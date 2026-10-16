@@ -8,6 +8,9 @@
 // accident. `ordinaryPages` records whether the locale's non-docs pages are
 // translated; when they are not, a link to one has to target the default
 // locale instead of a locale-prefixed page that would only repeat English.
+const fs = require('node:fs');
+const path = require('node:path');
+
 const localeRegistry = [
     {code: 'en', label: 'English', htmlLang: 'en-US', optional: false, ordinaryPages: true},
     {code: 'zh-CN', label: '中文', htmlLang: 'zh-Hans-CN', optional: false, ordinaryPages: true},
@@ -23,4 +26,21 @@ const isEnabled = locale => !locale.optional
     || selectedLocales().includes(locale.code) || process.env[flagFor(locale)] === 'true';
 const enabledLocaleRecords = () => localeRegistry.filter(isEnabled);
 const enabledLocales = () => enabledLocaleRecords().map(locale => locale.code);
-module.exports = {locales, localeRegistry, enabledLocaleRecords, enabledLocales};
+
+// Blog posts are the one content type without per-document translation state:
+// the blog plugin falls back per file, and a locale that holds no translated
+// post serves the default locale's articles at its own blog URLs. Those routes
+// are a second copy of every article, so the render path keeps them out of the
+// index, and this decides which locale that applies to. A locale leaves the
+// list as soon as its blog directory holds a translated post file.
+const blogTranslationDir = (root, locale) => path.join(root, 'i18n', locale, 'docusaurus-plugin-content-blog');
+function hasBlogTranslations(root, locale) {
+    try {
+        return fs.readdirSync(blogTranslationDir(root, locale), {recursive: true, withFileTypes: true})
+            .some(entry => entry.isFile() && /\.mdx?$/i.test(entry.name));
+    } catch {
+        return false;
+    }
+}
+
+module.exports = {locales, localeRegistry, enabledLocaleRecords, enabledLocales, hasBlogTranslations};

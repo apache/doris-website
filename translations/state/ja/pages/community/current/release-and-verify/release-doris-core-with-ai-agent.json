@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-core-with-ai-agent",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-core-with-ai-agent.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-core-with-ai-agent.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "bd195169f561f6c64e388d4fe46a5982085bb630714ef443665a7420e370210f",
+    "sourceTechnicalHash": "1d07498f12025dacc8c2f62c522db99305cb9393ae597b85a07d3886d5fd5a27",
+    "targetHash": "ab81a41b58dfdbc0820c16ac6d04595dced9d622c6ffb9605b55fe0b62f34832",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.555Z",
+    "glossaryVersion": "0"
+  }
+}

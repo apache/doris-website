@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-lineage-plugin-development",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-lineage-plugin-development.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/data-lineage-plugin-development.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "8343125666e24bdfd0d25a1ad11206b968ded264e4b95c1be99895bad7d32aaf",
+    "sourceTechnicalHash": "ef501b52e03a55fb17ac9c0f1c57d011a4c1527035b205705a80f88efefa20af",
+    "targetHash": "c2136821df01642eec02ce7592822981603cbfdb38faaa1b2556ace4a8430f9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

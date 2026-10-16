@@ -9,8 +9,9 @@ const {structure} = require('./structure.cjs');
 const {verify} = require('./verify-static.cjs');
 const root = path.resolve(__dirname, '../..');
 const fixture = path.join(root, '.i18n-build/fixture');
-const sourceBase = '---\ntitle: Example\nlast_update:\n  date: 2026-01-01\n---\n## Usage\n\nUse Doris.\n\n```sql\nSELECT 1;\n```\n\n[Current translation](./machine.md)\n';
+const sourceBase = '---\ntitle: Example\nlast_update:\n  date: 2026-01-01\n---\n## Usage\n\nUse Doris.\n\n### SSL error:protocol version mismatch\n\n```sql\nSELECT 1;\n```\n\n[Current translation](./machine.md)\n';
 const japanese = sourceBase.replace('title: Example', 'title: 例').replace('## Usage', '## 使用方法')
+    .replace('### SSL error:protocol version mismatch', '### SSL 接続エラー: protocol version mismatch')
     .replace('Use Doris.', 'Doris を使用します。').replace('date: 2026-01-01', 'date: 2026-10-11');
 
 async function write(file, content) {

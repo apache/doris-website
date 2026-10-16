@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/debug-tool",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/debug-tool.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/debug-tool.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "1833713dcf3f1d0f7c0a74680f00a6623c1dcf52c7696b8f237c9030711bf64b",
+    "sourceTechnicalHash": "b4282e6dee51884f6482184fb05af57f4e550afdc7081786ff1dae65564de46c",
+    "targetHash": "b06c089f61d840a1d776e5341f291dd2820097de796dc2de4951d53b6ae0a1c3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

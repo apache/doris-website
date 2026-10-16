@@ -1,0 +1,712 @@
+---
+title: ARM プラットフォームで Apache Doris をコンパイルする
+language: ja
+description: ARM64 プラットフォームで Apache Doris をコンパイルする方法。対応オペレーティングシステム、依存ソフトウェアのバージョン、ビルド手順を説明します。
+keywords:
+    - ARM コンパイル
+    - ARM64
+    - aarch64
+    - Apache Doris
+    - ソースからのコンパイル
+    - LDB Toolchain
+    - KylinOS
+    - Kunpeng
+---
+
+
+{/* Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License. */}
+
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+{/* Knowledge type: Procedure */}
+{/* Scenario: First-time compilation / ARM server environment */}
+
+このドキュメントでは、ARM64 プラットフォームで Apache Doris をコンパイルする方法を説明します。ハードウェアとオペレーティングシステムの互換性、依存ソフトウェアのインストール、ビルド手順を扱います。
+
+:::info
+このドキュメントは参考情報です。ARM 環境によっては、ここに記載のないエラーが発生する場合があります。[doris-website Issues](https://github.com/apache/doris-website/issues) で問題を報告したり、解決策を投稿したりできます。
+:::
+
+:::tip
+バージョン 3.0.3 以降、ARM プラットフォームではコンピュートとストレージを分離したモードでのコンパイルとデプロイをサポートしています。
+:::
+
+## 1. ハードウェアとオペレーティングシステムの互換性
+
+{/* Knowledge type: Hardware requirements */}
+
+コミュニティでは、以下の環境で動作を確認しています。
+
+| オペレーティングシステム | バージョン | CPU の例 |
+| -------- | ---- | -------- |
+| KylinOS | Kylin-Server-10-SP1-Release-Build04-20200711 | Phytium FT-2000+/64 |
+| CentOS | 7.9 以降 (AltArch) | aarch64 |
+| Ubuntu | 20.04 | aarch64 |
+
+:::info メモリページサイズ
+ARM サーバー向けディストリビューションのカーネルには、メモリページサイズが 4 KiB のものと 64 KiB のものがあります（KylinOS V10 と CentOS 7/8 aarch64 では一般に 64 KiB、Ubuntu では 4 KiB）。`getconf PAGESIZE` で確認してください。Doris が ARM 上でビルドする jemalloc は `--with-lg-page=16` を使用するため、同じバイナリがどちらのページサイズのカーネルでも動作します。ただし、一部のサードパーティライブラリはビルド時にページサイズに関する前提を組み込みます。自分でビルドまたは検証する場合は、実際のデプロイ先のカーネルで確認してください。項目 4 については [FAQ 4.2](#42-startup-issues) も参照してください。
+:::
+
+参考出力:
+
+```shell
+# KylinOS
+$ cat /etc/.kyinfo
+name=Kylin-Server
+milestone=10-SP1-Release-Build04-20200711
+arch=arm64
+beta=False
+time=2020-07-11 17:16:54
+dist_id=Kylin-Server-10-SP1-Release-Build04-20200711-arm64-2020-07-11 17:16:54
+
+$ cat /proc/cpuinfo
+model name  : Phytium,FT-2000+/64
+
+# CentOS 7.9
+$ lsb_release -a
+LSB Version:	:core-4.1-aarch64:core-4.1-noarch
+Distributor ID:	CentOS
+Description:	CentOS Linux release 7.9.2009 (AltArch)
+Release:	7.9.2009
+Codename:	AltArch
+```
+
+## 2. ソフトウェア環境の設定
+
+### 2.1 依存ソフトウェアのバージョン一覧（JDK 8 を例に使用）
+
+{/* Knowledge type: Configuration parameters */}
+
+| コンポーネント | バージョン | 備考 |
+| ---- | ---- | ---- |
+| Git | 2.0+ | |
+| JDK | 1.8.0 | JDK 17 は 3.0+ または master のコンパイルに必要 |
+| Maven | 3.6.3 | 3.9.9 を推奨 |
+| NodeJS | 16.3.0 | |
+| LDB Toolchain | 0.9.1 | ARM では 0.21+ を推奨 |
+| autoconf | 2.69 | ソースからインストール |
+| bison | 3.0.4 | |
+| 一般的なシステムパッケージ | yum/apt により自動的にインストール | byacc, patch, automake, libtool, make, which, file, ncurses-devel, gettext-devel, unzip, bzip2, zip, util-linux, wget, git, python2 |
+
+### 2.2 ソフトウェア環境をインストールするコマンド
+
+<Tabs>
+  <TabItem value="CentOS 7.9" label="CentOS 7.9" default>
+    <div>
+
+1. ダウンロードしたパッケージとインストールしたソフトウェアを格納するルートディレクトリを作成する
+
+```shell
+# Create the root directory for downloaded packages
+mkdir /opt/tools
+# Create the root directory for installed software
+mkdir /opt/software
+```
+  </div>
+    <div>
+
+2. 依存ソフトウェアをインストールする
+
+  - Git
+
+```shell
+  # To skip the compilation hassle, install directly with yum
+  yum install -y git
+```
+
+  - JDK 8
+
+```shell
+  # When compiling Doris 2.1 or earlier versions, you can install JDK 8
+  # Option 1: Install directly with yum. The devel package provides tools such as jps
+  yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
+
+  # Option 2: Download the arm64 package, extract it, and configure environment variables
+  cd /opt/tools
+  wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
+    tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
+    mv jdk1.8.0_291 /opt/software/jdk8
+```
+
+  - JDK 17
+
+```shell
+  # To compile Doris 3.0 (inclusive) or later versions, or the master branch, replace JDK 8 with JDK 17
+  yum install -y java-17-openjdk java-17-openjdk-devel
+```
+
+  - Maven
+
+```shell
+  cd /opt/tools
+  # Download, extract, and configure environment variables
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
+```
+
+  - NodeJS
+
+```shell
+  cd /opt/tools
+  # Download the arm64 package
+  wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
+    tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
+    mv node-v16.3.0-linux-arm64 /opt/software/nodejs
+```
+
+  - LDB Toolchain
+
+```shell
+  cd /opt/tools
+  # Download the ARM version of LDB Toolchain
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+```
+  </div>
+    <div>
+
+3. 環境変数を設定する
+
+```shell
+# Configure environment variables (using JDK 8 as an example)
+vim /etc/profile.d/doris.sh
+export JAVA_HOME=/opt/software/jdk8
+export MAVEN_HOME=/opt/software/maven
+export NODE_JS_HOME=/opt/software/nodejs
+export LDB_HOME=/opt/software/ldb_toolchain
+export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
+
+# Save, exit, and refresh environment variables
+source /etc/profile.d/doris.sh
+
+# Verify the installation (using JDK 8 as an example)
+java -version
+> java version "1.8.0_291"
+mvn -version
+> Apache Maven 3.9.9
+node --version
+> v16.3.0
+gcc --version
+> gcc-11
+```
+  </div>
+    <div>
+
+4. 追加の環境とコンポーネントをインストールする
+
+```shell
+# Install common system packages
+sudo yum install -y byacc patch automake libtool make which file ncurses-devel gettext-devel unzip bzip2 bison zip util-linux wget git python2
+
+# Install autoconf-2.69
+cd /opt/tools
+wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
+    tar zxf autoconf-2.69.tar.gz && \
+    mv autoconf-2.69 /opt/software/autoconf && \
+    cd /opt/software/autoconf && \
+    ./configure && \
+    make && \
+    make install
+```
+  </div>
+  </TabItem>
+  <TabItem value="Ubuntu 20.04" label="Ubuntu 20.04">
+    <div>
+
+1. apt のパッケージソースを更新する
+
+```shell
+apt-get update
+```
+  </div>
+    <div>
+
+2. シェルコマンドの設定を確認する
+
+  Ubuntu では、デフォルトで `/bin/sh` は bash ではなく dash を指します。一部のスクリプトを実行できるよう、bash に切り替える必要があります。まず、現在 `sh` が何を指しているか確認します。
+
+```shell
+ls -al /bin/sh
+```
+
+  次のコマンドで切り替えます。
+
+```shell
+sudo dpkg-reconfigure dash
+```
+
+  対話画面で `no`（dash をデフォルトのシェルにしない）を選ぶと、`/bin/sh` は bash を指すようになります。
+  </div>
+    <div>
+
+3. ダウンロードしたパッケージとインストールしたソフトウェアを格納するルートディレクトリを作成する
+
+```shell
+  # Create the root directory for downloaded packages
+  mkdir /opt/tools
+  # Create the root directory for installed software
+  mkdir /opt/software
+```
+  </div>
+    <div>
+
+4. 依存ソフトウェアをインストールする
+
+  - Git
+
+```shell
+  # Install directly with apt-get
+  apt-get -y install git
+```
+
+  - JDK 8
+
+```shell
+  # Download the arm64 package, extract it, and configure environment variables
+  cd /opt/tools
+  wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/jdk-8u291-linux-aarch64.tar.gz && \
+    tar -zxvf jdk-8u291-linux-aarch64.tar.gz && \
+    mv jdk1.8.0_291 /opt/software/jdk8
+```
+
+  - JDK 17
+
+```shell
+  # To compile Doris 3.0 (inclusive) or later versions, or the master branch, replace JDK 8 with JDK 17
+  apt-get -y install openjdk-17-jdk
+```
+
+  - Maven
+
+```shell
+  cd /opt/tools
+  # Download, extract, and configure environment variables
+  wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz && \
+    tar -zxvf apache-maven-3.9.9-bin.tar.gz && \
+    mv apache-maven-3.9.9 /opt/software/maven
+```
+
+  - NodeJS
+
+```shell
+  cd /opt/tools
+  # Download the arm64 package
+  wget https://doris-thirdparty-repo.bj.bcebos.com/thirdparty/node-v16.3.0-linux-arm64.tar.xz && \
+    tar -xvf node-v16.3.0-linux-arm64.tar.xz && \
+    mv node-v16.3.0-linux-arm64 /opt/software/nodejs
+```
+
+  - LDB Toolchain
+
+```shell
+  cd /opt/tools
+  # Download the ARM version of LDB Toolchain
+  wget https://github.com/amosbird/ldb_toolchain_gen/releases/download/v0.21/ldb_toolchain_gen.aarch64.sh && \
+    bash ldb_toolchain_gen.aarch64.sh /opt/software/ldb_toolchain/
+```
+  </div>
+    <div>
+
+5. 環境変数を設定する
+
+```shell
+# Configure environment variables (using JDK 8 as an example)
+vim /etc/profile.d/doris.sh
+export JAVA_HOME=/opt/software/jdk8
+export MAVEN_HOME=/opt/software/maven
+export NODE_JS_HOME=/opt/software/nodejs
+export LDB_HOME=/opt/software/ldb_toolchain
+export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_JS_HOME/bin:$LDB_HOME/bin:$PATH
+
+# Save, exit, and refresh environment variables
+source /etc/profile.d/doris.sh
+
+# Verify the installation (using JDK 8 as an example)
+java -version
+> java version "1.8.0_291"
+mvn -version
+> Apache Maven 3.9.9
+node --version
+> v16.3.0
+gcc --version
+> gcc-11
+```
+  </div>
+    <div>
+
+6. 追加の環境とコンポーネントをインストールする
+
+```shell
+# Install common system packages
+sudo apt install -y build-essential cmake flex automake bison binutils-dev libiberty-dev zip libncurses5-dev curl ninja-build
+sudo apt-get install -y make
+sudo apt-get install -y unzip
+sudo apt-get install -y python2
+sudo apt-get install -y byacc
+sudo apt-get install -y automake
+sudo apt-get install -y libtool
+sudo apt-get install -y bzip2
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
+sudo apt update
+sudo apt install gcc-11 g++-11
+sudo apt-get -y install autoconf autopoint
+
+# Install autoconf-2.69
+cd /opt/tools
+wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz && \
+    tar zxf autoconf-2.69.tar.gz && \
+    mv autoconf-2.69 /opt/software/autoconf && \
+    cd /opt/software/autoconf && \
+    ./configure && \
+    make && \
+    make install
+```
+  </div>
+  </TabItem>
+</Tabs>
+
+## 3. コンパイル
+
+{/* Knowledge type: Procedure */}
+
+:::tip
+ARM プラットフォームでのコンパイルには、LDB Toolchain のみを推奨します。この方法は [commit 7f3564](https://github.com/apache/doris/commit/7f3564cca62de49c9f2ea67fcf735921dbebb4d1) より後の Doris バージョンに適用されます。
+:::
+
+LDB Toolchain のダウンロードとインストールについては前のセクションを参照してください。その後のビルド手順は、[LDB Toolchain を使用したコンパイル](./compilation-with-ldb-toolchain) を参照してください。JDK と NodeJS は aarch64 版に置き換える必要があります（前のセクションを参照）。
+
+ビルド済みのサードパーティライブラリをダウンロードできない場合は、`thirdparty/build-thirdparty.sh` を使って自分でビルドしてください。サードパーティライブラリのビルドには gcc を使用します。
+
+```shell
+export DORIS_TOOLCHAIN=gcc
+```
+
+以下のビルドスイッチは、ARM と x86_64 で動作が異なります。
+
+- **AVX2**: `USE_AVX2` は x86_64 にのみ適用され、ARM では設定不要です。ARM の命令セットは `ARM_MARCH` で選択します（4.0 以降。デフォルトは `armv8-a+crc`）。例: `ARM_MARCH=armv8-a+crc+simd sh build.sh --be`。
+- **libunwind**: 4.1.3 以前（3.x と 4.0 を含む）では libunwind が ARM 上で動作しないため、ビルド前に `export USE_UNWIND=OFF` が必要です。master（2026 年の七月）と 4.1.4 以降では、`USE_UNWIND` スイッチが削除されました（[apache/doris#64093](https://github.com/apache/doris/pull/64093)）。すべての Linux プラットフォームで libunwind が常に有効となり、この変数を設定しても効果はありません。同梱の libunwind 1.6.2 は、メモリページサイズが 64 KiB のカーネルで BE の起動時にクラッシュします。項目 4 については [FAQ 4.2](#42-startup-issues) を参照してください。
+- **Azure**: 4.1 以前では、ARM 上で `env.sh` が `DISABLE_BUILD_AZURE=ON` を自動設定するため、手動設定は不要です。2026 年の八月以降の master（[apache/doris#66908](https://github.com/apache/doris/pull/66908)）では、ARM 上でも Azure ライブラリをビルドし、デフォルトで BE にリンクします。無効にする場合は `export DISABLE_BUILD_AZURE=ON` を設定します（BE にリンクされなくなります）。サードパーティライブラリのビルド時には、さらに `export DISABLE_THIRDPARTY_BUILD_AZURE=ON` を設定すると、Azure 自体のビルドもスキップされます。
+
+コンパイル時や起動時に問題が発生する場合は、[FAQ](#4-faq) を参照してください。該当する解決策がなければ、[Issue を作成](https://github.com/apache/doris/issues)してください。
+
+## 4. FAQ
+
+{/* Knowledge type: Troubleshooting */}
+{/* Scenario: Troubleshooting / Compilation failure */}
+
+### 4.1 コンパイル時の問題
+
+#### 1. サードパーティライブラリ libhdfs3.a のコンパイル時にディレクトリが見つからない
+
+- 症状:
+
+    コンパイルとインストール中に、次のエラーが表示されます。
+
+    > not found lib/libhdfs3.a file or directory
+
+- 原因:
+
+    サードパーティライブラリの依存パッケージをダウンロードできませんでした。
+
+- 解決方法:
+
+    サードパーティライブラリのダウンロードリポジトリを使用して、サードパーティライブラリを再コンパイルします。
+
+```shell
+  export REPOSITORY_URL=https://doris-thirdparty-repo.bj.bcebos.com/thirdparty
+  sh /opt/doris/thirdparty/build-thirdparty.sh
+```
+
+`REPOSITORY_URL` には、すべてのサードパーティライブラリと過去のバージョンのソースパッケージが含まれています。
+
+#### 2. python コマンドが見つからない
+
+- 症状:
+
+    `build.sh` を実行すると、次の例外が発生します。
+
+    > /opt/doris/env.sh: line 46: python: command not found
+    >
+    > Python 2.7.18
+
+- 原因:
+
+    システムでは通常、`python2.7`、`python3.6`、`python2`、`python3` などのコマンドで Python を起動しますが、Doris の依存ソフトウェアには `python` という名前のコマンドが必要です（2.7+ で使用できます）。
+
+- 解決方法:
+
+    `/usr/bin/python` にシンボリックリンクを作成します。
+
+```shell
+      # Check the python installation directory
+      whereis python
+      # Create the symbolic link
+      sudo ln -s /usr/bin/python2.7 /usr/bin/python
+```
+
+#### 3. コンパイル後に output ディレクトリがない
+
+- 症状:
+
+    `build.sh` の終了後、`output` ディレクトリが見つかりません。
+
+- 原因:
+
+    コンパイルが成功していません。再コンパイルしてください。
+
+- 解決方法:
+
+```shell
+      sh build.sh --clean
+```
+
+#### 4. spark-dpp のコンパイル失敗
+
+- 症状:
+
+    `build.sh` の実行中、spark-dpp のコンパイル時にエラーが報告されます。
+
+    > Failed to execute goal on project spark-dpp
+
+- 原因:
+
+    Maven Central リポジトリ `repo.maven.apache.org` に接続できず、依存パッケージをダウンロードできません。
+
+    > Could not transfer artifact org.apache.spark:spark-sql_2.12:jar:2.4.6 from/to central (https://repo.maven.apache.org/maven2): Transfer failed for https://repo.maven.apache.org/maven2/org/apache/spark/spark-sql_2.12/2.4.6/spark-sql_2.12-2.4.6.jar: Unknown host repo.maven.apache.org
+
+- 解決方法:
+
+    ネットワークを確認してから、再ビルドしてください。
+
+#### 5. 空き容量不足によるコンパイル失敗
+
+- 症状:
+
+    コンパイル中、空き容量がないことを示すメッセージとともに CXX オブジェクトのビルドが失敗します。
+
+    > fatal error: error writing to /tmp/ccKn4nPK.s: No space left on device
+    >
+    > 1112 | } // namespace doris::vectorized
+    >
+    > compilation terminated.
+
+- 原因:
+
+    デバイスの空き容量が不足しています。
+
+- 解決方法:
+
+    不要なファイルを削除するなどして、デバイスの空き容量を確保してください。
+
+#### 6. pkg.config で pkg.m4 が見つからない
+
+- 症状:
+
+    コンパイル中に「ファイルが見つからない」というエラーが表示されます。
+
+    > Couldn't find pkg.m4 from pkg-config. Install the appropriate package for your distribution or set ACLOCAL_PATH to the directory containing pkg.m4.
+
+    ログによると、これはサードパーティライブラリ `libxml2` のコンパイル中に発生します。
+
+- 原因:
+
+    サードパーティライブラリ `libxml2` のコンパイル中に、`pkg.m4` が見つかりません。考えられる原因は次のとおりです。
+
+    1. Ubuntu システムで環境変数の読み込みに問題があり、ldb ディレクトリ内のインデックスを正しく読み込めていません。
+    2. libxml2 のビルド中に環境変数の参照が失敗し、`ldb/aclocal` ディレクトリが検索されません。
+
+- 解決方法:
+
+    `pkg.m4` ファイルを `ldb/aclocal` から `libxml2/m4` ディレクトリにコピーし、サードパーティライブラリを再ビルドします。
+
+```shell
+      cp /opt/software/ldb_toolchain/share/aclocal/pkg.m4 /opt/doris/thirdparty/src/libxml2-v2.9.10/m4
+      sh /opt/doris/thirdparty/build-thirdparty.sh
+```
+
+#### 7. テスト CURL_HAS_TLS_PROXY の失敗
+
+- 症状:
+
+    サードパーティパッケージのコンパイル中に、次のエラーが報告されます。
+
+    > -- Performing Test CURL_HAS_TLS_PROXY - Failed
+    >
+    > CMake Error at cmake/dependencies.cmake:15 (get_property):
+    >
+    > INTERFACE_LIBRARY targets may only have whitelisted properties. The property "LINK_LIBRARIES_ALL" is not allowed.
+
+    ログを確認すると、curl のヘッダーファイルが見つからないことが分かります。
+
+    > fatal error: curl/curl.h: No such file or directory
+    >
+    >  2 |     #include &lt;curl/curl.h>
+    >
+    > compilation terminated.
+    >
+    > ninja: build stopped: subcommand failed.
+
+- 原因:
+
+    ビルドには LDB Toolchain ではなく、システム内蔵の gcc 9.3.0 が使用されています。LDB Toolchain の環境変数を正しく設定する必要があります。
+
+- 解決方法:
+
+    LDB の環境変数を設定します。
+
+```shell
+      # Configure environment variables
+      vim /etc/profile.d/ldb.sh
+      export LDB_HOME=/opt/software/ldb_toolchain
+      export PATH=$LDB_HOME/bin:$PATH
+      # Save, exit, and refresh environment variables
+      source /etc/profile.d/ldb.sh
+      # Test
+      gcc --version
+      > gcc-11
+```
+
+#### 8. `ninja failed with: signal: killed` でコンパイルが中断する
+
+- 症状:
+
+    BE またはサードパーティライブラリのコンパイルが途中で失敗し、次の文字列を含むメッセージが表示されます。
+
+    > ninja failed with: signal: killed
+
+- 原因:
+
+    マシンのメモリが不足しています。
+
+- 解決方法:
+
+    より多くのメモリ（少なくとも 16 GB）を搭載したマシンでコンパイルするか、ビルドの並列実行数（`-j`）を減らしてください。
+
+### 4.2 起動時の問題 {#42-startup-issues}
+
+#### 1. FE が起動しない（トランザクション -20 の問題）
+
+- 症状:
+
+    FE の起動時に、ステータス UNKNOWN のトランザクションエラー 20 が報告されます。
+
+    > [BDBEnvironment.setup():198] error to open replicated environment. will exit.
+    >
+    > com.sleepycat.je.rep.ReplicaWriteException: (JE 18.3.12) Problem closing transaction 20. The current state is:UNKNOWN. The node transitioned to this state at:Fri Apr 22 12:48:08 CST 2022
+
+- 原因:
+
+    ディスク容量が不足しています。
+
+- 解決方法:
+
+    ディスクの空き容量を確保するか、新しいディスクをマウントしてください。
+
+#### 2. BDB 環境のセットアップ例外（ディスクの参照エラー）
+
+- 症状:
+
+    FE が配置されているディスクを移行した後、FE を起動すると例外が発生します。
+
+    > 2022-04-22 16:21:44,092 ERROR (MASTER 172.28.7.231_9010_1650606822109(-1)|1) [BDBJEJournal.open():306] catch an exception when setup bdb environment. will exit.
+    >
+    > com.sleepycat.je.DiskLimitException: (JE 18.3.12) Disk usage is not within je.maxDisk or je.freeDisk limits and write operations are prohibited: maxDiskLimit=0 freeDiskLimit=5,368,709,120 adjustedMaxDiskLimit=0 maxDiskOverage=0 freeDiskShortage=1,536,552,960 diskFreeSpace=3,832,156,160 availableLogSize=-1,536,552,960 totalLogSize=4,665 activeLogSize=4,665 reservedLogSize=0 protectedLogSize=0 protectedLogSizeMap={}
+
+- 原因:
+
+    FE の配置場所が移行され、メタデータに記録されたディスク情報と一致していません。または、ディスクが破損しているか、マウントされていません。
+
+- 解決方法:
+
+    - ディスクが正常で、初期化され、正しくマウントされていることを確認してください。
+    - FE のメタデータを修復してください。
+    - テスト環境では、メタデータディレクトリを削除して再起動することもできます。
+
+#### 3. 起動時に BE がコアダンプし、コアスタックに `libc.so` または `glibc-compatibility/` が含まれる
+
+- 原因:
+
+    マシン上の glibc のバージョンが古すぎます。`ldd --version` で確認してください。バージョンが 2.27 未満の場合に、この問題が発生する可能性があります。
+
+- 解決方法:
+
+    次の環境変数を追加して BE を再コンパイルします。
+
+```shell
+      export GLIBC_COMPATIBILITY=OFF
+```
+
+#### 4. ARM で BE が起動直後にコアダンプし、コアスタックに `unw_backtrace`、`access_mem`、`is_plt_entry` が含まれる
+
+- 症状:
+
+    4.1.4、または 2026 年の七月以降の master からビルドした ARM 版 BE は、`start_be.sh` の実行直後にセグメンテーション違反を起こします。`be.out` には BE のログ行がなく、コアスタック（最も内側のフレームから順に）は次のようになります。
+
+    ```text
+    access_mem
+    is_plt_entry
+    _ULaarch64_step
+    _ULaarch64_tdep_trace
+    unw_backtrace
+    ...
+    __libc_csu_init
+    ```
+
+    また、`getconf PAGESIZE` は 65536 を出力します。
+
+- 原因:
+
+    これらのバージョンは、ARM 上で GNU libunwind 1.6.2 を静的にリンクします（[apache/doris#64093](https://github.com/apache/doris/pull/64093)）。その AArch64 メモリバリデーターには、4 KiB のページサイズが固定値として組み込まれています。メモリページサイズが 64 KiB のカーネルでは、すべての検証が失敗し、libunwind が `main()` の実行前に初期化されていないアドレスを参照します。4 KiB ページのカーネルは影響を受けないため、x86_64 や Ubuntu ARM では再現しません。
+
+- 解決方法:
+
+    [apache/doris#67877](https://github.com/apache/doris/pull/67877)（libunwind を 1.8.3 にアップグレード）を含むコードからビルドするか、この修正を含むリリースを使用してください。それまでは、4.1.3 を 64 KiB ページのカーネルで使用してください。クラッシュは `main()` の実行前に発生するため、`be.conf` の設定では回避できません。
+
+### 4.3 その他のコンポーネントに関する問題
+
+- 症状
+
+  以下のコンポーネントに関するエラーメッセージが表示された場合は、いずれも後述の方法で対処してください。
+
+    - bison: bison-3.0.4 のインストール時に fseterr.c のエラー
+    - flex: flex コマンドが見つからない
+    - cmake: cmake コマンドが見つからない / cmake が依存ライブラリを見つけられない / cmake が CMAKE_ROOT を見つけられない / cmake が CXX 環境変数で指定されたコンパイラーを見つけられない
+    - boost: Boost.Build エンジンのビルド失敗
+    - mysql: mysql クライアントの依存ファイルである .a ファイルが見つからない
+    - gcc: GCC 11+ が必要
+
+- 原因
+
+    コンパイルに適切な LDB Toolchain が使用されていません。
+
+- 解決方法
+
+    - LDB Toolchain の環境変数が設定されているか確認してください。
+    - gcc のバージョンが [LDB Toolchain を使用したコンパイル](./compilation-with-ldb-toolchain) で推奨されているものと一致するか確認してください。
+    - `ldb_toolchain_gen.aarch64.sh` の実行によって作成された ldb ディレクトリを削除し、スクリプトを再実行して環境変数を設定した後、gcc のバージョンを確認してください。
+
+## 関連ドキュメント
+
+- [LDB Toolchain を使用したコンパイル](./compilation-with-ldb-toolchain)
+- [Docker イメージを使用したコンパイル](./compilation-with-docker)
+- [Linux 上で直接コンパイルする](./compilation-linux)

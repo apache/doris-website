@@ -184,3 +184,40 @@ test('MDX imports, expressions and explicit IDs preserve heading order and raw o
     const setextTarget = await alignHeadings(setext, '日本語の見出し\n-------------\n', '.mdx');
     assert.deepEqual((await structure(setextTarget, '.mdx')).headings.map(h => h.id), ['english-heading']);
 });
+
+test('heading alignment matches native directive parsing in Markdown and MDX', async () => {
+    const {createProcessorUncached} = require('@docusaurus/mdx-loader/lib/processor.js');
+    const {DEFAULT_MARKDOWN_CONFIG} = require('@docusaurus/core/lib/server/configValidation.js');
+    const {escapeMarkdownHeadingIds} = require('@docusaurus/utils');
+    const source = '### Q2. SSL connection error:protocol version mismatch Failed to connect to the MySQL server\n';
+    const target = '### Q2. SSL 接続エラー: protocol version mismatch Failed to connect to the MySQL server\n';
+    const {visit} = await import('unist-util-visit');
+    for (const extension of ['.md', '.mdx']) {
+        const ids = [];
+        const processor = await createProcessorUncached({format: extension.slice(1), options: {
+            siteDir: process.cwd(), staticDirs: [], markdownConfig: DEFAULT_MARKDOWN_CONFIG,
+            remarkPlugins: [() => tree => visit(tree, 'heading', node => {ids.push(node.data.id);})],
+        }});
+        await processor.process({content: source, filePath: `source${extension}`,
+            frontMatter: {}, compilerName: 'server'});
+        const expected = [...ids];
+        const parsed = await structure(source, extension);
+        assert.deepEqual(parsed.headings.map(heading => heading.id), expected);
+        const aligned = await alignHeadings(parsed, target, extension);
+        ids.length = 0;
+        await processor.process({content: extension === '.mdx' ? escapeMarkdownHeadingIds(aligned) : aligned, filePath: `target${extension}`,
+            frontMatter: {}, compilerName: 'server'});
+        assert.deepEqual(ids, expected);
+    }
+});
+
+test('directive names and attributes remain protected technical content', async () => {
+    const {protectionSignature} = require('../protection.cjs');
+    for (const source of ['Timeout:timeout10\n', ':setting{timeout="10"}\n',
+        '::setting{timeout="10"}\n', ':::setting{timeout="10"}\nText\n:::\n']) {
+        const original = await structure(source, '.md');
+        const changed = await structure(source.replace('10', '20'), '.md');
+        assert.notEqual(changed.technicalHash, original.technicalHash);
+        assert.notEqual(protectionSignature(changed), protectionSignature(original));
+    }
+});

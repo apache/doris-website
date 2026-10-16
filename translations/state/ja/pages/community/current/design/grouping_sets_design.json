@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "design/grouping_sets_design",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/design/grouping_sets_design.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/design/grouping_sets_design.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "e53b3bc1330298ec54014a6abc5dd83b8c919b2e2e26ac73572e16b35055a499",
+    "sourceTechnicalHash": "00648433222547a38ae34bbb43d53d6528d68381f567b217db215da65e1f6e98",
+    "targetHash": "c3e2d226375b3ca46d94346dbea500e2925be5272596996a5aff82017944f581",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.556Z",
+    "glossaryVersion": "0"
+  }
+}

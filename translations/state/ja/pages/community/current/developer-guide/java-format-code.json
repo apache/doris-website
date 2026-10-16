@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/java-format-code",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/java-format-code.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/java-format-code.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "7bf89f963c1b96263f4848f56dd01d97e7cd8c58812208e68da1c3b685ca748f",
+    "sourceTechnicalHash": "e3ccee40e6f9001829a7069057bb957eb5281c0045635888b4fa3e091d653529",
+    "targetHash": "54cb98de71fda86827ea76a7e88e9eb3983d0af127b2cee28d8f6d14e2411bd8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

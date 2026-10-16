@@ -10,6 +10,9 @@ async function verify({site,devOnly = false}) {
     assert.equal(manifest.indexedPages,Object.values(manifest.contexts).reduce((a,b)=>a+b,0));
     const indexFiles = ['search-index.json','search-index-docs-dev.json','search-index-docs-4.x.json','search-index-community.json'];
     const indexes = Object.fromEntries(indexFiles.map(file => [file,JSON.parse(fs.readFileSync(path.join(site,'ja',file),'utf8'))]));
+    // "Everywhere" searches each context index in the browser; a union copy at
+    // the root outgrew GitHub's 100 MiB file limit.
+    assert(indexes['search-index.json'].every(section => section.documents.length === 0),'Root index repeats the contexts');
     for (const [file,index] of Object.entries(indexes)) {
         for (const section of index) for (const doc of section.documents) {
             assert(doc.u.startsWith('/ja/'),`Cross-locale result in ${file}: ${doc.u}`);
@@ -52,11 +55,28 @@ async function verify({site,devOnly = false}) {
             catch (error) {throw new Error(`${item.ctx}: ${error.message}; requests=${requests}; errors=${errors}; body=${(await page.locator('body').innerText()).slice(0,500)}`);}
             const links = await page.locator('section article a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
             assert(links.length && links.every(link => link.startsWith(item.path)),`${item.ctx} leaked a result: ${links.join(',')}`);
-            assert(requests.some(request => request.includes(`search-index-${item.ctx.replace(/\//g,'-')}`)),`Wrong worker index: ${requests}`);
+            // A page searching one context loads only that context's index.
+            assert(requests.length && requests.every(request => request.includes(`search-index-${item.ctx.replace(/\//g,'-')}`)),`Wrong worker index: ${requests}`);
             assert.deepEqual(errors,[],`Search page errors: ${item.ctx}`);
             results.push({...item,indexRequests:requests,results:links.length});
             await page.close();
         }
+        // Without ctx the page searches "Everywhere": every context index, merged.
+        for (const item of [{query:'SQL',path:'/ja/docs/dev/'},{query:'コミュニティ',path:'/ja/community/'}]) {
+            const everywhere = await browser.newPage();
+            const requests = [];
+            everywhere.on('request',request => {if(request.url().includes('search-index')) requests.push(new URL(request.url()).pathname);});
+            await everywhere.goto(`${origin}/ja/search/?${new URLSearchParams({q:item.query})}`);
+            await everywhere.locator('section article a').first().waitFor({timeout:30000});
+            const links = await everywhere.locator('section article a').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
+            const expected = ['docs-dev','docs-4.x','community'].map(ctx => `/ja/search-index-${ctx}.json`);
+            assert(expected.every(file => requests.includes(file)),`Everywhere skipped a context index: ${requests}`);
+            assert(!requests.includes('/ja/search-index.json'),`Everywhere fetched the root index: ${requests}`);
+            assert(links.some(link => link.startsWith(item.path)),`Everywhere missed ${item.path}: ${links.slice(0,10)}`);
+            results.push({everywhereQuery:item.query,results:links.length,indexRequests:requests});
+            await everywhere.close();
+        }
+
         const bar = await browser.newPage();
         const barRequests = [];
         bar.on('request',request => {if(request.url().includes('search-index')) barRequests.push(new URL(request.url()).pathname);});
@@ -67,7 +87,7 @@ async function verify({site,devOnly = false}) {
         await input.fill('query_vector');
         const suggestion = bar.locator('[class*="suggestion_"]');
         await suggestion.first().waitFor({timeout:30000});
-        assert(barRequests.some(request => request.includes('search-index-docs-dev')),`SearchBar used wrong index: ${barRequests}`);
+        assert(barRequests.length && barRequests.every(request => request.includes('search-index-docs-dev')),`SearchBar used wrong index: ${barRequests}`);
         results.push({searchBarQuery:'query_vector',suggestions:await suggestion.count(),indexRequests:barRequests});
         await bar.close();
 
@@ -80,7 +100,9 @@ async function verify({site,devOnly = false}) {
         await mobile.close();
 
         const page = await browser.newPage();
-        await page.goto(`${origin}/ja/search/?q=zzzzzzzz_t04_nomatch_98765&ctx=docs/dev`);
+        // An identifier with no results is retried part by part, and every part
+        // is a prefix query: "nomatch" from an earlier query found NoMatchingRule.
+        await page.goto(`${origin}/ja/search/?q=zzzzqqqq_xxxxwwww&ctx=docs/dev`);
         try {await page.getByRole('link',{name:'英語の原文を検索'}).waitFor({timeout:30000});}
         catch (error) {throw new Error(`Missing original-language search link: ${(await page.locator('body').innerText()).slice(-600)}; ${error.message}`);}
         const original = await page.getByRole('link',{name:'英語の原文を検索'}).getAttribute('href');

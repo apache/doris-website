@@ -28,6 +28,9 @@ jobs:
                   persist-credentials: false
                   submodules: recursive
                   ref: ${{ inputs.branch }}
+                  # Sitemap lastmod comes from each file's last commit, so a
+                  # shallow clone would date every page to the same commit.
+                  fetch-depth: 0
 
             - name: Add Chinese Fonts
               run: |
@@ -81,6 +84,16 @@ jobs:
                       node scripts/i18n/verify-static.cjs \
                         --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
                   done
+
+            - name: Check file sizes for asf-site
+              # GitHub rejects a push holding any file over 100 MiB. Checking
+              # before the OSS upload stops such a build before anything is
+              # published.
+              run: |
+                  if find build -type f -size +100M -exec ls -l {} + | grep .; then
+                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                      exit 1
+                  fi
 
             - name: Upload files to OSS
               id: oss-upload

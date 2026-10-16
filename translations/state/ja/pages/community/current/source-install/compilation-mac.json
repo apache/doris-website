@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-mac",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-mac.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-mac.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "82855c544dde6fcca4e993b522f1146a19acd297807eec6ad3c1c885264a17e1",
+    "sourceTechnicalHash": "436a4c841449ddbb23dff6bd6fecc3fb895eb6b4198154c923ad09763931aca6",
+    "targetHash": "a1df73bae2541cec0cda42bf5c92f3b45165495bfdae70d40a3737af105615a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

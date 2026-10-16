@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-with-ldb-toolchain",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-with-ldb-toolchain.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-ldb-toolchain.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "947b5311f04c927e3e7587fb1f64c51c6c9f2a93669e53c9570ec0e98cd80f25",
+    "sourceTechnicalHash": "85481d07a677671f028b74d495320ade462fe6cb753943d12c55322b9a9860d8",
+    "targetHash": "b4167cc76d36b142c67ec339b0ab38d1d0f6a8cff988bc882b34bf453a2d4be8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

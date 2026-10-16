@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-with-docker",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-with-docker.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
+    "sourceTechnicalHash": "5aca82ee484f3ef00d45063253cf63ac4764fd87117566e956949b471170ae8d",
+    "targetHash": "1625dc18aea84f867dd9af359ed62e302de7b99552255ec16ba57a4fa6716c9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

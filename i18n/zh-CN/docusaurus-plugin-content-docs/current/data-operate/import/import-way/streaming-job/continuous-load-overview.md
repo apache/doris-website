@@ -46,7 +46,7 @@ Doris 支持通过 **Streaming Job** 的方式，从多种数据源持续导入�
 | MySQL      | 5.6、5.7、8.0.x   | [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)            | [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)               | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL | 14、15、16、17    | [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)  | [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)     | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
 | OceanBase  | MySQL 兼容模式    | -                                                                     | [OceanBase CDC 自动建表同步](./continuous-load-oceanbase-database.md)（自 4.1.4 版本起） | -                                                                                                                                         |
-| S3         | -                 | [S3 持续导入](./continuous-load-s3.md)                                | -                                                                           | -                                                                                                                                         |
+| S3         | -                 | [S3 导入概览](./continuous-load-s3.md)                                | -                                                                           | -                                                                                                                                         |
 
 上游列类型如何映射为 Doris 类型，见 [MySQL](./data-type-mapping-mysql.md)、[PostgreSQL](./data-type-mapping-postgresql.md)和 [OceanBase](./data-type-mapping-oceanbase.md) 数据类型映射。
 
@@ -65,16 +65,18 @@ SQL 映射同步和自动建表同步是两种**实现机制完全不同**的持
 | 同步范围       | 单张表                                                         | 一张到多张到整库（由 `include_tables` 控制）    |
 | 自动建表       | 需预建                                                         | 首次同步自动创建主键表                         |
 | SQL 灵活表达   | 支持列映射、过滤、转换（SELECT 子句）                          | 支持目标表重命名和排除非主键列；不支持 SQL 表达式、行过滤或数据转换 |
-| 语义保证       | exactly-once                                                    | at-least-once                                  |
+| 语义保证       | CDC 与 S3 扫描模式为 exactly-once；S3 通知模式为 at-least-once | at-least-once                                  |
 | 所需权限       | Load                                                           | Load + Create（自动建表时）                    |
 | 典型适用场景   | 需要 SQL 表达式、类型转换或条件过滤的实时同步                   | 整库或一组表的镜像复制，允许简单的表重命名或列裁剪 |
 
 ### 选型建议
 
-- **需要对数据做 SQL 加工，或对精确一次语义有严格要求** → 选 **SQL 映射同步**
+- **需要对数据做 SQL 加工，或 CDC 同步对精确一次语义有严格要求** → 选 **SQL 映射同步**
 - **希望 Doris 自动建表、一次配置同步一组表** → 选 **自动建表同步**
 - **数据源是 OceanBase** → 目前仅支持 MySQL 兼容模式下的自动建表同步
 - **数据源是 S3 对象存储** → 只支持 SQL 映射同步（S3 TVF 方式）
+
+S3 文件导入支持三种模式：默认的 `ORDERED_LIST` 按 key 字典序持续扫描；`NOTIFICATION` 通过 AWS S3 和独占 SQS 队列发现乱序到达的文件；`ONE_TIME` 分批导入文件后自动结束。通知模式端到端采用 at-least-once 语义，可能重复导入同一对象，不具备全部历史通知的持久化去重能力。选型、权限与使用限制见 [S3 导入](./continuous-load-s3.md)。
 
 ## 作业状态流转
 
@@ -90,12 +92,14 @@ Streaming Job 在运行过程中会在以下状态之间迁移，**SQL 映射同
 | :----------- | :------------------------------------------------------------------------------------------------------------------------- |
 | **PENDING**  | 作业已创建但尚未调度出子任务；等待下一次调度创建 `StreamingTask`                                                            |
 | **RUNNING**  | 已派生子任务并在执行中，从源端读取增量数据并写入 Doris                                                                       |
-| **FINISHED** | 源消费完成，作业终止。S3 TVF 文件全部导入完成后会进入该状态                                                                  |
+| **FINISHED** | 源消费完成，作业终止。例如 S3 `ONE_TIME` 最后一批提交成功，或 CDC 仅全量同步完成；S3 `ORDERED_LIST` 和 `NOTIFICATION` 不会因暂时无数据而结束 |
 | **PAUSED**   | 子任务执行失败，作业自动暂停并记录 `failReason`；可通过 `select * from jobs(...)` 的 `ErrorMsg` 字段查看原因                 |
 
 ### 自动恢复（autoResume）
 
 作业进入 `PAUSED` 后，调度器会按**指数退避策略**定时尝试恢复，恢复时回到 `PENDING` 继续创建子任务。**无需人工介入临时故障（网络抖动、上游短暂不可用等）会被自动消化。**
+
+检测到不支持的 Schema Change 时，作业以 `[SCHEMA_CHANGE_UNSUPPORTED]` 暂停，**不会自动恢复**。需先检查并准备兼容的目标表，再手动执行 `RESUME JOB` 确认接受本轮变更。
 
 不同场景下应使用的命令：
 
@@ -225,11 +229,9 @@ DROP JOB WHERE jobName = <job_name>;
 
 ### Schema Change（DDL）
 
-DDL 同步**仅适用于[自动建表方式同步](#能力对比)**；[SQL 映射方式同步](#能力对比)不同步任何 DDL——`cdc_stream()` 表函数会强制把 `schema_change_enabled` 设为 `false`。
+DDL 同步仅适用于[自动建表方式同步](#能力对比)，SQL 映射方式不同步 DDL。默认自动同步支持的新增列、删除列操作；检测到不支持的列或主键变更时暂停作业，需手动处理后恢复。自行维护目标表结构时，可通过 `schema_change_behavior=ignore` 关闭结构同步。
 
-- **MySQL、PostgreSQL 和 OceanBase**：仅 `ADD COLUMN` 和 `DROP COLUMN` 会同步。**列类型变更、`RENAME COLUMN`、主键 / 约束 / 索引 / 分区变更不会同步**——需在 Doris 端手工处理。不同数据源的具体行为和限制详见 [MySQL](./schema-change-mysql.md)、[PostgreSQL](./schema-change-postgresql.md)和 [OceanBase](./schema-change-oceanbase.md) Schema Change 同步。
-
-自动建表同步默认启用 Schema Change 同步，目前未提供通过 SQL 关闭该能力的配置参数。
+支持范围、开关配置和恢复步骤见 [MySQL](./schema-change-mysql.md)、[PostgreSQL](./schema-change-postgresql.md) 和 [OceanBase](./schema-change-oceanbase.md) Schema Change 同步。
 
 ## FAQ
 
