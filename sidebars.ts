@@ -416,7 +416,17 @@ const sidebars: SidebarsConfig = {
                                         'data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase',
                                     ],
                                 },
-                                'data-operate/import/import-way/streaming-job/continuous-load-s3',
+                                {
+                                    type: 'category',
+                                    label: 'S3',
+                                    link: {type: 'doc', id: 'data-operate/import/import-way/streaming-job/continuous-load-s3'},
+                                    items: [
+                                        'data-operate/import/import-way/streaming-job/continuous-load-s3',
+                                        'data-operate/import/import-way/streaming-job/continuous-load-s3-ordered',
+                                        'data-operate/import/import-way/streaming-job/continuous-load-s3-notification',
+                                        'data-operate/import/import-way/streaming-job/continuous-load-s3-one-time',
+                                    ],
+                                },
                             ],
                         },
                     ],

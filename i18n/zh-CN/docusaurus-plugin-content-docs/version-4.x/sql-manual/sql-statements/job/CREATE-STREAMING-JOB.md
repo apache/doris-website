@@ -63,7 +63,7 @@ TO DATABASE <target_db> (
 > DO 子句，它指定了 Job 作业触发时需要执行的操作，即一条 INSERT INTO SELECT FROM TVF 语句。支持 [S3 TVF](../../sql-functions/table-valued-functions/s3.md) 和 [CDC Stream TVF](../../sql-functions/table-valued-functions/cdc-stream.md)。
 
 **3. `<sourceType>`**（多表 CDC 模式）
-> 支持的数据源类型，目前支持 `MYSQL` 和 `POSTGRES`。
+> 支持的数据源类型，支持 `MYSQL`、`POSTGRES` 和 `OCEANBASE`，OceanBase 仅支持 MySQL 兼容模式。
 
 **4. `<source_property>`**（多表 CDC 模式）
 
@@ -78,6 +78,7 @@ TO DATABASE <target_db> (
 | schema         | -       | Schema 名称（PostgreSQL）                                     |
 | include_tables | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表            |
 | offset         | latest  | `latest`: 仅增量同步（默认）；`initial`: 全量 + 增量同步                    |
+| `schema_change_behavior` | `evolve` | 仅自动建表同步支持。字符串，取值不区分大小写。`evolve` 自动应用支持的列变更，检测到不支持的列或主键变更时暂停；`ignore` 关闭结构同步，需自行维护兼容的目标表。可暂停后通过 `ALTER JOB` 修改。 |
 | snapshot_split_size | 40960（4.1.4 之前为 8096） | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步 |
 | snapshot_parallelism | 1   | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量         |
 
@@ -99,9 +100,15 @@ TO DATABASE <target_db> (
 | 参数               | 默认值 | 说明                                                         |
 | ------------------ | ------ | ------------------------------------------------------------ |
 | session.*          | 无     | 支持在 job_properties 上配置所有的 session 变量（仅 TVF 模式） |
-| s3.max_batch_files | 256    | 当累计文件数达到该值时触发一次导入写入（仅 S3 TVF）            |
-| s3.max_batch_bytes | 10737418240 | 当累计数据量（字节）达到该值时触发一次导入写入。只接受纯整数字节数，如 `10737418240`；不支持带单位后缀（如 `10G`）。取值范围 100MB–10GB，即 104857600–10737418240。（仅 S3 TVF）            |
+| `s3.ingestion_mode` | `ORDERED_LIST` | 仅 S3 TVF 使用。字符串，不区分大小写：`ORDERED_LIST` 按 key 字典序持续扫描；`NOTIFICATION` 消费 SQS 通知；`ONE_TIME` 分批导入后进入 `FINISHED`。创建后不可修改。 |
+| `s3.event.source` | - | `NOTIFICATION` 模式必填，当前仅支持 `SQS`；其他模式不能设置，创建后不可修改。 |
+| `s3.sqs.queue_url` | - | `NOTIFICATION` 模式必填，指定独占 SQS 队列的 Queue URL；其他模式不能设置，创建后不可修改。 |
+| `s3.max_batch_files` | `256` | 每批文件数量阈值，正整数，仅 S3 TVF 使用；不要求达到阈值才写入。 |
+| `s3.max_batch_bytes` | `10737418240` | 每批数据量阈值，仅 S3 TVF 使用；不要求达到阈值才写入。单位为字节，取值范围为 104857600 到 10737418240。 |
 | max_interval       | 10     | 当上游没有新增文件或数据时，空闲的调度间隔，单位为秒。只接受整数（秒数），如 `10`；不支持带单位后缀（如 `10s`）。取值需 >= 1 |
+| `offset` | - | 创建 S3 `ORDERED_LIST` 作业时设置起始文件 key，例如 `{"fileName":"data/001.csv"}`，从该 key 之后读取；`ONE_TIME` 和 `NOTIFICATION` 禁止设置。MySQL/PostgreSQL 的初始位点应在数据源参数中设置；仅在 `ALTER JOB` 时可用 JSON 精确位点重置 CDC 进度。 |
+
+`NOTIFICATION` 模式要求 `1 <= max_interval < 7200`，仅支持 AWS S3 直接发送到 SQS Standard Queue 的对象创建事件，不扫描历史对象，且可能因重复通知而重复导入。通知模式的批次文件数和字节数是软阈值，已接收消息不会拆分到下一批。完整示例和 IAM 权限见 [S3 通知导入](../../../data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md)；文件集的结束边界见 [S3 一次性导入](../../../data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md)。
 
 ## 权限控制
 

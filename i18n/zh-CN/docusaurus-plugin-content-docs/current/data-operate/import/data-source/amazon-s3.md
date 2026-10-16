@@ -2,7 +2,7 @@
 {
     "title": "Amazon S3",
     "language": "zh-CN",
-    "description": "如何从 Amazon S3 导入数据到 Doris：使用 S3 Load 异步导入与 TVF 同步导入的完整步骤、参数与示例。",
+    "description": "了解 Amazon S3 导入 Doris 的方式选型，比较 S3 Load、TVF 与 Streaming Job，查阅异步批量导入、同步 SQL 加工、有序导入、事件通知及一次性分批导入的操作指南。",
     "keywords": [
         "Amazon S3 导入",
         "Doris S3 Load",
@@ -17,12 +17,21 @@
 <!-- 知识类型: 操作步骤 / 数据导入 -->
 <!-- 适用场景: 从 AWS S3 将文件导入 Doris -->
 
-Doris 提供两种方式从 AWS S3 导入文件，分别适用于异步与同步两类场景：
+Doris 提供以下方式从 AWS S3 导入文件，可根据是否需要持续接入、是否需要同步等待结果，以及文件的生成方式选择：
 
 | 方式 | 类型 | 适用场景 |
 | --- | --- | --- |
 | **S3 Load** | 异步导入 | 大批量数据导入、定时任务、对吞吐与稳定性要求较高的离线导入 |
 | **TVF（Table Value Function）** | 同步导入 | 即席查询、ETL 加工、配合 `INSERT INTO ... SELECT` 的同步写入 |
+| **[Streaming Job](../import-way/streaming-job/continuous-load-s3.md)** | 后台分批导入 | 持续接入新文件，或一次性导入文件并跟踪可恢复的分批进度 |
+
+Streaming Job 提供三种模式：
+
+- [有序导入](../import-way/streaming-job/continuous-load-s3-ordered.md)：文件名按字典序递增时持续扫描新文件。
+- [通知导入](../import-way/streaming-job/continuous-load-s3-notification.md)：通过 AWS S3 事件和独占 SQS 队列接入新文件，适合文件名无序的场景；不补导历史对象，且可能重复导入。
+- [一次性导入](../import-way/streaming-job/continuous-load-s3-one-time.md)：对已准备好的静态文件分批导入，完成后作业自动结束。
+
+对于一次性任务，已有 `LOAD LABEL` 异步流程可继续使用 S3 Load；需要同步执行 SQL 加工并等待结果时使用 TVF + INSERT；希望由作业维护分批进度、支持中断恢复并在完成后自动结束时，可以选择 Streaming Job 的一次性模式。
 
 > 提示：S3 Load 基于 Broker Load 实现，详细行为可参考 [Broker Load 手册](../import-way/broker-load-manual.md)。
 
@@ -127,7 +136,9 @@ mysql> select * from test_s3load;
 10 rows in set (0.04 sec)
 ```
 
-## 方式二：使用 TVF 导入（同步）
+<span id="方式二使用-tvf-导入同步"></span>
+
+## 方式二：使用 TVF 导入（同步） {#method-2-load-with-tvf-synchronous}
 
 <!-- 知识类型: 操作步骤 -->
 
@@ -223,7 +234,7 @@ mysql> select * from test_s3load;
 
 <!-- 知识类型: 配置参数 / 鉴权 -->
 
-除了使用 Access Key / Secret Key，Doris 也支持通过 `AWS Assume Role` 的方式使用 S3 Load 与 TVF 进行鉴权，适合企业内对密钥下发受限的场景。详细配置请参考 [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)。
+除了使用 Access Key / Secret Key，Doris 也支持通过 `AWS Assume Role` 的方式使用 S3 Load 与 TVF 进行鉴权，适合企业内对密钥下发受限的场景。详细配置请参考 [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权)。
 
 ## FAQ
 
@@ -263,4 +274,4 @@ mysql> select * from test_s3load;
 ## 相关文档
 
 - [Broker Load 手册](../import-way/broker-load-manual.md)
-- [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)
+- [AWS 集成 - Assumed Role 认证](../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-认证鉴权)

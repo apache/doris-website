@@ -41,10 +41,20 @@ ALTER JOB <job_name>
 > 修改自动建表同步的数据源或目标端属性。数据源类型和目标数据库不能修改。
 
 :::note
-自动建表同步不能修改 `jdbc_url`、`database`、`schema`、`include_tables`、`exclude_tables`、源端 `offset`、`snapshot_split_size`、`snapshot_parallelism`、逐表映射参数、`slot_name` 或 `publication_name`。如需重置 CDC 位点，请使用 Job Property `offset`。
+自动建表同步不能修改 `jdbc_url`、`database`、`schema`、`include_tables`、`exclude_tables`、源端 `offset`、逐表映射参数、`slot_name` 或 `publication_name`。如需重置 CDC 位点，请使用 Job Property `offset`。
 
-CDC Stream TVF 模式不能修改目标表、TVF 类型、`type`、`jdbc_url`、`database`、`schema`、`table`、`snapshot_split_size`、`snapshot_parallelism`、`slot_name` 或 `publication_name`；可通过修改 INSERT SQL 轮换账号密码、驱动或其他可修改参数。
+CDC Stream TVF 模式不能修改目标表、TVF 类型、`type`、`jdbc_url`、`database`、`schema`、`table`、`snapshot_split_key`、`slot_name` 或 `publication_name`；可通过修改 INSERT SQL 轮换账号密码、驱动或其他可修改参数。
 :::
+
+暂停作业后可修改以下数据源参数：
+
+| 参数 | 适用模式 | 生效范围 |
+| --- | --- | --- |
+| `schema_change_behavior` | 自动建表同步 | `evolve` 自动应用支持的列 DDL，检测到不支持变更时暂停；`ignore` 关闭结构同步。切回 `evolve` 不会补做之前跳过的变更。 |
+| `snapshot_parallelism` | 自动建表同步、CDC Stream TVF | 影响后续全量 Task 的 split 调度数量。MySQL/OceanBase 保留的 `server_id` 范围必须覆盖修改后的并行度。 |
+| `snapshot_split_size` | 自动建表同步、CDC Stream TVF | 只影响之后新生成的 split，已持久化的切片边界不变。 |
+
+S3 作业的 `s3.ingestion_mode`、`s3.event.source`、`s3.sqs.queue_url` 创建后不可修改。`ONE_TIME` 和 `NOTIFICATION` 模式禁止修改 `offset`，所有 S3 模式均不能修改 S3 URI。详见 [S3 导入](../../../data-operate/import/import-way/streaming-job/continuous-load-s3.md)。
 
 ## 权限控制
 
@@ -126,3 +136,20 @@ PROPERTIES (
 ```
 
 CDC 作业只能在 `PAUSED` 状态下修改位点，且 `offset` 仅接受上述 JSON 精确位点，不接受 `initial`、`snapshot`、`earliest` 或 `latest`。
+
+- 暂停后切换 MySQL 自动建表同步的 Schema Change 行为，并调整后续快照调度
+
+```sql
+PAUSE JOB WHERE jobname = 'multi_table_sync';
+ALTER JOB multi_table_sync
+FROM MYSQL (
+    "schema_change_behavior" = "ignore",
+    "snapshot_parallelism" = "4",
+    "snapshot_split_size" = "81920",
+    "server_id" = "5400-5403"
+)
+TO DATABASE target_test_db;
+RESUME JOB WHERE jobname = 'multi_table_sync';
+```
+
+预期结果：后续列变更不再自动修改目标表，新的快照调度使用修改后的并行度，新生成的 split 使用新的大小。该设置不会改变既有切片，也不能代替手动准备兼容的目标表结构。PostgreSQL 和 OceanBase 自动建表同步可使用对应的 `FROM POSTGRES`、`FROM OCEANBASE` 修改这三个参数。

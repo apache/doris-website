@@ -63,7 +63,7 @@ TO DATABASE <target_db> (
 > DO 子句，它指定了 Job 作业触发时需要执行的操作，即一条 INSERT INTO SELECT FROM TVF 语句。支持 [S3 TVF](../../sql-functions/table-valued-functions/s3.md) 和 [CDC Stream TVF](../../sql-functions/table-valued-functions/cdc-stream.md)。
 
 **3. `<sourceType>`**（多表 CDC 模式）
-> 支持的数据源类型，目前支持 `MYSQL` 和 `POSTGRES`。
+> 支持的数据源类型，支持 `MYSQL`、`POSTGRES` 和 `OCEANBASE`，OceanBase 仅支持 MySQL 兼容模式。
 
 **4. `<source_property>`**（多表 CDC 模式）
 
@@ -81,6 +81,7 @@ TO DATABASE <target_db> (
 | `table.<table_name>.target_table` | MySQL、PostgreSQL | 源表名 | 为指定源表设置 Doris 目标表名。 |
 | `table.<table_name>.exclude_columns` | MySQL、PostgreSQL | - | 排除指定源表中的非主键列，多个列用逗号分隔。 |
 | `offset` | MySQL、PostgreSQL | `latest` | 启动位点。支持 `initial`、`snapshot`、`latest` 和 JSON 精确位点；MySQL 还支持 `earliest`。 |
+| `schema_change_behavior` | MySQL、PostgreSQL、OceanBase | `evolve` | 仅自动建表同步支持。字符串，取值不区分大小写。`evolve` 自动应用支持的列变更，检测到不支持的列或主键变更时暂停；`ignore` 关闭结构同步，需自行维护兼容的目标表。可暂停后通过 `ALTER JOB` 修改。 |
 | `snapshot_split_size` | MySQL、PostgreSQL | `40960`（4.1.4 之前为 `8096`） | 全量切片的大小（行数），必须为正整数。 |
 | `snapshot_parallelism` | MySQL、PostgreSQL | `1` | 全量阶段单次 Task 最多调度的 split 数量，必须为正整数。 |
 | `ssl_mode` | MySQL、PostgreSQL | `disable` | SSL 模式，可选值为 `disable`、`require`、`verify-ca`。 |
@@ -113,11 +114,16 @@ TO DATABASE <target_db> (
 | `max_interval` | `10` | 上游没有新增文件或数据时的空闲调度间隔，单位为秒；必须为不小于 1 的整数。 |
 | `compute_group` | 当前会话或用户默认计算组 | 仅存算分离模式支持。指定作业运行的计算组，用户必须具有该计算组的 USAGE 权限。 |
 | `session.<variable_name>` | 对应会话变量的默认值 | 仅 TVF 模式支持。为 INSERT 任务设置有效的 Doris 会话变量。 |
-| `s3.max_batch_files` | `256` | 当累计文件数达到该值时触发一次导入写入，仅 S3 TVF 使用。 |
-| `s3.max_batch_bytes` | `10737418240` | 当累计数据量达到该值时触发一次导入写入，仅 S3 TVF 使用。单位为字节，取值范围为 104857600 到 10737418240。 |
-| `offset` | - | 创建 S3 Streaming Job 时设置源端起始位置。MySQL/PostgreSQL 的初始位点应在数据源参数中设置；仅在 `ALTER JOB` 时可用 JSON 精确位点重置 CDC 进度。 |
+| `s3.ingestion_mode` | `ORDERED_LIST` | 仅 S3 TVF 使用。字符串，不区分大小写：`ORDERED_LIST` 按 key 字典序持续扫描；`NOTIFICATION` 消费 SQS 通知；`ONE_TIME` 分批导入后进入 `FINISHED`。创建后不可修改。 |
+| `s3.event.source` | - | `NOTIFICATION` 模式必填，当前仅支持 `SQS`；其他模式不能设置，创建后不可修改。 |
+| `s3.sqs.queue_url` | - | `NOTIFICATION` 模式必填，指定独占 SQS 队列的 Queue URL；其他模式不能设置，创建后不可修改。 |
+| `s3.max_batch_files` | `256` | 每批文件数量阈值，正整数，仅 S3 TVF 使用；不要求达到阈值才写入。 |
+| `s3.max_batch_bytes` | `10737418240` | 每批数据量阈值，仅 S3 TVF 使用；不要求达到阈值才写入。单位为字节，取值范围为 104857600 到 10737418240。 |
+| `offset` | - | 创建 S3 `ORDERED_LIST` 作业时设置起始文件 key，例如 `{"fileName":"data/001.csv"}`，从该 key 之后读取；`ONE_TIME` 和 `NOTIFICATION` 禁止设置。MySQL/PostgreSQL 的初始位点应在数据源参数中设置；仅在 `ALTER JOB` 时可用 JSON 精确位点重置 CDC 进度。 |
 
 CDC Stream TVF 的 `type`、`table`、`include_delete_sign` 等全部参数见 [CDC Stream](../../sql-functions/table-valued-functions/cdc-stream.md)。
+
+`NOTIFICATION` 模式要求 `1 <= max_interval < 7200`，仅支持 AWS S3 直接发送到 SQS Standard Queue 的对象创建事件，不扫描历史对象，且可能因重复通知而重复导入。通知模式的批次文件数和字节数是软阈值，已接收消息不会拆分到下一批。完整示例和 IAM 权限见 [S3 通知导入](../../../data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md)；文件集的结束边界见 [S3 一次性导入](../../../data-operate/import/import-way/streaming-job/continuous-load-s3-one-time.md)。
 
 ## 权限控制
 
