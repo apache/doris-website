@@ -80,12 +80,13 @@ Modifying dynamic partitions with the `ALTER TABLE` statement does not take effe
 The following example uses an `ALTER TABLE` statement to convert a non-dynamic partitioned table into a dynamic partitioned table:
 
 ```sql
-CREATE TABLE test_dynamic_partition(
+CREATE TABLE test_partition(
     order_id    BIGINT,
     create_dt   DATE,
     username    VARCHAR(20)
 )
 DUPLICATE KEY(order_id)
+PARTITION BY RANGE(create_dt) ()
 DISTRIBUTED BY HASH(order_id) BUCKETS 10;
 
 ALTER TABLE test_partition SET (

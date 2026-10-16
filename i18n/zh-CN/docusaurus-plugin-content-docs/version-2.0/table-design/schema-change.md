@@ -267,7 +267,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 注意：无论是修改 Key 列还是 Value 列都需要声明完整的 Column 信息
 
-**2. 修改 Base Index 的 val1 列最大长度。原 val1 为 (val1 VARCHAR(32) REPLACE DEFAULT "abc")**
+**2. 修改 Base Index 的 val5 列最大长度。原 val5 为 (val5 VARCHAR(32) REPLACE DEFAULT "abc")**
 
 ```sql
 ALTER TABLE example_db.my_table 

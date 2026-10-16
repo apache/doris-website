@@ -97,7 +97,7 @@ It is recommended to prefix index names with `idx_`, for example `idx_review_bod
 SHOW CREATE TABLE table_name;
 
 -- Method 2: An IndexType of NGRAM_BF marks an NGram BloomFilter index
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 ```
 
 ### Drop an Index

@@ -54,7 +54,7 @@ SHOW CREATE TABLE table_name;
 
 -- Syntax 2: IndexType as NGRAM_BF indicates an inverted index
 ```sql
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 ```
 
 ### Deleting an NGram BloomFilter Index

@@ -247,7 +247,7 @@ MODIFY COLUMN col1 BIGINT KEY DEFAULT "1" AFTER col2;
 
 Note: Whether modifying a key column or a value column, the complete column information must be declared.
 
-3. Modify the maximum length of the `val1` column in the base table. The original `val1` was (val1 VARCHAR(32) REPLACE DEFAULT "abc")
+3. Modify the maximum length of the `val5` column in the base table. The original `val5` was (val5 VARCHAR(32) REPLACE DEFAULT "abc")
 
 ```sql
 ALTER TABLE example_db.my_table 
