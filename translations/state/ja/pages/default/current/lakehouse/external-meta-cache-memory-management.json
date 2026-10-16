@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/external-meta-cache-memory-management",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/external-meta-cache-memory-management.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/external-meta-cache-memory-management.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6346492aa66c52ff363203753c77978409bba884c5d3f9c3ec73426e5c06e48d",
+    "sourceTechnicalHash": "c49e6451f486c0f659cd59d5d60221f4b7acf33608dd5a45f30da71162352586",
+    "targetHash": "e36d89ab3ac869dc23fb2019cec9fe15256a3d69db9c4fef3f4432ad178d144d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

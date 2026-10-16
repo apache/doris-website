@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "ai/ai-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/ai/ai-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/ai/ai-overview.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4d23ee7a42bd450ef6c46f0a8f91f0905e513909c5a7145020ea8082d4d6f360",
+    "sourceTechnicalHash": "2a92aac7a55ef3d978f5966d2d6e817f49dfb86c93b87d8282680e412a8a951c",
+    "targetHash": "55d4bbfab5139c969d8472b849e9ccff5588a848fbcd81c6f03dddeddd256507",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

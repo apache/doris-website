@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-clickhouse-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-clickhouse-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-clickhouse-catalog.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2dd308ba61ffa5e1d4f7d4af0e8264a894f30a39abdf2942068cf1ffc42ce543",
+    "sourceTechnicalHash": "e9ad1055b1392ab14f61ee9654fc2be5f9591d56da61da9594d173b019328211",
+    "targetHash": "ddde5fe59e3452427461c4b3b71f6e42e6b1dc1598db0377de739267402edcdc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.865Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/cluster-management/upgrade",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/cluster-management/upgrade.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/upgrade.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5845e418396f6ca7bef074896a0f4a1738ca46b6c96f2fadaa7774ed0f6f2c9c",
+    "sourceTechnicalHash": "c01ccd543dd1eea10e50e4e3983223035b55c438a348fcc2781293762853da76",
+    "targetHash": "41d8a61a94b5d1637162c6c0a7d31d0fd63cd89c0858d47ce9062fef15a064da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.869Z",
+    "glossaryVersion": "0"
+  }
+}

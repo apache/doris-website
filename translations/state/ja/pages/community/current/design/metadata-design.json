@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "design/metadata-design",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/design/metadata-design.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/design/metadata-design.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "e9c7809d3224997d9344624c487911ff23a33af21577503a2ae9a604eaed22ed",
+    "sourceTechnicalHash": "470198a9a4b4ff79b9fe7fdc2d7d050efd4e8643c56d2c49d2a07a27212f0b5a",
+    "targetHash": "2ab8ef9ee9e0fcefed4d34d37fe185e2b8fc24eec7545565b39fc34f2477bd9d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.556Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -26,7 +26,19 @@ function localizedOptions(options, locale, labels) {
         docsRouteBasePath:['docs','community',`${locale}/docs`,`${locale}/community`],
         // A locale without configured labels falls back to the context path.
         searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
+        // Outside every context, search all of them. The browser queries each
+        // context index for that (src/utils/searchContexts.js); see indexGroups.
         useAllContextsWithNoSearchContext:true, ignoreFiles:[]};
+}
+// One index per context, plus the root index for documents outside every
+// context. The root does not repeat the contexts the way the native plugin's
+// union does: that copy held every context a second time, and the Japanese one
+// outgrew GitHub's 100 MiB file limit, which rejected the deployment.
+function indexGroups(allDocuments, selected) {
+    const groups = new Map(contexts.map(group => [group,
+        allDocuments.map(documents => documents.filter(doc => selected.get(normalize(doc.u)) === group))]));
+    groups.set('', allDocuments.map(documents => documents.filter(doc => !selected.has(normalize(doc.u)))));
+    return groups;
 }
 function targetFingerprint(root, locale) {
     const digester = createHash('sha256');
@@ -76,8 +88,7 @@ async function buildLocalizedIndex(buildData, config, filename, locale) {
         const name = filename.replace('{dir}', group ? `-${group.replace(/\//g,'-')}` : '');
         fs.writeFileSync(path.join(buildData.outDir,name), JSON.stringify(buildIndex(documents,config)));
     };
-    for (const group of contexts) write(group, allDocuments.map(documents => documents.filter(doc => selected.get(normalize(doc.u)) === group)));
-    write('',allDocuments);
+    for (const [group, documents] of indexGroups(allDocuments, selected)) write(group, documents);
     fs.writeFileSync(path.join(buildData.outDir,`${locale}-search-summary.json`), JSON.stringify({schemaVersion:1,locale,
         indexedPages:selected.size, contexts:Object.fromEntries(contexts.map(group => [group,[...selected.values()].filter(value => value === group).length]))})+'\n');
 }
@@ -105,4 +116,5 @@ module.exports.validateOptions = nativeModule.validateOptions;
 module.exports.localizedOptions = localizedOptions;
 module.exports.groupFor = groupFor;
 module.exports.localizedPages = localizedPages;
+module.exports.indexGroups = indexGroups;
 module.exports.buildLocalizedIndex = buildLocalizedIndex;

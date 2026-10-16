@@ -407,6 +407,35 @@ test('lintSeo checks static robots, llms, and sitemap policy drafts', () => {
   assert.ok(!findings.some((finding) => finding.rule === 'seo-sitemap-search-exclusion'));
 });
 
+test('lintSeo accepts search exclusions derived from the enabled locales', () => {
+  const searchExclusionFindings = (configLines) =>
+    withTempFixture(
+      (rootDir) => {
+        fs.writeFileSync(path.join(rootDir, 'docusaurus.config.js'), [...configLines, ''].join('\n'), 'utf8');
+      },
+      (rootDir) => lintSeo({ rootDir, manifest: buildManifest({ rootDir }) }),
+    ).filter((finding) => finding.rule === 'seo-sitemap-search-exclusion');
+
+  assert.deepEqual(
+    searchExclusionFindings([
+      'const UTILITY_PATHS = new Set(ENABLED_LOCALES.flatMap(locale => {',
+      "  const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;",
+      '  return [`${prefix}/search`, `${prefix}/slack`];',
+      '}));',
+      "module.exports = { presets: [[ 'classic', { sitemap: { filename: 'sitemap.xml' } } ]] };",
+    ]),
+    [],
+  );
+  // Excluding only the default locale's search page leaves the localized ones.
+  assert.equal(
+    searchExclusionFindings([
+      "const UTILITY_PATHS = new Set(['/search', '/slack']);",
+      "module.exports = { presets: [[ 'classic', { sitemap: { filename: 'sitemap.xml' } } ]] };",
+    ]).length,
+    1,
+  );
+});
+
 test('filterSeoFindings keeps changed page findings without full-site SEO noise', () => {
   const findings = [
     { rule: 'seo-description-length', path: 'docs/changed.md', message: 'Changed page.' },

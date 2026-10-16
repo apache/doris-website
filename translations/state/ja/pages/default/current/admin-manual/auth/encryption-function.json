@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/encryption-function",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/encryption-function.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/encryption-function.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "bc2c2bc281b0eee3fbfbc307e7e04eac10e9d11961577300eb567fad40f7697a",
+    "sourceTechnicalHash": "6a3a77f9fc1c18c508bd8b97717847534c2f9647fffe93429da44badc6b7c6b8",
+    "targetHash": "b72265f40835e4342a18e999f1adf19418debb9c2ff87307ed37fc0c33961912",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.871Z",
+    "glossaryVersion": "0"
+  }
+}

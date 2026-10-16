@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/text",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/text.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/text.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "fb9dd260afbd0ab5f28f1e3f13504818b297b25296fed743c0f87b7a06d9f9b3",
+    "sourceTechnicalHash": "e27ad5b46d657dd91ab0a5fbebd7451c0c38d0a8a577be005cc24e8096eae904",
+    "targetHash": "8e5ff45599627b8ff339ca5c6330c180df48475a242d651a5f030c2b695077f0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

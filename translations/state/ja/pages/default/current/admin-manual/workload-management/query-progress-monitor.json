@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/query-progress-monitor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/query-progress-monitor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/query-progress-monitor.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8a0481f9b2988c16a8e3730b309fc76e82cabc1bbfdf66c0ee477548cc264563",
+    "sourceTechnicalHash": "65b3c42c1ada9f444b1e80435ef6c5b8b8f626e41e59ea543ad06a436be12238",
+    "targetHash": "8904e4fc5c292cc01e9fe674b56ddab3aa3854073f4ab63acf45794afb4c74b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.873Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -14,12 +14,13 @@ function withoutPositions(value) {
 
 async function structure(raw, extension, anchorsMaintainCase = false) {
     const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}, {default: directive}] = await Promise.all([
-        import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'), import('remark-directive'),
+        import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
+        import('remark-directive'),
     ]);
     // Use native format detection, including front-matter MDX overrides.
     const {data, content} = matter(raw, {});
     const format = getFormat({filePath: `doc${extension}`, frontMatterFormat: data.mdx?.format, markdownConfigFormat: 'detect'});
-    const processor = unified().use(parse).use(gfm).use(directive);
+    const processor = unified().use(parse).use(gfm);
     if (format === 'mdx') processor.use(mdx);
     const parseContent = format === 'mdx' ? escapeMarkdownHeadingIds(content) : content;
     const offsets = [];
@@ -31,11 +32,23 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     }
     offsets[parseContent.length] = content.length;
     const tree = processor.parse(parseContent);
-    const headings = [];
-    // Use the installed framework's heading transform, including its duplicate
-    // slug order and explicit-ID behavior, instead of a second slug algorithm.
+    // Existing state records fingerprint this original parse. Keep its IDs and
+    // protected nodes stable so a rendering fix does not invalidate translations;
+    // directive-like prose such as `:s3` also keeps its protected number here.
+    const fingerprintHeadings = [];
     await headingsPlugin({anchorsMaintainCase})(tree);
     visit(tree, 'heading', node => {
+        fingerprintHeadings.push({depth: node.depth, id: node.data.id});
+    });
+    // Docusaurus parses directives before assigning heading IDs. In particular,
+    // `error:protocol` contains a textDirective whose name is absent from the ID.
+    // Parse the original content again to preserve its raw heading offsets, and
+    // use the installed framework's heading transform, including its duplicate
+    // slug order and explicit-ID behavior, instead of a second slug algorithm.
+    const headingTree = processor().use(directive).parse(parseContent);
+    await headingsPlugin({anchorsMaintainCase})(headingTree);
+    const headings = [];
+    visit(headingTree, 'heading', node => {
         headings.push({depth: node.depth, id: node.data.id, position: {
             start: {...node.position.start, offset: offsets[node.position.start.offset]},
             end: {...node.position.end, offset: offsets[node.position.end.offset]},
@@ -43,9 +56,6 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
     });
     const protectedNodes = [];
     visit(tree, node => {
-        if (['textDirective', 'leafDirective', 'containerDirective'].includes(node.type)) {
-            protectedNodes.push([node.type, node.name, node.attributes]);
-        }
         if (['code', 'inlineCode', 'html', 'mdxjsEsm', 'mdxFlowExpression', 'mdxTextExpression'].includes(node.type)) {
             protectedNodes.push([node.type, node.lang ?? null, node.meta ?? null, node.value]);
         }
@@ -65,7 +75,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
         content, headings, format, protectedNodes, technicalMetadata,
-        technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, headings.map(({depth, id}) => ({depth, id}))])),
+        technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, fingerprintHeadings])),
         // A secondary comparison for planning only. The state sourceHash stays
         // byte-sensitive, so a formatting edit still needs an explicit review.
         semanticHash: hash(JSON.stringify([Object.fromEntries(Object.entries(data).sort(([a], [b]) => a.localeCompare(b))),

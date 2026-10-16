@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/huawei-obs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/huawei-obs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/huawei-obs.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e425f6f43b19c06fdd53521cda8c75a064384ac4602aa6d888711c2c97c78930",
+    "sourceTechnicalHash": "ad405e96600b8cd0b729fec3ca08bbd307b8f53c6cc06218bfc0f36c8704afe8",
+    "targetHash": "5f5fe2c4ff6fe193ee3910e102b48129b892efa0457431d89e4441f94bcc6ae3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

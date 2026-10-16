@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/security-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/security-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/security-overview.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "53f866ba350869eec3d9e85ebc4d03cdfe3b16a50455ecffe63a448bb82c332a",
+    "sourceTechnicalHash": "708e1cf67a7a4b68a57a8a09b62d6c0bd59efdbfaccb113bb8e005de7fb91785",
+    "targetHash": "198ce50861fec3824bf69fb8f82185a475f0230ee8d3655655c0b05420342d18",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.870Z",
+    "glossaryVersion": "0"
+  }
+}

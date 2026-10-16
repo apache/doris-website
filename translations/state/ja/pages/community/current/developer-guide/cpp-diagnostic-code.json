@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/cpp-diagnostic-code",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/cpp-diagnostic-code.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/cpp-diagnostic-code.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "af05bde852f81f871fa010e47879dcca4562fa52350701f6ce2697719b4a3703",
+    "sourceTechnicalHash": "a7369c8b708e88b1e3d405f5086049ab45007c43d7642a3f9343e2437c78b873",
+    "targetHash": "326d963d5defc00e46aca063fa273e71c8f6a0f5a28ca786277dd809bc0b345e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

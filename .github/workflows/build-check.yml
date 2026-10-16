@@ -96,6 +96,9 @@ jobs:
                   yarn
                   yarn key-features:generate
                   node --test scripts/i18n/__tests__/t04.test.cjs
+                  node --test scripts/i18n/__tests__/heading-ids.test.cjs
+                  node --test scripts/i18n/__tests__/search-input.test.cjs
+                  node --test scripts/i18n/__tests__/search-contexts.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
                   node --test scripts/i18n/__tests__/planner.test.cjs
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/baidu-bos",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/baidu-bos.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/baidu-bos.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "62b940936921555629f51521a168ab2a914abe30d8d89b6820e74657c0651fe7",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "663bbfc3eeaf220001a683ac09df776b4cb065ef297cc7bcf41525187431a739",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

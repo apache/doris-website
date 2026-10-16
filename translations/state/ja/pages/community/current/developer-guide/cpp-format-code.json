@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/cpp-format-code",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/cpp-format-code.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/cpp-format-code.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "9732d8f0d9c7ff1d027eb0888d2eb72c0d8a449a18239942de43073bef7a02af",
+    "sourceTechnicalHash": "cb0478282d457d382aaf8dcf45bc122e03fc8564c2b836bd576ef1811a7e25bc",
+    "targetHash": "158ed2ad96fc87d20b435553b9fd5009ff92fb33e7f52641ffee8486554422b9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

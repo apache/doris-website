@@ -29,7 +29,10 @@ import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
 import {searchWithLocaleFallback} from '@site/src/utils/searchInput';
+import {fetchContextIndexes, searchAcrossContexts} from '@site/src/utils/searchContexts';
 import {isTranslatedLocale} from '@site/src/utils/localization';
+
+const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -168,7 +171,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             setLoading(true);
             const [autoComplete] = await Promise.all([
                 fetchAutoCompleteJS(),
-                fetchIndexesByWorker(versionUrl, searchContext),
+                fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext),
             ]);
             if (myToken !== loadToken.current) {
                 // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
@@ -268,7 +271,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [
                     {
                         source: debounce(async (input, callback) => {
-                            const result = await searchWithLocaleFallback(searchByWorker, versionUrl, searchContext, input, searchResultLimits);
+                            const result = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, input, searchResultLimits);
                             callback(result);
                         }, 300),
                         templates: {
@@ -385,6 +388,11 @@ export default function SearchBar({ handleSearchBarToggle }) {
         }
     }, [location.pathname]);
     useEffect(() => {
+        // On mount the page's search context is not resolved yet, and an empty
+        // one would load every context index. Leave that to focus or hover.
+        if (!searchContext && useAllContextsWithNoSearchContext) {
+            return;
+        }
         loadIndex(true);
     }, [curVersion]);
     useEffect(() => {

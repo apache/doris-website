@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/docs-format-specification",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/docs-format-specification.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/docs-format-specification.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "a60fc3e28bc9e7309d726035a8322fe86027c43ae83f9051827f6fb7312017c7",
+    "sourceTechnicalHash": "67a4aa97886b1f44413cb449bd5ee0f58a94ca997884f6336abe98d3a330a310",
+    "targetHash": "63d1217d1e2919cb6b46ee4465967b32e049d05e30a4e0744455d155bdb95553",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/be-stack-trace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/be-stack-trace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/be-stack-trace.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "f3e0ff94973174c1d876c17f0b43678c60d7ee58f77f417b707404ee717691e1",
+    "sourceTechnicalHash": "74effc6532120070e649460a63912f58bcf7112f46db7b30e504a04b400cbf52",
+    "targetHash": "be7e88c0c7ffc4f49f814434d31dbcde8ed937d9d353b24a59e7fc1659df7e48",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

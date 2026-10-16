@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-win",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-win.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/source-install/compilation-win.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "ae83839f16c2116e72cbbe390c339b04ae9de7f24217fa5803a5e9a4e4c82f35",
+    "sourceTechnicalHash": "50df77ba9a47d6960e4f23338f25952a4433e69867005aa2b7f5c95427cf279a",
+    "targetHash": "5ba57d825ba019ae8f8231acc1af07ed55cbe4cdf1f225069269ae2981e62cd4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.552Z",
+    "glossaryVersion": "0"
+  }
+}

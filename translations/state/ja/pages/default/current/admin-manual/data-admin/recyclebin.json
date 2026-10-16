@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/data-admin/recyclebin",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/data-admin/recyclebin.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/data-admin/recyclebin.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+    "sourceTechnicalHash": "5a3ac57d61ff6dcaa1d0fdb12b797f7511def6f2a0a6f9bd2cb9091dd44f6893",
+    "targetHash": "af8331207d5916bbaf96e9c961370eebc87128666ae7f2539f23ceebb51b2a0c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}

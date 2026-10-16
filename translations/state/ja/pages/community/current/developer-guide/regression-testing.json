@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/regression-testing",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/regression-testing.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/regression-testing.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "0a4397b7166e070c2a65324325252ac02624f77c773d87cfab4d5be1cf07dfc7",
+    "sourceTechnicalHash": "8d1ffd81043a3c93fe4b18195eaf323d53a8b813f5d785e809f129455edf10a4",
+    "targetHash": "5d54f3464ff613fd1c108c2a0b654eea90c347126e15c320a63c3efa456c432a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

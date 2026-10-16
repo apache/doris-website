@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/compute-node",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/compute-node.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/compute-node.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4bd3ea41d63132bf7d7f2199682cc80bf2675dfb7847e1b0d9b1883a60949e79",
+    "sourceTechnicalHash": "f9a926edf7790b513ebb181420d2aeab0d79a36151730b4b5036e12dbd7bb0bc",
+    "targetHash": "948f4645651597549c9584ef7e43f19e3c01397bec533c5619b22dd468f1fbbe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

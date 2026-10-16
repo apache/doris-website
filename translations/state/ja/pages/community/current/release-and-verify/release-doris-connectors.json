@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-connectors",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-connectors.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-connectors.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "7f4da269e3874f7069b25d7925092bb1f45f94d8a47c800ba361491f9062e51a",
+    "sourceTechnicalHash": "5ae43ac119eada78506b18a69f125393408ae693f4c6e77b623eb562ebe967a8",
+    "targetHash": "845ba2f818bfea21537347c39c7e68cd703e17a78929132ad8626f66b60b8774",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.555Z",
+    "glossaryVersion": "0"
+  }
+}

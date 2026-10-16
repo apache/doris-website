@@ -1,0 +1,463 @@
+---
+title: コミュニティ貢献ガイド
+language: ja
+description: コード開発、コンテンツ制作、コミュニティ活動を通じて Apache Doris に貢献する方法を紹介します。
+keywords:
+    - Apache Doris
+    - コミュニティへの貢献
+    - コード開発
+    - コンテンツ制作
+    - コミュニティ活動
+    - Contributor
+    - Committer
+    - PMC
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+{/*
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+*/}
+
+<style>{`
+.contribution-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.contribution-path-card {
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  gap: 12px;
+  min-height: 100%;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-benefits-card {
+  grid-column: 1 / -1;
+  padding: 20px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+}
+
+.contribution-path-card:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-font-color-base);
+  text-decoration: none;
+}
+
+.contribution-path-card h3,
+.contribution-benefits-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.contribution-path-card p,
+.contribution-benefits-card p {
+  margin: 0;
+}
+
+.contribution-path-card ul,
+.contribution-benefits-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.contribution-path-card strong,
+.contribution-benefits-card strong {
+  color: var(--ifm-color-primary);
+}
+
+.contribution-benefits-list {
+  columns: 2;
+  column-gap: 32px;
+  margin-top: 12px;
+}
+
+.contribution-card-benefit {
+  align-self: start;
+}
+
+.contribution-next-step {
+  align-self: end;
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 996px) {
+  .contribution-path-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contribution-benefits-list {
+    columns: 1;
+  }
+}
+`}</style>
+
+Apache Doris は、世界中の開発者、ユーザー、テクニカルライター、登壇者、コミュニティ運営者を歓迎します。コード開発、コンテンツ制作、コミュニティ活動を通じて貢献できます。いずれの方法もプロジェクトの成長を支え、貢献者にはオープンソースでの協働を示す公開記録が残ります。
+
+<div className="contribution-path-grid">
+  <a className="contribution-path-card" href="?path=developer#community-participation-guide">
+    <h3>コード開発</h3>
+    <p><strong>こんな方におすすめ：</strong>Doris の開発に直接携わりたい方。</p>
+    <ul>
+      <li>バグを修正し、新機能を開発する。</li>
+      <li>性能、安定性、可観測性を改善する。</li>
+      <li>単体テスト、回帰テスト、統合テストを追加する。</li>
+      <li>ビルド、CI、リリース、開発ツール、開発ワークフローを改善する。</li>
+      <li>PR をレビューし、技術文書、ユーザー向けドキュメント、サンプルを追加する。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>貢献がマージされると、Apache Doris Contributor になります。</strong></p>
+    <span className="contribution-next-step">ガイドを読む -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=content#community-participation-guide">
+    <h3>コンテンツ制作</h3>
+    <p><strong>こんな方におすすめ：</strong>Doris のユースケースに詳しく、実践的な経験を共有したい方。</p>
+    <ul>
+      <li>技術ブログや本番環境の事例を書く。</li>
+      <li>入門チュートリアルやベストプラクティスを作成する。</li>
+      <li>機能、デプロイ、チューニング、トラブルシューティングに関する動画を収録する。</li>
+      <li>ミートアップ、ウェビナー、カンファレンスで登壇する。</li>
+      <li>ドキュメント、ブログ、イベント資料、動画の字幕を翻訳する。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>質の高いコンテンツへの貢献には、感謝のしるしとしてコミュニティグッズが贈られます。</strong></p>
+    <span className="contribution-next-step">ガイドを読む -&gt;</span>
+  </a>
+  <a className="contribution-path-card" href="?path=community#community-participation-guide">
+    <h3>コミュニティ活動</h3>
+    <p><strong>こんな方におすすめ：</strong>ユーザーのニーズを理解し、人と協力するのが好きな方。</p>
+    <ul>
+      <li>Slack、GitHub、メーリングリストで質問に答える。</li>
+      <li>新しいユーザーが適切なドキュメント、サンプル、コミュニティの窓口を見つけられるよう支援する。</li>
+      <li>オンラインまたはオフラインのミートアップ、ワークショップ、オフィスアワー、ユーザー講演を企画する。</li>
+      <li>ユーザーに本番環境での実践例や移行経験の共有を呼びかける。</li>
+      <li>ユーザーからのフィードバックを集め、公開のコミュニティチャネルで共有する。</li>
+    </ul>
+    <p className="contribution-card-benefit"><strong>積極的にコミュニティへ参加した方には、感謝のしるしとしてコミュニティグッズが贈られます。</strong></p>
+    <span className="contribution-next-step">ガイドを読む -&gt;</span>
+  </a>
+  <div className="contribution-benefits-card">
+    <h3>貢献によって得られるもの</h3>
+    <p>貢献の種類、質、継続性に応じて、次のような機会が得られます。</p>
+    <ul className="contribution-benefits-list">
+      <li>Apache Doris のコミュニティチャネルで公に評価される。</li>
+      <li>貢献者一覧、コミュニティからの謝辞、イベントの振り返りで紹介される。</li>
+      <li>Apache Doris のウェブサイト、ブログ、ソーシャルメディア、動画チャンネルでコンテンツを公開する機会が得られる。</li>
+      <li>コミュニティイベントで登壇する機会が得られる。</li>
+      <li>Maintainer、Committer、PMC メンバー、経験豊富なユーザーと話す機会が増える。</li>
+      <li>一部のミートアップ、ウェビナー、カンファレンス企画、その他のコミュニティプログラムに優先的に参加できる。</li>
+      <li>技術的な貢献と自身がもたらした影響を示す公開記録が残る。</li>
+      <li>コミュニティグッズ、記念品、特別な贈り物がもらえる。</li>
+    </ul>
+    <p>技術的な貢献を高い水準で継続している方は、Apache のガバナンス手続きを通じて<strong>Apache Doris Committer または PMC メンバー</strong>になるよう、コミュニティから招かれる場合があります。また Doris Summit では、顕著な貢献をしたユーザー、開発者、コミュニティの推進者への感謝を込めて、毎年 <strong>Outstanding Community Heroes</strong> を選出しています。</p>
+  </div>
+</div>
+
+## コミュニティ参加ガイド {#community-participation-guide}
+
+以下では、各分野での参加方法を説明します。
+
+:::tip ヒント
+このガイドは、コミュニティのプロセスの変化に合わせて更新される場合があります。最新情報は [Apache Doris の Slack コミュニティ](https://doris.apache.org/slack?utm_source=website&utm_medium=docs&utm_content=contribute_guide) で確認してください。
+:::
+
+<Tabs groupId="contribution-path" queryString="path">
+<TabItem value="developer" label="コード開発ガイド" default>
+
+### タスクの探し方
+
+貢献できるタスクは次の場所で探せます。
+
+- Slack：質問、議論の開始、背景の確認、相談相手の探索に適しています。
+- [Apache Doris GitHub Issues](https://github.com/apache/doris/issues)：バグ、機能リクエスト、改善案、未着手のタスクを探せます。
+- [Apache Doris GitHub Discussions](https://github.com/apache/doris/discussions)：技術的な議論、使い方の質問、設計提案に適しています。
+- ロードマップ：長期的な技術課題を探せます。通常は GitHub Issues ページのピン留めされた Issue から確認できます。
+- 既存の PR：レビュー、テスト、検証、変更を前に進めるための支援ができます。
+
+初めて貢献する方は、ドキュメントの修正、テストの追加、簡単なバグ修正、Issue の再現、エラーメッセージの改善、サンプルの整理など、小さく範囲の明確なタスクから始められます。大きな機能や動作変更に取り組む場合は、Apache Doris の Slack の `#dev` チャネルで議論を始め、Core Maintainer に背景を確認してください。
+
+### コードへの貢献で求められること
+
+コードを提出する前に、次のことを行うようにしてください。
+
+- `apache/doris` リポジトリをフォークし、最新の main ブランチから別のブランチを作成する。
+- 各 PR を明確な一つの問題に絞る。関連のない変更を一つの PR に混ぜない。
+- 目的、範囲、検証内容が分かる PR のタイトルと説明を書く。
+- 関連する Issue、Discussion、メーリングリストのスレッドをリンクする。
+- 必要な単体テスト、回帰テスト、または手動での検証手順を追加する。
+- ユーザー向けの動作、設定、SQL の意味、エラーメッセージ、互換性に影響する変更では、ドキュメントを更新する。
+- 互換性、性能、安定性、動作に関するリスクを PR の説明に明記する。
+
+一般に、良い PR には次の内容が含まれます。
+
+- 背景：なぜ変更が必要なのか。
+- 方針：何を、なぜ変更したのか。
+- テスト：実行したテストや検証手順と、その結果。
+- リスク：互換性、性能、安定性、ユーザー向けの動作に影響するかどうか。
+- ドキュメント：更新が必要かどうか、必要な場合はどこを更新したか。
+
+コミュニティは、コーディング、デバッグ、レビューの補助に AI を使うことを認めています。ただし、貢献者は次のルールに従う必要があります。
+
+- 開発、デバッグ、レビューには十分な能力のあるモデルを使用する。重要な変更を、品質の低い生成コードに頼って行わない。
+- 提出するコードには自分で責任を持つ。コミュニティは、人間の責任者がいない AI 生成コードを受け付けません。
+
+### 標準的なマージの流れ
+
+コードの変更は通常、次の手順で進みます。
+
+1. 貢献者が Pull Request を作成する。
+2. Committer またはそれ以上の権限を持つ人が CI と AI Review を起動する。支援が必要な場合は Slack の `#dev` チャネルで相談できます。
+3. 貢献者が CI やレビューで報告されたビルド、テスト、フォーマットの問題を修正する。AI からのフィードバックもレビューの一部です。有用な提案を取り入れ、当てはまらない提案については PR で理由を説明します。
+4. 必要に応じて、貢献者が最新の main ブランチ上にリベースし、競合を解決する。
+5. 必須の CI チェックがすべて成功する。
+6. Reviewer が PR を承認する。
+7. Committer がマージする。
+
+PR をマージするには、必須の CI チェックが成功している必要があります。必須ではないチェックはマージを妨げません。
+
+### レビューを進める方法
+
+貢献者は Reviewer を待つだけでなく、自分の PR を積極的に前に進めてください。Apache Doris の貢献ガイドでも、貢献者が自分の PR の Moderator として、提出からマージまで進めることを推奨しています。
+
+推奨される方法：
+
+- PR の説明に、Reviewer が判断するための十分な背景を書く。
+- Slack の `#dev` チャネルで PR のリンクを共有し、レビューを依頼する。
+- レビューコメントには速やかに返信する。
+- 指摘に対応した後は、解決済みとしてマークする。
+- コメントに同意しない場合は、技術的な理由を示す。
+- 競合が長引かないよう、定期的にリベースする。
+- PR の進行が止まった場合は、PR 上で関連する Reviewer に丁寧に確認する。
+- 誰にレビューを依頼すればよいか分からない場合は、適切なモジュール担当者を探せるよう Slack で相談する。
+
+適切な Reviewer を探す方法：
+
+- 同じモジュールで最近マージされた PR を見る。
+- 関連ファイルのコミット履歴を確認する。
+- 利用できる場合は、GitHub が提案する Reviewer や CODEOWNERS を確認する。
+- Slack で適切な Reviewer を探す支援を求める。ただし、重要な技術的結論は GitHub またはメーリングリストでも共有する。
+
+</TabItem>
+<TabItem value="content" label="コンテンツ制作ガイド">
+
+### 提出するものと提出先
+
+#### ブログ記事
+
+適したテーマの例：
+
+- Doris の機能の詳しい解説。
+- クエリの最適化、ロードの最適化、運用上のチューニング、トラブルシューティング。
+- レイクハウス、リアルタイムデータウェアハウス、ログ分析、ユーザー行動分析などの実践的なシナリオ。
+- Elasticsearch、ClickHouse、Hive、Trino などのシステムから Doris への移行経験。
+- 本番環境でのトラブルシューティングや性能チューニングの記録。
+- 新しいリリースの機能紹介と使い方のアドバイス。
+
+提出方法：
+
+- Slack の `#dev` チャネルで議論を始める。
+- `/blog` ディレクトリに Markdown ファイルを提出する。このディレクトリは `apache/doris-website` リポジトリ内にあります。必要に応じて Doris Maintainer が支援します。
+
+#### 事例紹介
+
+適した事例に含まれる内容：
+
+- 企業やチームの業務上の背景。
+- チームが Apache Doris を選んだ理由。
+- システムアーキテクチャとデータフロー。
+- データの規模、クエリのパターン、性能目標。
+- 移行や導入の過程で見つかった問題。
+- 本番稼働後の結果、効果、得られた教訓。
+
+提出方法：
+
+- コンテンツに企業名、業務データ、アーキテクチャ図が含まれる場合は、先に社内承認を得るか、機密情報を削除する。
+- Slack の `#dev` チャネルで議論を始める。コミュニティが事例の編集、翻訳、公開を支援できます。
+
+#### チュートリアル
+
+適したテーマの例：
+
+- 入門。
+- デプロイとアップグレード。
+- データロード。
+- クエリのチューニング。
+- マテリアライズドビュー。
+- 転置インデックス。
+- コンピューティングとストレージの分離。
+- レイクハウスクエリ。
+- ログ分析と可観測性のシナリオ。
+
+提出方法：
+
+- Slack の `#dev` チャネルで議論を始める。
+- 長期にわたって正確性を保てる一般的な内容は、通常、公式ドキュメントに掲載する。
+- 実践的なシナリオに基づく内容や、特定バージョンに関する内容は、通常、ブログ記事に適している。
+- サンプルコード、スクリプト、設定は、可能な限り再現できるようにする。
+
+#### 動画
+
+適したテーマの例：
+
+- 一分から五分の機能デモ。
+- インストールとデプロイの手順紹介。
+- ベストプラクティスの解説。
+- シナリオに基づくデモ。
+- ミートアップやウェビナーの録画。
+- ユーザーインタビューや事例紹介の講演。
+
+提出方法：
+
+- Slack の `#dev` チャネルで議論を始める。
+- まずコミュニティとテーマ、台本、または構成案を確認する。
+- 動画が完成したら、YouTube、Bilibili、その他の公式動画チャンネルへの公開をコミュニティが支援できます。
+- 動画に企業名、顧客名、性能データ、社内システムのスクリーンショットが含まれる場合は、先に承認を得るか、機密情報を削除する。
+
+#### 講演
+
+適した形式の例：
+
+- ミートアップでの講演。
+- ウェビナーでの講演。
+- カンファレンスでの講演。
+- リリース機能の紹介。
+- 新しい貢献者向けの案内セッション。
+- ユーザー事例の紹介セッション。
+
+提出方法：
+
+- Slack の `#dev` チャネルで議論を始める。
+- テーマ、概要、対象者、言語、予定時間、登壇者の情報をコミュニティと共有する。
+- コミュニティは、テーマの調整、技術的内容のレビュー、セッションの告知、登録ページの支援を行えます。必要に応じて、資金や会場の支援が可能な場合もあります。
+
+#### 翻訳
+
+適した翻訳対象：
+
+- 公式ドキュメント。
+- ブログ記事。
+- イベントの振り返り記事。
+- 動画の字幕。
+- チュートリアルとベストプラクティス。
+
+提出方法：
+
+- ドキュメントの翻訳は、`apache/doris-website` への PR として提出する。
+- ブログやイベントの翻訳では、対象ページと公開先のチャネルを先にコミュニティと確認する。
+- 技術的な意味を正確に保つ。宣伝向けの表現に合わせて意味を変えない。
+
+### 公開チャネル
+
+コンテンツの種類とレビュー結果に応じて、次のチャネルで公開される場合があります。
+
+- Apache Doris 公式ウェブサイト。
+- Apache Doris 公式ブログ。
+- Apache Doris の Medium。
+- Apache Doris の YouTube。
+- Apache Doris の LinkedIn。
+- Apache Doris の X/Twitter。
+- Apache Doris の Slack。
+- コミュニティのニュースレター、イベントの振り返り記事、リリースの特集ページ。
+
+公開前には通常、技術的な正確性のレビューが必要です。性能データ、商用の事例、顧客名、企業情報を含むコンテンツには、承認も必要です。
+
+</TabItem>
+<TabItem value="community" label="コミュニティ活動ガイド">
+
+### 参加方法
+
+コミュニティの貢献者は、次のような活動に参加したり、企画したりできます。
+
+- オンラインミートアップ：世界中のユーザーを対象に、テーマを決めてオンラインで情報を共有する。
+- オフラインミートアップ：都市や地域ごとに対面で議論する。
+- ウェビナー：機能、シナリオ、リリースについてオンラインで解説する。
+- ワークショップ：デプロイ、ロード、チューニング、事例を実際に体験する。
+- オフィスアワー：ユーザーの質問に答える定期的な Q&A セッション。
+- ユーザー事例セッション：実際のユーザーが本番環境での実践例を紹介する。
+- リリース紹介：新機能やアップグレードのアドバイスを紹介する。
+- 新しい貢献者向けの案内：コードベース、手順、コミュニティのワークフローを理解するためのセッション。
+- 地域コミュニティイベント：特定の言語や地域に合わせたイベント。
+- ハッカソンまたは貢献スプリント：Issue、ドキュメント、テスト、ツールに集中的に取り組む。
+
+### イベントを提案する方法
+
+イベントの主催者は、次の情報を準備してください。
+
+- イベントのテーマ。
+- 対象者。
+- イベント形式。
+- イベントで使用する言語。
+- 日時とタイムゾーン。
+- 登壇者または進行役。
+- 予定時間。
+- コミュニティに必要な支援。
+- 告知計画。
+- スライド、録画、ブログ記事、振り返り記事を作成するかどうか。
+
+まず Slack の `#dev` チャネルで議論を始めてください。そうすることで、より多くのコミュニティメンバーが参加でき、Apache コミュニティに求められる公開されたプロセスを保てます。
+
+### コミュニティからの支援
+
+イベントの種類、質、利用できるリソースに応じて、コミュニティは次のような支援を行える場合があります。
+
+- 公式メディアチャネルでの告知。
+- テーマの企画。
+- 登壇者の推薦。
+- スライドやデモの技術レビュー。
+- 登録ページやイベントページの作成支援。
+- 録画とアーカイブの配信。
+- ソーシャルメディアでの告知。
+- コミュニティグッズ。
+- 会場、資料、軽食、基本的な運営費など、限られたイベント予算。
+- イベントの振り返り記事の公開。
+
+資金、贈り物、旅費、会場、スポンサーによる支援については、コミュニティと相談できます。イベント主催者は、予算の使途、期待される効果、成果物を事前に説明してください。
+
+</TabItem>
+</Tabs>
+
+## コミュニティの行動規範
+
+すべての貢献者は、次の原則に従ってください。
+
+- 他者を尊重し、専門的で、友好的かつ建設的なコミュニケーションを心がける。
+- 重要な技術的議論やコミュニティの決定は、可能な限り公開チャネルで行う。
+- コード、ドキュメント、コンテンツのレビューを受け入れる姿勢を持つ。
+- レビューのフィードバックに同意しない場合は、技術的な理由を明確に説明する。
+- 公開の場で議論すべきコミュニティの決定を、非公開で行わない。
+- オリジナルのコンテンツを提出する。引用または参照した資料は、出典を明記する。
+- 誇張された、検証できない、または誤解を招く性能やビジネス上の主張を避ける。
+- コードを変更する際は、可能な限りテストを追加する。
+- ユーザーから見える動作に影響する変更では、ドキュメントを更新する。
+- ユーザーの個人情報、顧客の機密情報、企業の秘密情報を漏らさない。
+- セキュリティ上の問題は責任ある開示の手順に従って扱う。問題が対処される前に、公開チャネルで詳細を公表しない。
+- Apache コミュニティの価値観と ASF の行動規範を尊重する。
+
+貢献者はオープンソースコミュニティのメンバーとして参加します。活動の中で企業を代表する場合は、必要に応じてそのことを明らかにしてください。貢献は、貢献そのものを重視する Apache の公開性と透明性のある進め方に従う必要があります。

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/s3",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/s3.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/storages/s3.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "d17d29d2a613259b00b747ec721158240cb6c6ea90d0d67c3a971d99988dbb6a",
+    "sourceTechnicalHash": "7e355190580d01881fbd938211c32e26f1f0639a5a5308530b1f87c7d0e4667b",
+    "targetHash": "60c9c28555c5003732d19f92851e73502d44d6b38522ab138d4ef56232605466",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.866Z",
+    "glossaryVersion": "0"
+  }
+}

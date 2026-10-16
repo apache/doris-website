@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
     "sourceHash": "6697edda21a3fe94d29c7f51fbe12509a04fc8578425c2a574e4d9512741d850",
     "sourceTechnicalHash": "071f98404c3f6b945fe1a67d3452082aacede07dbe0d4f03aaf625ee14e2b95a",
     "targetHash": "7f28d5f3230e5179b6e4bec2487ca304f358bb2c5dc9ed7558a0f88a28cab15d",
-    "reviewStatus": "unverified",
+    "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T08:35:06.362Z",
+    "translatedAt": "2026-10-15T08:51:31.316Z",
     "glossaryVersion": "0"
   }
 }

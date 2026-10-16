@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/all-in-one-image",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/all-in-one-image.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/all-in-one-image.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "7c1ddcd70b0fff15ef2f855c8dd0cb5a4a02aeb7fffb776a3f8555421a0a4eb3",
+    "sourceTechnicalHash": "24e5089859bb7b56d1f2cc25c16513cf994ee212aca4a7af2c3b63701034bb88",
+    "targetHash": "c58a0356b358acc940d9f41dc642761f75e2c7fcc5661e25bcc3a84c44506393",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}
