@@ -72,7 +72,7 @@
      docker compose -f docker-compose-without-doris.yaml up -d
      ```
 
-     该账号需要具有 `CREATE DATABASE` 权限。OpenTelemetry Collector 会自动创建 `otel` 数据库及其中的表。
+     该账号需要具备创建目标数据库和表、导入数据，以及查询 Grafana 所用表的权限。OpenTelemetry Collector 会自动创建 `otel` 数据库及其中的表。
 
      OpenTelemetry Collector 通过 Stream Load 写入数据：FE 会将每个请求重定向到 BE 在 Doris 中注册的地址（可通过 `SHOW BACKENDS` 查看）。因此，除了 FE 之外，OpenTelemetry Collector 容器还需要能够访问这些 BE 地址及 BE 的 HTTP 端口（默认 8040）。
 
