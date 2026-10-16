@@ -26,6 +26,7 @@ The `ARRAY<T>` type is used to represent an ordered collection of elements, wher
 - In the `AGGREGATE` table model, `ARRAY<T>` type only supports `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, it cannot be used as a KEY column, nor as a partition or bucket column**.
 - Columns of `ARRAY<T>` type **support `ORDER BY` and `GROUP BY` operations**.
   - T types that support `ORDER BY` and `GROUP BY` include: `BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6`.
+- Columns of `ARRAY<T>` type do not support `IN` or `NOT IN` operations.
 - Columns of `ARRAY<T>` type do not support being used as `JOIN KEY` and do not support being used in `DELETE` statements.
 
 ## Constant Construction

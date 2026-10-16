@@ -31,7 +31,7 @@ The STRUCT type is used to combine multiple fields into a single structure, wher
 
 - In the `AGGREGATE` table model, `STRUCT` types only support `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, they cannot be used as KEY columns, nor as partition or bucket columns.**
 
-- Columns of `STRUCT` type do not support comparison or arithmetic operations, **do not support `ORDER BY` and `GROUP BY` operations, cannot be used as `JOIN KEY`, and cannot be used in `DELETE` statements.**
+- Columns of `STRUCT` type do not support comparison or arithmetic operations, including `IN` and `NOT IN`, **do not support `ORDER BY` and `GROUP BY` operations, cannot be used as `JOIN KEY`, and cannot be used in `DELETE` statements.**
 
 - Columns of `STRUCT` type do not support creating any indexes.
 
