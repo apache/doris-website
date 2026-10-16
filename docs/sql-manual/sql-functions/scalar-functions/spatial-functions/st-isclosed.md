@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Determines whether a `LINESTRING` is closed. A `LINESTRING` is closed when its first and last points are exactly equal. This function does not use a distance tolerance.
@@ -20,7 +24,7 @@ ST_ISCLOSED( <shape> )
 
 | Parameter | Description |
 | :--- | :--- |
-| `<shape>` | The input geometry, of type GEOMETRY or VARCHAR (in WKT format) that can be converted to GEOMETRY. |
+| `<shape>` | An encoded geometry value (`VARCHAR`) returned by a spatial constructor such as `ST_GeometryFromText` or `ST_LineFromText`. Raw WKT text must first be converted with a constructor. |
 
 ## Return Value
 

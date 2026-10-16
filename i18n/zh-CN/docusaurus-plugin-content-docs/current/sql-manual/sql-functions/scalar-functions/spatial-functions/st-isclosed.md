@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 判断 `LINESTRING` 是否闭合。当 `LINESTRING` 的起点和终点完全相等时，该线为闭合线。此函数不使用距离容差。
@@ -20,7 +24,7 @@ ST_ISCLOSED( <shape> )
 
 | 参数 | 说明 |
 | :--- | :--- |
-| `<shape>` | 输入的几何图形，类型为 GEOMETRY 或可以转换为 GEOMETRY 的 VARCHAR（WKT 格式）。 |
+| `<shape>` | 由 `ST_GeometryFromText`、`ST_LineFromText` 等空间构造函数返回的编码几何值，类型为 `VARCHAR`。WKT 文本必须先通过构造函数转换。 |
 
 ## 返回值
 
