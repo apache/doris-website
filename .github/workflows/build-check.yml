@@ -84,17 +84,20 @@ jobs:
                   sudo mkswap /mnt/japanese-build-check-swap
                   sudo swapon /mnt/japanese-build-check-swap
 
-            - name: Build
+            # Dependencies are required even when the scoped site build is skipped.
+            - name: Install dependencies
               env:
-                  DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
-                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
-                  PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
+                  NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   npm install -g yarn
                   yarn cache clean
-                  export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
                   yarn key-features:generate
+
+            - name: Japanese translation unit tests
+              env:
+                  NODE_OPTIONS: --max-old-space-size=8192
+              run: |
                   node --test scripts/i18n/__tests__/t04.test.cjs
                   node --test scripts/i18n/__tests__/heading-ids.test.cjs
                   node --test scripts/i18n/__tests__/search-input.test.cjs
@@ -105,9 +108,18 @@ jobs:
                   node --test scripts/i18n/__tests__/workflow.test.cjs
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
 
-                  # Dependencies are installed unconditionally above because the
-                  # governance steps below need node_modules; only the site build
-                  # itself is scoped by the detect step.
+            - name: Japanese translation gate
+              run: |
+                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                  node scripts/i18n/check-translations.cjs --base "$BASE_SHA"
+
+            - name: Build
+              env:
+                  DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
+                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
+                  PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
+                  NODE_OPTIONS: --max-old-space-size=8192
+              run: |
                   if [ "${{ steps.detect.outputs.skip_build }}" = "true" ]; then
                       echo "No site-affecting changes detected — skipping the docusaurus build."
                       exit 0
@@ -118,23 +130,21 @@ jobs:
                       PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   else
                       # Every locale gets a separate Node process and its real prefix.
-                      # Changes that can only affect some locales build just those.
                       yarn build:locales --locales "${{ steps.detect.outputs.locale_csv }}"
                   fi
-                  # A locale subset cannot render the English or Chinese
-                  # counterparts, so cross-locale assertions are reported as
-                  # skipped here. Publishing still verifies the whole site.
+
+            - name: Verify localized static pages
+              if: steps.detect.outputs.skip_build != 'true'
+              env:
+                  NODE_OPTIONS: --max-old-space-size=8192
+              run: |
+                  # A locale subset cannot prove cross-locale reciprocity.
                   VERIFY_PARTIAL=""
                   if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL="--partial"; fi
                   for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
                       node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" $VERIFY_PARTIAL
                   done
                   rm -rf build
-
-            - name: Japanese translation gate
-              run: |
-                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                  node scripts/i18n/check-translations.cjs --base "$BASE_SHA"
 
             - name: Docs changed link gate
               continue-on-error: true

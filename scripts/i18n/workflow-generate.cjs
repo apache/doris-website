@@ -81,7 +81,7 @@ function bodyFor(manifest) {
         '', `${markerPrefixFor(manifest.language)}PENDING -->`, ''].join('\n');
 }
 
-async function generate({plan, reconciliation, maxPages = 2, target,
+async function generate({plan, reconciliation, maxPages = 10, target,
     adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
@@ -173,7 +173,7 @@ async function main() {
     assert(process.env.CODEX_BIN && fs.existsSync(process.env.CODEX_BIN), 'Pinned Codex runtime is required');
     const adapter = codexAdapter({model: process.env.I18N_CODEX_MODEL || 'gpt-6-sol', language: languageName(root, locale), locale,
         codexBin: process.env.CODEX_BIN, codexHome: process.env.CODEX_HOME});
-    const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '2'),
+    const manifest = await generate({plan, reconciliation, maxPages: Number(process.env.I18N_MAX_PAGES || '10'),
         target, adapter, glossary, output});
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
         `created=${manifest.candidates.length > 0}\n`);
