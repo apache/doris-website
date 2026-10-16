@@ -12,7 +12,7 @@ The MIN_BY function returns the associated value based on the minimum value of t
 
 When `<expr2>` is an Array, arrays are compared lexicographically, element by element; a NULL element is greater than any non-NULL element. A NULL array value is ignored.
 
-Version difference: In Doris 4.1 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
+Version difference: In the Doris 4.1 series since 4.1.5, and in Doris 4.2 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0 and Doris 4.1 before 4.1.5, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
 
 ## Syntax
 
@@ -23,7 +23,7 @@ MIN_BY(<expr1>, <expr2>)
 ## Parameters
 
 | Parameter | Description |
-| -- | -- |
+| --- | --- |
 | `<expr1>` | The expression for the associated value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, TimestampNs, Array, Map, Struct. |
 | `<expr2>` | The expression for the minimum value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, TimestampNs, Array. |
 
@@ -49,6 +49,10 @@ insert into tbl values
     (1, 4,   [5, 6],  {"x": 2, "y": 3}, NAMED_STRUCT("a", 2, "b", "y")),
     (4, 1,   [7],     {"x": 3, "y": 2}, NAMED_STRUCT("a", 3, "b", "z")),
     (3, 1,   [8],     {"x": 4, "y": 1}, NAMED_STRUCT("a", 4, "b", "r"));
+```
+
+```text
+Table created and data inserted successfully.
 ```
 
 ```sql
@@ -99,7 +103,7 @@ select min_by(k1, k2) from tbl where k1 is null;
 +----------------+
 ```
 
-The following array comparison example applies to Doris 4.1 and later.
+The following array comparison example applies to the Doris 4.1 series since 4.1.5, and to Doris 4.2 and later.
 
 ```sql
 SELECT min_by(label, sort_key) AS result
