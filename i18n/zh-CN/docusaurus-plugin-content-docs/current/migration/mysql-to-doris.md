@@ -2,149 +2,117 @@
 {
     "title": "MySQL 迁移到 Doris",
     "language": "zh-CN",
-    "description": "从 MySQL 迁移数据到 Apache Doris 的完整指南"
+    "description": "通过 JDBC 批量迁移 MySQL，并选择正确的 CDC、类型映射与校验方式。"
 }
 ---
 
-本指南介绍如何将数据从 MySQL 迁移到 Apache Doris。MySQL 是最常见的迁移源之一，Doris 对 MySQL 协议有很好的兼容性，使迁移变得简单。
+本页使用 MySQL JDBC Catalog 把一个稳定快照导入 Doris 内部表。该方式适合一次性或周期性批量迁移，不会自动捕获后续更新、删除或 DDL。持续同步请见后面的 CDC 路线。
 
-## 注意事项
+## 前提条件
 
-1. **协议兼容**：Doris 兼容 MySQL 协议，因此现有的 MySQL 客户端和工具可以与 Doris 配合使用。
+- 已有名为 `migration_source` 的 MySQL 数据库，以及对示例表具有 SELECT 权限的源端账户。
+- 每个 Doris FE/BE 都可以访问源服务。按 [MySQL Catalog](../lakehouse/catalogs/jdbc-mysql-catalog.md) 和 [驱动部署](../lakehouse/catalogs/jdbc-catalog-overview.md) 准备 `mysql-connector-j-8.3.0.jar`。示例使用驱动文件名，因此 Jar 必须位于所有 FE/BE 的 `jdbc_drivers_dir` 中。
+- 使用具备建 Catalog、建库、建表、读外表及写目标表权限的 Doris 账户。权限配置见 [授权](../admin-manual/auth/authorization/internal.md)。
+- 以下演示在源库 `migration_source` 中运行，目标表必须为空。请替换示例主机、用户名和密码。
 
-2. **实时需求**：如果需要实时同步，Flink CDC 支持自动建表和 Schema 变更。
+## 基本用法
 
-3. **全库同步**：Flink Doris Connector 支持同步整个 MySQL 数据库，包括 DDL 操作。
+### 1. 准备源表
 
-4. **自增列**：MySQL AUTO_INCREMENT 列可以映射到 Doris 的自增功能。迁移时可以通过显式指定列值来保留原始 ID。
-
-5. **ENUM 和 SET 类型**：MySQL ENUM 和 SET 类型在 Doris 中作为 STRING 迁移。
-
-6. **二进制数据**：二进制数据（BLOB、BINARY）通常存储为 STRING。迁移时考虑使用 HEX 编码。
-
-7. **大表性能**：对于数十亿行的表，考虑增加 Flink 并行度、调整 Doris 写缓冲以及使用批量模式进行初始加载。
-
-## 数据类型映射
-
-| MySQL 类型 | Doris 类型 | 说明 |
-|------------|------------|------|
-| BOOLEAN / TINYINT(1) | BOOLEAN | |
-| TINYINT | TINYINT | |
-| SMALLINT | SMALLINT | |
-| MEDIUMINT | INT | |
-| INT / INTEGER | INT | |
-| BIGINT | BIGINT | |
-| FLOAT | FLOAT | |
-| DOUBLE | DOUBLE | |
-| DECIMAL(P, S) | DECIMAL(P, S) | |
-| DATE | DATE | |
-| DATETIME | DATETIME | |
-| TIMESTAMP | DATETIME | 以 UTC 存储，读取时转换 |
-| TIME | STRING | Doris 不支持 TIME 类型 |
-| YEAR | INT | |
-| CHAR(N) | CHAR(N) | |
-| VARCHAR(N) | VARCHAR(N) | |
-| TEXT / MEDIUMTEXT / LONGTEXT | STRING | |
-| BINARY / VARBINARY | STRING | |
-| BLOB / MEDIUMBLOB / LONGBLOB | STRING | |
-| JSON | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md) |
-| ENUM | STRING | |
-| SET | STRING | |
-| BIT | BOOLEAN / BIGINT | BIT(1) 映射为 BOOLEAN |
-
-## 迁移选项
-
-### 选项 1：Flink CDC（实时同步）
-
-Flink CDC 捕获 MySQL binlog 变更并流式传输到 Doris。此方法适用于：
-
-- 实时数据同步
-- 自动建表的全库迁移
-- 支持 Schema 演进的持续同步
-
-**前提条件**：MySQL 5.7+ 或 8.0+，启用 binlog；Flink 1.15+ 配合 Flink CDC 3.x 和 Flink Doris Connector。
-
-详细设置请参考 [Flink Doris Connector](../ecosystem/flink-doris-connector.md) 文档。
-
-### 选项 2：JDBC Catalog
-
-[JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) 允许从 MySQL 直接查询和批量迁移。这是一次性或定期批量迁移最简单的方法。
-
-### 选项 3：Streaming Job（内置 CDC 同步）
-
-Doris 内置的 [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) 可以直接从 MySQL 同步全量和增量数据到 Doris，无需部署 Flink 等外部工具。底层使用 CDC 读取 MySQL binlog，并自动创建目标表（UNIQUE KEY 模型），主键与源表保持一致。
-
-此选项适用于：
-
-- 无需部署 Flink 集群的实时多表同步
-- 偏好使用 Doris 原生功能而非外部工具的环境
-- 通过单条 SQL 命令实现全量 + 增量迁移
-
-**前提条件**：MySQL 启用 binlog（`binlog_format = ROW`）；MySQL JDBC 驱动已部署到 Doris。
-
-#### 步骤 1：启用 MySQL Binlog
-
-确保 `my.cnf` 包含：
-
-```ini
-[mysqld]
-log-bin = mysql-bin
-binlog_format = ROW
-server-id = 1
-```
-
-#### 步骤 2：创建 Streaming Job
+在源数据库中执行：
 
 ```sql
-CREATE JOB mysql_sync
-ON STREAMING
-FROM MYSQL (
-    "jdbc_url" = "jdbc:mysql://mysql-host:3306",
-    "driver_url" = "mysql-connector-j-8.0.31.jar",
-    "driver_class" = "com.mysql.cj.jdbc.Driver",
-    "user" = "root",
-    "password" = "password",
-    "database" = "source_db",
-    "include_tables" = "orders,customers,products",
-    "offset" = "initial"
-)
-TO DATABASE target_db (
-    "table.create.properties.replication_num" = "3"
-)
+CREATE TABLE migration_demo (
+    id BIGINT PRIMARY KEY,
+    amount DECIMAL(12,2),
+    note VARCHAR(100)
+);
+INSERT INTO migration_demo VALUES (1, 12.50, 'first'), (2, NULL, NULL);
 ```
 
-关键参数：
+结果：建表成功并插入 2 行。
 
-| 参数 | 说明 |
-|------|------|
-| `include_tables` | 逗号分隔的待同步表列表 |
-| `offset` | `initial` 全量 + 增量；`latest` 仅增量 |
-| `snapshot_split_size` | 全量同步时每个分片的行数（默认：8096） |
-| `snapshot_parallelism` | 全量同步阶段的并行度（默认：1） |
-
-#### 步骤 3：监控同步状态
+### 2. 在 Doris 中创建并检查 Catalog
 
 ```sql
--- 查看 Job 状态
-SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
-
--- 查看 Task 历史
-SELECT * FROM tasks(type='insert') WHERE jobName = 'mysql_sync';
-
--- 暂停 / 恢复 / 删除
-PAUSE JOB WHERE jobname = 'mysql_sync';
-RESUME JOB WHERE jobname = 'mysql_sync';
-DROP JOB WHERE jobname = 'mysql_sync';
+CREATE CATALOG migration_mysql PROPERTIES (
+    'type' = 'jdbc',
+    'user' = 'migration_reader',
+    'password' = '<source_password>',
+    'jdbc_url' = 'jdbc:mysql://mysql-host:3306/migration_source',
+    'driver_url' = 'mysql-connector-j-8.3.0.jar',
+    'driver_class' = 'com.mysql.cj.jdbc.Driver'
+);
+DESC migration_mysql.migration_source.migration_demo;
 ```
 
-详细参考请见 [Streaming Job 多表同步](../data-operate/import/streaming-job/streaming-job-multi-table.md) 文档。
+结果应包含 `id`、`amount`、`note` 三列。检查实际外表类型，再创建目标表。
 
-### 选项 4：DataX
+### 3. 创建目标表并迁移
 
-[DataX](https://github.com/alibaba/DataX) 是一个广泛使用的数据同步工具，通过 `mysqlreader` 和 `doriswriter` 插件支持 MySQL 到 Doris 的迁移。
+```sql
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.mysql_demo (
+    id BIGINT NOT NULL,
+    amount DECIMAL(12,2),
+    note STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-## 下一步
+INSERT INTO migration_target.mysql_demo (id, amount, note)
+SELECT id, amount, note FROM migration_mysql.migration_source.migration_demo;
 
-- [Flink Doris Connector](../ecosystem/flink-doris-connector.md) - 详细的连接器文档
-- [数据导入](../data-operate/import/load-manual.md) - 其他导入方法
-- [数据模型](../table-design/data-model/overview.md) - 选择正确的表模型
+SELECT id, amount, note FROM migration_target.mysql_demo ORDER BY id;
+```
+
+```text
++------+--------+-------+
+| id   | amount | note  |
++------+--------+-------+
+|    1 |  12.50 | first |
+|    2 |   NULL | NULL  |
++------+--------+-------+
+```
+
+示例使用单副本、单分桶，便于本地验证；生产环境请按可用 BE 数量和可靠性要求调整。重复执行 INSERT 会追加重复数据。
+## 连接参数
+
+| 参数 | 类型 | 是否必需 / 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `type` | STRING | 必需，无默认值 | 使用 `jdbc` |
+| `user` / `password` | STRING | 必需，无默认值 | 源数据库凭据 |
+| `jdbc_url` | STRING | 必需，无默认值 | 源数据库地址；PostgreSQL URL 还指定数据库 |
+| `driver_url` | STRING | 必需，无默认值 | 每个 FE/BE 可访问的 Jar；本例使用预部署文件名 |
+| `driver_class` | STRING | 必需，无默认值 | 对应驱动的 Java 类名 |
+
+连接池、名称映射及驱动路径安全规则见 [完整 JDBC 参数参考](../lakehouse/catalogs/jdbc-catalog-overview.md)。
+
+## 类型与版本注意事项 {#data-type-mapping}
+
+- `UNSIGNED` 整数需要扩宽：例如 `INT UNSIGNED` 对应 `BIGINT`，`BIGINT UNSIGNED` 对应 `LARGEINT`，不能直接照搬有符号类型。
+- JDBC 的 MySQL JSON 映射为 `STRING`，不是自动映射为 `VARIANT`。`TIME`、`ENUM`、`SET` 也按 Catalog 映射处理；不要假设 JDBC 和 CDC 使用相同规则。
+- `TINYINT(1)` 的 JDBC 元数据受驱动设置影响；以实际 `DESC` 为准，不要把任意 TINYINT 都当作布尔值。
+- 4.1 系列自 4.1.5 起，`TIMESTAMP` 使用 `TIMESTAMPTZ`，二进制类型使用 `VARBINARY`；`DATETIME` 仍是无时区的日期时间。更早版本的映射及配置不同。dev 使用当前映射。
+- 主键模型、AUTO_INCREMENT、索引和源库约束不会因批量 INSERT 自动复制。完整类型规则见 [MySQL 映射参考](../lakehouse/catalogs/jdbc-mysql-catalog.md)。
+
+## 持续同步
+
+需要源端更新、删除和全量初始化衔接时，使用 [Flink CDC 同步](../connection-integration/data-integration/flink-doris-connector/cdc-sync.md)。按 Connector 兼容矩阵选择 Flink、CDC 和 Doris Connector 版本，不要把独立版本的最低要求简单组合。
+
+<version since="dev">
+
+</version>
+
+dev 还提供 [原生 MySQL CDC](../data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md)。该自动建表路线要求源表主键，目前提供至少一次语义，前提条件、日志权限、复制资源及监控方式以该参考为准；不要直接套用本页 JDBC 类型映射。
+
+## 校验与错误处理
+
+在同一快照和固定范围内，对源表 `migration_mysql.migration_source.migration_demo` 与目标表 `migration_target.mysql_demo` 分别执行 `COUNT(*)`、`COUNT(amount)`、`SUM(amount)`；本例结果应分别为 `2`、`1`、`12.50`。还应逐值检查样本、NULL、精度和时区。完整迁移的校验与切换流程见 [迁移概览](./overview.md)。
+
+连接失败时先检查所有 FE/BE 的网络、驱动文件、源账户权限及驱动路径限制。类型不兼容时先检查 `DESC` 并显式转换；导入失败后检查实际已写入范围，再决定重试，不要无条件重复整个 INSERT。
+
+## 建议
+
+先用本页的小表验证环境，再按稳定键或时间范围分批。持续同步选择能够处理更新、删除和重放的目标模型；批量快照表与持续镜像表应分别设计。

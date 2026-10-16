@@ -21,6 +21,18 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
+            label: 'Migration',
+            link: {type: 'doc', id: 'migration/overview'},
+            collapsed: true,
+            items: [
+                'migration/postgresql-to-doris',
+                'migration/mysql-to-doris',
+                'migration/elasticsearch-to-doris',
+                'migration/other-olap-to-doris',
+            ],
+        },
+        {
+            type: 'category',
             label: 'Features & Architecture',
             link: {type: 'doc', id: 'features-architecture/intro'},
             collapsed: true,

@@ -2,149 +2,117 @@
 {
     "title": "MySQL to Doris",
     "language": "en",
-    "description": "Comprehensive guide to migrating data from MySQL to Apache Doris"
+    "description": "Migrate MySQL in batches with JDBC and choose CDC, type mappings, and validation."
 }
 ---
 
-This guide covers migrating data from MySQL to Apache Doris. MySQL is one of the most common migration sources, and Doris provides excellent compatibility with MySQL protocol, making migration straightforward.
+This guide uses the MySQL JDBC Catalog to copy a stable snapshot into a Doris internal table. It suits one-time or scheduled batch migration and does not automatically propagate later updates, deletes, or DDL. See the CDC options below for continuous synchronization.
 
-## Considerations
+## Prerequisites
 
-1. **Protocol Compatibility**: Doris is MySQL protocol compatible, so existing MySQL clients and tools work with Doris.
+- A MySQL database named `migration_source` and a source account with SELECT access to the sample table.
+- Connectivity from every Doris FE/BE to the source. Install `mysql-connector-j-8.3.0.jar` following the [MySQL Catalog](../lakehouse/catalogs/jdbc-mysql-catalog.md) and [driver deployment](../lakehouse/catalogs/jdbc-catalog-overview.md) references. The example uses a driver filename, so the Jar must exist in `jdbc_drivers_dir` on all FE/BE nodes.
+- A Doris account with permissions to create catalogs/databases/tables, read the external table, and load the target. See [authorization](../admin-manual/auth/authorization/internal.md).
+- Run the source setup inside `migration_source`; use an empty target table. Replace the sample hosts, username, and password.
 
-2. **Real-time Requirements**: If you need real-time synchronization, Flink CDC supports automatic table creation and schema changes.
+## Basic usage
 
-3. **Full Database Sync**: The Flink Doris Connector supports synchronizing entire MySQL databases including DDL operations.
+### 1. Prepare the source table
 
-4. **Auto Increment Columns**: MySQL AUTO_INCREMENT columns can map to Doris's auto-increment feature. When migrating, you can preserve original IDs by explicitly specifying column values.
-
-5. **ENUM and SET Types**: MySQL ENUM and SET types are migrated as STRING in Doris.
-
-6. **Binary Data**: Binary data (BLOB, BINARY) is typically stored as STRING. Consider using HEX encoding for binary data during migration.
-
-7. **Large Table Performance**: For tables with billions of rows, consider increasing Flink parallelism, tuning Doris write buffer, and using batch mode for initial load.
-
-## Data Type Mapping
-
-| MySQL Type | Doris Type | Notes |
-|------------|------------|-------|
-| BOOLEAN / TINYINT(1) | BOOLEAN | |
-| TINYINT | TINYINT | |
-| SMALLINT | SMALLINT | |
-| MEDIUMINT | INT | |
-| INT / INTEGER | INT | |
-| BIGINT | BIGINT | |
-| FLOAT | FLOAT | |
-| DOUBLE | DOUBLE | |
-| DECIMAL(P, S) | DECIMAL(P, S) | |
-| DATE | DATE | |
-| DATETIME | DATETIME | |
-| TIMESTAMP | DATETIME | Stored as UTC, converted on read |
-| TIME | STRING | Doris does not support TIME type |
-| YEAR | INT | |
-| CHAR(N) | CHAR(N) | |
-| VARCHAR(N) | VARCHAR(N) | |
-| TEXT / MEDIUMTEXT / LONGTEXT | STRING | |
-| BINARY / VARBINARY | STRING | |
-| BLOB / MEDIUMBLOB / LONGBLOB | STRING | |
-| JSON | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) |
-| ENUM | STRING | |
-| SET | STRING | |
-| BIT | BOOLEAN / BIGINT | BIT(1) maps to BOOLEAN |
-
-## Migration Options
-
-### Option 1: Flink CDC (Real-time Sync)
-
-Flink CDC captures MySQL binlog changes and streams them to Doris. This method is suited for:
-
-- Real-time data synchronization
-- Full database migration with automatic table creation
-- Continuous sync with schema evolution support
-
-**Prerequisites**: MySQL 5.7+ or 8.0+ with binlog enabled; Flink 1.15+ with Flink CDC 3.x and Flink Doris Connector.
-
-For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-connector.md) documentation.
-
-### Option 2: JDBC Catalog
-
-The [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) allows direct querying and batch migration from MySQL. This is the simplest approach for one-time or periodic batch migrations.
-
-### Option 3: Streaming Job (Built-in CDC Sync)
-
-Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from MySQL to Doris without external tools like Flink. It uses CDC under the hood to read MySQL binlog and automatically creates target tables (UNIQUE KEY model) with primary keys matching the source.
-
-This option is suited for:
-
-- Real-time multi-table sync without deploying a Flink cluster
-- Environments where you prefer Doris-native features over external tools
-- Full + incremental migration with a single SQL command
-
-**Prerequisites**: MySQL with binlog enabled (`binlog_format = ROW`); MySQL JDBC driver deployed to Doris.
-
-#### Step 1: Enable MySQL Binlog
-
-Ensure `my.cnf` contains:
-
-```ini
-[mysqld]
-log-bin = mysql-bin
-binlog_format = ROW
-server-id = 1
-```
-
-#### Step 2: Create Streaming Job
+Run in the source database:
 
 ```sql
-CREATE JOB mysql_sync
-ON STREAMING
-FROM MYSQL (
-    "jdbc_url" = "jdbc:mysql://mysql-host:3306",
-    "driver_url" = "mysql-connector-j-8.0.31.jar",
-    "driver_class" = "com.mysql.cj.jdbc.Driver",
-    "user" = "root",
-    "password" = "password",
-    "database" = "source_db",
-    "include_tables" = "orders,customers,products",
-    "offset" = "initial"
-)
-TO DATABASE target_db (
-    "table.create.properties.replication_num" = "3"
-)
+CREATE TABLE migration_demo (
+    id BIGINT PRIMARY KEY,
+    amount DECIMAL(12,2),
+    note VARCHAR(100)
+);
+INSERT INTO migration_demo VALUES (1, 12.50, 'first'), (2, NULL, NULL);
 ```
 
-Key parameters:
+Result: the table is created with 2 rows.
 
-| Parameter | Description |
-|-----------|-------------|
-| `include_tables` | Comma-separated list of tables to sync |
-| `offset` | `initial` for full + incremental; `latest` for incremental only |
-| `snapshot_split_size` | Row count per split during full sync (default: 8096) |
-| `snapshot_parallelism` | Parallelism during full sync phase (default: 1) |
-
-#### Step 3: Monitor Sync Status
+### 2. Create and inspect the catalog in Doris
 
 ```sql
--- Check job status
-SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
-
--- Check task history
-SELECT * FROM tasks(type='insert') WHERE jobName = 'mysql_sync';
-
--- Pause / Resume / Drop
-PAUSE JOB WHERE jobname = 'mysql_sync';
-RESUME JOB WHERE jobname = 'mysql_sync';
-DROP JOB WHERE jobname = 'mysql_sync';
+CREATE CATALOG migration_mysql PROPERTIES (
+    'type' = 'jdbc',
+    'user' = 'migration_reader',
+    'password' = '<source_password>',
+    'jdbc_url' = 'jdbc:mysql://mysql-host:3306/migration_source',
+    'driver_url' = 'mysql-connector-j-8.3.0.jar',
+    'driver_class' = 'com.mysql.cj.jdbc.Driver'
+);
+DESC migration_mysql.migration_source.migration_demo;
 ```
 
-For detailed reference, see the [Streaming Job Multi-Table Sync](../data-operate/import/streaming-job/streaming-job-multi-table.md) documentation.
+The external schema should contain `id`, `amount`, and `note`. Inspect their actual mapped types before creating the target.
 
-### Option 4: DataX
+### 3. Create the target and copy the data
 
-[DataX](https://github.com/alibaba/DataX) is a widely-used data synchronization tool that supports MySQL to Doris migration via the `mysqlreader` and `doriswriter` plugins.
+```sql
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.mysql_demo (
+    id BIGINT NOT NULL,
+    amount DECIMAL(12,2),
+    note STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-## Next Steps
+INSERT INTO migration_target.mysql_demo (id, amount, note)
+SELECT id, amount, note FROM migration_mysql.migration_source.migration_demo;
 
-- [Flink Doris Connector](../ecosystem/flink-doris-connector.md) - Detailed connector documentation
-- [Loading Data](../data-operate/import/load-manual.md) - Alternative import methods
-- [Data Model](../table-design/data-model/overview.md) - Choose the right table model
+SELECT id, amount, note FROM migration_target.mysql_demo ORDER BY id;
+```
+
+```text
++------+--------+-------+
+| id   | amount | note  |
++------+--------+-------+
+|    1 |  12.50 | first |
+|    2 |   NULL | NULL  |
++------+--------+-------+
+```
+
+One replica and one bucket keep the example suitable for local verification. Size production tables for available BEs and reliability requirements. Repeating the INSERT appends duplicate rows.
+## Connection options
+
+| Parameter | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `type` | STRING | Required, no default | Use `jdbc` |
+| `user` / `password` | STRING | Required, no default | Source database credentials |
+| `jdbc_url` | STRING | Required, no default | Source address; a PostgreSQL URL also selects the database |
+| `driver_url` | STRING | Required, no default | Jar accessible to every FE/BE; this example uses a preinstalled filename |
+| `driver_class` | STRING | Required, no default | Java class for the selected driver |
+
+See the [full JDBC reference](../lakehouse/catalogs/jdbc-catalog-overview.md) for connection pools, name mapping, and driver-location controls.
+
+## Types and version differences {#data-type-mapping}
+
+- Widen unsigned integers: for example, `INT UNSIGNED` maps to `BIGINT` and `BIGINT UNSIGNED` to `LARGEINT`. Do not copy their signed equivalents unchanged.
+- The MySQL JDBC Catalog maps JSON to `STRING`, not automatically to `VARIANT`. Follow catalog mappings for `TIME`, `ENUM`, and `SET`; JDBC and CDC do not necessarily use the same rules.
+- JDBC metadata for `TINYINT(1)` depends on driver settings. Inspect `DESC` rather than treating every TINYINT as Boolean.
+- In the 4.1 series since 4.1.5, `TIMESTAMP` uses `TIMESTAMPTZ` and binary types use `VARBINARY`; `DATETIME` remains a time-zone-free date-time. Earlier mappings and configuration differ. Dev uses the current mapping.
+- Batch INSERT does not copy primary-key behavior, AUTO_INCREMENT, indexes, or source constraints. See the [MySQL mapping reference](../lakehouse/catalogs/jdbc-mysql-catalog.md) for complete rules.
+
+## Continuous synchronization
+
+Use [Flink CDC synchronization](../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) when the migration must hand off an initial snapshot and propagate later updates/deletes. Choose compatible Flink, CDC, and Doris Connector versions from the connector reference rather than combining independent minimum-version claims.
+
+<version since="dev">
+
+</version>
+
+Dev also provides [native MySQL CDC](../data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md). This auto-table-creation route requires source primary keys and currently provides at-least-once semantics. Follow that reference for log permissions, replication resources, and monitoring; do not apply this page's JDBC type mappings to it.
+
+## Validation and errors
+
+For the same snapshot and bounded range, run `COUNT(*)`, `COUNT(amount)`, and `SUM(amount)` on source `migration_mysql.migration_source.migration_demo` and target `migration_target.mysql_demo`. This example should return `2`, `1`, and `12.50`, respectively. Also inspect exact sample values, NULLs, precision, and time zones. See [Migration Overview](./overview.md) for full validation and cutover.
+
+For connection failures, check connectivity from all FE/BE nodes, driver files, source permissions, and driver-location restrictions. Inspect `DESC` and convert explicitly for incompatible types. After a failed import, establish which ranges were written before retrying; do not blindly repeat the entire INSERT.
+
+## Best practices
+
+Validate the environment with this small table, then batch larger migrations by stable keys or time ranges. Continuous replication needs a target model that handles updates, deletes, and replay; design snapshot tables and ongoing mirrors separately.

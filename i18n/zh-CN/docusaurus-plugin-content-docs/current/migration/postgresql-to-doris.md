@@ -2,160 +2,117 @@
 {
     "title": "PostgreSQL 迁移到 Doris",
     "language": "zh-CN",
-    "description": "从 PostgreSQL 迁移数据到 Apache Doris 的完整指南"
+    "description": "通过 JDBC 批量迁移 PostgreSQL，并选择正确的 CDC、类型映射与校验方式。"
 }
 ---
 
-本指南介绍如何将数据从 PostgreSQL 迁移到 Apache Doris。您可以根据实时同步需求、数据量和运维复杂度选择多种迁移方法。
+本页使用 PostgreSQL JDBC Catalog 把一个稳定快照导入 Doris 内部表。该方式适合一次性或周期性批量迁移，不会自动捕获后续更新、删除或 DDL。持续同步请见后面的 CDC 路线。
 
-## 注意事项
+## 前提条件
 
-1. **Schema 设计**：迁移前，选择合适的 Doris [数据模型](../table-design/data-model/overview.md)并规划您的[分区](../table-design/data-partitioning/data-distribution.md)和[分桶](../table-design/data-partitioning/data-bucketing.md)策略。
+- 已有名为 `migration_source` 的 PostgreSQL 数据库，以及对示例表具有 SELECT 权限的源端账户。
+- 每个 Doris FE/BE 都可以访问源服务。按 [PostgreSQL Catalog](../lakehouse/catalogs/jdbc-pg-catalog.md) 和 [驱动部署](../lakehouse/catalogs/jdbc-catalog-overview.md) 准备 `postgresql-42.5.6.jar`。示例使用驱动文件名，因此 Jar 必须位于所有 FE/BE 的 `jdbc_drivers_dir` 中。
+- 使用具备建 Catalog、建库、建表、读外表及写目标表权限的 Doris 账户。权限配置见 [授权](../admin-manual/auth/authorization/internal.md)。
+- 以下演示在源库 `migration_source` 中运行，目标表必须为空。请替换示例主机、用户名和密码。
 
-2. **数据类型**：查看下面的类型映射表。某些 PostgreSQL 类型需要特殊处理（数组、带时区的时间戳、JSON）。
+## 基本用法
 
-3. **主键**：PostgreSQL 的 serial/identity 列映射到 Doris 的 INT/BIGINT 类型。对于唯一约束，使用 Doris 的 UNIQUE KEY 模型。
+### 1. 准备源表
 
-4. **时区处理**：PostgreSQL `timestamptz` 以 UTC 存储时间戳并在读取时转换为会话时区。Doris `DATETIME` 不携带时区信息。迁移时显式转换时间戳，并确保 Doris BE 中 JVM 时区一致（`be.conf`）。
-
-5. **数组处理**：PostgreSQL 数组映射到 Doris ARRAY 类型，但维度检测需要现有数据。如果无法确定数组维度，使用显式转换。
-
-6. **JSON/JSONB**：PostgreSQL JSON/JSONB 映射到 Doris VARIANT 类型，支持灵活 Schema 和高效的 JSON 操作。
-
-7. **大表迁移**：对于数亿行的表，按时间范围或 ID 范围分区迁移，同时运行多个 INSERT 语句，并监控 Doris BE 内存和磁盘使用情况。
-
-## 数据类型映射
-
-| PostgreSQL 类型 | Doris 类型 | 说明 |
-|-----------------|------------|------|
-| boolean | BOOLEAN | |
-| smallint / int2 | SMALLINT | |
-| integer / int4 | INT | |
-| bigint / int8 | BIGINT | |
-| decimal / numeric | DECIMAL(P,S) | 无精度的 Numeric 映射为 STRING |
-| real / float4 | FLOAT | |
-| double precision | DOUBLE | |
-| smallserial | SMALLINT | |
-| serial | INT | |
-| bigserial | BIGINT | |
-| char(n) | CHAR(N) | |
-| varchar / text | STRING | |
-| timestamp | DATETIME | |
-| timestamptz | DATETIME | 转换为本地时区；参见上方时区处理 |
-| date | DATE | |
-| time | STRING | Doris 不支持 TIME 类型 |
-| interval | STRING | |
-| json / jsonb | VARIANT | 参见 [VARIANT 类型](../data-operate/import/complex-types/variant.md)，支持灵活 Schema |
-| uuid | STRING | |
-| bytea | STRING | |
-| array | ARRAY | 参见上方数组处理 |
-| inet / cidr / macaddr | STRING | |
-| point / line / polygon | STRING | 几何类型存储为字符串 |
-
-## 迁移选项
-
-### 选项 1：JDBC Catalog（批量迁移）
-
-[JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) 提供从 Doris 直接访问 PostgreSQL 数据的能力。这是查询和迁移数据最简单的方法。
-
-**前提条件**：PostgreSQL 11.x 或更高版本；[PostgreSQL JDBC 驱动](https://jdbc.postgresql.org/) 42.5.x 或更高版本；Doris FE/BE 节点与 PostgreSQL 之间的网络连接（端口 5432）。
-
-### 选项 2：Flink CDC（实时同步）
-
-Flink CDC 从 PostgreSQL WAL（预写日志）捕获变更并实时流式传输到 Doris。这适用于持续同步场景。
-
-**前提条件**：启用逻辑复制的 PostgreSQL（`wal_level = logical`）；Flink 1.15+ 配合 Flink CDC 和 Flink Doris Connector；PostgreSQL 中的复制槽。
-
-详细设置请参考 [Flink Doris Connector](../ecosystem/flink-doris-connector.md) 文档。
-
-### 选项 3：Streaming Job（内置 CDC 同步）
-
-Doris 内置的 [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) 可以直接从 PostgreSQL 同步全量和增量数据到 Doris，无需部署 Flink 等外部工具。底层使用 CDC 读取 PostgreSQL WAL，并自动创建目标表（UNIQUE KEY 模型），主键与源表保持一致。
-
-此选项适用于：
-
-- 无需部署 Flink 集群的实时多表同步
-- 偏好使用 Doris 原生功能而非外部工具的环境
-- 通过单条 SQL 命令实现全量 + 增量迁移
-
-**前提条件**：PostgreSQL 启用逻辑复制（`wal_level = logical`）；PostgreSQL JDBC 驱动已部署到 Doris。
-
-#### 步骤 1：启用逻辑复制
-
-确保 `postgresql.conf` 包含：
-
-```ini
-wal_level = logical
-```
-
-#### 步骤 2：创建 Streaming Job
+在源数据库中执行：
 
 ```sql
-CREATE JOB pg_sync
-ON STREAMING
-FROM POSTGRES (
-    "jdbc_url" = "jdbc:postgresql://pg-host:5432/source_db",
-    "driver_url" = "postgresql-42.5.6.jar",
-    "driver_class" = "org.postgresql.Driver",
-    "user" = "postgres",
-    "password" = "password",
-    "database" = "source_db",
-    "schema" = "public",
-    "include_tables" = "orders,customers,products",
-    "offset" = "initial"
-)
-TO DATABASE target_db (
-    "table.create.properties.replication_num" = "3"
-)
+CREATE TABLE public.migration_demo (
+    id BIGINT PRIMARY KEY,
+    amount DECIMAL(12,2),
+    note VARCHAR(100)
+);
+INSERT INTO public.migration_demo VALUES (1, 12.50, 'first'), (2, NULL, NULL);
 ```
 
-关键参数：
+结果：建表成功并插入 2 行。
 
-| 参数 | 说明 |
-|------|------|
-| `include_tables` | 逗号分隔的待同步表列表 |
-| `offset` | `initial` 全量 + 增量；`latest` 仅增量 |
-| `snapshot_split_size` | 全量同步时每个分片的行数（默认：8096） |
-| `snapshot_parallelism` | 全量同步阶段的并行度（默认：1） |
-
-#### 步骤 3：监控同步状态
+### 2. 在 Doris 中创建并检查 Catalog
 
 ```sql
--- 查看 Job 状态
-SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
-
--- 查看 Task 历史
-SELECT * FROM tasks(type='insert') WHERE jobName = 'pg_sync';
-
--- 暂停 / 恢复 / 删除
-PAUSE JOB WHERE jobname = 'pg_sync';
-RESUME JOB WHERE jobname = 'pg_sync';
-DROP JOB WHERE jobname = 'pg_sync';
+CREATE CATALOG migration_pg PROPERTIES (
+    'type' = 'jdbc',
+    'user' = 'migration_reader',
+    'password' = '<source_password>',
+    'jdbc_url' = 'jdbc:postgresql://pg-host:5432/migration_source',
+    'driver_url' = 'postgresql-42.5.6.jar',
+    'driver_class' = 'org.postgresql.Driver'
+);
+DESC migration_pg.public.migration_demo;
 ```
 
-详细参考请见 [Streaming Job 多表同步](../data-operate/import/streaming-job/streaming-job-multi-table.md) 文档。
+结果应包含 `id`、`amount`、`note` 三列。检查实际外表类型，再创建目标表。
 
-### 选项 4：导出和加载
+### 3. 创建目标表并迁移
 
-适用于网络隔离环境或无法直接连接的情况：
+```sql
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.pg_demo (
+    id BIGINT NOT NULL,
+    amount DECIMAL(12,2),
+    note STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-1. 从 PostgreSQL 导出数据到文件（CSV、Parquet）
-2. 上传到对象存储（S3、HDFS）
-3. 使用 [S3 Load](../data-operate/import/data-source/amazon-s3.md) 或 [Broker Load](../data-operate/import/import-way/broker-load-manual.md) 加载到 Doris
+INSERT INTO migration_target.pg_demo (id, amount, note)
+SELECT id, amount, note FROM migration_pg.public.migration_demo;
 
-## 验证清单
+SELECT id, amount, note FROM migration_target.pg_demo ORDER BY id;
+```
 
-迁移后，验证：
+```text
++------+--------+-------+
+| id   | amount | note  |
++------+--------+-------+
+|    1 |  12.50 | first |
+|    2 |   NULL | NULL  |
++------+--------+-------+
+```
 
-- 源和目标的行数匹配
-- 样本记录相同
-- NULL 值正确保留
-- 数值精度保持
-- 日期/时间值正确（检查时区）
-- 数组和 JSON 字段可查询
+示例使用单副本、单分桶，便于本地验证；生产环境请按可用 BE 数量和可靠性要求调整。重复执行 INSERT 会追加重复数据。
+## 连接参数
 
-## 下一步
+| 参数 | 类型 | 是否必需 / 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `type` | STRING | 必需，无默认值 | 使用 `jdbc` |
+| `user` / `password` | STRING | 必需，无默认值 | 源数据库凭据 |
+| `jdbc_url` | STRING | 必需，无默认值 | 源数据库地址；PostgreSQL URL 还指定数据库 |
+| `driver_url` | STRING | 必需，无默认值 | 每个 FE/BE 可访问的 Jar；本例使用预部署文件名 |
+| `driver_class` | STRING | 必需，无默认值 | 对应驱动的 Java 类名 |
 
-- [Flink Doris Connector](../ecosystem/flink-doris-connector.md) - 详细的连接器文档
-- [数据导入](../data-operate/import/load-manual.md) - 其他导入方法
-- [数据模型](../table-design/data-model/overview.md) - 选择正确的表模型
+连接池、名称映射及驱动路径安全规则见 [完整 JDBC 参数参考](../lakehouse/catalogs/jdbc-catalog-overview.md)。
+
+## 类型与版本注意事项 {#data-type-mapping}
+
+- JDBC 读取的 `json/jsonb` 映射为 `STRING`，不会自动变为 `VARIANT`。要使用其他目标类型，请显式转换并校验。
+- PostgreSQL `time`、`timetz`、`interval` 采用该 Catalog 定义的字符串映射；这不表示 Doris 没有 TIME 类型。
+- 无明确精度或超出支持范围的 `numeric` 可能映射为 `STRING`。先检查外表类型，再做数值计算。
+- 4.1 系列自 4.1.5 起，`timestamptz` 映射为 `TIMESTAMPTZ`，`bytea` 映射为 `VARBINARY`；更早版本的映射及配置不同。dev 使用当前映射。核查时区、精度及二进制逐字节一致性。
+- 数组维度需要源数据辅助识别；没有可用数据时可能显示为不支持的类型。请按 [PostgreSQL 映射参考](../lakehouse/catalogs/jdbc-pg-catalog.md) 验证具体列。
+
+## 持续同步
+
+需要源端更新、删除和全量初始化衔接时，使用 [Flink CDC 同步](../connection-integration/data-integration/flink-doris-connector/cdc-sync.md)。按 Connector 兼容矩阵选择 Flink、CDC 和 Doris Connector 版本，不要把独立版本的最低要求简单组合。
+
+<version since="dev">
+
+</version>
+
+dev 还提供 [原生 PostgreSQL CDC](../data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md)。该自动建表路线要求源表主键，目前提供至少一次语义，前提条件、日志权限、复制资源及监控方式以该参考为准；不要直接套用本页 JDBC 类型映射。
+
+## 校验与错误处理
+
+在同一快照和固定范围内，对源表 `migration_pg.public.migration_demo` 与目标表 `migration_target.pg_demo` 分别执行 `COUNT(*)`、`COUNT(amount)`、`SUM(amount)`；本例结果应分别为 `2`、`1`、`12.50`。还应逐值检查样本、NULL、精度和时区。完整迁移的校验与切换流程见 [迁移概览](./overview.md)。
+
+连接失败时先检查所有 FE/BE 的网络、驱动文件、源账户权限及驱动路径限制。类型不兼容时先检查 `DESC` 并显式转换；导入失败后检查实际已写入范围，再决定重试，不要无条件重复整个 INSERT。
+
+## 建议
+
+先用本页的小表验证环境，再按稳定键或时间范围分批。持续同步选择能够处理更新、删除和重放的目标模型；批量快照表与持续镜像表应分别设计。

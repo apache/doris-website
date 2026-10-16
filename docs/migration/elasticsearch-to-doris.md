@@ -2,136 +2,106 @@
 {
     "title": "Elasticsearch to Doris",
     "language": "en",
-    "description": "Comprehensive guide to migrating data from Elasticsearch to Apache Doris"
+    "description": "Copy indexes through an ES Catalog and validate fields, document IDs, and search semantics."
 }
 ---
 
-This guide covers migrating data from Elasticsearch to Apache Doris. Doris can serve as a powerful alternative to Elasticsearch for log analytics, full-text search, and general OLAP workloads, often with better performance and lower operational complexity.
+Use an ES Catalog to query Elasticsearch indexes, then copy selected columns into Doris internal tables with `INSERT INTO ... SELECT`. This example is a small one-time migration and does not continuously propagate later updates or deletes. Search workloads also require separate validation of analyzers, scoring, nested objects, and query semantics.
 
-## Why Migrate from Elasticsearch to Doris?
+## Prerequisites
 
-| Aspect | Elasticsearch | Apache Doris |
-|--------|---------------|--------------|
-| Query Language | DSL (JSON-based) | Standard SQL |
-| JOINs | Limited | Full SQL JOINs |
-| Storage Efficiency | Higher storage usage | Columnar compression |
-| Operational Complexity | Complex cluster management | Simpler operations |
-| Full-text Search | Native inverted index | Inverted index support |
-| Real-time Analytics | Good | Excellent |
+This example uses the typeless mapping API in Elasticsearch 7.x or 8.x. Adapt index setup for other source versions and check the catalog support range.
 
-## Considerations
+- An accessible Elasticsearch cluster and an account that can create, write, and read the sample index. A production migration account also needs catalog metadata permissions; see [ES Catalog](../lakehouse/catalogs/es-catalog.md).
+- Connectivity from every Doris FE/BE to ES, and a Doris account allowed to create catalogs/databases/tables, read external tables, and load the target.
+- An empty target table. Replace connection addresses and credentials. One replica and one bucket are used only to keep the example small.
 
-1. **Full-text Search**: Doris supports [Inverted Index](../table-design/index/inverted-index/overview.md) for full-text search capabilities similar to Elasticsearch.
+## Basic usage
 
-2. **Index to Table Mapping**: Each Elasticsearch index typically maps to a Doris table.
+### 1. Prepare the source index
 
-3. **Nested Documents**: Elasticsearch nested types map to Doris [VARIANT](../data-operate/import/complex-types/variant.md) type for flexible schema handling.
+Run in Elasticsearch Dev Tools or an equivalent HTTP client:
 
-4. **Array Handling**: Elasticsearch doesn't have explicit array types. To read arrays correctly via the ES Catalog, configure array field metadata in the ES index mapping using `_meta.doris.array_fields`.
+```http
+PUT /migration_demo
+{
+  "mappings": {
+    "properties": {
+      "title": { "type": "keyword" }
+    }
+  }
+}
 
-5. **Date Types**: Elasticsearch dates can have multiple formats. Ensure consistent date handling when migrating — use explicit casting to DATETIME.
+PUT /migration_demo/_doc/one?refresh=true
+{ "title": "first" }
 
-6. **_id Field**: To preserve Elasticsearch document `_id`, enable `mapping_es_id` in the ES Catalog configuration.
+PUT /migration_demo/_doc/two?refresh=true
+{ "title": "second" }
+```
 
-7. **Performance**: For better ES Catalog read performance, enable `doc_value_scan`. Note that `text` fields don't support doc_value and will fall back to `_source`.
+Expected result: the index contains two searchable documents with IDs `one` and `two`.
 
-## Data Type Mapping
+### 2. Create the catalog and preserve document IDs
 
-| Elasticsearch Type | Doris Type | Notes |
-|--------------------|------------|-------|
-| null | NULL | |
-| boolean | BOOLEAN | |
-| byte | TINYINT | |
-| short | SMALLINT | |
-| integer | INT | |
-| long | BIGINT | |
-| unsigned_long | LARGEINT | |
-| float | FLOAT | |
-| half_float | FLOAT | |
-| double | DOUBLE | |
-| scaled_float | DOUBLE | |
-| keyword | STRING | |
-| text | STRING | Consider inverted index in Doris |
-| date | DATE or DATETIME | See Date Types consideration above |
-| ip | STRING | |
-| nested | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) for flexible schema |
-| object | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) |
-| flattened | VARIANT | Supported since Doris 3.1.4, 4.0.3 |
-| geo_point | STRING | Store as "lat,lon" string |
-| geo_shape | STRING | Store as GeoJSON string |
+```sql
+CREATE CATALOG migration_es PROPERTIES (
+    'type' = 'es',
+    'hosts' = 'http://es-host:9200',
+    'user' = '<es_user>',
+    'password' = '<es_password>',
+    'mapping_es_id' = 'true'
+);
+DESC migration_es.default_db.migration_demo;
 
-## Migration Options
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.es_demo (
+    doc_id VARCHAR(512),
+    title STRING
+)
+DUPLICATE KEY(doc_id)
+DISTRIBUTED BY HASH(doc_id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-### Option 1: ES Catalog (Direct Query and Migration)
+INSERT INTO migration_target.es_demo (doc_id, title)
+SELECT _id, title FROM migration_es.default_db.migration_demo;
 
-The [ES Catalog](../lakehouse/catalogs/es-catalog.md) provides direct access to Elasticsearch data from Doris, enabling both querying and migration.
+SELECT doc_id, title FROM migration_target.es_demo ORDER BY doc_id;
+```
 
-**Prerequisites**: Elasticsearch 5.x or higher; network connectivity between Doris FE/BE nodes and Elasticsearch.
+```text
++--------+--------+
+| doc_id | title  |
++--------+--------+
+| one    | first  |
+| two    | second |
++--------+--------+
+```
 
-### Option 2: Logstash Pipeline
+## Options reference
 
-Use Logstash to read from Elasticsearch and write to Doris via HTTP (Stream Load). This approach gives you transformation capabilities during migration.
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `hosts` | STRING | Yes | None | ES HTTP addresses reachable from every FE/BE |
+| `user` / `password` | STRING | Depends on ES authentication | Empty | Credentials when Basic authentication is enabled |
+| `mapping_es_id` | boolean | No | `false` | Exposes document `_id`; enabled in this example |
+| `doc_value_scan` | boolean | No | `true` | Attempts doc-values reads for supported fields |
+| `nodes_discovery` | boolean | No | `true` | Discovers nodes; may need disabling in isolated networks |
 
-### Option 3: Custom Script with Scroll API
+See [ES Catalog](../lakehouse/catalogs/es-catalog.md) for all parameters, authentication, and array annotations.
 
-For more control, use a custom script with Elasticsearch Scroll API to read data and load it into Doris via Stream Load.
+## Types and search semantics
 
-## Full-text Search in Doris
+- The ES Catalog maps `object` and `nested` to JSON, not automatically to VARIANT. Convert explicitly and test before using a different target type.
+- ES fields may contain both scalars and arrays. Configure `_meta.doris.array_fields` as documented, inspect `DESC`, and examine real samples rather than inferring the entire column from one document.
+- Validate date formats, time zones, numeric ranges, and missing fields. An analyzed `text` field differs from a `keyword` field used for exact matching.
+- Doris [inverted indexes](../table-design/index/inverted-index/overview.md) support full-text search, but ES DSL, scoring, nested queries, and analyzers are not automatically equivalent. Test real query results rather than mechanically replacing syntax.
 
-Doris's [Inverted Index](../table-design/index/inverted-index/overview.md) provides full-text search capabilities similar to Elasticsearch.
+## Validation and errors
 
-### DSL to SQL Conversion Reference
+During a write-free source window, compare document counts and distinct `_id` counts; both should be 2 in this example. Compare original `_source` samples with target columns, including missing values, JSON arrays, and dates.
 
-| Elasticsearch DSL | Doris SQL |
-|-------------------|-----------|
-| `{"match": {"title": "doris"}}` | `WHERE title MATCH 'doris'` |
-| `{"match_phrase": {"content": "real time"}}` | `WHERE content MATCH_PHRASE 'real time'` |
-| `{"term": {"status": "active"}}` | `WHERE status = 'active'` |
-| `{"terms": {"tag": ["a", "b"]}}` | `WHERE tag IN ('a', 'b')` |
-| `{"range": {"price": {"gte": 10}}}` | `WHERE price >= 10` |
-| `{"bool": {"must": [...]}}` | `WHERE ... AND ...` |
-| `{"bool": {"should": [...]}}` | `WHERE ... OR ...` |
-| `{"exists": {"field": "email"}}` | `WHERE email IS NOT NULL` |
+For metadata errors, check index-read, cluster-state, and node HTTP permissions. For paging failures, check source-node connectivity and node-discovery settings. Index changes during migration can affect consistency; establish a stable snapshot or a defined write-free window. Repeating INSERT appends rows, so establish the imported ranges before resuming.
 
-## Feature Compatibility
+## Best practices
 
-### VARIANT Type vs ES Dynamic Mapping
-
-Doris [VARIANT](../data-operate/import/complex-types/variant.md) type provides comparable functionality to Elasticsearch Dynamic Mapping for flexible schema handling.
-
-| Feature | Doris VARIANT | ES Dynamic Mapping | Status |
-|---------|--------------|-------------------|--------|
-| Dynamic schema inference | Auto-infer JSON field types | Dynamic Mapping | Compatible |
-| Predefined field types | `MATCH_NAME 'field': type` | Explicit Mapping | Compatible |
-| Pattern-based type matching | `MATCH_NAME_GLOB 'pattern*': type` | dynamic_templates | Compatible |
-| Field index configuration | `INDEX ... PROPERTIES("field_pattern"=...)` | Mapping + Index Settings | Compatible |
-| Custom analyzer | `CREATE INVERTED INDEX ANALYZER` | Custom Analyzer | Compatible |
-| Sub-column count limit | `variant_max_subcolumns_count` | `mapping.total_fields.limit` | Compatible |
-| Sparse column optimization | `variant_enable_typed_paths_to_sparse` | N/A | Doris-specific |
-| Nested array objects | Flattened handling | Nested Type | Partial |
-
-### Search Function vs ES Query String
-
-Doris `search()` function provides Lucene-compatible query string syntax similar to Elasticsearch `query_string`.
-
-| Feature | Doris search() | ES query_string | Status |
-|---------|---------------|----------------|--------|
-| Query string syntax | Lucene mode | query_string query | Compatible |
-| Multi-field search | `fields` parameter | multi_match / fields | Supported |
-| best_fields mode | Supported | Supported | Supported |
-| cross_fields mode | Supported | Supported | Supported |
-| VARIANT sub-column search | `variant.field:term` | Object/Nested search | Supported |
-| Boolean queries | AND/OR/NOT | AND/OR/NOT | Supported |
-| Phrase queries | `"exact phrase"` | `"exact phrase"` | Supported |
-| Wildcards | `*`, `?` | `*`, `?` | Supported |
-| Regular expressions | `/pattern/` | `/pattern/` | Supported |
-| Relevance scoring | Disabled | BM25 | Not supported |
-| Fuzzy queries | Not supported | `term~2` | Not supported |
-| Range queries | Not supported | `[a TO z]` | Not supported |
-| Proximity queries | Not supported | `"foo bar"~5` | Not supported |
-
-## Next Steps
-
-- [Inverted Index](../table-design/index/inverted-index/overview.md) - Full-text search in Doris
-- [ES Catalog](../lakehouse/catalogs/es-catalog.md) - Complete ES Catalog reference
-- [Log Storage Analysis](../log-storage-analysis.md) - Optimizing log analytics in Doris
+Verify field reads and search semantics before scaling to batches. Continuous mirrors need separately designed updates, deletes, ordering, and replay by document ID; a catalog is not a CDC task. See [Migration Overview](./overview.md) for cutover guidance.

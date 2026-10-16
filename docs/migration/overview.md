@@ -2,92 +2,55 @@
 {
     "title": "Migration Overview",
     "language": "en",
-    "description": "Guide to migrating data from various databases and data systems to Apache Doris"
+    "description": "Choose a migration method, design target tables, and validate the result."
 }
 ---
 
-Apache Doris provides multiple methods to migrate data from various source systems. This guide helps you choose the best migration approach based on your source system and requirements.
+Apache Doris supports migration through external catalogs, CDC tools, and file loading. Copying table data does not migrate source transactions, indexes, constraints, procedures, permissions, or SQL semantics. First decide whether you need a one-time snapshot or continuous propagation of updates and deletes.
 
-## Migration Paths
+## Migration paths
 
-| Source System | Migration Method | Sync Modes |
-|---------------|-------------------|------------|
-| [PostgreSQL](./postgresql-to-doris.md) | Streaming Job / JDBC Catalog / Flink CDC | Full, CDC |
-| [MySQL](./mysql-to-doris.md) | Streaming Job / JDBC Catalog / Flink CDC | Full, CDC |
-| [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog | Full |
-| [ClickHouse](./other-olap-to-doris.md#clickhouse) | JDBC Catalog | Full |
-| [Greenplum](./other-olap-to-doris.md#greenplum) | JDBC Catalog | Full |
-| [Hive/Iceberg/Hudi](./other-olap-to-doris.md#data-lake) | Multi-Catalog | Full, Batch Incremental |
+| Source | One-time or batch migration | Continuous synchronization |
+| --- | --- | --- |
+| [PostgreSQL](./postgresql-to-doris.md) | PostgreSQL JDBC Catalog + `INSERT INTO ... SELECT` | Flink CDC; native Streaming Jobs are also available in dev |
+| [MySQL](./mysql-to-doris.md) | MySQL JDBC Catalog + `INSERT INTO ... SELECT` | Flink CDC; native Streaming Jobs are also available in dev |
+| [Elasticsearch](./elasticsearch-to-doris.md) | ES Catalog + `INSERT INTO ... SELECT` | Design change capture, updates, and deletion handling separately |
+| [ClickHouse / Greenplum](./other-olap-to-doris.md) | The corresponding JDBC Catalog or file loading | Depends on the source system |
+| [Hive / Iceberg / Hudi](./other-olap-to-doris.md#data-lake) | The corresponding lakehouse catalog + `INSERT INTO ... SELECT` | Scheduled batches or an appropriate connector |
 
-## Choosing a Migration Method
+A catalog makes external data queryable; creating one does not copy data into Doris internal tables. A batch `INSERT INTO ... SELECT` does not continuously capture later updates or deletes.
 
-### Catalog-Based Migration
+## Basic workflow
 
-Doris's [Multi-Catalog](../lakehouse/lakehouse-overview.md) feature allows you to directly query external data sources without data movement. This approach is suited for:
+1. Verify connectivity from every FE/BE, driver deployment, source read permissions, and Doris permissions to create catalogs/tables and load data.
+2. Establish a stable source snapshot or a write-free window. Catalog queries across tables or batches do not automatically form a globally consistent snapshot.
+3. Inspect actual mappings with `DESC catalog.database.table` and design the target using an appropriate [data model](../table-design/data-model/intro.mdx). Do not directly copy source keys, engines, or indexes.
+4. Complete a small pilot migration. The MySQL and PostgreSQL guides include reproducible table setup, imports, and query results.
+5. Import bounded key or time ranges, record completed ranges and CDC positions, validate the result, and then switch read traffic.
 
-- **Initial exploration**: Query source data before deciding on migration strategy
-- **Hybrid queries**: Join data across Doris and external sources
-- **Incremental migration**: Gradually move data while keeping source accessible
+## Configuration and types
 
-### Streaming Job (Built-in CDC Sync)
+| Item | What to verify |
+| --- | --- |
+| Catalog | Drivers, connection addresses, authentication, and driver-location controls; see [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog-overview.md) or [ES Catalog](../lakehouse/catalogs/es-catalog.md) |
+| Target table | Key model, partitions, buckets, replicas, and update ordering |
+| Type mapping | Mapping depends on the import method, driver, and Doris version; JDBC mappings are not CDC mappings |
+| Time and binary data | Check time zones, microsecond precision, and byte preservation. Some JDBC mappings changed in 4.1.5; use the reference for the deployed version |
+| Incremental synchronization | Snapshot/log-position handoff, primary keys, replay, updates, and deletes |
 
-Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from MySQL and PostgreSQL without external tools. It reads binlog/WAL natively, auto-creates target tables, and keeps data in sync — all with a single SQL command.
+## Validation and cutover
 
-- **No external dependencies**: No Flink cluster or other middleware required
-- **Full + incremental sync**: Initial snapshot followed by continuous CDC
-- **Multi-table support**: Sync multiple tables in one job
+For the same source snapshot and bounded range, compare row counts, distinct keys, NULL counts, numeric sums, and extrema. Sample exact values for timestamps, decimals, binary data, arrays, and semi-structured columns. Matching row counts alone do not prove correctness.
 
-### Flink CDC (Real-time Synchronization)
+For continuous synchronization, test inserts, updates, and deletes, as well as lag and restart behavior. Switch application reads only after verification, retaining source data and a rollback route.
 
-[Flink CDC](../ecosystem/flink-doris-connector.md) provides CDC-based sync via an external Flink cluster. Choose this over Streaming Job when you need:
+## Errors and caveats
 
-- **Schema evolution**: Automatic DDL propagation
-- **Complex transformations**: Flink SQL processing during sync
-- **Broader source support**: Sources beyond MySQL/PostgreSQL
+- Repeating a batch INSERT may duplicate rows, particularly in Duplicate Key tables. Define a replay strategy before resuming. A Unique Key table does not automatically remove rows deleted at the source.
+- Source changes during multiple batches can cause gaps or duplication. Use a consistent snapshot, a write-free window, or a reliable CDC handoff.
+- For unsupported types, case differences, or precision changes, inspect the external table with `DESC`, convert explicitly, and validate again. Do not silently omit incompatible columns.
+- Synchronous INSERT, asynchronous load jobs, Flink, and Streaming Jobs use different status interfaces. Follow the relevant loading reference rather than relying on `SHOW LOAD` for every method.
 
-### Export-Import Method
+## Best practices
 
-For scenarios where direct connectivity is limited:
-
-1. Export data from source system to files (CSV, Parquet, JSON)
-2. Stage files in object storage (S3, GCS, HDFS)
-3. Load into Doris using [S3 Load](../data-operate/import/data-source/amazon-s3.md) or [Broker Load](../data-operate/import/import-way/broker-load-manual.md)
-
-## Migration Planning Principles
-
-Before migrating, consider the following:
-
-1. **Data Volume Assessment**
-   - Total data size and row count
-   - Daily/hourly data growth rate
-   - Historical data retention requirements
-
-2. **Schema Design**
-   - Choose appropriate [Data Model](../table-design/data-model/overview.md) (Duplicate, Unique, Aggregate)
-   - Plan [Partitioning](../table-design/data-partitioning/data-distribution.md) strategy
-   - Define [Bucketing](../table-design/data-partitioning/data-bucketing.md) keys
-
-3. **Data Type Mapping**
-   - Review type compatibility (see migration guides for specific mappings)
-   - Handle special types (arrays, JSON, timestamps with timezone)
-
-4. **Performance Requirements**
-   - Query latency expectations
-   - Concurrent query load
-   - Data freshness requirements
-
-## Best Practices
-
-- **Start with a pilot table**: Before migrating your entire database, test with a representative table to validate schema design, type mappings, and data correctness.
-- **Batch large migrations**: For tables with billions of rows, migrate in batches (e.g., by date range) to manage resource usage and allow for validation between batches.
-- **Monitor migration progress**: Use `SHOW LOAD` to track active and completed load jobs.
-- **Validate after migration**: Compare row counts, spot-check records, and verify data types between source and target.
-
-## Next Steps
-
-Choose your source system to see detailed migration instructions:
-
-- [PostgreSQL to Doris](./postgresql-to-doris.md)
-- [MySQL to Doris](./mysql-to-doris.md)
-- [Elasticsearch to Doris](./elasticsearch-to-doris.md)
-- [Other OLAP Systems to Doris](./other-olap-to-doris.md)
+Start with representative small tables, then size batches and concurrency for measured data volume, query load, and available resources. Verify query results and update semantics before cutover, and retain completed ranges and validation records.

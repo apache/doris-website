@@ -3,6 +3,10 @@
     "message": "dev",
     "description": "The label for version current"
   },
+  "sidebar.docs.category.Migration": {
+    "message": "数据迁移",
+    "description": "The label for category Migration in sidebar docs"
+  },
   "sidebar.docs.category.Get Started": {
     "message": "快速入门",
     "description": "The label for category Get Started in sidebar docs"

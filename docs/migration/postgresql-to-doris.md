@@ -2,160 +2,117 @@
 {
     "title": "PostgreSQL to Doris",
     "language": "en",
-    "description": "Comprehensive guide to migrating data from PostgreSQL to Apache Doris"
+    "description": "Migrate PostgreSQL in batches with JDBC and choose CDC, type mappings, and validation."
 }
 ---
 
-This guide covers migrating data from PostgreSQL to Apache Doris. You can choose from several migration methods depending on your requirements for real-time sync, data volume, and operational complexity.
+This guide uses the PostgreSQL JDBC Catalog to copy a stable snapshot into a Doris internal table. It suits one-time or scheduled batch migration and does not automatically propagate later updates, deletes, or DDL. See the CDC options below for continuous synchronization.
 
-## Considerations
+## Prerequisites
 
-1. **Schema Design**: Before migration, select an appropriate Doris [Data Model](../table-design/data-model/overview.md) and plan your [Partitioning](../table-design/data-partitioning/data-distribution.md) and [Bucketing](../table-design/data-partitioning/data-bucketing.md) strategies.
+- A PostgreSQL database named `migration_source` and a source account with SELECT access to the sample table.
+- Connectivity from every Doris FE/BE to the source. Install `postgresql-42.5.6.jar` following the [PostgreSQL Catalog](../lakehouse/catalogs/jdbc-pg-catalog.md) and [driver deployment](../lakehouse/catalogs/jdbc-catalog-overview.md) references. The example uses a driver filename, so the Jar must exist in `jdbc_drivers_dir` on all FE/BE nodes.
+- A Doris account with permissions to create catalogs/databases/tables, read the external table, and load the target. See [authorization](../admin-manual/auth/authorization/internal.md).
+- Run the source setup inside `migration_source`; use an empty target table. Replace the sample hosts, username, and password.
 
-2. **Data Types**: Review the type mapping table below. Some PostgreSQL types require special handling (arrays, timestamps with timezone, JSON).
+## Basic usage
 
-3. **Primary Keys**: PostgreSQL's serial/identity columns map to Doris INT/BIGINT types. For unique constraints, use Doris's UNIQUE KEY model.
+### 1. Prepare the source table
 
-4. **Timezone Handling**: PostgreSQL `timestamptz` stores timestamps in UTC and converts to session timezone on read. Doris `DATETIME` does not carry timezone information. Convert timestamps explicitly during migration and ensure JVM timezone consistency in Doris BE (`be.conf`).
-
-5. **Array Handling**: PostgreSQL arrays map to Doris ARRAY type, but dimension detection requires existing data. If array dimension cannot be determined, use explicit casting.
-
-6. **JSON/JSONB**: PostgreSQL JSON/JSONB maps to Doris VARIANT type, which supports flexible schema and efficient JSON operations.
-
-7. **Large Table Migration**: For tables with hundreds of millions of rows, partition the migration by time ranges or ID ranges, use multiple INSERT statements concurrently, and monitor Doris BE memory and disk usage.
-
-## Data Type Mapping
-
-| PostgreSQL Type | Doris Type | Notes |
-|-----------------|------------|-------|
-| boolean | BOOLEAN | |
-| smallint / int2 | SMALLINT | |
-| integer / int4 | INT | |
-| bigint / int8 | BIGINT | |
-| decimal / numeric | DECIMAL(P,S) | Numeric without precision maps to STRING |
-| real / float4 | FLOAT | |
-| double precision | DOUBLE | |
-| smallserial | SMALLINT | |
-| serial | INT | |
-| bigserial | BIGINT | |
-| char(n) | CHAR(N) | |
-| varchar / text | STRING | |
-| timestamp | DATETIME | |
-| timestamptz | DATETIME | Converted to local timezone; see Timezone Handling above |
-| date | DATE | |
-| time | STRING | Doris does not support TIME type |
-| interval | STRING | |
-| json / jsonb | VARIANT | See [VARIANT type](../data-operate/import/complex-types/variant.md) for flexible schema |
-| uuid | STRING | |
-| bytea | STRING | |
-| array | ARRAY | See Array Handling above |
-| inet / cidr / macaddr | STRING | |
-| point / line / polygon | STRING | Geometric types stored as strings |
-
-## Migration Options
-
-### Option 1: JDBC Catalog (Batch Migration)
-
-The [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) provides direct access to PostgreSQL data from Doris. This is the simplest approach for both querying and migrating data.
-
-**Prerequisites**: PostgreSQL 11.x or higher; [PostgreSQL JDBC Driver](https://jdbc.postgresql.org/) version 42.5.x or above; network connectivity between Doris FE/BE nodes and PostgreSQL (port 5432).
-
-### Option 2: Flink CDC (Real-time Sync)
-
-Flink CDC captures changes from PostgreSQL WAL (Write-Ahead Log) and streams them to Doris in real-time. This is ideal for continuous synchronization.
-
-**Prerequisites**: PostgreSQL with logical replication enabled (`wal_level = logical`); Flink 1.15+ with Flink CDC and Flink Doris Connector; a replication slot in PostgreSQL.
-
-For detailed setup, see the [Flink Doris Connector](../ecosystem/flink-doris-connector.md) documentation.
-
-### Option 3: Streaming Job (Built-in CDC Sync)
-
-Doris's built-in [Streaming Job](../data-operate/import/streaming-job/streaming-job-multi-table.md) can directly synchronize full and incremental data from PostgreSQL to Doris without external tools like Flink. It uses CDC under the hood to read PostgreSQL WAL and automatically creates target tables (UNIQUE KEY model) with primary keys matching the source.
-
-This option is suited for:
-
-- Real-time multi-table sync without deploying a Flink cluster
-- Environments where you prefer Doris-native features over external tools
-- Full + incremental migration with a single SQL command
-
-**Prerequisites**: PostgreSQL with logical replication enabled (`wal_level = logical`); PostgreSQL JDBC driver deployed to Doris.
-
-#### Step 1: Enable Logical Replication
-
-Ensure `postgresql.conf` contains:
-
-```ini
-wal_level = logical
-```
-
-#### Step 2: Create Streaming Job
+Run in the source database:
 
 ```sql
-CREATE JOB pg_sync
-ON STREAMING
-FROM POSTGRES (
-    "jdbc_url" = "jdbc:postgresql://pg-host:5432/source_db",
-    "driver_url" = "postgresql-42.5.6.jar",
-    "driver_class" = "org.postgresql.Driver",
-    "user" = "postgres",
-    "password" = "password",
-    "database" = "source_db",
-    "schema" = "public",
-    "include_tables" = "orders,customers,products",
-    "offset" = "initial"
-)
-TO DATABASE target_db (
-    "table.create.properties.replication_num" = "3"
-)
+CREATE TABLE public.migration_demo (
+    id BIGINT PRIMARY KEY,
+    amount DECIMAL(12,2),
+    note VARCHAR(100)
+);
+INSERT INTO public.migration_demo VALUES (1, 12.50, 'first'), (2, NULL, NULL);
 ```
 
-Key parameters:
+Result: the table is created with 2 rows.
 
-| Parameter | Description |
-|-----------|-------------|
-| `include_tables` | Comma-separated list of tables to sync |
-| `offset` | `initial` for full + incremental; `latest` for incremental only |
-| `snapshot_split_size` | Row count per split during full sync (default: 8096) |
-| `snapshot_parallelism` | Parallelism during full sync phase (default: 1) |
-
-#### Step 3: Monitor Sync Status
+### 2. Create and inspect the catalog in Doris
 
 ```sql
--- Check job status
-SELECT * FROM jobs(type=insert) WHERE ExecuteType = "STREAMING";
-
--- Check task history
-SELECT * FROM tasks(type='insert') WHERE jobName = 'pg_sync';
-
--- Pause / Resume / Drop
-PAUSE JOB WHERE jobname = 'pg_sync';
-RESUME JOB WHERE jobname = 'pg_sync';
-DROP JOB WHERE jobname = 'pg_sync';
+CREATE CATALOG migration_pg PROPERTIES (
+    'type' = 'jdbc',
+    'user' = 'migration_reader',
+    'password' = '<source_password>',
+    'jdbc_url' = 'jdbc:postgresql://pg-host:5432/migration_source',
+    'driver_url' = 'postgresql-42.5.6.jar',
+    'driver_class' = 'org.postgresql.Driver'
+);
+DESC migration_pg.public.migration_demo;
 ```
 
-For detailed reference, see the [Streaming Job Multi-Table Sync](../data-operate/import/streaming-job/streaming-job-multi-table.md) documentation.
+The external schema should contain `id`, `amount`, and `note`. Inspect their actual mapped types before creating the target.
 
-### Option 4: Export and Load
+### 3. Create the target and copy the data
 
-For air-gapped environments or when direct connectivity is not possible:
+```sql
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.pg_demo (
+    id BIGINT NOT NULL,
+    amount DECIMAL(12,2),
+    note STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-1. Export data from PostgreSQL to files (CSV, Parquet)
-2. Upload to object storage (S3, HDFS)
-3. Load into Doris using [S3 Load](../data-operate/import/data-source/amazon-s3.md) or [Broker Load](../data-operate/import/import-way/broker-load-manual.md)
+INSERT INTO migration_target.pg_demo (id, amount, note)
+SELECT id, amount, note FROM migration_pg.public.migration_demo;
 
-## Validation Checklist
+SELECT id, amount, note FROM migration_target.pg_demo ORDER BY id;
+```
 
-After migration, validate:
+```text
++------+--------+-------+
+| id   | amount | note  |
++------+--------+-------+
+|    1 |  12.50 | first |
+|    2 |   NULL | NULL  |
++------+--------+-------+
+```
 
-- Row counts match between source and target
-- Sample records are identical
-- Null values are preserved correctly
-- Numeric precision is maintained
-- Date/time values are correct (check timezone)
-- Array and JSON fields are queryable
+One replica and one bucket keep the example suitable for local verification. Size production tables for available BEs and reliability requirements. Repeating the INSERT appends duplicate rows.
+## Connection options
 
-## Next Steps
+| Parameter | Type | Required / default | Description |
+| --- | --- | --- | --- |
+| `type` | STRING | Required, no default | Use `jdbc` |
+| `user` / `password` | STRING | Required, no default | Source database credentials |
+| `jdbc_url` | STRING | Required, no default | Source address; a PostgreSQL URL also selects the database |
+| `driver_url` | STRING | Required, no default | Jar accessible to every FE/BE; this example uses a preinstalled filename |
+| `driver_class` | STRING | Required, no default | Java class for the selected driver |
 
-- [Flink Doris Connector](../ecosystem/flink-doris-connector.md) - Detailed connector documentation
-- [Loading Data](../data-operate/import/load-manual.md) - Alternative import methods
-- [Data Model](../table-design/data-model/overview.md) - Choose the right table model
+See the [full JDBC reference](../lakehouse/catalogs/jdbc-catalog-overview.md) for connection pools, name mapping, and driver-location controls.
+
+## Types and version differences {#data-type-mapping}
+
+- JDBC maps PostgreSQL `json/jsonb` to `STRING`, not automatically to `VARIANT`. Convert explicitly and validate if the target uses another type.
+- The catalog uses string mappings for PostgreSQL `time`, `timetz`, and `interval`. This does not mean that Doris lacks a TIME type.
+- `numeric` without usable precision, or outside the supported decimal range, may map to `STRING`. Inspect the external type before numeric calculations.
+- In the 4.1 series since 4.1.5, `timestamptz` maps to `TIMESTAMPTZ` and `bytea` to `VARBINARY`; earlier mappings and configuration differ. Dev uses the current mapping. Verify time zones, precision, and byte-for-byte binary equality.
+- Array dimension inference needs source data and can report an unsupported type when no usable data exists. Validate each column against the [PostgreSQL mapping reference](../lakehouse/catalogs/jdbc-pg-catalog.md).
+
+## Continuous synchronization
+
+Use [Flink CDC synchronization](../connection-integration/data-integration/flink-doris-connector/cdc-sync.md) when the migration must hand off an initial snapshot and propagate later updates/deletes. Choose compatible Flink, CDC, and Doris Connector versions from the connector reference rather than combining independent minimum-version claims.
+
+<version since="dev">
+
+</version>
+
+Dev also provides [native PostgreSQL CDC](../data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md). This auto-table-creation route requires source primary keys and currently provides at-least-once semantics. Follow that reference for log permissions, replication resources, and monitoring; do not apply this page's JDBC type mappings to it.
+
+## Validation and errors
+
+For the same snapshot and bounded range, run `COUNT(*)`, `COUNT(amount)`, and `SUM(amount)` on source `migration_pg.public.migration_demo` and target `migration_target.pg_demo`. This example should return `2`, `1`, and `12.50`, respectively. Also inspect exact sample values, NULLs, precision, and time zones. See [Migration Overview](./overview.md) for full validation and cutover.
+
+For connection failures, check connectivity from all FE/BE nodes, driver files, source permissions, and driver-location restrictions. Inspect `DESC` and convert explicitly for incompatible types. After a failed import, establish which ranges were written before retrying; do not blindly repeat the entire INSERT.
+
+## Best practices
+
+Validate the environment with this small table, then batch larger migrations by stable keys or time ranges. Continuous replication needs a target model that handles updates, deletes, and replay; design snapshot tables and ongoing mirrors separately.

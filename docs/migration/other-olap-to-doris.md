@@ -2,150 +2,67 @@
 {
     "title": "Other OLAP Systems to Doris",
     "language": "en",
-    "description": "Guide to migrating data from ClickHouse, Greenplum, Hive, Iceberg, Hudi and other OLAP systems to Apache Doris"
+    "description": "Choose migration routes and validation for ClickHouse, Greenplum, and lakehouse tables."
 }
 ---
 
-This guide covers migrating data from various OLAP systems to Apache Doris, including ClickHouse, Greenplum, and data lake technologies like Hive, Iceberg, and Hudi.
+ClickHouse, Greenplum, and lakehouse tables can be copied to Doris through their corresponding catalogs. Define snapshot, update, and aggregation semantics before selecting a target model; source storage engines do not have automatic, complete Doris equivalents.
 
-## Migration Methods Overview
+## Routes and prerequisites
 
-| Source System | Migration Method | Notes |
-|---------------|-------------------|-------|
-| ClickHouse | JDBC Catalog + SQL Convertor | Schema and SQL syntax conversion needed |
-| Greenplum | JDBC Catalog | PostgreSQL-compatible |
-| Hive | Multi-Catalog (Hive Catalog) | Direct metadata integration |
-| Iceberg | Multi-Catalog (Iceberg Catalog) | Table format native support |
-| Hudi | Multi-Catalog (Hudi Catalog) | Table format native support |
-| Spark/Flink Tables | Spark/Flink Doris Connector | Batch or streaming |
+| Source | Connection and options reference | Checks before migration |
+| --- | --- | --- |
+| ClickHouse | [ClickHouse JDBC Catalog](../lakehouse/catalogs/jdbc-clickhouse-catalog.md) | Drivers, unsigned integers, date-time and complex-type mappings |
+| Greenplum | [PostgreSQL JDBC Catalog](../lakehouse/catalogs/jdbc-pg-catalog.md) | Compatible driver, actual metadata, and consistency of distributed exports |
+| Hive | [Hive Catalog](../lakehouse/catalogs/hive-catalog.mdx) | Metastore, file storage, authentication, and partitions |
+| Iceberg | [Iceberg Catalog](../lakehouse/catalogs/iceberg-catalog.mdx) | Metadata service, storage permissions, and a consistent snapshot |
+| Hudi | [Hudi Catalog](../lakehouse/catalogs/hudi-catalog.md) | Table type, visible view, underlying files, and query limitations |
 
-## ClickHouse
+Every FE/BE must reach the required services, drivers, and storage. Configure a catalog following its reference and use a Doris account allowed to read the external table and create/load the target.
 
-ClickHouse and Doris are both columnar OLAP databases with some similarities but different SQL dialects and data types.
+## ClickHouse {#clickhouse}
 
-### Data Type Mapping
+Use the JDBC Catalog and explicit columns in `INSERT INTO ... SELECT`. Run `DESC` first; suggested target designs are not the actual JDBC mappings. For example, the catalog does not promise a direct CHAR mapping for ClickHouse `FixedString`; test Map/Tuple and other complex-type support for the actual driver and Doris version.
 
-| ClickHouse Type | Doris Type | Notes |
-|-----------------|------------|-------|
-| Int8 | TINYINT | |
-| Int16 | SMALLINT | |
-| Int32 | INT | |
-| Int64 | BIGINT | |
-| UInt8 | SMALLINT | Unsigned to signed |
-| UInt16 | INT | |
-| UInt32 | BIGINT | |
-| UInt64 | LARGEINT | |
-| Float32 | FLOAT | |
-| Float64 | DOUBLE | |
-| Decimal(P, S) | DECIMAL(P, S) | |
-| String | STRING | |
-| FixedString(N) | CHAR(N) | |
-| Date | DATE | |
-| DateTime | DATETIME | |
-| DateTime64 | DATETIME(precision) | |
-| UUID | VARCHAR(36) | |
-| Array(T) | ARRAY<T> | |
-| Tuple | STRUCT | |
-| Map(K, V) | MAP<K, V> | |
-| Nullable(T) | T (nullable) | |
-| LowCardinality(T) | T | No special handling needed |
-| Enum8/Enum16 | TINYINT/SMALLINT or STRING | |
+For `ReplacingMergeTree`, `CollapsingMergeTree`, and aggregate-state tables, establish the final visible rows, version columns, deletion markers, and merge rules. A Doris Unique Key table does not automatically reproduce all source-engine semantics. Test SQL differences involving NULLs, tied extrema, array expansion, and JSON string extraction.
 
-### SQL Syntax Conversion
+## Greenplum {#greenplum}
 
-Common ClickHouse to Doris SQL conversions:
+Follow the batch workflow in [PostgreSQL migration](./postgresql-to-doris.md), checking the actual Greenplum mappings. Parallel exports and SQL batches must share a consistent source view; concurrency alone does not establish a cross-table snapshot.
 
-| ClickHouse | Doris |
-|------------|-------|
-| `toDate(datetime)` | `DATE(datetime)` |
-| `toDateTime(string)` | `CAST(string AS DATETIME)` |
-| `formatDateTime(dt, '%Y-%m')` | `DATE_FORMAT(dt, '%Y-%m')` |
-| `arrayJoin(arr)` | `EXPLODE(arr)` with LATERAL VIEW |
-| `groupArray(col)` | `COLLECT_LIST(col)` |
-| `argMax(col1, col2)` | `MAX_BY(col1, col2)` |
-| `argMin(col1, col2)` | `MIN_BY(col1, col2)` |
-| `uniq(col)` | `APPROX_COUNT_DISTINCT(col)` |
-| `uniqExact(col)` | `COUNT(DISTINCT col)` |
-| `JSONExtract(json, 'key', 'String')` | `JSON_EXTRACT(json, '$.key')` |
-| `multiIf(cond1, val1, cond2, val2, default)` | `CASE WHEN cond1 THEN val1 WHEN cond2 THEN val2 ELSE default END` |
+## Data lake {#data-lake}
 
-### Table Engine Mapping
+Use the respective Hive, Iceberg, and Hudi catalogs. Pin the intended Iceberg snapshot during migration. For Hudi, establish which view is read and which table types the deployed version supports. Creating a catalog only makes external data accessible; it does not create a Doris copy.
 
-| ClickHouse Engine | Doris Model | Notes |
-|-------------------|-------------|-------|
-| MergeTree | DUPLICATE | Append-only analytics |
-| ReplacingMergeTree | UNIQUE | Deduplication by key |
-| SummingMergeTree | AGGREGATE | Pre-aggregation |
-| AggregatingMergeTree | AGGREGATE | Complex aggregations |
-| CollapsingMergeTree | UNIQUE | With delete support |
+## Basic usage
 
-### Migration
+Assume `source_catalog` is configured as described above and `analytics.migration_demo` contains `id BIGINT` and `value DECIMAL(12,2)`, with a fixed source snapshot. Verify these types with `DESC`, then run in Doris:
 
-Use the [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) to connect to ClickHouse and migrate data via `INSERT INTO ... SELECT`.
+```sql
+CREATE DATABASE IF NOT EXISTS migration_target;
+CREATE TABLE migration_target.olap_demo (
+    id BIGINT,
+    `value` DECIMAL(12,2)
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
 
-## Greenplum
+INSERT INTO migration_target.olap_demo (id, `value`)
+SELECT id, `value` FROM source_catalog.analytics.migration_demo;
 
-Greenplum is PostgreSQL-based, so migration is similar to PostgreSQL. See the [PostgreSQL to Doris](./postgresql-to-doris.md) guide for general principles.
+SELECT COUNT(*), SUM(`value`) FROM source_catalog.analytics.migration_demo;
+SELECT COUNT(*), SUM(`value`) FROM migration_target.olap_demo;
+```
 
-### Data Type Mapping
+Expected result: the empty target receives both selected columns from the source snapshot, and the two validation queries return equal row counts and sums. One replica and one bucket are illustrative; size production tables for resources and reliability. See [MySQL](./mysql-to-doris.md) or [PostgreSQL](./postgresql-to-doris.md) for a complete fixed-input example.
 
-Use the [PostgreSQL type mapping](./postgresql-to-doris.md#data-type-mapping) as reference. Additional Greenplum-specific types:
+## Other loading methods
 
-| Greenplum Type | Doris Type | Notes |
-|----------------|------------|-------|
-| INT2/INT4/INT8 | SMALLINT/INT/BIGINT | |
-| FLOAT4/FLOAT8 | FLOAT/DOUBLE | |
-| NUMERIC | DECIMAL | |
-| TEXT | STRING | |
-| BYTEA | STRING | |
-| TIMESTAMP | DATETIME | |
-| INTERVAL | STRING | |
+If a direct connection is unavailable, export supported files and use [S3 Load](../data-operate/import/data-source/amazon-s3.md) or [Broker Load](../data-operate/import/import-way/broker-load-manual.md). Establish file formats, encoding, NULL representation, precision, and time zones before scaling the import.
 
-### Migration
+You can also use the [Spark Connector](../connection-integration/data-integration/spark-doris-connector.md) or [Flink Connector](../connection-integration/data-integration/flink-doris-connector/overview.md). Follow each connector's reference for batch/streaming capabilities, compatible versions, and semantics.
 
-Use the [JDBC Catalog](../lakehouse/catalogs/jdbc-catalog.md) with the PostgreSQL driver to connect to Greenplum and migrate data. For large tables, consider parallel export via `gpfdist` followed by file-based loading into Doris.
+## Errors and best practices
 
-## Data Lake (Hive, Iceberg, Hudi) {#data-lake}
-
-Doris's Multi-Catalog feature provides native integration with data lake table formats.
-
-### Hive
-
-Use the [Hive Catalog](../lakehouse/catalogs/hive-catalog.md) to directly query and migrate data from Hive. Supports both HDFS and S3-based storage.
-
-### Iceberg
-
-Use the [Iceberg Catalog](../lakehouse/catalogs/iceberg-catalog.md) to query and migrate Iceberg tables. Supports HMS and REST catalog types, as well as time travel queries.
-
-### Hudi
-
-Use the Hive Catalog to query and migrate Hudi tables (read-optimized view).
-
-## Spark/Flink Connector Migration
-
-For systems not directly supported by catalogs, use the [Spark Doris Connector](../ecosystem/spark-doris-connector.md) or [Flink Doris Connector](../ecosystem/flink-doris-connector.md) to read from any Spark/Flink-supported source and write to Doris.
-
-## Schema Design Principles
-
-When migrating from other OLAP systems:
-
-1. **Choose the right data model**:
-   - DUPLICATE for append-only event data
-   - UNIQUE for dimension tables with updates
-   - AGGREGATE for pre-aggregated metrics
-
-2. **Partition strategy**:
-   - Time-based partitioning for time-series data
-   - Match source partitioning when possible
-
-3. **Bucket count**:
-   - Start with 8-16 buckets per partition
-   - Scale based on data volume and query patterns
-
-## Next Steps
-
-- [Lakehouse Overview](../lakehouse/lakehouse-overview.md) - Multi-Catalog capabilities
-- [Hive Catalog](../lakehouse/catalogs/hive-catalog.md) - Hive integration details
-- [Iceberg Catalog](../lakehouse/catalogs/iceberg-catalog.md) - Iceberg integration
-- [Spark Doris Connector](../ecosystem/spark-doris-connector.md) - Spark integration
-- [Flink Doris Connector](../ecosystem/flink-doris-connector.md) - Flink integration
+Validate bounded samples before increasing batch sizes or concurrency. Convert unsupported types explicitly and inspect precision loss rather than skipping columns. Repeating INSERT into a Duplicate Key target appends duplicate rows; establish completed ranges before resuming. Complete the cross-system checks in [Migration Overview](./overview.md) before cutover and retain source data and a rollback route.
