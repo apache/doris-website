@@ -29,7 +29,7 @@ The data flow can be summarized as:
 Table ──► Partition ──► Bucket ──► Tablet (data shard, stored on BE nodes)
 ```
 
-Good partitioning and bucketing give you three things at once: **faster queries** (partition pruning and parallel scans), **easier management** (archive or clean up by time), and **more even writes** (no hotspots).
+Good partitioning and bucketing give you three things at once: **faster queries** (partition pruning and parallel scans), **easier management** (archive or clean up by time), and **more even writes** (reduced hotspot risk).
 
 ## 2. Core Concepts
 
@@ -71,7 +71,7 @@ Good partition design provides:
 
 Bucketing further divides the data within a partition into smaller, mutually disjoint data units according to certain rules. Each row of data belongs to exactly one specific bucket.
 
-Partitions divide data by ranges or lists of column values. Bucketing instead spreads data **evenly** across the buckets in a partition, which reduces skew and improves query performance through better data locality.
+Partitions divide data by ranges or lists of column values. Bucketing aims to spread data **evenly** across the buckets in a partition, reducing skew and supporting parallel scans. The result depends on the bucketing method and key distribution.
 
 Doris supports two **bucketing methods**:
 
@@ -80,8 +80,8 @@ Doris supports two **bucketing methods**:
 
 Good bucketing provides:
 
-- **Even data distribution**: less risk of skew, and no single node or disk gets overloaded.
-- **Fewer hotspots**: no node or partition gets overloaded, which keeps the system stable.
+- **More even data distribution**: a suitable bucket key reduces the risk of skew and uneven load on nodes or disks.
+- **Fewer hotspots**: distributing work across buckets can reduce overload and improve stability.
 - **Better concurrency**: Doris reads different buckets in the same partition in parallel, which improves throughput.
 
 ### 2.4 Tablet and Node Architecture
