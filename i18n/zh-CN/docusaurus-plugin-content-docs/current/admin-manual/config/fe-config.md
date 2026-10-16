@@ -439,6 +439,24 @@ FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_i
 
 是否为 Master FE 节点独有的配置项：false
 
+### TSO (Timestamp Oracle)
+
+<version since="dev">
+
+</version>
+
+TSO 使用 `enable_feature_binlog` 作为基础开关；该开关默认关闭、不可动态修改。以下为当前支持的 TSO 参数；使用方法与注意事项见 [TSO](../cluster-management/tso.md)。
+
+| 参数 | 类型 | 默认值 | 可动态修改 | 仅 Master FE | 描述 |
+| --- | --- | --- | --- | --- | --- |
+| `tso_service_update_interval_ms` | int | `50 ms` | false | true | 分配窗口更新检查的间隔。 |
+| `tso_max_update_retry_count` | int | `3` | true | true | 更新 TSO 状态的最大尝试次数。 |
+| `tso_max_get_retry_count` | int | `10` | true | true | 分配 TSO 的最大尝试次数，耗尽后报错。 |
+| `tso_service_window_duration_ms` | int | `1000 ms` | true | true | 预留分配窗口的长度，同时限定周期性持久化间隔。 |
+| `tso_clock_backward_startup_threshold_ms` | long | `1800000 ms` | true | true | 启动校准时，回放的窗口终点领先系统时钟的最大允许值。 |
+| `tso_time_offset_debug_mode` | int | `0 ms` | true | false | 仅供测试的时钟偏移，正常运行时不要使用。 |
+| `enable_tso_forward_when_counter_full` | boolean | `true` | true | true | 当逻辑计数器超过容量的一半且系统时钟推进不足时，将物理部分向前推进 1 毫秒。 |
+
 ### 服务
 
 #### `arrow_flight_deferred_query_idle_timeout_second`

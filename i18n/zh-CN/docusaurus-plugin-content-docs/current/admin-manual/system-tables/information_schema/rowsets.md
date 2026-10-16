@@ -33,3 +33,17 @@
 | CREATION_TIME          | datetime    | Rowset 的创建时间。                    |
 | NEWEST_WRITE_TIMESTAMP | datetime    | Rowset 的最近写入时间。                |
 | SCHEMA_VERSION         | int         | Rowset 数据对应的表 Schema 版本号。    |
+| COMMIT_TSO | varchar(64) | Rowset 的 TSO 范围字符串，格式为 `[start_tso-end_tso]`，仅 dev 支持。未记录时为 `[-1--1]`。 |
+
+## COMMIT_TSO 使用说明
+
+该列是字符串，不能按单个 BIGINT 排序或直接与数值 `-1` 比较。缺失的范围显示为 `[-1--1]`；单一提交值也以起止范围显示。
+
+```sql
+SELECT BACKEND_ID, ROWSET_ID, COMMIT_TSO
+FROM information_schema.rowsets
+WHERE COMMIT_TSO <> '[-1--1]'
+LIMIT 20;
+```
+
+结果为已记录范围的 rowset 列表；如果尚未记录范围，则返回空结果。有关状态接口和配置，请参阅 [TSO](../../cluster-management/tso.md)。
