@@ -137,8 +137,11 @@ helm dependency update ./ai-observe-stack
 - `examples/ai-observe-stack/prod.yaml`：FE 和 BE 各三个，开启持久化，三个网关，并配置 Ingress。可作为生产配置的起点。使用前需要修改其中与环境相关的配置：`storageClass`（示例为 AWS 的 `gp3`）、Ingress 的 class、域名和 TLS 证书签发者，以及 Grafana 密码（`CHANGE_ME`）。
 
 ```Bash
-helm install dog ./ai-observe-stack -n dog --create-namespace -f examples/ai-observe-stack/dev.yaml
+cp examples/ai-observe-stack/dev.yaml dog-values.yaml
+helm install dog ./ai-observe-stack -n dog --create-namespace -f dog-values.yaml
 ```
+
+后续升级继续使用 `dog-values.yaml`。部署生产环境时，改为复制 `prod.yaml`，完成上面列出的环境配置后再安装。
 
 Doris FE 和 BE 拉取镜像并完成初始化需要 2 到 5 分钟。网关会等待 FE 的 9030 和 8030 端口可访问、且至少有一个 BE 在线后再启动。
 
@@ -181,6 +184,12 @@ Doris Operator 是集群级组件，一个 Kubernetes 集群中只能运行一�
 ## 步骤 2：安装 Kubernetes 采集器 {#step-2-install-the-kubernetes-collector}
 
 步骤 1 安装的后端只负责接收数据。采集器从 Kubernetes 集群中采集数据并发送给网关：agent 在每个节点上读取所有容器的 stdout 和 stderr，并采集 kubelet 与节点指标；cluster 采集器采集集群级指标和 Kubernetes Events。每条记录都会附带 Pod、命名空间、工作负载和集群名称。如果不安装采集器，只有直接向网关发送 OTLP 数据的应用能够接入 DOG Stack，不会有容器日志、节点与集群指标以及 Events。每个需要观测的 Kubernetes 集群中都需要安装一个采集器 Release。
+
+在被采集集群中准备命名空间。即使跳过步骤 1，也要执行以下幂等命令：
+
+```Bash
+kubectl create namespace dog --dry-run=client -o yaml | kubectl apply -f -
+```
 
 1. 确认在待采集的集群中可以访问网关。请将地址替换为实际地址。
 
