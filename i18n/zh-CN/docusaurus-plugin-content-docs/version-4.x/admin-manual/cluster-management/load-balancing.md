@@ -2,7 +2,7 @@
 {
     "title": "FE 负载均衡",
     "language": "zh-CN",
-    "description": "介绍 Doris 多 FE 节点的负载均衡方案：JDBC、Nginx、HAProxy、ProxySQL，以及通过 Proxy Protocol 实现客户端 IP 透传。",
+    "description": "介绍 Doris 多 FE 节点的负载均衡方案：JDBC、Nginx、HAProxy、ProxySQL、NJet，以及通过 Proxy Protocol 实现客户端 IP 透传。",
     "keywords": [
         "Doris 负载均衡",
         "FE 高可用",
@@ -11,6 +11,7 @@
         "Nginx TCP 反向代理",
         "HAProxy",
         "ProxySQL",
+        "NJet",
         "Proxy Protocol",
         "客户端 IP 透传",
         "query_port 9030",
@@ -25,7 +26,7 @@
 
 用户通过 FE 的查询端口（`query_port`，默认 `9030`）使用 MySQL 协议连接 Doris。当部署多个 FE 节点时，可以在 FE 之上部署负载均衡层，实现 Doris 查询入口的高可用与连接分发。
 
-本文档介绍四种适用于 Doris 的负载均衡方案，并说明如何通过 Proxy Protocol 在代理层后透传客户端真实 IP。
+本文档介绍五种适用于 Doris 的负载均衡方案，并说明如何通过 Proxy Protocol 在代理层后透传客户端真实 IP。
 
 ## 适用场景
 
@@ -35,6 +36,7 @@
 | 已有 Nginx 基础设施，需要 TCP 层反向代理 | Nginx | 通用 TCP 反向代理，配置简单 |
 | 需要高性能 TCP 代理与健康检查 | HAProxy | 专业 TCP/HTTP 负载均衡，支持丰富的健康检查策略 |
 | 需要 MySQL 协议感知的代理（连接管理、读写分离等） | ProxySQL | 面向 MySQL 协议的数据库代理 |
+| 需要动态管理上游 FE 并进行主动 SQL 健康检查 | NJet | TCP 代理及可选的管理 API |
 | 需要在负载均衡后保留客户端真实 IP | Proxy Protocol | 配合 Nginx 或 HAProxy 使用 |
 
 ## 前置条件
@@ -695,10 +697,10 @@ docker exec doris-njet curl --max-time 10 -sS \
   http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
 ```
 
-`njet -t` 会报告两个配置文件均验证成功。API 返回 HTTP 200 和包含三个 FE 的 JSON 数组。通过代理连接 Doris：
+`njet -t` 会报告两个配置文件均验证成功。API 返回 HTTP 200 和包含三个 FE 的 JSON 数组。通过代理连接 Doris，将 `doris_user` 替换为已有的 Doris 用户：
 
 ```shell
-mysql -h192.168.1.100 -P6030 -u<doris_user> -p -e 'SELECT 1 AS connection_test;'
+mysql -h192.168.1.100 -P6030 -u doris_user -p -e 'SELECT 1 AS connection_test;'
 ```
 
 ```text
@@ -854,7 +856,7 @@ backend forward-fe
 
 ### 验证 IP 透传是否成功
 
-1. 通过代理连接 Doris：
+1. 通过代理连接 Doris，将 `doris_user` 替换为已有的 Doris 用户：
 
     ```sql
     mysql -uroot -P6030 -h192.168.1.100

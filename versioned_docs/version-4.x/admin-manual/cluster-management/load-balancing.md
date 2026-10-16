@@ -2,7 +2,7 @@
 {
     "title": "FE Load Balancing",
     "language": "en",
-    "description": "Load balancing options for multi-FE Doris deployments: JDBC, Nginx, HAProxy, ProxySQL, plus client IP forwarding via Proxy Protocol.",
+    "description": "Load balancing options for multi-FE Doris deployments: JDBC, Nginx, HAProxy, ProxySQL, NJet, plus client IP forwarding via Proxy Protocol.",
     "keywords": [
         "Doris load balancing",
         "FE high availability",
@@ -11,6 +11,7 @@
         "Nginx TCP reverse proxy",
         "HAProxy",
         "ProxySQL",
+        "NJet",
         "Proxy Protocol",
         "client IP forwarding",
         "query_port 9030",
@@ -696,10 +697,10 @@ docker exec doris-njet curl --max-time 10 -sS \
   http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
 ```
 
-`njet -t` reports successful validation for both configuration files. The API returns HTTP 200 and a JSON array containing the three configured FEs. Connect through the proxy:
+`njet -t` reports successful validation for both configuration files. The API returns HTTP 200 and a JSON array containing the three configured FEs. Connect through the proxy, replacing `doris_user` with an existing Doris account:
 
 ```shell
-mysql -h192.168.1.100 -P6030 -u<doris_user> -p -e 'SELECT 1 AS connection_test;'
+mysql -h192.168.1.100 -P6030 -u doris_user -p -e 'SELECT 1 AS connection_test;'
 ```
 
 ```text
