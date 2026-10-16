@@ -33,7 +33,7 @@ Both `DATETIMEV2` and `TIMESTAMPTZ` mappings use this rule, including a carry in
 
 Doris writes a `UUID` column, including a UUID element nested in ARRAY, MAP, or STRUCT, as `BINARY` holding the canonical 16-byte big-endian value, and adds the `doris.logical_type=uuid` attribute to mark it as a native UUID. ORC has no standard UUID type, so tools other than Doris see a plain binary column without UUID semantics. When an ORC `schema` property is specified explicitly for OUTFILE, declare UUID columns as `binary`; another type such as `string` is rejected.
 
-Reading a `BINARY` column that carries the `doris.logical_type=uuid` attribute restores the native UUID type, including nested elements and in both file readers, so a table-valued function reports `uuid`, `array<uuid>`, or `struct<k:uuid>` for such columns. `BINARY` and `STRING` columns without the attribute keep the existing `STRING` mapping.
+Reading a `BINARY` column that carries the `doris.logical_type=uuid` attribute restores the native UUID type, including nested elements and in both file readers, so a table-valued function reports `uuid`, `array<uuid>`, or `struct<k:uuid>` for such columns. In the dev version, unmarked `BINARY` maps to `VARBINARY`, while `STRING` remains `STRING`.
 
 For the complete UUID output mappings in OUTFILE and EXPORT, see [Column Type Mapping for Exported Files](../../data-operate/export/export-overview.md#column-type-mapping-for-exported-files).
 
@@ -47,6 +47,14 @@ For the complete UUID output mappings in OUTFILE and EXPORT, see [Column Type Ma
 * zlib
 
 ## Parameters
+
+### Timestamp and Date Compatibility (Since 4.1.5)
+
+Since 4.1.5, ORC `TIMESTAMP` represents wall-clock time without a time zone, while `TIMESTAMP_INSTANT` represents an instant and maps to `TIMESTAMPTZ`. Reads round nanoseconds to microseconds. Out-of-range values and invalid nanosecond values produce errors.
+
+When writing ORC, some negative fractional timestamps immediately before the Unix epoch cannot be represented without data loss. Doris returns `ORC cannot represent pre-epoch timestamp fractions in [-0.999, 0) seconds without data loss; use Parquet for these values`. Use Parquet for data containing these values.
+
+DATE files written with the old Doris encoding and containing `0000-01-01` through `0000-02-28` require explicit migration. See [Year-Zero DATE File Migration](../../admin-manual/cluster-management/upgrade.md#year-zero-date-file-migration).
 
 ### Session Variables
 

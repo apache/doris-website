@@ -15,7 +15,7 @@ Peer cache read is how the File Cache handles a miss in compute-storage decouple
 
 :::caution Experimental feature
 
-Peer cache read is available as an experimental feature starting from Doris 4.2.0 and is enabled by default. To turn it off, set `enable_cache_read_from_peer = false` on the BE.
+Cross-group peer cache read is available as an experimental feature starting from Doris 4.2.0 and is disabled by default. To use it, explicitly set `enable_cache_read_from_peer = true` on the relevant BEs.
 
 :::
 
@@ -37,7 +37,7 @@ In a cold-read test on the TPC-H 1 TB dataset, peer cache read was about twice a
 
 - A compute-storage decoupled deployment. Peer read does nothing in integrated mode.
 - File Cache enabled on every BE (`enable_file_cache = true`).
-- `enable_cache_read_from_peer` left at its default value `true`.
+- Explicitly set `enable_cache_read_from_peer = true` (default `false`).
 - For cross-group fill, the ID of the fill compute group (`compute_group_id`). See [Designating a Fill Compute Group](#designating-a-fill-compute-group) for how to find it.
 
 ## Limitations
@@ -83,6 +83,8 @@ A cold query usually issues many concurrent reads. The first read of a segment f
 - After `peer_all_miss_cooldown_threshold` (default 5) consecutive reads in which every candidate missed, the tablet enters a cooldown of `peer_all_miss_cooldown_duration_s` (default 300 seconds). During cooldown, its reads go straight to object storage.
 - Candidate entries that have not been used for `peer_candidate_expiry_s` (default 3600 seconds) are cleared from memory. The next miss fetches them from FE again.
 
+Since version 4.2.0, peer reads share an address-level circuit breaker across tablets. After `cache_peer_read_failure_threshold` consecutive connection or RPC failures for one address (default `3`, effective minimum `1`), reads to that address stop for `cache_peer_read_circuit_open_seconds` seconds (default `30`, negative values treated as `0`). After that period, only one recovery probe is allowed. This operates independently of tablet candidate eviction and the cooldown after all candidates miss.
+
 ### Cross-Group Fill
 
 When `peer_cache_fill_compute_group_id` is set on the requesting BE and the chosen candidate belongs to that compute group, the request carries a fill flag. If the receiving BE does not have the block and `enable_peer_server_cache_fill` is on (the default), it reads the block from object storage, writes it into its own File Cache, and then returns it.
@@ -98,7 +100,7 @@ All parameters below are BE configs. Except for the thread pool parameters, they
 
 ### Checking or Disabling Peer Read
 
-Peer read is on by default and works as soon as File Cache is enabled, for both same-group and cross-group reads. FE supplies the candidates automatically. Check the current value from a MySQL client:
+Peer read is disabled by default. To use it, enable File Cache and set `enable_cache_read_from_peer=true` in the BE's `be.conf`, or use the dynamic configuration endpoint below. Same-group and cross-group reads are enabled together, and FE supplies the candidates automatically. Check the current value from a MySQL client:
 
 ```sql
 SHOW BACKEND CONFIG LIKE 'enable_cache_read_from_peer';
@@ -155,7 +157,7 @@ curl -X POST "http://<be_host>:<be_webserver_port>/api/update_config?peer_race_h
 
 | Parameter | Default | Description |
 |---|---|---|
-| `enable_cache_read_from_peer` | `true` | Master switch for peer read. When on, a local File Cache miss first tries other BEs, both in the same compute group and across compute groups |
+| `enable_cache_read_from_peer` | `false` | Master switch for peer read. When on, a local File Cache miss first tries other BEs, both in the same compute group and across compute groups |
 | `enable_peer_s3_race` | `true` | Whether the peer read races the object storage read. When off, reads are sequential: candidates are tried one by one, and object storage is read only after all of them fail |
 | `peer_race_hedge_delay_ms` | `20` | Head start given to the peer read, in milliseconds. If the peer answers within it, the object storage read is not sent; `0` starts both at the same time |
 | `max_concurrent_peer_races` | `64` | Maximum number of concurrent races on one BE. Misses beyond this limit are handled sequentially |

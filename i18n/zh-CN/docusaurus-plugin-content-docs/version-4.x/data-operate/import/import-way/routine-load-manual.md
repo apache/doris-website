@@ -329,9 +329,21 @@ STOP ROUTINE LOAD FOR testdb.example_routine_load_csv;
 
 在**存算分离模式**下，Routine Load 的 Compute Group 选择逻辑按优先级如下：
 
-1. 选择 `use db@cluster` 语句指定的 Compute Group；
-2. 选择用户属性 `default_compute_group` 指定的 Compute Group；
-3. 从当前用户有权限的 Compute Group 中选择一个。
+1. 自 4.1.5 版本起，优先使用作业属性 `"compute_group" = "<计算组名>"` 显式绑定的 Compute Group；
+2. 未声明该属性时，选择 `use db@cluster` 语句指定的 Compute Group；
+3. 选择用户属性 `default_compute_group` 指定的 Compute Group；
+4. 从当前用户有权限的 Compute Group 中选择一个。
+
+`compute_group` 是可选字符串属性，默认不声明。它仅支持存算分离模式，要求计算组已存在，且创建者有其 `USAGE` 权限。`DEFAULT`（不区分大小写）是保留值，不能用于绑定。显式绑定优先于会话选组；每次任务运行前还会重新检查计算组和任务所有者权限。组不存在时任务可暂停并等待恢复；权限被撤销时应先恢复授权，再手动恢复作业。
+
+在下文的 `CREATE ROUTINE LOAD` 示例中，可将该配置加入 `PROPERTIES`：
+
+```sql
+PROPERTIES (
+    "compute_group" = "cg_ingest",
+    "desired_concurrent_number" = "3"
+)
+```
 
 在**存算一体模式**下，选择用户属性 `resource_tags.location` 中指定的 Compute Group。如果用户属性中未指定，则使用名为 `default` 的 Compute Group。
 
@@ -454,6 +466,7 @@ PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 | strict_mode | 是否开启严格模式，默认关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。开启后，非空原始数据的列类型变换如果结果为 NULL 则会被过滤。<p>过滤策略：</p><p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响；</p><p>- 当列类型需要转换，错误的数据类型将被过滤掉，可在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看；</p><p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换但无法通过范围限制的，strict mode 对其不产生影响。例如类型是 `decimal(1,0)`，原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。详细内容参考[严格模式](../../../data-operate/import/handling-messy-data#严格模式)。</p> |
 | timezone | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的与时区有关的函数结果。 |
 | format | 指定导入数据格式，默认是 CSV，支持 JSON 格式。 |
+| compute_group | 自 4.1.5 版本起支持。可选字符串，默认不声明；仅存算分离模式支持，显式绑定执行计算组。需要对应计算组的 `USAGE` 权限，不接受保留值 `DEFAULT`。 |
 | jsonpaths | 当导入数据格式为 JSON 时，可以通过 `jsonpaths` 指定抽取 JSON 数据中的字段。例如：`"jsonpaths" = "[\"$.userid\",\"$.username\",\"$.age\",\"$.city\"]"` |
 | json_root | 当导入数据格式为 JSON 时，可以通过 `json_root` 指定 JSON 数据的根节点。Doris 将通过 `json_root` 抽取根节点的元素进行解析。默认为空。例如：`"json_root" = "$.RECORDS"` |
 | strip_outer_array | 当导入数据格式为 JSON 时，`strip_outer_array` 为 true 表示 JSON 数据以数组的形式展现，数据中的每一个元素将被视为一行数据。默认值是 false。通常 Kafka 中的 JSON 数据可能以数组形式表示，即在最外层中包含中括号 `[]`，此时可以指定 `"strip_outer_array" = "true"`。如以下数据会被解析成两行：`[{"user_id":1,"name":"Emily","age":25},{"user_id":2,"name":"Benjamin","age":35}]` |

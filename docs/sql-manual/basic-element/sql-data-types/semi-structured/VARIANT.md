@@ -1,7 +1,7 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en-US",
+    "language": "en",
     "description": "VARIANT stores semi-structured JSON. Covers write and parse rules, CAST, NULL semantics, ordering, Schema Template, ALTER, properties, indexes, and limits."
 }
 ---
@@ -696,6 +696,8 @@ CREATE TABLE IF NOT EXISTS tbl (
 SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
+
+Since Doris 4.1.5, norms can be disabled with the index property or BE config below.
 
 Tokenized indexes on VARIANT paths write BM25 norms by default, costing one byte per row per path, including rows with no value for that path. For paths used only for filtering, disable norms with `"norms" = "false"`. Without `field_pattern`, this property applies to all subpaths covered by the index:
 

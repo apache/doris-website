@@ -48,6 +48,8 @@ under the License.
 
 ## 语法
 
+自 4.1.5 版本起，AI Resource 支持为文本和多模态 Embedding 分别配置 `ai.embed.*` 与 `ai.embed.mm.*` 模型组。文本输入依次选择文本 Embedding 组、通用组；JSON 多模态输入依次选择多模态 Embedding 组、文本 Embedding 组、通用组。配置要求见 [AI 资源配置](../overview.md#embedding-专用模型配置415-起)。
+
 
 ```sql
 EMBED([<resource_name>], <input>)

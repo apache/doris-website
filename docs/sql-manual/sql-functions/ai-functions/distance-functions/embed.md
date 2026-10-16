@@ -48,6 +48,8 @@ Calling multimodal embedding on any other provider reports `<provider> does not 
 
 ## Syntax
 
+Since version 4.1.5, an AI Resource can configure separate `ai.embed.*` and `ai.embed.mm.*` model groups for text and multimodal embedding. Text input selects the text embedding group, then the general group. JSON multimodal input selects the multimodal embedding group, then the text embedding group, then the general group. See [AI resource configuration](../overview.md#dedicated-embedding-model-configuration-since-415) for configuration requirements.
+
 ```sql
 EMBED([<resource_name>], <input>)
 ```

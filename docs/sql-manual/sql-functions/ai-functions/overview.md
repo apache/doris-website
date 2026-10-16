@@ -62,27 +62,74 @@ PROPERTIES (
 
 `type`: Required, must be `ai`, used as the type identifier for ai.
 
-`ai.provider_type`: Required, external AI provider type. Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan. If there are providers not listed above but their API format is the same as [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), you can directly fill in the corresponding provider.
+`ai.provider_type`: Required for the general model group. Specifies the external AI provider. Supported providers include OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan, VoyageAI, and Jina. If another provider uses an API compatible with [OpenAI](https://platform.openai.com/docs/overview), [Anthropic](https://docs.anthropic.com/en/api/messages-examples), or [Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), specify the corresponding compatible provider type.
 
-`ai.endpoint`: Required, AI API endpoint.
+A valid provider type does not imply support for every AI function. For example, VoyageAI and Jina support embedding and cannot serve as text generation models.
 
-`ai.model_name`: Required, model name.
+`ai.endpoint`: Required for the general model group. Specifies the AI API endpoint.
 
-`ai_api_key`: Required except when `ai.provider_type = local`, API key.
+`ai.model_name`: Required for the general model group. Specifies the model name.
+
+`ai.api_key`: API key for the general model group. Required unless `ai.provider_type = local`.
 
 `ai.temperature`: Optional. Controls the randomness of generated content. Accepts a float value between 0 and 1. 
 The default value is -1, which means this parameter is not set.
 
-`ai.max_tokens`: Optional. Limits the maximum number of tokens for generated content. 
+`ai.max_token`: Optional. Limits the maximum number of tokens for generated content.
 The default value is -1, which means this parameter is not set. The default value for Anthropic is 2048.
 
 `ai.max_retries`: Optional. The maximum number of retries for a single request. The default value is 3.
 
-`ai.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
+`ai.retry_delay_second`: Optional. The delay before retrying, in seconds. The default value on the development branch is 1; in Doris 4.1.5 it is 0.
 
 `ai.dimensions`: Optional, control the vector dimension of [EMBED](./distance-functions/embed.md) output. 
 **Make sure to confirm that the model filled in `ai.model_name` supports custom vector dimension before setting**, 
 otherwise it may cause model call failure.
+
+### Dedicated Embedding Model Configuration (Since 4.1.5)
+
+Since version 4.1.5, an AI Resource can configure a general model, a text embedding model, and a multimodal embedding model separately. At least one complete group is required. If any connection property or API key is set for a group, that group must include `endpoint`, `provider_type`, and `model_name`, plus `api_key` for non-`LOCAL` providers. Missing fields are not inherited from other groups.
+
+| Model group | Connection properties | API key | Usage |
+| --- | --- | --- | --- |
+| General | `ai.endpoint`, `ai.provider_type`, `ai.model_name` | `ai.api_key` | Text generation and other AI functions; fallback when no dedicated embedding group is configured |
+| Text embedding | `ai.embed.endpoint`, `ai.embed.provider_type`, `ai.embed.model_name` | `ai.embed.api_key` | Text input to `EMBED()`; fallback for multimodal input |
+| Multimodal embedding | `ai.embed.mm.endpoint`, `ai.embed.mm.provider_type`, `ai.embed.mm.model_name` | `ai.embed.mm.api_key` | JSON multimodal input to `EMBED()` |
+
+Text `EMBED()` selects the text embedding group first, then the general group. Multimodal `EMBED()` selects the multimodal embedding group, then the text embedding group, then the general group. The selected provider and model must support the actual media type. A resource with only embedding groups can serve the corresponding `EMBED()` calls, but cannot serve text generation functions that require a general model.
+
+For example, a resource used only for text embedding does not need a general generation model:
+
+```sql
+CREATE RESOURCE "text_embed_resource"
+PROPERTIES (
+    "type" = "ai",
+    "ai.embed.provider_type" = "openai",
+    "ai.embed.endpoint" = "https://<embedding-service>/v1/embeddings",
+    "ai.embed.model_name" = "<embedding-model>",
+    "ai.embed.api_key" = "<api-key>"
+);
+```
+
+Replace the connection values with your service configuration. Successful creation returns `Query OK`. Shared settings such as `ai.dimensions` and retry parameters still come from the resource configuration.
+
+### Reasoning Effort: `ai.effort` (Since 4.1.5)
+
+Since version 4.1.5, the optional string property `ai.effort` specifies reasoning effort. By default, it is unset and is not sent to the provider. Use lowercase values, subject to provider validation:
+
+| Provider | Accepted values |
+| --- | --- |
+| `ANTHROPIC` | `low`, `medium`, `high`, `xhigh`, `max` |
+| `GEMINI` | `minimal`, `low`, `medium`, `high` |
+| Property validation for other providers | `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max` |
+
+Passing property validation does not mean every model supports that effort level. Choose a value supported by your service and model. `ai.effort` does not replace `ai.max_token`.
+
+### Create, Alter, and Drop Permissions (Since 4.1.5)
+
+Creating an AI Resource requires global `ADMIN` privileges. Since version 4.1.5, the FE configuration [`ai_resource_allowed_user`](../../../admin-manual/config/fe-config.md#ai_resource_allowed_user) can further restrict the creator's identity. Its default value, `*`, adds no identity restriction.
+
+An AI Resource newly created by `root` since version 4.1.5 can only be altered or dropped by `root`; other accounts are rejected even if they have `ADMIN` privileges. Resources that existed before the upgrade and lack this marker are not marked retroactively. Other resources retain the existing privilege checks.
 
 ---
 

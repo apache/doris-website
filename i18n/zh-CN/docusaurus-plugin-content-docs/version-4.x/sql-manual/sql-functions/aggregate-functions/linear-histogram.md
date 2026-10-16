@@ -13,21 +13,26 @@ LINEAR_HISTOGRAM 函数用于描述数据分布情况，它使用“等宽”的
 ## 语法
 
 ```sql
-`LINEAR_HISTOGRAM(<expr>, DOUBLE <interval>[, DOUBLE <offset>)`
+LINEAR_HISTOGRAM(<expr>, <interval> [, <offset>])
 ```
 
-## 参数说明
+<a id="参数说明"></a>
+
+## 参数
 
 | 参数 | 说明 |
 | -- | -- |
-| `interval` | 桶的宽度，支持类型为 TinyInt，SmallInt，Int，BigtInt，LargeInt，Float，Double，Decimal。 |
-| `offset`   | 可选。默认为 0，范围是 `[0, interval)`，支持类型为Double。 |
+| `<expr>` | 要统计的表达式，支持 BOOLEAN、TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL。Doris 4.1 系列自 4.1.5 起支持 BOOLEAN 输入，FALSE 和 TRUE 分别按 0 和 1 统计。 |
+| `<interval>` | 桶的宽度，DOUBLE 类型，必须大于 0。 |
+| `<offset>` | 可选，DOUBLE 类型，默认为 0，范围为 `[0, interval)`。 |
 
 ## 返回值
 
-返回计算后的 JSON 类型的值。
+返回 VARCHAR 类型的 JSON 文本，包含桶边界、桶内计数和累计计数。忽略 NULL 输入；输入全部为 NULL 或没有输入行时，返回 `{"num_buckets":0,"buckets":[]}`。
 
-## 举例
+<a id="举例"></a>
+
+## 示例
 
 ```sql
 -- setup
@@ -75,7 +80,6 @@ select linear_histogram(a, 2, 1) from histogram_test where a is null;
 | {"num_buckets":0,"buckets":[]} |
 ```
 
-```text
 字段说明：
 
 - `num_buckets`：桶的数量。
@@ -84,4 +88,14 @@ select linear_histogram(a, 2, 1) from histogram_test where a is null;
   - `upper`：桶的上界。（不包含在内）
   - `count`：桶内包含的元素数量。
   - `acc_count`：前面桶与当前桶元素的累计总量。
+
+BOOLEAN 输入按 0、1 分桶，NULL 不参与计数：
+
+```sql
+SELECT LINEAR_HISTOGRAM(b, 1.0)
+FROM (SELECT TRUE AS b UNION ALL SELECT FALSE UNION ALL SELECT TRUE UNION ALL SELECT NULL) t;
+```
+
+```text
+{"num_buckets":2,"buckets":[{"lower":0.0,"upper":1.0,"count":1,"acc_count":1},{"lower":1.0,"upper":2.0,"count":2,"acc_count":3}]}
 ```

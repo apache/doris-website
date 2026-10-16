@@ -60,6 +60,31 @@ curl http://fe_host:http_port/metrics?type=json
 curl http://be_host:webserver_port/metrics?type=json
 ```
 
+### bvar 指标
+
+BE 和 Meta Service / Recycler 进程还通过 brpc 服务导出 bvar 指标。Prometheus 兼容格式使用 `/brpc_metrics`，按名称查看诊断信息使用 `/vars`：
+
+```shell
+curl http://be_host:brpc_port/brpc_metrics
+curl http://be_host:brpc_port/vars
+curl http://cloud_host:brpc_listen_port/brpc_metrics
+```
+
+这里使用 BE 的 `brpc_port`（默认 `8060`）或 Meta Service / Recycler 的 `brpc_listen_port`（默认 `5000`），与前面的 FE / BE HTTP 监控端口不同。下文的 bvar 名称使用代码中注册的名称，不统一添加 `doris_be_` 前缀。
+
+#### 版本标识
+
+自 4.1.5 版本起，BE 和 Meta Service / Recycler 的版本指标在 `/brpc_metrics` 中带有以下标签：
+
+| 指标 | 类型 | 标签 | 含义 |
+| --- | --- | --- | --- |
+| `doris_be_version` | Gauge | `version`、`major`、`minor`、`patch`、`hotfix`、`short_hash` | BE 的构建版本与提交标识 |
+| `doris_cloud_version` | Gauge | 同上 | Meta Service / Recycler 进程的构建版本与提交标识 |
+
+每个进程导出一个版本样本。指标数值保留原有的版本编码，完整版本应读取 `version` 标签，提交标识应读取 `short_hash`。`doris_cloud_version` 不区分进程运行的是 Meta Service、Recycler 还是两者兼有，可通过采集目标标签标记角色。
+
+多维 bvar 样本的导出上限由对应进程的 `bvar_max_dump_multi_dimension_metric_num` 配置控制；默认值为 `5000`，设为 `0` 时不会导出版本指标这类多维样本。BE 自 4.1.5 版本起支持该配置，修改后需重启，详见 [BE 配置](../config/be-config.md#bvar_max_dump_multi_dimension_metric_num)。
+
 ## 监控等级与最佳实践
 
 <!-- 知识类型: 最佳实践 -->
@@ -269,7 +294,7 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_fragment_instance_count` |  | Num | 当前已接收的 fragment instance 的数量 | 观测是否出现 instance 堆积 | P0 |
 | `doris_be_process_fd_num_limit_hard` |  | Num | BE 进程的文件句柄数硬限。通过 `/proc/pid/limits` 采集 |  |  |
 | `doris_be_process_fd_num_limit_soft` |  | Num | BE 进程的文件句柄数软限。通过 `/proc/pid/limits` 采集 |  |  |
-| `doris_be_process_fd_num_used` |  | Num | BE 进程已使用的文件句柄数。通过 `/proc/pid/limits` 采集 |  |  |
+| `doris_be_process_fd_num_used` |  | Num | BE 进程已使用的文件句柄数。通过统计 `/proc/self/fd` 中的条目采集 |  |  |
 | `doris_be_process_thread_num` |  | Num | BE 进程线程数。通过 `/proc/pid/task` 采集 |  | P0 |
 | `doris_be_query_cache_memory_total_byte` |  | 字节 | Query Cache 占用字节数 |  |  |
 | `doris_be_query_cache_partition_total_count` |  | Num | 当前 Partition Cache 缓存个数 |  |  |
@@ -297,7 +322,7 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_stream_load` | {type="load_rows"} | Num | stream load 最终导入的行数累计值 | 包括 stream load 和 routine load 任务 | P0 |
 | `doris_be_stream_load` | {type="receive_bytes"} | 字节 | stream load 接收的字节数累计值 | 包括 stream load 从 HTTP 接收的数据，以及 routine load 从 Kafka 读取的数据 | P0 |
 | `doris_be_tablet_base_max_compaction_score` |  | Num | 当前最大的 Base Compaction Score | 该数值实时变化，有可能丢失峰值数据。数值越高，表示 Compaction 堆积越严重 | P0 |
-| `doris_be_tablet_cumulative_max_compaction_score` |  | Num | 同上。当前最大的 Cumulative Compaction Score |  |  |
+| `doris_be_tablet_cumulative_max_compaction_score` |  | Num | 当前所有 Cumulative Compaction 策略中的最大 Compaction Score | 保留为各策略的汇总最大值 |  |
 | `doris_be_tablet_version_num_distribution` |  | Num | tablet version 数量的直方 | 用于反映 tablet version 数量的分布 | P0 |
 | `doris_be_thrift_connections_total` |  | Num | 创建过的 thrift 连接数的累计值。如 `{name="heartbeat"}` 表示心跳服务的连接数累计 | 此数值为 BE 作为服务端的 thrift server 的连接 |  |
 | `doris_be_thrift_current_connections` |  | Num | 当前 thrift 连接数。如 `{name="heartbeat"}` 表示心跳服务的当前连接数 | 同上 |  |
@@ -326,6 +351,12 @@ curl http://be_host:webserver_port/metrics?type=json
 | `routine_load_get_msg_count` |  | Num | Routine Load 获取 Kafka 消息的次数 |  |  |
 | `routine_load_consume_bytes` |  | 字节 | Routine Load 消费 Kafka 的数据量 |  |  |
 | `routine_load_consume_rows` |  | Num | Routine Load 消费 Kafka 的行数 |  |  |
+| `doris_be_tablet_size_based_max_compaction_score` |  | Num | 当前 Size-based 策略的最大 Cumulative Compaction Score | Gauge，4.1.5 新增；支持存算一体和存算分离模式 |  |
+| `doris_be_tablet_time_series_max_compaction_score` |  | Num | 当前 Time-series 策略的最大 Cumulative Compaction Score | Gauge，4.1.5 新增；支持存算一体和存算分离模式 |  |
+| `doris_be_hdfs_file_open_reading` |  | Num | 当前实际打开的 HDFS 文件句柄数 | Gauge；自 4.1.5 版本起按共享文件句柄统计，不再按读取器对象统计 |  |
+| `doris_be_hdfs_file_reader_total` |  | Num | 成功打开 HDFS 文件句柄的累计次数 | Counter；自 4.1.5 版本起，未实际打开文件的读取器不会增加此值，复用缓存句柄也不重复计数 |  |
+
+两个分策略的 Compaction Score 均为最大值，不应相加或按 Counter 计算速率。完成一次完整检查后，没有符合条件 Tablet 的策略可以归零；若存算一体模式因磁盘容量限制跳过部分目录，则不会据此降低已有观测值。
 
 ### 机器监控
 
@@ -363,6 +394,21 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_snmp_tcp_in_segs` |  | Num | tcp 包接收的个数。采集自 `/proc/net/snmp` |  |  |
 | `doris_be_snmp_tcp_out_segs` |  | Num | tcp 包发送的个数。采集自 `/proc/net/snmp` |  |  |
 | `doris_be_snmp_tcp_retrans_segs` |  | Num | tcp 包重传的个数。采集自 `/proc/net/snmp` |  |  |
+
+## bvar 诊断指标
+
+以下指标自 4.1.5 版本起支持，使用前文所述 brpc 端口查询。Counter 是自进程启动以来的累计值，Gauge 是当前值。
+
+| 名称或前缀 | 所在进程 | 类型 | 含义 |
+| --- | --- | --- | --- |
+| `sync_tablets_meta_num` | 存算分离 BE | Counter | 后台尝试同步 Tablet 元数据的累计次数，在同步调用前计数，不等于成功次数 |
+| `sync_tablets_rowsets_num` | 存算分离 BE | Counter | 后台尝试同步 Tablet Rowset 的累计次数，在同步调用前计数，不等于成功次数 |
+| `vertical_compaction_active_segment_contexts` | BE | Gauge | 当前垂直 Compaction 持有的活跃 Segment 上下文数 |
+| `hdfs_get_path_info` | BE | 时延统计，微秒 | 以该名称为前缀的一组 `hdfsGetPathInfo` 调用时延指标，用于排查获取 HDFS 文件元数据的耗时 |
+| `ms_repair_tablet_index` | Meta Service | Counter | 事务提交过程中修复历史 Tablet Index 记录缺失 `db_id` 的累计数量；仅在事务提交成功后计数 |
+| `file_cache_ttl_mgr_ttl_info_map_size`（带缓存路径前缀） | BE | Gauge | 当前内存中跟踪的 Tablet TTL 信息条目数，不是缓存块数 |
+
+缓存路径前缀和缓存淘汰指标见 [文件缓存监控](../../compute-storage-decoupled/file-cache/file-cache.md#缓存空间与命中率指标)。垂直 Compaction 结束时，BE INFO 日志中的 `vertical_compaction_active_segment_contexts_peak` 记录该次任务的上下文峰值；它是日志字段，不是另一个进程级 Gauge。
 
 ## 常见问题
 

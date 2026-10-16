@@ -1,58 +1,76 @@
 ---
 {
     "title": "ARRAY_SHUFFLE",
-    "language": "en-US",
+    "language": "en",
     "description": "Randomly shuffle the order of elements in an array."
 }
 ---
 
-## Function
+<a id="function"></a>
 
-Randomly shuffle the order of elements in an array.
+## Description
 
-:::note
-Since Apache Doris 4.2, `seed` must be a constant, all 64 bits of any `BIGINT` value are used, and a constant `arr` is shuffled on each row, so the same `seed` gives a different order than in 4.0 and 4.1. In 4.0 and 4.1, a non-constant `seed` does not report an error, but only the seed of the first row in each batch is used; a `seed` that is negative or larger than 4294967295 reports an error; and a constant `arr` gets the same order on every row.
+Randomly shuffles the order of elements in an array, preserving the elements and their count. Returns NULL if the input array or seed is NULL. `SHUFFLE` is an alias for this function.
+
+:::caution Behavior change (4.1.5)
+
+In the Doris 4.1 series since 4.1.5, `seed` must be a constant. It accepts any BIGINT value, including negative values, and uses all 64 bits. Constant arrays are also shuffled separately for each row, so the same seed may produce a different result from earlier versions. Earlier 4.1 versions used only the seed of the first row in each batch, rejected negative seeds and seeds greater than 4294967295, and produced the same order on every row for constant arrays.
+
 :::
 
 ## Syntax
 
-- `ARRAY_SHUFFLE(arr)`
-- `ARRAY_SHUFFLE(arr, seed)`
+```sql
+ARRAY_SHUFFLE(<arr> [, <seed>])
+```
 
 ## Parameters
 
-- `arr`: `ARRAY<T>`.
-- `seed`: optional, random seed. It must be a constant `BIGINT`.
+| Parameter | Description |
+| --- | --- |
+| `<arr>` | ARRAY to shuffle. |
+| `<seed>` | Optional constant BIGINT random seed. Constant expressions are supported. If omitted, each batch uses a new random seed. |
 
-## Return value
+## Return Value
 
-- Returns an array of the same type as the input, with elements randomly reordered. Element count and types remain unchanged.
+Returns an array of the same type as the input, with elements randomly reordered. Element count and types are preserved. Returns NULL if the array or seed is NULL, and returns an empty array for an empty input array.
 
-## Usage notes
+<a id="usage-notes"></a>
 
-- If the input `arr` is `NULL`, returns `NULL`. If `seed` is `NULL`, returns `NULL`.
-- Each row is shuffled on its own, even when `arr` is a constant, so rows with the same array can get different orders.
-- `seed` must be a constant, such as `0` or `1 + 1`. Passing a column or another non-constant expression reports an error.
-- Any `BIGINT` value can be a `seed`, including a negative one. All 64 bits are used, so `-1` and `4294967295` give different results.
-- Rows are processed in batches. Each batch starts a random sequence from `seed`, and its rows take numbers from the sequence one after another. So a single call such as `ARRAY_SHUFFLE([1, 2, 3, 4], 0)` gives the same result each time, but on many rows, the order of a row can change with how the rows are split into batches.
-- Without `seed`, each batch starts from a new random seed, so the result may differ between executions.
-- `ARRAY_SHUFFLE` has an alias `SHUFFLE`; they are equivalent.
+Rows are processed in batches. With a specified seed, each batch starts a random sequence from that seed, and its rows use that sequence in order. A row's permutation can therefore depend on batch boundaries. Specifying a seed does not guarantee identical permutations for identical arrays. Constant arrays are also shuffled separately for each row.
 
-## Examples
+<a id="examples"></a>
 
-- Basic usage:
-  - `ARRAY_SHUFFLE([1, 2, 3, 4])` -> e.g. `[3, 1, 4, 2]` (random order)
-  - `ARRAY_SHUFFLE(['a', null, 'b'])` -> e.g. `['b', 'a', null]`
+## Example
 
-- With a fixed seed (reproducible results):
-  - `ARRAY_SHUFFLE([1, 2, 3, 4], 0)` -> `[2, 1, 3, 4]` each time
+Sorting the shuffled array verifies that its elements are preserved. Both negative seeds and constant expressions are valid:
 
-- A constant array is shuffled on each row:
-  - `SELECT number, ARRAY_SHUFFLE([1, 2, 3, 4, 5], 0) FROM numbers("number" = "3") ORDER BY number` -> `[3, 1, 2, 4, 5]`, `[3, 5, 4, 2, 1]` and `[4, 5, 1, 3, 2]` on the three rows
+```sql
+SELECT ARRAY_SORT(ARRAY_SHUFFLE([1, 2, 3, 4], -1)),
+       ARRAY_SORT(ARRAY_SHUFFLE([1, 2, 3, 4], 1 + 1));
+```
 
-- A negative seed works, and all 64 bits are used:
-  - `ARRAY_SHUFFLE([1, 2, 3, 4], -1)` -> `[4, 1, 3, 2]`, while `ARRAY_SHUFFLE([1, 2, 3, 4], 4294967295)` -> `[2, 4, 3, 1]`
+```text
+[1, 2, 3, 4]    [1, 2, 3, 4]
+```
 
-- A non-constant seed reports an error:
-  - `SELECT ARRAY_SHUFFLE(arr, id) FROM t` -> error `The seed of array_shuffle must be a constant`
+NULL and empty arrays:
 
+```sql
+SELECT ARRAY_SHUFFLE(CAST(NULL AS ARRAY<INT>), 1),
+       ARRAY_SHUFFLE([1, 2, 3], NULL), ARRAY_SHUFFLE([], 1);
+```
+
+```text
+NULL    NULL    []
+```
+
+Using a column as the seed reports an error containing:
+
+```sql
+SELECT ARRAY_SHUFFLE([1, 2, 3], number) FROM numbers("number" = "2");
+```
+
+```text
+The seed of array_shuffle must be a constant
+```

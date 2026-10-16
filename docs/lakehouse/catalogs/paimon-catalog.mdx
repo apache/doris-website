@@ -354,10 +354,10 @@ The currently dependent Paimon version is 1.4.2.
 | decimal(P, S)                      | decimal(P, S) |                                                                         |
 | varchar                            | string        |                                                                         |
 | char                               | string        |                                                                         |
-| binary, varbinary                             | string/varbinary | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| binary, varbinary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
 | date                               | date          |                                                                         |
 | timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
-| timestamp\_with\_local\_time\_zone | datetime(N)/timestamptz(N)  | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.|
+| timestamp\_with\_local\_time\_zone | TIMESTAMPTZ(N) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(N)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
 | array                              | array         |                                                                         |
 | map                                | map           |                                                                         |
 | row                                | struct        |                                                                         |
@@ -375,8 +375,10 @@ Versions in the 4.0 line before 4.0.8 located columns by exact match when readin
 
 :::
 
+Since 4.1.5, explicit `REFRESH TABLE`, `REFRESH DATABASE`, and `REFRESH CATALOG` commands also invalidate the corresponding Paimon metadata caches. After external schema changes or dropping and recreating a table, use a refresh command to reload metadata. Queries that have already started retain their selected snapshot.
+
 :::info Note
-Doris currently does not support `Timestamp` types with timezone. All `timestamp_without_time_zone` and `timestamp_with_local_time_zone` will be uniformly mapped to `datetime(N)` type. However, during reading, Doris will correctly handle timezones based on the actual source type. For example, after specifying a timezone with `SET time_zone=<tz>`, it will affect the return results of `timestamp_with_local_time_zone` columns.
+Since 4.1.5, `timestamp_without_time_zone` maps to `DATETIME(N)`, while `timestamp_with_local_time_zone` always maps to `TIMESTAMPTZ(N)`. The latter represents an instant displayed in the session `time_zone`; `enable.mapping.timestamp_tz=false` cannot restore the old mapping.
 
 You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
 

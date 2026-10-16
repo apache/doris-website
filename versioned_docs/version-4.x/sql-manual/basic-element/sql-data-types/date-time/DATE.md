@@ -11,9 +11,11 @@
 
 ## Description
 
-DATE type stores dates, with a value range of `[0000-01-01, 9999-12-31]`, and the default output format is 'yyyy-MM-dd'.
+DATE type stores dates, with a value range of `[0000-01-01, 9999-12-31]`, excluding `0000-02-29`. The default output format is 'yyyy-MM-dd'.
 
-Doris uses the Gregorian calendar date format, and the dates existing in the Gregorian calendar correspond one by one to the dates existing in Doris, where `0000` represents 1 BC (BCE 1).
+Doris uses Gregorian calendar rules, with year `0000` representing 1 BC (BCE 1). The special boundary date `0000-02-29` is unsupported.
+
+Since 4.1.5, Arrow, Parquet, and ORC V2 epoch-day conversion for DATE fixes an offset in the first two months of year zero. Files with the old Doris encoding cannot be identified automatically. For files containing `0000-01-01` through `0000-02-28`, identify the writer and migrate them as described in the [upgrade guide](../../../../admin-manual/cluster-management/upgrade.md#year-zero-date-file-migration).
 
 DATE type can be used as a primary key, partition column or bucket column. A DATE type field actually occupies 4 bytes in Doris. DATE is stored separately by year、month、day in runtime, so executing `months_add` operation on DATE column is more efficient than `unix_timestamp`.
 

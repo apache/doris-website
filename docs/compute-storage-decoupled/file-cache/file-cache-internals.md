@@ -99,7 +99,7 @@ You can check task status (`FINISHED` / `CANCELLED` / `RUNNING`) and overall pro
 
 When a tablet is migrated to a new BE due to load rebalancing (from scaling or a node failure), the new BE sends an RPC to the old BE to fetch the cache metadata, then re-downloads the data into its local file cache based on that metadata. The cache data on the old node is proactively evicted when the tablet information is cleaned up, freeing the space.
 
-> **Note:** There is a time window between migration completion and cache download readiness, during which file cache misses may occur. [Peer cache read](./file-cache-peer-read), which is on by default, lets the new BE pull missing blocks directly from the cache of the source BE during this window instead of going back to remote storage.
+> **Note:** There is a time window between migration completion and cache download readiness, during which file cache misses may occur. [Peer cache read](./file-cache-peer-read), which must be explicitly enabled, lets the new BE pull missing blocks directly from the cache of the source BE during this window instead of going back to remote storage.
 
 #### Automatic Warm-Up Across Compute Clusters (Version 3.1+)
 
@@ -127,7 +127,7 @@ The file cache processing flow during a query is as follows:
 1. **Scanner read request:** After a query arrives, the Scanner component prepares to read the required data files.
 2. **Check local cache:** The Scanner first checks the local file cache, matching cache metadata by file path and offset.
 3. **Cache hit:** When matching cached data is found, the system returns a set of BlockFile handles, and the Scanner reads data locally without accessing remote storage.
-4. **Cache miss:** For ranges that are not in the cache, the Scanner downloads data from remote storage, writes it to the file cache, and then returns it. Space is freed in accordance with the eviction policy. With [peer cache read](./file-cache-peer-read) on (the default), the Scanner first tries the file cache of other BEs and downloads from remote storage only if no BE has the data.
+4. **Cache miss:** For ranges that are not in the cache, the Scanner downloads data from remote storage, writes it to the file cache, and then returns it. Space is freed in accordance with the eviction policy. With [peer cache read](./file-cache-peer-read) on (explicitly enabled), the Scanner first tries the file cache of other BEs and downloads from remote storage only if no BE has the data.
 
 ### Ingestion Scenario
 
@@ -222,7 +222,7 @@ Horizontal scale-out and scale-in involve tablet rebalancing operations. **Wait 
 
 - Confirm that tablet rebalancing is complete (the `doris_fe_tablet_num` curve is flat and stable).
 - Run a manual warm-up command for the target tables and partitions.
-- After horizontal scale-out, data download on new BEs takes time. Cache misses during this period are expected. [Peer cache read](./file-cache-peer-read), on by default, shortens the impact of this window; make sure it has not been turned off.
+- After horizontal scale-out, data download on new BEs takes time. Cache misses during this period are expected. [Peer cache read](./file-cache-peer-read), when explicitly enabled, shortens the impact of this window; check that it is enabled.
 
 **Q: Does Base Compaction cause hot data to be evicted?**
 

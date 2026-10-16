@@ -44,6 +44,8 @@ FE 的配置项有两种方式进行查看：
 
 ## 设置配置项
 
+自 4.1.5 版本起，`SHOW FRONTEND CONFIG` 和配置导出接口会将非空的敏感配置值显示为 `********`，包括 `initial_root_password`、TLS 私钥密码、HTTPS Key Store 密码和 MySQL SSL 证书密码。空值仍显示为空，表示尚未设置；脱敏不会改变实际生效的配置。
+
 FE 的配置项有两种方式进行配置：
 
 1. 静态配置
@@ -127,7 +129,7 @@ Doris 元数据将保存在这里。强烈建议将此目录的存储为：
 
 #### `enable_bdbje_debug_mode`
 
-默认值：false
+默认值：true（4.1.5 之前为 false）
 
 如果设置为 true，FE 将在 BDBJE 调试模式下启动，在 Web 页面 `System->bdbje` 可以查看相关信息，否则不可以查看
 
@@ -278,6 +280,66 @@ Master FE will save image every  `edit_log_roll_num` meta journals.
 
 是否为 Master FE 节点独有的配置项：true
 
+#### `cloud_edit_log_roll_interval_second`
+
+默认值：3600（秒）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+自 4.1.5 版本起支持。存算分离模式下按时间触发 Edit Log 滚动的间隔，用于在元数据写入较少时推进周期性 Checkpoint。是否到达该间隔是在追加日志时检查，完全没有新日志时不会由独立定时器强制滚动。非正值禁用按时间滚动，按日志条目数滚动的机制仍保留。
+
+#### `cloud_version_syncer_interval_second`
+
+默认值：60（秒，4.1.5 之前为 20）
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
+
+所有 FE 在存算分离模式下后台同步表和分区版本的间隔。需要 `cloud_enable_version_syncer=true`，且全局 / 默认的表或分区版本缓存 TTL 至少有一个为 `Long.MAX_VALUE`，后台同步才运行；有限 TTL 的缓存按读取惰性刷新。4.1.5 将默认间隔从 20 秒调整为 60 秒，以减少 Meta Service 请求。修改后需要重启 FE。
+
+#### `cloud_get_version_task_batch_size`
+
+默认值：200（4.1.5 之前为 2000）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
+
+存算分离版本同步任务中，单个 Get Version 批次包含的表或分区数量上限。4.1.5 将默认值从 2000 调整为 200，以减小单次请求规模。
+
+#### `cloud_version_syncer_get_version_retry_times`
+
+默认值：3
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
+
+自 4.1.5 版本起支持。存算分离后台版本同步任务获取表或分区版本时的最大尝试次数，包含首次请求；默认最多尝试 3 次，而不是首次请求后再重试 3 次。与前台查询的 Meta Service RPC 重试配置独立。
+
+#### `cloud_warm_up_job_scheduler_interval_millisecond`
+
+默认值：1000（毫秒）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+缓存预热任务的调度间隔。自 4.1.5 版本起，动态修改时要求值大于 `0`，否则返回 `cloud_warm_up_job_scheduler_interval_millisecond must be greater than 0`。
+
+#### `max_active_cloud_warm_up_job`
+
+默认值：10
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+同时调度的缓存预热任务数量。自 4.1.5 版本起，动态调整会同时更新预热执行器的并发数；非正值暂停调度新的预热工作。
+
 #### `cluster_id`
 
 默认值：-1
@@ -378,6 +440,16 @@ FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_i
 是否为 Master FE 节点独有的配置项：false
 
 ### 服务
+
+#### `arrow_flight_deferred_query_idle_timeout_second`
+
+默认值：3600（秒）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
+
+自 4.1.5 版本起支持。Arrow Flight SQL 外表批量扫描查询在返回 `GetFlightInfo` 后，仍需保留 FE Coordinator，以便客户端通过 `DoGet` 读取结果时 BE 继续获取 Split。此配置为闲置会话中的这类查询设置资源释放期限，期限从查询开始计时，且不会短于该查询自身的执行超时。到期后释放 Coordinator、Workload Group 排队槽位和 `active_queries` 记录，但不会关闭会话；会话仍由 `wait_timeout` 控制。设置为 `0` 可禁用该期限。
 
 #### `query_port`
 
@@ -1006,6 +1078,26 @@ colocate join PlanFragment instance 的 memory_limit = exec_mem_limit / min (que
 - 描述：**仅对于 AGG 模型的表来说**，当变量为 true 时，用户查询时包含 count(distinct c1) 这类聚合函数时，如果 c1 列本身类型为 bitmap，则 count distinct 会改写为 bitmap_union_count(c1)。当 c1 列本身类型为 hll，则 count distinct 会改写为 hll_union_agg(c1) 如果变量为 false，则不发生任何改写。
 
 ### 导入与导出
+
+#### `streaming_cdc_fetch_splits_batch_size`
+
+默认值：16（4.1.5 之前为 100）
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+Streaming CDC 每次获取 Split 的批量大小。4.1.5 将默认值从 100 调整为 16，以减小单批请求的规模。
+
+#### `max_export_history_job_num`
+
+默认值：1000
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+EXPORT 历史记录的清理阈值。自 4.1.5 版本起，清理只删除 `FINISHED` / `CANCELLED` 历史作业，不删除执行中的作业，因此总记录数可以因活跃作业而超过该值。
 
 #### `enable_pipeline_load`
 
@@ -1834,6 +1926,16 @@ HOUR: log 前缀是：yyyyMMddHH
 
 ### 存储
 
+#### `inverted_index_storage_format`
+
+默认值：`V3`
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：true
+
+新建倒排索引使用的默认存储格式。自 4.1.5 版本起，禁止新建 V1 格式倒排索引，也不允许通过动态配置设置为 `V1`。如果 `fe.conf` 或 `fe_custom.conf` 中生效的值为 `V1`，FE 将拒绝启动，应在升级前改为 `V2` 或 `V3`。已有 V1 表仍可读取，但不能继续添加倒排索引；需要新索引时，应重建为 V2 或 V3 格式的表。
+
 #### `min_replication_num_per_tablet`
 
 默认值：1
@@ -2534,6 +2636,16 @@ FE 会在每隔 es_state_sync_interval_secs 调用 es api 获取 es 索引分片
 
 ### 外部资源
 
+#### `ai_resource_allowed_user`
+
+默认值：`*`
+
+是否可以动态配置：false
+
+是否为 Master FE 节点独有的配置项：false
+
+自 4.1.5 版本起支持。限制允许创建 AI Resource 的用户身份。`*` 表示不额外限制身份，创建者仍需满足原有权限检查；其他取值采用 `'user'@'host'` 格式，必须与当前用户身份匹配。修改后需要重启 FE。
+
 #### `dpp_hadoop_client_path`
 
 默认值：/lib/hadoop-client/hadoop/bin/hadoop
@@ -2956,7 +3068,17 @@ FE 向 Meta Service 获取版本号（Version）的超时时间。
 
 是否可以动态配置：true
 
-自 4.1.4 版本起新增。是否对 FE 发往 Meta Service 的 RPC 请求开启 QPS 限流。
+自 4.1.4 版本起新增。是否对 FE 发往 Meta Service 的 RPC 请求启用 QPS 限流评估。自 4.1.5 版本起默认开启，同时默认启用 `meta_service_rpc_rate_limit_dry_run`，因此只记录预计等待和拒绝情况，不实际延迟或拒绝请求。要执行限流，需保持本项为 `true` 并将 dry-run 设置为 `false`。
+
+#### `meta_service_rpc_rate_limit_dry_run`
+
+默认值：true
+
+是否可以动态配置：true
+
+是否为 Master FE 节点独有的配置项：false
+
+自 4.1.5 版本起支持。仅在 `meta_service_rpc_rate_limit_enabled=true` 时生效。为 `true` 时，评估限流并记录相关指标，但不会等待或拒绝请求；为 `false` 时，按 QPS、突发窗口和等待超时配置实际限流。观察模式下的等待指标表示预计等待时间。
 
 #### `meta_service_rpc_rate_limit_default_qps_per_core`
 

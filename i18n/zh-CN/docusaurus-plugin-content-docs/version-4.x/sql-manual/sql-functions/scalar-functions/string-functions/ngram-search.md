@@ -26,16 +26,16 @@ NGRAM_SEARCH(<text>, <pattern>, <gram_num>)
 | ------------ | ----------------------------------------- |
 | `<text>` | 需要比较的文本字符串。类型：VARCHAR |
 | `<pattern>` | 模式字符串（必须为常量）。类型：VARCHAR |
-| `<gram_num>` | N-gram 的 N 值（必须为常量）。类型：INT |
+| `<gram_num>` | N-gram 的 N 值，必须为正整数常量。类型：INT。 |
 
 ## 返回值
 
 返回 DOUBLE 类型，为两个字符串的 N-gram 相似度（0 到 1 之间）。
 
 特殊情况：
-- 如果任意参数为 NULL，返回 NULL
+- `<text>` 或 `<pattern>` 为 NULL 时，返回 NULL；`<gram_num>` 必须满足正整数常量约束，不能为 NULL
 - 如果字符串长度小于 `<gram_num>`，返回 0
-- `<pattern>` 和 `<gram_num>` 必须为常量
+- `<pattern>` 和 `<gram_num>` 必须为常量。Doris 4.1 系列自 4.1.5 起，对 `<gram_num>` 为 0、负数或非整数常量等非法输入显式报错
 - 相似度为 1 不一定表示字符串完全相同
 
 ## 示例
@@ -86,6 +86,16 @@ SELECT ngram_search(NULL, 'test', 2);
 +--------------------------------+
 | NULL                           |
 +--------------------------------+
+```
+
+非法的 gram_num 会报错：
+
+```sql
+SELECT NGRAM_SEARCH('abc', 'abc', 0);
+```
+
+```text
+ngram_search(text,pattern,gram_num): gram_num must be a positive constant.
 ```
 
 ## Keywords

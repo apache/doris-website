@@ -60,6 +60,31 @@ curl http://fe_host:http_port/metrics?type=json
 curl http://be_host:webserver_port/metrics?type=json
 ```
 
+### bvar Metrics
+
+BE and Meta Service / Recycler processes also export bvar metrics through their brpc services. Use `/brpc_metrics` for Prometheus-compatible output and `/vars` to inspect diagnostics by name:
+
+```shell
+curl http://be_host:brpc_port/brpc_metrics
+curl http://be_host:brpc_port/vars
+curl http://cloud_host:brpc_listen_port/brpc_metrics
+```
+
+These endpoints use the BE `brpc_port` (default `8060`) or Meta Service / Recycler `brpc_listen_port` (default `5000`), which differ from the FE / BE HTTP monitoring ports above. bvar names below follow their registered names and do not all have a `doris_be_` prefix.
+
+#### Version Identification
+
+Since version 4.1.5, BE and Meta Service / Recycler version metrics include the following labels in `/brpc_metrics`:
+
+| Metric | Type | Labels | Meaning |
+| --- | --- | --- | --- |
+| `doris_be_version` | Gauge | `version`, `major`, `minor`, `patch`, `hotfix`, `short_hash` | BE build version and commit identifier |
+| `doris_cloud_version` | Gauge | Same as above | Meta Service / Recycler build version and commit identifier |
+
+Each process exports one version sample. The metric value retains the existing version encoding; read the `version` label for the complete version and `short_hash` for the commit identifier. `doris_cloud_version` does not distinguish whether the process runs Meta Service, Recycler, or both. Add a scrape target label to identify the role.
+
+The process's `bvar_max_dump_multi_dimension_metric_num` setting limits multidimensional bvar samples. It defaults to `5000`; `0` disables samples such as version metrics. BE supports this setting since version 4.1.5, and changes require a restart. See [BE Configuration](../config/be-config.md#bvar_max_dump_multi_dimension_metric_num).
+
 ## Monitoring Priority and Best Practices
 
 <!-- Knowledge type: Best practices -->
@@ -269,7 +294,7 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_fragment_instance_count` |  | Num | Number of fragment instances currently received | Observe whether instances are accumulating | P0 |
 | `doris_be_process_fd_num_limit_hard` |  | Num | Hard limit on the number of file handles for the BE process. Collected via `/proc/pid/limits` |  |  |
 | `doris_be_process_fd_num_limit_soft` |  | Num | Soft limit on the number of file handles for the BE process. Collected via `/proc/pid/limits` |  |  |
-| `doris_be_process_fd_num_used` |  | Num | Number of file handles used by the BE process. Collected via `/proc/pid/limits` |  |  |
+| `doris_be_process_fd_num_used` |  | Num | Number of file handles used by the BE process. Collected by counting entries in `/proc/self/fd` |  |  |
 | `doris_be_process_thread_num` |  | Num | Number of threads in the BE process. Collected via `/proc/pid/task` |  | P0 |
 | `doris_be_query_cache_memory_total_byte` |  | Bytes | Bytes occupied by the Query Cache |  |  |
 | `doris_be_query_cache_partition_total_count` |  | Num | Current number of entries in the Partition Cache |  |  |
@@ -297,7 +322,7 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_stream_load` | {type="load_rows"} | Num | Cumulative number of rows finally loaded by stream load | Includes both stream load and routine load tasks | P0 |
 | `doris_be_stream_load` | {type="receive_bytes"} | Bytes | Cumulative number of bytes received by stream load | Includes data received by stream load over HTTP and data read from Kafka by routine load | P0 |
 | `doris_be_tablet_base_max_compaction_score` |  | Num | Current maximum Base Compaction Score | This value changes in real time and may miss peak data. The higher the value, the more severe the Compaction backlog | P0 |
-| `doris_be_tablet_cumulative_max_compaction_score` |  | Num | Same as above. Current maximum Cumulative Compaction Score |  |  |
+| `doris_be_tablet_cumulative_max_compaction_score` |  | Num | Current maximum Compaction Score across all Cumulative Compaction strategies | Retained as the aggregate maximum across strategies |  |
 | `doris_be_tablet_version_num_distribution` |  | Num | Histogram of the number of tablet versions | Reflects the distribution of tablet version counts | P0 |
 | `doris_be_thrift_connections_total` |  | Num | Cumulative number of created thrift connections. For example, `{name="heartbeat"}` indicates the cumulative number of connections to the heartbeat service | This value is for the thrift server in which the BE acts as the server side |  |
 | `doris_be_thrift_current_connections` |  | Num | Current number of thrift connections. For example, `{name="heartbeat"}` indicates the current number of connections to the heartbeat service | Same as above |  |
@@ -326,6 +351,12 @@ curl http://be_host:webserver_port/metrics?type=json
 | `routine_load_get_msg_count` |  | Num | Number of times Routine Load retrieves Kafka messages |  |  |
 | `routine_load_consume_bytes` |  | Bytes | Volume of data consumed from Kafka by Routine Load |  |  |
 | `routine_load_consume_rows` |  | Num | Number of rows consumed from Kafka by Routine Load |  |  |
+| `doris_be_tablet_size_based_max_compaction_score` |  | Num | Current maximum Cumulative Compaction Score for the Size-based strategy | Gauge, added in 4.1.5; supports integrated and compute-storage decoupled modes |  |
+| `doris_be_tablet_time_series_max_compaction_score` |  | Num | Current maximum Cumulative Compaction Score for the Time-series strategy | Gauge, added in 4.1.5; supports integrated and compute-storage decoupled modes |  |
+| `doris_be_hdfs_file_open_reading` |  | Num | Current number of HDFS file handles actually open | Gauge; since version 4.1.5, counts shared file handles rather than reader objects |  |
+| `doris_be_hdfs_file_reader_total` |  | Num | Cumulative number of successful HDFS file handle opens | Counter; since version 4.1.5, readers that never open a file do not increase it, and reusing a cached handle does not count again |  |
+
+The two strategy-specific Compaction Scores are maxima. Do not add them or apply Counter rates to them. After a complete check, a strategy with no eligible tablets can reset to zero. If an integrated-mode check skips some directories because of disk capacity limits, it does not lower the previous observed value on that basis.
 
 ### Machine Monitoring
 
@@ -363,6 +394,21 @@ curl http://be_host:webserver_port/metrics?type=json
 | `doris_be_snmp_tcp_in_segs` |  | Num | Number of tcp packets received. Collected from `/proc/net/snmp` |  |  |
 | `doris_be_snmp_tcp_out_segs` |  | Num | Number of tcp packets sent. Collected from `/proc/net/snmp` |  |  |
 | `doris_be_snmp_tcp_retrans_segs` |  | Num | Number of tcp packet retransmissions. Collected from `/proc/net/snmp` |  |  |
+
+## bvar Diagnostic Metrics
+
+The following metrics are supported since version 4.1.5 and use the brpc ports described above. Counters accumulate from process startup; gauges represent current values.
+
+| Name or prefix | Process | Type | Meaning |
+| --- | --- | --- | --- |
+| `sync_tablets_meta_num` | BE in compute-storage decoupled mode | Counter | Cumulative background attempts to synchronize tablet metadata, counted before the call; does not represent successful calls |
+| `sync_tablets_rowsets_num` | BE in compute-storage decoupled mode | Counter | Cumulative background attempts to synchronize tablet rowsets, counted before the call; does not represent successful calls |
+| `vertical_compaction_active_segment_contexts` | BE | Gauge | Current number of active Segment contexts held by vertical Compaction |
+| `hdfs_get_path_info` | BE | Latency statistics, microseconds | Prefix of the `hdfsGetPathInfo` latency metrics, for diagnosing HDFS file metadata access |
+| `ms_repair_tablet_index` | Meta Service | Counter | Cumulative number of historical Tablet Index records repaired to add missing `db_id` during transaction commit; counted only after a successful commit |
+| `file_cache_ttl_mgr_ttl_info_map_size` (with cache path prefix) | BE | Gauge | Current number of tablet TTL information entries tracked in memory, rather than cache blocks |
+
+See [File Cache Monitoring](../../compute-storage-decoupled/file-cache/file-cache.md#cache-space-and-hit-rate-metrics) for cache path prefixes and eviction metrics. At the end of vertical Compaction, the BE INFO log field `vertical_compaction_active_segment_contexts_peak` records the peak context count for that task. It is a log field, rather than another process-level gauge.
 
 ## FAQ
 

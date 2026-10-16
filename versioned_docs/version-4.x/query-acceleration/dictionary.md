@@ -158,6 +158,8 @@ ORDER BY total_amount DESC;
 
 ## Dictionary Definition
 
+Since 4.1.5, creating a dictionary requires `CREATE` on the target dictionary object and `SELECT` on the source table. Dropping it requires `DROP` on the dictionary object. Source-table privileges are also checked when the source belongs to an external Catalog.
+
 <!-- Knowledge type: Configuration parameters / Operation steps -->
 
 ### Basic Syntax

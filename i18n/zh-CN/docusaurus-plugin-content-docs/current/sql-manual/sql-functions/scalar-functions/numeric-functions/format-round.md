@@ -29,16 +29,21 @@ FORMAT_ROUND(<number>, <D>)
 
 ## 返回值
 
-返回格式化后的字符串。特殊情况：
+返回 STRING 类型的格式化字符串。特殊情况：
 
 - 当参数为 NULL 时，返回 NULL
-- 如果 D 为 0，结果将没有小数点或小数部分。
+- 如果 D 为 0，结果将没有小数点或小数部分。Doris 4.1 系列自 4.1.5 起，DECIMAL 输入在 D 为 0 时也会四舍五入；此前可能直接丢弃小数部分。
 - 如果 D 不在 [0, 1024] 范围内，将返回错误提示参数应在该范围内。
 
-## 举例
+<a id="举例"></a>
+
+## 示例
 
 ```sql
-mysql> select format_round(17014116, 2);
+select format_round(17014116, 2);
+```
+
+```text
 +---------------------------+
 | format_round(17014116, 2) |
 +---------------------------+
@@ -47,7 +52,10 @@ mysql> select format_round(17014116, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.456, 2);
+select format_round(1123.456, 2);
+```
+
+```text
 +---------------------------+
 | format_round(1123.456, 2) |
 +---------------------------+
@@ -56,7 +64,10 @@ mysql> select format_round(1123.456, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.4, 2);
+select format_round(1123.4, 2);
+```
+
+```text
 +-------------------------+
 | format_round(1123.4, 2) |
 +-------------------------+
@@ -65,7 +76,10 @@ mysql> select format_round(1123.4, 2);
 ```
 
 ```sql
-mysql> select format_round(123456, 0);
+select format_round(123456, 0);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 0) |
 +-------------------------+
@@ -74,7 +88,10 @@ mysql> select format_round(123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456, 3);
+select format_round(123456, 3);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 3) |
 +-------------------------+
@@ -83,7 +100,10 @@ mysql> select format_round(123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 0);
+select format_round(123456.123456, 0);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 0) |
 +--------------------------------+
@@ -92,7 +112,10 @@ mysql> select format_round(123456.123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 3);
+select format_round(123456.123456, 3);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 3) |
 +--------------------------------+
@@ -101,7 +124,10 @@ mysql> select format_round(123456.123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 6);
+select format_round(123456.123456, 6);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 6) |
 +--------------------------------+
@@ -110,8 +136,40 @@ mysql> select format_round(123456.123456, 6);
 ```
 
 ```sql
-mysql> SELECT format_round(-0.01, -1);
+SELECT format_round(-0.01, -1);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1, it should be in range [0, 1024].
-mysql> SELECT format_round(-0.01, -1500);
+```
+
+```sql
+SELECT format_round(-0.01, -1500);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1500, it should be in range [0, 1024].
+```
+
+DECIMAL 输入舍入到 0 位小数：
+
+```sql
+SELECT FORMAT_ROUND(CAST(1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(1.4 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.4 AS DECIMAL(9, 1)), 0);
+```
+
+```text
+2    -2    1    -1
+```
+
+NULL 输入：
+
+```sql
+SELECT FORMAT_ROUND(NULL, 2);
+```
+
+```text
+NULL
 ```

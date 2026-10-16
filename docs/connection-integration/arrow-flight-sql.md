@@ -72,6 +72,14 @@ How to verify successful startup:
 | FE   | `fe/log/fe.log`  | `Arrow Flight SQL service is started` |
 | BE   | `be/log/be.INFO` | `Arrow Flight Service bind to host`   |
 
+## Type Mapping and Resource Release Since 4.1.5
+
+Since version 4.1.5, Arrow schemas preserve child-field logical type metadata and nullability in nested ARRAY / MAP / STRUCT values. `DATETIME` uses a timestamp without a time zone; `TIMESTAMPTZ` uses a timestamp annotated with the session time zone (`Z` is normalized to `UTC`). Parse the two types according to their different time zone semantics. Timestamps outside the supported range cause an error rather than being truncated or wrapped.
+
+Closing a result stream before reading finishes cancels the corresponding query and releases resources. Clients should close Readers / Statements correctly. For external table batch scans that must retain the Coordinator, the FE configuration [`arrow_flight_deferred_query_idle_timeout_second`](../admin-manual/config/fe-config.md#arrow_flight_deferred_query_idle_timeout_second) defaults to `3600` seconds. The deadline is never shorter than the query execution timeout, and releasing the Coordinator does not close the session.
+
+Since version 4.1.5, Arrow Flight queries explicitly bypass the MySQL protocol SQL result cache and the MySQL point-query short-circuit path. Queries still execute normally.
+
 ## Python usage
 
 <!-- Knowledge type: Operation steps -->
@@ -686,19 +694,17 @@ If you are not sure whether BE is fully on the internal network, follow these st
 
 The Linux kernel version on KylinV10 SP2 and SP3 only goes up to `4.19.90-24.4.v2101.ky10.aarch64` and cannot be upgraded further. The only option is to recompile Doris BE on KylinV10. If the issue persists after compiling with the new `ldb_toolchain`, try compiling with the older `ldb_toolchain v0.17`. If your ARM environment cannot reach the internet, Huawei Cloud provides ARM + KylinV10 and Alibaba Cloud provides x86 + KylinV10.
 
-### 4. Prepared Statement parameter passing error
+<a id="5-how-to-change-the-per-batch-read-size-for-jdbcarrow-flight-sql"></a>
 
-**Q:** When passing parameters with a Prepared Statement (such as `select * from xxx where id=?`), the error `parameter ordinal 1 out of range` occurs.
-
-**A:** Currently, `jdbc:arrow-flight-sql` and the Java ADBC/JDBC Driver do not support parameter passing with Prepared Statement. This is a bug in Arrow Flight SQL. See [GitHub Issue](https://github.com/apache/arrow/issues/40118) for details.
-
-### 5. How to change the per-batch read size for `jdbc:arrow-flight-sql`
+### 4. How to change the per-batch read size for `jdbc:arrow-flight-sql`
 
 **Q:** In some scenarios, the batch size needs to be changed to improve performance.
 
 **A:** Modify `setTargetBatchSize` in the `makeJdbcConfig` method in `org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader` (default `1024`), then save the modified file to a local directory under the same path to override the original file and take effect.
 
-### 6. ADBC v0.10 does not support parallel reads
+<a id="6-adbc-v010-does-not-support-parallel-reads"></a>
+
+### 5. ADBC v0.10 does not support parallel reads
 
 **Q:** Do JDBC and the Java ADBC/JDBC Driver in ADBC v0.10 support parallel reads?
 
@@ -713,25 +719,33 @@ for (FlightEndpoint endpoint : endpoints) { ... }
 
 In addition, the default `AdbcStatement` in ADBC v0.10 is actually `JdbcStatement`. After `executeQuery`, the row-based JDBC `ResultSet` is converted back to Arrow columnar format. Java ADBC functionality is expected to be more complete in ADBC 1.0.0. See [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490) for details.
 
-### 7. Specifying database name in the URL
+<a id="7-specifying-database-name-in-the-url"></a>
+
+### 6. Specifying database name in the URL
 
 **Q:** Can a database name be specified in the URL?
 
 **A:** As of Arrow v15.0, the Arrow JDBC Connector does not support specifying a database name in the URL. For example, specifying the `test` database in `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` has no effect. You must run the SQL `use database` manually. Arrow v18.0 supports specifying the database name in the URL, but bugs still exist in practice.
 
-### 8. Python ADBC prints a `Cannot disable autocommit` warning
+<a id="8-python-adbc-prints-a-cannot-disable-autocommit-warning"></a>
+
+### 7. Python ADBC prints a `Cannot disable autocommit` warning
 
 **Q:** The full warning is `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant`.
 
 **A:** When using Python, you can ignore this warning. It is an issue with the Python ADBC Client and does not affect queries.
 
-### 9. Python error `grpc: received message larger than max`
+<a id="9-python-error-grpc-received-message-larger-than-max"></a>
+
+### 8. Python error `grpc: received message larger than max`
 
 **Q:** The full error is `grpc: received message larger than max (20748753 vs. 16777216)`.
 
 **A:** Refer to [Python: grpc: received message larger than max #2078](https://github.com/apache/arrow-adbc/issues/2078) and add `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value` in the Database Option.
 
-### 10. Error `invalid bearer token`
+<a id="10-error-invalid-bearer-token"></a>
+
+### 9. Error `invalid bearer token`
 
 **Q:** The client reports the error `invalid bearer token`.
 
@@ -763,13 +777,17 @@ As of Doris v2.1.8, Arrow Flight connections and MySQL/JDBC connections share th
 
 Arrow Flight SQL is often used to replace JDBC scenarios, but JDBC connections are released immediately after the query finishes. Therefore, when using Arrow Flight SQL, the default connection limits in Doris are too small, often causing the number of connections to exceed `arrow_flight_token_cache_size` and evict connections that are still in use.
 
-### 11. Reading Datetime type via JDBC or Java returns a timestamp
+<a id="11-reading-datetime-type-via-jdbc-or-java-returns-a-timestamp"></a>
+
+### 10. Reading Datetime type via JDBC or Java returns a timestamp
 
 **Q:** When reading the Datetime type via JDBC or Java connecting to Arrow Flight SQL, a timestamp (such as `1740993808`) is returned instead of a formatted time (such as `2025-03-03 17:23:28Z`).
 
 **A:** When reading the Datetime type via JDBC or Java connecting to Arrow Flight SQL, you must convert the timestamp yourself. Refer to [Add java parsing datetime type in arrow flight sql sample #48578](https://github.com/apache/doris/pull/48578). Python Arrow Flight SQL returns `2025-03-03 17:23:28Z` for the Datetime type, while JDBC or Java returns `1740993808`.
 
-### 12. JDBC or Java JDBC Client error when reading Array nested types
+<a id="12-jdbc-or-java-jdbc-client-error-when-reading-array-nested-types"></a>
+
+### 11. JDBC or Java JDBC Client error when reading Array nested types
 
 **Q:** The full error is `Configuration does not provide a mapping for array column 2`.
 

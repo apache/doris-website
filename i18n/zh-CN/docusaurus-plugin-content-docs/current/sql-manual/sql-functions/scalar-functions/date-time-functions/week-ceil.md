@@ -2,13 +2,13 @@
 {
     "title": "WEEK_CEIL",
     "language": "zh-CN",
-    "description": "WEEKCEIL 函数用于将输入的日期时间值向上舍入到最接近的指定周间隔的起始时间,间隔单位为 WEEK 。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。"
+    "description": "WEEKCEIL 函数用于将输入的日期时间值向上舍入到最接近的指定周间隔的起始时间,间隔单位为 WEEK 。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0001-01-01 00:00:00 为参考点。"
 }
 ---
 
 ## 描述
 
-WEEK_CEIL 函数用于将输入的日期时间值向上舍入到最接近的指定周间隔的起始时间,间隔单位为 WEEK 。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0000-01-01 00:00:00 为参考点。
+WEEK_CEIL 函数用于将输入的日期时间值向上舍入到最接近的指定周间隔的起始时间,间隔单位为 WEEK 。若指定了起始参考点（origin），则以该点为基准计算间隔；否则默认以 0001-01-01 00:00:00 为参考点。
 
 日期计算公式：
 $$
@@ -23,10 +23,10 @@ $k$ 代表基准时间到达目标时间所需的周期数
 ## 语法
 
 ```sql
-WEEK_CEIL(`<date_or_time_expr>`)
-WEEK_CEIL(`<date_or_time_expr>`, `<origin>`)
-WEEK_CEIL(`<date_or_time_expr>`, `<period>`)
-WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
+WEEK_CEIL(<date_or_time_expr>)
+WEEK_CEIL(<date_or_time_expr>, <origin>)
+WEEK_CEIL(<date_or_time_expr>, <period>)
+WEEK_CEIL(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## 参数
@@ -35,7 +35,7 @@ WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 | ---- | ---- |
 | `<date_or_time_expr>` | 要向上舍入的日期时间值，支持输入 DATE/DATETIME/TIMESTAMP_NS/TIMESTAMPTZ 类型,具体格式请查看 [timestamptz的转换](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), [datetime 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) 和 [date 的转换](../../../../../current/sql-manual/basic-element/sql-data-types/conversion/date-conversion) |
 | `<period>` | 周间隔值，类型为 INT，表示每个间隔的周数 |
-| `<origin>` | 间隔的起始点，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型；默认为 0000-01-01 00:00:00 |
+| `<origin>` | 间隔的起始点，支持输入 DATE/DATETIME/TIMESTAMP_NS 类型；默认为 0001-01-01 00:00:00 |
 
 ## 返回值
 
@@ -45,116 +45,191 @@ WEEK_CEIL(`<date_or_time_expr>`, `<period>`, `<origin>`)
 
 返回根据输入参数确定的日期时间类型，表示向上舍入后的日期时间值。
 
+
 - 若输入为 TIMESTAMPTZ 类型，则会先将其转换为 local_time(如：`2025-12-31 23:59:59+05:00` 在会话变量为`+08:00`的情况下代表的local_time为`2026-01-01 02:59:59`),再进行 CEIL 计算操作。
-- 若输入的时间值(`<date_or_time_expr>` 和`<period>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
-- 若 `<period>` 为非正数（≤0），函数返回错误；
+- 若输入的时间值(`<date_or_time_expr>` 和`<origin>`)同时包含 TIMESTAMPTZ 和 DATETIME 类型，则输出 DATETIME 类型。
+- 输入非 NULL 且 `<period>` 为非正数（≤0）时，函数返回错误；
 - 若任一参数为 NULL，返回 NULL；
 - 若 `<date_or_time_expr>` 恰好是某间隔的起始点（基于 `<period>` 和 `<origin>`），则返回该起始点；
 - 若输入为 date 类型，则返回 date 类型
 - 若输入为  datetime 类型，则返回 datetime 类型，时间部分和起始时间一样。
 - 计算结果超过最大日期时间 9999-12-31 23:59:59 ，则返回错误 。
 - 对于 `<origin>` 日期时间超过 `<date_or_time_expr>`,也可以使用上述公式计算，不过 k 为负值。
-- 若 `date_or_time_expr` 带有 scale,则返回结果也带有 scale 且小数部分为零
+- 若 `date_or_time_expr` 带有 scale，则结果保留相应精度；指定的 `origin` 带有小数秒时，周期边界也保留该小数秒。Doris 4.1 系列自 4.1.5 起，周边界比较会考虑微秒，修复输入与 `origin` 仅在小数秒上不同时的舍入结果。
 
-## 举例
+<a id="举例"></a>
+
+## 示例
 
 ```sql
-
 -- 2023-07-13是周四，向上舍入到下一个间隔起点（1周间隔的起始点为周一，故舍入到2023-07-17（周一））
 SELECT WEEK_CEIL(cast('2023-07-13 22:28:18' as datetime)) AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-17 00:00:00 |
 +---------------------+
+```
 
+```sql
 -- 指定两周为一间隔
 SELECT WEEK_CEIL('2023-07-13 22:28:18', 2) AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-24 00:00:00 |
 +---------------------+
+```
 
+```sql
 -- 带有小数部分
-mysql> SELECT WEEK_CEIL('2023-07-13 22:28:18.123', 2) AS result;
+SELECT WEEK_CEIL('2023-07-13 22:28:18.123', 2) AS result;
+```
+
+```text
 +-------------------------+
 | result                  |
 +-------------------------+
 | 2023-07-24 00:00:00.000 |
 +-------------------------+
+```
 
+```sql
 -- 输入日期时间恰好为周期起点，则返回输入日期时间
-SELECT WEEK_CEIL('2023-07-24 22:28:18', 2) AS result;
+SELECT WEEK_CEIL('2023-07-24 00:00:00', 2) AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
-| 2023-08-07 00:00:00 |
+| 2023-07-24 00:00:00 |
 +---------------------+
+```
 
+```sql
 --输入 date 类型返回 date 类型， date 字符串返回 datetime
 SELECT WEEK_CEIL(cast('2023-07-13' as date));
+```
+
+```text
 +---------------------------------------+
 | WEEK_CEIL(cast('2023-07-13' as date)) |
 +---------------------------------------+
 | 2023-07-17                            |
 +---------------------------------------+
+```
 
+```sql
 -- 只有起始日期和指定日期
 select week_ceil("2023-07-13 22:28:18", "2021-05-01 12:00:00");
+```
+
+```text
 +---------------------------------------------------------+
 | week_ceil("2023-07-13 22:28:18", "2021-05-01 12:00:00") |
 +---------------------------------------------------------+
 | 2023-07-15 12:00:00                                     |
 +---------------------------------------------------------+
+```
 
+```sql
 ---指定起始日期
 SELECT WEEK_CEIL('2023-07-13', 1, '2023-07-03') AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-17 00:00:00 |
 +---------------------+
+```
 
+```sql
 ---指定时间为非 00:00:00 的 datetime ,返回时间部分也为起始时间部分
 SELECT WEEK_CEIL('2023-07-10', 1, '2023-07-10 12:00:00') AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-10 12:00:00 |
 +---------------------+
+```
 
+```sql
 -- TimeStampTz类型样例, SET time_zone = '+08:00'
 -- 将变量值转换为 local_time(2026-01-01 02:59:59)后再做 WEEK_CEIL 操作
 SELECT WEEK_CEIL('2025-12-31 23:59:59+05:00');
+```
+
+```text
 +----------------------------------------+
 | WEEK_CEIL('2025-12-31 23:59:59+05:00') |
 +----------------------------------------+
 | 2026-01-05 00:00:00+08:00              |
 +----------------------------------------+
+```
 
+```sql
 -- 若参数同时包含 TimeStampTz 和 Datetime 类型，则输出 DateTime 类型
 SELECT WEEK_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
+```
+
+```text
 +-------------------------------------------------------------------+
 | WEEK_CEIL('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
 +-------------------------------------------------------------------+
 | 2026-01-05 00:00:00.123                                           |
 +-------------------------------------------------------------------+
+```
 
+```sql
 ---计算结果超过最大日期时间 9999-12-31 23:59:59 ，则返回错误 。
 SELECT WEEK_CEIL('9999-12-31 22:28:18', 2) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_ceil of 9999-12-31 22:28:18, 2 out of range
+```
 
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_ceil of 9999-12-31 22:28:18, 2 out of range
+```
+
+```sql
 -- 无效period（非正整数）
 SELECT WEEK_CEIL('2023-07-13', 0) AS result;
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_ceil of 2023-07-13 00:00:00, 0 out of range
+```
 
-
+```sql
 -- 参数为NULL
 SELECT WEEK_CEIL(NULL, 1) AS result;
+```
+
+```text
 +--------+
 | result |
 +--------+
 | NULL   |
 +--------+
+```
+
+以带微秒的起点计算周边界（Doris 4.1 系列自 4.1.5 起修复）：
+
+```sql
+SELECT WEEK_CEIL(CAST('2024-01-08 00:00:00.600000' AS DATETIME(6)),
+                   1, CAST('2024-01-01 00:00:00.500000' AS DATETIME(6)));
+```
+
+```text
+2024-01-15 00:00:00.500000
 ```

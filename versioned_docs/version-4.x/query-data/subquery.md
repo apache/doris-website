@@ -123,6 +123,8 @@ Different forms of correlated subqueries have different limitations in Doris, de
 
 ### Limitations of Correlated Scalar Subqueries
 
+Since 4.1.5, subqueries that contain set operations such as `UNION`, `INTERSECT`, or `EXCEPT` and reference outer columns are explicitly rejected during analysis, for example with `Unsupported correlated subquery with set operation`. Uncorrelated set-operation subqueries are unaffected. A top-level `EXISTS` or `NOT EXISTS` over an ungrouped aggregate can still simplify to true or false when its result is known. This does not imply that all subqueries containing set operations are unsupported.
+
 The following two conditions must be met at the same time:
 
 - The correlation condition must be an equality condition.

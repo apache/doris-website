@@ -102,6 +102,12 @@ Use the appropriate command for each scenario:
 - **Resume immediately, or start manually after troubleshooting**: use [`RESUME JOB`](#resume-a-load-job)
 - **Stop completely and no longer schedule**: use [`PAUSE JOB`](#pause-a-load-job) (a manually paused job is not woken up by autoResume) or [`DROP JOB`](#delete-a-load-job)
 
+### CDC task identity and failure handling {#cdc-task-identity-and-failure-handling}
+
+Since 4.1.5, Streaming CDC uses the job creator's Doris identity for writes, table metadata queries, and schema changes, instead of a fixed administrator identity. The creator needs `LOAD` on the target tables, `CREATE` for automatic table creation, and the corresponding `ALTER` and table visibility privileges for schema synchronization. Revoking privileges during execution also affects subsequent tasks. Check grants for the creator recorded in the job.
+
+Failed Streaming INSERT tasks based on `cdc_stream()` do not enter the ordinary task retry flow. Inspect the errors in `jobs()` and `tasks()`, fix source or privilege problems, and resume according to the job state. Do not assume that a failed task is automatically replayed.
+
 ## Common Operations
 
 <!-- Knowledge type: Operational steps -->

@@ -32,6 +32,8 @@
 >
 > 2. 需要确保 JDBC 驱动 JAR 包可访问。可以通过 `iceberg.jdbc.driver_url` 指定驱动位置。
 
+自 4.1.5 版本起，创建或修改 Catalog 时会统一校验 JDBC 驱动地址：不带协议的值只能是匹配 `[A-Za-z0-9._-]+.jar` 的文件名；需要绝对路径时使用 `file:///...`。URL 解码后的路径不得含 `..` 父目录段。现有驱动安全路径及 URL 白名单限制仍然生效。
+
 ## 示例配置
 
 ### PostgreSQL 作为元数据存储
@@ -71,7 +73,7 @@ CREATE CATALOG iceberg_jdbc_mysql PROPERTIES (
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',
@@ -92,7 +94,7 @@ CREATE CATALOG iceberg_jdbc_sqlite PROPERTIES (
     'iceberg.jdbc.init-catalog-tables' = 'true',
     'iceberg.jdbc.schema-version' = 'V1',
     'iceberg.jdbc.driver_class' = 'org.sqlite.JDBC',
-    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>'
+    'iceberg.jdbc.driver_url' = '<jdbc_driver_jar>',
     'warehouse' = 's3://bucket/warehouse',
     's3.access_key' = '<ak>',
     's3.secret_key' = '<sk>',

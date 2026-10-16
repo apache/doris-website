@@ -1,7 +1,7 @@
 ---
 {
     "title": "VARIANT",
-    "language": "en-US",
+    "language": "en",
     "description": "The VARIANT type stores semi-structured JSON data. It can contain different primitive types (integers, strings, booleans, etc.), one-dimensional arrays, and nested objects. On write, Doris infers the structure and type of sub-paths based on JSON paths and performs Subcolumnization on frequent paths, exposing them as independent columnar subcolumns for both flexibility and performance."
 }
 ---
@@ -305,7 +305,7 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 
 Note: 2.1.7+ supports only InvertedIndex V2 properties (fewer files, lower write IOPS; suitable for disaggregated storage/compute). 2.1.8+ removes offline Build Index.
 
-Since Doris 4.1.0, norms can be disabled with the index property or BE config below.
+Since Doris 4.1.5, norms can be disabled with the index property or BE config below.
 
 Tokenized indexes on VARIANT paths write BM25 norms by default, costing one byte per row per path, including rows with no value for that path. For paths used only for filtering, disable norms with `"norms" = "false"`. Without `field_pattern`, this property applies to all subpaths covered by the index:
 

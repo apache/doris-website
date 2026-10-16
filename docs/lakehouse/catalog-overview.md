@@ -360,3 +360,15 @@ Dropping an external data catalog from Doris does not delete the actual data. It
 ## Permission Management
 
 Permission management for databases and tables in external data catalogs is the same as for internal tables. For details, refer to the [Authentication and Authorization](../admin-manual/auth/authentication-and-authorization.md) documentation.
+
+## External Table Partition Validation (Since 4.1.5)
+
+Since 4.1.5, external table creation validates the Catalog partition model before converting the partition definition:
+
+| Catalog | Supported definition | Unsupported definition |
+| --- | --- | --- |
+| Hive | `PARTITION BY LIST` using existing column names | RANGE, partition expressions, and explicit partition values |
+| Paimon / MaxCompute | Partition keys specified by column name | Partition function expressions and explicit partition values |
+| Iceberg | Supported column or transform partition definitions | Explicit partition values in Doris internal-table syntax |
+
+Do not reuse internal-table definitions that enumerate partition values for external tables. For example, Hive creates partitions from the data written, so you do not need to list `VALUES IN (...)` in advance.

@@ -68,6 +68,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       3. Http 地址。如：`https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar` 系统会从这个 Http 地址下载 Driver 文件。仅支持无认证的 Http 服务。  
 
 
+      自 4.1.5 版本起，不带协议的驱动地址只能是匹配 `[A-Za-z0-9._-]+.jar` 的文件名；URL 解码后的路径不得包含 `..` 父目录段。该校验也覆盖 `ALTER CATALOG`，以及 Iceberg / Paimon JDBC Catalog 的驱动地址。驱动安全目录和白名单检查仍然生效。
+
   * 可选属性
 
       | 参数名称                              | 默认值     | 说明                                                                                                                |

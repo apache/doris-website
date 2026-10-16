@@ -23,10 +23,10 @@ This system table is supported from versions 2.1.6 and 3.0.2.
 | Column Name | Type | Description |
 |---|---|---|
 | BE_ID | BIGINT | BE node ID |
-| BE_IP | VARCHAR(256) | BE node IP |
-| CACHE_PATH | VARCHAR(256) | BE node cache path |
-| METRIC_NAME | VARCHAR(256) | Metric name |
-| METRIC_VALUE | DOUBLE | Metric value |
+| BE_IP | STRING | BE node IP |
+| CACHE_PATH | STRING | BE node cache path |
+| METRIC_NAME | STRING | Metric name |
+| METRIC_VALUE | STRING | Text representation of the metric value; cast explicitly for numeric comparisons or calculations |
 
 :::info Note
 
@@ -70,6 +70,30 @@ Doris different version may have different metrics
 
 TODO
 
+### Metric Changes in Version 4.1.5
+
+Since version 4.1.5, the following two `METRIC_NAME` values are available. They accumulate separately for each BE and cache path from process startup:
+
+| METRIC_NAME | Unit | Meaning |
+| --- | --- | --- |
+| `evict_not_downloaded_size` | Bytes | Cumulative logical range size of cache blocks removed before download completion, excluding blocks currently downloading; does not represent physical eviction of downloaded data |
+| `evict_not_downloaded_num` | Blocks | Cumulative number of these removed cache blocks |
+
+Since the same version, `total_removed_size` counts only the bytes of fully downloaded cache blocks that are removed. Blocks that have not been downloaded use the new metrics separately. Marking a downloading block for deletion does not increase these counters.
+
+The corresponding brpc `/vars` names are `file_cache_evict_not_downloaded_size` and `file_cache_evict_not_downloaded_num`, each prefixed with its cache path. See [File Cache Monitoring](../../../compute-storage-decoupled/file-cache/file-cache.md#cache-space-and-hit-rate-metrics). The system table's `METRIC_NAME` has no path prefix; the path appears in `CACHE_PATH`.
+
+For example, query the new metrics and the cumulative removal volume of downloaded data:
+
+```sql
+SELECT BE_ID, CACHE_PATH, METRIC_NAME, CAST(METRIC_VALUE AS DOUBLE) AS metric_value
+FROM information_schema.file_cache_statistics
+WHERE METRIC_NAME IN ('total_removed_size', 'evict_not_downloaded_size', 'evict_not_downloaded_num')
+ORDER BY BE_ID, CACHE_PATH, METRIC_NAME;
+```
+
+The query returns the metrics for each cache path on each BE. Values change with cache activity.
+
 ## Examples
 
 1. Query all cache metrics
@@ -92,5 +116,5 @@ TODO
 2. Query cache hit ratio and sort by hit ratio
 
     ```sql
-    select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by METRIC_VALUE desc;
+    select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by cast(METRIC_VALUE as double) desc;
     ```

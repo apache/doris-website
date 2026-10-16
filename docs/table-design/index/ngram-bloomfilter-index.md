@@ -301,3 +301,7 @@ Run the same query again:
 | ------------------------------------- | ------ | ---------------- |
 | Without index                         | 7.60 s | Baseline         |
 | With NGram BloomFilter index added    | 0.93 s | **About 8x**     |
+
+## Index limitations for escaped LIKE patterns
+
+Since 4.1.5, LIKE queries with a custom `ESCAPE` or a backslash in the pattern do not use the NGRAM Bloom Filter for pruning, to avoid incorrect filtering. These queries remain supported through normal scanning. LIKE patterns without escapes can still use the index when the existing conditions are met.

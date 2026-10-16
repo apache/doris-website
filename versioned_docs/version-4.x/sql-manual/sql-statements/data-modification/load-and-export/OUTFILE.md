@@ -112,6 +112,8 @@ Users executing this SQL command must have at least the following permissions:
 |:------------|:-------------|:-------------------------------|
 | SELECT_PRIV | Database     | Requires read permissions on database and table. |
 
+Since 4.1.5, Parquet export defaults `enable_int96_timestamps` to `false`, using logical `INT64` timestamps. Set it explicitly to `true` when a reader requires INT96. The property accepts only `true` or `false`. See [Parquet](../../../../lakehouse/file-formats/parquet.md) for date and timezone semantics.
+
 ## Notes
 
 ### Data Type Mapping
@@ -130,9 +132,11 @@ Users executing this SQL command must have at least the following permissions:
    | bigint                  | bigint    |
    | largeInt                | string    |
    | date                    | string    |
-   | datev2                  | string    |
+   | datev2                  | date      |
    | datetime                | string    |
    | datetimev2              | timestamp |
+   | timestamptz | timestamp with local time zone (ORC TIMESTAMP_INSTANT; preserves instant semantics since 4.1.5) |
+   | varbinary | binary |
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |

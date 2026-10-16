@@ -360,3 +360,16 @@ DROP CATALOG [IF EXISTS] iceberg_catalog;
 ## 权限管理
 
 外部数据目录中库表的权限管理和内表一致。具体可参阅 [安全概览](../admin-manual/auth/security-overview) 文档。
+
+
+## 外表分区定义校验（4.1.5 起）
+
+自 4.1.5 版本起，创建外表会在转换分区定义前校验所属 Catalog 的分区模型：
+
+| Catalog | 允许的定义 | 不支持的定义 |
+| --- | --- | --- |
+| Hive | `PARTITION BY LIST`，按已有列名分区 | RANGE、分区表达式和显式分区值定义 |
+| Paimon / MaxCompute | 按列名定义分区键 | 分区函数表达式和显式分区值定义 |
+| Iceberg | 支持的列或 Transform 分区定义 | Doris 内表形式的显式分区值定义 |
+
+不要把 Doris 内表中枚举分区值的写法直接用于外表。例如 Hive 分区由写入的数据创建，不需要预先列出 `VALUES IN (...)`。

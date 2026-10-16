@@ -112,6 +112,8 @@ Outfile 语句返回的结果，各个列的含义如下：
 |:------------|:------------|:--------------|
 | SELECT_PRIV | 库（Database） | 需要对数据库、表的读权限。 |
 
+自 4.1.5 版本起，Parquet 导出的 `enable_int96_timestamps` 默认 `false`，使用逻辑 INT64；确需兼容 INT96 时显式设置为 `true`。该属性只接受 `true` / `false`。日期与时区语义见 [Parquet](../../../../lakehouse/file-formats/parquet.md#时间戳与日期兼容性415-起)。
+
 ## 注意事项
 
 ### 数据类型映射
@@ -130,9 +132,11 @@ Outfile 语句返回的结果，各个列的含义如下：
    | bigint                  | bigint    |
    | largeInt                | string    |
    | date                    | string    |
-   | datev2                  | string    |
+   | datev2                  | date |
    | datetime                | string    |
    | datetimev2              | timestamp |
+   | timestamptz | timestamp with local time zone（ORC TIMESTAMP_INSTANT；4.1.5 起保留时间点语义） |
+   | varbinary | binary |
    | float                   | float     |
    | double                  | double    |
    | char / varchar / string | string    |

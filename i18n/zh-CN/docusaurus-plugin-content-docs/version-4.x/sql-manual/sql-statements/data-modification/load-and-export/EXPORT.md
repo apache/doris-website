@@ -63,6 +63,8 @@
 
   - `format`：指定导出作业的文件格式，支持：parquet, orc, csv, csv_with_names、csv_with_names_and_types。默认为 CSV 格式。
 
+  - `enable_int96_timestamps`：Parquet 导出是否使用 INT96 时间戳。自 4.1.5 版本起支持在 EXPORT 中显式配置，默认 `false`，采用逻辑 INT64；设为 `true` 可兼容需要 INT96 的消费端，只接受 `true` 或 `false`。
+
   - `max_file_size`：导出作业单个文件大小限制，如果结果超过这个值，将切割成多个文件。`max_file_size`取值范围是[5MB, 2GB], 默认为 1GB。（当指定导出为 orc 文件格式时，实际切分文件的大小将是 64MB 的倍数，如：指定 max_file_size = 5MB, 实际将以 64MB 为切分；指定 max_file_size = 65MB, 实际将以 128MB 为切分）
 
   - `parallelism`：导出作业的并发度，默认为`1`，导出作业会开启`parallelism`个数的线程去执行`select into outfile`语句。（如果 Parallelism 个数大于表的 Tablets 个数，系统将自动把 Parallelism 设置为 Tablets 个数大小，即每一个`select into outfile`语句负责一个 Tablets）

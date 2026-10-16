@@ -15,7 +15,7 @@ Peer 读是存算分离架构下 File Cache 的未命中处理策略：本 BE �
 
 :::caution 实验性功能
 
-Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认开启。不需要这项能力时，在 BE 上设置 `enable_cache_read_from_peer = false` 关闭。
+跨计算组 Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认关闭。需要使用时，在相关 BE 上显式设置 `enable_cache_read_from_peer = true`。
 
 :::
 
@@ -37,7 +37,7 @@ Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认开启。不需�
 
 - 存算分离部署。存算一体模式下 Peer 读不生效。
 - 所有 BE 已开启 File Cache（`enable_file_cache = true`）。
-- `enable_cache_read_from_peer` 保持默认值 `true`。
+- 显式设置 `enable_cache_read_from_peer = true`（默认 `false`）。
 - 使用回源填充时，需要知道填充计算组的 ID（`compute_group_id`），获取方法见[指定回源填充计算组](#指定回源填充计算组)。
 
 ## 限制
@@ -83,6 +83,8 @@ Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认开启。不需�
 - 某个 tablet 连续 `peer_all_miss_cooldown_threshold`（默认 5）次"所有候选节点都没有数据"后进入冷却期，冷却 `peer_all_miss_cooldown_duration_s`（默认 300 秒）期间直接走对象存储。
 - 候选节点信息 `peer_candidate_expiry_s`（默认 3600 秒）内没有被使用就从内存清理，下次未命中时重新向 FE 拉取。
 
+自 4.2.0 版本起，支持跨 Tablet 共享的 Peer 地址级熔断：同一地址连续连接或 RPC 失败达到 `cache_peer_read_failure_threshold`（默认 `3`，最小按 `1` 处理）后，暂停向它发送请求 `cache_peer_read_circuit_open_seconds` 秒（默认 `30`，负值按 `0` 处理），到期后仅允许一次恢复探测。这与 Tablet 候选节点剔除、所有候选未命中的冷却机制分别生效。
+
 ### 跨计算组回源填充
 
 在发起读取的 BE 上配置 `peer_cache_fill_compute_group_id` 后，如果本次选中的候选节点属于该计算组，请求会带上填充标记。收到请求的 BE 自己也没有该数据块，且 `enable_peer_server_cache_fill` 开启（默认开启）时，就会代为从对象存储读取，写入自己的 File Cache 后再返回。
@@ -98,7 +100,7 @@ Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认开启。不需�
 
 ### 确认或关闭 Peer 读
 
-Peer 读默认开启，只要 File Cache 已开启就会生效，同计算组和跨计算组同时生效，候选节点由 FE 自动给出。通过 MySQL 客户端确认当前值：
+Peer 读默认关闭。使用时需同时启用 File Cache，并在 BE 的 `be.conf` 中设置 `enable_cache_read_from_peer=true`，或使用下文的动态配置接口。同计算组和跨计算组同时生效，候选节点由 FE 自动给出。通过 MySQL 客户端确认当前值：
 
 ```sql
 SHOW BACKEND CONFIG LIKE 'enable_cache_read_from_peer';
@@ -155,7 +157,7 @@ curl -X POST "http://<be_host>:<be_webserver_port>/api/update_config?peer_race_h
 
 | 参数 | 默认值 | 说明 |
 |---|---|---|
-| `enable_cache_read_from_peer` | `true` | Peer 读总开关。开启时本地 File Cache 未命中先尝试从其他 BE 读取，同计算组和跨计算组同时生效 |
+| `enable_cache_read_from_peer` | `false` | Peer 读总开关。开启时本地 File Cache 未命中先尝试从其他 BE 读取，同计算组和跨计算组同时生效 |
 | `enable_peer_s3_race` | `true` | 是否让 Peer 读与对象存储读并发竞速。关闭后改为串行：先依次尝试候选节点，全部失败再读对象存储 |
 | `peer_race_hedge_delay_ms` | `20` | 竞速时给 Peer 的先手时间（毫秒）。Peer 在该时间内返回则不再发起对象存储读取；设为 `0` 表示两路同时发起 |
 | `max_concurrent_peer_races` | `64` | 单个 BE 上同时进行的竞速数上限。超过后新的未命中请求改为串行 |

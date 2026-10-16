@@ -58,11 +58,11 @@ CREATE CATALOG oracle_catalog PROPERTIES (
 | float/real                            | double                               |                                                                                                                 |
 | date                                  | date                                 |                                                                                                                 |
 | timestamp                             | datetime(S)                          |                                                                                                                 |
-|timestamp(s) with local time zone | datetime / timestamptz| properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型|
+| timestamp(s) with time zone / timestamp(s) with local time zone | TIMESTAMPTZ(S) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |
-| BLOB | varbinary | 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| BLOB | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
 | other                                 | UNSUPPORTED                          |                                                                                                                 |
 
 ## 常见问题

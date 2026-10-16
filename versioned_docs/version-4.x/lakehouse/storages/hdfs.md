@@ -117,6 +117,8 @@ Example:
 'dfs.client.failover.proxy.provider.nameservice1' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider',
 ```
 
+Since 4.1.5, the comma-separated XML paths in `hadoop.config.resources` must not contain a `..` parent-directory segment. Both forward-slash and backslash separators are checked. Use normal paths such as `conf/core-site.xml,conf/hdfs-site.xml`; do not use `../` to access a parent directory.
+
 ## Configuration Files
 
 > This feature is supported since version 3.1.0

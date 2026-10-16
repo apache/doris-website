@@ -86,7 +86,7 @@ The Parquet and ORC file formats have their own data type definitions, and Apach
 
 The mappings between Apache Doris data types and the ORC and Parquet formats are listed below.
 
-UUID values are exported as 36-character lowercase canonical text in CSV only. In Parquet, a UUID column is written as `FIXED_LEN_BYTE_ARRAY(16)` with the Parquet UUID logical annotation, in canonical big-endian byte order. In ORC, a UUID column is written as `BINARY` with the Doris-specific `doris.logical_type=uuid` attribute, because ORC has no standard UUID type. UUID elements nested in ARRAY, MAP, or STRUCT use the same representation as top-level columns. Reloading a Doris-written ORC file through a table-valued function restores the native UUID type, whereas Parquet schema inference still exposes UUID leaves as `STRING`/`VARBINARY`; specify UUID target columns or use `CAST(value AS UUID)` when reloading a Parquet file. Writes to Iceberg UUID fields follow the [Iceberg column type mapping](../../lakehouse/catalogs/iceberg-catalog.mdx#column-type-mapping).
+UUID values are exported as 36-character lowercase canonical text in CSV only. In Parquet, a UUID column is written as `FIXED_LEN_BYTE_ARRAY(16)` with the Parquet UUID logical annotation, in canonical big-endian byte order. In ORC, a UUID column is written as `BINARY` with the Doris-specific `doris.logical_type=uuid` attribute, because ORC has no standard UUID type. UUID elements nested in ARRAY, MAP, or STRUCT use the same representation as top-level columns. Reloading Doris-written ORC files or Parquet files with the UUID logical annotation through a table-valued function restores the native UUID type in dev. Writes to Iceberg UUID fields follow the [Iceberg column type mapping](../../lakehouse/catalogs/iceberg-catalog.mdx#column-type-mapping).
 
 ### ORC Type Mapping
 
@@ -99,9 +99,11 @@ UUID values are exported as 36-character lowercase canonical text in CSV only. I
 | bigint                  | bigint    |
 | largeInt                | string    |
 | date                    | string    |
-| datev2                  | string    |
+| datev2                  | date      |
 | datetime                | string    |
 | datetimev2              | timestamp |
+| timestamptz | timestamp with local time zone (ORC TIMESTAMP_INSTANT; preserves instant semantics since 4.1.5) |
+| varbinary | binary |
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
@@ -147,7 +149,7 @@ When Apache Doris exports to the Parquet file format, it first converts the in-m
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-For Parquet Export and Outfile, use the `enable_int96_timestamps` property to choose the physical encoding of Doris `DATETIMEV2` values. The default is `false`, which writes `INT64` with a Parquet timestamp logical type. Set it to `true` to write the deprecated `INT96` encoding only when a legacy downstream reader, such as Hive 2 or Hive 3, requires it. Asynchronous Export stores this property with the export job and applies it when the job executes. If Doris later reads an explicitly exported `INT96` file, set `hive.parquet.time-zone` to the export session time zone in the Hive Catalog or file table-valued function so FileScannerV2 restores the original wall-clock value.
+For Parquet Export and Outfile, use the `enable_int96_timestamps` property to choose the physical encoding of Doris `DATETIMEV2` values. The default is `false`, which writes `INT64` with a Parquet timestamp logical type. Set it to `true` to write the deprecated `INT96` encoding only when a legacy downstream reader, such as Hive 2 or Hive 3, requires it. Asynchronous Export stores this property with the export job and applies it when the job executes. If Doris later reads an explicitly exported `INT96` file, set `hive.parquet.time-zone` to the export session time zone in the Hive Catalog or file table-valued function so FileScannerV2 restores the original wall-clock value. This default applies since 4.1.5; the property accepts only `true` or `false`.
 :::
 
 ## Related Documents

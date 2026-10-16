@@ -98,6 +98,8 @@ Specifies the role name. The role must exist.
 
 A comma-separated list of roles to be revoked. All specified roles must exist.
 
+Since 4.1.5, a privilege object name has at most three components: `db`, `db.table`, or `catalog.db.table`, including the corresponding wildcard forms. More than three components are rejected, rather than silently ignoring extra prefixes.
+
 ## Access Control Requirements
 
 Users executing this SQL command must have at least the following privileges:
@@ -105,6 +107,8 @@ Users executing this SQL command must have at least the following privileges:
 | Privilege | Object | Notes                |
 | :---------------- | :------------- | :---------------------------- |
 | GRANT_PRIV        | User or Role   | Only users or roles with the GRANT_PRIV privilege can perform the REVOKE operation. |
+
+Since 4.1.5, a non-`ADMIN` user granting or revoking column privileges needs both the existing `GRANT` privilege and the corresponding table privilege or the corresponding privilege on every listed column. `GRANT` alone does not allow users to grant or revoke column privileges they do not hold.
 
 ## Examples
 

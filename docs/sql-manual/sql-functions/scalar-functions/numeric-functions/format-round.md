@@ -29,16 +29,21 @@ FORMAT_ROUND(<number>, <D>)
 
 ## Return Value
 
-Returns the formatted string. Special cases:
+Returns the formatted string of type STRING. Special cases:
 
 - Returns NULL when the parameter is NULL
-- If D is 0, the result will have no decimal point or decimal part.
+- If D is 0, the result will have no decimal point or decimal part. In the Doris 4.1 series since 4.1.5, DECIMAL input is also rounded when D is 0; earlier versions could discard the fractional part without rounding.
 - If D is not in [0, 1024], an error is returned indicating the argument should be within this range.
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 ```sql
-mysql> select format_round(17014116, 2);
+select format_round(17014116, 2);
+```
+
+```text
 +---------------------------+
 | format_round(17014116, 2) |
 +---------------------------+
@@ -47,7 +52,10 @@ mysql> select format_round(17014116, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.456, 2);
+select format_round(1123.456, 2);
+```
+
+```text
 +---------------------------+
 | format_round(1123.456, 2) |
 +---------------------------+
@@ -56,7 +64,10 @@ mysql> select format_round(1123.456, 2);
 ```
 
 ```sql
-mysql> select format_round(1123.4, 2);
+select format_round(1123.4, 2);
+```
+
+```text
 +-------------------------+
 | format_round(1123.4, 2) |
 +-------------------------+
@@ -65,7 +76,10 @@ mysql> select format_round(1123.4, 2);
 ```
 
 ```sql
-mysql> select format_round(123456, 0);
+select format_round(123456, 0);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 0) |
 +-------------------------+
@@ -74,7 +88,10 @@ mysql> select format_round(123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456, 3);
+select format_round(123456, 3);
+```
+
+```text
 +-------------------------+
 | format_round(123456, 3) |
 +-------------------------+
@@ -83,7 +100,10 @@ mysql> select format_round(123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 0);
+select format_round(123456.123456, 0);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 0) |
 +--------------------------------+
@@ -92,7 +112,10 @@ mysql> select format_round(123456.123456, 0);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 3);
+select format_round(123456.123456, 3);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 3) |
 +--------------------------------+
@@ -101,7 +124,10 @@ mysql> select format_round(123456.123456, 3);
 ```
 
 ```sql
-mysql> select format_round(123456.123456, 6);
+select format_round(123456.123456, 6);
+```
+
+```text
 +--------------------------------+
 | format_round(123456.123456, 6) |
 +--------------------------------+
@@ -110,8 +136,40 @@ mysql> select format_round(123456.123456, 6);
 ```
 
 ```sql
-mysql> SELECT format_round(-0.01, -1);
+SELECT format_round(-0.01, -1);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1, it should be in range [0, 1024].
-mysql> SELECT format_round(-0.01, -1500);
+```
+
+```sql
+SELECT format_round(-0.01, -1500);
+```
+
+```text
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]The second argument is -1500, it should be in range [0, 1024].
+```
+
+Round DECIMAL input to zero decimal places:
+
+```sql
+SELECT FORMAT_ROUND(CAST(1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.9 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(1.4 AS DECIMAL(9, 1)), 0),
+       FORMAT_ROUND(CAST(-1.4 AS DECIMAL(9, 1)), 0);
+```
+
+```text
+2    -2    1    -1
+```
+
+NULL input:
+
+```sql
+SELECT FORMAT_ROUND(NULL, 2);
+```
+
+```text
+NULL
 ```

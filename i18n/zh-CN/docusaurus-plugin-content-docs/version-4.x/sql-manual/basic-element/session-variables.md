@@ -27,6 +27,14 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
+## 4.1.5 版本变更概览
+
+| 类别 | 变量 |
+| --- | --- |
+| 新增 | `enable_hyperscan_fallback` |
+| 默认值变更 | `enable_file_cache`：`false` → `true` |
+| 行为修正 | `profile_level` 随请求转发到 Master FE；`return_object_data_as_binary` 纳入 SQL Cache 结果区分 |
+
 ## 4.1.4 版本变更概览
 
 | 类别 | 变量 |
@@ -36,6 +44,16 @@ SET GLOBAL enable_file_scanner_v2 = false;
 | 移除 | `eager_aggregation_on_join`、`plan_nereids_dump` |
 
 ## 外表扫描
+
+### `enable_file_cache`
+
+| 项 | 值 |
+| --- | --- |
+| 类型 | Boolean |
+| 默认值 | `true`（4.1.5 之前为 `false`） |
+| 版本 | 4.1.5 默认值变更 |
+
+查询是否使用 File Cache。BE 的同名配置也必须开启；如果 BE 配置为 `false`，仅开启会话变量不会使用缓存。4.1.5 同时将两者的默认值改为 `true`。升级后应检查已有显式配置及持久化的全局变量，相关路径、容量与限制见 [File Cache](../../compute-storage-decoupled/file-cache/file-cache.md)。
 
 ### `enable_file_scanner_v2`
 
@@ -125,7 +143,7 @@ ScanNode 扫描数据的最大并发数。4.1.4 将默认值由 `4` 调整为 `8
 
 是否使用 Nereids 分布式规划器。
 
-自 4.1.4 版本起，升级会把该变量的**全局默认值刷新为 `true`**，即使集群元数据中此前持久化的是 `false`。升级后如果观察到查询计划的分布方式与升级前不同，可执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退。
+4.1 系列自 4.1.4 版本起，仅当 `variable_version < 400`（通常为从 3.x 升级）时，迁移逻辑才会把该变量的**全局默认值刷新为 `true`**，即使此前持久化的是 `false`。已经运行在 4.x 的集群升级时不会再次刷新。升级后如果观察到查询计划的分布方式与升级前不同，可执行 `SET GLOBAL enable_nereids_distribute_planner = false;` 回退。
 
 ### `runtime_filter_broadcast_join_producer_num`
 
@@ -272,6 +290,40 @@ SET force_eager_agg_hint = 'sum:t1.a=push; sum:t2.a=nopush; count:*=push';
 | 版本 | 4.1.4 新增 |
 
 多模态 `EMBED()` 场景中，为 S3 兼容存储对象生成的预签名 URL 的有效期。媒体文件较大、Provider 拉取耗时较长时可以适当调大。详见 [EMBED](../sql-functions/ai-functions/distance-functions/embed.md)。
+
+## Profile 与结果输出
+
+### `profile_level`
+
+| 项 | 值 |
+| --- | --- |
+| 类型 | Integer（1、2、3） |
+| 默认值 | `2` |
+| 版本 | 4.1.5 修正转发行为 |
+
+控制查询 Profile 的详细程度：`1` 收集合并后的计数，`2` 输出详细信息，`3` 额外开启部分可能影响性能的计数。自 4.1.5 版本起，转发到 Master FE 的查询会保留当前会话指定的级别。详见 [Query Profile](../../query-acceleration/query-profile.md)。
+
+### `return_object_data_as_binary`
+
+| 项 | 值 |
+| --- | --- |
+| 类型 | Boolean |
+| 默认值 | `false` |
+| 版本 | 4.1.5 修正 SQL Cache 区分行为 |
+
+控制 MySQL 结果中 HLL、BITMAP、QUANTILE_STATE 对象是否返回原始二进制数据；为 `false` 时返回 NULL。自 4.1.5 版本起，该变量参与 SQL 结果缓存的区分，避免开启二进制输出的会话复用关闭时缓存的 NULL 结果。
+
+## 正则表达式
+
+### `enable_hyperscan_fallback`
+
+| 项 | 值 |
+| --- | --- |
+| 类型 | Boolean |
+| 默认值 | `true` |
+| 版本 | 4.1.5 新增 |
+
+Hyperscan 无法编译模式时，是否允许回退到 RE2。为 `true` 时尝试 RE2；为 `false` 时返回 Hyperscan 编译错误。回退不会让 RE2 支持其本身不支持的语法。该变量与启用 Boost.Regex 高级语法的 `enable_extended_regex` 分别控制不同路径。详见 [REGEXP](../sql-functions/scalar-functions/string-functions/regexp.md)。
 
 ## 已移除的变量
 

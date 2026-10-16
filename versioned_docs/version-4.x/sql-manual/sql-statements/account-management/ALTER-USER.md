@@ -77,6 +77,8 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Usage Notes
 
+Since 4.1.5, only `'root'@'%'` is the special root identity. An identity such as `'root'@'localhost'` remains an ordinary user and gains no privilege to modify the actual root account merely from its username. Protection of the actual root account also does not apply to other users named root.
+
 1. Starting from version 2.0, this command no longer supports modifying user roles. Please use [GRANT](./GRANT-TO.md) and [REVOKE](./REVOKE-FROM.md) for related operations.
 
 2. In an ALTER USER command, only one of the following account attributes can be modified at the same time:

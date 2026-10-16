@@ -8,7 +8,7 @@
 
 ## Description
 
-The WEEK_FLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0000-01-01 00:00:00 as the reference point.
+The WEEK_FLOOR function rounds down an input datetime value to the nearest specified week interval start time, with the interval unit being WEEK. If a starting reference point (origin) is specified, it uses that point as the basis for calculating intervals; otherwise, it defaults to using 0001-01-01 00:00:00 as the reference point.
 
 Date calculation formula:
 $$
@@ -19,10 +19,10 @@ $k$ represents the number of periods from the reference time to the target time.
 ## Syntax
 
 ```sql
-WEEK_FLOOR(`<date_or_time_expr>`)
-WEEK_FLOOR(`<date_or_time_expr>`, `<origin>`)
-WEEK_FLOOR(`<date_or_time_expr>`, `<period>`)
-WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
+WEEK_FLOOR(<date_or_time_expr>)
+WEEK_FLOOR(<date_or_time_expr>, <origin>)
+WEEK_FLOOR(<date_or_time_expr>, <period>)
+WEEK_FLOOR(<date_or_time_expr>, <period>, <origin>)
 ```
 
 ## Parameters
@@ -31,99 +31,170 @@ WEEK_FLOOR(`<date_or_time_expr>`, `<period>`, `<origin>`)
 |-----------|-------------|
 | `<date_or_time_expr>` | The datetime value to round down, supports date/datetime/timestamptz types. Date type will be converted to the start time 00:00:00 of the corresponding date. For specific formats please see [timestamptz conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion), and for datetime/date formats refer to [datetime conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/datetime-conversion) and [date conversion](../../../../sql-manual/basic-element/sql-data-types/conversion/date-conversion)|
 | `<period>` | Week interval value, type INT, representing the number of weeks in each interval |
-| `<origin>` | Starting point for the interval, supports date/datetime types; defaults to 0000-01-01 00:00:00 |
+| `<origin>` | Starting point for the interval, supports date/datetime types; defaults to 0001-01-01 00:00:00 |
 
 ## Return Value
 
-Returns DATETIME type, representing the rounded-down datetime value. The time portion of the result will be set to 00:00:00.
+Returns TIMESTAMPTZ, DATETIME, or DATE, representing the rounded-down datetime value. The time portion is determined by the origin.
 
-- If `<period>` is a non-positive (≤0), the function returns an error;
+- If the input is non-NULL and `<period>` is non-positive (≤0), the function returns an error;
 - If any parameter is NULL, returns NULL;
 - If `<datetime>` is exactly at an interval start point (based on `<period>` and `<origin>`), returns that start point;
 - If input is date type, returns date type
 - If input is datetime type, returns datetime type with the same time portion as the origin time.
-- If the `<origin>` date and time is after the `<period>`, it will still be calculated according to the above formula, but the period k will be negative.
-- If date_or_time_expr has a scale, the returned result will also have a scale with the fractional part being zero.
+- If the `<origin>` date and time is after `<date_or_time_expr>`, it will still be calculated according to the above formula, but the period k will be negative.
+- If `date_or_time_expr` has a scale, the result retains the corresponding precision. When `origin` includes fractional seconds, interval boundaries retain that fraction. In the Doris 4.1 series since 4.1.5, week boundary comparisons account for microseconds, correcting rounding when the input and `origin` differ only in fractional seconds.
 - If the input is TIMESTAMPTZ type, it will first be converted to local_time (for example: `2025-12-31 23:59:59+05:00` represents local_time `2026-01-01 02:59:59` when the session variable is `+08:00`), and then perform FLOOR calculation.
-- If the input time values (`<date_or_time_expr>` and `<period>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
+- If the input time values (`<date_or_time_expr>` and `<origin>`) contain both TIMESTAMPTZ and DATETIME types, the output is DATETIME type.
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 ```sql
 -- 2023-07-13 is Thursday, default 1-week interval (starting Monday), rounds down to nearest Monday (2023-07-10)
 SELECT WEEK_FLOOR(cast('2023-07-13 22:28:18' as datetime)) AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-10 00:00:00 |
 +---------------------+
+```
 
+```sql
 -- Specify 2-week interval, rounds down to nearest 2-week interval start
 SELECT WEEK_FLOOR('2023-07-13 22:28:18', 2) AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-10 00:00:00 |
 +---------------------+
+```
 
+```sql
 -- input with decimal part
-mysql> SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
+SELECT WEEK_FLOOR('2023-07-13 22:28:18.123', 2) AS result;
+```
+
+```text
 +-------------------------+
 | result                  |
 +-------------------------+
 | 2023-07-10 00:00:00.000 |
 +-------------------------+
+```
 
+```sql
 -- Input date type, returns date type
 SELECT WEEK_FLOOR(cast('2023-07-13' as date)) AS result;
+```
+
+```text
 +------------+
 | result     |
 +------------+
 | 2023-07-10 |
 +------------+
+```
 
+```sql
 -- Only with origin date and specified date
 select week_floor("2023-07-13 22:28:18", "2021-05-01 12:00:00");
+```
+
+```text
 +----------------------------------------------------------+
 | week_floor("2023-07-13 22:28:18", "2021-05-01 12:00:00") |
 +----------------------------------------------------------+
 | 2023-07-08 12:00:00                                      |
 +----------------------------------------------------------+
+```
 
+```sql
 -- Specify origin='2023-07-03' (Monday), 1-week interval
 SELECT WEEK_FLOOR('2023-07-13', 1, '2023-07-03') AS result;
+```
+
+```text
 +---------------------+
 | result              |
 +---------------------+
 | 2023-07-10 00:00:00 |
 +---------------------+
+```
 
+```sql
 -- TimeStampTz sample, SET time_zone = '+08:00'
 -- Convert to local_time (2026-01-01 02:59:59) and then perform WEEK_FLOOR
 SELECT WEEK_FLOOR('2025-12-31 23:59:59+05:00');
+```
+
+```text
 +-----------------------------------------+
 | WEEK_FLOOR('2025-12-31 23:59:59+05:00') |
 +-----------------------------------------+
 | 2025-12-29 00:00:00+08:00               |
 +-----------------------------------------+
+```
 
+```sql
 -- If parameters contain both TimeStampTz and Datetime types, output DateTime type
 SELECT WEEK_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123');
+```
+
+```text
 +--------------------------------------------------------------------+
 | WEEK_FLOOR('2025-12-31 23:59:59+05:00', '2025-12-15 00:00:00.123') |
 +--------------------------------------------------------------------+
 | 2025-12-29 00:00:00.123                                            |
 +--------------------------------------------------------------------+
+```
 
+```sql
 -- Invalid period, returns error
 SELECT WEEK_FLOOR('2023-07-13', 0) AS result;
-ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_floor of 2023-07-13 00:00:00, 0 out of range
+```
 
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.3)[E-218]Operation week_floor of 2023-07-13 00:00:00, 0 out of range
+```
+
+```sql
 -- Parameter is NULL
 SELECT WEEK_FLOOR(NULL, 1) AS result;
+```
+
+```text
 +--------+
 | result |
 +--------+
 | NULL   |
 +--------+
+```
+
+An input exactly on an interval boundary is unchanged:
+
+```sql
+SELECT WEEK_FLOOR('2023-07-10 00:00:00', 2);
+```
+
+```text
+2023-07-10 00:00:00
+```
+
+Week boundaries with a microsecond origin (corrected in the Doris 4.1 series since 4.1.5):
+
+```sql
+SELECT WEEK_FLOOR(CAST('2024-01-08 00:00:00.400000' AS DATETIME(6)),
+                   1, CAST('2024-01-01 00:00:00.500000' AS DATETIME(6)));
+```
+
+```text
+2024-01-01 00:00:00.500000
 ```

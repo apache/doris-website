@@ -98,6 +98,12 @@ BE 重启后该配置将失效。如果想持久化修改结果，使用如下�
 
 ### 服务
 
+#### `bvar_max_dump_multi_dimension_metric_num`
+
+* 类型：string
+* 描述：自 4.1.5 版本起支持。`/brpc_metrics` 最多导出的多维 bvar 指标样本数。`0` 会禁用这类指标的导出；调整后需要重启 BE。
+* 默认值：5000
+
 #### `be_port`
 
 * 类型：int32
@@ -337,6 +343,19 @@ Thrift 服务器接收请求消息的大小（字节数）上限。如果客户�
 * 默认值：100
 
 ### 查询
+
+#### `ignore_not_found_file_in_external_table`
+
+* 类型：bool
+* 描述：是否允许外表读取路径跳过不存在的文件，支持动态修改。自 4.1.5 版本起，Iceberg 已提交快照中的数据文件和删除文件不受此开关放宽：即使配置为 `true`，缺失文件仍会使查询报错，以避免静默返回不完整快照。
+* 默认值：true
+
+
+#### `parquet_metadata_size_limit`
+
+* 类型：int64
+* 描述：自 4.1.5 版本起支持。原生 Parquet V2 读取路径允许的序列化文件 Footer 元数据大小上限，单位为字节，必须大于 `0`。超过上限时返回 `Parquet v2 footer size ... exceeds metadata limit ...`。支持动态修改；遇到合法大 Footer 时可按内存预算适当提高该值。
+* 默认值：268435456（256 MiB）
 
 #### `fragment_mgr_asynic_work_pool_queue_size`
 
@@ -675,6 +694,12 @@ BaseCompaction:546859:
 
 ### 导入
 
+#### `request_cdc_client_timeout_ms`
+
+* 类型：int32
+* 描述：CDC 客户端请求超时，单位为毫秒，支持动态修改。4.1.5 将默认值从 `60000` 调整为 `120000`，以容忍较慢的 CDC 请求。
+* 默认值：120000（4.1.5 之前为 60000）
+
 #### `enable_table_memtable_flush_backpressure`
 
 * 类型：bool
@@ -1003,6 +1028,12 @@ BaseCompaction:546859:
 * 默认值：5 (分钟)
 
 ### 存储
+
+#### `inverted_index_skip_norms_for_variant`
+
+* 类型：bool
+* 描述：自 4.1.5 版本起支持，支持动态修改。设为 `true` 时，为 VARIANT 子路径生成的倒排索引统一省略 Norms，无论索引的 `norms` 属性为何值。这可以减少多子路径索引的空间开销，但这些索引不再支持依赖 Norms 的 BM25 `score()` 评分。默认保留 Norms。详见 [相关性评分](../../table-design/index/inverted-index/scoring.md)。
+* 默认值：false
 
 #### `default_num_rows_per_column_file_block`
 
@@ -1375,9 +1406,51 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `enable_file_cache`
 
-* 默认值：true（自 4.2 版本起默认开启；存算分离模式下始终开启）。
+* 默认值：true（自 4.1.5 版本起默认开启，之前为 false；存算分离模式下始终开启）。
 
-* 描述：是否使用文件缓存。
+* 描述：是否使用文件缓存。此项需要重启 BE 生效；查询会话中的 `enable_file_cache` 也需开启。4.1.5 同时将 BE 配置和同名会话变量的默认值改为 `true`，已有显式配置和持久化的全局变量需单独检查。
+
+#### `enable_ms_rpc_host_level_rate_limit_dry_run`
+
+* 类型：bool
+* 描述：自 4.1.5 版本起支持，支持动态修改。评估 BE 到 Meta Service 的主机级 RPC 限流，但不实际等待。它独立于 `enable_ms_rpc_host_level_rate_limit`：即使后者为 `false`，本项为 `true` 时也会评估；两者都为 `true` 时以观察模式为准。要实际限流，需要开启 `enable_ms_rpc_host_level_rate_limit` 并关闭本项。
+* 默认值：true
+
+#### `enable_ms_backpressure_handling_dry_run`
+
+* 类型：bool
+* 描述：自 4.1.5 版本起支持，支持动态修改。评估 Meta Service `MS_BUSY` 触发的表级自适应限流，但不实际等待。它独立于 `enable_ms_backpressure_handling`，两者都为 `true` 时以观察模式为准。要实际执行表级限流，需要开启 `enable_ms_backpressure_handling` 并关闭本项。
+* 默认值：true
+
+#### `cache_peer_read_failure_threshold`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起支持，支持动态修改。对同一 Peer 地址连续发生连接或 RPC 失败后，打开地址级熔断器的阈值，实际至少为 `1`。该状态由不同 Tablet 的 Peer 读取共享，用于避免反复连接不可达节点。
+* 默认值：3
+
+#### `cache_peer_read_circuit_open_seconds`
+
+* 类型：int32
+* 描述：自 4.2.0 版本起支持，支持动态修改。地址级 Peer 读取熔断器打开后，拒绝向该地址发起读取的时间，单位为秒，负值按 `0` 处理；到期后允许一次恢复探测。
+* 默认值：30
+
+#### `delete_bitmap_store_v2_max_bytes_in_fdb`
+
+* 类型：int64
+* 描述：存算分离 Delete Bitmap V2 允许直接保存在 FDB 中的序列化大小阈值，单位为字节，支持动态修改。超过非负阈值时改写入对象存储文件；负值不按此阈值转存。4.1.5 将默认值从 `1024` 调整为 `89000`，为存储消息的额外字段预留空间，使其能够放入 90000 字节的分片。
+* 默认值：89000（4.1.5 之前为 1024）
+
+#### `enable_remove_agg_pre_rowsets_delete_bitmap_by_keys`
+
+* 类型：bool
+* 描述：自 4.1.5 版本起支持，支持动态修改。存算分离聚合替换历史 Delete Bitmap 时，对结束版本对应的记录按键删除；设为 `false` 使用范围删除。仅控制既有清理过程的删除方式，不开启额外清理任务。
+* 默认值：true
+
+#### `enable_remove_pre_rowsets_delete_bitmap_by_keys`
+
+* 类型：bool
+* 描述：自 4.1.5 版本起支持，支持动态修改。存算分离清理聚合范围内的历史 Delete Bitmap 时，对起始版本（含）至结束版本（不含）的记录按键删除；设为 `false` 使用范围删除。既有清理开关及适用条件仍生效。
+* 默认值：true
 
 #### `file_cache_path`
 
@@ -1421,7 +1494,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 * 类型：bool
 * 描述：Peer 读总开关。开启时，本地 File Cache 未命中先尝试从其他 BE（同计算组或其他计算组）的 File Cache 读取数据块，其他 BE 也没有时再回源对象存储。同计算组和跨计算组的 Peer 读由该开关一起控制，不能单独关闭跨计算组读取。自 4.2.0 版本起支持跨计算组 Peer 读，同时移除了配置项 `cache_read_from_peer_expired_seconds`。详见 [Peer 读](../../compute-storage-decoupled/file-cache/file-cache-peer-read)。
-* 默认值：true
+* 默认值：false（需要使用时显式开启）
 
 #### `enable_peer_s3_race`
 

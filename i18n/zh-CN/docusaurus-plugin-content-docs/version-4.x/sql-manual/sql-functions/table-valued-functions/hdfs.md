@@ -19,7 +19,7 @@ HDFS(
     "uri" = "<uri>",
     "fs.defaultFS" = "<fs_defaultFS>",
     "hadoop.username" = "<hadoop_username>",
-    "format" = "<format>",
+    "format" = "<format>"
     [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
   );
 ```
@@ -61,15 +61,15 @@ HDFS(
 | `skip_lines`                  | 对 CSV 格式导入，整数类型，默认为 0，跳过 CSV 文件前几行，`csv_with_names` 或 `csv_with_names_and_types` 时失效                                                                                          |                                                                             |
 | `path_partition_keys`         | 指定文件路径中携带的分区列名，例如/path/to/city=beijing/date="2023-07-09", 则填写 path_partition_keys="city,date"，将会自动从路径中读取相应列名和列值进行导入                                                            |                                                                             |
 | `resource`                    | 指定 Resource 名，HDFS TVF 可以利用已有的 HFDS Resource 来直接访问 HDFS。创建 HDFS Resource 的方法可以参照 [CREATE-RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) | 仅支持 2.1.4 及以上版本                                                                            |
-|`enable_mapping_varbinary`|默认为 false，在读取 PARQUET / ORC 时将 BYTE_ARRAY 类型映射为 STRING，开启后则会映射到 VARBINAY 类型。| 在 4.0.3 之后开始支持 |
-|`enable_mapping_timestamp_tz`|默认为 false，在读取 PARQUET(TIMESTAMP WITH isAdjustedToUTC) \ ORC(TIMESTAMP_INSTANT) 类型映射为 DATATIME，开启后则会映射到 TIMESTAMPTZ 类型。| 在 4.0.3 之后开始支持 |
+|`enable_mapping_varbinary`|默认为 false，在读取 PARQUET / ORC 时将 BYTE_ARRAY 类型映射为 STRING，开启后则会映射到 VARBINARY 类型。| 在 4.0.3 之后开始支持 |
+|`enable_mapping_timestamp_tz`| 自 4.1.5 版本起仅作为兼容参数接收，值会被忽略。Parquet 的 `isAdjustedToUTC=true` Timestamp 和 ORC 的 `TIMESTAMP_INSTANT` 固定映射为 `TIMESTAMPTZ`，设为 `false` 也不能恢复 `DATETIME`。二进制映射的 `enable_mapping_varbinary` 仍可单独配置，默认 `false`。 | 在 4.0.3 之后开始支持 |
+| `hive.parquet.time-zone` | 可选字符串，默认空；自 4.1.5 起支持。指定 Parquet INT96 写入端时区，支持 IANA 时区或 -12:00 至 +14:00 偏移，不支持 CST / PRC 等短别名；详见 [Parquet](../../../lakehouse/file-formats/parquet.md#时间戳与日期兼容性415-起)。 | 4.1.5 起 |
 
 ## 权限控制
 
 | 权限（Privilege）      | 对象（Object） | 说明（Notes） |
 |:-------------------|:-----------| :------------ |
-| USAGE_PRIV         | 表          |               |
-| SELECT_PRIV        | 表          |               |
+| USAGE_PRIV | Resource | 使用 `resource` 参数时，需要对指定 Resource 拥有 USAGE 权限。 |
 
 
 ## 示例
@@ -77,7 +77,7 @@ HDFS(
 - 读取并访问 HDFS 存储上的 CSV 格式文件
   ```sql
   select * from hdfs(
-                "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
+                "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
                 "fs.defaultFS" = "hdfs://127.0.0.1:8424",
                 "hadoop.username" = "doris",
                 "format" = "csv");
@@ -97,8 +97,8 @@ HDFS(
 - 读取并访问 HA 模式的 HDFS 存储上的 CSV 格式文件
   ```sql
   select * from hdfs(
-              "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+              "uri" = "hdfs://my_hdfs/user/doris/csv_format_test/student.csv",
+              "fs.defaultFS" = "hdfs://my_hdfs",
               "hadoop.username" = "doris",
               "format" = "csv",
               "dfs.nameservices" = "my_hdfs",

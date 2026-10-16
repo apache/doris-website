@@ -1,7 +1,7 @@
 ---
 {
     "title": "相关性打分",
-    "language": "zh",
+    "language": "zh-CN",
     "description": "Doris 全文检索通过 BM25 算法为查询结果计算相关性得分，结合词频、逆文档频率与记录长度进行加权排序，帮助用户优先返回最相关内容。"
 }
 ---
@@ -112,6 +112,8 @@ avgdl = total_terms / total_rows
 当查询包含多个词项时，**最终得分为各词项得分之和**。
 
 ### 记录长度与 `norms` 属性
+
+`norms` 索引属性和 `inverted_index_skip_norms_for_variant` BE 配置项自 Doris 4.1.5 起支持。
 
 `|d|` 来自 norms，每个索引字段每行占 1 字节，包括该字段没有值的行。分词索引默认写入 norms（`"norms" = "true"`），非分词索引不写。仅用于过滤的索引可设置 `"norms" = "false"` 节省空间：
 

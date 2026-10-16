@@ -75,6 +75,8 @@ SELECT CAST('123' AS INT);
 
 ### Using TRY_CAST to Handle Potentially Failed Conversions
 
+Since 4.1.5, arithmetic overflow during a conversion also returns NULL for the affected row instead of failing the entire TRY_CAST query. Internal execution errors and unsupported type conversions can still fail; TRY_CAST does not suppress every error.
+
 When conversions might fail, using TRY_CAST can prevent query errors by returning NULL instead:
 
 ```sql
@@ -125,3 +127,18 @@ length(CAST(123 AS varchar(65533)))
 ```
 
 You can see from the execution plan above that the system automatically performs a CAST conversion, converting the integer 123 to a string type. This is an example of implicit CAST.
+
+Arithmetic overflow and NULL input:
+
+```sql
+SELECT TRY_CAST(CAST(1000 AS DECIMAL(9, 0)) AS DECIMAL(3, 0)) AS overflow_value,
+       TRY_CAST(NULL AS INT) AS null_value;
+```
+
+```text
++----------------+------------+
+| overflow_value | null_value |
++----------------+------------+
+| NULL           | NULL       |
++----------------+------------+
+```

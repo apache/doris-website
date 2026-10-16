@@ -67,6 +67,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
       
       3. HTTP URL. For example: `https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.3.0/mysql-connector-j-8.3.0.jar`. The system will download the driver file from this HTTP address. Only supports HTTP services without authentication.
 
+      Since 4.1.5, a driver location without a URI scheme must be a file name matching `[A-Za-z0-9._-]+.jar`. The URL-decoded path must not contain a `..` parent-directory segment. This check also applies to `ALTER CATALOG` and the driver locations of Iceberg and Paimon JDBC Catalogs. Existing secure driver-directory and allowlist checks still apply.
+
   * Optional Properties
 
       | Parameter Name                | Default Value | Description                                                                                                                                   |

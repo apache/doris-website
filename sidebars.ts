@@ -901,6 +901,7 @@ const sidebars: SidebarsConfig = {
                         'admin-manual/config/config-dir',
                         'admin-manual/config/fe-config',
                         'admin-manual/config/be-config',
+                        'admin-manual/config/ms-config',
                         'admin-manual/config/user-property',
                         'admin-manual/cluster-management/time-zone',
                     ],

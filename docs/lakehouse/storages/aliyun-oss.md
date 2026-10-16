@@ -90,6 +90,8 @@ For backward compatibility, the endpoint configuration allows the inclusion of h
 
 When using legacy names, the system determines whether it's an OSS-HDFS service based on whether the `endpoint` contains `oss-dls`.
 
+Since 4.1.5, XML paths in `oss.hdfs.hadoop.config.resources` must not contain a `..` parent-directory segment. Both forward-slash and backslash separators are checked. Use normal file paths.
+
 ### Configuration Files
 
 > Supported in version 3.1

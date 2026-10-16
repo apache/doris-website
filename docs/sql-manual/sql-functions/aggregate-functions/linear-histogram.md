@@ -13,19 +13,20 @@ The LINEAR_HISTOGRAM function is used to describe data distribution. It uses an 
 ## Syntax
 
 ```sql
-LINEAR_HISTOGRAM(<expr>, DOUBLE <interval>[, DOUBLE <offset>])
+LINEAR_HISTOGRAM(<expr>, <interval> [, <offset>])
 ```
 
 ## Parameters
 
 | Parameter | Description |
 | -- | -- |
-| `interval` | The width of the bucket, supports types: TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal. |
-| `offset`   | Optional. Default is 0, range is `[0, interval)`, type Double supported. |
+| `<expr>` | The expression to summarize. Supports BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, and DECIMAL. BOOLEAN input is supported in the Doris 4.1 series since 4.1.5; FALSE and TRUE are counted as 0 and 1. |
+| `<interval>` | Bucket width, of type DOUBLE. Must be greater than 0. |
+| `<offset>` | Optional DOUBLE offset. Defaults to 0 and must be in `[0, interval)`. |
 
 ## Return Value
 
-Returns a computed value of JSON type.
+Returns VARCHAR containing JSON text with bucket boundaries, counts, and cumulative counts. NULL inputs are ignored. If all inputs are NULL or there are no input rows, returns `{"num_buckets":0,"buckets":[]}`.
 
 ## Example
 
@@ -82,3 +83,14 @@ Field description:
   - `upper`: Upper bound (exclusive).
   - `count`: Number of elements in the bucket.
   - `acc_count`: Accumulated count up to this bucket.
+
+BOOLEAN input uses buckets for 0 and 1; NULL does not contribute to the count:
+
+```sql
+SELECT LINEAR_HISTOGRAM(b, 1.0)
+FROM (SELECT TRUE AS b UNION ALL SELECT FALSE UNION ALL SELECT TRUE UNION ALL SELECT NULL) t;
+```
+
+```text
+{"num_buckets":2,"buckets":[{"lower":0.0,"upper":1.0,"count":1,"acc_count":1},{"lower":1.0,"upper":2.0,"count":2,"acc_count":3}]}
+```

@@ -13,7 +13,7 @@
 
 In compute-storage decoupled mode, data is stored in remote object storage (such as S3 or HDFS). Doris uses the local disks of BE nodes as a file cache layer and manages cache space efficiently with a multi-queue LRU (Least Recently Used) strategy. The access paths for indexes and metadata are specially optimized to maximize the cache hit rate for hot data.
 
-For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance. [Peer cache read](./file-cache-peer-read), which is on by default, serves blocks that miss the local cache from the cache of another BE (including BEs in other compute groups) before falling back to remote storage.
+For multi-compute-group scenarios, Doris provides a **cache warmup** feature that proactively pulls data for specified tables or partitions into a new compute group when it starts, quickly establishing a local cache and improving first-query performance. [Peer cache read](./file-cache-peer-read), when enabled, serves blocks that miss the local cache from the cache of another BE (including BEs in other compute groups) before falling back to remote storage.
 
 ## The Role of File Cache
 
@@ -47,13 +47,15 @@ Doris controls file cache behavior through the following parameters in the BE co
 
 | Parameter | Default | Description |
 |---|---|---|
-| `enable_file_cache` | `true` | Whether to enable the file cache feature. Enabled by default since Doris 4.2. In compute-storage decoupled mode, BE always forces it on. |
+| `enable_file_cache` | `true` | Whether to enable the file cache feature. Enabled by default since version 4.1.5 (previously `false`). In compute-storage decoupled mode, BE always forces it on. |
 
 :::caution
 
 `file_cache_path` defaults to the storage directory under the BE deployment path. Without a `total_size`, the cache may grow until the disk is 85%–88% full; set a `total_size` to bound it.
 
 :::
+
+The session variable with the same name must also be enabled. See the [Session Variables](../../sql-manual/basic-element/session-variables.md#enable_file_cache) reference for values and upgrade defaults.
 
 ### Configuring Index-Only Cache Writes
 
@@ -480,6 +482,11 @@ The returned metric names are prefixed with the disk path. For example, the pref
 | `file_cache_evict_by_heat_[A]_to_[B]` | Amount of type-A cache data evicted to make room for type-B cache data (eviction based on expiration time) |
 | `file_cache_evict_by_size_[A]_to_[B]` | Amount of type-A cache data evicted to make room for type-B cache data (eviction based on space) |
 | `file_cache_evict_by_self_lru_[A]` | Amount of type-A cache data that the type-A queue evicted from itself to write new data (LRU-based eviction) |
+| `file_cache_evict_not_downloaded_size` | Added in 4.1.5. Cumulative logical range size in bytes of blocks removed before download completion, excluding blocks currently downloading; does not represent physical eviction of downloaded data |
+| `file_cache_evict_not_downloaded_num` | Added in 4.1.5. Cumulative number of these removed blocks |
+| `file_cache_ttl_mgr_ttl_info_map_size` | Added in 4.1.5. Current number of tracked tablet TTL information entries, rather than blocks |
+
+Since version 4.1.5, the overall and per-queue eviction byte counters count only fully downloaded blocks. Blocks removed before download completion use the new counters separately; blocks marked for deletion while downloading do not increase these removal counters. The corresponding SQL system table metric names are `evict_not_downloaded_size` and `evict_not_downloaded_num`. See [file_cache_statistics](../../admin-manual/system-tables/information_schema/file_cache_statistics.md).
 
 ### SQL Profile Cache Metrics
 
@@ -541,7 +548,7 @@ PROPERTIES (
 );
 ```
 
-All newly ingested data for the table above is retained in the cache for 300 seconds.
+Since version 4.1.5, all write and read paths calculate an absolute protection deadline as `tablet creation time + file_cache_ttl_seconds`. In the example above, each tablet is protected until 300 seconds after its creation. Later ingestion, reads, Compaction, Schema Change, and warm-up do not restart the timer. Data past its deadline uses ordinary caching; each new ingestion is not guaranteed another 300 seconds of protection.
 
 The valid range for `file_cache_ttl_seconds` is `0 <= value <= 4611686018427387903` (that is, `Long.MAX_VALUE / 2`). Starting from version 4.1.4, both `CREATE TABLE` and `ALTER TABLE ... SET` validate this value, and an out-of-range or malformed value is rejected with an error:
 
@@ -558,7 +565,7 @@ ALTER TABLE customer SET ("file_cache_ttl_seconds" = "3000");
 ```
 
 :::info Note
-The updated TTL value does not take effect immediately; there is a short delay. If TTL was not set at table creation time, you can add it later with an `ALTER TABLE` statement.
+TTL changes take effect after a metadata synchronization delay. If TTL was not set at table creation, you can add it with `ALTER TABLE`. The new deadline is still based on tablet creation time. Since version 4.1.5, extending an expired TTL to a future deadline also moves cached ordinary blocks back into the TTL queue. Setting TTL to `0` returns them to ordinary caching.
 :::
 
 ## Practical Example
@@ -582,10 +589,10 @@ Other large tables are accessed infrequently.
 **Solution:** Set TTL for both frequently accessed tables to guarantee that their data is retained in the cache for a sufficient duration.
 
 ```sql
--- Dimension table: small data volume, infrequent changes; set a 1-year TTL to keep it resident in the cache
+-- Dimension table: protect each tablet until 1 year after creation; use a longer TTL if it is already older than 1 year
 ALTER TABLE dimension_table SET ("file_cache_ttl_seconds" = "31536000");
 
--- Fact table: full load ingested daily; set a 1-day TTL aligned with the ingestion cycle
+-- Fact table with new daily partitions: protect each new partition's tablets until 1 day after creation
 ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 ```
 
@@ -606,7 +613,7 @@ Check whether `clear_file_cache` is set to `true`. If you do not want the cache 
 
 **Q: The first query after a new compute group comes online is very slow.**
 
-Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md). If another compute group already holds the data in its cache, [peer cache read](./file-cache-peer-read), which is on by default, lets the new compute group read it from that group's BEs on a miss.
+Use the **cache warmup** feature to proactively pull hot table or partition data from remote storage into the local cache of the new compute group before queries arrive. For detailed usage, see the [WARM-UP SQL documentation](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md). If another compute group already holds the data in its cache, [peer cache read](./file-cache-peer-read), when enabled, lets the new compute group read it from that group's BEs on a miss.
 
 **Q: How do I tell whether the current cache space is full?**
 

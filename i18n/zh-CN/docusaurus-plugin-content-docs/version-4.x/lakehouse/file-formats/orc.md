@@ -37,6 +37,14 @@
 
 ## 相关参数
 
+### 时间戳与日期兼容性（4.1.5 起）
+
+自 4.1.5 版本起，ORC `TIMESTAMP` 按不带时区的墙上时间处理，`TIMESTAMP_INSTANT` 按时间点处理并映射为 `TIMESTAMPTZ`。读取时将纳秒精度按微秒舍入，超过支持范围或非法纳秒值会报错。
+
+写入 ORC 时，部分紧邻 Unix 纪元之前的负小数时间戳无法无损表示；Doris 会返回 `ORC cannot represent pre-epoch timestamp fractions in [-0.999, 0) seconds without data loss; use Parquet for these values`。包含这类值时，应改用 Parquet。
+
+曾由旧 Doris 编码写出的 `0000-01-01` 至 `0000-02-28` DATE 文件需要显式迁移，详见[零年 DATE 文件迁移](../../admin-manual/cluster-management/upgrade.md#零年-date-文件迁移)。
+
 ### 会话变量
 
 * `enable_orc_lazy_mat` (2.1+, 3.0+)

@@ -29,6 +29,8 @@ This is an experimental feature, supported since version 4.1.0.
 >
 > 2. Ensure the JDBC driver JAR file is accessible. You can specify the driver location via `paimon.jdbc.driver_url`.
 
+Since 4.1.5, creating or altering a Catalog validates JDBC driver locations consistently. A value without a URI scheme must be a file name matching `[A-Za-z0-9._-]+.jar`; use `file:///...` for an absolute path. The URL-decoded path must not contain a `..` parent-directory segment. Existing secure driver-path and URL allowlist restrictions still apply.
+
 ## Example Configurations
 
 ### PostgreSQL as Metadata Storage

@@ -108,6 +108,12 @@ There are two ways to configure BE configuration items:
 * Description:  The mode in which BE runs. `cloud` indicates the decoupled storage-compute mode.
 * Default value: ""
 
+#### `bvar_max_dump_multi_dimension_metric_num`
+
+* Type: string
+* Description: Supported since version 4.1.5. Maximum number of multidimensional bvar metric samples exported by `/brpc_metrics`. Set to `0` to disable these samples. Changes require a BE restart.
+* Default value: 5000
+
 #### `be_port`
 
 * Type: int32
@@ -332,6 +338,18 @@ The maximum size of a (received) message of the thrift server, in bytes. If the 
 * Default value: 100
 
 ### Query
+
+#### `ignore_not_found_file_in_external_table`
+
+* Type: bool
+* Description: Whether external table readers can skip missing files. Supports dynamic configuration. Since version 4.1.5, this setting never permits missing data or delete files in committed Iceberg snapshots: a query fails even when it is `true`, to avoid silently returning an incomplete snapshot.
+* Default value: true
+
+#### `parquet_metadata_size_limit`
+
+* Type: int64
+* Description: Supported since version 4.1.5. Maximum serialized file footer metadata size, in bytes, for the native Parquet V2 reader. Must be greater than `0`. Exceeding it returns `Parquet v2 footer size ... exceeds metadata limit ...`. Supports dynamic configuration. Increase it within your memory budget for valid files with large footers.
+* Default value: 268435456 (256 MiB)
 
 #### `fragment_mgr_asynic_work_pool_queue_size`
 
@@ -662,6 +680,12 @@ BaseCompaction:546859:
 * Default value: false (was true before 4.0.8)
 
 ### Load
+
+#### `request_cdc_client_timeout_ms`
+
+* Type: int32
+* Description: CDC client request timeout in milliseconds. Supports dynamic configuration. Version 4.1.5 raises the default from `60000` to `120000` to allow slower CDC requests.
+* Default value: 120000 (60000 before 4.1.5)
 
 #### `enable_table_memtable_flush_backpressure`
 
@@ -1019,6 +1043,12 @@ BaseCompaction:546859:
 
 * Type: bool
 * Description: Whether to enable the kuromoji (Japanese) inverted-index analyzer. Supported since Doris 5.0.0.
+* Default value: false
+
+#### `inverted_index_skip_norms_for_variant`
+
+* Type: bool
+* Description: Supported since version 4.1.5. Supports dynamic configuration. When `true`, inverted indexes on VARIANT subpaths omit Norms regardless of the index's `norms` property. This reduces index storage for multiple subpaths, but those indexes can no longer support BM25 `score()` calculations that require Norms. Norms are retained by default. See [Relevance Scoring](../../table-design/index/inverted-index/scoring.md).
 * Default value: false
 
 #### `default_num_rows_per_column_file_block`
@@ -1406,8 +1436,51 @@ Default: ""
 
 #### `enable_file_cache`
 
-Default: true (enabled by default since Doris 4.2; always on in cloud mode).
-* Description: Whether to use file cache.
+Default: true (enabled by default since version 4.1.5; previously false; always on in compute-storage decoupled mode).
+
+* Description: Whether to use file cache. Changes require a BE restart. The session variable `enable_file_cache` must also be enabled. Version 4.1.5 changes both the BE configuration and the session variable defaults to `true`; check existing explicit configuration and persisted global variables separately.
+
+#### `enable_ms_rpc_host_level_rate_limit_dry_run`
+
+* Type: bool
+* Description: Supported since version 4.1.5. Supports dynamic configuration. Evaluates host-level rate limiting for BE-to-Meta-Service RPCs without waiting. It is independent of `enable_ms_rpc_host_level_rate_limit`: evaluation runs even if that setting is `false`; when both are `true`, dry-run takes precedence. To enforce rate limiting, enable `enable_ms_rpc_host_level_rate_limit` and disable this setting.
+* Default value: true
+
+#### `enable_ms_backpressure_handling_dry_run`
+
+* Type: bool
+* Description: Supported since version 4.1.5. Supports dynamic configuration. Evaluates table-level adaptive rate limiting triggered by Meta Service `MS_BUSY` responses without waiting. It is independent of `enable_ms_backpressure_handling`; when both are `true`, dry-run takes precedence. To enforce table-level rate limiting, enable `enable_ms_backpressure_handling` and disable this setting.
+* Default value: true
+
+#### `cache_peer_read_failure_threshold`
+
+* Type: int32
+* Description: Supported since version 4.2.0. Supports dynamic configuration. Number of consecutive connection or RPC failures for a peer address that opens its circuit breaker. The effective minimum is `1`. This address-level state is shared by peer reads for different tablets, to avoid repeatedly connecting to an unreachable node.
+* Default value: 3
+
+#### `cache_peer_read_circuit_open_seconds`
+
+* Type: int32
+* Description: Supported since version 4.2.0. Supports dynamic configuration. Time in seconds during which an open peer circuit breaker rejects reads to that address. Negative values are treated as `0`. After this period, one recovery probe is allowed.
+* Default value: 30
+
+#### `delete_bitmap_store_v2_max_bytes_in_fdb`
+
+* Type: int64
+* Description: Maximum serialized size, in bytes, of a Delete Bitmap V2 stored directly in FDB in compute-storage decoupled mode. Supports dynamic configuration. Values above a nonnegative threshold are stored in an object storage file instead; a negative value disables this size-based spill. Version 4.1.5 raises the default from `1024` to `89000`, leaving room for extra message fields within a 90000-byte chunk.
+* Default value: 89000 (1024 before 4.1.5)
+
+#### `enable_remove_agg_pre_rowsets_delete_bitmap_by_keys`
+
+* Type: bool
+* Description: Supported since version 4.1.5. Supports dynamic configuration. When replacing aggregated historical Delete Bitmaps in compute-storage decoupled mode, deletes the records for the end version by key. Set to `false` to use range deletion. This only changes how the existing cleanup deletes records; it does not enable an additional cleanup task.
+* Default value: true
+
+#### `enable_remove_pre_rowsets_delete_bitmap_by_keys`
+
+* Type: bool
+* Description: Supported since version 4.1.5. Supports dynamic configuration. When cleaning up historical Delete Bitmaps within an aggregated range in compute-storage decoupled mode, deletes records by key from the start version (inclusive) to the end version (exclusive). Set to `false` to use range deletion. Existing cleanup switches and prerequisites still apply.
+* Default value: true
 
 #### `file_cache_path`
 
@@ -1449,7 +1522,7 @@ Default: [{"path":"${DORIS_HOME}/file_cache"}]
 
 * Type: bool
 * Description: Master switch for peer cache read. When on, a local File Cache miss first tries to read the block from the File Cache of another BE (in the same compute group or another one) and falls back to object storage only if no BE has it. Same-group and cross-group peer reads are controlled together by this switch; cross-group reads cannot be turned off separately. Cross-group peer read is supported since version 4.2.0, which also removed the configuration item `cache_read_from_peer_expired_seconds`. See [Peer Cache Read](../../compute-storage-decoupled/file-cache/file-cache-peer-read).
-* Default value: true
+* Default value: false (enable explicitly when needed)
 
 #### `enable_peer_s3_race`
 

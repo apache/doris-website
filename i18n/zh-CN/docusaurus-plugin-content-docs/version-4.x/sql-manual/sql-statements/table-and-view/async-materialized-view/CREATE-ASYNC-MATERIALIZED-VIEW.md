@@ -144,6 +144,7 @@ refresh_trigger
 | partition_date_format            | 当基表的分区字段为字符串时，如果想使用 `partition_sync_limit`的能力，可以设置日期的格式，将按照 `partition_date_format`的设置解析分区时间 |
 | enable_nondeterministic_function | 物化视图定义 SQL 是否允许包含 nondeterministic 函数，比如 current_date(), now(), random() 等，如果 是 true, 允许包含，否则不允许包含，默认不允许包含。 |
 | use_for_rewrite                  | 标识此物化视图是否参与到透明改写中，如果为 false，不参与到透明改写，默认是 true。数据建模场景中，如果物化视图只是用于直查，物化视图可以设置此属性，从而不参与透明改写，提高查询响应速度。 |
+| compute_group | 自 4.1.5 版本起支持。可选字符串，默认不声明。仅存算分离模式支持，用于显式绑定刷新计算组，优先于会话或手动刷新时选择的计算组。创建或修改时检查操作者的 `USAGE` 权限，运行刷新任务时检查组是否存在。当前刷新阶段尚不按创建者身份复查授权，单独撤销创建者的 `USAGE` 不会据此阻止刷新；`DEFAULT` 为保留值，不接受作为绑定值。可通过 `ALTER MATERIALIZED VIEW ... SET ("compute_group" = "cg_refresh")` 修改。 |
 
 :::caution 注意
 

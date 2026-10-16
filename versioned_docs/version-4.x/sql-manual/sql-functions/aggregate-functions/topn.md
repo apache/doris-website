@@ -20,8 +20,8 @@ TOPN(<expr>, <top_num> [, <space_expand_rate>])
 | Parameter | Description |
 | -- | -- |
 | `<expr>` | The column or expression to be counted. Supported types: TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Date, Datetime, IPV4, IPV6, String. |
-| `<top_num>` | The number of most frequent values to return. Must be a positive integer. Supported type: Integer. |
-| `<space_expand_rate>` | Optional. Sets the number of counters used in the Space-Saving algorithm: `counter_numbers = top_num * space_expand_rate`. The larger the value, the more accurate the result. Default is 50. Supported type: Integer. |
+| `<top_num>` | The number of most frequent values to return. Must be a positive INT constant. |
+| `<space_expand_rate>` | Optional INT constant, default 50. A positive value retains at most `top_num * space_expand_rate` candidates when serializing intermediate state; larger values generally improve accuracy. This is not a hard limit on local aggregation memory. In the Doris 4.1 series since 4.1.5, a value of 0 or less retains all intermediate candidates, while the final result still contains at most `top_num` values. This mode may use more memory and remains subject to query memory limits. |
 
 ## Return Value
 
@@ -76,4 +76,15 @@ FROM page_visits where page_id is null;
 +-----------+
 | NULL      |
 +-----------+
+```
+
+Retain all intermediate candidates, but return only the most frequent value:
+
+```sql
+SELECT TOPN(s, 1, 0)
+FROM (SELECT 'a' AS s UNION ALL SELECT 'b' UNION ALL SELECT 'a') t;
+```
+
+```text
+{"a":2}
 ```

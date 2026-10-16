@@ -74,9 +74,10 @@ When mapping SQLServer, a Database in Doris corresponds to a Schema under the sp
 | date                                   | date          |                                                  |
 | datetime/datetime2/smalldatetime       | datetime(S)   |                                                  |
 | char/varchar/text/nchar/nvarchar/ntext | string        |                                                  |
-| time/datetimeoffset                    | string        |                                                  |
+| time | string | |
+| datetimeoffset | TIMESTAMPTZ(S) | Since 4.1.5, this type preserves instant semantics, with precision capped at 6. |
 | timestamp                              | string        | Displays hexadecimal representation of binary data, no actual meaning |
-| image/binary/varbinary             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| image/binary/varbinary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
 | other                                  | UNSUPPORTED   |                                                  |
 
 ## Common Issues

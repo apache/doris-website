@@ -10,6 +10,8 @@
 
 This statement is used to display the configuration of the current cluster (currently only the configuration items of FE are supported)
 
+Since 4.1.5, nonempty sensitive configuration values appear as `********` in `Value`, including the initial root password and passwords for TLS, HTTPS, and MySQL SSL. Unset empty values remain empty. Masking does not change the actual configuration values.
+
 ## Syntax
 
 ```sql

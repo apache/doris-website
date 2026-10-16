@@ -8,24 +8,47 @@
 
 ## Description
 
-Performs a regular expression match on the string str, returning true if the match succeeds, otherwise false. pattern is the regular expression pattern.
-It should be noted that when handling character set matching, Utf-8 standard character classes should be used. This ensures that functions can correctly identify and process various characters from different languages.
+Matches a regular expression against `<str>`, returning true for a match and false otherwise. A pattern does not need to match the whole string; use `^` and `$` for a full match. Returns NULL if either argument is NULL and reports an error for an invalid pattern. Strings are processed as UTF-8; use character classes such as `\p{Han}` to match Unicode character categories.
 
-If the `pattern` is not allowed regexp regular,throw error;
+See [RE2 syntax](https://github.com/google/re2/wiki/Syntax) for ordinary patterns.
 
-Default supported character match classes : https://github.com/google/re2/wiki/Syntax
+### Matching Engines and Session Variables
 
-Doris supports enabling more advanced regular expression features, such as look-around zero-width assertions, through the session variable `enable_extended_regex` (default is `false`).
+Ordinary `LIKE` and `REGEXP` matching can use Hyperscan acceleration. The following session variables control fallback behavior:
 
-Supported character matching types when the session variable `enable_extended_regex` is set to `true`: https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html
+| Session variable | Default | Behavior |
+| --- | --- | --- |
+| `enable_hyperscan_fallback` | `true` | Supported in the Doris 4.1 series since 4.1.5. Allows a path that actually compiles with Hyperscan to fall back to RE2 if compilation fails or match scratch space cannot be allocated. When false, the corresponding error is returned. Simple-pattern optimizations and paths that use RE2 directly are unaffected. |
+| `enable_extended_regex` | `false` | Allows `REGEXP` to try Boost.Regex when RE2 rejects the pattern, supporting extended syntax such as look-around. It does not extend RE2 syntax or add extended syntax to `LIKE`, `MATCH_REGEXP`, or `MULTI_MATCH_ANY`. |
 
-Note: After enabling this variable, performance will only be affected when the regular expression contains advanced syntax (such as look-around). Therefore, for better performance, it is recommended to optimize your regular expressions as much as possible and avoid using such zero-width assertions.
+In the Doris 4.1 series since 4.1.5, `enable_extended_regex=true` applies to both constant patterns and non-constant patterns read from columns. If a Hyperscan path uses `enable_hyperscan_fallback=false`, a Hyperscan failure still returns an error; enabling `enable_extended_regex` does not bypass that error.
 
+See the [session variable reference](../../../basic-element/session-variables.md#enable_hyperscan_fallback) for the values and scope of `enable_hyperscan_fallback`.
+
+See [Boost.Regex Perl syntax](https://www.boost.org/doc/libs/latest/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html) for extended patterns. The matching overhead of Boost.Regex applies only when that engine is used. Complex backtracking patterns may also report `Failed to match regex expression`.
+
+### Repetition Limit
+
+In the Doris 4.1 series since 4.1.5, a regular expression submitted to Hyperscan skips Hyperscan compilation if a `{m}`, `{m,}`, or `{m,n}` form contains a number greater than 50. For example, `a{51}`, `a{51,}`, and `a{0,51}` trigger this check; `a{50}` and `a{0,50}` do not. This is a conservative text check, so the same forms inside character classes or comments may also trigger it.
+
+| Matching path | Behavior when the check is triggered |
+| --- | --- |
+| Hyperscan path for ordinary `LIKE` or `REGEXP` | Tries fallback when `enable_hyperscan_fallback=true`; otherwise returns an error. The pattern must still satisfy the target engine's syntax and repetition limits. |
+| Row matching for `MATCH_REGEXP` and inverted-index regular expression matching | Rejects the pattern directly; does not use `enable_hyperscan_fallback`. |
+| Multi-pattern matching for `MULTI_MATCH_ANY` | Rejects the pattern directly; does not use `enable_hyperscan_fallback`. |
+
+When the check is triggered without fallback, the error contains:
+
+```text
+Skip hyperscan compilation because bounded repetition exceeds 50
+```
 
 ## Syntax
 
 ```sql
 REGEXP(<str>, <pattern>)
+<str> [NOT] REGEXP <pattern>
+<str> [NOT] RLIKE <pattern>
 ```
 
 ## Parameters
@@ -33,11 +56,13 @@ REGEXP(<str>, <pattern>)
 | Parameter | Description |
 | -- | -- |
 | `<str>` | String type. Represents the string to be matched against the regular expression, which can be a column in a table or a literal string.|
-| `<pattern>` | String type. The regular expression pattern used to match against the string <str>. Regular expressions provide a powerful way to define complex search patterns, including character classes, quantifiers, and anchors.|
+| `<pattern>` | String type. The regular expression pattern used to match against the string `<str>`. Regular expressions provide a powerful way to define complex search patterns, including character classes, quantifiers, and anchors.|
 
 ## Return Value
 
-The REGEXP function returns a BOOLEAN value. If the string <str> matches the regular expression pattern <pattern>, the function returns true (represented as 1 in SQL); if not, it returns false (represented as 0 in SQL).
+The REGEXP function returns a BOOLEAN value. If the string `<str>` matches the regular expression pattern `<pattern>`, the function returns true (represented as 1 in SQL); if not, it returns false (represented as 0 in SQL). Returns NULL if either argument is NULL.
+
+In the Doris 4.1 series since 4.1.5, constant empty patterns behave consistently with column patterns: an empty pattern matches every non-NULL string, including the empty string.
 
 **Default Behavior**:
 
@@ -53,7 +78,7 @@ The REGEXP function returns a BOOLEAN value. If the string <str> matches the reg
 
 You can override the default behavior by prefixing the `pattern` with `(?flags)`. Multiple modifiers can be combined, e.g., `(?im)`; a `-` prefix disables the corresponding option, e.g., `(?-s)`.
 
-Pattern modifiers only take effect when using the default regex engine. If `enable_extended_regex=true` is enabled while using zero-width assertions (e.g., `(?<=...)`, `(?=...)`), the query will be handled by the Boost.Regex engine, and modifier behavior may not work as expected. It is recommended not to mix them.
+The following table describes modifiers on the ordinary Hyperscan/RE2 path. If a pattern falls back to Boost.Regex because of syntax such as look-around, interpret modifiers according to Boost.Regex syntax; the engines do not necessarily behave identically.
 
 | Flag    | Meaning                                                                      |
 | ------- | ---------------------------------------------------------------------------- |
@@ -66,10 +91,12 @@ Pattern modifiers only take effect when using the default regex engine. If `enab
 | `(?U)`  | Non-greedy quantifiers: `*`, `+`, etc. match as little as possible           |
 | `(?-U)` | Greedy quantifiers (default): `*`, `+`, etc. match as much as possible       |
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 ```sql
-CREATE TABLE test ( k1 VARCHAR(255) ) properties("replication_num"="1")
+CREATE TABLE test ( k1 VARCHAR(255) ) properties("replication_num"="1");
 
 INSERT INTO test (k1) VALUES ('billie eillish'), ('It\'s ok'), ('billie jean'), ('hello world');
 ```
@@ -77,32 +104,37 @@ INSERT INTO test (k1) VALUES ('billie eillish'), ('It\'s ok'), ('billie jean'), 
 
 ```sql
 --- Find all data in the k1 column starting with 'billie'
-SELECT k1 FROM test WHERE k1 REGEXP '^billie'
---------------
+SELECT k1 FROM test WHERE k1 REGEXP '^billie' ORDER BY k1;
+```
 
+```text
 +----------------+
 | k1             |
 +----------------+
 | billie eillish |
 | billie jean    |
 +----------------+
-2 rows in set (0.02 sec)
+```
 
+```sql
 --- Find data in the k1 column ending with 'ok':
-SELECT k1 FROM test WHERE k1 REGEXP 'ok$'
---------------
+SELECT k1 FROM test WHERE k1 REGEXP 'ok$';
+```
 
+```text
 +---------+
 | k1      |
 +---------+
 | It's ok |
 +---------+
-1 row in set (0.03 sec)
 ```
 Chinese Character Example
 
 ```sql
-mysql> select regexp('这是一段中文 This is a passage in English 1234567', '\\p{Han}');
+select regexp('这是一段中文 This is a passage in English 1234567', '\\p{Han}');
+```
+
+```text
 +-----------------------------------------------------------------------------+
 | ('这是一段中文 This is a passage in English 1234567' regexp '\p{Han}')         |
 +-----------------------------------------------------------------------------+
@@ -158,16 +190,17 @@ SELECT id, name FROM test_regexp WHERE name REGEXP '-';
 Test for Ending String Matching
 ```sql
 -- Find names ending with 'e'
-SELECT id, name FROM test_regexp WHERE name REGEXP 'e$';
+SELECT id, name FROM test_regexp WHERE name REGEXP 'e$' ORDER BY id;
 ```
 
 ```text
-+------+---------+
-| id   | name    |
-+------+---------+
-|    1 | Alice   |
-|    3 | Charlie |
-+------+---------+
++------+----------+
+| id   | name     |
++------+----------+
+|    1 | Alice    |
+|    3 | Charlie  |
+|    6 | John_Doe |
++------+----------+
 ```
 
 Emoji test
@@ -185,10 +218,23 @@ SELECT 'Hello' REGEXP '😀';
 ```
 
 
+An empty pattern matches every non-NULL string, including the empty string:
+
+```sql
+SELECT REGEXP('abc', ''), REGEXP('', ''), REGEXP(NULL, '');
+```
+
+```text
+1    1    NULL
+```
+
 'str' is NULL,return NULL
 
 ```sql
-mysql> SELECT REGEXP(NULL, '^billie');
+SELECT REGEXP(NULL, '^billie');
+```
+
+```text
 +-------------------------+
 | REGEXP(NULL, '^billie') |
 +-------------------------+
@@ -199,7 +245,10 @@ mysql> SELECT REGEXP(NULL, '^billie');
 'pattern' is NULL, return NULL
 
 ```sql
-mysql> SELECT REGEXP('billie eillish', NULL);
+SELECT REGEXP('billie eillish', NULL);
+```
+
+```text
 +--------------------------------+
 | REGEXP('billie eillish', NULL) |
 +--------------------------------+
@@ -210,7 +259,10 @@ mysql> SELECT REGEXP('billie eillish', NULL);
 All parameters are NULL,return NULL
 
 ```sql
-mysql> SELECT REGEXP(NULL, NULL);
+SELECT REGEXP(NULL, NULL);
+```
+
+```text
 +--------------------+
 | REGEXP(NULL, NULL) |
 +--------------------+
@@ -228,20 +280,48 @@ SELECT REGEXP('Hello, World!', '([a-z');
 ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.2)[INTERNAL_ERROR]Invalid regex expression: ([a-z
 ```
 
-Advanced regexp
-```sql
-SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INTERNAL_ERROR]Invalid regex expression: ([a-zA-Z_+-]+(?:/[a-zA-Z_0-9+-]+)*)(?=s|$). Error: invalid perl operator: (?=
+Advanced patterns require extended syntax. Ordinary RE2 fallback does not support look-around:
 
+```sql
+SET enable_hyperscan_fallback = true;
 SET enable_extended_regex = true;
-SELECT REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)');
+SELECT REGEXP('foobar', '(?<=foo)bar');
 ```
+
 ```text
-+-----------------------------------------------------------------------+
-| REGEXP('Apache/Doris', '([a-zA-Z_+-]+(?:\/[a-zA-Z_0-9+-]+)*)(?=s|$)') |
-+-----------------------------------------------------------------------+
-|                                                                     1 |
-+-----------------------------------------------------------------------+
+1
+```
+
+Non-constant patterns also support extended syntax (in the Doris 4.1 series since 4.1.5):
+
+```sql
+CREATE TABLE regexp_patterns (
+    id INT,
+    s VARCHAR(32),
+    p VARCHAR(64)
+) DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+INSERT INTO regexp_patterns VALUES
+    (1, 'foobar', '(?<=foo)bar'),
+    (2, 'fobar', '(?<=foo)bar'),
+    (3, 'foo123bar', 'foo(?=123)'),
+    (4, 'foo124bar', 'foo(?=123)');
+
+SELECT id, REGEXP(s, p) FROM regexp_patterns ORDER BY id;
+```
+
+```text
+1    1
+2    0
+3    1
+4    0
+```
+
+Restore the session setting before running the ordinary syntax examples below:
+
+```sql
+SET enable_extended_regex = false;
 ```
 
 Pattern Modifiers

@@ -44,6 +44,8 @@ There are two ways to view the configuration items of FE:
 
 ## Set configuration items
 
+Since version 4.1.5, `SHOW FRONTEND CONFIG` and configuration export endpoints mask nonempty sensitive values as `********`, including `initial_root_password`, TLS private key passwords, HTTPS Key Store passwords, and MySQL SSL certificate passwords. Empty values remain empty to indicate that they are unset. Masking does not change the effective configuration.
+
 There are two ways to configure FE configuration items:
 
 1. Static configuration
@@ -377,6 +379,16 @@ Is it possible to dynamically configure: true
 Is it a configuration item unique to the Master FE node: false
 
 ### Service
+
+#### `arrow_flight_deferred_query_idle_timeout_second`
+
+Default: 3600 (seconds)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: false
+
+Supported since version 4.1.5. An Arrow Flight SQL query that scans external tables in batches must retain its FE Coordinator after returning `GetFlightInfo`, so that BEs can continue fetching splits when the client reads results through `DoGet`. This setting limits how long such a query in an idle session retains resources. The period starts at query start and is never shorter than the query's execution timeout. On expiry, the Coordinator, Workload Group queue slot, and `active_queries` entry are released, but the session remains open and is still governed by `wait_timeout`. Set to `0` to disable this deadline.
 
 #### `query_port`
 
@@ -1007,6 +1019,26 @@ This variable is a session variable, and the session level takes effect.
 * Description: **Only for the table of the AGG model**, when the variable is true, when the user query contains aggregate functions such as count(distinct c1), if the type of the c1 column itself is bitmap, count distinct will be rewritten It is bitmap_union_count(c1). When the type of the c1 column itself is hll, count distinct will be rewritten as hll_union_agg(c1) If the variable is false, no overwriting occurs..
 
 ### Load And Export
+
+#### `streaming_cdc_fetch_splits_batch_size`
+
+Default: 16 (100 before 4.1.5)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Number of splits fetched per Streaming CDC request. Version 4.1.5 lowers the default from 100 to 16 to reduce the size of each request.
+
+#### `max_export_history_job_num`
+
+Default: 1000
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Cleanup threshold for EXPORT job history. Since version 4.1.5, cleanup removes only `FINISHED` / `CANCELLED` jobs and preserves running jobs, so active jobs can cause the total number of records to exceed this value.
 
 #### `enable_pipeline_load`
 
@@ -1823,6 +1855,16 @@ If true, will compress fe.audit.log by gzip
 
 ### Storage
 
+#### `inverted_index_storage_format`
+
+Default: `V3`
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Default storage format for new inverted indexes. Since version 4.1.5, creating V1 inverted indexes and dynamically setting this configuration to `V1` are prohibited. If the effective value in `fe.conf` or `fe_custom.conf` is `V1`, FE refuses to start; change it to `V2` or `V3` before upgrading. Existing V1 tables remain readable but cannot have more inverted indexes added. Recreate the table in V2 or V3 format if you need new indexes.
+
 #### `min_replication_num_per_tablet`
 
 Default: 1
@@ -2526,6 +2568,16 @@ fe will call es api to get es index shard info every es_state_sync_interval_secs
 
 ### External Resources
 
+#### `ai_resource_allowed_user`
+
+Default: `*`
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: false
+
+Supported since version 4.1.5. Restricts the user identity allowed to create AI Resources. `*` adds no identity restriction, but the existing privilege checks still apply. Other values use the `'user'@'host'` format and must match the current user identity. Changes require an FE restart.
+
 #### `dpp_hadoop_client_path`
 
 Default：/lib/hadoop-client/hadoop/bin/hadoop
@@ -2888,6 +2940,66 @@ Used to control the interval at which ProfileManager performs profile garbage co
 
 ### Compute and Storage Disaggregated Mode
 
+#### `cloud_edit_log_roll_interval_second`
+
+Default: 3600 (seconds)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Supported since version 4.1.5. Time-based Edit Log roll interval in compute-storage decoupled mode, to advance periodic checkpoints even when metadata writes are infrequent. The interval is checked when a log entry is appended; no independent timer forces a roll when there are no new entries. Nonpositive values disable time-based rolling. Rolling based on the number of log entries remains enabled.
+
+#### `cloud_version_syncer_interval_second`
+
+Default: 60 (seconds, 20 before 4.1.5)
+
+Is it possible to dynamically configure: false
+
+Is it a configuration item unique to the Master FE node: false
+
+Interval at which all FEs synchronize table and partition versions in the background in compute-storage decoupled mode. Background synchronization requires `cloud_enable_version_syncer=true` and at least one global/default table or partition version cache TTL set to `Long.MAX_VALUE`; caches with finite TTLs refresh lazily on reads. Version 4.1.5 raises the default interval from 20 to 60 seconds to reduce Meta Service requests. Changes require an FE restart.
+
+#### `cloud_get_version_task_batch_size`
+
+Default: 200 (2000 before 4.1.5)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: false
+
+Maximum number of tables or partitions in one Get Version batch during version synchronization in compute-storage decoupled mode. Version 4.1.5 lowers the default from 2000 to 200 to reduce request size.
+
+#### `cloud_version_syncer_get_version_retry_times`
+
+Default: 3
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: false
+
+Supported since version 4.1.5. Maximum number of attempts to fetch table or partition versions during background synchronization in compute-storage decoupled mode, including the initial request. The default permits up to 3 total attempts, rather than 3 retries after the first request. This setting is independent of the Meta Service RPC retry settings for foreground queries.
+
+#### `cloud_warm_up_job_scheduler_interval_millisecond`
+
+Default: 1000 (milliseconds)
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Cache warm-up job scheduling interval. Since version 4.1.5, dynamic updates require a value greater than `0`; otherwise they return `cloud_warm_up_job_scheduler_interval_millisecond must be greater than 0`.
+
+#### `max_active_cloud_warm_up_job`
+
+Default: 10
+
+Is it possible to dynamically configure: true
+
+Is it a configuration item unique to the Master FE node: true
+
+Number of cache warm-up jobs scheduled concurrently. Since version 4.1.5, dynamic updates also resize the warm-up executor. Nonpositive values pause scheduling of new warm-up work.
+
 #### `cluster_id`
 
 Default：-1
@@ -2954,11 +3066,21 @@ Added in version 4.1.4. Whether bucket placement of colocate tables in the compu
 
 #### `meta_service_rpc_rate_limit_enabled`
 
+Default: true (false before 4.1.5)
+
+Is it possible to dynamically configure: true
+
+Added in version 4.1.4. Whether to evaluate QPS rate limiting for FE-to-Meta-Service RPCs. Enabled by default since version 4.1.5, together with `meta_service_rpc_rate_limit_dry_run`, so the default behavior only records estimated waits and rejections without delaying or rejecting requests. To enforce rate limiting, keep this setting `true` and set dry-run to `false`.
+
+#### `meta_service_rpc_rate_limit_dry_run`
+
 Default: true
 
 Is it possible to dynamically configure: true
 
-Added in version 4.1.4. Whether to enable QPS rate limiting for the RPC requests that FE sends to the Meta Service.
+Is it a configuration item unique to the Master FE node: false
+
+Supported since version 4.1.5. Only takes effect when `meta_service_rpc_rate_limit_enabled=true`. When `true`, evaluates rate limiting and records metrics without waiting or rejecting requests. When `false`, enforces the configured QPS, burst window, and wait timeout. Wait metrics in dry-run mode represent the estimated waiting time.
 
 #### `meta_service_rpc_rate_limit_default_qps_per_core`
 

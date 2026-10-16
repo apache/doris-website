@@ -219,6 +219,8 @@ Hive transactional tables are supported from version 3.x onwards. For details, r
 
 Hive tables can contain timestamp files produced by different engines. The physical encoding and writer behavior determine whether a time zone conversion is required. Doris does not infer a writer time zone from a Parquet `INT96` value because `INT96` has no time zone annotation.
 
+Since 4.1.5, `hive.parquet.time-zone` accepts an IANA time zone or a UTC offset from `-12:00` to `+14:00`. `UTC` and `GMT` are accepted; short aliases such as `CST` and `PRC` are rejected. See [Parquet](../file-formats/parquet.md#timestamp-and-date-compatibility).
+
 ### Parquet INT96 timestamps
 
 FileScannerV2 handles Parquet timestamps as follows:
@@ -276,8 +278,8 @@ The same property is accepted by file table-valued functions that read Parquet f
 | char(N)       | char(N)       |                                                |
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
-| binary        | string/varbinary  | Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
-| timestamp with local time zone| datetime/timestamptz | The `enable.mapping.timestamp_tz` property (supported since version 4.0.3) controls the mapping behavior.  By default, it is set to `false`, in which case the type is mapped to `datetime`.  When set to `true`, it is mapped to the `timestamptz` type.     |
+| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
+| timestamp with local time zone | TIMESTAMPTZ | Since 4.1.5, this type always maps to `TIMESTAMPTZ`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
 | array         | array         |                                                |
 | map           | map           |                                                |
 | struct        | struct        |                                                |
@@ -840,7 +842,7 @@ You can query Hive Views, but there are some limitations:
 
 Data can be written to Hive tables using the INSERT statement. This is supported for Hive tables created by Doris or existing Hive tables with compatible formats.
 
-For partitioned tables, data will automatically be written to the corresponding partition or a new partition will be created based on the data. Currently, specifying a partition for writing is not supported.
+For partitioned tables, data will automatically be written to the corresponding partition or a new partition will be created based on the data. Since 4.1.5, `PARTITION (column = literal)` supports static partitions and mixed static and dynamic partition columns. Exclude static partition columns from the INSERT target column list and SELECT or VALUES output; supply the remaining dynamic partition columns in the input.
 
 ### INSERT INTO
 
@@ -854,7 +856,7 @@ INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
 ```
 
-Since version 4.2.0, support for writing data to static partition(or hybrid):
+Since 4.1.5, writes support static partitions or a mix of static and dynamic partitions:
 
 ```sql
 -- Full Static Partition
@@ -879,7 +881,7 @@ INSERT OVERWRITE TABLE hive_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
 
-Since version 4.2.0, support for writing data to static partition(or hybrid):
+Since 4.1.5, writes support static partitions or a mix of static and dynamic partitions:
 
 ```sql
 -- Full Static Partition
@@ -901,7 +903,41 @@ The semantics of INSERT OVERWRITE are consistent with Hive, with the following b
 
 * If the target table is non-partitioned and the source table is empty, the target table will be cleared.
 
-* Since version 4.2.0, specifying static partitions for writing is supported, as well as hybrid mode combining static and dynamic partitions. However, even when static partitions are specified, if the source query results are empty, the specified partitions will not be cleared.
+* Since 4.1.5, specifying static partitions for writing is supported, as well as hybrid mode combining static and dynamic partitions. However, even when static partitions are specified, if the source query results are empty, the specified partitions will not be cleared.
+
+**Complete static-partition example (since 4.1.5)**
+
+Configure the Hive Catalog described on this page, prepare the existing `hive_ctl.hive_db` database, and grant permissions to create tables, write, and query. The Catalog used for writes must have `fs.defaultFS` configured. This example combines a static date with dynamic regions, then overwrites one fully specified static partition:
+
+```sql
+CREATE TABLE hive_ctl.hive_db.static_write_demo (
+    id INT,
+    dt STRING,
+    region STRING
+)
+ENGINE=HIVE
+PARTITION BY LIST (dt, region) ()
+PROPERTIES ("file_format" = "parquet");
+
+INSERT INTO hive_ctl.hive_db.static_write_demo PARTITION (dt='2026-10-01')
+VALUES (1, 'beijing'), (2, 'shanghai');
+
+INSERT OVERWRITE TABLE hive_ctl.hive_db.static_write_demo
+PARTITION (dt='2026-10-01', region='beijing') VALUES (3);
+
+SELECT id, dt, region FROM hive_ctl.hive_db.static_write_demo ORDER BY id;
+```
+
+```text
++----+------------+----------+
+| id | dt         | region   |
++----+------------+----------+
+|  2 | 2026-10-01 | shanghai |
+|  3 | 2026-10-01 | beijing  |
++----+------------+----------+
+```
+
+Static partition values must be literals. Do not specify a partition key more than once or repeat a static partition column in the explicit INSERT column list. Static key names are matched case-insensitively; a nonexistent partition column produces an error.
 
 ### CTAS
 

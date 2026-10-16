@@ -526,6 +526,8 @@ Note the following:
 
 ## 2. Query Materialized Views
 
+Since 4.1.5, historical snapshot and Time Travel queries on external tables are excluded from transparent rewrites using current materialized view data, so the query reads the requested snapshot. This restriction does not affect rewrites of queries on current data.
+
 <!-- Knowledge type: Operations manual -->
 <!-- Applicable scenarios: Use materialized views to accelerate queries -->
 

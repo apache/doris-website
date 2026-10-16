@@ -26,19 +26,21 @@ NGRAM_SEARCH(<text>, <pattern>, <gram_num>)
 | ------------ | ----------------------------------------- |
 | `<text>` | The text string to compare. Type: VARCHAR |
 | `<pattern>` | Pattern string (must be constant). Type: VARCHAR |
-| `<gram_num>` | The N value for N-gram (must be constant). Type: INT |
+| `<gram_num>` | The N value for N-gram. Must be a positive integer constant. Type: INT. |
 
 ## Return Value
 
 Returns DOUBLE type, the N-gram similarity between the two strings (between 0 and 1).
 
 Special cases:
-- If any parameter is NULL, returns NULL
+- Returns NULL if `<text>` or `<pattern>` is NULL. `<gram_num>` must be a positive integer constant and cannot be NULL
 - If string length is less than `<gram_num>`, returns 0
-- `<pattern>` and `<gram_num>` must be constants
+- `<pattern>` and `<gram_num>` must be constants. In the Doris 4.1 series since 4.1.5, invalid `<gram_num>` values such as 0, a negative number, or a non-integer constant explicitly report an error
 - Similarity of 1 does not necessarily mean strings are completely identical
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 1. Basic usage: Calculate similarity
 ```sql
@@ -86,6 +88,16 @@ SELECT ngram_search(NULL, 'test', 2);
 +--------------------------------+
 | NULL                           |
 +--------------------------------+
+```
+
+An invalid gram_num reports an error:
+
+```sql
+SELECT NGRAM_SEARCH('abc', 'abc', 0);
+```
+
+```text
+ngram_search(text,pattern,gram_num): gram_num must be a positive constant.
 ```
 
 ### Keywords
