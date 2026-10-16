@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Converts a string to a `VARBINARY` value using the specified character set. Character set names are case-insensitive. The supported character sets are `US-ASCII`, `ISO-8859-1`, `UTF-8`, `UTF-16BE`, `UTF-16LE`, and `UTF-16`.

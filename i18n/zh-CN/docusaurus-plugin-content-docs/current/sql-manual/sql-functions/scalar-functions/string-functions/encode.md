@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 使用指定字符集将字符串转换为 `VARBINARY` 值。字符集名称不区分大小写。支持的字符集包括 `US-ASCII`、`ISO-8859-1`、`UTF-8`、`UTF-16BE`、`UTF-16LE` 和 `UTF-16`。
