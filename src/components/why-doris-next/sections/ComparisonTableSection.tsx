@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import './ComparisonTableSection.scss';
 
@@ -51,7 +52,7 @@ export function ComparisonTableSection({
             <div className="cmp-tbl__wrap">
                 <div className="cmp-tbl__head">
                     <div className="cmp-tbl__col">
-                        <span className="cmp-tbl__col-label">DIMENSION</span>
+                        <span className="cmp-tbl__col-label">{translate({ id: "marketing.compare.256", message: "DIMENSION" })}</span>
                     </div>
                     <div className="cmp-tbl__col">
                         <span className="cmp-tbl__col-name cmp-tbl__col-name--doris">
@@ -59,7 +60,7 @@ export function ComparisonTableSection({
                                 <img className="cmp-tbl__col-logo" src={dorisLogoSrc} alt="" draggable={false} />
                             </span>
                             Apache Doris
-                            <span className="cmp-tbl__col-badge">RECOMMENDED</span>
+                            <span className="cmp-tbl__col-badge">{translate({ id: "marketing.compare.257", message: "RECOMMENDED" })}</span>
                         </span>
                     </div>
                     <div className="cmp-tbl__col">

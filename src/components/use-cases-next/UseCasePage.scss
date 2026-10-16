@@ -7,6 +7,10 @@ $uc-bp-sm: 700px;
 $uc-bp-xs: 480px;
 $uc-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
 
+.uc-hero__title .uc-accent:lang(ja) {
+    white-space: nowrap;
+}
+
 // cream-on-dark ink scale used everywhere on these pages
 @function cream($alpha) {
     @return rgba(245, 239, 228, $alpha);

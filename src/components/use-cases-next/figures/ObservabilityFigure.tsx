@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { ACCENT, Badge, Card, Chip, CREAM, DorisBlock, Figure, Header, Hint, Label, PAD, Wire } from './primitives';
 
@@ -6,37 +7,37 @@ import { ACCENT, Badge, Card, Chip, CREAM, DorisBlock, Figure, Header, Hint, Lab
 
 const ROWS = [90, 168, 246, 324];
 const SIGNALS = [
-    ['APPS & SERVICES', 'logs · traces · OTel'],
-    ['HOSTS & K8S', 'metrics · pod logs'],
-    ['LOG SHIPPERS', 'Vector · Fluent Bit'],
-    ['AI AGENTS', 'prompts · tool calls'],
+    [translate({ id: "marketing.figures.043", message: "APPS & SERVICES" }), translate({ id: "marketing.figures.044", message: "logs · traces · OTel" })],
+    [translate({ id: "marketing.figures.045", message: "HOSTS & K8S" }), translate({ id: "marketing.figures.046", message: "metrics · pod logs" })],
+    [translate({ id: "marketing.figures.047", message: "LOG SHIPPERS" }), translate({ id: "marketing.figures.048", message: "Vector · Fluent Bit" })],
+    [translate({ id: "marketing.figures.049", message: "AI AGENTS" }), translate({ id: "marketing.figures.050", message: "prompts · tool calls" })],
 ];
 const CONSUMERS = [
-    ['GRAFANA', 'dashboards'],
-    ['ALERTS & SLOS', 'P99 · error rate'],
-    ['AD HOC SQL', 'investigations'],
-    ['AI QUALITY', 'evals · feedback'],
+    ['GRAFANA', translate({ id: "marketing.figures.051", message: "dashboards" })],
+    [translate({ id: "marketing.figures.052", message: "ALERTS & SLOS" }), translate({ id: "marketing.figures.053", message: "P99 · error rate" })],
+    [translate({ id: "marketing.figures.026", message: "AD HOC SQL" }), translate({ id: "marketing.figures.054", message: "investigations" })],
+    [translate({ id: "marketing.figures.055", message: "AI QUALITY" }), translate({ id: "marketing.figures.056", message: "evals · feedback" })],
 ];
 const STORE: Array<[string, string, number?]> = [
-    ['VARIANT', 'dynamic JSON', 2],
-    ['INVERTED INDEX', 'full-text · BM25'],
-    ['COLUMNAR', '5:1 compression'],
+    ['VARIANT', translate({ id: "marketing.figures.057", message: "dynamic JSON" }), 2],
+    [translate({ id: "marketing.figures.058", message: "INVERTED INDEX" }), translate({ id: "marketing.figures.059", message: "full-text · BM25" })],
+    [translate({ id: "marketing.figures.060", message: "COLUMNAR" }), translate({ id: "marketing.figures.061", message: "5:1 compression" })],
 ];
 const QUERY: Array<[string, string, number?]> = [
-    ['FULL-TEXT', 'BM25 · keyword', 3],
-    ['AGGREGATE', 'P99 · SLA · cost', 4],
-    ['HYBRID', 'keyword + vector', 5],
+    [translate({ id: "marketing.figures.062", message: "FULL-TEXT" }), translate({ id: "marketing.figures.063", message: "BM25 · keyword" }), 3],
+    [translate({ id: "marketing.figures.064", message: "AGGREGATE" }), translate({ id: "marketing.figures.065", message: "P99 · SLA · cost" }), 4],
+    [translate({ id: "marketing.figures.066", message: "HYBRID" }), translate({ id: "marketing.figures.067", message: "keyword + vector" }), 5],
 ];
 const TIERS = [
-    { label: 'HOT · SSD', from: 0, to: 0.38, fill: ACCENT, opacity: 0.28 },
-    { label: 'WARM', from: 0.38, to: 0.66, fill: CREAM, opacity: 0.16 },
-    { label: 'COLD · S3 / HDFS', from: 0.66, to: 1, fill: CREAM, opacity: 0.07 },
+    { label: translate({ id: "marketing.figures.068", message: "HOT · SSD" }), from: 0, to: 0.38, fill: ACCENT, opacity: 0.28 },
+    { label: translate({ id: "marketing.figures.069", message: "WARM" }), from: 0.38, to: 0.66, fill: CREAM, opacity: 0.16 },
+    { label: translate({ id: "marketing.figures.070", message: "COLD · S3 / HDFS" }), from: 0.66, to: 1, fill: CREAM, opacity: 0.07 },
 ];
 const TICKS: Array<[number, string]> = [
-    [0, 'now'],
-    [0.38, '7 d'],
-    [0.66, '30 d'],
-    [1, '1 y'],
+    [0, translate({ id: "marketing.figures.071", message: "now" })],
+    [0.38, translate({ id: "marketing.figures.072", message: "7 d" })],
+    [0.66, translate({ id: "marketing.figures.073", message: "30 d" })],
+    [1, translate({ id: "marketing.figures.074", message: "1 y" })],
 ];
 
 const REGION_X = 240;
@@ -69,12 +70,11 @@ export function ObservabilityFigure(): JSX.Element {
     const barH = 24;
     return (
         <Figure
-            title="Observability on Apache Doris: logs, metrics, traces, and AI agent events pass through a collector into Doris, where VARIANT, inverted indexes, and columnar storage hold them as they age from hot SSD to cold object storage, and full-text, aggregate, and hybrid queries serve Grafana, alerts, ad hoc SQL, and AI quality reviews."
-            caption="FIG. 03 · SIGNALS FLOW IN, AGE FROM HOT TO COLD, AND STAY QUERYABLE THE WHOLE TIME"
+            title={translate({ id: "marketing.figures.075", message: "Observability on Apache Doris: logs, metrics, traces, and AI agent events pass through a collector into Doris, where VARIANT, inverted indexes, and columnar storage hold them as they age from hot SSD to cold object storage, and full-text, aggregate, and hybrid queries serve Grafana, alerts, ad hoc SQL, and AI quality reviews." })}
+            caption={translate({ id: "marketing.figures.076", message: "FIG. 03 · SIGNALS FLOW IN, AGE FROM HOT TO COLD, AND STAY QUERYABLE THE WHOLE TIME" })}
         >
             <Header x={PAD} y={60} width={140}>
-                SIGNALS
-            </Header>
+                {translate({ id: "marketing.figures.077", message: "SIGNALS" })}</Header>
             {SIGNALS.map(([t, s], i) => (
                 <g key={t}>
                     <Card x={PAD} y={ROWS[i]} w={140} h={50} title={t} sub={s} />
@@ -85,23 +85,20 @@ export function ObservabilityFigure(): JSX.Element {
             {/* collector bar */}
             <Card x={184} y={90} w={34} h={284} />
             <Label x={205} y={232} size={8.5} weight={700} opacity={0.75} tracking="0.14em" anchor="middle" rotate={-90}>
-                OTEL COLLECTOR · VECTOR · KAFKA
-            </Label>
+                {translate({ id: "marketing.figures.078", message: "OTEL COLLECTOR · VECTOR · KAFKA" })}</Label>
             <Wire points={[[218, 232], [240, 232]]} head />
             <Badge x={229} y={216} n={1} />
 
             {/* Doris region */}
             <Card x={REGION_X} y={76} w={REGION_W} h={296} faint />
-            <DorisBlock x={INNER_X} y={86} w={INNER_W} h={28} right="ONE SQL LAYER" />
+            <DorisBlock x={INNER_X} y={86} w={INNER_W} h={28} right={translate({ id: "marketing.figures.015", message: "ONE SQL LAYER" })} />
 
             <Hint x={INNER_X} y={138} tracking="0.2em" size={9}>
-                STORE
-            </Hint>
+                {translate({ id: "marketing.figures.079", message: "STORE" })}</Hint>
             <ChipRow y={146} items={STORE} />
 
             <Hint x={INNER_X} y={214} tracking="0.2em" size={9}>
-                DATA LIFECYCLE · TIERED STORAGE
-            </Hint>
+                {translate({ id: "marketing.figures.080", message: "DATA LIFECYCLE · TIERED STORAGE" })}</Hint>
             {TIERS.map(t => {
                 const x = INNER_X + t.from * INNER_W;
                 const w = (t.to - t.from) * INNER_W;
@@ -127,18 +124,15 @@ export function ObservabilityFigure(): JSX.Element {
                 );
             })}
             <Label x={INNER_X} y={278} size={7.8} weight={500} opacity={0.55}>
-                recent data fast on SSD · history cheap on object storage
-            </Label>
+                {translate({ id: "marketing.figures.081", message: "recent data fast on SSD · history cheap on object storage" })}</Label>
 
             <Hint x={INNER_X} y={306} tracking="0.2em" size={9}>
-                QUERY
-            </Hint>
+                {translate({ id: "marketing.figures.082", message: "QUERY" })}</Hint>
             <ChipRow y={314} items={QUERY} />
 
             {/* consumers */}
             <Header x={696} y={60} anchor="end" width={124}>
-                CONSUMERS
-            </Header>
+                {translate({ id: "marketing.figures.037", message: "CONSUMERS" })}</Header>
             {CONSUMERS.map(([t, s], i) => (
                 <g key={t}>
                     <Wire points={[[REGION_X + REGION_W, ROWS[i] + 25], [572, ROWS[i] + 25]]} head />

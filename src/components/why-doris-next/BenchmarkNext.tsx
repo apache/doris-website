@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, {
     CSSProperties,
     Fragment,
@@ -7,7 +8,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import { LayoutNext } from '../home-next/LayoutNext';
 import benchmarkData from '@site/src/constant/benchmark.data.json';
 import agentlogBenchmarkData from '@site/src/constant/agentlog-benchmark.data.json';
@@ -54,26 +55,49 @@ interface BenchmarkDataset {
  * Data — loaded from src/constant/benchmark.data.json
  * ────────────────────────────────────────────────────────────────────────── */
 
-const DATA = benchmarkData as unknown as BenchmarkDataset;
-const AGENTLOG_DATA = agentlogBenchmarkData as unknown as BenchmarkDataset;
+function localizeDataset(dataset: BenchmarkDataset): BenchmarkDataset {
+    const labels: Record<string, string> = {
+        'Internal Table Format': translate({ id: 'marketing.benchmarkLabels.internal', message: 'Internal Table Format' }),
+        'Iceberg Table Format': translate({ id: 'marketing.benchmarkLabels.iceberg', message: 'Iceberg Table Format' }),
+        '100M rows': translate({ id: 'marketing.benchmarkLabels.100m', message: '100M rows' }),
+        '10M rows': translate({ id: 'marketing.benchmarkLabels.10m', message: '10M rows' }),
+        '1M rows': translate({ id: 'marketing.benchmarkLabels.1m', message: '1M rows' }),
+        'Search & Retrieval': translate({ id: 'marketing.benchmarkLabels.retrieval', message: 'Search & Retrieval' }),
+        'Analytics Rollups': translate({ id: 'marketing.benchmarkLabels.analytics', message: 'Analytics Rollups' }),
+        'Semi-Structured Payload': translate({ id: 'marketing.benchmarkLabels.semi', message: 'Semi-Structured Payload' }),
+        '8 queries': translate({ id: 'marketing.benchmarkLabels.8queries', message: '8 queries' }),
+        '6 queries': translate({ id: 'marketing.benchmarkLabels.6queries', message: '6 queries' }),
+    };
+    return { ...dataset, tabs: dataset.tabs.map(tab => ({
+        ...tab,
+        label: labels[tab.label] ?? tab.label,
+        benchmarks: tab.benchmarks.map(bench => ({ ...bench,
+            name: labels[bench.name] ?? bench.name,
+            scale: labels[bench.scale] ?? bench.scale,
+        })),
+    })) };
+}
+
+const DATA = localizeDataset(benchmarkData as unknown as BenchmarkDataset);
+const AGENTLOG_DATA = localizeDataset(agentlogBenchmarkData as unknown as BenchmarkDataset);
 
 const TAB_DESCRIPTIONS: Record<string, string> = {
     internal:
-        'Each engine reads and writes data in its own native format.',
+        translate({ id: "marketing.benchmarks.001", message: "Each engine reads and writes data in its own native format." }),
     iceberg:
-        'Every engine reads the same Apache Iceberg dataset, so only the engine changes.',
-    s100m: 'Official leaderboard size. Around 100M rows.',
-    s10m:  'Full validation pass that still fits on a single machine. Around 10M rows.',
-    s1m:   'Quick smoke-test size. Around 1M rows.',
+        translate({ id: "marketing.benchmarks.002", message: "Every engine reads the same Apache Iceberg dataset, so only the engine changes." }),
+    s100m: translate({ id: "marketing.benchmarks.003", message: "Official leaderboard size. Around 100M rows." }),
+    s10m:  translate({ id: "marketing.benchmarks.004", message: "Full validation pass that still fits on a single machine. Around 10M rows." }),
+    s1m:   translate({ id: "marketing.benchmarks.005", message: "Quick smoke-test size. Around 1M rows." }),
 };
 
 const BENCH_DESC: Record<string, string> = {
-    ssb:   'A star-schema benchmark with 13 queries, heavy on wide joins and aggregations.',
-    tpch:  'The classic decision-support benchmark: 22 ad-hoc queries against a normalized schema.',
-    tpcds: 'The hardest decision-support benchmark: 99 queries that cover most of what an analytical engine has to do.',
-    retrieval: 'Observation lookup, trace replay, generation-to-tool chain expansion, and incident keyword / phrase retrieval over large text bodies.',
-    analytics: 'Trace-level failure and cost summaries, model and observation-type rollups, tool usage distributions, and operational diagnostics.',
-    semi:      'Filtering and aggregation over evolving payload fields: release rings, customer tiers, retrieval strategies, and nested provider / tool diagnostics.',
+    ssb:   translate({ id: "marketing.benchmarks.006", message: "A star-schema benchmark with 13 queries, heavy on wide joins and aggregations." }),
+    tpch:  translate({ id: "marketing.benchmarks.007", message: "The classic decision-support benchmark: 22 ad-hoc queries against a normalized schema." }),
+    tpcds: translate({ id: "marketing.benchmarks.008", message: "The hardest decision-support benchmark: 99 queries that cover most of what an analytical engine has to do." }),
+    retrieval: translate({ id: "marketing.benchmarks.009", message: "Observation lookup, trace replay, generation-to-tool chain expansion, and incident keyword / phrase retrieval over large text bodies." }),
+    analytics: translate({ id: "marketing.benchmarks.010", message: "Trace-level failure and cost summaries, model and observation-type rollups, tool usage distributions, and operational diagnostics." }),
+    semi:      translate({ id: "marketing.benchmarks.011", message: "Filtering and aggregation over evolving payload fields: release rings, customer tiers, retrieval strategies, and nested provider / tool diagnostics." }),
 };
 
 const PRODUCT_COLORS: Record<string, string> = {
@@ -124,15 +148,10 @@ function Hero(): JSX.Element {
         <section className="b-hero">
             <div className="b-container b-hero-inner">
                 <h1 className="b-hero-title" data-reveal>
-                    See how fast<br />
-                    <span className="b-accent">Apache Doris</span> really is.
-                </h1>
+                    {translate({ id: "marketing.benchmarks.012", message: "See how fast" })}<br />
+                    <span className="b-accent">Apache Doris</span> {translate({ id: "marketing.benchmarks.013", message: "really is." })}</h1>
                 <p className="b-hero-sub" data-reveal data-reveal-delay="1">
-                    Two workloads people actually run on Apache Doris: classic SQL
-                    analytics, and AI-agent observability logs. Both compared against
-                    the engines you&rsquo;d realistically consider. Scripts and raw
-                    timings are public.
-                </p>
+                    {translate({ id: "marketing.benchmarks.014", message: "Two workloads people actually run on Apache Doris: classic SQL analytics, and AI-agent observability logs. Both compared against the engines you’d realistically consider. Scripts and raw timings are public." })}</p>
             </div>
         </section>
     );
@@ -262,7 +281,7 @@ function SummaryCard({
                 <h3 className="b-card-title">{bench.name}</h3>
                 <span className="b-card-tag">{bench.scale}</span>
             </div>
-            <div className="b-card-metric">Total Run Time</div>
+            <div className="b-card-metric">{translate({ id: "marketing.benchmarks.015", message: "Total Run Time" })}</div>
             <div className="b-bars">
                 {sortedProducts.map(p => (
                     <SummaryBar key={p.id} product={p} max={max} />
@@ -270,7 +289,7 @@ function SummaryCard({
             </div>
             <div className="b-card-desc">{BENCH_DESC[bench.id] || ''}</div>
             <div className="b-card-tip">
-                {active ? <>Hide per-query breakdown ↑</> : <>See per-query breakdown ↓</>}
+                {active ? <>{translate({ id: "marketing.benchmarks.016", message: "Hide per-query breakdown ↑" })}</> : <>{translate({ id: "marketing.benchmarks.017", message: "See per-query breakdown ↓" })}</>}
             </div>
         </button>
     );
@@ -390,10 +409,8 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
         <div className="b-detail">
             <div className="b-detail-head">
                 <h3 className="b-detail-title">
-                    {bench.name} per-query runtime
-                    <span className="b-detail-title-sub">
-                        scale {bench.scale} · {bench.queries.length} queries
-                    </span>
+                    {bench.name} {translate({ id: "marketing.benchmarks.018", message: "per-query runtime" })}<span className="b-detail-title-sub">
+                        {translate({ id: "marketing.benchmarks.019", message: "scale" })}{" "}{bench.scale} · {bench.queries.length} {translate({ id: "marketing.benchmarks.020", message: "queries" })}</span>
                 </h3>
                 <div className="b-detail-legend">
                     {sortedProducts.map(p => (
@@ -410,8 +427,7 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                             className="b-detail-legend-swatch"
                             style={{ background: 'transparent', border: '1px dashed rgba(255,92,57,0.7)' }}
                         />
-                        Failed
-                    </span>
+                        {translate({ id: "marketing.benchmarks.021", message: "Failed" })}</span>
                 </div>
             </div>
             <div className="b-detail-scroll">
@@ -421,7 +437,7 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                 >
                     <div className="b-chart-yaxis" aria-hidden="true">
                         {yticks.map((t, i) => (
-                            <span key={i}>{t}s</span>
+                            <span key={i}>{t}{translate({ id: "marketing.benchmarks.022", message: "s" })}</span>
                         ))}
                     </div>
                     <div className="b-chart-grid" aria-hidden="true" />
@@ -448,7 +464,7 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                                             transitionDelay: `${Math.min(qi * 12 + pi * 30, 1100)}ms`,
                                         };
                                         const tipText = `${p.name} · ${q} · ${
-                                            failed ? 'failed' : `${(v as number).toFixed(2)}s`
+                                            failed ? translate({ id: 'marketing.benchmarks.failedTooltip', message: 'failed' }) : `${(v as number).toFixed(2)}s`
                                         }`;
                                         return (
                                             <span
@@ -488,7 +504,7 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                                 </span>
                                 {partial ? (
                                     <span className="b-detail-env-partial">
-                                        {' · '}completed {p.queriesCompleted} / {p.queriesTotal}
+                                        {' · '}{translate({ id: "marketing.benchmarks.023", message: "completed" })}{" "}{p.queriesCompleted} / {p.queriesTotal}
                                     </span>
                                 ) : null}
                             </li>
@@ -497,12 +513,9 @@ function DetailStrip({ bench }: { bench: Benchmark }): JSX.Element {
                 </ul>
             </div>
             <div className="b-detail-foot">
-                Hover any bar for its exact runtime. Hatched bars timed out.
-                {isCapped ? (
+                {translate({ id: "marketing.benchmarks.024", message: "Hover any bar for its exact runtime. Hatched bars timed out." })}{isCapped ? (
                     <>
-                        {' '}Bars with a broken top run past the visible scale; hover for
-                        the real number.
-                    </>
+                        {' '}{translate({ id: "marketing.benchmarks.025", message: "Bars with a broken top run past the visible scale; hover for the real number." })}</>
                 ) : null}
             </div>
             <div ref={tipRef} className="b-floating-tip" aria-hidden="true" />
@@ -548,8 +561,7 @@ function Comparison({ dataset, title, subtitle, reportHref }: ComparisonProps): 
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            See Report ↗
-                        </a>
+                            {translate({ id: "marketing.benchmarks.026", message: "See Report ↗" })}</a>
                     ) : (
                         <button
                             type="button"
@@ -557,8 +569,7 @@ function Comparison({ dataset, title, subtitle, reportHref }: ComparisonProps): 
                             disabled
                             aria-disabled="true"
                         >
-                            See Report (Coming Soon)
-                        </button>
+                            {translate({ id: "marketing.benchmarks.027", message: "See Report (Coming Soon)" })}</button>
                     )}
                 </div>
 
@@ -623,36 +634,36 @@ interface ReproStep {
 
 const METHODOLOGY: { label: string; body: string }[] = [
     {
-        label: 'What we measure',
-        body: 'Per-query runtime, summed across the selected queries for each benchmark.',
+        label: translate({ id: "marketing.benchmarks.028", message: "What we measure" }),
+        body: translate({ id: "marketing.benchmarks.029", message: "Per-query runtime, summed across the selected queries for each benchmark." }),
     },
     {
-        label: 'Runs per query',
-        body: 'Each query runs at least 3×. Cold = first run; hot = faster of runs 2 and 3.',
+        label: translate({ id: "marketing.benchmarks.030", message: "Runs per query" }),
+        body: translate({ id: "marketing.benchmarks.031", message: "Each query runs at least 3×. Cold = first run; hot = faster of runs 2 and 3." }),
     },
     {
-        label: 'Cache control',
-        body: 'Result caches disabled on every engine. Doris BE caches cleared before cold runs.',
+        label: translate({ id: "marketing.benchmarks.032", message: "Cache control" }),
+        body: translate({ id: "marketing.benchmarks.033", message: "Result caches disabled on every engine. Doris BE caches cleared before cold runs." }),
     },
     {
-        label: 'Hardware parity',
-        body: 'Same region and VPC across engines, with identical machine class for each cluster.',
+        label: translate({ id: "marketing.benchmarks.034", message: "Hardware parity" }),
+        body: translate({ id: "marketing.benchmarks.035", message: "Same region and VPC across engines, with identical machine class for each cluster." }),
     },
     {
-        label: 'Data parity',
-        body: 'Same source data loaded into each engine before the run, in its native format.',
+        label: translate({ id: "marketing.benchmarks.036", message: "Data parity" }),
+        body: translate({ id: "marketing.benchmarks.037", message: "Same source data loaded into each engine before the run, in its native format." }),
     },
     {
-        label: 'Transparency',
-        body: 'All scripts, queries, configs, and per-run metadata are published in the repo.',
+        label: translate({ id: "marketing.benchmarks.038", message: "Transparency" }),
+        body: translate({ id: "marketing.benchmarks.039", message: "All scripts, queries, configs, and per-run metadata are published in the repo." }),
     },
 ];
 
 const REPRO_STEPS: ReproStep[] = [
     {
         id: 1,
-        title: 'Clone the benchmark scripts',
-        body: 'Pull the benchmark repository onto the machine that will drive the run.',
+        title: translate({ id: "marketing.benchmarks.040", message: "Clone the benchmark scripts" }),
+        body: translate({ id: "marketing.benchmarks.041", message: "Pull the benchmark repository onto the machine that will drive the run." }),
         promptLine: 'user@bench ~ %',
         file: 'shell',
         lines: [
@@ -665,9 +676,9 @@ const REPRO_STEPS: ReproStep[] = [
     },
     {
         id: 2,
-        title: 'Configure your Doris cluster endpoint',
+        title: translate({ id: "marketing.benchmarks.042", message: "Configure your Doris cluster endpoint" }),
         body:
-            'Open the config file and fill in the host, port, user, password, and database for your Doris cluster.',
+            translate({ id: "marketing.benchmarks.043", message: "Open the config file and fill in the host, port, user, password, and database for your Doris cluster." }),
         promptLine: 'user@bench ~/benchmarks %',
         file: 'benchmark.yaml',
         lines: [
@@ -682,9 +693,9 @@ const REPRO_STEPS: ReproStep[] = [
     },
     {
         id: 3,
-        title: 'Install third-party tooling',
+        title: translate({ id: "marketing.benchmarks.044", message: "Install third-party tooling" }),
         body:
-            'The runner relies on a few CLI clients (mysql, jq, hyperfine). One make target installs them all.',
+            translate({ id: "marketing.benchmarks.045", message: "The runner relies on a few CLI clients (mysql, jq, hyperfine). One make target installs them all." }),
         promptLine: 'user@bench ~/benchmarks %',
         file: 'shell',
         lines: [
@@ -697,9 +708,9 @@ const REPRO_STEPS: ReproStep[] = [
     },
     {
         id: 4,
-        title: 'Run the benchmark and generate the report',
+        title: translate({ id: "marketing.benchmarks.046", message: "Run the benchmark and generate the report" }),
         body:
-            'Kick off the run, then collect the report. The runner prints a per-query summary as it goes.',
+            translate({ id: "marketing.benchmarks.047", message: "Kick off the run, then collect the report. The runner prints a per-query summary as it goes." }),
         promptLine: 'user@bench ~/benchmarks %',
         file: 'shell',
         lines: [
@@ -723,27 +734,22 @@ function ReproSection(): JSX.Element {
             <div className="b-container">
                 <div className="b-repro-head" data-reveal>
                     <h2 className="b-repro-title">
-                        Run it yourself<br />in five minutes.
-                    </h2>
+                        {translate({ id: "marketing.benchmarks.048", message: "Run it yourself" })}<br />{translate({ id: "marketing.benchmarks.049", message: "in five minutes." })}</h2>
                     <p className="b-repro-sub">
-                        Every number above is reproducible from open scripts. Four steps, four
-                        shell commands. Click a step to see what runs.
-                    </p>
+                        {translate({ id: "marketing.benchmarks.050", message: "Every number above is reproducible from open scripts. Four steps, four shell commands. Click a step to see what runs." })}</p>
                 </div>
                 <div className="b-method" data-reveal data-reveal-delay="1">
                     <div className="b-method-head">
                         <span className="b-eyebrow">
                             <span className="b-eyebrow-line" />
-                            How we measure
-                        </span>
+                            {translate({ id: "marketing.benchmarks.051", message: "How we measure" })}</span>
                         <a
                             className="b-method-link"
                             href="https://github.com/velodb/benchmarks#readme"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Read the full methodology ↗
-                        </a>
+                            {translate({ id: "marketing.benchmarks.052", message: "Read the full methodology ↗" })}</a>
                     </div>
                     <div className="b-method-grid">
                         {METHODOLOGY.map(m => (
@@ -779,7 +785,7 @@ function ReproSection(): JSX.Element {
                             </span>
                             <span className="b-term-title">
                                 <span>{step.promptLine}</span>
-                                <span className="b-term-step">— step 0{step.id}</span>
+                                <span className="b-term-step">{translate({ id: "marketing.benchmarks.053", message: "— step 0" })}{step.id}</span>
                             </span>
                             <span>{step.file}</span>
                         </div>
@@ -817,8 +823,7 @@ function CTA(): JSX.Element {
         <section className="b-cta">
             <div className="b-container b-cta-inner">
                 <h2 className="b-cta-title" data-reveal data-reveal-delay="1">
-                    Try Apache <span className="b-accent">Doris</span> on<br />your own data.
-                </h2>
+                    {translate({ id: "marketing.benchmarks.054", message: "Try Apache" })}{" "}<span className="b-accent">Doris</span> {translate({ id: "marketing.benchmarks.055", message: "on" })}<br />{translate({ id: "marketing.benchmarks.056", message: "your own data." })}</h2>
                 <div className="b-cta-actions" data-reveal data-reveal-delay="2">
                     <Link
                         className="b-btn b-btn-yellow"
@@ -835,8 +840,7 @@ function CTA(): JSX.Element {
                         >
                             <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
                         </svg>
-                        Get Started
-                    </Link>
+                        {translate({ id: "marketing.benchmarks.057", message: "Get Started" })}</Link>
                 </div>
             </div>
         </section>
@@ -851,58 +855,47 @@ export default function BenchmarkNext(): JSX.Element {
     useRevealObserver();
     return (
         <LayoutNext
-            title="Apache Doris Benchmarks: SQL Analytics and Agent Observability"
-            description="Apache Doris benchmark results against ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on structured analytics (SSB, TPC-H, TPC-DS) and AI-agent observability workloads."
+            title={translate({ id: "marketing.benchmarks.058", message: "Apache Doris Benchmarks: SQL Analytics and Agent Observability" })}
+            description={translate({ id: "marketing.benchmarks.059", message: "Apache Doris benchmark results against ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on structured analytics (SSB, TPC-H, TPC-DS) and AI-agent observability workloads." })}
         >
             <div className="bench-next">
                 <Hero />
                 <Comparison
                     dataset={DATA}
-                    title="Structured analytics, query by query."
+                    title={translate({ id: "marketing.benchmarks.060", message: "Structured analytics, query by query." })}
                     subtitle={
                         <>
-                            Doris versus ClickHouse, Redshift, Snowflake, and Trino on{' '}
+                            {translate({ id: "marketing.benchmarks.061", message: "Doris versus ClickHouse, Redshift, Snowflake, and Trino on" })}{' '}
                             <a
                                 href="https://www.cs.umb.edu/~poneil/StarSchemaB.PDF"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Star Schema Benchmark
-                            </a>
+                                {translate({ id: "marketing.benchmarks.062", message: "Star Schema Benchmark" })}</a>
                             ,{' '}
                             <a
                                 href="https://www.tpc.org/tpch/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                TPC-H
-                            </a>
-                            , and{' '}
+                                {translate({ id: "marketing.benchmarks.063", message: "TPC-H" })}</a>
+                            {translate({ id: "marketing.benchmarks.064", message: ", and" })}{' '}
                             <a
                                 href="https://www.tpc.org/tpcds/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                TPC-DS
-                            </a>
-                            . All three lean heavily on joins and analytical SQL, which
-                            is what Doris was built for. Click any benchmark to see
-                            per-query times.
-                        </>
+                                {translate({ id: "marketing.benchmarks.065", message: "TPC-DS" })}</a>
+                            {translate({ id: "marketing.benchmarks.066", message: ". All three lean heavily on joins and analytical SQL, which is what Doris was built for. Click any benchmark to see per-query times." })}</>
                     }
                 />
                 <Comparison
                     dataset={AGENTLOG_DATA}
-                    title="Agent observability, query by query."
+                    title={translate({ id: "marketing.benchmarks.067", message: "Agent observability, query by query." })}
                     reportHref="https://www.velodb.io/blog/agentlogsbench-apache-doris-in-ai-observability"
                     subtitle={
                         <>
-                            AI-agent observability logs: trace replay, incident phrase
-                            retrieval, and rollups over evolving payload fields. Doris
-                            against ClickHouse, Elasticsearch, OpenSearch, PostgreSQL,
-                            and DuckDB on the same data. Click any workload to see
-                            per-query times.
-                        </>
+                            {translate({ id: "marketing.benchmarks.068", message: "AI-agent observability logs: trace replay, incident phrase retrieval, and rollups over evolving payload fields. Doris against ClickHouse, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on the same data. Click any workload to see per-query times." })}</>
                     }
                 />
                 {/* <ReproSection /> hidden for now; revisit later */}

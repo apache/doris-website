@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, useEffect, useState } from 'react';
 import { LayoutNext } from '../home-next/LayoutNext';
 import { WhyChooseSection } from './sections/WhyChooseSection';
@@ -56,7 +57,7 @@ interface TabSwitcherProps {
 
 function TabSwitcher({ active, onChange }: TabSwitcherProps): JSX.Element {
     return (
-        <div className="cmp-next__tabs" role="tablist" aria-label="Compare against">
+        <div className="cmp-next__tabs" role="tablist" aria-label={translate({ id: "marketing.compare.001", message: "Compare against" })}>
             {TABS.map(tab => {
                 const isActive = active === tab.id;
                 const classes = [
@@ -81,9 +82,9 @@ function TabSwitcher({ active, onChange }: TabSwitcherProps): JSX.Element {
                                 draggable={false}
                             />
                         </span>
-                        <span className="cmp-next__tab-vs">vs</span>
+                        <span className="cmp-next__tab-vs">{translate({ id: "marketing.compare.002", message: "vs" })}</span>
                         <span className="cmp-next__tab-name">{tab.name}</span>
-                        {!tab.enabled && <span className="cmp-next__tab-soon">SOON</span>}
+                        {!tab.enabled && <span className="cmp-next__tab-soon">{translate({ id: "marketing.compare.003", message: "SOON" })}</span>}
                     </button>
                 );
             })}
@@ -108,8 +109,8 @@ export default function CompareNext(): JSX.Element {
 
     return (
         <LayoutNext
-            title="Apache Doris vs. the Others — Selection Guide"
-            description="Pick the right real-time analytical database for your workload. See how Apache Doris compares with ClickHouse, Elasticsearch, and Trino/Presto on architecture, performance, and total cost."
+            title={translate({ id: "marketing.compare.004", message: "Apache Doris vs. the Others — Selection Guide" })}
+            description={translate({ id: "marketing.compare.005", message: "Pick the right real-time analytical database for your workload. See how Apache Doris compares with ClickHouse, Elasticsearch, and Trino/Presto on architecture, performance, and total cost." })}
         >
             <div className="cmp-next">
                 <div className="cmp-next__bg" aria-hidden="true">
@@ -123,19 +124,19 @@ export default function CompareNext(): JSX.Element {
                 <main className="cmp-next__body">
                     {content && (
                         <>
-                            <SectionTitle num="01" label="When to Choose Apache Doris" />
+                            <SectionTitle num="01" label={translate({ id: "marketing.extra.001", message: "When to Choose Apache Doris" })} />
                             <WhyChooseSection
                                 key={`why-${active}`}
                                 valueProps={content.whyChoose.valueProps}
                                 sub={content.whyChoose.sub}
                             />
-                            <SectionTitle num="02" label="Featured Cases" />
+                            <SectionTitle num="02" label={translate({ id: "marketing.extra.002", message: "Featured Cases" })} />
                             <CoverFlowSection
                                 key={`cf-${active}`}
                                 cases={content.cases.items}
                                 sub={content.cases.sub}
                             />
-                            <SectionTitle num="03" label="Core Differences" />
+                            <SectionTitle num="03" label={translate({ id: "marketing.extra.003", message: "Core Differences" })} />
                             <ComparisonTableSection
                                 key={`tbl-${active}`}
                                 rows={content.table.rows}

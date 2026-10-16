@@ -218,6 +218,7 @@ export function NavbarNext(): JSX.Element {
     return (
         <nav
             ref={navbarRef}
+            lang={usesDefaultLocalePages() ? defaultLocale : undefined}
             className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}
         >
             <div className="navbar-next__inner">

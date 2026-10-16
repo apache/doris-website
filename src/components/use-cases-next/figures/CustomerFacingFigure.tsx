@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { Badge, Card, CREAM, DorisBlock, Figure, Label, Pill, Wire } from './primitives';
 
@@ -9,21 +10,21 @@ const COLS = [40, 207, 374, 541];
 const CARD_W = 155;
 
 const TENANTS: Array<[string, string, number]> = [
-    ['TENANT A', 'embedded dashboards', 14],
-    ['TENANT B', 'customer portal', 9],
-    ['TENANT C', 'mobile & web app', 6],
-    ['+ MORE TENANTS', 'APIs · data products', 4],
+    [translate({ id: "marketing.extra.021", message: "TENANT A" }), translate({ id: "marketing.extra.022", message: "embedded dashboards" }), 14],
+    [translate({ id: "marketing.extra.023", message: "TENANT B" }), translate({ id: "marketing.extra.024", message: "customer portal" }), 9],
+    [translate({ id: "marketing.extra.025", message: "TENANT C" }), translate({ id: "marketing.extra.026", message: "mobile & web app" }), 6],
+    [translate({ id: "marketing.extra.027", message: "+ MORE TENANTS" }), translate({ id: "marketing.extra.028", message: "APIs · data products" }), 4],
 ];
 const SOURCES = [
-    ['PRODUCT EVENTS', 'Kafka · clickstream'],
-    ['OLTP · CDC', 'MySQL · PostgreSQL'],
-    ['BATCH JOBS', 'Spark · Flink · files'],
-    ['DATA LAKE', 'Iceberg · S3'],
+    [translate({ id: "marketing.figures.001", message: "PRODUCT EVENTS" }), translate({ id: "marketing.figures.002", message: "Kafka · clickstream" })],
+    [translate({ id: "marketing.figures.003", message: "OLTP · CDC" }), translate({ id: "marketing.figures.004", message: "MySQL · PostgreSQL" })],
+    [translate({ id: "marketing.figures.005", message: "BATCH JOBS" }), translate({ id: "marketing.figures.006", message: "Spark · Flink · files" })],
+    [translate({ id: "marketing.figures.007", message: "DATA LAKE" }), translate({ id: "marketing.figures.008", message: "Iceberg · S3" })],
 ];
 const PATH: Array<[string, string]> = [
-    ['REQUEST', 'MySQL protocol · REST'],
-    ['ISOLATE TENANTS', 'workload groups'],
-    ['SERVE', 'cache · point query'],
+    [translate({ id: "marketing.extra.029", message: "REQUEST" }), translate({ id: "marketing.extra.030", message: "MySQL protocol · REST" })],
+    [translate({ id: "marketing.extra.031", message: "ISOLATE TENANTS" }), translate({ id: "marketing.extra.032", message: "workload groups" })],
+    [translate({ id: "marketing.extra.033", message: "SERVE" }), translate({ id: "marketing.extra.034", message: "cache · point query" })],
 ];
 
 function LaneLabel({ y, children }: { y: number; children: string }): JSX.Element {
@@ -39,15 +40,15 @@ export function CustomerFacingFigure(): JSX.Element {
     const pathY = 210;
     return (
         <Figure
-            title="Customer-facing analytics on Apache Doris: users across many tenants query embedded dashboards, portals, and apps; every request passes through Doris, is isolated per tenant, and is served from cache or point queries in under a second, while product events, CDC, and batch data arrive within seconds and the data lake is queried in place."
-            caption="FIG. 01 · MANY TENANTS, ONE SERVING PATH, DATA THAT IS SECONDS OLD"
-            legend="DASHED = QUERIED IN PLACE"
+            title={translate({ id: "marketing.figures.009", message: "Customer-facing analytics on Apache Doris: users across many tenants query embedded dashboards, portals, and apps; every request passes through Doris, is isolated per tenant, and is served from cache or point queries in under a second, while product events, CDC, and batch data arrive within seconds and the data lake is queried in place." })}
+            caption={translate({ id: "marketing.figures.010", message: "FIG. 01 · MANY TENANTS, ONE SERVING PATH, DATA THAT IS SECONDS OLD" })}
+            legend={translate({ id: "marketing.extra.035", message: "DASHED = QUERIED IN PLACE" })}
         >
             <line x1={8} y1={150} x2={712} y2={150} stroke={CREAM} strokeOpacity={0.12} />
             <line x1={8} y1={292} x2={712} y2={292} stroke={CREAM} strokeOpacity={0.12} />
-            <LaneLabel y={87}>YOUR PRODUCT</LaneLabel>
-            <LaneLabel y={221}>APACHE DORIS</LaneLabel>
-            <LaneLabel y={356}>FRESH DATA</LaneLabel>
+            <LaneLabel y={87}>{translate({ id: "marketing.figures.011", message: "YOUR PRODUCT" })}</LaneLabel>
+            <LaneLabel y={221}>{translate({ id: "marketing.figures.012", message: "APACHE DORIS" })}</LaneLabel>
+            <LaneLabel y={356}>{translate({ id: "marketing.figures.013", message: "FRESH DATA" })}</LaneLabel>
 
             {/* tenants and their users */}
             {TENANTS.map(([t, s, users], i) => (
@@ -69,12 +70,11 @@ export function CustomerFacingFigure(): JSX.Element {
             <Wire points={[[360, 128], [360, regionY]]} head />
             <Badge x={347} y={140} n={2} />
             <Label x={372} y={143} size={7.8} weight={700} opacity={0.65} tracking="0.1em">
-                10,000+ QPS · THOUSANDS OF CONCURRENT USERS
-            </Label>
+                {translate({ id: "marketing.figures.014", message: "10,000+ QPS · THOUSANDS OF CONCURRENT USERS" })}</Label>
 
             {/* serving path */}
             <Card x={40} y={regionY} w={656} h={120} faint />
-            <DorisBlock x={50} y={regionY + 10} w={636} h={28} right="ONE SQL LAYER" />
+            <DorisBlock x={50} y={regionY + 10} w={636} h={28} right={translate({ id: "marketing.figures.015", message: "ONE SQL LAYER" })} />
             {PATH.map(([t, s], i) => {
                 const x = 50 + i * 176;
                 return (
@@ -86,8 +86,7 @@ export function CustomerFacingFigure(): JSX.Element {
                 );
             })}
             <Pill x={578} y={pathY + 13} w={84} h={24}>
-                SUB-SECOND
-            </Pill>
+                {translate({ id: "marketing.figures.016", message: "SUB-SECOND" })}</Pill>
             <Badge x={678} y={pathY + 25} n={1} />
 
             {/* fresh data */}
@@ -97,8 +96,7 @@ export function CustomerFacingFigure(): JSX.Element {
             <Wire points={[[COLS[0] + CARD_W / 2, 326], [COLS[2] + CARD_W / 2, 326]]} />
             <Wire points={[[284, 326], [284, regionY + 120]]} head />
             <Label x={296} y={306} size={7.8} weight={700} opacity={0.65} tracking="0.1em">
-                INGESTED IN SECONDS · STREAM LOAD · CDC
-            </Label>
+                {translate({ id: "marketing.figures.017", message: "INGESTED IN SECONDS · STREAM LOAD · CDC" })}</Label>
             <Wire points={[[COLS[3] + CARD_W / 2, 346], [COLS[3] + CARD_W / 2, regionY + 120]]} head dashed />
             {SOURCES.map(([t, s], i) => (
                 <g key={t}>

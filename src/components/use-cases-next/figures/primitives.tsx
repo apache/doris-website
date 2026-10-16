@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, ReactNode } from 'react';
 
 // Shared drawing vocabulary for the four use-case figures (direction B in
@@ -154,8 +155,7 @@ export function DorisBlock({ x, y, w, h = 40, right, note }: { x: number; y: num
                 ))}
             </g>
             <Label x={x + 20 + 24 * k} y={y + h / 2 + 4.5} size={12.5} weight={800} fill={INK} tracking="0.1em">
-                APACHE DORIS
-            </Label>
+                {translate({ id: "marketing.figures.012", message: "APACHE DORIS" })}</Label>
             {note ? (
                 <Label x={x + 20 + 24 * k + 118} y={y + h / 2 + 4} size={8.5} weight={600} fill={INK} opacity={0.75} tracking="0.08em">
                     {note}

@@ -5,93 +5,6 @@
   "homepage.home.002": {
     "message": "Apache Doris は MPP アーキテクチャに基づくオープンソースのリアルタイム分析データベースです。単一のエンジンで、ペタバイト規模の OLAP クエリ、レイクハウス分析、ハイブリッド検索を実行できます。"
   },
-  "homepage.navbar.001": {
-    "message": "Doris を選ぶ理由"
-  },
-  "homepage.navbar.002": {
-    "message": "他の製品との比較（英語）"
-  },
-  "homepage.navbar.003": {
-    "message": "ベンチマーク（英語）"
-  },
-  "homepage.navbar.004": {
-    "message": "主な機能（英語）"
-  },
-  "homepage.navbar.005": {
-    "message": "導入事例（英語）"
-  },
-  "homepage.navbar.006": {
-    "message": "ユースケース"
-  },
-  "homepage.navbar.007": {
-    "message": "顧客向け分析（英語）"
-  },
-  "homepage.navbar.008": {
-    "message": "データウェアハウス（英語）"
-  },
-  "homepage.navbar.009": {
-    "message": "オブザーバビリティ（英語）"
-  },
-  "homepage.navbar.010": {
-    "message": "AI 向け Doris（英語）"
-  },
-  "homepage.navbar.011": {
-    "message": "ドキュメント"
-  },
-  "homepage.navbar.015": {
-    "message": "リソース"
-  },
-  "homepage.navbar.016": {
-    "message": "リリースノート"
-  },
-  "homepage.navbar.017": {
-    "message": "ブログ（英語）"
-  },
-  "homepage.navbar.018": {
-    "message": "講座（英語）"
-  },
-  "homepage.navbar.019": {
-    "message": "プロファイル分析（英語）"
-  },
-  "homepage.navbar.020": {
-    "message": "コミュニティ"
-  },
-  "homepage.navbar.021": {
-    "message": "コミュニティレポート（英語）"
-  },
-  "homepage.navbar.022": {
-    "message": "ロードマップ"
-  },
-  "homepage.navbar.023": {
-    "message": "コミュニティに参加"
-  },
-  "homepage.navbar.024": {
-    "message": "GitHub Discussions に参加"
-  },
-  "homepage.navbar.027": {
-    "message": "Doris Summit 2026 を開く（新しいタブ）"
-  },
-  "homepage.navbar.029": {
-    "message": "AI に質問"
-  },
-  "homepage.navbar.030": {
-    "message": "利用不可"
-  },
-  "homepage.navbar.031": {
-    "message": "質問"
-  },
-  "homepage.navbar.032": {
-    "message": "スター"
-  },
-  "homepage.navbar.033": {
-    "message": "ダウンロード（英語）"
-  },
-  "homepage.navbar.034": {
-    "message": "ナビゲーションメニューを閉じる"
-  },
-  "homepage.navbar.035": {
-    "message": "ナビゲーションメニューを開く"
-  },
   "homepage.newsticker.001": {
     "message": "プロファイル"
   },
@@ -768,27 +681,6 @@
     "message": "コミュニティに参加",
     "description": "Footer Follow"
   },
-  "homepage.theme.label": {
-    "message": "カラーテーマ"
-  },
-  "homepage.theme.change": {
-    "message": "カラーテーマを変更"
-  },
-  "homepage.theme.current": {
-    "message": "カラーテーマ：{theme}"
-  },
-  "homepage.navbar.starLabel": {
-    "message": "GitHub で Apache Doris にスターを付ける（{stars} スター）"
-  },
-  "homepage.ai.loading": {
-    "message": "AI を読み込み中…"
-  },
-  "homepage.ai.slow": {
-    "message": "読み込みに時間がかかっています…"
-  },
-  "homepage.ai.error": {
-    "message": "再試行"
-  },
   "theme.blog.post.readingTime.plurals": {
     "message": "約{readingTime}分",
     "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
@@ -1239,5 +1131,2648 @@
   },
   "theme.SearchPage.searchSource": {
     "message": "英語の原文を検索"
+  },
+  "marketing.compare.001": {
+    "message": "比較対象"
+  },
+  "marketing.compare.002": {
+    "message": "vs"
+  },
+  "marketing.compare.003": {
+    "message": "近日公開"
+  },
+  "marketing.compare.004": {
+    "message": "Apache Doris と他製品の比較・選定ガイド"
+  },
+  "marketing.compare.005": {
+    "message": "ワークロードに適したリアルタイム分析データベースを選びましょう。Apache Doris と ClickHouse、Elasticsearch、Trino/Presto を、アーキテクチャ、性能、総コストの観点から比較します。"
+  },
+  "marketing.compare.006": {
+    "message": "Doris と ClickHouse は、どちらも代表的なリアルタイム分析データベースです。Doris は、データチームが日常的に扱うワークロードで強みを発揮します。"
+  },
+  "marketing.compare.007": {
+    "message": "高速な結合"
+  },
+  "marketing.compare.008": {
+    "message": "複数テーブルの分散結合。ワイドテーブルへの変換は不要です。"
+  },
+  "marketing.compare.009": {
+    "message": "MPP アーキテクチャとコストベースオプティマイザが、Broadcast、Shuffle、Colocate の各結合方式を自動選択します。Doris は TPC-DS の全クエリを完了しますが、ClickHouse は約 50% のクエリで失敗します。"
+  },
+  "marketing.compare.010": {
+    "message": "コスト削減"
+  },
+  "marketing.compare.011": {
+    "message": "オープンソースのストレージ・コンピュート分離。"
+  },
+  "marketing.compare.012": {
+    "message": "リバランスなしでコンピュートを柔軟に拡張できます。このコスト構造はオープンソースの 3.0 以降で利用でき、商用クラウドへのロックインはありません。"
+  },
+  "marketing.compare.013": {
+    "message": "同時実行クエリ"
+  },
+  "marketing.compare.014": {
+    "message": "クエリ速度を維持したまま、リアルタイムに UPSERT。"
+  },
+  "marketing.compare.015": {
+    "message": "Merge-on-Write により、高頻度の更新中も安定した読み取り性能を維持します。完全な ACID、MySQL 互換性を備え、100 未満ではなく数千のクエリを同時実行できます。"
+  },
+  "marketing.compare.016": {
+    "message": "インターネット規模の企業による本番移行事例。同じ SQL ワークロードでも、結果は大きく変わります。"
+  },
+  "marketing.compare.017": {
+    "message": "ショート動画・DAU 6 億人以上"
+  },
+  "marketing.compare.018": {
+    "message": "事例 01"
+  },
+  "marketing.compare.019": {
+    "message": "ClickHouse を Apache Doris に置き換えた Kuaishou は、統合レイクハウスアーキテクチャへの移行を実現し、ストレージを統合してデータパイプラインを簡素化しました。"
+  },
+  "marketing.compare.020": {
+    "message": "レイクハウスへの直接クエリ"
+  },
+  "marketing.compare.021": {
+    "message": "：取り込み不要でパイプラインを短縮"
+  },
+  "marketing.compare.022": {
+    "message": "マテリアライズドビューによるクエリ書き換え"
+  },
+  "marketing.compare.023": {
+    "message": "でさまざまなクエリを高速化"
+  },
+  "marketing.compare.024": {
+    "message": "柔軟な"
+  },
+  "marketing.compare.025": {
+    "message": "データガバナンス"
+  },
+  "marketing.compare.026": {
+    "message": "を自動マテリアライズで実現"
+  },
+  "marketing.compare.027": {
+    "message": "音楽配信・MAU 8 億人"
+  },
+  "marketing.compare.028": {
+    "message": "事例 02"
+  },
+  "marketing.compare.029": {
+    "message": "分析エンジンを ClickHouse から Apache Doris に移行し、データの鮮度を改善するとともに、運用コストを削減し、データ管理の分断を解消しました。"
+  },
+  "marketing.compare.030": {
+    "message": "優れた"
+  },
+  "marketing.compare.031": {
+    "message": "複数テーブル結合"
+  },
+  "marketing.compare.032": {
+    "message": "と"
+  },
+  "marketing.compare.033": {
+    "message": "フェデレーテッドクエリ"
+  },
+  "marketing.compare.034": {
+    "message": "の性能"
+  },
+  "marketing.compare.035": {
+    "message": "MySQL プロトコル互換"
+  },
+  "marketing.compare.036": {
+    "message": "：運用負荷を軽減"
+  },
+  "marketing.compare.037": {
+    "message": "一部カラムの更新"
+  },
+  "marketing.compare.038": {
+    "message": "で多様なデータ更新パターンに対応"
+  },
+  "marketing.compare.039": {
+    "message": "EC 向け SaaS・加盟店 500 万店以上"
+  },
+  "marketing.compare.040": {
+    "message": "事例 03"
+  },
+  "marketing.compare.041": {
+    "message": "Apache Doris は、ほとんどのシナリオで ClickHouse よりもクエリ応答が速く、特に複雑な結合では大幅に優れた性能を発揮します。"
+  },
+  "marketing.compare.042": {
+    "message": "主要な業務クエリが"
+  },
+  "marketing.compare.043": {
+    "message": "2～3 倍高速に"
+  },
+  "marketing.compare.044": {
+    "message": "複雑な結合クエリが"
+  },
+  "marketing.compare.045": {
+    "message": "2～10 倍高速に"
+  },
+  "marketing.compare.046": {
+    "message": "実行に成功："
+  },
+  "marketing.compare.047": {
+    "message": "ClickHouse でメモリ不足になったすべての"
+  },
+  "marketing.compare.048": {
+    "message": "クエリ"
+  },
+  "marketing.compare.049": {
+    "message": "重要な観点を並べて比較します。"
+  },
+  "marketing.compare.050": {
+    "message": "システムアーキテクチャ"
+  },
+  "marketing.compare.051": {
+    "message": "MPP 分散アーキテクチャ"
+  },
+  "marketing.compare.052": {
+    "message": "MySQL プロトコル互換・標準 SQL"
+  },
+  "marketing.compare.053": {
+    "message": "CBO による自動最適化"
+  },
+  "marketing.compare.054": {
+    "message": "Scatter-Gather アーキテクチャ"
+  },
+  "marketing.compare.055": {
+    "message": "SQL に似た独自構文"
+  },
+  "marketing.compare.056": {
+    "message": "手動チューニングが必要"
+  },
+  "marketing.compare.057": {
+    "message": "結合クエリの性能"
+  },
+  "marketing.compare.058": {
+    "message": "ノード間の分散結合で 2～10 倍高速"
+  },
+  "marketing.compare.059": {
+    "message": "CBO が結合方式を選択"
+  },
+  "marketing.compare.060": {
+    "message": "TPC-DS の全クエリを完了"
+  },
+  "marketing.compare.061": {
+    "message": "効率的なメモリ利用で OOM を回避"
+  },
+  "marketing.compare.062": {
+    "message": "サブクエリとワイドテーブルのモデル化"
+  },
+  "marketing.compare.063": {
+    "message": "CBO がなく、手動調整が必要"
+  },
+  "marketing.compare.064": {
+    "message": "TPC-DS クエリの約 50% が失敗"
+  },
+  "marketing.compare.065": {
+    "message": "大規模クエリでメモリ不足が頻発"
+  },
+  "marketing.compare.066": {
+    "message": "リアルタイム更新"
+  },
+  "marketing.compare.067": {
+    "message": "Merge-on-Write エンジン"
+  },
+  "marketing.compare.068": {
+    "message": "強い整合性・更新を即座に参照可能"
+  },
+  "marketing.compare.069": {
+    "message": "高スループットの UPSERT、性能劣化なし"
+  },
+  "marketing.compare.070": {
+    "message": "ReplacingMergeTree・結果整合性"
+  },
+  "marketing.compare.071": {
+    "message": "FINAL により 2～10 倍低速化"
+  },
+  "marketing.compare.072": {
+    "message": "高頻度の更新でマージ負荷が増大"
+  },
+  "marketing.compare.073": {
+    "message": "トランザクション対応"
+  },
+  "marketing.compare.074": {
+    "message": "完全な ACID トランザクション"
+  },
+  "marketing.compare.075": {
+    "message": "アトミックなバッチ取り込み"
+  },
+  "marketing.compare.076": {
+    "message": "トランザクション非対応"
+  },
+  "marketing.compare.077": {
+    "message": "一部のデータだけが見える場合がある"
+  },
+  "marketing.compare.078": {
+    "message": "クエリ同時実行数"
+  },
+  "marketing.compare.079": {
+    "message": "数千の同時クエリ、10 倍以上"
+  },
+  "marketing.compare.080": {
+    "message": "効率的なメモリ管理"
+  },
+  "marketing.compare.081": {
+    "message": "通常は同時実行数 100 未満"
+  },
+  "marketing.compare.082": {
+    "message": "メモリ負荷の高い処理でクラスタが不安定化"
+  },
+  "marketing.compare.083": {
+    "message": "データ API とレイクハウス"
+  },
+  "marketing.compare.084": {
+    "message": "高スループットの Arrow Flight プロトコル"
+  },
+  "marketing.compare.085": {
+    "message": "Hive / Hudi / Iceberg / Parquet"
+  },
+  "marketing.compare.086": {
+    "message": "自動スケーリングと複数レプリカの負荷分散"
+  },
+  "marketing.compare.087": {
+    "message": "JDBC のみ"
+  },
+  "marketing.compare.088": {
+    "message": "レイクハウス連携が限定的"
+  },
+  "marketing.compare.089": {
+    "message": "拡張時に手動リバランスが必要"
+  },
+  "marketing.compare.090": {
+    "message": "ストレージ・コンピュート分離"
+  },
+  "marketing.compare.091": {
+    "message": "オープンソースの 3.0 以降で提供"
+  },
+  "marketing.compare.092": {
+    "message": "コンピュートを柔軟に拡張、リバランス不要"
+  },
+  "marketing.compare.093": {
+    "message": "最大 70% のコスト削減"
+  },
+  "marketing.compare.094": {
+    "message": "商用クラウド版のみ"
+  },
+  "marketing.compare.095": {
+    "message": "密結合のため、拡張時にリバランスが必要"
+  },
+  "marketing.compare.096": {
+    "message": "ピークに備えた過剰なリソース確保が必要"
+  },
+  "marketing.compare.097": {
+    "message": "オープンソースライセンス"
+  },
+  "marketing.compare.098": {
+    "message": "Apache 財団の下でコミュニティが保守"
+  },
+  "marketing.compare.099": {
+    "message": "商用企業が管理"
+  },
+  "marketing.compare.100": {
+    "message": "Doris と Elasticsearch は、どちらもオブザーバビリティ、セキュリティ、リアルタイム分析に利用できます。Doris はストレージコスト、書き込み効率、分析機能の幅に強みがあり、独自の DSL も不要です。"
+  },
+  "marketing.compare.101": {
+    "message": "圧縮率"
+  },
+  "marketing.compare.102": {
+    "message": "ストレージ使用量を大幅に削減。"
+  },
+  "marketing.compare.103": {
+    "message": "ログとメトリクスの圧縮率は、Doris が 1:5～1:10、Elasticsearch が 1:1.5 です。同じデータを、はるかに少ないディスク容量で保持できます。"
+  },
+  "marketing.compare.104": {
+    "message": "書き込み負荷"
+  },
+  "marketing.compare.105": {
+    "message": "高い書き込みスループットと低い負荷。"
+  },
+  "marketing.compare.106": {
+    "message": "Doris は一度構築したインデックスを複数レプリカで利用し、負荷を 10% 未満に抑えます。Elasticsearch はレプリカごとにインデックスを構築し、重複排除時には書き込み負荷が最大 3 倍になります。"
+  },
+  "marketing.compare.107": {
+    "message": "高速な検索"
+  },
+  "marketing.compare.108": {
+    "message": "全文検索と SQL。独自の DSL は不要。"
+  },
+  "marketing.compare.109": {
+    "message": "本番移行では全文検索の 2～3 倍の高速化が報告されており、複数テーブル結合、マテリアライズドビュー、オープンな MySQL エコシステムも利用できます。"
+  },
+  "marketing.compare.110": {
+    "message": "オブザーバビリティ、金融セキュリティ、物流での Elasticsearch から Doris への移行事例。同じワークロードのコストを大幅に削減しています。"
+  },
+  "marketing.compare.111": {
+    "message": "オブザーバビリティ・GuanceDB"
+  },
+  "marketing.compare.112": {
+    "message": "Elasticsearch を Apache Doris に置き換え、GuanceDB はデータ処理の高速化とコスト削減を大きく進めました。"
+  },
+  "marketing.compare.113": {
+    "message": "70% のコスト削減"
+  },
+  "marketing.compare.114": {
+    "message": "を Elasticsearch からの移行で実現"
+  },
+  "marketing.compare.115": {
+    "message": "の全文検索性能"
+  },
+  "marketing.compare.116": {
+    "message": "VARIANT データ型"
+  },
+  "marketing.compare.117": {
+    "message": "で半構造化ログを追跡"
+  },
+  "marketing.compare.118": {
+    "message": "FinTech・セキュリティ分析"
+  },
+  "marketing.compare.119": {
+    "message": "Apache Doris でアーキテクチャを統合し、書き込みスループット、複雑なクエリの応答、ストレージ効率が大幅に改善しました。"
+  },
+  "marketing.compare.120": {
+    "message": "4 倍高速な"
+  },
+  "marketing.compare.121": {
+    "message": "書き込み"
+  },
+  "marketing.compare.122": {
+    "message": "3 倍高速な"
+  },
+  "marketing.compare.123": {
+    "message": "クエリ性能"
+  },
+  "marketing.compare.124": {
+    "message": "ストレージを 50% 削減"
+  },
+  "marketing.compare.125": {
+    "message": "同じデータ量で比較"
+  },
+  "marketing.compare.126": {
+    "message": "物流・年間取扱荷物 230 億個以上"
+  },
+  "marketing.compare.127": {
+    "message": "Doris の導入後、クエリ性能が 5～10 倍に、同時処理能力が 2 倍に向上しました。分析の 90% は、10 分から 1 分未満に短縮されました。"
+  },
+  "marketing.compare.128": {
+    "message": "2 倍の性能"
+  },
+  "marketing.compare.129": {
+    "message": "高同時実行のレポート分析で達成"
+  },
+  "marketing.compare.130": {
+    "message": "65% 削減した"
+  },
+  "marketing.compare.131": {
+    "message": "ストレージ容量"
+  },
+  "marketing.compare.132": {
+    "message": "標準 SQL"
+  },
+  "marketing.compare.133": {
+    "message": "で運用と利用を簡素化"
+  },
+  "marketing.compare.134": {
+    "message": "オープンソース"
+  },
+  "marketing.compare.135": {
+    "message": "Apache License 2.0"
+  },
+  "marketing.compare.136": {
+    "message": "Apache Software Foundation によるベンダー中立の運営"
+  },
+  "marketing.compare.137": {
+    "message": "ライセンスが Apache 2.0 → Elastic License → AGPL と変遷"
+  },
+  "marketing.compare.138": {
+    "message": "商用企業の Elastic が運営"
+  },
+  "marketing.compare.139": {
+    "message": "事業部門間で読み取りと書き込みを厳密に分離"
+  },
+  "marketing.compare.140": {
+    "message": "ストレージ・コンピュートの統合と分離の両構成に対応"
+  },
+  "marketing.compare.141": {
+    "message": "混在するクエリのワークロードを分離"
+  },
+  "marketing.compare.142": {
+    "message": "スレッドグループによる分離で、コンピュート分離は限定的"
+  },
+  "marketing.compare.143": {
+    "message": "ストレージ・コンピュート統合構成のみ"
+  },
+  "marketing.compare.144": {
+    "message": "ワークロードの伸縮性が限定的"
+  },
+  "marketing.compare.145": {
+    "message": "リアルタイム取り込み"
+  },
+  "marketing.compare.146": {
+    "message": "レプリカ間で一度だけインデックスを構築：高スループット・低負荷"
+  },
+  "marketing.compare.147": {
+    "message": "外部ツールなしで Push と Kafka からの Pull に対応"
+  },
+  "marketing.compare.148": {
+    "message": "Logstash と Beats に対応"
+  },
+  "marketing.compare.149": {
+    "message": "レプリカごとにインデックスを構築し、書き込み負荷が最大 3 倍"
+  },
+  "marketing.compare.150": {
+    "message": "Push のみ。Pull には Logstash などの外部ツールが必要"
+  },
+  "marketing.compare.151": {
+    "message": "取り込みパイプライン全体の負荷が大きい"
+  },
+  "marketing.compare.152": {
+    "message": "リアルタイムストレージ"
+  },
+  "marketing.compare.153": {
+    "message": "1:5～1:10 の圧縮率でディスク使用量を大幅に削減"
+  },
+  "marketing.compare.154": {
+    "message": "主キーで Merge-on-Write と Merge-on-Read の両方に対応"
+  },
+  "marketing.compare.155": {
+    "message": "強い整合性の集約結果と元データを共存可能"
+  },
+  "marketing.compare.156": {
+    "message": "業務の変化に対応する柔軟なスキーマ変更"
+  },
+  "marketing.compare.157": {
+    "message": "圧縮率は 1:1.5"
+  },
+  "marketing.compare.158": {
+    "message": "主キーは Merge-on-Write のみで、書き込み負荷が最大 3 倍"
+  },
+  "marketing.compare.159": {
+    "message": "集約は結果整合性のみで、元データと共存できない"
+  },
+  "marketing.compare.160": {
+    "message": "スキーマ変更が限定的"
+  },
+  "marketing.compare.161": {
+    "message": "リアルタイムクエリ"
+  },
+  "marketing.compare.162": {
+    "message": "ポイントクエリ、集約、分析を高速に処理"
+  },
+  "marketing.compare.163": {
+    "message": "複数テーブル結合、マテリアライズドビュー、UDF、レイクハウス"
+  },
+  "marketing.compare.164": {
+    "message": "使いやすい標準 SQL"
+  },
+  "marketing.compare.165": {
+    "message": "オープンな MySQL エコシステム"
+  },
+  "marketing.compare.166": {
+    "message": "ポイントクエリに強く、分析機能は限定的"
+  },
+  "marketing.compare.167": {
+    "message": "複数テーブル結合がなく、単純な処理に限定"
+  },
+  "marketing.compare.168": {
+    "message": "習得コストの高い独自 DSL"
+  },
+  "marketing.compare.169": {
+    "message": "Elasticsearch 独自のエコシステム"
+  },
+  "marketing.compare.170": {
+    "message": "総保有コスト"
+  },
+  "marketing.compare.171": {
+    "message": "オープンソースのストレージ・コンピュート分離"
+  },
+  "marketing.compare.172": {
+    "message": "リバランスなしでコンピュートを柔軟に拡張"
+  },
+  "marketing.compare.173": {
+    "message": "本番移行で最大 70% のコスト削減"
+  },
+  "marketing.compare.174": {
+    "message": "ストレージとコンピュートが密結合"
+  },
+  "marketing.compare.175": {
+    "message": "ピーク時の処理に備えた過剰なリソース確保が必要"
+  },
+  "marketing.compare.176": {
+    "message": "Doris と Trino/Presto は、どちらも主要なレイクハウスクエリエンジンです。Doris はデータウェアハウスとレイクハウスクエリエンジンを統合し、両方で同じ SQL を大幅に高速化します。"
+  },
+  "marketing.compare.177": {
+    "message": "内部テーブル"
+  },
+  "marketing.compare.178": {
+    "message": "完全にベクトル化された C++ エンジン。"
+  },
+  "marketing.compare.179": {
+    "message": "Doris の内部テーブルクエリは Presto/Trino より最大 10 倍高速です。完全にベクトル化された C++ エンジンが、Trino では別システムに委ねるウェアハウス処理も実行します。"
+  },
+  "marketing.compare.180": {
+    "message": "高速なレイクハウス分析"
+  },
+  "marketing.compare.181": {
+    "message": "外部テーブルも高速化。"
+  },
+  "marketing.compare.182": {
+    "message": "両エンジンが同じ外部 Hive テーブルを読む TPC-DS 1 TB ベンチマークでは、Doris のレイクハウスクエリは Presto/Trino より 2～3 倍高速です。"
+  },
+  "marketing.compare.183": {
+    "message": "同時クエリ処理数"
+  },
+  "marketing.compare.184": {
+    "message": "対話的分析からリアルタイム分析へ。"
+  },
+  "marketing.compare.185": {
+    "message": "数千の同時クエリを処理する高同時実行のリアルタイム分析向けに設計されており、Trino が主に対象とする対話的分析の範囲を超えています。"
+  },
+  "marketing.compare.186": {
+    "message": "ネットワーク、ゲーム、物流での Trino/Presto から Doris への移行事例。同じ SQL を、よりシンプルな構成で高速に実行します。"
+  },
+  "marketing.compare.187": {
+    "message": "ネットワーク・ビッグデータ基盤"
+  },
+  "marketing.compare.188": {
+    "message": "複数の技術スタックを Apache Doris に置き換え、レイクハウスを統合しました。クエリ性能とシステムの安定性が大幅に向上し、リソースコストを 30% 削減しました。"
+  },
+  "marketing.compare.189": {
+    "message": "レイクハウスを統合"
+  },
+  "marketing.compare.190": {
+    "message": "Trino、Pinot、Iceberg、Kyuubi を置き換え"
+  },
+  "marketing.compare.191": {
+    "message": "大幅に向上した"
+  },
+  "marketing.compare.192": {
+    "message": "とシステムの安定性"
+  },
+  "marketing.compare.193": {
+    "message": "30% 削減した"
+  },
+  "marketing.compare.194": {
+    "message": "リソースコスト"
+  },
+  "marketing.compare.195": {
+    "message": "ゲーム・中国トップ 3 のスタジオ"
+  },
+  "marketing.compare.196": {
+    "message": "多次元分析のクエリは Presto では 20～40 秒かかっていましたが、Doris では 1～2 秒に短縮されました。"
+  },
+  "marketing.compare.197": {
+    "message": "クエリ時間を短縮："
+  },
+  "marketing.compare.198": {
+    "message": "20～40 秒から 1～2 秒へ"
+  },
+  "marketing.compare.199": {
+    "message": "マテリアライズドビューの自動マッチング"
+  },
+  "marketing.compare.200": {
+    "message": "で複雑な分析を高速化"
+  },
+  "marketing.compare.201": {
+    "message": "大きく向上した"
+  },
+  "marketing.compare.202": {
+    "message": "多次元分析の性能"
+  },
+  "marketing.compare.203": {
+    "message": "Apache Doris への移行後、全体のクエリ性能が 2 倍以上に向上し、アーキテクチャの統合でデータサイロとリソースの重複を解消しました。"
+  },
+  "marketing.compare.204": {
+    "message": "2 倍以上高速な"
+  },
+  "marketing.compare.205": {
+    "message": "全体のクエリ性能"
+  },
+  "marketing.compare.206": {
+    "message": "解消した"
+  },
+  "marketing.compare.207": {
+    "message": "データサイロ"
+  },
+  "marketing.compare.208": {
+    "message": "とリソースの重複"
+  },
+  "marketing.compare.209": {
+    "message": "高速化した"
+  },
+  "marketing.compare.210": {
+    "message": "リアルタイム分析"
+  },
+  "marketing.compare.211": {
+    "message": "とアドホッククエリ"
+  },
+  "marketing.compare.212": {
+    "message": "データウェアハウスとレイクハウスを統合したアーキテクチャ"
+  },
+  "marketing.compare.213": {
+    "message": "ストレージ層を内蔵"
+  },
+  "marketing.compare.214": {
+    "message": "単一エンジンで分析スタック全体を処理"
+  },
+  "marketing.compare.215": {
+    "message": "異なるデータソースを横断するフェデレーテッドクエリエンジン"
+  },
+  "marketing.compare.216": {
+    "message": "ストレージ層は内蔵しない"
+  },
+  "marketing.compare.217": {
+    "message": "データ配信には別のウェアハウスが必要"
+  },
+  "marketing.compare.218": {
+    "message": "実行エンジン"
+  },
+  "marketing.compare.219": {
+    "message": "完全にベクトル化された C++ エンジン"
+  },
+  "marketing.compare.220": {
+    "message": "導入後すぐに高性能なデータ処理を実行"
+  },
+  "marketing.compare.221": {
+    "message": "内部テーブルクエリが最大 10 倍高速"
+  },
+  "marketing.compare.222": {
+    "message": "主に Java ベースの実行"
+  },
+  "marketing.compare.223": {
+    "message": "ベクトル化エンジンは開発中（Hummingbird プロジェクト）"
+  },
+  "marketing.compare.224": {
+    "message": "内部テーブルの性能が低い"
+  },
+  "marketing.compare.225": {
+    "message": "クエリ最適化"
+  },
+  "marketing.compare.226": {
+    "message": "結合、集約、ソートに対応するコストベースオプティマイザ（CBO）"
+  },
+  "marketing.compare.227": {
+    "message": "統計情報の自動収集"
+  },
+  "marketing.compare.228": {
+    "message": "手動ヒントなしで複雑なクエリを最適化"
+  },
+  "marketing.compare.229": {
+    "message": "コストベース最適化に対応"
+  },
+  "marketing.compare.230": {
+    "message": "統計情報の収集が不完全"
+  },
+  "marketing.compare.231": {
+    "message": "有効に使うには手動で完全な統計収集が必要"
+  },
+  "marketing.compare.232": {
+    "message": "キャッシュ"
+  },
+  "marketing.compare.233": {
+    "message": "TTL、自動更新、増分同期に対応するメタデータキャッシュ"
+  },
+  "marketing.compare.234": {
+    "message": "ローカル SSD のホットデータキャッシュでネットワーク I/O を削減"
+  },
+  "marketing.compare.235": {
+    "message": "SQL キャッシュとパーティションキャッシュを内蔵"
+  },
+  "marketing.compare.236": {
+    "message": "Alluxio などの外部キャッシュに依存"
+  },
+  "marketing.compare.237": {
+    "message": "メタデータキャッシュとクエリキャッシュは内蔵しない"
+  },
+  "marketing.compare.238": {
+    "message": "別システムの運用と調整が必要"
+  },
+  "marketing.compare.239": {
+    "message": "マテリアライズドビュー"
+  },
+  "marketing.compare.240": {
+    "message": "複数のデータ戦略で増分更新に対応"
+  },
+  "marketing.compare.241": {
+    "message": "自動クエリ書き換えによる透過的な高速化"
+  },
+  "marketing.compare.242": {
+    "message": "オプティマイザが最適なビューを自動選択"
+  },
+  "marketing.compare.243": {
+    "message": "手動の完全更新のみ"
+  },
+  "marketing.compare.244": {
+    "message": "透過的なクエリ書き換えには非対応"
+  },
+  "marketing.compare.245": {
+    "message": "クエリごとにビューを手動選択"
+  },
+  "marketing.compare.246": {
+    "message": "ユースケース"
+  },
+  "marketing.compare.247": {
+    "message": "高同時実行のリアルタイム分析"
+  },
+  "marketing.compare.248": {
+    "message": "対話的なアドホック分析"
+  },
+  "marketing.compare.249": {
+    "message": "データ配信とレイクハウスクエリを単一エンジンで実行"
+  },
+  "marketing.compare.250": {
+    "message": "対話的分析のみ"
+  },
+  "marketing.compare.251": {
+    "message": "異種ソースを横断するフェデレーテッドクエリに強み"
+  },
+  "marketing.compare.252": {
+    "message": "データ配信には別のウェアハウスを組み合わせる"
+  },
+  "marketing.compare.253": {
+    "message": "★ 注目事例"
+  },
+  "marketing.compare.254": {
+    "message": "前の事例"
+  },
+  "marketing.compare.255": {
+    "message": "次の事例"
+  },
+  "marketing.compare.256": {
+    "message": "比較項目"
+  },
+  "marketing.compare.257": {
+    "message": "推奨"
+  },
+  "marketing.benchmarks.001": {
+    "message": "各エンジンが、それぞれのネイティブ形式でデータを読み書きします。"
+  },
+  "marketing.benchmarks.002": {
+    "message": "全エンジンが同じ Apache Iceberg データセットを読みます。変わるのはエンジンだけです。"
+  },
+  "marketing.benchmarks.003": {
+    "message": "公式ランキングのデータ規模。約 1 億行。"
+  },
+  "marketing.benchmarks.004": {
+    "message": "単一マシンで実行できる完全検証用の規模。約 1,000 万行。"
+  },
+  "marketing.benchmarks.005": {
+    "message": "手軽に動作確認できる規模。約 100 万行。"
+  },
+  "marketing.benchmarks.006": {
+    "message": "ワイドな結合と集約を多用する、13 クエリのスタースキーマベンチマーク。"
+  },
+  "marketing.benchmarks.007": {
+    "message": "正規化スキーマに対する 22 のアドホッククエリで構成する、代表的な意思決定支援ベンチマーク。"
+  },
+  "marketing.benchmarks.008": {
+    "message": "分析エンジンの幅広い機能を検証する 99 クエリで構成した、高難度の意思決定支援ベンチマーク。"
+  },
+  "marketing.benchmarks.009": {
+    "message": "観測データの検索、トレースの再現、生成からツール呼び出しまでの連鎖展開、大量テキストからの障害キーワード・フレーズ検索。"
+  },
+  "marketing.benchmarks.010": {
+    "message": "トレース単位の障害・コスト集計、モデル別・観測タイプ別集約、ツール利用分布、運用診断。"
+  },
+  "marketing.benchmarks.011": {
+    "message": "変化するペイロードフィールドのフィルタと集約。リリースリング、顧客区分、検索戦略、入れ子のプロバイダ・ツール診断情報を対象にします。"
+  },
+  "marketing.benchmarks.012": {
+    "message": "その速さを確かめる"
+  },
+  "marketing.benchmarks.013": {
+    "message": "の実力。"
+  },
+  "marketing.benchmarks.014": {
+    "message": "Apache Doris で実際に使われる 2 つのワークロード、従来の SQL 分析と AI エージェントのオブザーバビリティログを比較します。どちらも導入候補となるエンジンを対象とし、スクリプトと実測値を公開しています。"
+  },
+  "marketing.benchmarks.015": {
+    "message": "合計実行時間"
+  },
+  "marketing.benchmarks.016": {
+    "message": "クエリ別の内訳を閉じる ↑"
+  },
+  "marketing.benchmarks.017": {
+    "message": "クエリ別の内訳を見る ↓"
+  },
+  "marketing.benchmarks.018": {
+    "message": "クエリ別実行時間"
+  },
+  "marketing.benchmarks.019": {
+    "message": "データ規模"
+  },
+  "marketing.benchmarks.020": {
+    "message": "クエリ"
+  },
+  "marketing.benchmarks.021": {
+    "message": "失敗"
+  },
+  "marketing.benchmarks.022": {
+    "message": "s"
+  },
+  "marketing.benchmarks.023": {
+    "message": "完了"
+  },
+  "marketing.benchmarks.024": {
+    "message": "バーにカーソルを合わせると実行時間を確認できます。斜線付きのバーはタイムアウトです。"
+  },
+  "marketing.benchmarks.025": {
+    "message": "上端が途切れたバーは表示範囲を超えています。カーソルを合わせると実測値を確認できます。"
+  },
+  "marketing.benchmarks.026": {
+    "message": "レポートを見る ↗"
+  },
+  "marketing.benchmarks.027": {
+    "message": "レポート（近日公開）"
+  },
+  "marketing.benchmarks.028": {
+    "message": "測定対象"
+  },
+  "marketing.benchmarks.029": {
+    "message": "各ベンチマークで選択したクエリの実行時間を合計します。"
+  },
+  "marketing.benchmarks.030": {
+    "message": "クエリの実行回数"
+  },
+  "marketing.benchmarks.031": {
+    "message": "各クエリを最低 3 回実行します。コールドは初回、ホットは 2 回目と 3 回目のうち速い方です。"
+  },
+  "marketing.benchmarks.032": {
+    "message": "キャッシュの管理"
+  },
+  "marketing.benchmarks.033": {
+    "message": "全エンジンで結果キャッシュを無効化します。コールド実行前には Doris BE のキャッシュをクリアします。"
+  },
+  "marketing.benchmarks.034": {
+    "message": "ハードウェア条件の統一"
+  },
+  "marketing.benchmarks.035": {
+    "message": "全エンジンを同じリージョンと VPC に配置し、各クラスタで同じマシンクラスを使用します。"
+  },
+  "marketing.benchmarks.036": {
+    "message": "データ条件の統一"
+  },
+  "marketing.benchmarks.037": {
+    "message": "実行前に、同じソースデータを各エンジンのネイティブ形式で取り込みます。"
+  },
+  "marketing.benchmarks.038": {
+    "message": "透明性"
+  },
+  "marketing.benchmarks.039": {
+    "message": "スクリプト、クエリ、設定、各実行のメタデータをすべてリポジトリで公開しています。"
+  },
+  "marketing.benchmarks.040": {
+    "message": "ベンチマークスクリプトを取得"
+  },
+  "marketing.benchmarks.041": {
+    "message": "実行を制御するマシンに、ベンチマークリポジトリをクローンします。"
+  },
+  "marketing.benchmarks.042": {
+    "message": "Doris クラスタの接続先を設定"
+  },
+  "marketing.benchmarks.043": {
+    "message": "設定ファイルを開き、Doris クラスタのホスト、ポート、ユーザー、パスワード、データベースを指定します。"
+  },
+  "marketing.benchmarks.044": {
+    "message": "外部ツールをインストール"
+  },
+  "marketing.benchmarks.045": {
+    "message": "実行には mysql、jq、hyperfine などの CLI クライアントを使います。1 つの make ターゲットでまとめてインストールできます。"
+  },
+  "marketing.benchmarks.046": {
+    "message": "ベンチマークを実行してレポートを生成"
+  },
+  "marketing.benchmarks.047": {
+    "message": "実行を開始し、レポートを取得します。実行中はクエリごとの結果が表示されます。"
+  },
+  "marketing.benchmarks.048": {
+    "message": "自分の環境で試す"
+  },
+  "marketing.benchmarks.049": {
+    "message": "準備は 5 分。"
+  },
+  "marketing.benchmarks.050": {
+    "message": "上記の数値はすべて、公開スクリプトで再現できます。4 つのステップと 4 つのシェルコマンド。ステップをクリックすると、実行内容を確認できます。"
+  },
+  "marketing.benchmarks.051": {
+    "message": "測定方法"
+  },
+  "marketing.benchmarks.052": {
+    "message": "測定方法の詳細を見る ↗"
+  },
+  "marketing.benchmarks.053": {
+    "message": "・ステップ 0"
+  },
+  "marketing.benchmarks.054": {
+    "message": "Apache"
+  },
+  "marketing.benchmarks.055": {
+    "message": "を試す"
+  },
+  "marketing.benchmarks.056": {
+    "message": "自分のデータで。"
+  },
+  "marketing.benchmarks.057": {
+    "message": "はじめる"
+  },
+  "marketing.benchmarks.058": {
+    "message": "Apache Doris ベンチマーク：SQL 分析とエージェントのオブザーバビリティ"
+  },
+  "marketing.benchmarks.059": {
+    "message": "構造化データ分析（SSB、TPC-H、TPC-DS）と AI エージェントのオブザーバビリティ処理について、Apache Doris を ClickHouse、Redshift、Snowflake、Trino、Elasticsearch、OpenSearch、PostgreSQL、DuckDB と比較した結果です。"
+  },
+  "marketing.benchmarks.060": {
+    "message": "構造化データ分析をクエリごとに比較。"
+  },
+  "marketing.benchmarks.061": {
+    "message": "Doris と ClickHouse、Redshift、Snowflake、Trino を比較するベンチマーク："
+  },
+  "marketing.benchmarks.062": {
+    "message": "Star Schema Benchmark"
+  },
+  "marketing.benchmarks.063": {
+    "message": "TPC-H"
+  },
+  "marketing.benchmarks.064": {
+    "message": "、および"
+  },
+  "marketing.benchmarks.065": {
+    "message": "TPC-DS"
+  },
+  "marketing.benchmarks.066": {
+    "message": "。いずれも結合と分析 SQL を多用する、Doris が得意とする処理です。ベンチマークをクリックすると、クエリ別の実行時間を確認できます。"
+  },
+  "marketing.benchmarks.067": {
+    "message": "エージェントのオブザーバビリティをクエリごとに比較。"
+  },
+  "marketing.benchmarks.068": {
+    "message": "AI エージェントのオブザーバビリティログを使い、トレースの再現、障害フレーズの検索、変化するペイロードフィールドの集約を検証します。同じデータで Doris を ClickHouse、Elasticsearch、OpenSearch、PostgreSQL、DuckDB と比較します。ワークロードをクリックすると、クエリ別の実行時間を確認できます。"
+  },
+  "marketing.features.003": {
+    "message": "Apache Doris の中核技術と主要機能をまとめたリファレンス"
+  },
+  "marketing.features.004": {
+    "message": "機能を検索：レイクハウス、MPP、インデックスなど"
+  },
+  "marketing.features.005": {
+    "message": "検索をクリア"
+  },
+  "marketing.features.006": {
+    "message": "機能"
+  },
+  "marketing.features.007": {
+    "message": "正式ドキュメント"
+  },
+  "marketing.features.008": {
+    "message": "文書"
+  },
+  "marketing.features.011": {
+    "message": "検索をクリア"
+  },
+  "marketing.features.012": {
+    "message": "主要機能"
+  },
+  "marketing.features.013": {
+    "message": "リアルタイム分析、レイクハウスのフェデレーション、ハイブリッド検索を含む、Apache Doris の中核技術と主要機能をまとめたリファレンスです。"
+  },
+  "marketing.useCases.001": {
+    "message": "利用シーン"
+  },
+  "marketing.useCases.002": {
+    "message": "成果"
+  },
+  "marketing.useCases.003": {
+    "message": "各機能から対応するドキュメントを開けます。実装や技術の詳細は、こちらをご覧ください："
+  },
+  "marketing.useCases.004": {
+    "message": "Apache Doris ブログ"
+  },
+  "marketing.useCases.005": {
+    "message": "関連するユースケース"
+  },
+  "marketing.useCases.006": {
+    "message": "関連機能"
+  },
+  "marketing.useCases.007": {
+    "message": "はじめる"
+  },
+  "marketing.useCases.008": {
+    "message": "デモを試す（近日公開）"
+  },
+  "marketing.customer.001": {
+    "message": "顧客向けアナリティクス"
+  },
+  "marketing.customer.002": {
+    "message": "Apache Doris：リアルタイムデータによる顧客向けアナリティクス"
+  },
+  "marketing.customer.003": {
+    "message": "Apache Doris なら、リアルタイムデータ、高い同時実行性能、テナント分離を単一エンジンで実現し、顧客向けに 1 秒未満の対話的な分析を提供できます。"
+  },
+  "marketing.customer.004": {
+    "message": "顧客に届ける分析、"
+  },
+  "marketing.customer.005": {
+    "message": "支えるのは"
+  },
+  "marketing.customer.006": {
+    "message": "リアルタイムの"
+  },
+  "marketing.customer.007": {
+    "message": "データ"
+  },
+  "marketing.customer.008": {
+    "message": "1 秒未満で応答する対話的な分析を、多くの顧客に直接届けます。"
+  },
+  "marketing.customer.009": {
+    "message": "リアルタイムの分析が"
+  },
+  "marketing.customer.010": {
+    "message": "製品を変える理由。"
+  },
+  "marketing.customer.011": {
+    "message": "ユーザー体験"
+  },
+  "marketing.customer.012": {
+    "message": "エンゲージメント"
+  },
+  "marketing.customer.013": {
+    "message": "収益"
+  },
+  "marketing.customer.014": {
+    "message": "意思決定の速さ"
+  },
+  "marketing.customer.015": {
+    "message": "優れたユーザー体験"
+  },
+  "marketing.customer.016": {
+    "message": "アクセスした瞬間にダッシュボードが表示され、分析が待ち時間のあるレポートではなく、製品の自然な一部になります。"
+  },
+  "marketing.customer.017": {
+    "message": "利用頻度と継続率の向上"
+  },
+  "marketing.customer.018": {
+    "message": "常に最新で応答の速い分析が、ユーザーが製品を使い続ける理由になります。"
+  },
+  "marketing.customer.019": {
+    "message": "収益化"
+  },
+  "marketing.customer.020": {
+    "message": "顧客向けの分析を、自社製品の中で収益を生むプレミアム機能にできます。"
+  },
+  "marketing.customer.021": {
+    "message": "迅速な意思決定"
+  },
+  "marketing.customer.022": {
+    "message": "昨日のデータに反応するのではなく、リアルタイムの兆候を捉え、機会が残っているうちに行動できます。"
+  },
+  "marketing.customer.023": {
+    "message": "本番環境ですでに活用。"
+  },
+  "marketing.customer.024": {
+    "message": "実際の同時アクセスと最新データを使い、Apache Doris で顧客に 1 秒未満の分析を提供する 3 チームの事例です。"
+  },
+  "marketing.customer.025": {
+    "message": "JD.com の検索ボックスを支えるリアルタイム OLAP"
+  },
+  "marketing.customer.026": {
+    "message": "Flink のウィンドウ計算を Doris に置き換えることで、開発効率の向上とディメンション変更への対応に加え、コンピュートリソースの削減も実現できます。"
+  },
+  "marketing.customer.027": {
+    "message": "JD.com の検索ボックスで、検索トラフィック、A/B テストのリアルタイム監視、急上昇の検索語を分析。ビジネスアナリストが SKU 単位の粒度で利用しています。"
+  },
+  "marketing.customer.028": {
+    "message": "1 日あたり 100 億行を処理"
+  },
+  "marketing.customer.029": {
+    "message": "10,000 QPS、クエリレイテンシは最短 150 ms"
+  },
+  "marketing.customer.030": {
+    "message": "毎秒 100 万行のリアルタイム取り込み"
+  },
+  "marketing.customer.031": {
+    "message": "Xanh SM のリアルタイムレコメンデーション"
+  },
+  "marketing.customer.032": {
+    "message": "Apache Doris のストレージ・コンピュート分離モードにより、単一のストレージ層で両方のワークロードを実行でき、性能を維持したままインフラコストと複雑さを減らせました。"
+  },
+  "marketing.customer.033": {
+    "message": "ベトナムの大手 EV 配車サービス Xanh SM は、Apache Doris で分析とリアルタイム配信を実行し、個人に合わせた目的地の推薦を提供しています。"
+  },
+  "marketing.customer.034": {
+    "message": "毎秒 175,000 レコードを書き込み、レイテンシは 1 秒未満"
+  },
+  "marketing.customer.035": {
+    "message": "ほとんどの時間範囲で平均クエリレイテンシは約 76 ms"
+  },
+  "marketing.customer.036": {
+    "message": "P9999 レイテンシが 100 ms を超えるのはまれ"
+  },
+  "marketing.customer.037": {
+    "message": "ZTO Express のリアルタイム分析"
+  },
+  "marketing.customer.038": {
+    "message": "ZTO Express は 1 日 5 億件のレコード更新を扱うリアルタイム分析基盤を再構築しました。頻出のフィルタ項目に転置インデックスを付け、監視、多次元分析、精密な絞り込みに利用しています。"
+  },
+  "marketing.customer.039": {
+    "message": "多次元フィルタのクエリを 1 分超から 1 秒未満へ短縮（60 倍）。複雑な集約も 5～10 分から 1 分未満に"
+  },
+  "marketing.customer.040": {
+    "message": "主要クエリの同時実行数を 50 未満から 100 以上に向上。タイムアウト率は 30% から 5% 未満に低下"
+  },
+  "marketing.customer.041": {
+    "message": "ハードウェアを従来の 3 分の 1 に削減し、1 日 5 億件の更新を数秒でクエリに反映"
+  },
+  "marketing.customer.042": {
+    "message": "ZTO EXPRESS"
+  },
+  "marketing.customer.043": {
+    "message": "顧客向けアナリティクスの要件と"
+  },
+  "marketing.customer.044": {
+    "message": "Apache Doris の対応。"
+  },
+  "marketing.customer.045": {
+    "message": "顧客向けアナリティクスは社内 BI とは異なるワークロードです。配信エンジンに求められる 4 つの要件と、それに応える Apache Doris の機能を紹介します。"
+  },
+  "marketing.customer.046": {
+    "message": "エンドツーエンドの低レイテンシ"
+  },
+  "marketing.customer.047": {
+    "message": "顧客向けアプリには、データの鮮度と応答の速さの両方が必要です。新しいイベントを数秒でクエリ可能にし、ダッシュボード、埋め込み分析、製品内の処理に対して 1 秒未満で応答する必要があります。"
+  },
+  "marketing.customer.048": {
+    "message": "高い同時実行性能"
+  },
+  "marketing.customer.049": {
+    "message": "数千人のユーザーが同時にクエリを実行することがあります。分析エンジンには、単一クエリのベンチマークだけでなく、重い同時実行負荷の下でも低レイテンシを維持する能力が必要です。"
+  },
+  "marketing.customer.050": {
+    "message": "マルチテナントとリソース分離"
+  },
+  "marketing.customer.051": {
+    "message": "顧客向けアナリティクスでは、多くのテナント、ユーザー、埋め込みアプリを 1 つの基盤から提供します。あるテナントの操作が他の性能、セキュリティ、体験に影響しないよう、データ、ワークロード、リソースを分離する必要があります。"
+  },
+  "marketing.customer.052": {
+    "message": "レイクハウスとオープンなデータアクセス"
+  },
+  "marketing.customer.053": {
+    "message": "データは、オープンなレイクハウス形式、オブジェクトストレージ、既存のデータレイクに蓄積されています。分析エンジンには、データをコピーせず直接読み取り、リアルタイム配信用データと組み合わせて、最新の知見を提供する能力が必要です。"
+  },
+  "marketing.customer.054": {
+    "message": "取り込みからクエリまで"
+  },
+  "marketing.customer.055": {
+    "message": "数秒で実現"
+  },
+  "marketing.customer.056": {
+    "message": "ロードトランザクション"
+  },
+  "marketing.customer.057": {
+    "message": "データコンパクション"
+  },
+  "marketing.customer.058": {
+    "message": "データの更新と削除"
+  },
+  "marketing.customer.059": {
+    "message": "事前集約と Rollup"
+  },
+  "marketing.customer.060": {
+    "message": "Group Commit"
+  },
+  "marketing.customer.061": {
+    "message": "Kafka と CDC の連携"
+  },
+  "marketing.customer.062": {
+    "message": "増分マテリアライズドビュー"
+  },
+  "marketing.customer.063": {
+    "message": "Unique Key"
+  },
+  "marketing.customer.064": {
+    "message": "1 秒未満の応答を"
+  },
+  "marketing.customer.065": {
+    "message": "高同時実行で維持"
+  },
+  "marketing.customer.066": {
+    "message": "データプルーニング"
+  },
+  "marketing.customer.067": {
+    "message": "高同時実行ポイントクエリ"
+  },
+  "marketing.customer.068": {
+    "message": "ベクトル化実行"
+  },
+  "marketing.customer.069": {
+    "message": "カラムナストレージ"
+  },
+  "marketing.customer.070": {
+    "message": "プリペアドステートメント"
+  },
+  "marketing.customer.071": {
+    "message": "クエリキャッシュ"
+  },
+  "marketing.customer.072": {
+    "message": "条件キャッシュ"
+  },
+  "marketing.customer.073": {
+    "message": "マルチテナントと"
+  },
+  "marketing.customer.074": {
+    "message": "リソース分離"
+  },
+  "marketing.customer.075": {
+    "message": "Workload Group"
+  },
+  "marketing.customer.076": {
+    "message": "Resource Group"
+  },
+  "marketing.customer.077": {
+    "message": "Compute Group"
+  },
+  "marketing.customer.078": {
+    "message": "Pipeline 実行エンジン"
+  },
+  "marketing.customer.079": {
+    "message": "レイクハウス"
+  },
+  "marketing.customer.080": {
+    "message": "連携"
+  },
+  "marketing.customer.081": {
+    "message": "Parquet リーダーの最適化"
+  },
+  "marketing.customer.082": {
+    "message": "データキャッシュとページキャッシュ"
+  },
+  "marketing.customer.083": {
+    "message": "メタデータキャッシュ"
+  },
+  "marketing.customer.084": {
+    "message": "顧客向けアナリティクスを構築"
+  },
+  "marketing.customer.085": {
+    "message": "活用するのは"
+  },
+  "marketing.warehouse.001": {
+    "message": "データウェアハウス"
+  },
+  "marketing.warehouse.002": {
+    "message": "Apache Doris：リアルタイムの知見を生むモダンなデータウェアハウス"
+  },
+  "marketing.warehouse.003": {
+    "message": "Apache Doris は、使い慣れた SQL モデルで、低レイテンシのダッシュボード、高同時実行の BI、業務レポートを実現するモダンなデータウェアハウス基盤です。"
+  },
+  "marketing.warehouse.004": {
+    "message": "モダンなデータウェアハウスで、"
+  },
+  "marketing.warehouse.005": {
+    "message": "実現する"
+  },
+  "marketing.warehouse.006": {
+    "message": "リアルタイムの"
+  },
+  "marketing.warehouse.007": {
+    "message": "インサイト"
+  },
+  "marketing.warehouse.008": {
+    "message": "バッチとストリーミングのデータを統合し、BI を高速化。信頼できる業務指標を、単一のリアルタイム分析データベースから大規模に提供します。"
+  },
+  "marketing.warehouse.009": {
+    "message": "モダンなデータウェアハウスが"
+  },
+  "marketing.warehouse.010": {
+    "message": "ビジネスを変える理由。"
+  },
+  "marketing.warehouse.011": {
+    "message": "データへの信頼"
+  },
+  "marketing.warehouse.012": {
+    "message": "分析の速さ"
+  },
+  "marketing.warehouse.013": {
+    "message": "意思決定に使うデータの鮮度"
+  },
+  "marketing.warehouse.014": {
+    "message": "基盤全体の運用コスト"
+  },
+  "marketing.warehouse.015": {
+    "message": "統一されたビジネスの全体像"
+  },
+  "marketing.warehouse.016": {
+    "message": "受注、顧客、決済、CRM、ERP、広告、ログを、信頼できる 1 つの分析基盤に集約し、全チームが同じ指標で業務を進められます。"
+  },
+  "marketing.warehouse.017": {
+    "message": "高速な BI とセルフサービス分析"
+  },
+  "marketing.warehouse.018": {
+    "message": "1 秒未満で応答する SQL により、Tableau、Power BI、Superset、Looker でドリルダウンやアドホック分析を対話的に実行できます。"
+  },
+  "marketing.warehouse.019": {
+    "message": "リアルタイム監視"
+  },
+  "marketing.warehouse.020": {
+    "message": "CDC、Kafka、Flink から継続的に取り込み、ダッシュボード、アラート、業務レポートを現在の状況に追従させます。"
+  },
+  "marketing.warehouse.021": {
+    "message": "拡張性とコスト効率"
+  },
+  "marketing.warehouse.022": {
+    "message": "分析データが TB から PB に増え、BI の同時利用者が増えても、システム、パイプライン、配信層を追加せずに対応できます。"
+  },
+  "marketing.warehouse.023": {
+    "message": "本番環境ですでに稼働。"
+  },
+  "marketing.warehouse.024": {
+    "message": "Apache Doris をデータウェアハウスの分析エンジンに採用し、実際の同時アクセスと最新の業務データを大規模に処理する 3 チームの事例です。"
+  },
+  "marketing.warehouse.025": {
+    "message": "SF Express：BI とアドホック分析を Presto から Apache Doris へ"
+  },
+  "marketing.warehouse.026": {
+    "message": "SF Technology は、1 日 100 万件超のクエリを処理する主要 BI 基盤を Presto から Apache Doris に移行しました。すべてのアドホック分析と BI を移行し、P95 レイテンシを約 70% 削減しました。"
+  },
+  "marketing.warehouse.027": {
+    "message": "P95 クエリレイテンシを約 70% 削減。10 秒未満のクエリの割合が 72% から 88% に増加"
+  },
+  "marketing.warehouse.028": {
+    "message": "ハードウェアを 48% 削減し、レイクハウスクエリのデータキャッシュ命中率は 96%"
+  },
+  "marketing.warehouse.029": {
+    "message": "SQL 互換率 97% で、アドホック分析と BI の全処理を移行"
+  },
+  "marketing.warehouse.030": {
+    "message": "SF EXPRESS"
+  },
+  "marketing.warehouse.031": {
+    "message": "Xiaomi：Apache Doris と Apache Paimon による統合レイクハウス"
+  },
+  "marketing.warehouse.032": {
+    "message": "Xiaomi は Presto、Druid、複数のストレージ形式を、Apache Doris と Apache Paimon による 1 つのレイクハウスに統合し、クエリを従来の 6 倍に高速化しました。"
+  },
+  "marketing.warehouse.033": {
+    "message": "平均クエリレイテンシを 60 秒から 10 秒に、集約を 40 秒から 8 秒に短縮"
+  },
+  "marketing.warehouse.034": {
+    "message": "同時処理スループットが Presto の 5 倍に向上し、負荷時のレイテンシを 25～75% 削減"
+  },
+  "marketing.warehouse.035": {
+    "message": "Doris のホットデータと Paimon のコールドデータを、ユーザー行動、デバイス、業務分析で統一的に利用"
+  },
+  "marketing.warehouse.036": {
+    "message": "XIAOMI"
+  },
+  "marketing.warehouse.037": {
+    "message": "Cainiao：グローバル物流のリアルタイムレイクハウス"
+  },
+  "marketing.warehouse.038": {
+    "message": "データ更新は数秒で完了し、クエリには数百ミリ秒で応答できます。"
+  },
+  "marketing.warehouse.039": {
+    "message": "リアルタイムデータ基盤のコストを 90% 削減し、平均応答時間を 72% 短縮"
+  },
+  "marketing.warehouse.040": {
+    "message": "ポイントクエリは 1,000～2,000 QPS で 10～100 ms、複数テーブル結合は 200～300 QPS で 1 秒未満"
+  },
+  "marketing.warehouse.041": {
+    "message": "3 リージョンの 25 以上のクラスタと 10,000 以上の CPU で、1 日 8,000 万個の荷物に関する在庫・配送・注文を追跡"
+  },
+  "marketing.warehouse.042": {
+    "message": "CAINIAO"
+  },
+  "marketing.warehouse.043": {
+    "message": "データウェアハウスの要件と"
+  },
+  "marketing.warehouse.044": {
+    "message": "Apache Doris の対応。"
+  },
+  "marketing.warehouse.045": {
+    "message": "モダンなデータウェアハウスに求められる 5 つの要件と、それに応える Apache Doris の機能を紹介します。"
+  },
+  "marketing.warehouse.046": {
+    "message": "リアルタイムのデータ鮮度"
+  },
+  "marketing.warehouse.047": {
+    "message": "業務チームには、現在の状況を把握することが必要です。夜間バッチを待たず、ストリーミング取り込み、CDC、増分更新によって、数秒でクエリできるデータを提供します。"
+  },
+  "marketing.warehouse.048": {
+    "message": "ウェアハウス処理のデータモデリング"
+  },
+  "marketing.warehouse.049": {
+    "message": "モダンなデータウェアハウスは、明細、ファクト・ディメンションテーブル、ワイドテーブル、集約指標、業務向けデータセットを保持します。適切なモデリングで定義を統一し、クエリを高速化し、信頼できるデータを再利用できます。"
+  },
+  "marketing.warehouse.050": {
+    "message": "増分更新と安定したバッチ処理"
+  },
+  "marketing.warehouse.051": {
+    "message": "ウェアハウスには、増分更新と大規模バッチの両方が必要です。マテリアライズドビューと増分計算で集約・Rollup・レポートを全件再計算なしで最新に保ち、安定したバッチ処理で日次ジョブ、バックフィル、履歴データ処理に対応します。"
+  },
+  "marketing.warehouse.052": {
+    "message": "レイクハウスとオープンな構成"
+  },
+  "marketing.warehouse.053": {
+    "message": "業務データベース、イベントストリーム、SaaS、オープンなレイクハウステーブルには重要なデータがあります。すべてを別のサイロにコピーせず、これらを統合し、Iceberg、Hudi、Delta Lake、Hive 上のデータを直接クエリする必要があります。"
+  },
+  "marketing.warehouse.054": {
+    "message": "企業向けのガバナンスと運用"
+  },
+  "marketing.warehouse.055": {
+    "message": "共通の分析基盤には、セキュリティ、信頼性、監査性、運用の容易さが必要です。細かなアクセス制御、ワークロード分離、高可用性、監査ログ、シンプルな運用により、全チームが同じ基盤を安心して使えます。"
+  },
+  "marketing.warehouse.056": {
+    "message": "柔軟なウェアハウスの"
+  },
+  "marketing.warehouse.057": {
+    "message": "データモデリング"
+  },
+  "marketing.warehouse.058": {
+    "message": "データモデル"
+  },
+  "marketing.warehouse.059": {
+    "message": "事前集約と Rollup"
+  },
+  "marketing.warehouse.060": {
+    "message": "分析関数"
+  },
+  "marketing.warehouse.061": {
+    "message": "パーティション分割とバケット分割"
+  },
+  "marketing.warehouse.062": {
+    "message": "Unique Key"
+  },
+  "marketing.warehouse.063": {
+    "message": "リアルタイム取り込み"
+  },
+  "marketing.warehouse.064": {
+    "message": "と更新"
+  },
+  "marketing.warehouse.065": {
+    "message": "ロードトランザクション"
+  },
+  "marketing.warehouse.066": {
+    "message": "データコンパクション"
+  },
+  "marketing.warehouse.067": {
+    "message": "データの更新と削除"
+  },
+  "marketing.warehouse.068": {
+    "message": "Group Commit"
+  },
+  "marketing.warehouse.069": {
+    "message": "Kafka と CDC の連携"
+  },
+  "marketing.warehouse.070": {
+    "message": "増分更新"
+  },
+  "marketing.warehouse.071": {
+    "message": "とバッチ実行"
+  },
+  "marketing.warehouse.072": {
+    "message": "バッチロード"
+  },
+  "marketing.warehouse.073": {
+    "message": "増分マテリアライズドビュー"
+  },
+  "marketing.warehouse.074": {
+    "message": "ディスクへのスピル"
+  },
+  "marketing.warehouse.075": {
+    "message": "Binlog / Table Stream（近日公開）"
+  },
+  "marketing.warehouse.076": {
+    "message": "レイクハウスの"
+  },
+  "marketing.warehouse.077": {
+    "message": "コンピュートエンジン"
+  },
+  "marketing.warehouse.078": {
+    "message": "Multi Catalog"
+  },
+  "marketing.warehouse.079": {
+    "message": "レイクテーブルの管理"
+  },
+  "marketing.warehouse.080": {
+    "message": "エンタープライズ向けの"
+  },
+  "marketing.warehouse.081": {
+    "message": "ガバナンス"
+  },
+  "marketing.warehouse.082": {
+    "message": "プラガブル認証"
+  },
+  "marketing.warehouse.083": {
+    "message": "Catalog 連携"
+  },
+  "marketing.warehouse.084": {
+    "message": "データリネージ"
+  },
+  "marketing.warehouse.085": {
+    "message": "モダンなデータウェアハウスを構築"
+  },
+  "marketing.warehouse.086": {
+    "message": "活用するのは"
+  },
+  "marketing.observability.001": {
+    "message": "オブザーバビリティ"
+  },
+  "marketing.observability.002": {
+    "message": "Apache Doris：AI エージェント時代のオブザーバビリティ"
+  },
+  "marketing.observability.003": {
+    "message": "Apache Doris は、ログ、メトリクス、トレース、AI エージェントのイベントを扱う高性能な分析基盤です。リアルタイム取り込み、全文検索、OLAP、ハイブリッドベクトル検索を単一エンジンで実現します。"
+  },
+  "marketing.observability.004": {
+    "message": "リアルタイムの"
+  },
+  "marketing.observability.005": {
+    "message": "AI エージェント時代へ"
+  },
+  "marketing.observability.006": {
+    "message": "Apache Doris は、ログ、メトリクス、トレース、AI エージェントのイベントを高性能な単一分析エンジンに統合します。問題調査を速め、コストを管理し、AI の品質を継続的に改善できます。"
+  },
+  "marketing.observability.007": {
+    "message": "エージェント時代に"
+  },
+  "marketing.observability.008": {
+    "message": "オブザーバビリティが"
+  },
+  "marketing.observability.009": {
+    "message": "重要な理由。"
+  },
+  "marketing.observability.010": {
+    "message": "障害の検知"
+  },
+  "marketing.observability.011": {
+    "message": "ユーザー体験"
+  },
+  "marketing.observability.012": {
+    "message": "大規模運用のコスト"
+  },
+  "marketing.observability.013": {
+    "message": "AI の品質"
+  },
+  "marketing.observability.014": {
+    "message": "システムの挙動とビジネス成果の関係"
+  },
+  "marketing.observability.015": {
+    "message": "障害をすばやく検知"
+  },
+  "marketing.observability.016": {
+    "message": "ログ、トレース、エージェントイベントを分析可能な実行データとして扱い、障害が広がる前に異常や根本原因を見つけます。"
+  },
+  "marketing.observability.017": {
+    "message": "ユーザー体験と SLA"
+  },
+  "marketing.observability.018": {
+    "message": "システムの健全性を、レイテンシ、エラー、回答精度、タスク完了率、回答の根拠など、ユーザーへの実際の影響に結び付けます。"
+  },
+  "marketing.observability.019": {
+    "message": "大規模運用のコスト削減"
+  },
+  "marketing.observability.020": {
+    "message": "調査に使うホットデータは高速に保ち、傾向は集約で把握。テレメトリの増加に合わせて履歴を低コストのストレージへ移します。"
+  },
+  "marketing.observability.021": {
+    "message": "AI の継続的な改善"
+  },
+  "marketing.observability.022": {
+    "message": "プロンプト、回答、RAG のコンテキスト、ツール呼び出し、スコア、利用者の反応から、検索、プロンプト、タスク遂行の改善点を把握します。"
+  },
+  "marketing.observability.023": {
+    "message": "ビジネスを見据えた運用"
+  },
+  "marketing.observability.024": {
+    "message": "各シグナルを影響先の顧客、テナント、処理フローに結び付け、AI の失敗がコンバージョン、サポート負荷、収益に及ぼすコストを把握します。"
+  },
+  "marketing.observability.025": {
+    "message": "本番環境ですでに稼働。"
+  },
+  "marketing.observability.026": {
+    "message": "Apache Doris をオブザーバビリティの分析基盤として使い、ログ、メトリクス、イベントを最新の運用データ上で大規模に分析する 3 チームの事例です。"
+  },
+  "marketing.observability.027": {
+    "message": "MiniMax：Grafana Loki から Apache Doris の PB 規模ログ基盤へ"
+  },
+  "marketing.observability.028": {
+    "message": "Grafana Loki から移行した MiniMax では、すべての事業部門が Apache Doris にログを保存しています。PB 規模のデータを 99.9% 超の可用性で扱い、数十億行のログへのクエリに数秒で応答します。"
+  },
+  "marketing.observability.029": {
+    "message": "全事業部門の PB 規模ログを 99.9% 以上の可用性で保存"
+  },
+  "marketing.observability.030": {
+    "message": "10 億件のログに対するキーワード検索と集約が 2 秒以内に完了"
+  },
+  "marketing.observability.031": {
+    "message": "書き込みスループット 10 GB/s、取り込みレイテンシは秒単位"
+  },
+  "marketing.observability.032": {
+    "message": "5:1 の圧縮と階層化ストレージで、ストレージコストを 70% 削減"
+  },
+  "marketing.observability.033": {
+    "message": "NetEase：Elasticsearch と InfluxDB を Apache Doris に統合"
+  },
+  "marketing.observability.034": {
+    "message": "NetEase は Eagle 監視基盤を Elasticsearch から、IM 時系列基盤を InfluxDB から移行しました。現在は両方を Apache Doris で動かし、クエリの高速化、容量削減、テーブルの再構築なしでのインデックス変更を実現しています。"
+  },
+  "marketing.observability.035": {
+    "message": "監視ログで Elasticsearch よりクエリが 11 倍高速、ストレージコストは 70% 削減"
+  },
+  "marketing.observability.036": {
+    "message": "時系列処理で InfluxDB よりストレージを 67%、サーバー台数を半分に削減"
+  },
+  "marketing.observability.037": {
+    "message": "最大 100 万 TPS、ピーク書き込みスループット 1 GB/s"
+  },
+  "marketing.observability.038": {
+    "message": "テーブルを書き直さずに転置インデックスを増分で追加・削除"
+  },
+  "marketing.observability.039": {
+    "message": "Tencent Music：Elasticsearch を置き換え、コストを 80% 削減"
+  },
+  "marketing.observability.040": {
+    "message": "Tencent Music Entertainment は、タグを使う検索と分析を Elasticsearch から Apache Doris に移行しました。転置インデックスにより、全文検索と集約を単一の SQL クエリで処理します。"
+  },
+  "marketing.observability.041": {
+    "message": "Elasticsearch と比べて運用コスト全体を 80% 削減"
+  },
+  "marketing.observability.042": {
+    "message": "同じデータセットでストレージを 72% 削減（697.7 GB → 195.4 GB）"
+  },
+  "marketing.observability.043": {
+    "message": "書き込みを 4 倍に高速化し、取り込み時間を 10 時間超から 3 時間未満に短縮"
+  },
+  "marketing.observability.044": {
+    "message": "アラート数を 1 日 20 件超から月 1 桁に削減"
+  },
+  "marketing.observability.045": {
+    "message": "モダンなオブザーバビリティの要件と"
+  },
+  "marketing.observability.046": {
+    "message": "Apache Doris の対応。"
+  },
+  "marketing.observability.047": {
+    "message": "モダンなオブザーバビリティ基盤に求められる 5 つの要件と、それに応える Apache Doris の機能を紹介します。"
+  },
+  "marketing.observability.048": {
+    "message": "あらゆるシグナルをリアルタイムに取り込む"
+  },
+  "marketing.observability.049": {
+    "message": "アプリ、Kubernetes、API、ゲートウェイ、データベース、AI システムから、観測データが継続的に届きます。大量のログ、トレース、メトリクス、エージェントイベントを低レイテンシで取り込み、LLM リクエスト、ツール呼び出し、RAG 検索、トークンコスト、評価、利用者の反応をほぼリアルタイムにクエリできる必要があります。"
+  },
+  "marketing.observability.050": {
+    "message": "大がかりな ETL なしで動的 JSON を分析"
+  },
+  "marketing.observability.051": {
+    "message": "ログ、トレース、ツールの出力、モデルの回答、エージェントイベントは、項目が変わり続ける入れ子の JSON で届くことがあります。スキーマの変化に対応して新しい項目をすぐクエリ可能にし、パイプラインを作り直さずに絞り込み、調査、分析を行える必要があります。"
+  },
+  "marketing.observability.052": {
+    "message": "ログとエージェントのシグナルを高速に全文検索"
+  },
+  "marketing.observability.053": {
+    "message": "エラーメッセージ、スタックトレース、ログだけでなく、プロンプト、モデルの回答、ツールの出力、エージェントの失敗理由も検索対象です。高速なキーワード・全文検索により、障害の発見、リクエストの追跡、エージェントの挙動調査を大規模に行います。"
+  },
+  "marketing.observability.054": {
+    "message": "メトリクス、コスト、品質を対話的に分析"
+  },
+  "marketing.observability.055": {
+    "message": "オブザーバビリティには検索以外も必要です。大量のテレメトリを分類、集約、掘り下げて、P99 レイテンシ、SLA の傾向、トークン使用量、モデルコスト、RAG 品質、タスク完了率を分析します。高速な検索とともに、高性能な分析エンジンが必要です。"
+  },
+  "marketing.observability.056": {
+    "message": "AI エージェントの観測にハイブリッド検索を活用"
+  },
+  "marketing.observability.057": {
+    "message": "AI エージェントの観測は、ログのキーワード検索だけでは足りません。構造化メタデータを、プロンプト、回答、ツール呼び出し、トレースの全文・意味検索と組み合わせ、完全一致、類似障害、ハルシネーションを含む出力、繰り返す挙動を 1 つのクエリで見つけます。"
+  },
+  "marketing.observability.058": {
+    "message": "リアルタイム取り込み"
+  },
+  "marketing.observability.059": {
+    "message": "ログとエージェントのトレースに対応"
+  },
+  "marketing.observability.060": {
+    "message": "Stream Load"
+  },
+  "marketing.observability.061": {
+    "message": "Kafka と CDC の連携"
+  },
+  "marketing.observability.062": {
+    "message": "Group Commit"
+  },
+  "marketing.observability.063": {
+    "message": "垂直コンパクション"
+  },
+  "marketing.observability.064": {
+    "message": "半構造化データの分析"
+  },
+  "marketing.observability.065": {
+    "message": "VARIANT を活用"
+  },
+  "marketing.observability.066": {
+    "message": "VARIANT データ型"
+  },
+  "marketing.observability.067": {
+    "message": "高速な全文検索"
+  },
+  "marketing.observability.068": {
+    "message": "転置インデックスと BM25 を活用"
+  },
+  "marketing.observability.069": {
+    "message": "転置インデックス"
+  },
+  "marketing.observability.070": {
+    "message": "全文検索"
+  },
+  "marketing.observability.071": {
+    "message": "BM25 関連度スコアリング"
+  },
+  "marketing.observability.072": {
+    "message": "対話的な分析"
+  },
+  "marketing.observability.073": {
+    "message": "オブザーバビリティのダッシュボード向け"
+  },
+  "marketing.observability.074": {
+    "message": "増分マテリアライズドビュー"
+  },
+  "marketing.observability.075": {
+    "message": "事前集約と Rollup"
+  },
+  "marketing.observability.076": {
+    "message": "ベクトル化実行"
+  },
+  "marketing.observability.077": {
+    "message": "クエリキャッシュ"
+  },
+  "marketing.observability.078": {
+    "message": "プリペアドステートメント"
+  },
+  "marketing.observability.079": {
+    "message": "横断的なハイブリッド検索"
+  },
+  "marketing.observability.080": {
+    "message": "構造化データ、テキスト、ベクトルに対応"
+  },
+  "marketing.observability.081": {
+    "message": "ハイブリッド検索"
+  },
+  "marketing.observability.082": {
+    "message": "ベクトルインデックス"
+  },
+  "marketing.observability.083": {
+    "message": "埋め込み"
+  },
+  "marketing.observability.084": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "marketing.observability.085": {
+    "message": "AI エージェント時代のオブザーバビリティを構築"
+  },
+  "marketing.observability.086": {
+    "message": "活用するのは"
+  },
+  "marketing.ai.001": {
+    "message": "AI 向けアナリティクス"
+  },
+  "marketing.ai.002": {
+    "message": "Apache Doris：エージェント時代の AI 向けアナリティクス"
+  },
+  "marketing.ai.003": {
+    "message": "Apache Doris は、AI アプリケーション、RAG システム、AI のオブザーバビリティ向けの高性能な分析基盤です。リアルタイム分析、ハイブリッド検索、AI ネイティブ SQL を単一エンジンで実現します。"
+  },
+  "marketing.ai.004": {
+    "message": "リアルタイムの"
+  },
+  "marketing.ai.005": {
+    "message": "AI 向け"
+  },
+  "marketing.ai.006": {
+    "message": "アナリティクスをエージェント時代へ"
+  },
+  "marketing.ai.007": {
+    "message": "Apache Doris は、AI アプリケーションが信頼できる企業データへリアルタイムにアクセスしてクエリする基盤を提供します。データを理解するエージェントの構築、RAG 品質の改善、AI の挙動の監視を支え、構造化・半構造化・非構造化データを大規模に分析・ハイブリッド検索できます。"
+  },
+  "marketing.ai.008": {
+    "message": "エージェント時代に"
+  },
+  "marketing.ai.009": {
+    "message": "AI 向け分析が"
+  },
+  "marketing.ai.010": {
+    "message": "重要な理由。"
+  },
+  "marketing.ai.011": {
+    "message": "意思決定の質"
+  },
+  "marketing.ai.012": {
+    "message": "アプリケーションのコンテキスト"
+  },
+  "marketing.ai.013": {
+    "message": "検索結果の関連性"
+  },
+  "marketing.ai.014": {
+    "message": "エージェントの可視性"
+  },
+  "marketing.ai.015": {
+    "message": "基盤全体の運用コスト"
+  },
+  "marketing.ai.016": {
+    "message": "AI によるリアルタイムの意思決定"
+  },
+  "marketing.ai.017": {
+    "message": "AI エージェントは最新の業務データをクエリし、ユーザーとの対話や業務処理が進行している間に行動できます。"
+  },
+  "marketing.ai.018": {
+    "message": "データを理解するアプリケーション"
+  },
+  "marketing.ai.019": {
+    "message": "コパイロット、エージェント、RAG システムが、最新で信頼できる企業データをコンテキストや記憶として利用し、確実な処理につなげます。"
+  },
+  "marketing.ai.020": {
+    "message": "RAG とナレッジ検索"
+  },
+  "marketing.ai.021": {
+    "message": "SQL フィルタ、全文検索、BM25、ベクトル検索を 1 つのクエリで実行し、LLM に正確なコンテキストを渡してハルシネーションを抑えます。"
+  },
+  "marketing.ai.022": {
+    "message": "AI のオブザーバビリティ"
+  },
+  "marketing.ai.023": {
+    "message": "プロンプト、回答、トレース、ツール呼び出し、トークン使用量、コストを、デバッグと継続的な品質管理のために 1 つのクエリ可能なストアへ保存します。"
+  },
+  "marketing.ai.024": {
+    "message": "シンプルな AI データ基盤"
+  },
+  "marketing.ai.025": {
+    "message": "リアルタイム分析、全文検索とベクトル検索、ログ分析、AI ネイティブ SQL を単一エンジンで処理し、運用するパイプラインを減らします。"
+  },
+  "marketing.ai.026": {
+    "message": "AI 向けアナリティクスの要件と"
+  },
+  "marketing.ai.027": {
+    "message": "Apache Doris の対応。"
+  },
+  "marketing.ai.028": {
+    "message": "AI 向けの分析基盤に求められる 5 つの要件と、それに応える Apache Doris の機能を紹介します。"
+  },
+  "marketing.ai.029": {
+    "message": "AI アプリケーションのエンドツーエンド低レイテンシ"
+  },
+  "marketing.ai.030": {
+    "message": "AI アプリケーションと自律エージェントは、最新データに基づいてリアルタイムに行動します。新しいイベント、CDC 更新、ストリーミングデータを数秒でクエリ可能にし、本番の高同時実行トラフィックでも分析クエリに 1 秒未満で応答する必要があります。"
+  },
+  "marketing.ai.031": {
+    "message": "構造化データ・テキスト・ベクトルのハイブリッド検索"
+  },
+  "marketing.ai.032": {
+    "message": "AI アプリケーションは、文書、ログ、プロンプト、回答、フィードバック、ナレッジベース、サポートチケット、埋め込みを検索します。SQL、キーワード検索、ベクトル検索はそれぞれ役割が異なります。構造化フィルタ、全文検索、意味的な類似度、関連度を考慮したランキングを、1 つの処理フローに統合します。"
+  },
+  "marketing.ai.033": {
+    "message": "AI ネイティブデータに対応する柔軟なスキーマ"
+  },
+  "marketing.ai.034": {
+    "message": "AI アプリケーションは、モデル、エージェント、ツール、フレームワーク、ワークフローから、変化し続ける半構造化イベントを出力します。大がかりな ETL なしで動的 JSON、入れ子の項目、スキーマの変化、高速なフィルタ、アドホック SQL に対応し、各ステップ、ツール呼び出し、検索イベント、回答を直接分析できる必要があります。"
+  },
+  "marketing.ai.035": {
+    "message": "AI のオブザーバビリティデータの分析"
+  },
+  "marketing.ai.036": {
+    "message": "AI の観測は、ログ、メトリクス、トレースにとどまりません。モデル呼び出し、プロンプト、回答、ツール実行、検索イベント、トークン使用量、レイテンシ、コスト、評価点、利用者の反応を 1 か所で分析します。配信層には、大量の AI データに対する柔軟なスキーマ、高速検索、対話的な集約が必要です。"
+  },
+  "marketing.ai.037": {
+    "message": "LLM エコシステムとの連携"
+  },
+  "marketing.ai.038": {
+    "message": "AI アプリケーションは、変化の速いエージェントフレームワーク、LLMOps 基盤、観測ツール、MCP ワークフロー、独自パイプラインを利用します。SQL、API、コネクタ、MCP を通して、エージェント、コパイロット、RAG、LLMOps が信頼できるデータを読み、AI のシグナルを書き込める必要があります。"
+  },
+  "marketing.ai.039": {
+    "message": "リアルタイム取り込みと"
+  },
+  "marketing.ai.040": {
+    "message": "低レイテンシのデータ配信"
+  },
+  "marketing.ai.041": {
+    "message": "Kafka と CDC の連携"
+  },
+  "marketing.ai.042": {
+    "message": "Group Commit"
+  },
+  "marketing.ai.043": {
+    "message": "MPP アーキテクチャ"
+  },
+  "marketing.ai.044": {
+    "message": "高同時実行ポイントクエリ"
+  },
+  "marketing.ai.045": {
+    "message": "顧客向けアナリティクス"
+  },
+  "marketing.ai.046": {
+    "message": "プロンプトを観測する AI オブザーバビリティ、"
+  },
+  "marketing.ai.047": {
+    "message": "トレース・コスト・品質も可視化"
+  },
+  "marketing.ai.048": {
+    "message": "Stream Load"
+  },
+  "marketing.ai.049": {
+    "message": "転置インデックス"
+  },
+  "marketing.ai.050": {
+    "message": "増分マテリアライズドビュー"
+  },
+  "marketing.ai.051": {
+    "message": "AI エージェント時代のオブザーバビリティ"
+  },
+  "marketing.ai.052": {
+    "message": "柔軟な JSON 分析"
+  },
+  "marketing.ai.053": {
+    "message": "VARIANT を活用"
+  },
+  "marketing.ai.054": {
+    "message": "VARIANT データ型"
+  },
+  "marketing.ai.055": {
+    "message": "横断的なハイブリッド検索"
+  },
+  "marketing.ai.056": {
+    "message": "SQL・テキスト・ベクトルに対応"
+  },
+  "marketing.ai.057": {
+    "message": "ハイブリッド検索"
+  },
+  "marketing.ai.058": {
+    "message": "全文検索"
+  },
+  "marketing.ai.059": {
+    "message": "BM25 関連度スコアリング"
+  },
+  "marketing.ai.060": {
+    "message": "ベクトルインデックス"
+  },
+  "marketing.ai.061": {
+    "message": "埋め込み"
+  },
+  "marketing.ai.062": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "marketing.ai.063": {
+    "message": "AI ネイティブ SQL と"
+  },
+  "marketing.ai.064": {
+    "message": "ツールチェーン連携"
+  },
+  "marketing.ai.065": {
+    "message": "LLM SQL 関数"
+  },
+  "marketing.ai.066": {
+    "message": "MCP サーバー"
+  },
+  "marketing.ai.067": {
+    "message": "セマンティックレイヤー（近日公開）"
+  },
+  "marketing.ai.068": {
+    "message": "AI 向けアナリティクスを構築"
+  },
+  "marketing.ai.069": {
+    "message": "活用するのは"
+  },
+  "marketing.figures.001": {
+    "message": "製品イベント"
+  },
+  "marketing.figures.002": {
+    "message": "Kafka・クリックストリーム"
+  },
+  "marketing.figures.003": {
+    "message": "OLTP・CDC"
+  },
+  "marketing.figures.004": {
+    "message": "MySQL・PostgreSQL"
+  },
+  "marketing.figures.005": {
+    "message": "バッチジョブ"
+  },
+  "marketing.figures.006": {
+    "message": "Spark・Flink・ファイル"
+  },
+  "marketing.figures.007": {
+    "message": "データレイク"
+  },
+  "marketing.figures.008": {
+    "message": "Iceberg・S3"
+  },
+  "marketing.figures.009": {
+    "message": "Apache Doris による顧客向けアナリティクス。多くのテナントの利用者が、埋め込みダッシュボード、ポータル、アプリからクエリします。リクエストは Doris を経由してテナントごとに分離され、キャッシュやポイントクエリにより 1 秒未満で応答します。製品イベント、CDC、バッチデータは数秒で反映され、データレイクは直接クエリできます。"
+  },
+  "marketing.figures.010": {
+    "message": "図 01・多数のテナントを 1 つの経路で配信し、数秒前のデータを利用"
+  },
+  "marketing.figures.011": {
+    "message": "自社製品"
+  },
+  "marketing.figures.012": {
+    "message": "APACHE DORIS"
+  },
+  "marketing.figures.013": {
+    "message": "最新データ"
+  },
+  "marketing.figures.014": {
+    "message": "10,000 QPS 以上・数千ユーザーが同時利用"
+  },
+  "marketing.figures.015": {
+    "message": "単一の SQL 層"
+  },
+  "marketing.figures.016": {
+    "message": "1 秒未満"
+  },
+  "marketing.figures.017": {
+    "message": "数秒で取り込み・Stream Load・CDC"
+  },
+  "marketing.figures.018": {
+    "message": "マテリアライズドビュー・集約・ポイントクエリ・低遅延 BI"
+  },
+  "marketing.figures.019": {
+    "message": "集約指標・業務向けデータセット"
+  },
+  "marketing.figures.020": {
+    "message": "整備済み明細・ファクトとディメンション・ワイドテーブル"
+  },
+  "marketing.figures.021": {
+    "message": "元データ・Stream Load・Routine Load・CDC・数秒で反映"
+  },
+  "marketing.figures.022": {
+    "message": "BI ツール"
+  },
+  "marketing.figures.023": {
+    "message": "Tableau・Power BI"
+  },
+  "marketing.figures.024": {
+    "message": "ダッシュボード"
+  },
+  "marketing.figures.025": {
+    "message": "レポート・業務運用"
+  },
+  "marketing.figures.026": {
+    "message": "アドホック SQL"
+  },
+  "marketing.figures.027": {
+    "message": "分析担当・ノートブック"
+  },
+  "marketing.figures.028": {
+    "message": "アプリと API"
+  },
+  "marketing.figures.029": {
+    "message": "データサービス"
+  },
+  "marketing.figures.030": {
+    "message": "イベントストリーム"
+  },
+  "marketing.figures.031": {
+    "message": "Kafka・Flink"
+  },
+  "marketing.figures.032": {
+    "message": "バッチと SaaS"
+  },
+  "marketing.figures.033": {
+    "message": "Parquet・CSV・API"
+  },
+  "marketing.figures.034": {
+    "message": "Iceberg・Paimon・S3"
+  },
+  "marketing.figures.035": {
+    "message": "Apache Doris によるモダンなデータウェアハウス。OLTP、ストリーム、バッチのデータを ODS 層に取り込み、DWD・DWS 層でモデリングします。マテリアライズドビューを通して、BI ツール、ダッシュボード、アドホック SQL、アプリに提供し、データレイクは直接クエリします。"
+  },
+  "marketing.figures.036": {
+    "message": "図 02・下段にデータソース、中央に Doris のデータ層、上段に利用先"
+  },
+  "marketing.figures.037": {
+    "message": "利用先"
+  },
+  "marketing.figures.038": {
+    "message": "バッチとストリーム・単一の SQL 層"
+  },
+  "marketing.figures.039": {
+    "message": "ガバナンス"
+  },
+  "marketing.figures.040": {
+    "message": "細かな認証・ワークロード分離・監査ログ・高可用性"
+  },
+  "marketing.figures.041": {
+    "message": "レイクハウス"
+  },
+  "marketing.figures.042": {
+    "message": "データソース"
+  },
+  "marketing.figures.043": {
+    "message": "アプリとサービス"
+  },
+  "marketing.figures.044": {
+    "message": "ログ・トレース・OTel"
+  },
+  "marketing.figures.045": {
+    "message": "ホストと K8S"
+  },
+  "marketing.figures.046": {
+    "message": "メトリクス・Pod ログ"
+  },
+  "marketing.figures.047": {
+    "message": "ログ転送ツール"
+  },
+  "marketing.figures.048": {
+    "message": "Vector・Fluent Bit"
+  },
+  "marketing.figures.049": {
+    "message": "AI エージェント"
+  },
+  "marketing.figures.050": {
+    "message": "プロンプト・ツール呼び出し"
+  },
+  "marketing.figures.051": {
+    "message": "ダッシュボード"
+  },
+  "marketing.figures.052": {
+    "message": "アラートと SLO"
+  },
+  "marketing.figures.053": {
+    "message": "P99・エラー率"
+  },
+  "marketing.figures.054": {
+    "message": "調査"
+  },
+  "marketing.figures.055": {
+    "message": "AI 品質"
+  },
+  "marketing.figures.056": {
+    "message": "評価・フィードバック"
+  },
+  "marketing.figures.057": {
+    "message": "動的 JSON"
+  },
+  "marketing.figures.058": {
+    "message": "転置インデックス"
+  },
+  "marketing.figures.059": {
+    "message": "全文検索・BM25"
+  },
+  "marketing.figures.060": {
+    "message": "カラムナ形式"
+  },
+  "marketing.figures.061": {
+    "message": "5:1 の圧縮"
+  },
+  "marketing.figures.062": {
+    "message": "全文検索"
+  },
+  "marketing.figures.063": {
+    "message": "BM25・キーワード"
+  },
+  "marketing.figures.064": {
+    "message": "集約"
+  },
+  "marketing.figures.065": {
+    "message": "P99・SLA・コスト"
+  },
+  "marketing.figures.066": {
+    "message": "ハイブリッド"
+  },
+  "marketing.figures.067": {
+    "message": "キーワード＋ベクトル"
+  },
+  "marketing.figures.068": {
+    "message": "ホット・SSD"
+  },
+  "marketing.figures.069": {
+    "message": "ウォーム"
+  },
+  "marketing.figures.070": {
+    "message": "コールド・S3 / HDFS"
+  },
+  "marketing.figures.071": {
+    "message": "現在"
+  },
+  "marketing.figures.072": {
+    "message": "7 日"
+  },
+  "marketing.figures.073": {
+    "message": "30 日"
+  },
+  "marketing.figures.074": {
+    "message": "1 年"
+  },
+  "marketing.figures.075": {
+    "message": "Apache Doris によるオブザーバビリティ。ログ、メトリクス、トレース、AI エージェントのイベントはコレクタ経由で Doris に届きます。VARIANT、転置インデックス、カラムナ形式で保持し、時間の経過に応じてホットな SSD からコールドなオブジェクトストレージへ移します。全文検索、集約、ハイブリッド検索で Grafana、アラート、アドホック SQL、AI 品質の確認に利用します。"
+  },
+  "marketing.figures.076": {
+    "message": "図 03・シグナルを取り込み、ホットからコールドへ移しても継続してクエリ可能"
+  },
+  "marketing.figures.077": {
+    "message": "シグナル"
+  },
+  "marketing.figures.078": {
+    "message": "OTel Collector・Vector・Kafka"
+  },
+  "marketing.figures.079": {
+    "message": "保存"
+  },
+  "marketing.figures.080": {
+    "message": "データのライフサイクル・階層化ストレージ"
+  },
+  "marketing.figures.081": {
+    "message": "最新データは SSD で高速に、履歴はオブジェクトストレージで低コストに"
+  },
+  "marketing.figures.082": {
+    "message": "クエリ"
+  },
+  "marketing.figures.083": {
+    "message": "文書とログ"
+  },
+  "marketing.figures.084": {
+    "message": "テキスト・JSON・チケット"
+  },
+  "marketing.figures.085": {
+    "message": "埋め込み"
+  },
+  "marketing.figures.086": {
+    "message": "埋め込みモデルから生成"
+  },
+  "marketing.figures.087": {
+    "message": "ストリームと CDC"
+  },
+  "marketing.figures.088": {
+    "message": "注文・セッション"
+  },
+  "marketing.figures.089": {
+    "message": "SQL フィルタ"
+  },
+  "marketing.figures.090": {
+    "message": "時間・ACL"
+  },
+  "marketing.figures.091": {
+    "message": "ベクトル"
+  },
+  "marketing.figures.092": {
+    "message": "埋め込み"
+  },
+  "marketing.figures.093": {
+    "message": "Apache Doris による AI 向けアナリティクス。文書、埋め込み、ストリームでデータを最新に保ちます。AI アプリの質問に対し、SQL フィルタ・全文検索・ベクトル検索を統合する単一のハイブリッドクエリでコンテキストを取得し、LLM が回答を生成します。トレース、トークン、コスト、フィードバックを Doris に記録し、次の処理を改善します。"
+  },
+  "marketing.figures.094": {
+    "message": "図 04・質問 → 検索 → 生成 → 記録 → 改善を単一エンジンで実行"
+  },
+  "marketing.figures.095": {
+    "message": "入力"
+  },
+  "marketing.figures.096": {
+    "message": "取り込みと配信"
+  },
+  "marketing.figures.097": {
+    "message": "数秒で取り込み・1 秒未満で応答"
+  },
+  "marketing.figures.098": {
+    "message": "単一のハイブリッドクエリ"
+  },
+  "marketing.figures.099": {
+    "message": "RRF 統合 → 順位付きコンテキスト"
+  },
+  "marketing.figures.100": {
+    "message": "動的 JSON・エージェントイベント・ツール呼び出し"
+  },
+  "marketing.figures.101": {
+    "message": "AI の観測"
+  },
+  "marketing.figures.102": {
+    "message": "プロンプト・トレース・トークン・コスト・評価"
+  },
+  "marketing.figures.103": {
+    "message": "エコシステム"
+  },
+  "marketing.figures.104": {
+    "message": "LLM SQL・MCP サーバー・API"
+  },
+  "marketing.figures.105": {
+    "message": "エージェントの処理ループ"
+  },
+  "marketing.figures.106": {
+    "message": "質問"
+  },
+  "marketing.figures.107": {
+    "message": "コンテキスト"
+  },
+  "marketing.figures.108": {
+    "message": "AI アプリ"
+  },
+  "marketing.figures.109": {
+    "message": "エージェント・コパイロット・RAG"
+  },
+  "marketing.figures.110": {
+    "message": "プロンプト＋コンテキスト"
+  },
+  "marketing.figures.111": {
+    "message": "コンテキストに基づく回答"
+  },
+  "marketing.figures.112": {
+    "message": "トレース・トークン・コスト"
+  },
+  "marketing.figures.113": {
+    "message": "トレースとフィードバック"
+  },
+  "marketing.figures.114": {
+    "message": "トークン・コスト・評価"
+  },
+  "marketing.figures.115": {
+    "message": "記録"
+  },
+  "marketing.figures.116": {
+    "message": "プロンプトと検索を改善"
+  },
+  "marketing.extra.001": {
+    "message": "Apache Doris を選ぶ場面"
+  },
+  "marketing.extra.002": {
+    "message": "注目の導入事例"
+  },
+  "marketing.extra.003": {
+    "message": "主な違い"
+  },
+  "marketing.extra.004": {
+    "message": "分析を社内レポートから製品そのものに組み込むと、4 つの点が変わります。"
+  },
+  "marketing.extra.005": {
+    "message": "事例 01・JD.com"
+  },
+  "marketing.extra.006": {
+    "message": "事例 02・Xanh SM"
+  },
+  "marketing.extra.007": {
+    "message": "事例 03・ZTO Express"
+  },
+  "marketing.extra.008": {
+    "message": "顧客向けアナリティクスを支える Apache Doris の機能"
+  },
+  "marketing.extra.009": {
+    "message": "ウェアハウスを統合し、高速・リアルタイム・柔軟な拡張を実現すると、4 つの点が変わります。"
+  },
+  "marketing.extra.010": {
+    "message": "事例 01・SF Technology"
+  },
+  "marketing.extra.011": {
+    "message": "事例 02・Xiaomi"
+  },
+  "marketing.extra.012": {
+    "message": "事例 03・Cainiao"
+  },
+  "marketing.extra.013": {
+    "message": "データウェアハウスを支える Apache Doris の機能"
+  },
+  "marketing.extra.014": {
+    "message": "ログ、トレース、メトリクス、AI エージェントのイベントを統合して観測すると、5 つの点が変わります。"
+  },
+  "marketing.extra.015": {
+    "message": "事例 01・PB 規模のログ"
+  },
+  "marketing.extra.016": {
+    "message": "事例 02・ログと時系列データ"
+  },
+  "marketing.extra.017": {
+    "message": "事例 03・Elasticsearch からの移行"
+  },
+  "marketing.extra.018": {
+    "message": "オブザーバビリティを支える Apache Doris の機能"
+  },
+  "marketing.extra.019": {
+    "message": "最新データ、ハイブリッド検索、観測性、統合された分析基盤によって、5 つの点が変わります。"
+  },
+  "marketing.extra.020": {
+    "message": "AI を支える Apache Doris の機能"
+  },
+  "marketing.extra.021": {
+    "message": "テナント A"
+  },
+  "marketing.extra.022": {
+    "message": "埋め込みダッシュボード"
+  },
+  "marketing.extra.023": {
+    "message": "テナント B"
+  },
+  "marketing.extra.024": {
+    "message": "顧客ポータル"
+  },
+  "marketing.extra.025": {
+    "message": "テナント C"
+  },
+  "marketing.extra.026": {
+    "message": "モバイル・Web アプリ"
+  },
+  "marketing.extra.027": {
+    "message": "その他のテナント"
+  },
+  "marketing.extra.028": {
+    "message": "API・データ製品"
+  },
+  "marketing.extra.029": {
+    "message": "リクエスト"
+  },
+  "marketing.extra.030": {
+    "message": "MySQL プロトコル・REST"
+  },
+  "marketing.extra.031": {
+    "message": "テナントを分離"
+  },
+  "marketing.extra.032": {
+    "message": "Workload Group"
+  },
+  "marketing.extra.033": {
+    "message": "配信"
+  },
+  "marketing.extra.034": {
+    "message": "キャッシュ・ポイントクエリ"
+  },
+  "marketing.extra.035": {
+    "message": "破線＝データを直接クエリ"
+  },
+  "marketing.extra.036": {
+    "message": "配信層"
+  },
+  "marketing.extra.037": {
+    "message": "破線＝データを直接クエリ"
+  },
+  "marketing.benchmarkLabels.internal": {
+    "message": "内部テーブル形式"
+  },
+  "marketing.benchmarkLabels.iceberg": {
+    "message": "Iceberg テーブル形式"
+  },
+  "marketing.benchmarkLabels.100m": {
+    "message": "1 億行"
+  },
+  "marketing.benchmarkLabels.10m": {
+    "message": "1,000 万行"
+  },
+  "marketing.benchmarkLabels.1m": {
+    "message": "100 万行"
+  },
+  "marketing.benchmarkLabels.retrieval": {
+    "message": "検索と取得"
+  },
+  "marketing.benchmarkLabels.analytics": {
+    "message": "分析集約"
+  },
+  "marketing.benchmarkLabels.semi": {
+    "message": "半構造化ペイロード"
+  },
+  "marketing.benchmarkLabels.8queries": {
+    "message": "8 クエリ"
+  },
+  "marketing.benchmarkLabels.6queries": {
+    "message": "6 クエリ"
+  },
+  "marketing.benchmarks.failedTooltip": {
+    "message": "失敗"
+  },
+  "marketing.featureTags.ai": {
+    "message": "AI"
+  },
+  "marketing.featureTags.analytics": {
+    "message": "分析"
+  },
+  "marketing.featureTags.authentication": {
+    "message": "認証"
+  },
+  "marketing.featureTags.authorization": {
+    "message": "認可"
+  },
+  "marketing.featureTags.bulk-ingestion": {
+    "message": "一括取り込み"
+  },
+  "marketing.featureTags.caching": {
+    "message": "キャッシュ"
+  },
+  "marketing.featureTags.catalog": {
+    "message": "Catalog"
+  },
+  "marketing.featureTags.cdc": {
+    "message": "CDC"
+  },
+  "marketing.featureTags.coming-soon": {
+    "message": "近日公開"
+  },
+  "marketing.featureTags.data-loading": {
+    "message": "データ取り込み"
+  },
+  "marketing.featureTags.data-management": {
+    "message": "データ管理"
+  },
+  "marketing.featureTags.data-streaming": {
+    "message": "データストリーミング"
+  },
+  "marketing.featureTags.data-types": {
+    "message": "データ型"
+  },
+  "marketing.featureTags.delete": {
+    "message": "削除"
+  },
+  "marketing.featureTags.external-catalog": {
+    "message": "外部 Catalog"
+  },
+  "marketing.featureTags.federation": {
+    "message": "フェデレーション"
+  },
+  "marketing.featureTags.governance": {
+    "message": "ガバナンス"
+  },
+  "marketing.featureTags.iceberg": {
+    "message": "Iceberg"
+  },
+  "marketing.featureTags.ingest": {
+    "message": "取り込み"
+  },
+  "marketing.featureTags.integration": {
+    "message": "連携"
+  },
+  "marketing.featureTags.lakehouse": {
+    "message": "レイクハウス"
+  },
+  "marketing.featureTags.load": {
+    "message": "ロード"
+  },
+  "marketing.featureTags.materialized-view": {
+    "message": "マテリアライズドビュー"
+  },
+  "marketing.featureTags.memory-management": {
+    "message": "メモリ管理"
+  },
+  "marketing.featureTags.metadata": {
+    "message": "メタデータ"
+  },
+  "marketing.featureTags.multi-tenancy": {
+    "message": "マルチテナント"
+  },
+  "marketing.featureTags.observability": {
+    "message": "オブザーバビリティ"
+  },
+  "marketing.featureTags.performance": {
+    "message": "性能"
+  },
+  "marketing.featureTags.query-acceleration": {
+    "message": "クエリ高速化"
+  },
+  "marketing.featureTags.query-engine": {
+    "message": "クエリエンジン"
+  },
+  "marketing.featureTags.ranking": {
+    "message": "ランキング"
+  },
+  "marketing.featureTags.real-time-ingest": {
+    "message": "リアルタイム取り込み"
+  },
+  "marketing.featureTags.reliability": {
+    "message": "信頼性"
+  },
+  "marketing.featureTags.resource-management": {
+    "message": "リソース管理"
+  },
+  "marketing.featureTags.search": {
+    "message": "検索"
+  },
+  "marketing.featureTags.security": {
+    "message": "セキュリティ"
+  },
+  "marketing.featureTags.semi-structured": {
+    "message": "半構造化"
+  },
+  "marketing.featureTags.sql": {
+    "message": "SQL"
+  },
+  "marketing.featureTags.storage": {
+    "message": "ストレージ"
+  },
+  "marketing.featureTags.storage-compute-decoupled": {
+    "message": "ストレージ・コンピュート分離"
+  },
+  "marketing.featureTags.streaming": {
+    "message": "ストリーミング"
+  },
+  "marketing.featureTags.table-design": {
+    "message": "テーブル設計"
+  },
+  "marketing.featureTags.table-format": {
+    "message": "テーブル形式"
+  },
+  "marketing.featureTags.update": {
+    "message": "更新"
+  },
+  "marketing.featureTags.upsert": {
+    "message": "UPSERT"
+  },
+  "marketing.features.hero": {
+    "message": "{doris} の{lineBreak}主要機能と技術"
+  },
+  "marketing.figures.queriedInPlace": {
+    "message": "データを直接クエリ"
+  },
+  "marketing.features.noResults": {
+    "message": "{query} に一致する機能はありません。検索語を広げるか、{clear}してください。"
+  },
+  "marketing.pageLanguage": {
+    "message": "ページの言語"
   }
 }

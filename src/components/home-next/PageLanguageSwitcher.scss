@@ -1,0 +1,30 @@
+.page-language-switcher {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px max(20px, calc((100% - 1180px) / 2));
+    background: var(--brand-ink);
+    color: var(--brand-cream-light);
+
+    a {
+        padding: 6px 12px;
+        border: 1px solid var(--brand-cream-light);
+        border-radius: 6px;
+        color: inherit;
+        font-size: 14px;
+        line-height: 1.5;
+        text-decoration: none;
+
+        &[aria-current='page'], &:hover {
+            background: var(--brand-accent);
+            border-color: var(--brand-accent);
+            color: var(--brand-ink);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--brand-cream-light);
+            outline-offset: 3px;
+        }
+    }
+}

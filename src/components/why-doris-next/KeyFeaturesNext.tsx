@@ -1,7 +1,10 @@
+import Translate, { translate } from '@docusaurus/Translate';
 import React, { JSX, useEffect, useId, useMemo, useState } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import { LayoutNext } from '../home-next/LayoutNext';
-import { keyFeatureCards, type KeyFeatureCard } from '@site/src/generated/key-features';
+import { keyFeatureCards, localizedKeyFeatureCards, type KeyFeatureCard } from '@site/src/generated/key-features';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { featureTagLabels } from './feature-tags';
 import './KeyFeaturesNext.scss';
 
 function useRevealObserver(): void {
@@ -80,19 +83,15 @@ function KeyFeaturesHero(): JSX.Element {
             <div className="kf-next__container">
                 <div className="kf-next__hero-stack">
                     <h1 className="kf-next__hero-title" data-reveal data-reveal-delay="1">
-                        Everything you need to know
-                        <br />
-                        about{' '}
-                        <span className="kf-next__accent">
-                            Apache Doris
-                            <span className="kf-next__bolt-inline">
-                                <BoltIcon size="0.85em" />
-                            </span>
-                        </span>
+                        <Translate id="marketing.features.hero" values={{
+                            lineBreak: <br />,
+                            doris: <span className="kf-next__accent">Apache Doris<span className="kf-next__bolt-inline"><BoltIcon size="0.85em" /></span></span>,
+                        }}>
+                            {'Everything you need to know{lineBreak}about {doris}'}
+                        </Translate>
                     </h1>
                     <p className="kf-next__hero-sub" data-reveal data-reveal-delay="2">
-                        A reference index for the core technologies and key features of Apache Doris
-                    </p>
+                        {translate({ id: "marketing.features.003", message: "A reference index for the core technologies and key features of Apache Doris" })}</p>
                 </div>
             </div>
         </section>
@@ -100,18 +99,21 @@ function KeyFeaturesHero(): JSX.Element {
 }
 
 function GlossarySection(): JSX.Element {
+    const { i18n: { currentLocale } } = useDocusaurusContext();
+    const cards = useMemo(() => (localizedKeyFeatureCards[currentLocale] ?? keyFeatureCards)
+        .map(card => ({ ...card, tags: card.tags.map(tag => featureTagLabels[tag] ?? tag) })), [currentLocale]);
     const [query, setQuery] = useState('');
     const inputId = useId();
     const liveId = useId();
 
     const filtered = useMemo(
         () =>
-            keyFeatureCards.map((entry, index) => ({
+            cards.map((entry, index) => ({
                 entry,
                 originalIdx: index,
-                visible: matches(entry, query),
+                visible: matches(entry, query) || matches(keyFeatureCards[index], query),
             })),
-        [query]
+        [cards, query]
     );
 
     const visibleCount = filtered.filter((item) => item.visible).length;
@@ -141,7 +143,7 @@ function GlossarySection(): JSX.Element {
                             id={inputId}
                             type="search"
                             className="kf-next__search-input"
-                            placeholder="Search features - try “lakehouse”, “MPP”, “index”…"
+                            placeholder={translate({ id: "marketing.features.004", message: "Search features - try “lakehouse”, “MPP”, “index”…" })}
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
                             autoComplete="off"
@@ -153,7 +155,7 @@ function GlossarySection(): JSX.Element {
                                 type="button"
                                 className="kf-next__search-clear"
                                 onClick={() => setQuery('')}
-                                aria-label="Clear search"
+                                aria-label={translate({ id: "marketing.features.005", message: "Clear search" })}
                             >
                                 ×
                             </button>
@@ -164,9 +166,9 @@ function GlossarySection(): JSX.Element {
                         <span className="kf-next__meta-count">
                             <strong>{String(visibleCount).padStart(2, '0')}</strong>
                             {' / '}
-                            {String(keyFeatureCards.length).padStart(2, '0')}
+                            {String(cards.length).padStart(2, '0')}
                         </span>
-                        <span className="kf-next__meta-label">features</span>
+                        <span className="kf-next__meta-label">{translate({ id: "marketing.features.006", message: "features" })}</span>
                     </div>
                 </div>
 
@@ -190,9 +192,8 @@ function GlossarySection(): JSX.Element {
                                 <Link className="kf-next__tile-link" to={entry.href}>
                                     {entry.badge === 'doc' && (
                                         <span className="kf-next__tile-badge-row">
-                                            <span className="kf-next__tile-badge" aria-label="Formal documentation">
-                                                Doc
-                                            </span>
+                                            <span className="kf-next__tile-badge" aria-label={translate({ id: "marketing.features.007", message: "Formal documentation" })}>
+                                                {translate({ id: "marketing.features.008", message: "Doc" })}</span>
                                         </span>
                                     )}
                                     <span className="kf-next__tile-top">
@@ -219,11 +220,14 @@ function GlossarySection(): JSX.Element {
 
                 {visibleCount === 0 && (
                     <div className="kf-next__empty" role="status">
-                        No features match <strong>“{query}”</strong>. Try a broader term, or{' '}
-                        <button type="button" className="kf-next__empty-clear" onClick={() => setQuery('')}>
-                            clear the search
-                        </button>
-                        .
+                        <Translate id="marketing.features.noResults" values={{
+                            query: <strong>“{query}”</strong>,
+                            clear: <button type="button" className="kf-next__empty-clear" onClick={() => setQuery('')}>
+                                {translate({ id: 'marketing.features.011', message: 'clear the search' })}
+                            </button>,
+                        }}>
+                            {'No features match {query}. Try a broader term, or {clear}.'}
+                        </Translate>
                     </div>
                 )}
             </div>
@@ -245,8 +249,8 @@ function KeyFeaturesContent(): JSX.Element {
 export default function KeyFeaturesNext(): JSX.Element {
     return (
         <LayoutNext
-            title="Key Features"
-            description="A reference index for the core technologies and key features of Apache Doris, including real-time analytics, lakehouse federation, and hybrid search."
+            title={translate({ id: "marketing.features.012", message: "Key Features" })}
+            description={translate({ id: "marketing.features.013", message: "A reference index for the core technologies and key features of Apache Doris, including real-time analytics, lakehouse federation, and hybrid search." })}
         >
             <KeyFeaturesContent />
         </LayoutNext>

@@ -6,15 +6,25 @@
 // `optional` locales are still being introduced, so they stay opt-in behind
 // DORIS_ENABLE_<LANG> and must never reach a default build or a deployment by
 // accident. `ordinaryPages` records whether the locale's non-docs pages are
-// translated; when they are not, a link to one has to target the default
-// locale instead of a locale-prefixed page that would only repeat English.
+// translated; `translatedPages` lists exceptions for a docs-first locale.
+// Links to the remaining pages target the default locale instead of a
+// locale-prefixed page that would only repeat English.
 const fs = require('node:fs');
 const path = require('node:path');
 
 const localeRegistry = [
     {code: 'en', label: 'English', htmlLang: 'en-US', optional: false, ordinaryPages: true},
     {code: 'zh-CN', label: '中文', htmlLang: 'zh-Hans-CN', optional: false, ordinaryPages: true},
-    {code: 'ja', label: '日本語', htmlLang: 'ja', optional: true, ordinaryPages: false},
+    {code: 'ja', label: '日本語', htmlLang: 'ja', optional: true, ordinaryPages: false,
+        translatedPages: [
+            '/why-doris/compare',
+            '/why-doris/benchmarks',
+            '/why-doris/key-features',
+            '/use-cases/customer-facing-analytics',
+            '/use-cases/data-warehousing',
+            '/use-cases/observability',
+            '/use-cases/ai',
+        ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
 // ja reads DORIS_ENABLE_JA, a future ko reads DORIS_ENABLE_KO. CI enables
