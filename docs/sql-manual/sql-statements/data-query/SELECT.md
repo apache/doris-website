@@ -81,6 +81,10 @@ SELECT
 
 ### Query the maximum visible partition
 
+:::note
+This syntax targets the development version and requires the corresponding implementation to be merged. It is not available in released 4.x versions.
+:::
+
 `MAX_VISIBLE_PARTITION()` queries the visible partition with the greatest partition key:
 
 ```sql
@@ -99,12 +103,30 @@ Only regular partitions whose visible version is greater than the initial versio
 
 Multi-column partition keys are compared in partition-column order. If no visible partition exists, the query returns an empty result. This syntax supports only internal OLAP tables and asynchronous materialized views, and cannot be combined with `PARTITION(...)` or historical snapshot queries.
 
+It cannot be applied directly to a CTE reference; apply it to the base table inside the CTE definition instead.
+
 :::note
 "Visible" does not mean "non-empty." A partition can still be selected after `DELETE` removes all its rows. `TRUNCATE PARTITION` resets the partition version.
 :::
 
+The following example requires CREATE, INSERT, and SELECT privileges in the current database. The result comes from the visible partition with the greatest upper bound.
+
 ```sql
-SELECT * FROM sales MAX_VISIBLE_PARTITION();
+CREATE TABLE max_partition_example (d DATE, amount INT)
+DUPLICATE KEY(d)
+PARTITION BY RANGE(d) (
+    PARTITION p202601 VALUES LESS THAN ('2026-02-01'),
+    PARTITION p202602 VALUES LESS THAN ('2026-03-01')
+)
+DISTRIBUTED BY HASH(d) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
+INSERT INTO max_partition_example VALUES ('2026-01-15', 10), ('2026-02-15', 20);
+SELECT * FROM max_partition_example MAX_VISIBLE_PARTITION();
+```
+
+```text
+d           amount
+2026-02-15  20
 ```
 
 **Join query:**

@@ -78,6 +78,10 @@ SELECT
 
 ### 查询最大可见分区
 
+:::note
+此语法面向开发版本，需在合入实现后使用，已发布的 4.x 版本暂不支持。
+:::
+
 `MAX_VISIBLE_PARTITION()` 用于查询分区键最大的可见分区：
 
 ```sql
@@ -96,12 +100,30 @@ FROM <table_name> MAX_VISIBLE_PARTITION() [[AS] <table_alias>];
 
 多列分区键按分区列的定义顺序依次比较。如果没有可见分区，查询返回空结果。该语法仅支持内部 OLAP 表和异步物化视图，不能与 `PARTITION(...)` 或历史快照查询同时使用。
 
+不能直接用于 CTE 引用；应将其写在 CTE 定义中对基础表的查询上。
+
 :::note
 “可见”不等同于“非空”。`DELETE` 清空分区后，该分区仍可能被选中；`TRUNCATE PARTITION` 会重置分区版本。
 :::
 
+以下示例需要当前数据库的建表、写入和查询权限。结果来自分区范围上界最大的可见分区。
+
 ```sql
-SELECT * FROM sales MAX_VISIBLE_PARTITION();
+CREATE TABLE max_partition_example (d DATE, amount INT)
+DUPLICATE KEY(d)
+PARTITION BY RANGE(d) (
+    PARTITION p202601 VALUES LESS THAN ('2026-02-01'),
+    PARTITION p202602 VALUES LESS THAN ('2026-03-01')
+)
+DISTRIBUTED BY HASH(d) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
+INSERT INTO max_partition_example VALUES ('2026-01-15', 10), ('2026-02-15', 20);
+SELECT * FROM max_partition_example MAX_VISIBLE_PARTITION();
+```
+
+```text
+d           amount
+2026-02-15  20
 ```
 
 **联接查询：**
