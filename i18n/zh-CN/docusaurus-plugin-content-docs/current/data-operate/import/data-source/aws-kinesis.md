@@ -105,7 +105,7 @@ SELECT id, name FROM kinesis_demo.kinesis_events WHERE id = 1;
 | `kinesis_shards` | 逗号分隔字符串；可选 | 自动发现 Shard | 要消费的 Shard ID。 |
 | `kinesis_shards_pos` | 逗号分隔字符串；可选 | 显式列出 Shard 时，每个 Shard 使用 `LATEST` | 与 `kinesis_shards` 一一对应的位置；每项为 `TRIM_HORIZON`、`LATEST` 或 Sequence Number。指定 Sequence Number 时，从该记录**之后**开始消费。 |
 | `property.kinesis_default_pos` | 字符串；可选 | `LATEST` | 默认起始位置，可为 `TRIM_HORIZON`、`LATEST` 或 Sequence Number。不能与 `kinesis_shards_pos` 同时使用，不支持时间戳字符串。 |
-| 其他 `property.*` | 字符串；可选 | 取决于 BE 选项 | 去除 `property.` 前缀后透传给 BE。例如 `property.aws.profile.name` 选择凭据 Profile，`property.aws.external.id` 提供承担角色的 External ID，后者需要同时配置 Role ARN。仅使用 BE 支持的选项。 |
+| 其他 `property.*` | 字符串；可选 | 取决于 BE 选项 | 去除 `property.` 前缀后透传给 BE。例如 `property.aws.external.id` 提供承担角色的 External ID，需要同时配置 Role ARN。仅使用 BE 支持的选项。 |
 
 ## 查看和管理任务
 

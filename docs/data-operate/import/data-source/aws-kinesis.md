@@ -105,7 +105,7 @@ All properties below belong to the `FROM KINESIS (...)` clause. Omitted optional
 | `kinesis_shards` | Comma-separated string; optional | Automatically discover shards | Shard IDs to consume. |
 | `kinesis_shards_pos` | Comma-separated string; optional | `LATEST` for each explicitly listed shard | Positions corresponding one-to-one to `kinesis_shards`. Each value is `TRIM_HORIZON`, `LATEST`, or a sequence number. A sequence number starts consumption **after** that record. |
 | `property.kinesis_default_pos` | String; optional | `LATEST` | Default start position: `TRIM_HORIZON`, `LATEST`, or a sequence number. Cannot be combined with `kinesis_shards_pos`. Timestamp strings are not supported. |
-| Other `property.*` | String; optional | Depends on the BE option | Forwarded to the BE after stripping `property.`. For example, `property.aws.profile.name` selects a credential profile and `property.aws.external.id` supplies an external ID for role assumption; the latter requires a role ARN. Only use options supported by the BE. |
+| Other `property.*` | String; optional | Depends on the BE option | Forwarded to the BE after stripping `property.`. For example, `property.aws.external.id` supplies an external ID for role assumption and requires a role ARN. Only use options supported by the BE. |
 
 ## Monitor and Manage the Job
 
