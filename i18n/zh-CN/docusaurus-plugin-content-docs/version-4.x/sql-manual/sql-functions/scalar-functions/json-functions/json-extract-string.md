@@ -15,8 +15,11 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
 ```
 
 ## 参数
-- `<json_object>` JSON 类型，要提取的目标参数。
-- `<json_path>` String 类型，要从目标 JSON 中提取目标元素的 JSON 路径。
+
+| 参数 | 描述 |
+| --- | --- |
+| `<json_object>` | 必需。JSON 值，或可转换为 JSON 的合法 JSON 字符串。 |
+| `<json_path>` | 必需。STRING 类型的 JSON 路径；数组遍历使用显式通配符。 |
 
 ## 返回值
 `Nullable(STRING)` 返回提取出的 STRING 值，某些情况会得到 NULL
@@ -39,7 +42,10 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     SELECT json_extract_string('{"id": 123, "name": "doris"}', '$.name');
     ```
     ```text
-    +---------------------------------------------------------------+
+```
+
+```text
++---------------------------------------------------------------+
     | json_extract_string('{"id": 123, "name": "doris"}', '$.name') |
     +---------------------------------------------------------------+
     | doris                                                         |
@@ -99,3 +105,21 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     | null                                                        |
     +-------------------------------------------------------------+
     ```
+
+### 提取数组中的同名字段（Doris 4.0 及后续版本）
+
+使用 `$[*].k1` 显式遍历数组元素；`$.k1` 只访问对象成员，不会隐式遍历数组，因此下面的直接路径返回 SQL `NULL`。没有 `k1` 的数组元素会被忽略。
+
+返回值是包含 JSON 数组文本的 `STRING`，不是 SQL `ARRAY`。
+```sql
+SELECT json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$.k1') AS direct_path,
+       json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$[*].k1') AS all_values;
+```
+
+```text
++-------------+------------------+
+| direct_path | all_values       |
++-------------+------------------+
+| NULL        | ["v1","v3","v4"] |
++-------------+------------------+
+```
