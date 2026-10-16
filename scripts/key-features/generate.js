@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
+const { localeRegistry } = require('../../config/i18n');
 const {
   ensureDirForFile,
   normalizePath,
@@ -105,6 +106,16 @@ function generate({ rootDir = process.cwd(), output = OUTPUT_FILE } = {}) {
   }
 
   const outputPath = path.resolve(rootDir, output);
+  const localizedCards = {};
+  for (const locale of localeRegistry.filter(locale => locale.translatedPages?.includes('/why-doris/key-features'))) {
+    localizedCards[locale.code] = cards.map(({ sourcePath, ...card }) => {
+      const target = path.join(rootDir, 'i18n', locale.code, 'docusaurus-plugin-content-docs', 'current',
+        sourcePath.replace(/^docs\//, ''));
+      if (!fs.existsSync(target)) return card;
+      const { data } = matter(fs.readFileSync(target, 'utf8'));
+      return { ...card, title: data.title || card.title, description: data.description || card.description };
+    });
+  }
   ensureDirForFile(outputPath);
   const file = `/* AUTO-GENERATED FILE. DO NOT EDIT DIRECTLY. */
 export type KeyFeatureCard = {
@@ -121,6 +132,8 @@ export const keyFeatureCards: KeyFeatureCard[] = ${JSON.stringify(
     null,
     2,
   )};
+
+export const localizedKeyFeatureCards: Record<string, KeyFeatureCard[]> = ${JSON.stringify(localizedCards, null, 2)};
 `;
   fs.writeFileSync(outputPath, `${file}\n`, 'utf8');
   return cards;

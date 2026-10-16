@@ -1,3 +1,4 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, ReactNode, useEffect, useRef, useState } from 'react';
 import './CoverFlowSection.scss';
 
@@ -196,7 +197,7 @@ export function CoverFlowSection({ cases, sub }: CoverFlowSectionProps): JSX.Ele
                                 }}
                             >
                                 <span className="cmp-cf__rank">{c.rank}</span>
-                                <span className="cmp-cf__corner">★ FEATURED</span>
+                                <span className="cmp-cf__corner">{translate({ id: "marketing.compare.253", message: "★ FEATURED" })}</span>
                                 <div className="cmp-cf__logo">
                                     <span
                                         className="cmp-cf__logo-mark"
@@ -230,7 +231,7 @@ export function CoverFlowSection({ cases, sub }: CoverFlowSectionProps): JSX.Ele
             </div>
 
             <div className="cmp-cf__nav">
-                <button className="cmp-cf__arrow" onClick={prev} aria-label="Previous case" type="button">
+                <button className="cmp-cf__arrow" onClick={prev} aria-label={translate({ id: "marketing.compare.254", message: "Previous case" })} type="button">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
@@ -246,7 +247,7 @@ export function CoverFlowSection({ cases, sub }: CoverFlowSectionProps): JSX.Ele
                         />
                     ))}
                 </div>
-                <button className="cmp-cf__arrow" onClick={next} aria-label="Next case" type="button">
+                <button className="cmp-cf__arrow" onClick={next} aria-label={translate({ id: "marketing.compare.255", message: "Next case" })} type="button">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                         <polyline points="9 18 15 12 9 6" />
                     </svg>

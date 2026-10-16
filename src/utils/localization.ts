@@ -10,10 +10,18 @@ const fields = (siteConfig.customFields ?? {}) as {
     translatedLocales?: string[];
     defaultLocalePageLocales?: string[];
     defaultLocaleBlogLocales?: string[];
+    translatedPagePaths?: Record<string, string[]>;
 };
 const translatedLocales = fields.translatedLocales ?? [];
 const defaultLocalePageLocales = fields.defaultLocalePageLocales ?? [];
 const defaultLocaleBlogLocales = fields.defaultLocaleBlogLocales ?? [];
+export const translatedPagePaths = fields.translatedPagePaths ?? {};
+
+/** Ordinary pages with an explicit translation, even in a docs-first locale. */
+export function hasTranslatedPage(pathname: string, locale = i18n.currentLocale): boolean {
+    const path = normalizePathname(pathname, i18n.locales).replace(/\/+$/, '');
+    return translatedPagePaths[locale]?.includes(path) ?? false;
+}
 
 /** A locale with per-document translation state, which renders its notices. */
 export function isTranslatedLocale(locale: string): boolean {
@@ -22,8 +30,8 @@ export function isTranslatedLocale(locale: string): boolean {
 
 /**
  * A locale that is still being introduced: its ordinary pages are not
- * translated and render the default locale's content, so a link to one must
- * target the default locale instead of a locale-prefixed page. The same
+ * translated by default, apart from its registered translated pages, so other
+ * ordinary links must target the default locale. The same
  * locales label their embedded UI — the AI widget and the illustration frames.
  */
 export function usesDefaultLocalePages(): boolean {
@@ -61,6 +69,7 @@ export function defaultLocalePath(permalink: string): string {
 
 export function localizedHomeLink(href: string): string {
     if (!usesDefaultLocalePages() || !href.startsWith('/')) return href;
+    if (hasTranslatedPage(href.split(/[?#]/)[0])) return href;
     const prefix = siteConfig.baseUrl.replace(/\/$/, '');
     if (prefix && href.startsWith(`${prefix}/`)) return href;
     // The course hub is an ordinary page; lessons use the docs plugin.

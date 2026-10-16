@@ -3,6 +3,7 @@ import { PageMetadata } from '@docusaurus/theme-common';
 import LayoutProvider from '@theme/Layout/Provider';
 import Footer from '@theme/Footer';
 import { NavbarNext } from './NavbarNext';
+import { PageLanguageSwitcher } from './PageLanguageSwitcher';
 
 interface LayoutNextProps {
     title?: string;
@@ -16,7 +17,10 @@ export function LayoutNext({ title, description, children }: LayoutNextProps): J
         <LayoutProvider>
             <PageMetadata title={title} description={description} />
             <NavbarNext />
-            <main className="home-next-main">{children}</main>
+            <main className="home-next-main">
+                <PageLanguageSwitcher />
+                {children}
+            </main>
             <Footer />
         </LayoutProvider>
     );

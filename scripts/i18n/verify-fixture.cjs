@@ -121,7 +121,7 @@ async function main() {
         sourceHash:hash(relativeSource), targetHash:hash(relativeTarget), sourceTechnicalHash:(await structure(relativeSource,'.mdx')).technicalHash});
     await write('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages}, null, 2));
     // Reuse the production components, including the single alternate emitter.
-    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/theme/SiteMetadata/index.tsx',
+    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/utils/locale.ts', 'src/theme/SiteMetadata/index.tsx',
         'src/theme/DocItem/Metadata/index.tsx', 'src/theme/DocItem/Content/index.tsx',
         'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/LocalizedNotice.module.css']) {
         await write(file, await fs.readFile(path.join(root, file), 'utf8'));

@@ -370,6 +370,9 @@ const config = {
         translatedLocales: MANAGED_LOCALES,
         defaultLocalePageLocales: enabledLocaleRecords()
             .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
+        translatedPagePaths: Object.fromEntries(enabledLocaleRecords()
+            .filter(locale => locale.translatedPages?.length)
+            .map(locale => [locale.code, locale.translatedPages])),
         defaultLocaleBlogLocales: DEFAULT_LOCALE_BLOG_LOCALES,
     },
     future: {

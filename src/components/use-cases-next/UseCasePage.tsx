@@ -1,5 +1,6 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, ReactNode, useEffect, useState } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import { UseCaseIcon, UseCaseIconName } from './UseCaseIcons';
 import './UseCasePage.scss';
@@ -224,11 +225,11 @@ function CaseCard({ study, index }: { study: UseCaseStudy; index: number }): JSX
             ) : null}
             {study.scenario ? (
                 <>
-                    <div className="uc-case__label">Scenario</div>
+                    <div className="uc-case__label">{translate({ id: "marketing.useCases.001", message: "Scenario" })}</div>
                     <p className="uc-case__scenario">{study.scenario}</p>
                 </>
             ) : null}
-            <div className="uc-case__label">Outcome</div>
+            <div className="uc-case__label">{translate({ id: "marketing.useCases.002", message: "Outcome" })}</div>
             <ul className="uc-case__outcomes">
                 {study.outcomes.map(o => (
                     <li key={o}>{o}</li>
@@ -356,8 +357,7 @@ function CapabilitiesSection({
         <Section id="capabilities" tone={tone}>
             <h3 className="uc-kicker">{tech.capabilitiesTitle}</h3>
             <p className="uc-sub">
-                Each capability links to its feature doc. For the engineering detail behind them,
-                read the <Link to="/blog">Apache Doris blog</Link>.
+                {translate({ id: "marketing.useCases.003", message: "Each capability links to its feature doc. For the engineering detail behind them, read the" })}{" "}<Link to="/blog">{translate({ id: "marketing.useCases.004", message: "Apache Doris blog" })}</Link>.
             </p>
             <div className="uc-capabilities" style={cols} data-reveal>
                 {tech.capabilities.map((c, i) => (
@@ -367,7 +367,7 @@ function CapabilitiesSection({
                         <h4 className="uc-tag__title">{c.title}</h4>
                         {c.related ? (
                             <div className="uc-tag__related">
-                                <div className="uc-tag__related-eyebrow">Related use case</div>
+                                <div className="uc-tag__related-eyebrow">{translate({ id: "marketing.useCases.005", message: "Related use case" })}</div>
                                 <Link to={c.related.to} className="uc-tag__related-link">
                                     {c.related.title}
                                 </Link>
@@ -375,7 +375,7 @@ function CapabilitiesSection({
                         ) : null}
                         {c.poweredBy.length > 0 ? (
                             <div className="uc-tag__footer">
-                                <div className="uc-tag__label">Powered by</div>
+                                <div className="uc-tag__label">{translate({ id: "marketing.useCases.006", message: "Powered by" })}</div>
                                 <ul>
                                     {c.poweredBy.map(item => (
                                         <li key={item.label}>
@@ -415,11 +415,9 @@ function CtaSection({ content, tone }: { content: UseCasePageContent; tone: Tone
                     >
                         <path d="M12 4v12m0 0l-5-5m5 5l5-5M4 20h16" />
                     </svg>
-                    Get Started
-                </Link>
+                    {translate({ id: "marketing.useCases.007", message: "Get Started" })}</Link>
                 <button type="button" className="uc-btn uc-btn--paper" disabled aria-disabled="true">
-                    Try a Demo (coming soon)
-                </button>
+                    {translate({ id: "marketing.useCases.008", message: "Try a Demo (coming soon)" })}</button>
             </div>
         </Section>
     );
