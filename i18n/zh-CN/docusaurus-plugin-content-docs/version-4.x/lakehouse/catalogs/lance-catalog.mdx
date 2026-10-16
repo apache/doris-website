@@ -586,7 +586,7 @@ WHERE active
 
 ### 数组标签谓词
 
-Doris 4.1 的数组标签下推更新支持对直接引用的 Lance `list<utf8>` 列执行 `array_contains`，标签必须为非 `NULL` 字符串字面量。较早的构建版本可能仍将这些条件保留在 Doris，请先通过 `EXPLAIN` 确认。`NULL` 数组仍返回 `NULL`，空数组不匹配，重复标签不会导致结果行重复。
+从 Apache Doris 4.1.5 开始，数组标签下推支持对直接引用的 Lance `list<utf8>` 列执行 `array_contains`，标签必须为非 `NULL` 字符串字面量。较早的构建版本可能仍将这些条件保留在 Doris，请先通过 `EXPLAIN` 确认。`NULL` 数组仍返回 `NULL`，空数组不匹配，重复标签不会导致结果行重复。
 
 对于包含 `id` 列和 `list<utf8>` 类型 `labels` 列的 Lance 表：
 

@@ -586,7 +586,7 @@ WHERE active
 
 ### Array Label Predicates
 
-The array-label pushdown update for Doris 4.1 supports `array_contains` on a direct Lance `list<utf8>` column with a non-`NULL` string literal. Older builds may keep these conditions in Doris; check `EXPLAIN` before relying on this optimization. A `NULL` array still produces `NULL`, an empty array does not match, and duplicate labels do not duplicate result rows.
+Starting from Apache Doris 4.1.5, array-label pushdown supports `array_contains` on a direct Lance `list<utf8>` column with a non-`NULL` string literal. Older builds may keep these conditions in Doris; check `EXPLAIN` before relying on this optimization. A `NULL` array still produces `NULL`, an empty array does not match, and duplicate labels do not duplicate result rows.
 
 For a Lance table with an `id` column and a `labels` column of type `list<utf8>`:
 
