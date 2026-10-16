@@ -31,7 +31,7 @@ SET GLOBAL enable_file_scanner_v2 = false;
 
 | 类别 | 变量 |
 | --- | --- |
-| 新增 | `enable_paimon_rust_reader`、`enable_hyperscan_fallback` |
+| 新增 | `enable_hyperscan_fallback` |
 | 默认值变更 | `enable_file_cache`：`false` → `true` |
 | 行为修正 | `profile_level` 随请求转发到 Master FE；`return_object_data_as_binary` 纳入 SQL Cache 结果区分 |
 
@@ -54,16 +54,6 @@ SET GLOBAL enable_file_scanner_v2 = false;
 | 版本 | 4.1.5 默认值变更 |
 
 查询是否使用 File Cache。BE 的同名配置也必须开启；如果 BE 配置为 `false`，仅开启会话变量不会使用缓存。4.1.5 同时将两者的默认值改为 `true`。升级后应检查已有显式配置及持久化的全局变量，相关路径、容量与限制见 [File Cache](../../compute-storage-decoupled/file-cache/file-cache.md)。
-
-### `enable_paimon_rust_reader`
-
-| 项 | 值 |
-| --- | --- |
-| 类型 | Boolean |
-| 默认值 | `false` |
-| 版本 | 4.1.5 新增 |
-
-允许符合条件的 Paimon 逻辑 Split 使用 Rust Reader，优先于原有 JNI / C++ 逻辑读取路径。需要 `enable_file_scanner_v2=true`，且所有候选 BE 都通过心跳声明支持该 Reader。不满足数据类型、认证或 Split 能力检查时回退到 JNI；可直接读取原始 Parquet / ORC 文件的 Split 仍优先走原生文件读取路径。详见 [Paimon Catalog](../../lakehouse/catalogs/paimon-catalog.mdx)。
 
 ### `enable_file_scanner_v2`
 

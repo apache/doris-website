@@ -105,3 +105,6 @@ release.
 29. **Preserve old heading anchors when normalizing SQL function sections.** Keep compatibility
     anchors for names such as `功能`, `使用说明` and `举例`; also validate new fragments with the
     repository's actual Docusaurus slugger.
+30. **Keep the user's publication decisions across review rounds.** Preserve explicitly requested
+    support-version markers, even when backported code exists earlier. When a topic is withdrawn,
+    remove its new session-variable entries and cross-references, and update the audit and PR scope.

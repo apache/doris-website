@@ -332,32 +332,6 @@ ORDER BY entry_name;
 
 * [ORC](../file-formats/orc.md)
 
-## Rust Reader（4.1.5 起）
-
-自 4.1.5 版本起，可通过会话变量 `enable_paimon_rust_reader` 为符合条件的 Paimon 逻辑 Split 启用 Rust Reader。默认 `false`，不改变原有读取路径。它需要 File Scanner V2，并在下发前检查所有候选 BE 的能力：
-
-```sql
-SET enable_file_scanner_v2 = true;
-SET enable_paimon_rust_reader = true;
-SELECT * FROM paimon_ctl.db1.tbl1 LIMIT 10;
-```
-
-将表名替换为已配置的 Paimon 表。查询仍返回表中的正常记录；开启变量不保证每个 Split 都使用 Rust Reader。可直接读取原始 Parquet / ORC 文件的 Split 仍优先使用原生文件 Reader；逻辑 Split 未通过 Rust 能力检查时回退到 JNI。
-
-当前 Rust 路径支持经校验的 S3 / S3A / OSS，以及无需 Catalog 认证配置的 HDFS 和本地文件系统。增量扫描、按用户认证、REST Token、未支持的存储凭证方式、部分 Deletion Vector / 合并场景和未支持的数据类型等仍走 JNI。所有候选 BE 都必须通过心跳声明支持 Rust Reader，因此滚动升级期间可能仍回退。
-
-应通过实际投影列的查询检查 Profile；`COUNT(*)` 可能直接读取元数据，不能用来确认 Reader。使用 Rust Reader 时可见以下 `PaimonRustReader` Profile：
-
-| 字段 | 含义 |
-| --- | --- |
-| `OpenSplitTime` | 打开 Split 的耗时 |
-| `ReadBatchTime` | 从 Rust Reader 读取批次的耗时 |
-| `ArrowToBlockTime` | Arrow 批次转换为 Doris Block 的耗时 |
-| `RustPredicatesInput` / `RustPredicatesConverted` / `RustPredicatesApplied` | 输入、成功转换和实际应用的谓词数量 |
-| `RustRuntimeFiltersInput` / `RustRuntimeFiltersApplied` | 输入与实际应用的 Runtime Filter 数量 |
-
-需要与原有逻辑 Reader 对比时，在同一会话设置 `enable_paimon_rust_reader=false` 后重新执行。变量参考见[会话变量列表](../../sql-manual/basic-element/session-variables.md#enable_paimon_rust_reader)。
-
 ## 列类型映射
 
 | Paimon Type                        | Doris Type    | Comment                                |

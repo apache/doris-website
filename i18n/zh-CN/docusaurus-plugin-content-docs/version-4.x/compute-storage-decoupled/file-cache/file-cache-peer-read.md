@@ -15,7 +15,7 @@ Peer 读是存算分离架构下 File Cache 的未命中处理策略：本 BE �
 
 :::caution 实验性功能
 
-跨计算组 Peer 读自 Doris 4.1.4 起作为实验性功能提供，默认关闭。需要使用时，在相关 BE 上显式设置 `enable_cache_read_from_peer = true`。
+跨计算组 Peer 读自 Doris 4.2.0 起作为实验性功能提供，默认关闭。需要使用时，在相关 BE 上显式设置 `enable_cache_read_from_peer = true`。
 
 :::
 
@@ -83,7 +83,7 @@ Peer 读是存算分离架构下 File Cache 的未命中处理策略：本 BE �
 - 某个 tablet 连续 `peer_all_miss_cooldown_threshold`（默认 5）次"所有候选节点都没有数据"后进入冷却期，冷却 `peer_all_miss_cooldown_duration_s`（默认 300 秒）期间直接走对象存储。
 - 候选节点信息 `peer_candidate_expiry_s`（默认 3600 秒）内没有被使用就从内存清理，下次未命中时重新向 FE 拉取。
 
-自 4.1.5 版本起，新增跨 Tablet 共享的 Peer 地址级熔断：同一地址连续连接或 RPC 失败达到 `cache_peer_read_failure_threshold`（默认 `3`，最小按 `1` 处理）后，暂停向它发送请求 `cache_peer_read_circuit_open_seconds` 秒（默认 `30`，负值按 `0` 处理），到期后仅允许一次恢复探测。这与 Tablet 候选节点剔除、所有候选未命中的冷却机制分别生效。
+自 4.2.0 版本起，支持跨 Tablet 共享的 Peer 地址级熔断：同一地址连续连接或 RPC 失败达到 `cache_peer_read_failure_threshold`（默认 `3`，最小按 `1` 处理）后，暂停向它发送请求 `cache_peer_read_circuit_open_seconds` 秒（默认 `30`，负值按 `0` 处理），到期后仅允许一次恢复探测。这与 Tablet 候选节点剔除、所有候选未命中的冷却机制分别生效。
 
 ### 跨计算组回源填充
 
