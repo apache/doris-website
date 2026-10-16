@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 `stack` separates a list of expressions into a fixed number of rows. The expressions are arranged in row-major order, which is compatible with the Spark and Hive `stack` functions. Use `stack` with [`LATERAL VIEW`](../../../query-data/lateral-view.md) to add the generated columns to each input row.
@@ -21,13 +25,13 @@ STACK(<num_rows>, <expr1> [, <expr2> ...])
 | Parameter | Description |
 |-----------|-------------|
 | `<num_rows>` | A positive constant integer that specifies the number of rows to generate. Constant expressions, such as `3 - 1`, are supported. |
-| `<expr1> [, <expr2> ...]` | Expressions to distribute across the generated rows. Expressions in the same output column must have compatible types. Expressions can reference columns from the input row. |
+| `<expr1> [, <expr2> ...]` | Expressions to distribute across the generated rows. Non-NULL expressions in the same output column must have exactly the same type; use explicit casts when needed. Expressions can reference columns from the input row. |
 
 ## Return Value
 
-Returns `<num_rows>` rows. The number of output columns is the ceiling of the number of expressions divided by `<num_rows>`. Each output column has the common type of the expressions assigned to that column; a column containing only `NULL` expressions has the `NULL` type. Values are assigned row by row from left to right. If the final row does not contain enough expressions, the missing values are filled with `NULL`.
+Returns `<num_rows>` rows. The number of output columns is the ceiling of the number of expressions divided by `<num_rows>`. Each output column has the type shared by its non-NULL expressions; a column containing only `NULL` expressions has the `NULL` type. Values are assigned row by row from left to right. If the final row does not contain enough expressions, the missing values are filled with `NULL`.
 
-When `stack` is used with a single expression per output column, the table function returns one column. When multiple output columns are produced, specify aliases in the `LATERAL VIEW` clause to name them.
+When multiple output columns are produced, specify aliases in the `LATERAL VIEW` clause to name them.
 
 ## Usage Notes
 
@@ -118,3 +122,21 @@ ORDER BY id, c1, c2;
 Expressions are evaluated for each input row. In this example, `a` and `b` form one output column and `s1` and `s2` form the other. If expressions assigned to one output column have incompatible types, the query returns an analysis error.
 
 `NULL` expressions can be used with values of another type; the `NULL` values are padded or preserved in the result.
+
+Explicit NULL expressions are preserved:
+
+```sql
+SELECT c1
+FROM (SELECT 1) t
+LATERAL VIEW stack(2, 1, NULL) s AS c1
+ORDER BY c1;
+```
+
+```text
++------+
+| c1   |
++------+
+| NULL |
+|    1 |
++------+
+```
