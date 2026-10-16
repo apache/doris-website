@@ -26,15 +26,19 @@ under the License.
 -->
 
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 判断一个几何图形（shape1）是否完全位于另一个几何图形（shape2）的内部。若 shape1 的所有点都位于 shape2 内部，则返回 1；否则返回 0。
 
 `ST_WITHIN(shape1, shape2)` 在逻辑上等价于 `ST_CONTAINS(shape2, shape1)`。
 
-- 对于点：点必须位于多边形内部或边界上。
-- 对于线：线的所有点必须位于多边形内部或边界上。
-- 对于多边形：内部多边形必须完全位于外部多边形的内部（边界可以重叠）。
+- 对于点：点必须位于多边形内部。多边形边界上的点返回 0。
+- 对于线：包含关系与反转参数后的 `ST_CONTAINS` 相同，遵循球面几何规则。
+- 对于多边形：内部多边形必须被外部多边形包含，遵循 `ST_CONTAINS` 使用的 S2 包含规则。
 
 ## 语法
 
@@ -46,10 +50,12 @@ ST_WITHIN( <shape1>, <shape2>)
 
 | 参数       | 说明                     |
 |----------|------------------------|
-| `<shape1>` | 用于判断是否在另一个图形内部的几何图形，支持 Point、Line、Polygon 等类型。 |
-| `<shape2>` | 用于判断是否包含 shape1 的几何图形，支持 Polygon 类型。 |
+| `<shape1>` | 由 `ST_Point`、`ST_GeometryFromText` 等空间构造函数返回的编码几何值，类型为 `VARCHAR`。 |
+| `<shape2>` | 包含图形的编码值，类型为 `VARCHAR`。Polygon、MultiPolygon 支持 Point、LineString、Polygon、MultiPolygon 输入；Circle 只支持 Point 输入。其他合法图形组合返回 0。 |
 
 ## 返回值
+
+返回 `BOOLEAN`，在 SQL 结果中显示为 1 或 0。WKT 文本必须先通过空间构造函数转换。
 
 返回 1：shape1 完全位于 shape2 内部。
 
@@ -61,7 +67,7 @@ ST_WITHIN 存在以下边缘情况：
 - 若输入的几何图形无效（如自相交的多边形），返回 NULL。
 - 若 shape1 部分位于 shape2 的边界上，但部分在 shape2 外部，返回 0。
 
-## 举例
+## 示例 {#举例}
 
 点在多边形内部
 

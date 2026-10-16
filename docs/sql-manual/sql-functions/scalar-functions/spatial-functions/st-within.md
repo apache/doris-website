@@ -6,15 +6,19 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Determines whether one geometric shape (shape1) is completely inside another geometric shape (shape2). Returns 1 if shape1 is entirely within shape2; otherwise, returns 0.
 
 `ST_WITHIN(shape1, shape2)` is logically equivalent to `ST_CONTAINS(shape2, shape1)`.
 
-- For points: The point must lie inside or on the boundary of the polygon.
-- For lines: All points of the line must lie inside or on the boundary of the polygon.
-- For polygons: The inner polygon must be entirely inside the outer polygon (boundaries can overlap).
+- For points: The point must lie inside the polygon. A point on a polygon boundary returns 0.
+- For lines: Containment follows the same spherical geometry rules as `ST_CONTAINS` with the arguments reversed.
+- For polygons: The inner polygon must be contained by the outer polygon, according to the S2 containment rules used by `ST_CONTAINS`.
 
 ## Syntax
 
@@ -24,12 +28,14 @@ ST_WITHIN( <shape1>, <shape2>)
 
 ## Parameters
 
-| Parameters       | Description                     |
+| Parameter        | Description                     |
 |----------|------------------------|
-| `<shape1>` | The geometric shape to check if it is inside the other shape, supporting types such as Point, Line, Polygon, etc. |
-| `<shape2>` | The geometric shape used to check if it contains shape1, supporting the Polygon type. |
+| `<shape1>` | An encoded geometry value (`VARCHAR`) returned by a spatial constructor such as `ST_Point` or `ST_GeometryFromText`. |
+| `<shape2>` | An encoded containing geometry (`VARCHAR`). Polygon and MultiPolygon support Point, LineString, Polygon, and MultiPolygon inputs; Circle supports Point inputs. Other valid shape combinations return 0. |
 
 ## Return Value
+
+Returns `BOOLEAN`, displayed as 1 or 0 in SQL results. Raw WKT must first be converted with a spatial constructor.
 
 - 1: Indicates that shape1 is completely inside shape2.
 - 0: Indicates that shape1 is not inside shape2.
