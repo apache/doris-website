@@ -471,6 +471,10 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 ### 使用 lance_index_entries 查看物理索引条目
 
+:::note
+`lance_index_entries` 自 Apache Doris 4.1.5 起支持。
+:::
+
 `SHOW INDEX` 提供 Lance 表索引的逻辑视图：索引名、被索引列、索引类型和属性，使用固定的 MySQL 风格 13 列结果集。索引条目的物理身份（UUID 和数据集版本）无法放入该固定 Schema，因此由只读表函数 `lance_index_entries` 提供物理视图。它为最新数据集快照中记录的每个物理索引条目返回一行：
 
 ```sql
