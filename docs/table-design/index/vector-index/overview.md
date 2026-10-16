@@ -608,3 +608,6 @@ See the [Performance Tuning](#performance-tuning) section. Key points:
 - Keep the ANN index resident in memory.
 - `parallel_pipeline_task_num = 1`.
 - Disable the query profile.
+
+
+For the pending development mode that scores filtered rows with PQ codes, see [PQ On-Disk](./pq-on-disk.md). This feature is not released.

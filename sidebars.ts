@@ -278,6 +278,7 @@ const sidebars: SidebarsConfig = {
                             link: {type: 'doc', id: 'table-design/index/vector-index/overview'},
                             items: [
                                 'table-design/index/vector-index/practical-guide',
+                                'table-design/index/vector-index/pq-on-disk',
                                 'table-design/index/vector-index/hnsw',
                                 'table-design/index/vector-index/ivf',
                                 'table-design/index/vector-index/ivf-on-disk',
