@@ -194,7 +194,7 @@ ORDER BY l2_distance_approximate(embedding, CAST(? AS ARRAY<FLOAT>)) ASC
 LIMIT 20;
 ```
 
-如果使用内积，则按降序排序：
+如果使用内积，需要先单独创建 `metric_type="inner_product"` 的索引表，再按降序排序。本页使用 L2 索引的表不提供内积索引：
 
 ```sql
 SELECT photo_id
@@ -223,8 +223,8 @@ ORDER BY photo_id;
 | `index_type` | 是 | - | 必须为 `pq_on_disk`。 |
 | `metric_type` | 是 | - | `l2_distance` 或 `inner_product`。 |
 | `dim` | 是 | - | 向量维度。 |
-| `pq_m` | 是 | - | PQ 子量化器数量，必须能整除 `dim`。 |
-| `pq_nbits` | 否 | `8` | 每个子量化编码的 bit 数。 |
+| `pq_m` | 是 | - | 正整数 PQ 子量化器数量，必须能整除正整数向量维度 `dim`。 |
+| `pq_nbits` | 否 | `8` | 每个子量化编码的 bit 数，必须为 `1` 到 `24` 的整数。过大的值会显著增加训练和码本成本。 |
 
 ### 训练要求
 
