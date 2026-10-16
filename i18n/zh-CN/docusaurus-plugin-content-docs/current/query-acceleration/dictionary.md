@@ -199,6 +199,10 @@ PROPERTIES(
 
 ### 布局类型
 
+:::note
+FLAT 布局依赖尚未合入的开发版本实现 apache/doris#67116；已发布 4.x 版本暂不支持。
+:::
+
 目前支持三种布局类型：
 
 | 布局类型 | 适用场景 | 说明 |
@@ -696,11 +700,15 @@ FLAT 布局直接将 Key 值作为数组下标，适用于取值密集、范围�
 
 ```sql
 -- 创建源数据表（Key 列必须为整数列）
+CREATE DATABASE IF NOT EXISTS flat_dict_example;
+USE flat_dict_example;
+
 CREATE TABLE status_info (
     status_code INT NOT NULL,
     status_name VARCHAR(32) NOT NULL
 ) ENGINE=OLAP
-DISTRIBUTED BY HASH(status_code) BUCKETS 1;
+DISTRIBUTED BY HASH(status_code) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
 -- 插入数据。Key 可以稀疏（此处为 0、1、100），
 -- 但必须为非负数且小于 500000。
@@ -720,10 +728,10 @@ PROPERTIES('data_lifetime' = '600');
 
 -- 查询存在的 Key（0、1、100）以及不存在的 Key（5，返回 null）
 SELECT
-    dict_get("test_refresh_dict.status_dict", "status_name", 0)   AS s0,
-    dict_get("test_refresh_dict.status_dict", "status_name", 1)   AS s1,
-    dict_get("test_refresh_dict.status_dict", "status_name", 100) AS s100,
-    dict_get("test_refresh_dict.status_dict", "status_name", 5)   AS s_missing;
+    dict_get("flat_dict_example.status_dict", "status_name", 0)   AS s0,
+    dict_get("flat_dict_example.status_dict", "status_name", 1)   AS s1,
+    dict_get("flat_dict_example.status_dict", "status_name", 100) AS s100,
+    dict_get("flat_dict_example.status_dict", "status_name", 5)   AS s_missing;
 ```
 
 ```text

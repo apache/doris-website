@@ -199,13 +199,17 @@ There must be at least one `<key_column>` and one `<value_column>`. The `<key_co
 
 ### Layout Types
 
+:::note
+The FLAT layout requires the pending development implementation in apache/doris#67116. Released 4.x versions do not support FLAT.
+:::
+
 Three layout types are currently supported:
 
 | Layout Type | Use Case | Description |
 | --- | --- | --- |
 | `HASH_MAP` | General key-value lookup scenarios | Hash-table-based implementation |
 | `IP_TRIE` | IP address lookups | Trie-based implementation, optimized specifically for IP address lookups. The key column must be IP addresses in CIDR notation, and queries are matched against the CIDR notation |
-| `FLAT` | Key-value lookups on dense, small-range non-negative integer keys | Array-based implementation that uses the key directly as an array index, offering the fastest lookups and the lowest memory overhead. The key column must be a single integer column, and all keys must be non-negative and smaller than 500000 |
+| `FLAT` | Key-value lookups on dense, small-range non-negative integer keys | Array-based implementation that uses the key directly as an array index, avoiding hash lookup overhead for dense keys. The key column must be a single integer column, and all keys must be non-negative and smaller than 500000 |
 
 ### Properties
 
@@ -494,7 +498,7 @@ To view the column definitions of a dictionary, use `DESC DICTIONARY`. For examp
 
     - Use the HASH_MAP layout for general scenarios.
     - Use the IP_TRIE layout for IP address range matching scenarios.
-    - Use the FLAT layout when the key is a single non-negative integer within a small, dense range (below 500000). It provides the fastest lookups and the lowest memory footprint, but a sparse or large-valued key range wastes memory or is rejected, in which case HASH_MAP is the better choice.
+    - Use the FLAT layout when the key is a single non-negative integer within a small, dense range (below 500000). It avoids hashing overhead for dense keys, but a sparse or large-valued key range wastes memory or is rejected, in which case HASH_MAP is the better choice.
 
 3. **State management**:
 
@@ -696,11 +700,15 @@ The FLAT layout uses the key value directly as an array index. It is ideal for a
 
 ```sql
 -- Create the source data table (key must be an integer column)
+CREATE DATABASE IF NOT EXISTS flat_dict_example;
+USE flat_dict_example;
+
 CREATE TABLE status_info (
     status_code INT NOT NULL,
     status_name VARCHAR(32) NOT NULL
 ) ENGINE=OLAP
-DISTRIBUTED BY HASH(status_code) BUCKETS 1;
+DISTRIBUTED BY HASH(status_code) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
 
 -- Insert data. Keys may be sparse (here 0, 1, 100), but must be
 -- non-negative and smaller than 500000.
@@ -720,10 +728,10 @@ PROPERTIES('data_lifetime' = '600');
 
 -- Look up present keys (0, 1, 100) and a missing key (5, returns null)
 SELECT
-    dict_get("test_refresh_dict.status_dict", "status_name", 0)   AS s0,
-    dict_get("test_refresh_dict.status_dict", "status_name", 1)   AS s1,
-    dict_get("test_refresh_dict.status_dict", "status_name", 100) AS s100,
-    dict_get("test_refresh_dict.status_dict", "status_name", 5)   AS s_missing;
+    dict_get("flat_dict_example.status_dict", "status_name", 0)   AS s0,
+    dict_get("flat_dict_example.status_dict", "status_name", 1)   AS s1,
+    dict_get("flat_dict_example.status_dict", "status_name", 100) AS s100,
+    dict_get("flat_dict_example.status_dict", "status_name", 5)   AS s_missing;
 ```
 
 ```text
@@ -766,7 +774,7 @@ Use IP_TRIE when you need to perform IP range matching queries based on CIDR. Fo
 
 **Q4: When should you choose FLAT over HASH_MAP?**
 
-Choose FLAT when the key is a single non-negative integer whose values are dense and confined to a small range (below 500000), such as status codes or enumerated dimension IDs. FLAT stores values in an array indexed directly by the key, which gives the fastest lookups and the lowest memory overhead. If the key is non-integer, negative, sparse, or larger than 500000, use HASH_MAP instead.
+Choose FLAT when the key is a single non-negative integer whose values are dense and confined to a small range (below 500000), such as status codes or enumerated dimension IDs. FLAT stores values in an array indexed directly by the key, which avoids hashing overhead for dense keys. If the key is non-integer, negative, sparse, or greater than or equal to 500000, use HASH_MAP instead.
 
 **Q5: What should you do if a dictionary uses too much memory?**
 
