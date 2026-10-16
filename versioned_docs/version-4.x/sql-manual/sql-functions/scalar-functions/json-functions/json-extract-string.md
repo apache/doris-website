@@ -40,7 +40,10 @@ If you want to check whether an element is null, please use the function  [`JSON
     SELECT json_extract_string('{"id": 123, "name": "doris"}', '$.name');
     ```
     ```text
-    +---------------------------------------------------------------+
+```
+
+```text
++---------------------------------------------------------------+
     | json_extract_string('{"id": 123, "name": "doris"}', '$.name') |
     +---------------------------------------------------------------+
     | doris                                                         |
@@ -106,7 +109,6 @@ If you want to check whether an element is null, please use the function  [`JSON
 Use `$[*].k1` to traverse array elements explicitly. `$.k1` only accesses object members and does not implicitly traverse an array, so the direct path below returns SQL `NULL`. Array elements without `k1` are omitted from the matches.
 
 The result is a `STRING` containing JSON array text, rather than a SQL `ARRAY`.
-
 ```sql
 SELECT json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$.k1') AS direct_path,
        json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$[*].k1') AS all_values;

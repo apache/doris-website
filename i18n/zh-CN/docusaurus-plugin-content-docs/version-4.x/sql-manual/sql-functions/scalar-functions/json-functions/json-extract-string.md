@@ -39,7 +39,10 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     SELECT json_extract_string('{"id": 123, "name": "doris"}', '$.name');
     ```
     ```text
-    +---------------------------------------------------------------+
+```
+
+```text
++---------------------------------------------------------------+
     | json_extract_string('{"id": 123, "name": "doris"}', '$.name') |
     +---------------------------------------------------------------+
     | doris                                                         |
@@ -105,7 +108,6 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
 使用 `$[*].k1` 显式遍历数组元素；`$.k1` 只访问对象成员，不会隐式遍历数组，因此下面的直接路径返回 SQL `NULL`。没有 `k1` 的数组元素会被忽略。
 
 返回值是包含 JSON 数组文本的 `STRING`，不是 SQL `ARRAY`。
-
 ```sql
 SELECT json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$.k1') AS direct_path,
        json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$[*].k1') AS all_values;

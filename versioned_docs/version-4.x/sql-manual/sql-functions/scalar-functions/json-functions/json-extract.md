@@ -21,6 +21,8 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
 - `<path2>` Multiple path values can be extracted from the JSON object.
 
 ## Return Value
+
+Returns SQL `NULL` if any argument is `NULL` or no path matches.
 - `Nullable(JSON)`: Returns the JSON element pointed to by `<path>`. If multiple results are matched, they will be returned as a JSON array.
 
 ## Usage Notes
@@ -45,8 +47,11 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
   ```sql
   SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k1');
   ```
-  ```
-  +-----------------------------------------------+
+  ```text
+```
+
+```text
++-----------------------------------------------+
   | JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k1') |
   +-----------------------------------------------+
   | "v31"                                         |
@@ -57,7 +62,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select JSON_EXTRACT(null, '$.k1');
     ```
-    ```
+    ```text
     +----------------------------+
     | JSON_EXTRACT(null, '$.k1') |
     +----------------------------+
@@ -68,7 +73,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', NULL);
     ```
-    ```
+    ```text
     +---------------------------------------------+
     | JSON_EXTRACT('{"k1":"v31","k2":300}', NULL) |
     +---------------------------------------------+
@@ -79,7 +84,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     SELECT JSON_EXTRACT('{"k1":"v31","k2":{"sub_key": 1234.56}}', '$.k2.sub_key');
     ```
-    ```
+    ```text
     +------------------------------------------------------------------------+
     | JSON_EXTRACT('{"k1":"v31","k2":{"sub_key": 1234.56}}', '$.k2.sub_key') |
     +------------------------------------------------------------------------+
@@ -90,7 +95,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     SELECT JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$[2]');
     ```
-    ```
+    ```text
     +----------------------------------------------------------------------+
     | JSON_EXTRACT(json_array("abc", 123, cast(now() as string)), '$[2]') |
     +----------------------------------------------------------------------+
@@ -101,7 +106,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     SELECT JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k3');
     ```
-    ```
+    ```text
     +-----------------------------------------------+
     | JSON_EXTRACT('{"k1":"v31","k2":300}', '$.k3') |
     +-----------------------------------------------+
@@ -112,7 +117,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id', '$.not_exists');
     ```
-    ```
+    ```text
     +--------------------------------------------------------------------------------+
     | JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.name', '$.id', '$.not_exists') |
     +--------------------------------------------------------------------------------+
@@ -123,7 +128,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     SELECT json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name');
     ```
-    ```
+    ```text
     +-----------------------------------------------------------------+
     | json_extract('{"id": 123, "name": "doris"}', '$.aaa', '$.name') |
     +-----------------------------------------------------------------+
@@ -134,7 +139,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.k1', '$.k2', '$.not_exists');
     ```
-    ```
+    ```text
     +------------------------------------------------------------------------------+
     | JSON_EXTRACT('{"id": 123, "name": "doris"}', '$.k1', '$.k2', '$.not_exists') |
     +------------------------------------------------------------------------------+
@@ -146,7 +151,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select json_extract('{"k": [1,2,3,4,5]}', '$.k[*]');
     ```
-    ```
+    ```text
     +----------------------------------------------+
     | json_extract('{"k": [1,2,3,4,5]}', '$.k[*]') |
     +----------------------------------------------+
@@ -156,7 +161,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select json_extract('{"k": [1,2,3,4,5], "k2": "abc", "k3": {"k4": "v4"}}', '$.*', '$.k3.k4');
     ```
-    ```
+    ```text
     +---------------------------------------------------------------------------------------+
     | json_extract('{"k": [1,2,3,4,5], "k2": "abc", "k3": {"k4": "v4"}}', '$.*', '$.k3.k4') |
     +---------------------------------------------------------------------------------------+
@@ -179,7 +184,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select JSON_EXTRACT('{"id": 123, "name": null}', '$.name') v, JSON_EXTRACT('{"id": 123, "name": null}', '$.name') is null v2;
     ```
-    ```
+    ```text
     +------+------+
     | v    | v2   |
     +------+------+
@@ -191,7 +196,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k');
     ```
-    ```
+    ```text
     +--------------------------------------------------+
     | json_extract('[{"k":1},{"k":2},{"k":3}]', '$.k') |
     +--------------------------------------------------+
@@ -202,7 +207,7 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
     ```sql
     select json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k');
     ```
-    ```
+    ```text
     +-----------------------------------------------------+
     | json_extract('[{"k":1},{"k":2},{"k":3}]', '$[*].k') |
     +-----------------------------------------------------+
@@ -214,7 +219,6 @@ JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
 ### Extracting the same field from array elements (Doris 4.0 and later)
 
 Use `$[*].k1` to traverse array elements explicitly. `$.k1` only accesses object members and does not implicitly traverse an array, so the direct path below returns SQL `NULL`. Array elements without `k1` are omitted from the matches.
-
 ```sql
 SELECT json_extract('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$.k1') AS direct_path,
        json_extract('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$[*].k1') AS all_values;
