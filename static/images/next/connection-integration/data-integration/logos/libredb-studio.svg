@@ -13,17 +13,17 @@
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
-  
+
   <!-- Background Shape -->
   <path d="M100 20L169.282 60V140L100 180L30.718 140V60L100 20Z" fill="url(#logo-gradient)" fill-opacity="0.05" stroke="url(#logo-gradient)" stroke-width="1.5"/>
-  
+
   <!-- Database Layers (De-emphasized) -->
   <g opacity="0.3">
     <rect x="70" y="80" width="60" height="10" rx="2" fill="url(#logo-gradient)" />
     <rect x="70" y="95" width="60" height="10" rx="2" fill="url(#logo-gradient)" />
     <rect x="70" y="110" width="60" height="10" rx="2" fill="url(#logo-gradient)" />
   </g>
-  
+
   <!-- Coding Brackets (Emphasized) -->
   <g filter="url(#glow)">
     <path d="M55 70L35 100L55 130" stroke="url(#code-gradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
