@@ -10,6 +10,8 @@
 
 The MAX function returns the maximum non-NULL value of the expression.
 
+Version difference: In the Doris 4.1 series since 4.1.5, and in Doris 4.2 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0 and Doris 4.1 before 4.1.5, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
+
 ## Syntax
 
 ```sql
@@ -19,7 +21,7 @@ MAX(<expr>)
 ## Parameters
 
 | Parameter | Description |
-| -- | -- |
+| --- | --- |
 | `<expr>` | The expression to get the value. Supported types are String, Time, Date, DateTime, Timestamptz, IPv4, IPv6, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Array. |
 
 ## Return Value
@@ -51,6 +53,10 @@ insert into t1 values
     (2, 'orange', 30.03, [10, 20, 40]),
     (2, null, null, [10, 20, null]),
     (3, null, null, null);
+```
+
+```text
+Table created and data inserted successfully.
 ```
 
 ```sql

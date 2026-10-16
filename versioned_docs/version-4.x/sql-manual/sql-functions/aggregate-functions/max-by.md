@@ -10,6 +10,10 @@
 
 The MAX_BY function returns the associated value based on the maximum value of the specified column.
 
+When `<expr2>` is an Array, arrays are compared lexicographically, element by element; a NULL element is greater than any non-NULL element. A NULL array value is ignored.
+
+Version difference: In the Doris 4.1 series since 4.1.5, and in Doris 4.2 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0 and Doris 4.1 before 4.1.5, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
+
 ## Syntax
 
 ```sql
@@ -19,7 +23,7 @@ MAX_BY(<expr1>, <expr2>)
 ## Parameters
 
 | Parameter | Description |
-| -- | -- |
+| --- | --- |
 | `<expr1>` | The expression for the associated value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array, Map, Struct. |
 | `<expr2>` | The expression for the maximum value, supports types: Bool, TinyInt, SmallInt, Int, BigInt, LargeInt, Float, Double, Decimal, String, Date, Datetime, Array. |
 
@@ -45,6 +49,10 @@ insert into tbl values
     (1, 4,   [5, 6],  {"x": 2, "y": 3}, NAMED_STRUCT("a", 2, "b", "y")),
     (4, 1,   [7],     {"x": 3, "y": 2}, NAMED_STRUCT("a", 3, "b", "z")),
     (3, 1,   [8],     {"x": 4, "y": 1}, NAMED_STRUCT("a", 4, "b", "r"));
+```
+
+```text
+Table created and data inserted successfully.
 ```
 
 ```sql
@@ -93,4 +101,27 @@ select max_by(k1, k2) from tbl where k1 is null;
 +----------------+
 |           NULL |
 +----------------+
+```
+
+The following array comparison example applies to the Doris 4.1 series since 4.1.5, and to Doris 4.2 and later.
+
+```sql
+SELECT max_by(label, sort_key) AS result
+FROM (
+    SELECT 'null element' AS label, [1, NULL] AS sort_key
+    UNION ALL SELECT 'non-null element', [1, 2]
+    UNION ALL SELECT 'null array', CAST(NULL AS ARRAY<INT>)
+) t;
+```
+
+```text
+null element
+```
+
+```sql
+SELECT max_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
+```
+
+```text
+NULL
 ```
