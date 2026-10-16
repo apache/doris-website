@@ -2,158 +2,65 @@
 {
     "title": "Timestamp Oracle (TSO)",
     "language": "en",
-    "description": "Timestamp Oracle (TSO) provides globally monotonic timestamps for Doris."
+    "description": "TSO configuration, status inspection, recovery, and clock-rollback behavior."
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Overview
 
-Timestamp Oracle (TSO) is a service running on the **Master FE** that generates **globally monotonic** 64-bit timestamps. Doris uses TSO as a unified version reference in distributed scenarios, avoiding the correctness risks caused by physical clock skew across nodes.
+Timestamp Oracle (TSO) allocates monotonically increasing timestamps on the Master FE, providing a global ordering reference for Doris transactions and incremental processing. It is currently available only in dev and is controlled by the FE configuration `enable_feature_binlog`, which defaults to `false`. The physical component can advance proactively, so a TSO is not an exact wall-clock reading.
 
-Typical use cases include:
+## Basic usage
 
-- A unified “transaction version” across multiple tables and nodes.
-- Incremental processing / version-based reads using a single global ordering.
-- Better observability: a timestamp is easier to interpret than an internal version counter.
+1. Set `enable_feature_binlog = true` in the FE configuration file `fe.conf` and restart FE. This experimental configuration cannot be changed dynamically; keep it consistent across FEs. Assess the cluster impact of enabling Binlog before changing it.
+2. Ensure the cluster has a ready Master FE and prepare valid Doris credentials.
+3. Query the read-only status endpoint. This command uses the default HTTP port and prompts for the root password:
 
-## Timestamp Format
+```bash
+curl --user root http://127.0.0.1:8030/api/tso
+```
 
-TSO is a 64-bit integer:
+A successful response has `code = 0`; its `data` contains the allocation cursor, physical time, logical counter, and window end. Requests sent to a non-master FE are forwarded to the Master FE by default. See [TSO Action](../open-api/fe-http/tso-action.md) for a complete response example.
 
-- High bits: **physical time (milliseconds)** since Unix epoch
-- Low bits: **logical counter** for issuing multiple unique timestamps within the same millisecond
+To inspect the local state of the FE receiving the request, use:
 
-The core guarantee of TSO is **monotonicity**, not being an exact wall clock.
+```bash
+curl --user root 'http://127.0.0.1:8030/api/tso?local=true'
+```
 
-## Architecture and Lifecycle
+This call does not allocate a timestamp. Local state may be uninitialized; a non-master FE's local result does not represent the active master's allocation state.
 
-- **Master FE** hosts the `TSOService` daemon.
-- FE components (for example, transaction publish and metadata repair flows) obtain timestamps from `Env.getCurrentEnv().getTSOService().getTSO()`.
-- The service uses a **time window lease** (window end physical time) to reduce persistence overhead while ensuring monotonicity across master failover.
+## Timestamp format and recovery
 
-### Monotonicity Guarantee
+A TSO is a 64-bit integer containing a physical component in milliseconds and an 18-bit logical counter. Within one physical millisecond, incrementing the counter makes subsequent allocations larger. The counter restarts when the physical component advances.
 
-TSO monotonicity is guaranteed by combining three layers:
+The Master FE reserves a future allocation window and persists its boundary together with committed TSO state. On startup or master failover, the service replays this state and calibrates a safe starting point before allocating timestamps. Persistence is part of the current implementation and does not require separate TSO journal or checkpoint switches.
 
-- **Within the same millisecond**: Doris keeps the physical time unchanged and increases the logical counter, so a later TSO in the same millisecond is always larger.
-- **Across milliseconds**: once physical time moves forward, the logical counter is reset, so the next TSO still remains greater than previous ones.
-- **Across restart or master switch**: Doris replays the persisted TSO window end and calibrates the new starting physical time to be greater than the previously persisted upper bound.
+## Configuration reference
 
-This is why Doris treats TSO as a **monotonic version generator**, not as a direct wall-clock mirror.
+These are FE configurations; see [FE Configuration](../config/fe-config.md). The base switch `enable_feature_binlog` is a `boolean`, defaults to `false`, is not mutable, and is not restricted to the Master FE.
 
-### Monotonicity Across Master Failover
+| Parameter | Type | Default | Mutable | Master only | Description |
+| --- | --- | --- | --- | --- | --- |
+| `tso_service_update_interval_ms` | int | `50 ms` | false | true | Interval between allocation-window update checks. |
+| `tso_max_update_retry_count` | int | `3` | true | true | Maximum attempts to update the TSO state. |
+| `tso_max_get_retry_count` | int | `10` | true | true | Maximum attempts to allocate a TSO before reporting failure. |
+| `tso_service_window_duration_ms` | int | `1000 ms` | true | true | Duration of the reserved allocation window; also bounds the periodic persistence interval. |
+| `tso_clock_backward_startup_threshold_ms` | long | `1800000 ms` | true | true | Maximum tolerated difference between the replayed window end and the system clock during startup calibration. |
+| `tso_time_offset_debug_mode` | int | `0 ms` | true | false | Clock offset for testing only; do not use for normal operation. |
+| `enable_tso_forward_when_counter_full` | boolean | `true` | true | true | Advance the physical component by 1 ms when the logical counter exceeds half its capacity and wall-clock progress is insufficient. |
 
-On master switch, the new Master FE replays the persisted window end and calibrates the initial physical time to ensure the first TSO it issues is strictly greater than any TSO issued by the previous master.
+## Errors and caveats
 
-### Why Only Master FE Issues TSO
+- Startup calibration fails if the replayed window boundary is ahead of the system clock by more than `tso_clock_backward_startup_threshold_ms`. The service cannot safely allocate new TSOs. Check clock synchronization, persisted state, and FE logs.
+- Runtime clock rollback produces warnings and metrics rather than immediately stopping the service. If physical time cannot advance, the logical counter may be exhausted; after allocation retries are exhausted, transactions that need a TSO may fail.
+- `/api/tso` is a snapshot and does not consume the logical counter. Zero values or an apparently normal snapshot do not replace initialization and transaction-commit checks.
+- `information_schema.rowsets.COMMIT_TSO` is a string representing a rowset TSO range, not one BIGINT. See [rowsets](../system-tables/information_schema/rowsets.md).
 
-Only the Master FE is allowed to issue TSO values and expose `/api/tso`.
+## Best practices
 
-- This avoids multiple FE nodes issuing timestamps independently.
-- The active master owns both timestamp generation and persistence of the leased window end.
-- After role change, the old master is not supposed to continue serving as a TSO allocator.
-
-Without this master-only rule, Doris could not safely guarantee a single global TSO order.
-
-### Persistence and Recovery
-
-The key persisted state is the **window end physical time** (`windowEndTSO`), not every individual issued TSO.
-
-- Doris leases a future time window and persists the **right boundary** of that window to EditLog.
-- Persisting the window boundary is much cheaper than writing every issued timestamp while still providing a safe upper bound for recovery.
-- If enabled, the checkpoint image can also store the TSO module so that recovery can restore the same boundary faster.
-- During recovery, the new master replays the persisted boundary and chooses a new physical time that is greater than the historical upper bound before issuing new TSO values.
-
-This design is what lets Doris preserve monotonicity across restart and master switch without turning every TSO allocation into a persistence operation.
-
-### End-to-End Flow
-
-- Master FE runs `TSOService` and allocates TSO values.
-- The daemon periodically renews the time window and writes the new window end to EditLog.
-- Checkpoint image can optionally persist the TSO module for faster recovery.
-- After restart or master switch, Doris replays the window end and calibrates a safe new starting point.
-- Transactions on tables with `enable_tso = true` record commit TSO into rowset metadata.
-- `/api/tso` shows current service state, while `information_schema.rowsets.COMMIT_TSO` shows committed results written into rowsets.
-
-## Configuration
-
-TSO is controlled by FE configuration items (see [FE Configuration](../config/fe-config.md) for how to set and persist configs):
-
-- `enable_tso_feature`
-- `tso_service_update_interval_ms`
-- `tso_max_update_retry_count`
-- `tso_max_get_retry_count`
-- `tso_service_window_duration_ms`
-- `tso_clock_backward_startup_threshold_ms`
-- `tso_time_offset_debug_mode` (test only)
-- `enable_tso_persist_journal` (may affect rollback compatibility)
-- `enable_tso_checkpoint_module` (may affect older versions reading newer images)
-- `enable_tso_forward_when_counter_full`
-
-## Clock Backward Behavior
-
-TSO handles clock backward differently during startup calibration and normal runtime:
-
-- During startup calibration, the new Master FE compares the persisted TSO window end with the current system time.
-- If the backward gap exceeds `tso_clock_backward_startup_threshold_ms`, TSO initialization fails fast and the Master FE cannot safely issue new TSOs.
-- During normal runtime, detecting clock backward only triggers warning logs and metrics. The service does not immediately stop.
-
-This means a clock rollback does not always fail transactions immediately. The actual risk depends on whether physical time can move forward again before the logical counter is exhausted.
-
-Runtime rollback detection is intentionally softer than startup calibration. During runtime, Doris prefers to keep the master available and relies on the existing monotonicity guards, logical counter, and persisted window boundary. The hard failure happens at startup calibration because that is the point where Doris must prove the next TSO can still be greater than historical values.
-
-## Logical Counter Exhaustion
-
-TSO uses a logical counter to generate multiple timestamps within the same millisecond. If physical time cannot advance for a while, the service keeps consuming the logical counter under the same physical millisecond.
-
-- When the logical counter reaches its limit, `getTSO()` retries according to `tso_max_get_retry_count`.
-- If retries are exhausted before a new physical millisecond becomes available, TSO allocation fails.
-- Transactions that need a commit TSO may then fail because FE cannot obtain a valid TSO.
-
-This is the main reason clock rollback can eventually surface as transaction errors even though runtime rollback detection itself is not a hard-stop mechanism.
-
-## Configuration Impact
-
-- `tso_clock_backward_startup_threshold_ms`: only affects startup calibration. It defines how much backward clock drift is tolerated before TSO initialization fails.
-- `enable_tso_forward_when_counter_full`: when enabled, the TSO service proactively advances physical time by 1ms once the logical counter becomes high, which helps reduce the chance of hitting the logical counter limit.
-- `enable_tso_forward_when_counter_full = false`: the service depends more strictly on real wall-clock progress and does not proactively advance physical time. Under clock stall or rollback, logical-counter exhaustion is more likely.
-- `tso_max_get_retry_count`: controls how many retries FE performs before returning a TSO allocation failure.
-- `tso_service_update_interval_ms`: affects how often the daemon checks clock conditions and refreshes the TSO window.
-- `enable_tso_persist_journal`: is the persistence foundation that allows restart or master switch to resume from a safe upper bound instead of risking rollback.
-- `enable_tso_checkpoint_module`: affects whether checkpoint image also carries the TSO boundary for faster recovery; it does not change the runtime allocation algorithm.
-
-## Observability and Debugging
-
-### FE HTTP API
-
-You can fetch the current TSO without consuming the logical counter via FE HTTP API:
-
-- `GET /api/tso`
-
-The response is a read-only snapshot of the current TSO state, including the current logical counter and the current window end. It is useful for observation, but it does not guarantee that future transactions will always be able to obtain a new TSO.
-
-`window_end_physical_time` is the leased upper bound of the current TSO window, while `current_tso` represents the current allocation cursor. It is normal for the window end to be ahead of the current TSO physical time.
-
-See [TSO Action](../open-api/fe-http/tso-action.md) for authentication, response fields, examples, and caveats.
-
-### System Table: `information_schema.rowsets`
-
-When enabled, Doris records the commit TSO into rowset metadata and exposes it via:
-
-- `information_schema.rowsets.COMMIT_TSO`
-
-This requires both FE-level `enable_tso_feature = true` and table-level `enable_tso = true`.
-
-Table-level `enable_tso` only controls whether commit TSO is recorded for that table. It does not change how `TSOService` allocates timestamps or how monotonicity is protected.
-
-See [rowsets](../system-tables/information_schema/rowsets.md).
-
-## FAQ
-
-### Can I treat TSO as a wall clock?
-
-No. Although the physical part is in milliseconds, the physical time may be advanced proactively (for example, to handle high logical counter usage), so TSO should be used as a **monotonic version** rather than a precise wall clock.
-
-### Why can transactions fail during clock rollback?
-
-Clock rollback during runtime only raises warnings and metrics, but it can keep TSO in the same physical millisecond for longer than expected. If the logical counter is consumed faster than physical time recovers, FE may fail to obtain a new TSO after `tso_max_get_retry_count` retries, and transactions that require commit TSO may fail.
+Synchronize FE clocks, inspect status with the HTTP endpoint, and use FE logs to diagnose calibration or allocation failures. Keep the debug clock offset unchanged outside deliberate tests. Enable the base switch only after assessing Binlog and its dependent features; obtaining a wall-clock value alone is not a reason to enable it.

@@ -33,20 +33,17 @@
 | CREATION_TIME          | datetime    | Rowset 的创建时间。                    |
 | NEWEST_WRITE_TIMESTAMP | datetime    | Rowset 的最近写入时间。                |
 | SCHEMA_VERSION         | int         | Rowset 数据对应的表 Schema 版本号。    |
-| COMMIT_TSO             | bigint      | Rowset 元数据中记录的提交 TSO（64 位）。通常只有在 FE 级别 `enable_tso_feature = true`、表级 `enable_tso = true`，且事务成功拿到有效 TSO 时才会有值；未记录时通常为 `-1`。 |
+| COMMIT_TSO | varchar(64) | Rowset 的 TSO 范围字符串，格式为 `[start_tso-end_tso]`，仅 dev 支持。未记录时为 `[-1--1]`。 |
 
-## 使用说明
+## COMMIT_TSO 使用说明
 
-- `COMMIT_TSO` 适合用于追踪开启 TSO 的表所生成 Rowset 的全局提交顺序。
-- 如果 `COMMIT_TSO = -1`，通常表示该表未开启 TSO 记录能力，或者该事务没有持久化 commit TSO。
-- `COMMIT_TSO` 反映的是已经提交到 Rowset 元数据中的结果，而不是 `TSOService` 当前的内部状态；表级 TSO 开关也不会改变服务如何发号。
-
-示例：
+该列是字符串，不能按单个 BIGINT 排序或直接与数值 `-1` 比较。缺失的范围显示为 `[-1--1]`；单一提交值也以起止范围显示。
 
 ```sql
-SELECT BACKEND_ID, TXN_ID, TABLET_ID, ROWSET_ID, COMMIT_TSO
+SELECT BACKEND_ID, ROWSET_ID, COMMIT_TSO
 FROM information_schema.rowsets
-WHERE COMMIT_TSO != -1
-ORDER BY COMMIT_TSO DESC
+WHERE COMMIT_TSO <> '[-1--1]'
 LIMIT 20;
 ```
+
+结果为已记录范围的 rowset 列表；如果尚未记录范围，则返回空结果。有关状态接口和配置，请参阅 [TSO](../../cluster-management/tso.md)。

@@ -33,20 +33,17 @@ Returns basic information about the Rowset.
 | CREATION_TIME          | datetime    | The creation time of the Rowset.                             |
 | NEWEST_WRITE_TIMESTAMP | datetime    | The most recent write time of the Rowset.                    |
 | SCHEMA_VERSION         | int         | The Schema version number of the table corresponding to the Rowset data. |
-| COMMIT_TSO             | bigint      | The commit TSO recorded in the Rowset metadata (64-bit). This is typically available only when FE-level `enable_tso_feature = true`, table-level `enable_tso = true`, and the transaction successfully obtained a valid TSO. If commit TSO is not recorded, the value is typically `-1`. |
+| COMMIT_TSO | varchar(64) | Rowset TSO range as `[start_tso-end_tso]` (dev only). The default is `[-1--1]` when no range is recorded. |
 
-## Usage Notes
+## COMMIT_TSO usage
 
-- `COMMIT_TSO` is useful for tracing the global commit order of rowsets created by TSO-enabled tables.
-- `COMMIT_TSO` being `-1` usually means TSO recording was not enabled for that table or the transaction did not persist a commit TSO.
-- `COMMIT_TSO` reflects committed rowset metadata only. It does not expose the current internal state of `TSOService`, and table-level TSO settings do not change how timestamps are allocated by the service.
-
-Example:
+This column is a string: do not sort it as a single BIGINT or compare it directly with numeric `-1`. An absent range appears as `[-1--1]`; a single commit value is also displayed as a start/end range.
 
 ```sql
-SELECT BACKEND_ID, TXN_ID, TABLET_ID, ROWSET_ID, COMMIT_TSO
+SELECT BACKEND_ID, ROWSET_ID, COMMIT_TSO
 FROM information_schema.rowsets
-WHERE COMMIT_TSO != -1
-ORDER BY COMMIT_TSO DESC
+WHERE COMMIT_TSO <> '[-1--1]'
 LIMIT 20;
 ```
+
+The result lists rowsets with recorded ranges, or is empty if no ranges have been recorded. See [TSO](../../cluster-management/tso.md) for status inspection and configuration.
