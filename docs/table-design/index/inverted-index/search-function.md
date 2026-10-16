@@ -67,6 +67,8 @@ SEARCH('<search_expression>', '<options_json>')
 | `default_operator` | string | The default operator for multi-term expressions (`and` or `or`) |
 | `mode` | string | `standard` (default) or `lucene` |
 | `minimum_should_match` | integer | The minimum number of SHOULD clause matches (Lucene mode only) |
+| `fields` | array of strings | Optional target columns for terms without explicit fields; mutually exclusive with a nonempty `default_field` |
+| `type` | string | Optional multi-field expansion: `best_fields` (default) or `cross_fields`; does not select a scoring or sorting algorithm |
 
 **Example:**
 
@@ -204,7 +206,7 @@ WHERE SEARCH('apple AND banana OR cherry',
 | --- | --- | --- |
 | `a AND b` | a ∩ b | +a +b (both MUST) |
 | `a OR b` | a ∪ b | a b (both SHOULD, min=1) |
-| `NOT a` | ¬a | Empty result (no positive clause) |
+| `NOT a` | ¬a | Match all documents except a (`-a`) |
 | `a AND NOT b` | a ∩ ¬b | +a -b (MUST a, MUST_NOT b) |
 | `a AND b OR c` | (a ∩ b) ∪ c | +a b c (only a is MUST) |
 
@@ -430,4 +432,66 @@ You can use standard operators or text search operators as alternatives:
 ```sql
 -- Filter by range using SQL
 SELECT * FROM t WHERE created_at >= '2024-01-01';
+```
+
+
+## Multi-Field Options Example
+
+`fields` and `type` are available in Doris 4.1.0. In `standard` mode, `best_fields` copies the complete query to each field and joins the copies with OR. `cross_fields` expands each term across the fields. The same-field versus cross-field distinction below uses `AND` or `default_operator="and"`; it must not be assumed for the default OR operator. In `lucene` mode, expansion is per clause, so this standard-mode AND comparison does not describe Lucene behavior.
+
+Prepare the following data in a database where you have CREATE, INSERT and SELECT privileges:
+
+```sql
+CREATE TABLE search_multifield (
+    id INT,
+    title STRING,
+    content STRING,
+    INDEX title_idx(title) USING INVERTED PROPERTIES ("parser"="unicode", "lower_case"="true"),
+    INDEX content_idx(content) USING INVERTED PROPERTIES ("parser"="unicode", "lower_case"="true")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num"="1");
+INSERT INTO search_multifield VALUES
+(1, 'Alice', 'Smith'),
+(2, 'Alice Smith', 'other'),
+(3, 'Bob', 'Smith');
+```
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('Alice Smith',
+  '{"fields":["title","content"],"type":"best_fields","default_operator":"and"}')
+ORDER BY id;
+```
+
+```text
+id
+2
+```
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('Alice Smith',
+  '{"fields":["title","content"],"type":"cross_fields","default_operator":"and"}')
+ORDER BY id;
+```
+
+```text
+id
+1
+2
+```
+
+A Lucene query containing only negative clauses adds a match-all condition and excludes the negative terms:
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('NOT title:Alice', '{"mode":"lucene"}')
+ORDER BY id;
+```
+
+```text
+id
+3
 ```
