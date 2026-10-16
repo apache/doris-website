@@ -1779,6 +1779,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkb',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects',
+                                        'sql-manual/sql-functions/scalar-functions/spatial-functions/st-isclosed',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-length',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext',
                                         'sql-manual/sql-functions/scalar-functions/spatial-functions/st-point',
