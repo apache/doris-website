@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-union-int.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-union-int.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "d0b223fe0eec3770de65bc139321ba693df54c8a4b3158f0c69ac505642046c1",
-    "sourceTechnicalHash": "3535810d7c0c11dfcc9a8aaa340b11a489d35ad0e43a8768b62921f49153516c",
-    "targetHash": "3a8c062961dcfa03d4c94b460e7ae945cbef558c46618b15418a2d826dbf9b88",
+    "sourceCommit": "f8f3bcc26a30a6de16c701f2d8fe68e14f4660f7",
+    "sourceHash": "de904c589a289f94c7f58ffb12980f2beb530802c18bc28f89edfa6b3615810f",
+    "sourceTechnicalHash": "026ec146b754671f89187f8d8eef756e066ea5480743f7d8c1a7380648dc6ac3",
+    "targetHash": "ec15ce9a1e142ca3337610291f4f41b4081020c1b6ad1d442b1c3631d1ee303e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:08:32.053Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-16T07:10:45.505Z",
+    "glossaryVersion": "1"
   }
 }
