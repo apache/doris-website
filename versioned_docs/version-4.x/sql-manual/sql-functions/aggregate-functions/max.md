@@ -10,6 +10,8 @@
 
 The MAX function returns the maximum non-NULL value of the expression.
 
+Version difference: In Doris 4.1 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
+
 ## Syntax
 
 ```sql

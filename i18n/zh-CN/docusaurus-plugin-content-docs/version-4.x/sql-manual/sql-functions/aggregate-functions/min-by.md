@@ -12,6 +12,8 @@ MIN_BY 函数用于根据指定列的最小值，返回对应的的关联值。
 
 当 `<expr2>` 为 Array 时，数组按字典序逐元素比较；数组元素中的 NULL 大于任何非 NULL 元素。整个数组为 NULL 时会被忽略。
 
+版本差异：Doris 4.1 及后续版本中，数组内的 `NULL` 元素大于非 `NULL` 元素；Doris 4.0 中数组内的 `NULL` 元素小于非 `NULL` 元素。整个数组值为 `NULL` 的输入在这些版本中均被忽略。
+
 ## 语法
 
 ```sql
@@ -95,4 +97,27 @@ select min_by(k1, k2) from tbl where k1 is null;
 +----------------+
 |           NULL |
 +----------------+
+```
+
+以下数组比较示例适用于 Doris 4.1 及后续版本。
+
+```sql
+SELECT min_by(label, sort_key) AS result
+FROM (
+    SELECT 'null element' AS label, [1, NULL] AS sort_key
+    UNION ALL SELECT 'non-null element', [1, 2]
+    UNION ALL SELECT 'null array', CAST(NULL AS ARRAY<INT>)
+) t;
+```
+
+```text
+non-null element
+```
+
+```sql
+SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
+```
+
+```text
+NULL
 ```

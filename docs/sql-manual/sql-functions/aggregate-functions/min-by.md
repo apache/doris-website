@@ -12,6 +12,8 @@ The MIN_BY function returns the associated value based on the minimum value of t
 
 When `<expr2>` is an Array, arrays are compared lexicographically, element by element; a NULL element is greater than any non-NULL element. A NULL array value is ignored.
 
+Version difference: In Doris 4.1 and later, a `NULL` element inside an array compares greater than a non-`NULL` element. In Doris 4.0, a `NULL` array element compares smaller. A `NULL` array value is ignored in all these versions.
+
 ## Syntax
 
 ```sql
@@ -95,4 +97,27 @@ select min_by(k1, k2) from tbl where k1 is null;
 +----------------+
 |           NULL |
 +----------------+
+```
+
+The following array comparison example applies to Doris 4.1 and later.
+
+```sql
+SELECT min_by(label, sort_key) AS result
+FROM (
+    SELECT 'null element' AS label, [1, NULL] AS sort_key
+    UNION ALL SELECT 'non-null element', [1, 2]
+    UNION ALL SELECT 'null array', CAST(NULL AS ARRAY<INT>)
+) t;
+```
+
+```text
+non-null element
+```
+
+```sql
+SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
+```
+
+```text
+NULL
 ```
