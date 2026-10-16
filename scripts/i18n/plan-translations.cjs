@@ -162,7 +162,9 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
             targetHash: page.targetHash, state: page.state, reviewStatus: page.reviewStatus,
             estimatedSourceTokens: estimate(source), requiresHumanReview: protectedTask,
             sourceChange: page.change,
-            activePr: activeValid ? candidate.pr : null,
+            // An open PR owns this identity until it is merged or closed,
+            // even if its source revision or path has become stale.
+            activePr: candidate?.pr ?? null,
             ...(moveFrom ? {previousDocId: moveFrom.docId, reuseTarget: moveFrom.sourceHash === page.sourceHash
                 && !!moveFrom.targetHash && !!moveFrom.targetPath
                 && readCurrent(moveFrom.targetPath) !== null && hash(readCurrent(moveFrom.targetPath)) === moveFrom.targetHash,
@@ -200,9 +202,10 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         && (!filters.path || task.sourcePath.startsWith(filters.path) || task.targetPath?.startsWith(filters.path)));
     const selected = [];
     let tokens = 0;
+    const blockedTargets = new Set(active?.blockedTargets ?? []);
     for (const task of selectedTasks) {
         if (selected.length >= limit) break;
-        if (task.activePr || task.requiresHumanReview) continue;
+        if (task.activePr || task.requiresHumanReview || blockedTargets.has(task.targetPath)) continue;
         if (tokenBudget !== null && tokens + task.estimatedSourceTokens > tokenBudget) continue;
         selected.push(task.id);
         tokens += task.estimatedSourceTokens;

@@ -8,7 +8,7 @@ const {hash, loadConfig, stateFileFor, loadRecords, identity} = require('../stat
 const {structure} = require('../structure.cjs');
 const {readState, applyCandidates} = require('../translate-docs.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
-const {relevantPush, replaceableBotPr} = require('../workflow-scan.cjs');
+const {relevantPush} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
 const {expectedFiles, authorFor} = require('../workflow-publish.cjs');
 
@@ -111,15 +111,6 @@ test('two open PRs for one source are flagged and robot branch is identified', a
     assert.deepEqual(result.blockedTargets, [record.targetPath]);
     assert.deepEqual(result.botPrs, [21]);
     assert.equal(result.exceptions[0].kind, 'duplicate_open_pr_candidate');
-});
-
-test('an untouched stale robot PR may be replaced, but a human edit blocks replacement', () => {
-    const sha = 'a'.repeat(40);
-    const plan = {exceptions: [{kind: 'stale_active_candidate', pr: '#21'}]};
-    const bot = {number: 21, headSha: sha, expectedHead: sha, untouched: true};
-    assert.equal(replaceableBotPr(plan, {botDetails: [bot]}), bot);
-    assert.equal(replaceableBotPr(plan, {botDetails: [{...bot, untouched: false}]}), null);
-    assert.equal(replaceableBotPr({exceptions: []}, {botDetails: [bot]}), null);
 });
 
 test('only exact current Dev/4.x identity, path and source hash are paired', () => {
@@ -282,6 +273,28 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
         calls: () => calls};
 }
 
+test('a paired target reserved by an open PR is not copied even when the supplied plan omits that reservation', async t => {
+    const fixture = await updateFixture(t);
+    const sourcePath = 'versioned_docs/version-4.x/guide.md';
+    fixture.put(sourcePath, fs.readFileSync(path.join(fixture.root, fixture.task.sourcePath), 'utf8'));
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'paired source');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const primary = {...fixture.task, sourceCommit};
+    const partner = {...primary, version: '4.x', groupId: '4X', id: 'T06-4X-000000000000002',
+        kind: 'translate_new', sourcePath, targetHash: null,
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md'};
+    const manifest = await fixture.run({maxPages: 2, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, tasks: [primary, partner]},
+        reconciliation: {botPrs: [22], blockedTargets: [],
+            active: {candidates: [{...partner, sourceHash: hash('older source'), pr: '#22'}]}}});
+    assert.equal(manifest.candidates.length, 1);
+    assert.equal(manifest.candidates[0].version, 'current');
+    assert.equal(fixture.calls(), 1);
+    assert(!fs.existsSync(path.join(fixture.root, partner.targetPath)));
+    assert(!fs.existsSync(path.join(fixture.root, stateFileFor(partner))));
+});
+
 test('an existing page shard is updated without rewriting or trusting its obsolete legacy copy', async t => {
     const fixture = await updateFixture(t);
     const {root, legacyPath, shardPath, task} = fixture;
@@ -414,7 +427,7 @@ test('publication deduplicates shared state and rejects an unrelated page shard'
         [record.targetPath, second.targetPath, 'translations/state/ja/docs.json'].sort());
 });
 
-test('normal generation defaults to ten target pages and leaves the next task untouched', async t => {
+test('normal generation skips open PRs and blocked targets, then generates ten other pages', async t => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-ten-page-batch-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     const put = (file, text) => {
@@ -424,7 +437,7 @@ test('normal generation defaults to ten target pages and leaves the next task un
     put('translations/scope/ja.json', JSON.stringify(scope));
     put('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages: []}));
     put('translations/state/ja/shards.schema.json', JSON.stringify({schemaVersion: 1, format: 'page-record-v1'}));
-    const tasks = Array.from({length: 11}, (_, index) => {
+    const tasks = Array.from({length: 14}, (_, index) => {
         const source = `# Guide ${index}\n\nA guide.\n`;
         const sourcePath = `docs/page-${index}.md`;
         put(sourcePath, source);
@@ -438,6 +451,7 @@ test('normal generation defaults to ten target pages and leaves the next task un
     git('init', '-q'); git('add', '.');
     git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'eleven pending pages');
     const sourceCommit = git('rev-parse', 'HEAD');
+    tasks[0].activePr = '#21';
     let calls = 0;
     const adapter = {model: 'fixture', usedTokens: 0, translate: async ({units}) => {
         calls++;
@@ -445,12 +459,18 @@ test('normal generation defaults to ten target pages and leaves the next task un
     }};
     const manifest = await generate({rootDir: root, target, output: path.join(root, 'output'),
         plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: tasks.map(task => task.id), tasks, exceptions: []},
-        reconciliation: {botPrs: [], botDetails: [], blockedTargets: []}, ensureFresh: () => {},
+        reconciliation: {botPrs: [21, 22], botDetails: [{number: 21, untouched: false}, {number: 22, untouched: true}],
+            active: {candidates: [{...tasks[1], sourceHash: hash('older source'), pr: '#22'}]},
+            blockedTargets: [tasks[2].targetPath]}, ensureFresh: () => {},
         adapter, glossary: require('../../../translations/glossary/ja.json')});
     assert.equal(manifest.candidates.length, 10);
     assert.equal(manifest.failures.length, 0);
     assert.equal(calls, 10);
     assert.equal(loadRecords(root, 'ja').size, 10);
-    assert(!fs.existsSync(path.join(root, tasks[10].targetPath)));
-    assert(!fs.existsSync(path.join(root, stateFileFor(tasks[10]))));
+    assert.deepEqual(manifest.candidates.map(item => item.id), tasks.slice(3, 13).map(item => item.id));
+    for (const task of [tasks[0], tasks[1], tasks[2], tasks[13]]) {
+        assert(!fs.existsSync(path.join(root, task.targetPath)));
+        assert(!fs.existsSync(path.join(root, stateFileFor(task))));
+    }
+    assert.equal(manifest.replacesPr, undefined);
 });

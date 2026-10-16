@@ -47,19 +47,11 @@ function summarize(plan, reconciliation, eligible, mode, language) {
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
         `- Robot batch PRs already open: ${reconciliation.botPrs.join(', ') || 'none'}`,
-        `- Untouched stale robot PR eligible for replacement: ${replaceableBotPr(plan, reconciliation)?.number || 'none'}`,
         `- Exceptions: ${[...exceptionKinds].map(([kind, count]) => `${kind}=${count}`).join(', ') || 'none'}`,
         '',
         'This report is read only. Open PR candidates do not count as merged translations.',
         '',
     ].join('\n');
-}
-
-function replaceableBotPr(plan, reconciliation) {
-    if (reconciliation.botDetails?.length !== 1 || !reconciliation.botDetails[0].untouched) return null;
-    const bot = reconciliation.botDetails[0];
-    return plan.exceptions.some(item => item.kind === 'stale_active_candidate' && item.pr === `#${bot.number}`)
-        ? bot : null;
 }
 
 function main() {
@@ -103,12 +95,11 @@ function main() {
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
     else process.stdout.write(summary);
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
-        `can_generate=${eligible && plan.selected.length > 0
-            && (reconciliation.botPrs.length === 0 || !!replaceableBotPr(plan, reconciliation))}\n`
+        `can_generate=${eligible && plan.selected.length > 0}\n`
         + `source_commit=${plan.sourceCommit}\n`);
 }
 
 if (require.main === module) {
     try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
 }
-module.exports = {relevantPush, changedPaths, summarize, replaceableBotPr, rulesFor};
+module.exports = {relevantPush, changedPaths, summarize, rulesFor};

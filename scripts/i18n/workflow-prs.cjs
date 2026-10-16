@@ -124,7 +124,7 @@ async function reconcileOpenPrs({scope, language, pulls, filesFor, readHead, rea
     }
     const candidates = [...active.values()].filter(candidate => !blocked.has(
         managedPath(scope, {...candidate, targetPath: targetFor(scope, candidate)})));
-    return {schemaVersion: 1, active: {schemaVersion: 1, candidates}, blockedTargets: ordered(blocked),
+    return {schemaVersion: 1, active: {schemaVersion: 1, candidates, blockedTargets: ordered(blocked)}, blockedTargets: ordered(blocked),
         botPrs: botPrs.sort((a, b) => a - b), botDetails, openPrCount: pulls.length,
         relevantPrs: relevant.sort((a, b) => a - b), exceptions};
 }
