@@ -72,6 +72,17 @@ curl --location-trusted -u root:"" \
     http://127.0.0.1:8030/api/db/loadtest/_stream_load
 ```
 
+### 通过 Kafka Connect 或 Confluent 导入时批次过小
+
+Doris Kafka Connector 任务频繁发送较小的 Stream Load 请求时，应检查任务的缓冲配置。例如，已有配置显式设置了 `buffer.count.records=10000` 和 `buffer.size.bytes=5000000` 时，可测试更大的批次：
+
+```properties
+buffer.count.records=50000
+buffer.size.bytes=104857600
+```
+
+这些参数属于 Doris Kafka Connector，并非 Confluent 的通用配置，分别控制一个批次的记录数和字节数阈值。增大缓冲区可以减少导入请求数，但会增加 Kafka Connect 任务的内存需求，也可能增加延迟。同时检查 `buffer.flush.time`，它可能在两个大小阈值到达前触发刷新。所用 Connector 版本的参数及默认值请参阅 [Doris Kafka Connector](../connection-integration/data-integration/doris-kafka-connector.md)。
+
 ## Routine Load 
 
 ### 较严重的 Bug 修复
