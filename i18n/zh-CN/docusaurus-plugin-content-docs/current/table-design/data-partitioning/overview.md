@@ -73,7 +73,7 @@ SELECT COUNT(*) AS row_count FROM sales;
 ALTER TABLE partition_demo.sales SET ("partition.retention_count" = "3");
 ```
 
-FE 调度器随后清理多余的历史分区。该属性仅适用于 AUTO RANGE 表，不能与已启用的动态分区同时使用。调度行为及版本限制（包括 Doris 4.1.4 的变化）参见[自动分区：生命周期管理](./auto-partitioning#lifecycle-management)。
+FE 调度器随后清理多余的历史分区。该属性仅适用于 AUTO RANGE 表，不能与已启用的动态分区同时使用。调度行为及版本限制（包括 Doris 4.1.4 的变化）参见[自动分区：生命周期管理](./auto-partitioning#生命周期管理)。
 
 保留策略会**删除**数据。如需将冷数据移至更便宜的存储并继续保留，请使用[冷热分层](../tiered-storage/overview)。
 
