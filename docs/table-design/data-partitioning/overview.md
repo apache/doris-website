@@ -2,17 +2,22 @@
 {
     "title": "Partitioning and Bucketing",
     "language": "en",
-    "description": "The recommended partitioning and bucketing for a Doris table, and when to customize: auto, dynamic, and manual partitioning, bucketing method, and bucket count."
+    "description": "Choose partitioning and bucketing for Doris tables based on query filters, data distribution, and retention requirements."
 }
 ---
 
-Doris organizes a table in two tiers: partitions split rows by column value, and buckets split each partition into shards for parallel processing. This page gives the recommended starting point and shows when to customize.
+Doris organizes a table in two tiers: partitions split rows by column value, and buckets split each partition into tablets for parallel processing. Choose the design based on query filters, data distribution, and retention requirements.
 
-## Recommended Starting Point
+## Starting Point for Time-Series Data
 
-For most tables, partition by time and let Doris manage partition creation and bucket sizing automatically:
+For time-series data that arrives continuously, auto partitioning can create time partitions as rows arrive. The following example uses daily partitions and automatic bucket sizing.
+
+Connect with a MySQL client using an account with permission to create databases and tables. The example uses one replica so it can run on a single-BE development cluster; choose an appropriate replica count for production.
 
 ```sql
+CREATE DATABASE IF NOT EXISTS partition_demo;
+USE partition_demo;
+
 CREATE TABLE sales (
     sale_time   DATETIME NOT NULL,
     order_id    BIGINT   NOT NULL,
@@ -20,59 +25,71 @@ CREATE TABLE sales (
 )
 DUPLICATE KEY(sale_time, order_id)
 AUTO PARTITION BY RANGE (date_trunc(sale_time, 'day')) ()
-DISTRIBUTED BY HASH(order_id) BUCKETS AUTO;
+DISTRIBUTED BY HASH(order_id) BUCKETS AUTO
+PROPERTIES (
+    "replication_num" = "1",
+    "estimate_partition_size" = "1G"
+);
+
+INSERT INTO sales VALUES
+    ('2026-10-14 10:00:00', 1, 12.50),
+    ('2026-10-15 11:00:00', 2, 20.00);
+
+SELECT COUNT(*) AS row_count FROM sales;
 ```
 
-- **Auto partitioning** creates a partition as data arrives, so you never pre-define or backfill partition ranges.
-- **`BUCKETS AUTO`** lets Doris size the number of shards from the data.
-- Partition pruning on `sale_time` and parallel scans across buckets keep queries fast.
-
-If the table has no time column or stays small (under about 1 GB), use a single partition with a fixed bucket count:
-
-```sql
-DISTRIBUTED BY HASH(order_id) BUCKETS 10
+```text
++-----------+
+| row_count |
++-----------+
+|         2 |
++-----------+
 ```
+
+The load creates two daily partitions. `BUCKETS AUTO` chooses the bucket count using the estimated partition size and cluster resources; it does not resize existing partitions. Select a partition interval that avoids creating too many small partitions. Small reference tables or tables without time-based filtering or retention can use a single partition instead.
 
 ## Choose Your Design
 
-Customize only when the default does not fit:
-
-| Decision | Recommended default | Change it when |
+| Decision | Starting point | When to choose another option |
 | --- | --- | --- |
-| How to partition | [Auto partitioning](./auto-partitioning) | Use [manual partitioning](./manual-partitioning) for schemes auto cannot express: custom or irregular ranges, ranges on a numeric column, or grouped LIST values. [Dynamic partitioning](./dynamic-partitioning) is superseded by auto. |
-| Bucketing method | Hash on a high-cardinality column | If data skews, or you filter on arbitrary dimensions, use random bucketing ([Data Bucketing](./data-bucketing)) |
-| Number of buckets | `BUCKETS AUTO` | If you know your data size and want fixed control, set a count ([Data Bucketing](./data-bucketing)) |
+| Partitioning | [Auto partitioning](./auto-partitioning) for on-demand creation of time or list partitions | Use [manual partitioning](./manual-partitioning) for custom ranges, numeric ranges, or grouped LIST values. Use [dynamic partitioning](./dynamic-partitioning) when you need scheduled creation and a rolling time window. |
+| Bucketing method | Hash on columns that suit equality filters and distribute data well | Random bucketing can reduce skew for DUPLICATE tables, but does not support bucket pruning. See [Data Bucketing](./data-bucketing). |
+| Number of buckets | `BUCKETS AUTO` with a representative `estimate_partition_size` | Use a fixed count when you need explicit control. Balance tablet size and query parallelism against tablet-management overhead. |
 
 ## Expire Old Partitions
 
-To drop old data automatically, set a retention policy. Both modes keep the most recent partitions and drop older ones; they differ in how you express the limit:
+The retention modes express different policies:
 
-| Partition mode | Property | Retention limit |
+| Partition mode | Property | Retention rule |
 | --- | --- | --- |
-| [Dynamic partitioning](./dynamic-partitioning) | `dynamic_partition.start` (for example, `-7`) | A time window: keep partitions within the last N time units of now |
-| [Auto partitioning](./auto-partitioning) (RANGE) | `partition.retention_count` (for example, `3`) | A partition count: keep the newest N historical partitions |
+| [Dynamic partitioning](./dynamic-partitioning) | `dynamic_partition.start` (for example, `-7`) | A window relative to the current time, using the configured time unit and time zone |
+| [Auto partitioning](./auto-partitioning) (RANGE) | `partition.retention_count` (for example, `3`) | Keep the newest N **historical** partitions by partition value; current and future partitions are retained |
 
-With regular time partitions (such as one per day), the two are effectively equivalent: "last 7 days" matches "newest 7 daily partitions." They diverge when partitions are irregular or data is stale: a time window can drop every partition once the data is older than the window, whereas a count always keeps the newest N.
+A partition count is not an elapsed-time guarantee. For sparse or stale data, the newest N historical partitions may be much older than N days. Choose a time window when data must expire by age.
 
-Combining auto and dynamic partitioning for retention is no longer recommended; use `partition.retention_count` for auto-range tables.
+For the example table, the following policy retains the newest three historical partitions in addition to current and future partitions:
 
-Retention **drops** data. To move cold data to cheaper storage instead of dropping it, use [tiered storage](../tiered-storage/overview) instead.
+```sql
+ALTER TABLE partition_demo.sales SET ("partition.retention_count" = "3");
+```
+
+The FE scheduler subsequently removes excess historical partitions. This property applies only to AUTO RANGE tables and cannot be combined with enabled dynamic partitioning. See [Auto Partitioning: Lifecycle Management](./auto-partitioning#lifecycle-management) for scheduling behavior and version-specific restrictions, including changes in Doris 4.1.4.
+
+Retention **drops** data. To move cold data to cheaper storage while retaining it, use [tiered storage](../tiered-storage/overview).
 
 ## How It Works
 
-Doris maps data in two tiers:
-
 ```text
-Table ──► Partition (by column value) ──► Bucket (hash or random) ──► Tablet (shard on a BE node)
+Table → Partition (by column value) → Bucket (hash or random) → Tablet (shard on a BE node)
 ```
 
-Partitions let Doris skip data that can't match a query, and make it easy to archive or drop data by time. Buckets spread each partition across tablets for parallel reads and writes. For the full data-distribution model, including tablets, replicas, and how they map to nodes, see [How Partitioning and Bucketing Work](./basic-concepts).
+Partitions support query pruning and data lifecycle management. Buckets provide parallel reads and writes. For tablets, replicas, node placement, and operational commands, see [How Partitioning and Bucketing Work](./basic-concepts).
 
 ## Next Steps
 
-- [Auto Partitioning](./auto-partitioning): the default, with no manual range maintenance.
-- [Dynamic Partitioning](./dynamic-partitioning): rolling time windows with retention.
+- [Auto Partitioning](./auto-partitioning): on-demand partition creation.
+- [Dynamic Partitioning](./dynamic-partitioning): scheduled creation and rolling time windows.
 - [Manual Partitioning](./manual-partitioning): explicit ranges and list partitions.
 - [Data Bucketing](./data-bucketing): choose the method, key, and bucket count.
-- [How Partitioning and Bucketing Work](./basic-concepts): the underlying data-distribution model.
-- [Common Issues](./common-issues): troubleshooting partition and bucket design.
+- [How Partitioning and Bucketing Work](./basic-concepts): the data-distribution model.
+- [Common Issues](./common-issues): troubleshoot partition and bucket design.
