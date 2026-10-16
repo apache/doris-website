@@ -86,7 +86,7 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 
 下面分别给出 Apache Doris 数据类型与 ORC、Parquet 格式的映射关系。
 
-仅 CSV 将 UUID 值导出为 36 字符的小写标准文本。Parquet 中 UUID 列写入带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序；ORC 中 UUID 列写入 `BINARY` 并附带 Doris 专有的 `doris.logical_type=uuid` 属性，因为 ORC 没有标准 UUID 类型。ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素与顶层列使用相同的表示方式。通过表值函数重新读取 Doris 写出的 ORC 文件可还原原生 UUID 类型，而 Parquet 的 Schema 推断仍将 UUID 叶子暴露为 `STRING`/`VARBINARY`，重新导入 Parquet 文件时需指定 UUID 目标列，或使用 `CAST(value AS UUID)` 转换。写入 Iceberg UUID 字段时遵循 [Iceberg 列类型映射](../../lakehouse/catalogs/iceberg-catalog.mdx#列类型映射)。
+仅 CSV 将 UUID 值导出为 36 字符的小写标准文本。Parquet 中 UUID 列写入带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序；ORC 中 UUID 列写入 `BINARY` 并附带 Doris 专有的 `doris.logical_type=uuid` 属性，因为 ORC 没有标准 UUID 类型。ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素与顶层列使用相同的表示方式。dev 中，通过表值函数重新读取 Doris 写出的 ORC 文件，或带 UUID 逻辑标记的 Parquet 文件，均可还原原生 UUID 类型。写入 Iceberg UUID 字段时遵循 [Iceberg 列类型映射](../../lakehouse/catalogs/iceberg-catalog.mdx#列类型映射)。
 
 ### ORC 类型映射
 
@@ -99,9 +99,11 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 | bigint                  | bigint    |
 | largeInt                | string    |
 | date                    | string    |
-| datev2                  | string    |
+| datev2                  | date      |
 | datetime                | string    |
 | datetimev2              | timestamp |
+| timestamptz | timestamp with local time zone（ORC TIMESTAMP_INSTANT；4.1.5 起保留时间点语义） |
+| varbinary | binary |
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
@@ -147,7 +149,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-Parquet Export 和 Outfile 使用 `enable_int96_timestamps` 属性选择 Doris `DATETIMEV2` 值的物理编码。默认值为 `false`，写入带 Parquet 时间戳逻辑类型的 `INT64`。仅当 Hive 2、Hive 3 等下游旧版读取端要求时，才设置为 `true` 写入已废弃的 `INT96` 编码。异步 Export 会将该属性保存在导出作业中，并在作业执行时应用。如果 Doris 后续读取显式导出的 `INT96` 文件，请在 Hive Catalog 或文件表值函数中将 `hive.parquet.time-zone` 设置为导出会话时区，使 FileScannerV2 还原原始墙上时间。
+Parquet Export 和 Outfile 使用 `enable_int96_timestamps` 属性选择 Doris `DATETIMEV2` 值的物理编码。默认值为 `false`，写入带 Parquet 时间戳逻辑类型的 `INT64`。仅当 Hive 2、Hive 3 等下游旧版读取端要求时，才设置为 `true` 写入已废弃的 `INT96` 编码。异步 Export 会将该属性保存在导出作业中，并在作业执行时应用。如果 Doris 后续读取显式导出的 `INT96` 文件，请在 Hive Catalog 或文件表值函数中将 `hive.parquet.time-zone` 设置为导出会话时区，使 FileScannerV2 还原原始墙上时间。 此默认值自 4.1.5 版本起生效；该属性仅接受 `true` 或 `false`。
 :::
 
 ## 相关文档

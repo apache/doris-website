@@ -74,7 +74,7 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under a spe
 | char(N)                                 | char(N)                |                                                                 |
 | varchar/text                            | string                 |                                                                 |
 | timestamp(S)              | datetime(S)            |                                                                 |
-| timestamptz(S) | datetime(S) / timestamptz(S) | Controlled by the `enable.mapping.timestamp_tz` property (supported since version 4.0.3). By default, it is `false`, in which case it is mapped to `datetime`; when set to `true`, it is mapped to the `timestamptz` type. |
+| timestamptz(S) | TIMESTAMPTZ(S) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(S)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
 | date                                    | date                   |                                                                 |
 | json/jsonb                              | string                 | For better reading and computing performance balance, Doris maps JSON type to STRING type.                   |
 | time                                    | string                 | Doris does not support time type, time type will be mapped to string.                          |
@@ -83,7 +83,7 @@ When mapping PostgreSQL, a Database in Doris corresponds to a Schema under a spe
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris does not support bit type, bit type will be mapped to boolean when bit(1), otherwise mapped to string. |
-| bytea             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| bytea | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
 | array                                   | array                  | Please refer to the following explanation regarding the mapping methods for array types. |
 | other                                   | UNSUPPORTED            |                                                                 |
 

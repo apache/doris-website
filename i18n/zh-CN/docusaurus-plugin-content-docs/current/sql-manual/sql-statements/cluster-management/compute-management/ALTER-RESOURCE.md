@@ -10,6 +10,8 @@
 
 该语句用于修改一个已有的资源。仅 root 或 admin 用户可以修改资源。
 
+自 4.1.5 版本起，新建且由 root 创建的 AI Resource 只能由 root 修改或删除，其他 ADMIN 用户也不能操作；升级前没有 root 创建标记的资源不追溯限制。详见 [AI 资源权限](../../../sql-functions/ai-functions/overview.md#创建修改与删除权限415-起)。
+
 ## 语法
 ```sql
 ALTER RESOURCE '<resource_name>'

@@ -41,6 +41,10 @@ warm_up_item ::= TABLE <table_name> [PARTITION <partition_name>];
 
 * JobId:  The ID of the warm-up job.
 
+## Access Control Requirements
+
+Since 4.1.5, warming up requires `USAGE` on the destination Compute Group and, when specified, `USAGE` on the source Compute Group. Each internal table explicitly listed with `WITH TABLE` requires `SELECT`. Event-driven warm-up using `ON TABLES` rules additionally requires global `ADMIN`. The operation is rejected if any required privilege is missing.
+
 ## Examples
 
 1. Warm up the compute group named destination_group_name using the compute group named source_group_name

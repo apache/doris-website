@@ -30,6 +30,14 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
+## What changed in 4.1.5
+
+| Category | Variables |
+| --- | --- |
+| Added | `enable_hyperscan_fallback` |
+| Default changed | `enable_file_cache`: `false` to `true` |
+| Behavior corrected | `profile_level` is forwarded to the Master FE; `return_object_data_as_binary` distinguishes SQL Cache results |
+
 ## What changed in 4.1.4
 
 | Category | Variables |
@@ -39,6 +47,16 @@ SET GLOBAL enable_file_scanner_v2 = false;
 | Removed | `eager_aggregation_on_join`, `plan_nereids_dump` |
 
 ## External table scan
+
+### `enable_file_cache`
+
+| Item | Value |
+| --- | --- |
+| Type | Boolean |
+| Default | `true` (`false` before 4.1.5) |
+| Version | Default changed in 4.1.5 |
+
+Whether queries use File Cache. The BE configuration with the same name must also be enabled; enabling only the session variable does not use the cache when the BE setting is `false`. Both defaults changed to `true` in 4.1.5. After upgrading, check explicit settings and persisted global variables. See [File Cache](../../compute-storage-decoupled/file-cache/file-cache.md) for paths, capacity, and limitations.
 
 ### `enable_file_scanner_v2`
 
@@ -139,9 +157,7 @@ throughput when scan threads are the bottleneck. Set it back to `4` to keep the 
 
 Whether to use the Nereids distributed planner.
 
-Since 4.1.4, upgrading refreshes the **global default of this variable to `true`**, even when the
-cluster metadata previously persisted `false`. If plan distribution looks different after the
-upgrade, run `SET GLOBAL enable_nereids_distribute_planner = false;` to roll back.
+In the 4.1 series since 4.1.4, migration refreshes the **global default to `true`** only when `variable_version < 400`, typically when upgrading from 3.x, even if `false` was persisted. Upgrading a cluster already running 4.x does not refresh it again. If plan distribution changes after upgrading, run `SET GLOBAL enable_nereids_distribute_planner = false;` to roll back.
 
 ### `runtime_filter_broadcast_join_producer_num`
 
@@ -310,6 +326,40 @@ read pattern is random and the cache hit rate is low.
 Expiration time of the presigned URL generated for an object in S3-compatible storage in multimodal
 `EMBED()` scenarios. Increase it when media files are large and the provider takes longer to fetch
 them. See [EMBED](../sql-functions/ai-functions/distance-functions/embed.md).
+
+## Profile and result output
+
+### `profile_level`
+
+| Item | Value |
+| --- | --- |
+| Type | Integer (`1`, `2`, or `3`) |
+| Default | `2` |
+| Version | Forwarding behavior corrected in 4.1.5 |
+
+Controls Query Profile detail: `1` collects merged counters, `2` prints detailed information, and `3` enables additional counters that may affect performance. Since 4.1.5, queries forwarded to the Master FE retain the current session's level. See [Query Profile](../../query-acceleration/query-profile.md).
+
+### `return_object_data_as_binary`
+
+| Item | Value |
+| --- | --- |
+| Type | Boolean |
+| Default | `false` |
+| Version | SQL Cache distinction corrected in 4.1.5 |
+
+Whether MySQL results return raw binary data for HLL, BITMAP, and QUANTILE_STATE objects. When `false`, these values return NULL. Since 4.1.5, this variable distinguishes SQL result cache entries, preventing sessions with binary output enabled from reusing NULL results cached by sessions with it disabled.
+
+## Regular expressions
+
+### `enable_hyperscan_fallback`
+
+| Item | Value |
+| --- | --- |
+| Type | Boolean |
+| Default | `true` |
+| Version | Added in 4.1.5 |
+
+Whether to fall back to RE2 when Hyperscan cannot compile a pattern. When `true`, Doris tries RE2; when `false`, it returns the Hyperscan compilation error. Falling back does not add syntax that RE2 itself does not support. This variable controls a different path from `enable_extended_regex`, which enables advanced Boost.Regex syntax. See [REGEXP](../sql-functions/scalar-functions/string-functions/regexp.md).
 
 ## Removed variables
 

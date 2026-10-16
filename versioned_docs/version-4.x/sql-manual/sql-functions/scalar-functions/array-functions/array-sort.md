@@ -1,31 +1,39 @@
 ---
 {
     "title": "ARRAY_SORT",
-    "language": "en-US",
+    "language": "en",
     "description": "If no lambda function is specified, the array elements are sorted in ascending order. Otherwise,"
 }
 ---
 
-## Function
+<a id="function"></a>
+
+## Description
 
 If no lambda function is specified, the array elements are sorted in ascending order. Otherwise, sorting is performed according to the lambda function.
 
 ## Syntax
 
-- `ARRAY_SORT(arr)`
-- `ARRAY_SORT(lambda, arr)`
+```sql
+ARRAY_SORT(<arr>)
+ARRAY_SORT(<lambda>, <arr>)
+```
 
 ## Parameters
 
-- `lambda`: A `lambda` expression used to define sorting rules, whose return value should be -1, 0, or 1 (representing less than, less than or equal to, and greater than respectively).
-- `arr`: `ARRAY<T>`, where `T` can be numeric, boolean, string, datetime, IP, etc. Multi-dimensional arrays are supported, but all array elements (no matter how deeply nested) must be of the supported types.
+| Parameter | Description |
+| --- | --- |
+| `<arr>` | ARRAY whose elements can be numeric, boolean, string, datetime, IP, or other supported types. Multi-dimensional arrays are supported, but all nested elements must be of these supported types. |
+| `<lambda>` | Optional comparator that accepts two elements and returns -1, 0, or 1 when the first element is less than, equal to, or greater than the second. |
 
-## Return value
+## Return Value
 
 - If it does not contain a `lambda` expression
   - Returns `ARRAY<T>` of the same type as the input.
   - `NULL` elements are placed at the beginning of the returned array.
 - If it contains a `lambda` expression, sort according to the lambda expression and return an `ARRAY<T>` of the same type as the input.
+
+In the Doris 4.1 series since 4.1.5, a comparator that references an outer lambda argument or another column explicitly reports an error. The comparator may use only its own two arguments, and a lambda nested inside it cannot capture those comparator arguments. This restriction does not affect ordinary nested lambda capture in `ARRAY_MAP`.
 
 ## Usage notes
 
@@ -35,7 +43,9 @@ If no lambda function is specified, the array elements are sorted in ascending o
 - If containing a `lambda` expression
   - The value of the `lambda` expression shall be -1, 0, or 1. Should a `NULL` value exist, it shall be explicitly stated whether the `NULL` value is to be placed before or after the array.
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 1. Basic: `NULL` elements are placed at the beginning of the returned array
 

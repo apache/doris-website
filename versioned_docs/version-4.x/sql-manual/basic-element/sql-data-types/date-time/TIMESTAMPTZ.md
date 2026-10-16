@@ -35,6 +35,10 @@ Therefore, TIMESTAMPTZ can be understood as a DATETIME type with time zone conve
 - When input strings contain time zone information (e.g., `"2020-01-01 00:00:00 +03:00"`), Doris uses that time zone information for conversion.
 - When input strings do not contain time zone information (e.g., `"2020-01-01 00:00:00"`), Doris uses the current session's time zone setting for conversion.
 
+Since 4.1.5, output preserves historical IANA time zone offsets with second precision as `+HH:MM:SS`. Numeric offsets in input timestamps have different constraints from fixed session offsets: input hours must be below `24`, and minutes and seconds below `60`; fixed session offsets remain limited to `-12:00` through `+14:00`. Conversion to the session time zone fails if the resulting local year falls outside `0` through `9999`.
+
+Since 4.1.5, Catalogs always map external time-zone-aware timestamp types to `TIMESTAMPTZ`. Setting the compatibility property `enable.mapping.timestamp_tz=false` cannot restore the old `DATETIME` mapping. Arrow Flight SQL carries instants as Arrow Timestamp values with a time zone annotation; query schemas use the session time zone (`Z` is normalized to `UTC`). `DATETIME` uses a Timestamp without a time zone annotation.
+
 ### Storage and Usage
 
 In Doris, a TIMESTAMPTZ type field occupies 8 bytes of storage space.

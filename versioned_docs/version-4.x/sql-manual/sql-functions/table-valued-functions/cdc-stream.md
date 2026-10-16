@@ -60,6 +60,8 @@ cdc_stream(
 3. When using the PostgreSQL type, logical replication must be enabled (`wal_level=logical`).
 4. Supports exactly-once semantics.
 
+Since 4.1.5, when used with a Streaming Job, CDC operations check Doris privileges as the job creator, and failed tasks do not use the ordinary automatic task retry path. See [Continuous Load Identity and Failure Handling](../../../data-operate/import/import-way/streaming-job/continuous-load-overview.md#cdc-task-identity-and-failure-handling).
+
 ## Examples
 
 - Continuously synchronize a single table from MySQL

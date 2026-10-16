@@ -437,6 +437,71 @@ The following changes also need attention when upgrading to 4.1.4:
 | The JDK 17 `JAVA_OPTS` must change `--add-opens=java.base/java.nio=ALL-UNNAMED` to `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED` | Deployments with a customized `JAVA_OPTS_FOR_JDK_17` in `fe.conf` / `be.conf` | Sync this option from the `fe.conf` / `be.conf` shipped in the new release package. Otherwise Arrow-based features such as Arrow Flight SQL may fail to start or run |
 | The BE `_stream_load_forward` endpoint requires the configuration to be enabled and requests to be authenticated | Deployments relying on Group Commit BE forwarding in decoupled mode | Set `enable_group_commit_streamload_be_forward=true` in every `be.conf` and make sure the load account holds the global `LOAD` privilege. See [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
 
+### Upgrading to 4.1.5
+
+The following changes are relative to 4.1.4.1. Before upgrading, check V1 inverted index settings, external table type mappings, and files containing historical dates.
+
+**Removed interfaces and syntax**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| Creating V1 inverted indexes is prohibited; existing V1 tables cannot have more inverted indexes added | `CREATE TABLE`, `CREATE INDEX`, and `ALTER TABLE ADD INDEX` | Use V2 or V3 for new tables. Existing tables remain readable. Recreate a table if you need new indexes; `ALTER TABLE` cannot convert its storage format |
+| Custom functions no longer accept variadic `...` signatures | Java / Python UDFs, UDAFs, UDTFs, and ALIAS FUNCTION | Use a fixed number of parameters or a single `ARRAY` parameter to receive multiple values. See [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION.md) |
+| The `native` file format is removed | File reads or exports using this format | Use a supported format such as Parquet or ORC. Convert old files with the previous Doris version before upgrading |
+
+**Default value and behavior changes**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| Catalog binary types always map to `VARBINARY`; time zone aware timestamp types always map to `TIMESTAMPTZ` | Hive, Iceberg, Paimon, and related JDBC type mappings | `enable.mapping.varbinary` and `enable.mapping.timestamp_tz` remain compatibility markers; setting them to `false` cannot restore the old mappings. Master FE persists the markers as `true` for old catalogs. Check client field types, time zones, and explicit casts |
+| S3 / HDFS / LOCAL TVFs always preserve timestamp time zone semantics | Reading Parquet UTC Timestamp or ORC `TIMESTAMP_INSTANT` through TVFs | In 4.1.5, `enable_mapping_timestamp_tz` is accepted for compatibility and ignored even when `false`; `enable_mapping_varbinary` remains configurable and defaults to `false`. The current dev branch ignores both legacy flags and always maps binary types to `VARBINARY` and time zone aware timestamps to `TIMESTAMPTZ`. See [S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3.md), [HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs.md), and [LOCAL TVF](../../sql-manual/sql-functions/table-valued-functions/local.md) |
+| The BE configuration and session variable `enable_file_cache` default changes from `false` to `true` | Remote file reads in integrated mode; BEs in compute-storage decoupled mode already force it on | Check cache paths, disk capacity, existing explicit BE configuration, and persisted global variables. See [File Cache](../../compute-storage-decoupled/file-cache/file-cache.md) |
+| FE `meta_service_rpc_rate_limit_enabled` is enabled by default, with a new dry-run mode also enabled by default | FE-to-Meta-Service RPCs in compute-storage decoupled mode | The default only evaluates and records rate limiting. Set `meta_service_rpc_rate_limit_dry_run=false` to enforce it. The two new BE dry-run switches must also be disabled before they cause actual waiting. See [FE Configuration](../config/fe-config.md#meta_service_rpc_rate_limit_dry_run) and [BE Configuration](../config/be-config.md#enable_ms_rpc_host_level_rate_limit_dry_run) |
+| `cloud_version_syncer_interval_second` default changes from `20` to `60` seconds, `cloud_get_version_task_batch_size` from `2000` to `200`, and the new maximum attempt count is `3` | Compute-storage decoupled clusters using background version synchronization | Configure explicit values if you need the old frequency or batch size. The interval requires an FE restart |
+| FE `streaming_cdc_fetch_splits_batch_size` default changes from `100` to `16`; BE `request_cdc_client_timeout_ms` from `60000` to `120000` | Streaming CDC ingestion | No migration is required. Check explicit configuration if you have tuned throughput or timeouts |
+| The legacy LDAP authentication path rejects empty passwords by default | Logins relying on LDAP unauthenticated Bind | Use a valid password. The compatibility switch `ldap_allow_empty_pass` defaults to `false` and requires an FE restart. The LDAP authentication plugin always rejects empty passwords. See [LDAP](../auth/authentication/ldap.md#empty-password-login) |
+| Missing data or delete files in committed Iceberg snapshots always cause an error | Iceberg queries with `ignore_not_found_file_in_external_table=true` | Restore the missing files or use a valid snapshot. This switch can no longer skip committed Iceberg files |
+| Invalid Iceberg `schema.name-mapping.default` values now cause an error instead of allowing a tolerant read | Tables with invalid name mapping properties | Fix or remove the property through the writer, then refresh Doris metadata. See [Iceberg Catalog](../../lakehouse/catalogs/iceberg-catalog.mdx) |
+| Dictionary, warm-up, constraint, and other commands add privilege checks; column-level GRANT / REVOKE checks the operator's own privileges | Related operations accounts and automation scripts | Grant the required privileges on target and related objects. See the corresponding command documentation |
+| New AI Resources created by root can only be altered or dropped by root | AI Resources created with the root marker from 4.1.5 onward | Use root for these operations. Resources without the marker from before the upgrade are unaffected. See [AI Resources](../../sql-manual/sql-functions/ai-functions/overview.md) |
+
+**Deployment and configuration file changes**
+
+| Change | Affected scope | What to do |
+| --- | --- | --- |
+| An effective FE setting of `inverted_index_storage_format=V1` prevents startup | Clusters that configured V1 in `fe.conf` or `fe_custom.conf` | **Before upgrading**, change it to `V2` or `V3` and check whether `fe_custom.conf` overrides `fe.conf` |
+| Parquet export `enable_int96_timestamps` now defaults to `false`, using INT64 timestamps with logical types | Outfile / Export consumers that depend on the old INT96 format | Confirm support for logical INT64 timestamps. If the old format is required, explicitly set `enable_int96_timestamps=true`. Only `true` and `false` are accepted |
+| Files using the old Doris DATE encoding can have a year-zero date offset | ORC / Parquet files exported by Doris containing `0000-01-01` through `0000-02-28` | Verify the file origin and migrate as described below. Upgrading the reader alone cannot restore the original dates |
+| In 4.1.5, bundled Thrift upgrades from 0.16.0 to 0.24.0 and Iceberg SDK from 1.10.1 to 1.11.0 (the current dev branch uses Iceberg SDK 1.12.0) | Deployments that build Doris or reuse third-party dependency artifacts | Prepare dependencies from the source of the version you are building. Avoid reusing an old Thrift generator or mixing JAR versions |
+
+#### Command Privilege Checks
+
+Version 4.1.5 adds privilege checks to the following paths. For operations scripts and delegated accounts, check privileges on both target objects and any objects modified through cascading operations:
+
+| Operation | Required privileges |
+| --- | --- |
+| `ADD CONSTRAINT` / `DROP CONSTRAINT` | `ALTER` on the target table; adding a foreign key also requires `ALTER` on the referenced table; dropping a primary key and cascading to foreign keys also requires `ALTER` on every table modified by the cascade |
+| `CREATE DICTIONARY` / `DROP DICTIONARY` | Creating requires `CREATE` on the dictionary and `SELECT` on its source table; dropping requires `DROP` on the dictionary |
+| `WARM UP COMPUTE GROUP` | `USAGE` on the target group and any specified source group, plus `SELECT` on explicit tables; `ON TABLES` rules also require global `ADMIN` |
+| Cancel warm-up, clean up the catalog recycle bin, drop a stage, and manage TDE root keys | Global `ADMIN` |
+| `/rest/v1` endpoints requiring administrative privileges | Both Basic and Cookie authentication require global `ADMIN` or `NODE`. A successful `/login` authenticates the user but does not grant access to administrative endpoints |
+
+Metadata queries also become more tolerant: `information_schema.view_dependency` skips views whose definitions cannot be parsed or reference invalid objects, instead of failing the entire query. If a view is missing from the result, check its definition and FE warning logs. A missing row does not mean that the view has no dependencies.
+
+#### Year-Zero DATE File Migration
+
+Version 4.1.5 corrects the conversion of DATE values to proleptic Gregorian epoch days in Arrow, Parquet, and ORC V2. The old Doris encoding wrote an epoch day one greater than expected for `0000-01-01` through `0000-02-28`. Dates on or after `0000-03-01` are unaffected, and `0000-02-29` remains outside the supported Doris DATE range.
+
+Old values cannot be distinguished automatically from valid new encodings. Verify files by their writer. For files where **all DATE fields** are confirmed to use the old Doris encoding, use the [offline migration tool](https://github.com/apache/doris/tree/4.1.5-release/tools/legacy_date_migration) in this release's source:
+
+```bash
+python tools/legacy_date_migration/migrate_legacy_dates.py \
+  --input legacy.parquet --output migrated.parquet --format parquet \
+  --confirm-legacy-doris-date-encoding
+```
+
+For ORC files, change `--format` to `orc`. The tool requires Python 3.8+ and PyArrow with support for the selected format. It writes a new file and does not overwrite the original. Do not run it on files from other writers, files with mixed origins, or files already migrated. After migration, use `enable_file_scanner_v2=true` and validate boundary dates, row counts, and NULL values against a trusted source before switching consumers. For table formats such as Iceberg, do not replace data files in place. Recreate the table through the table format's writer or perform a supported transactional rewrite, so that partitions, statistics, and snapshot metadata are recomputed consistently.
+
 ## FAQ
 
 <!-- Knowledge type: Troubleshooting -->

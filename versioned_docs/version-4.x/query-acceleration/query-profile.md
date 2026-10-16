@@ -75,12 +75,16 @@ The first point allows FE to retain thousands of complete Profiles. The second p
 | Parameter | Scope | Default | Description |
 | --- | --- | --- | --- |
 | `enable_profile` | Session/Global | `false` | Whether to generate Profiles |
-| `profile_level` | Session/Global | `1` | Profile detail level (1 to 3, takes effect in 4.0+) |
+| `profile_level` | Session/Global | `2` | Profile detail level (1 to 3, takes effect in 4.0+) |
 | `auto_profile_threshold_ms` | Global | `-1` | Generate a Profile only for queries whose elapsed time exceeds the threshold (takes effect in 3.0+) |
 | `max_query_profile_num` | `fe.conf` | `500` | Maximum number of Profiles retained in FE memory |
 | `max_spilled_profile_num` | `fe.conf` | `500` | Maximum number of Profiles retained on disk |
 | `spilled_profile_storage_path` | `fe.conf` | `log/profile` | Local storage directory for Profiles |
 | `spilled_profile_storage_limit_bytes` | `fe.conf` | `1 GB` | Total storage capacity limit for Profiles on disk |
+
+The archived and ChangedSessionVariables examples below contain historical Profiles. Their `profile_level` default of `1` reflects the version used to collect them, rather than the current default.
+
+Since 4.1.5, queries forwarded to the Master FE retain the session's `profile_level`. See the [session variable reference](../sql-manual/basic-element/session-variables.md#profile_level) for its values.
 
 ### Enabling Profile
 
@@ -151,15 +155,15 @@ show query profile
 
 - Purpose: Controls the level of detail in the Profile.
 - Command: `set profile_level=2;`
-- Description: The default value is `1`. **This parameter takes effect in version 4.0 and the master branch. Do not use it in versions earlier than 4.0, where it has different semantics.**
+- Description: The default value is `2`. **This parameter takes effect in version 4.0 and later. Do not use it in versions earlier than 4.0, where it has different semantics.**
 
 | Level | Behavior | Performance impact |
 | --- | --- | --- |
-| 1 (default) | BE reports only a simplified Profile, sufficient for FE to aggregate into a MergedProfile | Minimal |
-| 2 | Outputs more detailed Counters, suitable for in-depth analysis | Small |
+| 1 | BE reports only a simplified Profile, sufficient for FE to aggregate into a MergedProfile | Minimal |
+| 2 (default) | Outputs more detailed Counters, suitable for in-depth analysis | Small |
 | 3 | Maximum granularity. Collecting some Counters may affect query performance | Larger |
 
-Example: By default, the Counters of `EXCHANGE_OPERATOR` are as follows:
+Example: With `profile_level=1`, the Counters of `EXCHANGE_OPERATOR` are as follows:
 
 ```text
 EXCHANGE_OPERATOR(id=1):

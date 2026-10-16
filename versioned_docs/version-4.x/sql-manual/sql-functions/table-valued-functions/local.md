@@ -48,7 +48,8 @@ LOCAL(
 | `skip_lines`            | For CSV format imports, optional, defaults to `0`, which means skipping the first few lines of the CSV file. When the format is `csv_with_names` or `csv_with_names_and_types`, this parameter is ignored. | For CSV format                                                           |
 | `path_partition_keys`   | Optional, specifies the partition column names carried in the file path, e.g., `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`. This will automatically read the corresponding column names and values from the path for import. |                                                                       |
 | `enable_mapping_varbinary` | Defaults to false. When reading PARQUET/ORC, it maps the BYTE_ARRAY type to STRING. When enabled, it maps to VARBINARY type. | Supported since 4.0.3 |
-| `enable_mapping_timestamp_tz` | Defaults to `false`. When reading PARQUET (`TIMESTAMP` with `isAdjustedToUTC`) or ORC (`TIMESTAMP_INSTANT`), the type is mapped to `DATETIME`. When enabled, it is mapped to the `TIMESTAMPTZ` type. | Supported since version 4.0.3 |
+| `enable_mapping_timestamp_tz` | Since 4.1.5, accepted only for compatibility; the value is ignored. Parquet Timestamp with `isAdjustedToUTC=true` and ORC `TIMESTAMP_INSTANT` always map to `TIMESTAMPTZ`, even when this option is `false`. The independent `enable_mapping_varbinary` option remains configurable and defaults to `false`. | Supported since 4.0.3 |
+| `hive.parquet.time-zone` | Optional string, empty by default. Supported since 4.1.5. Specifies the Parquet INT96 writer time zone: an IANA time zone or offset from -12:00 to +14:00; short aliases such as CST and PRC are rejected. See [Parquet](../../../lakehouse/file-formats/parquet.md#timestamp-and-date-compatibility). | Since 4.1.5 |
 
 ## Access Control Requirements
 | Privilege  | Object | Notes |

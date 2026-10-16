@@ -58,11 +58,11 @@ When mapping Oracle, a Database in Apache Doris corresponds to a User in Oracle.
 | float/real                            | double                               |                                                                                                                 |
 | date                                  | date                                 |                                                                                                                 |
 | timestamp                             | datetime(S)                          |                                                                                                                 |
-| timestamp(s) with local time zone | datetime / timestamptz | Controlled by the `enable.mapping.timestamp_tz` property (supported since version 4.0.3). By default, it is `false`, in which case it is mapped to `datetime`; when set to `true`, it is mapped to the `timestamptz` type. |
+| timestamp(s) with time zone / timestamp(s) with local time zone | TIMESTAMPTZ(S) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(S)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
 | char/nchar                            | string                               |                                                                                                                 |
 | varchar2/nvarchar2                    | string                               |                                                                                                                 |
 | long/raw/long raw/internal            | string                               |                                                                                                                 |
-| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| BLOB | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
 | other                                 | UNSUPPORTED                          |                                                                                                                 |
 
 ## Common Issues

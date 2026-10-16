@@ -66,6 +66,8 @@ The `EXPORT` command is used to export data from a specified table to files at a
 
   - `format`: Specifies the file format for the export job, supports: parquet, orc, csv, csv_with_names, csv_with_names_and_types. Default is CSV format.
 
+  - `enable_int96_timestamps`: Whether Parquet export uses INT96 timestamps. Explicit configuration in EXPORT is supported since 4.1.5. The default is `false`, which uses logical INT64 timestamps. Set it to `true` for readers that require INT96. Only `true` and `false` are accepted.
+
   - `max_file_size`: Single file size limit for export job. If the result exceeds this value, it will be split into multiple files. `max_file_size` value range is [5MB, 2GB], default is 1GB. (When specifying export to orc file format, the actual split file size will be a multiple of 64MB, e.g.: specifying max_file_size = 5MB will actually split at 64MB; specifying max_file_size = 65MB will actually split at 128MB)
 
   - `parallelism`: Concurrency of the export job, default is `1`. The export job will start `parallelism` number of threads to execute `select into outfile` statements. (If the number of Parallelism is greater than the number of Tablets in the table, the system will automatically set Parallelism to the size of the number of Tablets, i.e., each `select into outfile` statement is responsible for one Tablet)

@@ -12,7 +12,10 @@
         "edge_ngram",
         "word_delimiter",
         "USING ANALYZER",
-        "multi-analyzer index"
+        "multi-analyzer index",
+        "ik_smart",
+        "ik_max_word",
+        "max_ngram_diff"
     ]
 }
 ---
@@ -90,12 +93,14 @@ Supported tokenizer types:
 | Type | Description | Main Parameters |
 | --- | --- | --- |
 | `standard` | Standard tokenization (follows Unicode text segmentation), suitable for most languages | None |
-| `ngram` | Splits by N-grams | `min_gram`, `max_gram`, `token_chars` |
+| `ngram` | Splits by N-grams | `min_gram`, `max_gram`, `max_ngram_diff`, `token_chars` |
 | `edge_ngram` | Generates N-grams starting from the beginning of the word | `min_gram`, `max_gram`, `token_chars` |
 | `keyword` | Outputs the entire text as a single term, often combined with token_filter | None |
 | `char_group` | Splits by the given characters | `tokenize_on_chars` |
 | `basic` | Simple English / digit / Chinese / Unicode tokenization | `extra_chars` |
 | `icu` | ICU internationalized tokenization, supports complex scripts in multiple languages | None |
+| `ik_smart` | IK smart Chinese tokenization, favoring complete words; available for custom analyzers since 4.1.5 | None |
+| `ik_max_word` | IK fine-grained Chinese tokenization, producing more potentially overlapping terms; available for custom analyzers since 4.1.5 | None |
 
 Parameter descriptions:
 
@@ -104,6 +109,20 @@ Parameter descriptions:
 - `token_chars`: character categories to keep (default: keep all). Options: `letter`, `digit`, `whitespace`, `punctuation`, `symbol`
 - `tokenize_on_chars`: a character list or category. Categories support `whitespace`, `letter`, `digit`, `punctuation`, `symbol`, `cjk`
 - `extra_chars`: additional ASCII characters to split on (such as `[]().`)
+
+#### Ngram Range Limits (Since 4.1.5)
+
+Since 4.1.5, the `ngram` tokenizer supports `max_ngram_diff` to relax the previous limit of `1` on the difference between maximum and minimum gram lengths. For ordinary `ngram` tokenizers without a `mode` property, creation validates the following conditions:
+
+| Parameter | Default | Constraints |
+| --- | --- | --- |
+| `min_gram` | `1` | Positive integer no greater than `max_gram`; at most `1024` for a new `ngram` tokenizer. |
+| `max_gram` | `2` | Positive integer no less than `min_gram`; at most `1024` for a new `ngram` tokenizer. |
+| `max_ngram_diff` | `1` | Integer from `0` through `255`; must satisfy `max_gram - min_gram <= max_ngram_diff`. A value of `0` allows only fixed-length N-grams. |
+
+For example, `min_gram=1` and `max_gram=8` require `max_ngram_diff` of at least `7`. Omitting it causes creation to fail with `The difference between max_gram and min_gram in NGram Tokenizer must be less than or equal to: [ 1 ] but was [7]`. See [Example 5](#example-5-expand-the-ngram-length-range-since-415) for complete usage.
+
+These limits and `max_ngram_diff` apply to ordinary `ngram` tokenizers without a `mode` property. Tokenizers that specify `mode` use separate validation and ignore these limits. `edge_ngram` does not accept this parameter; the phone-number and autocomplete examples keep their own `min_gram` and `max_gram` settings. Wider ranges produce more terms per input position. Size the range for your search requirements to avoid unnecessary index growth.
 
 ### 3. Token Filter
 
@@ -485,6 +504,120 @@ Result:
     {"token":"hello world"}
 ]
 ```
+
+### Example 4: IK Smart and Fine-Grained Chinese Tokenization (Since 4.1.5)
+
+Since 4.1.5, custom analyzers can reference the built-in `ik_smart` and `ik_max_word` tokenizers directly, or use a named tokenizer with either `type` before combining it with character and token filters. Neither IK tokenizer has additional tokenizer parameters. Both use dictionaries in the `ik` directory under the BE configuration `inverted_index_dict_path`. Every BE involved in tokenization and index construction must support these components and be able to read the dictionaries.
+
+The examples below demonstrate direct references and named tokenizers. Creating these components requires global `ADMIN`. Creating tables, loading data, and querying also require the corresponding privileges on the target database and tables.
+
+```sql
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_smart
+PROPERTIES ("tokenizer" = "ik_smart");
+
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS cn_ik_max_tokenizer
+PROPERTIES ("type" = "ik_max_word");
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_max
+PROPERTIES ("tokenizer" = "cn_ik_max_tokenizer");
+```
+
+Successful creation returns `Query OK`. After the components synchronize to the BEs, compare their output with `TOKENIZE`. The following results use the built-in dictionaries; changing the dictionaries can change the tokens.
+
+```sql
+SELECT TOKENIZE('中华人民共和国', '"analyzer"="cn_ik_smart"');
+```
+
+```json
+[{"token":"中华人民共和国"}]
+```
+
+```sql
+SELECT TOKENIZE('中华人民共和国', '"analyzer"="cn_ik_max"');
+```
+
+```json
+[
+    {"token":"中华人民共和国"},
+    {"token":"中华人民"},
+    {"token":"中华"},
+    {"token":"华人"},
+    {"token":"人民共和国"},
+    {"token":"人民"},
+    {"token":"共和国"},
+    {"token":"共和"},
+    {"token":"国"}
+]
+```
+
+Use the analyzer in a table's inverted index:
+
+```sql
+CREATE TABLE ik_articles (
+    id INT,
+    content STRING,
+    INDEX idx_content(content) USING INVERTED
+        PROPERTIES("analyzer" = "cn_ik_smart")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+
+INSERT INTO ik_articles VALUES (1, '中华人民共和国');
+
+SELECT id FROM ik_articles
+WHERE content MATCH '中华人民共和国' USING ANALYZER cn_ik_smart
+ORDER BY id;
+```
+
+```text
++----+
+| id |
++----+
+|  1 |
++----+
+```
+
+Use `ik_smart` when searches should preserve complete Chinese words, and `ik_max_word` when searches need more subword matches. Add token filters through the analyzer's `token_filter` property when further token processing is needed.
+
+### Example 5: Expand the Ngram Length Range (Since 4.1.5)
+
+This tokenizer generates N-grams of lengths `1` through `8` by explicitly setting `max_ngram_diff=7`:
+
+```sql
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS ngram_1_8_tokenizer
+PROPERTIES (
+    "type" = "ngram",
+    "min_gram" = "1",
+    "max_gram" = "8",
+    "max_ngram_diff" = "7"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_1_8_analyzer
+PROPERTIES ("tokenizer" = "ngram_1_8_tokenizer");
+```
+
+After successful creation and synchronization to the BEs, run:
+
+```sql
+SELECT TOKENIZE('abcdefgh', '"analyzer"="ngram_1_8_analyzer"');
+```
+
+```json
+[
+    {"token":"a"}, {"token":"ab"}, {"token":"abc"}, {"token":"abcd"},
+    {"token":"abcde"}, {"token":"abcdef"}, {"token":"abcdefg"}, {"token":"abcdefgh"},
+    {"token":"b"}, {"token":"bc"}, {"token":"bcd"}, {"token":"bcde"},
+    {"token":"bcdef"}, {"token":"bcdefg"}, {"token":"bcdefgh"},
+    {"token":"c"}, {"token":"cd"}, {"token":"cde"}, {"token":"cdef"},
+    {"token":"cdefg"}, {"token":"cdefgh"},
+    {"token":"d"}, {"token":"de"}, {"token":"def"}, {"token":"defg"}, {"token":"defgh"},
+    {"token":"e"}, {"token":"ef"}, {"token":"efg"}, {"token":"efgh"},
+    {"token":"f"}, {"token":"fg"}, {"token":"fgh"},
+    {"token":"g"}, {"token":"gh"}, {"token":"h"}
+]
+```
+
 
 ---
 

@@ -68,7 +68,7 @@ When mapping IBM Db2, Doris's Database corresponds to a Schema under the specifi
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
-| BLOB             | varbinary     |Controlled by the `enable.mapping.varbinary` property of Catalog (supported since 4.0.2). The default is `false`, which maps to `string`; when `true`, it maps to `varbinary` type.|
+| BLOB | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
 | other            | UNSUPPORTED   |         |
 
 ## Common Issues

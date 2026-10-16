@@ -78,6 +78,8 @@ password_policy:
 
 ## 注意事项
 
+自 4.1.5 版本起，特殊 root 身份仅指 `'root'@'%'`。例如 `'root'@'localhost'` 仍是普通用户身份，不会仅因用户名为 root 而获得修改真正 root 账号的特权；真正 root 的保护也不会错误地套用到其他同名用户。
+
 1. 从 2.0 版本开始，此命令不再支持修改用户角色，相关操作请使用[GRANT](./GRANT-TO.md)和[REVOKE](./REVOKE-FROM.md)。
 
 2. 在一个 ALTER USER 命令中，只能同时对以下账户属性中的一项进行修改：

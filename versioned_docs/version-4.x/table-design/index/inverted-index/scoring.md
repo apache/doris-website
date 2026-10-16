@@ -113,7 +113,7 @@ When a query contains multiple terms, **the final score is the sum of the scores
 
 ### Record Length and the `norms` Property
 
-The `norms` index property and the `inverted_index_skip_norms_for_variant` BE config are supported since Doris 4.1.0.
+The `norms` index property and the `inverted_index_skip_norms_for_variant` BE config are supported since Doris 4.1.5.
 
 `|d|` comes from norms, which cost one byte per row per indexed field, including rows with no value for that field. Tokenized indexes write norms by default (`"norms" = "true"`); non-tokenized indexes do not. For indexes used only for filtering, set `"norms" = "false"` to save space:
 

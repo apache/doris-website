@@ -97,9 +97,11 @@ The mappings between Apache Doris data types and the ORC and Parquet formats are
 | bigint                  | bigint    |
 | largeInt                | string    |
 | date                    | string    |
-| datev2                  | string    |
+| datev2                  | date      |
 | datetime                | string    |
 | datetimev2              | timestamp |
+| timestamptz | timestamp with local time zone (ORC TIMESTAMP_INSTANT; preserves instant semantics since 4.1.5) |
+| varbinary | binary |
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
@@ -143,7 +145,7 @@ When Apache Doris exports to the Parquet file format, it first converts the in-m
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-In versions 2.1.11 and 3.0.7, the `parquet.enable_int96_timestamps` property is supported to specify whether the Doris `datetimev2` type is stored as `INT96` or `INT64` in Parquet. The default is `INT96`. `INT96` has been deprecated in the Parquet standard and is used only for compatibility with legacy systems (such as Hive versions before 4.0).
+Since 4.1.5, Outfile and Export use `enable_int96_timestamps` to control Parquet timestamp encoding. The default is `false`, which writes `INT64` with a logical timestamp type; earlier versions defaulted to `INT96`. Set it to `true` only for compatibility with legacy readers. Only `true` and `false` are accepted. Do not use `parquet.enable_int96_timestamps` instead. See [Parquet](../../lakehouse/file-formats/parquet.md) for instant and wall-clock timestamp semantics.
 :::
 
 ## Related Documents

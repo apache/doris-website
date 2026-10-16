@@ -120,6 +120,8 @@ Kerberos 配置常见问题请参考 [Kerberos FAQ](../best-practices/kerberos.m
 
 ## 配置文件
 
+自 4.1.5 版本起，`hadoop.config.resources` 指定的逗号分隔 XML 路径中，不得包含 `..` 父目录路径段；正斜杠和反斜杠分隔形式都会检查。请使用正常文件路径，例如 `conf/core-site.xml,conf/hdfs-site.xml`，不要使用 `../` 绕到父目录。
+
 > 该功能自 3.1.0 版本支持
 
 Doris 支持通过 `hadoop.config.resources` 参数来指定 HDFS 相关配置文件目录。

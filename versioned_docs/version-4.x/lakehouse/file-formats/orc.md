@@ -28,6 +28,14 @@ This document introduces the support for reading and writing ORC file formats in
 
 ## Parameters
 
+### Timestamp and Date Compatibility (Since 4.1.5)
+
+Since 4.1.5, ORC `TIMESTAMP` represents wall-clock time without a time zone, while `TIMESTAMP_INSTANT` represents an instant and maps to `TIMESTAMPTZ`. Reads round nanoseconds to microseconds. Out-of-range values and invalid nanosecond values produce errors.
+
+When writing ORC, some negative fractional timestamps immediately before the Unix epoch cannot be represented without data loss. Doris returns `ORC cannot represent pre-epoch timestamp fractions in [-0.999, 0) seconds without data loss; use Parquet for these values`. Use Parquet for data containing these values.
+
+DATE files written with the old Doris encoding and containing `0000-01-01` through `0000-02-28` require explicit migration. See [Year-Zero DATE File Migration](../../admin-manual/cluster-management/upgrade.md#year-zero-date-file-migration).
+
 ### Session Variables
 
 * `enable_orc_lazy_mat` (2.1+, 3.0+)

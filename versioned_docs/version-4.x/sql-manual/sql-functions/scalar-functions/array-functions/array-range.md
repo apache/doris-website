@@ -6,68 +6,100 @@
 }
 ---
 
-## Function
+<a id="function"></a>
 
-Generate an arithmetic sequence array of numbers or datetimes.
-- For numeric types, the default step is 1
-- For datetime types, the default step is 1 day
+## Description
+
+Generates an arithmetic sequence array of numbers or datetimes. The result includes the start and excludes the end. Returns NULL if any argument is NULL.
+
+In the Doris 4.1 series since 4.1.5, datetime sequences retain every valid value below the end, even when the last value is less than a full interval away from the end. Earlier versions could omit these trailing values.
 
 ## Syntax
 
-- `ARRAY_RANGE(end)`
-- `ARRAY_RANGE(start, end)`
-- `ARRAY_RANGE(start, end, step)`
-- `ARRAY_RANGE(start_dt, end_dt)`
-- `ARRAY_RANGE(start_dt, end_dt, interval step unit)`
+```sql
+ARRAY_RANGE(<end>)
+ARRAY_RANGE(<start>, <end> [, <step>])
+ARRAY_RANGE(<start_dt>, <end_dt> [, INTERVAL <step> <unit>])
+```
 
 ## Parameters
 
-- `start`, `end`: non-negative integers. `end` is the upper bound and is excluded from the result.
-- `step`: must be a positive integer; the step length; default is 1.
-- `start_dt`, `end_dt`: DATETIME. In the two-argument form, the default step is 1 DAY.
-- `interval step unit`: datetime step. `unit` can be `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`; `step` must be a positive integer.
+| Parameter | Description |
+| --- | --- |
+| `<start>` | Optional non-negative INT start value. Defaults to 0. |
+| `<end>` | Non-negative INT end value, excluded from the result. |
+| `<step>` | Optional positive integer step. Defaults to 1. |
+| `<start_dt>`, `<end_dt>` | DATETIME start and end values. The end is excluded. Without INTERVAL, the step is 1 DAY. |
+| `<unit>` | Datetime step unit: YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, or SECOND. |
 
-## Return value
+## Return Value
 
-- Returns `ARRAY<T>`; returns `NULL` for illegal arguments; returns an empty array `[]` for an empty range.
-- The element type `T` matches the input: integers produce `INT`, datetimes produce `DATETIME`.
+Returns an ARRAY. Numeric sequences contain INT elements; datetime sequences contain DATETIME elements.
 
-## Usage notes
+<a id="usage-notes"></a>
 
-- Numeric sequence: start from `start`, increment by `step`, up to but excluding `end` (left-closed, right-open).
-- Datetime sequence: start from `start_dt`, increment by `step` in the given `unit`, up to but excluding `end_dt`; the two-argument form is equivalent to `interval 1 day`.
-- Illegal arguments return `NULL`:
-  - Numeric: `start < 0`, `end < 0`, `step <= 0`.
-  - Datetime: `start_dt` or `end_dt` invalid, or `step <= 0`.
-- `ARRAY_RANGE` and `SEQUENCE` are equivalent.
+- Returns NULL if any argument is NULL or invalid, such as a negative numeric start or end, or a non-positive step.
+- Returns an empty array `[]` if the start is greater than or equal to the end.
+- Each successive value is calculated from the previous value. Month arithmetic can adjust a date to the last day of the target month.
+- Reports an error if the sequence exceeds the array size limit. If a successor exceeds the date type's range, generation stops after the last valid value.
+- `SEQUENCE` is an alias for `ARRAY_RANGE`.
 
-## Examples
+<a id="examples"></a>
 
-- Numeric: `start` defaults to 0, `step` defaults to 1
-  - `ARRAY_RANGE(5)` -> `[0, 1, 2, 3, 4]`
-  - `ARRAY_RANGE(0, 5)` -> `[0, 1, 2, 3, 4]`
+## Example
 
-- Numeric: `end` is the upper bound and is not included in the result.
-  - `ARRAY_RANGE(2, 6, 2)` -> `[2, 4]`
-  - `ARRAY_RANGE(3, 3)` -> `[]`
+Numeric sequences exclude the end:
 
-- Numeric: `end` must be greater than or equal to `start`, otherwise returns `[]`
-   - `ARRAY_RANGE(3, 2)` -> `[]`
+```sql
+SELECT ARRAY_RANGE(5), ARRAY_RANGE(2, 6, 2), ARRAY_RANGE(3, 2);
+```
 
-- Numeric: `start`, `end` must be non-negative integers, and `step` must be greater than 0.
-  - `ARRAY_RANGE(-1, 3)` -> `NULL`
-  - `ARRAY_RANGE(1, 3, 0)` -> `NULL`
+```text
+[0, 1, 2, 3, 4]    [2, 4]    []
+```
 
-- Datetime: `step` defaults to 1 day.
-  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00')` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
-  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
+Datetime sequences default to a one-day step. The last value is retained even if less than one day remains:
 
-- Datetime: `unit` can be `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2024-05-17 12:00:00', interval 1 year)` -> `["2022-05-15 12:00:00", "2023-05-15 12:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2023-05-17 12:00:00', interval 1 quarter);` -> `["2022-05-15 12:00:00", "2022-08-15 12:00:00", "2022-11-15 12:00:00", "2023-02-15 12:00:00"] `
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-07-17 12:00:00', interval 1 month);` -> `["2022-05-15 12:00:00", "2022-06-15 12:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 14:00:00', interval 1 hour)` -> `["2022-05-15 12:00:00", "2022-05-15 13:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:02:00', interval 1 minute)` -> `["2022-05-15 12:00:00", "2022-05-15 12:01:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:00:02', interval 1 second)` -> `["2022-05-15 12:00:00", "2022-05-15 12:00:01"]`
+```sql
+SELECT ARRAY_RANGE(
+    CAST('2024-01-01 00:00:00.000000' AS DATETIME(6)),
+    CAST('2024-01-02 12:00:00.000000' AS DATETIME(6)));
+```
 
+```text
+["2024-01-01 00:00:00.000000", "2024-01-02 00:00:00.000000"]
+```
+
+A monthly step increments from the previously generated date:
+
+```sql
+SELECT ARRAY_RANGE(
+    CAST('2020-01-31 00:00:00' AS DATETIME(6)),
+    CAST('2020-03-30 00:00:00' AS DATETIME(6)), INTERVAL 1 MONTH);
+```
+
+```text
+["2020-01-31 00:00:00.000000", "2020-02-29 00:00:00.000000", "2020-03-29 00:00:00.000000"]
+```
+
+`SEQUENCE` uses the same rules:
+
+```sql
+SELECT SEQUENCE(
+    CAST('2024-01-01 00:00:00.000000' AS DATETIME(6)),
+    CAST('2024-01-01 00:00:01.500000' AS DATETIME(6)), INTERVAL 1 SECOND);
+```
+
+```text
+["2024-01-01 00:00:00.000000", "2024-01-01 00:00:01.000000"]
+```
+
+NULL or invalid arguments:
+
+```sql
+SELECT ARRAY_RANGE(NULL), ARRAY_RANGE(-1, 3), ARRAY_RANGE(1, 3, 0);
+```
+
+```text
+NULL    NULL    NULL
+```

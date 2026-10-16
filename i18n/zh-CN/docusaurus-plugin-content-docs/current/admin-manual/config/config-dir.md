@@ -10,6 +10,8 @@ FE 和 BE 的配置文件目录为 `conf/`。这个目录除了存放默认的 f
 
 用户可以在其中存放一些配置文件，系统会自动读取。
 
+存算分离模式下，Meta Service 使用独立的 `doris_cloud.conf`，参见 [Meta Service 配置项](./ms-config.md)。
+
 :::note
 自 Doris 1.2 版本后支持该功能
 :::

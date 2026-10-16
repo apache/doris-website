@@ -437,6 +437,71 @@ FE 通过内部变量 `variable_version` 记录会话变量默认值的迁移进
 | JDK 17 的 `JAVA_OPTS` 需要把 `--add-opens=java.base/java.nio=ALL-UNNAMED` 改为 `--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED` | 自定义修改过 `fe.conf` / `be.conf` 中 `JAVA_OPTS_FOR_JDK_17` 的部署 | 按新版本发布包中的 `fe.conf` / `be.conf` 同步该参数，否则 Arrow 相关功能（Arrow Flight SQL 等）可能启动或运行失败 |
 | BE `_stream_load_forward` 接口需要开启配置并通过认证 | 存算分离模式下依赖 Group Commit BE 转发的部署 | 在所有 BE 的 `be.conf` 中设置 `enable_group_commit_streamload_be_forward=true`，并确认导入账号具备全局 `LOAD` 权限。详见 [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual) |
 
+### 升级到 4.1.5
+
+以下变更相对于 4.1.4.1。升级前应重点检查倒排索引 V1 配置、外表类型映射和历史日期文件。
+
+**接口与语法移除**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| 禁止创建 V1 格式倒排索引；已有 V1 表不能再添加倒排索引 | `CREATE TABLE`、`CREATE INDEX`、`ALTER TABLE ADD INDEX` | 新表使用 V2 或 V3；旧表仍可读取。需要新增索引时重建表，不能通过 `ALTER TABLE` 转换存储格式 |
+| 自定义函数不再接受可变参数 `...` 签名 | Java / Python UDF、UDAF、UDTF 及 ALIAS FUNCTION | 改为固定参数个数，或通过一个 `ARRAY` 参数接收多个值。详见 [CREATE FUNCTION](../../sql-manual/sql-statements/function/CREATE-FUNCTION.md) |
+| 文件格式 `native` 移除 | 使用该格式的文件读取或导出请求 | 改用 Parquet、ORC 等受支持格式；旧文件应在升级前用原版本转为受支持格式 |
+
+**默认值与行为变更**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| Catalog 的二进制类型固定映射为 `VARBINARY`，带时区时间类型固定映射为 `TIMESTAMPTZ` | Hive、Iceberg、Paimon 及相关 JDBC 类型映射 | `enable.mapping.varbinary`、`enable.mapping.timestamp_tz` 仅保留为兼容标记，设为 `false` 也不能恢复旧映射。Master FE 会将旧 Catalog 的标记持久化为 `true`；核对客户端字段类型、时区和显式转换 |
+| S3 / HDFS / LOCAL TVF 固定保留时间戳的时区语义 | 通过 TVF 读取 Parquet UTC Timestamp 或 ORC `TIMESTAMP_INSTANT` | 4.1.5 中，`enable_mapping_timestamp_tz` 仅作为兼容参数接收，设为 `false` 也被忽略；`enable_mapping_varbinary` 仍可配置且默认 `false`。当前 dev 分支忽略这两个旧标记，二进制类型固定映射为 `VARBINARY`，带时区时间戳固定映射为 `TIMESTAMPTZ`。详见 [S3 TVF](../../sql-manual/sql-functions/table-valued-functions/s3.md)、[HDFS TVF](../../sql-manual/sql-functions/table-valued-functions/hdfs.md) 和 [LOCAL TVF](../../sql-manual/sql-functions/table-valued-functions/local.md) |
+| BE 配置与会话变量 `enable_file_cache` 默认由 `false` 改为 `true` | 存算一体的远端文件读取；存算分离 BE 原本已强制开启 | 核对缓存路径、磁盘容量，以及已有显式 BE 配置和持久化的全局变量。详见 [File Cache](../../compute-storage-decoupled/file-cache/file-cache.md) |
+| FE `meta_service_rpc_rate_limit_enabled` 默认开启，同时新增默认开启的 dry-run | 存算分离 FE 到 Meta Service 的 RPC | 默认只评估和记录；要实际限流需将 `meta_service_rpc_rate_limit_dry_run=false`。BE 新增的两个 dry-run 开关也须关闭后才实际等待。详见 [FE 配置](../config/fe-config.md#meta_service_rpc_rate_limit_dry_run) 与 [BE 配置](../config/be-config.md#enable_ms_rpc_host_level_rate_limit_dry_run) |
+| `cloud_version_syncer_interval_second` 默认 `20` → `60` 秒，`cloud_get_version_task_batch_size` 默认 `2000` → `200`，新增同步尝试次数 `3` | 启用后台版本同步的存算分离集群 | 如需原同步频率或批量大小，显式配置；间隔需重启 FE 生效 |
+| FE `streaming_cdc_fetch_splits_batch_size` 默认 `100` → `16`；BE `request_cdc_client_timeout_ms` 默认 `60000` → `120000` | Streaming CDC 导入 | 无需迁移；如已有吞吐或超时调优，核对显式配置 |
+| 旧 LDAP 认证路径默认拒绝空密码 | 依赖 LDAP 未认证 Bind 的登录方式 | 使用有效密码；兼容开关 `ldap_allow_empty_pass` 默认 `false`，修改需重启 FE。LDAP 认证插件始终拒绝空密码。详见 [LDAP](../auth/authentication/ldap.md#空密码登录) |
+| Iceberg 已提交快照中的数据或删除文件缺失时，始终报错 | 设置了 `ignore_not_found_file_in_external_table=true` 的 Iceberg 查询 | 恢复缺失文件或使用有效快照；该开关不再允许跳过 Iceberg 已提交文件 |
+| 无效 Iceberg `schema.name-mapping.default` 从容错读取改为报错 | 带有错误名称映射属性的表 | 在写入端修复或删除该属性，再刷新 Doris 元数据。详见 [Iceberg Catalog](../../lakehouse/catalogs/iceberg-catalog.mdx) |
+| Dictionary、预热、约束等命令补齐权限检查；列级 GRANT / REVOKE 检查操作者自身权限 | 相关运维账号和自动化脚本 | 补齐目标对象和关联对象所需权限；详细要求见对应命令文档 |
+| 新建且由 root 创建的 AI Resource 只能由 root 修改和删除 | 4.1.5 起创建并记录 root 标记的 AI Resource | 使用 root 操作；升级前无该标记的资源不追溯限制。详见 [AI 资源](../../sql-manual/sql-functions/ai-functions/overview.md) |
+
+**部署与配置文件变更**
+
+| 变更内容 | 影响范围 | 处理方式 |
+| --- | --- | --- |
+| 生效的 FE `inverted_index_storage_format=V1` 会导致启动失败 | 在 `fe.conf` 或 `fe_custom.conf` 中配置过 V1 的集群 | **升级前**改为 `V2` 或 `V3`，检查 `fe_custom.conf` 对 `fe.conf` 的覆盖值 |
+| Parquet 导出 `enable_int96_timestamps` 默认改为 `false`，使用带逻辑类型的 INT64 时间戳 | 依赖旧 INT96 导出格式的 Outfile / Export 消费端 | 确认消费端支持逻辑 INT64；确需旧格式时显式设置 `enable_int96_timestamps=true`，取值只接受 `true` 或 `false` |
+| 旧 Doris DATE 编码文件存在零年日期偏移 | Doris 曾导出的 ORC / Parquet，且包含 `0000-01-01` 至 `0000-02-28` | 按下节确认文件来源并迁移；仅升级 Reader 不能恢复原日期 |
+| 4.1.5 的内置 Thrift 从 0.16.0 升级到 0.24.0，Iceberg SDK 从 1.10.1 升级到 1.11.0（当前 dev 分支使用 Iceberg SDK 1.12.0） | 自行编译或复用第三方依赖产物的部署 | 按目标版本源码重新准备依赖，避免复用旧 Thrift 生成器或混装 JAR |
+
+#### 命令权限校验
+
+4.1.5 对以下路径补齐权限检查。使用运维脚本或委派账号时，请核对目标对象及级联关联对象的权限：
+
+| 操作 | 所需权限 |
+| --- | --- |
+| `ADD CONSTRAINT` / `DROP CONSTRAINT` | 目标表的 `ALTER`；添加外键还需被引用表的 `ALTER`；删除主键并级联处理外键时，还需每张被级联修改表的 `ALTER` |
+| `CREATE DICTIONARY` / `DROP DICTIONARY` | 创建需字典对象的 `CREATE` 和源表的 `SELECT`；删除需字典对象的 `DROP` |
+| `WARM UP COMPUTE GROUP` | 目标组及指定来源组的 `USAGE`，显式表的 `SELECT`；`ON TABLES` 规则还需全局 `ADMIN` |
+| 取消预热、清理 Catalog 回收站、删除 Stage、TDE 根密钥管理 | 全局 `ADMIN` |
+| 需要管理权限的 `/rest/v1` 接口 | Basic 和 Cookie 认证统一要求全局 `ADMIN` 或 `NODE`；成功调用 `/login` 仅代表认证成功，不代表能访问管理接口 |
+
+元数据查询也有一项容错变化：`information_schema.view_dependency` 会跳过定义无法解析或引用失效对象的视图，而不再让整次查询失败。结果缺少某个视图时，应检查 FE 警告日志及其定义，不要将缺失行理解为该视图没有依赖。
+
+#### 零年 DATE 文件迁移
+
+4.1.5 修正 Arrow、Parquet 和 ORC V2 中 DATE 的公历纪元日转换。旧 Doris 编码对 `0000-01-01` 至 `0000-02-28` 写出的纪元日大了 1；`0000-03-01` 及以后的日期不受此问题影响，`0000-02-29` 仍不在 Doris DATE 支持范围内。
+
+旧值与合法的新编码无法自动区分，必须根据写入来源确认文件。对于确认全部 DATE 字段使用旧 Doris 编码的文件，可使用本版本源码中的[离线迁移工具](https://github.com/apache/doris/tree/4.1.5-release/tools/legacy_date_migration)：
+
+```bash
+python tools/legacy_date_migration/migrate_legacy_dates.py \
+  --input legacy.parquet --output migrated.parquet --format parquet \
+  --confirm-legacy-doris-date-encoding
+```
+
+ORC 文件将 `--format` 改为 `orc`。工具需要 Python 3.8+ 和支持相应格式的 PyArrow，写入新文件且不覆盖原文件。不要对其他写入器的文件、混合来源文件或已迁移文件重复执行。迁移后使用 `enable_file_scanner_v2=true`，对照可信源验证边界日期、行数及 NULL，再切换消费者。Iceberg 等表格式不能原地替换数据文件，应通过表格式的写入器重建表或执行受支持的事务性重写，以同步重算分区、统计和快照元数据。
+
 ## 常见问题
 
 <!-- 知识类型: 故障排查 -->

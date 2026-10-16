@@ -18,7 +18,7 @@ MIN(<expr>)
 
 ## Parameters
 
-| Parameters | Description |
+| Parameter | Description |
 | -- | -- |
 | `<expr>` | The expression to get the value. Supported types are String, Time, Date, DateTime, TimestampNs, Timestamptz, IPv4, IPv6, UUID, TinyInt, SmallInt, Integer, BigInt, LargeInt, Float, Double, Decimal, Array. |
 
@@ -26,6 +26,12 @@ MIN(<expr>)
 
 Returns the same data type as the input expression.
 If all records in the group are NULL, the function returns NULL.
+
+:::caution Behavior change (4.1.5)
+
+In the Doris 4.1 series since 4.1.5, NULL elements inside complex values such as arrays compare greater than non-NULL elements at the same position. For example, `[10, 20, NULL]` is greater than `[10, 20, 40]`. This differs from an entire expression being NULL: those rows are still ignored. Before 4.1.5, aggregate comparisons treated NULL elements inside complex values as smaller.
+
+:::
 
 ## Example
 
@@ -47,7 +53,7 @@ insert into t1 values
 ```
 
 ```sql
-select k1, min(k_string) from t1 group by k1;
+select k1, min(k_string) from t1 group by k1 order by k1;
 ```
 
 String type: For each group, returns the minimum string value.
@@ -63,7 +69,7 @@ String type: For each group, returns the minimum string value.
 ```
 
 ```sql
-select k1, min(k_decimal) from t1 group by k1;
+select k1, min(k_decimal) from t1 group by k1 order by k1;
 ```
 
 Decimal type: Returns the minimum high-precision decimal value.
@@ -79,17 +85,17 @@ Decimal type: Returns the minimum high-precision decimal value.
 ```
 
 ```sql
-select k1, min(k_array) from t1 group by k1;
+select k1, min(k_array) from t1 group by k1 order by k1;
 ```
 
-For Array type: Returns the minimum array value for each group(Compare elements one by one; null is the smallest element.).
+For Array type: Compares elements in order and returns the minimum array value for each group. NULL elements compare greater than non-NULL elements at the same position.
 
 ```text
 +------+----------------+
 | k1   | min(k_array)   |
 +------+----------------+
 |    1 | [10, 20]       |
-|    2 | [10, 20, null] |
+|    2 | [10, 20, 40]   |
 |    3 | NULL           |
 +------+----------------+
 ```

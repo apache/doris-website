@@ -118,11 +118,11 @@ CSV 输入使用 UUID 文本字段；JSON 输入使用 JSON 字符串或 `null`�
 | MySQL 协议 | 标准文本；即使 Doris 列为 UUID，客户端也可能将结果类型显示为字符串 |
 | Arrow Flight SQL | 原生 UUID，即基于 16 字节大端序 `fixed_size_binary(16)` 的标准 `arrow.uuid` 扩展，ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素同样如此。使用 Arrow Flight SQL JDBC 驱动时，列类型为 `Types.OTHER`，`getObject()` 返回 `java.util.UUID`，`getString()` 返回标准文本，`getBytes()` 返回 16 字节 |
 | CSV、JSON 和 Hive Text 输出 | 标准文本；JSON 将 UUID 表示为字符串 |
-| `OUTFILE` / `EXPORT` 导出 Parquet | 写入带 Parquet UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序，嵌套的 UUID 元素同样如此。文件中保留了原生类型，但 TVF 的 Schema 推断仍将 UUID 叶子暴露为 `STRING`/`VARBINARY` |
+| `OUTFILE` / `EXPORT` 导出 Parquet | 写入带 Parquet UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序，嵌套的 UUID 元素同样如此。dev 版本的 TVF Schema 推导也会还原原生 UUID |
 | `OUTFILE` / `EXPORT` 导出 ORC | 写入 `BINARY`，并附带 Doris 专有的 `doris.logical_type=uuid` 属性，嵌套的 UUID 元素同样如此。ORC 没有标准 UUID 类型，其他工具会将其视为普通二进制 |
-| 原生 Parquet UUID 输入 | 支持带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，使用标准大端字节序。TVF 的 Schema 推断保留由 `enable_mapping_varbinary` 控制的 STRING / VARBINARY 映射；标准 STRING 可用 `CAST(value AS UUID)` 转换，原始 VARBINARY 可用 `CAST(HEX(value) AS UUID)` 转换 |
-| ORC 输入 | 带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 ORC Reader 均支持；此时 TVF 报告的列为 `uuid`、`array<uuid>`、`struct<k:uuid>`。不带该属性的其他 `BINARY` 和 `STRING` 列仍保持原 STRING 映射 |
-| Iceberg | Catalog 的 UUID 映射仍由 `enable.mapping.varbinary` 决定为 STRING / VARBINARY。两种映射均保留 16 字节原始值，使用 `CAST(HEX(value) AS UUID)` 转换为原生 UUID。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记 |
+| 原生 Parquet UUID 输入 | 支持标准大端字节序、带 UUID 逻辑标记的 `FIXED_LEN_BYTE_ARRAY(16)`，包括嵌套元素。dev 版本推导为原生 `UUID`，不受 `enable_mapping_varbinary` 影响；4.1.5 的 TVF 仍按该选项映射为 STRING / VARBINARY |
+| ORC 输入 | 带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 ORC Reader 均支持；此时 TVF 报告的列为 `uuid`、`array<uuid>`、`struct<k:uuid>`。dev 版本中，不带该属性的 `BINARY` 映射为 `VARBINARY`，`STRING` 仍映射为 `STRING` |
+| Iceberg | dev 版本的 Iceberg UUID 直接映射到 Doris 原生 UUID，不受 `enable.mapping.varbinary` 影响。4.1.5 映射为 `VARBINARY(16)`。写入 Iceberg UUID 字段时，Parquet 保留 UUID 逻辑标记 |
 | ClickHouse JDBC Catalog | 将 ClickHouse UUID 映射为 Doris 原生 UUID；此前文档中的发布版本映射为 STRING |
 | Python UDF | SQL UUID 映射为 `uuid.UUID`，`NULL` 映射为 `None`，适用于标量、向量化（`list` 和 `pandas.Series`）、聚合和表函数，也适用于 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素。返回类型为 UUID 的函数必须返回 `uuid.UUID` 对象或 `None` |
 | Java UDF | SQL UUID 映射为 `java.util.UUID`，也支持出现在受支持的复杂类型内部 |

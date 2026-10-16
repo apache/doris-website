@@ -68,7 +68,7 @@ CREATE CATALOG db2_catalog PROPERTIES (
 | time             | string        |         |
 | clob             | string        |         |
 | xml              | string        |         |
-| BLOB             | varbinary     |由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| BLOB             | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
 | other            | UNSUPPORTED   |         |
 
 ## 常见问题

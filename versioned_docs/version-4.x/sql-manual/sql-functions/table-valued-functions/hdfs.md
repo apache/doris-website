@@ -1,140 +1,162 @@
 ---
 {
-    "title": "LOCAL | Table Valued Functions",
+    "title": "HDFS | Table Valued Functions",
     "language": "en",
-    "description": "Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table.",
-    "sidebar_label": "LOCAL"
+    "description": "Read files on HDFS as a relational table with the HDFS table-valued function.",
+    "sidebar_label": "HDFS"
 }
 ---
 
-# LOCAL
+<a id="local"></a>
+
+# HDFS
 
 ## Description
 
-Local table-valued-function(tvf), allows users to read and access local file contents on be node, just like accessing relational table. Currently supports `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` file format.
+The HDFS table-valued function (TVF) reads files on HDFS as a relational table. It supports `csv`, `csv_with_names`, `csv_with_names_and_types`, `json`, `parquet`, `orc`, and `avro` formats.
 
-## syntax
+## Syntax
 
 ```sql
-LOCAL(
-  "file_path" = "<file_path>", 
-  "backend_id" = "<backend_id>",
-  "format" = "<format>"
-  [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
-  );
+HDFS(
+    "uri" = "<uri>",
+    "fs.defaultFS" = "<fs_defaultFS>",
+    "hadoop.username" = "<hadoop_username>",
+    "format" = "<format>"
+    [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
+)
 ```
 
-## Required Parameters
-| Parameter         | Description                                                                                                                                                                                          | Remarks                                           |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| `file_path`       | The path of the file to be read, which is relative to the `user_files_secure_path` directory. The `user_files_secure_path` parameter is a [BE configuration item](../../../admin-manual/config/be-config.md). <br /> The path cannot include `..`, and glob syntax can be used for pattern matching, such as `logs/*.log`. |                                                   |
-| `backend_id`      | The ID of the BE node where the file is located. It can be obtained via the `show backends` command.                                                                                                  | Before version 2.1.1, Doris only supports specifying a BE node to read local data files on that node. |
-| `format`          | The file format, which is required. Supported formats are `csv/csv_with_names/csv_with_names_and_types/json/parquet/orc`.                                                                             |                                                   |
+## Parameters
 
-## Optional Parameters
-| Parameter              | Description                                                                                                                                                                       | Remarks                                                                |
-|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| `shared_storage`        | Defaults to false. If true, the specified file is located on shared storage (e.g., NAS). The shared storage must support POSIX file interfaces and be mounted on all BE nodes. <br /> When `shared_storage` is true, `backend_id` can be omitted. Doris may utilize all BE nodes to access the data. If `backend_id` is set, the data will be accessed only on the specified BE node. | Supported starting from version 2.1.2                                      |
-| `column_separator`      | The column separator, optional, defaults to `\t`.                                                                                                                                 |                                                                       |
-| `line_delimiter`        | The line delimiter, optional, defaults to `\n`.                                                                                                                                   |                                                                       |
-| `compress_type`         | The compression type, optional. Supported types are `UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK`. Defaults to `UNKNOWN`, and the type will be automatically inferred from the `uri` suffix. |                                                                       |
-| `read_json_by_line`     | For JSON format imports, optional, defaults to `true`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `strip_outer_array`     | For JSON format imports, optional, defaults to `false`.                                                                                                                           | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `json_root`             | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `json_paths`            | For JSON format imports, optional, defaults to empty.                                                                                                                               | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `num_as_string`         | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `fuzzy_parse`           | For JSON format imports, optional, defaults to `false`.                                                                                                                            | Refer to: [Json Load](../../../data-operate/import/file-format/json) |
-| `trim_double_quotes`    | For CSV format imports, optional, defaults to `false`. If true, it will trim the outermost double quotes around each field in the CSV file.                                          | For CSV format                                                           |
-| `skip_lines`            | For CSV format imports, optional, defaults to `0`, which means skipping the first few lines of the CSV file. When the format is `csv_with_names` or `csv_with_names_and_types`, this parameter is ignored. | For CSV format                                                           |
-| `path_partition_keys`   | Optional, specifies the partition column names carried in the file path, e.g., `/path/to/city=beijing/date="2023-07-09"`, then fill in `path_partition_keys="city,date"`. This will automatically read the corresponding column names and values from the path for import. |                                                                       |
-| `enable_mapping_varbinary` | Defaults to false. When reading PARQUET/ORC, it maps the BYTE_ARRAY type to STRING. When enabled, it maps to VARBINARY type. | Supported since 4.0.3 |
-| `enable_mapping_timestamp_tz` | Defaults to `false`. When reading PARQUET (`TIMESTAMP` with `isAdjustedToUTC`) or ORC (`TIMESTAMP_INSTANT`), the type is mapped to `DATETIME`. When enabled, it is mapped to the `TIMESTAMPTZ` type. | Supported since version 4.0.3 |
+### Required Parameters
 
-## Access Control Requirements
-| Privilege  | Object | Notes |
-| :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+| Parameter | Description |
+| --- | --- |
+| `uri` | HDFS URI of the file to read. If the path does not exist or the file is empty, the TVF returns an empty result. |
+| `fs.defaultFS` | Default HDFS filesystem URI. |
+| `hadoop.username` | HDFS username. Provide a nonempty string. |
+| `format` | File format: `csv`, `csv_with_names`, `csv_with_names_and_types`, `json`, `parquet`, `orc`, or `avro`. |
 
+### Optional Parameters
 
-## Usage Notes
+Use the following keys for `<optional_property_key>` and their corresponding values for `<optional_property_value>`:
 
-- For more detailed usage of local tvf, please refer to [S3](./s3.md) tvf, The only difference between them is the way of accessing the storage system.
+| Parameter | Description | Notes |
+| --- | --- | --- |
+| `hadoop.security.authentication` | HDFS authentication type. | |
+| `hadoop.kerberos.principal` | Kerberos principal. | |
+| `hadoop.kerberos.keytab` | Kerberos keytab file. | |
+| `dfs.client.read.shortcircuit` | Enable HDFS short-circuit reads. | |
+| `dfs.domain.socket.path` | Domain socket path. | |
+| `dfs.nameservices` | Nameservice used in HA mode. | |
+| `dfs.ha.namenodes.<nameservice>` | NameNode IDs for the specified nameservice in HA mode. | |
+| `dfs.namenode.rpc-address.<nameservice>.<namenode>` | RPC address of the specified NameNode. | |
+| `dfs.client.failover.proxy.provider.<nameservice>` | Failover proxy provider class for the nameservice. | |
+| `column_separator` | Column separator; defaults to `\t`. | |
+| `line_delimiter` | Line delimiter; defaults to `\n`. | |
+| `compress_type` | Compression: `UNKNOWN`, `PLAIN`, `GZ`, `LZO`, `BZ2`, `LZ4FRAME`, `DEFLATE`, or `SNAPPYBLOCK`. Defaults to `UNKNOWN`, which infers compression from the URI suffix. | |
+| `read_json_by_line` | Read JSON by line; defaults to `true`. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `strip_outer_array` | Remove the outer JSON array; defaults to `false`. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `json_root` | JSON root path; empty by default. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `json_paths` | JSON field paths; empty by default. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `num_as_string` | Read JSON numbers as strings; defaults to `false`. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse` | Enable fuzzy JSON parsing; defaults to `false`. | [JSON Load](../../../data-operate/import/file-format/json) |
+| `trim_double_quotes` | Boolean for CSV; defaults to `false`. When enabled, removes outer double quotes from each field. | |
+| `skip_lines` | Integer for CSV; defaults to `0`. Skips initial lines; ignored for `csv_with_names` and `csv_with_names_and_types`. | |
+| `path_partition_keys` | Comma-separated partition column names encoded in the path. For `/path/to/city=beijing/date=2023-07-09`, use `city,date` to extract those values. | |
+| `resource` | Existing HDFS Resource used to access HDFS. See [CREATE RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE). | Since 2.1.4 |
+| `enable_mapping_varbinary` | Defaults to `false`. For Parquet and ORC binary fields, maps to STRING by default or VARBINARY when enabled. This option is independent of `enable_mapping_timestamp_tz`. | Since 4.0.3 |
+| `enable_mapping_timestamp_tz` | Since 4.1.5, accepted only for compatibility; the value is ignored. Parquet Timestamp with `isAdjustedToUTC=true` and ORC `TIMESTAMP_INSTANT` always map to `TIMESTAMPTZ`, even when this option is `false`. | Since 4.0.3 |
+| `hive.parquet.time-zone` | Optional string, empty by default. Specifies the Parquet INT96 writer time zone: an IANA time zone or UTC offset from `-12:00` to `+14:00`; short aliases such as `CST` and `PRC` are rejected. See [Parquet](../../../lakehouse/file-formats/parquet.md#timestamp-and-date-compatibility). | Since 4.1.5 |
 
-- Access data on NAS through local tvf
+### Access Control Requirements
 
-  NAS shared storage allows to be mounted to multiple nodes at the same time. Each node can access files in the shared storage just like local files. Therefore, the NAS can be thought of as a local file system, accessed through local tvf.
+When using the `resource` parameter, the querying user needs `USAGE` on that Resource. Doris must also have network access to HDFS and valid HDFS or Kerberos credentials for the files.
 
-  When setting `"shared_storage" = "true"`, Doris will think that the specified file can be accessed from any BE node. When a set of files is specified using wildcards, Doris will distribute requests to access files to multiple BE nodes, so that multiple nodes can be used to perform distributed file scanning and improve query performance.
+## Return Value
 
+Returns a table whose column names and types are inferred from the files. NULL fields are returned as SQL NULL. A nonexistent path or an empty file returns an empty result. Invalid parameters, inaccessible storage, or malformed files can cause analysis or execution to fail.
 
 ## Examples
 
-Analyze the log file on specified BE:
-```sql
-select * from local(
-        "file_path" = "log/be.out",
-        "backend_id" = "10006",
-        "format" = "csv")
-       where c1 like "%start_time%" limit 10;
-```
+The following examples assume that the HDFS file `student.csv` contains:
+
 ```text
-+--------------------------------------------------------+
-| c1                                                     |
-+--------------------------------------------------------+
-| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
-| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
-| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
-| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
-+--------------------------------------------------------+
+1,alice,18
+2,bob,20
+3,jack,24
+4,jackson,19
+5,liming,18
 ```
 
-Read and access csv format files located at path `${DORIS_HOME}/student.csv`:
+### Read a CSV file
+
 ```sql
-select * from local(
-      "file_path" = "student.csv", 
-      "backend_id" = "10003", 
-      "format" = "csv");
-```
-```text
-+------+---------+--------+
-| c1   | c2      | c3     |
-+------+---------+--------+
-| 1    | alice   | 18     |
-| 2    | bob     | 20     |
-| 3    | jack    | 24     |
-| 4    | jackson | 19     |
-| 5    | liming  | d18    |
-+------+---------+--------+
-```--+---------+--------+
+SELECT * FROM HDFS(
+    "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ","
+);
 ```
 
-Query files on NAS:
-```sql
-select * from local(
-        "file_path" = "/mnt/doris/prefix_*.txt",
-        "format" = "csv",
-        "column_separator" =",",
-        "shared_storage" = "true");
-```
 ```text
-+------+------+------+
-| c1   | c2   | c3   |
-+------+------+------+
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-+------+------+------+
++------+---------+------+
+| c1   | c2      | c3   |
++------+---------+------+
+| 1    | alice   | 18   |
+| 2    | bob     | 20   |
+| 3    | jack    | 24   |
+| 4    | jackson | 19   |
+| 5    | liming  | 18   |
++------+---------+------+
 ```
 
-Can be used with `desc function` :
+### Read a CSV file from HA HDFS
+
+Configure the nameservice and both NameNode addresses for your HA cluster. The URI and `fs.defaultFS` use the logical nameservice:
+
 ```sql
-desc function local(
-      "file_path" = "student.csv", 
-      "backend_id" = "10003", 
-      "format" = "csv");
+SELECT * FROM HDFS(
+    "uri" = "hdfs://my_hdfs/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://my_hdfs",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ",",
+    "dfs.nameservices" = "my_hdfs",
+    "dfs.ha.namenodes.my_hdfs" = "nn1,nn2",
+    "dfs.namenode.rpc-address.my_hdfs.nn1" = "namenode01:8020",
+    "dfs.namenode.rpc-address.my_hdfs.nn2" = "namenode02:8020",
+    "dfs.client.failover.proxy.provider.my_hdfs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+);
 ```
+
+```text
++------+---------+------+
+| c1   | c2      | c3   |
++------+---------+------+
+| 1    | alice   | 18   |
+| 2    | bob     | 20   |
+| 3    | jack    | 24   |
+| 4    | jackson | 19   |
+| 5    | liming  | 18   |
++------+---------+------+
+```
+
+### Inspect the inferred schema
+
+```sql
+DESC FUNCTION HDFS(
+    "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ","
+);
+```
+
 ```text
 +-------+------+------+-------+---------+-------+
 | Field | Type | Null | Key   | Default | Extra |
@@ -144,3 +166,7 @@ desc function local(
 | c3    | TEXT | Yes  | false | NULL    | NONE  |
 +-------+------+------+-------+---------+-------+
 ```
+
+## Usage Notes
+
+For other common file options, see the [S3 TVF](./s3.md). HDFS-specific authentication and HA settings are described in [HDFS Storage](../../../lakehouse/storages/hdfs.md).

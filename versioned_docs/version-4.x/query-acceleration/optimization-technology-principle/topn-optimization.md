@@ -51,6 +51,8 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 <!-- Knowledge type: configuration -->
 <!-- Applicable scenarios: tuning or disabling TOPN optimization -->
 
+3. **Two-phase read limitation**: Since 4.1.5, TopN lazy materialization for internal Doris tables requires `light_schema_change` and does not support Aggregate Key tables. When these conditions are not met, Doris uses the regular TopN execution path and the query remains available.
+
 ## Configuration Parameters
 
 The following four parameters are all session variables. You can set them for a single SQL statement or globally.

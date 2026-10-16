@@ -72,6 +72,14 @@ Doris 中查询结果以列存格式的 Block 组织。在 2.1 之前的版本�
 | FE   | `fe/log/fe.log`  | `Arrow Flight SQL service is started` |
 | BE   | `be/log/be.INFO` | `Arrow Flight Service bind to host`   |
 
+## 4.1.5 起的类型映射与资源释放
+
+自 4.1.5 版本起，嵌套 ARRAY / MAP / STRUCT 的 Arrow Schema 保留子字段逻辑类型信息及 NULL 属性。`DATETIME` 使用无时区 Timestamp，`TIMESTAMPTZ` 使用带时区注解的 Timestamp，采用会话时区（`Z` 规范化为 `UTC`）；两者不能按同一种时区语义解析。超出支持范围的时间戳会报错，不会截断或回绕后继续返回。
+
+读取期间提前关闭结果流会取消相应查询并释放资源，客户端应正确关闭 Reader / Statement。对于需要延迟保留 Coordinator 的外表批量扫描，FE 配置 [`arrow_flight_deferred_query_idle_timeout_second`](../admin-manual/config/fe-config.md#arrow_flight_deferred_query_idle_timeout_second) 默认 `3600` 秒，实际期限不短于查询执行超时，释放 Coordinator 不会关闭会话。
+
+自 4.1.5 版本起，Arrow Flight 查询明确不复用 MySQL 协议 SQL 结果缓存，也不使用 MySQL 点查询短路路径，仍可正常执行查询。
+
 ## Python 使用方式
 
 <!-- 知识类型: 操作步骤 -->
@@ -686,19 +694,17 @@ arrow_flight_sql_proxy_port={nginx port}
 
 KylinV10 SP2 和 SP3 的 Linux 内核版本最高仅 `4.19.90-24.4.v2101.ky10.aarch64`，无法继续升级，只能在 KylinV10 上重新编译 Doris BE。如果使用新版本 `ldb_toolchain` 编译后问题仍存在，可尝试使用低版本 `ldb_toolchain v0.17` 编译。如果你的 ARM 环境无法连外网，华为云提供 ARM + KylinV10，阿里云提供 x86 + KylinV10。
 
-### 4. Prepared Statement 传递参数报错
+<a id="5-如何修改-jdbcarrow-flight-sql-每次读取的批次大小"></a>
 
-**Q：** Prepared Statement 传递参数（如 `select * from xxx where id=?`）时报错 `parameter ordinal 1 out of range`。
-
-**A：** 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBC Driver 不支持 Prepared Statement 传递参数。这是 Arrow Flight SQL 的一个 BUG，详见 [GitHub Issue](https://github.com/apache/arrow/issues/40118)。
-
-### 5. 如何修改 `jdbc:arrow-flight-sql` 每次读取的批次大小
+### 4. 如何修改 `jdbc:arrow-flight-sql` 每次读取的批次大小
 
 **Q：** 在某些场景下需要修改批次大小以提升性能。
 
 **A：** 通过修改 `org.apache.arrow.adbc.driver.jdbc.JdbcArrowReader` 文件中 `makeJdbcConfig` 方法的 `setTargetBatchSize`（默认 `1024`），然后将修改后的文件保存到本地同名路径目录下，从而覆盖原文件生效。
 
-### 6. ADBC v0.10 不支持并行读取
+<a id="6-adbc-v010-不支持并行读取"></a>
+
+### 5. ADBC v0.10 不支持并行读取
 
 **Q：** ADBC v0.10 中 JDBC 和 Java ADBC/JDBC Driver 是否支持并行读取？
 
@@ -713,25 +719,33 @@ for (FlightEndpoint endpoint : endpoints) { ... }
 
 此外，ADBC v0.10 默认的 `AdbcStatement` 实际是 `JdbcStatement`，`executeQuery` 后将行存格式的 JDBC `ResultSet` 又重新转为 Arrow 列存格式。预期 ADBC 1.0.0 时 Java ADBC 将功能完善，详见 [GitHub Issue](https://github.com/apache/arrow-adbc/issues/1490)。
 
-### 7. 在 URL 中指定 database name
+<a id="7-在-url-中指定-database-name"></a>
+
+### 6. 在 URL 中指定 database name
 
 **Q：** 是否可以在 URL 中指定 database name？
 
 **A：** 截止 Arrow v15.0，Arrow JDBC Connector 不支持在 URL 中指定 database name，例如 `jdbc:arrow-flight-sql://{FE_HOST}:{fe.conf:arrow_flight_sql_port}/test?useServerPrepStmts=false` 中指定连接 `test` database 无效，只能手动执行 SQL `use database`。Arrow v18.0 已支持 URL 指定 database name，但实测仍存在 BUG。
 
-### 8. Python ADBC 打印 `Cannot disable autocommit` 警告
+<a id="8-python-adbc-打印-cannot-disable-autocommit-警告"></a>
+
+### 7. Python ADBC 打印 `Cannot disable autocommit` 警告
 
 **Q：** 完整警告为 `Warning: Cannot disable autocommit; conn will not be DB-API 2.0 compliant`。
 
 **A：** 使用 Python 时可忽略此警告，这是 Python ADBC Client 的问题，不会影响查询。
 
-### 9. Python 报错 `grpc: received message larger than max`
+<a id="9-python-报错-grpc-received-message-larger-than-max"></a>
+
+### 8. Python 报错 `grpc: received message larger than max`
 
 **Q：** 完整报错为 `grpc: received message larger than max (20748753 vs. 16777216)`。
 
 **A：** 参考 [Python: grpc: received message larger than max #2078](https://github.com/apache/arrow-adbc/issues/2078)，在 Database Option 中增加 `adbc_driver_flightsql.DatabaseOptions.WITH_MAX_MSG_SIZE.value`。
 
-### 10. 报错 `invalid bearer token`
+<a id="10-报错-invalid-bearer-token"></a>
+
+### 9. 报错 `invalid bearer token`
 
 **Q：** 客户端报错 `invalid bearer token`。
 
@@ -763,13 +777,17 @@ ADBC Client 与 Arrow Flight Server 之间的连接本质上是长连接，需�
 
 Arrow Flight SQL 常用来取代使用 JDBC 的场景，但 JDBC 连接会在查询结束后立即释放，因此使用 Arrow Flight SQL 时 Doris 默认的连接数限制偏小，经常导致连接数超过 `arrow_flight_token_cache_size` 后将仍被使用的连接淘汰。
 
-### 11. JDBC 或 Java 读取 Datetime 类型返回时间戳
+<a id="11-jdbc-或-java-读取-datetime-类型返回时间戳"></a>
+
+### 10. JDBC 或 Java 读取 Datetime 类型返回时间戳
 
 **Q：** 使用 JDBC 或 Java 连接 Arrow Flight SQL 读取 Datetime 类型时，返回的是时间戳（如 `1740993808`），而非格式化时间（如 `2025-03-03 17:23:28Z`）。
 
 **A：** JDBC 或 Java 连接 Arrow Flight SQL 读取 Datetime 类型需要自行转换时间戳，参考 [Add java parsing datetime type in arrow flight sql sample #48578](https://github.com/apache/doris/pull/48578)。Python Arrow Flight SQL 读取 Datetime 类型返回 `2025-03-03 17:23:28Z`，而 JDBC 或 Java 返回 `1740993808`。
 
-### 12. JDBC 或 Java JDBC Client 读取 Array 嵌套类型报错
+<a id="12-jdbc-或-java-jdbc-client-读取-array-嵌套类型报错"></a>
+
+### 11. JDBC 或 Java JDBC Client 读取 Array 嵌套类型报错
 
 **Q：** 完整报错为 `Configuration does not provide a mapping for array column 2`。
 

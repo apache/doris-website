@@ -43,6 +43,8 @@ The user executing this SQL command must have at least the following privileges:
 
 ## Usage Notes
 
+Since 4.1.5, only `'root'@'%'` is the special root identity. An identity such as `'root'@'localhost'` remains an ordinary user and gains no privilege to modify the actual root account merely from its username. Protection of the actual root account also does not apply to other users named root.
+
 - If the `FOR user_identity` field does not exist, then change the current user's password.
 
 ## Example

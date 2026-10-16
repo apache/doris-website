@@ -74,7 +74,7 @@ CREATE CATALOG postgresql_catalog PROPERTIES (
 | char(N)                                 | char(N)                |                                                                 |
 | varchar/text                            | string                 |                                                                 |
 | timestamp(S)              | datetime(S)            |                                                                 |
-|timestamptz(S)| datetime(s) / timestamptz(s)| properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型                                                                               |
+|timestamptz(S)| TIMESTAMPTZ(S) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(S)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
 | date                                    | date                   |                                                                 |
 | json/jsonb                              | string                 | 为了更好的读取与计算性能均衡，Doris 会将 JSON 类型映射为 STRING 类型。                   |
 | time                                    | string                 | Doris 不支持 time 类型，time 类型会被映射为 string。                          |
@@ -83,7 +83,7 @@ CREATE CATALOG postgresql_catalog PROPERTIES (
 | cidr/inet/macaddr                       | string                 |                                                                 |
 | uuid                                    | string                 |                                                                 |
 | bit                                     | boolean / string       | Doris 不支持 bit 类型，bit 类型会在 bit(1) 时被映射为 boolean，其他情况下映射为 string。 |
-| bytea | varbinary | 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
+| bytea | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
 | array                                   | array                  | 关于数组类型的映射方式，请参与下面的说明。 |
 | other                                   | UNSUPPORTED            |                                                                 |
 

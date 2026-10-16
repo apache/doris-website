@@ -190,16 +190,17 @@ SELECT id, name FROM test_regexp WHERE name REGEXP '-';
 结尾字符匹配
 ```sql
 -- Find names ending with 'e'
-SELECT id, name FROM test_regexp WHERE name REGEXP 'e$';
+SELECT id, name FROM test_regexp WHERE name REGEXP 'e$' ORDER BY id;
 ```
 
 ```text
-+------+---------+
-| id   | name    |
-+------+---------+
-|    1 | Alice   |
-|    3 | Charlie |
-+------+---------+
++------+----------+
+| id   | name     |
++------+----------+
+|    1 | Alice    |
+|    3 | Charlie  |
+|    6 | John_Doe |
++------+----------+
 ```
 
 emoji字符匹配

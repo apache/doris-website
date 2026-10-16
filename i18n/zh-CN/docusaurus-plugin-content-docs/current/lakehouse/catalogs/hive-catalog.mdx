@@ -231,6 +231,8 @@ ORDER BY engine_name, entry_name;
 
 Hive 表中的时间戳文件可能由不同引擎生成。是否需要时区转换取决于物理编码和写入端行为。Parquet `INT96` 本身不包含时区标注，因此 Doris 不会根据 `INT96` 值推断写入端时区。
 
+自 4.1.5 版本起，`hive.parquet.time-zone` 接受 IANA 时区或 `-12:00` 至 `+14:00` 的 UTC 偏移，接受 `UTC` / `GMT`，拒绝 `CST` / `PRC` 等短别名。详见 [Parquet](../file-formats/parquet.md#时间戳与日期兼容性415-起)。
+
 ### Parquet INT96 时间戳
 
 FileScannerV2 按以下规则处理 Parquet 时间戳：
@@ -288,8 +290,8 @@ CREATE CATALOG hive_legacy_int96 PROPERTIES (
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | string/varbinary| 由 properties 中 `enable.mapping.varbinary` (4.0.2 后开始支持) 属性控制。默认为 `false`, 则映射到 `string`; 为 `true` 时，则映射到 `varbinary` 类型。|
-| timestamp with local time zone| datetime/timestamptz | 由 properties 中 `enable.mapping.timestamp_tz` (4.0.3 后开始支持) 属性控制，默认为 `false`, 则映射到 `datetime`; 为 `true` 时，则映射到 `timestamptz` 类型 |
+| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
+| timestamp with local time zone| TIMESTAMPTZ | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
 | array         | array         |                           |
 | map           | map           |                           |
 | struct        | struct        |                           |
@@ -847,7 +849,7 @@ Hive Transactional 表是 Hive 中支持 ACID 语义的表。详情可见 [Hive 
 
 可以通过 INSERT 语句将数据写入到 Hive 表中。支持写入到由 Doris 创建的 Hive 表，或者 Hive 中已存在的且格式支持的表。
 
-对于分区表，会根据数据，自动写入到对应分区，或者创建新的分区。目前不支持指定分区写入。
+对于分区表，会根据数据写入对应分区，或者创建新分区。自 4.1.5 版本起，也支持通过 `PARTITION (列名 = 字面量)` 指定静态分区，或者混合使用静态和动态分区列。静态分区列不要重复放入 INSERT 的目标列列表或 SELECT / VALUES 输出中；剩余动态分区列仍由输入数据提供。
 
 ### INSERT INTO
 
@@ -861,7 +863,7 @@ INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
 ```
 
-自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+自 4.1.5 版本起，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
 
 ```sql
 -- Full Static Partition
@@ -882,11 +884,11 @@ SELECT col1, col2, partition_col2 FROM source_table;
 INSERT OVERWRITE 会使用新的数据完全覆盖原有表中的数据。
 
 ```sql
-INSERT OVERWRITE TABLE VALUES(val1, val2, val3, val4);
+INSERT OVERWRITE TABLE hive_tbl VALUES(val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
 
-自 4.2.0 版本，支持写入数据到静态分区，或者静态分区和动态分区混合使用：
+自 4.1.5 版本起，支持覆盖静态分区，或者静态分区和动态分区混合使用：
 
 ```sql
 -- Full Static Partition
@@ -908,7 +910,41 @@ INSERT OVERWRITE 的语义与 Hive 一致，有如下行为：
 
 * 当目的表是非分区表，而源表是空表是，目的表会被清空。
 
-* 自 4.2.0 版本开始，支持指定分区写入，以及指定分区和动态分区混合使用。但是即便指定了静态分区，如果查询内容为空，则指定的分区也不会被清理。
+* 自 4.1.5 版本起，支持指定静态分区以及静态和动态分区混合写入。但是即便指定了静态分区，如果查询内容为空，则指定的分区也不会被清理。
+
+**静态分区完整示例（4.1.5 起）**
+
+先配置本页所述的 Hive Catalog，并准备已有的 `hive_ctl.hive_db` 数据库，以及建表、写入和查询权限；用于写入的 Catalog 需已设置 `fs.defaultFS`。下面混合使用静态日期和动态地区，再仅覆盖其中一个完整静态分区：
+
+```sql
+CREATE TABLE hive_ctl.hive_db.static_write_demo (
+    id INT,
+    dt STRING,
+    region STRING
+)
+ENGINE=HIVE
+PARTITION BY LIST (dt, region) ()
+PROPERTIES ("file_format" = "parquet");
+
+INSERT INTO hive_ctl.hive_db.static_write_demo PARTITION (dt='2026-10-01')
+VALUES (1, 'beijing'), (2, 'shanghai');
+
+INSERT OVERWRITE TABLE hive_ctl.hive_db.static_write_demo
+PARTITION (dt='2026-10-01', region='beijing') VALUES (3);
+
+SELECT id, dt, region FROM hive_ctl.hive_db.static_write_demo ORDER BY id;
+```
+
+```text
++----+------------+----------+
+| id | dt         | region   |
++----+------------+----------+
+|  2 | 2026-10-01 | shanghai |
+|  3 | 2026-10-01 | beijing  |
++----+------------+----------+
+```
+
+静态分区值必须是字面量；不能重复指定同一分区键，也不能将静态分区列重复放入 INSERT 的显式列列表。静态键名按不区分大小写匹配，不存在的分区列会报错。
 
 ### CTAS
 

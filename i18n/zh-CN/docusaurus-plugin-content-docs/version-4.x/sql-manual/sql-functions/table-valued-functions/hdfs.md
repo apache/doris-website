@@ -19,7 +19,7 @@ HDFS(
     "uri" = "<uri>",
     "fs.defaultFS" = "<fs_defaultFS>",
     "hadoop.username" = "<hadoop_username>",
-    "format" = "<format>",
+    "format" = "<format>"
     [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
   );
 ```
@@ -69,8 +69,7 @@ HDFS(
 
 | 权限（Privilege）      | 对象（Object） | 说明（Notes） |
 |:-------------------|:-----------| :------------ |
-| USAGE_PRIV         | 表          |               |
-| SELECT_PRIV        | 表          |               |
+| USAGE_PRIV | Resource | 使用 `resource` 参数时，需要对指定 Resource 拥有 USAGE 权限。 |
 
 
 ## 示例
@@ -78,7 +77,7 @@ HDFS(
 - 读取并访问 HDFS 存储上的 CSV 格式文件
   ```sql
   select * from hdfs(
-                "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
+                "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
                 "fs.defaultFS" = "hdfs://127.0.0.1:8424",
                 "hadoop.username" = "doris",
                 "format" = "csv");
@@ -98,8 +97,8 @@ HDFS(
 - 读取并访问 HA 模式的 HDFS 存储上的 CSV 格式文件
   ```sql
   select * from hdfs(
-              "uri" = "hdfs://127.0.0.1:842/user/doris/csv_format_test/student.csv",
-              "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+              "uri" = "hdfs://my_hdfs/user/doris/csv_format_test/student.csv",
+              "fs.defaultFS" = "hdfs://my_hdfs",
               "hadoop.username" = "doris",
               "format" = "csv",
               "dfs.nameservices" = "my_hdfs",

@@ -23,6 +23,12 @@ In generative AI applications, especially in retrieval-augmented generation (RAG
 - Improve recall while ensuring accuracy and explainability of results
 - Together build a reliable retrieval foundation that provides more accurate and relevant context for large language models
 
+:::caution Creating V1 inverted indexes is prohibited since 4.1.5
+
+Use V2 or V3 for new indexes. Existing V1 tables remain readable, but you cannot add inverted indexes or upgrade the index storage format in place with `ALTER TABLE`; rebuild the table instead. The FE cannot start after upgrading if its effective `inverted_index_storage_format` configuration remains `V1`. Update `fe.conf` and `fe_custom.conf` beforehand. See [Upgrading to 4.1.5](../../../admin-manual/cluster-management/upgrade.md).
+
+:::
+
 ## Evolution of text search in Doris
 
 Starting from version 2.0.0, Doris introduced the inverted index to support high-performance full-text search. As retrieval scenarios diversified and query complexity increased, Doris has continued to expand its text search capabilities in subsequent releases.

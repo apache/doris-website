@@ -23,6 +23,12 @@
 - 既提升召回率，又保证结果的准确性与可解释性
 - 共同构建可靠的检索基础，为大模型提供更准确、更相关的上下文
 
+:::caution 4.1.5 起禁止新建 V1 倒排索引
+
+新建索引请使用 V2 或 V3。已有 V1 表仍能读取，但不能继续添加倒排索引，也不能通过 `ALTER TABLE` 将索引存储格式原地升级，需要重建表。FE 的生效配置若仍为 `inverted_index_storage_format=V1`，升级后将无法启动，须提前修改 `fe.conf` / `fe_custom.conf`。详见[升级到 4.1.5](../../../admin-manual/cluster-management/upgrade.md#升级到-415)。
+
+:::
+
 ## Doris 文本搜索的演进
 
 从 2.0.0 版本开始，Doris 引入了倒排索引（Inverted Index）以支持高性能的全文搜索。随着检索场景的多样化与查询复杂度的提升，Doris 在后续版本中持续扩展文本搜索能力。

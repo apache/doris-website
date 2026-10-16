@@ -697,6 +697,8 @@ SELECT * FROM tbl WHERE v['pattern_1'] MATCH 'Doris';
 SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
 
+自 Doris 4.1.5 起，可通过以下索引属性或 BE 配置项关闭 norms。
+
 VARIANT 路径上的分词索引默认写入 BM25 norms，每行每路径占 1 字节，包括该路径没有值的行。仅用于过滤的路径可通过 `"norms" = "false"` 关闭；不带 `field_pattern` 时，该属性作用于索引覆盖的所有子路径：
 
 ```sql

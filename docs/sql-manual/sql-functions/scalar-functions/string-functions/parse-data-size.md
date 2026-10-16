@@ -24,14 +24,14 @@ PARSE_DATA_SIZE(<str>)
 
 ## Return Value
 
-Returns BIGINT type, representing the numeric value converted to bytes.
+Returns LARGEINT type, representing the numeric value converted to bytes.
 
 Special cases:
-- Supported units (case-insensitive): B, kB, MB, GB, TB, PB, EB, ZB, YB
+- Supported units (case-sensitive; use these exact spellings): B, kB, MB, GB, TB, PB, EB, ZB, YB
 - Units use base 1024 (e.g., 1kB = 1024B)
 - Supports decimals (e.g., "2.5MB")
 - If parameter format is invalid, returns error
-- If parameter is NULL, returns NULL
+- If parameter is NULL, returns NULL. In the Doris 4.1 series since 4.1.5, NULL rows in nullable columns are skipped before string parsing
 
 **Supported Units Table:**
 
@@ -45,7 +45,9 @@ Special cases:
 | PB   | Petabytes  | 1024⁵      |
 | EB   | Exabytes   | 1024⁶      |
 
-## Examples
+<a id="examples"></a>
+
+## Example
 
 1. Basic usage: Parse bytes
 ```sql

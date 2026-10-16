@@ -583,6 +583,8 @@ This error means that WAL replay has run into a problem (for example, a schema c
 
 ### WAL Limitations
 
+Since 4.1.5, WAL replay treats an incomplete trailing length or payload as the end of the file. A complete data block can still be replayed when its trailing checksum field was not fully written. An unfinished trailing record is not recovered as a complete record. Missing or corrupt WAL files still cannot guarantee data integrity.
+
 - `async_mode` writes data to the WAL, deletes it on success, and recovers from the WAL on failure.
 - WAL files are stored as a single replica. If the corresponding disk is damaged or the file is deleted accidentally, data may be lost.
 - When taking a BE node offline, use the `DECOMMISSION` command to prevent data loss.

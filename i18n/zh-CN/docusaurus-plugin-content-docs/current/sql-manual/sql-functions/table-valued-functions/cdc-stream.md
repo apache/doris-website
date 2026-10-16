@@ -77,6 +77,8 @@ cdc_stream(
 
 返回源表各列，列名和类型根据源表 Schema 生成；源列中的 NULL 值按对应列类型返回。设置 `include_delete_sign=true` 时，结果末尾额外包含 `TINYINT` 类型的 `__DORIS_DELETE_SIGN__` 列；普通记录取值为 `0`，删除记录取值为 `1`。无法连接数据源、找不到源表或参数不合法时，函数分析或执行失败，不返回数据。
 
+自 4.1.5 版本起，配合 Streaming Job 使用时，CDC 操作以作业创建者身份检查 Doris 权限，且失败任务不会走普通任务的自动重试流程。详见[持续导入的身份与失败处理](../../../data-operate/import/import-way/streaming-job/continuous-load-overview.md#cdc-任务身份与失败处理415-起)。
+
 ## 示例
 
 - 从 MySQL 持续同步单表数据

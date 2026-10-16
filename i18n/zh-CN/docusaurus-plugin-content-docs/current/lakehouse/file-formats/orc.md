@@ -37,7 +37,7 @@ ORC 时间戳可以保存纳秒，而 Doris `DATETIMEV2` 和 `TIMESTAMPTZ` 最�
 
 Doris 写入 `UUID` 列（包括 ARRAY、MAP 或 STRUCT 中嵌套的 UUID 元素）时使用 `BINARY`，其中存放 16 字节的标准大端序值，并附加 `doris.logical_type=uuid` 属性标记为原生 UUID。ORC 没有标准 UUID 类型，因此其他工具只会看到普通二进制列，不具备 UUID 语义。显式指定 ORC `schema` 属性时，UUID 列必须声明为 `binary`；声明为 `string` 等其他类型会被拒绝。
 
-读取带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 Reader 均支持，此时表值函数报告的列为 `uuid`、`array<uuid>` 或 `struct<k:uuid>`。不带该属性的 `BINARY` 和 `STRING` 列仍保持原 STRING 映射。
+读取带 `doris.logical_type=uuid` 属性的 `BINARY` 列会还原为原生 UUID，嵌套元素同样如此，新旧两套 Reader 均支持，此时表值函数报告的列为 `uuid`、`array<uuid>` 或 `struct<k:uuid>`。dev 版本中，不带该属性的 `BINARY` 映射为 `VARBINARY`，`STRING` 仍映射为 `STRING`。
 
 OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映射](../../data-operate/export/export-overview.md#导出文件列类型映射)。
 
@@ -56,6 +56,14 @@ OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映
 * zlib
 
 ## 相关参数
+
+### 时间戳与日期兼容性（4.1.5 起）
+
+自 4.1.5 版本起，ORC `TIMESTAMP` 按不带时区的墙上时间处理，`TIMESTAMP_INSTANT` 按时间点处理并映射为 `TIMESTAMPTZ`。读取时将纳秒精度按微秒舍入，超过支持范围或非法纳秒值会报错。
+
+写入 ORC 时，部分紧邻 Unix 纪元之前的负小数时间戳无法无损表示；Doris 会返回 `ORC cannot represent pre-epoch timestamp fractions in [-0.999, 0) seconds without data loss; use Parquet for these values`。包含这类值时，应改用 Parquet。
+
+曾由旧 Doris 编码写出的 `0000-01-01` 至 `0000-02-28` DATE 文件需要显式迁移，详见[零年 DATE 文件迁移](../../admin-manual/cluster-management/upgrade.md#零年-date-文件迁移)。
 
 ### 会话变量
 

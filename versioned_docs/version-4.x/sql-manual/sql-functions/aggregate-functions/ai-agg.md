@@ -12,9 +12,13 @@ Aggregates a specific column using a large language model according to user-prov
 
 ## Syntax
 
-`AI_AGG([<resource_name>], <expr>, <instruction>)`
+```sql
+AI_AGG([<resource_name>], <expr>, <instruction>)
+```
 
-## Parameter Description
+<a id="parameter-description"></a>
+
+## Parameters
 
 | Parameter         | Description                                             |
 | ----------------- | ------------------------------------------------------- |
@@ -23,6 +27,8 @@ Aggregates a specific column using a large language model according to user-prov
 | `<instruction>`   | The instruction to execute, only accepts literals.      |
 
 ## Return Value
+
+Since version 4.1.5, AI_AGG returns the full model-generated text as one result, including text that contains a JSON array. It does not split that array into multiple aggregation results. For the OpenAI Responses format, it skips non-text output such as reasoning and tool items, and concatenates `output_text` from message items. If the response includes a status, it must be `completed`; an incomplete response or a response without text reports an error.
 
 Returns a string containing the aggregation result.
 

@@ -93,6 +93,8 @@ Endpoint 是访问阿里云 OSS 的入口地址，格式为 `<region>.oss-dls.al
 
 ### 配置文件
 
+自 4.1.5 版本起，`oss.hdfs.hadoop.config.resources` 中的 XML 路径不得包含 `..` 父目录路径段，正斜杠和反斜杠分隔形式都会检查。请使用正常文件路径。
+
 > 3.1 版本支持
 
 OSS-HDFS 支持通过 `oss.hdfs.hadoop.config.resources` 参数来指定 HDFS 相关配置文件目录。

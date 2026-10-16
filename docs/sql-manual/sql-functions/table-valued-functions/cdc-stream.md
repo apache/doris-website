@@ -77,6 +77,8 @@ cdc_stream(
 
 Returns the columns of the source table. Column names and types are derived from the source table Schema, and NULL source values are returned using the corresponding column types. When `include_delete_sign=true`, the result includes an additional `TINYINT` column named `__DORIS_DELETE_SIGN__`; regular records have a value of `0`, and delete records have a value of `1`. If the data source cannot be reached, the source table cannot be found, or a parameter is invalid, function analysis or execution fails and no data is returned.
 
+Since 4.1.5, when used with a Streaming Job, CDC operations check Doris privileges as the job creator, and failed tasks do not use the ordinary automatic task retry path. See [Continuous Load Identity and Failure Handling](../../../data-operate/import/import-way/streaming-job/continuous-load-overview.md#cdc-task-identity-and-failure-handling).
+
 ## Examples
 
 - Continuously synchronize a single table from MySQL

@@ -88,6 +88,8 @@ Pay special attention to the following rules:
 4. NULL values in the matching column or in the equi-key columns do not produce a match. If a left-table row has NULL in the matching column, or if no qualifying right-table row exists in the same group, the right-side columns are filled with NULL (LEFT JOIN) or the row is discarded (INNER JOIN).
 5. When multiple rows in the right table share the same grouping key and the same value in the matching column, and they all satisfy the matching condition, one of them is returned (the result is non-deterministic).
 
+Since 4.1.5, equality keys in an ASOF JOIN `ON` clause accept ordinary `=` only, and reject the NULL-safe equality operator `<=>`. This restriction does not change `<=>` behavior in ordinary joins.
+
 ## Examples
 
 <!-- Knowledge type: Operational example -->

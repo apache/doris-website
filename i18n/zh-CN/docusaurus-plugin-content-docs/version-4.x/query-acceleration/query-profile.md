@@ -159,11 +159,11 @@ show query profile
 
 | Level | 行为 | 性能影响 |
 | --- | --- | --- |
-| 1（默认） | BE 仅汇报精简版 Profile，足以在 FE 聚合为 MergedProfile | 最小 |
-| 2 | 输出更详细的 Counter，便于深入分析 | 较小 |
+| 1 | BE 仅汇报精简版 Profile，足以在 FE 聚合为 MergedProfile | 最小 |
+| 2（默认） | 输出更详细的 Counter，便于深入分析 | 较小 |
 | 3 | 最大粒度，部分 Counter 的采集可能影响查询性能 | 较大 |
 
-例：默认情况下，`EXCHANGE_OPERATOR` 的 Counter 如下：
+例：当 `profile_level=1` 时，`EXCHANGE_OPERATOR` 的 Counter 如下：
 
 ```text
 EXCHANGE_OPERATOR(id=1):
