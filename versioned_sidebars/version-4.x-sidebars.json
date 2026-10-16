@@ -2451,6 +2451,7 @@
                     "sql-manual/sql-functions/table-valued-functions/hudi-meta",
                     "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
                     "sql-manual/sql-functions/table-valued-functions/jobs",
+                    "sql-manual/sql-functions/table-valued-functions/lance-index-entries",
                     "sql-manual/sql-functions/table-valued-functions/local",
                     "sql-manual/sql-functions/table-valued-functions/mv_infos",
                     "sql-manual/sql-functions/table-valued-functions/numbers",
