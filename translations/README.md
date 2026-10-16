@@ -200,11 +200,14 @@ file with the reviewed PR candidates:
 }
 ```
 
-Use `--active-candidates /path/to/open-prs.json`. A matching source hash marks
-the task as active and removes it from `selected`, but does not add coverage.
-A source change makes the PR candidate stale and requeues the page. The planner
-does not query GitHub: a caller that wants complete PR deduplication must supply
-all active candidate PRs, including manually opened T09 PRs.
+Use `--active-candidates /path/to/open-prs.json`. An open candidate reserves its
+document identity and removes it from `selected`, but does not add coverage.
+A changed source hash or path reports a stale candidate and keeps the document
+reserved until the PR is merged or closed. The input may also include a
+`blockedTargets` array; those paths are excluded before the batch limit is
+applied. The planner does not query GitHub: a caller that wants complete PR
+deduplication must supply all active candidate PRs, including manually opened
+T09 PRs.
 
 The plan also reports `zh_only_change` exceptions when a committed Chinese
 counterpart changed since the T03 baseline while its English fact source did
