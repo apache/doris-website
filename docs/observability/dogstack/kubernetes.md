@@ -137,8 +137,11 @@ The repository provides two sizes:
 - `examples/ai-observe-stack/prod.yaml`: three FE and three BE, persistence, three gateways, and Ingress. A starting point for production. Before using it, adapt the environment-specific settings: `storageClass` (set to the AWS `gp3`), the Ingress class, hosts, and TLS issuer, and the Grafana password (`CHANGE_ME`).
 
 ```Bash
-helm install dog ./ai-observe-stack -n dog --create-namespace -f examples/ai-observe-stack/dev.yaml
+cp examples/ai-observe-stack/dev.yaml dog-values.yaml
+helm install dog ./ai-observe-stack -n dog --create-namespace -f dog-values.yaml
 ```
+
+Keep `dog-values.yaml` for later upgrades. For production, copy `prod.yaml` instead and adapt the environment-specific settings listed above before installing.
 
 Doris FE and BE take two to five minutes to pull images and initialize. The gateway waits until FE ports 9030 and 8030 are reachable and at least one BE is online before starting.
 
@@ -181,6 +184,12 @@ When the installation finishes, Helm prints NOTES, which include the OTLP gRPC a
 ## Step 2: Install the Kubernetes Collector {#step-2-install-the-kubernetes-collector}
 
 The backend installed in Step 1 only receives data. The collector gathers data from the Kubernetes cluster and sends it to the gateway: on every node, the agent reads the stdout and stderr of all containers and collects kubelet and node metrics; the cluster collector collects cluster-level metrics and Kubernetes Events. Every record carries the pod, namespace, workload, and cluster name. Without the collector, only applications that send OTLP to the gateway directly reach DOG Stack, and there are no container logs, node or cluster metrics, or Events. Install one collector release in every Kubernetes cluster to be observed.
+
+Prepare the namespace in the cluster being collected. Run this idempotent command even if you skipped Step 1:
+
+```Bash
+kubectl create namespace dog --dry-run=client -o yaml | kubectl apply -f -
+```
 
 1. Confirm that the gateway is reachable from the cluster to be collected. Replace the address with yours.
 
