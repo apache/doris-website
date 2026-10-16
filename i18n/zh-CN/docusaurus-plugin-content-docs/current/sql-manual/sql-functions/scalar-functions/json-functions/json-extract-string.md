@@ -15,8 +15,11 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
 ```
 
 ## 参数
-- `<json_object>` JSON 类型，要提取的目标参数。
-- `<json_path>` String 类型，要从目标 JSON 中提取目标元素的 JSON 路径。
+
+| 参数 | 描述 |
+| --- | --- |
+| `<json_object>` | 必需。JSON 值，或可转换为 JSON 的合法 JSON 字符串。 |
+| `<json_path>` | 必需。STRING 类型的 JSON 路径；数组遍历使用显式通配符。 |
 
 ## 返回值
 `Nullable(STRING)` 返回提取出的 STRING 值，某些情况会得到 NULL

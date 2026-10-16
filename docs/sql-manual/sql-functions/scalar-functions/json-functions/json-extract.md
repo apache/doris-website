@@ -14,11 +14,15 @@ Extract the field specified by json_path from JSON type data.
 JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
 ```
 ## Parameters
-### Required Parameters:
-- `<json_object>`: The JSON type expression to extract from.
-- `<path>`: The JSON path to extract the target element from the target JSON.
-### Optional/Variable Parameters
-- `<path2>` Multiple path values can be extracted from the JSON object.
+
+| Parameter | Description |
+| --- | --- |
+| `<json_object>` | Required. A JSON value, or valid JSON text that can be converted to JSON. |
+| `<path>` | Required. A JSON path of type STRING; use an explicit wildcard to traverse arrays. |
+| `<path2>, ...` | Optional additional STRING paths; matching results are combined into a JSON array. |
+
+<a id="required-parameters"></a>
+<a id="optionalvariable-parameters"></a>
 
 ## Return Value
 

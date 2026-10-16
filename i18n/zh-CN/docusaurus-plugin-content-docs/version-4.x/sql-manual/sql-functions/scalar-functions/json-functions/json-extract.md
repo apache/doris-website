@@ -14,11 +14,15 @@
 JSON_EXTRACT (<json_object>, <path>[, <path2>, ...])
 ```
 ## 参数
-### 必须参数：
-- `<json_object>`: 要提取的 JSON 类型的表达式。
-- `<path>`: 要从目标 JSON 中提取目标元素的 JSON 路径。
-### 可选/可变参数
-- `<path2>` 可以从 JSON 对象中提取多个路径的值。
+
+| 参数 | 描述 |
+| --- | --- |
+| `<json_object>` | 必需。JSON 值，或可转换为 JSON 的合法 JSON 字符串。 |
+| `<path>` | 必需。STRING 类型的 JSON 路径；数组遍历使用显式通配符。 |
+| `<path2>, ...` | 可选。其他 STRING 类型路径；匹配结果组合为 JSON 数组。 |
+
+<a id="required-parameters"></a>
+<a id="optionalvariable-parameters"></a>
 
 ## 返回值
 

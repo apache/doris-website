@@ -15,8 +15,11 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
 ```
 
 ## Parameters
-- `<json_object>`: JSON type, the target parameter to extract from.
-- `<json_path>`: String type, the JSON path to extract the target element from the target JSON.
+
+| Parameter | Description |
+| --- | --- |
+| `<json_object>` | Required. A JSON value, or valid JSON text that can be converted to JSON. |
+| `<json_path>` | Required. A JSON path of type STRING; use an explicit wildcard to traverse arrays. |
 
 ## Return Value
 `Nullable(STRING)` Returns the extracted STRING value, returns NULL in some cases
