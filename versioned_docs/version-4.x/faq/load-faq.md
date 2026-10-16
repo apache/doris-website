@@ -72,6 +72,17 @@ curl --location-trusted -u root:"" \
     http://127.0.0.1:8030/api/db/loadtest/_stream_load
 ```
 
+### Small batches when loading through Kafka Connect or Confluent
+
+When a Doris Kafka Connector task sends frequent, small Stream Load requests, check the task's buffer settings. For example, if an existing configuration sets `buffer.count.records=10000` and `buffer.size.bytes=5000000`, consider testing larger batches:
+
+```properties
+buffer.count.records=50000
+buffer.size.bytes=104857600
+```
+
+These are Doris Kafka Connector options, rather than general Confluent settings. They control the record-count and byte-size thresholds for a batch. A larger buffer can reduce the number of load requests, but requires more Kafka Connect task memory and can increase latency. Also review `buffer.flush.time`, which can flush a batch before either size threshold is reached. Check the options and defaults for the Connector version you use in [Doris Kafka Connector](../connection-integration/data-integration/doris-kafka-connector.md).
+
 ## Routine Load 
 
 ### Major Bug Fixes
