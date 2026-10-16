@@ -48,6 +48,8 @@ SELECT * FROM tablex WHERE xxx ORDER BY c1, c2 ... LIMIT n
 1. **表类型限制**：仅支持 Duplicate 表和 Unique MOW 表。Unique MOR 表使用此优化可能导致结果错误。
 2. **n 值限制**：`n` 过大时优化的内存消耗会显著上升。超过 Session 变量 `topn_opt_limit_threshold` 的 `n` 不会启用优化。
 
+3. **两阶段读取限制**：自 4.1.5 版本起，Doris 内表的 TopN 延迟物化明确要求支持 `light_schema_change`，且不适用于 Aggregate Key 表。不满足时使用普通 TopN 执行路径，不影响查询可用性。
+
 <!-- 知识类型：配置 -->
 <!-- 适用场景：调优或关闭 TOPN 优化 -->
 

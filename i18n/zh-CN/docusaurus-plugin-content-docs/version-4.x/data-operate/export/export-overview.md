@@ -97,9 +97,11 @@ Parquet 和 ORC 文件格式拥有自己的数据类型定义，Apache Doris 在
 | bigint                  | bigint    |
 | largeInt                | string    |
 | date                    | string    |
-| datev2                  | string    |
+| datev2                  | date |
 | datetime                | string    |
 | datetimev2              | timestamp |
+| timestamptz | timestamp with local time zone（ORC TIMESTAMP_INSTANT；4.1.5 起保留时间点语义） |
+| varbinary | binary |
 | float                   | float     |
 | double                  | double    |
 | char / varchar / string | string    |
@@ -143,7 +145,7 @@ Apache Doris 导出到 Parquet 文件格式时，会先将 Doris 内存数据转
 | hll                     | binary      | BYTE_ARRAY            |                                  |
 
 :::note
-在 2.1.11 和 3.0.7 版本中，支持通过 `parquet.enable_int96_timestamps` 属性指定 Doris 的 `datetimev2` 类型在 Parquet 中是使用 `INT96` 还是 `INT64` 存储，默认为 `INT96`。`INT96` 在 Parquet 标准中已被废弃，仅用于兼容旧系统（如 Hive 4.0 之前的版本）。
+自 4.1.5 版本起，Outfile / Export 通过 `enable_int96_timestamps` 属性控制 Parquet 时间戳编码，默认 `false`，使用带逻辑时间类型的 `INT64`；之前默认使用 `INT96`。仅在兼容旧消费端时设为 `true`。该属性只接受 `true` 或 `false`，不要使用 `parquet.enable_int96_timestamps` 代替。时间点与墙上时间的区别见 [Parquet](../../lakehouse/file-formats/parquet.md#时间戳与日期兼容性415-起)。
 :::
 
 ## 相关文档

@@ -72,6 +72,46 @@ Doris 中查询结果以列存格式的 Block 组织。在 2.1 之前的版本�
 | FE   | `fe/log/fe.log`  | `Arrow Flight SQL service is started` |
 | BE   | `be/log/be.INFO` | `Arrow Flight Service bind to host`   |
 
+## 4.1.5 起的参数绑定与资源释放
+
+自 4.1.5 版本起，服务端支持通过 Flight SQL Prepared Statement 的 `DoPut` 上传一行带类型的查询参数，包括 NULL、Boolean、有符号整数、浮点数、字符串、DATE、Timestamp 和 Decimal。带时区 Timestamp 按时间点绑定，不带时区 Timestamp 保留墙上时间。客户端需要实现相应的参数绑定协议。
+
+| 项目 | 约束 |
+| --- | --- |
+| 每次参数绑定 | 只接受一行，参数列数须与占位符数一致，不支持批量多行绑定 |
+| 参数个数 | 最多 `1024` 个 |
+| 单次绑定大小 | 所有参数 Arrow Buffer 合计最多 `1 MiB` |
+| 会话保留的参数 | 合计最多 `16 MiB` |
+| 不支持的输入 | 字典编码和未支持的复杂向量类型会被拒绝 |
+| 转发 | 带绑定参数的查询不能转发到 Master FE，需要此类转发时直接连接 Master FE |
+
+例如，在上文已启用服务的环境中，使用兼容 Flight SQL 参数绑定的 JDBC 驱动：
+
+```java
+try (java.sql.Connection conn = java.sql.DriverManager.getConnection(
+        "jdbc:arrow-flight-sql://<fe_host>:8070?useEncryption=false", "<user>", "<password>");
+     java.sql.PreparedStatement stmt = conn.prepareStatement("SELECT CAST(? AS BIGINT) AS v")) {
+    stmt.setLong(1, 7L);
+    try (java.sql.ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+            System.out.println(rs.getLong(1));
+        }
+    }
+}
+```
+
+```text
+7
+```
+
+`SELECT ?` 无上下文时可能无法推导客户端所需的参数类型，建议显式 `CAST`。绑定失败后不能继续使用旧绑定值，应重新绑定；切换当前 Catalog / Database 或句柄过期后应重新 Prepare。服务端会在 Schema 查询和 Prepare 阶段分析查询结构，无需先执行查询来获得结果列。
+
+自 4.1.5 版本起，嵌套 ARRAY / MAP / STRUCT 的 Arrow Schema 保留子字段逻辑类型信息及 NULL 属性。`DATETIME` 使用无时区 Timestamp，`TIMESTAMPTZ` 使用带时区注解的 Timestamp，采用会话时区（`Z` 规范化为 `UTC`）；两者不能按同一种时区语义解析。超出支持范围的时间戳会报错，不会截断或回绕后继续返回。
+
+读取期间提前关闭结果流会取消相应查询并释放资源，客户端应正确关闭 Reader / Statement。对于需要延迟保留 Coordinator 的外表批量扫描，FE 配置 [`arrow_flight_deferred_query_idle_timeout_second`](../admin-manual/config/fe-config.md#arrow_flight_deferred_query_idle_timeout_second) 默认 `3600` 秒，实际期限不短于查询执行超时，释放 Coordinator 不会关闭会话。
+
+自 4.1.5 版本起，Arrow Flight 查询明确不复用 MySQL 协议 SQL 结果缓存，也不使用 MySQL 点查询短路路径，仍可正常执行查询。
+
 ## Python 使用方式
 
 <!-- 知识类型: 操作步骤 -->
@@ -690,7 +730,7 @@ KylinV10 SP2 和 SP3 的 Linux 内核版本最高仅 `4.19.90-24.4.v2101.ky10.aa
 
 **Q：** Prepared Statement 传递参数（如 `select * from xxx where id=?`）时报错 `parameter ordinal 1 out of range`。
 
-**A：** 目前 `jdbc:arrow-flight-sql` 和 Java ADBC/JDBC Driver 不支持 Prepared Statement 传递参数。这是 Arrow Flight SQL 的一个 BUG，详见 [GitHub Issue](https://github.com/apache/arrow/issues/40118)。
+**A：** Doris 4.1.5 起的服务端支持 Prepared Statement 参数绑定，见[参数绑定与资源释放](#415-起的参数绑定与资源释放)。旧版本服务端或不支持相应 `DoPut` 协议的客户端仍可能出现此问题。请检查客户端兼容性，对无类型上下文的占位符显式 `CAST`，并在需要转发执行时直接连接 Master FE。
 
 ### 5. 如何修改 `jdbc:arrow-flight-sql` 每次读取的批次大小
 

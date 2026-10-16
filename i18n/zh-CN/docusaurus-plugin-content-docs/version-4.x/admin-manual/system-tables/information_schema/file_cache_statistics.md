@@ -25,10 +25,10 @@
 | 列名 | 类型 | 说明 |
 |---|---|---|
 | BE_ID | BIGINT  | BE 节点 ID  | 
-| BE_IP | VARCHAR(256)  | BE 节点 IP  | 
-| CACHE_PATH | VARCHAR(256)  | BE 节点缓存路径  | 
-| METRIC_NAME    | VARCHAR(256)   | 指标名称  | 
-| METRIC_VALUE      | DOUBLE   | 指标值  | 
+| BE_IP | STRING | BE 节点 IP |
+| CACHE_PATH | STRING | BE 节点缓存路径 |
+| METRIC_NAME | STRING | 指标名称 |
+| METRIC_VALUE | STRING | 指标值的文本表示，进行数值比较或计算时需显式转换类型 |
 
 :::info 备注
 
@@ -72,6 +72,30 @@ Doris 不同版本可能包含不同的指标信息。
 
 TODO
 
+### 4.1.5 版本指标变化
+
+自 4.1.5 版本起，新增以下两项 `METRIC_NAME`。指标按 BE 和缓存路径分别累计，数值自进程启动后计数：
+
+| METRIC_NAME | 单位 | 含义 |
+| --- | --- | --- |
+| `evict_not_downloaded_size` | 字节 | 移除尚未下载完成的缓存块时累计的逻辑范围大小；不包含正在下载的块，不代表已下载数据的物理淘汰量 |
+| `evict_not_downloaded_num` | 块 | 上述缓存块被移除的累计个数 |
+
+同一版本起，`total_removed_size` 仅累计已下载完成的缓存块被移除的字节数。尚未下载的块使用上述新指标单独统计，正在下载的块标记为待删除时不增加这些计数。
+
+这些指标在 brpc `/vars` 接口中对应带缓存路径前缀的 `file_cache_evict_not_downloaded_size` 和 `file_cache_evict_not_downloaded_num`，详见 [文件缓存监控](../../../compute-storage-decoupled/file-cache/file-cache.md#缓存空间与命中率指标)。系统表中的 `METRIC_NAME` 不带路径前缀，路径由 `CACHE_PATH` 列给出。
+
+例如，查询新指标以及已下载数据的累计移除量：
+
+```sql
+SELECT BE_ID, CACHE_PATH, METRIC_NAME, CAST(METRIC_VALUE AS DOUBLE) AS metric_value
+FROM information_schema.file_cache_statistics
+WHERE METRIC_NAME IN ('total_removed_size', 'evict_not_downloaded_size', 'evict_not_downloaded_num')
+ORDER BY BE_ID, CACHE_PATH, METRIC_NAME;
+```
+
+每个 BE 的每条缓存路径分别返回对应指标值，结果随缓存活动变化。
+
 ## 示例
 
 1. 查询所有缓存指标
@@ -94,5 +118,5 @@ TODO
 2. 查询缓存命中率，并按命中率排序
 
     ```sql
-    select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by METRIC_VALUE desc;
+    select * from information_schema.file_cache_statistics where METRIC_NAME = "hits_ratio" order by cast(METRIC_VALUE as double) desc;
     ```

@@ -24,6 +24,8 @@
 
 ## 返回值
 
+自 4.1.5 版本起，AI_AGG 将模型生成的完整文本作为一个结果返回；即使文本内容是 JSON 数组，也不会把数组拆为多个聚合结果。使用 OpenAI Responses 格式时，跳过 reasoning / tool 等非文本输出，并拼接 message 中的 `output_text`；若响应声明状态，则必须为 `completed`，没有文本或未完成的响应会报错。
+
 返回包含聚合结果的字符串。
 
 当输入有值全为 NULL 时返回 NULL。

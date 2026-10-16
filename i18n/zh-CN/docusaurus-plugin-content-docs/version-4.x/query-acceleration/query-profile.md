@@ -75,12 +75,16 @@ Query Profile 的核心由两部分组成：FE 的 `ProfileManager` 与 BE 的 `
 | 参数 | 作用域 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `enable_profile` | Session/Global | `false` | 是否生成 Profile |
-| `profile_level` | Session/Global | `1` | Profile 详细等级（1~3，4.0+ 生效） |
+| `profile_level` | Session/Global | `2` | Profile 详细等级（1~3，4.0+ 生效） |
 | `auto_profile_threshold_ms` | Global | `-1` | 仅对耗时超过阈值的查询生成 Profile（3.0+ 生效） |
 | `max_query_profile_num` | `fe.conf` | `500` | FE 内存中最多保留的 Profile 数量 |
 | `max_spilled_profile_num` | `fe.conf` | `500` | 磁盘上最多保留的 Profile 数量 |
 | `spilled_profile_storage_path` | `fe.conf` | `log/profile` | Profile 在本地的存储目录 |
 | `spilled_profile_storage_limit_bytes` | `fe.conf` | `1 GB` | 磁盘上 Profile 的总存储空间上限 |
+
+后文归档及 ChangedSessionVariables 的输出保留了历史 Profile 样例，其中 `profile_level` 的默认值 `1` 是采集时版本的值，不代表本页当前默认值。
+
+自 4.1.5 版本起，转发到 Master FE 的查询会保留会话指定的 `profile_level`。取值说明见[会话变量列表](../sql-manual/basic-element/session-variables.md#profile_level)。
 
 ### 开启 Profile
 
@@ -151,7 +155,7 @@ show query profile
 
 - 目的：控制 Profile 的详细程度。
 - 命令：`set profile_level=2;`
-- 说明：默认值为 `1`。**该参数在 4.0 及 master 分支生效，不要在 4.0 版本之前使用，4.0 之前有不同的语义。**
+- 说明：默认值为 `2`。**该参数在 4.0 及后续版本生效，不要在 4.0 版本之前使用，4.0 之前有不同的语义。**
 
 | Level | 行为 | 性能影响 |
 | --- | --- | --- |

@@ -76,3 +76,32 @@ release.
     description states the sync status.
 21. The report file (`plan-doc/doris-<ver>-doc-review.md`) stays out of the PR; its summary goes into
     the PR description.
+
+## E. Lessons from the 4.1.5 round
+
+22. **Surface extraction is a baseline, not a complete inventory.** The BE metric definitions moved
+    to `be/src/common/metrics/`; the extractor still searched `be/src/util/`. New system-table metric
+    rows also arrived through BE statistics producers without changing `SchemaTable.java`. Check
+    every production diff and audit nonproduction batches for shipped dependency/platform changes.
+23. **A field initializer does not establish the public option behavior.** `FileFormatProperties`
+    defaults timezone mapping to true, but `ExternalFileTableValuedFunction` also consumes the old
+    option and forces it true. Setting the option false cannot restore the old mapping. Follow the
+    option from parsing through its consumer; the separate binary TVF option remains configurable.
+24. **A schema helper can be overridden by the query schema builder.** The generic Arrow helper uses
+    UTC for TIMESTAMPTZ, while `FlightSqlQuerySchema` supplies the session timezone. Verify the caller
+    before documenting the actual client-visible timezone label.
+25. **A privilege helper's owner argument is not necessarily the creator.** Routine Load checks its
+    job owner, but current MV refresh runs with a system identity. CREATE/ALTER checks the caller's
+    compute-group privilege; creator revocation is not rechecked as that creator during MV refresh.
+26. **Inspect implementation timing before describing a bound.** Cloud edit-log time rolling is
+    checked when appending a journal, so it is not a strict idle timer. TopN candidate capacity trims
+    serialized state and does not impose a hard local aggregation memory cap.
+27. **SQL examples need the complete grammar even when no partitions are enumerated.** Hive
+    `PARTITION BY LIST (dt, region)` still requires trailing `()` in CREATE TABLE. Static partition
+    columns are omitted from implicit INSERT values; verify both forms against final parser/tests.
+28. **Reference cleanup can uncover older factual errors.** Check exact FE return signatures and
+    string-parser maps: FORMAT_ROUND returns STRING, PARSE_DATA_SIZE returns LARGEINT with
+    case-sensitive units, and WEEK rounding defaults to `0001-01-01`, not year zero.
+29. **Preserve old heading anchors when normalizing SQL function sections.** Keep compatibility
+    anchors for names such as `功能`, `使用说明` and `举例`; also validate new fragments with the
+    repository's actual Docusaurus slugger.

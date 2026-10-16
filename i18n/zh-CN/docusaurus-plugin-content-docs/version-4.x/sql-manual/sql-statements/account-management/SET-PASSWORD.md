@@ -43,6 +43,8 @@ SET PASSWORD [FOR <user_identity>] =
 
 ## 注意事项
 
+自 4.1.5 版本起，特殊 root 身份仅指 `'root'@'%'`。例如 `'root'@'localhost'` 仍是普通用户身份，不会仅因用户名为 root 而获得修改真正 root 账号的特权；真正 root 的保护也不会错误地套用到其他同名用户。
+
 - 如果 `FOR user_identity` 字段不存在，那么修改当前用户的密码。
 
 ## 示例

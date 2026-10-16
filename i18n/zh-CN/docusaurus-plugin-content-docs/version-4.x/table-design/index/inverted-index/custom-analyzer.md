@@ -13,7 +13,10 @@
         "edge_ngram",
         "word_delimiter",
         "USING ANALYZER",
-        "多分词索引"
+        "多分词索引",
+        "ik_smart",
+        "ik_max_word",
+        "max_ngram_diff"
     ]
 }
 ---
@@ -91,12 +94,14 @@ PROPERTIES (
 | 类型 | 说明 | 主要参数 |
 | --- | --- | --- |
 | `standard` | 标准分词（遵循 Unicode 文本分割），适用于多数语言 | 无 |
-| `ngram` | 按 N 元组切分 | `min_gram`、`max_gram`、`token_chars` |
+| `ngram` | 按 N 元组切分 | `min_gram`、`max_gram`、`max_ngram_diff`、`token_chars` |
 | `edge_ngram` | 从词首起始位置生成 N 元组 | `min_gram`、`max_gram`、`token_chars` |
 | `keyword` | 整段文本作为一个词项输出，常与 token_filter 组合 | 无 |
 | `char_group` | 按给定字符切分 | `tokenize_on_chars` |
 | `basic` | 简单英文 / 数字 / 中文 / Unicode 分词 | `extra_chars` |
 | `icu` | ICU 国际化分词，支持多语言复杂脚本 | 无 |
+| `ik_smart` | IK 中文智能分词，优先输出较完整的词；自 4.1.5 版本起可用于自定义分析器 | 无 |
+| `ik_max_word` | IK 中文细粒度分词，输出更多可能重叠的词；自 4.1.5 版本起可用于自定义分析器 | 无 |
 
 参数说明：
 
@@ -105,6 +110,20 @@ PROPERTIES (
 - `token_chars`：保留字符类别（默认保留全部）。可选：`letter`、`digit`、`whitespace`、`punctuation`、`symbol`
 - `tokenize_on_chars`：字符列表或类别，类别支持 `whitespace`、`letter`、`digit`、`punctuation`、`symbol`、`cjk`
 - `extra_chars`：额外分割的 ASCII 字符（如 `[]().`）
+
+#### ngram 范围限制（4.1.5 起）
+
+自 4.1.5 版本起，`ngram` 分词器支持 `max_ngram_diff`，可显式放宽原先最大长度与最小长度之差不超过 `1` 的限制。创建分词器时会检查以下条件：
+
+| 参数 | 默认值 | 约束 |
+| --- | --- | --- |
+| `min_gram` | `1` | 正整数，不大于 `max_gram`；新建 `ngram` 分词器时不大于 `1024` |
+| `max_gram` | `2` | 正整数，不小于 `min_gram`；新建 `ngram` 分词器时不大于 `1024` |
+| `max_ngram_diff` | `1` | `0` 到 `255` 的整数，必须满足 `max_gram - min_gram <= max_ngram_diff`；设为 `0` 时只允许固定长度的 N 元组 |
+
+例如，`min_gram=1`、`max_gram=8` 必须同时设置 `max_ngram_diff` 至少为 `7`。省略该参数会导致创建失败，返回 `The difference between max_gram and min_gram in NGram Tokenizer must be less than or equal to: [ 1 ] but was [7]`。完整用法见[示例 5](#示例-5扩大-ngram-长度范围415-起)。
+
+这些新增限制和 `max_ngram_diff` 参数仅适用于 `ngram`。`edge_ngram` 不接受该参数，本文的电话号码和自动补全示例仍按其自身的 `min_gram`、`max_gram` 设置执行。长度范围越大，每个输入位置生成的词项越多，应按实际检索需求设置，避免不必要的索引膨胀。
 
 ### 3. 词元过滤器（token_filter）
 
@@ -484,6 +503,119 @@ SELECT tokenize('hÉllo World', '"analyzer"="keyword_lowercase"');
 ```json
 [
     {"token":"hello world"}
+]
+```
+
+### 示例 4：IK 中文智能与细粒度分词（4.1.5 起）
+
+自 4.1.5 版本起，可以在自定义分析器中直接引用内置 `ik_smart` 或 `ik_max_word` 分词器，也可以先创建一个指定该 `type` 的命名分词器，再组合字符过滤器和词元过滤器。两种 IK 分词器没有额外的分词器参数，均使用 BE 配置 `inverted_index_dict_path` 下 `ik` 目录中的词典；参与分词和索引构建的 BE 需要支持这些组件并可读取词典。
+
+下面分别演示直接引用和创建命名分词器。创建这些分词组件需要全局 `ADMIN` 权限；后续建表、导入和查询还需要目标库表的相应权限。
+
+```sql
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_smart
+PROPERTIES ("tokenizer" = "ik_smart");
+
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS cn_ik_max_tokenizer
+PROPERTIES ("type" = "ik_max_word");
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS cn_ik_max
+PROPERTIES ("tokenizer" = "cn_ik_max_tokenizer");
+```
+
+创建成功返回 `Query OK`。等待分词组件同步到 BE 后，可以用 `TOKENIZE` 对比效果。以下结果使用内置词典；调整词典后切分结果可能不同。
+
+```sql
+SELECT TOKENIZE('中华人民共和国', '"analyzer"="cn_ik_smart"');
+```
+
+```json
+[{"token":"中华人民共和国"}]
+```
+
+```sql
+SELECT TOKENIZE('中华人民共和国', '"analyzer"="cn_ik_max"');
+```
+
+```json
+[
+    {"token":"中华人民共和国"},
+    {"token":"中华人民"},
+    {"token":"中华"},
+    {"token":"华人"},
+    {"token":"人民共和国"},
+    {"token":"人民"},
+    {"token":"共和国"},
+    {"token":"共和"},
+    {"token":"国"}
+]
+```
+
+将分析器用于表的倒排索引：
+
+```sql
+CREATE TABLE ik_articles (
+    id INT,
+    content STRING,
+    INDEX idx_content(content) USING INVERTED
+        PROPERTIES("analyzer" = "cn_ik_smart")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_allocation" = "tag.location.default: 1");
+
+INSERT INTO ik_articles VALUES (1, '中华人民共和国');
+
+SELECT id FROM ik_articles
+WHERE content MATCH '中华人民共和国' USING ANALYZER cn_ik_smart
+ORDER BY id;
+```
+
+```text
++----+
+| id |
++----+
+|  1 |
++----+
+```
+
+`ik_smart` 更适合保留完整中文词的检索，`ik_max_word` 更适合需要更多子词召回的场景。需要进一步处理词项时，可通过分析器的 `token_filter` 组合词元过滤器。
+
+### 示例 5：扩大 ngram 长度范围（4.1.5 起）
+
+以下分词器生成长度为 `1` 到 `8` 的 N 元组，显式设置 `max_ngram_diff=7`：
+
+```sql
+CREATE INVERTED INDEX TOKENIZER IF NOT EXISTS ngram_1_8_tokenizer
+PROPERTIES (
+    "type" = "ngram",
+    "min_gram" = "1",
+    "max_gram" = "8",
+    "max_ngram_diff" = "7"
+);
+
+CREATE INVERTED INDEX ANALYZER IF NOT EXISTS ngram_1_8_analyzer
+PROPERTIES ("tokenizer" = "ngram_1_8_tokenizer");
+```
+
+创建成功并同步到 BE 后执行：
+
+```sql
+SELECT TOKENIZE('abcdefgh', '"analyzer"="ngram_1_8_analyzer"');
+```
+
+```json
+[
+    {"token":"a"}, {"token":"ab"}, {"token":"abc"}, {"token":"abcd"},
+    {"token":"abcde"}, {"token":"abcdef"}, {"token":"abcdefg"}, {"token":"abcdefgh"},
+    {"token":"b"}, {"token":"bc"}, {"token":"bcd"}, {"token":"bcde"},
+    {"token":"bcdef"}, {"token":"bcdefg"}, {"token":"bcdefgh"},
+    {"token":"c"}, {"token":"cd"}, {"token":"cde"}, {"token":"cdef"},
+    {"token":"cdefg"}, {"token":"cdefgh"},
+    {"token":"d"}, {"token":"de"}, {"token":"def"}, {"token":"defg"}, {"token":"defgh"},
+    {"token":"e"}, {"token":"ef"}, {"token":"efg"}, {"token":"efgh"},
+    {"token":"f"}, {"token":"fg"}, {"token":"fgh"},
+    {"token":"g"}, {"token":"gh"}, {"token":"h"}
 ]
 ```
 

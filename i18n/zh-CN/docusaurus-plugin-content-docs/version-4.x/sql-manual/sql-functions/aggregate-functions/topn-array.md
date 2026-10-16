@@ -19,15 +19,17 @@ TOPN_ARRAY(<expr>, <top_num> [, <space_expand_rate>])
 ## 参数
 | 参数 | 说明 |
 | -- | -- |
-| `<expr>` | 要统计的列或表达式，支持类型为 TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，IPV4，IPV6，String。 |
-| `<top_num>` | 要返回的最高频率值的数量，必须是正整数，支持类型为 Integer。 |
-| `<space_expand_rate>` | 可选项，该值用来设置 Space-Saving 算法中使用的 counter 个数`counter_numbers = top_num * space_expand_rate` space_expand_rate 的值越大，结果越准确，默认值为 50，支持类型为 Integer。 |
+| `<expr>` | 要统计的列或表达式，支持类型为 Boolean（Doris 4.1 系列自 4.1.5 起）、TinyInt，SmallInt，Integer，BigInt，LargeInt，Float，Double，Decimal，Date，Datetime，IPV4，IPV6，String。 |
+| `<top_num>` | 要返回的最高频率值的数量，必须是 INT 类型的正整数常量。 |
+| `<space_expand_rate>` | 可选，INT 类型常量，默认值为 50。正数时，中间状态序列化最多保留 `top_num * space_expand_rate` 个候选，值越大通常越准确；该值不是本地聚合内存的硬上限。Doris 4.1 系列自 4.1.5 起，设置为 0 或负数会保留全部中间候选值，最终结果仍最多返回 `top_num` 个值；此模式可能占用更多内存，仍受查询内存限制。 |
 
 ## 返回值
 返回一个数组，包含出现频率最高的 N 个值。
 如果组内没有合法数据，返回 NULL。
 
-## 举例
+<a id="举例"></a>
+
+## 示例
 ```sql
 -- setup
 CREATE TABLE page_visits (
@@ -77,3 +79,13 @@ SELECT TOPN_ARRAY(page_id, 3) as top_pages FROM page_visits where page_id is nul
 +-----------+
 ```
 
+
+BOOLEAN 输入示例（Doris 4.1 系列自 4.1.5 起）：
+
+```sql
+SELECT TOPN_ARRAY(TRUE, 2), TOPN_ARRAY(CAST(NULL AS BOOLEAN), 2);
+```
+
+```text
+[1]    NULL
+```

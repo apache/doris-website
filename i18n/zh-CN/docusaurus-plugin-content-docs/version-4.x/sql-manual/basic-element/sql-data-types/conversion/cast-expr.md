@@ -74,6 +74,8 @@ select cast('123' as int);
 
 ### 使用 TRY_CAST 处理可能失败的转换
 
+自 4.1.5 版本起，数据转换中的算术溢出也会按行返回 NULL，不再使整个 TRY_CAST 查询失败。内部执行错误或不支持的类型转换仍可能报错，TRY_CAST 不会吞掉所有错误。
+
 当转换可能失败时，使用 TRY_CAST 可以避免查询报错，而是返回 NULL：
 
 ```sql
@@ -121,3 +123,19 @@ length(CAST(123 AS varchar(65533)))
 ```
 
 从上述执行计划可以看到，系统自动将整数 123 转换为字符串类型，这就是一个隐式 CAST 的例子。
+
+
+算术溢出与 NULL 输入示例：
+
+```sql
+SELECT TRY_CAST(CAST(1000 AS DECIMAL(9, 0)) AS DECIMAL(3, 0)) AS overflow_value,
+       TRY_CAST(NULL AS INT) AS null_value;
+```
+
+```text
++----------------+------------+
+| overflow_value | null_value |
++----------------+------------+
+| NULL           | NULL       |
++----------------+------------+
+```

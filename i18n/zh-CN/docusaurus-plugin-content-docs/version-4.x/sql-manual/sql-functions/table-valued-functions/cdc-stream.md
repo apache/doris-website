@@ -65,6 +65,8 @@ cdc_stream(
 4. 使用 PostgreSQL 类型时，需要开启逻辑复制（`wal_level=logical`）。
 5. 支持 exactly-once 语义。
 
+自 4.1.5 版本起，配合 Streaming Job 使用时，CDC 操作以作业创建者身份检查 Doris 权限，且失败任务不会走普通任务的自动重试流程。详见[持续导入的身份与失败处理](../../../data-operate/import/import-way/streaming-job/continuous-load-overview.md#cdc-任务身份与失败处理415-起)。
+
 ## 示例
 
 - 从 MySQL 持续同步单表数据

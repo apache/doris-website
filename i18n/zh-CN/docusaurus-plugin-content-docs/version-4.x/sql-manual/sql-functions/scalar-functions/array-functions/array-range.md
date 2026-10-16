@@ -1,72 +1,103 @@
 ---
 {
-    "title": "ARRAYS_RANGE",
+    "title": "ARRAY_RANGE",
     "language": "zh-CN",
     "description": "生成数值或日期时间的等差序列数组。"
 }
 ---
 
-## 功能
+<a id="功能"></a>
 
-生成数值或日期时间的等差序列数组。
-- 对于数值类型，默认差值为 1
-- 对于日期时间类型，默认差值为 1 天
+## 描述
+
+生成数值或日期时间的等差序列数组。结果包含起点，不包含终点；任一参数为 NULL 时返回 NULL。
+
+Doris 4.1 系列自 4.1.5 起，日期时间序列会保留所有小于终点的有效值，即使最后一个值与终点之间不足一个完整间隔。此前可能遗漏这些尾部值。
 
 ## 语法
 
-- `ARRAY_RANGE(end)`
-- `ARRAY_RANGE(start, end)`
-- `ARRAY_RANGE(start, end, step)`
-- `ARRAY_RANGE(start_dt, end_dt)`
-- `ARRAY_RANGE(start_dt, end_dt, interval step unit)`
+```sql
+ARRAY_RANGE(<end>)
+ARRAY_RANGE(<start>, <end> [, <step>])
+ARRAY_RANGE(<start_dt>, <end_dt> [, INTERVAL <step> <unit>])
+```
 
 ## 参数
 
-- `start`、`end`：非负整数。`end` 为上界，结果不包含 `end` 本身。
-- `step`：必须是正整数，步长，默认 1。
-- `start_dt`、`end_dt`：DATETIME。两参形式默认步长为 1 DAY。
-- `interval step unit`：日期时间步长，`unit` 取 `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`，`step` 必须为正整数。
+| 参数 | 说明 |
+| --- | --- |
+| `<start>` | 可选，非负 INT 类型起点，省略时为 0。 |
+| `<end>` | 非负 INT 类型终点，结果不包含该值。 |
+| `<step>` | 可选，正整数步长，默认值为 1。 |
+| `<start_dt>`、`<end_dt>` | DATETIME 类型起点和终点，结果不包含终点。省略 INTERVAL 时，步长为 1 DAY。 |
+| `<unit>` | 日期时间步长单位，支持 YEAR、QUARTER、MONTH、WEEK、DAY、HOUR、MINUTE、SECOND。 |
 
 ## 返回值
 
-- 返回 `ARRAY<T>`；当参数非法时返回 `NULL`；当范围为空时返回空数组 `[]`。
-- 数组元素类型 `T` 与输入一致：整型返回 `INT`，日期时间返回 `DATETIME`。
+返回 ARRAY 类型，数值序列元素为 INT，日期时间序列元素为 DATETIME。
 
-## 使用说明
+<a id="使用说明"></a>
 
-- 数值序列：从 `start` 开始，按 `step` 递增，直到但不包含 `end`（即左闭右开）。
-- 日期时间序列：从 `start_dt` 开始，按给定 `unit` 的 `step` 递增，直到但不包含 `end_dt`；两参形式等价于 `interval 1 day`。
-- 非法参数返回 `NULL`：
-  - 数值：`start < 0`、`end < 0`、`step <= 0`。
-  - 日期时间：`start_dt` 或 `end_dt` 非法，或 `step <= 0`。
-- `ARRAY_RANGE` 和 `SEQUENCE` 函数功能一致。
+- 任一参数为 NULL，或参数非法（如数值起点或终点为负、步长非正）时，返回 NULL。
+- 起点不小于终点时，返回空数组 `[]`。
+- 每一步以上一步的结果计算下一个值。月份运算可能将日期调整为目标月份的最后一天。
+- 序列超过数组大小上限时会报错；达到日期类型上界后不再生成越界的后继值。
+- `SEQUENCE` 是 `ARRAY_RANGE` 的别名。
 
 ## 示例
 
-- 数值: `start` 默认从0 开始，`step`默认为 1
-  - `ARRAY_RANGE(5)` -> `[0, 1, 2, 3, 4]`
-  - `ARRAY_RANGE(0, 5)` -> `[0, 1, 2, 3, 4]`
+数值序列不包含终点：
 
-- 数值：`end` 为上界，不在结果之内。
-  - `ARRAY_RANGE(2, 6, 2)` -> `[2, 4]`
-  - `ARRAY_RANGE(3, 3)` -> `[]`
+```sql
+SELECT ARRAY_RANGE(5), ARRAY_RANGE(2, 6, 2), ARRAY_RANGE(3, 2);
+```
 
-- 数值：`end` 必须大于等于 `start`，否则返回 `[]`
-   - `ARRAY_RANGE(3, 2)` -> `[]`
+```text
+[0, 1, 2, 3, 4]    [2, 4]    []
+```
 
-- 数值：`start`、`end` 参数必须为非负正数，`step`必须大于 0。
-  - `ARRAY_RANGE(-1, 3)` -> `NULL`
-  - `ARRAY_RANGE(1, 3, 0)` -> `NULL`
+日期时间默认每次递增一天；末尾不足一天仍保留最后一个值：
 
-- 日期时间: `step` 默认是 1 day。
-  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00')` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
-  - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
+```sql
+SELECT ARRAY_RANGE(
+    CAST('2024-01-01 00:00:00.000000' AS DATETIME(6)),
+    CAST('2024-01-02 12:00:00.000000' AS DATETIME(6)));
+```
 
-- 日期时间:`unit` 取 `YEAR|QUARTER|MONTH|WEEK|DAY|HOUR|MINUTE|SECOND`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2024-05-17 12:00:00', interval 1 year)` -> `["2022-05-15 12:00:00", "2023-05-15 12:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2023-05-17 12:00:00', interval 1 quarter);` -> `["2022-05-15 12:00:00", "2022-08-15 12:00:00", "2022-11-15 12:00:00", "2023-02-15 12:00:00"] `
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-07-17 12:00:00', interval 1 month);` -> `["2022-05-15 12:00:00", "2022-06-15 12:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-17 12:00:00', interval 1 day)` -> `['2022-05-15 12:00:00', '2022-05-16 12:00:00']`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 14:00:00', interval 1 hour)` -> `["2022-05-15 12:00:00", "2022-05-15 13:00:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:02:00', interval 1 minute)` -> `["2022-05-15 12:00:00", "2022-05-15 12:01:00"]`
-   - `ARRAY_RANGE('2022-05-15 12:00:00', '2022-05-15 12:00:02', interval 1 second)` -> `["2022-05-15 12:00:00", "2022-05-15 12:00:01"]`
+```text
+["2024-01-01 00:00:00.000000", "2024-01-02 00:00:00.000000"]
+```
+
+指定月份步长，每一步都基于上一个日期递增：
+
+```sql
+SELECT ARRAY_RANGE(
+    CAST('2020-01-31 00:00:00' AS DATETIME(6)),
+    CAST('2020-03-30 00:00:00' AS DATETIME(6)), INTERVAL 1 MONTH);
+```
+
+```text
+["2020-01-31 00:00:00.000000", "2020-02-29 00:00:00.000000", "2020-03-29 00:00:00.000000"]
+```
+
+`SEQUENCE` 使用相同规则：
+
+```sql
+SELECT SEQUENCE(
+    CAST('2024-01-01 00:00:00.000000' AS DATETIME(6)),
+    CAST('2024-01-01 00:00:01.500000' AS DATETIME(6)), INTERVAL 1 SECOND);
+```
+
+```text
+["2024-01-01 00:00:00.000000", "2024-01-01 00:00:01.000000"]
+```
+
+NULL 或非法参数：
+
+```sql
+SELECT ARRAY_RANGE(NULL), ARRAY_RANGE(-1, 3), ARRAY_RANGE(1, 3, 0);
+```
+
+```text
+NULL    NULL    NULL
+```

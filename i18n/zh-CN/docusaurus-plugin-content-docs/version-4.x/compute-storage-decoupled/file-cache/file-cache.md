@@ -13,7 +13,7 @@
 
 在存算分离架构中，数据存储于远程对象存储（如 S3、HDFS）。Doris 利用 BE 节点本地磁盘作为文件缓存层，配合多队列 LRU（Least Recently Used）策略高效管理缓存空间，特别优化了索引与元数据的访问路径，以最大化热点数据的缓存命中率。
 
-针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。默认开启的 [Peer 读](./file-cache-peer-read)则让本地缓存未命中的数据块先从其他 BE（包括其他计算组）的缓存读取，再回源远端存储。
+针对多计算组（Compute Group）场景，Doris 额外提供**缓存预热**功能，在新计算组启动时可主动拉取指定表或分区的数据，快速建立本地缓存，提升首次查询性能。启用后的 [Peer 读](./file-cache-peer-read)则让本地缓存未命中的数据块先从其他 BE（包括其他计算组）的缓存读取，再回源远端存储。
 
 ## 文件缓存的作用
 
@@ -47,13 +47,15 @@ Doris 通过 BE 配置文件中的以下参数控制文件缓存行为。
 
 | 参数 | 默认值 | 说明 |
 |---|---|---|
-| `enable_file_cache` | `true` | 是否启用文件缓存功能。自 4.2 版本起默认开启；存算分离模式下 BE 会强制开启。 |
+| `enable_file_cache` | `true` | 是否启用文件缓存功能。自 4.1.5 版本起默认开启（之前为 `false`）；存算分离模式下 BE 会强制开启。 |
 
 :::caution
 
 `file_cache_path` 默认使用 BE 部署目录下的存储目录。未设置 `total_size` 时，缓存可能增长到磁盘的 85%–88%，建议设置 `total_size` 加以限制。
 
 :::
+
+查询会话的同名变量需要一并开启，取值和升级默认值说明见[会话变量列表](../../sql-manual/basic-element/session-variables.md#enable_file_cache)。
 
 ### 配置写入路径仅缓存索引
 
@@ -482,6 +484,11 @@ curl {be_ip}:{brpc_port}/vars
 | `file_cache_evict_by_heat_[A]_to_[B]` | 为写入 B 类型缓存而淘汰的 A 类型缓存数据量（基于过期时间的淘汰方式） |
 | `file_cache_evict_by_size_[A]_to_[B]` | 为写入 B 类型缓存而淘汰的 A 类型缓存数据量（基于空间的淘汰方式） |
 | `file_cache_evict_by_self_lru_[A]` | A 类型缓存为写入新数据而淘汰自身的数据量（基于 LRU 的淘汰方式） |
+| `file_cache_evict_not_downloaded_size` | 4.1.5 新增。尚未下载完成且不在下载中的块被移除时累计的逻辑范围字节数，不表示已下载数据的物理淘汰量 |
+| `file_cache_evict_not_downloaded_num` | 4.1.5 新增。上述块被移除的累计个数 |
+| `file_cache_ttl_mgr_ttl_info_map_size` | 4.1.5 新增。当前跟踪的 Tablet TTL 信息条目数，不是块数 |
+
+自 4.1.5 版本起，普通总量及各队列淘汰字节计数只累计已下载完成的块；未完成下载的块使用新增计数单独记录，正在下载而标记待删除的块不计入这些移除数。SQL 系统表中的对应行名为 `evict_not_downloaded_size` / `evict_not_downloaded_num`，详见 [file_cache_statistics](../../admin-manual/system-tables/information_schema/file_cache_statistics.md)。
 
 ### SQL Profile 缓存指标
 
@@ -543,7 +550,7 @@ PROPERTIES (
 );
 ```
 
-上表中，所有新导入的数据将在缓存中保留 300 秒。
+自 4.1.5 版本起，各写入和读取路径统一按 `Tablet 创建时间 + file_cache_ttl_seconds` 计算绝对保护截止时间。上例对每个 Tablet 的保护截止时间为其创建后 300 秒，后续导入、读取、Compaction、Schema Change 或预热不会重新开始计时。截止时间已过的数据按普通缓存处理，并不保证每次新导入的数据再保留 300 秒。
 
 `file_cache_ttl_seconds` 的取值范围为 `0 <= value <= 4611686018427387903`（即 `Long.MAX_VALUE / 2`）。自 4.1.4 版本起，`CREATE TABLE` 与 `ALTER TABLE ... SET` 都会校验该取值，超出范围或非法取值会直接报错：
 
@@ -560,7 +567,7 @@ ALTER TABLE customer SET ("file_cache_ttl_seconds" = "3000");
 ```
 
 :::info 备注
-修改后的 TTL 值不会立即生效，存在一定延迟。若建表时未设置 TTL，同样可通过 `ALTER TABLE` 语句补充设置。
+修改后的 TTL 值不会立即生效，存在元数据同步延迟。若建表时未设置 TTL，同样可通过 `ALTER TABLE` 补充设置。新截止时间仍按 Tablet 创建时间计算。自 4.1.5 版本起，将已过期的 TTL 延长到未来时，已缓存的普通块也会重新归入 TTL 队列；设置为 `0` 后转回普通缓存。
 :::
 
 ## 实践案例
@@ -584,10 +591,10 @@ ALTER TABLE customer SET ("file_cache_ttl_seconds" = "3000");
 **解决方案：** 为两张高频表分别设置 TTL，保证其数据在缓存中的保留时长。
 
 ```sql
--- 维度表：数据量小，变动不大，设置 1 年 TTL 确保常驻缓存
+-- 维度表：保护至各 Tablet 创建后 1 年；已超过 1 年时应选择更长的期限
 ALTER TABLE dimension_table SET ("file_cache_ttl_seconds" = "31536000");
 
--- 事实表：每日全量导入，设置 1 天 TTL 与导入周期对齐
+-- 按天新增分区的事实表：每个新分区的 Tablet 保护至创建后 1 天
 ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 ```
 
@@ -608,7 +615,7 @@ ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
 
 **Q：新计算组上线后首次查询很慢？**
 
-使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。如果其他计算组已经缓存了这些数据，默认开启的 [Peer 读](./file-cache-peer-read)会让新计算组未命中时直接从其他计算组的 BE 读取。
+使用**缓存预热**功能，提前将热点表或分区数据从远端存储拉取到新计算组的本地缓存中。具体用法详见 [WARM-UP SQL 文档](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)。如果其他计算组已经缓存了这些数据，启用后的 [Peer 读](./file-cache-peer-read)会让新计算组未命中时直接从其他计算组的 BE 读取。
 
 **Q：如何判断当前缓存空间是否已满？**
 

@@ -183,7 +183,15 @@ ORDER BY entry_name;
 | 3.0 | 1.6.1 |
 | 3.1 | 1.9.1 |
 | 4.0 | 1.9.1 |
-| 4.1（4.1.4+） | 1.10.1 |
+| 4.1.4 / 4.1.4.1 | 1.10.1 |
+| 4.1.5+ | 1.11.0 |
+
+## 元数据与读取异常（4.1.5 起）
+
+- `DESCRIBE`、`SHOW COLUMNS` 和 `SHOW CREATE TABLE` 保留 Iceberg 当前 Schema 声明的 required / optional 属性；扫描时仍需处理演化造成的缺失字段，不能将展示的非空声明当作所有历史文件都存在该字段的保证。
+- 历史分区 Spec 含无法映射的分区类型时，普通读取与逐行 DML 的要求不同：`DELETE` / `UPDATE` 可能因无法生成 Iceberg Row ID 而报错 `Cannot produce Iceberg row IDs with unsupported partition types in spec ...`。应先用表格式支持的写入方式重写历史数据文件，再执行逐行修改。
+- 已提交快照的数据文件或删除文件缺失时，查询报错，不会受 `ignore_not_found_file_in_external_table=true` 影响而跳过。应恢复缺失对象，或选择文件完整的有效快照。
+- 表属性 `schema.name-mapping.default` 必须是合法的 Iceberg Name Mapping JSON 数组。无效时数据扫描会报错，不再按当前列名容错读成 NULL。应在 Spark 等写入端修复或删除该属性，再刷新 Doris 表；元数据系统表查询不执行这项数据扫描校验。
 
 ## 支持的 Iceberg 格式
 
@@ -264,11 +272,11 @@ ORDER BY entry_name;
 | decimal(P, S)                          | decimal(P, S)        |                       |
 | date                                   | date                 |                       |
 | timestamp (Timestamp without timezone) | datetime(6)          | 固定映射到精度为 6 的 datetime |
-| timestamptz (Timestamp with timezone)  | datetime(6)/timestamptz(6)          | 固定映射到精度为 6 的 datetime。由 properties 中 `enable.mapping.timestamp_tz`（4.0.3 后开始支持）属性控制，默认为 `false`，则映射到 `datetime`；为 `true` 时，则映射到 `timestamptz` 类型 |
-| fixed(N)                               | char(N)              |                       |
+| timestamptz (Timestamp with timezone)  | TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
+| fixed(N) | VARBINARY(N) | 自 4.1.5 版本起保留固定二进制宽度。 |
 | string                                 | string               |                       |
-| binary                                 | string/varbinary     | 由 properties 中 `enable.mapping.varbinary`（4.0.2 后开始支持）属性控制。默认为 `false`，则映射到 `string`；为 `true` 时，则映射到 `varbinary` 类型 |
-| uuid                                   | string/varbinary     | version < 4.0.2 映射成 `string` 类型；version == 4.0.2 则映射成 `varbinary` 类型。version > 4.0.2，由 properties 中 `enable.mapping.varbinary` 属性控制。默认为 `false`，则映射到 `string` |
+| binary                                 | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
+| uuid                                   | VARBINARY(16) | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
@@ -1561,6 +1569,10 @@ SELECT * FROM iceberg_tbl FOR TIME AS OF "2022-10-07 17:20:37";
 
 SELECT * FROM iceberg_tbl FOR VERSION AS OF 868895038966572;
 ```
+
+自 4.1.5 版本起，`FOR TIME AS OF` 支持 `yyyy-MM-dd HH:mm:ss` 后带 1 到 9 位小数秒，按会话时区解释，并转换为毫秒选择快照，例如 `FOR TIME AS OF '2024-01-01 12:00:00.123456'`。快照时间选择精度为毫秒，不代表保留纳秒级快照时间。
+
+4.1.5 同时修复历史快照在列重命名、删除、类型提升和分区演化后的读取；文件按其写入时的分区 Spec 解释，不能只用当前 Spec。历史查询不应通过当前物化视图改写读取。
 
 ### Branch 和 Tag
 

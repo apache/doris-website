@@ -1,7 +1,7 @@
 ---
 {
     "title": "WARM UP",
-    "language": "zh_CN",
+    "language": "zh-CN",
     "description": "WARM UP COMPUTE GROUP 语句用于预热计算组中的数据，以提高查询性能。预热操作可以从另一个计算组中获取资源，也可以指定特定的表和分区进行预热。预热操作返回一个作业 ID，可以用于追踪预热作业的状态。"
 }
 ---
@@ -40,6 +40,10 @@ warm_up_item ::= TABLE <table_name> [PARTITION <partition_name>];
 ## 返回值
 
 * JobId: 预热作业的 ID。
+
+## 权限控制
+
+自 4.1.5 版本起，预热会检查目标 Compute Group 的 `USAGE` 权限；指定来源 Compute Group 时，还需要来源组的 `USAGE` 权限。通过 `WITH TABLE` 显式指定的每张内表需要 `SELECT` 权限；使用 `ON TABLES` 规则的事件驱动预热还需要全局 `ADMIN` 权限。缺少任一权限都会拒绝执行。
 
 ## 示例
 

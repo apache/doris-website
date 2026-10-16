@@ -16,7 +16,9 @@ MIN 函数返回表达式的最小非 NULL 值。
 MIN(<expr>)
 ```
 
-## 参数说明
+<a id="参数说明"></a>
+
+## 参数
 
 | 参数 | 说明 |
 | -- | -- |
@@ -27,7 +29,15 @@ MIN(<expr>)
 返回与输入表达式相同的数据类型。
 如果组内所有记录均为 NULL，则函数返回 NULL。
 
-## 举例
+:::caution 版本行为变更（4.1.5）
+
+Doris 4.1 系列自 4.1.5 起，比较数组等复杂类型时，相同位置的 NULL 元素大于非 NULL 元素。例如，`[10, 20, NULL]` 大于 `[10, 20, 40]`。这与整个表达式为 NULL 的情况不同：整个表达式为 NULL 的行仍会被忽略。4.1.5 之前，聚合比较将复杂类型内部的 NULL 元素视为较小值。
+
+:::
+
+<a id="举例"></a>
+
+## 示例
 
 ```sql
 -- setup
@@ -47,7 +57,7 @@ insert into t1 values
 ```
 
 ```sql
-select k1, min(k_string) from t1 group by k1;
+select k1, min(k_string) from t1 group by k1 order by k1;
 ```
 
 String 类型：对于每个分组，返回最小的字符串值。
@@ -63,7 +73,7 @@ String 类型：对于每个分组，返回最小的字符串值。
 ```
 
 ```sql
-select k1, min(k_decimal) from t1 group by k1;
+select k1, min(k_decimal) from t1 group by k1 order by k1;
 ```
 
 Decimal 类型：返回最小的高精度小数值。
@@ -79,17 +89,17 @@ Decimal 类型：返回最小的高精度小数值。
 ```
 
 ```sql
-select k1, min(k_array) from t1 group by k1;
+select k1, min(k_array) from t1 group by k1 order by k1;
 ```
 
-Array 类型: 返回最小的数组值（逐元素比较大小，null为最小元素）。
+Array 类型：逐元素比较，返回最小的数组值；相同位置的 NULL 元素大于非 NULL 元素。
 
 ```text
 +------+----------------+
 | k1   | min(k_array)   |
 +------+----------------+
 |    1 | [10, 20]       |
-|    2 | [10, 20, null] |
+|    2 | [10, 20, 40]   |
 |    3 | NULL           |
 +------+----------------+
 ```
