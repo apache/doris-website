@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Read-only dry run, one-page live validation, or enabled batch
+        description: Read-only dry run, one-page live validation, or batch generation
         type: choice
         options: [dry-run, validate, generate]
         default: generate
@@ -82,7 +82,7 @@ jobs:
     needs: discover
     env:
       I18N_LOCALE: ${{ inputs.locale }}
-    if: needs.discover.outputs.can_generate == 'true' && ((github.event_name == 'workflow_dispatch' && inputs.mode == 'validate') || (vars.I18N_AUTO_TRANSLATE_ENABLED == 'true' && vars.I18N_LIVE_VERIFIED == 'true'))
+    if: needs.discover.outputs.can_generate == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -184,9 +184,7 @@ jobs:
         id: translation
         env:
           I18N_CODEX_MODEL: ${{ vars.I18N_CODEX_MODEL || 'gpt-6-sol' }}
-          I18N_AUTO_TRANSLATE_ENABLED: ${{ vars.I18N_AUTO_TRANSLATE_ENABLED }}
-          I18N_LIVE_VERIFIED: ${{ vars.I18N_LIVE_VERIFIED }}
-          I18N_VALIDATION_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'validate' }}
+          I18N_MODE: ${{ inputs.mode || 'generate' }}
           I18N_PATH: ${{ inputs.path }}
           I18N_MAX_PAGES: ${{ inputs.mode == 'validate' && '1' || '10' }}
           GITHUB_REPOSITORY: ${{ github.repository }}

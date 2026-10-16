@@ -1,4 +1,4 @@
-// Trusted-master automation only. A closed-by-default workflow supplies the
+// Trusted-master automation only. The workflow supplies the requested mode and
 // model credential; this module writes only validated managed ja files/state.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -147,19 +147,19 @@ async function generate({plan, reconciliation, maxPages = 10, target,
 }
 
 function allowGeneration(env) {
-    if (env.I18N_VALIDATION_RUN === 'true') {
+    if (env.I18N_MODE === 'validate') {
         return env.GITHUB_EVENT_NAME === 'workflow_dispatch'
             && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1';
     }
-    return env.I18N_AUTO_TRANSLATE_ENABLED === 'true' && env.I18N_LIVE_VERIFIED === 'true';
+    return env.I18N_MODE === 'generate';
 }
 
 async function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-generate.cjs <scan-directory>');
-    assert(allowGeneration(process.env), 'Live automation is not enabled or limited validation was not requested');
+    assert(allowGeneration(process.env), 'Generation requires generate mode or valid one-page validation');
     const plan = JSON.parse(fs.readFileSync(path.join(output, 'plan.json'), 'utf8'));
-    if (process.env.I18N_VALIDATION_RUN === 'true') {
+    if (process.env.I18N_MODE === 'validate') {
         assert(plan.selected.length === 1 && plan.tasks.find(task => task.id === plan.selected[0])?.sourcePath === process.env.I18N_PATH,
             'Validation mode must select exactly one source file');
     }
@@ -179,7 +179,7 @@ async function main() {
         + `${manifest.failures.length} failed or need manual handling. No translation is merged yet.\n`);
     process.stdout.write(JSON.stringify({candidates: manifest.candidates.length,
         failures: manifest.failures.length, usedTokens: manifest.usedTokens}) + '\n');
-    if (process.env.I18N_VALIDATION_RUN === 'true' && manifest.candidates.length === 0)
+    if (process.env.I18N_MODE === 'validate' && manifest.candidates.length === 0)
         process.exitCode = 1;
 }
 
