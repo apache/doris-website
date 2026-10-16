@@ -32,6 +32,17 @@ The cache feature is disabled by default. Please refer to the [Data Cache](../da
 
 Since version 4.0.2, cache warmup functionality is supported, which can further actively utilize data cache to improve query performance.
 
+## External Split Spreading
+
+In development builds that support external split spreading, repeated queries for the same remote file split can be spread across eligible BEs. Consider enabling it when those queries saturate one BE while other eligible BEs have spare capacity.
+
+```sql
+-- Enable automatic spreading for the current session.
+SET external_scan_consistent_hash_spread_num = 0;
+```
+
+The default value `1` preserves the original scheduling. Spreading does not use live BE CPU usage or guarantee a throughput multiplier, and can increase cache copies and warmup reads. Compare throughput using the same query, cache state and resources. See [`external_scan_consistent_hash_spread_num`](../../sql-manual/basic-element/session-variables.md#external_scan_consistent_hash_spread_num) for candidate limits, locality rules and reset commands.
+
 ## HDFS Read Optimization
 
 Please refer to the **HDFS IO Optimization** section in the [HDFS Documentation](../storages/hdfs.md).

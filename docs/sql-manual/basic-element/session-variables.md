@@ -30,7 +30,15 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
-## Development Version
+## What changed in 4.1.4
+
+| Category | Variables |
+| --- | --- |
+| Added | `enable_file_scanner_v2`, `enable_expr_zonemap_filter`, `enable_local_exchange_before_agg`, `enable_local_exchange_before_streaming_agg`, `runtime_filter_broadcast_join_producer_num`, `runtime_filter_tree_publish_max_send_bytes`, `bucket_shuffle_downgrade_ratio`, `eager_aggregation_on_broadcast_join`, `eager_agg_broadcast_row_count`, `force_eager_agg_hint`, `enable_topn_lazy_mat_phase2_no_write_file_cache`, `file_cache_query_limit_bytes`, `file_presigned_url_ttl_seconds`, `force_forward_all_queries` |
+| Semantics changed | `enable_runtime_filter_partition_prune`, `enable_nereids_distribute_planner` |
+| Removed | `eager_aggregation_on_join`, `plan_nereids_dump` |
+
+## External table scan
 
 ### `external_scan_consistent_hash_spread_num`
 
@@ -63,23 +71,15 @@ SET external_scan_consistent_hash_spread_num = 1;
 UNSET VARIABLE external_scan_consistent_hash_spread_num;
 ```
 
-The spread mode selects the candidate with the least scan weight already assigned by this query's policy; ties are broken uniformly at random. Each split is assigned once. It does not select by live backend CPU usage, and does not guarantee a throughput multiplier. Local preference and mandatory Host constraints take precedence; they may select a backend outside a remote split's hash candidates. File load and schema scans retain their existing behavior.
+The spread mode selects the candidate with the least scan weight already assigned by this query's policy; ties are broken uniformly at random. Each split is assigned once. It does not select by live backend CPU usage, and does not guarantee a throughput multiplier. File load and schema scans retain their existing behavior.
+
+In spread mode, when optimized local scheduling is enabled, a remotely accessible split prefers a backend matching its host hints only if that backend's assigned scan weight is no greater than the minimum across all eligible backends. Otherwise, the split follows the configured scheduling strategy. This local preference can select a backend outside the remote split's hash candidates. Splits that are not remotely accessible must still use backends matching their required hosts.
 
 Spreading disables subsequent global split redistribution, so assignments remain within the split's eligible candidates and locality constraints. With multiple splits, balancing is limited to each split's candidates and may be less even than the original global redistribution.
 
 This option does not enable file caching. When file caching is enabled, `0` can create cached copies on every eligible backend and increase warmup reads and cache storage; explicit N limits remote hash candidates, subject to locality precedence. It does not pre-create cache replicas. Start with `1`; enable spreading when repeated queries concentrate on a saturated backend and other eligible backends have spare capacity. Compare both modes with the same query, cache state and resources.
 
 Persisted global values are retained on upgrade. Changing the compiled default does not reset a saved global value of `0`; use `SET GLOBAL external_scan_consistent_hash_spread_num = 1` if new sessions should preserve original scheduling. Existing sessions must change their session value separately. Negative, non-integer or out-of-range values are rejected.
-
-## What changed in 4.1.4
-
-| Category | Variables |
-| --- | --- |
-| Added | `enable_file_scanner_v2`, `enable_expr_zonemap_filter`, `enable_local_exchange_before_agg`, `enable_local_exchange_before_streaming_agg`, `runtime_filter_broadcast_join_producer_num`, `runtime_filter_tree_publish_max_send_bytes`, `bucket_shuffle_downgrade_ratio`, `eager_aggregation_on_broadcast_join`, `eager_agg_broadcast_row_count`, `force_eager_agg_hint`, `enable_topn_lazy_mat_phase2_no_write_file_cache`, `file_cache_query_limit_bytes`, `file_presigned_url_ttl_seconds`, `force_forward_all_queries` |
-| Semantics changed | `enable_runtime_filter_partition_prune`, `enable_nereids_distribute_planner` |
-| Removed | `eager_aggregation_on_join`, `plan_nereids_dump` |
-
-## External table scan
 
 ### `enable_file_scanner_v2`
 

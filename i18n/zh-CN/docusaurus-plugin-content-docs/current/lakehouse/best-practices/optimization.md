@@ -32,6 +32,17 @@
 
 自 4.0.2 版本开始支持缓存预热功能，可以进一步主动利用数据缓存提升查询性能。
 
+## 外部 Split 分散调度
+
+在支持外部 split 分散调度的开发版本中，对同一个远程文件 split 的重复查询可分散到合法候选 BE。当这些查询使单个 BE 饱和，而其他合法候选 BE 仍有可用容量时，可考虑开启此功能。
+
+```sql
+-- 为当前会话开启自动分散。
+SET external_scan_consistent_hash_spread_num = 0;
+```
+
+默认值 `1` 保留原调度。分散调度不根据 BE 实时 CPU 选点，不保证固定吞吐提升倍数，并可能增加缓存副本和预热读取。应使用相同查询、缓存状态和资源对比吞吐。候选数量限制、本地性规则和恢复命令请参阅 [`external_scan_consistent_hash_spread_num`](../../sql-manual/basic-element/session-variables.md#external_scan_consistent_hash_spread_num)。
+
 ## HDFS 读取优化
 
 可参考 [HDFS 文档](../storages/hdfs.md) 中 **HDFS IO 优化** 部分。

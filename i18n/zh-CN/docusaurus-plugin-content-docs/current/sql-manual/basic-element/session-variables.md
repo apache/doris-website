@@ -27,7 +27,15 @@ SET enable_file_scanner_v2 = false;
 SET GLOBAL enable_file_scanner_v2 = false;
 ```
 
-## 开发版本
+## 4.1.4 版本变更概览
+
+| 类别 | 变量 |
+| --- | --- |
+| 新增 | `enable_file_scanner_v2`、`enable_expr_zonemap_filter`、`enable_local_exchange_before_agg`、`enable_local_exchange_before_streaming_agg`、`runtime_filter_broadcast_join_producer_num`、`runtime_filter_tree_publish_max_send_bytes`、`bucket_shuffle_downgrade_ratio`、`eager_aggregation_on_broadcast_join`、`eager_agg_broadcast_row_count`、`force_eager_agg_hint`、`enable_topn_lazy_mat_phase2_no_write_file_cache`、`file_cache_query_limit_bytes`、`file_presigned_url_ttl_seconds`、`force_forward_all_queries` |
+| 语义变更 | `enable_runtime_filter_partition_prune`、`enable_nereids_distribute_planner` |
+| 移除 | `eager_aggregation_on_join`、`plan_nereids_dump` |
+
+## 外表扫描
 
 ### `external_scan_consistent_hash_spread_num`
 
@@ -60,23 +68,15 @@ SET external_scan_consistent_hash_spread_num = 1;
 UNSET VARIABLE external_scan_consistent_hash_spread_num;
 ```
 
-分散模式优先选择本次查询的调度 policy 中已分配扫描权重最小的候选，权重相同时均匀随机选择。每个 split 仅分配一次；不根据 BE 实时 CPU 选点，也不保证固定吞吐提升倍数。本地优先和强制 Host 约束优先于远程哈希候选范围，可能选择范围外节点。文件导入和 schema 扫描保留原行为。
+分散模式优先选择本次查询的调度 policy 中已分配扫描权重最小的候选，权重相同时均匀随机选择。每个 split 仅分配一次；不根据 BE 实时 CPU 选点，也不保证固定吞吐提升倍数。文件导入和 schema 扫描保留原行为。
+
+在分散模式下，开启本地调度优化时，可远程访问的 split 仅在匹配其 Host 提示的 BE 已分配扫描权重不高于全部合法候选 BE 的最小值时，优先选择该 BE；否则按配置的调度策略选择。本地优先可能选择远程 split 哈希候选范围外的 BE。不可远程访问的 split 仍必须分配到匹配其强制 Host 的 BE。
 
 分散模式关闭后续全局 split 再分配，以保持候选范围和本地约束。多 split 查询仅在各 split 的候选范围内均衡，可能不如原全局再分配均匀。
 
 此参数不会开启文件缓存。文件缓存开启时，`0` 可能在全部合法候选 BE 保存相同数据，增加预热读取和缓存空间；显式 N 可限制远程哈希候选，但本地性仍优先。不会预先创建缓存副本。建议保留默认 `1`；当重复查询集中到已饱和 BE 且其他候选 BE 有可用容量时再开启分散，并使用相同查询、缓存状态和资源进行对比。
 
 升级保留已持久化的全局值。修改编译默认值不会重置已保存的全局 `0`；若需新会话保留原调度，可执行 `SET GLOBAL external_scan_consistent_hash_spread_num = 1`。已有会话需单独修改会话值。负数、非整数和越界值会被拒绝。
-
-## 4.1.4 版本变更概览
-
-| 类别 | 变量 |
-| --- | --- |
-| 新增 | `enable_file_scanner_v2`、`enable_expr_zonemap_filter`、`enable_local_exchange_before_agg`、`enable_local_exchange_before_streaming_agg`、`runtime_filter_broadcast_join_producer_num`、`runtime_filter_tree_publish_max_send_bytes`、`bucket_shuffle_downgrade_ratio`、`eager_aggregation_on_broadcast_join`、`eager_agg_broadcast_row_count`、`force_eager_agg_hint`、`enable_topn_lazy_mat_phase2_no_write_file_cache`、`file_cache_query_limit_bytes`、`file_presigned_url_ttl_seconds`、`force_forward_all_queries` |
-| 语义变更 | `enable_runtime_filter_partition_prune`、`enable_nereids_distribute_planner` |
-| 移除 | `eager_aggregation_on_join`、`plan_nereids_dump` |
-
-## 外表扫描
 
 ### `enable_file_scanner_v2`
 
