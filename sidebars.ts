@@ -1494,6 +1494,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/e',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/exp',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/factorial',
+                                        'sql-manual/sql-functions/scalar-functions/numeric-functions/gamma',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/floor',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/fmod',
                                         'sql-manual/sql-functions/scalar-functions/numeric-functions/format-round',
