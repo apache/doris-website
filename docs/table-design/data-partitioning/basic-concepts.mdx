@@ -1,18 +1,17 @@
 ---
 {
-    "title": "Basic Concepts",
+    "title": "How Partitioning and Bucketing Work",
+    "sidebar_label": "How It Works",
     "language": "en",
-    "description": "A progressive introduction to Doris partitioning and bucketing: from core concepts and the first CREATE TABLE example to auto/dynamic partitioning, auto-bucketing, Colocate, and other advanced capabilities, along with design recommendations and operational guidance for partitions and buckets."
+    "description": "The data-distribution model behind Doris partitioning and bucketing: partitions, buckets, tablets, and nodes, plus advanced partition and bucket modes, design recommendations, and operational guidance."
 }
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 {/* Knowledge type: Concept introduction / Procedure */}
 {/* Applicable scenarios: Table design / Data organization and management */}
 
-This document introduces the partitioning (Partition) and bucketing (Bucket) mechanisms of Doris, helping you design table structures reasonably to improve query performance and data management efficiency. New users are recommended to read the sections in order: Sections 1-3 cover core concepts and the first CREATE TABLE example, Sections 4-6 cover advanced features and design recommendations, and Section 7 covers the methods for viewing and modifying partitions needed for daily operations.
+This page explains how Doris distributes data across partitions, buckets, and tablets. It also covers the advanced partition and bucket modes, design recommendations, and operational commands. For a recommended starting configuration and a decision guide, start with [Partitioning and Bucketing](./overview), then read this page when you want to understand the underlying model.
 
 ## 1. Overview
 
@@ -148,152 +147,13 @@ Besides manually declaring partitions at table creation time, Doris also support
 | Dynamic partition | Automatically created/recycled by the system based on time scheduling rules | Time-series data, where you want to automatically maintain rolling partitions for the past N days/weeks/months |
 | Auto partition  | Created on demand when data is written | Partition values are unpredictable (such as multi-tenant or sparse time), where pre-creation should be avoided |
 
-The following shows CREATE TABLE examples for common combinations:
-
-<Tabs>
-<TabItem value="auto-partition" label="Auto Partition" default>
-
-[Auto Partition](./auto-partitioning) supports automatically creating corresponding partitions according to user-defined rules during data ingestion, making it more convenient to use. The basic example rewritten as Auto Range partition:
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1"
-);
-```
-
-With this CREATE TABLE statement, when data is loaded, Doris automatically creates corresponding partitions for the `date` column at the month level. For example, `2018-12-01` and `2018-12-31` fall into the same partition, while `2018-11-12` falls into another partition. Auto Partition also supports List partitioning. For more usage, see the Auto Partition documentation.
-
-</TabItem>
-
-<TabItem value="dynamic-partition" label="Dynamic Partition">
-
-[Dynamic Partition](./dynamic-partitioning) is a management approach that automatically creates and recycles partitions based on real time. The basic example rewritten as Dynamic Partition:
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-PARTITION BY RANGE(`date`)
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "WEEK", --- Partition granularity is week
-    "dynamic_partition.start" = "-2", --- Retain the past two weeks
-    "dynamic_partition.end" = "2", --- Pre-create the next two weeks
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
-
-Dynamic Partition supports tiered storage, custom replica counts, and more. See the Dynamic Partition documentation for details.
-
-</TabItem>
-
-<TabItem value="auto-and-dynamic-partition" label="Auto Partition + Dynamic Partition">
-
-Auto Partition and Dynamic Partition each have their own advantages. Combining the two enables flexible on-demand creation and automatic recycling of partitions:
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "month", --- The two granularities must be the same
-    "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up historical partitions older than two weeks
-    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions; this is fully delegated to Auto Partition
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
-
-For details about this feature, see [Using Auto Partition with Dynamic Partition](./auto-partitioning#lifecycle-management).
-
-</TabItem>
-
-</Tabs>
+For ready-to-use CREATE TABLE examples of each mode, including combining auto with dynamic partitioning, see [Auto Partitioning](./auto-partitioning), [Dynamic Partitioning](./dynamic-partitioning), and [Manual Partitioning](./manual-partitioning).
 
 ## 5. Advanced: Bucketing
 
 ### 5.1 Auto Bucketing
 
-When you are not sure about a reasonable number of buckets, you can use Auto Bucketing to let Doris perform the estimation. You only need to provide the estimated table data size:
-
-```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-PARTITION BY RANGE(`date`)
-(
-    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
-    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
-    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
-)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
-PROPERTIES
-(
-    "replication_num" = "1",
-    "estimate_partition_size" = "2G" --- Estimated data volume for one partition; defaults to 10G if not provided
-);
-```
-
-Note that this approach is not suitable for scenarios with extremely large table data volumes.
+When you are unsure how many buckets to use, set `BUCKETS AUTO` and let Doris size them from an estimated data volume (`estimate_partition_size`). This is not suitable for extremely large tables. For details, see [Data Bucketing](./data-bucketing).
 
 ### 5.2 Colocate
 

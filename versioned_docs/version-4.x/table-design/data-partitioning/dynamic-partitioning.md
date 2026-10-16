@@ -1,13 +1,14 @@
 ---
 {
     "title": "Dynamic Partitioning",
+    "sidebar_label": "Dynamic Partitioning",
     "language": "en",
     "description": "Dynamic partitioning rolls partitions forward by creating and dropping them on a schedule, providing partition lifecycle management (TTL) for tables. It applies to scenarios such as logs and time-series data that need automatic cleanup of expired data."
 }
 ---
 
-:::info Tip
-[Auto Partitioning](./auto-partitioning) is the recommended approach for automatic partition management. It is the successor to dynamic partitioning.
+:::info Choose a partition-management mode
+Dynamic partitioning creates and removes partitions on a schedule. Use [auto partitioning](./auto-partitioning) when partitions should be created on demand as data arrives. Choose the retention mode according to whether you need a time window or a count of historical partitions.
 :::
 
 <!-- Knowledge type: Feature introduction + Operating procedure + Configuration parameters -->

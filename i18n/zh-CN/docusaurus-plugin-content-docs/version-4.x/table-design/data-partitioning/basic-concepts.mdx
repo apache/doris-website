@@ -1,18 +1,17 @@
 ---
 {
-    "title": "基本概念",
+    "title": "分区与分桶原理",
+    "sidebar_label": "工作原理",
     "language": "zh-CN",
     "description": "由浅入深介绍 Doris 的分区与分桶机制：从核心概念、第一个建表示例到自动/动态分区、自动分桶、Colocate 等进阶能力，并给出分区分桶的设计建议与运维方法。"
 }
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 {/* 知识类型: 概念介绍 / 操作步骤 */}
 {/* 适用场景: 建表设计 / 数据组织与管理 */}
 
-本文介绍 Doris 的分区（Partition）与分桶（Bucket）机制，帮助用户合理设计表结构以提升查询性能与数据管理效率。建议新手按章节顺序阅读：第 1–3 节涵盖核心概念与第一个建表示例，第 4–6 节为进阶特性与设计建议，第 7 节为日常运维所需的查看与修改方法。
+本文介绍 Doris 如何将数据分布到分区、分桶与 Tablet，并涵盖进阶的分区与分桶模式、设计建议与运维命令。若需要推荐的起步配置与选型指南，请先阅读 [分区与分桶](./overview)；当你希望理解底层模型时再阅读本文。
 
 ## 1. 概述
 
@@ -148,152 +147,13 @@ PROPERTIES
 | 动态分区 | 系统按时间调度规则自动创建/回收     | 时间序列数据，希望自动滚动维护近 N 天/周/月分区 |
 | 自动分区 | 数据写入时按需创建                 | 分区取值不可预知（如多租户、稀疏时间），希望避免预创建 |
 
-下面给出常见组合的建表示例：
-
-<Tabs>
-<TabItem value="自动分区" label="自动分区" default>
-
-[自动分区](./auto-partitioning) 支持在数据导入时根据用户定义的规则自动创建对应分区，使用更为便捷。将基础示例改写为自动 Range 分区：
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- 使用月作为分区粒度
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1"
-);
-```
-
-如上建表，当数据导入时，Doris 将自动按月级别为 `date` 列创建对应分区。例如 `2018-12-01` 与 `2018-12-31` 会落入同一个分区，而 `2018-11-12` 会落入另一个分区。自动分区还支持 List 分区，更多用法请查看自动分区文档。
-
-</TabItem>
-
-<TabItem value="动态分区" label="动态分区">
-
-[动态分区](./dynamic-partitioning) 是根据现实时间进行自动分区创建与回收的管理方式。将基础示例改写为动态分区：
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-)
-PARTITION BY RANGE(`date`)
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "WEEK", --- 分区粒度为周
-    "dynamic_partition.start" = "-2", --- 向前保留两周
-    "dynamic_partition.end" = "2", --- 提前创建后两周
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
-
-动态分区支持分层存储、自定义副本数等功能，详见动态分区文档。
-
-</TabItem>
-
-<TabItem value="自动分区+动态分区" label="自动分区 + 动态分区">
-
-自动分区与动态分区各有优势，二者结合可实现分区的灵活按需创建与自动回收：
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- 使用月作为分区粒度
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "month", --- 二者粒度必须相同
-    "dynamic_partition.start" = "-2", --- 动态分区自动清理超过两周的历史分区
-    "dynamic_partition.end" = "0", --- 动态分区不创建未来分区，完全交给自动分区
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
-
-关于该功能的细节说明，详见 [自动分区与动态分区联用](./auto-partitioning#与动态分区联用)。
-
-</TabItem>
-
-</Tabs>
+各模式开箱即用的建表示例，以及自动分区与动态分区的组合用法，见[自动分区](./auto-partitioning)、[动态分区](./dynamic-partitioning)与[手动分区](./manual-partitioning)。
 
 ## 5. 进阶：分桶进阶
 
 ### 5.1 自动分桶
 
-当用户不确定合理的分桶数时，可以使用自动分桶让 Doris 完成估计，用户仅需提供预估的表数据量：
-
-```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "用户 id",
-    `date` DATE NOT NULL COMMENT "数据灌入日期时间",
-    `timestamp` DATETIME NOT NULL COMMENT "数据灌入的时间戳",
-    `city` VARCHAR(20) COMMENT "用户所在城市",
-    `age` SMALLINT COMMENT "用户年龄",
-    `sex` TINYINT COMMENT "用户性别",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "用户最后一次访问时间",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "用户总消费",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "用户最大停留时间",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "用户最小停留时间"
-)
-PARTITION BY RANGE(`date`)
-(
-    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
-    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
-    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
-)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
-PROPERTIES
-(
-    "replication_num" = "1",
-    "estimate_partition_size" = "2G" --- 用户估计一个分区将有的数据量，不提供则默认为 10G
-);
-```
-
-需要注意的是，该方式不适用于表数据量特别大的场景。
+当不确定合理的分桶数时，可设置 `BUCKETS AUTO`，由 Doris 根据预估数据量（`estimate_partition_size`）自动确定分桶数。该方式不适用于数据量极大的表。详见[数据分桶](./data-bucketing)。
 
 ### 5.2 Colocate（同分布）
 
