@@ -75,7 +75,7 @@ Provider 类型校验通过不代表它支持全部 AI 函数。例如 VoyageAI 
 
 `ai.max_retries`: 可选，单次请求的最大重试次数。默认值为 3。
 
-`ai.retry_delay_second`: 可选，重试前的延迟时间（秒）。开发分支必须为正整数。默认值为 1，Doris 4.1.5 的默认值为 0。
+`ai.retry_delay_second`: 可选，重试前的延迟时间（秒）。开发分支默认值为 1，Doris 4.1.5 的默认值为 0。
 
 `ai.max_concurrency`: 可选，单个执行实例同时保持在途的批量请求数上限，适用于标量 AI 函数（`ai_filter`、`ai_classify`、`ai_sentiment`、`ai_summarize`、`ai_translate`、`ai_generate`、`ai_extract`、`ai_mask`、`ai_fix_grammar`、`ai_similarity`）。必须为正整数。默认值为 1，表示一个 Block 内的各批次逐个发送；大于 1 时多个批次并发发送。请根据模型服务商的限流或连接配额设置：当执行计划包含多个 Scan 实例时，服务商同时收到的请求数最多为 `实例数 × ai.max_concurrency`。可通过 `ALTER RESOURCE` 修改。不适用于 `embed` 和 `ai_agg`。批次大小由 Session 变量 `ai_context_window_size` 单独控制。
 
