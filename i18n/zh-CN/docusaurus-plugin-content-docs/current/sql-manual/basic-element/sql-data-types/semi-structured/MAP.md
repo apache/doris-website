@@ -25,7 +25,7 @@
   - 例如: `MAP<INT,INT>`可以转换为`MAP<BIGINT,BIGINT>`，因为`INT`和`BIGINT`可以转换。
   - 字符串类型可以转换成`MAP<key_type, value_type>`类型（通过解析的形式，解析失败返回 NULL）。
 - `MAP<key_type, value_type>` 类型在`AGGREGATE`表模型中只支持`REPLACE`和`REPLACE_IF_NOT_NULL`，**在任何表模型中都无法作为`Key`列，无法作为分区分桶列**。
-- `MAP<key_type, value_type>`类型的列不支持比较或者算数运算，**不支持`ORDER BY`和`GROUP BY`操作，不支持作为`JOIN KEY`，不支持在`DELETE`语句中使用**。
+- `MAP<key_type, value_type>`类型的列不支持比较或者算数运算，包括`IN`和`NOT IN`，**不支持`ORDER BY`和`GROUP BY`操作，不支持作为`JOIN KEY`，不支持在`DELETE`语句中使用**。
 - `MAP<key_type, value_type>`类型的列不支持建立任何索引。
 
 ## 类型构造
