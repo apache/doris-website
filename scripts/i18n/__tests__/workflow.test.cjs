@@ -130,15 +130,25 @@ test('human maintained pages are excluded from automatic generation', () => {
     assert.equal(machineOwned(task, {data: {pages: [{...task, ownership: 'human'}]}}), false);
 });
 
-test('one-page validation can bootstrap without enabling ongoing automation', () => {
-    const request = {I18N_VALIDATION_RUN: 'true', GITHUB_EVENT_NAME: 'workflow_dispatch',
+test('one-page validation requires a manual run, exact source path and one-page limit', () => {
+    const request = {I18N_MODE: 'validate', GITHUB_EVENT_NAME: 'workflow_dispatch',
         I18N_PATH: 'docs/guide.md', I18N_MAX_PAGES: '1'};
     assert.equal(allowGeneration(request), true);
     assert.equal(allowGeneration({...request, I18N_MAX_PAGES: '4'}), false);
     assert.equal(allowGeneration({...request, GITHUB_EVENT_NAME: 'push'}), false);
     assert.equal(allowGeneration({...request, I18N_PATH: ''}), false);
-    assert.equal(allowGeneration({I18N_AUTO_TRANSLATE_ENABLED: 'true'}), false);
-    assert.equal(allowGeneration({I18N_AUTO_TRANSLATE_ENABLED: 'true', I18N_LIVE_VERIFIED: 'true'}), true);
+});
+
+test('generate mode runs manually and on schedule without enablement variables', () => {
+    for (const event of ['workflow_dispatch', 'schedule']) {
+        assert.equal(allowGeneration({I18N_MODE: 'generate', GITHUB_EVENT_NAME: event}), true);
+    }
+});
+
+test('dry-run, unknown and missing modes cannot call the generator', () => {
+    for (const mode of ['dry-run', 'unknown', undefined]) {
+        assert.equal(allowGeneration({I18N_MODE: mode}), false);
+    }
 });
 
 test('push eligibility follows current native identities and relevant rules', () => {

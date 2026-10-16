@@ -303,7 +303,7 @@ For offline tests, `--provider mock --mock-file <json>` maps each masked unit
 text to a replacement string and stages a fixture candidate. Mock output cannot
 be applied to managed translation files. The offline fixture does not establish
 live model quality, latency, cost or availability. A real limited call and
-review are required before T08 enables automatic generation.
+review are recommended before running batch generation.
 
 ## Asynchronous Japanese discovery and generation
 
@@ -323,10 +323,9 @@ appears in the exception report.
 Manual dispatch defaults to `generate` and accepts optional plugin, version and
 source path filters. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
-page while ongoing automation remains disabled. It is the first live acceptance
-path after OSS model access is available. With OSS access but no GitHub write
-credential, `validate` still
-writes the candidate to the generation artifact and makes no GitHub write.
+page. It provides a single-page live check after OSS model access is available.
+With OSS access but no GitHub write credential, `validate` still writes the
+candidate to the generation artifact and makes no GitHub write.
 `dry-run` remains available for read-only discovery. Full scans recover
 pending work from new or changed source documents and earlier failed runs.
 One workflow-level concurrency group covers every trigger, mode and locale.
@@ -339,9 +338,10 @@ Translation PR
 merges do not trigger this workflow. It does not participate in website
 builds or release deployment.
 
-Ongoing generation stays off unless both repository variables
-`I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. The
-workflow uses the same verified Codex CLI package and numbered ChatGPT auth
+The mode controls generation directly: manual `generate` runs and scheduled
+runs generate batches when eligible documents are pending, while `dry-run`
+only scans. No repository enablement variables are required. The workflow
+uses the same verified Codex CLI package and numbered ChatGPT auth
 snapshots in OSS as the Apache Doris code-review runner. The repository's
 `OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
@@ -357,12 +357,12 @@ write permissions, subject to organization token policy. A repository admin
 must store the secret. The resulting commits and PR use that person's identity.
 When both credentials are present, the App takes precedence. The workflow
 does not use `GITHUB_TOKEN` to create PRs because those PR checks can require
-manual approval. Set the enablement variables only after a one-page `validate`
-run and its App- or PAT-created PR have passed the required checks.
+manual approval. Use a one-page `validate` run to check model access and the
+App- or PAT-created PR before running a full batch.
 Missing write credentials leave manual validation as an artifact-only run;
 missing OSS credentials leave discovery available without model calls.
 
-When enabled, one run produces at most 10 target page candidates. The T08 planner
+In `generate` mode, one run produces at most 10 target page candidates. The T08 planner
 and Codex adapter do not reject work based on an estimated or accumulated
 token allowance. The adapter still records actual usage for the run summary.
 Document length, chunk size, call timeout and the model's own context limits

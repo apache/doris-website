@@ -108,7 +108,7 @@ function main() {
     const env = {...process.env, PATH: `${bin}:${process.env.PATH}`, GH_TOKEN: 'local-simulation',
         GITHUB_REPOSITORY: 'apache/doris-website', GITHUB_EVENT_NAME: 'workflow_dispatch',
         GITHUB_RUN_ID: runId, I18N_PR_AUTH_KIND: 'pat', I18N_MODE: 'validate',
-        I18N_VALIDATION_RUN: 'true', I18N_PATH: sourcePath, I18N_MAX_PAGES: '1',
+        I18N_PATH: sourcePath, I18N_MAX_PAGES: '1',
         I18N_LIMIT: '20', DORIS_ENABLE_JA: 'true', CODEX_HOME: auth,
         I18N_SIM_PR_RECORD: path.join(output, 'pull-request.json')};
     runNode(repo, 'scripts/i18n/workflow-prs.cjs', [scan], env, logs);
