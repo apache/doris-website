@@ -30,7 +30,7 @@ LANCE_INDEX_ENTRIES(
 
 `lance_index_entries` 表函数（TVF）接受一个 `"key"="value"` 参数对。
 
-| 参数 | 说明 |
+| 参数 | 描述 |
 |---|---|
 | `<table>` | 要查看的 Lance 表的完整三部分 `catalog.database.table` 名称。标识符支持反引号引用；多级 Lance Namespace 映射为包含 `.` 的数据库名时，需要使用反引号引用数据库部分，例如 `` lance_catalog.`doris.analytics`.items ``。 |
 
