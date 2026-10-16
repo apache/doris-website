@@ -49,11 +49,13 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 ## 参数
 
 | 参数 | 描述 |
-| -- | -- |
+| --- | --- |
 | `<str>` | 该参数为 String 类型。表示要执行正则表达式匹配的输入字符串。可以是字面值字符串或包含字符串数据的表列引用。|
 | `<pattern>` | 该参数也为 String 类型。指定用于与输入字符串 <str> 匹配的正则表达式模式。该模式可以包含各种正则表达式构造，如字符类、量词和子模式。|
 
 ## 返回值
+
+任一参数为 `NULL` 时返回 `NULL`。
 
 函数返回表示输入字符串中与指定正则表达式的第一个子模式匹配部分的字符串。返回类型为 String。如果未找到匹配项，或模式没有子模式，则返回空字符串。
 
@@ -85,12 +87,15 @@ REGEXP_EXTRACT_ALL(<str>, <pattern>)
 | `(?U)`  | 量词非贪婪：`*`、`+` 等尽可能少地匹配        |
 | `(?-U)` | 量词贪婪（默认）：`*`、`+` 等尽可能多地匹配  |
 
-## 例子
+## 示例 {#例子}
 
 围绕 'C' 的小写字母基本匹配,在这个示例中，模式([[:lower:]]+)C([[:lower:]]+)匹配字符串中一个或多个小写字母后跟 'C' 再跟一个或多个小写字母的部分。'C' 之前的第一个子模式([[:lower:]]+)匹配 'b'，因此结果为['b']。
 
 ```sql
-mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
+SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
+```
+
+```text
 +--------------------------------------------------------------+
 | regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)') |
 +--------------------------------------------------------------+
@@ -100,7 +105,10 @@ mysql> SELECT regexp_extract_all('AbCdE', '([[:lower:]]+)C([[:lower:]]+)');
 字符串中的多个匹配项,在这里，模式在字符串中匹配两个部分。第一个匹配的第一个子模式匹配 'b'，第二个匹配的第一个子模式匹配 'f'。因此结果为['b', 'f']。
 
 ```sql
-mysql> SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
+SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
+```
+
+```text
 +-----------------------------------------------------------------+
 | regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)') |
 +-----------------------------------------------------------------+
@@ -111,7 +119,10 @@ mysql> SELECT regexp_extract_all('AbCdEfCg', '([[:lower:]]+)C([[:lower:]]+)');
 从键值对中提取键, 该模式匹配字符串中的键值对。第一个子模式捕获键，因此结果为 ['abc', 'def', 'ghi']。
 
 ```sql
-mysql> SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[^"]+"|\\w+)');
+SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[^"]+"|\\w+)');
+```
+
+```text
 +--------------------------------------------------------------------------------+
 | regexp_extract_all('abc=111, def=222, ghi=333', '("[^"]+"|\w+)=("[^"]+"|\w+)') |
 +--------------------------------------------------------------------------------+
@@ -121,7 +132,10 @@ mysql> SELECT regexp_extract_all('abc=111, def=222, ghi=333','("[^"]+"|\\w+)=("[
 匹配汉字, 模式(\p{Han}+)(.+)首先通过第一个子模式(\p{Han}+)匹配一个或多个汉字，因此结果为['这是一段中文']。
 
 ```sql
-mysql> select regexp_extract_all('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)');
+select regexp_extract_all('这是一段中文 This is a passage in English 1234567', '(\\p{Han}+)(.+)');
+```
+
+```text
 +------------------------------------------------------------------------------------------------+
 | regexp_extract_all('这是一段中文 This is a passage in English 1234567', '(\p{Han}+)(.+)')       |
 +------------------------------------------------------------------------------------------------+
@@ -175,7 +189,10 @@ SELECT REGEXP_EXTRACT_ALL('ABC', '(\\d+)');
 emoji字符匹配
 
 ```sql
-mysql> SELECT REGEXP_EXTRACT_ALL('👩‍💻,👨‍🚀', '(💻|🚀)');
+SELECT REGEXP_EXTRACT_ALL('👩‍💻,👨‍🚀', '(💻|🚀)');
+```
+
+```text
 +--------------------------------------------------------------+
 | REGEXP_EXTRACT_ALL('👩‍💻,👨‍🚀', '(💻|🚀)')                     |
 +--------------------------------------------------------------+
@@ -240,7 +257,10 @@ Error: missing ]: [[:alpha:]+
 高级的正则表达式
 ```sql
 SELECT REGEXP_EXTRACT_ALL('ID:AA-1,ID:BB-2,ID:CC-3', '(?<=ID:)([A-Z]{2}-\\d)');
--- ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=ID:)([A-Z]{2}-\d). Error: invalid perl operator: (?<
+```
+
+```text
+ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Invalid regex pattern: (?<=ID:)([A-Z]{2}-\d). Error: invalid perl operator: (?<
 ```
 
 ```sql

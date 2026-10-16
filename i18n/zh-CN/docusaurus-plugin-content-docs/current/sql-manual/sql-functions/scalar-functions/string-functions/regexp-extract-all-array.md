@@ -23,7 +23,7 @@ REGEXP_EXTRACT_ALL_ARRAY(<str>, <pattern>)
 ## 参数
 
 | 参数 | 描述 |
-| -- | -- |
+| --- | --- |
 | `<str>` | 用于匹配的字符串，类型为 `STRING`。 |
 | `<pattern>` | 正则表达式字符串，类型为 `STRING`。提取第一个捕获组；不支持第三个捕获组索引参数。 |
 

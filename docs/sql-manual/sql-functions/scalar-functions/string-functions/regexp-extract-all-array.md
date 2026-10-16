@@ -23,7 +23,7 @@ REGEXP_EXTRACT_ALL_ARRAY(<str>, <pattern>)
 ## Parameters
 
 | Parameter | Description |
-| -- | -- |
+| --- | --- |
 | `<str>` | Input string, of type `STRING`. |
 | `<pattern>` | Regular expression, of type `STRING`. The first capturing group is extracted; a third group-index argument is not supported. |
 
