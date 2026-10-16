@@ -33,7 +33,7 @@ Compared with managing Iceberg tables in a regular OSS Bucket, OSS Tables provid
 Apache Doris connects to OSS Tables through Iceberg REST Catalog: REST Catalog manages namespaces and table metadata, while `S3FileIO` reads and writes data files. This guide explains how to create an OSS Tables Catalog in Doris and query and write Iceberg tables.
 
 :::caution
-This feature is experimental and will be released in Doris 5.0.0.
+This feature is experimental and supported starting from Doris 4.1.4.
 :::
 
 <!-- Knowledge Type: Operational Steps -->
@@ -161,6 +161,12 @@ INSERT INTO orders VALUES
 SELECT order_id, customer, amount, created_at
 FROM orders
 ORDER BY order_id;
+```
+
+```text
+order_id  customer  amount  created_at
+1         Alice     99.50   2026-08-11 10:00:00
+2         Bob       120.00  2026-08-11 10:01:00
 ```
 
 You can query the Iceberg `$files` metadata table to verify that data files have been written to OSS Tables:
