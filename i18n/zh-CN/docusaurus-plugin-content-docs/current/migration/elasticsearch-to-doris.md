@@ -84,7 +84,7 @@ SELECT doc_id, title FROM migration_target.es_demo ORDER BY doc_id;
 | `hosts` | STRING | 是 | 无 | ES HTTP 地址，所有 FE/BE 必须能够访问 |
 | `user` / `password` | STRING | 取决于 ES 认证 | 空 | 启用 Basic 认证时填写 |
 | `mapping_es_id` | boolean | 否 | `false` | 暴露文档 `_id`，本例设为 true |
-| `doc_value_scan` | boolean | 否 | `true` | 尝试通过 doc values 读取支持的字段 |
+| `enable_docvalue_scan` | boolean | 否 | `true` | 尝试通过 doc values 读取支持的字段 |
 | `nodes_discovery` | boolean | 否 | `true` | 自动发现节点；隔离网络中可能需要关闭 |
 
 完整参数、认证及数组标注格式见 [ES Catalog](../lakehouse/catalogs/es-catalog.md)。

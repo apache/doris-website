@@ -19,7 +19,7 @@ This guide uses the MySQL JDBC Catalog to copy a stable snapshot into a Doris in
 
 ### 1. Prepare the source table
 
-Run in the source database:
+Prepare this sample in the source database using an account with CREATE and INSERT privileges. The catalog connection uses the source read account described above.
 
 ```sql
 CREATE TABLE migration_demo (
@@ -83,7 +83,7 @@ One replica and one bucket keep the example suitable for local verification. Siz
 | --- | --- | --- | --- |
 | `type` | STRING | Required, no default | Use `jdbc` |
 | `user` / `password` | STRING | Required, no default | Source database credentials |
-| `jdbc_url` | STRING | Required, no default | Source address; a PostgreSQL URL also selects the database |
+| `jdbc_url` | STRING | Required, no default | Source JDBC connection URL, including the database name |
 | `driver_url` | STRING | Required, no default | Jar accessible to every FE/BE; this example uses a preinstalled filename |
 | `driver_class` | STRING | Required, no default | Java class for the selected driver |
 

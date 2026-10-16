@@ -19,7 +19,7 @@
 
 ### 1. 准备源表
 
-在源数据库中执行：
+使用具有建表和插入权限的源端账号，在源数据库中准备下面的样例；Catalog 连接使用前述源端只读账号。
 
 ```sql
 CREATE TABLE migration_demo (
@@ -83,7 +83,7 @@ SELECT id, amount, note FROM migration_target.mysql_demo ORDER BY id;
 | --- | --- | --- | --- |
 | `type` | STRING | 必需，无默认值 | 使用 `jdbc` |
 | `user` / `password` | STRING | 必需，无默认值 | 源数据库凭据 |
-| `jdbc_url` | STRING | 必需，无默认值 | 源数据库地址；PostgreSQL URL 还指定数据库 |
+| `jdbc_url` | STRING | 必需，无默认值 | 包含源数据库名的 JDBC 连接地址 |
 | `driver_url` | STRING | 必需，无默认值 | 每个 FE/BE 可访问的 Jar；本例使用预部署文件名 |
 | `driver_class` | STRING | 必需，无默认值 | 对应驱动的 Java 类名 |
 

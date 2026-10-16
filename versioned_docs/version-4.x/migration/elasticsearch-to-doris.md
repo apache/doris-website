@@ -84,7 +84,7 @@ SELECT doc_id, title FROM migration_target.es_demo ORDER BY doc_id;
 | `hosts` | STRING | Yes | None | ES HTTP addresses reachable from every FE/BE |
 | `user` / `password` | STRING | Depends on ES authentication | Empty | Credentials when Basic authentication is enabled |
 | `mapping_es_id` | boolean | No | `false` | Exposes document `_id`; enabled in this example |
-| `doc_value_scan` | boolean | No | `true` | Attempts doc-values reads for supported fields |
+| `enable_docvalue_scan` | boolean | No | `true` | Attempts doc-values reads for supported fields |
 | `nodes_discovery` | boolean | No | `true` | Discovers nodes; may need disabling in isolated networks |
 
 See [ES Catalog](../lakehouse/catalogs/es-catalog.md) for all parameters, authentication, and array annotations.
