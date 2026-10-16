@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 :::note
 This is an experimental feature.
 
-Lance Catalog is supported starting from Apache Doris 4.2.
+Lance Catalog is supported starting from Apache Doris 4.1.4.
 :::
 
 Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system, S3-compatible object storage, or Alibaba Cloud OSS.
@@ -374,19 +374,17 @@ Lance Catalog supports the following metadata DDL operations:
 | `ALTER TABLE DROP COLUMN` | Supported for top-level columns |
 | `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE TABLE` | Not supported |
 
-### Create and Drop Namespaces
+### Create Namespaces
 
 Use `CREATE DATABASE` and `DROP DATABASE` to create or delete Lance Namespaces:
 
 ```sql
 CREATE DATABASE lance_catalog.analytics;
-
-DROP DATABASE lance_catalog.analytics;
 ```
 
 The root Namespace mapped by `lance.namespace.root_database` cannot be created or dropped through SQL.
 
-### Create and Drop Tables
+### Create Tables
 
 Use `CREATE TABLE` to create an empty Lance table with the specified schema:
 
@@ -397,12 +395,6 @@ CREATE TABLE lance_catalog.analytics.user_profiles (
     age INT,
     created_at DATETIME(3)
 );
-```
-
-`DROP TABLE` calls the Lance Namespace drop-table operation. Treatment of underlying data depends on the Namespace implementation. Check its deletion semantics and back up required data first:
-
-```sql
-DROP TABLE lance_catalog.analytics.user_profiles;
 ```
 
 ### Evolve Table Schemas
@@ -431,6 +423,15 @@ The following schema changes are not supported:
 - Nested-field schema changes.
 - Multiple schema change clauses in one `ALTER TABLE` statement.
 - Type changes involving unsupported Lance/Arrow types.
+
+### Drop Tables and Namespaces
+
+After verifying schema evolution, clean up the example objects. DROP TABLE calls the Lance Namespace drop-table operation; treatment of underlying data depends on the Namespace implementation. Check its deletion semantics and back up required data first:
+
+```sql
+DROP TABLE lance_catalog.analytics.user_profiles;
+DROP DATABASE lance_catalog.analytics;
+```
 
 ## Query Lance Tables
 
