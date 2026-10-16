@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 对 Map 中的每一个键值对应用 Lambda 表达式，并使用原始键和转换后的值构造一个新的 Map。Lambda 表达式接收每个键值对的键和值作为参数。

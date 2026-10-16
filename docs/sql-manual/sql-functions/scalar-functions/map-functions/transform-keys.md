@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Applies a lambda expression to every entry in a map and constructs a new map with the transformed keys and the original values. The lambda receives the key and value of each entry.

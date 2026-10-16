@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 对 Map 中的每一个键值对应用 Lambda 表达式，并使用转换后的键和值构造一个新的 Map。Lambda 表达式接收每个键值对的键和值，并返回一对表达式：第一个表达式作为新键，第二个表达式作为新值。
@@ -14,6 +18,7 @@
 
 ```sql
 MAP_APPLY((<key>, <value>) -> (<new_key>, <new_value>), <map>)
+MAP_APPLY((<key>, <value>) -> STRUCT(<new_key>, <new_value>), <map>)
 ```
 
 ## 参数
@@ -34,7 +39,7 @@ MAP_APPLY((<key>, <value>) -> (<new_key>, <new_value>), <map>)
 - 如果 `<map>` 为 `NULL`，返回 `NULL`。
 - Lambda 返回字段中的 `NULL` 会保留为 Map 中的 `NULL` 键或值。
 - 如果多个元素转换为相同的新键，保留最后一次出现的值。
-- 如果 Lambda 没有返回两个表达式，则报告分析错误。
+- Lambda 必须返回恰好包含两个字段且整体不可为 NULL 的 `STRUCT`。元组语法 `(<new_key>, <new_value>)` 等价于 `STRUCT(<new_key>, <new_value>)`；整体可为 NULL 的结构体或字段数不为 2 的结果会触发分析错误。
 
 ## 示例
 

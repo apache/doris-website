@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Tests every entry in a map with a lambda expression and returns whether at least one entry satisfies the specified condition. The lambda receives the key and value of each entry.

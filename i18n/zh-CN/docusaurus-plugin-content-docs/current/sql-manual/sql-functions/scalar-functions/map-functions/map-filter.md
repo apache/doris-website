@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## 描述
 
 过滤 Map 中的元素，并返回只包含选中元素的新 Map。

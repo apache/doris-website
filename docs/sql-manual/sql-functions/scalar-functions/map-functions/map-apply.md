@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Applies a lambda expression to every entry in a map and constructs a new map from the transformed keys and values. The lambda receives the key and value of each entry and returns a pair of expressions. The first expression is used as the new key and the second expression as the new value.
@@ -14,6 +18,7 @@ Applies a lambda expression to every entry in a map and constructs a new map fro
 
 ```sql
 MAP_APPLY((<key>, <value>) -> (<new_key>, <new_value>), <map>)
+MAP_APPLY((<key>, <value>) -> STRUCT(<new_key>, <new_value>), <map>)
 ```
 
 ## Parameters
@@ -34,7 +39,7 @@ Returns a `MAP<K2, V2>`, where `K2` and `V2` are the types of the first and seco
 - If `<map>` is `NULL`, returns `NULL`.
 - `NULL` fields returned by the lambda are retained as `NULL` keys or values.
 - If multiple entries are transformed to the same key, the value from the last occurrence is retained.
-- If the lambda does not return exactly two expressions, an analysis error is reported.
+- The lambda must return a non-nullable `STRUCT` with exactly two fields. Tuple syntax `(<new_key>, <new_value>)` is equivalent to `STRUCT(<new_key>, <new_value>)`; a nullable struct or a result with a different number of fields causes an analysis error.
 
 ## Examples
 

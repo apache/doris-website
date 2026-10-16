@@ -6,6 +6,10 @@
 }
 ---
 
+<version since="dev">
+
+</version>
+
 ## Description
 
 Filters entries in a map and returns a map containing only the selected entries.
