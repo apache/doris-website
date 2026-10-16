@@ -934,10 +934,14 @@ BaseCompaction:546859:
 * 描述：SendBatch 线程池的队列长度。在 NodeChannel 的发送数据任务之中，每一个 NodeChannel 的 SendBatch 操作会作为一个线程 Task 提交到线程池之中等待被调度，而提交的任务数目超过线程池队列的长度之后，后续提交的任务将阻塞直到队列之中有新的空缺。
 * 默认值：102400
 
+:::note
+以下 AI 并发配置依赖尚未合入的开发版本实现 apache/doris#68666；已发布 4.x 版本暂不支持。
+:::
+
 #### `ai_function_thread_pool_thread_num`
 
 * 类型：int32
-* 描述：当 AI 资源的 `ai.max_concurrency` 大于 1 时，用于执行标量 AI 函数批量请求的共享线程池的线程数。线程阻塞在对模型服务商的 HTTP 调用上，因此该值限制的是每个 BE 同时在途的 AI 请求数，而非 CPU 计算量。
+* 描述：当 AI 资源的 `ai.max_concurrency` 大于 1 时，用于执行标量 AI 函数批量请求的共享线程池的线程数。线程阻塞在对模型服务商的 HTTP 调用上，因此该值控制线程池工作线程的并发量，而非 CPU 计算量。队列已满时调用线程会直接执行请求，在途请求总数可能超过该值。
 * 默认值：64
 
 #### `ai_function_thread_pool_queue_size`
