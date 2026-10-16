@@ -18,7 +18,7 @@ SELECT
     [ALL | DISTINCT | DISTINCTROW | ALL EXCEPT ( col_name1 [, col_name2, col_name3, ...] )]
     select_expr [, select_expr ...]
     [FROM table_references
-      [PARTITION partition_list]
+      [PARTITION (partition_list) | MAX_VISIBLE_PARTITION()]
       [TABLET tabletid_list]
       [TABLESAMPLE sample_value [ROWS | PERCENT]
         [REPEATABLE pos_seek]]
@@ -61,9 +61,11 @@ SELECT
 
 11. SELECT 支持使用 PARTITION 显式分区选择，其中包含 `table_reference` 中表的名称后面的分区或子分区（或两者）列表。
 
-12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: 在 FROM 子句中限制表的读取行数，根据指定的行数或百分比从表中伪随机的选择数个 Tablet，REPEATABLE 指定种子数可使选择的样本再次返回，此外也可手动指定 TableID，注意这只能用于 OLAP 表。
+12. `MAX_VISIBLE_PARTITION()`：在查询规划阶段，自动选择分区键最大的可见分区。该语法与 `PARTITION(...)` 互斥，详细行为参见 [查询最大可见分区](#查询最大可见分区)。
 
-13. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](../../../query-acceleration/hints/distribute-hint.md)
+13. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: 在 FROM 子句中限制表的读取行数，根据指定的行数或百分比从表中伪随机的选择数个 Tablet，REPEATABLE 指定种子数可使选择的样本再次返回，此外也可手动指定 TableID，注意这只能用于 OLAP 表。
+
+14. `hint_statement`: 在 selectlist 前面使用 hint 表示可以通过 hint 去影响优化器的行为以期得到想要的执行计划，详情可参考[joinHint 使用文档](../../../query-acceleration/hints/distribute-hint.md)
     
 **语法约束：**
 
@@ -73,6 +75,34 @@ SELECT
 4. Where 子句：执行 WHERE 语句以确定哪些行应被包含在 GROUP BY 部分中，而 HAVING 用于确定应使用结果集中的哪些行。
 5. HAVING 子句可以引用总计函数，而 WHERE 子句不能引用，如 count,sum,max,min,avg，同时，where 子句可以引用除总计函数外的其他函数。Where 子句中不能使用列别名来定义条件。
 6. Group by 后跟 with rollup 可以对结果进行一次或者多次统计。
+
+### 查询最大可见分区
+
+`MAX_VISIBLE_PARTITION()` 用于查询分区键最大的可见分区：
+
+```sql
+SELECT *
+FROM <table_name> MAX_VISIBLE_PARTITION() [[AS] <table_alias>];
+```
+
+仅可见版本大于初始版本的正式分区参与选择，临时分区不参与选择。
+
+| 分区类型 | 选择规则 |
+| --- | --- |
+| RANGE 分区 | 选择范围上界最大的分区 |
+| LIST 分区 | 比较各分区中最大的枚举键，选择键最大的分区 |
+| LIST DEFAULT 分区 | 仅当没有可见的非 DEFAULT 分区时选择 |
+| 非分区表 | 表可见时选择其唯一分区 |
+
+多列分区键按分区列的定义顺序依次比较。如果没有可见分区，查询返回空结果。该语法仅支持内部 OLAP 表和异步物化视图，不能与 `PARTITION(...)` 或历史快照查询同时使用。
+
+:::note
+“可见”不等同于“非空”。`DELETE` 清空分区后，该分区仍可能被选中；`TRUNCATE PARTITION` 会重置分区版本。
+:::
+
+```sql
+SELECT * FROM sales MAX_VISIBLE_PARTITION();
+```
 
 **联接查询：**
 
