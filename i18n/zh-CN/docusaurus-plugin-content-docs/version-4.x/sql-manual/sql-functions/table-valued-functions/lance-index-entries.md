@@ -82,6 +82,16 @@ LANCE_INDEX_ENTRIES(
     embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47
     ```
 
+空的 `table` 参数会报错，错误信息包含：
+
+```sql
+SELECT * FROM lance_index_entries("table" = "");
+```
+
+```text
+Missing required lance_index_entries property 'table'
+```
+
 ## 相关说明
 
 更多关于 Lance 索引查看的信息，包括 `SHOW INDEX` 提供的逻辑视图，请参阅 [Lance Catalog](../../../lakehouse/catalogs/lance-catalog.mdx)。

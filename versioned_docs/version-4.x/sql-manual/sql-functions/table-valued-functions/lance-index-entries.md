@@ -82,6 +82,16 @@ First configure a Filesystem Catalog as described in [Lance Catalog](../../../la
     embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47
     ```
 
+An empty `table` argument raises an error containing the following message:
+
+```sql
+SELECT * FROM lance_index_entries("table" = "");
+```
+
+```text
+Missing required lance_index_entries property 'table'
+```
+
 ## Related
 
 For more information about Lance index inspection, including the logical view provided by `SHOW INDEX`, refer to [Lance Catalog](../../../lakehouse/catalogs/lance-catalog.mdx#inspect-lance-indexes).
