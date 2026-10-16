@@ -5,93 +5,6 @@
   "homepage.home.002": {
     "message": "Apache Doris は MPP アーキテクチャに基づくオープンソースのリアルタイム分析データベースです。単一のエンジンで、ペタバイト規模の OLAP クエリ、レイクハウス分析、ハイブリッド検索を実行できます。"
   },
-  "homepage.navbar.001": {
-    "message": "Doris を選ぶ理由"
-  },
-  "homepage.navbar.002": {
-    "message": "他の製品との比較（英語）"
-  },
-  "homepage.navbar.003": {
-    "message": "ベンチマーク（英語）"
-  },
-  "homepage.navbar.004": {
-    "message": "主な機能（英語）"
-  },
-  "homepage.navbar.005": {
-    "message": "導入事例（英語）"
-  },
-  "homepage.navbar.006": {
-    "message": "ユースケース"
-  },
-  "homepage.navbar.007": {
-    "message": "顧客向け分析（英語）"
-  },
-  "homepage.navbar.008": {
-    "message": "データウェアハウス（英語）"
-  },
-  "homepage.navbar.009": {
-    "message": "オブザーバビリティ（英語）"
-  },
-  "homepage.navbar.010": {
-    "message": "AI 向け Doris（英語）"
-  },
-  "homepage.navbar.011": {
-    "message": "ドキュメント"
-  },
-  "homepage.navbar.015": {
-    "message": "リソース"
-  },
-  "homepage.navbar.016": {
-    "message": "リリースノート"
-  },
-  "homepage.navbar.017": {
-    "message": "ブログ（英語）"
-  },
-  "homepage.navbar.018": {
-    "message": "講座（英語）"
-  },
-  "homepage.navbar.019": {
-    "message": "プロファイル分析（英語）"
-  },
-  "homepage.navbar.020": {
-    "message": "コミュニティ"
-  },
-  "homepage.navbar.021": {
-    "message": "コミュニティレポート（英語）"
-  },
-  "homepage.navbar.022": {
-    "message": "ロードマップ"
-  },
-  "homepage.navbar.023": {
-    "message": "コミュニティに参加"
-  },
-  "homepage.navbar.024": {
-    "message": "GitHub Discussions に参加"
-  },
-  "homepage.navbar.027": {
-    "message": "Doris Summit 2026 を開く（新しいタブ）"
-  },
-  "homepage.navbar.029": {
-    "message": "AI に質問"
-  },
-  "homepage.navbar.030": {
-    "message": "利用不可"
-  },
-  "homepage.navbar.031": {
-    "message": "質問"
-  },
-  "homepage.navbar.032": {
-    "message": "スター"
-  },
-  "homepage.navbar.033": {
-    "message": "ダウンロード（英語）"
-  },
-  "homepage.navbar.034": {
-    "message": "ナビゲーションメニューを閉じる"
-  },
-  "homepage.navbar.035": {
-    "message": "ナビゲーションメニューを開く"
-  },
   "homepage.newsticker.001": {
     "message": "プロファイル"
   },
@@ -767,27 +680,6 @@
   "footer.follow": {
     "message": "コミュニティに参加",
     "description": "Footer Follow"
-  },
-  "homepage.theme.label": {
-    "message": "カラーテーマ"
-  },
-  "homepage.theme.change": {
-    "message": "カラーテーマを変更"
-  },
-  "homepage.theme.current": {
-    "message": "カラーテーマ：{theme}"
-  },
-  "homepage.navbar.starLabel": {
-    "message": "GitHub で Apache Doris にスターを付ける（{stars} スター）"
-  },
-  "homepage.ai.loading": {
-    "message": "AI を読み込み中…"
-  },
-  "homepage.ai.slow": {
-    "message": "読み込みに時間がかかっています…"
-  },
-  "homepage.ai.error": {
-    "message": "再試行"
   },
   "theme.blog.post.readingTime.plurals": {
     "message": "約{readingTime}分",
