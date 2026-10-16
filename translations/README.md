@@ -18,6 +18,16 @@ registered by the English docs plugin. A Chinese-only file is reported as
 `community`) to the label that locale's search page shows; a locale without it
 shows the raw context path.
 
+The translation workflow's `validate` mode selects one exact source page for a
+live check. Normal `generate` runs produce at most 10 target pages per batch,
+including any reused Dev/4.x partner; the planner can consider up to 20 tasks.
+Automated draft PRs receive the `translate-<locale>` repository label, such as
+`translate-ja`. Create that label before enabling publication for a new locale.
+
+Build Check installs dependencies and runs the i18n unit tests before the
+translation gate. The gate checks source metadata and state without a site
+build; the scoped website build and static-page verification run afterward.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live

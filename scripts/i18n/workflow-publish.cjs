@@ -91,7 +91,8 @@ function main() {
     }
     git('push', 'origin', `HEAD:refs/heads/${branch}`);
     const url = execFileSync('gh', ['pr', 'create', '--repo', 'apache/doris-website', '--base', 'master',
-        '--head', branch, '--draft', '--title', `docs(i18n): machine ${language} translation candidates`,
+        '--head', branch, '--draft', '--label', `translate-${locale}`,
+        '--title', `docs(i18n): machine ${language} translation candidates`,
         '--body-file', bodyFile], {cwd: root, encoding: 'utf8'}).trim();
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
         `\nOpened draft translation PR: ${url}; ${manifest.candidates.length} candidate pages.\n`);

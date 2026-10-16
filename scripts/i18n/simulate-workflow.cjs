@@ -53,9 +53,10 @@ if (args[0] === 'api' && args.some(arg => arg.startsWith('repos/apache/doris-web
     assert(args.includes('--draft'));
     assert.equal(value('--base'), 'master');
     assert.equal(value('--repo'), 'apache/doris-website');
+    assert.equal(value('--label'), 'translate-ja');
     const body = fs.readFileSync(value('--body-file'), 'utf8');
     assert.match(body, /japanese-translation-automation:v1 bot-head=[a-f0-9]{40}/);
-    const record = {draft: true, base: value('--base'), head: value('--head'), body,
+    const record = {draft: true, base: value('--base'), head: value('--head'), labels: [value('--label')], body,
         url: 'https://example.invalid/apache/doris-website/pull/1'};
     fs.writeFileSync(process.env.I18N_SIM_PR_RECORD, JSON.stringify(record, null, 2) + '\\n');
     process.stdout.write(record.url + '\\n');
@@ -145,7 +146,7 @@ function main() {
         sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath,
         invalidModel: {exitCode: 1, error: failure.failures[0].error, usedTokens: failure.usedTokens},
         generation: {candidates: generation.candidates.length, usedTokens: generation.usedTokens},
-        draftPr: {url: pr.url, branch: pr.head, commit: branch, files: committedFiles}};
+        draftPr: {url: pr.url, branch: pr.head, commit: branch, files: committedFiles, labels: pr.labels}};
     fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 }

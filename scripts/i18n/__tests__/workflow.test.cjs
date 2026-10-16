@@ -413,3 +413,44 @@ test('publication deduplicates shared state and rejects an unrelated page shard'
     assert.deepEqual(expectedFiles({schemaVersion: 1, provider: 'codex', candidates: [record, second]}, scope),
         [record.targetPath, second.targetPath, 'translations/state/ja/docs.json'].sort());
 });
+
+test('normal generation defaults to ten target pages and leaves the next task untouched', async t => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-ten-page-batch-'));
+    t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+    const put = (file, text) => {
+        fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true});
+        fs.writeFileSync(path.join(root, file), text);
+    };
+    put('translations/scope/ja.json', JSON.stringify(scope));
+    put('translations/state/ja/docs.json', JSON.stringify({schemaVersion: 1, pages: []}));
+    put('translations/state/ja/shards.schema.json', JSON.stringify({schemaVersion: 1, format: 'page-record-v1'}));
+    const tasks = Array.from({length: 11}, (_, index) => {
+        const source = `# Guide ${index}\n\nA guide.\n`;
+        const sourcePath = `docs/page-${index}.md`;
+        put(sourcePath, source);
+        return {pluginId: 'default', version: 'current', locale: 'ja', groupId: 'DEV',
+            id: `T06-DEV-${String(index + 1).padStart(15, '0')}`, docId: `page-${index}`,
+            sourcePath, sourceHash: hash(source), kind: 'translate_new',
+            targetPath: `i18n/ja/docusaurus-plugin-content-docs/current/page-${index}.md`,
+            requiresHumanReview: false, activePr: null};
+    });
+    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
+    git('init', '-q'); git('add', '.');
+    git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'eleven pending pages');
+    const sourceCommit = git('rev-parse', 'HEAD');
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 0, translate: async ({units}) => {
+        calls++;
+        return {translations: units.map(unit => ({id: unit.id, text: '訳' + unit.text}))};
+    }};
+    const manifest = await generate({rootDir: root, target, output: path.join(root, 'output'),
+        plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: tasks.map(task => task.id), tasks, exceptions: []},
+        reconciliation: {botPrs: [], botDetails: [], blockedTargets: []}, ensureFresh: () => {},
+        adapter, glossary: require('../../../translations/glossary/ja.json')});
+    assert.equal(manifest.candidates.length, 10);
+    assert.equal(manifest.failures.length, 0);
+    assert.equal(calls, 10);
+    assert.equal(loadRecords(root, 'ja').size, 10);
+    assert(!fs.existsSync(path.join(root, tasks[10].targetPath)));
+    assert(!fs.existsSync(path.join(root, stateFileFor(tasks[10]))));
+});
