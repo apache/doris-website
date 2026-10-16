@@ -273,6 +273,28 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
         calls: () => calls};
 }
 
+test('a paired target reserved by an open PR is not copied even when the supplied plan omits that reservation', async t => {
+    const fixture = await updateFixture(t);
+    const sourcePath = 'versioned_docs/version-4.x/guide.md';
+    fixture.put(sourcePath, fs.readFileSync(path.join(fixture.root, fixture.task.sourcePath), 'utf8'));
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'paired source');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const primary = {...fixture.task, sourceCommit};
+    const partner = {...primary, version: '4.x', groupId: '4X', id: 'T06-4X-000000000000002',
+        kind: 'translate_new', sourcePath, targetHash: null,
+        targetPath: 'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md'};
+    const manifest = await fixture.run({maxPages: 2, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, tasks: [primary, partner]},
+        reconciliation: {botPrs: [22], blockedTargets: [],
+            active: {candidates: [{...partner, sourceHash: hash('older source'), pr: '#22'}]}}});
+    assert.equal(manifest.candidates.length, 1);
+    assert.equal(manifest.candidates[0].version, 'current');
+    assert.equal(fixture.calls(), 1);
+    assert(!fs.existsSync(path.join(fixture.root, partner.targetPath)));
+    assert(!fs.existsSync(path.join(fixture.root, stateFileFor(partner))));
+});
+
 test('an existing page shard is updated without rewriting or trusting its obsolete legacy copy', async t => {
     const fixture = await updateFixture(t);
     const {root, legacyPath, shardPath, task} = fixture;

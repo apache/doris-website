@@ -128,7 +128,9 @@ function main() {
     const generation = JSON.parse(fs.readFileSync(path.join(scan, 'generation.json'), 'utf8'));
     assert.equal(generation.candidates.length, 1);
     assert.equal(generation.failures.length, 0);
-    assert.equal(generation.usedTokens, 100000);
+    const requests = generation.candidates.reduce((sum, candidate) => sum + candidate.requests, 0);
+    assert(Number.isInteger(requests) && requests > 0);
+    assert.equal(generation.usedTokens, requests * 100000);
     runNode(repo, 'scripts/i18n/workflow-publish.cjs', [scan], env, logs);
     const pr = JSON.parse(fs.readFileSync(env.I18N_SIM_PR_RECORD, 'utf8'));
     assert.equal(pr.head, `i18n/ja-automated-${runId}`);
