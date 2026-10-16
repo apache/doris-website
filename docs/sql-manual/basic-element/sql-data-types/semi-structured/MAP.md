@@ -23,7 +23,7 @@
   - For example: `MAP<INT, INT>` can be converted to `MAP<BIGINT, BIGINT>` because `INT` and `BIGINT` can be converted.
   - String types can be converted to `MAP<key_type, value_type>` (through parsing, returning NULL if parsing fails).
 - In the `AGGREGATE` table model, `MAP<key_type, value_type>` only supports `REPLACE` and `REPLACE_IF_NOT_NULL`. **In any table model, it cannot be used as a KEY column, nor as a partition or bucket column**.
-- Columns of type `MAP<key_type, value_type>` do not support comparison or arithmetic operations, **do not support `ORDER BY` and `GROUP BY` operations, cannot be used as `JOIN KEY`, and cannot be used in `DELETE` statements**.
+- Columns of type `MAP<key_type, value_type>` do not support comparison or arithmetic operations, including `IN` and `NOT IN`, **do not support `ORDER BY` and `GROUP BY` operations, cannot be used as `JOIN KEY`, and cannot be used in `DELETE` statements**.
 - Columns of type `MAP<key_type, value_type>` do not support creating any indexes.
 
 ## Type Construction
