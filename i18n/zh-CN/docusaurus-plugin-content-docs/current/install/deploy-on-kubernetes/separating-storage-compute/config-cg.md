@@ -216,7 +216,7 @@ data:
 使用如下命令将自定义启动配置信息的 ConfigMap 部署到 Kubernetes 集群中：
 
 ```shell
-kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
+kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
 ```
 
 参数说明：
