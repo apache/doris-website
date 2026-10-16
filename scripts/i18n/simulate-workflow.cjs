@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
+const {loadRecords} = require('./state.cjs');
 
 const sourceRoot = path.resolve(__dirname, '../..');
 const sourcePath = process.env.I18N_SIM_SOURCE_PATH
@@ -133,14 +134,18 @@ function main() {
     const branch = command('git', ['rev-parse', `refs/heads/${pr.head}`], {cwd: remote});
     const target = command('git', ['show', `${branch}:${targetPath}`], {cwd: remote});
     assert.match(target, /[\u3040-\u30ff\u3400-\u9fff]/);
-    const state = JSON.parse(command('git', ['show', `${branch}:translations/state/ja/docs.json`], {cwd: remote}));
-    assert(state.pages.some(page => page.sourcePath === sourcePath && page.reviewStatus === 'machine'));
+    const state = [...loadRecords(repo, 'ja').values()];
+    const candidate = generation.candidates[0];
+    assert(state.some(page => page.sourcePath === sourcePath && page.reviewStatus === 'machine'
+        && page.sourceHash === candidate.sourceHash && page.targetHash === candidate.targetHash));
+    const expectedFiles = [targetPath, candidate.statePath].sort();
+    const committedFiles = command('git', ['diff', '--name-only', plan.sourceCommit, branch], {cwd: repo}).split('\n').sort();
+    assert.deepEqual(committedFiles, expectedFiles);
     const report = {kind: 'local simulation; no external model or GitHub writes', output,
         sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath,
         invalidModel: {exitCode: 1, error: failure.failures[0].error, usedTokens: failure.usedTokens},
         generation: {candidates: generation.candidates.length, usedTokens: generation.usedTokens},
-        draftPr: {url: pr.url, branch: pr.head, commit: branch, files: [targetPath,
-            'translations/state/ja/docs.json']}};
+        draftPr: {url: pr.url, branch: pr.head, commit: branch, files: committedFiles}};
     fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 }

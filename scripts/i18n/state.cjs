@@ -197,4 +197,4 @@ function decide({page, source, target, record, technicalHash}) {
 }
 
 module.exports = {hash, identity, relative, loadConfig, managedLocales, pipelineLocale, languageName, inventoryBaseline, loadRecords, loadRecordsAt,
-    stateFileFor, listShardFiles, sourceLocaleFor, decide};
+    stateFileFor, listShardFiles, collectRecords, sourceLocaleFor, decide};
