@@ -38,8 +38,6 @@ LANCE_INDEX_ENTRIES(
 
 The TVF returns a result set rather than a scalar NULL. A table without user indexes produces zero rows. A missing or invalid `table` argument raises an error. The `table` argument must be a nonempty string and does not accept SQL NULL.
 
-The TVF returns a result set rather than a scalar NULL. A table without user indexes produces zero rows. A missing or invalid `table` argument raises an error. The `table` argument must be a nonempty string and does not accept SQL NULL.
-
 The TVF returns the following fixed columns:
 
 | Column | Type | Description |
@@ -52,8 +50,6 @@ The TVF returns the following fixed columns:
 | `DatasetVersion` | BIGINT | Dataset version recorded on the physical index entry, that is, the dataset version at which the entry was written. Physical entries of the same logical index can carry different dataset versions. It is always `1` or greater. |
 
 ## Example
-
-First configure a Filesystem Catalog as described in [Lance Catalog](../../../lakehouse/catalogs/lance-catalog.mdx), and create a dataset and index using external Lance tooling. Replace the example names with a table you can access. The `SHOW` privilege on that table is required.
 
 First configure a Filesystem Catalog as described in [Lance Catalog](../../../lakehouse/catalogs/lance-catalog.mdx), and create a dataset and index using external Lance tooling. Replace the example names with a table you can access. The `SHOW` privilege on that table is required.
 
@@ -79,11 +75,6 @@ First configure a Filesystem Catalog as described in [Lance Catalog](../../../la
     from lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32")
     where DatasetVersion >= 12
     order by IndexName, IndexUuid;
-    ```
-
-    ```text
-    IndexName             IndexUuid
-    embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47
     ```
 
     ```text
