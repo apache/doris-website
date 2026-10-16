@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/ALTER-ROUTINE-LOAD.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "c934d4b5eb22a78f5f894abc24a2a6c7e0494af477475d9d3d0f0729723e455c",
+    "sourceTechnicalHash": "60d9fcdac50328f17802c52bd65785f7c0517032654b8f6a0c7274732f0119ff",
+    "targetHash": "400e86546da56621261b7e141f6e2c3b0c3ae69e506fc1033ad03b786d6f5db8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:48:32.828Z",
+    "glossaryVersion": "0"
+  }
+}

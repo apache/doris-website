@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-ROLES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-ROLES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-ROLES.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "08a00b91e2f2dadecdf5f2ae98ee2717beb4f9524e026eddaa42b3748c12acb9",
+    "sourceTechnicalHash": "9766bd932a4700e8c9579adfeb46e92a78a7dcef14ff99c4ef3e67269d0b723e",
+    "targetHash": "3564d3213964ca95671918136043d7c9d5a70a516b95700d20017845d49b724b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

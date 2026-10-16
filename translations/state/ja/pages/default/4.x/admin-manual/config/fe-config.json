@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/config/fe-config",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/config/fe-config.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/config/fe-config.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "eaab0a984ba90e06633299ef38d9e90404d719f005a545b537b706c20ea2b32b",
+    "sourceTechnicalHash": "8d0d9ef22a7d4d5e241047365c4c097cb489f035febacebc437f36565dbd0aaf",
+    "targetHash": "ac094e6ec9eeb1e0acdba13bdbd341137c00fe6084ee512826251a34eb58aa0a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/paimon-jdbc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/paimon-jdbc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/paimon-jdbc.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ad904b9ffc2e3cd3a0582d20bba881e67c293a7e9d1cdcd7137f3e2507c82f6c",
+    "sourceTechnicalHash": "69b8c62ec749bb01ed024b965970a368d861b4839edafaa20881f1a9e7f6b2af",
+    "targetHash": "9edf946185e0672d13504a3a9f836806d452d543ac10728f938abbcba0e9c95b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

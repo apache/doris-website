@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/parquet-meta",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+    "sourceTechnicalHash": "bd95cb35dd1207b90dc3e6a5d20c76e65b271955d6cc029d661dfc47758b6b3b",
+    "targetHash": "6a70cf9658c8f9a98ae8471245fb08f25276f6ba687defaeba195da62b2251cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:10:18.484Z",
+    "glossaryVersion": "0"
+  }
+}

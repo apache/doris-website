@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-BACKUP.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "dddd3299016158e1b55e692376c0792a060f29375f7979851cdd4e9f2f7c491f",
+    "sourceTechnicalHash": "536aecfca8f3373b8e8c28f6f1c5c0e147a9ca65a00eaf24f57eebaaf3bcffbd",
+    "targetHash": "c42ae879b104bcd5d95b3add5d10ad20d4c39b4c60164d056d867728cdcd7362",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:48:32.829Z",
+    "glossaryVersion": "0"
+  }
+}

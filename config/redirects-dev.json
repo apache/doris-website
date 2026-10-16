@@ -1,0 +1,10 @@
+[
+  {
+    "from": "/docs/dev/connection-integration/data-integration/flink-doris-connector",
+    "to": "/docs/dev/connection-integration/data-integration/flink-doris-connector/overview"
+  },
+  {
+    "from": "/zh-CN/docs/dev/connection-integration/data-integration/flink-doris-connector",
+    "to": "/zh-CN/docs/dev/connection-integration/data-integration/flink-doris-connector/overview"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/mysql-proto",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/mysql-proto.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/mysql-proto.mdx",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
+    "sourceTechnicalHash": "f9a831498dd822476c1ba275e2da8490763e65449fc4814249d36b530b1784db",
+    "targetHash": "35616bc78b16c0c8f27839a12a511576f16e686722f6fe2fd2c77680ce544dbf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:48:13.766Z",
+    "glossaryVersion": "0"
+  }
+}

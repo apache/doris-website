@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-feature/memory-control-strategy.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "cf9dad399061120808acdb19ad6f9c0e94e083e88a4f15e47219abd66ba7423e",
+    "sourceTechnicalHash": "dc3a9b00033c2de77ba2bd754ace50091f0d923746f6196f6e4499f1d4eb1ee4",
+    "targetHash": "4eda7fc313fe683d5db6536e90377f69255e96b097da6c243b05eb813a5ca9dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

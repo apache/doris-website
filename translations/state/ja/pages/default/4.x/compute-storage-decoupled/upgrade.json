@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/upgrade",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/upgrade.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/upgrade.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "27aec86be3acfb3221a0d68fb2690a7fec2a7e6fca256e606a32c4d2d05e3714",
+    "sourceTechnicalHash": "490335181d3ad3edd8b2ac80de928a76e4415e5cb301dec7c812d511100ed3f7",
+    "targetHash": "b52750d6105be29d58f48af2136c88de382691e36c8284dd7e4f6318c7498d99",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

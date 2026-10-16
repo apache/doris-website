@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "f1011b64b599bcf558592343325e454fb18225522a0076a24558643b234c01f0",
+    "sourceTechnicalHash": "1380d4677303dcc391b40386a4c6883fb51105827561d4e7b410dde9d890b2bd",
+    "targetHash": "dc2df71072686cd259790f50db9ca00947ae1a38835abc65d49d990d3c1a4140",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.484Z",
+    "glossaryVersion": "0"
+  }
+}

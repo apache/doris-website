@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/set-config-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/set-config-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/set-config-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "073402ac92a770caab86256830920e6da38806b073843a78c6c83111861274b1",
+    "sourceTechnicalHash": "e90f041c8cd1ed2907c3a787c406028ccf3b746f718412fdf6ffe7ae49175672",
+    "targetHash": "00f64e0dead387e96cbf67a5cdf685f519462951139b020eaf8926987e5ba9db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.291Z",
+    "glossaryVersion": "0"
+  }
+}

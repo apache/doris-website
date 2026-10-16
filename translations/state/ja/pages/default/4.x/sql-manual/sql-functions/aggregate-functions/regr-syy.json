@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-syy",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "078c79ba58e79cc818f19062b0d2b5e54f6572b1c979a3b737824c0b57d2ae48",
+    "sourceTechnicalHash": "eb597de8fdbe7d679db57e13ceca53fd5de74b34fbedeacbfaf106ff0681ecd6",
+    "targetHash": "beabc99727cc3ce3168689881ebe3d64324f3da759f87e7157e406f37c7e49a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.787Z",
+    "glossaryVersion": "0"
+  }
+}

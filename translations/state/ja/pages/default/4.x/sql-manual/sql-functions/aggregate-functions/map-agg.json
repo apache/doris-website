@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/map-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/map-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/map-agg.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "584b406e88d5e2512e263e2412517792e0a081262f89ba1fdc047b31a557961c",
+    "sourceTechnicalHash": "b2c4a2f4e8b894a66f90bea802fceaab2c9b061cfab446771165937f68d9ee1d",
+    "targetHash": "51f0e259e889543cca8c1749750668a6983b67c26d128bf7f67b2f1a6d307e00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

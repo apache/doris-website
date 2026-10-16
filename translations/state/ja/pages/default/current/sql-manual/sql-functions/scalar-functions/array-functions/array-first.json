@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-first",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-first.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-first.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "63ee2aab670b53a28a68fda5b56886b7083bc9e3e1897f31592bf621230fe566",
+    "sourceTechnicalHash": "de7946e4aba375e84b5c5e7ad4baf4a0a10b8ffe7e57f331bfe681a11ccf6de8",
+    "targetHash": "5bb9407fa9bf5314bd6ba5db725a5b74185d54d5b83de7858ba3ec085fc582a2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/max-map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-map.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "e8af4f0f8a757293b486548a86bce098ad83646c432f36a1f5a2f44bed2a4a9c",
+    "sourceTechnicalHash": "d1b7069238d6b5b644bc44d821cd199d21344df9afc22819c854aa8aea510a31",
+    "targetHash": "a1448a7f08ed4729da12ec0fe501f519cbad1b45f5172133af3a42b751f48363",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

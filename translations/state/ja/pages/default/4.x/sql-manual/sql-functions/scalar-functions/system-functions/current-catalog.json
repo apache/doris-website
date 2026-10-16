@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/current-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/current-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/current-catalog.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "6c6dc740b4c7fcde30b80050e9178c8408bc636d2743ce9b90592fb22137fa36",
+    "sourceTechnicalHash": "63ecc83cdb394289b0b4e21abd4ad7983c168dd0bf46b472139dbcb3ffdbbae2",
+    "targetHash": "0cb78880382d0a0e6eb8e2c9fed4b63b774f9bc8cadc5bc3904d3b54f0725ac0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.385Z",
+    "glossaryVersion": "0"
+  }
+}

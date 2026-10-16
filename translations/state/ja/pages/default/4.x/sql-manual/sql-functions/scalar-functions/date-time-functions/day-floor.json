@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0f86ee32f975609acb31bb3cae770bd532f0ba050acb75778143ec1229e8ca5b",
+    "sourceTechnicalHash": "39eef4035269d45078af90d7b8c4402f1843fa3cc5905fe4dbad9d8bcdf33093",
+    "targetHash": "1d3662add6a751d84467d3f9e868f088036448889982521c1aaf568af02ef09b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.698Z",
+    "glossaryVersion": "0"
+  }
+}

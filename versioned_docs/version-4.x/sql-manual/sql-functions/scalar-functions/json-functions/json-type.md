@@ -36,7 +36,7 @@ JSON_TYPE( <json>, <json_path> )
 `Nullable<String>`: Returns the type of the corresponding field.
 
 ## Usage Notes
-- If `<json_object>` or `<json_path>` is NULL, returns NULL.
+- If `<json>` or `<json_path>` is NULL, returns NULL.
 - If `<json_path>` is not a valid path, the function reports an error.
 - If the field specified by `<json_path>` does not exist, returns NULL.
 

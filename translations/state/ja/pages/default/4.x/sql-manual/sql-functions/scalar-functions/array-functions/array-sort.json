@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-sort",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-sort.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-sort.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "7206ee3d412d8d7df557b434114a7596342a52713c38214aa5400909336929fc",
+    "sourceTechnicalHash": "1723526121c8c11109f668555c593439768075ea3bcf3e6eb3f635c585eae449",
+    "targetHash": "0074b542b4bfb43f4d26a105f3adb6137bd6e210322af2a2120c7171e4251a8f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}

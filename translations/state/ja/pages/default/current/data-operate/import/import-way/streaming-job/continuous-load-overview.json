@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "47e567c3b97c5e464352f9b48218c8aa2d7a0c02fabef1e2f75ee697a1901071",
+    "sourceTechnicalHash": "6d7f5d68c709dfc8d44fd4d881406c8e6543626e6f3c249a867bc25f1029d3d0",
+    "targetHash": "b40881d6ad766fe5384db613c934cc568566ed383e1f09af4df7cb4e41ded656",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.096Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "48be311748cee9ca2ad799f3ad06160b7db94caaf462d4f4b067289f11956fbf",
+    "sourceTechnicalHash": "9e5a8d84d1dd18a8ff63db7ae0ff41c4db4042fe9d53389dc27e8b509999eae5",
+    "targetHash": "3002c962148d7511af6e17a90a337bda9f4c0ec64887c36e37c169cc0ffadddf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

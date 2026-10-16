@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/doris-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/doris-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/doris-catalog.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "fa8649cc26d1a79f193a79d02d1d107efd14c0dd2564f764833637cf8a3bc577",
+    "sourceTechnicalHash": "382f9202dd03c52c6250c1975d16e3a075a20315e0e6b2e1aa4d562d2878ee45",
+    "targetHash": "255ff14f8e0d00dff7b3721cf8fa4a43ce5d9a16da1ca0ed5ceb44e5d7cb9b21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

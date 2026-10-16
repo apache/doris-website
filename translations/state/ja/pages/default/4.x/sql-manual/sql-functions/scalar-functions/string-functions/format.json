@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/format",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/format.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/format.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2872537c0676a32b95b4fb5338bcb8f1d526bc85c485040ec856a6c1914909b8",
+    "sourceTechnicalHash": "bf87133acba6a3fd7164cc488ee71262e94b27f99db5d7acda66da18e1690ad0",
+    "targetHash": "b8c964935a8549113a9685143cdc4cbfd50a9774ac8cfe5c4ddc72929f2c7328",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.831Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/compaction",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/compaction.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
+    "sourceTechnicalHash": "41d944af131840b9d678afb8022e96503a768084f57e9cba0e5a8fa14f401d19",
+    "targetHash": "8f6a4c67fb8f66388ebabee1f938d11d106a00e96fbeb57117921da6e302e354",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.555Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv6-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv6-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv6-string.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "3561ef2f1682ec3b1e6e2fc6125cba9632033ef912952bea9031f52783c0a6f0",
+    "sourceTechnicalHash": "ada0775c3a3f4ef0027a64194891a8f41877a09350d3c6c901e302b83dc918c8",
+    "targetHash": "7518c6a1ed2744cb793c3a24891b37c55a3c802e02d42624ad099ff0bd9a99c3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.981Z",
+    "glossaryVersion": "0"
+  }
+}

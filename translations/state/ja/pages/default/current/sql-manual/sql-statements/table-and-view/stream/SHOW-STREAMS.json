@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/SHOW-STREAMS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "eb37c71f3c74e05fdde1ef5335de9fb157efc85e4e0cccde6a4ff1fb43bd9024",
+    "sourceTechnicalHash": "a049963231f2c24969ac25f0c29a3ddc6a41577a42f89066a914f5b89e2b2640",
+    "targetHash": "7870a63dd3342cb73fd815edebc28988e69fbe88882e49d1554cfa767d0ad7e9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.009Z",
+    "glossaryVersion": "0"
+  }
+}

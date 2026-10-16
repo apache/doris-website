@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ascii",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ascii.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ascii.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3e14d123d41ca705298bba6de6dcf8943d501b9a7398dc912a719a775729373d",
+    "sourceTechnicalHash": "5eef2662f6a30f9fccf98ea056c256c3f77b7aed14918e3941630b5a3f92e106",
+    "targetHash": "49688b68c83c1efde5f9ebb15bb1f80c9f77dd322902e99200d619833f3004f6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

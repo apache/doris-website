@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "48a8bc6a2a6fabf268129ce01e56c5989bcfd0790a1f8fb0dc30eaae94158d12",
+    "sourceTechnicalHash": "8b21c9a4c55c4c69ac69248ea7e9f8327f9b658a81f0871e83c9ac979e744705",
+    "targetHash": "baefbb934ca42fd4d6a52ad03728708f8ad5cf8bc17f7d45a2c958f727ea2c4c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

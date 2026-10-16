@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/query-cancelled-after-query-memory-exceeded.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ebca2539590e6bdddc58f69dfa3f8945ab301d1b86a947a8e2441b7f3af01d65",
+    "sourceTechnicalHash": "61841b66d02671add69120815d320e046e02a90e4c3c8612f6c3bd57c0f767dd",
+    "targetHash": "01dc433ee2a01bab020cb9ac93c37388133ceb4066c131cf3767cdefda453a9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.555Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "features-architecture/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/features-architecture/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/features-architecture/intro.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9cbb22571e0ccf8dbe9d59eb1026785bae2c3e77cb85085506ae7a1a69814c2a",
+    "sourceTechnicalHash": "a1b2f19b907974720a5d56c0d81b162558f32f1a9836fcc850499dc123f9058b",
+    "targetHash": "5ee86a0f740a12095cf6b5b447c6f09f4bb543a30dea16c7ca5e58211a621863",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

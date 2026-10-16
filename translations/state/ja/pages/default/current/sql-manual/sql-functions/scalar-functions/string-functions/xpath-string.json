@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/xpath-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/xpath-string.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ec5a67299789aeb48717d6bf0b2dc4095c364cbf63c7b8d04274d0f9e5be187c",
+    "sourceTechnicalHash": "11dc3b8766c730e7fb8198434c293a2151e869cb0d9789e77f5006ae5a939c46",
+    "targetHash": "0d870274a8ae28089edd65b784a4ae5b7969ba1172ede51d450e3b1780de2013",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

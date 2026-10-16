@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/collations",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/collations.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/collations.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7fe75479ba4baa368ca95eab1036a0f34c23da8836f442673090d165a62cf613",
+    "sourceTechnicalHash": "17c9b39e3bb018aeff6b8c174bfa0791386d3b04adde0621b07ee9a4f7f77af0",
+    "targetHash": "c335b19ca346aecc30999e48496a8049bc919814479dd20f3b776174cbc443df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

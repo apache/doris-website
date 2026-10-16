@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/oom-crash-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e1af6400d376b0947e232ba3fe1d9611193d943d0d8d48c3627d38084afc3aed",
+    "sourceTechnicalHash": "fb105ea3dc3ebee51175037bbe02167a58c18d50d5ccac4960175c794dea96f3",
+    "targetHash": "d262ca2d6f4937bfa3b45ad785bb3d867c4e3298c739a09290a2d992945dcbc7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

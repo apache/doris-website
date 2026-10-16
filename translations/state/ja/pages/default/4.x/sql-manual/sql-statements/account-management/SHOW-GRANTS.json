@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-GRANTS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+    "sourceTechnicalHash": "95a0b9d880040f6c5df1829657ef4e7ee05b731bce2a5c9af8c0c15ef51fdd1d",
+    "targetHash": "5ebced9871bbc82ba0250365c70cddd2e119533a5d641cd4b911d4e084b14a63",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.509Z",
+    "glossaryVersion": "0"
+  }
+}

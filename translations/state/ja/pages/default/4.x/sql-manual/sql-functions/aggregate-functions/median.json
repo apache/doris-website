@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/median",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/median.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/median.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "66869fb96827ce63ee4017d4520b2fc160f34374b7d294cbca76fb54e74c4e29",
+    "sourceTechnicalHash": "20b9a702944f61a63bd28531738cdbb5b7f40ada2b4c78db67cad411f2bee506",
+    "targetHash": "545ebf2ded77f9e135695a8ed59ae5bb165b00a34dc4276fa4b30d8c06c4dcf1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

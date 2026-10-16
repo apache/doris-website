@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/session-user",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/session-user.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/session-user.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "634bc088be4108f529f8aff4d64fa8486076cfb0227596be870c8df89fc66bb4",
+    "sourceTechnicalHash": "9863d8e15f4929ccf09714660cc56f89db71facda53d4fc92bdbc9bf60b68283",
+    "targetHash": "f7a9fbdbc8d9f80e9344aca8f3b4b1a2acac52f443dfeb773344c73bc4f55952",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.385Z",
+    "glossaryVersion": "0"
+  }
+}

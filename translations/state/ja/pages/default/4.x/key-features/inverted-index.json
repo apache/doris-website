@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/inverted-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/inverted-index.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/inverted-index.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "62e9abaf1fd9272bad84dc7596d9a8580472e750543f559a1ccab60762d0c81b",
+    "sourceTechnicalHash": "cd0dbed777e53eb70ee863601e819b413b69ba64afe527108bbab0fcf640afe5",
+    "targetHash": "9f23ba10191fff5d242ebde6da27c8867fa68a27e54145890ae4fafbbecc8f61",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.453Z",
+    "glossaryVersion": "0"
+  }
+}

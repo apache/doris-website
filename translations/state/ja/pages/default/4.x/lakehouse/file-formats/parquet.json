@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/file-formats/parquet",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/parquet.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/parquet.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "69280e4466fc77ff46da2330aa432b37b0e4cfa86a82f75b79315841eea27cb7",
+    "sourceTechnicalHash": "d13cca33f63d0cd0e8134edc377c7c0ab91989a541668819ebee6576ae77b289",
+    "targetHash": "d9cd72443007cc89af58a6cc7f5825800ecf9501c593354692a8a44b788aea49",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.109Z",
+    "glossaryVersion": "0"
+  }
+}

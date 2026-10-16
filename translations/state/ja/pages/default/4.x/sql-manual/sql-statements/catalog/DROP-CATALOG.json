@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/catalog/DROP-CATALOG",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/catalog/DROP-CATALOG.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/catalog/DROP-CATALOG.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "d0b85fb449551b206d99664546992b5ddd183205a2849a9da57acd02afb13567",
+    "sourceTechnicalHash": "54080a6d8442a93c17ff60453f13606585085b7eb6228c63d59a1d5e284af56a",
+    "targetHash": "d99bbe18d392d0568362271d8d6b7e4ae209bee16f62806e10b0db28b38496ec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:18:55.551Z",
+    "glossaryVersion": "0"
+  }
+}

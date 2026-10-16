@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/hive-metastore",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/hive-metastore.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/metastores/hive-metastore.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a88df59c31f7e5b71b00c36eb4d54830ad477322c65f0422bcd06ad0ee80d07f",
+    "sourceTechnicalHash": "419c0bf9d78a04feb42ebff40951cfb0cb81bc271fcb73c37d8cf1823e7b48b5",
+    "targetHash": "310708f9abebe20fe7e3bac2de7979c47053686329e8f61600658a3fe05e3d80",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.865Z",
+    "glossaryVersion": "0"
+  }
+}

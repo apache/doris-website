@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/frontend_metrics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/frontend_metrics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/frontend_metrics.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "927c2528b083b54345320d865759d84fa515ce13c04b3f5cfce3515848413966",
+    "sourceTechnicalHash": "002f55cc75cf14486750d130d23aae1d652f78778aa0d0995097d1caa394c9c1",
+    "targetHash": "47e8dfb0fbc66d8d26010ba7052c7fa0e9ee33a4bc71f62f1bf1b19119a5d53b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

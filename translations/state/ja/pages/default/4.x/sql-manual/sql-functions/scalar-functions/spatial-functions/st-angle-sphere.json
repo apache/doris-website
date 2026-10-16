@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle-sphere.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "52b997bb87a5b7ab6a9daec3683196309a18e45a7ee433eda7a0398916fd3233",
+    "sourceTechnicalHash": "825cff354234393bccec878f8ac9eaa36a60b89701fb2de074772cae15bf088d",
+    "targetHash": "330fb0231ffb6127d7230694720cd003a96dbe6e7e29200ea54de3da491ee5ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

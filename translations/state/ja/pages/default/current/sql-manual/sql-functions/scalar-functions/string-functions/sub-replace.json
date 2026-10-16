@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/sub-replace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/sub-replace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/sub-replace.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d839932a54ba3665b6455ca9301589a11623b564535b4a95a6f4a392234369a6",
+    "sourceTechnicalHash": "cba98581b4737fd641bfe2202f18870947eb33001bb8e41c3a5c73e1ab4d0504",
+    "targetHash": "ad9380d4e036716f4e8563aebaf97e6b62fd08bd502d82b9145319a715767966",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9a740eb88b3fd23d8c63675620fa4546b8d82f78cb41da595d02e515a5c44620",
+    "sourceTechnicalHash": "bce18183031010d4a83c9e866f298d9b3e57a444171053b984768ec891ae3afa",
+    "targetHash": "74ddc8ea3f775a0999bb1404196f6a8c93c713ea8a35a5f83370f8d9bbb33648",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.701Z",
+    "glossaryVersion": "0"
+  }
+}

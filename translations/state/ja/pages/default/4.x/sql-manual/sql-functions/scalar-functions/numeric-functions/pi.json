@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/pi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/pi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/pi.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "845e233fc50404ebbefcdf7719866244fd3bc7f933f320f117603c8af7e71d81",
+    "sourceTechnicalHash": "c39b99197cd6c253d6396c60ab65615111c718966c33705e2807ac612545ef8c",
+    "targetHash": "2dffba56c9de4c2c1d997ffda49e15987ab06d42e662d5518803248750bc8f95",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.822Z",
+    "glossaryVersion": "0"
+  }
+}

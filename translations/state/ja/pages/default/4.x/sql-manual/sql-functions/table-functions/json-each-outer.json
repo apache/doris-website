@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/json-each-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/json-each-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/json-each-outer.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "2d31d3b2dc332781f7c84869b1d3c0a1514dec3eb1dded9a7f8da2ed7db34673",
+    "sourceTechnicalHash": "efb8a25d603602f1991bc51c613b031668abd7bb8e62cf8c4a3cbc639b379f56",
+    "targetHash": "485b827840ca74a12da10c78bdbe485e7905c58d5c672f51af1f15451423fc60",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.002Z",
+    "glossaryVersion": "0"
+  }
+}

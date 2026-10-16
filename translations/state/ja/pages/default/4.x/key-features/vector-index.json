@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/vector-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/vector-index.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/vector-index.mdx",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "2fa15f7d2229b5748aa8a7c79c4a0070465f4149382314dbbabdf3042b478da7",
+    "sourceTechnicalHash": "0991bc6c4d9b52c449d93a94d470e4eae615fa6fa4d09b234e619efab679ac79",
+    "targetHash": "4c15f41b0e32e7cd62d74bf4ae461275d4d7f8af8ae735b3dfc64a49b09e64ce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:51:31.316Z",
+    "glossaryVersion": "0"
+  }
+}

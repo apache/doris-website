@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/isnan",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/isnan.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/isnan.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4b19419fda3b66a4d71318760de69e14e71db822fe5c9fe6669ea142aa795d71",
+    "sourceTechnicalHash": "f9511fb2535645b8a0d076be2973654a3cca5fa7dd6d8b8041186ca38b1a0967",
+    "targetHash": "af80a5b06a7ba8e931a8746c6bc473a09595c6019ded0893fad18db584c58d78",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.822Z",
+    "glossaryVersion": "0"
+  }
+}

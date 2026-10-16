@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/docker-dev",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/docker-dev.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/docker-dev.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "a2c59f18ff5236e120fb525640a7d1bb2fbf00d0d75dab36433617b404da3a95",
+    "sourceTechnicalHash": "89f7104f111a36ffcfbbe02f13aaee31e90474470d5c95f22e61dc54ef586ef6",
+    "targetHash": "6671e4b005db2a552975e8d9116fe0a89e0f971464ce16ea44d446076d9367c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

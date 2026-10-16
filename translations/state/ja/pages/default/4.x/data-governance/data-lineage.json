@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-governance/data-lineage",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-governance/data-lineage.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-governance/data-lineage.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0498916655be833d827d325d0e152e4b1ab6ec3373948b962fd6dea05dc0e038",
+    "sourceTechnicalHash": "a0089cc217580a06fab762a1491971d2f2e60732a7a373426a457cfdd8bd1c1c",
+    "targetHash": "8c60d4dbcc138e96a61f5eeb690df59efa4f7d3ebebce361d5e7f312049d34f0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.109Z",
+    "glossaryVersion": "0"
+  }
+}

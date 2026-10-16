@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/substring-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/substring-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/substring-index.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2d8049e4092d9513aa98cb12ddc02e137b839113ca98eef88d600407b55b0337",
+    "sourceTechnicalHash": "743e1eb5966108c8e60fe51f78e4a254f7194f52f4377484c0280f2cae37a002",
+    "targetHash": "7c5c52cb48b2150007130d16b6dc13b92e080551627697cc54fa8729d770b18a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

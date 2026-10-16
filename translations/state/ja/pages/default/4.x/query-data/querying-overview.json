@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/querying-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/querying-overview.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-data/querying-overview.mdx",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "176f779a3d629daec2b16697c178045ef542a06d4a98223ddae1996d930854df",
+    "sourceTechnicalHash": "baf88b175cc170a2dc75fb78dd24cadbefe446e69b5f53724994fff979929d4c",
+    "targetHash": "c9f348fb102b1af669c763af7bbce14d59471ea1ee589f83f887992f3b1fb675",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.708Z",
+    "glossaryVersion": "0"
+  }
+}

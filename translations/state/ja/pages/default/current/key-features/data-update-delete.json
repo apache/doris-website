@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-update-delete",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-update-delete.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/data-update-delete.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7afc3aa9b3f0aea213dc376223b53952733cc6db2342a2a9d86fb9e0df83caf5",
+    "sourceTechnicalHash": "5abc6a71cdfed581407e259fbabfdced6949ebee0e537b241fe4b2b675263196",
+    "targetHash": "edb80eeaa824de118868ceab01f08aa31da324607ec671de73d6e3a185e97d75",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.613Z",
+    "glossaryVersion": "0"
+  }
+}

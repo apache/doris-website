@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-in-range.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "73ebf218c05157ec1d3544f8bebab2d7e7e6f47bee2f2e76bc2f76bd2d2df457",
+    "sourceTechnicalHash": "1c3acca026a1b15691de0d55db96f666c8b721559880db078c0010c243fa36fc",
+    "targetHash": "36a8391e074822d19199cc8a3bc8abcb5c44fbefa32dc02924318d5fcc10cd43",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.052Z",
+    "glossaryVersion": "0"
+  }
+}

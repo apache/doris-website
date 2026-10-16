@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/bloomfilter",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/bloomfilter.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/bloomfilter.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+    "sourceTechnicalHash": "e24225fde399ad4056003abfc23f09a59cf7e3e72f7732533520be72b3d76f60",
+    "targetHash": "647686fbcc938a7790490be6d803a818f7dde0d73639e0d460ae4f2ae7bca4a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}

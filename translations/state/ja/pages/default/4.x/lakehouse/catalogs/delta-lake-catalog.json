@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/delta-lake-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/delta-lake-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/delta-lake-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "ef36159a43b8afe8e22234f85cbb4c72d09037236b54caf0a78756e4d913af12",
+    "sourceTechnicalHash": "da8edc473de4ed392eb47d57b65cedf8dcf478aabda3ce69b460e65eb5a774ba",
+    "targetHash": "e6b2d44473a9ad21242984c8ede3e35593b330c739385ce8994987cabd83f6ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.713Z",
+    "glossaryVersion": "0"
+  }
+}

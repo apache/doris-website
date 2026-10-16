@@ -2,7 +2,7 @@
 {
     "title": "VARIANT 使用与配置指南",
     "language": "zh-CN",
-    "description": "帮助用户判断何时使用 VARIANT、宽列场景如何在默认模式、Sparse 和 DOC mode 之间做选择，以及如何确定起步配置。"
+    "description": "帮助用户判断何时使用 VARIANT、宽列场景如何在默认模式、Sparse 和 DOC mode 之间做选择，何时使用 Schema Template，以及如何确定起步配置。"
 }
 ---
 
@@ -16,7 +16,7 @@
 - JSON 很宽时，应该先用默认模式、Sparse，还是 DOC mode？
 - 哪些配置先保持默认，哪些配置才值得优先调整？
 
-如果你已经确定要使用 `VARIANT`，只是想查语法或类型规则，请直接看 [VARIANT](./VARIANT)。如果你只需要一个最小可运行的导入示例，请看 [导入 Variant 数据](../../../../data-operate/import/complex-types/variant)。
+如果你已经确定要使用 `VARIANT`，只是想查语法或类型规则，请直接看 [VARIANT](./VARIANT.md)。如果你只需要一个最小可运行的导入示例，请看 [导入 Variant 数据](../../../../data-operate/import/complex-types/variant.md)。
 
 :::tip 为什么使用 VARIANT
 `VARIANT` 保留了 JSON 的灵活性，同时又能让常用路径通过子列列式提取（Subcolumnization）获得类似普通列的裁剪、聚合和索引能力，不必先把整份文档固化成静态 schema。对超宽 JSON，存储层优化也让更大规模的 Subcolumnization 保持可控。
@@ -34,7 +34,7 @@
 当以下条件更占主导时，优先考虑静态列：
 
 - schema 稳定，并且可以提前定义清楚。
-- 核心字段经常作为 Join Key、排序键，或者必须严格类型治理。
+- 核心字段经常作为 Join Key、排序键，或者必须严格类型治理。VARIANT 值虽然可以参与 Join 和排序，但静态类型列更快，也保留类型本身的语义。
 - 主要诉求是原样存档 JSON，而不是按路径做分析。
 
 ## 先回答四个问题
@@ -60,7 +60,7 @@
 
 ## 关键概念
 
-阅读下面的存储模式之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT)。
+阅读下面的存储模式之前，先确认以下术语清晰。每个概念用 2-3 行讲清边界；实现细节请参考 [VARIANT](./VARIANT.md)。
 
 **子列列式提取（Subcolumnization）。** 写入 `VARIANT` 列时，Doris 会自动发现 JSON Path，并对热点路径执行子列列式提取，使其以独立子列的形式参与分析。
 
@@ -212,6 +212,7 @@ PROPERTIES (
 注意：
 - DOC mode 不是所有宽 JSON 场景的默认答案。若核心诉求是热点路径分析，通常还是 Sparse 更合适。
 - DOC mode 和 Sparse 互斥，不能同时开启。
+- 带 Schema Template 的列除了 `DROP`、`RENAME` 和修改注释之外不能 ALTER，因此之后也无法修改它的 `variant_doc_materialization_min_rows`，请在建表时确定这个值。
 
 ### Schema Template 模式
 
@@ -243,6 +244,7 @@ PROPERTIES (
 注意：
 - 不要试图把整个 JSON 都静态模板化，这会削弱 `VARIANT` 的意义。
 - Schema Template 只用于关键路径，其余保持动态。
+- 列创建后不能修改 Schema Template。请在导入生产数据之前确定关键路径。
 
 ## 性能
 
@@ -277,7 +279,8 @@ PROPERTIES (
 ### 查询阶段
 
 - **不要把 `SELECT *` 当成超宽 `VARIANT` 列的主查询模式。** 没有 DOC mode 时，`SELECT *` 或 `SELECT variant_col` 需要从所有子列重组 JSON，远慢于指定路径查询如 `SELECT v['path']`。
-- **查询依赖路径类型时，务必显式 CAST。** 自动推断的类型可能与预期不一致。如果 `v['id']` 实际存储为 STRING，但你用整数字面量做比较，索引不会被使用，结果也可能不正确。
+- **过滤条件中把子路径 CAST 为其存储类型。** `v['id'] = 123` 这样的比较会隐式转换路径并逐行求值，无法利用 zone map、BloomFilter 和索引。请写成 `CAST(v['id'] AS BIGINT) = 123`，其中的类型用路径的存储类型（执行 `SET describe_extend_variant_column = true` 后用 `DESC` 查看）。字符串路径与字符串字面量比较时不需要 CAST。
+- **弄清楚比较使用的是哪种语义。** 路径与字面量比较时，路径会根据字面量 CAST 为具体类型；而比较两个 VARIANT 值，或按 VARIANT 值分组、Join、排序时，使用 VARIANT 语义：数值排在字符串之前，`1` 永远不等于 `"1"`。参见[比较、分组与排序](./VARIANT.md#comparison-grouping-and-ordering)。
 
 ### 运维阶段
 
@@ -290,11 +293,11 @@ PROPERTIES (
 建表后，用以下最小序列验证一切正常：
 
 ```sql
--- 插入示例数据
+-- 插入示例数据。INSERT 会把普通字符串作为 VARIANT 字符串写入，因此需要解析 JSON 文本。
 INSERT INTO event_log VALUES
-    ('2025-01-01 10:00:00', 1001, 'click', '{"page": "home", "user_id": 42, "duration_ms": 320}'),
-    ('2025-01-01 10:00:01', 1002, 'purchase', '{"item": "widget", "price": 9.99, "user_id": 42}'),
-    ('2025-01-01 10:00:02', 1003, 'click', '{"page": "search", "user_id": 99, "query": "doris variant"}');
+    ('2025-01-01 10:00:00', 1001, 'click', PARSE_TO_VARIANT('{"page": "home", "user_id": 42, "duration_ms": 320}')),
+    ('2025-01-01 10:00:01', 1002, 'purchase', PARSE_TO_VARIANT('{"item": "widget", "price": 9.99, "user_id": 42}')),
+    ('2025-01-01 10:00:02', 1003, 'click', PARSE_TO_VARIANT('{"page": "search", "user_id": 99, "query": "doris variant"}'));
 
 -- 验证数据
 SELECT payload['user_id'], payload['page'] FROM event_log;
@@ -303,13 +306,13 @@ SELECT payload['user_id'], payload['page'] FROM event_log;
 SET describe_extend_variant_column = true;
 DESC event_log;
 
--- 查看每行类型
-SELECT variant_type(payload) FROM event_log;
+-- 逐行查看某个路径的类型
+SELECT variant_type(payload['user_id']) FROM event_log;
 ```
 
 ## 延伸阅读
 
-- [VARIANT](./VARIANT)
-- [导入 Variant 数据](../../../../data-operate/import/complex-types/variant)
-- [Storage Format V3](../../../../table-design/storage-format)
-- [SEARCH Function](../../../../table-design/index/inverted-index/search-function)
+- [VARIANT](./VARIANT.md)
+- [导入 Variant 数据](../../../../data-operate/import/complex-types/variant.md)
+- [Storage Format V3](../../../../table-design/storage-format.md)
+- [SEARCH Function](../../../../table-design/index/inverted-index/search-function.md)

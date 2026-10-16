@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/heap-profile-memory-analysis.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "1ef27a03762e07ab7c2a255ace11a89fb00296faaed8cdabeaff8e9a79c02ed2",
+    "sourceTechnicalHash": "fa2588be8bbcb2e64bcc7527b67dedb8b7fb9480cf17e02e22db1e699ad60d70",
+    "targetHash": "2fe08dabdfa7ae30ff67dd8b80e94263ef42f0ca12e964095cbf290e377c6ef1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.555Z",
+    "glossaryVersion": "0"
+  }
+}

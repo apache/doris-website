@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-source-extension/trino-connector-developer-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-source-extension/trino-connector-developer-guide.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/data-source-extension/trino-connector-developer-guide.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "025defbecc4c37d780b7f0d79515e252313be69583b8ae281b4e9232f4ca56c0",
+    "sourceTechnicalHash": "a309a9114368a6887fe0088ac59732661d63b2c387ee500f0682cbc340ad22af",
+    "targetHash": "844f646c3c603d2df4846afd1c3fa7313d100657ec41e7e6773595cd8015c8d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.554Z",
+    "glossaryVersion": "0"
+  }
+}

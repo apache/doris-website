@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "66193411e7e956cc600967da16ce73dad78f187b5fe217eab185438b0db426d6",
+    "sourceTechnicalHash": "84054e73b55ef513100b0193c89f67eb2734319ba1651debc410068ce404aee6",
+    "targetHash": "b1c67b5669b8b1a740dd1b9544e560fce522572d00946e051bb1faddf60093a4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.699Z",
+    "glossaryVersion": "0"
+  }
+}

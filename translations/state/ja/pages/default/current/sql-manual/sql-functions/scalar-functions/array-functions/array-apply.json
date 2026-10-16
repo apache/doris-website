@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-apply",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-apply.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-apply.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "dda0cfb4694591e4c56d88795442c3e713514645fa2250d7d4a8ce1deebf01d0",
+    "sourceTechnicalHash": "534a9b2cd20d00a7faa9053b810569183e626058f075eb796975fae59510873e",
+    "targetHash": "1f66ab50e586df928d693b9d3ff0fa6e92d9ba4a0a00167a236e2c7a986aed94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.185Z",
+    "glossaryVersion": "0"
+  }
+}

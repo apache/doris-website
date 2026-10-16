@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+    "sourceTechnicalHash": "63ed87ed0674487416f9e5e7e8fd98f1439db1fe950690a2417abb30327a9827",
+    "targetHash": "3a462710c0b245bc13c408bee264dc1803f4db9ba783bbbdfa10e1c9cd231d9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

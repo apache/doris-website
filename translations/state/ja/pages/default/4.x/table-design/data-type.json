@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-type",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-type.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/data-type.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "eebe1b24f2449c5f0dba326e458ef444b5a23d5a5b26911431300306615c9935",
+    "sourceTechnicalHash": "6324d25baa3f85756721637bd9c0fde6d295c603ccacc87e0c004767bcd3495f",
+    "targetHash": "595f28bf59d2d170e224370e7561caf53dc908a4ff7adce9788e84fdd1d36676",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

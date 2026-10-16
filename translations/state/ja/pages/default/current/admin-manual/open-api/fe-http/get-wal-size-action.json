@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/get-wal-size-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/get-wal-size-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/get-wal-size-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "d89ed4cf7b21b2346ce8290ca91ac484ed2be554e240e0a49bf84c9573026a5f",
+    "sourceTechnicalHash": "df2cdca1ccfb98460b0fd40155dc2fc86240188b96ee8c5d8fbf4f89330c9b33",
+    "targetHash": "b47c1207453a7f2676e278ce84b0503e0a5b81e54b078cfc7fa1aff831dad1e1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.290Z",
+    "glossaryVersion": "0"
+  }
+}

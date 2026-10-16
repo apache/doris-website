@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "bec80bdd9204e324ea1c3dd03f54b067fba081a3cf9e00defa918e10b1ef1577",
+    "sourceTechnicalHash": "0f8086f54ccc5e6d9be7833d90918005ea1acc2e27aa280d3698a45c62c56dc5",
+    "targetHash": "a2d21681c131e0005f0e97ae5fbe31e4472596c80dccd04e794643f75cdb6e73",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

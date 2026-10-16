@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/overview.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "db04a16ef780137380d4cb61908dde272e0d47d458443ac88c4063be6764ece1",
+    "sourceTechnicalHash": "82e628ea223c07159a2a5fc113f9084d5787d406529a2a555d1ac03ed138820c",
+    "targetHash": "a7b0dc0869552a7d65ad7b111a53c674ae9170b34b132af3d8f8a3c56b1873fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.345Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/bm25",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/bm25.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/bm25.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "c767dea43ef41ff4a582dc8a9a6a2b691812d54feee6b8854cc6731fabe08487",
+    "sourceTechnicalHash": "0f91427df92cfeffdc834a6763988e582eb637b4d094ba0af52cbd1c02d0101f",
+    "targetHash": "b911087ac4cf9a608b73dd08d99d70fed1bb21bebe40dd9247995b7032b4c29c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.237Z",
+    "glossaryVersion": "0"
+  }
+}

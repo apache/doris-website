@@ -288,7 +288,10 @@ function lintSitemap(rootDir, manifest) {
       makeFinding('warning', 'seo-sitemap-filename', sourcePath, 1, 'Docusaurus sitemap should emit sitemap.xml.'),
     );
   }
-  if (!/\/search/.test(raw) || !/\/zh-CN\/search/.test(raw)) {
+  // Localized search routes are either listed one by one or derived from the
+  // enabled locales through a locale prefix, as in `${prefix}/search`.
+  const excludesLocalizedSearch = /\/zh-CN\/search/.test(raw) || /\$\{[^}]+\}\/search/.test(raw);
+  if (!/\/search/.test(raw) || !excludesLocalizedSearch) {
     findings.push(
       makeFinding(
         'warning',

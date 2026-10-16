@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/schema-change-mysql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "114e51a4a15ae74358e7887d18bef7f472c715a884b413b73d2a2aaa642e73e3",
+    "sourceTechnicalHash": "82dae752a6ace72d210035fe7471669c8327210aa2a5b53650a626f217611c11",
+    "targetHash": "76b71d074be196b71d10de408b530a212a780c168827f85397805ac5980f86aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:18:07.096Z",
+    "glossaryVersion": "0"
+  }
+}

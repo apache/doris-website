@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/table_stream_consumption",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/table_stream_consumption.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/table_stream_consumption.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "f0ea19e43edcbd4c2ad6e91f364ae4742f193824b58c1eb5529c1703398f3496",
+    "sourceTechnicalHash": "958e56c73eb63cc944d636d830860bbf892fe38801f94bf715d9cfe443e8c2a1",
+    "targetHash": "7c3df17511843d565223e8f7e6fea9498b3da4a9c0f93885386b9093714102da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.287Z",
+    "glossaryVersion": "0"
+  }
+}

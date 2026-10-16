@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/flink",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/flink.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/flink.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "be061e9bc8a5f47f409572e6c52a5cdfeaa5b204f490aab78a40e4e83b39be74",
+    "sourceTechnicalHash": "36326fdd045107abac98016480a6ade6081763f7de11c46e90977f79761c852d",
+    "targetHash": "2fff3e69948ac7763bcdd52f4348fc6f37215561cb5483c5557b741e3fa1660e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

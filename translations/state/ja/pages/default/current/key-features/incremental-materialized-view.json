@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/incremental-materialized-view",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/incremental-materialized-view.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/incremental-materialized-view.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c4954023b15bd05420a5026e798618c118ecf2fab60bb6719f33ebfbd72338e8",
+    "sourceTechnicalHash": "374eea2b1cf98c8d3adb7a7757158f6fbed11da1666da465f3a9b903f6dfadf6",
+    "targetHash": "1a369e48eb40d9278ac7ba48dc424a6e9861403aa27f3715a006913c8c7e7a62",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

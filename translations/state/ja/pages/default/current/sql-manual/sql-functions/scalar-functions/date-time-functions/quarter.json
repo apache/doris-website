@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b02b5af0436d4b398e0c7c75f5f995f49abe023ab105b8afd18a6f2e2ac7cac7",
+    "sourceTechnicalHash": "0f0d9fbcb174f4c37650cb626b56936046aa9d95ef7a793a90f360ca20cbff92",
+    "targetHash": "1b08e540cddcb3c9aacb51b3c59449e6cc53bb6db67a2214cfbdae534c2d4929",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.813Z",
+    "glossaryVersion": "0"
+  }
+}

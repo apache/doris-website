@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/schema-and-index-optimization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/schema-and-index-optimization.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/schema-and-index-optimization.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3b8e8dfb05437d761256cc9900e7957cd20044d054363674bda82fe287f6e090",
+    "sourceTechnicalHash": "0f0fe18a09686266eecfedcd50e36f80cbf54d3f923c1c96d97b91bfa23faafb",
+    "targetHash": "e855903460228ff4e869978cbbd8e084b77b075b6d7039479bcc08a1a072a601",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

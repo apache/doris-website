@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/asof-join",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/asof-join.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-data/asof-join.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9419e9adfa3b9ea03b54d9273e9d0b0b60fafabbe504bd691430963d125cf3e5",
+    "sourceTechnicalHash": "d65c6a72fcfeca7038d0d41000582c30a1b821a7022925e56483425906289b95",
+    "targetHash": "65061212740f0108cdfcec9f26701ce934f1cab61a4ea8e06bdb5ab155a68ccf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.221Z",
+    "glossaryVersion": "0"
+  }
+}

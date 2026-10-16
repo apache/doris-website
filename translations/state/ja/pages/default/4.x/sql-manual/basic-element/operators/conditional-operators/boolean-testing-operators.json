@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "168545093d0d594a45519a7911815e3dc4f9efa1ff747fe9edc72edde08e2742",
+    "sourceTechnicalHash": "557c2ddbeb9dd49d39665b96a598ee59bb272390bd719b4b112fc37780061d44",
+    "targetHash": "c8cccfd7b8720e166b1b840b8bbbae2435181637510511cefed2ee41e8406c30",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

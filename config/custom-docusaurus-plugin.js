@@ -1,18 +1,20 @@
-const path = require('path');
+const { getAssetOrigin } = require('./asset-origin');
 
 module.exports = function (context, options) {
     return {
         name: 'custom-docusaurus-plugin',
         configureWebpack(config, isServer, utils) {
-            const localePublicPath = context.i18n.currentLocale === 'en' ? '/' : '/zh-CN/';
+            // The resolved base URL also handles single-locale previews, where
+            // Docusaurus deliberately omits the locale prefix.
+            const localePublicPath = context.siteConfig.baseUrl;
+            // An empty origin serves this build's assets locally. Unset keeps
+            // the production CDN. Worker bootstrap always stays same-origin.
+            const assetOrigin = getAssetOrigin();
 
             return {
                 output: {
                     ...config.output,
-                    publicPath:
-                        context.i18n.currentLocale === 'en'
-                            ? 'https://cdnd.selectdb.com/'
-                            : 'https://cdnd.selectdb.com/zh-CN/',
+                    publicPath: `${assetOrigin}${localePublicPath}`,
                     // Keep general assets on CDN, but force worker chunks to same-origin
                     // to satisfy browser worker same-origin policy for Search worker bootstrap.
                     workerPublicPath: localePublicPath,

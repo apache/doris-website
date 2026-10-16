@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-fe",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-fe.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "af1474677fc59b708718449fb10fdc133836c4217644277c0755f61a4f3abf92",
+    "sourceTechnicalHash": "175d416210d1d920ea3d8f5e912b9777c912b9baaedbb040b37b2764200f6db2",
+    "targetHash": "14305d6f7c5df87abc162fb77e1aa920df83070938da77710df09d6669305ba8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

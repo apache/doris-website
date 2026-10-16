@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/tablet-meta-tool",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/tablet-meta-tool.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/tablet-meta-tool.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "180ed4e25707b430afb0834d2d22b3f013ab5783c97500339acb44b2d740cd7b",
+    "sourceTechnicalHash": "a44b0c2cd1f4b5f387e4825c38962752cf6fdf3e60108365ef27d12d3b290a68",
+    "targetHash": "9d3f88211a96c7beae6eedc1d6a2dcf86fbf2628d5052ef50aa436d0f651bbb3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.341Z",
+    "glossaryVersion": "0"
+  }
+}

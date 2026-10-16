@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/index-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/index-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/index-overview.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7e31322e1b7bda720eba44c4bd32143124ec70649d6b2fa0a4a25097fbb24c65",
+    "sourceTechnicalHash": "7516c125a870d522372cb89117698adb726728826e4fe737940caecf5ff92ba4",
+    "targetHash": "0c63d0c77d674d4d16d94725939122dc31213e9599d2e5ca25888236ef8aba91",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.632Z",
+    "glossaryVersion": "0"
+  }
+}

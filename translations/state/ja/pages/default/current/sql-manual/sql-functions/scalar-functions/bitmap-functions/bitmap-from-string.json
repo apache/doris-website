@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-string.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e3ea89df4e860905b323cbd95ee5296275be00025e43e7dcdf2602df2c297748",
+    "sourceTechnicalHash": "f0b5a1d7d759924b2c836eb2d8d6af41e474b93c25695d0848de00a933ddda61",
+    "targetHash": "2df20ab9bea8d10fb88b548433da2731b2c90fb05e4e75b65662958f8ddd72cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.051Z",
+    "glossaryVersion": "0"
+  }
+}

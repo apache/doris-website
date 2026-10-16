@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/resource-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/resource-group.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/resource-group.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "126b2a35dee41106cb753447df028859631cab7d74e200d88bbdda52dd7ed8c2",
+    "sourceTechnicalHash": "b5ba468e4ab3f135fa77a1244988c60eeb7042121a383565a101277fd1b620d9",
+    "targetHash": "c28898ed3c6fce67c2f23a22d5d87f3d418124c368e662713e8c72406c072948",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

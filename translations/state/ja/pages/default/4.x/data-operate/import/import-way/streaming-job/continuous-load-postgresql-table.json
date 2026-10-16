@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-postgresql-table",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "9d1878589b264c2e101f07c8b3ae3af91d74b37a40af06704e4c56ef89ac48ea",
+    "sourceTechnicalHash": "83a156a58ee48063812a4ac076ecdc409cca9e605bfbb17d21a8ba265f319678",
+    "targetHash": "e64f1c2b83d470754ea4e79e31fb6c9a9ed6fb5925b41cb8fe92c7cf8ef8cdcd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

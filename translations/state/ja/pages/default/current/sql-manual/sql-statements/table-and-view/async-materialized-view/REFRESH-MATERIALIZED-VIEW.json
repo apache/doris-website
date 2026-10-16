@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c7c84ce5a60e96fc4402016049977bfe3f1a25bebdf5d341c3fbb736d0d9a71f",
+    "sourceTechnicalHash": "1e26844d7f03b8cfef46716f6b08dea5fd14aea52b68e1c49a0c1e06635ff1f4",
+    "targetHash": "720dc78666f6483036c8216dda8a0d488e7c2ccc08de1b9ef35b5ce4851f2153",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

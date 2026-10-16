@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "fdb5798e78285ebb744fbfcaaefc21e5f991d945b6ddca5dd4b396c2d0b7f9de",
+    "sourceTechnicalHash": "37d5639e18c2fb5ac7ca37305d4052154e92dfba6f77417083b380be5f92f235",
+    "targetHash": "5fec6b96961fad5ce3a141ff6f5d1a7269c3bf7957b1700fbdfe458a8716347c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.700Z",
+    "glossaryVersion": "0"
+  }
+}

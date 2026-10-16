@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/top-level-domain",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/top-level-domain.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/top-level-domain.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f75b379ef554d7070d2285ff00c82511ce989d5bba36b81cbe92dcf53fd6f4cc",
+    "sourceTechnicalHash": "b010acb0cb72604269eaccee93e6087ff21978a84e9bfa9214ba369bd64ebbb8",
+    "targetHash": "bc054cb297dbe78ebcdc15aefdec229beaf0c6cd0e59847c1fcc85e6d6565cc2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

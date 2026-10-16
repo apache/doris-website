@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/quickbi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/quickbi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/quickbi.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c70b6db8bfbba37940923e08b0953d502980a2075f97034059b75dbc8cd65dcd",
+    "sourceTechnicalHash": "49347bb8625974167f2e088a1cc560495358f57098d4ab70cb82f80ab91a434a",
+    "targetHash": "7ee8983a114c7bb77dd610501c8d89a29e0ae4e2282bfa6b3ce36b04a8681097",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

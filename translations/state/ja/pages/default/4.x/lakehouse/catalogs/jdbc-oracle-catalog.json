@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-oracle-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "8fe00fede5978e5c6d2da8129bc7e14fd362066adbb57d32c121d5edb522cade",
+    "sourceTechnicalHash": "a1de65434ee0f6b49a419393d469a09eddb5d4b251f23f6c0f9f29b203ff885e",
+    "targetHash": "4ba32631f5f588eaf7886de5f5ff079e948cdf1766874b7550624340b7c63e26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.714Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "57f5e5389247b4d99c426f1facd00c589f112dc89bf1df656c3c713d347608fc",
+    "sourceTechnicalHash": "57808af146a8845673de4d48839bd505905b56b9646edf57e2d5aaa6c3740807",
+    "targetHash": "27f090930cf40ec94cd9ca4eabee8235b1edbb3afa0dacda6eacf99a3455e7bb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

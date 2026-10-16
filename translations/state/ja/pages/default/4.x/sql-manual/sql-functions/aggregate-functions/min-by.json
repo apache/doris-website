@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/min-by",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min-by.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "d38ac023c2d1d64b6c8ec36f972bd8992481703655d550d962b211b1dd2beaa2",
+    "sourceTechnicalHash": "1bdbbf385ea0c9a1dbb46190bcf1d3168e673f18d9d80786d925572236cb1474",
+    "targetHash": "2042d384890e45fe4ebd72d5fdb186430dfeb69703c51b9dca63b029f7ddd91b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

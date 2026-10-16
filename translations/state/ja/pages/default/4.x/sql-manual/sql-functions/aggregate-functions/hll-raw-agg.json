@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/hll-raw-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/hll-raw-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/hll-raw-agg.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "8c3a238f7cf14bbde32de0f667583c551c587d930b39a9f7faf098cbc1fea482",
+    "sourceTechnicalHash": "98ac53c5c6ec450d75471802fe91f7047f744cd61b3ea463e642b80d4fe96cd3",
+    "targetHash": "1c05ecce890d7d202213d08bf3dc3a3dae9f623ff3b39958c1501f12b12fddda",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:51:31.314Z",
+    "glossaryVersion": "0"
+  }
+}

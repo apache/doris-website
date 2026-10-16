@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/migrate-data-from-other-oltp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "52bd4bf3d46f13aa99c9f347e8d8a8a8736a966397f15a82bbe39813a7ef9df4",
+    "sourceTechnicalHash": "59ba3e4652b33d8337940521ebf469d5881cf2d6734dbdd2fc08dcb2d89aeb16",
+    "targetHash": "28fca7c91ebe7d633854f73d2eaa1655e3c4e3c485ad9565350077affe585969",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

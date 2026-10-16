@@ -458,7 +458,20 @@
                         "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase"
                       ]
                     },
-                    "data-operate/import/import-way/streaming-job/continuous-load-s3"
+                    {
+                      "type": "category",
+                      "label": "S3",
+                      "link": {
+                        "type": "doc",
+                        "id": "data-operate/import/import-way/streaming-job/continuous-load-s3"
+                      },
+                      "items": [
+                        "data-operate/import/import-way/streaming-job/continuous-load-s3",
+                        "data-operate/import/import-way/streaming-job/continuous-load-s3-ordered",
+                        "data-operate/import/import-way/streaming-job/continuous-load-s3-notification",
+                        "data-operate/import/import-way/streaming-job/continuous-load-s3-one-time"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -891,6 +904,7 @@
                 "lakehouse/best-practices/optimization",
                 "lakehouse/best-practices/doris-lance",
                 "lakehouse/best-practices/lance-hybrid-search",
+                "lakehouse/best-practices/lance-query-profile",
                 "lakehouse/best-practices/kerberos",
                 "lakehouse/best-practices/tpch",
                 "lakehouse/best-practices/tpcds"

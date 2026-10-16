@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2375517acc50a23a789a4ccfe075a7046b2964579e3e447dea0fe2b403f8f16e",
+    "sourceTechnicalHash": "67b43439aa0ca11c4764d03f90b5c78def71e5500d68d62e07e943f8b15e9bd4",
+    "targetHash": "3285ecf6c787b039e329e2e1045a72c8cc021430dfbfb48d9c85adc5d98f04de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

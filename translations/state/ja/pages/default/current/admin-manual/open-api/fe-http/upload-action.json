@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/upload-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/upload-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/upload-action.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e3fe2cedc250612698af1e78f68a806c6b0f748a15b15e159ba8183c9f4d89a4",
+    "sourceTechnicalHash": "3beaafdcc3e5765e6f8f781250cadcc72749ec5cd7bebd64f2c959f21e5585c2",
+    "targetHash": "320e659c402a57f69bc50e7dd52ddc7e256ce261c780a2ea84d44402043d3a10",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.337Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "7ff6ca0af64c6bcbbea5b380f37f117b4420c54ce124077167e35df52fc08a05",
+    "sourceTechnicalHash": "4592f9e01743b36bb6485e74efbb417ecca359ae34008cfac50c29f144306e23",
+    "targetHash": "a5c800bd8a3df0b7e08b8826773998b6c321a856db3adc8eecee4de0c0f5ebe3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.009Z",
+    "glossaryVersion": "0"
+  }
+}

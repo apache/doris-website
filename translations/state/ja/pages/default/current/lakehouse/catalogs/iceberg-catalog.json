@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/iceberg-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/iceberg-catalog.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/iceberg-catalog.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "75469cd92d68e6c20f5430303d65b1edc450e01190c14804fd7f98a33e5d9a47",
+    "sourceTechnicalHash": "6b0da8025bf95b2683ab8483454a05fb0a176c6b6373713e0e791efd9c0acede",
+    "targetHash": "1da32cddfa185dd7e8fd5aa2348bb18e0488e91f12ac2d27db1ec11b38c74c05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/plugin/INSTALL-PLUGIN",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/plugin/INSTALL-PLUGIN.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/plugin/INSTALL-PLUGIN.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "84855047348dbd1b95210c4aa804f024cf26735642eabac4d0196b9db5919bee",
+    "sourceTechnicalHash": "e5a3c5bfe0d6b8868364c7477a119a857eb101f8d4e588db662b0a06dada6c7c",
+    "targetHash": "410890f9dfb1066cd35600a35bbad2038a5312aa005b4f886ef87e74bc3c7fb2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.234Z",
+    "glossaryVersion": "0"
+  }
+}

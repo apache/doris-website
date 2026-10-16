@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sum",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/sum.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/sum.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "26706f57f7a11cd39c50b37b394294dfaea24a84fe6ba2827a33de6784217387",
+    "sourceTechnicalHash": "17cc6b03c26fd0add5c21e26f32cdd87947e91b27d7d97302f64b0bb260d758f",
+    "targetHash": "3fe2bc77779fc1a299ae26feae214241dcf4f5cde74cfe5906a14c8479dabb1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/user",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/user.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/system-functions/user.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "8410b87c60643a2a58835d394589a8bf9f0c0da7df0c98a6fd1eb9ce504aa83c",
+    "sourceTechnicalHash": "56a068154b712d69141893ab534f7a9716f62397d3100fa747fcadbc72f20a2e",
+    "targetHash": "f060319ac2ed7e02e4cfe4dedf9917512b2188637b33989b904a5583141ce9dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:02:01.385Z",
+    "glossaryVersion": "0"
+  }
+}

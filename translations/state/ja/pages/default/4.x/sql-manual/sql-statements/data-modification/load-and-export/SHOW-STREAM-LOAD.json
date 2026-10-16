@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/SHOW-STREAM-LOAD.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "066119a536e726480d6b3f6aae9ae3382abb4fbbc0d879be35c2a9a47c05fcbe",
+    "sourceTechnicalHash": "9b330503280875d6f20b8d3093d293b0cbb73bfe63f97806714ce34eb8c5b0d2",
+    "targetHash": "2ab6604562bac1df8b2a72bc93648b266ab2457b695b586254b65596353ce558",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.469Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-and-not-count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-and-not-count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-and-not-count.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "1c1d39979e96ea134639ef2baf89d3bcfc2ff46d185098b34b9930b2b93b39c7",
+    "sourceTechnicalHash": "a788e05ecfbd608c52586fa319ec71ec8421285140da7ccbdde1ca5547c053a0",
+    "targetHash": "95b3aa27cbd73c3b2635d59eea18f9d4d154e662192533e1aabe7316391c7436",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T16:38:44.017Z",
+    "glossaryVersion": "0"
+  }
+}

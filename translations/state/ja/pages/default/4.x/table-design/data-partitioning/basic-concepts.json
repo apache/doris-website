@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/basic-concepts",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/basic-concepts.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/basic-concepts.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e143245e07d5ad1a7afd8af3d4ca5764b84b15afec692159be3e05031591cc9c",
+    "sourceTechnicalHash": "bc1c44e76eb63f6c8e19d592d067cca20a4a45b0281a34cb6d1c8cb0fbc265c0",
+    "targetHash": "a9ae247db89f447e9a6d298610291f9e72c03753d1423666945ef9c3fd1e8778",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

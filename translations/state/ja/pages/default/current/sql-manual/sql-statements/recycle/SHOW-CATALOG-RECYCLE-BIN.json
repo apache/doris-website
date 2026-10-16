@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/recycle/SHOW-CATALOG-RECYCLE-BIN.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3095e232cc2629a9ceb2eebd6a8bf91411d7813bc8e71486d4291443da5ad7c1",
+    "sourceTechnicalHash": "7aa57a816c64c13ca5b8859804a0a39668d9358d318292bceb4ca1541371d1eb",
+    "targetHash": "e490e49bf200adf2be33127b22557e198759de150f42f402546b1e97f2ce7c96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.011Z",
+    "glossaryVersion": "0"
+  }
+}

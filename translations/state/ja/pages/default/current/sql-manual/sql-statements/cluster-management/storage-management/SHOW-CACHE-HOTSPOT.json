@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "432130a2145bb0df3314fc4840082a4e7bac1928fa6d0ebca7752ff3c188cbb6",
+    "sourceTechnicalHash": "b2338ead349fd42e6e5d86d9e032135c13d7917bcf75e0393ab93dad221bcfa1",
+    "targetHash": "42a647ddaac28a91de49d38698307eed97eaca1f3992f019df1fa247d9729df7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

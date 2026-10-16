@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/complex-types/variant",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/complex-types/variant.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/complex-types/variant.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a638ecfaa747a02eec75681e179f1d8d4646fa02a392ca5ebce3947d80bab9e3",
+    "sourceTechnicalHash": "365084d42d3d53b869c08dae292730b3e92c92974ead71429ff1f3a1d19738ce",
+    "targetHash": "9d094c715c321ca469fe215a6dc6bdf7f3ffa3be887f44a87deacbb9d2dfb88e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

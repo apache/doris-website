@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/CREATE-FILE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/CREATE-FILE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/CREATE-FILE.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "60b695564c048cd515ad0d6c07a5b31bf9d6de7b44d7fd1b9ff16092bf90722c",
+    "sourceTechnicalHash": "615a74916a47bfdc15c92fa6d23b58104d8eff0eacb6bd386988105891c568d6",
+    "targetHash": "0973fb26b0fa9d6c83d2d54d93590d2aa6692fec633c47f1dce204c3cb35a823",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

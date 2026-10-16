@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-intersect",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e3473d0a8f20f0b00f855ecc2ef6ad123099d1b11090186a242d3c50574feada",
+    "sourceTechnicalHash": "e4694caa2267cb82f6a2a20ba509ee5e467544263334b62284f8442224bf32d5",
+    "targetHash": "7e3364430cc0b1b03850e294071d336d000a2f8b18ce588f63a0924db7899558",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.053Z",
+    "glossaryVersion": "0"
+  }
+}

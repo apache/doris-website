@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/update/unique-update-sql",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/update/unique-update-sql.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/update/unique-update-sql.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "067995b388e1731e955bf4a0fe84bd81575c6f8ba9529814413c2b7dee1681ab",
+    "sourceTechnicalHash": "d74d032369ba639ec1b7af860abf76fb32e602c1edc4dab1b28eee3c17b9ef2e",
+    "targetHash": "58d1db41acc32d86cc54766fa9ad7d37e229ac4c14cdd2e1b96b79d0e47d967c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

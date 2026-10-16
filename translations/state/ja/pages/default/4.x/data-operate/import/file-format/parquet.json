@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/file-format/parquet",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/file-format/parquet.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/file-format/parquet.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6217a7cc62dd9025ce582ae01c87cfcb5c3b08aa1a728537cfd7028a4a270310",
+    "sourceTechnicalHash": "77591e89eff16ba75b226fe3331ffccdf02854cf355896891c26e253a1636e6a",
+    "targetHash": "bb25619ad11ed17fd5cbaa5d3a3b1a01f9702c0ea6d2c200cc6de6ed54051486",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.605Z",
+    "glossaryVersion": "0"
+  }
+}

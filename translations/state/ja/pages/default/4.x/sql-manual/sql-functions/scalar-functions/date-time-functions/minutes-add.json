@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "234b30bbbb134d276c7485921cc251598eb92cf16caaf020295120182e26194d",
+    "sourceTechnicalHash": "05a44a6ec2807a934fc104268df49f9d073f4fb5dc687b5ca540e365c0073f36",
+    "targetHash": "606ca128e4cc72d2ee4c65de802f76d60c5e553106d10098ef47fc6f05d09536",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.701Z",
+    "glossaryVersion": "0"
+  }
+}

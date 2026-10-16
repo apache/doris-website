@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "79d4030b7de45c7279b91d81740071d1341ca873c5096b1705f921acc3a00792",
+    "sourceTechnicalHash": "270aa988ae8804da1a8831c9ae5b2a0db2fe4f4ed256cc6c098620662c48dd7a",
+    "targetHash": "98dd6fc6b90eba046599a64498964b649845b1d8c4316b45191e212b7fac649f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.917Z",
+    "glossaryVersion": "0"
+  }
+}

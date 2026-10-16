@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/exponential-moving-average",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/exponential-moving-average.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/exponential-moving-average.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0002fd3023048d68f0ead07edac5751ef6741e0ec61efdd0359ec77b57a9b159",
+    "sourceTechnicalHash": "4bb4d67b79267b9564406d220ce600764fb4edac5c3873cfafe94f1fdf0570fa",
+    "targetHash": "1c6a52089e28d26ecea4a605cbe417af3b9eacfeae265f42f3de42f1dd48005d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/count",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "390ded406dd7f722ac35251da1fcb31d20c482054c3fb1cb849b3396e135bfcd",
+    "sourceTechnicalHash": "263a672cd7c1bdd1fb7e493a4a75475b713bd0c1ea68f2d7de6d2cde16991720",
+    "targetHash": "582de96a46ae57bdbdf8f570c1528f0e1139c2d9d0f0510a117e09c392da5828",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T20:45:36.247Z",
+    "glossaryVersion": "0"
+  }
+}

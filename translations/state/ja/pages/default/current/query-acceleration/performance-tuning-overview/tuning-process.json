@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/performance-tuning-overview/tuning-process",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/performance-tuning-overview/tuning-process.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-overview/tuning-process.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e565c6f8f0859ed810a626a3a91e32e9d43df976ff590cfd88178c7eb084f6e7",
+    "sourceTechnicalHash": "ba4050bd9177258cb228a78c7c3ef0acfa69540286347a03598a80f07957d860",
+    "targetHash": "df4764b1bf2038ffff49cb6c12c81426f71c0825880f2c7f54720ac8665629c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.223Z",
+    "glossaryVersion": "0"
+  }
+}

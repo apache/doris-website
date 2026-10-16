@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-paimon",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-paimon.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-paimon.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "12f87ffc4be2ee4d9c1b3dfd14214fcd6d9f19ed1e9529867de08dd65da04142",
+    "sourceTechnicalHash": "8f07ebcb264ecf3d4ed28a48b2c12c976dc8e8b1f95fca3ddc034a7ad45efffd",
+    "targetHash": "1e52d3030de188eb24674faf28bf67fc75a8899cbe3ac1d9282302c6797ae8b6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

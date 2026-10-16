@@ -699,7 +699,7 @@
         }
 
         &__mobile-panel {
-            max-height: calc(100vh - 56px);
+            max-height: calc(100vh - var(--navbar-next-height, 56px));
         }
 
         &__mobile-actions {

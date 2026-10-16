@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-fixgrammar.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-fixgrammar.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "83a87b0780d08ca96d02800da4e411e339af0967318c8b402cdfafbbf9b27c6a",
+    "sourceTechnicalHash": "ff938447673753587175f41389ea798e1e80bce0c0d1507390e9c1a1aaac8840",
+    "targetHash": "6bdacae44083795ebeca841f4ef70775dff845e099254bf38e82d8fac051ed71",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.672Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/statistics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/statistics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/statistics.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "11973b6dafce9a87c784ff2a7f3d4f57af5608de6e85af716c3a19517059a9af",
+    "sourceTechnicalHash": "2fef94c40a8047e4431133e08d2ecde18d60774f5eb2ff69516b87fc16f7d602",
+    "targetHash": "2e159b61f589a72af2e9da4a9ce48bfce37663ff32cb33070bb49ae168f72a2d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.224Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/DROP-FILE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/DROP-FILE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/DROP-FILE.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "d5f09efad67fb11e9e7a0c58c51c1b833ab8bcb73579596f4da97c6723c45641",
+    "sourceTechnicalHash": "27ab5991fb4d154329f4c3e0a2db00e77047fde977935ec83f44032a93592f0f",
+    "targetHash": "7cc46476ec052e69ad85c7087cecc678539289f94b93c00e8a6caac0693bb9ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

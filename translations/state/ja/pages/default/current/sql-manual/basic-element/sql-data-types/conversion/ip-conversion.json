@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/ip-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/ip-conversion.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3f8947c121018d2ff91d7aa1f1f1e238c945c41eefdc125627ad651931d1298e",
+    "sourceTechnicalHash": "d6f2325851c6a31a4969ef4071d2c5f8a387b9700e625b6945e66c2ea7cf962f",
+    "targetHash": "c3c8e705a49b42467ee9da7f7f27be592963ebdfee80c688a94cf819bd9b77c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.346Z",
+    "glossaryVersion": "0"
+  }
+}

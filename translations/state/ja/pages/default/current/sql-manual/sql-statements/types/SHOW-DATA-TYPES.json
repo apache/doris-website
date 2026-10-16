@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/types/SHOW-DATA-TYPES",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "63500ada1e3bf5ad8f56e035402f6bb6190a0c648c551ae8eeb2408e139c0ea0",
+    "sourceTechnicalHash": "c76a37fcb26cb54b159f4e0cc19ebfe5fc510fe185ed56420aac5375385fd045",
+    "targetHash": "e7ee294441b4a3c9aa1c319f1667c673d2ac15dc11ca4b386607137b59cf9d98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.612Z",
+    "glossaryVersion": "0"
+  }
+}

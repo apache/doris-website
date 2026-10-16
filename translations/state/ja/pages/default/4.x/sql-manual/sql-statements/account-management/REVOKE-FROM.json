@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/REVOKE-FROM",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "5dbd70421778a9b59c38e6fa9feb9f0d9aa850605a6ccc7d941bfb6ab711ff35",
+    "sourceTechnicalHash": "2220047ccab1a270d2306d68cf2f5bd3c30a1d7b36d16d7d418a94cf0d5365f7",
+    "targetHash": "7846b462b007e7b2d2575750d0ba79073e2b54b4ef3839b843ab9c13282ba21d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

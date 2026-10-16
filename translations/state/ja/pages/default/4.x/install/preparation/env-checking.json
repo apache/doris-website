@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/preparation/env-checking",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/preparation/env-checking.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/preparation/env-checking.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "4e8bf0b7821d5579f66027b6a1993c369c00cce660eddef8353c4fc789746329",
+    "sourceTechnicalHash": "c58431f95fba9ced01812f8e908a8bf84ed4f07a0eab344c4e6112ecb872a2b0",
+    "targetHash": "2a05b61b7e4da4fedea8b9f8f6e9ec3b21a2a719f7c00491f64687a6ce8f1b01",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

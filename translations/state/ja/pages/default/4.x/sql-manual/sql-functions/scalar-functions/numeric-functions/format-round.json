@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/format-round",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e23c7a7dd2617d6b234383f8840fd2442f76b8cd0afe6122b00c72aea1b03157",
+    "sourceTechnicalHash": "c373315f1c159c17fc041f415e1c346dc090fc773ba598d0ec9589e631345a0e",
+    "targetHash": "feca10f8d3ed4ff50c7300afa6c0354e6bab53816578c26d7bf76fede24d8aea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.821Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -111,6 +111,20 @@ avgdl = total_terms / total_rows
 
 当查询包含多个词项时，**最终得分为各词项得分之和**。
 
+### 记录长度与 `norms` 属性
+
+`norms` 索引属性和 `inverted_index_skip_norms_for_variant` BE 配置项自 Doris 4.1.0 起支持。
+
+`|d|` 来自 norms，每个索引字段每行占 1 字节，包括该字段没有值的行。分词索引默认写入 norms（`"norms" = "true"`），非分词索引不写。仅用于过滤的索引可设置 `"norms" = "false"` 节省空间：
+
+```sql
+INDEX idx_content(content) USING INVERTED PROPERTIES("parser" = "english", "norms" = "false")
+```
+
+VARIANT 子路径继承索引的 `norms` 属性，空间开销为 `行数 × 路径数` 字节。BE 配置项 `inverted_index_skip_norms_for_variant`（默认 `false`，可动态修改）设为 `true` 时，所有 VARIANT 路径索引都不写 norms，优先于索引属性。
+
+关闭 norms 不影响 `MATCH_*` 过滤，但 `score()` 读到任一缺少 norms 的段时会报错。该属性和配置项只影响新写入的段；已有段在 compaction 重写前保持不变。修改前须将所有 BE 升级到支持它们的版本。
+
 ## 结果解读
 
 理解打分结果有助于更准确地使用相关性排序：

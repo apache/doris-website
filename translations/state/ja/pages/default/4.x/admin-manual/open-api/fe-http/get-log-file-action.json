@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/get-log-file-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+    "sourceTechnicalHash": "27a0c54487d51b13184371a6c3cc6c29b93732d52ba2b7cf3d81c8b54415b6bf",
+    "targetHash": "9fffd52fe732f836eb7bf8c2c85543844af67b8dd7e88c685de598d219131bea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

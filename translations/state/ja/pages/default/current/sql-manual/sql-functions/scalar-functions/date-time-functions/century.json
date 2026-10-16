@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/century",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/century.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/century.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "28563d9d0984634ac0e246e7ee11715a284783dda681aa57cd721b29fa86e841",
+    "sourceTechnicalHash": "596aa3751c20b6d9ca4be5797e2c303c6c2336d679226b474b9a78d03fa5b8ac",
+    "targetHash": "b9daa579a5249f8184a4c983dbf8df9ddca82941dacf8ab9089c18afa5cb095c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

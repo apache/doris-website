@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "257c56596e0dc1180a8da66b6f818661f35820022864b67f5069fc345dbaf500",
+    "sourceTechnicalHash": "add197030a5865a6fb41ee613246e38339dcfefd203407b84ca70a15d7d3b625",
+    "targetHash": "8556c4a8da1ac9ea0310bda8ab63b5f916268710e87a3d58ef5265643544f894",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.583Z",
+    "glossaryVersion": "0"
+  }
+}

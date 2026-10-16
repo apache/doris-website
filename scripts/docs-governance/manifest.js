@@ -18,15 +18,15 @@ const {
   walkMarkdownFiles,
 } = require('./lib');
 
+const {locales} = require('../../config/i18n');
 const CONTENT_ROOTS = [
-  'docs',
-  'versioned_docs',
-  'i18n/zh-CN/docusaurus-plugin-content-docs',
-  'community',
-  'i18n/zh-CN/docusaurus-plugin-content-docs-community/current',
-  'releasenotes',
-  'i18n/zh-CN/docusaurus-plugin-content-docs-releases/current',
-  'blog',
+  'docs', 'versioned_docs', 'community', 'releasenotes', 'blog',
+  ...locales.filter(locale => locale !== 'en').flatMap(locale => [
+    `i18n/${locale}/docusaurus-plugin-content-docs`,
+    `i18n/${locale}/docusaurus-plugin-content-docs-community/current`,
+    `i18n/${locale}/docusaurus-plugin-content-docs-releases/current`,
+    `i18n/${locale}/docusaurus-plugin-content-docs-course/current`,
+  ]),
 ];
 
 function parseFrontMatter(absPath) {
@@ -46,6 +46,20 @@ function parseFrontMatter(absPath) {
 
 function getContentInfo(relativePath, rules) {
   const currentRoute = rules.currentRouteVersion;
+
+  const localized = relativePath.match(/^i18n\/([^/]+)\/docusaurus-plugin-content-docs(-[^/]+)?\/(current|version-([^/]+))\/(.+)$/);
+  if (localized && locales.includes(localized[1])) {
+    const [, locale, suffix = '', , archivedVersion, docRelative] = localized;
+    const version = archivedVersion || 'current';
+    const plugins = {'': ['main_docs', 'docs', 'sidebars.ts'], '-community': ['community', 'community', 'sidebarsCommunity.json'],
+      '-releases': ['releases', 'releases', 'sidebarsReleases.json'], '-course': ['course', 'course', 'sidebarsCourse.ts']};
+    const plugin = plugins[suffix];
+    if (!plugin) return null;
+    return {contentRoot: `${locale === 'zh-CN' ? 'zh' : locale}_${suffix ? plugin[0] : archivedVersion ? 'versioned_docs' : 'docs'}`,
+      plugin: plugin[0], locale, version, docRelative,
+      routeBase: `/${locale}/${plugin[1]}${suffix ? '' : `/${archivedVersion || currentRoute}`}`,
+      sidebarSource: suffix ? plugin[2] : archivedVersion ? `versioned_sidebars/version-${version}-sidebars.json` : plugin[2]};
+  }
 
   let match = relativePath.match(/^versioned_docs\/version-([^/]+)\/(.+)$/);
   if (match) {
@@ -198,7 +212,7 @@ function resolveCanonicalRoute(entry, rules) {
     return entry.route_path;
   }
   const docPart = routePartFromEntry(entry.doc_id, entry.plugin);
-  const localePrefix = entry.locale === 'zh-CN' ? '/zh-CN' : '';
+  const localePrefix = entry.locale === 'en' ? '' : `/${entry.locale}`;
   if (entry.version === 'current') {
     return `${localePrefix}/docs/${rules.defaultVersion}/${docPart}`;
   }
@@ -291,7 +305,7 @@ function addCounterparts(entries) {
       .map((candidate) => candidate.source_path);
     const sourceCounterpart = groupEntries.find(
       (candidate) => candidate.locale === 'en' && candidate.version === entry.version,
-    ) || groupEntries.find((candidate) => candidate.locale === 'en' && candidate.version === 'current');
+    ) || (entry.locale === 'ja' ? null : groupEntries.find((candidate) => candidate.locale === 'en' && candidate.version === 'current'));
     entry.source_counterpart = entry.locale === 'en' ? null : sourceCounterpart?.source_path || null;
   }
 }

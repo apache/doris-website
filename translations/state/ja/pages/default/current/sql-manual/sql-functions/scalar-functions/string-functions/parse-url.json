@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/parse-url",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/parse-url.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/parse-url.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ff7fb3845febaa6c82819584f46a0dafd3f387e19d0bc06ceafbe86931d1f6b9",
+    "sourceTechnicalHash": "907e1bee1310cdfdaae0eb0921fa84923efd8537f1cc6a91b947dda8ee367d29",
+    "targetHash": "0fbae078c326e45a8d40bd684a9ddc65d567b5e68bb65c62caabb4732a9a83c2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

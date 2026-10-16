@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/DML/SHOW-DELETE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/DML/SHOW-DELETE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/DML/SHOW-DELETE.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "572ed1e714ccb369d939e6f088934edbd03ed593c4cf35b9fb72517e91a9f9fc",
+    "sourceTechnicalHash": "62f716bbae295dd541791fe0b1d84f2dda0957d7886eaa07d4ee1db373450a2e",
+    "targetHash": "9a8c65f2c0804ba1ef734b7d67e6088f4b3e9458ddb1c954234e87e8434ba70f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}

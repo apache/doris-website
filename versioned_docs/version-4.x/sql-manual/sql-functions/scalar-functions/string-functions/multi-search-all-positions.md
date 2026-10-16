@@ -31,7 +31,8 @@ Special cases:
 - Position counting starts from 1
 - If substring is not found, the corresponding position returns 0
 - Search is case-sensitive
-- If `<haystack>` or `<needles>` is NULL, returns NULL
+- If `<haystack>` is NULL, returns an array of zeros with the same length as `<needles>`
+- If `<needles>` is NULL, returns an empty array `[]`, including when both parameters are NULL
 - Returns byte position, not the n-th character position
 
 ## Examples
@@ -94,6 +95,21 @@ SELECT multi_search_all_positions('ṭṛì ḍḍumai Hello', ['ṭṛì', 'Hel
 +----------------------------------------------------------------------------------------+
 | [1, 21, 0]                                                                             |
 +----------------------------------------------------------------------------------------+
+```
+
+NULL inputs:
+
+```sql
+SELECT multi_search_all_positions(NULL, ['a', 'b']) AS null_haystack,
+       multi_search_all_positions('a', NULL) AS null_needles,
+       multi_search_all_positions(NULL, NULL) AS both_null;
+```
+```text
++---------------+--------------+-----------+
+| null_haystack | null_needles | both_null |
++---------------+--------------+-----------+
+| [0, 0]        | []           | []        |
++---------------+--------------+-----------+
 ```
 
 ### Keywords

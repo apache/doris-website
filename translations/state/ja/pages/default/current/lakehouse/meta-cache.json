@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/meta-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/meta-cache.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/meta-cache.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "fdfc40c1edcb7dbcc110e3e111039be1a4bd85224264a0b0bf8313f4f47baedc",
+    "sourceTechnicalHash": "c6f4a8a7af5779a900c5bc52bcecd025ca03097d11bc0c7fc637ec088521ddbb",
+    "targetHash": "8a0e2e63b7f9167de5c2b07d1cf4442824ddbb6ccc175a9f7ad8a6e29e48976b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

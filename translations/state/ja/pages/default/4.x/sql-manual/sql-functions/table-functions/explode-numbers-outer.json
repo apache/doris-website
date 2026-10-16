@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-numbers-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-numbers-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-numbers-outer.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0440a7cfc896bd9edf9ab36daccb6002f9a36086baaefc6c565852af1d9a38db",
+    "sourceTechnicalHash": "5354b5f9636930bb6828269e73be4d3c6e4f5e2fff80cf47509b49e65a49c532",
+    "targetHash": "7ba1565071b714ccdbc82c4f384f970d11568ca12f32f6d2ede50fb91c9592cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.002Z",
+    "glossaryVersion": "0"
+  }
+}

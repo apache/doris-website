@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/spark-load",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/spark-load.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/spark-load.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "cef55ca65c1d4739e73259e8b1a8b69080ed8acccf0f336e519b01c557aab703",
+    "sourceTechnicalHash": "b144b4afdef805f76f6cea80195b87fde9182777b2cc9c3e62749a7cf521d402",
+    "targetHash": "c1d9a1635399cf3973e49847a2258546ff33129f3d44d52cc4a86cab877b503c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.604Z",
+    "glossaryVersion": "0"
+  }
+}

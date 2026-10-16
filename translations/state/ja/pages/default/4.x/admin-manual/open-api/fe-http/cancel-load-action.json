@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/cancel-load-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/cancel-load-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/cancel-load-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "263f8d577ea88c3f6c71c1659cffb27f295ca91fe4776cc6d3d108b7e5489864",
+    "sourceTechnicalHash": "04b5e2f011cd5cea3e8cd2caf63794e04887c007a6748c9b44f9c19f28ba50c8",
+    "targetHash": "b28b49db3cd2eb76c4e5d3d5b93011548055f0a0105d43ff9829b7a4cc8fe4de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

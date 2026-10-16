@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/uuid-functions/to-uuid-or-default.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f23ff7e1d235cb28907f45495ea48c426861f2b525b33cd846de0de3b5f889a8",
+    "sourceTechnicalHash": "9de0b8cf3079ca98fae373289f495c0fb64e5c87443881834f873448c698a756",
+    "targetHash": "0ec7848a8a9ccf1bfd8ee656c8527aefc277e3c81635936b26791cb47e9b9908",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.256Z",
+    "glossaryVersion": "0"
+  }
+}

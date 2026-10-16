@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/pull-request",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/pull-request.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/pull-request.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "ed3064f9e7c889c04c77929170c2de07d4c4987a8803f2cc3277406e120ef018",
+    "sourceTechnicalHash": "f07de74b6e5343debdcb895bc90af8cdf7b26ca24a345800f55fba9ca1b9341a",
+    "targetHash": "d5aafaf3fc96cd838addcf5674378d22533d0ad60de89cb961a9636163892a83",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

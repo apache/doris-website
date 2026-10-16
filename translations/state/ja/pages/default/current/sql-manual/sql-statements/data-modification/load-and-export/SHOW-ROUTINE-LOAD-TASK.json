@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "dedae9dcf917c37aa614a1134c33b47ca9c9bb6f77d1e20ce326f5c041e5063d",
+    "sourceTechnicalHash": "2ccdd6034d1c2e5b0bba554b939096093067e8466f300d48fe59cebda4cb9750",
+    "targetHash": "c89dd843a9fa01a96f88c128f12a152da192aa2667f31b72a5485aab9e4b5711",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.627Z",
+    "glossaryVersion": "0"
+  }
+}

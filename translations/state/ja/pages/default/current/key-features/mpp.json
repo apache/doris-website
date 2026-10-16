@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/mpp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/mpp.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/mpp.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "3f5eeae988337df2f11dec0eaf43790a8634d470c4ee7a5a0af50710a6893980",
+    "sourceTechnicalHash": "ecc5056bea501f820d3417bb97a5604e2214f65773e4b06602e38ecb6e445013",
+    "targetHash": "98407d1094f4717731a931385759683525430a560fb41e2945d3ac57664307dd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

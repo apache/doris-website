@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/aggregate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/aggregate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/aggregate.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "f68f9b11fdb49cbea6ee654a219ccda04211f0364729e68fc1f3a6e631d8297a",
+    "sourceTechnicalHash": "00d93b390bf8d9be570c6ff536c02bba61714ae4b0422935b4727567189fa919",
+    "targetHash": "730d934bd97f8971c51241c370417acaad2edef46aec306aeeaee887f8c4249a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}

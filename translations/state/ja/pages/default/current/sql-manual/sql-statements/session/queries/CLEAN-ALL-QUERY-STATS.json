@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/CLEAN-ALL-QUERY-STATS.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "39bee638ef43d567d3fb5d76ea1d4d88f8ef232eb25f3c4d0b83087bf62c877e",
+    "sourceTechnicalHash": "dc5b94f85b9fa046dda6c8e206800dead79324383b5b721b277b67658d172a69",
+    "targetHash": "6743ee218dad66201174a608263ae78f83253d4dea3d7c0cd28884525f415997",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

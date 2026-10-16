@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/overview.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d900f6be634efecc5fbd1f974fd6eec1616a58b3376f50ae0cdcdc6c1b936136",
+    "sourceTechnicalHash": "2d3651de0f7c8bb56ff3acab7c2f177ab89fc7b203c68b07ba10b517109b153d",
+    "targetHash": "7477f1de48a420274d47fc574d2dcead19e0d05c759bb57236d0b9ba1847c617",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

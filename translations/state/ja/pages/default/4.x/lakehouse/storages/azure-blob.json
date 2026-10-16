@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/azure-blob",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/azure-blob.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/azure-blob.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+    "sourceTechnicalHash": "ea63f52129ba68abaf2eebaaeaa863378a5525a522d46fe3b41dadc481ce4fb0",
+    "targetHash": "55176cd91f44f4e8ff8f266a7c46254af9fdf41f7568d6dbe195247f61f5d104",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

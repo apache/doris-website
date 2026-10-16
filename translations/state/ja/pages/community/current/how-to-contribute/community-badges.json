@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/community-badges",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/community-badges.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/community-badges.mdx",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "726fa863e1766c4a0a1999f0adeba3e85268db7e097a83a5d61aa4234ec8bea9",
+    "sourceTechnicalHash": "be014d60ac106c61f8c3e4f65a0001a51832cbb9a9dd10c4572d39d31d3d8d15",
+    "targetHash": "8d30880525f61aa89f096924863a01413aa20f44606f037a06839118755b40ec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

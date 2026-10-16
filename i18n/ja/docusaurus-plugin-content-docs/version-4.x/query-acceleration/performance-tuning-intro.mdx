@@ -1,0 +1,139 @@
+---
+{
+    "title": "パフォーマンスとチューニング",
+    "language": "ja",
+    "description": "Apache Doris のパフォーマンスとチューニングに関するナビゲーション。チューニングの進め方、クエリとデータ取り込みの性能、最適化技術の仕組み、ベンチマークを紹介します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris の適応型オプティマイザと Pipeline 実行エンジンにより、多くのワークロードは特別な調整なしで動作します。ただし、本番環境では通常、体系的なパフォーマンスチューニングが必要です。まずチューニングの進め方に沿ってボトルネックを特定し、次にクエリまたはデータ取り込みの具体的なシナリオに合わせて最適化します。実行計画の解釈が難しい場合は、その背景にある仕組みを理解するために最適化技術の仕組みを参照してください。
+
+## チューニングの進め方
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="パフォーマンスチューニングの概要"
+    description="チューニングの一連の流れ、Doris が提供する診断・分析ツール、パフォーマンス上の問題を体系的に特定する方法を学びます。"
+    link="performance-tuning-overview/tuning-overview"
+/>
+</div>
+
+## クエリ性能
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="スキーマとインデックスの最適化"
+    description="テーブルモデル、パーティションとバケットの分割、キーカラムの設計、インデックス（プレフィックスインデックス、BloomFilter、NGram、転置インデックス）の選択によって、クエリ性能の上限が決まります。"
+    link="tuning/tuning-plan/schema-and-index-optimization"
+/>
+
+<GettingStartedCard
+    title="マテリアライズドビュー"
+    description="同期または非同期のマテリアライズドビューで結果を事前計算し、透過的なクエリ書き換えによって既存の SQL を変更せずに高速化します。"
+    link="materialized-view/intro"
+/>
+
+<GettingStartedCard
+    title="Join の最適化"
+    description="Colocation Join で Shuffle をなくし、オプティマイザの判断が最適でない場合は Distribute Hint と Leading Hint を使用して Join プランを手動で調整します。"
+    link="join-optimization-intro"
+/>
+
+<GettingStartedCard
+    title="キャッシュによる高速化"
+    description="SQL Cache、Condition Cache、外部テーブルのファイルキャッシュを組み合わせ、繰り返し実行するクエリ間で結果、フィルター計算、リモートデータを再利用します。"
+    link="caching-intro"
+/>
+
+<GettingStartedCard
+    title="実行時のチューニング"
+    description="Profile に示された実行時のボトルネックに基づき、並列度、RuntimeFilter の待機時間、データスキュー、CBO ルールを調整します。"
+    link="tuning/tuning-execution/intro"
+/>
+
+<GettingStartedCard
+    title="高い同時実行数とポイントクエリ"
+    description="行ストアとショートサーキット実行を使用して、Unique Key テーブルに対する高 QPS の主キー検索を実現します。また、ディメンションテーブルとの Join の代わりに辞書テーブルを使用して、KV クエリを高速化します。"
+    link="high-concurrency-intro"
+/>
+
+<GettingStartedCard
+    title="Distinct 件数の集計"
+    description="正確な重複排除には BITMAP を使用します。1%-2% の誤差を許容できる場合は UV の概算に HLL を使用し、メモリとストレージの負荷を大幅に削減します。"
+    link="distinct-counts/intro"
+/>
+
+<GettingStartedCard
+    title="クエリ Profile"
+    description="Profile で Scan、Exchange、Join、集約などのオペレーターの処理時間の内訳を分析し、クエリで最も時間のかかる段階を素早く特定します。"
+    link="query-profile"
+/>
+</div>
+
+## データ取り込み性能
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DML のチューニング"
+    description="INSERT、UPDATE、DELETE の実行計画について、書き込みの並列度、バッチサイズ、実行経路を調整し、安定したデータ取り込み性能を実現します。"
+    link="tuning/tuning-plan/dml-tuning-plan"
+/>
+</div>
+
+## 最適化技術の仕組み
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="クエリオプティマイザ"
+    description="ルールに基づく等価変換やコストに基づく Join Enumeration など、Nereids オプティマイザのルール書き換えとコストモデルを紹介します。"
+    link="optimization-technology-principle/query-optimizer"
+/>
+
+<GettingStartedCard
+    title="Pipeline 実行エンジン"
+    description="Doris の実行レイヤーの基盤となる Pipeline モデル、スケジューリングの仕組み、Morsel-Driven の並列実行を紹介します。"
+    link="optimization-technology-principle/pipeline-execution-engine"
+/>
+
+<GettingStartedCard
+    title="Runtime Filter"
+    description="Join の build 側で生成した RuntimeFilter を probe 側にプッシュダウンし、無関係なデータをスキップする実行の仕組みを紹介します。"
+    link="optimization-technology-principle/runtime-filter"
+/>
+
+<GettingStartedCard
+    title="TopN の最適化"
+    description="ORDER BY ... LIMIT を使う場合に、データの大部分をスキップして TopN を素早く返すショートサーキット実行と部分ソートの最適化を紹介します。"
+    link="optimization-technology-principle/topn-optimization"
+/>
+
+<GettingStartedCard
+    title="統計情報"
+    description="コストベースのクエリオプティマイザが実行計画を選ぶ際の基盤となる、テーブル、カラム、ヒストグラムなどの統計情報の収集と利用を紹介します。"
+    link="optimization-technology-principle/statistics"
+/>
+</div>
+
+## ベンチマーク
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Star Schema Benchmark (SSB)"
+    description="標準的なハードウェア上での Doris の SSB テスト結果を、再現可能な環境設定とチューニングの要点とともに紹介します。"
+    link="../benchmark/ssb"
+/>
+
+<GettingStartedCard
+    title="TPC-H"
+    description="データ取り込み、クエリのレイテンシー、比較時の指針を含む Doris の TPC-H テスト結果を紹介します。"
+    link="../benchmark/tpch"
+/>
+
+<GettingStartedCard
+    title="TPC-DS"
+    description="より複雑な複数テーブルの分析シナリオにおける Doris の TPC-DS テスト結果を紹介します。"
+    link="../benchmark/tpcds"
+/>
+</div>

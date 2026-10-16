@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/contribute-doc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/contribute-doc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "92adddc806e422b80b5be3a9f2c075d436e64edfe50b6241939addb25f2b77c0",
+    "sourceTechnicalHash": "5307a5f274e0ecb35c2e1aa50b86d12a518436bc7cf8564a2a02e1f11d080ac8",
+    "targetHash": "d8421fac0220ed2a4b5c4feea7a37e76607e468590fdf384131cf9110566803e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.551Z",
+    "glossaryVersion": "0"
+  }
+}

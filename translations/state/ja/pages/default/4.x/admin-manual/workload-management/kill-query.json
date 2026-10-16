@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/kill-query",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/kill-query.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/kill-query.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b6b3b1a9aff6fb27f6e269cb59f1041b7347209da608c9c9cb2bf570086eca23",
+    "sourceTechnicalHash": "a32378767717523afda460ba3cff6d4fd4fc594df4ae215e7d15bf05cd95838a",
+    "targetHash": "c011d67ce65fe58c03b9b7f8a472ecea14848eba57eff1479a2b6971fe524bc0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.112Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+    "sourceTechnicalHash": "02905433255307879a8835e84207a37cd75299b2c7f7d88333283c1cd6e4c810",
+    "targetHash": "8b6574ca54b77581525871dd92168ddd7134cb564d8660838872f54f6cf8a423",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/logstash",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/logstash.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/logstash.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "654e71f6af77a96f17a37bfbfbdc56ee7a26c36f6ea6e06f2cbc90e887cd8f75",
+    "sourceTechnicalHash": "9979ce1ae2e85c650f932b7c9af820e99603412ad9548723cfbb203acbebe050",
+    "targetHash": "7efd6bd56188046838630e0413ca940c791599a37198802bba01d0c677ba6133",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

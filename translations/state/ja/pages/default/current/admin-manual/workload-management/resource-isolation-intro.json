@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/resource-isolation-intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+    "sourceTechnicalHash": "a8daf870cd195736992f02abfd2e2d58405140e5f6658652c5d54164681e61d2",
+    "targetHash": "dc9dc74eead16b675b257fe2e39d5125f33748eb31de1aec46a744d78f1cd4bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.872Z",
+    "glossaryVersion": "0"
+  }
+}

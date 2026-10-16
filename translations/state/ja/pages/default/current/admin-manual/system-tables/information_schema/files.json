@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/files",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/files.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/files.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "ba0597b43d351919e907feca08f4b6aeeca6361d12d60a69a037997cda13736e",
+    "sourceTechnicalHash": "c1fb6fcd8b0fb7417a7672546c00354c004c9576e58cd5b67c75307a1f65f058",
+    "targetHash": "b10e49db873a5601cc345cbd6de02f729d415376eb7f3e566da606bcca1404c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.285Z",
+    "glossaryVersion": "0"
+  }
+}

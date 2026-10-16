@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-DATA-SKEW.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9ee725a13fb8ac2240c6f5fe4e15864ba5f248f9922bd0fa6bd24be89156eb6b",
+    "sourceTechnicalHash": "ebf22e0265f5ccb17923be8a9199206518e20af32807dadcf3bf1cbfb8e9e612",
+    "targetHash": "1c44994e4d2f398329453fed9840f09401f3883470f9f09539cdc83e2c9cc1d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

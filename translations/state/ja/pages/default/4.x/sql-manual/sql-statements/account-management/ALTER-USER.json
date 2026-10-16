@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/ALTER-USER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0c50f660a6e9ec4d8b0995cf6180478be890054831030649c4d8aeef91658070",
+    "sourceTechnicalHash": "54e5f6d8089c21ea5bd2d415ce2ffed38e3ee5fb8429537234cebd9b32ff53cc",
+    "targetHash": "f9133bef675f961ffebb5ee49632bfd94166b48ce006b4afb601dd5a0d679022",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

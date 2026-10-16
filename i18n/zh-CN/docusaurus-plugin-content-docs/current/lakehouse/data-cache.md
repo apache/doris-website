@@ -28,7 +28,7 @@
 
 ## 开启数据缓存
 
-数据缓存功能是默认关闭的，需要在 FE 和 BE 中设置相关参数进行开启。
+自 4.2 版本起，数据缓存功能默认开启：BE 配置项 `enable_file_cache` 和会话变量 `enable_file_cache` 的默认值均为 `true`。使用时配置 `be.conf` 中的缓存目录；并通过 FE 参数按会话或全局开启、关闭缓存。
 
 ### BE 配置
 
@@ -36,7 +36,7 @@
 
 | 参数                  | 必选项 | 说明                                     |
 | ------------------- | --- | -------------------------------------- |
-| `enable_file_cache` | 是   | 是否启用 Data Cache，默认 false               |
+| `enable_file_cache` | 否   | 是否启用 Data Cache，自 4.2 版本起默认开启。               |
 | `file_cache_path`   | 是   | 缓存目录的相关配置，JSON 格式。                      |
 | `clear_file_cache`  | 否   | 默认 false。如果为 true，则当 BE 节点重启时，会清空缓存目录。 |
 
@@ -64,7 +64,14 @@ SET enable_file_cache = true;
 SET GLOBAL enable_file_cache = true;
 ```
 
-注意，如果没有开启 `enable_file_cache`，即使 BE 配置了缓存目录，也不会使用缓存。同样，如果 BE 没有配置缓存目录，即使开启 `enable_file_cache`，也不会使用缓存。
+外部文件扫描仅在 BE 配置项 `enable_file_cache`、会话变量 `enable_file_cache` 与缓存准入控制同时开启时才会走缓存。该会话变量对内部表无效。
+
+:::caution[自 4.2 版本起文件缓存默认开启]
+
+- 在存算一体的 BE 上，如果没有设置 `file_cache_path`，缓存会创建在 `${DORIS_HOME}/file_cache` 下；未设置 `total_size` 时，缓存可能增长到磁盘的 85%–88%。建议为 `file_cache_path` 设置 `total_size` 加以限制，或在 `be.conf` 中设置 `enable_file_cache = false` 以保持原有行为。
+- BE 配置不会持久化：升级后的 BE 在没有显式配置该项时，使用二进制内置的默认值。会话变量会持久化到 FE image，因此从旧版本升级的集群会保留原有取值；升级后如需让外部表走缓存，请执行 `SET GLOBAL enable_file_cache = true`。
+
+:::
 
 ## 缓存可观测性
 

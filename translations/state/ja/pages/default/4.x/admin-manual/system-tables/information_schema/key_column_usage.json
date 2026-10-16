@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/key_column_usage",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/key_column_usage.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/key_column_usage.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "374049816a5bea26244d582206a2bd65d992c7f3a54c5f820e118f8e627f56ab",
+    "sourceTechnicalHash": "b8745a19e759155ffed14213d062d22d4856b71405d23db5a54e5ab39801583e",
+    "targetHash": "ba0b0e6bb716dbe3a85e3c18ca44743a2fa6ccfa3c7bc242cefea0826745a197",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

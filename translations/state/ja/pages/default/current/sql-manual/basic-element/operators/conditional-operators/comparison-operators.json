@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/comparison-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/comparison-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/comparison-operators.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a082a405231f797934ffb242e64576235be10327abf4b784da46a5283268368a",
+    "sourceTechnicalHash": "88f6bae478fbc87fd4a043ab033ed33f836108a0c6409b79f57d8f78a08f4f0e",
+    "targetHash": "36bc14cb2217af9e4ae403d44538b85467d957ea2c43acaa5e290b2de66cfc7a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.255Z",
+    "glossaryVersion": "0"
+  }
+}

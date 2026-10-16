@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "locale": "ja",
+  "sourceCommit": "2b158c2eff9a3cc12c872ac673698b007223a3ce",
+  "routingInputs": {
+    "docusaurus.config.js": "17cce172527b1c051927536b9232540c1576d926e2dc2a336fa4e90c3c60db26",
+    "versions.json": "9fbfcc6add6c7cba5983676fe6d43d854855be29ecc57cc1fbcc407ad229ba85",
+    "sidebars.ts": "f5d1b9acc12a0de3659a08f79999c16803c11385844a1ca27d71cb3ff1656da1",
+    "sidebarsCommunity.json": "bcfe439d2b60ddfbb9841c59bff4bc33b2e8b66da15e53854b37ac26a00df39e",
+    "versioned_sidebars/version-4.x-sidebars.json": "213d9e8518e7a82e185906f12165b94ae5b4a0717a87e96f6ecb817eb3dba63e",
+    "translations/config.json": "2be4c8162d2e305814a2d1e8f4c937d680af8f3bb8966aa36a9a37a30cc6c382",
+    "translations/scope/ja.json": "bed00251b2adfec7dc4dcfa086bcf99c0e34f74cf3ac4bdaa9392fb270f288ec"
+  },
+  "nativeVersions": [
+    {
+      "pluginId": "default",
+      "version": "current"
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x"
+    },
+    {
+      "pluginId": "default",
+      "version": "3.x"
+    },
+    {
+      "pluginId": "default",
+      "version": "2.1"
+    },
+    {
+      "pluginId": "course",
+      "version": "current"
+    },
+    {
+      "pluginId": "community",
+      "version": "current"
+    },
+    {
+      "pluginId": "releases",
+      "version": "current"
+    }
+  ],
+  "reports": [
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/admin-manual/security-overview.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/lakehouse/best-practices/doris-aws-emr.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/observability/log-storage-analysis.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/date-time-functions/localtime.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-to-ipv6.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/numeric-functions/running-difference.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/string-functions/uuid-to-int.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "2.1",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-SYNC-MATERIALIZED-VIEW.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/auth/ldap.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/auth/ranger.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/config/fe-config-template.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/compute-storage-decoupled/meta-service-api.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/data-operate/update/unique-update.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/lakehouse/best-practices/doris-aws-emr.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/observability/log-storage-analysis.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-functions/scalar-functions/numeric-functions/running-difference.md",
+      "inScope": false
+    },
+    {
+      "kind": "unsupported_source_route",
+      "pluginId": "default",
+      "version": "3.x",
+      "sourceLocale": "zh-CN",
+      "sourcePath": "i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md",
+      "inScope": false
+    }
+  ],
+  "groups": [
+    {
+      "id": "DEV",
+      "pluginId": "default",
+      "version": "current",
+      "sourceRoot": "docs",
+      "counts": {
+        "sourceFiles": 1640,
+        "registered": 1640,
+        "required": 1639,
+        "mergedCurrent": 2,
+        "humanReviewed": 0,
+        "machineReviewed": 2,
+        "untranslated": 1637,
+        "needsUpdate": 0,
+        "drafts": 1,
+        "retainEnglish": 0,
+        "unregistered": 0,
+        "pending": 1637,
+        "batches": 82
+      },
+      "exceptions": [
+        {
+          "kind": "draft",
+          "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/other-functions/g.md",
+          "docId": "sql-manual/sql-functions/scalar-functions/other-functions/g",
+          "reason": "Native front matter marks this document as draft; no production page."
+        }
+      ]
+    },
+    {
+      "id": "4X",
+      "pluginId": "default",
+      "version": "4.x",
+      "sourceRoot": "versioned_docs/version-4.x",
+      "counts": {
+        "sourceFiles": 1597,
+        "registered": 1597,
+        "required": 1596,
+        "mergedCurrent": 1,
+        "humanReviewed": 0,
+        "machineReviewed": 1,
+        "untranslated": 1595,
+        "needsUpdate": 0,
+        "drafts": 1,
+        "retainEnglish": 0,
+        "unregistered": 0,
+        "pending": 1595,
+        "batches": 80
+      },
+      "exceptions": [
+        {
+          "kind": "draft",
+          "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/other-functions/g.md",
+          "docId": "sql-manual/sql-functions/scalar-functions/other-functions/g",
+          "reason": "Native front matter marks this document as draft; no production page."
+        }
+      ]
+    },
+    {
+      "id": "COMMUNITY",
+      "pluginId": "community",
+      "version": "current",
+      "sourceRoot": "community",
+      "counts": {
+        "sourceFiles": 51,
+        "registered": 51,
+        "required": 51,
+        "mergedCurrent": 1,
+        "humanReviewed": 0,
+        "machineReviewed": 1,
+        "untranslated": 50,
+        "needsUpdate": 0,
+        "drafts": 0,
+        "retainEnglish": 0,
+        "unregistered": 0,
+        "pending": 50,
+        "batches": 3
+      },
+      "exceptions": []
+    }
+  ]
+}

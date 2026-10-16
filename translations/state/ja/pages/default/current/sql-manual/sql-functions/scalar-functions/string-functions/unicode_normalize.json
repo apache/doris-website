@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/unicode_normalize",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/unicode_normalize.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/unicode_normalize.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "21abbfa1a38b3fea777f7f748bf1934a17ba88ce124ccfa2797bd2ba3eabc76c",
+    "sourceTechnicalHash": "a2747783b669412a99377f73481fc087840b91da6c9b4af3b057adae4dbf820a",
+    "targetHash": "67e94704b4915750b4b6badc38c3a967591c0e15d12941ccd48f0d3a56c69ec4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

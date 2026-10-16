@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-between",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-between.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-between.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "57047ce4b283a376b1d7799d52fef43c3ddb18be6dec404ff33258999ab56e45",
+    "sourceTechnicalHash": "f9a50f3f805ff78104bb6575f37fad012c8ed1021042258730e3dfe41f12d9e4",
+    "targetHash": "b4ea85c21d61eff11175385bb2a07ac1cfcd9f9c5c4a234f61c099110e1cd7d1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.702Z",
+    "glossaryVersion": "0"
+  }
+}

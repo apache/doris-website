@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/DROP-ROW-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-ROW-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-ROW-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "584a2047ab8f22477015532bfee3cc2b5ec10efd741f1f5d3321447a2a4eb5c2",
+    "sourceTechnicalHash": "adbc5011c1a528d59cb8c887bdc4b9120528dc1436ebf6f61ad2e69d3c54b26c",
+    "targetHash": "7558be6935f330124ed3e3cbd25f44b48056010aff7431a4cb8b451fb68c42b7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.484Z",
+    "glossaryVersion": "0"
+  }
+}

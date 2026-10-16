@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+    "sourceTechnicalHash": "6a99bf4da14c52ef76b49c9f031184316d09a8c55bf20d3f71855a966deb0237",
+    "targetHash": "3f76995b287750a0afec2a378d27c597f7b6df87db4666337dd4babc60d70f27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.465Z",
+    "glossaryVersion": "0"
+  }
+}

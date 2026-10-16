@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e5a80c538ab3b8ee5dbfa254a33420c850f64fb038fa4db0ff48802582166292",
+    "sourceTechnicalHash": "f817356aac3ad0ca633b8d50c161e43b0cae056429e6c5c72f92c175efb90e52",
+    "targetHash": "47d323e77da6ae44f22a122dc7f5f53b6875b3983c7a0612cf5dcb2158501e9d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.626Z",
+    "glossaryVersion": "0"
+  }
+}

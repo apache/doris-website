@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "1f437bd64af128c74a5ee9392ac43fade5270e94f4a302215b4f480a77191406",
+    "sourceTechnicalHash": "05a16cc6e14f760aec212f7a13ca57307d5106e5d32c684b70ee59d10acf40c2",
+    "targetHash": "e5989eba369304f4082555442b51a4730c59a5da43888006933ef945b0c41624",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.116Z",
+    "glossaryVersion": "0"
+  }
+}

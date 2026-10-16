@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/vectorized-execution",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/vectorized-execution.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/vectorized-execution.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ca3716ec1d89b1f801a2d2ea49574b798512ff43c5ec25762e4d76be9c163de0",
+    "sourceTechnicalHash": "3f6c13b6d31b397a9c379dfc79fed49b1adf40969557a640d2ccc24e83933ddb",
+    "targetHash": "66412238f8315f4f34ad45412f7fe3d9db040df7db16467d9aaafed4103b455a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.615Z",
+    "glossaryVersion": "0"
+  }
+}

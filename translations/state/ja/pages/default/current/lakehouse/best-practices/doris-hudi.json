@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-hudi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-hudi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-hudi.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8880a294e357497d667a5eddc6e8e6ecc251a4a4436de28060ded6970f383449",
+    "sourceTechnicalHash": "c6d6df2ff63026d70f19bfeb7525282f353ab16902d2f9d080aa2da1c12bffb1",
+    "targetHash": "b763ea45995094052989348b4496df964703b2d03ac2ac5f6c54cef75ce0e4fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

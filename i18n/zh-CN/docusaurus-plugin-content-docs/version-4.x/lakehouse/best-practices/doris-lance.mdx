@@ -248,7 +248,7 @@ lance_metadata_cache_size_bytes = 1073741824
 重启该 BE 后生效。应分别为每个 BE 做预算；这些是 BE 配置参数，不是 Catalog 属性或 SQL 会话变量。
 
 1. 使用有代表性的查询及并发预热，覆盖不同查询向量、过滤条件和表。仅重复同一个查询向量会低估多样化工作负载的工作集。
-2. 对比 `doris_be_lance_session_index_cache_usage_bytes` 与 `doris_be_lance_session_index_cache_capacity_bytes`、时间窗口内 `hits_total`/`misses_total` 的增量，以及每次查询的 `LanceIndexPartitionCacheMissLoads`。使用量接近容量且持续未命中，可能意味着缓存反复淘汰；新分区、新索引版本或切换 BE 也会造成未命中。只有确认存在复用需求且内存允许时才增大容量。
+2. 对比 `doris_be_lance_session_index_cache_usage_bytes` 与 `doris_be_lance_session_index_cache_capacity_bytes`，并观察时间窗口内 `hits_total`/`misses_total` 的增量。对每次已完成的查询，还应查看 `LanceIndex` 下的 `LanceIndexCacheHits`、`LanceIndexCacheMisses`、`LanceIndexObjectLoads` 和 `LanceIndexComponentsLoaded`。查询缓存查询次数与部件加载数范围不同，均不能替代 BE 全局指标增量。使用量接近容量且持续未命中可能意味着缓存反复淘汰，但新分区、新索引版本、切换 BE 和不保留内容的流式路径也会造成未命中。只有确认存在复用需求且内存允许时才增大容量。
 3. BE 内存预算允许时，Metadata Cache 可从默认的 1 GiB 开始，根据其 `usage_bytes` 和命中/未命中指标调整。文件/Fragment 数量、Schema/页面元信息、删除信息和 row ID 映射决定其需求，不能按向量索引大小的固定比例配置。BE Metadata Cache 与 FE 表访问缓存相互独立。
 4. 增大任何一个缓存前，都应在目标并发下检查 BE 进程内存和查询峰值。缓存命中率高但查询仍慢，可能是评分、Prefilter、解码或回表开销，增大缓存不一定有效。
 5. 单独为精排和输出列回表等重复数据文件读取配置 `lance_data_cache_disk_capacity_bytes`。增大它不会扩大 Index Cache，也不能弥补索引缓存未命中：索引文件绕过这个磁盘数据缓存。`lance_data_cache_read_block_size_bytes` 建议先保持默认的 1 MiB，再根据有效读取量与读放大调整。
@@ -278,7 +278,7 @@ lance_metadata_cache_size_bytes = 1073741824
 
 Index Cache 和 Metadata Cache 容量独立：元数据条目不会直接淘汰索引条目，增大其中一个也不会扩大另一个。但两者仍消耗同一个 BE 进程的内存。磁盘数据缓存是第三份预算，且不缓存索引文件。同一 BE 上拆分 Catalog 不能隔离 Index Cache；需要隔离的工作负载，应使用部署环境支持的独立 BE 资源和路由能力。
 
-排查相互抢占时，可先预热一类查询，记录延迟和缓存指标增量；再运行另一类查询，随后重复第一类查询。在索引版本和 BE 分配具有可比性的前提下，如果接近容量时重新出现未命中或加载，说明可能存在淘汰压力。Session 命中/未命中指标汇总了多种工作负载，需要结合查询 Profile 分析。预热所有索引本身也可能淘汰希望保留的工作集。应优先使用有代表性的混合工作负载预热，仅在有复用需求且内存允许时增大容量。
+排查相互抢占时，可先预热一类查询，记录延迟和缓存指标增量；再运行另一类查询，随后重复第一类查询。在索引版本和 BE 分配具有可比性的前提下，如果接近容量时重新出现未命中或加载，说明可能存在淘汰压力。Session 命中/未命中指标汇总了多种工作负载，需要结合查询级 `LanceIndexCacheHits`/`LanceIndexCacheMisses`、`LanceIndexComponentsLoaded` 和 `LanceIOReadBytes` 分析。部件加载数不是未命中数，执行读取字节也不是实测远端流量。预热所有索引本身也可能淘汰希望保留的工作集。应优先使用有代表性的混合工作负载预热，仅在有复用需求且内存允许时增大容量。
 
 ## 5. 选择 Index Segment 粒度 {#index-segment-granularity}
 
@@ -325,4 +325,4 @@ Segment 数应与每个 Segment 的 IVF `num_partitions`、查询 `nprobes` 一�
 | 缓存未满但进程内存很高 | 并发查询分配、正在加载的数据、仍被引用的对象和其他 BE 工作负载 | 根据测得的峰值降低并发或缓存预算；缓存容量不是进程内存上限 |
 | 数据文件 I/O 持续较高 | 磁盘缓存计数、复用情况、读取块大小和输出列 | 调整数据缓存预算或读取粒度；索引文件不使用这个磁盘数据缓存 |
 
-使用[查看缓存效果](../catalogs/lance-catalog.mdx#查看缓存效果)中的 Profile 计数器和 BE 指标。仅凭汇总命中率无法判断哪个索引被淘汰，或哪个阶段占主要耗时。每次改变一个配置，记录每组对比的工作负载、索引版本、BE 分配、延迟、吞吐、召回率和峰值内存。
+使用[查询 Profile 参考](lance-query-profile.md)区分 FE 元数据/规划、BE 索引/扫描工作和第二阶段 Row ID 回表；缓存计数与 BE 全局指标见[查看缓存效果](../catalogs/lance-catalog.mdx#查看缓存效果)。仅凭汇总命中率无法判断哪个索引被淘汰，或哪个阶段占主要耗时。每次改变一个配置，记录每组对比的工作负载、索引版本、BE 分配、延迟、吞吐、召回率和峰值内存。

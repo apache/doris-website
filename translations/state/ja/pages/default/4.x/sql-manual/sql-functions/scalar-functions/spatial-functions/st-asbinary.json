@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "d6d6eab7775735ade09988a5340d5e416cb2362dba64eaab3328b2796ee12ece",
+    "sourceTechnicalHash": "fc5b0ac0cc7fb8b8bbed096bdb96474c2161f5bca76f927dc91a6cb6f0817eee",
+    "targetHash": "19d27f97038f09b37cf29505f6e909da0897a25cda87deea81d79dc47611e438",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.920Z",
+    "glossaryVersion": "0"
+  }
+}

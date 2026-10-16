@@ -1,0 +1,61 @@
+---
+{
+    "title": "クラスター管理",
+    "language": "ja",
+    "description": "Apache Doris クラスターの管理ガイド。アップグレード、エラスティックスケーリング、FQDN、ロードバランシング、サービスの自動起動、レプリカ管理を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# クラスター管理
+
+この章では、バージョンのアップグレード、容量の変更、ネットワークトポロジー、レプリカの保守など、本番環境で Apache Doris クラスターを正常に稼働させるための日常的な運用について説明します。
+
+## クラスターのライフサイクル
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="クラスターのアップグレード"
+    description="バージョンの互換性に関するルール、メタデータの互換性テスト、FE/BE のアップグレード手順を扱うローリングアップグレードガイド"
+    link="upgrade"
+/>
+
+<GettingStartedCard
+    title="エラスティックスケーリング"
+    description="業務を中断せずに FE/BE ノードをオンラインで追加または削除する方法。縮小時には DROP または DECOMMISSION を使用"
+    link="elastic-expansion"
+/>
+</div>
+
+## トポロジーとアクセス
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FQDN"
+    description="新規クラスター、既存クラスターの移行、Kubernetes 環境で FQDN（完全修飾ドメイン名）モードを有効にする方法"
+    link="fqdn"
+/>
+
+<GettingStartedCard
+    title="FE のロードバランシング"
+    description="複数の FE を配置した環境向けのロードバランシング方法（JDBC、Nginx、HAProxy、ProxySQL）と、Proxy Protocol によるクライアント IP の転送"
+    link="load-balancing"
+/>
+</div>
+
+## サービスの可用性とレプリカ
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="サービスの自動起動"
+    description="Systemd または Supervisor を使用して、FE/BE/Broker の OS 起動時の自動起動と自動再起動を設定する方法"
+    link="../maint-monitor/automatic-service-start"
+/>
+
+<GettingStartedCard
+    title="データレプリカの管理"
+    description="タブレットレプリカのバランシングと修復のスケジューリング戦略、およびレプリカの確認と操作に使用するコマンド"
+    link="../maint-monitor/tablet-repair-and-balance"
+/>
+</div>

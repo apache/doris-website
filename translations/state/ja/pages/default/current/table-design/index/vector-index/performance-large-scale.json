@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/performance-large-scale",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/performance-large-scale.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/vector-index/performance-large-scale.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "8361f4d44a0d0462bead8c32631348cf3a1a1d3f940c9fc10c3bc08619b947f1",
+    "sourceTechnicalHash": "a4cfce1e1cbc8d6582f5b6fc0ffa73ae106d941b1400ab5ea24d71fef7210a04",
+    "targetHash": "a399a54624fe84f3e440bd85de27f345338fd3a7ce59e3ba5dd605f6cf605a8c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:29:57.402Z",
+    "glossaryVersion": "0"
+  }
+}

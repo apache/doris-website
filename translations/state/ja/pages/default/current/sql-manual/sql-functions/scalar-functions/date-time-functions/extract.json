@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/extract",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/extract.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "72c9e3f0b34f10e035f60ead5bf8b529591a8ee82003dc8f6217ea75a633902c",
+    "sourceTechnicalHash": "69f2551bdb9ab50746f748ab6c2ac5379dc9173da26b92473578a92c5fb5fc13",
+    "targetHash": "c3627b8dfb1ae1762ccff75e38bf4550391c292612e4d019336013080dfbd1eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.810Z",
+    "glossaryVersion": "0"
+  }
+}

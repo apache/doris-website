@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/recycler",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/recycler.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/recycler.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+    "sourceTechnicalHash": "9587c7ac742347a701c413f9c3bde0fe0e035e2d8f9a44340dd6ec6aa2597c03",
+    "targetHash": "e0e2227751a6f6ea3078d65308dfae1db60fc8c8c064e934e8ac99df21a5fc3f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

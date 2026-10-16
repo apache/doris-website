@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/iceberg-rest",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/iceberg-rest.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/metastores/iceberg-rest.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3157eeb1d90e5511d8fed90b75354f54a1eeb674c008347052778117872fc6cb",
+    "sourceTechnicalHash": "108adeaf7687377151392b18d7c4b66689eb60e7342a6f2b1cfd4785841cb54b",
+    "targetHash": "a18d4b1101fc25270e55d4efa7c6019f1c2c22844aa7ad4b18a047397809e31a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.866Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-min",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-min.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-min.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "36ed5d9b770cd78621c55d9142e98778fc69e4b530ff229895030af343b48576",
+    "sourceTechnicalHash": "7422b6959a0a153848809e0907533e84e49e4e48055af6c5104bb274b6eecbfc",
+    "targetHash": "b74bd5445ec13396066b3a6cf639ef767464ae8cbb30bfb8363e5a0850aae460",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.330Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5676ad810d9c8ecf02635b90656c43485868295cdcc6d51e42ead972f3172c7e",
+    "sourceTechnicalHash": "e12bd03c19bbfdefcd4cf75776107a2f8fdde7fbc3245b2b1c2d87df5cf2060f",
+    "targetHash": "1065fa797a21068f5bfe0e6ceb34570531e9a481c5530c3dd2927572b48fdd86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.700Z",
+    "glossaryVersion": "0"
+  }
+}

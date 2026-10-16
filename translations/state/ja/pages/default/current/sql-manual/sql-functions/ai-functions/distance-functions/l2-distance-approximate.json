@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "639bcebe1324b51c839b0008c6d3629c108a6a150e0f54dd7ecdbeb93d58da5e",
+    "sourceTechnicalHash": "183580802f54353e915da00a856727fc775598291d8013b178433c4d99ee2048",
+    "targetHash": "9fb24dbfae77681b343be68ff6748e81265d5d534d8bb8b4d8f8511f759ed905",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.582Z",
+    "glossaryVersion": "0"
+  }
+}

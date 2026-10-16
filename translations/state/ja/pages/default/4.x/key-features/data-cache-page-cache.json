@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/data-cache-page-cache",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/data-cache-page-cache.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/data-cache-page-cache.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "0fef2c7d90e18062053be7194bcb6e826184003309f55f3001729db9823ee596",
+    "sourceTechnicalHash": "cbe7c7b504f3ba689a77ae492413b42bb0e2d561481105f112da765680925b7c",
+    "targetHash": "dfa61e0c8d9daa1035bcbd00cea8d305917daf67f11c8be976426d3d809783cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:36:53.451Z",
+    "glossaryVersion": "0"
+  }
+}

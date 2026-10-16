@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/seconds-add.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "f8a65d18a2dd501139543287a229242e85a27c1d6e258af48fb7415834d45c69",
+    "sourceTechnicalHash": "9f14a713a893409adf8deff035a33b049e05fb2a70c26071b977a0b71eba414f",
+    "targetHash": "2b64e092f4b3d0bcc8ddfecf9b96e8d17ad14978487f854e05bf65c3990e4c00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.918Z",
+    "glossaryVersion": "0"
+  }
+}

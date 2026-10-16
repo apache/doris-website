@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/quicksight",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/quicksight.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/quicksight.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2020228ce200a69554b5e197cd262b6acfa43347630c401cb20aa360727ca57d",
+    "sourceTechnicalHash": "289f1fd617f6c6c015112332fdc014e27829f9769040ae6e4a53ccac7136ab85",
+    "targetHash": "acd7bee27b25c27d18bb985271ab1269383adf001d0f8fb15a578185c583b88f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

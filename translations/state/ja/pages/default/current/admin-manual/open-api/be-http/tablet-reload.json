@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/tablet-reload",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/tablet-reload.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/tablet-reload.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c50d2819dc5cee00a358b1030df0f547697ae286258e7e1ae12ad893912615bb",
+    "sourceTechnicalHash": "7234e21833e74d0548cc694d7f364f7f64ae336f7744c7304a040f5fb1048b0d",
+    "targetHash": "6ffb234b691b5f53f29b08b9d2586ffe578effe229d0b2b89399432d163ff2f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

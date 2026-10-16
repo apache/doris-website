@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-classify",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-classify.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/ai-classify.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "02e55a6c5ac0765454280463c751930feba24aae5298e500f10df2d3a8186798",
+    "sourceTechnicalHash": "4afd998ecbb2deb8ab008f32d5e74a34891309c3bf3c973befd4101582a9fee7",
+    "targetHash": "d809edee070e6fd20f281b1f403be47c9509b2f7f91d37d1a3e54fa5b4b21bef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

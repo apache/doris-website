@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/truncate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/truncate.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5db4080137542ef7609b68e420ddd9251a60d46934fb694146cd87d5999004b2",
+    "sourceTechnicalHash": "1e73277cef99dedb3573a42ff819e48daeef8245c92fe5be90949c4750aece93",
+    "targetHash": "f015bfe7343d97f87b5ffec3eb816af8876bf7b46985248d554c96496258fefb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

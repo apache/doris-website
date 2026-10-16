@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "196b3b174e3e5ec43e6e2b14bda1fd239dc337ae263a9a4caffd82738a42baa2",
+    "sourceTechnicalHash": "3064ca87b1d0d84b07a1bda1a515c7b7388f013b09d74347c07cfc222d1bb539",
+    "targetHash": "52aca33b901ce417c4227ce7ba0f761db664c66407babdb7daaaef7eb15660a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.698Z",
+    "glossaryVersion": "0"
+  }
+}

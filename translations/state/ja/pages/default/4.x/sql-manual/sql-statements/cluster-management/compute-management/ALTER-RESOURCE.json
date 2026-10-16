@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "5734be5af146436dca0457e25274d8ad05f5e88b62f3bec14c2fbd5c3320c3bd",
+    "sourceTechnicalHash": "2f352daa1e588ba8d99cef42ee5bd98efd764cc5937cd2d25ef0e35505c789e5",
+    "targetHash": "71652abe4019dd02f317e8bbf9a03d213b9b51e1115cd468853676f2448bf018",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.351Z",
+    "glossaryVersion": "0"
+  }
+}

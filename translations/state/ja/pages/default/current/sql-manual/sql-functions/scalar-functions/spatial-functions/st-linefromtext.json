@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "6bb8c35859a6247c9ad2de4a56566a7b90740b140740b9fc786e26db55643cc7",
+    "sourceTechnicalHash": "261aa1b7b00e1e565660ceb4b7b85a84c2c195f3ec4138cf036ad26561dbce17",
+    "targetHash": "2784d4a80e8953daea5e05fda8629e04258b9137a1de073c6d458fb93a02f2e3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.184Z",
+    "glossaryVersion": "0"
+  }
+}

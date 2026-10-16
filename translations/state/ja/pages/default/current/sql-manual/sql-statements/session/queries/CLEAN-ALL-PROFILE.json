@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "771273be0b9dc412a9c2431e69f74456e429b2cb9ebebc338c207a1cfb930f36",
+    "sourceTechnicalHash": "cfb5896af53f82cf73dd69759b65b4c8039c08769a4a35a590de318ca400e23e",
+    "targetHash": "74d2277cdac3a2e28443c1f44e8a567fe17defe8639c46a2532d91d2294335fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

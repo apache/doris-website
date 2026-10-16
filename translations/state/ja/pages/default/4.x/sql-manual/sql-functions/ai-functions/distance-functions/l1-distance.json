@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+    "sourceTechnicalHash": "46960c160bce347f907160c1e74fbfb7337d4c8ba7995cd3aaee589df6948c3e",
+    "targetHash": "4df862ceaddffcc920c74b88f8b1e9d7cd04b887468cb0c5f0e648fcde96742e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

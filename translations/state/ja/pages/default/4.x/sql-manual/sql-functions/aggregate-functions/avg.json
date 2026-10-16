@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/avg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/avg.md",
+    "sourceCommit": "16f5b30d55a55ef6fbd9ced7b028236140037ac8",
+    "sourceHash": "dff337c7e23584814473da5d5eb47f4809f8219666327e76f8cb72690024b864",
+    "sourceTechnicalHash": "a020263865a3f66655d994e4395155104be627aa6bb3a873c277563618122028",
+    "targetHash": "8777d2130cfed61e334fa77655d66a25527e8c5f278a7028cdcb16f1053870fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T19:30:24.920Z",
+    "glossaryVersion": "0"
+  }
+}

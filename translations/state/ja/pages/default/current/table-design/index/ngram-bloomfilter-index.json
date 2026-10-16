@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/ngram-bloomfilter-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/ngram-bloomfilter-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/ngram-bloomfilter-index.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "02238d2ae99d46939d108e17e8a3199ab266a159a8bce6337a74057d790106e9",
+    "sourceTechnicalHash": "88595fd2217f6ebb7958ea9ad1063af643e48cc4a62bf1e1c8a66cde5279aa12",
+    "targetHash": "efc63bb372f51c0beb12fb099bad1373872ec57b70cae2f468b6a79e3780489f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:05:28.127Z",
+    "glossaryVersion": "0"
+  }
+}

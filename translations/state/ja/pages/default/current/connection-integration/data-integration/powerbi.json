@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/powerbi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/powerbi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/powerbi.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "1c2866875301b91f7cddca42d59267f5332022fba5163dd5ef78a9e1555bdaba",
+    "sourceTechnicalHash": "1a4eaa88c7ed750efdf0a05f2b5aa1c22b956a5b643b1f1fd47d109902c4fc44",
+    "targetHash": "b4d2827bea253caa1803b6dac0e2758c41364f748b04df9c74cc64d10fa85a25",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.816Z",
+    "glossaryVersion": "0"
+  }
+}

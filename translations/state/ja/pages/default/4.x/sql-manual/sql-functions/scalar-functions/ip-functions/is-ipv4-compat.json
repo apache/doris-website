@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-compat.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "6dda1ac60066d767b20564fa9c73ac2a24db176381bb85f5af71bfc3d7fc91f1",
+    "sourceTechnicalHash": "4190d4922eff043e08fbb2aed672cfcefb3a3f94aace5d5aa6775facdde5a0ad",
+    "targetHash": "c7b38daec1e4fd5a323c88d43da7c5991e12d6d41e2ef6db8c4961522c97f235",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.978Z",
+    "glossaryVersion": "0"
+  }
+}

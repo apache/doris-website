@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/catalogs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/catalogs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/catalogs.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2ffdfb931062a6f0b0a22903dc51baa25d7b689b0408ed637ce49fff7e5eb81c",
+    "sourceTechnicalHash": "a0c793382edbc5e25099b64b9f8ba31f38cc66ee1fca0cb6a4669434d3b22bd5",
+    "targetHash": "08ca512d12d1ed7408ec046daf803a77169932b6f0c78f82c0854a1684f3b849",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.706Z",
+    "glossaryVersion": "0"
+  }
+}

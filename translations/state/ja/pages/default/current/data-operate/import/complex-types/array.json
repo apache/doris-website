@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/complex-types/array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/complex-types/array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/array.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "023a43cacfe9a14fa5dadc52d990becb98dd9f8d05e491280b06447cd312d0d1",
+    "sourceTechnicalHash": "d362249e8a6b314d477c13626989d71c1ae080f8adb2ab7c1319e0339a542639",
+    "targetHash": "d8bde09825dcefbf6aa84f0fd8f6286a3a4e4d356b0848af9ebbeabc23c3fe3f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T15:42:24.383Z",
+    "glossaryVersion": "0"
+  }
+}

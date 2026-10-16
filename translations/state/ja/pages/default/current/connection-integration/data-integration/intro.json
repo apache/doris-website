@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/intro.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "0c4f095518f84e9e4233ff6964d20fa38b7ae9c27578e4d99e692ad398eac7fa",
+    "sourceTechnicalHash": "ea02c318350605de49cc99b7f2c833d76879229621fa4a5a93a227910766c5e1",
+    "targetHash": "5739901bf5a0bed14ce0ece13447c8690c92028b6305556008162a1bbf13f1d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:26:49.465Z",
+    "glossaryVersion": "0"
+  }
+}

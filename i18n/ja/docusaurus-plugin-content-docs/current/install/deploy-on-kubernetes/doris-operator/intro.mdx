@@ -1,0 +1,43 @@
+---
+{
+    "title": "Doris Operator の概念と機能",
+    "language": "ja",
+    "description": "Doris Operator の概念、アーキテクチャ、リソースモデル、ライフサイクル、トラブルシューティングを紹介します。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris Operator は、Kubernetes 上で Apache Doris をデプロイ、管理するためのコントロールプレーンです。まず以下の文書を読み、Operator の管理対象、動作の仕組み、リソースの状態から問題を調べる方法を確認してください。
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Doris Operator の概要"
+    description="Doris Operator の管理対象、用途、機能の範囲を説明します"
+    link="doris-operator-overview"
+/>
+
+<GettingStartedCard
+    title="アーキテクチャ"
+    description="コントロールプレーン、データプレーン、Reconcile モデルを説明します"
+    link="architecture"
+/>
+
+<GettingStartedCard
+    title="リソースモデル"
+    description="Doris のカスタムリソースと StatefulSet、Service、PVC などの対応関係を説明します"
+    link="resource-model"
+/>
+
+<GettingStartedCard
+    title="ライフサイクル管理"
+    description="作成、スケーリング、設定変更、削除時の動作を説明します"
+    link="lifecycle"
+/>
+
+<GettingStartedCard
+    title="状態とトラブルシューティング"
+    description="状態フィールドの確認方法と推奨される問題調査手順を説明します"
+    link="status-and-troubleshooting"
+/>
+</div>

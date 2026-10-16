@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/observability/intro.mdx",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5333aa7bff9666ff1a7f23bf6bc310342f5ea9f9f378986eb0b61654d2188b7a",
+    "sourceTechnicalHash": "6e33a766375fc39997a5e71a43bbe87c73637b1ff4bbc9b1059fde2f45e4b038",
+    "targetHash": "585bca291c03eb07d69a9ba98f9510e5677ca44d7338b233c76399912208dba6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.868Z",
+    "glossaryVersion": "0"
+  }
+}

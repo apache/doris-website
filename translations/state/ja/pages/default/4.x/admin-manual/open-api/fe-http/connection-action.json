@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/connection-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/connection-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/connection-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "c6a42cd93536ad377f6aa680a0c0f91dc7be14a32f4443f964300d7938b9d860",
+    "sourceTechnicalHash": "472210ef312f89fecb8caa9dc249c41b474fcb1642abb5757106b0af9bf343d2",
+    "targetHash": "c4c9c3a93e5ce5180234bb7fbe1ce737bf8c1b1362213d1ca12a1df3fdaa926f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.551Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,10 +1,11 @@
 ---
 {
-    "title": "Apache Doris dbt Adapter",
+    "title": "dbt Adapter",
+    "sidebar_label": "dbt Adapter",
     "language": "zh-CN",
     "toc_min_heading_level": 2,
     "toc_max_heading_level": 3,
-    "description": "安装和配置 dbt-for-apache-doris，连接 Apache Doris，并构建增量模型、Source Freshness、异步物化视图及其他 dbt 数据转换功能。",
+    "description": "安装 dbt-for-apache-doris 1.1.1，配置模型、External Catalog 数据源、Iceberg 目标表和异步物化视图，并了解版本限制与常见故障处理。",
     "keywords": [
         "Apache Doris dbt",
         "dbt Doris Adapter",
@@ -28,7 +29,7 @@
 [dbt](https://docs.getdbt.com/docs/introduction) 用于管理 ELT（Extract、Load、Transform）
 流程中的转换环节。`dbt-for-apache-doris` Adapter 会将 dbt Model
 编译为 Doris SQL，并通过 Doris Frontend（FE）的 MySQL Query Port 执行建表、数据转换、
-测试和文档生成。原始数据需要提前写入 Doris；Adapter 不负责采集或同步源数据。
+测试和文档生成。原始数据需要已能通过 Doris 查询，可以来自 Internal Catalog 内表或已配置的 External Catalog；Adapter 不负责采集或同步源数据。
 
 :::caution
 
@@ -44,11 +45,13 @@
 | 项目 | 要求 |
 | --- | --- |
 | Python | 3.10 或更高版本 |
+| dbt Core | 1.12.x（安装 Adapter 时自动安装） |
 
 ## 已发布版本
 
 | 版本 |
 | --- |
+| [1.1.1](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.1) |
 | [1.1.0](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) |
 
 <!-- 知识类型: 操作步骤 -->
@@ -56,7 +59,7 @@
 
 ## 安装 dbt-for-apache-doris
 
-以下命令以已发布的 [`v1.1.0`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) 为安装示例。安装其他版本时，请替换 `pip` 依赖中的版本号。
+以下命令以已发布的 [`v1.1.1`](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.1) 为安装示例。安装其他版本时，请替换 `pip` 依赖中的版本号。
 
 建议在独立的 Python 虚拟环境中从 PyPI 安装 Adapter：
 
@@ -64,7 +67,7 @@
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install "dbt-for-apache-doris==1.1.0"
+python -m pip install "dbt-for-apache-doris==1.1.1"
 dbt --version
 ```
 
@@ -74,11 +77,11 @@ Windows PowerShell 使用以下命令：
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install "dbt-for-apache-doris==1.1.0"
+python -m pip install "dbt-for-apache-doris==1.1.1"
 dbt --version
 ```
 
-在本示例中，输出的 `Plugins` 列表中应包含 `doris: 1.1.0`。dbt Core 和 MySQL Connector/Python 会作为依赖项自动安装。
+在本示例中，输出的 `Plugins` 列表中应包含 `doris: 1.1.1`。dbt Core 和 MySQL Connector/Python 会作为依赖项自动安装。
 
 <!-- 知识类型: 配置参数 / 操作步骤 -->
 <!-- 适用场景: Doris Profile 配置 / 连接验证 / 跨 Database 读取 -->
@@ -119,24 +122,9 @@ doris_demo:
 | `password` | 建议通过环境变量传入 | 省略时为空字符串 |
 | `schema` | 必须填写目标 Doris Database 名称 | `dbt init` 的提示默认值为 `dbt`；底层凭据本身的默认值为 `None` |
 | `threads` | 按 FE 和任务负载设置 | `dbt init` 的提示默认值为 `1` |
-| `database` | 不要在 Profile 中配置 | 这是 dbt 通用凭据字段；如果提供，当前实现要求它与 `schema` 完全相同 |
+| `database` | Internal Catalog 省略；External Catalog 目标填写已有 Doris Catalog 名称 | 在 v1.1.1 中映射为 Doris Catalog |
 
-Adapter 将 dbt Schema 映射为 Doris Database。目标 Database 不存在时，
-Adapter 会尝试创建它，因此执行用户需要相应权限。执行用户还需要读取源表，以及在
-目标 Database 中创建、修改、删除和写入对象的权限。
-
-这里的 `database` 不是 Doris Catalog。它只是 dbt 通用的
-`database.schema.identifier` 命名模型遗留到 Adapter 的字段；Doris Internal
-Catalog 中只需要 `database.table` 两层，因此 Profile 使用 `schema` 表示 Doris
-Database，并省略 `database`。Source 资源中的 `database` 是另一种用法：当前
-Adapter 会把它作为 Doris Database 覆盖 `schema`，用于跨 Database 读取。Profile
-和标准 `source()` 当前不能同时表示 Doris Catalog 与 Database 两个层级。
-
-:::caution
-
-当前不支持 External Catalog 的 Catalog、Database、Table 三段式命名空间。
-
-:::
+v1.1.1 将 dbt 的 `database.schema.identifier` 映射为 Doris 的 `catalog.database.table`。使用 Internal Catalog 时，省略 `database`，并将 `schema` 设置为 Doris Database。写入 External Catalog 时，将 `database` 设置为已有 Doris Catalog，将 `schema` 设置为该 Catalog 中的 Database。如果目标 Database 不存在且 Catalog 支持创建，Adapter 会尝试创建。执行 dbt 的用户需要读取源数据，以及创建、修改、删除和写入目标对象的权限。External Catalog 的写入能力还取决于 Doris Connector。
 
 确保 `dbt_project.yml` 中的 `profile` 与 `profiles.yml` 顶层名称一致：
 
@@ -267,10 +255,54 @@ sources:
       - name: payments
 ```
 
-为兼容已有 dbt 项目，也可以只设置 `database: finance_raw`，或同时把 `database` 和
-`schema` 设置为相同值。对于 Source，若两者不同，当前 Adapter 会采用 `database`
-作为 Doris Database；这与 Profile 中必须保持两者相同的连接校验不同。为了避免
-歧义，新项目建议统一使用 `schema`。
+在 v1.1.1 中，Source 的 `database` 表示 Doris Catalog。读取 Internal Catalog 中其他 Database 的数据时，只需按上例设置 `schema`。如果旧项目在 v1.1.0 中使用 `database: finance_raw` 表示跨 Database Source，升级前应将该值移到 `schema`。
+
+## v1.1.1 中的 External Catalog
+
+Adapter 可以读取 External Catalog 中的 Source，并通过 `dbt docs generate` 获取表和字段元数据。先在 Doris 中创建 Catalog，再把 Catalog 名称写入 Source 的 `database` 字段：
+
+```yaml
+sources:
+  - name: lakehouse
+    database: hive_catalog
+    schema: ods
+    tables:
+      - name: orders
+```
+
+`{{ source('lakehouse', 'orders') }}` 对应 `hive_catalog.ods.orders`。其中 `schema` 表示该 Catalog 中的 Database。Adapter 支持三段式对象名，具体 DDL 和写入能力仍由 Doris Catalog Connector 决定。
+
+要创建 Iceberg 目标表，先[配置可写的 Iceberg Catalog](../../lakehouse/catalogs/iceberg-catalog)，并在现有 Profile Output 中设置：
+
+```yaml
+database: iceberg_catalog
+schema: analytics
+```
+
+创建 `models/iceberg_sample.sql`：
+
+```sql
+{{ config(materialized='table', engine='iceberg') }}
+
+select cast(1 as int) as id
+```
+
+显式转换为 `INT`，避免常量被推断为 Iceberg 不支持的 `TINYINT` 字段类型。
+
+执行 `dbt run --select iceberg_sample`，创建 `iceberg_catalog.analytics.iceberg_sample`。Catalog 必须已存在；Database 必须已存在或允许 dbt 创建，目标需要可写。`engine='iceberg'` 会生成显式 Engine 子句；省略 `engine` 时，Doris 会根据目标 Catalog 推断。Catalog 推断已在 Doris 4.1.3 验证；更早的 Doris 版本可能需要显式设置 Engine。
+
+| Iceberg 目标 | v1.1.1 行为 |
+| --- | --- |
+| `table` | 创建 Iceberg 表；再次运行时通过备份和重命名替换目标 |
+| `incremental` | 支持下文介绍的 `append`、`merge`、`insert_overwrite` 和 `microbatch` |
+| Seed 和 Snapshot | 支持；Snapshot 发布和 Seed 完整刷新使用备份和重命名。非分区表常规重载使用 INSERT OVERWRITE；分区表重载使用原生 MERGE，需要 V2+。V1 分区 Seed 应使用 `dbt seed --full-refresh` |
+| `view` 和 `materialized_view` | 目标必须位于 Internal Catalog；Internal Catalog 中的 View 和 MV 可以查询 External Catalog Source |
+
+Iceberg 的 `merge`、`microbatch` 和分区 Seed 常规重载需要支持原生 Iceberg `MERGE INTO` 的 Doris 版本，以及 Iceberg V2 或更高版本的表。这些路径已在 Doris 4.1.3 验证；[Doris 文档将 Iceberg MERGE 标记为自 4.1.0 起的实验功能](../../lakehouse/catalogs/iceberg-catalog#merge-into)。External Catalog 表的替换不是原子操作：两次重命名之间，目标表名会短暂不可用；失败时旧表可能保留在备份名称下。生产使用前，应在隔离项目中验证 Doris 版本、Catalog Connector 和故障恢复流程。
+
+Adapter 会在写入 Table、View、Incremental 或 MV 目标前拒绝 Model 或字段上的 `constraints` 声明。Model Contract 仍会校验字段名称和类型。`not_null` 等 `data_tests` 可在写入后校验数据，但不会创建数据库约束。
+
+[五个可运行的 Doris Demo](https://github.com/velodb/dbt-for-apache-doris/tree/3fb9cc75f9dcdd756b472847728bbdf42fb3b128/examples/doris-demos) 展示了 Model、测试、跨 Database Source、增量处理、Snapshot 和异步物化视图。Demo 环境默认安装 `dbt-for-apache-doris==1.1.1`。
 
 <!-- 知识类型: 能力定义 / 配置参数 / 架构选型决策 -->
 <!-- 适用场景: Materialization 选型 / 增量加工 / 物化视图 -->
@@ -281,10 +313,10 @@ sources:
 
 | Materialization | Doris 对象或行为 | 适用场景 |
 | --- | --- | --- |
-| `view` | Doris View | 轻量转换、始终读取最新源数据 |
-| `table` | 每次运行完整重建的 Doris Duplicate Key Table | 结果规模可控、需要稳定查询性能 |
+| `view` | Internal Catalog 中的 Doris View | 轻量转换、始终读取最新源数据 |
+| `table` | 每次运行完整重建的 Internal Catalog Duplicate Key 表或可写 Iceberg 表 | 结果规模可控、需要稳定查询性能 |
 | `incremental` | 按策略追加、Upsert 或覆盖本批数据 | 大表增量加工 |
-| `materialized_view` | Doris 异步物化视图 | 由 Doris 管理刷新和透明改写 |
+| `materialized_view` | Internal Catalog 中的 Doris 异步物化视图 | 由 Doris 管理刷新和透明改写 |
 | `ephemeral` | 由 dbt 编译为下游 Model 中的公共表表达式（CTE） | 只复用 SQL、不创建 Doris 对象 |
 
 Seed 和 Snapshot 也可创建 Doris Table。Adapter 当前不包含自定义 `partition`
@@ -331,7 +363,7 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-Table Materialization 创建 Duplicate Key 表，后续运行会完整替换目标。Table Model 可配置以下建表参数：
+对于 Internal Catalog 目标，Table Materialization 创建 Duplicate Key 表，后续运行会完整替换目标。Iceberg 目标不使用 Doris OLAP Key 或默认分桶。Table Model 可配置以下建表参数：
 
 | 配置项 | 类型和默认值 | 说明 |
 | --- | --- | --- |
@@ -346,7 +378,7 @@ Table Materialization 创建 Duplicate Key 表，后续运行会完整替换目�
 
 `duplicate_key`、分区列和分桶列必须出现在 Model 输出中，并满足 Doris 建表规则。
 Adapter 会将 `partition_by_init` 和 `properties` 生成到 `CREATE TABLE` 语句中；分区定义、
-属性名称和取值是否合法，由 Doris 校验。
+属性名称和取值是否合法，由 Doris 校验。`duplicate_key`、`distributed_by` 等 OLAP 专用配置不适用于 Iceberg 目标。
 
 普通 Table Model 当前不支持配置 Aggregate Key 或独立 Unique Key；Unique Key Upsert 使用 Incremental `merge`。
 
@@ -394,23 +426,22 @@ where updated_at >= (
 
 | `incremental_strategy` | 目标表和写入语义 | 主要配置 |
 | --- | --- | --- |
-| `append` | 向 Duplicate Key 表追加数据，不去重 | 不需要 `unique_key` |
-| `merge` | 向 Merge-on-Write 或 Merge-on-Read Unique Key 表执行全行 `INSERT INTO` Upsert | 必须设置 `unique_key` |
-| `insert_overwrite` | 使用 Doris `INSERT OVERWRITE` 覆盖整表、指定分区或本批涉及的分区 | 不能设置 `unique_key`；可设置 `overwrite_partitions` |
-| `microbatch` | 按 dbt Core 的 UTC 时间窗口逐批覆盖一个精确的 Doris RANGE 分区 | 设置 `event_time`、`batch_size` 和 `begin`；不能设置 `unique_key` |
+| `append` | 对 OLAP Duplicate Key 表或可写 Iceberg 表执行 `INSERT INTO` | 不设置 `unique_key` |
+| `merge` | OLAP Unique Key 表使用全行 `INSERT INTO` Upsert；Iceberg 表使用原生 `MERGE INTO` | 必须设置 `unique_key`；Iceberg 还要求原生 MERGE 能力和 V2+ 表 |
+| `insert_overwrite` | OLAP 可覆盖整表、指定分区或动态分区；Iceberg 可覆盖整表、动态分区或静态分区 | 不允许 `unique_key`；Iceberg 静态范围使用字段和值的映射 |
+| `microbatch` | OLAP 覆盖精确 RANGE 分区；Iceberg 使用原生 MERGE 替换一个 UTC 时间窗口 | 设置 `event_time`、`batch_size` 和 `begin`；Iceberg 要求原生 MERGE 和 V2+ |
 
 未设置 `incremental_strategy` 时，有 `unique_key` 使用 `merge`，否则使用
 `append`。Adapter 支持 `ignore`、`fail`、`append_new_columns` 和
 `sync_all_columns` 四种 `on_schema_change` 策略。
 
 `delete+insert` 和 `delete_insert` 已被当前实现明确拒绝；Doris Unique Key Upsert
-应使用 `merge`。`merge` 不生成原生 `MERGE INTO`，而是依赖 Doris Unique Key
-表的全行 `INSERT INTO` 语义。每批数据中的 `unique_key` 必须唯一。需要 Sequence
+应使用 `merge`。对 OLAP 目标，`merge` 依赖 Doris Unique Key 表的全行 `INSERT INTO` 语义。对 Iceberg 目标，`merge` 会生成原生 `MERGE INTO`，并在写入前拒绝源数据中重复的 Key。每批数据中的 `unique_key` 必须唯一。需要 Sequence
 Column 时，在 `properties` 中设置可见列
 `function_column.sequence_col`，并继续使用 `merge`。裸 `sequence_col` 配置和使用隐藏
 `__DORIS_SEQUENCE_COL__` 的 `function_column.sequence_type` 当前均不受支持。
 
-覆盖指定 Doris 分区：
+覆盖指定的 Internal Catalog Doris 分区：
 
 ```sql
 {{
@@ -452,13 +483,13 @@ where order_time >= '2026-07-01'
 首次运行走 CTAS 建表路径，不执行 `INSERT OVERWRITE`，所以示例必须用
 `partition_by_init` 创建目标分区。`overwrite_partitions` 只决定目标表已存在时的覆盖
 范围。省略 `overwrite_partitions` 会覆盖整张表；设置分区名列表会只覆盖这些分区；
-设置 `'*'` 时，Doris 根据本批数据动态覆盖涉及的分区。空批次
-无法识别需要清空的分区；需要清空分区时应显式指定分区名。
+设置 `'*'` 时，Doris 根据本批数据动态覆盖涉及的分区。OLAP 动态覆盖无法从空批次识别需要清空的分区；需要清空分区时应显式指定分区名。
+
+对于 Iceberg 目标，省略 `overwrite_partitions` 可动态覆盖本批涉及的分区。设置非空字段和值映射，例如 `overwrite_partitions={'dt': '2025-01-25'}`，可替换一个静态范围。Model 必须返回该范围内的完整数据。对于非分区表，Model 必须返回完整替换结果；空结果会清空整表。静态范围的空结果也会清空该范围。映射中包含 `NULL` 时使用原生 MERGE，因此需要 Iceberg V2+。
 
 ### Microbatch
 
-`microbatch` 使用 dbt Core 的批处理上下文，把每个 UTC 时间窗口映射为一个
-精确的 Doris RANGE 分区，并逐分区执行 `INSERT OVERWRITE`。例如：
+`microbatch` 使用 dbt Core 的批处理上下文处理每个 UTC 时间窗口。下例针对 Internal Catalog OLAP 目标，将窗口映射为精确的 Doris RANGE 分区，并逐分区执行 `INSERT OVERWRITE`：
 
 先为每个直接上游资源和目标 Model 配置 Event Time 字段，使 dbt Core 能向每批输入
 注入时间过滤。对于前文示例中创建的 `raw.orders` Source，在已有 Table 声明下增加：
@@ -499,7 +530,7 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-`event_time` 必须是未加引号的列名，并与 `partition_by` 指向同一个单列；
+对于 Internal Catalog OLAP 目标，`event_time` 必须是未加引号的列名，并与 `partition_by` 指向同一个单列；
 `batch_size` 支持 `hour`、
 `day`、`month` 和 `year`。目标是 Duplicate Key 表；`duplicate_key` 是 Doris 表的
 Key 配置，不是 dbt 的 `unique_key`。不要为 Microbatch 设置 `unique_key`、
@@ -508,7 +539,7 @@ Key 配置，不是 dbt 的 `unique_key`。不要为 Microbatch 设置 `unique_k
 当前批次窗口过滤输入。Microbatch 批次串行执行；即使遇到空批次，也会覆盖对应的
 精确分区，因此可以清除该窗口中已不存在的数据。
 
-Microbatch 也可使用 Doris Dynamic Partition，但必须在 `properties` 中显式启用并
+Internal Catalog 中的 Microbatch 也可使用 Doris Dynamic Partition，但必须在 `properties` 中显式启用并
 满足当前 Adapter 的校验：
 
 - `dynamic_partition.enable='true'`；
@@ -530,7 +561,7 @@ Doris 创建 Dynamic Partition 表时还要求 `dynamic_partition.buckets` 为�
 目标表所需的完整数据。同一批 `merge` 数据中的 `unique_key` 必须唯一。Microbatch
 的时间过滤由 dbt Core 根据已配置 `event_time` 的上游资源生成，不需要使用
 `is_incremental()`。修改 Key、分区方式或其他不兼容表结构后，应执行
-`dbt run --full-refresh`。
+`dbt run --full-refresh`。对于 Iceberg Microbatch，不要配置 `unique_key`、`overwrite_partitions`（包括字段和值映射）、`partition_by_init` 或 OLAP Dynamic Partition 属性。若设置 `partition_by`，必须显式配置 `partition_type='LIST'`。每个 UTC 时间窗口由原生 MERGE 替换，包括空窗口。
 :::
 
 ### 异步物化视图
@@ -635,15 +666,15 @@ Model SQL 或 DDL 配置变化时，`on_configuration_change=apply` 默认通过
 | 功能 | 用法 |
 | --- | --- |
 | Seed | 将小型、版本受控的 CSV 放入 `seeds/`，执行 `dbt seed`；支持类型推断、`column_types` 和 `ref` |
-| Snapshot | 在 `snapshots/` 中定义 `check` 或 `timestamp` 策略，执行 `dbt snapshot`；支持 Hard Delete、Schema 演进和原子替换 |
+| Snapshot | 在 `snapshots/` 中定义 `check` 或 `timestamp` 策略，执行 `dbt snapshot`；支持 Hard Delete 和 Schema 演进。Internal Catalog 原子替换，Iceberg 使用备份和重命名 |
 | Data Test | 在 YAML 中配置 Generic Test，或在 `tests/` 中编写 Singular Test；支持 Ephemeral 和 `store_failures` 路径 |
 | Unit Test | 在 Model YAML 中提供 Inline Row 或 CSV Fixture，执行 `dbt test --select test_type:unit` |
-| Model Contract | 对 Table、View 或 Incremental Model 设置 `contract.enforced: true` 并声明字段名称和类型；不会创建数据库 PK 或 NOT NULL 约束 |
+| Model Contract | 对 Table、View 或 Incremental Model 设置 `contract.enforced: true` 并声明字段名称和类型；Adapter 拒绝 `constraints` 声明，Data Test 不会创建数据库约束 |
 | Persisted Docs | 启用 `persist_docs`，为主要 Relation 类型写入 Relation 和字段注释 |
 | Source Freshness | 配置 `loaded_at_field` 或 `loaded_at_query` 以及 `freshness`，执行 `dbt source freshness` |
 | Grants | 使用标准 `grants` 配置管理 Doris `user` 和 `user@host` 表权限；当前不支持 Role 授权主体 |
 | Hooks | 使用 `pre_hook` 和 `post_hook` 在 Materialization 前后执行 Doris SQL；Hook 副作用没有事务回滚 |
-| 文档与血缘 | 编写 Description 并执行 `dbt docs generate`，生成 Doris Database、Table、View、字段、注释和异步物化视图元数据 |
+| 文档与血缘 | 编写 Description 并执行 `dbt docs generate`，获取 Internal 和 External Catalog 的 Relation 与字段元数据，包括 Internal Catalog 异步物化视图 |
 
 Seed 适合国家代码、状态映射等小型静态数据，不适合批量导入业务数据。大文件应使用
 Doris Stream Load、Broker Load 或 Doris Connector。
@@ -768,12 +799,12 @@ dbt run --select fct_orders --full-refresh
 ## 当前限制
 
 - 当前不支持 Aggregate Key 表建模和 Secondary Index 配置。
-- 当前不支持完整的 External Catalog 命名空间。
+- External Catalog 的写入行为取决于 Doris Connector。当前不支持 Catalogs V2 或针对各 Connector 的写入保证。
 - 当前未实现 SSL 配置、超时与重试、多 FE 故障转移、服务端取消和完整的查询遥测。
 - 部分 Table、View 和 MV 类型切换存在短暂的标准对象名不可用窗口，无法做到零停机切换。
 
 <!-- 知识类型: 故障排查 -->
-<!-- 适用场景: 连接失败 / Profile database 与 schema 不一致 -->
+<!-- 适用场景: 连接失败 / Catalog 与 Database 查找 -->
 
 ## 故障处理
 
@@ -782,8 +813,6 @@ dbt run --select fct_orders --full-refresh
 确认 `host` 和 `port` 指向可访问的 Doris FE Query Port，并检查用户名、密码和
 网络策略。`9030` 是默认 Query Port，`8030` 通常是 FE HTTP Port。
 
-### `database` 与 `schema` 不一致
+### 找不到 Catalog 或 Database
 
-Profile 中的 `schema` 就是目标 Doris Database。删除 `database`；它不是 Doris
-Catalog，而且在 Profile 中没有提供额外命名层级。如果保留该兼容字段，当前实现
-要求它与 `schema` 完全相同。
+在 v1.1.1 中，Profile 和 Source 的 `database` 表示 Doris Catalog，`schema` 表示其中的 Database。使用 Internal Catalog 时省略 `database`。如果旧项目曾用 Source 的 `database` 表示 Doris Database，升级前应将该值移到 `schema`。检查 External Catalog 是否已创建，以及 dbt 用户是否有权限查看。

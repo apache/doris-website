@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e90fea7fb163dd85ebd94d0a952cb455a41ed6b926645b10f8d80603b52de951",
+    "sourceTechnicalHash": "18a94c79c46018073f38620d96b9e6a99e425cfd6d3ab9cca2158d7b39258772",
+    "targetHash": "6c51a2388aace96686b70c96fae16520cb41b773465ceefb7cb3b6f1917d2a69",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

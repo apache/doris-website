@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-lance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+    "sourceTechnicalHash": "94e6357a4cfc2f835b0ab1e52aeeac4dffe042e0c42b39d31df9ea3bef5ccc47",
+    "targetHash": "af809b41f02a6b07bf462216a92b5e7067af8a87ae4a4c81cc334eab2e13cf72",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.109Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/quote",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/quote.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/quote.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "8df1e34dc238b33e7d55d9e0aa1362c1e8d2dde3cfdb783d4707cc4f8a49b2a3",
+    "sourceTechnicalHash": "083d83416943566fb63ea5b066d7e6a8deb88f7b8161877e0efd8ba1ac1afbbe",
+    "targetHash": "44e4e6e958968c9bb070b232a3de5ff2f9b7088d37d3ae811e78cada6ab5d4bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.834Z",
+    "glossaryVersion": "0"
+  }
+}

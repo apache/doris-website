@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/sinh",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/sinh.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/sinh.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "0e12e9db93f515e2dba2423f7998f54f7200cbbac0b3fa1d4b2d8a40f1866ed9",
+    "sourceTechnicalHash": "4236111452b460151e6bc04f463ed582b8a9eaeda8499fc65c44f38189e570c3",
+    "targetHash": "53275b2ff5aa257acd2ff58804fc97ffd0d95a39a54a7e27e2da41e0f2bb7166",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

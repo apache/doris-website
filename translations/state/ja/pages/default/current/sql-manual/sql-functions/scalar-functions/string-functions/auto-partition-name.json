@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/auto-partition-name.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c766c02639d30b7c4bc2c7ff40bfa6af08c60e1b5e6be653d536072cc099fcc5",
+    "sourceTechnicalHash": "75b17d39ea97793f8f495b51bddbc2df58ba66ffdeb7eb0db757624c00227fc8",
+    "targetHash": "968a99072c2e43dc68f458586e231e6ca7dfeab124f54e7208f17dc365108322",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.806Z",
+    "glossaryVersion": "0"
+  }
+}

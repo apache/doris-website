@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a89115a0ddfa26c0385ae52c7ddfff1e38eb66fd6591640619cddc0a743584ca",
+    "sourceTechnicalHash": "3eff1fb9f5de08fcd326cac0e175d06a8aa55a9c48ed8dac32b7d6cc7d1b0d65",
+    "targetHash": "8b1ca02a8c2ec08216f0eaa38d8cdb21b802f9b009cb00762a0c2d44e04d31dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.629Z",
+    "glossaryVersion": "0"
+  }
+}

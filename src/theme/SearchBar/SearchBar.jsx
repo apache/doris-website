@@ -28,6 +28,11 @@ import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import useIsDocPage from '@site/src/hooks/use-is-doc';
 import { debounce } from '@site/src/utils/debounce';
 import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
+import {searchWithLocaleFallback} from '@site/src/utils/searchInput';
+import {fetchContextIndexes, searchAcrossContexts} from '@site/src/utils/searchContexts';
+import {isTranslatedLocale} from '@site/src/utils/localization';
+
+const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 
 async function fetchAutoCompleteJS() {
     const autoCompleteModule = await import('@easyops-cn/autocomplete.js');
@@ -69,7 +74,8 @@ export default function SearchBar({ handleSearchBarToggle }) {
     // It returns undefined for non-docs pages
     const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
-    let versionUrl = getVersionUrl(baseUrl, location.pathname, locales, currentLocale, defaultLocale);
+    let versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
+        : getVersionUrl(baseUrl, location.pathname, locales, currentLocale, defaultLocale);
 
     // For non-docs pages while using plugin-content-docs with custom ids,
     // this will throw an error of:
@@ -128,7 +134,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         // useAllContextsWithNoSearchContext is false).
         const normalized = normalizePathname(location.pathname, locales);
         const parts = normalized.replace(/^\//, '').split('/').filter(Boolean);
-        if (parts[0] === 'docs' && parts.length > 1 && VERSIONS.includes(parts[1])) {
+        if (!isTranslatedLocale(currentLocale) && parts[0] === 'docs' && parts.length > 1 && VERSIONS.includes(parts[1])) {
             parts.splice(1, 1);
         }
         const uri = parts.join('/');
@@ -149,7 +155,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             prevSearchContext.current = nextSearchContext;
         }
         setSearchContext(nextSearchContext);
-    }, [location.pathname, locales]);
+    }, [location.pathname, locales, currentLocale]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
 
     const loadIndex = useCallback(
@@ -165,7 +171,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
             setLoading(true);
             const [autoComplete] = await Promise.all([
                 fetchAutoCompleteJS(),
-                fetchIndexesByWorker(versionUrl, searchContext),
+                fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext),
             ]);
             if (myToken !== loadToken.current) {
                 // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
@@ -216,7 +222,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 ) {
                     params.set('ctx', searchContext);
                 }
-                if (versionUrl !== baseUrl) {
+                if (!isTranslatedLocale(currentLocale) && versionUrl !== baseUrl) {
                     if (!versionUrl.startsWith(baseUrl)) {
                         throw new Error(
                             `Version url '${versionUrl}' does not start with base url '${baseUrl}', this is a bug of \`@yang1666204/docusaurus-search-local\`, please report it.`,
@@ -265,7 +271,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [
                     {
                         source: debounce(async (input, callback) => {
-                            const result = await searchByWorker(versionUrl, searchContext, input, searchResultLimits);
+                            const result = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, input, searchResultLimits);
                             callback(result);
                         }, 300),
                         templates: {
@@ -382,6 +388,11 @@ export default function SearchBar({ handleSearchBarToggle }) {
         }
     }, [location.pathname]);
     useEffect(() => {
+        // On mount the page's search context is not resolved yet, and an empty
+        // one would load every context index. Leave that to focus or hover.
+        if (!searchContext && useAllContextsWithNoSearchContext) {
+            return;
+        }
         loadIndex(true);
     }, [curVersion]);
     useEffect(() => {

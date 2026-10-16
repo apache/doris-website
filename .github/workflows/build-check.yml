@@ -74,307 +74,36 @@ jobs:
               id: detect
               run: |
                 BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                CHANGED_FILES=$(git diff --name-only "$BASE_SHA" HEAD)
+                node scripts/i18n/build-scope.cjs "$BASE_SHA"
 
-                echo "=== Changed files ==="
-                echo "$CHANGED_FILES"
-
-                # ---------------------------------------------------------------
-                # The build scope is three independent questions. Answering them
-                # separately is what keeps a website-only PR from paying for a
-                # 4-version x 2-locale build (~1h, and enough memory pressure to
-                # kill the runner outright).
-                #
-                #   TIER     how much has to be compiled at all
-                #     skip     nothing that reaches the bundler changed
-                #     build    compile the version set computed below
-                #     full     the *set of versions itself* changed, so every
-                #              active version has to be re-validated
-                #   VERSIONS which doc versions have content changes
-                #   LOCALES  which locales have *content* changes
-                #
-                # Site code (src/**, docusaurus.config.js, deps) deliberately does
-                # NOT force `full`: the React/TS/SCSS compile is identical for
-                # every doc version, so one representative version catches exactly
-                # the same errors at a quarter of the cost. Only versions.json and
-                # config/versions-plugin.js — the files that define which versions
-                # exist — earn a full build.
-                #
-                # Unrecognised paths fall through to `build` (minimal, but real),
-                # so a new kind of file is never silently skipped.
-                # ---------------------------------------------------------------
-
-                VERSIONS=""
-                LOCALES=""
-                TIER="skip"
-                JSON_TO_VALIDATE=""
-
-                # Representative version for compile-only checks: the latest
-                # released version, i.e. the stable one the navbar defaults to.
-                PROBE_VERSION=$(jq -r '.[0] // "4.x"' versions.json)
-
-                # skip < build < full; never lower an already-raised tier.
-                raise_tier() {
-                    case "$1" in
-                        full)
-                            TIER="full"
-                            ;;
-                        build)
-                            if [ "$TIER" = "skip" ]; then TIER="build"; fi
-                            ;;
-                    esac
-                }
-
-                add_version() {
-                    VERSIONS="$1,$VERSIONS"
-                    raise_tier build
-                }
-
-                add_locale() {
-                    case ",$LOCALES," in
-                        *",$1,"*) ;;
-                        *) LOCALES="${LOCALES:+$LOCALES,}$1" ;;
-                    esac
-                    raise_tier build
-                }
-
-                # Translation JSON only needs a syntax check (see below).
-                validate_json_later() {
-                    JSON_TO_VALIDATE="${JSON_TO_VALIDATE}${1}"$'\n'
-                }
-
-                # First match wins, so order matters: the most specific paths and
-                # the version-defining files come before the broad catch-alls.
-                while IFS= read -r file; do
-                    [ -n "$file" ] || continue
-                    case "$file" in
-                        # ---- Files that define which versions exist ----------
-                        # These change the version set itself, so every active
-                        # version has to be rebuilt to stay honest.
-                        versions.json|config/versions-plugin.js)
-                            raise_tier full
-                            ;;
-
-                        # ---- English doc content -----------------------------
-                        # Dev / unreleased version.
-                        docs/*)
-                            add_locale en
-                            add_version current
-                            ;;
-                        versioned_docs/version-*/*)
-                            ver=$(echo "$file" | sed -n 's|versioned_docs/version-\([^/]*\)/.*|\1|p')
-                            add_locale en
-                            add_version "$ver"
-                            ;;
-
-                        # ---- Chinese doc content -----------------------------
-                        # Only zh-CN is built: an en page cannot break because a
-                        # zh-CN page changed. With a single --locale, Docusaurus
-                        # drops the locale path prefix (baseUrl becomes / instead
-                        # of /zh-CN/) — the same path `yarn start:zh-CN` takes.
-                        # That only shifts output paths, and onBrokenLinks is
-                        # 'warn', so it cannot manufacture a failure.
-                        i18n/zh-CN/docusaurus-plugin-content-docs/current/*)
-                            add_locale zh-CN
-                            add_version current
-                            ;;
-                        i18n/zh-CN/docusaurus-plugin-content-docs/version-*/*)
-                            ver=$(echo "$file" | sed -n 's|i18n/zh-CN/docusaurus-plugin-content-docs/version-\([^/]*\)/.*|\1|p')
-                            add_locale zh-CN
-                            add_version "$ver"
-                            ;;
-
-                        # ---- Translation tables (JSON) -----------------------
-                        # code.json and the per-version label files are lookup
-                        # tables, not content: Docusaurus falls back to the
-                        # source string and warns on a missing/stale key, it does
-                        # not fail. The single build-breaking failure mode is
-                        # malformed JSON, which `jq` catches in milliseconds — so
-                        # these no longer drag a whole zh-CN site build along.
-                        i18n/*/code.json|i18n/*/docusaurus-plugin-content-docs*/*.json)
-                            validate_json_later "$file"
-                            ;;
-
-                        # ---- Version-scoped sidebars -------------------------
-                        # e.g. versioned_sidebars/version-4.x-sidebars.json → 4.x
-                        versioned_sidebars/version-*-sidebars.json)
-                            ver=$(echo "$file" | sed -n 's|versioned_sidebars/version-\(.*\)-sidebars\.json|\1|p')
-                            add_locale en
-                            add_version "$ver"
-                            ;;
-                        sidebars.ts)
-                            add_locale en
-                            add_version current
-                            ;;
-
-                        # ---- Always-built, version-independent plugins -------
-                        # Blog, community, releases and course are separate
-                        # plugin instances that Docusaurus compiles regardless of
-                        # DOCS_VERSIONS, so they need a build but no extra
-                        # versions. Their sidebars belong here for the same
-                        # reason — they used to force a full multi-version build
-                        # for nothing.
-                        blog/*|community/*|releasenotes/*|course/*)
-                            add_locale en
-                            raise_tier build
-                            ;;
-                        sidebarsCommunity.json|sidebarsReleases.json|sidebarsCourse.ts)
-                            add_locale en
-                            raise_tier build
-                            ;;
-                        i18n/zh-CN/docusaurus-plugin-content-docs-community/*|i18n/zh-CN/docusaurus-plugin-content-docs-releases/*)
-                            add_locale zh-CN
-                            raise_tier build
-                            ;;
-
-                        # ---- Nothing the bundler ever sees -------------------
-                        # static/ is copied verbatim into the output. A change
-                        # there cannot fail (or be validated by) a build, so it
-                        # must not widen the scope on its own. A doc that
-                        # references a new asset triggers its own build above.
-                        static/*)
-                            ;;
-                        # CI config, governance tooling, repo-level prose and
-                        # helper scripts. No Python or shell file in this repo is
-                        # compiled into the site.
-                        .github/*|.claude/*|.agents/*|.vscode/*|.idea/*)
-                            ;;
-                        scripts/docs-governance/*|website-quality-governance/*)
-                            ;;
-                        *.py|*.sh)
-                            ;;
-                        README.md|AGENTS.md|TOC.md|LICENSE|NOTICE|store_format_v3.md|cspell.json|author.yml|buildVersions.json|.gitignore|.prettierrc|.prettierignore|.eslintrc|.eslintrc.js)
-                            ;;
-
-                        # ---- Site code, config and deps ----------------------
-                        # Compiled once and shared by every version and locale,
-                        # so the representative version is a complete check.
-                        # scripts/ entries listed here are genuine build inputs:
-                        # key-features/ and last-update/ are read by
-                        # docusaurus.config.js, patch-search-tokenize.js runs on
-                        # postinstall.
-                        src/*|config/*|docusaurus.config.js|package.json|yarn.lock|tailwind.config.js|tsconfig.json|scripts/key-features/*|scripts/last-update/*|scripts/patch-search-tokenize.js)
-                            add_locale en
-                            raise_tier build
-                            ;;
-
-                        # ---- Anything else: fail safe ------------------------
-                        *)
-                            echo "Unclassified path '$file' — falling back to a minimal build."
-                            add_locale en
-                            raise_tier build
-                            ;;
-                    esac
-                done <<< "$CHANGED_FILES"
-
-                # Syntax-check the translation tables we chose not to build.
-                if [ -n "$JSON_TO_VALIDATE" ]; then
-                    echo ""
-                    echo "=== Validating changed i18n JSON ==="
-                    while IFS= read -r f; do
-                        [ -n "$f" ] || continue
-                        # Deleted in this PR — nothing left to parse.
-                        [ -f "$f" ] || { echo "  skip (deleted)  $f"; continue; }
-                        if jq empty "$f" >/dev/null 2>&1; then
-                            echo "  ok              $f"
-                        else
-                            echo "  INVALID JSON    $f"
-                            jq empty "$f" || true
-                            exit 1
-                        fi
-                    done <<< "$JSON_TO_VALIDATE"
-                fi
-
-                # The versions Docusaurus can actually build: `current` (dev)
-                # plus everything in versions.json. Older dirs (version-1.2,
-                # version-2.0) may still sit on disk while being absent from
-                # versions.json — feeding those to onlyIncludeVersions fails the
-                # build with "unknown versions".
-                ACTIVE_VERSIONS=$(jq -r '.[]' versions.json | tr '\n' ',' | sed 's/,$//')
-                ACTIVE_VERSIONS="current,${ACTIVE_VERSIONS}"
-                echo ""
-                echo "Active versions (current + versions.json): $ACTIVE_VERSIONS"
-
-                SKIP_BUILD="false"
-                NEED_FULL_BUILD="false"
-                DOCS_VERSIONS=""
-
-                if [ "$TIER" = "skip" ]; then
-                    SKIP_BUILD="true"
-                    LOCALES="en"
-                    # An empty DOCS_VERSIONS means "every version" to
-                    # docusaurus.config.js. Nothing should read it while
-                    # skip_build is set, but pin it to the probe version anyway so
-                    # a future edit can't turn a skipped build into the most
-                    # expensive one.
-                    DOCS_VERSIONS="$PROBE_VERSION"
-                    echo "Nothing that reaches the bundler changed — skipping the site build."
-                elif [ "$TIER" = "full" ]; then
-                    NEED_FULL_BUILD="true"
-                    DOCS_VERSIONS=""
-                    echo "The version set itself changed — building ALL active versions."
-                else
-                    RAW_VERSIONS=$(echo "$VERSIONS" | tr ',' '\n' | sort -u | grep -v '^$' || true)
-                    KEPT=""
-                    DROPPED=""
-                    for v in $RAW_VERSIONS; do
-                        if echo ",$ACTIVE_VERSIONS," | grep -q ",$v,"; then
-                            KEPT="${v},$KEPT"
-                        else
-                            DROPPED="${v},$DROPPED"
-                        fi
-                    done
-                    DOCS_VERSIONS=$(echo "$KEPT" | sed 's/,$//')
-                    DROPPED=$(echo "$DROPPED" | sed 's/,$//')
-                    if [ -n "$DROPPED" ]; then
-                        echo "Ignoring changes to retired/unknown versions: $DROPPED"
-                    fi
-                    if [ -z "$DOCS_VERSIONS" ]; then
-                        # Either no versioned content changed (site code, blog,
-                        # community, course...) or everything we found was
-                        # retired. One representative version is enough.
-                        DOCS_VERSIONS="$PROBE_VERSION"
-                        echo "No active versioned content changed — probing with '$PROBE_VERSION' only."
-                    else
-                        echo "Versioned content changed for: $DOCS_VERSIONS"
-                    fi
-                fi
-
-                # Default the locale when a build is needed but no locale-specific
-                # content changed (site code, deps, blog, ...).
-                if [ "$SKIP_BUILD" != "true" ] && [ -z "$LOCALES" ]; then
-                    LOCALES="en"
-                fi
-
-                LOCALE_ARGS=""
-                IFS=',' read -ra LOCALE_ARR <<< "$LOCALES"
-                for locale in "${LOCALE_ARR[@]}"; do
-                    [ -n "$locale" ] || continue
-                    LOCALE_ARGS="$LOCALE_ARGS --locale $locale"
-                done
-
-                echo "docs_versions=$DOCS_VERSIONS" >> "$GITHUB_OUTPUT"
-                echo "locale_args=$LOCALE_ARGS" >> "$GITHUB_OUTPUT"
-                echo "need_full_build=$NEED_FULL_BUILD" >> "$GITHUB_OUTPUT"
-                echo "skip_build=$SKIP_BUILD" >> "$GITHUB_OUTPUT"
-
-                echo ""
-                echo "=== Build plan ==="
-                echo "  TIER:            $TIER"
-                echo "  SKIP_BUILD:      $SKIP_BUILD"
-                echo "  DOCS_VERSIONS:   ${DOCS_VERSIONS:-all}"
-                echo "  LOCALE_ARGS:    ${LOCALE_ARGS:- (none)}"
-                echo "  NEED_FULL_BUILD: $NEED_FULL_BUILD"
+            - name: Prepare swap for the localized build
+              if: steps.detect.outputs.enabled_locales != '' && steps.detect.outputs.skip_build != 'true'
+              run: |
+                  sudo fallocate -l 8G /mnt/japanese-build-check-swap
+                  sudo chmod 600 /mnt/japanese-build-check-swap
+                  sudo mkswap /mnt/japanese-build-check-swap
+                  sudo swapon /mnt/japanese-build-check-swap
 
             - name: Build
               env:
                   DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
+                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
+                  PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
               run: |
                   npm install -g yarn
                   yarn cache clean
                   export NODE_OPTIONS=--max-old-space-size=8192
                   yarn
                   yarn key-features:generate
+                  node --test scripts/i18n/__tests__/t04.test.cjs
+                  node --test scripts/i18n/__tests__/heading-ids.test.cjs
+                  node --test scripts/i18n/__tests__/search-input.test.cjs
+                  node --test scripts/i18n/__tests__/search-contexts.test.cjs
+                  node --test scripts/i18n/__tests__/locale-registry.test.cjs
+                  node --test scripts/i18n/__tests__/planner.test.cjs
+                  node --test scripts/i18n/__tests__/translation-engine.test.cjs
+                  node --test scripts/i18n/__tests__/workflow.test.cjs
+                  node --test scripts/i18n/__tests__/codex-adapter.test.cjs
 
                   # Dependencies are installed unconditionally above because the
                   # governance steps below need node_modules; only the site build
@@ -384,9 +113,28 @@ jobs:
                       exit 0
                   fi
 
-                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all}"
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
+                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all} LOCALES=${{ steps.detect.outputs.locale_csv }}"
+                  if [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enabled_locales }}" = "" ]; then
+                      PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
+                  else
+                      # Every locale gets a separate Node process and its real prefix.
+                      # Changes that can only affect some locales build just those.
+                      yarn build:locales --locales "${{ steps.detect.outputs.locale_csv }}"
+                  fi
+                  # A locale subset cannot render the English or Chinese
+                  # counterparts, so cross-locale assertions are reported as
+                  # skipped here. Publishing still verifies the whole site.
+                  VERIFY_PARTIAL=""
+                  if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL="--partial"; fi
+                  for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
+                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" $VERIFY_PARTIAL
+                  done
                   rm -rf build
+
+            - name: Japanese translation gate
+              run: |
+                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                  node scripts/i18n/check-translations.cjs --base "$BASE_SHA"
 
             - name: Docs changed link gate
               continue-on-error: true

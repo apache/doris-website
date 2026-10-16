@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/money-format",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/money-format.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0d98b41d61981874dc4ab8ea5dccf60d46f4a340f29f1d4f08713d4055102ebf",
+    "sourceTechnicalHash": "59cfa15cf92be101fcbe5995a03b17a6cf90a887366e35e2405540768fb0f48c",
+    "targetHash": "506f527e6fdd5873a13953cc393680e7b6d203485a87e4b8648f10ee3117ef9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.822Z",
+    "glossaryVersion": "0"
+  }
+}

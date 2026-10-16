@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/translate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/translate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/translate.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f9a772f5c78e1bf49e7b7dffae62929aa4d74c11524c71de54062891b994afea",
+    "sourceTechnicalHash": "0417db9bb3eece42fb2348bad28c37756259747ee5cf4a620795413e64e165f0",
+    "targetHash": "1a66b657b292ca11a03949078e686bfe3705ae4700a8e8e7bff0862844808301",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.811Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/tiered-storage/tiered-ssd-hdd",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+    "sourceTechnicalHash": "01f90aff160c57d037316f9b13ef2305a3dc62d1eea050c1b0d6fe542c66cda3",
+    "targetHash": "41b8c07a1ca3bac9af9e8defd92164afe532534066c38b4824d2868ffb6d4237",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.602Z",
+    "glossaryVersion": "0"
+  }
+}

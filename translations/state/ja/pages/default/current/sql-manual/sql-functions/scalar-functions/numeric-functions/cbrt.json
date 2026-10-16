@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/cbrt.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ffc19331a956251dccffe3af3681534bffc40b2644dcc9d5af43c8b3aa3988b5",
+    "sourceTechnicalHash": "04b268b4f356e9e02a3b59edffb9546a908275b2e16c86d8cd79ed4b3d40697e",
+    "targetHash": "7facf331d8195d396a028d652d533ff34da774c91cd7f5504c2f551c90fdc6ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.256Z",
+    "glossaryVersion": "0"
+  }
+}

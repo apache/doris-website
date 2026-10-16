@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "ae1ef3e94f89f5b3d15b1757af9c520f9208be4355bf7a5727dd46a683f67af9",
+    "sourceTechnicalHash": "25fb69290fee7594d69dbfce07cecf4e35daf5871a1f6f379409400c9a8d8158",
+    "targetHash": "819703a2bd5eb01a6c2588498edcef0392057291ffe92e26e44734d2d1b81352",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.922Z",
+    "glossaryVersion": "0"
+  }
+}

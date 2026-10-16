@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c6d14c814cf882a51e48992701e55ad05324fe8c66b0109be5896ecb23f67e8d",
+    "sourceTechnicalHash": "f57f79f15acec8cbb799eb17188e8af1c49788e49439134f14abf9611f80c339",
+    "targetHash": "b2a5118d40fe223976b9b2ae7f829d5fe04175cbfac1152e887272f1111b85e6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

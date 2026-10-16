@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/BITMAP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/aggregate/BITMAP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/aggregate/BITMAP.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "f819c0b9c57bf443e793aa861f7fdb0f70d60c36ac9214838b4d70a08cfb1bdb",
+    "sourceTechnicalHash": "4f0879b7d080e08bd2733ae643ef773bb7b588b8418a316bf9abd6e777660a63",
+    "targetHash": "6c896bb89aec5d58789102277f531325e58fc7839e99c449801427f8dcb85510",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

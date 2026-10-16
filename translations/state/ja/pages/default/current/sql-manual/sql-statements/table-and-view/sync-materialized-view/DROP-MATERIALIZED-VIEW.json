@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-MATERIALIZED-VIEW.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b68421c4094f8e689035ae958ee43d6f2f4b83d4e86c850ec9cb2204bb709ec5",
+    "sourceTechnicalHash": "bed19375ad3b7107d2b11bf04f8abe9e76f585bfdcfa0cc881782982358f38e6",
+    "targetHash": "fcfbd5dfc3161641ff94e3189f4c13e1a8e1960c588094e31378747e28158153",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.009Z",
+    "glossaryVersion": "0"
+  }
+}

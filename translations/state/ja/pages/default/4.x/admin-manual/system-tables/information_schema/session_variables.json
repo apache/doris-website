@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/session_variables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/session_variables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/session_variables.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "be01f743edd85ba8d914f3d96773d85d7ec43c5508ddba3448cdc95e445bd895",
+    "sourceTechnicalHash": "8e8b4c6769637ace7b29fe5db74748125c54c3b7768f3771273bf05a39792a8d",
+    "targetHash": "99c589eee93b3ffc8e2e846875945cd37b64daaeb796fa5a84bfcd22faf81af1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

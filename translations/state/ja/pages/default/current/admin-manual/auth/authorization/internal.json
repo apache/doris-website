@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authorization/internal",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authorization/internal.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/internal.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "016913a97a1ff76324524542eba9c1286dd0acc3cb8165094cf6807de13ae12c",
+    "sourceTechnicalHash": "8d9cf780566410000e6b90bf2a618dadd8b4e6e0374b90631f9e582e9ed416ad",
+    "targetHash": "07534115529c3cd5de6e715f7b19215b0de76e584fb179e8f4e3d5a5c6960664",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.870Z",
+    "glossaryVersion": "0"
+  }
+}

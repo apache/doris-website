@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/truncate-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/truncate-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/truncate-manual.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "0020dfdaf4a83a51ee65621905229ed64d32f1df7eeb3ffc7a0688156727325d",
+    "sourceTechnicalHash": "58ed03664e265ab2c9010717f74af2d83fcaac55b0132eff694c0aeb20ca5d2e",
+    "targetHash": "dc34dd35b93513335ab1495ff1f9da57ca0d998f24ee095f1ab324356703adb7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.707Z",
+    "glossaryVersion": "0"
+  }
+}

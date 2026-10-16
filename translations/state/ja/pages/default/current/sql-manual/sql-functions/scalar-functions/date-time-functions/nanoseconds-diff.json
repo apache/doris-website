@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-diff",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-diff.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/nanoseconds-diff.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "d290a164e6927faa545665adc6862a426d1d54be31e5b8a0b4c5400272dc8a0b",
+    "sourceTechnicalHash": "1fd16b7097e5591f420cb356615b106d642459f4422e058e174bf570ee271d3e",
+    "targetHash": "6e593e5d4f12e0418ae4fd79e271ddd53acf01ee767965be8a4a991f96480e20",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.812Z",
+    "glossaryVersion": "0"
+  }
+}

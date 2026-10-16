@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/reset-rpc-channel",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/reset-rpc-channel.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/reset-rpc-channel.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "7b60e0560c9ae9ff7a29987ef9d539af41d68afa7bf8c2f969406561ea600732",
+    "sourceTechnicalHash": "262ac11fc973a3c763f2f5474f9c395ea9728ca89c5ce0ea8a1477e79af66302",
+    "targetHash": "1aa5451e11093e20dfd3befee01559e9c62f2884f52b5e83a27a952e86acd9d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

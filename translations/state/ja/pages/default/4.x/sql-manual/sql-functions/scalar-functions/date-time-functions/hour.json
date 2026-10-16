@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6ec0816a6421c2872b9f7fe0eb3eefc416bd9ecd25464eb7437a2ee5cb2468ac",
+    "sourceTechnicalHash": "53985b32f4e73576133d2ed10a56dc0de077876810c6f50616ee10bb68544f21",
+    "targetHash": "22109eeec7d84ebbc60e3390888a0d33f8aeb4b89049644c318f22cc0af59af8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.699Z",
+    "glossaryVersion": "0"
+  }
+}

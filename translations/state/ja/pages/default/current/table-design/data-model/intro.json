@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/intro",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/intro.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-model/intro.mdx",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "4f8f54e0df79cc3467e00add7c3e7966e108516de78820d7258a79cac28dc98c",
+    "sourceTechnicalHash": "368f31316a14136e5e75136008024e9c13bdfdc88c14d398f2c8e5c5858d8b96",
+    "targetHash": "80a567848aac3ad16b044599f2bc5079864a709f5ec2a8fb20a41722ca54bb6f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.817Z",
+    "glossaryVersion": "0"
+  }
+}

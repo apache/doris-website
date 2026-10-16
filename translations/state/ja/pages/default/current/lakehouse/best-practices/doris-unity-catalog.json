@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-unity-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-unity-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-unity-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "1dc3d6523046cd239467676140efc79d246f2ad354faa33fcec7993ab5fba1cf",
+    "sourceTechnicalHash": "5880cbd1625a30868cd0cdd2d8e5b5a40f2ea75af52d1242c34e6acf51dac697",
+    "targetHash": "3f911ce13ddf9ce0597e2d3fbf322d31436db4875ee23c1b62732b939265177a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

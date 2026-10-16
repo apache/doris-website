@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "feedback",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/feedback.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/feedback.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "c4dec690dd07cf838fbc778e913a3ac75063fc1627e08d0f8fc74426a69e47cf",
+    "sourceTechnicalHash": "a351c4575d1222708a31823014602be32b2ffb7450967b0ada2b5db058baaf5a",
+    "targetHash": "c3a44f35feb2e52572f5f4eb779d2fd97c96bc77b737af493e5513aab593bbef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.550Z",
+    "glossaryVersion": "0"
+  }
+}

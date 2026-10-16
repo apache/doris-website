@@ -1,0 +1,37 @@
+---
+{
+    "title": "JOIN の最適化",
+    "language": "ja",
+    "description": "Apache Doris の JOIN 最適化に関する章のナビゲーションです。Colocation Join、Distribute Hint によるシャッフル方式の調整、Leading Hint による JOIN 順序の制御を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris は、ほとんどの JOIN クエリで初期設定のままでも良好な性能を発揮します。ただし、性能要件が厳しい場合は、テーブルのコロケーションを設定し、ヒントを使ってオプティマイザを誘導することで、さらに最適化できます。まず Colocation Join を使用して、バケット分割列の等価 JOIN でネットワークシャッフルをなくすことを推奨します。そのうえで、オプティマイザの選択が最適でない場合は、Distribute Hint と Leading Hint を使ってシャッフル方式と JOIN 順序を調整します。
+
+## コロケーション
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Colocation Join"
+    description="関連するテーブルのデータを同じバケット分割ルールに従って同じ BE ノードに配置します。これにより、バケット分割列の等価 JOIN をローカルで実行でき、ノード間のデータ転送を完全になくせます。"
+    link="colocation-join"
+/>
+</div>
+
+## ヒントによるチューニング
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="ヒントによる JOIN のシャッフル方式の調整"
+    description="[shuffle] と [broadcast] の Distribute Hint を使用して、JOIN の右側のテーブルに対するデータ分散方式についてオプティマイザの選択を上書きし、特定のシナリオに合わせて手動で調整します。"
+    link="tuning/tuning-plan/adjusting-join-shuffle"
+/>
+
+<GettingStartedCard
+    title="Leading Hint による JOIN 順序の制御"
+    description="CBO が選択した JOIN 順序が最適でない場合、Leading Hint を使用して複数テーブルの JOIN 順序を手動で指定します。左深木、右深木、ブッシー木など、さまざまな形状に対応します。"
+    link="tuning/tuning-plan/reordering-join-with-leading-hint"
+/>
+</div>

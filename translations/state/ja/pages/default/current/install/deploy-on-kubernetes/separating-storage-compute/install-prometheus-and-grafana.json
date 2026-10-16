@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-prometheus-and-grafana.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "de8870e8ac513d424d04205d9e915344c7cc6479e419ca1ca849767f69268815",
+    "sourceTechnicalHash": "083bb60d68bdf2ffd23e4b1aaa1e808e850505777bd03b775f217be0db87a779",
+    "targetHash": "d9e0d03a05a210f45cbc1b1541d24cf3d9d53ae60e7b050d734669fdc9e12a2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T12:03:12.439Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "ca876803fa3e9ecb520daaecbdc8e43eee97c31bc15604038a7ae5a9223a1483",
+    "sourceTechnicalHash": "b82e1174f0b966a48ed4a84788664f06932e626757f943f21757ed643a2f672a",
+    "targetHash": "a084b87702c673bd005452dde604b3cbc3e27da2e08d6e3bb79734ab556c44a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

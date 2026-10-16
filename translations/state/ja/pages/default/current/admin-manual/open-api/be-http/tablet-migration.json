@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/tablet-migration",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/tablet-migration.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/tablet-migration.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "2cadb867fa9b376b7882f98a0dac095c0a2ca7011f2396b3da7bc3264c895d12",
+    "sourceTechnicalHash": "6553ba4f58358d26115471e104275f5f912a50515aa173e30003004fc03ce41f",
+    "targetHash": "2ac1214364b193b981f2231e47bf674e676eb76a7d403bea57c09755bc82dc02",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

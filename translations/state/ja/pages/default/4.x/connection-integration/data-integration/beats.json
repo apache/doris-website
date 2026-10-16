@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/beats",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/beats.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/beats.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f41d01f52d1af989fe576c94f14c3e8f0845c7fc453a24e3af5b4bbe12a6b650",
+    "sourceTechnicalHash": "d8017723135bb28dab718a98bcc731b34c57f5c6e4afebf58f44d946119c2ea5",
+    "targetHash": "b29e352202fb7a5f7fa02b2f71b07911ee014c7b0482e08e4fa715c3a7c90343",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.629Z",
+    "glossaryVersion": "0"
+  }
+}

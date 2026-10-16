@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-default.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "f24f6094c1f87e4ef06df36695325850b67da4ae8a23d05d55e690f2721ec413",
+    "sourceTechnicalHash": "bac442ef3e3da5b92feeba21a534e3db398135df50717f7b3ecc9e583e51da4e",
+    "targetHash": "f650f12e893866d931f55fa4e67b097767072b899b890cddb018e2f007932244",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T14:32:10.986Z",
+    "glossaryVersion": "0"
+  }
+}

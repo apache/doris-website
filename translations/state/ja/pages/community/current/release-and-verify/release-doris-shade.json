@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-shade",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-shade.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-shade.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "3287c647f3a0cba0b132187a9f96b2f073de6dabee53013ae22a2dc1520b6846",
+    "sourceTechnicalHash": "504faca86887f6e70f1713a5bef42c40e79659bfdd7f017f77d3ca775c5eaa0e",
+    "targetHash": "1fac83b97ea24115b6080e424f0af3cb45b3af6472c721b47fad7b92498582a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.555Z",
+    "glossaryVersion": "0"
+  }
+}

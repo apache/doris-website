@@ -1,3 +1,6 @@
+const { getAssetOrigin } = require('./asset-origin');
+const assetOrigin = JSON.stringify(getAssetOrigin());
+
 module.exports = {
     ssrTemplate: `<!DOCTYPE html>
 <html <%~ it.htmlAttributes %>>
@@ -13,10 +16,10 @@ module.exports = {
       <%~ metaAttribute %>
     <% }); %>
     <% it.stylesheets.forEach((stylesheet) => { %>
-      <link rel="stylesheet" href="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= stylesheet %>" />
+      <link rel="stylesheet" href="<%= ${assetOrigin} %><%= it.baseUrl %><%= stylesheet %>" />
     <% }); %>
     <% it.scripts.forEach((script) => { %>
-      <link rel="preload" href="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= script %>" as="script">
+      <link rel="preload" href="<%= ${assetOrigin} %><%= it.baseUrl %><%= script %>" as="script">
     <% }); %>
   </head>
   <body <%~ it.bodyAttributes %>>
@@ -25,7 +28,7 @@ module.exports = {
       <%~ it.appHtml %>
     </div>
     <% it.scripts.forEach((script) => { %>
-      <script src="<%= 'https://cdnd.selectdb.com' %><%= it.baseUrl %><%= script %>"></script>
+      <script src="<%= ${assetOrigin} %><%= it.baseUrl %><%= script %>"></script>
     <% }); %>
     <%~ it.postBodyTags %>
   </body>

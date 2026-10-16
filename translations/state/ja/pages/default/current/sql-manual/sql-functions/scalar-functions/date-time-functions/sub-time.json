@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/sub-time.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "58598dafcc53e13a0ead43ab467d1d78f88495b6d2f4aa52563c6c44f59d7fa6",
+    "sourceTechnicalHash": "4ac491d7dc85a3064e7543af269f277fb4a010a759e495097959d33fcccba03a",
+    "targetHash": "dc4bb396c1b05e65c07f2b6ec6d0e9d01f8a6168acbc329a495db267e49db310",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.813Z",
+    "glossaryVersion": "0"
+  }
+}

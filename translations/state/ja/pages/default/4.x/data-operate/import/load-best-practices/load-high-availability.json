@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-best-practices/load-high-availability",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-best-practices/load-high-availability.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-best-practices/load-high-availability.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "b0d89ac3f3ea80ddc86931d91bafc85ab2d365cf188e04897d5aafb7c616f1e7",
+    "sourceTechnicalHash": "de3396e750aecb11883eb6bbf76ab07595d0759ee1f5091c9d51e83d2c7fcd5c",
+    "targetHash": "d55de93672084c3f77975e2ad49f8dd3d152e64eaf1bd42da68d723769058896",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

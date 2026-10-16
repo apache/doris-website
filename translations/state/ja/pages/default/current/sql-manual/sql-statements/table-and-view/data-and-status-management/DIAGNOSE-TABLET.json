@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/DIAGNOSE-TABLET",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/DIAGNOSE-TABLET.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/DIAGNOSE-TABLET.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b346950525ace9b5c3bdff79fa61880cf95a3c177b9e0558eb183f54235d9e97",
+    "sourceTechnicalHash": "f1e09472271a9449a2abb02a10a9a5177c8c8c6be52e11d13edea95b11ae29ae",
+    "targetHash": "9ba1ac499a87d32f8de205d68bcb7ed2151fea316f92cfcbe6dbfd4771e99c8b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.011Z",
+    "glossaryVersion": "0"
+  }
+}

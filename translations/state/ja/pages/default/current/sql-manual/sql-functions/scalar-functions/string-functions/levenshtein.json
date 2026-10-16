@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/levenshtein",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/levenshtein.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/levenshtein.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3902baebb8d6750d44d0d38d1c5b473ff61aeeb6577c8b1c4536d96bbc1d8864",
+    "sourceTechnicalHash": "756f1bb226253d41180adb6a685bddd710863d73be382a9b802b6e2dc9d54839",
+    "targetHash": "a5c7f59a905ed8c623cad46d25d260f075872a8e059586dc78761f5b69b4375a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}

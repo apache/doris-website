@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "d940b930c32912dfdf8db5bd342f91ce282a9bb088bceec1f47482e1d754d983",
+    "sourceTechnicalHash": "302a1c4cbb94601dd049171f61c36247839274c0bd022e690e971c15cccc68d9",
+    "targetHash": "7f63819b1535773ac76bb4fd15b22a43e790c73bbb05bdf8227e088e15560d9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T16:38:44.018Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/logical-operators",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "ae6f6229b0226e4074c8478d01951b6fd0af75fc40123ac8ad77ccbf107b1609",
+    "sourceTechnicalHash": "54cd8afc249bf755ff2a9d48d29e7be2101c547f34b127f898b863f35f0fede5",
+    "targetHash": "004e0e2010d8e053bb1c937e34e6e4c4a9ef8801b263b4ea1197208fc47096f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.670Z",
+    "glossaryVersion": "0"
+  }
+}

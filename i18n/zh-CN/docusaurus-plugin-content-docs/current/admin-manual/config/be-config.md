@@ -1381,7 +1381,7 @@ load tablets from header failed, failed tablets size: xxx, path=xxx
 
 #### `enable_file_cache`
 
-* 默认值：在存算分离模式下为 true，在非存算分离模式下为 false。
+* 默认值：true（自 4.2 版本起默认开启；存算分离模式下始终开启）。
 
 * 描述：是否使用文件缓存。
 

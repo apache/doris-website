@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/first-significant-subdomain",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/first-significant-subdomain.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/first-significant-subdomain.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "eb9ff19598dd614dbff3eb39741047f449853885b0121c4c7da3960f8cce8514",
+    "sourceTechnicalHash": "0a60bbe6f6d958403f105bd5bff2586e208bd59ae00f723cf8114694f3354352",
+    "targetHash": "720a3a97a750a1fc60e3d4e1828215fb9a0477966e731dfc66556d4a8f072c72",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}

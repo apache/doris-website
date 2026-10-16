@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/snapshot",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/snapshot.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/snapshot.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "816b6c44ea0a963cf0fd634fd82a76ecd7ad60833a1e7c87c87fac3eaacfe00e",
+    "sourceTechnicalHash": "fc175eb7e169599f482efbe4217b5dbf8a05b8b24455a7540113b5a79402feae",
+    "targetHash": "9c038d0da27c8ac9acf1e5aaca51e2534b5c3d0c2b3b1553aef9fdd3b4ccfef6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.338Z",
+    "glossaryVersion": "0"
+  }
+}

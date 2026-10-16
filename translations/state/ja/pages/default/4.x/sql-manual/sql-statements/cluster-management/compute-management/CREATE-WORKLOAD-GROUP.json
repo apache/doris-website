@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-GROUP.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "032b7914f488c5f9ee2d14ba84a472c090cfbe88555fb9ac30aa03ae6956215e",
+    "sourceTechnicalHash": "0c750e9b768e91232cb9a31e029fe0c552e4902755f47c26842583d5a9ec4a03",
+    "targetHash": "2df761b07f8d03dd4db641ea6c0024c66b16cbb25b2fbbd11b94c8a25dbf0249",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:47:19.116Z",
+    "glossaryVersion": "0"
+  }
+}

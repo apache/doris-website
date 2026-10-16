@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-COPY-TABLET",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-COPY-TABLET.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-COPY-TABLET.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c43088e8d0f5a7f26869d25aafafcb509bd344ec0ca1812181332bbdf859c750",
+    "sourceTechnicalHash": "f72d4f82333adecd4006584a89cf391b42ba9f4ff9284ea2464f69fafd23126c",
+    "targetHash": "2c2335744e649e2e886e5daf640825ea458f5634b4d955a438433a78d47264e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.011Z",
+    "glossaryVersion": "0"
+  }
+}

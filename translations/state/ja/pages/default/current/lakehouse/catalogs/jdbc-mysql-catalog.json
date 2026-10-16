@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-mysql-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-mysql-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-mysql-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2e953ecf983aefbf0958e5cd372daa0948d50134c54968a32131d5a185e017a1",
+    "sourceTechnicalHash": "e10ced9db39e046712f98897f99b44b2bff022540b0c10996ec279843b263dee",
+    "targetHash": "e96e30249fc2618dbf009667c4ecf3dc3b1ca7def635e4e6df9a01016c72931c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

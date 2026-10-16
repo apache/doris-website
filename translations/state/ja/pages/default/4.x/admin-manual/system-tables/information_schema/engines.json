@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/engines",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/engines.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/engines.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a9eb75da7619acf1ad059d43054167de1bf1f8b66ac6b726ee62799a82a0e738",
+    "sourceTechnicalHash": "e153c41565e97bcfd0834612a38295c84a7143db90d09302b22f60281b984fde",
+    "targetHash": "a6e075d7c2c81e2769ecb23f09571eb2ed31cf50855a3eccb7115457e63e2dac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

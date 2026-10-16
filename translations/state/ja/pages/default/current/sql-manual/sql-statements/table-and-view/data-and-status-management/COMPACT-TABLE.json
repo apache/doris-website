@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fcb89107bb083d68951d5a6ebd20db5149c57e52ebda0e449febab2fb52f2429",
+    "sourceTechnicalHash": "e567088a8059f0d969dda24887b50b6e0576fb09cc9a44f91bd80cde2f48730e",
+    "targetHash": "1631b62b2d19916cea5a347474a16b7ec4434c03c3247c8fc935990f8a1216d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

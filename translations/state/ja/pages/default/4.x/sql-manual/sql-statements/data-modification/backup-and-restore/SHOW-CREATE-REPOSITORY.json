@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-CREATE-REPOSITORY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-CREATE-REPOSITORY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-CREATE-REPOSITORY.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "14690427a2f494410ac3ba34b4ee86bafb00c13cf2f9b9db735beaafe2087ede",
+    "sourceTechnicalHash": "cc38fe3c86208dc40a3813b4327b798a8a3e1640d9a67ec0f68eefbcee749508",
+    "targetHash": "4139dec12cd4b90463ac1c18e7b82ea45d6686a01587344394407eba28a9a294",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:48:32.829Z",
+    "glossaryVersion": "0"
+  }
+}

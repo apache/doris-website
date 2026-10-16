@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "1add2afb10a98fe97270845cc4bc6518bb0de772cd50188e6ed5bc54f30a248c",
+    "sourceTechnicalHash": "563602f340250e6daa2a86b5728261edcd02876ee4655d831c307bad13b3655f",
+    "targetHash": "a5d0f6969ac79df832435ef76cf536c662b5d61eabdf75adc9feaa5ec54aa441",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,43 @@
+---
+{
+    "title": "実行チューニング",
+    "language": "ja",
+    "description": "Apache Doris の実行チューニングに関するナビゲーション。並列度の調整、RuntimeFilter の待機時間、データスキューへの対処、Hint による CBO ルールの制御を扱います。"
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+実行チューニングは、実行時に明らかになるパフォーマンスのボトルネックに対処します。たとえば、不適切な並列度、適時に効果を発揮しない RuntimeFilter、Shuffle のデータスキュー、オプティマイザの選択に手動で介入する必要がある場合などです。まず Profile で症状を特定し、対応するチューニング方法を選んでください。
+
+## 実行時の最適化
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="並列度のチューニング"
+    description="単一テーブルのスキャン、JOIN、集約、同時実行数が多い場合の `parallel_pipeline_task_num` の設定方法を示し、クエリのレイテンシーとスケジューリングのオーバーヘッドのバランスを取ります。"
+    link="parallelism-tuning"
+/>
+
+<GettingStartedCard
+    title="RuntimeFilter の待機時間の調整"
+    description="Profile で RuntimeFilter の NOT_READY 状態を特定し、Probe 側がフィルタリングの効果を実際に得られるように `runtime_filter_wait_time_ms` を調整します。"
+    link="adjustment-of-runtimefilter-wait-time"
+/>
+
+<GettingStartedCard
+    title="データスキューへの対処"
+    description="Join Key またはバケット分布に起因する、一箇所に集中した実行ボトルネックを特定し、Broadcast Join や Leading Hint などの手法で Shuffle の負荷を均等化します。"
+    link="data-skew-handling"
+/>
+</div>
+
+## オプティマイザの制御
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Hint による CBO ルールの制御"
+    description="適応的な最適化だけでは不十分な場合は、`USE_CBO_RULE` Hint を使用して、集約のプッシュダウンなどのコストベースの書き換えルールを明示的に有効化します。"
+    link="../tuning-plan/controlling-hints-with-cbo-rule"
+/>
+</div>

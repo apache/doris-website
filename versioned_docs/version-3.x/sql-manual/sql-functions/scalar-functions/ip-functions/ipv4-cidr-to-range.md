@@ -17,7 +17,7 @@ IPV4_CIDR_TO_RANGE(<ip_v4>, <cidr>)
 ## Parameters
 | Parameter | Description                                      |
 |-----------|--------------------------------------------------|
-| `<ip_v4>`      | An IPv4 address of type String |
+| `<ip_v4>`      | An IPv4 address. Use `TO_IPV4` to convert an address string; `INET_ATON` and `ipv4_string_to_num` return BIGINT and cannot be used for this parameter. |
 | `<cidr>`      | The cidr value |
 
 
@@ -28,12 +28,12 @@ Returns a struct that contains two IPv4 fields representing the lower range (min
 
 ## Example
 ```sql
-SELECT ipv4_cidr_to_range(ipv4_string_to_num('192.168.5.2'), 16) as re1, ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16) as re2, ipv4_cidr_to_range(NULL, NULL) as re3;
+SELECT ipv4_cidr_to_range(to_ipv4('192.168.5.2'), 16) as re1, ipv4_cidr_to_range(NULL, NULL) as re3;
 ```
 ```text
-+------------------------------------------------+------------------------------------------------+------+
-| re1                                            | re2                                            | re3  |
-+------------------------------------------------+------------------------------------------------+------+
-| {"min":"192.168.0.0", "max":"192.168.255.255"} | {"min":"192.168.0.0", "max":"192.168.255.255"} | NULL |
-+------------------------------------------------+------------------------------------------------+------+
++------------------------------------------------+------+
+| re1                                            | re3  |
++------------------------------------------------+------+
+| {"min":"192.168.0.0", "max":"192.168.255.255"} | NULL |
++------------------------------------------------+------+
 ```

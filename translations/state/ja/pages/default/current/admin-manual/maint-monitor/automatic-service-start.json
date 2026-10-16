@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/maint-monitor/automatic-service-start",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/maint-monitor/automatic-service-start.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/automatic-service-start.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6fc335287cad909f2b65a7b0b4e1792ef06df9d5507975af1c39198c6eefea36",
+    "sourceTechnicalHash": "2906eadd40f23be6f8bf3b76969fe60fe9a85ab0dd8bde10909b3b510690782d",
+    "targetHash": "7c22948e4a36fb6d39647c6f93063c29fefe595d5e161b09a8901430457aa04d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.869Z",
+    "glossaryVersion": "0"
+  }
+}

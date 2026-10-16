@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/BIGINT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/BIGINT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "bf2a52b6a070bab9380321121b563a08590d49a525e63de920b727a183cec274",
+    "sourceTechnicalHash": "42a50455b542a8e2cc9d5c358547d5f57630cb4d68402469f86fcf926fee2bf9",
+    "targetHash": "f134a8e6f1c81d7f11892b8c1aea2b6589f34caacdc9724e01ca4804d926478a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}

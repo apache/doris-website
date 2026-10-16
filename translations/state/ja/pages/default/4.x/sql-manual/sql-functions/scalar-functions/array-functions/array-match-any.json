@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-match-any",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "88a9455c4e5c37c8829f8f1e91e25cb29df12a600d669c971c69b069995f80dc",
+    "sourceTechnicalHash": "ec198cd445796b99ae166a927b663fce672f0dac943ce4b1e9f80baad6823122",
+    "targetHash": "1cb44a3d29e124c9894096e7b480c8d66153e2522d1f12744c0cde2bab9d39a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.330Z",
+    "glossaryVersion": "0"
+  }
+}

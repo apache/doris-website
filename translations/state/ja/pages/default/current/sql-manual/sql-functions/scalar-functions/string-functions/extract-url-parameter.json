@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/extract-url-parameter",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/extract-url-parameter.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/extract-url-parameter.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "e8ac138405e493f37f18152979f119d0e65a80d0a1b73111fbf4b3e09f57d823",
+    "sourceTechnicalHash": "908206498ed16926ba3f083f545644602d2eb4b4ae4c3694e2b48fd9b27956da",
+    "targetHash": "976ab58b3e54f0009c4ca3125eca3eb0440943e26ad29b8cade382f28e2ec855",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.807Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/google-dataproc-metastore",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/google-dataproc-metastore.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/metastores/google-dataproc-metastore.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0da7ef56ce473752b70a177c38c3890b8ec23f6ccce1976fa742a3196698e4f0",
+    "sourceTechnicalHash": "64a41e95ce5613bb15b2cd6867f14a07c9d9d9331163c64d6d3ac260001465f7",
+    "targetHash": "ef5aae2a1b8fed617afc11e288e14df703707c07d87e7afe93f204523dac3410",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.866Z",
+    "glossaryVersion": "0"
+  }
+}

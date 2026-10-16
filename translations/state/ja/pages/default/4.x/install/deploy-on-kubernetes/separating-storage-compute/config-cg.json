@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-cg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "8caac48161b3e51a6e61dfd7e04f5d57886c5526d4ae8f212e2b5f8ec5ab2f95",
+    "sourceTechnicalHash": "b456bd74493eb189d55ac2d9143b43e927b19828e50ecd091d06afc641078bb2",
+    "targetHash": "636cefde3846b016d0627f291905dc5710d83bbf49524ff7de988144b1d359ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

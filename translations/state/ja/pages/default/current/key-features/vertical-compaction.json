@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/vertical-compaction",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/vertical-compaction.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/vertical-compaction.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a22ecc28cf117b68572242dd5513fc9dc57afa525fb983fa633d895c1a2ab5c1",
+    "sourceTechnicalHash": "3c3ba07d127ed0f3f7b9c0a2b30ea911f7e712654df9a9918c0e660b3f4e3dae",
+    "targetHash": "4f22e61d299576a63b3fe3f85769e1b2c8adf6e846f7fe9f32f6030d82ff4e7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:58:39.582Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -18,6 +18,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Verify Japanese source fallback resolver
+        run: python3 -m unittest scripts/__tests__/test_japanese_links.py
+
       - name: Collect added/modified Markdown files
         id: changed
         env:
@@ -36,7 +39,8 @@ jobs:
               "$BASE_SHA" HEAD \
               -- 'docs/**/*.md' 'docs/**/*.mdx' \
                  'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.md' \
-                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx'
+                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx' \
+                 'i18n/ja/**/*.md' 'i18n/ja/**/*.mdx'
             echo EOF
           } >> "$GITHUB_OUTPUT"
 

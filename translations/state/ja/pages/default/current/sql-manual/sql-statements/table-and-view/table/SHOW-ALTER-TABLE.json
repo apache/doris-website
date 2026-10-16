@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/SHOW-ALTER-TABLE.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "71ba50f435f5007c8452f54828f4c60714bdae099b7e6e214ffa0fde9edbb188",
+    "sourceTechnicalHash": "9d2202d77278dc4f9d689d646c53c2ec62fabd80ebae772aa99d5378e6b857fb",
+    "targetHash": "77502ae3fcf768f46ee4205cf7fbf09e98d51db3849f4fd5359642860019d6d4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.630Z",
+    "glossaryVersion": "0"
+  }
+}

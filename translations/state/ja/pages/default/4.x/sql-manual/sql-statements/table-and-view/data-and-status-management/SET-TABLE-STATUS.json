@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-STATUS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-STATUS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-STATUS.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "eccc03e94a072ef2409f34365a0762c1087909ce35d087ba5f7051682a4556c0",
+    "sourceTechnicalHash": "055fe7fcf5724e153b5d5aded2d2fa3453a69e16a9c14b5edcf7c95394152676",
+    "targetHash": "3ad06f41ac81b886853ba512f0878771f48283dc334041fc51ca4800bcc8a006",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.744Z",
+    "glossaryVersion": "0"
+  }
+}

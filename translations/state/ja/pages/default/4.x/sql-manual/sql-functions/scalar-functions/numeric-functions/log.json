@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/log",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/log.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/log.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "3ec8e3c24f155c3cfe322a5aa4f1c4361121a61f1ebe5392c295081dfd4d8fbb",
+    "sourceTechnicalHash": "3c4bc3c518584a531668e78565e3c58678c36efc3ff5c98241c459cb047efc4c",
+    "targetHash": "e52159a883267e3b7d2a242eff5669557c7e53871c79545e8ccd83d028d05768",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.822Z",
+    "glossaryVersion": "0"
+  }
+}

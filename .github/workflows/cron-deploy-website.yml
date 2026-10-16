@@ -1,11 +1,17 @@
 name: Cron Deploy
 
 on:
+    push:
+        branches:
+            - master
     schedule:
-        - cron: '0 */2 * * *' # Runs every 2 hours.
+        # Refresh dynamic data, such as the GitHub star count, and recover from
+        # a missed push deployment without rebuilding an unchanged site 12
+        # times per day.
+        - cron: '0 1 * * *' # Daily at 01:00 UTC.
 permissions: write-all
 # One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
-# run spent two hours on it) must not overlap the next cron trigger: both
+# run spent two hours on it) must not overlap a newer push or cron trigger: both
 # would push the same objects through the same slow pipe and race for the
 # bucket's .actioninfo manifest. Queue the newer run instead of cancelling
 # the running one - killing it mid-upload discards the manifest it writes at
@@ -17,6 +23,8 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
+        env:
+            DORIS_ENABLE_JA: 'true'
         steps:
             - name: Checkout
               # v4 (the pinned @master commit predates the `filter` input) with
@@ -78,12 +86,32 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:locales
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   ls build
-                  export DORIS_COMMIT=`git rev-parse HEAD`
+                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+            - name: Verify localized publishing artifacts
+              # Publishing builds every enabled locale, so every managed locale
+              # must be present and pass the strict cross-locale verification.
+              run: |
+                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                      test -s "build/${LOCALE}/index.html"
+                      node scripts/i18n/verify-static.cjs \
+                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+                  done
+
+            - name: Check file sizes for asf-site
+              # GitHub rejects a push holding any file over 100 MiB. Checking
+              # before the OSS upload stops such a build before anything is
+              # published. The PDFs under assets/files are removed before the push.
+              run: |
+                  if find build -type f -size +100M ! -path 'build/assets/files/*.pdf' -exec ls -l {} + | grep .; then
+                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                      exit 1
+                  fi
 
             #     - name: Generate PDF
             #       run: |
@@ -137,7 +165,6 @@ jobs:
               run: rm -rf ./build/assets/files/*.pdf
 
             - name: Deploy Website
-              if: ${{ github.event.inputs.branch == 'master' }}
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ github.token }}
@@ -147,17 +174,4 @@ jobs:
                   destination_dir: ./
                   user_name: 'github-actions[bot]'
                   user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
-
-            - name: Deploy Branch
-              if: ${{ github.event.inputs.branch != 'master' }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_branch: asf-site
-                  publish_dir: ./build
-                  force_orphan: true
-                  destination_dir: ${{ github.event.inputs.branch }}
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris branch ${{ github.event.inputs.branch }}@${{ env.DORIS_COMMIT }}'
+                  commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'

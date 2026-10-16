@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/file_cache_info",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/file_cache_info.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/file_cache_info.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "5da6b1aeb0c62eba993bec6b3d5c00aa145debffcd22a69ce6b6044d58aa3df7",
+    "sourceTechnicalHash": "d332b1b4fce1607b86045b66a16b38a1e420e216f85e9bf5a024c8a435803f98",
+    "targetHash": "82a033f0203e2144b5151841c18e57b3be88e27145d9cdce1ce598167846da40",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.744Z",
+    "glossaryVersion": "0"
+  }
+}

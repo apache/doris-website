@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/normal-cdf.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "937e63eb624b03ab7faefd843b744a37262ee0571e965d67c061388975677354",
+    "sourceTechnicalHash": "9b6e60157b4de9017a739fe79a692392bc0e1b8c68adfab6b3001fc56fd2200c",
+    "targetHash": "32e39e52414121d3db81a6cf67de984ea2f4f4227dffe0b4346c4589f5947228",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.258Z",
+    "glossaryVersion": "0"
+  }
+}

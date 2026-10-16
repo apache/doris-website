@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/statistic-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/statistic-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/statistic-action.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6c3186267d486851506c2dac2cf66f24ad7a7cb5ea1e1cb9fab1a59d185bf342",
+    "sourceTechnicalHash": "3c285b49791864cf47d619634dcfb572f00d581c46f487eb462d5567944692c2",
+    "targetHash": "da95baaf654251af9fa3655c9f1c31b6c3d193956ec48029fd090922b9e966c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.553Z",
+    "glossaryVersion": "0"
+  }
+}

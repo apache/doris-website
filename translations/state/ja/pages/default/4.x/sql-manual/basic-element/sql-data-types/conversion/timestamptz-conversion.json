@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2f2db332590ff56a611515d2e03d3aabfe1ec3b5e1683ac3412b3a41e558f5a7",
+    "sourceTechnicalHash": "09b6e1b7a0adb8889f44e93cc8adfd7ac2183edb33e69bb3a29d10cd43590272",
+    "targetHash": "dd52dcbe6fc72985a3405e4b4fca5a8e253a12dfb5f5185fc951acb92c21d67a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.669Z",
+    "glossaryVersion": "0"
+  }
+}

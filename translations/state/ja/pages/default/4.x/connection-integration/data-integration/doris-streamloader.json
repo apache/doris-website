@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/doris-streamloader",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
+    "sourceTechnicalHash": "a86693a509552566f5e0e82d32185567ef3d6d7be9f285772214d9680fa42b21",
+    "targetHash": "016c16c7404dc2f7b444141da133a01f2d2510021568af7bf187f7a508c08bb9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

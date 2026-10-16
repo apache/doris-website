@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/processlist",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/processlist.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/processlist.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "5e8fe61b2a336af9dc90facdecfe3fa4c4124243b57e859236a4a2b0d2615cee",
+    "sourceTechnicalHash": "113b05267ed3a92ac0c20f924782e5c98839449c6a18f5e5b2eeb674ada84c5a",
+    "targetHash": "ba86ee76224736e2b222ef5a09e6d220b8a985425f1d6a0fa34c6089e0846c9a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.285Z",
+    "glossaryVersion": "0"
+  }
+}

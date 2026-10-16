@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5f5109a4bf51e5f5a006f2f64a971c4d7baf4b501f827f37f42c4a172fa8ead4",
+    "sourceTechnicalHash": "a83e48e03a70fd0e65434690842fcb00fb4e8823019376e821a36f49e0349f10",
+    "targetHash": "d71085d54081038b2817b60a16ee2d5ccb1f47312d247ad79410aad8def12b6c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.010Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/schema_privileges",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/schema_privileges.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/schema_privileges.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "f6f631e59af54760c73ab29958517ab3dc420805abeadac85de6b5fbe3621fae",
+    "sourceTechnicalHash": "620ee300f8c28039ea7cb60f2d9f7072b3af7a258d3b112fc7455914abe1b34f",
+    "targetHash": "22f3a63504f8f0e392ccb08c8794cc8cf11a6b1441cb1eb625d9318ac9ba040b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

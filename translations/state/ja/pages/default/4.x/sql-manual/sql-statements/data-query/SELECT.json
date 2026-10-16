@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-query/SELECT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "487935a7779ee25948d245adb231d3536ecd3c12d3dbabea375dc388f9cbaf19",
+    "sourceTechnicalHash": "e940903aa0b466e8d23ced42700ff72d77f7afa1f2239982c2d5993d25e8bbf3",
+    "targetHash": "ec7d27bb1b0c877ff8024e1d2ebedb68752d2316473c3be31db45d5a5a310ffa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:30:45.468Z",
+    "glossaryVersion": "0"
+  }
+}

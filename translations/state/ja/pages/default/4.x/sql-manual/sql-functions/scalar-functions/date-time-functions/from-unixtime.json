@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "7f957f03a9b19f64b5eb69ff7015a3f0d92f47d2fc882bd3798433e1e10567fc",
+    "sourceTechnicalHash": "ce943c599ba5f28a58998f785953fb96d9c61680924229ff3c2f9d4256d83dd0",
+    "targetHash": "237f2e808281b54666194b694a824c64d7ec5a831bea4b4c0b58e08ae992e286",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.699Z",
+    "glossaryVersion": "0"
+  }
+}

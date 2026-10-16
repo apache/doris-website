@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/replace",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/replace.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "2220a624fb9b6a749099f422fde8ccd5e274f38cf1f9c6ec70f32b954ca317f2",
+    "sourceTechnicalHash": "87b2e1eda2abf04f914504151fafe200e2e197e4efeef4a20bae5732e0162bef",
+    "targetHash": "36082b920cc108b052039accc863787665e957e7509ebf6c2d2f4b2a2c8bc222",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.834Z",
+    "glossaryVersion": "0"
+  }
+}

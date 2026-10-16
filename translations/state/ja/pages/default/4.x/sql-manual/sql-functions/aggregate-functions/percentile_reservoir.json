@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "96848feac2604375066c1ee011d08feeb597d04c682f26bb83465019076efaa3",
+    "sourceTechnicalHash": "33616adfea1e9e9c4e35ad8eb56e90ca13202572fff35a7846a071966db2f2f5",
+    "targetHash": "d5f79876464506321bd69f13af7438519a8bb894f07816edf7db1d5151f5a4ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:12:57.466Z",
+    "glossaryVersion": "0"
+  }
+}

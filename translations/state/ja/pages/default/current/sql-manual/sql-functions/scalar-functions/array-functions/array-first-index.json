@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-first-index",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-first-index.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-first-index.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5edd9903a5dea0ffc015149b73347e1c943c28f7eeb2636102d6c3e6a1a36063",
+    "sourceTechnicalHash": "af5258cf81a952105a159257286be4b1ee299f7a713ac52f175e8d73468bcc20",
+    "targetHash": "acd7d6be57b796e29f7df1df5a744457064b21dee1fa1d6b699eedf4a13d824b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

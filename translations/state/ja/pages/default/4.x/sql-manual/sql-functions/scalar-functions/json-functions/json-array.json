@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-array",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-array.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-array.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "d2c186999632f426b62e3837307a58b30b79ab37787bf0020753acec77a3d664",
+    "sourceTechnicalHash": "f43d2b6b3e9ae6765294caf3fe9c524029099a9f03e34a13dc3d20138d5da411",
+    "targetHash": "4af3b674020bad910d6d6459822314b200c5ad3d6d2d1a1181a0c1931dd064bb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T12:42:57.798Z",
+    "glossaryVersion": "0"
+  }
+}

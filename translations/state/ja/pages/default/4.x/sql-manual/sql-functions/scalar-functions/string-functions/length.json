@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/length",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/length.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/length.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "42ca0b65b2e34ae9a253154a469e6f8d542e56c1af08820d14585a3dadd489ef",
+    "sourceTechnicalHash": "b60ab22b8c4aed47b4dd2765968b103a6006c5353f4fac98b2ba355190a0a7e0",
+    "targetHash": "1499c284d706104c734ff146f7a62044887280970e7afa633f7655937d7e8796",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.832Z",
+    "glossaryVersion": "0"
+  }
+}

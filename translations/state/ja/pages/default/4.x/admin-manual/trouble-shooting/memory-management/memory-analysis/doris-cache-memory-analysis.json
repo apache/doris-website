@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e207f15ade1ddbdab399ddb4c949d9592852bd89d92af2cdfc05d8a4a358b386",
+    "sourceTechnicalHash": "48b40df44f3897492a66fdeab2b9696b7345cd6393fe9bc56bbff1bccbf3a2bd",
+    "targetHash": "5b7b12d03eb0cbaee782926a4e80097a17de8bc2d2a78ae4e41a634d1d9e52c2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.554Z",
+    "glossaryVersion": "0"
+  }
+}

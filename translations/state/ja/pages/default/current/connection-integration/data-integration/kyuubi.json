@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/kyuubi",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/kyuubi.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/kyuubi.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "28e0e05b62c03c49891584d9daafc21a96fd5e162e9cacb20517cab2ae53abc8",
+    "sourceTechnicalHash": "9cee55840eab44c923f31f3105f1f61b88c310c0577ea2f3a6994fe024d9162d",
+    "targetHash": "86d3731bd783a7e2dd5ab23ce5c0a77a9db103ddfd5892b337e40623c4262861",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:19:43.743Z",
+    "glossaryVersion": "0"
+  }
+}

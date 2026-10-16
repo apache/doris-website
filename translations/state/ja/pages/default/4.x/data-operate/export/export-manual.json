@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/export/export-manual",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/export/export-manual.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/export/export-manual.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "36d2a74bd445bc86dc9794d08ae0d9c1ed2c455b30cfcbe4c8be830407bfc388",
+    "sourceTechnicalHash": "89c654243bf03eea64356feec81fb0b17516de02232806fa8ec6ca196230ded9",
+    "targetHash": "ea7bf79108f55f59ed4bb764293ab9017bd31ee61f5fcc1304ae3d4bac2c18ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.707Z",
+    "glossaryVersion": "0"
+  }
+}

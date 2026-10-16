@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-governance/DROP-SQL_BLOCK_RULE.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "a5bbee11987e8f622096af7460b6b4b83ddd907aa04cb70b28f8a34d31b27076",
+    "sourceTechnicalHash": "95a07581533bf370760aed92091f4bd4931a014929821d5437060bbd2b13bb6e",
+    "targetHash": "7907a8ed959b7897d35187f6c28c8e7177adbe0cb1c17cd92cd25984e34a83d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:58:17.484Z",
+    "glossaryVersion": "0"
+  }
+}

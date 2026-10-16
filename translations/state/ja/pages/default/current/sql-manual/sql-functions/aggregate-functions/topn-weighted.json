@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/topn-weighted",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/topn-weighted.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "932c037c7202f26599b33c16f1deef89bf5ec05b3af62208dc15801f103d943d",
+    "sourceTechnicalHash": "ec1d1bc6ba2cde41e3622ad9b6f6bb7197a30cac99fb65cebc0f7c5e565298d7",
+    "targetHash": "14a1f8f2bae02b418d901358922d5deceb1a009bf68dca15eb7a5de2ed616ed2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

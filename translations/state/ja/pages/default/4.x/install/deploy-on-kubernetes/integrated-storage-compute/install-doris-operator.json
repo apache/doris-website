@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/install-doris-operator.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "0827643ef46dcc6264232b3ec5d204b25b27c0ad73b6ad078ac8ff0f37fb1cd8",
+    "sourceTechnicalHash": "a655dba2b3f4dd1f7c4cb8900bdf19e74cefae7c6a72efad4935aa41736555b1",
+    "targetHash": "e18ffe455de6eb13d524aba9747409e2abeba090e92277bc27f3094743af41bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.628Z",
+    "glossaryVersion": "0"
+  }
+}

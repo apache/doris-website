@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/update-of-aggregate-model",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/update-of-aggregate-model.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/update/update-of-aggregate-model.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "9032ca31680810fc4869c081537a51ed37b382420500ebc7bd592f01c54b0fc2",
+    "sourceTechnicalHash": "94e640251b2463a05b00945c1c7f6726409f0110ddc77313ad32a4b4f4eef28d",
+    "targetHash": "fbcc43bfbf57b89a4f48dc597e45c32eddfdff26e53b8d959bf6e1a282a6a39b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.642Z",
+    "glossaryVersion": "0"
+  }
+}

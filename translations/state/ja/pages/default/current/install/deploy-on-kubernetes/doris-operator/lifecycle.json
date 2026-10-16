@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/doris-operator/lifecycle",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/doris-operator/lifecycle.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/doris-operator/lifecycle.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "f363eeaef7db75223e49266f9c38843e528efb15f2683ef4aee25cf4b0e2fb21",
+    "sourceTechnicalHash": "1db283409a7c3c70ecacf5d70c25dbc7fb13e6407e79acfc8bf814b8c5211e73",
+    "targetHash": "4d51ae98c125af4d53bc7ae34c970c8bc9a0655b38436b15422effc999d43621",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:44:44.431Z",
+    "glossaryVersion": "0"
+  }
+}

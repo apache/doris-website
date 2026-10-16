@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/tablet-restore",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/tablet-restore.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/tablet-restore.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "88bf083687ca27f66f47b25640ce6c60717e8ca2112c031f79c03cfbb8afd2db",
+    "sourceTechnicalHash": "70814596d35509691b6621b223ac01ac06aa492075136d3fec4537e02f05bc5f",
+    "targetHash": "be09d3b85eb13643bd0d8142243c7c7e8db04ccb715e2dd6c3565011ae1d5a6f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.339Z",
+    "glossaryVersion": "0"
+  }
+}

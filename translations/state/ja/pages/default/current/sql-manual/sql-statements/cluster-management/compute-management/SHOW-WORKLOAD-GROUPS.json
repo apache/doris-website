@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "45101971735896edce99f0195ac7a24fd33a305048121148dbe9b6765a1a0490",
+    "sourceTechnicalHash": "811677881846d26980ef24fb2cb60d3111c826a22c52ac33e294cf5f60fdaca6",
+    "targetHash": "64189a22177f35c4bbf533deebe57af06a3eb9da8a2fdfa5d0feb11fcc9aab82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.610Z",
+    "glossaryVersion": "0"
+  }
+}

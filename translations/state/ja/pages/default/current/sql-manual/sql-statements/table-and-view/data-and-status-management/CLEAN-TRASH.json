@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "fe07d7fc65e05041e5fabeb0fd86a171989aba850af61066426affbdbb14a583",
+    "sourceTechnicalHash": "b69e74b8aa7bdc0d0c8387e18290852c96f8e61994a5dc63d6afe34a9777ccd5",
+    "targetHash": "83d15a2a7249c6acd8f44a1773eaac9e233874d886954e699cd6e77f7e2f85c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.011Z",
+    "glossaryVersion": "0"
+  }
+}

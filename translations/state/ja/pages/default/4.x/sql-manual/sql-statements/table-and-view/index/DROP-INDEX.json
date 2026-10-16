@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/index/DROP-INDEX",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/index/DROP-INDEX.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/index/DROP-INDEX.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "2a5f775ba0dfeec836cc8e8c05368d1b0787f00056254c02f238defdc51bc966",
+    "sourceTechnicalHash": "e09b09f4f230da4093e8fda565612f9eb6ad6b9cc502d5a7d3a4015d17c8845b",
+    "targetHash": "a040de160016025267d02e51f62ac7d889eac1d8aec75e53c4e6467b52c28bcd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.485Z",
+    "glossaryVersion": "0"
+  }
+}

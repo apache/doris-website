@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-manually/integrated-storage-compute-deploy-manually",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "249905350a4e4b80ef3f85a974222867979aadf8abf2618dadc4cb185c4fc377",
+    "sourceTechnicalHash": "cbff0bccbfffec51e9cd01b909f5427397fe66de696778302442e48ea728b04b",
+    "targetHash": "a0b2ae8b3acb66eab5c156a281bc76fcca4ee82562e5fd669bdfa042ea147285",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

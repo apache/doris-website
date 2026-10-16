@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/global_variables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/global_variables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/global_variables.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "a7b0a0231a90b197603d663b4b5f88bc211b62023e98bab5f87d28f313af611b",
+    "sourceTechnicalHash": "8e8b4c6769637ace7b29fe5db74748125c54c3b7768f3771273bf05a39792a8d",
+    "targetHash": "9e2ec0c332cca28f743f76318eb4ecdeb306907b0a001d668ee0b2a458b6ab69",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.285Z",
+    "glossaryVersion": "0"
+  }
+}

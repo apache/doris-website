@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-pushback",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-pushback.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-pushback.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a6afa3ac8d24c5c739bd592c4e60ed824b2cd543fa18ae1befd5935dbf793f91",
+    "sourceTechnicalHash": "4d88f0ecff5a0e662034c190dc9f7da7762d36a13eca7635b7ce888cc82ca091",
+    "targetHash": "a80ad0deab59151392653fba4f9d1d5a6ff1104a530fb0066eeed6a3b373110c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.187Z",
+    "glossaryVersion": "0"
+  }
+}

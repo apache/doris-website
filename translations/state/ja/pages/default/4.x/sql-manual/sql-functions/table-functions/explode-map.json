@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-map.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "71e7f3fb39e24960282cb68ddc9c232bbb4e439f7d6bbf806abbe0831767bddf",
+    "sourceTechnicalHash": "834ebcac2ebde175bb4b7bc954bb8eaed99be16cd4217b6293fe0d5e416ba489",
+    "targetHash": "2f8eb4bd088d7222677671ab31283969d7533864f892a08bf11642485330ddab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.001Z",
+    "glossaryVersion": "0"
+  }
+}

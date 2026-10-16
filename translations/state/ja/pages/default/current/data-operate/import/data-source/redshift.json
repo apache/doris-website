@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/redshift",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/redshift.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/data-source/redshift.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+    "sourceTechnicalHash": "c2ac105a31955ed67c896b8c6096831e77bcba2c8c134c6b21cac16f173d1230",
+    "targetHash": "efb1a972725cc0344078664f41f70d17dc5007f78a3262eb186dbc6f5ec79c7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T14:56:43.008Z",
+    "glossaryVersion": "0"
+  }
+}

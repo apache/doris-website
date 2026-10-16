@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/INT",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "be163231911536f29f77838f1a9ff3019afa2f0a2d261d5488d1814bd17986bd",
+    "sourceTechnicalHash": "377cc441a7b1dfbd87011987935b387fa4fe495be7efb7bcb0cb07c6b5d88f3f",
+    "targetHash": "dce255cd01fe89ddf1e6db1059df64ebd438351812914184e5e783e3f3121051",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.342Z",
+    "glossaryVersion": "0"
+  }
+}

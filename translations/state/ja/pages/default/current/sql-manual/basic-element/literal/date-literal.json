@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/literal/date-literal",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/literal/date-literal.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/literal/date-literal.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "59d9c6d10ef78107e42a200db4e86ecd36dd69cf6400f4a7ba535619d71ad5a2",
+    "sourceTechnicalHash": "4871ebcc72379b2abfc4d8698330664f28265c0fa33bdd9de8ea223c8e28a260",
+    "targetHash": "d76bc0efdf5af17ce470b5cafe1e89062ea7cbb22a1bd7f5d573ecf626c5e6b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.254Z",
+    "glossaryVersion": "0"
+  }
+}

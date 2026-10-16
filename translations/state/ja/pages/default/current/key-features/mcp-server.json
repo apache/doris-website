@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/mcp-server",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/mcp-server.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/mcp-server.mdx",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+    "sourceTechnicalHash": "f07db36c8c1852980955f655e71c8e7b35cbb101a4667221fe8bc39e87401113",
+    "targetHash": "2f0b48c8eb3d33f5de8cc0c7f3534daa2b647e02139b1540cc5d0a8db71bb7ec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.614Z",
+    "glossaryVersion": "0"
+  }
+}

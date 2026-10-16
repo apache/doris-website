@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "94094452a54b766e808ddc2b906400769b37e8d97d5aebf7de610614382da95c",
+    "sourceTechnicalHash": "31903913f344ad340b9f460f139f91e2b32a254b14db539298bc4b51b8a1d356",
+    "targetHash": "40122980911ca6d697bad34ec9c2c0b25f06d7696c3ed3f4e33dcaa2cad7903e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

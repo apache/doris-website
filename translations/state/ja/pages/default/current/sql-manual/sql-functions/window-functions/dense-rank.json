@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/dense-rank",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "3901365d069fddfe816fe2bcc8de38a9ca8931debb8b2019961d5a75bfb23e6d",
+    "sourceTechnicalHash": "25e0ed6ecd74ca9196245b2354e2bdd3dffcc4a96ede0a58e095c3fb691b5d37",
+    "targetHash": "84c09e7cd24304ce71468324b22cb64f937b830b60be5e8e224f7c4a46584283",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

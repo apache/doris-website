@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/character-set/SHOW-COLLATION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/character-set/SHOW-COLLATION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/character-set/SHOW-COLLATION.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "6ff5e38868dcca9d89b3cab93294b9a91b8f246c4da158fb938d2dcc6681cba7",
+    "sourceTechnicalHash": "7ce3a56ff21090d26843fd64adda142ea0da24b22fd94ff999fc7ceb37e093f9",
+    "targetHash": "5edb8408d3e29e74125875888344fbd40ed47e37535420d4b687b0cbbefba16f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.235Z",
+    "glossaryVersion": "0"
+  }
+}

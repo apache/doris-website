@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/partitioning-and-bucketing",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/partitioning-and-bucketing.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/partitioning-and-bucketing.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "dd14dc780abfedbdcf4453a3a045e95b091fdeed5097e21216fd2eefe4c78667",
+    "sourceTechnicalHash": "f54cd186a0459b4c6df08d002d99da2a2deb5ad9b98adad303e09b8e505bc3ae",
+    "targetHash": "fc2be3586875fe3c8d2d4ed77b72b1fc795ccaf4bb5254b52fc3b61797a73b19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:20:55.868Z",
+    "glossaryVersion": "0"
+  }
+}

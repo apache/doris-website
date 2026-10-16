@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-length",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-length.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-length.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "fc67201b8658c682856a8c1a1d1e2c91f40a7d808999346f0bcb59d5ab1313eb",
+    "sourceTechnicalHash": "e802882e4545085a85dc6ee1687ee7c4f5f0c41198994fd6b98ffae71fa44a43",
+    "targetHash": "124c2f9dc3b1e409cd9ac32e25b6c9ea100bb9b145e498dd792c4bd5f9c1dac8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:46:52.921Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/literal/numeric-literal",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/literal/numeric-literal.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/literal/numeric-literal.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a21c13f9a55b92772f3064a313eb2d9a0a1fdb8579423f1d3933b43633123f84",
+    "sourceTechnicalHash": "7bbfa6c4f5469dc497b3ff133e5419dbc39c25775a9d4d00423fb8a188d11b40",
+    "targetHash": "9f8d9f1b4fcccbf8d7ccf39b64b0ff97164ef0e325f466ef3f94bacf6fd7ddad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.670Z",
+    "glossaryVersion": "0"
+  }
+}

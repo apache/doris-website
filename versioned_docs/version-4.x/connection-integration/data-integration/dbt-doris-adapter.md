@@ -1,8 +1,9 @@
 ---
 {
-    "title": "Apache Doris dbt Adapter",
+    "title": "dbt Adapter",
+    "sidebar_label": "dbt Adapter",
     "language": "en",
-    "description": "Install and configure dbt-for-apache-doris for Apache Doris models, source freshness, and asynchronous materialized views.",
+    "description": "Install dbt-for-apache-doris 1.1.1 and configure models, External Catalog sources, Iceberg targets, and asynchronous materialized views.",
     "keywords": [
         "Apache Doris dbt",
         "dbt Doris Adapter",
@@ -25,7 +26,7 @@
 
 [dbt](https://docs.getdbt.com/docs/introduction) manages the transformation step in an ELT (Extract, Load, Transform) workflow. The `dbt-for-apache-doris` adapter compiles dbt models into Doris SQL and executes table creation, transformation, testing, and documentation operations through the Doris Frontend (FE) MySQL query port.
 
-Source data must already be loaded into Doris. The adapter performs transformations; it does not ingest or synchronize source data.
+Source data must already be queryable through Doris, either in Internal Catalog tables or through configured External Catalogs. The adapter performs transformations; it does not ingest or synchronize source data.
 
 :::caution
 
@@ -41,11 +42,13 @@ Source data must already be loaded into Doris. The adapter performs transformati
 | Component | Requirement |
 | --- | --- |
 | Python | 3.10 or later |
+| dbt Core | 1.12.x (installed with the adapter) |
 
 ## Released versions
 
 | Version |
 | --- |
+| [1.1.1](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.1) |
 | [1.1.0](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) |
 
 <!-- Knowledge Type: Operational Steps -->
@@ -53,7 +56,7 @@ Source data must already be loaded into Doris. The adapter performs transformati
 
 ## Installation
 
-The following commands use the published [`v1.1.0` release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.0) as an installation example. To install another release, replace the version in the `pip` requirement.
+The following commands use the published [`v1.1.1` release](https://github.com/velodb/dbt-for-apache-doris/releases/tag/v1.1.1) as an installation example. To install another release, replace the version in the `pip` requirement.
 
 Install the adapter from PyPI in an isolated Python environment:
 
@@ -61,7 +64,7 @@ Install the adapter from PyPI in an isolated Python environment:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install "dbt-for-apache-doris==1.1.0"
+python -m pip install "dbt-for-apache-doris==1.1.1"
 dbt --version
 ```
 
@@ -71,11 +74,11 @@ On Windows PowerShell:
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install "dbt-for-apache-doris==1.1.0"
+python -m pip install "dbt-for-apache-doris==1.1.1"
 dbt --version
 ```
 
-For this example, the `Plugins` section of `dbt --version` should contain `doris: 1.1.0`. dbt Core and MySQL Connector/Python are installed as dependencies.
+For this example, the `Plugins` section of `dbt --version` should contain `doris: 1.1.1`. dbt Core and MySQL Connector/Python are installed as dependencies.
 
 <!-- Knowledge Type: Operational Steps / Minimal Example -->
 <!-- Use Case: Connect dbt to Doris / Validate an end-to-end model build -->
@@ -114,17 +117,9 @@ doris_demo:
 | `password` | Read from an environment variable | Defaults to an empty string |
 | `schema` | Set the target Doris database | The `dbt init` prompt defaults to `dbt`; the underlying credentials default to `None` |
 | `threads` | Set according to FE and workload capacity | The `dbt init` prompt defaults to `1` |
-| `database` | Omit it | If set, it must exactly equal `schema` |
+| `database` | Omit for Internal Catalog; set to an existing Doris Catalog for an external target | Maps to the Doris Catalog in v1.1.1 |
 
-The adapter maps a dbt schema to a Doris database. If the target database does not exist, the adapter attempts to create it. The Doris account used by dbt therefore needs permission to read source tables and to create, alter, drop, and write objects in the target database.
-
-Here, `database` is not a Doris catalog. It is a field inherited from dbt's generic `database.schema.identifier` naming model. Doris Internal Catalog uses only `database.table`, so set the Doris database in profile `schema` and omit profile `database`. Source `database` has a different compatibility behavior: it can override `schema` as the Doris database for cross-database reads. Profiles and standard `source()` cannot represent both a Doris catalog and database level.
-
-:::caution
-
-The adapter currently does not support External Catalog three-part namespaces using Catalog, Database, and Table.
-
-:::
+In v1.1.1, dbt `database.schema.identifier` maps to Doris `catalog.database.table`. For Internal Catalog, omit `database` and set `schema` to the Doris database. For an external target, set `database` to an existing Doris Catalog and `schema` to a database in that Catalog. The adapter can attempt to create a missing target database if the Catalog supports it. The dbt account needs permission to read sources and to create, alter, drop, and write target objects. External Catalog write support also depends on the Doris connector.
 
 Ensure that `dbt_project.yml` references the same profile:
 
@@ -253,7 +248,54 @@ sources:
       - name: payments
 ```
 
-For compatibility with existing dbt projects, a source may instead set only `database: finance_raw`, or set `database` and `schema` to the same value. If source `database` and `schema` differ, the adapter uses `database` as the Doris database. This differs from profile validation, which requires both values to match. New projects should consistently use source `schema` to avoid ambiguity.
+In v1.1.1, a source's `database` names a Doris Catalog. To read from another database in Internal Catalog, set only `schema`, as above. Projects that used `database: finance_raw` for cross-database sources in v1.1.0 must move that value to `schema` before upgrading.
+
+## External Catalogs in v1.1.1
+
+The adapter can read sources in External Catalogs and discover their tables and columns for `dbt docs generate`. Create the Catalog in Doris first, then specify its name in the source's `database` field:
+
+```yaml
+sources:
+  - name: lakehouse
+    database: hive_catalog
+    schema: ods
+    tables:
+      - name: orders
+```
+
+`{{ source('lakehouse', 'orders') }}` resolves to `hive_catalog.ods.orders`. The `schema` field names the database inside that Catalog. The adapter supports catalog-qualified relation names; each Catalog connector still determines which DDL and writes Doris can perform.
+
+To create an Iceberg target, first [configure a writable Iceberg Catalog](../../lakehouse/catalogs/iceberg-catalog). Set these fields in the existing profile output:
+
+```yaml
+database: iceberg_catalog
+schema: analytics
+```
+
+Create `models/iceberg_sample.sql`:
+
+```sql
+{{ config(materialized='table', engine='iceberg') }}
+
+select cast(1 as int) as id
+```
+
+The explicit `INT` cast avoids inferring `TINYINT`, which is not an Iceberg column type.
+
+Run `dbt run --select iceberg_sample`. It creates `iceberg_catalog.analytics.iceberg_sample`. The Catalog must exist; its database must exist or be creatable by dbt, and the target must be writable. `engine='iceberg'` emits an explicit engine clause; omitting `engine` lets Doris infer it from the target Catalog. Catalog-based inference was verified with Doris 4.1.3. Earlier Doris releases may require the explicit engine.
+
+| Iceberg target | v1.1.1 behavior |
+| --- | --- |
+| `table` | Creates an Iceberg table; reruns replace it through backup and rename |
+| `incremental` | Supports `append`, `merge`, `insert_overwrite`, and `microbatch` as described below |
+| Seed and Snapshot | Supported; Snapshot publication and Seed full refresh use backup and rename. Ordinary reload uses INSERT OVERWRITE for unpartitioned tables; partitioned reload uses native MERGE and requires V2+. For V1 partitioned Seeds, use `dbt seed --full-refresh` |
+| `view` and `materialized_view` | Targets must be in Internal Catalog; Internal Catalog views and MVs can query External Catalog sources |
+
+Iceberg `merge`, `microbatch`, and partitioned Seed reload require a Doris release with native Iceberg `MERGE INTO` and an Iceberg V2 or later table. These paths were verified on Doris 4.1.3; [Doris documents Iceberg MERGE as experimental since 4.1.0](../../lakehouse/catalogs/iceberg-catalog#merge-into). An external table replacement is not atomic: its name is briefly unavailable between renames, and a failure can leave the old table under a backup name. Use an isolated test project to validate your Doris release, Catalog connector, and recovery procedure before production use.
+
+The adapter rejects model or column `constraints` declarations before writing a Table, View, Incremental, or MV target. Model contracts still check column names and types. Use `data_tests` such as `not_null` to check data after writing; these do not create database-enforced constraints.
+
+The [five runnable Doris demos](https://github.com/velodb/dbt-for-apache-doris/tree/3fb9cc75f9dcdd756b472847728bbdf42fb3b128/examples/doris-demos) cover models, tests, cross-database sources, incremental processing, snapshots, and asynchronous materialized views. The demo setup defaults to `dbt-for-apache-doris==1.1.1`.
 
 <!-- Knowledge Type: Capability Reference / Configuration Parameters / Architecture Decision -->
 <!-- Use Case: Materialization selection / Incremental processing / Materialized views -->
@@ -264,10 +306,10 @@ For compatibility with existing dbt projects, a source may instead set only `dat
 
 | Materialization | Doris object or behavior | Use case |
 | --- | --- | --- |
-| `view` | Doris view | Lightweight transformations that should always read current source data |
-| `table` | A fully rebuilt Doris Duplicate Key table | Bounded results that need stable query performance |
+| `view` | Internal Catalog Doris view | Lightweight transformations that should always read current source data |
+| `table` | A fully rebuilt Internal Catalog Duplicate Key table or writable Iceberg table | Bounded results that need stable query performance |
 | `incremental` | Appends, upserts, or overwrites data according to a strategy | Incremental processing for large tables |
-| `materialized_view` | Doris asynchronous materialized view | Doris-managed refresh and transparent query rewrite |
+| `materialized_view` | Internal Catalog Doris asynchronous materialized view | Doris-managed refresh and transparent query rewrite |
 | `ephemeral` | Compiles into a CTE in downstream models | Reuse SQL without creating a Doris object |
 
 Seeds and snapshots can also create Doris tables. The adapter currently does not include a custom `partition` materialization; use incremental `insert_overwrite` for partition replacement. The examples below keep `replication_num=1` so they also run on a single-BE development cluster; use a production-appropriate replica count in real deployments.
@@ -311,7 +353,7 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-The `table` materialization creates a Duplicate Key table and fully replaces the target on subsequent runs. Table models accept the following table-creation settings:
+For Internal Catalog targets, the `table` materialization creates a Duplicate Key table and fully replaces it on subsequent runs. Iceberg targets do not use Doris OLAP keys or default distribution. Table models accept the following table-creation settings:
 
 | Setting | Type and default | Description |
 | --- | --- | --- |
@@ -324,7 +366,7 @@ The `table` materialization creates a Duplicate Key table and fully replaces the
 | `replication_num` | Positive integer or numeric string; optional | Replica count; the top-level setting overrides the same key in `properties` |
 | `properties` | Dictionary; optional | Key-value pairs rendered into Doris `PROPERTIES` |
 
-Duplicate Key, partition, and distribution columns must be present in the model output and comply with Doris table-creation rules. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. An ordinary `table` model currently does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
+Duplicate Key, partition, and distribution columns must be present in the model output and comply with Doris table-creation rules. The adapter renders `partition_by_init` and `properties` into the `CREATE TABLE` statement; Doris validates the partition definitions, property names, and values. OLAP-specific options such as `duplicate_key` and `distributed_by` are not suitable for Iceberg targets. An ordinary `table` model currently does not expose Aggregate Key or standalone Unique Key configuration. Use incremental `merge` for Unique Key upserts.
 
 ### Incremental
 
@@ -337,14 +379,14 @@ Microbatch does not use this filtering pattern. dbt Core injects time filters fr
 
 | Strategy | Doris target and behavior | Main requirements |
 | --- | --- | --- |
-| `append` | Executes `INSERT INTO` against a Duplicate Key table | Do not set `unique_key` |
-| `merge` | Performs full-row `INSERT INTO` upserts against a MOW or MOR Unique Key table | `unique_key` is required |
-| `insert_overwrite` | Overwrites the whole table, named partitions, or partitions touched by the batch | `unique_key` is rejected |
-| `microbatch` | Overwrites one exact RANGE partition for each dbt Core UTC window | Configure `event_time`, `batch_size`, and `begin` |
+| `append` | `INSERT INTO` on an OLAP Duplicate Key or writable Iceberg table | Do not set `unique_key` |
+| `merge` | Full-row `INSERT INTO` upsert on an OLAP Unique Key table; native `MERGE INTO` on Iceberg | Requires `unique_key`; Iceberg also requires native MERGE support and V2+ tables |
+| `insert_overwrite` | OLAP whole-table, named or dynamic partition overwrite; Iceberg whole-table, dynamic or static partition overwrite | Rejects `unique_key`; Iceberg static scope uses a column/value mapping |
+| `microbatch` | OLAP exact RANGE-partition overwrite; Iceberg replaces one UTC window with native MERGE | Configure `event_time`, `batch_size`, and `begin`; Iceberg requires native MERGE and V2+ |
 
 When no strategy is set, `unique_key` selects `merge`; otherwise the adapter uses `append`. The adapter supports all four `on_schema_change` modes: `ignore`, `fail`, `append_new_columns`, and `sync_all_columns`.
 
-`delete+insert` and `delete_insert` are rejected. Use `merge` for Doris Unique Key upserts. `merge` does not generate SQL `MERGE INTO`; it uses full-row `INSERT INTO` with Doris Unique Key semantics. Each batch must contain at most one row for each `unique_key`. To use a Sequence Column, set the visible column through `function_column.sequence_col` in `properties` and continue using `merge`. The bare `sequence_col` setting and `function_column.sequence_type` with the hidden `__DORIS_SEQUENCE_COL__` are currently not supported.
+`delete+insert` and `delete_insert` are rejected. Use `merge` for Doris Unique Key upserts. On OLAP targets, `merge` uses full-row `INSERT INTO` with Doris Unique Key semantics. On Iceberg targets, it generates native `MERGE INTO` and rejects duplicate source keys before writing. Each batch must contain at most one row for each `unique_key`. To use a Sequence Column, set the visible column through `function_column.sequence_col` in `properties` and continue using `merge`. The bare `sequence_col` setting and `function_column.sequence_type` with the hidden `__DORIS_SEQUENCE_COL__` are currently not supported.
 
 The following example performs a full-row upsert by `order_id`:
 
@@ -376,7 +418,7 @@ where updated_at >= (
 {% endif %}
 ```
 
-To overwrite named Doris partitions:
+To overwrite named Internal Catalog Doris partitions:
 
 ```sql
 {{
@@ -421,11 +463,13 @@ The first run creates the target through CTAS and does not execute `INSERT OVERW
 - List of partition names: overwrite only those partitions.
 - `'*'`: let Doris dynamically overwrite partitions touched by the batch.
 
-A dynamic overwrite cannot infer which partition to clear from an empty batch. Specify partition names when an empty source batch must clear target data.
+A dynamic OLAP overwrite cannot infer which partition to clear from an empty batch. Specify partition names when an empty source batch must clear target data.
+
+For Iceberg targets, omit `overwrite_partitions` to use native dynamic overwrite on partitioned tables. Set a non-empty column/value mapping, such as `overwrite_partitions={'dt': '2025-01-25'}`, to replace one static scope. The model must return all rows in that scope. On an unpartitioned target, the model must return the complete replacement result; an empty result clears the table. An empty result for a static scope also clears that scope. A mapping containing `NULL` uses native MERGE and requires Iceberg V2+.
 
 ### Microbatch
 
-`microbatch` uses the dbt Core batch context. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the first-model example above, add this configuration to its existing table declaration:
+`microbatch` uses the dbt Core batch context. The following example targets an Internal Catalog OLAP table and overwrites one exact RANGE partition for each UTC window. Configure an `event_time` field on each direct upstream resource and on the target model. For the `raw.orders` source created in the first-model example above, add this configuration to its existing table declaration:
 
 ```yaml
 sources:
@@ -461,9 +505,9 @@ select
 from {{ source('raw', 'orders') }}
 ```
 
-`event_time` must be an unquoted column name and must refer to the same single column as `partition_by`. `batch_size` supports `hour`, `day`, `month`, and `year`. The target is a Duplicate Key table: `duplicate_key` configures the Doris table key and is not dbt `unique_key`. Do not set `unique_key`, `overwrite_partitions`, or `partition_by_init`; the adapter derives the partition boundary and overwrite target from the current batch. If an upstream `ref()` or `source()` also configures `event_time`, dbt Core filters that input to the current window. Microbatch batches execute serially and overwrite the exact partition even when a batch is empty, so rows removed from that window are cleared.
+For an Internal Catalog OLAP target, `event_time` must be an unquoted column name and must refer to the same single column as `partition_by`. `batch_size` supports `hour`, `day`, `month`, and `year`. The target is a Duplicate Key table: `duplicate_key` configures the Doris table key and is not dbt `unique_key`. Do not set `unique_key`, `overwrite_partitions`, or `partition_by_init`; the adapter derives the partition boundary and overwrite target from the current batch. If an upstream `ref()` or `source()` also configures `event_time`, dbt Core filters that input to the current window. Microbatch batches execute serially and overwrite the exact partition even when a batch is empty, so rows removed from that window are cleared.
 
-Microbatch can also use Doris Dynamic Partition when the following properties are configured and pass adapter validation:
+Internal Catalog Microbatch can also use Doris Dynamic Partition when the following properties are configured and pass adapter validation:
 
 - `dynamic_partition.enable='true'`.
 - `dynamic_partition.time_unit` matches `batch_size`, and `dynamic_partition.time_zone` is `UTC`, `Etc/UTC`, or `+00:00`.
@@ -475,7 +519,7 @@ Doris also requires a positive `dynamic_partition.buckets` value when creating a
 
 :::caution
 
-For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Whole-table `insert_overwrite` must return the complete target data. Each `merge` batch must contain unique `unique_key` values. dbt Core supplies Microbatch filtering from upstream resources configured with `event_time`, so Microbatch models do not need `is_incremental()`. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes.
+For `append`, `merge`, and partition-scoped `insert_overwrite`, the adapter does not discover new or changed source rows automatically. The model SQL must return the intended batch. Whole-table `insert_overwrite` must return the complete target data. Each `merge` batch must contain unique `unique_key` values. dbt Core supplies Microbatch filtering from upstream resources configured with `event_time`, so Microbatch models do not need `is_incremental()`. Run `dbt run --full-refresh` after incompatible key, partition, or physical-layout changes. For Iceberg Microbatch, omit `unique_key`, `overwrite_partitions` (including column/value mappings), `partition_by_init`, and OLAP Dynamic Partition properties. If `partition_by` is configured, set `partition_type='LIST'`. Each UTC window is replaced with native MERGE, including empty windows.
 
 :::
 
@@ -567,15 +611,15 @@ When model SQL or DDL configuration changes, the default `on_configuration_chang
 | Capability | Support |
 | --- | --- |
 | Seed | Put small, version-controlled CSV files in `seeds/`, then run `dbt seed`; supports type inference, `column_types`, and `ref` |
-| Snapshot | Define `check` or `timestamp` strategies in `snapshots/`, then run `dbt snapshot`; supports hard deletes, schema evolution, and atomic replacement |
+| Snapshot | Define `check` or `timestamp` strategies in `snapshots/`, then run `dbt snapshot`; supports hard deletes and schema evolution. Internal Catalog replacement is atomic; Iceberg replacement uses backup and rename |
 | Data tests | Configure Generic Tests in YAML or write Singular Tests in `tests/`; supports ephemeral and `store_failures` paths |
 | Unit tests | Provide inline-row or CSV fixtures in model YAML, then run `dbt test --select test_type:unit` |
-| Model contracts | Set `contract.enforced: true` and declare column names and types for Table, View, or Incremental models; does not create database PK or NOT NULL constraints |
+| Model contracts | Set `contract.enforced: true` and declare column names and types for Table, View, or Incremental models; `constraints` declarations are rejected, and data tests do not create database constraints |
 | Persisted docs | Enable `persist_docs` for relation and column comments on primary relation types |
 | Source freshness | Configure `loaded_at_field` or `loaded_at_query` with `freshness`, then run `dbt source freshness` |
 | Grants | Use standard `grants` configuration for Doris `user` and `user@host` table privileges; role principals are currently not supported |
 | Hooks | Use `pre_hook` and `post_hook` to execute Doris SQL around materializations; hook side effects have no transactional rollback |
-| Documentation and lineage | Write descriptions and run `dbt docs generate` for metadata about Doris databases, tables, views, columns, comments, and asynchronous materialized views |
+| Documentation and lineage | Write descriptions and run `dbt docs generate` for Internal and External Catalog relation and column metadata, including Internal Catalog asynchronous materialized views |
 
 Seeds are suitable for small, version-controlled data such as country codes or status mappings, not bulk business-data ingestion. Use Doris Stream Load, Broker Load, or a Doris Connector for large files.
 
@@ -692,12 +736,12 @@ dbt run --select fct_orders --full-refresh
 ## Current limitations
 
 - The adapter currently does not support Aggregate Key table modeling or secondary-index configuration.
-- The adapter currently does not support a complete External Catalog namespace.
+- External Catalog write behavior depends on the Doris connector. Catalogs V2 and connector-specific write guarantees are not supported.
 - The adapter currently does not implement SSL configuration, timeout/retry, multi-FE failover, server-side cancellation, or complete query telemetry.
 - Some Table/View/MV type changes have a short canonical-name availability window rather than a zero-downtime switch.
 
 <!-- Knowledge Type: Troubleshooting -->
-<!-- Use Case: Connection errors / Profile database and schema mismatch -->
+<!-- Use Case: Connection errors / Catalog and database lookup -->
 
 ## Troubleshooting
 
@@ -705,6 +749,6 @@ dbt run --select fct_orders --full-refresh
 
 Verify that `host` and `port` point to a reachable FE MySQL query port, and check the username, password, and network policy. The default query port is `9030`; `8030` is normally the FE HTTP port.
 
-### `database` and `schema` differ
+### Catalog or database cannot be found
 
-Profile `schema` is the target Doris database. Remove `database`; it is not a Doris catalog and does not add another namespace level. If you retain this compatibility field, set it to exactly the same value as `schema`.
+In v1.1.1, profile and source `database` values identify a Doris Catalog, and `schema` identifies a database inside it. Omit `database` for Internal Catalog. If an old project used source `database` for a Doris database, move that value to `schema`. Check that external Catalogs already exist and are visible to the dbt account.

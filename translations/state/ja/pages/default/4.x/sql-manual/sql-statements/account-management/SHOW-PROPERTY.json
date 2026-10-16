@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-PROPERTY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-PROPERTY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-PROPERTY.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "20b800cb7ae470ffa27a96bc1ecb4549cb5c369d7f95c232c600dddd721bf8ca",
+    "sourceTechnicalHash": "115de433678226887a2050840f11e7a794d6891763746b81f69b8e8707deb18d",
+    "targetHash": "ce97b9cc04889913cf8083abda234b4a2b33355bf45bf350a7277db13497739e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:03:58.216Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/use-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/use-guide.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/use-guide.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "517383a260e3f808d080e508b4248067c30e36e8f8f69a148ad5cf91e7c6270a",
+    "sourceTechnicalHash": "0be4ae12e7f57069838c5d6bda258e84887765c49a6cd90680a4e7c35c7cc0f8",
+    "targetHash": "c929d495e7b78b2f7ceb2831b2c64d65e3152e9b59238d1392e68a1c9f489270",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.709Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/KILL-QUERY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/KILL-QUERY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/KILL-QUERY.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f2ad0070b63aabd53c7ae1e18846a06a2520fc7dd03ccbea5be962fdf1ee91f9",
+    "sourceTechnicalHash": "facff7566013e60898b36841e838cb7bd7c9c920ac33b500e53a9019f5f2ec59",
+    "targetHash": "c15123c4a8bb47dafede843a3fa387a65045844c0e1c8bd6c40329b284541ec6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.628Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/ARRAY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "029508a024937fa8ab31835e767208b190ea745dddab438f2022642b8815be29",
+    "sourceTechnicalHash": "ae1760276d769393111f272080d4989b6de313566c71f8fda1ebc4d19dcf4a37",
+    "targetHash": "14f77fb2507b7e11a844030f791931348ac525386185a8db1004c679c841063c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

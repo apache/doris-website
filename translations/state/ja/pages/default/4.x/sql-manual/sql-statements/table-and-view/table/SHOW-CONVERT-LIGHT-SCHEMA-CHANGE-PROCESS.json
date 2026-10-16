@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-CONVERT-LIGHT-SCHEMA-CHANGE-PROCESS.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "fa0839ab04f700098ba55d96f53d9e8ec56a59af05461cc6cfb6b69feb1dd38f",
+    "sourceTechnicalHash": "b95192dfb55dacece13ad22a65bdfa2ede166f13d12debdb8ee0da4394c3dfdc",
+    "targetHash": "8aab0e04022b4dbc316fa1bc541055858ab9f5b4ddcc1e63a29abb4b6e2788cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.484Z",
+    "glossaryVersion": "0"
+  }
+}

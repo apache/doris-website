@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/tablet-repair-and-balance",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+    "sourceTechnicalHash": "ed45bb56d82b7f7ae7f9c75e5a50218782d1dd73c352f3b72252718b81433a04",
+    "targetHash": "35ab3e5e70d25e04aaa4452fe0001183883bb4126a5465abe695a06b5f5d6397",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.111Z",
+    "glossaryVersion": "0"
+  }
+}

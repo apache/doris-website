@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/orc",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/orc.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/orc.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "0ceb1cf3a7e7588f03e5efdb6b1762e0d2cf1ecaba79eca39976f70fce7ed349",
+    "sourceTechnicalHash": "7230e06f343205ef7d4cb70c19d73654c9270e5721dd2105321b25824d5b15d8",
+    "targetHash": "367053a8732d3abd7e943a4b5b8dad6e523d8e22dac0ba0b912e1db32db327df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.867Z",
+    "glossaryVersion": "0"
+  }
+}

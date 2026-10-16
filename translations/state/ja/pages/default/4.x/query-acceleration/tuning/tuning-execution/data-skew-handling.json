@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-execution/data-skew-handling",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-execution/data-skew-handling.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "30637ac337f83998e28465426aeb899f67fe04430a12bd89698f12df44e12a48",
+    "sourceTechnicalHash": "2b55537386195c32c6c06146cebfdb136e1bae5a2117f1c287254897928e9fd3",
+    "targetHash": "f6d110c8919e7b081d936d1a998a38d40b45bd74d0175e1177910006a4b2ab71",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.711Z",
+    "glossaryVersion": "0"
+  }
+}

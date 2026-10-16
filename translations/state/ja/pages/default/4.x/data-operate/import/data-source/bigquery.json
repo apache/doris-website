@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/bigquery",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/bigquery.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/bigquery.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f6802e8f9d67405d55cea0380028398a6cf51eb12c707c85596f2eb7041dec05",
+    "sourceTechnicalHash": "d6ca0427d36f4812b4e1550e9eb7bff50c494fe8ad1a0a5c3a9c03e144f0845e",
+    "targetHash": "540ef2f5cf49037c6f44db505d1f8e9e717609947333bdd72516dc6b04a5349d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

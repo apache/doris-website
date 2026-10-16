@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/retention",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/retention.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/retention.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5469828a51b3b7de7436d22dbd947450bd9187c36d1f8841ecb3f37d7b9fa5d7",
+    "sourceTechnicalHash": "3976eb80f47af068e1427a37a51bb5bd0ac452f6807158cd6591560181f306bd",
+    "targetHash": "36cafb4d126c2d6ec3c09a14e2133778152c1efe2f0ee1705bf310a43c00933b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

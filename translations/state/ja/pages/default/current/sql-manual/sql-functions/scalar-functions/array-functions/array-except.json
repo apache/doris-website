@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-except",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-except.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-except.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b5bd14f69603565c5df805ba148b955cce017f60e0f145b50aca988ff7b1865d",
+    "sourceTechnicalHash": "2bfeffe19280923cda123ad38b7cf1bc6f6f15926d5ba70eb7573baa9b864ce4",
+    "targetHash": "5a9c0a4e54197d3d43d47f3e5663f9b4acb967ebc610e56fd5aca60e8cccc9a4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:55:53.186Z",
+    "glossaryVersion": "0"
+  }
+}

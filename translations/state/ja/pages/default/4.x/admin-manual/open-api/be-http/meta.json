@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/meta",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/meta.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/meta.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "6c561b93bdb52b298de5ed4a66b46a9c708382fa81418005de1e67ead1ef14b9",
+    "sourceTechnicalHash": "209c35d1dedb713c2ccf8cc21c8a8dabc583059d687640831a637c9ed6d680a4",
+    "targetHash": "95293db569a17e7f8920699772f4fc3a8b41051ece497d63f6f89ca053d523b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.553Z",
+    "glossaryVersion": "0"
+  }
+}

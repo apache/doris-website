@@ -8,16 +8,29 @@ on:
                 required: true
                 default: 'master'
 
+permissions:
+    contents: write
+
+concurrency:
+    group: cron-deploy-website
+    cancel-in-progress: false
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         environment: Production
+        env:
+            DORIS_ENABLE_JA: 'true'
         steps:
             - name: Checkout
               uses: actions/checkout@master
               with:
                   persist-credentials: false
                   submodules: recursive
+                  ref: ${{ inputs.branch }}
+                  # Sitemap lastmod comes from each file's last commit, so a
+                  # shallow clone would date every page to the same commit.
+                  fetch-depth: 0
 
             - name: Add Chinese Fonts
               run: |
@@ -55,12 +68,32 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build --locale en --locale zh-CN
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:locales
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/
                   ls build
-                  export DORIS_COMMIT=`git rev-parse HEAD`
+                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+            - name: Verify localized publishing artifacts
+              # Publishing builds every enabled locale, so every managed locale
+              # must be present and pass the strict cross-locale verification.
+              run: |
+                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                      test -s "build/${LOCALE}/index.html"
+                      node scripts/i18n/verify-static.cjs \
+                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+                  done
+
+            - name: Check file sizes for asf-site
+              # GitHub rejects a push holding any file over 100 MiB. Checking
+              # before the OSS upload stops such a build before anything is
+              # published.
+              run: |
+                  if find build -type f -size +100M -exec ls -l {} + | grep .; then
+                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                      exit 1
+                  fi
 
             - name: Upload files to OSS
               id: oss-upload
@@ -117,7 +150,9 @@ jobs:
               with:
                   github_token: ${{ github.token }}
                   publish_branch: asf-site
-                  force_orphan: true
+                  # Preserve the live root site while replacing this preview
+                  # subdirectory. Orphaning would discard the other paths.
+                  force_orphan: false
                   publish_dir: ./build
                   destination_dir: ${{ github.event.inputs.branch }}
                   user_name: 'github-actions[bot]'

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/kudu-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/kudu-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/kudu-catalog.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "5a6925159b62ef92b7029c8ea6740a8c627f23f68e3b24aa72ea8aa749248390",
+    "sourceTechnicalHash": "65c6ed153bd1ca693a981c5a714804f0d7e60e5dbefaac9a3df6920f26cc1005",
+    "targetHash": "9012d6e28d504fb7e3c353488a3c8e5ab9720eb6aa639ec2729dda5a6a4986f5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.713Z",
+    "glossaryVersion": "0"
+  }
+}

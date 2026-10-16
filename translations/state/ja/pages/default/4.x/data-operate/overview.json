@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/overview.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/overview.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "ab77b65606715fb4ff8fe2a28fd15a4a9ee23cc34de1b20972bd195d44add338",
+    "sourceTechnicalHash": "648ba0f2b0de83d6d6207ce921a024755f58442446960b7d412d8ae0ca6e64c7",
+    "targetHash": "32df88ecae425838fdd00fb7969fefcb08cbac33588d8af4a4dc8cc805d5cc57",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T10:15:40.236Z",
+    "glossaryVersion": "0"
+  }
+}

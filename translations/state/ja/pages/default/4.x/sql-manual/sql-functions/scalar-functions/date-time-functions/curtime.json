@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curtime",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curtime.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curtime.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "63da3bfb2be77411f574b739f16343a3b93ef6cd326364a16cfc69d9a58c0c4c",
+    "sourceTechnicalHash": "77ccca33daedeac8f773bdbf5ea052cfc84e4264546ff0cac16318bfe249a3c9",
+    "targetHash": "9495bc789999190d1100b7936fd7c76256268fe59a3428037cda36ebdd2f307a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.697Z",
+    "glossaryVersion": "0"
+  }
+}

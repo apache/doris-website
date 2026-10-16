@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DROP-OBSERVER.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "856573d1eeeafee38c75a38964991ea4a1249bb400af63a1c64429924d83e8a0",
+    "sourceTechnicalHash": "cdb93deedc17974c8ee6930eb1ce9202703c3c615a711be94c76e1064752f240",
+    "targetHash": "1d26356c2d0f27994cfcb35309570fc5b1c4cb619581b20f445957c463f53212",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:35:18.349Z",
+    "glossaryVersion": "0"
+  }
+}

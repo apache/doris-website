@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "f9b2d37cc9975d2f290a09abf20a0fdb6379374eb59c20068df3548b2aa32150",
+    "sourceTechnicalHash": "383d4c7df3bb54bf2519389ec0df8c918d4c3367a5390fca53ddac88989eec95",
+    "targetHash": "ef9db795087fe31a6cc8a3fb7be939bfe3dd4a06c7d15acedcf7a82461f45fcd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.137Z",
+    "glossaryVersion": "0"
+  }
+}

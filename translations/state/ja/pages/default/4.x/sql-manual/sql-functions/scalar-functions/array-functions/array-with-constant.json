@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-with-constant.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "891e3d13dffdf0225aa9322292d1ab82bdc8cb9bdb27d302b9f1eee3ec17c847",
+    "sourceTechnicalHash": "0672f7affd08ba0b850af854663c902a4b39893307f88e09f51148c00f7bc42d",
+    "targetHash": "0004b081f3cfe0bc4bcd46d0b6c1f0ed37a9f1a09ad5feec6f908ee3669f576c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.332Z",
+    "glossaryVersion": "0"
+  }
+}

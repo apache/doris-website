@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/write",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/write.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/write.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "42fbef6b385af4fd2596adcfded89bd138b726c76a8d6b166a53d87867ac9aaf",
+    "sourceTechnicalHash": "5974fd0b1aaa2a3ec9b952468adde1995c6fe90a8d80bcffbb193dee4c00b611",
+    "targetHash": "87d3263749af2b0c3fa8da5a5f2d5758fb9defdf46b456593340e0e70e5535e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:19:43.743Z",
+    "glossaryVersion": "0"
+  }
+}

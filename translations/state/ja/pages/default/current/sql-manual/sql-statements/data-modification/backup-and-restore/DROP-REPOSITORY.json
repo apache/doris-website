@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "a6ca45f30583f6d5630e73a2b371cbbe5fee1e601402ce442e839d81c034f47a",
+    "sourceTechnicalHash": "99826deaf116fd5f74cb72879f4190ca6374e7f2a8ecf5046457df9b741cdcd7",
+    "targetHash": "c3e3d6617331f50653c9f61a860d5f1c7ae0b7c0e3e88aa2f30e7715547e43a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:26:58.627Z",
+    "glossaryVersion": "0"
+  }
+}

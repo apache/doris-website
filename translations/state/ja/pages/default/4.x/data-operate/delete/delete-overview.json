@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/delete-overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/delete-overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/delete-overview.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "42d157bb2c27a6e2274ab53fd4d6dbc02891971a08ceb13f641191adb5db7186",
+    "sourceTechnicalHash": "31c2d9fbe41e896d2444fe0bfbb59bafc1fbef2c0048c966593bd88e737da07a",
+    "targetHash": "631987de762f61e736621771b5d11d8343bd4afc88d4b00f004bbd50f9fa7a86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.606Z",
+    "glossaryVersion": "0"
+  }
+}

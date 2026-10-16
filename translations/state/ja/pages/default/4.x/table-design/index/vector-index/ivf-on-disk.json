@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/vector-index/ivf-on-disk",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/vector-index/ivf-on-disk.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/vector-index/ivf-on-disk.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "e3d2bfde910e7c6a80f9b460d7ea4cf2549849a734b5a93daf321db9a81bb395",
+    "sourceTechnicalHash": "416d7571a352f41a107970a72ab03c8f332ea7d206155c9e73edf9fd590e085c",
+    "targetHash": "7e5750879c5732cd8f056f235e98e66cbbf557792ca53a6a3741248e93bc3b56",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.601Z",
+    "glossaryVersion": "0"
+  }
+}

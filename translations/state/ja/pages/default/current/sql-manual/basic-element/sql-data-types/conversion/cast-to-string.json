@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/cast-to-string",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/cast-to-string.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/cast-to-string.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "125ea6df0515b7be8d7ce6b12153eca918afe7dbe6be91f7e0605f0f5988d3f8",
+    "sourceTechnicalHash": "7ee163ce9a7277fdc65aedfaf836420a0a164be96c5cdc907c03b018a049ea6a",
+    "targetHash": "c44ae5088d4e2a59050396ddff61527fc78d07fe6f025458bcafe4b434bfa33d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.345Z",
+    "glossaryVersion": "0"
+  }
+}

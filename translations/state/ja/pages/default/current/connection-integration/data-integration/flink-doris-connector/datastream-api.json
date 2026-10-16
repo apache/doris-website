@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/datastream-api",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/datastream-api.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/datastream-api.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "dc80c9d674d216afcd4ab19a3b906d65bc2f0da1ed5be29937b28a9f110f52a5",
+    "sourceTechnicalHash": "d19d27252f079960677f3d111026cc61bbac50ef7e14f4ae1e1750c700013bc7",
+    "targetHash": "f531b2623b117a523d77cd2bb3725717386b825c0ee1d03a1c1aae54cf82ca17",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:19:43.743Z",
+    "glossaryVersion": "0"
+  }
+}

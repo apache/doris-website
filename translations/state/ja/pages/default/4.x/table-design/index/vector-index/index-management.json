@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/vector-index/index-management",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/vector-index/index-management.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/vector-index/index-management.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6cf433510d3358a9671ea4958843fb8db02d07bb772d19d66ef510bc0fd66354",
+    "sourceTechnicalHash": "96354223e2ea1338783c9f34db7dfc9f6ab017bbffad949287f3b2cff1d4fb6e",
+    "targetHash": "9a4f604ca6871c0e380ef9ea13c47f54589012a52e6bc32e0c4b5a6b653bc864",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.601Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/lag",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/lag.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/lag.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "25f8ab9b6ef16f7ea199f525aa0dfd2920db2a19178f6533da5a05f0672d90a1",
+    "sourceTechnicalHash": "1315f0915d2decf0d1b52480bb11980718e2f4d012e814563924e8e7141a65e5",
+    "targetHash": "127e2402d3b5778e745e087c12ee467ae27105261e1af4b56bd2061c32af9dc5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

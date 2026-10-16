@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/uniform",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/uniform.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/uniform.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "e068bfd5958bc64480fa1932409f06233d5577ad5193153c7fbecb2eefca04b7",
+    "sourceTechnicalHash": "9bdfe2e7363a421740e1db5ac255dbde2d5eb88aee4aa438fb9eaa41b3e80b77",
+    "targetHash": "a6489e77fb07839602fc159a9201584b64bc03e196f438588c7a8698b1f6727f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.826Z",
+    "glossaryVersion": "0"
+  }
+}

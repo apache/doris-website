@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-json-array-double",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-json-array-double.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-json-array-double.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b593ca4c09807fafe6d98d64f6984b7299f230a690a7c79bc4838a324d86f63c",
+    "sourceTechnicalHash": "4e212b9cb81f14ecded1a5abc8ba75c3272a1b3ffa983800abcb5191a53e45c1",
+    "targetHash": "d5af6e427fb589feed278a461c120bc8a7d8e3aa77e44f6e0a149f55ab4b11ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.705Z",
+    "glossaryVersion": "0"
+  }
+}

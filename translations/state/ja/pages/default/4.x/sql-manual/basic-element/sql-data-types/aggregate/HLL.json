@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/HLL",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/aggregate/HLL.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/aggregate/HLL.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "d3691582124f5f8e6ce54fc8f87d18db1a381a05793822ca08e8a546ff13642d",
+    "sourceTechnicalHash": "7d2ee4779ea17a41e89c1d830e34fef773851a2734980157455e1d31e29750c8",
+    "targetHash": "7aff3f9689484734f002dc71041936c02f223460b1721490a96e428531509825",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.668Z",
+    "glossaryVersion": "0"
+  }
+}

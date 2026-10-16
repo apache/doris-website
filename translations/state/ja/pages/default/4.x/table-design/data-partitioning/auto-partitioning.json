@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/auto-partitioning",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/auto-partitioning.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/auto-partitioning.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "08885daca4ac8937c0676669c81ef537c238fe9bd3f5b1319a9dfdfebdbd81f1",
+    "sourceTechnicalHash": "dc7c9d5f9b9740573cc46c225d6bcddb8afb3670cddfa2a134abab03a58d1500",
+    "targetHash": "98cb2a3be464b3463329a487d8cec480284bc1339f9ef413e9505be73248cf6f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.632Z",
+    "glossaryVersion": "0"
+  }
+}

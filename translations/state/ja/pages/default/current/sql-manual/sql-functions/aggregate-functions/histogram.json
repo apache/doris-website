@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/histogram",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/histogram.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/histogram.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "b97f3f1a2b22030acf57feeba0d1d53bbe9bbe65ea4fa149f34949fdde539fd4",
+    "sourceTechnicalHash": "00b4bb01465dd2c9047d98757de9d72b95fecc4b3fc9f6b19453801760111429",
+    "targetHash": "cafe27051e16a78883ca228e855d5ea3d506956a1779547f632e68b06265d8dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.055Z",
+    "glossaryVersion": "0"
+  }
+}

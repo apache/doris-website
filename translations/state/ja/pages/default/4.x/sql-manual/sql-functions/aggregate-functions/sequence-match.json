@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sequence-match",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sequence-match.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sequence-match.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "9a2ed81d0ac0b8e73e31dee671d72f4b8b1b9de17bbc8f8586146b1118b64018",
+    "sourceTechnicalHash": "af64e9398097e306339f918475e789f2f6b8e99e09eb10ca205e33a753b80991",
+    "targetHash": "5e885d05ee0e84a4781ebd4c6e507f53c5a593ce5f0433caca2312a2c4b7cc12",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.787Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/http",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/http.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/http.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "2438c11bde8e91e4e38c4f1b9bf3a801d6eb947ecb916a9c15532417b73d37a7",
+    "sourceTechnicalHash": "b0a938d8255a70daba1b61c3d10e8004e414676bbf53be4102e72099ec2f31a9",
+    "targetHash": "1383e4e3ec2525cfe039a35f72b3b45095848e7ac6c7a30e878b7fa7180d172a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:10:18.483Z",
+    "glossaryVersion": "0"
+  }
+}

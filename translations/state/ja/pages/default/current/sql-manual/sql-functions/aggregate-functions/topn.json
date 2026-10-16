@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/topn",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/topn.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/topn.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "36187f0edbaf21acc62e0b3e950e555137e7e53b9fc5a387a99c50b8bf9afa72",
+    "sourceTechnicalHash": "0a8491771f915666302734c6fa5f7cfd233e30e41260699ec960d7c05fe16bb1",
+    "targetHash": "4cd63ca9785136b50fad79a5f2b6aa8c4c1c2b75af836a8b45d7c71a8756a531",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.703Z",
+    "glossaryVersion": "0"
+  }
+}

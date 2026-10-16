@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/ip/IPV4",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/ip/IPV4.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/ip/IPV4.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c950b977b3f698373b6609d62fd80e30260eca622c1645b558d64de45c4cdfc4",
+    "sourceTechnicalHash": "b96242ad9eed4812c0ff38c6ef3e3c6fe3fbafba0a0603b5c54e7b5ad5bcfb69",
+    "targetHash": "5bad1c7482f40107f57889c21ab1d7eeb9e17a3aa6806c9460644d367ea8cf3c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

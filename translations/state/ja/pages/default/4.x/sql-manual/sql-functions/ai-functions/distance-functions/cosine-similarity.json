@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "56e69fa6ada727f2a1a707848f8e3ae1df103279492aa954fd8554d88382e6b8",
+    "sourceTechnicalHash": "c08d646702920819b67f7800705c2811b4232932d2f09b0ca198c2996c6ff530",
+    "targetHash": "c737e7bda255aef64fe14fd33c2534919c3e129a10158271ec0eb1281c2ef1a4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:07:27.671Z",
+    "glossaryVersion": "0"
+  }
+}

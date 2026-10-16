@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/SHOW-ENCRYPTKEY",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/SHOW-ENCRYPTKEY.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/SHOW-ENCRYPTKEY.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2365dd65665f0232b867063dab9838d4ac5533d077df0c6e386008996609641a",
+    "sourceTechnicalHash": "690eeffb01300cd30d912f5082c0e5ceb5f255304ff1f61b2fe9352ae1f08087",
+    "targetHash": "fa75d9c32141f45b0a4ac0f1ae38358e85683cce1d0a211911326666d7c14e12",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:50:40.611Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS ${table_name} (
 PROPERTIES("replication_num" = "1");
 ```
 
+A top-level VARIANT column name cannot contain a dot (`.`), even when quoted with backticks: for example, `` `v.x` VARIANT `` is invalid. This restriction applies to `CREATE TABLE` and `ALTER TABLE`; it does not restrict JSON field names inside a VARIANT value.
+
+`ADD COLUMN` (including batch additions), `MODIFY COLUMN`, and `RENAME COLUMN` must also use a top-level VARIANT column name without dots. For example, the following statement is rejected:
+
+```sql
+ALTER TABLE ${table_name} ADD COLUMN `v.x` VARIANT;
+-- ERROR: Cannot use `VARIANT` type column named with a `.` character: v.x
+```
+
 Constrain certain paths with a Schema Template (see “Extended types”):
 
 ```sql
@@ -295,6 +304,20 @@ SELECT * FROM tbl WHERE v['pattern_1'] = 'Doris';
 ```
 
 Note: 2.1.7+ supports only InvertedIndex V2 properties (fewer files, lower write IOPS; suitable for disaggregated storage/compute). 2.1.8+ removes offline Build Index.
+
+Since Doris 4.1.0, norms can be disabled with the index property or BE config below.
+
+Tokenized indexes on VARIANT paths write BM25 norms by default, costing one byte per row per path, including rows with no value for that path. For paths used only for filtering, disable norms with `"norms" = "false"`. Without `field_pattern`, this property applies to all subpaths covered by the index:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl (
+    k BIGINT,
+    v VARIANT<'body_*' : STRING>,
+    INDEX idx_body(v) USING INVERTED PROPERTIES("parser" = "english", "field_pattern" = "body_*", "norms" = "false")
+);
+```
+
+Disabling norms does not affect `MATCH` filtering, but `score()` returns an error when it reads a segment without norms. The BE config `inverted_index_skip_norms_for_variant` disables norms for all VARIANT paths. See [Record Length and the norms Property](../../../../table-design/index/inverted-index/scoring.md#record-length-and-the-norms-property) for details.
 
 ### When indexes don’t work
 

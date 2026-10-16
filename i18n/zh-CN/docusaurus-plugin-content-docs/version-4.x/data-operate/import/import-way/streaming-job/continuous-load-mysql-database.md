@@ -89,12 +89,12 @@ TO DATABASE target_test_db (
 ```sql
 select * from jobs("type"="insert") where ExecuteType = "STREAMING"
              Id: 1765332859199
-             Name: mysql_db_sync
+             Name: multi_table_sync
           Definer: root
       ExecuteType: STREAMING
 RecurringStrategy: \N
            Status: RUNNING
-       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
+       ExecuteSql: FROM MYSQL('include_tables'='user_info,order_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')
        CreateTime: 2025-12-10 10:19:35
  SucceedTaskCount: 1
   FailedTaskCount: 0
@@ -145,6 +145,7 @@ MySQL 源端 (`FROM MYSQL`) 支持的参数如下：
 | database             | -       | 数据库名                                                                                                            |
 | include_tables       | -       | 需要同步的表名，多个表用逗号分隔，不填默认所有的表                                                                  |
 | offset               | latest  | `latest`：仅增量同步；`initial`：全量 + 增量同步                                                                    |
+| `schema_change_behavior` | `evolve` | 可选。 字符串，不区分大小写。`evolve` 自动同步支持的列变更，`ignore` 关闭结构同步。可暂停后通过 `ALTER JOB` 修改；支持范围及暂停处理见 [Schema Change 同步](./schema-change-mysql.md)。 |
 | snapshot_split_size  | 40960（4.1.4 之前为 8096）    | split 的大小（行数），全量同步时，表会被切分成多个 split 进行同步                                                   |
 | snapshot_parallelism | 1       | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量                                                             |
 

@@ -1,0 +1,1243 @@
+{
+  "homepage.home.001": {
+    "message": "Apache Doris：AI 時代のオープンソース、リアルタイム分析・検索データベース"
+  },
+  "homepage.home.002": {
+    "message": "Apache Doris は MPP アーキテクチャに基づくオープンソースのリアルタイム分析データベースです。単一のエンジンで、ペタバイト規模の OLAP クエリ、レイクハウス分析、ハイブリッド検索を実行できます。"
+  },
+  "homepage.navbar.001": {
+    "message": "Doris を選ぶ理由"
+  },
+  "homepage.navbar.002": {
+    "message": "他の製品との比較（英語）"
+  },
+  "homepage.navbar.003": {
+    "message": "ベンチマーク（英語）"
+  },
+  "homepage.navbar.004": {
+    "message": "主な機能（英語）"
+  },
+  "homepage.navbar.005": {
+    "message": "導入事例（英語）"
+  },
+  "homepage.navbar.006": {
+    "message": "ユースケース"
+  },
+  "homepage.navbar.007": {
+    "message": "顧客向け分析（英語）"
+  },
+  "homepage.navbar.008": {
+    "message": "データウェアハウス（英語）"
+  },
+  "homepage.navbar.009": {
+    "message": "オブザーバビリティ（英語）"
+  },
+  "homepage.navbar.010": {
+    "message": "AI 向け Doris（英語）"
+  },
+  "homepage.navbar.011": {
+    "message": "ドキュメント"
+  },
+  "homepage.navbar.015": {
+    "message": "リソース"
+  },
+  "homepage.navbar.016": {
+    "message": "リリースノート"
+  },
+  "homepage.navbar.017": {
+    "message": "ブログ（英語）"
+  },
+  "homepage.navbar.018": {
+    "message": "講座（英語）"
+  },
+  "homepage.navbar.019": {
+    "message": "プロファイル分析（英語）"
+  },
+  "homepage.navbar.020": {
+    "message": "コミュニティ"
+  },
+  "homepage.navbar.021": {
+    "message": "コミュニティレポート（英語）"
+  },
+  "homepage.navbar.022": {
+    "message": "ロードマップ"
+  },
+  "homepage.navbar.023": {
+    "message": "コミュニティに参加"
+  },
+  "homepage.navbar.024": {
+    "message": "GitHub Discussions に参加"
+  },
+  "homepage.navbar.027": {
+    "message": "Doris Summit 2026 を開く（新しいタブ）"
+  },
+  "homepage.navbar.029": {
+    "message": "AI に質問"
+  },
+  "homepage.navbar.030": {
+    "message": "利用不可"
+  },
+  "homepage.navbar.031": {
+    "message": "質問"
+  },
+  "homepage.navbar.032": {
+    "message": "スター"
+  },
+  "homepage.navbar.033": {
+    "message": "ダウンロード（英語）"
+  },
+  "homepage.navbar.034": {
+    "message": "ナビゲーションメニューを閉じる"
+  },
+  "homepage.navbar.035": {
+    "message": "ナビゲーションメニューを開く"
+  },
+  "homepage.newsticker.001": {
+    "message": "プロファイル"
+  },
+  "homepage.newsticker.002": {
+    "message": "講座"
+  },
+  "homepage.newsticker.003": {
+    "message": "ロードマップ"
+  },
+  "homepage.newsticker.005": {
+    "message": "Apache Doris の最新情報"
+  },
+  "homepage.newsticker.006": {
+    "message": "最新情報"
+  },
+  "homepage.newsticker.010": {
+    "message": "一時停止中"
+  },
+  "homepage.hero.002": {
+    "message": "クエリを実行中 ..."
+  },
+  "homepage.hero.004": {
+    "message": "リセット"
+  },
+  "homepage.hero.005": {
+    "message": "リセット"
+  },
+  "homepage.hero.007": {
+    "message": "クエリを実行"
+  },
+  "homepage.hero.008": {
+    "message": "実行"
+  },
+  "homepage.hero.015": {
+    "message": "3 件のドキュメント · 18.4M 件のベクトルをスキャン"
+  },
+  "homepage.hero.016": {
+    "message": "構造化データ・全文・ベクトル"
+  },
+  "homepage.hero.017": {
+    "message": "検索を、1 つの SQL で。"
+  },
+  "homepage.hero.020": {
+    "message": "結果 · 5 件のドキュメント · ランキング順"
+  },
+  "homepage.hero.021": {
+    "message": "全文"
+  },
+  "homepage.hero.022": {
+    "message": "ベクトル"
+  },
+  "homepage.hero.023": {
+    "message": "フィルター"
+  },
+  "homepage.hero.027": {
+    "message": "ナレッジグラフ"
+  },
+  "homepage.hero.033": {
+    "message": "1 日のクエリ数"
+  },
+  "homepage.hero.039": {
+    "message": "エラー 0.00%"
+  },
+  "homepage.hero.040": {
+    "message": "検索結果を表示"
+  },
+  "homepage.hero.041": {
+    "message": "ナレッジグラフとクエリのグラフを表示"
+  },
+  "homepage.hero.044": {
+    "message": "レポートのアニメーションを切り替える"
+  },
+  "homepage.hero.049": {
+    "message": "圧倒的な"
+  },
+  "homepage.hero.050": {
+    "message": "速さの"
+  },
+  "homepage.hero.051": {
+    "message": "分析"
+  },
+  "homepage.hero.052": {
+    "message": "と"
+  },
+  "homepage.hero.053": {
+    "message": "検索"
+  },
+  "homepage.hero.054": {
+    "message": "データベース"
+  },
+  "homepage.hero.055": {
+    "message": "Apache Doris は、現代のデータ分析と AI に向けたオープンソースのリアルタイムデータベースです。ベアメタル上のシェアードナッシング構成でも、クラウドオブジェクトストレージを使うストレージ・コンピュート分離構成でも実行できます。"
+  },
+  "homepage.hero.056": {
+    "message": "はじめる"
+  },
+  "homepage.hero.057": {
+    "message": "AI に質問"
+  },
+  "homepage.hero.058": {
+    "message": "Slack に参加"
+  },
+  "homepage.usecases.001": {
+    "message": "顧客向け分析"
+  },
+  "homepage.usecases.002": {
+    "message": "1 秒未満で応答するインタラクティブな分析を、多くの顧客に直接提供できます。"
+  },
+  "homepage.usecases.003": {
+    "message": "データウェアハウス"
+  },
+  "homepage.usecases.004": {
+    "message": "あらゆる業務領域の分析を、1 つのリアルタイムデータウェアハウスで。"
+  },
+  "homepage.usecases.005": {
+    "message": "オブザーバビリティ"
+  },
+  "homepage.usecases.006": {
+    "message": "ログとメトリクスを高スループットで分析し、監視とインシデント対応を支援します。"
+  },
+  "homepage.usecases.007": {
+    "message": "AI 向け Doris"
+  },
+  "homepage.usecases.008": {
+    "message": "ベクトル、テキスト、JSON の検索を SQL に統合。AI エージェントと RAG のために設計されています。"
+  },
+  "homepage.usecases.009": {
+    "message": "ユースケース"
+  },
+  "homepage.usecases.010": {
+    "message": "Doris が活躍する場面"
+  },
+  "homepage.usecases.011": {
+    "message": "詳しく見る（英語）"
+  },
+  "homepage.stats.001": {
+    "message": "Xiaomi は世界トップ 3 のスマートフォンメーカーで、家電やスマートホーム製品を手がける大手ブランドです。電気自動車分野にも事業を広げています。"
+  },
+  "homepage.stats.002": {
+    "message": "テクノロジー"
+  },
+  "homepage.stats.003": {
+    "message": "デバイス、アプリ、サービスのデータをインタラクティブに分析し、運用チームが事業の状況をリアルタイムで把握できるようにしています。"
+  },
+  "homepage.stats.004": {
+    "message": "運用状況の把握"
+  },
+  "homepage.stats.005": {
+    "message": "Baidu は中国最大の検索エンジンを運営する大手 AI 企業です。ERNIE 大規模言語モデルから Apollo 自動運転まで、幅広い製品を提供しています。"
+  },
+  "homepage.stats.006": {
+    "message": "大規模なログ分析とアドホックな SQL 分析により、開発やプラットフォームの監視業務を支えています。"
+  },
+  "homepage.stats.007": {
+    "message": "分析対象のイベント"
+  },
+  "homepage.stats.008": {
+    "message": "Samsung は世界最大の電子機器メーカーで、スマートフォン、メモリチップ、ディスプレイ、家電などを 70 か国以上で展開しています。"
+  },
+  "homepage.stats.009": {
+    "message": "Apache Doris を使い、家電製品群のデバイステレメトリとサービスを分析しています。"
+  },
+  "homepage.stats.010": {
+    "message": "デバイス分析"
+  },
+  "homepage.stats.011": {
+    "message": "JD.com は売上高で中国最大の小売企業で、Fortune Global 500 の上位 50 社に入る企業です。世界でも有数の自社物流ネットワークを運営しています。"
+  },
+  "homepage.stats.012": {
+    "message": "E コマース"
+  },
+  "homepage.stats.013": {
+    "message": "注文、在庫、マーケティングデータの小売分析を提供し、業務ユーザーが SQL で素早くアクセスできるようにしています。"
+  },
+  "homepage.stats.014": {
+    "message": "小売分析"
+  },
+  "homepage.stats.015": {
+    "message": "Meituan は中国最大の地域密着型サービスプラットフォームです。毎日、数億人のユーザーにフードデリバリー、旅行、オンデマンド小売サービスを届けています。"
+  },
+  "homepage.stats.016": {
+    "message": "インターネットサービス"
+  },
+  "homepage.stats.017": {
+    "message": "注文、加盟店、配達員、ユーザー行動を都市規模で分析し、リアルタイムの意思決定を支援しています。"
+  },
+  "homepage.stats.018": {
+    "message": "業務データ"
+  },
+  "homepage.stats.019": {
+    "message": "NetEase は中国第 2 位のゲーム企業で、人気ゲーム、音楽配信、教育、企業向けインテリジェントサービスを展開する大手インターネット企業です。"
+  },
+  "homepage.stats.020": {
+    "message": "Apache Doris でゲームとコンテンツを分析し、長いバッチ処理を待たずに最新のメトリクスを確認しています。"
+  },
+  "homepage.stats.021": {
+    "message": "コンテンツのメトリクス"
+  },
+  "homepage.stats.022": {
+    "message": "Tencent Music Entertainment は中国を代表するオンライン音楽・音声プラットフォームです。QQ Music、Kugou、Kuwo を通じ、月間 5 億人以上のユーザーにサービスを提供しています。"
+  },
+  "homepage.stats.023": {
+    "message": "メディア"
+  },
+  "homepage.stats.024": {
+    "message": "Doris を使って視聴履歴、コンテンツ、エンゲージメントデータを高速集計し、リアルタイムの音楽分析に役立てています。"
+  },
+  "homepage.stats.025": {
+    "message": "音楽分析"
+  },
+  "homepage.stats.026": {
+    "message": "Kuaishou は世界最大級のショート動画・ライブ配信プラットフォームの 1 つです。中国と海外の Kwai アプリを合わせ、月間アクティブユーザーは 7 億人を超えます。"
+  },
+  "homepage.stats.027": {
+    "message": "膨大なエンゲージメントイベントを 1 秒未満で処理し、ショート動画のコンテンツとクリエイターを分析しています。"
+  },
+  "homepage.stats.028": {
+    "message": "エンゲージメントイベント"
+  },
+  "homepage.stats.029": {
+    "message": "海外では HoYoverse として知られる miHoYo は、Genshin Impact、Honkai Star Rail、Zenless Zone Zero などを開発する大手ゲームスタジオです。"
+  },
+  "homepage.stats.030": {
+    "message": "ゲーム"
+  },
+  "homepage.stats.031": {
+    "message": "Doris でプレイヤー行動、ゲーム内経済、運営データを分析し、素早い改善につなげています。"
+  },
+  "homepage.stats.032": {
+    "message": "ゲーム分析"
+  },
+  "homepage.stats.033": {
+    "message": "Luckin Coffee は店舗数で世界最大のコーヒーチェーンです。31,000 を超える店舗で、毎日数千万人の顧客にサービスを提供しています。"
+  },
+  "homepage.stats.034": {
+    "message": "小売"
+  },
+  "homepage.stats.035": {
+    "message": "Doris で店舗、注文、会員データを分析し、数千の店舗で実施するキャンペーンの効果を追跡しています。"
+  },
+  "homepage.stats.036": {
+    "message": "小売のインサイト"
+  },
+  "homepage.stats.037": {
+    "message": "MINISO は急成長する世界的なライフスタイル・IP 小売企業です。世界 110 以上の国と地域で 8,000 を超える店舗を運営しています。"
+  },
+  "homepage.stats.038": {
+    "message": "世界各地の小売事業で、SKU ごとの売上、在庫、サプライチェーンのレポートを支えています。"
+  },
+  "homepage.stats.039": {
+    "message": "売上レポート"
+  },
+  "homepage.stats.040": {
+    "message": "SF Express は中国とアジアで最大の総合物流企業で、売上高では世界の上位 4 社に入ります。"
+  },
+  "homepage.stats.041": {
+    "message": "物流"
+  },
+  "homepage.stats.042": {
+    "message": "配送、経路、運用データをほぼリアルタイムで追跡し、全国の宅配業務を支援しています。"
+  },
+  "homepage.stats.043": {
+    "message": "配送状況の追跡"
+  },
+  "homepage.stats.044": {
+    "message": "ZTO Express は取扱荷物数で中国最大の宅配企業です。年間 340 億個以上の荷物を扱い、9 年連続で市場をリードしています。"
+  },
+  "homepage.stats.045": {
+    "message": "Doris を使い、宅配ネットワーク全体の荷物流通、仕分け拠点、最終配送区間を分析しています。"
+  },
+  "homepage.stats.046": {
+    "message": "荷物の分析"
+  },
+  "homepage.stats.047": {
+    "message": "Cainiao は Alibaba の国際スマート物流部門で、主要な越境配送ネットワークの 1 つです。200 を超える国で E コマースとサプライチェーンの顧客にサービスを提供しています。"
+  },
+  "homepage.stats.048": {
+    "message": "倉庫、経路、越境物流のデータを分析し、配送業務を最適化しています。"
+  },
+  "homepage.stats.049": {
+    "message": "物流のインサイト"
+  },
+  "homepage.stats.050": {
+    "message": "Ford Motor Company は世界最大級の自動車メーカーの 1 つです。F-Series ピックアップ、Mustang などの名車に加え、電気自動車の製品群も拡大しています。"
+  },
+  "homepage.stats.051": {
+    "message": "自動車"
+  },
+  "homepage.stats.052": {
+    "message": "車両、販売店、サービスのデータを統合して分析し、コネクテッドモビリティの取り組みを支えています。"
+  },
+  "homepage.stats.053": {
+    "message": "車両データ"
+  },
+  "homepage.stats.054": {
+    "message": "BYD は世界最大の電気自動車メーカーで、主要なリチウム電池メーカーでもあります。世界販売台数で Tesla を上回り、毎年数百万台の EV とハイブリッド車を出荷しています。"
+  },
+  "homepage.stats.055": {
+    "message": "EV テレメトリ、サプライチェーン、アフターサービスを分析し、製品チームが SQL で素早くデータにアクセスできるようにしています。"
+  },
+  "homepage.stats.056": {
+    "message": "テレメトリデータ"
+  },
+  "homepage.stats.057": {
+    "message": "Suzuki Motor は世界トップ 10 の自動車メーカーで、インドと東南アジアでも主要なブランドです。二輪車、ATV、船外機でも知られています。"
+  },
+  "homepage.stats.058": {
+    "message": "Apache Doris を使い、世界各地の自動車事業で製造、販売店、サービスのデータを分析しています。"
+  },
+  "homepage.stats.059": {
+    "message": "運用状況の表示"
+  },
+  "homepage.stats.060": {
+    "message": "ANTA Sports は中国最大のスポーツウェア企業で、売上高では世界トップ 3 に入ります。ANTA、FILA、Descente、Arc'teryx などのブランドを展開しています。"
+  },
+  "homepage.stats.061": {
+    "message": "スポーツウェア"
+  },
+  "homepage.stats.062": {
+    "message": "小売、販売チャネル、消費者データを分析し、各スポーツウェアブランドの商品とマーケティングの意思決定に役立てています。"
+  },
+  "homepage.stats.063": {
+    "message": "Li-Ning はオリンピック体操選手が創業した中国の大手スポーツウェアブランドです。機能性ウェアとストリート文化を融合し、全国に数千の店舗を展開しています。"
+  },
+  "homepage.stats.064": {
+    "message": "Doris で店舗、E コマース、サプライチェーンを分析し、日々の業務とリアルタイムの意思決定に役立てています。"
+  },
+  "homepage.stats.065": {
+    "message": "売上分析"
+  },
+  "homepage.stats.066": {
+    "message": "Xtep は中国トップ 5 のスポーツウェアブランドで、中国第 1 位のランニングブランドです。マラソン大会を支援し、世界中の数百万人のランナーにウェアを提供しています。"
+  },
+  "homepage.stats.067": {
+    "message": "Doris を使い、小売とデジタルチャネル全体の会員、売上、キャンペーンを分析しています。"
+  },
+  "homepage.stats.068": {
+    "message": "顧客のインサイト"
+  },
+  "homepage.stats.069": {
+    "message": "Zhipu AI は清華大学発の、中国を代表する大規模モデル研究企業の 1 つです。チャットボットと AI エージェントを支える GLM、ChatGLM 基盤モデルを開発しています。"
+  },
+  "homepage.stats.071": {
+    "message": "Apache Doris を使い、モデル学習のメトリクス、利用イベント、プラットフォームのテレメトリを大規模に分析しています。"
+  },
+  "homepage.stats.072": {
+    "message": "モデル分析"
+  },
+  "homepage.stats.073": {
+    "message": "MiniMax は中国の主要な AI ユニコーン企業です。Talkie、Hailuo などの人気アプリを支えるマルチモーダル基盤モデルを開発し、世界中の数千万人にサービスを提供しています。"
+  },
+  "homepage.stats.074": {
+    "message": "基盤モデルのワークロードに対し、製品利用、学習パイプライン、推論のオブザーバビリティ分析を提供しています。"
+  },
+  "homepage.stats.075": {
+    "message": "モデルのテレメトリ"
+  },
+  "homepage.stats.076": {
+    "message": "Ave AI は急成長するデータ企業です。複雑な企業データを AI による分析とインテリジェントな意思決定に変換し、データチームを支援しています。"
+  },
+  "homepage.stats.077": {
+    "message": "Doris 上に AI データ製品を構築し、アドホックな調査やレポート作成に向けて SQL による高速アクセスを提供しています。"
+  },
+  "homepage.stats.078": {
+    "message": "AI 分析"
+  },
+  "homepage.stats.079": {
+    "message": "Talkie は月間アクティブユーザーが 1,100 万人を超える、主要な AI コンパニオン・キャラクターチャットアプリです。米国でもダウンロード数の多い AI アプリの 1 つです。"
+  },
+  "homepage.stats.080": {
+    "message": "AI キャラクターチャット製品の会話、エンゲージメント、成長に関するデータを大規模に分析しています。"
+  },
+  "homepage.stats.081": {
+    "message": "エンゲージメントデータ"
+  },
+  "homepage.stats.082": {
+    "message": "Horizon Robotics は中国を代表する自動運転チップメーカーです。国内 ADAS 市場の 40% 以上を占め、100 を超える車種で採用されています。"
+  },
+  "homepage.stats.083": {
+    "message": "自動運転"
+  },
+  "homepage.stats.084": {
+    "message": "Doris を使い、自動運転プラットフォームの走行データ、センサーテレメトリ、チップ性能のメトリクスを処理しています。"
+  },
+  "homepage.stats.085": {
+    "message": "走行データ"
+  },
+  "homepage.stats.086": {
+    "message": "Goldwind は世界第 1 位の風力タービンメーカーです。年間で約 30 GW の設備を出荷し、6 大陸の風力発電所に製品を提供しています。"
+  },
+  "homepage.stats.087": {
+    "message": "エネルギー"
+  },
+  "homepage.stats.088": {
+    "message": "世界各地の再生可能エネルギー設備で、風力タービンのテレメトリと運用データを分析しています。"
+  },
+  "homepage.stats.089": {
+    "message": "エネルギーのテレメトリ"
+  },
+  "homepage.stats.090": {
+    "message": "Advance Intelligence Group は東南アジアを代表する AI フィンテック企業です。Atome、ADVANCE.AI などを通じ、4,000 万人の消費者と 235,000 の加盟店にサービスを提供しています。"
+  },
+  "homepage.stats.091": {
+    "message": "フィンテック"
+  },
+  "homepage.stats.092": {
+    "message": "東南アジアの AI フィンテック製品に向けて、リスク、信用、取引データを分析しています。"
+  },
+  "homepage.stats.093": {
+    "message": "リスク分析"
+  },
+  "homepage.stats.094": {
+    "message": "TrueWatch は、マルチクラウド環境のメトリクス、ログ、トレースを統合する次世代クラウド監視プラットフォームです。世界中の DevOps・SRE チームにサービスを提供しています。"
+  },
+  "homepage.stats.095": {
+    "message": "オブザーバビリティ"
+  },
+  "homepage.stats.096": {
+    "message": "Doris を使い、インフラ規模のメトリクス、ログ、トレースを扱う統合オブザーバビリティプラットフォームを支えています。"
+  },
+  "homepage.stats.097": {
+    "message": "オブザーバビリティデータ"
+  },
+  "homepage.stats.099": {
+    "message": "ユースケース"
+  },
+  "homepage.stats.100": {
+    "message": "Apache Doris を利用する企業"
+  },
+  "homepage.stats.101": {
+    "message": "10,000 を超えるユーザーが採用"
+  },
+  "homepage.features.001": {
+    "message": "リアルタイム分析"
+  },
+  "homepage.features.002": {
+    "message": "データの取り込みからインサイトまで、最速のエンドツーエンドエンジン。"
+  },
+  "homepage.features.003": {
+    "message": "高い同時実行性能 / 低レイテンシ"
+  },
+  "homepage.features.004": {
+    "message": "リアルタイム分析を見る（近日公開）"
+  },
+  "homepage.features.005": {
+    "message": "ストリーミング取り込み"
+  },
+  "homepage.features.006": {
+    "message": "Kafka とデータベースの CDC から、秒単位の鮮度でデータを取り込みます。"
+  },
+  "homepage.features.007": {
+    "message": "増分変換"
+  },
+  "homepage.features.008": {
+    "message": "マテリアライズドビューにより、複雑な変換を数時間ではなく数分で更新します。"
+  },
+  "homepage.features.009": {
+    "message": "1 秒未満のクエリ"
+  },
+  "homepage.features.010": {
+    "message": "ペタバイト規模のデータでも、高い同時実行数のもとで 1 秒未満の応答を維持します。"
+  },
+  "homepage.features.011": {
+    "message": "レイクハウス分析"
+  },
+  "homepage.features.012": {
+    "message": "オープンなレイクハウスを、そのままリアルタイムに分析。"
+  },
+  "homepage.features.014": {
+    "message": "レイクハウス分析を見る（近日公開）"
+  },
+  "homepage.features.015": {
+    "message": "幅広いカタログ対応"
+  },
+  "homepage.features.016": {
+    "message": "Iceberg、Delta Lake、Hudi のテーブルを、コピーせずにその場でクエリできます。"
+  },
+  "homepage.features.017": {
+    "message": "高速クエリエンジン"
+  },
+  "homepage.features.018": {
+    "message": "ベクトル化実行と効率的なメタデータキャッシュで、レイク上のクエリを高速化します。"
+  },
+  "homepage.features.019": {
+    "message": "双方向の増分同期"
+  },
+  "homepage.features.020": {
+    "message": "オープンなレイク形式と Doris の内部ストレージの間で、データを双方向にストリーミングします。"
+  },
+  "homepage.features.021": {
+    "message": "ハイブリッド検索"
+  },
+  "homepage.features.022": {
+    "message": "構造化データ、テキスト、ベクトルを横断する検索を標準装備。"
+  },
+  "homepage.features.023": {
+    "message": "JSON / テキスト / ベクトル"
+  },
+  "homepage.features.024": {
+    "message": "ハイブリッド検索を見る（近日公開）"
+  },
+  "homepage.features.025": {
+    "message": "JSON 分析"
+  },
+  "homepage.features.026": {
+    "message": "エージェントのトレースやツール呼び出しのメタデータを自動で列形式に保存し、分析を 50 倍高速化します。"
+  },
+  "homepage.features.027": {
+    "message": "テキスト検索"
+  },
+  "homepage.features.028": {
+    "message": "RAG、エージェントのメモリ、監視ログに向けた高速な BM25 検索。"
+  },
+  "homepage.features.029": {
+    "message": "ベクトル検索"
+  },
+  "homepage.features.030": {
+    "message": "HNSW と IVF インデックスを内蔵し、埋め込みベクトルを使うセマンティック検索に対応します。"
+  },
+  "homepage.features.037": {
+    "message": "アプリ"
+  },
+  "homepage.features.038": {
+    "message": "レイクハウス分析のアニメーション"
+  },
+  "homepage.features.039": {
+    "message": "ハイブリッド検索のアニメーション"
+  },
+  "homepage.features.040": {
+    "message": "リアルタイム分析のアニメーション"
+  },
+  "homepage.features.041": {
+    "message": "主な機能"
+  },
+  "homepage.features.042": {
+    "message": "3 つの柱、1 つのエンジン"
+  },
+  "homepage.ecosystem.001": {
+    "message": "データベース"
+  },
+  "homepage.ecosystem.003": {
+    "message": "データストリーム"
+  },
+  "homepage.ecosystem.005": {
+    "message": "データレイク"
+  },
+  "homepage.ecosystem.006": {
+    "message": "オープンなテーブル形式"
+  },
+  "homepage.ecosystem.007": {
+    "message": "BI と可視化"
+  },
+  "homepage.ecosystem.008": {
+    "message": "ダッシュボード"
+  },
+  "homepage.ecosystem.009": {
+    "message": "AI と分析"
+  },
+  "homepage.ecosystem.010": {
+    "message": "LLM / エージェント"
+  },
+  "homepage.ecosystem.011": {
+    "message": "オブザーバビリティ"
+  },
+  "homepage.ecosystem.012": {
+    "message": "監視"
+  },
+  "homepage.ecosystem.013": {
+    "message": "エコシステム"
+  },
+  "homepage.ecosystem.014": {
+    "message": "現代のデータ基盤の"
+  },
+  "homepage.ecosystem.015": {
+    "message": "中心に。"
+  },
+  "homepage.ecosystem.016": {
+    "message": "コネクター対応の概要"
+  },
+  "homepage.ecosystem.017": {
+    "message": "50 以上のコネクター"
+  },
+  "homepage.ecosystem.018": {
+    "message": "データベース、ストリーミング、レイクハウス、BI、AI、オブザーバビリティ。"
+  },
+  "homepage.ecosystem.019": {
+    "message": "Apache Doris のデータ連携ドキュメントを見る"
+  },
+  "homepage.ecosystem.020": {
+    "message": "上流：データソース"
+  },
+  "homepage.ecosystem.022": {
+    "message": "下流：利用先"
+  },
+  "homepage.ecosystem.023": {
+    "message": "上流：データソース"
+  },
+  "homepage.ecosystem.024": {
+    "message": "エンジン"
+  },
+  "homepage.ecosystem.025": {
+    "message": "下流：利用先"
+  },
+  "homepage.deployment.001": {
+    "message": "コンピュート"
+  },
+  "homepage.deployment.002": {
+    "message": "ストレージ"
+  },
+  "homepage.deployment.003": {
+    "message": "一体型"
+  },
+  "homepage.deployment.004": {
+    "message": "各ノードにコンピュートとストレージを配置する従来の MPP 構成です。ローカル I/O を最大限に活かし、クエリのレイテンシを抑えます。"
+  },
+  "homepage.deployment.005": {
+    "message": "Apache Doris のストレージ・コンピュート一体型構成図"
+  },
+  "homepage.deployment.006": {
+    "message": "今すぐデプロイ"
+  },
+  "homepage.deployment.007": {
+    "message": "分離型"
+  },
+  "homepage.deployment.008": {
+    "message": "共有オブジェクトストレージ上でステートレスなコンピュートグループを実行するクラウドネイティブ構成です。コンピュートを必要に応じて拡張し、ワークロードを分離できます。"
+  },
+  "homepage.deployment.009": {
+    "message": "Apache Doris のストレージ・コンピュート分離型構成図"
+  },
+  "homepage.deployment.010": {
+    "message": "デプロイ"
+  },
+  "homepage.deployment.011": {
+    "message": "アーキテクチャを選ぶ"
+  },
+  "homepage.deployment.012": {
+    "message": "1 つのエンジン、2 つの構成"
+  },
+  "homepage.community.001": {
+    "message": "コミュニティ"
+  },
+  "homepage.community.002": {
+    "message": "Doris を活用する"
+  },
+  "homepage.community.003": {
+    "message": "5,000 を超えるチーム"
+  },
+  "homepage.community.004": {
+    "message": "とつながる"
+  },
+  "homepage.community.mailingList": {
+    "message": "開発メーリングリスト"
+  },
+  "homepage.news.profileCopy": {
+    "message": "新しい Apache Doris プロファイル分析ツールで、遅いクエリを診断できます（英語）。"
+  },
+  "homepage.news.open": {
+    "message": "開く（英語）"
+  },
+  "homepage.news.courseCopy": {
+    "message": "新しい無料の Apache Doris 101 講座（英語）で、基礎を学べます。"
+  },
+  "homepage.news.start": {
+    "message": "はじめる（英語）"
+  },
+  "homepage.news.roadmapCopy": {
+    "message": "Apache Doris コミュニティのロードマップで、今後の開発予定を確認できます。"
+  },
+  "homepage.news.explore": {
+    "message": "見る"
+  },
+  "footer.follow": {
+    "message": "コミュニティに参加",
+    "description": "Footer Follow"
+  },
+  "homepage.theme.label": {
+    "message": "カラーテーマ"
+  },
+  "homepage.theme.change": {
+    "message": "カラーテーマを変更"
+  },
+  "homepage.theme.current": {
+    "message": "カラーテーマ：{theme}"
+  },
+  "homepage.navbar.starLabel": {
+    "message": "GitHub で Apache Doris にスターを付ける（{stars} スター）"
+  },
+  "homepage.ai.loading": {
+    "message": "AI を読み込み中…"
+  },
+  "homepage.ai.slow": {
+    "message": "読み込みに時間がかかっています…"
+  },
+  "homepage.ai.error": {
+    "message": "再試行"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "約{readingTime}分",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "パンくずリストのナビゲーション",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.common.editThisPage": {
+    "message": "このページを編集",
+    "description": "The link label to edit the current page"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "このドキュメントは Apache Doris の{unreleased}バージョン向けです。",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unreleasedText": {
+    "message": "開発中の"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "これはバージョン{versionLabel}の{siteTitle}のドキュメントで現在はメンテナンスされていません",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "利用方法は、バージョン {v4xLink} / {v3xLink} / {v21Link} の正式ドキュメントを参照してください。",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.NotFound.title": {
+    "message": "ページが見つかりません",
+    "description": "The title of the 404 page"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "他のバージョン",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "結果が見つかりません"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "「{context}」以外のすべての結果を表示"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "「{context}」の結果をすべて表示"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "すべての結果を表示"
+  },
+  "theme.SearchBar.label": {
+    "message": "検索",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "「{query}」の検索結果",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "ドキュメントを検索",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "全体"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "{count} 件の文書が見つかりました",
+    "description": "Pluralized label for \"{count} documents found\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "該当する文書はありません",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "閉じる",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.admonition.caution": {
+    "message": "注意",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "危険",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "備考",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "注記",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "ヒント",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "警告",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "'{label}'の目次を開く",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "'{label}'の目次を隠す",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.NotFound.p1": {
+    "message": "お探しのページが見つかりませんでした",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "他の言語",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.blog.post.readMore": {
+    "message": "もっと見る",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "{title}についてもっと見る",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "サイドバーを隠す",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "サイドバーを隠す",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "ドキュメントのサイドバー",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "エラーが発生しました",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "先頭へ戻る",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "アーカイブ",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "アーカイブ",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "ブログ記事一覧のナビゲーション",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "新しい記事",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "過去の記事",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "ブログ記事のナビゲーション",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "新しい記事",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "過去の記事",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "全てのタグを見る",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "ダークモードを切り替える(現在は{mode})",
+    "description": "The ARIA label for the navbar color mode toggle"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "ダークモード",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "ライトモード",
+    "description": "The name for the light color mode"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count}項目",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "ドキュメントページ",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "前へ",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "次へ",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count}記事",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "「{tagName}」タグのついた{nDocsTagged}",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "バージョン: {versionLabel}"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "最新バージョン",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading} への直接リンク",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": "{date}に",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": "{user}が",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "{atDate}{byUser}最終更新",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "タグ:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "最近のブログ記事のナビゲーション",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "コピーしました",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "クリップボードにコードをコピー",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "コピー",
+    "description": "The copy button label on code blocks"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "折り返し",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "ナビゲーション",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.NotFound.p2": {
+    "message": "このページにリンクしているサイトの所有者にリンクが壊れていることを伝えてください",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "このページの見出し",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "ホームページ",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "ナビゲーションバーを閉じる",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "ナビゲーションバーを開く",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← メインメニューに戻る",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "サイドバーを開く",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "サイドバーを開く",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count}件",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "「{tagName}」タグの記事が{nPosts}件あります",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "著者一覧",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "すべての著者を見る",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "この著者による投稿はまだありません。",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "非公開のページ",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "このページは非公開です。 検索対象外となり、このページのリンクに直接アクセスできるユーザーのみに公開されます。",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "下書きのページ",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "このページは下書きです。開発環境でのみ表示され、本番環境のビルドには含まれません。",
+    "description": "The draft content banner message"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "もう一度試してください",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "メインコンテンツまでスキップ",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "タグ",
+    "description": "The title of the tag list page"
+  },
+  "homepage.slackcommunitynudge.004": {
+    "message": "Apache Doris のコミュニティ、Summit、ドキュメントのリソース"
+  },
+  "homepage.slackcommunitynudge.005": {
+    "message": "Apache Doris のコミュニティと Summit のリソース"
+  },
+  "homepage.slackcommunitynudge.006": {
+    "message": "コミュニティ、Summit、ドキュメントの案内を閉じる"
+  },
+  "homepage.slackcommunitynudge.007": {
+    "message": "コミュニティと Summit の案内を閉じる"
+  },
+  "homepage.slackcommunitynudge.008": {
+    "message": "コミュニティのサポート"
+  },
+  "homepage.slackcommunitynudge.009": {
+    "message": "Doris を使っていますか？"
+  },
+  "homepage.slackcommunitynudge.010": {
+    "message": "Slack に参加して、セットアップや性能改善のヒント、Apache Doris のユーザーとメンテナーからの回答を得られます。"
+  },
+  "homepage.slackcommunitynudge.011": {
+    "message": "Slack に参加"
+  },
+  "homepage.slackcommunitynudge.013": {
+    "message": "10 月 21～22 日 · オンラインイベント"
+  },
+  "homepage.slackcommunitynudge.014": {
+    "message": "Summit を見る"
+  },
+  "homepage.slackcommunitynudge.015": {
+    "message": "ドキュメントに問題がありましたか？"
+  },
+  "homepage.slackcommunitynudge.016": {
+    "message": "フィードバックを共有し、Apache Doris ドキュメントの改善にご協力ください。"
+  },
+  "homepage.slackcommunitynudge.017": {
+    "message": "ドキュメントの問題を報告"
+  },
+  "homepage.slackcommunitynudge.018": {
+    "message": "閉じる"
+  },
+  "homepage.slackcommunitynudge.019": {
+    "message": "開く"
+  },
+  "homepage.ecosystem.aiAgents": {
+    "message": "AI エージェント"
+  },
+  "homepage.nudge.toggle": {
+    "message": "コミュニティと Summit のリソースを{action}"
+  },
+  "homepage.nudge.toggleDocs": {
+    "message": "コミュニティ、Summit、ドキュメントのリソースを{action}"
+  },
+  "homepage.nudge.benefit1": {
+    "message": "Doris のユーザーや開発者と交流できます。"
+  },
+  "homepage.nudge.benefit2": {
+    "message": "コミュニティの最新情報、学習リソース、イベント情報を得られます。"
+  },
+  "homepage.nudge.benefit3": {
+    "message": "コミュニティ活動、機能の議論、PR レビューに参加できます。"
+  },
+  "docs.translation.status.label": {
+    "message": "翻訳状況"
+  },
+  "docs.translation.untranslated": {
+    "message": "このページはまだ日本語に翻訳されていません。"
+  },
+  "docs.translation.showingSource": {
+    "message": "現在のバージョンの英語原文を表示しています。"
+  },
+  "docs.translation.openSource": {
+    "message": "英語版を開く"
+  },
+  "docs.translation.openChineseSource": {
+    "message": "中国語原文を開く"
+  },
+  "docs.translation.staleProse": {
+    "message": "日本語訳は原文の最新の表現を反映していません。"
+  },
+  "docs.translation.sourceMissing": {
+    "message": "翻訳元を確認できないため、この日本語訳は表示していません。"
+  },
+  "docs.translation.unverified": {
+    "message": "日本語訳の内容や更新状況を確認できていません。"
+  },
+  "docs.translation.stale": {
+    "message": "日本語訳は原文の最新の変更を反映していません。"
+  },
+  "docs.translation.reviewedHuman": {
+    "message": "この日本語訳は人が校正しています。"
+  },
+  "docs.translation.machine": {
+    "message": "このページは機械翻訳されています。"
+  },
+  "docs.translation.translatedAt": {
+    "message": "翻訳日: "
+  },
+  "theme.SearchPage.searchSource": {
+    "message": "英語の原文を検索"
+  }
+}

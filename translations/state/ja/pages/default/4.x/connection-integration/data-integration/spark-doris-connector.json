@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/spark-doris-connector",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/spark-doris-connector.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/spark-doris-connector.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ec479b6a3dde11ea58cf91ee69c2b224fc670bee04458e7c84fec5382474cad5",
+    "sourceTechnicalHash": "b1d072cb664cc6fc5243c38a4f00b3ec9f482a0bc18659e74517afcfd323f176",
+    "targetHash": "d9705146941b119094b7590d04b886e4fb44287ddea1c09e68dbc96d66d68340",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.631Z",
+    "glossaryVersion": "0"
+  }
+}

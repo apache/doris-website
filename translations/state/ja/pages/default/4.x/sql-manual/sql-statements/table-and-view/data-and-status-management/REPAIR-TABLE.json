@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/REPAIR-TABLE.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "3975b497567fc376147db3ab87db83bed4acda8b8e820383100d92a947718580",
+    "sourceTechnicalHash": "bdee9f5dfb9643a506378c18a6198250acefcdcd90cd9c0ed611ef88ed0a39af",
+    "targetHash": "02da4718c2f8021f13f93f82973b9db6e1e5c9f6344e3ae4340d0a8b761991a0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.743Z",
+    "glossaryVersion": "0"
+  }
+}

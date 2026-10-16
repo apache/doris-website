@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "5d6e5315724171c3d5e8f0156b9d48259d78adacc3435c987bfe86abf397dc66",
+    "sourceTechnicalHash": "25bdd062f8ebbc445152a31b8ec15e40d23f1da208ae082b020d7d3a3f4ee731",
+    "targetHash": "29667f6a3e0c91f26a91a001a63c77ddd9381055673a0772aefdd7c9e1e0bde7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.224Z",
+    "glossaryVersion": "0"
+  }
+}

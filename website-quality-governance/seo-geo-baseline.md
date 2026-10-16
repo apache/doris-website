@@ -10,6 +10,13 @@ This runbook records the standing policy for Apache Doris website SEO and genera
 - `static/llms.txt` lists curated Overview, Getting Started, SQL Manual, Load, Lakehouse, AI, Admin, Release Notes, and Community entry points.
 - `static/llms-full-docs.txt` is intentionally a compact topic index, not a full content dump.
 
+## Localized Indexing
+
+- A section that only repeats the default locale's content is kept out of the index. A locale's blog routes are `noindex` until that locale holds a translated post (`hasBlogTranslations` in `config/i18n.js`), and an untranslated docs page is `noindex` with a canonical to the default locale (`src/theme/DocItem/Metadata`).
+- The sitemap plugin skips noindex routes, so those URLs leave the locale's sitemap as well. A localized page that should rank needs a real translation, not an indexable English copy.
+- `static/robots.txt` declares every locale's sitemap (`/zh-CN/sitemap.xml`, `/ja/sitemap.xml`). Each locale builds its own sitemap, and Google retired the sitemap ping endpoint, so a new locale also needs its sitemap submitted in Search Console.
+- Sitemaps carry `lastmod` from each file's last commit, so a deploy has to check out full history (`fetch-depth: 0`).
+
 ## Structured Data Plan
 
 - Blog pages should use `BlogPosting` schema with headline, description, date, author, and canonical URL.

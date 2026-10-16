@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "4e78ff7d74e5e964cbe131d0bcce134fb7bf24364a762076dd1c738afab14a0c",
+    "sourceTechnicalHash": "ca1de324a85ce539e577796f12e6a70e4327c5f99c2f45733fa72184712d3b14",
+    "targetHash": "3b8d655727c0d24c85dd8d29c58f5960a4531787f700105af82f582f2e2a2309",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.055Z",
+    "glossaryVersion": "0"
+  }
+}

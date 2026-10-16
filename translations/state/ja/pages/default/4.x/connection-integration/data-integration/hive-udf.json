@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/hive-udf",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/hive-udf.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/hive-udf.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "a86c53fcd1c1bdf051e88634800903b14474b9a0a43aeb03c73093b9f9005e2d",
+    "sourceTechnicalHash": "672d2a1af43fa075b33f9358f1247edd0cea64139c8d95a63d68483e0233a823",
+    "targetHash": "84ba87565aa833ad55af77733e95f8139a517b8f1b79158dcbe0617d7fd19fcd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.630Z",
+    "glossaryVersion": "0"
+  }
+}

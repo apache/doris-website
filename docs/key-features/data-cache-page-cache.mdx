@@ -67,7 +67,7 @@ Apache Doris funnels every lakehouse scan through the Page Cache first, then the
 
 ```sql
 -- One-time setup on each BE: configure a cache directory.
--- be.conf:
+-- be.conf (enable_file_cache is enabled by default since Doris 4.2):
 --   enable_file_cache = true
 --   file_cache_path = [{"path":"/data/file_cache","total_size":107374182400}]
 

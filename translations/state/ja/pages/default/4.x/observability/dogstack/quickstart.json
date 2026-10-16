@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/quickstart",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/quickstart.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/quickstart.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9ce961037a59a9e026b015fdde260d6c7a54c7041f6f429750f09baf2d99d3e0",
+    "sourceTechnicalHash": "8ab8eb9664847ef91d82fb47ed8e4607d87f07dc52f3feff94ea2182b4223709",
+    "targetHash": "4ad52930a2ab9888dbe8b40b59ef0e551b76cc7c20c193aad726aa4e01738f75",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.110Z",
+    "glossaryVersion": "0"
+  }
+}

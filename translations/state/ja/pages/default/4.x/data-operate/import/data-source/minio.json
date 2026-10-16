@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/minio",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/minio.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/minio.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "6918ee7a82b81a97087cfe4cadbe31eb40f7085ac9b747dc0b3cae1263f36241",
+    "sourceTechnicalHash": "5eed4cea87e982e8446cefd797113f1468bf488417138049c445086318a98dc3",
+    "targetHash": "6530b2dfd67cce8ab40a6d3300f43db67d12b7a59eb0d10422b266fbd14a69a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

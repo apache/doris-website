@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "498e92a60097014f82fd8c104ac4b9b73d6813eaa930c681093c1ede685cc25c",
+    "sourceTechnicalHash": "a0bb58feb7403208cbf1afeb0aac3dda3fc100485029be24d2ab354717602fcb",
+    "targetHash": "90d9df0582fc7341b4e5c2e0cc947dd7359eff2917acbbedcedd18b2343cb000",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:46:39.009Z",
+    "glossaryVersion": "0"
+  }
+}

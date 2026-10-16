@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/string-type/STRING",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "9169b4533c57ecae822213ddb5190860ab2f49270db7bed387d70bd254f06867",
+    "sourceTechnicalHash": "f041f1ef76a703797cbeccd3d72435cf897d1e1df5b05abc945a7a6b0826a119",
+    "targetHash": "505fb0116f86042c8c092ef8104b4e39192b5fa926e73d135db0b9e879791964",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.343Z",
+    "glossaryVersion": "0"
+  }
+}

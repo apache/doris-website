@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "7435826f3a44b3a94ef205e7eacc79211a5b5bf3b6520910e853d7326e8bebbb",
+    "sourceTechnicalHash": "d4c9508a8af7e5c61c1bb5725276750ea0ed215c62ad052aa82ec0fd37c474a8",
+    "targetHash": "a294e8c0a41d8223182ebdaf06983c79323ddfea6b5e7896b4effe3359679a62",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "features-architecture/system-architecture",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/features-architecture/system-architecture.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/features-architecture/system-architecture.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "c9fa2e126f1410ed74133eef9d43e164a2c7ee19a4501204dbebe070e0023c46",
+    "sourceTechnicalHash": "52ebc3c02d19d0746754865a869cb7ba6f68fc46918b291d61c356c4362d2013",
+    "targetHash": "5fa65f9bcf8b206e0c53ced4300d7da97041b3686fa9abaff66abfd324a06fd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

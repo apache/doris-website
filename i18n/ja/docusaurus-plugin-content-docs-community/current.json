@@ -1,0 +1,66 @@
+{
+  "version.label": {
+    "message": "コミュニティ",
+    "description": "The label for version current"
+  },
+  "sidebar.community.category.About the Community": {
+    "message": "コミュニティについて",
+    "description": "The label for category About the Community in sidebar community"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "貢献する方法",
+    "description": "The label for category How to Contribute in sidebar community"
+  },
+  "sidebar.community.category.Documentation Contribution": {
+    "message": "ドキュメントへの貢献",
+    "description": "The label for category Documentation Contribution in sidebar community"
+  },
+  "sidebar.community.category.Development & Debugging": {
+    "message": "開発とデバッグ",
+    "description": "The label for category Development & Debugging in sidebar community"
+  },
+  "sidebar.community.category.Source Code Compilation": {
+    "message": "ソースコードのコンパイル",
+    "description": "The label for category Source Code Compilation in sidebar community"
+  },
+  "sidebar.community.category.IDE Setup": {
+    "message": "IDE の設定",
+    "description": "The label for category IDE Setup in sidebar community"
+  },
+  "sidebar.community.category.Code Style": {
+    "message": "コーディング規約",
+    "description": "The label for category Code Style in sidebar community"
+  },
+  "sidebar.community.category.Debugging & Profiling": {
+    "message": "デバッグとプロファイリング",
+    "description": "The label for category Debugging & Profiling in sidebar community"
+  },
+  "sidebar.community.category.Testing": {
+    "message": "テスト",
+    "description": "The label for category Testing in sidebar community"
+  },
+  "sidebar.community.category.Data Source Extension": {
+    "message": "データソースの拡張",
+    "description": "The label for category Data Source Extension in sidebar community"
+  },
+  "sidebar.community.category.Plugin Development": {
+    "message": "プラグイン開発",
+    "description": "The label for category Plugin Development in sidebar community"
+  },
+  "sidebar.community.category.Data Format Reference": {
+    "message": "データ形式リファレンス",
+    "description": "The label for category Data Format Reference in sidebar community"
+  },
+  "sidebar.community.category.Release": {
+    "message": "リリース",
+    "description": "The label for category Release in sidebar community"
+  },
+  "sidebar.community.category.Design Documents": {
+    "message": "設計ドキュメント",
+    "description": "The label for category Design Documents in sidebar community"
+  },
+  "sidebar.community.link.Improvement Proposals": {
+    "message": "改善提案",
+    "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
+  }
+}

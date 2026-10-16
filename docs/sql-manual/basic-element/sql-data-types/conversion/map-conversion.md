@@ -114,6 +114,22 @@ If key/value in key-value pairs does not meet the format of the corresponding ty
 | '{   "123":"abc"  }' | Cast to MAP\<int,int\>: {123:null} | "abc" cannot be converted to int type, converted to null |
 | '{ 1:2 ,34, 5:6}' | NULL | Does not meet MAP format |
 
+#### Duplicate Keys in Nested MAPs
+
+When a string is cast to a `MAP`, `ARRAY`, or `STRUCT`, Doris removes duplicate keys from every `MAP` in the converted result, including MAPs nested in an `ARRAY`, a `STRUCT`, or a MAP value. When a key occurs more than once, the last value is retained.
+
+```sql
+SELECT CAST('{"outer":[{"a":1,"a":2}]}' AS MAP<STRING, ARRAY<MAP<STRING, INT>>>);
+SELECT CAST('[{"a":1,"a":2}]' AS ARRAY<MAP<STRING, INT>>);
+SELECT CAST('{"m":{"a":1,"a":2}}' AS STRUCT<m:MAP<STRING, INT>>);
+```
+
+```text
+{"outer":[{"a":2}]}
+[{"a":2}]
+{"m":{"a":2}}
+```
+
 ### FROM MAP\<Other Type\>
 
 #### Strict Mode

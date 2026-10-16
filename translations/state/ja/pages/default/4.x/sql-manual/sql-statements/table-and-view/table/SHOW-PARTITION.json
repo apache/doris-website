@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "4e4237406862249b2c89e33f98c1ed37cdfa7b8c3ffc00cf4d563a53ba5a3100",
+    "sourceTechnicalHash": "2489acf909e3e79d208459e521635392af4dfd8071a7824d4b215179e6bc5437",
+    "targetHash": "e1a4a598a1ab69658015b3cda9a76393ac809f199d3a85f698f856067b7045cb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:24:55.484Z",
+    "glossaryVersion": "0"
+  }
+}

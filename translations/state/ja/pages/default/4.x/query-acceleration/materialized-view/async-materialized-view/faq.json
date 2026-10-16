@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/faq",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/faq.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/faq.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "86195192f9d72de69c1d3bbb47f1ff19379cd1e96b11fed9759450445e03d634",
+    "sourceTechnicalHash": "6a663dd819c77082ccdcf15e06393ffec22c5ce72652135865b64fab229adeda",
+    "targetHash": "825fdaeced3f1603c87af557c50f07b1f744259bc8e7ecc4591bddb65fbb7660",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.709Z",
+    "glossaryVersion": "0"
+  }
+}

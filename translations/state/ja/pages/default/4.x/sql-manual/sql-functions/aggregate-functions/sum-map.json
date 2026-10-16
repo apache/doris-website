@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sum-map",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sum-map.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sum-map.md",
+    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
+    "sourceHash": "f6f88d1afb091f178fed17e25911cab095b932ade3b9e495377df28c4863d131",
+    "sourceTechnicalHash": "38728ec91d843788ca9e2c4da0be4aaddf20f118903e84584c431710d047cfd0",
+    "targetHash": "acae3741280c3b23a8acb81bf792055b791559f0f71fbebcff03e785871b7925",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T05:27:19.788Z",
+    "glossaryVersion": "0"
+  }
+}

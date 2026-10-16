@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/var-samp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/var-samp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/var-samp.md",
+    "sourceCommit": "8d395e5202c28020ca7b4d581deb5cf72df59370",
+    "sourceHash": "bae5c7c9f289aa0e3056b0255e1c622638e1329329482d6a04e14843e1efaba9",
+    "sourceTechnicalHash": "b022f899be29877d7610634498e2ca794ad19a54aa38e4d869aa0ade52619dd5",
+    "targetHash": "b8ac358d973a80b41bfe905f0d7eb6b1bc59ccfbfb96a99f12e9437f693d2c97",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:36:14.112Z",
+    "glossaryVersion": "0"
+  }
+}

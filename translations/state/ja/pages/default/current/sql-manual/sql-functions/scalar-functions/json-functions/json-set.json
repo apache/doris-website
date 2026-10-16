@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-set",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-set.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-set.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "4d0d3d5e3f28f92371baec8b0ffff0857ebcdfec9b8db10e3be9bb381d6f12b7",
+    "sourceTechnicalHash": "32e5f45a18b503acaa5b4bc8916deeedba79df3e1492cebfa69337bc70598c02",
+    "targetHash": "da21fe2809b143220e04497459f0d194b7fadf4563a2b69d86dd59380d4925f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:05:15.137Z",
+    "glossaryVersion": "0"
+  }
+}

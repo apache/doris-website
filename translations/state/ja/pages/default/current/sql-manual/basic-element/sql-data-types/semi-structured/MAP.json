@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "51816178cc61439f2fe5fc304ca243ecf485cc8c8c5dd9dcbc60bec34b4c652a",
+    "sourceTechnicalHash": "16d6bebab203446ee807fedada18854be920d7bdfd86d4a00b7e1bcde0cfb750",
+    "targetHash": "e540e4306dbfbd23bc34507fcc037ced0f178cf2cea6252ca9b1d9624dcc08f3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

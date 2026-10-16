@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/auto-increment",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/auto-increment.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/auto-increment.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "f0742191b4a2d9f2b0c4e8deb595d3d6595a0d64b31bfbe0871ee0fcf0ac79ae",
+    "sourceTechnicalHash": "59a504992a389848dfd9d7110c690a21696373006c03c5f172900c0a6b524bac",
+    "targetHash": "805e6dcf4a432954de1c595f8ad5676fe67bab644bc5e085d2d31079cdf2eaea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.602Z",
+    "glossaryVersion": "0"
+  }
+}

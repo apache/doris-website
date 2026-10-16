@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "0ed88acd82a11357cc0debd2ebaefe825966837e7af96fc75e09b7274b9b67df",
+    "sourceTechnicalHash": "25017bc9ec1990e592f1d7dd2bddb5328007231df043d36eefa7d14781deb408",
+    "targetHash": "bc1c844a5536f54b3cccf14fe598f6d4d507568c349ac7aba2b87e247def50ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:33:33.245Z",
+    "glossaryVersion": "0"
+  }
+}

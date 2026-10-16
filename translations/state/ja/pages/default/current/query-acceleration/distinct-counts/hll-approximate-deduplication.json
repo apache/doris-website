@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/distinct-counts/hll-approximate-deduplication",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/distinct-counts/hll-approximate-deduplication.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/distinct-counts/hll-approximate-deduplication.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "42b68d52f29bbafd32e07be01c9a914e8a22607403db80f96f1afb329abbdd70",
+    "sourceTechnicalHash": "2b5fbec2f3e379fb6c3747ec52b93f8a7fd638846e7dda0241d46a41a2c104d6",
+    "targetHash": "4954dbc39eb58902759e91063c5d54fbceabae987cec4e07aac54add67680bcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.224Z",
+    "glossaryVersion": "0"
+  }
+}

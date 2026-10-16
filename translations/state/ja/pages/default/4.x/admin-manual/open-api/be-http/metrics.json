@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/metrics",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/metrics.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/metrics.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "f5f12d116c70619a63c8023af05a66d9fffe7f419bf77fdfdb8dfcd6c4999e17",
+    "sourceTechnicalHash": "08fdccd7fdaa82a1cdb4fc4c18a537abdfa0fb91a9459f08c98454e8fdb6d58e",
+    "targetHash": "72af24aa7b17c920403bb3287f444d65752a056c50fabbc7853c5f709b3763b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:47:44.553Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/table-stream-advanced",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/table-stream-advanced.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream-advanced.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "3459fb316236b230ecf32175c8b9261af8c2b81ea679f13d52f2ee74434b062f",
+    "sourceTechnicalHash": "c880a020b16055a490e63b71754fb5efcf0c2ed0a6d7d3f5421603f6548b6445",
+    "targetHash": "e35466ede64c71e4317b00bb2f0639c9901a827cc6d1c97120a93fd827544b58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T16:06:57.645Z",
+    "glossaryVersion": "0"
+  }
+}

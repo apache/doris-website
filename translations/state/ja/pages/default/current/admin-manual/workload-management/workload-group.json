@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/workload-group",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/workload-group.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/workload-management/workload-group.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "9e20883d8e25f43f3a374f5abf59a7e4874f9f2bd23895f87e6f480e45c2be94",
+    "sourceTechnicalHash": "c131fd00dc7bd4b3c256bd0fea514d56c195a98eccd3ef8a797314470d3c7daf",
+    "targetHash": "044b09a05fce9a66cca68e4c9c1a20f5fcecb432923fcf8bc0a6e2d9ac4c51fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.872Z",
+    "glossaryVersion": "0"
+  }
+}

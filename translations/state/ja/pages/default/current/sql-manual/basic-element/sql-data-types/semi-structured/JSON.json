@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "44e0590952d928738a596a3b6bab8578a6112ead90fda4d25533df62e6c9266b",
+    "sourceTechnicalHash": "5cac76b5297f60e16ed9f3af6d5cb028c0948dc4e125e9bd939b1748b87debf8",
+    "targetHash": "991a968ddb58b1dbd54b277db13a4a02f6a94707b32e9e383a061f37f457a4a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.344Z",
+    "glossaryVersion": "0"
+  }
+}

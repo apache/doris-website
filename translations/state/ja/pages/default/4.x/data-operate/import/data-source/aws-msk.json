@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/aws-msk",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/aws-msk.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/aws-msk.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "534acfea1668d3ea8891aade8e8a9c1b43014ef245a65140f15476797b6db323",
+    "sourceTechnicalHash": "5afb1859c21db458a26feedd8db129b1d95c734fac7cbd7c72217eed13162469",
+    "targetHash": "e2287776605bbd5d75eb86167edb56a8e59d0a9b55822b14008f0d3441424514",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T02:27:01.603Z",
+    "glossaryVersion": "0"
+  }
+}

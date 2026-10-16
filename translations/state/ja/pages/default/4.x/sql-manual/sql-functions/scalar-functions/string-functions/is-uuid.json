@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/is-uuid",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/is-uuid.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/is-uuid.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4a69dfc8fba2bc352c3d79fe8712fd6a8c5b0fa84723cea6c9f8ecfdfd319e06",
+    "sourceTechnicalHash": "a9b9578b34ac56754d9ea63c02d2e904ab5efae8ad061f25e03d53a2aec9c738",
+    "targetHash": "c8f7c687989ca23976566e0bf758d4103bea7ba88e598a2f9bf7067a5bd404cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.832Z",
+    "glossaryVersion": "0"
+  }
+}

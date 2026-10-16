@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/GRANT-TO",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "fe89064712ab4c77320f0d31c36d8e4a63ad236a0377c6ca25773506b23c325f",
+    "sourceTechnicalHash": "e30ecd2089d5c4b16fd8256b3ee0373e328d05cf2c2610967eb2ee7237c48002",
+    "targetHash": "3598c49647ee43c140864fcf8222892eb4176db59258c57f672faadd6c138914",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T07:55:32.508Z",
+    "glossaryVersion": "0"
+  }
+}

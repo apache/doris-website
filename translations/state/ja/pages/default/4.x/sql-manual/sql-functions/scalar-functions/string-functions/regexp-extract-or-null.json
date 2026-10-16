@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "57f93d048c83e4864801078a98128730d4968fd39b9dc19d5f59dd0fce43993d",
+    "sourceTechnicalHash": "7191f4f42fdf89a2bc6f14e04cdf14a5edbcedd1061f033ad49d3a77677781db",
+    "targetHash": "2ad990260d7285548a9f8a7a7368373e8beec3879e4fd4382f778bdeebd314cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.834Z",
+    "glossaryVersion": "0"
+  }
+}

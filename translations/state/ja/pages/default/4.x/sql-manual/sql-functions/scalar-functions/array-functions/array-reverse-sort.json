@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort.md",
+    "sourceCommit": "a9218193f7910089103047f76a7b3d0ffdd01c4e",
+    "sourceHash": "851b4d3d038a3ab584218bca3927507b0c387f4c5b0a6224453669a84721f9d1",
+    "sourceTechnicalHash": "f4f03b1d9bb09951b7b56651d9362da372799410b8746c5a33e5d82225a1914a",
+    "targetHash": "5bd46c3373f9ec45efd98183683a1b9af30457f13df3b43974f0673e2f5b3002",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:59:59.331Z",
+    "glossaryVersion": "0"
+  }
+}

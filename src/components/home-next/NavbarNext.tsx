@@ -1,11 +1,13 @@
+import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useRef } from 'react';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
+import { localizedAiLabels, usesDefaultLocalePages } from '@site/src/utils/localization';
 import './NavbarNext.scss';
 
 const GITHUB_REPO = 'apache/doris';
@@ -19,6 +21,7 @@ interface DropdownItem {
 }
 
 interface NavItem {
+    id: string;
     label: string;
     items: DropdownItem[];
 }
@@ -35,25 +38,28 @@ function buildNavItems(
 ): NavItem[] {
     return [
         {
-            label: 'Why Doris',
+            id: 'why-doris',
+            label: translate({ id: "homepage.navbar.001", message: "Why Doris" }),
             items: [
-                { label: 'Doris vs. Others', href: '/why-doris/compare' },
-                { label: 'Benchmarks', href: '/why-doris/benchmarks' },
-                { label: 'Key Features', href: '/why-doris/key-features' },
-                { label: 'User Stories', href: '/why-doris/users' },
+                { label: translate({ id: "homepage.navbar.002", message: "Doris vs. Others" }), href: '/why-doris/compare' },
+                { label: translate({ id: "homepage.navbar.003", message: "Benchmarks" }), href: '/why-doris/benchmarks' },
+                { label: translate({ id: "homepage.navbar.004", message: "Key Features" }), href: '/why-doris/key-features' },
+                { label: translate({ id: "homepage.navbar.005", message: "User Stories" }), href: '/why-doris/users' },
             ],
         },
         {
-            label: 'Use Cases',
+            id: 'use-cases',
+            label: translate({ id: "homepage.navbar.006", message: "Use Cases" }),
             items: [
-                { label: 'Customer-Facing Analytics', href: '/use-cases/customer-facing-analytics' },
-                { label: 'Data Warehousing', href: '/use-cases/data-warehousing' },
-                { label: 'Observability', href: '/use-cases/observability' },
-                { label: 'Doris for AI', href: '/use-cases/ai' },
+                { label: translate({ id: "homepage.navbar.007", message: "Customer-Facing Analytics" }), href: '/use-cases/customer-facing-analytics' },
+                { label: translate({ id: "homepage.navbar.008", message: "Data Warehousing" }), href: '/use-cases/data-warehousing' },
+                { label: translate({ id: "homepage.navbar.009", message: "Observability" }), href: '/use-cases/observability' },
+                { label: translate({ id: "homepage.navbar.010", message: "Doris for AI" }), href: '/use-cases/ai' },
             ],
         },
         {
-            label: 'Docs',
+            id: 'docs',
+            label: translate({ id: "homepage.navbar.011", message: "Docs" }),
             items: [
                 { label: 'Dev', href: devDocsHref },
                 { label: '4.x', href: stableDocsHref },
@@ -62,21 +68,23 @@ function buildNavItems(
             ],
         },
         {
-            label: 'Resources',
+            id: 'resources',
+            label: translate({ id: "homepage.navbar.015", message: "Resources" }),
             items: [
-                { label: 'Release Notes', href: releasesHref },
-                { label: 'Blogs', href: '/blog' },
-                { label: 'Course', href: '/course' },
-                { label: 'Profile Analysis', href: '/profile-analysis' },
+                { label: translate({ id: "homepage.navbar.016", message: "Release Notes" }), href: releasesHref },
+                { label: translate({ id: "homepage.navbar.017", message: "Blogs" }), href: '/blog' },
+                { label: translate({ id: "homepage.navbar.018", message: "Course" }), href: '/course' },
+                { label: translate({ id: "homepage.navbar.019", message: "Profile Analysis" }), href: '/profile-analysis' },
             ],
         },
         {
-            label: 'Community',
+            id: 'community',
+            label: translate({ id: "homepage.navbar.020", message: "Community" }),
             items: [
-                { label: 'Community Report', href: communityReportHref },
-                { label: 'Roadmap', href: roadmapHref },
-                { label: 'Build with Us', href: joinCommunityHref },
-                { label: 'Join GitHub Discussions', href: 'https://github.com/apache/doris/discussions', external: true },
+                { label: translate({ id: "homepage.navbar.021", message: "Community Report" }), href: communityReportHref },
+                { label: translate({ id: "homepage.navbar.022", message: "Roadmap" }), href: roadmapHref },
+                { label: translate({ id: "homepage.navbar.023", message: "Build with Us" }), href: joinCommunityHref },
+                { label: translate({ id: "homepage.navbar.024", message: "Join GitHub Discussions" }), href: 'https://github.com/apache/doris/discussions', external: true },
             ],
         },
     ];
@@ -155,7 +163,11 @@ export function NavbarNext(): JSX.Element {
     const releasesHref = `${localePrefix}/releases/all-release`;
     const roadmapHref = `${localePrefix}/community/roadmap`;
     const joinCommunityHref = `${localePrefix}/community/join-community`;
-    const communityReportHref = `${localePrefix}/community-report`;
+    // The community report is an ordinary page, so a locale that renders the
+    // default locale's ordinary pages links to it without a prefix.
+    const communityReportHref = usesDefaultLocalePages()
+        ? '/community-report'
+        : `${localePrefix}/community-report`;
     const navItems = buildNavItems(
         devDocsHref,
         stableDocsHref,
@@ -215,7 +227,7 @@ export function NavbarNext(): JSX.Element {
 
                 <div className="navbar-next__nav">
                     {navItems.map(item => (
-                        <div key={item.label} className="navbar-next__item">
+                        <div key={item.id} className="navbar-next__item">
                             <button className="navbar-next__trigger" type="button" aria-haspopup="true">
                                 {item.label}
                                 <ChevronDown />
@@ -243,7 +255,7 @@ export function NavbarNext(): JSX.Element {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__summit"
-                        aria-label="Visit Doris Summit 2026 (opens in a new tab)"
+                        aria-label={translate({ id: "homepage.navbar.027", message: "Visit Doris Summit 2026 (opens in a new tab)" })}
                     >
                         <span>Doris Summit 26</span>
                     </a>
@@ -251,7 +263,7 @@ export function NavbarNext(): JSX.Element {
                         type="button"
                         id="navbar-ask-ai-btn"
                         className="navbar-next__ask-ai"
-                        aria-label="Ask Me"
+                        aria-label={translate({ id: "homepage.navbar.029", message: "Ask Me" })}
                         aria-busy="false"
                         aria-disabled="false"
                         data-kapa-trigger
@@ -266,46 +278,44 @@ export function NavbarNext(): JSX.Element {
                             the one-row phone navbar never has to fit "Loading AI…". */}
                         <span
                             data-kapa-label
+                            {...localizedAiLabels()}
                             className="navbar-next__ask-ai-label navbar-next__ask-ai-label--full"
                             aria-live="polite"
                             suppressHydrationWarning
                         >
-                            Ask Me
-                        </span>
+                            {translate({ id: "homepage.navbar.029", message: "Ask Me" })}</span>
                         <span
                             data-kapa-label
                             data-kapa-loading-label="…"
-                            data-kapa-error-label="N/A"
+                            data-kapa-error-label={translate({ id: "homepage.navbar.030", message: "N/A" })}
                             className="navbar-next__ask-ai-label navbar-next__ask-ai-label--compact"
                             aria-live="polite"
                             suppressHydrationWarning
                         >
-                            Ask
-                        </span>
+                            {translate({ id: "homepage.navbar.031", message: "Ask" })}</span>
                     </button>
                     <a
                         href={`https://github.com/${GITHUB_REPO}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__star-link"
-                        aria-label={`Star Apache Doris on GitHub (${STAR_DISPLAY} stars)`}
+                        aria-label={translate({ id: 'homepage.navbar.starLabel', message: 'Star Apache Doris on GitHub ({stars} stars)' }, { stars: STAR_DISPLAY })}
                     >
                         <StarIcon />
-                        <span className="navbar-next__star-text">Star</span>
+                        <span className="navbar-next__star-text">{translate({ id: "homepage.navbar.032", message: "Star" })}</span>
                         <span className="navbar-next__star-divider" />
                         <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
                     <Link to="/download" className="navbar-next__cta">
-                        DOWNLOAD
-                    </Link>
+                        {translate({ id: "homepage.navbar.033", message: "DOWNLOAD" })}</Link>
                 </div>
 
                 <button
                     type="button"
                     className="navbar-next__menu-button"
-                    aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                    aria-label={mobileOpen ? translate({ id: "homepage.navbar.034", message: "Close navigation menu" }) : translate({ id: "homepage.navbar.035", message: "Open navigation menu" })}
                     aria-expanded={mobileOpen}
                     aria-controls="navbar-next-mobile-panel"
                     onClick={() => setMobileOpen(open => !open)}
@@ -318,10 +328,10 @@ export function NavbarNext(): JSX.Element {
                 <div className="navbar-next__mobile-sections">
                     {navItems.map(item => {
                         const expanded = expandedMobileItem === item.label;
-                        const sectionId = `navbar-next-mobile-${item.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+                        const sectionId = `navbar-next-mobile-${item.id}`;
 
                         return (
-                            <div className="navbar-next__mobile-section" key={item.label}>
+                            <div className="navbar-next__mobile-section" key={item.id}>
                                 <button
                                     type="button"
                                     className="navbar-next__mobile-trigger"
@@ -360,7 +370,7 @@ export function NavbarNext(): JSX.Element {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__summit"
-                        aria-label="Visit Doris Summit 2026 (opens in a new tab)"
+                        aria-label={translate({ id: "homepage.navbar.027", message: "Visit Doris Summit 2026 (opens in a new tab)" })}
                         onClick={() => setMobileOpen(false)}
                     >
                         <span>Doris Summit 26</span>

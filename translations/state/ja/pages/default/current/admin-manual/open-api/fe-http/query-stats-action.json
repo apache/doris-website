@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/query-stats-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/query-stats-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/query-stats-action.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "6d569311ff7d97b3db4fa8a9e7ed6d86a3996f7469d39a6a675c093c4ac74c03",
+    "sourceTechnicalHash": "f86c7c811a1bcdfd56103d53fdb82c89282ec405b69be1a38859c37b72bdd252",
+    "targetHash": "62eb28a0c6b68d0bab7814145b987ba7b4e53478795e23d84603e27c7f825eb4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.291Z",
+    "glossaryVersion": "0"
+  }
+}

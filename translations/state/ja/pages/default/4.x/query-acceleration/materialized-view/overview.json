@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/overview",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/overview.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/overview.md",
+    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
+    "sourceHash": "8da4beae745471b9a011763f4f994f4334bf5f37831ae8cb8925dbc8149631a3",
+    "sourceTechnicalHash": "ac27c46b3b26a3aa6c0e280f65a3a31c5bf8ff42e17981fe3e3ce8006c0014bf",
+    "targetHash": "57eb2cc9c27e62a95b179e868ab82c3b2f66f01703023df059903b0eb2b5861b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T03:18:55.709Z",
+    "glossaryVersion": "0"
+  }
+}

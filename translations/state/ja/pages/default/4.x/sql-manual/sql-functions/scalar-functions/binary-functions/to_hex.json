@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/to_hex.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/binary-functions/to_hex.md",
+    "sourceCommit": "9bd8b356d362e6e0ce821bb464039c73129bff2c",
+    "sourceHash": "841cd079a456a0685dd247e1766ecf0d6ed86a0908d0e2d77bf0bb5e5b423f94",
+    "sourceTechnicalHash": "e11e76348f7572bb3ec4546f955b7afa043e1e56692825a634ded711227381a7",
+    "targetHash": "4add786104d4ad30f70050893e87ad4b5eb7f1712f56ea8f434b3d9d8b30ead7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T18:12:09.567Z",
+    "glossaryVersion": "0"
+  }
+}

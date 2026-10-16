@@ -141,7 +141,7 @@ IVM 位于这两层能力之上。它使用 Row Binlog 记录的变化和 Doris 
 | 创建 Stream 报 `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | FE 未开启 `enable_table_stream`，修改 `fe.conf` 后重启 FE |
 | 存算分离模式能用吗？ | Row Binlog 与 Table Stream 可以；`@incr` 请在存算一体模式下使用 |
 | 开启 Row Binlog 对写入有什么影响？ | 每次写入要额外生成并持久化变更记录，MoW 表还要读取旧值，导入吞吐会有可感知的下降。只对需要增量消费的表开启，上线前用真实负载评估 |
-| 变更记录会自动清理吗？ | 当前版本不会自动清理，需要为开启 Row Binlog 的表预留存储空间，见 [保留与清理](row-binlog#保留与清理) |
+| 变更记录会自动清理吗？ | 会。`binlog.ttl_seconds` 控制保留时长（默认一天）；增量读取过滤过期记录，后台 compaction 回收其存储空间。请在保留窗口内完成消费，见 [保留与清理](row-binlog#保留与清理) |
 
 ## 文档导读
 

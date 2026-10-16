@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/superset",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/superset.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/superset.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "b572431f679029c1c47e43cb9ca6ce98c2c8b610cfff905f2b88b5355ce30050",
+    "sourceTechnicalHash": "340d8c46042dbe631710ac92f36fb50f892028f7c296a2deee71f7dec8cc54d4",
+    "targetHash": "ad00c4f42e19895a66c64c2211d0addf108f7d146277d3a2d2a0678f4f632ffa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T13:39:04.816Z",
+    "glossaryVersion": "0"
+  }
+}

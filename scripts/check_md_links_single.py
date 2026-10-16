@@ -11,6 +11,8 @@ Behavior:
 - Skips autolinks/anchor-only/empty/mailto/tel/javascript schemes (anchor-only is reported as info).
 - Internal/relative links:
     * Resolves relative to the file's directory.
+    * Maps versioned site routes such as `/docs/dev/...` to their source tree.
+    * Follows explicit doc redirects only when their target source file exists.
     * If the path has no extension, tries the path itself, then `.md`, then `.mdx`,
       and also `<path>/index.md` / `<path>/index.mdx` (Docusaurus directory links).
 - External links (http/https):
@@ -24,12 +26,13 @@ Exit code:
 """
 
 import argparse
+import json
 import os
 import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import lru_cache
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 try:
     import urllib.request
@@ -111,24 +114,53 @@ def _candidates_for(full: str):
             os.path.join(full, "index.mdx")]
 
 
+@lru_cache(maxsize=None)
+def _doc_redirects(site_root: str):
+    """Read the same explicit doc redirects as docusaurus.config.js."""
+    redirects = {}
+    for name in ("redirects-dev.json", "redirects-4.x.json"):
+        config = os.path.join(site_root, "config", name)
+        if os.path.isfile(config):
+            with open(config, encoding="utf-8") as f:
+                redirects.update((entry["from"].rstrip("/"), entry["to"])
+                                 for entry in json.load(f))
+    return redirects
+
+
 def resolve_internal(base_dir: str, target: str):
     """Return the resolved file path if target exists, else None."""
-    path_part = target.split("#", 1)[0]
+    path_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
     if path_part == "":
         return "anchor-only"
 
     if path_part.startswith("/"):
-        # Docusaurus site-absolute path. Try, in order:
-        #   1) static/<path>            — assets like /images/foo.png
-        #   2) <site_root>/<path>       — plugin routes whose dir == prefix
-        #                                 (e.g. /community/X → community/X.md)
-        #   3) <site_root>/<remapped>/<rest>
-        #                               — plugin routes whose dir ≠ prefix
-        #                                 (e.g. /releases/X → releasenotes/X.md)
+        # Resolve explicit redirects and version/locale routes before trying
+        # static assets and paths relative to the site root.
         site_root, static_root = _find_site_roots(base_dir)
         if site_root is None:
             return None
+        # createRedirects emits an alias only when its target is a real page;
+        # another redirect alone is not sufficient.
+        path_part = _doc_redirects(site_root).get(path_part.rstrip("/"), path_part)
         rel = path_part.lstrip("/")
+        routed = re.match(r"(?:(ja|zh-CN)/)?(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
+        if routed:
+            locale, route, version, rest = routed.groups()
+            if route.startswith("docs/"):
+                source = "docs" if version == "dev" else "versioned_docs/version-" + version
+                plugin = "docusaurus-plugin-content-docs"
+                content_version = "current" if version == "dev" else "version-" + version
+            else:
+                source = ROUTE_PREFIX_REMAP.get(route, route)
+                plugin = "docusaurus-plugin-content-docs-" + route
+                content_version = "current"
+            roots = [source]
+            if locale:
+                roots.insert(0, f"i18n/{locale}/{plugin}/{content_version}")
+            for root in roots:
+                for candidate in _candidates_for(os.path.join(site_root, root, rest.rstrip("/"))):
+                    if os.path.isfile(candidate):
+                        return candidate
         head, _, rest = rel.partition("/")
         if head in ROUTE_PREFIX_REMAP and rest:
             remapped = os.path.normpath(
@@ -147,6 +179,18 @@ def resolve_internal(base_dir: str, target: str):
     for c in _candidates_for(full):
         if os.path.isfile(c):
             return c
+    site_root, _ = _find_site_roots(base_dir)
+    if site_root:
+        relative = os.path.relpath(full, site_root).replace(os.sep, "/")
+        localized = re.match(r"i18n/ja/docusaurus-plugin-content-docs(-[^/]+)?/(current|version-([^/]+))/(.*)", relative)
+        if localized:
+            suffix, _, version, rest = localized.groups()
+            roots = {None: "docs", "-community": "community", "-releases": "releasenotes", "-course": "course"}
+            source = "versioned_docs/version-" + version if version and suffix is None else roots.get(suffix) if not version else None
+            if source:
+                for candidate in _candidates_for(os.path.join(site_root, source, rest)):
+                    if os.path.isfile(candidate):
+                        return candidate
     return None
 
 

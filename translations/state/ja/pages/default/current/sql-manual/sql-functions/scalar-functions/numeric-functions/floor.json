@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/floor.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/floor.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "c5d6d401cbf206b87f947e8adea54425de3db58974e8aa9d58c68447bf02d6b9",
+    "sourceTechnicalHash": "38569cfe1a27c8590f2ac9e6d7a28ea87cfe99ff4c77880b65576c5db0718ec9",
+    "targetHash": "6b94d730c288270b277fda5e5d67ba773bcbac0d9fd43d9be723a3972f8e9c00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:46:26.257Z",
+    "glossaryVersion": "0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/be-log",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/be-log.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/log-management/be-log.md",
+    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceHash": "b9608fc81b4da8d5e843a0b8523057f0ad6df1aca6c3578266d284e35e5e44fc",
+    "sourceTechnicalHash": "6930c90d7fe504b06c8d620884b3107fb701fe2009e77af519874252f1058b2a",
+    "targetHash": "306e6d2fb726546acc6ccfaab5b813329d435891ca389826593c0b410b502c98",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T17:24:17.283Z",
+    "glossaryVersion": "0"
+  }
+}

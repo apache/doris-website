@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/maint-monitor/disk-capacity",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/maint-monitor/disk-capacity.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/disk-capacity.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "1c87f65dd60bd8b53f73b5c7a7cc8a834c186490bba8891cb1740226a57b7081",
+    "sourceTechnicalHash": "a1d84958dba3258341dd96b813cfa2a1836747c31cca4f4903459caaffb0c91e",
+    "targetHash": "f9a3fd7b75fad20b22a1b8843ee8cb00ab9da2d2056f7181b0ec5295547e526a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:46:10.874Z",
+    "glossaryVersion": "0"
+  }
+}

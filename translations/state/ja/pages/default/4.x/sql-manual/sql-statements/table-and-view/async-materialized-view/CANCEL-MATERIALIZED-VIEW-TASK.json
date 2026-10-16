@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/async-materialized-view/CANCEL-MATERIALIZED-VIEW-TASK.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "0cf01da72f15c8286bdebdcd18d2f5e0c7dbcd78b69bf9799625e525a940ae1b",
+    "sourceTechnicalHash": "3e42245caed2c6ca608cf49617763f84852c6db2dcef225a1168f0cc6c50b0b4",
+    "targetHash": "56031b11108ea6f4bbdc29a982510dabe5f2723f90ce68119b092f7c066a275d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T08:35:06.362Z",
+    "glossaryVersion": "0"
+  }
+}

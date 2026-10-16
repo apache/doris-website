@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "locales": {
+    "ja": {
+      "sourceLocale": "en",
+      "sourceOverrides": [],
+      "languageName": "Japanese",
+      "scriptPattern": "[\\u3040-\\u30ff\\u3400-\\u9fff]",
+      "searchContextLabels": {
+        "docs/dev": "Dev ドキュメント",
+        "docs/4.x": "4.x ドキュメント",
+        "community": "コミュニティ"
+      }
+    }
+  }
+}

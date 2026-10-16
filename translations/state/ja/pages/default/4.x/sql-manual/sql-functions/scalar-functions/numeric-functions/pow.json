@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/pow",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/pow.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/pow.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "4f4fbf6293a4804d1a90a61a91506d1cd6c9aa9647d656eafcb0ea8045c1605c",
+    "sourceTechnicalHash": "269ceb8627956c7c172aa5cd7d2e3437874a0db4dd1291798f942fdeb9cb5e68",
+    "targetHash": "1274de3a40173ab0375639ebf595738b06b98bdf80a8c024a3772a3963781efe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T05:52:07.823Z",
+    "glossaryVersion": "0"
+  }
+}

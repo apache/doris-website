@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/parquet-reader-optimization",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/parquet-reader-optimization.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/key-features/parquet-reader-optimization.mdx",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+    "sourceTechnicalHash": "0025fc46eedf7f942534854251f275a61105923a43752b1356c75bf57a52dace",
+    "targetHash": "c4792001dcb02a2e91d31b42e3fcc0d9593067c232fc37aad834be4889d33dfc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T11:20:55.867Z",
+    "glossaryVersion": "0"
+  }
+}

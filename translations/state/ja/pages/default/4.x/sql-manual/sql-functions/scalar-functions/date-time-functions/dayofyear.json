@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofyear.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "1efeb051d077a43a15d0a62ae91863088ed77c5287a7dcb8ab2a1a315a044fad",
+    "sourceTechnicalHash": "6a01bc144a96de7b320b6a50f29c65d2eca161a49688bb10955ead893de35a2a",
+    "targetHash": "e135f3d51b3e1630de7f6e735d9c89c9cf16f32e745ac7410172d216dd8e5a71",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.698Z",
+    "glossaryVersion": "0"
+  }
+}

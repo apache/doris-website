@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-split-outer",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split-outer.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split-outer.md",
+    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
+    "sourceHash": "d84179ab2855720dbda865aaeb13f03afa7fded3d2c476276d75270d3cb45393",
+    "sourceTechnicalHash": "33098c16ef9229fdb9b3f3eec85d1664f4ab928263556dfc788ef1cf189cd79f",
+    "targetHash": "d73e7e0a485df457eb4bec6b1c5813e0ac6f39a4d790933dc5c258c2275e8b68",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T06:53:51.002Z",
+    "glossaryVersion": "0"
+  }
+}

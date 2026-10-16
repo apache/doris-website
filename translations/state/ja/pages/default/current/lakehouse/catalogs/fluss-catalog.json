@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/fluss-catalog",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/fluss-catalog.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/fluss-catalog.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "2141b755e5ac67a3f0734304a7a5171867883847940a3d30e64a3bc9145d9a39",
+    "sourceTechnicalHash": "1992902843cc809a99c72a43ccb2dc5c97e0f6474e81bd2e9773424e2a09b835",
+    "targetHash": "49bd7327732db11a9ae29e8babd401824631efce3b366d32798828cec92b3f3c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.226Z",
+    "glossaryVersion": "0"
+  }
+}

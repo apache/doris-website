@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-add",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-add.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-add.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "71f59e566ce2e2ad65244f284ec0d0d4106592319001428d15e937366060a3e2",
+    "sourceTechnicalHash": "96dfa33d6975643a049386bafd552f55582194571cb407735d18006091e00ba1",
+    "targetHash": "96bf5e55d4e246b440794bbdf8791e8d23a74acd1a5763686881754ad6d8364b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T06:25:01.702Z",
+    "glossaryVersion": "0"
+  }
+}

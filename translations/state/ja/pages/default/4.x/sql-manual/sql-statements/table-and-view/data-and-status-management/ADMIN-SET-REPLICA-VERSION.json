@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-VERSION",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-VERSION.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-SET-REPLICA-VERSION.md",
+    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceHash": "9d1f3751686b915bbb7de83bd756aaa4f6e9357298c15fcf9cf9159b813176b7",
+    "sourceTechnicalHash": "0fa9ecca2b2110ddce0fd47bf79ec3c100ccab5bd0db51d9f4cc68151dec37b2",
+    "targetHash": "3c909a5088f94f35000a21e308c1c0b88a74a5d588f2d5edf0e927570a514ff6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T09:10:39.745Z",
+    "glossaryVersion": "0"
+  }
+}

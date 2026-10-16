@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "51c8194622e96554c9293b12a7793f16436ab19ecedb7b375495016105a7bd8e",
+    "sourceTechnicalHash": "b8f73e96a681d9b404da9743731f89541ef0d741c9675853b492c19ab4061974",
+    "targetHash": "0dc3e91475fd18631b64bcdbdb2328e9925c1e7ad5e8ac7930c476a0d9e2a6fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.809Z",
+    "glossaryVersion": "0"
+  }
+}

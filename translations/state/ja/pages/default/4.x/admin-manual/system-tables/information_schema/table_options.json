@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/table_options",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/table_options.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/table_options.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "98ec6a2e09a131710cd659890dffe1cfd1066bb0752707474714cbd9fe2d30ed",
+    "sourceTechnicalHash": "19cdd7a07e3b11c0344ce3ec59e4b0aee53ec577d6a2a904952f84f2f987ff04",
+    "targetHash": "dbcadc7b1c94df44acf12255836ca5735720c5cc61499a1179ff2b26164d88b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:45:19.745Z",
+    "glossaryVersion": "0"
+  }
+}

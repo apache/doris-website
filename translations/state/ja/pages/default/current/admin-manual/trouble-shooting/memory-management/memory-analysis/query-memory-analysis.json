@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/query-memory-analysis.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "8981113b8d0b643eaf88dacd8c1c3549e13ce98c0f9e01c469a8d6648b87ec8c",
+    "sourceTechnicalHash": "4d06c5cbfa8f90e3705e11032d1cc53684d73d2dd6915980e80c24308dd8aad8",
+    "targetHash": "b7464402c989b637bace80779f18b44d376ae5f3246a4e1209fb347ca39d32b2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T18:27:30.340Z",
+    "glossaryVersion": "0"
+  }
+}

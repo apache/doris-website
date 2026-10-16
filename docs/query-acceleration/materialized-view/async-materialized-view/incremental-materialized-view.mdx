@@ -30,8 +30,8 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-<!-- Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting -->
-<!-- Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation -->
+{/* Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting */}
+{/* Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation */}
 
 Incremental View Maintenance (IVM) maintains an asynchronous materialized view based on row-level changes in its base tables. A regular asynchronous materialized view recomputes all of its data or every affected partition; IVM computes only the rows inserted, updated and deleted in the base tables between two refreshes and applies those changes to the materialized view.
 
@@ -39,8 +39,8 @@ Incremental View Maintenance (IVM) maintains an asynchronous materialized view b
 IVM is available since Doris 5.0.0. It is experimental and disabled by default. Before using it, enable Row Binlog and Table Stream in the FE configuration. See [Prerequisites](#prerequisites).
 :::
 
-<!-- Knowledge type: Scenario selection -->
-<!-- Use cases: Choosing IVM / Estimating refresh cost -->
+{/* Knowledge type: Scenario selection */}
+{/* Use cases: Choosing IVM / Estimating refresh cost */}
 
 ## When to use IVM
 
@@ -53,8 +53,8 @@ Compare the number of changed rows per refresh, the size of the affected partiti
 | Building the first baseline, small data volume, or recovering the IVM baseline | Use `COMPLETE` | Recomputes all data of the materialized view |
 | Results must be transactionally consistent with the base tables in real time | Do not use an asynchronous materialized view | IVM still refreshes through asynchronous tasks and does not provide real-time consistency |
 
-<!-- Knowledge type: Architecture decision -->
-<!-- Use cases: Choosing between INCREMENTAL / PARTITIONS / COMPLETE / AUTO -->
+{/* Knowledge type: Architecture decision */}
+{/* Use cases: Choosing between INCREMENTAL / PARTITIONS / COMPLETE / AUTO */}
 
 ## Differences from partition-level incremental refresh
 
@@ -69,8 +69,8 @@ Doris supports four refresh methods for asynchronous materialized views. IVM cor
 
 `INCREMENTAL FALLBACK` only changes how failures are handled at refresh time. When the materialized view is created, its definition SQL must still satisfy the IVM requirements; `FALLBACK` does not let an unsupported definition pass the creation check.
 
-<!-- Knowledge type: How it works -->
-<!-- Use cases: Understanding the IVM data flow / Consistency mechanism -->
+{/* Knowledge type: How it works */}
+{/* Use cases: Understanding the IVM data flow / Consistency mechanism */}
 
 ## How it works
 
@@ -82,8 +82,8 @@ When a materialized view that supports IVM is created, Doris creates an internal
 
 At refresh time, Doris generates a delta plan from the unconsumed changes of each base table. For join queries, it also reads a snapshot of the base tables aligned with the consumption offsets, so that multi-table computation uses a consistent data boundary. The materialized view data and the consumption offsets are committed in the same transaction; if the transaction fails, neither is committed.
 
-<!-- Knowledge type: Pre-deployment checklist -->
-<!-- Use cases: Enabling IVM / Evaluating tables before creation -->
+{/* Knowledge type: Pre-deployment checklist */}
+{/* Use cases: Enabling IVM / Evaluating tables before creation */}
 
 ## Prerequisites
 
@@ -124,8 +124,8 @@ PROPERTIES (
 
 Row Binlog can only be enabled when the table is created and cannot be disabled afterwards. For the full list of table model, column type, write method and DDL restrictions, see [Row Binlog](../../../data-operate/incremental/row-binlog).
 
-<!-- Knowledge type: Step-by-step guide -->
-<!-- Use cases: First-time setup / Feature verification -->
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: First-time setup / Feature verification */}
 
 ## Quick start
 
@@ -269,8 +269,8 @@ LIMIT 1;
 - `IvmFallbackReason` is empty when no IVM fallback happened; otherwise it records a stable fallback reason.
 - `ErrorMsg` records the details of a failed strict incremental refresh.
 
-<!-- Knowledge type: Compatibility reference / SQL examples -->
-<!-- Use cases: Evaluating SQL before creation / Diagnosing unsupported syntax -->
+{/* Knowledge type: Compatibility reference / SQL examples */}
+{/* Use cases: Evaluating SQL before creation / Diagnosing unsupported syntax */}
 
 ## Supported queries
 
@@ -355,7 +355,7 @@ Every example follows the same steps: run its `CREATE MATERIALIZED VIEW`, then r
 | `WHERE` filters | Filter the rows of the base tables by a condition |
 | `FROM` subqueries | Aliased subqueries in the `FROM` clause; they can be nested and must not contain aggregations |
 | Constant rows | A `SELECT` without `FROM` that always returns one row of constants, for example `SELECT -1, 'unknown'`. It can be a `UNION ALL` branch, one side of a join, or the whole definition |
-| `GROUP BY` aggregation | The aggregation must be the outermost operation of the query with only projections above it, and an aggregate result must not be wrapped in another expression |
+| `GROUP BY` aggregation | The aggregation must be the outermost operation of the query with only projections above it; deterministic expressions on group-by columns and aggregate results are supported |
 | `GROUPING SETS`, `ROLLUP`, `CUBE` | Can be used with `GROUPING()` and `GROUPING_ID()`; the same restrictions as `GROUP BY` apply |
 | `SELECT DISTINCT` | Handled as a `GROUP BY` without aggregate functions; the same restrictions as `GROUP BY` apply |
 | `INNER JOIN`, `CROSS JOIN` | Multi-table joins and self-joins are supported |
@@ -521,7 +521,7 @@ Result:
 +----------+----------+--------------+
 ```
 
-The projection above the aggregation can rename columns, reorder them, or compute on the group-by columns. `HAVING`, aggregations inside a subquery or a join input, and expressions wrapped around an aggregate result are not supported. See [Unsupported query forms](#unsupported-query-forms).
+The projection above the aggregation can rename columns, reorder them, or use deterministic expressions to compute on group-by columns and aggregate results. For example, `SUM(amount) * 100`, `MAX(amount) + 1` and `SUM(amount) / COUNT(*)` support incremental refresh, subject to the restrictions of the aggregate functions used. `HAVING` and aggregations inside a subquery or a join input are not supported. See [Unsupported query forms](#unsupported-query-forms).
 
 </TabItem>
 <TabItem value="grouping-sets" label="GROUPING SETS / ROLLUP / CUBE">
@@ -1075,10 +1075,8 @@ The following forms are not supported, and creation fails with an explicit `REFR
 - Using a regular asynchronous materialized view as a base table. Chained maintenance requires the lower-level materialized view to be an IVM as well.
 - Any other operation not listed in the table above.
 
-In addition, an expression wrapped around an aggregate result can be created, but every incremental refresh of it fails, for example `SUM(amount) * 100`, `MAX(amount) + 1` and `SUM(amount) / COUNT(*)`. A strict `INCREMENTAL` refresh fails with `IvmFallbackReason` `PLAN_REWRITE_FAILED`, and `INCREMENTAL FALLBACK` falls back to `COMPLETE` every time. Output the aggregate result directly and compute on it when querying the materialized view, or move the expression into the argument of the aggregate function, for example `SUM(amount * 100)`.
-
-<!-- Knowledge type: Runtime behavior / Failure handling -->
-<!-- Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline -->
+{/* Knowledge type: Runtime behavior / Failure handling */}
+{/* Use cases: Configuring the refresh strategy / Automatic refresh interval / Diagnosing IVM fallback / Rebuilding the baseline */}
 
 ## Refresh and fallback
 
@@ -1221,8 +1219,8 @@ If the definition SQL can no longer be analyzed after a base table change, for e
 
 When an internal Stream is missing or can no longer be used, `INCREMENTAL FALLBACK` and `AUTO` run `COMPLETE` directly with `IvmFallbackReason` `STREAM_UNSUPPORTED`; a `COMPLETE` refresh rebuilds the internal Streams and realigns the consumption offsets. A strict `INCREMENTAL` refresh fails, and you need to run `COMPLETE` or `AUTO` once.
 
-<!-- Knowledge type: Troubleshooting -->
-<!-- Use cases: Verifying the delta plan / Previewing refresh data -->
+{/* Knowledge type: Troubleshooting */}
+{/* Use cases: Verifying the delta plan / Previewing refresh data */}
 
 ## Previewing and explaining the delta plan
 
@@ -1262,8 +1260,8 @@ The result contains the rows the refresh would actually write, so besides the bu
 
 `DRY RUN` only supports the `INCREMENTAL` refresh of an IVM. It cannot be combined with `COMPLETE`, `EXPLAIN` or partition refresh.
 
-<!-- Knowledge type: Operations -->
-<!-- Use cases: Monitoring internal Streams / Lifecycle management -->
+{/* Knowledge type: Operations */}
+{/* Use cases: Monitoring internal Streams / Lifecycle management */}
 
 ## Internal Table Streams
 
@@ -1290,8 +1288,8 @@ Internal Streams start with `__doris_ivm_stream_` and are reserved for IVM. Do n
 
 For the offset, snapshot and concurrency semantics of Table Streams, see [Table Stream Basics](../../../data-operate/incremental/table-stream) and [Table Stream Advanced](../../../data-operate/incremental/table-stream-advanced).
 
-<!-- Knowledge type: Configuration parameters -->
-<!-- Use cases: IVM key design / Incremental partition window / Refresh resource control -->
+{/* Knowledge type: Configuration parameters */}
+{/* Use cases: IVM key design / Incremental partition window / Refresh resource control */}
 
 ## IVM properties
 
@@ -1351,8 +1349,8 @@ Only exclude dimension tables that rarely change, or tables whose changes may wa
 
 For all materialized view properties, see [CREATE ASYNC MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW).
 
-<!-- Knowledge type: Limitations -->
-<!-- Use cases: Production readiness / Performance risk review -->
+{/* Knowledge type: Limitations */}
+{/* Use cases: Production readiness / Performance risk review */}
 
 ## Limitations and notes
 
@@ -1363,8 +1361,8 @@ For all materialized view properties, see [CREATE ASYNC MATERIALIZED VIEW](../..
 - `MIN`, `MAX` and Bitmap aggregations require a complete recomputation in some delete scenarios. In production, use `INCREMENTAL FALLBACK` or `AUTO` and monitor `IvmFallbackReason`.
 - The table model, column type, schema change and delete restrictions of Row Binlog apply directly to IVM. See [Supported scope and limitations of Row Binlog](../../../data-operate/incremental/row-binlog#supported-scope-and-limitations).
 
-<!-- Knowledge type: FAQ / Troubleshooting -->
-<!-- Use cases: Creation failure / Refresh fallback / Baseline rebuild / Data latency -->
+{/* Knowledge type: FAQ / Troubleshooting */}
+{/* Use cases: Creation failure / Refresh fallback / Baseline rebuild / Data latency */}
 
 ## FAQ
 
@@ -1381,8 +1379,8 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 | The view is not updated after an excluded base table changes on its own | Tables in `excluded_trigger_tables` do not trigger refreshes on their own. Wait for a refresh triggered by other base tables, or run a `COMPLETE` refresh. After the table is removed from `excluded_trigger_tables`, the next refresh rebuilds the whole materialized view |
 | Can internal Streams be consumed or reset manually | No. Internal Streams are reserved for IVM; Doris manages their lifecycle and consumption offsets |
 
-<!-- Knowledge type: Best practices -->
-<!-- Use cases: Production deployment / Resource planning / Ongoing operations -->
+{/* Knowledge type: Best practices */}
+{/* Use cases: Production deployment / Resource planning / Ongoing operations */}
 
 ## Best practices
 
@@ -1395,8 +1393,8 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 7. **Monitor tasks and Stream backlog.** Watch `tasks("type"="mv")`, `mv_infos` and `information_schema.table_stream_consumption` together.
 8. **Review fallback reasons regularly.** Occasional fallbacks protect correctness; continuous fallbacks indicate that the query shape, Binlog continuity or the baseline needs attention.
 
-<!-- Knowledge type: Step-by-step guide -->
-<!-- Use cases: Cleaning up the example environment -->
+{/* Knowledge type: Step-by-step guide */}
+{/* Use cases: Cleaning up the example environment */}
 
 ## Cleaning up the example
 
@@ -1408,7 +1406,7 @@ DROP DATABASE ivm_demo;
 
 When an IVM is dropped, Doris also cleans up its internal Table Streams. No separate `DROP STREAM` is needed.
 
-<!-- Knowledge type: Navigation -->
+{/* Knowledge type: Navigation */}
 
 ## See also
 

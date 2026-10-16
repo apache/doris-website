@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/seaweedfs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/seaweedfs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/seaweedfs.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+    "sourceTechnicalHash": "73e3b08b3b882ea92feedf2af698730434c0cc86dddf1f55144c679bdee30144",
+    "targetHash": "77510dc04a8f87583ba3e69c63b1b76855ad624aea2419863b1b3f39f25de8eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

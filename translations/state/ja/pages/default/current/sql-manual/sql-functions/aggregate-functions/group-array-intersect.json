@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-array-intersect.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-array-intersect.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "28869e8453d2fb3e00023e66502aa64578279a54ba26c4b0c315dac61026ef7f",
+    "sourceTechnicalHash": "c79a7172fd144276c61c1a62d78fb60dd1c716319b57287f89617104c1b8c579",
+    "targetHash": "0be10330ec6d8c9249d2b4adff9f7d1f5df57cd5626419de3f5df43d43e82fd4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

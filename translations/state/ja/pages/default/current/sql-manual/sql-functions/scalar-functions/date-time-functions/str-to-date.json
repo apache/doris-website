@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/str-to-date.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "5d87ce3e5149c01b32cbe0168028b3c62a783a84d5739af5125cee351f9e8cd1",
+    "sourceTechnicalHash": "30feb72e351e86d5551438b66cc79005e5d553a7d4def3a1fca8d821a1ec2a2c",
+    "targetHash": "7e8daa62539ae4088a29f60438f37690dc1a0c09a49e7ce800153e5876c8ce10",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:36:49.813Z",
+    "glossaryVersion": "0"
+  }
+}

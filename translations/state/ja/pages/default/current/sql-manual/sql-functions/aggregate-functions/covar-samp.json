@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/covar-samp",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/covar-samp.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/covar-samp.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "966d9b4a80f74ad3e6d101ab039742ec13163150a85ab0c22649b5230557027c",
+    "sourceTechnicalHash": "17cd806c473b1636ce02027b52da50023aae1e70e44b5fc30108b027262bff17",
+    "targetHash": "8ca94a055da92614d37829e4ade3207a3263cca835991242452ad7c6d5f7d096",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:08:32.054Z",
+    "glossaryVersion": "0"
+  }
+}

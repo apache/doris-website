@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "features-architecture/product-concepts",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/features-architecture/product-concepts.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/features-architecture/product-concepts.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "ee18de809dc6f273c127439c5a7e6ca77e51fec9b1b9a61c4a0c66f97f676305",
+    "sourceTechnicalHash": "5a23383bc78bb8d3fc3f2e27f3bd511c64b62d7bdacdfeeb24eb78be52fa09e3",
+    "targetHash": "03f7a381f21bd2b9320065e47e19eaebb9672310e87d186cdf30782ecfe5c830",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T01:12:08.627Z",
+    "glossaryVersion": "0"
+  }
+}

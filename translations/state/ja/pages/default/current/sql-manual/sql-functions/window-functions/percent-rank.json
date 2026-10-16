@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/percent-rank",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/percent-rank.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/percent-rank.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "bb85bf2c652043d0f103e3c7d8c3d81adc75f4014960418b3b893ea71fcc432c",
+    "sourceTechnicalHash": "877871eaeb89c1e5c0ea2438f1947e1ae25fa15597051168df3ed0bdb7d879a8",
+    "targetHash": "e7334a51fb6500024f87c6de2fbc5b1168be0f58f41a62429cac54fdaba72a68",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.704Z",
+    "glossaryVersion": "0"
+  }
+}

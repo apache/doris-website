@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/be-clion-dev",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/be-clion-dev.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/developer-guide/be-clion-dev.md",
+    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
+    "sourceHash": "c1a6fe03f5876a09c93b8fe39c2efaf96f1797757fe851ef51c1f660ff7f8fc0",
+    "sourceTechnicalHash": "c28b61bb0f10c2253a2ab64b98caa745e06b496a5530ebd98ab0c9ef59d0b047",
+    "targetHash": "592249c6f34427e7f69c148db0175a344550160667241e99ba5d55562fbe5742",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T08:41:51.553Z",
+    "glossaryVersion": "0"
+  }
+}

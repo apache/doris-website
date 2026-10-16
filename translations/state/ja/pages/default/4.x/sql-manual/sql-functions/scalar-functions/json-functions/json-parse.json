@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-parse",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-parse.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-parse.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "d68c7c8e923c8818a4cb7a96c836cf34a6b6bf204f9c84a10f27b32280416f30",
+    "sourceTechnicalHash": "569e0d02d47de099c068c3d1aa73c73d9a09afd768fdb48410d4aee7ae78c5db",
+    "targetHash": "73ca26c6e81cad8b77c9f4929f5ccbcd01a86c6f225d6231e07919e602c631b4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T13:33:42.788Z",
+    "glossaryVersion": "0"
+  }
+}

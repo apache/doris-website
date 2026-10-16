@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/tasks",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/tasks.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/tasks.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "16d5a7c1588a77117909ce58634ed7b260be36f2b74896fada9e57c1ddb4389a",
+    "sourceTechnicalHash": "d2c909080ece80b92636735074fbfa43dbe744250328dccef71a2b714a9af19c",
+    "targetHash": "fed109e43cc8e1b1b741aeabbcd1ec9e3cf2d1d9b4f3dc417fde6dbba09bd030",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T20:18:33.707Z",
+    "glossaryVersion": "0"
+  }
+}

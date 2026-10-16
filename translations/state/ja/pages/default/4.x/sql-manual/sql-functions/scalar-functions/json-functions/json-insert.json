@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-insert",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-insert.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-insert.md",
+    "sourceCommit": "8bad9a9a9922364e218c73aab145b521fd884334",
+    "sourceHash": "66347c867efa173f543c3208eb9e4fa1bfd40b8ac6478065aa06324bb8f67ab3",
+    "sourceTechnicalHash": "c754cd786b3f91c27a26b9771e0db6e0b3283bd0f6aef98d8c71f84ba67a95d5",
+    "targetHash": "dd5624de6d6bbdb94212c5cb20c9d6f31f4e668f8f2325ffe8d7a48321224b4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-13T13:33:42.788Z",
+    "glossaryVersion": "0"
+  }
+}

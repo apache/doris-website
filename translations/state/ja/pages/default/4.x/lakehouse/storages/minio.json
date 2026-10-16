@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/minio",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/minio.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/minio.md",
+    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+    "sourceTechnicalHash": "e56c9c6ebdce825424900c8318d1abc6ca373cd97f527d778822476eadd4ae8b",
+    "targetHash": "e2374e519010c08f926b932801253c2325b808a66f2dba8600fdcc1f5bf254ac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T04:38:46.108Z",
+    "glossaryVersion": "0"
+  }
+}

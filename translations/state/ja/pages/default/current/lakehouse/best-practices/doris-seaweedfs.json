@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-seaweedfs",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-seaweedfs.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-seaweedfs.md",
+    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceHash": "de2445d11d476bce769a818eb61b388463361b835199d4d4fdcb26e7eb0b465c",
+    "sourceTechnicalHash": "adbb638da3d01195c94e7e1f40a7aaf14fc73d14623235a4077a0ed32be7fdae",
+    "targetHash": "a6d5cf91ef15752824c3f0b98413a77e1c5d9c919ae6c57ddfd46d56b22a5f52",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-15T00:13:52.225Z",
+    "glossaryVersion": "0"
+  }
+}

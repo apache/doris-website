@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/locate",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/locate.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/locate.md",
+    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
+    "sourceHash": "42cc96c13b780429a3d14b8ec2c3b845b301b873c865e59af00853cf6b22e79c",
+    "sourceTechnicalHash": "bdae3bfc00d582fa3d432e3ab556e3661ce402955a9d7184a9b79cee1da58953",
+    "targetHash": "671072bcd63f62971828e92d368802805cb9b6edb302d15b8595f586efb778b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-14T19:01:49.808Z",
+    "glossaryVersion": "0"
+  }
+}
