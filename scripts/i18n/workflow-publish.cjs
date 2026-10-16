@@ -54,6 +54,7 @@ function main() {
     const kind = process.env.I18N_PR_AUTH_KIND;
     assert(kind === 'app' || kind === 'pat', 'Unsupported GitHub write identity');
     const manifest = JSON.parse(fs.readFileSync(path.join(output, 'generation.json'), 'utf8'));
+    assert(!manifest.replacesPr, 'Preserve existing translation PRs; rescan with the current generator');
     const locale = pipelineLocale(root);
     const language = languageName(root, locale);
     const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
@@ -81,21 +82,13 @@ function main() {
     // gh configures Git's credential helper from GH_TOKEN. The token is never
     // placed in a remote URL, command argument, log or generated file.
     execFileSync('gh', ['auth', 'setup-git'], {cwd: root, stdio: 'inherit'});
-    if (manifest.replacesPr) {
-        const old = JSON.parse(execFileSync('gh', ['pr', 'view', String(manifest.replacesPr.number),
-            '--repo', 'apache/doris-website', '--json', 'headRefOid,state'], {cwd: root, encoding: 'utf8'}));
-        assert(old.state === 'OPEN' && old.headRefOid === manifest.replacesPr.headSha,
-            'Previous robot PR was edited or closed; preserve it and rescan');
-        execFileSync('gh', ['pr', 'close', String(manifest.replacesPr.number),
-            '--repo', 'apache/doris-website'], {cwd: root, stdio: 'inherit'});
-    }
     git('push', 'origin', `HEAD:refs/heads/${branch}`);
     const url = execFileSync('gh', ['pr', 'create', '--repo', 'apache/doris-website', '--base', 'master',
-        '--head', branch, '--draft', '--label', `translate-${locale}`,
+        '--head', branch, '--label', `translate-${locale}`,
         '--title', `docs(i18n): machine ${language} translation candidates`,
         '--body-file', bodyFile], {cwd: root, encoding: 'utf8'}).trim();
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
-        `\nOpened draft translation PR: ${url}; ${manifest.candidates.length} candidate pages.\n`);
+        `\nOpened translation PR for review: ${url}; ${manifest.candidates.length} candidate pages.\n`);
     process.stdout.write(`${url}\n`);
 }
 

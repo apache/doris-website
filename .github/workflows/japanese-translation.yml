@@ -7,7 +7,7 @@ on:
         description: Read-only dry run, one-page live validation, or enabled batch
         type: choice
         options: [dry-run, validate, generate]
-        default: dry-run
+        default: generate
         required: true
       plugin:
         description: Optional plugin filter (default or community)
@@ -21,33 +21,19 @@ on:
       locale:
         description: Optional translation locale; required once several are managed
         type: string
-  push:
-    branches: [master]
-    paths:
-      - 'docs/**'
-      - 'versioned_docs/version-4.x/**'
-      - 'community/**'
-      - 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**'
-      - 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/**'
-      - 'i18n/zh-CN/docusaurus-plugin-content-docs-community/current/**'
-      - 'translations/config.json'
-      - 'translations/scope/**'
-      - 'translations/glossary/**'
-      - 'sidebars.ts'
-      - 'sidebarsCommunity.json'
-      - 'versioned_sidebars/version-4.x-sidebars.json'
-      - 'docusaurus.config.js'
-      - 'config/i18n.js'
   schedule:
-    - cron: '23 4 * * *'
+    - cron: '23 4,16 * * *'
 
 permissions:
   contents: read
   pull-requests: read
 
 concurrency:
+  # One entire run across scheduled/manual triggers, locales and modes.
+  # Keep this stable so an in-flight run also holds the same lock.
   group: japanese-translation-ja
   cancel-in-progress: false
+  queue: max
 
 jobs:
   discover:
@@ -62,6 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -77,8 +64,7 @@ jobs:
       - name: Plan all current and historical pending documents
         id: scan
         env:
-          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_MODE: ${{ inputs.mode || 'generate' }}
           I18N_PLUGIN: ${{ inputs.plugin }}
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
@@ -122,7 +108,7 @@ jobs:
           APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
           I18N_GITHUB_PAT: ${{ secrets.I18N_GITHUB_PAT }}
-          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_MODE: ${{ inputs.mode || 'generate' }}
         run: |
           if [[ -n "$APP_ID" && -n "$APP_PRIVATE_KEY" ]]; then
             echo 'auth_kind=app' >> "$GITHUB_OUTPUT"
@@ -152,8 +138,7 @@ jobs:
         if: steps.config.outputs.ready == 'true'
         id: fresh
         env:
-          GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-          I18N_MODE: ${{ inputs.mode || 'dry-run' }}
+          I18N_MODE: ${{ inputs.mode || 'generate' }}
           I18N_PLUGIN: ${{ inputs.plugin }}
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
@@ -216,7 +201,7 @@ jobs:
           repositories: doris-website
           permission-contents: write
           permission-pull-requests: write
-      - name: Open draft PR with the configured write identity
+      - name: Open reviewable PR with the configured write identity
         if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind != 'none'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token || secrets.I18N_GITHUB_PAT }}
@@ -224,7 +209,7 @@ jobs:
         run: node scripts/i18n/workflow-publish.cjs "$RUNNER_TEMP/japanese-translation"
       - name: Report staged validation without GitHub write credentials
         if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'none'
-        run: echo 'One-page Codex candidate is in the generation artifact. A GitHub App or personal token is required for a draft PR.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'One-page Codex candidate is in the generation artifact. A GitHub App or personal token is required for a translation PR.' >> "$GITHUB_STEP_SUMMARY"
       - name: Sync refreshed Codex auth without overwriting a newer snapshot
         if: always() && steps.auth.outcome == 'success'
         env:

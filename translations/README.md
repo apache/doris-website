@@ -21,7 +21,7 @@ shows the raw context path.
 The translation workflow's `validate` mode selects one exact source page for a
 live check. Normal `generate` runs produce at most 10 target pages per batch,
 including any reused Dev/4.x partner; the planner can consider up to 20 tasks.
-Automated draft PRs receive the `translate-<locale>` repository label, such as
+Automated PRs receive the `translate-<locale>` repository label, such as
 `translate-ja`. Create that label before enabling publication for a new locale.
 
 Build Check installs dependencies and runs the i18n unit tests before the
@@ -304,29 +304,37 @@ review are required before T08 enables automatic generation.
 
 ## Asynchronous Japanese discovery and generation
 
-`.github/workflows/japanese-translation.yml` runs a read-only scan after
-relevant master source pushes, each day, and on manual dispatch. It recounts
+`.github/workflows/japanese-translation.yml` runs at 04:23 and 16:23 UTC daily
+and on manual dispatch. It has no push trigger. Every run first recounts
 the current native Dev, 4.x and community documents, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
 `active-candidates.json` and `open-pr-reconciliation.json` and writes a short
 job summary. Open PR candidates stay pending until merged. A changed source
-hash makes an older PR candidate stale and queues the page again. A PR whose
+hash makes an older PR candidate stale, but that document remains reserved
+until its PR is merged or closed. The workflow reports it for maintainer
+attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Manual dispatch defaults to `dry-run` and accepts optional plugin, version and
+Manual dispatch defaults to `generate` and accepts optional plugin, version and
 source path filters. `validate` mode requires one exact English source path
-ending in `.md` or `.mdx`; it can call the model and create a draft PR for one
+ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
 page while ongoing automation remains disabled. It is the first live acceptance
 path after OSS model access is available. With OSS access but no GitHub write
 credential, `validate` still
 writes the candidate to the generation artifact and makes no GitHub write.
-Pushes are checked against the current registered source
-identities before any generation. The daily full scan recovers missed or
-cancelled pushes. Japanese target or state-only commits do not trigger the
-push listener. The workflow does not participate in website builds or release
-deployment.
+`dry-run` remains available for read-only discovery. Full scans recover
+pending work from new or changed source documents and earlier failed runs.
+One workflow-level concurrency group covers every trigger, mode and locale.
+Only one complete run can execute at a time; `cancel-in-progress: false`
+preserves it when another run is requested. `queue: max` lets up to 100
+pending runs wait instead of replacing the previous pending run; see
+[GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
+Each queued run takes a fresh master checkout and recounts pending documents.
+Translation PR
+merges do not trigger this workflow. It does not participate in website
+builds or release deployment.
 
 Ongoing generation stays off unless both repository variables
 `I18N_AUTO_TRANSLATE_ENABLED=true` and `I18N_LIVE_VERIFIED=true` are set. The
@@ -336,7 +344,7 @@ snapshots in OSS as the Apache Doris code-review runner. The repository's
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
 and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
 workflow; the separate T07 manual tool still supports the Responses API.
-To open a draft PR, configure one GitHub write identity. The preferred App path
+To open a PR, configure one GitHub write identity. The preferred App path
 uses `I18N_GITHUB_APP_ID` and `I18N_GITHUB_APP_PRIVATE_KEY`; install the App on
 `apache/doris-website` with repository Contents and Pull requests write
 permissions. If an App cannot be installed, a maintainer with repository write
@@ -347,11 +355,11 @@ must store the secret. The resulting commits and PR use that person's identity.
 When both credentials are present, the App takes precedence. The workflow
 does not use `GITHUB_TOKEN` to create PRs because those PR checks can require
 manual approval. Set the enablement variables only after a one-page `validate`
-run and its App- or PAT-created draft PR have passed the required checks.
+run and its App- or PAT-created PR have passed the required checks.
 Missing write credentials leave manual validation as an artifact-only run;
 missing OSS credentials leave discovery available without model calls.
 
-When enabled, one run produces at most two page candidates. The T08 planner
+When enabled, one run produces at most 10 target page candidates. The T08 planner
 and Codex adapter do not reject work based on an estimated or accumulated
 token allowance. The adapter still records actual usage for the run summary.
 Document length, chunk size, call timeout and the model's own context limits
@@ -363,11 +371,15 @@ only if its OSS source has not changed since download.
 The generator calls the model once for exact Dev/4.x pairs whose doc ID,
 relative source path and normalized source hash match. It writes two separate
 state records. Human-owned or changed targets, moves, deletions and other
-protected tasks stay in the manual queue. The robot opens a draft PR with
-machine review status and never merges it. It keeps one active robot batch PR;
-if its source becomes stale and its head still matches the robot's recorded
-commit, the next run closes that stale draft and opens a fresh batch. A human
-commit on the branch stops replacement and is reported for manual handling.
+protected tasks stay in the manual queue. The robot opens a regular PR with
+machine review status and the `translate-ja` label, and never merges it.
+Maintainers review and merge PRs when ready. Multiple batches can remain open:
+their documents are excluded, while unrelated pending documents can form the
+next batch. This exclusion includes stale candidates and manually edited
+branches; unresolved target/state records block their targets before the
+planner applies its batch limit. Generation rechecks PR reservations for both
+primary and reused Dev/4.x targets. Each batch writes separate page state
+shards where enabled, so different documents do not rewrite a shared ledger.
 The PR body lists the source commit, source links, source hashes, model,
 glossary version, failures and validation. The normal PR checks remain the
 merge gate.
@@ -387,7 +399,9 @@ reconciliation and full planning against a GitHub CLI mock, then runs the
 translation engine with a schema-shaped Codex mock. It checks that an invalid
 model unit fails validation, that a 100,000-token usage report does not stop a
 valid candidate, and that publication pushes only managed Japanese files to a
-local bare Git repository and records a mock draft PR. `report.json` and step
+local bare Git repository and records a mock regular PR with its label. Each
+local step has a 20-minute timeout to accommodate the full native scan.
+`report.json` and step
 logs remain in the output directory. No real model call or GitHub write occurs.
 
 ## Validation

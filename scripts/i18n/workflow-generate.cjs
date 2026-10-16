@@ -8,7 +8,6 @@ const {hash, identity, languageName, pipelineLocale} = require('./state.cjs');
 const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
 const {codexAdapter} = require('./codex-adapter.cjs');
 const {prepare, applyCandidates, readState, statePathForRecord, targetFor} = require('./translate-docs.cjs');
-const {replaceableBotPr} = require('./workflow-scan.cjs');
 const {markerPrefixFor} = require('./automation-naming.cjs');
 
 const root = path.resolve(__dirname, '../..');
@@ -86,24 +85,23 @@ async function generate({plan, reconciliation, maxPages = 10, target,
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
         {cwd: rootDir, encoding: 'utf8'}).trim(), 'Plan does not match trusted checkout');
-    const replaces = replaceableBotPr(plan, reconciliation);
-    assert(reconciliation.botPrs.length === 0 || replaces,
-        'An automated translation PR is already open or was edited after generation');
     const scope = JSON.parse(fs.readFileSync(path.join(rootDir, `translations/scope/${target.locale}.json`), 'utf8'));
     const state = readState(rootDir, target.locale);
     const blocked = new Set(reconciliation.blockedTargets);
+    const active = new Set((reconciliation.active?.candidates ?? []).map(identity));
     const candidates = [], failures = [], consumed = new Set();
     for (const id of plan.selected) {
         if (candidates.length >= maxPages) break;
         const task = plan.tasks.find(item => item.id === id);
-        if (!task || consumed.has(id) || blocked.has(task.targetPath)) continue;
+        if (!task || consumed.has(id) || task.activePr || active.has(identity(task))
+            || blocked.has(task.targetPath)) continue;
         consumed.add(id);
         if (!machineOwned(task, state)) {
             failures.push({id, sourcePath: task.sourcePath, error: 'Human maintained target requires manual review'});
             continue;
         }
         let partner = pairFor(task, plan.tasks, scope);
-        if (partner && (blocked.has(partner.targetPath) || !machineOwned(partner, state)
+        if (partner && (active.has(identity(partner)) || blocked.has(partner.targetPath) || !machineOwned(partner, state)
             || candidates.length + 2 > maxPages)) partner = null;
         try {
             checkedTask(plan, id, scope, rootDir);
@@ -125,7 +123,6 @@ async function generate({plan, reconciliation, maxPages = 10, target,
         locale: target.locale, language: target.language,
         model: adapter.model, glossaryVersion: glossary.version, liveCall: adapter.usedTokens > 0,
         liveVerified: false, usedTokens: adapter.usedTokens,
-        replacesPr: replaces ? {number: replaces.number, headSha: replaces.headSha} : null,
         candidates: candidates.map(item => ({id: item.task.id, kind: item.task.kind,
             pluginId: item.task.pluginId, version: item.task.version, docId: item.task.docId,
             sourcePath: item.task.sourcePath, sourceHash: item.task.sourceHash,

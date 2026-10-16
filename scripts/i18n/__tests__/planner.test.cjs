@@ -57,22 +57,40 @@ test('modified completed source is an update and valid active PR suppresses sele
     assert.deepEqual(result.selected, []);
 });
 
-test('stale active PR is reported and a later source revision reenters selection', async () => {
+test('stale active PR stays excluded until closed, without adding merged coverage', async () => {
     const changed = page('edited', {state: 'stale_unknown'});
     const active = {schemaVersion: 1, candidates: [{pluginId: 'default', version: 'current', docId: 'edited',
         locale: 'ja', sourcePath: changed.sourcePath, sourceHash: hash('older'), pr: '#123'}]};
     const result = await run([changed], {old: [{...changed, sourceHash: hash('older'), sourceCommit: baselineSha}], active});
     assert.equal(result.exceptions.some(item => item.kind === 'stale_active_candidate'), true);
-    assert.equal(result.selected.length, 1);
+    assert.equal(result.tasks[0].activePr, '#123');
+    assert.equal(result.counts.activeCandidates, 1);
+    assert.equal(result.counts.mergedCurrent, 0);
+    assert.deepEqual(result.selected, []);
+    const afterClose = await run([changed], {old: [{...changed, sourceHash: hash('older'), sourceCommit: baselineSha}]});
+    assert.equal(afterClose.selected.length, 1);
 });
 
-test('an active PR for an old path cannot suppress a moved page with the same source hash', async () => {
+test('an active PR for an old path reserves the same document identity until resolved', async () => {
     const changed = page('new', {sourcePath: 'docs/new.md'});
     const active = {schemaVersion: 1, candidates: [{pluginId: 'default', version: 'current', docId: 'new',
         locale: 'ja', sourcePath: 'docs/old.md', sourceHash: changed.sourceHash, pr: '#123'}]};
     const result = await run([changed], {active});
-    assert.equal(result.tasks[0].activePr, null);
-    assert.equal(result.selected.length, 1);
+    assert.equal(result.tasks[0].activePr, '#123');
+    assert.deepEqual(result.selected, []);
+    assert.equal(result.exceptions[0].kind, 'stale_active_candidate');
+});
+
+test('multiple open PRs reserve only their documents and blocked targets do not consume the batch limit', async () => {
+    const pages = [page('a'), page('b'), page('c'), page('d')];
+    const active = {schemaVersion: 1, candidates: pages.slice(0, 2).map((p, i) => ({...p, locale: 'ja',
+        sourceHash: i === 0 ? p.sourceHash : hash('older'), pr: `#${i + 1}`})),
+        blockedTargets: [pages[2].targetPath]};
+    const result = await run(pages, {active, limit: 1});
+    assert.equal(result.counts.pending, 4);
+    assert.equal(result.counts.mergedCurrent, 0);
+    assert.equal(result.counts.activeCandidates, 2);
+    assert.deepEqual(result.selected, [result.tasks.find(task => task.docId === 'd').id]);
 });
 
 test('same identity path move includes cleanup and only reuses a verified target', async () => {

@@ -50,13 +50,13 @@ if (args[0] === 'api' && args.some(arg => arg.startsWith('repos/apache/doris-web
     process.exit(0);
 } else if (args[0] === 'pr' && args[1] === 'create') {
     const value = flag => args[args.indexOf(flag) + 1];
-    assert(args.includes('--draft'));
+    assert(!args.includes('--draft'));
     assert.equal(value('--base'), 'master');
     assert.equal(value('--repo'), 'apache/doris-website');
     assert.equal(value('--label'), 'translate-ja');
     const body = fs.readFileSync(value('--body-file'), 'utf8');
     assert.match(body, /japanese-translation-automation:v1 bot-head=[a-f0-9]{40}/);
-    const record = {draft: true, base: value('--base'), head: value('--head'), labels: [value('--label')], body,
+    const record = {draft: false, base: value('--base'), head: value('--head'), labels: [value('--label')], body,
         url: 'https://example.invalid/apache/doris-website/pull/1'};
     fs.writeFileSync(process.env.I18N_SIM_PR_RECORD, JSON.stringify(record, null, 2) + '\\n');
     process.stdout.write(record.url + '\\n');
@@ -68,7 +68,7 @@ if (args[0] === 'api' && args.some(arg => arg.startsWith('repos/apache/doris-web
 
 function runNode(root, script, args, env, logDir, expectedStatus = 0) {
     const result = spawnSync(process.execPath, [path.join(root, script), ...args], {
-        cwd: root, env, encoding: 'utf8', timeout: 300000, maxBuffer: 16 * 1024 * 1024,
+        cwd: root, env, encoding: 'utf8', timeout: 1200000, maxBuffer: 16 * 1024 * 1024,
     });
     const name = path.basename(script, '.cjs') + (env.I18N_SIM_PHASE || '');
     fs.writeFileSync(path.join(logDir, `${name}.log`), `${result.stdout || ''}${result.stderr || ''}`);
@@ -110,7 +110,7 @@ function main() {
         GITHUB_RUN_ID: runId, I18N_PR_AUTH_KIND: 'pat', I18N_MODE: 'validate',
         I18N_VALIDATION_RUN: 'true', I18N_PATH: sourcePath, I18N_MAX_PAGES: '1',
         I18N_LIMIT: '20', DORIS_ENABLE_JA: 'true', CODEX_HOME: auth,
-        I18N_SIM_PR_RECORD: path.join(output, 'draft-pr.json')};
+        I18N_SIM_PR_RECORD: path.join(output, 'pull-request.json')};
     runNode(repo, 'scripts/i18n/workflow-prs.cjs', [scan], env, logs);
     runNode(repo, 'scripts/i18n/workflow-scan.cjs', [scan], env, logs);
     const plan = JSON.parse(fs.readFileSync(path.join(scan, 'plan.json'), 'utf8'));
@@ -146,7 +146,7 @@ function main() {
         sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath,
         invalidModel: {exitCode: 1, error: failure.failures[0].error, usedTokens: failure.usedTokens},
         generation: {candidates: generation.candidates.length, usedTokens: generation.usedTokens},
-        draftPr: {url: pr.url, branch: pr.head, commit: branch, files: committedFiles, labels: pr.labels}};
+        pullRequest: {url: pr.url, draft: pr.draft, branch: pr.head, commit: branch, files: committedFiles, labels: pr.labels}};
     fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 }
