@@ -637,6 +637,7 @@ const sidebars: SidebarsConfig = {
                                 'query-acceleration/tuning/tuning-execution/parallelism-tuning',
                                 'query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time',
                                 'query-acceleration/tuning/tuning-execution/data-skew-handling',
+                                'query-acceleration/tuning/tuning-execution/skew-hint',
                                 'query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule',
                             ],
                         },
