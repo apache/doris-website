@@ -188,11 +188,11 @@ Workload Group 的内存管理和 IO 管理为 Doris 内部实现，不依赖外
 ```sql
 CREATE WORKLOAD GROUP IF NOT EXISTS g1
 PROPERTIES (
-    "cpu_share" = "1024"
+    "min_cpu_percent" = "10%"
 );
 ```
 
-此时配置的 CPU 限制为软限。自 2.1 版本起，系统自动创建名为 `normal` 的分组，不可删除。
+此处配置的 CPU 最低资源比例为 10%。自 2.1 版本起，系统自动创建名为 `normal` 的分组，不可删除。
 
 :::caution 存算分离模式必须显式指定 Compute Group
 本文中所有 CREATE / ALTER / DROP WORKLOAD GROUP 示例均省略了 `FOR <compute_group>` 子句，仅在**存算一体模式**下可直接使用，此时将作用于默认 Resource Group。
@@ -256,27 +256,25 @@ SHOW WORKLOAD GROUPS;
 **方式二：系统表查询**
 
 ```sql
-SELECT * FROM information_schema.workload_groups WHERE name = 'g1';
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-| ID    | NAME | CPU_SHARE | MEMORY_LIMIT | ENABLE_MEMORY_OVERCOMMIT | MAX_CONCURRENCY | MAX_QUEUE_SIZE | QUEUE_TIMEOUT | CPU_HARD_LIMIT | SCAN_THREAD_NUM | MAX_REMOTE_SCAN_THREAD_NUM | MIN_REMOTE_SCAN_THREAD_NUM | MEMORY_LOW_WATERMARK | MEMORY_HIGH_WATERMARK | TAG  | READ_BYTES_PER_SECOND | REMOTE_READ_BYTES_PER_SECOND |
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-| 14009 | g1   |      1024 | -1           | true                     |      2147483647 |              0 |             0 | -1             |              -1 |                         -1 |                         -1 | 50%                  | 80%                   |      |                    -1 |                           -1 |
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-1 row in set (0.05 sec)
+SELECT name, min_cpu_percent FROM information_schema.workload_groups WHERE name = 'g1';
++------+-----------------+
+| name | min_cpu_percent |
++------+-----------------+
+| g1   | 10%             |
++------+-----------------+
 ```
 
 ### 修改 Workload Group
 
 ```sql
-ALTER WORKLOAD GROUP g1 PROPERTIES('cpu_share' = '2048');
+ALTER WORKLOAD GROUP g1 PROPERTIES('min_cpu_percent' = '20%');
 
-SELECT cpu_share FROM information_schema.workload_groups WHERE name = 'g1';
-+-----------+
-| cpu_share |
-+-----------+
-|      2048 |
-+-----------+
-1 row in set (0.02 sec)
+SELECT min_cpu_percent FROM information_schema.workload_groups WHERE name = 'g1';
++-----------------+
+| min_cpu_percent |
++-----------------+
+| 20%             |
++-----------------+
 ```
 
 参考：[ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)
