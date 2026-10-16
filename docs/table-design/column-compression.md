@@ -63,6 +63,10 @@ Compression in Doris is implemented by the coordinated effort of several layers:
 
 ### Per-Column Compression
 
+:::note
+Per-column compression requires the pending development implementation in apache/doris#66169. Released 4.x versions do not support this clause.
+:::
+
 Because Doris uses columnar storage, it compresses each column in a table independently. Data within the same column typically shares similar distribution characteristics, so per-column compression achieves higher compression efficiency than per-row compression.
 
 ### Encoding Before Compression
