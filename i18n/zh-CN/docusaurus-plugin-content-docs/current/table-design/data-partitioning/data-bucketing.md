@@ -232,6 +232,7 @@ properties("estimate_partition_size" = "20G")
 
 - 该参数为可选设置，未指定时默认值为 `10GB`；
 - 该参数仅影响前期估算，与后续系统通过历史分区数据推算出的未来分区大小无关。
+- `estimate_partition_size` 只能在建表时设置，不能通过 `ALTER TABLE ... SET` 修改；尝试修改会报错 `You can not modify estimate partition size`。新增分区会使用历史分区数据进行推算，无需通过修改此属性调整后续分区。
 
 推算出的分桶数会被限制在 FE 配置项 `autobucket_min_buckets` 与 `autobucket_max_buckets` 之间：
 

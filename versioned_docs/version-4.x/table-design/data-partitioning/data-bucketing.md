@@ -232,6 +232,7 @@ The `estimate_partition_size` property is used to adjust the initial estimate of
 
 - This parameter is optional. If not specified, the default value is `10GB`.
 - This parameter only affects the initial estimate and is independent of the future partition size that the system later infers from historical partition data.
+- Set `estimate_partition_size` when creating the table. `ALTER TABLE ... SET` cannot change it and returns `You can not modify estimate partition size`. Later partitions use historical partition data for estimation; changing this property is not a way to tune their bucket counts.
 
 The computed bucket number is clamped between the FE configurations `autobucket_min_buckets` and `autobucket_max_buckets`:
 
