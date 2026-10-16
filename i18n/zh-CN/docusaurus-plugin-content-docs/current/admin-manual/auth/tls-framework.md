@@ -18,24 +18,30 @@
 
 本文档说明 Apache Doris TLS 框架的配置契约。
 
+:::note
+此框架自 Apache Doris 4.1.4 起提供。4.0 版本没有这些统一 TLS 配置。
+:::
+
 开源 Doris 包含 TLS 和证书鉴权相关的框架、配置项、解析支持和扩展点，但不包含覆盖所有协议的完整 TLS 运行时实现。在开源默认构建中，如果为未提供 TLS 模块实现的协议开启 TLS，启动或连接创建会失败，并提示需要 TLS module。
 
 下表中的配置名称、默认值和语义由框架固定。如果你提供自己的 TLS module 实现，需要使用这套框架和这些配置项，以保证配置兼容。证书加载、TLS context 创建、握手行为、证书重载、协议级对端校验等细节可以由 TLS module 自行实现。
 
 ## 配置项参考
 
-| 配置项 | 适用组件 | 默认值 | 说明 | 备注 |
-| --- | --- | --- | --- | --- |
-| `enable_tls` | FE、BE、Cloud | `false` | 是否为当前进程启用统一 TLS 框架。 | 设置为 `true` 后，未被 `tls_excluded_protocols` 排除的协议预期由 TLS module 提供 TLS 实现。相关 Doris 组件需要使用兼容的 TLS 配置。 |
-| `tls_verify_mode` | FE、BE、Cloud | `verify_peer` | 控制证书校验行为。可选值为 `verify_none`、`verify_peer`、`verify_fail_if_no_peer_cert`。 | 参见 [TLS 校验模式](#tls-校验模式)。 |
-| `tls_certificate_path` | FE、BE、Cloud | 空 | 当前组件作为 TLS 服务端或客户端时使用的证书路径。 | 框架契约预期使用 PEM 证书。TLS module 可以支持单张 leaf 证书或 full chain PEM 文件。 |
-| `tls_private_key_path` | FE、BE、Cloud | 空 | 与 `tls_certificate_path` 配套使用的私钥路径。 | 框架契约预期使用 PEM 私钥。 |
-| `tls_private_key_password` | FE、BE、Cloud | 空 | 私钥文件密码。 | 使用明文密码字符串，不是 Base64 编码值。 |
-| `tls_ca_certificate_path` | FE、BE、Cloud | 空 | 用于校验对端证书的 CA 证书或 CA bundle 路径。 | 框架契约预期使用 PEM CA 证书。在该值为空且场景允许时，TLS module 也可以使用系统或 JDK 默认 trust store。 |
-| `tls_cert_refresh_interval_seconds` | FE、BE、Cloud | `3600` | 检查证书文件是否需要重载的周期，单位为秒。 | 框架暴露该周期，具体证书重载行为由 TLS module 实现。 |
-| `tls_excluded_protocols` | FE、BE、Cloud | 空 | 指定不使用 TLS 的协议列表，用英文逗号分隔，大小写不敏感。 | 可用协议名取决于组件和 TLS module。开源框架预留了 `thrift`、`mysql`、`http`、`arrowflight`、`brpc`、`bdbje` 等 selector；只应使用你的实现支持的 selector。 |
-| `tls_peer_cert_required_san_dns` | FE、BE、Cloud | 空 | 为部分私有协议配置对端证书 DNS Subject Alternative Name 准入 allowlist。 | 语法为 `<protocol>=<dns1>,<dns2>;...`。该配置是为需要对端证书准入控制的 TLS module 预留的框架契约。 |
-| `tls_cert_based_auth_ignore_password` | FE | `false` | 证书鉴权成功后是否允许跳过密码校验。 | 该配置只影响 FE 用户认证流程。开启后会削弱密码保护，只应在 TLS module 已提供所需证书鉴权行为的部署中使用。 |
+所有下列选项均可选，默认值见表。分别写入 FE 的 `fe.conf`、BE 的 `be.conf` 和 Cloud Meta Service/Recycler 的组件配置文件；除 FE 的 `tls_cert_based_auth_ignore_password` 可动态修改外，按启动配置处理并重启对应进程。先部署并验证模块，再启用其负责的协议。
+
+| 配置项 | 类型 | 适用组件 | 默认值 | 说明 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| `enable_tls` | Boolean | FE、BE、Cloud | `false` | 是否为当前进程启用统一 TLS 框架。 | 设置为 `true` 后，未被 `tls_excluded_protocols` 排除的协议预期由 TLS module 提供 TLS 实现。相关 Doris 组件需要使用兼容的 TLS 配置。 |
+| `tls_verify_mode` | String | FE、BE、Cloud | `verify_peer` | 控制证书校验行为。可选值为 `verify_none`、`verify_peer`、`verify_fail_if_no_peer_cert`。 | 参见 [TLS 校验模式](#tls-校验模式)。 |
+| `tls_certificate_path` | String | FE、BE、Cloud | 空 | 当前组件作为 TLS 服务端或客户端时使用的证书路径。 | 框架契约预期使用 PEM 证书。TLS module 可以支持单张 leaf 证书或 full chain PEM 文件。 |
+| `tls_private_key_path` | String | FE、BE、Cloud | 空 | 与 `tls_certificate_path` 配套使用的私钥路径。 | 框架契约预期使用 PEM 私钥。 |
+| `tls_private_key_password` | String | FE、BE、Cloud | 空 | 私钥文件密码。 | 使用明文密码字符串，不是 Base64 编码值。 |
+| `tls_ca_certificate_path` | String | FE、BE、Cloud | 空 | 用于校验对端证书的 CA 证书或 CA bundle 路径。 | 框架契约预期使用 PEM CA 证书。在该值为空且场景允许时，TLS module 也可以使用系统或 JDK 默认 trust store。 |
+| `tls_cert_refresh_interval_seconds` | Integer | FE、BE、Cloud | `3600` | 检查证书文件是否需要重载的周期，单位为秒。 | 框架暴露该周期，具体证书重载行为由 TLS module 实现。 |
+| `tls_excluded_protocols` | String | FE、BE、Cloud | 空 | 指定不使用 TLS 的协议列表，用英文逗号分隔，大小写不敏感。 | 可用协议名取决于组件和 TLS module。开源框架预留了 `thrift`、`mysql`、`http`、`arrowflight`、`brpc`、`bdbje` 等 selector；只应使用你的实现支持的 selector。 |
+| `tls_peer_cert_required_san_dns` | String | FE、BE、Cloud | 空 | 为部分私有协议配置对端证书 DNS Subject Alternative Name 准入 allowlist。 | 语法为 `<protocol>=<dns1>,<dns2>;...`。该配置是为需要对端证书准入控制的 TLS module 预留的框架契约。 |
+| `tls_cert_based_auth_ignore_password` | Boolean | FE | `false` | 证书鉴权成功后是否允许跳过密码校验。 | 该配置只影响 FE 用户认证流程。开启后会削弱密码保护，只应在 TLS module 已提供所需证书鉴权行为的部署中使用。 |
 
 ## TLS 校验模式
 
