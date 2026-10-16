@@ -34,7 +34,7 @@
 Apache Doris 可以通过 Iceberg REST Catalog 接入 OSS Tables：使用 REST Catalog 管理 Namespace 和表元数据，使用 `S3FileIO` 读写数据文件。本文介绍如何在 Doris 中创建 OSS Tables Catalog，并查询和写入 Iceberg 表。
 
 :::caution
-该功能目前为实验功能，自 Doris 4.2.0 版本起支持。
+该功能目前为实验功能，自 Doris 4.1.4 版本起支持。
 :::
 
 <!-- 知识类型: 操作步骤 -->
@@ -162,6 +162,12 @@ INSERT INTO orders VALUES
 SELECT order_id, customer, amount, created_at
 FROM orders
 ORDER BY order_id;
+```
+
+```text
+order_id  customer  amount  created_at
+1         Alice     99.50   2026-08-11 10:00:00
+2         Bob       120.00  2026-08-11 10:01:00
 ```
 
 可以通过 Iceberg `$files` 元数据表确认数据文件已经写入 OSS Tables：
