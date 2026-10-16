@@ -49,13 +49,16 @@ There is no Helm dependency between the two charts: they are installed and upgra
 If a DOG Stack is already running (installed with this chart, deployed another way, or in another cluster), skip to [Step 2: Install the Kubernetes Collector](#step-2-install-the-kubernetes-collector). You only need the OTLP gRPC address of its gateway.
 :::
 
+This guide is checked against AI Observe Stack commit [`2c1fbee83170`](https://github.com/ai-observe/ai-observe-stack/tree/2c1fbee831701178c7dddba857e88130ef292949). The checkout below pins this revision so later main-branch changes do not alter the parameters. Its Helm chart version is `0.2.0` and the default Doris images use `4.0.3`.
+
 ## Prerequisites
 
 - Kubernetes 1.24 or later, Helm 3.8 or later, and `kubectl` configured to access the cluster.
 - Cluster-level RBAC permissions: the collector creates a ClusterRole and a ClusterRoleBinding.
+- A PersistentVolume provisioner for the default gateway sending queues, including when Doris is external. Alternatively, disable `gateway.persistence.enabled` for a disposable trial; queued data is then lost when a pod is replaced.
 - Nodes can pull the images `otel/opentelemetry-collector-contrib`, `otel/opentelemetry-collector-k8s`, `grafana/grafana`, `velodb/doris-app-plugin`, and `busybox`. For a private registry, set `global.imagePullSecrets` in `ai-observe-stack` and `imagePullSecrets` in `dog-k8s-collector`, and point the image parameters at your mirror: `gateway.image.repository`, `grafana.image.repository`, `dorisPlugin.image.repository`, and `global.helperImages.busybox` / `global.helperImages.curl` in `ai-observe-stack`; `agent.image.repository` and `cluster.image.repository` in `dog-k8s-collector`.
 - Doris, one of the following:
-  - An existing Doris cluster whose FE ports 9030 (MySQL protocol) and 8030 (HTTP) are reachable from the Kubernetes cluster, and an account with the `CREATE DATABASE` privilege. The gateway writes data through Stream Load: FE redirects each request to a BE at the address the BE registered in Doris (shown by `SHOW BACKENDS`), so these BE addresses and the BE HTTP port (8040 by default) must also be reachable from the gateway pods.
+  - An existing Doris cluster whose FE ports 9030 (MySQL protocol) and 8030 (HTTP) are reachable from the Kubernetes cluster, and an account that can create the target database and tables, load data, and query the Grafana tables. The gateway writes data through Stream Load: FE redirects each request to a BE at the address the BE registered in Doris (shown by `SHOW BACKENDS`), so these BE addresses and the BE HTTP port (8040 by default) must also be reachable from the gateway pods.
   - Or let the chart deploy Doris: a PersistentVolume provisioner, and at least 2 CPU cores and 4 GiB of memory each for FE and BE.
 
 The commands in this article use the release name `dog` and the namespace `dog`. The object names below are derived from them; if you use other names, replace them accordingly.
@@ -75,7 +78,9 @@ Clone the repository and download the chart dependency. The Doris Operator subch
 
 ```Bash
 git clone https://github.com/ai-observe/ai-observe-stack.git
-cd ai-observe-stack/helm-charts
+cd ai-observe-stack
+git checkout 2c1fbee831701178c7dddba857e88130ef292949
+cd helm-charts
 helm dependency update ./ai-observe-stack
 ```
 
@@ -97,7 +102,7 @@ Choose where Doris runs:
    ```Bash
    kubectl create namespace dog
    kubectl create secret generic doris-credentials -n dog \
-     --from-literal=username=<DORIS_USER> --from-literal=password='<DORIS_PASSWORD>'
+     --from-literal=username='<DORIS_USER>' --from-literal=password='<DORIS_PASSWORD>'
    ```
 
 2. Create a values file `dog-values.yaml`:
@@ -190,7 +195,7 @@ The backend installed in Step 1 only receives data. The collector gathers data f
    | --- | --- |
    | Installed by this chart in the same cluster | `<release>-ai-observe-stack-otel-gateway.<namespace>.svc:4317` |
    | Your own OpenTelemetry Collector with the Doris exporter | Its OTLP gRPC Service, usually `<service>.<namespace>.svc:4317` |
-   | Another Kubernetes cluster | The gateway's external address: a LoadBalancer IP (`gateway.service.type: LoadBalancer`) or an Ingress host. Port 4317 must be open between the clusters |
+   | Another Kubernetes cluster | The gateway's gRPC address exposed by a LoadBalancer (`gateway.service.type: LoadBalancer`) or a separately configured gRPC ingress. This chart's Ingress exposes OTLP/HTTP, not OTLP/gRPC. The chosen port must be reachable between clusters |
 
 2. The agent runs as root and mounts the node's `/var/log/pods`, `/` (read-only), and `/var/lib/otelcol`. If the namespace enforces the `restricted` Pod Security Standard, relax it:
 
@@ -317,7 +322,7 @@ To change the collection, edit `collector-values.yaml` and run:
 helm upgrade dog-k8s-collector ./dog-k8s-collector -n dog -f collector-values.yaml
 ```
 
-Only the affected agent or cluster collector restarts. File offsets on the nodes are kept, so no log line is collected twice.
+Only the affected agent or cluster collector restarts. With `agent.storage.enabled=true`, file offsets are retained on the same node and storage path. This reduces rereading but does not guarantee exactly-once delivery: retries can duplicate records, and node/storage loss or queue exhaustion can lose data.
 
 ### Select Namespaces and Containers
 
@@ -400,6 +405,8 @@ env:
     valueFrom: {fieldRef: {fieldPath: status.hostIP}}
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
     value: http://$(HOST_IP):4318
+  - name: OTEL_EXPORTER_OTLP_PROTOCOL
+    value: http/protobuf
   - name: OTEL_SERVICE_NAME
     value: checkout
 ```
@@ -410,7 +417,7 @@ Set `presets.prometheusScrape.enabled: true`, then annotate the application pods
 
 ### Collect Multiple Clusters
 
-Install one collector release in each cluster. Point `gateway.endpoint` at the same gateway (use its LoadBalancer or Ingress address across clusters) and give each cluster a different `clusterName`. Queries and dashboards filter by `k8s.cluster.name`.
+Install one collector release in each cluster. Point `gateway.endpoint` at the same gateway (use a LoadBalancer or separately configured gRPC ingress across clusters) and give each cluster a different `clusterName`. Queries and dashboards filter by `k8s.cluster.name`.
 
 ## Production Recommendations
 
@@ -426,6 +433,8 @@ Install one collector release in each cluster. Point `gateway.endpoint` at the s
 | Collector resources | `agent.resources`, `agent.queueSize` | Each agent requests 100m CPU and 128 MiB of memory, and is limited to 1 CPU and 512 MiB. While the gateway is unreachable, each node buffers up to `agent.queueSize` records (20,000 by default) on local disk. |
 
 `examples/ai-observe-stack/prod.yaml` in the repository is a production values file to start from.
+
+By default, `gateway.timeGuard.enabled=true` restamps records outside the writable partition window with receive time. Logs retain the original in `log.original_time_unix_nano`, traces in `span.original_start_time_unix_nano`, and metric timestamps are rewritten directly. For historical backfill, review `gateway.dorisExporter.createHistoryDays` and time-guard settings together. The default Doris export retry limit is 10 minutes (`gateway.dorisExporter.retryMaxElapsedTime`); a batch still failing then is logged and dropped.
 
 ## Upgrade and Uninstall
 
@@ -467,7 +476,7 @@ kubectl delete crd dorisclusters.doris.selectdb.com
 | `helm dependency build` reports `no repository definition for https://charts.selectdb.com` | `helm dependency build` only uses repositories added with `helm repo add`. Run `helm dependency update ./ai-observe-stack` instead. |
 | `helm install` reports `gateway.endpoint is required` | Set `gateway.endpoint` of the collector to the gateway address. |
 | `helm install` reports `additional properties 'xxx' not allowed` | A top-level key in the values file is misspelled. |
-| `helm test` fails, or the gateway log reports Doris errors | Check that Doris FE ports 9030 and 8030 are reachable and that the account has the `CREATE DATABASE` privilege. View the gateway log with `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0`. |
+| `helm test` fails, or the gateway log reports Doris errors | Check that Doris FE ports 9030 and 8030 are reachable and that the account can create the target database/tables, load data and query them. View the gateway log with `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0`. |
 | Agent pod reports `CreateContainerConfigError`, is rejected by Pod Security, or logs `permission denied` on `/var/log/pods` | The namespace enforces `restricted`. Add the `privileged` label, see Step 2. |
 | Agent log reports `connection refused` or `Unavailable` | The gateway address is wrong, the gateway is down, or a network policy blocks port 4317. Records are buffered on the node and sent after the problem is fixed. |
 | Agent pod stays in `ContainerCreating`, and its events report `MountVolume.SetUp failed for volume "zoneinfo"` | The node has no time zone database (some minimal operating system images). Set `agent.tzdata.hostPath: ""`, and keep `timezone` and the `timestamp.timezone` of every rule at UTC. |

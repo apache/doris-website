@@ -25,6 +25,8 @@
 如果不使用 Docker 部署各组件，请参见 [Doris 部署文档](https://doris.apache.org/zh-CN/docs/4.x/install/preparation/env-checking)、[OpenTelemetry Collector 安装文档](https://opentelemetry.io/docs/collector/install/) 和 [Grafana 安装文档](https://grafana.com/docs/grafana/latest/setup-grafana/installation/)。
 :::
 
+本文按 AI Observe Stack 源码提交 [`2c1fbee83170`](https://github.com/ai-observe/ai-observe-stack/tree/2c1fbee831701178c7dddba857e88130ef292949) 核对。下方检出命令固定该提交，避免主分支更新导致参数变化。该提交的内置 Doris 镜像为 `4.0.3-all-slim`，用于部署栈的连通性验证。
+
 ## 前提条件
 
 - Docker Engine 20.10 及以上版本
@@ -36,7 +38,9 @@
 
    ```Bash
    git clone https://github.com/ai-observe/ai-observe-stack.git
-   cd ai-observe-stack/docker
+   cd ai-observe-stack
+   git checkout 2c1fbee831701178c7dddba857e88130ef292949
+   cd docker
    ```
 
 2. 启动服务，以下两种方式二选一。

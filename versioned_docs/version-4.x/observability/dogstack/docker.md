@@ -25,6 +25,8 @@ This article describes how to deploy DOG Stack on a single host with Docker Comp
 To deploy the components without Docker, follow the [Doris deployment documentation](https://doris.apache.org/docs/4.x/install/preparation/env-checking), the [OpenTelemetry Collector installation documentation](https://opentelemetry.io/docs/collector/install/), and the [Grafana installation documentation](https://grafana.com/docs/grafana/latest/setup-grafana/installation/).
 :::
 
+This guide is checked against AI Observe Stack commit [`2c1fbee83170`](https://github.com/ai-observe/ai-observe-stack/tree/2c1fbee831701178c7dddba857e88130ef292949). The checkout below pins this revision so later main-branch changes do not alter the parameters. Its built-in Doris image is `4.0.3-all-slim`, intended for stack connectivity checks.
+
 ## Prerequisites
 
 - Docker Engine 20.10 or later
@@ -36,7 +38,9 @@ To deploy the components without Docker, follow the [Doris deployment documentat
 
    ```Bash
    git clone https://github.com/ai-observe/ai-observe-stack.git
-   cd ai-observe-stack/docker
+   cd ai-observe-stack
+   git checkout 2c1fbee831701178c7dddba857e88130ef292949
+   cd docker
    ```
 
 2. Start the services. Choose one of the following modes.
@@ -68,7 +72,7 @@ To deploy the components without Docker, follow the [Doris deployment documentat
      docker compose -f docker-compose-without-doris.yaml up -d
      ```
 
-     The account must have the `CREATE DATABASE` privilege. The OpenTelemetry Collector creates the database `otel` and its tables automatically.
+     The account must be able to create the target database and tables, load data, and query the tables used by Grafana. The OpenTelemetry Collector creates the database `otel` and its tables automatically.
 
      The OpenTelemetry Collector writes data through Stream Load: FE redirects each request to a BE at the address the BE registered in Doris (shown by `SHOW BACKENDS`). Therefore the BE addresses and the BE HTTP port (8040 by default) must also be reachable from the OpenTelemetry Collector container, not only the FE.
 

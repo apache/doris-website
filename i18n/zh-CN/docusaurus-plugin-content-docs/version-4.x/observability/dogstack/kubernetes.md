@@ -49,13 +49,16 @@ ai-observe-stack
 如果已经有运行中的 DOG Stack（使用本 Chart 安装、以其他方式部署或位于其他集群），可以直接跳到[步骤 2：安装 Kubernetes 采集器](#step-2-install-the-kubernetes-collector)，只需要知道其网关的 OTLP gRPC 地址。
 :::
 
+本文按 AI Observe Stack 源码提交 [`2c1fbee83170`](https://github.com/ai-observe/ai-observe-stack/tree/2c1fbee831701178c7dddba857e88130ef292949) 核对。下方检出命令固定该提交，避免主分支更新导致参数变化。该提交的 Helm Chart 版本为 `0.2.0`，默认 Doris 镜像为 `4.0.3`。
+
 ## 前提条件
 
 - Kubernetes 1.24 及以上版本、Helm 3.8 及以上版本，并已配置 `kubectl` 访问集群。
 - 集群级 RBAC 权限：采集器会创建 ClusterRole 和 ClusterRoleBinding。
+- 默认网关发送队列需要 PersistentVolume 供应器，连接外部 Doris 时也一样。临时试用可设置 `gateway.persistence.enabled: false`，但 Pod 替换会丢失内存中的队列数据。
 - 节点能够拉取镜像 `otel/opentelemetry-collector-contrib`、`otel/opentelemetry-collector-k8s`、`grafana/grafana`、`velodb/doris-app-plugin` 和 `busybox`。使用私有镜像仓库时，在 `ai-observe-stack` 中设置 `global.imagePullSecrets`，在 `dog-k8s-collector` 中设置 `imagePullSecrets`，并将镜像参数指向镜像源：`ai-observe-stack` 中的 `gateway.image.repository`、`grafana.image.repository`、`dorisPlugin.image.repository` 以及 `global.helperImages.busybox` / `global.helperImages.curl`；`dog-k8s-collector` 中的 `agent.image.repository` 和 `cluster.image.repository`。
 - Doris，以下二选一：
-  - 已有 Doris 集群：FE 的 9030（MySQL 协议）和 8030（HTTP）端口可以从 Kubernetes 集群访问，并准备一个具有 `CREATE DATABASE` 权限的账号。网关通过 Stream Load 写入数据：FE 会将每个请求重定向到 BE 在 Doris 中注册的地址（可通过 `SHOW BACKENDS` 查看），因此网关 Pod 还需要能够访问这些 BE 地址及 BE 的 HTTP 端口（默认 8040）。
+  - 已有 Doris 集群：FE 的 9030（MySQL 协议）和 8030（HTTP）端口可以从 Kubernetes 集群访问，并准备一个能创建目标数据库和表、导入数据及查询 Grafana 所用表的账号。网关通过 Stream Load 写入数据：FE 会将每个请求重定向到 BE 在 Doris 中注册的地址（可通过 `SHOW BACKENDS` 查看），因此网关 Pod 还需要能够访问这些 BE 地址及 BE 的 HTTP 端口（默认 8040）。
   - 由 Chart 部署 Doris：集群中有 PersistentVolume 供应器，且 FE 和 BE 各自至少有 2 核 CPU 和 4 GiB 内存。
 
 本文命令使用 Release 名称 `dog` 和命名空间 `dog`，下表中的对象名称由此生成。如果使用其他名称，请相应替换。
@@ -75,7 +78,9 @@ ai-observe-stack
 
 ```Bash
 git clone https://github.com/ai-observe/ai-observe-stack.git
-cd ai-observe-stack/helm-charts
+cd ai-observe-stack
+git checkout 2c1fbee831701178c7dddba857e88130ef292949
+cd helm-charts
 helm dependency update ./ai-observe-stack
 ```
 
@@ -97,7 +102,7 @@ helm dependency update ./ai-observe-stack
    ```Bash
    kubectl create namespace dog
    kubectl create secret generic doris-credentials -n dog \
-     --from-literal=username=<DORIS_USER> --from-literal=password='<DORIS_PASSWORD>'
+     --from-literal=username='<DORIS_USER>' --from-literal=password='<DORIS_PASSWORD>'
    ```
 
 2. 创建 values 文件 `dog-values.yaml`：
@@ -190,7 +195,7 @@ Doris Operator 是集群级组件，一个 Kubernetes 集群中只能运行一�
    | --- | --- |
    | 使用本 Chart 安装在同一集群 | `<release>-ai-observe-stack-otel-gateway.<namespace>.svc:4317` |
    | 自建的带 Doris exporter 的 OpenTelemetry Collector | 其 OTLP gRPC Service，通常为 `<service>.<namespace>.svc:4317` |
-   | 其他 Kubernetes 集群 | 网关的外部地址：LoadBalancer IP（`gateway.service.type: LoadBalancer`）或 Ingress 域名。集群之间需要开放 4317 端口 |
+   | 其他 Kubernetes 集群 | 通过 LoadBalancer（`gateway.service.type: LoadBalancer`）或单独配置的 gRPC Ingress 暴露网关地址。本 Chart 的 Ingress 仅暴露 OTLP/HTTP，不暴露 OTLP/gRPC。集群之间需要开放所选端口 |
 
 2. agent 以 root 身份运行，并挂载节点的 `/var/log/pods`、`/`（只读）和 `/var/lib/otelcol`。如果命名空间启用了 `restricted` 级别的 Pod Security Standard，需要放宽：
 
@@ -317,7 +322,7 @@ ORDER BY timestamp DESC LIMIT 5;
 helm upgrade dog-k8s-collector ./dog-k8s-collector -n dog -f collector-values.yaml
 ```
 
-只有受影响的 agent 或 cluster 采集器会重启。节点上的文件读取位置会保留，不会重复采集日志。
+只有受影响的 agent 或 cluster 采集器会重启。`agent.storage.enabled=true` 时，同一节点和存储路径上的读取位置会保留，减少重复读取，但不保证恰好一次交付：重试可能产生重复记录，节点/存储丢失或队列耗尽也可能丢失数据。
 
 ### 选择命名空间和容器
 
@@ -400,6 +405,8 @@ env:
     valueFrom: {fieldRef: {fieldPath: status.hostIP}}
   - name: OTEL_EXPORTER_OTLP_ENDPOINT
     value: http://$(HOST_IP):4318
+  - name: OTEL_EXPORTER_OTLP_PROTOCOL
+    value: http/protobuf
   - name: OTEL_SERVICE_NAME
     value: checkout
 ```
@@ -410,7 +417,7 @@ env:
 
 ### 采集多个集群
 
-在每个集群中各安装一个采集器 Release，`gateway.endpoint` 指向同一个网关（跨集群时使用其 LoadBalancer 或 Ingress 地址），并为每个集群设置不同的 `clusterName`。查询和仪表盘通过 `k8s.cluster.name` 过滤。
+在每个集群中各安装一个采集器 Release，`gateway.endpoint` 指向同一个网关（跨集群时使用 LoadBalancer 或单独配置的 gRPC Ingress 地址），并为每个集群设置不同的 `clusterName`。查询和仪表盘通过 `k8s.cluster.name` 过滤。
 
 ## 生产环境建议
 
@@ -426,6 +433,8 @@ env:
 | 采集器资源 | `agent.resources`、`agent.queueSize` | 每个 agent 默认申请 100m CPU 和 128 MiB 内存，上限为 1 CPU 和 512 MiB。网关不可达期间，每个节点最多在本地磁盘缓存 `agent.queueSize` 条记录（默认 20,000 条）。 |
 
 仓库中的 `examples/ai-observe-stack/prod.yaml` 可作为生产 values 文件的起点。
+
+默认 `gateway.timeGuard.enabled=true` 会将超出可写分区时间窗口的记录时间改为接收时间：日志在 `log.original_time_unix_nano`、Trace 在 `span.original_start_time_unix_nano` 保留原时间，指标时间直接重写。需要回填历史数据时，应同时调整 `gateway.dorisExporter.createHistoryDays` 和时间保护配置。网关向 Doris 发送失败的默认重试时限为 10 分钟（`gateway.dorisExporter.retryMaxElapsedTime`），超时批次会记录错误并丢弃。
 
 ## 升级与卸载
 
@@ -467,7 +476,7 @@ kubectl delete crd dorisclusters.doris.selectdb.com
 | `helm dependency build` 报错 `no repository definition for https://charts.selectdb.com` | `helm dependency build` 只使用通过 `helm repo add` 添加的仓库。改为执行 `helm dependency update ./ai-observe-stack`。 |
 | `helm install` 报错 `gateway.endpoint is required` | 将采集器的 `gateway.endpoint` 设置为网关地址。 |
 | `helm install` 报错 `additional properties 'xxx' not allowed` | values 文件中有拼写错误的顶层键。 |
-| `helm test` 失败，或网关日志中出现 Doris 相关错误 | 检查 Doris FE 的 9030 和 8030 端口是否可访问，以及账号是否具有 `CREATE DATABASE` 权限。使用 `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0` 查看网关日志。 |
+| `helm test` 失败，或网关日志中出现 Doris 相关错误 | 检查 Doris FE 的 9030 和 8030 端口是否可访问，以及账号是否能创建目标数据库/表、导入和查询数据。使用 `kubectl logs -n dog dog-ai-observe-stack-otel-gateway-0` 查看网关日志。 |
 | agent Pod 报 `CreateContainerConfigError`、被 Pod Security 拒绝，或日志中出现 `/var/log/pods` 的 `permission denied` | 命名空间启用了 `restricted`。添加 `privileged` 标签，参见步骤 2。 |
 | agent 日志出现 `connection refused` 或 `Unavailable` | 网关地址错误、网关未运行，或网络策略阻止了 4317 端口。问题修复前，记录会缓存在节点上，修复后自动发送。 |
 | agent Pod 一直处于 `ContainerCreating` 状态，事件显示 `MountVolume.SetUp failed for volume "zoneinfo"` | 节点上没有时区数据库（部分精简操作系统镜像）。设置 `agent.tzdata.hostPath: ""`，并将 `timezone` 以及所有规则的 `timestamp.timezone` 保持为 UTC。 |
