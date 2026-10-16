@@ -12,12 +12,12 @@ import TabItem from '@theme/TabItem';
 :::note
 这是一个实验性功能。
 
-Lance Catalog 自 Apache Doris 4.2 版本开始支持。
+Lance Catalog 自 Apache Doris 4.1.4 版本开始支持。
 :::
 
 Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统、S3 兼容对象存储或阿里云 OSS 中的 Lance 数据集。
 
-当前 Doris 对 Lance 提供只读能力，不支持创建、写入、更新或删除 Lance 表。
+Doris 支持 Lance Namespace、表和顶层列的元数据 DDL。`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 等数据写入操作暂不支持。
 
 ## 适用场景
 
@@ -44,13 +44,14 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 | 全文检索 | 通过 `full_text_search()` 使用已有的 Lance FTS 倒排索引，支持 Match OR/AND 和 Phrase 查询，并由 Doris 合并全局 Top-K |
 | Lance Cache | BE 内共享索引、元数据缓存及本地磁盘数据缓存 |
 | TopN 两阶段读取 | 对向量和全文检索中可延迟的输出列默认开启，由 `enable_lance_lazy_materialization` 独立控制 |
-| 写入 Lance | 暂不支持 |
+| Lance DDL | 支持 Namespace 和表的创建、删除，以及顶层列 Schema 演进 |
+| 向 Lance 写入数据 | 暂不支持 |
 | Time Travel | 支持 `FOR VERSION AS OF`、`FOR TIME AS OF`、`@tag(...)` 和 `@branch(...)`，包括由 REST Namespace 管理版本的表 |
 | Hybrid Search | 暂不支持 |
 
 ## Lance 版本与兼容性
 
-Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:12.0.0` 读取 Namespace 和数据集元数据；FE 只读元数据、不写数据集，因此 FE 采用较新的 Lance 版本不改变 BE 能读取的范围。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
+Doris BE 数据读取器使用 `lance-c v0.1.9` 加 Doris 补丁构建，补丁包含多向量检索支持，并将其内置的 Lance Rust crates 升级到 `11.0.0`（commit `ab6b5bbe`）。Doris FE 使用 `org.lance:lance-core:12.0.0` 读取 Namespace 和数据集元数据；FE 还会执行元数据 DDL，但 FE 采用较新的 Lance 版本不扩大 BE 能读取的数据格式范围。Dataset 必须同时满足 FE 元数据加载和 BE 数据读取的兼容性要求。这些实现版本与数据集中记录的 Lance `data_storage_version` 不是同一个概念。
 
 当前读取器的文件格式兼容情况如下：
 
@@ -353,6 +354,84 @@ CREATE CATALOG lance_analytics PROPERTIES (
 ```
 
 此时 Doris 只展示 `production.analytics` 之下的表和子 Namespace。
+
+## DDL 操作
+
+:::note
+以下 DDL 依赖尚未发布的实现（apache/doris#68349），当前已发布版本暂不支持。
+:::
+
+Lance Catalog 支持以下元数据 DDL 操作：
+
+| 操作 | 支持情况 |
+|---|---|
+| `CREATE DATABASE` / `DROP DATABASE` | 支持非根 Namespace |
+| `CREATE TABLE` / `DROP TABLE` | 支持 |
+| `RENAME TABLE` | 暂不支持 |
+| `ALTER TABLE ADD COLUMN` | 支持顶层列 |
+| `ALTER TABLE MODIFY COLUMN` | 支持顶层列 |
+| `ALTER TABLE RENAME COLUMN` | 支持顶层列 |
+| `ALTER TABLE DROP COLUMN` | 支持顶层列 |
+| `INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` | 暂不支持 |
+
+### 创建 Namespace
+
+使用 `CREATE DATABASE` 和 `DROP DATABASE` 创建或删除 Lance Namespace：
+
+```sql
+CREATE DATABASE lance_catalog.analytics;
+```
+
+通过 `lance.namespace.root_database` 映射的根 Namespace 不能通过 SQL 创建或删除。
+
+### 创建表
+
+使用 `CREATE TABLE` 创建带指定 Schema 的空 Lance 表：
+
+```sql
+CREATE TABLE lance_catalog.analytics.user_profiles (
+    user_id BIGINT,
+    name STRING,
+    age INT,
+    created_at DATETIME(3)
+);
+```
+
+### 演进表 Schema
+
+Lance Catalog 支持每条 `ALTER TABLE` 语句变更一个顶层列：
+
+```sql
+ALTER TABLE lance_catalog.analytics.user_profiles
+ADD COLUMN email STRING;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+MODIFY COLUMN age BIGINT;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+RENAME COLUMN name name_text;
+
+ALTER TABLE lance_catalog.analytics.user_profiles
+DROP COLUMN email;
+```
+
+以下 Schema 变更暂不支持：
+
+- 列默认值。
+- `FIRST` 或 `AFTER` 等列位置变更。
+- Schema 变更中的列注释。
+- 嵌套字段 Schema 变更。
+- 一条 `ALTER TABLE` 语句中包含多个 Schema 变更子句。
+- 涉及不支持的 Lance/Arrow 类型的类型变更。
+
+### 删除表和 Namespace
+
+完成 Schema 演进验证后，再清理示例对象。`DROP TABLE` 调用 Lance Namespace 的删除表操作，对底层数据的处理由 Namespace 实现决定。删除前确认其语义并备份所需数据：
+
+```sql
+DROP TABLE lance_catalog.analytics.user_profiles;
+DROP DATABASE lance_catalog.analytics;
+```
 
 ## 查询 Lance 表
 
@@ -1288,7 +1367,7 @@ Profile 的采集和查看方法见 [Query Profile 分析指南](../../query-acc
 
 ## 当前限制和建议
 
-- Lance Catalog 和 Lance TVF 当前仅支持读取，不支持 `CREATE TABLE`、`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance。
+- Lance Catalog 支持元数据 DDL，但 Lance TVF 仍为只读。`INSERT`、`UPDATE`、`DELETE`、`TRUNCATE TABLE` 或写回 Lance 暂不支持。
 - 使用不支持的列类型时，建议显式列出需要读取的列，避免 `SELECT *` 投影到不支持的列。
 - 对普通扫描使用 `EXPLAIN` 检查 `lancePushdownPredicate`，确认目标条件是否已下推。
 - 向量检索前应在 Lance 中创建与查询方式匹配的索引；小数据集或验证场景可以设置 `"use_index" = "false"` 使用 Flat Search。
