@@ -8,6 +8,7 @@ const {hash, identity, relative, loadConfig, pipelineLocale, stateFileFor, listS
 const {structure} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
 const {checkedTask, safeFile, openAIAdapter, mockAdapter, translateDocument} = require('./translation-engine.cjs');
+const {translateWholeDocument} = require('./translate-document.cjs');
 
 function optionsFrom(argv) {
     const values = {}, tasks = [];
@@ -95,16 +96,21 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
             && previousTarget !== null && hash(previousTarget) === existing.targetHash,
         'Existing target or identity changed; manual review required');
     }
-    const previousSource = existing ? readCommitted(root, existing.sourceCommit, existing.sourcePath) : null;
-    if (existing) assert(hash(previousSource) === existing.sourceHash, 'Previous source record is invalid');
+    const wholeDocument = typeof adapter.translateDocument === 'function';
+    const previousSource = existing && !wholeDocument ? readCommitted(root, existing.sourceCommit, existing.sourcePath) : null;
+    if (existing && !wholeDocument) assert(hash(previousSource) === existing.sourceHash, 'Previous source record is invalid');
     const extension = path.extname(task.sourcePath);
     const canReuse = existing?.glossaryVersion === glossary.version;
-    const generated = await translateDocument({source, extension, adapter, glossary,
+    const generated = wholeDocument ? await translateWholeDocument({source, extension, adapter, glossary,
+        targetLocale: target.locale, targetScriptPattern: target.scriptPattern, root, targetPath: task.targetPath,
+        onAttempt: ({attempt, issues}) => process.stdout.write(`${task.sourcePath}: attempt ${attempt}/3: `
+            + (issues.length ? issues.map(item => `${item.check}: ${item.message}`).join('; ') : 'passed') + '\n')})
+        : await translateDocument({source, extension, adapter, glossary,
         previousSource: canReuse ? previousSource : null,
         previousTarget: canReuse ? previousTarget : null,
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern,
         maxDocumentChars, maxChunkChars});
-    if (adapter.model !== 'fixture') {
+    if (!wholeDocument && adapter.model !== 'fixture') {
         assert(generated.targetChanged,
             `Live candidate contains no ${target.language} text; review manually`);
     }
@@ -114,7 +120,8 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         sourceCommit: plan.sourceCommit, sourceHash: task.sourceHash,
         sourceTechnicalHash: sourceParsed.technicalHash, targetHash: hash(generated.target),
         reviewStatus: 'machine', ownership: 'machine', translatedAt: new Date().toISOString(),
-        glossaryVersion: glossary.version};
+        glossaryVersion: glossary.version,
+        ...(generated.generation ? {generation: generated.generation} : {})};
     return {task, targetFile, previousTarget, target: generated.target, record,
         units: generated.units, reusedUnits: generated.reusedUnits, requests: generated.requests,
         targetChanged: generated.targetChanged};

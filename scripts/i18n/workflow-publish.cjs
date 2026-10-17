@@ -47,7 +47,7 @@ function authorFor(kind, user = {}, language) {
     return {name: user.login, email: `${user.id}+${user.login}@users.noreply.github.com`};
 }
 
-function main() {
+async function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-publish.cjs <scan-directory>');
     assert(process.env.GH_TOKEN && process.env.GITHUB_RUN_ID, 'GitHub write token and run ID required');
@@ -73,10 +73,9 @@ function main() {
     const bodyFile = path.join(output, 'pr-body.md');
     const body = fs.readFileSync(bodyFile, 'utf8');
     assert(body.includes('bot-head=PENDING'), 'Missing PR ownership marker');
+    await require('./pr-preflight.cjs').preflight({root, base: manifest.sourceCommit});
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
-        + `\nLocal ${language} translation gate: passed.\n`);
-    execFileSync(process.execPath, [path.join(__dirname, 'check-translations.cjs'), '--base', manifest.sourceCommit],
-        {cwd: root, stdio: 'inherit'});
+        + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`);
     const remoteMaster = git('ls-remote', 'origin', 'refs/heads/master').split(/\s+/)[0];
     assert.equal(remoteMaster, manifest.sourceCommit, 'master advanced before publish; rescan required');
     // gh configures Git's credential helper from GH_TOKEN. The token is never
@@ -93,6 +92,6 @@ function main() {
 }
 
 if (require.main === module) {
-    try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
+    main().catch(error => {console.error(error.message); process.exitCode = 1;});
 }
 module.exports = {expectedFiles, checkStaged, authorFor};

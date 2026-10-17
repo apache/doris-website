@@ -68,15 +68,26 @@ function ensureMasterFresh(sourceCommit) {
 function bodyFor(manifest) {
     const rows = manifest.candidates.map(item => `| ${item.kind} | ${item.version} | [\`${item.sourcePath}\`](https://github.com/apache/doris-website/blob/${manifest.sourceCommit}/${item.sourcePath}) | \`${item.sourceHash.slice(0, 12)}\` | ${item.reusedFrom ? `copied from \`${item.reusedFrom}\`` : 'model call'} |`);
     const failures = manifest.failures.length ? manifest.failures.map(item => `- \`${item.id}\` (${item.sourcePath}): ${item.error}`).join('\n') : 'None.';
+    const warnings = manifest.candidates.filter(item => item.generation?.acceptedWithWarnings)
+        .map(item => {
+            const detail = item.generation.warnings.map(warning => `${warning.check}: ${warning.message}`)
+                .join('; ').replace(/\s+/g, ' ');
+            return `- \`${item.sourcePath}\`: third attempt retained for review. `
+                + detail.slice(0, 1500) + (detail.length > 1500 ? '…' : '');
+        });
     return [`## ${manifest.language} translation candidate`, '',
         `Source commit: \`${manifest.sourceCommit}\``,
         `Model: \`${manifest.model}\`; glossary: \`${manifest.glossaryVersion}\``,
         `Review status: machine. ${manifest.language} proofreading and the normal PR checks are still required.`,
         '', '| Action | Version | English source | SHA-256 prefix | Generation |',
         '| --- | --- | --- | --- | --- |', ...rows, '', '## Failed or skipped tasks', '', failures, '',
-        '## Validation', '', 'The generator checked committed source hashes, managed paths, protected syntax,',
-        'target/state hashes and the current master SHA before applying the candidate.',
-        'The PR checks must verify links, routes, coverage and the site build before merging.',
+        '## Candidates retained with warnings', '', ...(warnings.length ? warnings : ['None.']), '',
+        '## Validation', '', 'Each document is translated in one request, with at most three attempts.',
+        'Each retry receives the earlier validation errors. Third-attempt content issues are retained as warnings above.',
+        'Full attempt history and diagnostics are in generation.json and the page state records.',
+        'Committed source hashes, managed paths, target/state hashes and the master SHA are checked before applying candidates.',
+        'The publisher runs the shared PR translation-state, syntax and internal-link checks before pushing.',
+        'The normal PR build and human proofreading are still required before merging.',
         '', `${markerPrefixFor(manifest.language)}PENDING -->`, ''].join('\n');
 }
 
@@ -105,8 +116,7 @@ async function generate({plan, reconciliation, maxPages = 10, target,
             || candidates.length + 2 > maxPages)) partner = null;
         try {
             checkedTask(plan, id, scope, rootDir);
-            const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary, target,
-                maxDocumentChars: 60000, maxChunkChars: 5000});
+            const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary, target});
             candidates.push(primary);
             if (partner) try {
                 const copy = copyPair(primary, partner, scope, state, rootDir);
@@ -128,7 +138,8 @@ async function generate({plan, reconciliation, maxPages = 10, target,
             sourcePath: item.task.sourcePath, sourceHash: item.task.sourceHash,
             targetPath: item.task.targetPath, targetHash: item.record.targetHash,
             statePath: statePathForRecord(state, item.record),
-            reusedFrom: item.reusedFrom || null, requests: item.requests})), failures};
+            reusedFrom: item.reusedFrom || null, requests: item.requests,
+            ...(item.record.generation ? {generation: item.record.generation} : {})})), failures};
     fs.mkdirSync(output, {recursive: true});
     fs.writeFileSync(path.join(output, 'generation.json'), JSON.stringify(manifest, null, 2) + '\n');
     if (candidates.length) {

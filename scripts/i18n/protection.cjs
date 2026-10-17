@@ -3,17 +3,23 @@ const {hash} = require('./state.cjs');
 const translatable = new Set(['title', 'description', 'sidebar_label', 'keywords', 'language']);
 const visibleAttribute = name => ['alt', 'title', 'aria-label', 'description', 'label', 'caption'].includes(name);
 
+function normalizedNumbers(text) {
+    return text.normalize('NFKC').replace(/(?<=\d),(?=\d{3}(?:,\d{3})*(?!\d))/g, '')
+        .match(/\d+(?:\.\d+)*/g) || [];
+}
+
 // Keep the T02 freshness hash unchanged. This separate signature permits prose
 // in HTML and visible string attributes while protecting executable MDX.
-function protectionSignature(parsed) {
+function protectedContent(parsed, {normalizeProseNumbers = false} = {}) {
     const nodes = [], numbers = [];
     for (const node of parsed.protectedNodes) {
-        if (node[0] === 'numbers') {numbers.push(...node[1]); continue;}
+        if (node[0] === 'numbers') {if (!normalizeProseNumbers) numbers.push(...node[1]); continue;}
         if (node[0] === 'html' && !node[3].trim().startsWith('<!--')) {
             const $ = cheerio.load(node[3], {decodeEntities:false}, false);
             $('*').contents().each((i, child) => {
                 if (child.type === 'text') {
-                    numbers.push(...(child.data.match(/\d+(?:\.\d+)*/g) || []));
+                    numbers.push(...(normalizeProseNumbers ? normalizedNumbers(child.data)
+                        : child.data.match(/\d+(?:\.\d+)*/g) || []));
                     child.data = '';
                 }
             });
@@ -26,7 +32,11 @@ function protectionSignature(parsed) {
                 && typeof attribute.value === 'string' ? {...attribute, value:''} : attribute)]);
         } else nodes.push(node);
     }
-    return hash(JSON.stringify([Object.fromEntries(Object.entries(parsed.technicalMetadata).filter(([key]) => !translatable.has(key))),
-        nodes, numbers.sort(), parsed.headings.map(({depth,id}) => ({depth,id}))]));
+    return [Object.fromEntries(Object.entries(parsed.technicalMetadata).filter(([key]) => !translatable.has(key))),
+        nodes, [...numbers, ...(normalizeProseNumbers ? parsed.proseNumbers || [] : [])].sort(),
+        parsed.headings.map(({depth,id}) => ({depth,id}))];
 }
-module.exports = {protectionSignature};
+function protectionSignature(parsed, options) {
+    return hash(JSON.stringify(protectedContent(parsed, options)));
+}
+module.exports = {protectionSignature, protectedContent, normalizedNumbers};

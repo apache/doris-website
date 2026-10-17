@@ -233,6 +233,7 @@ def _try_get(url: str, timeout: float, fallback_status=None):
 def main():
     ap = argparse.ArgumentParser(description="Check Markdown links in a single file.")
     ap.add_argument("file", help="Path to the Markdown file to check")
+    ap.add_argument("--content-file", help="Read candidate content here, resolving links relative to file")
     ap.add_argument("--no-external", action="store_true",
                     help="Skip checking http(s) external links")
     ap.add_argument("--timeout", type=float, default=10.0,
@@ -242,12 +243,12 @@ def main():
     args = ap.parse_args()
 
     md_path = os.path.abspath(args.file)
-    if not os.path.isfile(md_path):
+    if not os.path.isfile(args.content_file or md_path):
         print(f"File not found: {md_path}", file=sys.stderr)
         sys.exit(2)
 
     base_dir = os.path.dirname(md_path)
-    links = extract_links(md_path)
+    links = extract_links(args.content_file or md_path)
 
     internal, external, anchors = [], [], []
     for line, url in links:
