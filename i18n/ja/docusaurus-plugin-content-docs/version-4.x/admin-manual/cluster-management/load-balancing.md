@@ -1,21 +1,22 @@
 ---
 {
-    "title": "FE の負荷分散",
+    "title": "FE のロードバランシング",
     "language": "ja",
-    "description": "複数 FE 構成の Doris で利用できる JDBC、Nginx、HAProxy、ProxySQL による負荷分散と、Proxy Protocol によるクライアント IP の転送について説明します。",
+    "description": "複数の FE を配置した Doris 環境でのロードバランシング方法。JDBC、Nginx、HAProxy、ProxySQL、NJet、および Proxy Protocol によるクライアント IP の転送を説明します。",
     "keywords": [
-        "Doris の負荷分散",
-        "FE の高可用性",
-        "MySQL プロトコルのプロキシ",
-        "JDBC 負荷分散",
+        "Doris ロードバランシング",
+        "FE 高可用性",
+        "MySQL プロトコルプロキシ",
+        "JDBC loadbalance",
         "Nginx TCP リバースプロキシ",
         "HAProxy",
         "ProxySQL",
+        "NJet",
         "Proxy Protocol",
-        "クライアント IP の転送",
+        "クライアント IP 転送",
         "query_port 9030",
-        "Doris の複数 FE への接続",
-        "MySQL の負荷分散"
+        "Doris 複数 FE アクセス",
+        "MySQL ロードバランシング"
     ]
 }
 ---
@@ -23,30 +24,31 @@
 <!-- Knowledge type: Architecture decision / Operational procedure -->
 <!-- Applicable scenario: Multi-FE high availability access / Client IP forwarding -->
 
-ユーザーは MySQL プロトコルを使用し、FE のクエリポート（`query_port`、デフォルトは `9030`）を通じて Doris に接続します。複数の FE ノードを配置する場合、FE の前段に負荷分散レイヤーを設けることで、Doris のクエリエントリーポイントの高可用性と接続の分散を実現できます。
+ユーザーは MySQL プロトコルを使用し、FE のクエリポート（`query_port`、デフォルトは `9030`）経由で Doris に接続します。複数の FE ノードを配置している場合は、FE の前段にロードバランシング層を設けることで、Doris のクエリへの接続口に高可用性を持たせ、接続を分散できます。
 
-このドキュメントでは、Doris で使用できる四つの負荷分散方法と、Proxy Protocol を使用してプロキシレイヤー経由で実際のクライアント IP を転送する方法を説明します。
+このドキュメントでは、Doris で利用できる五つのロードバランシング方法と、Proxy Protocol を使ってプロキシ層越しに実際のクライアント IP を転送する方法を説明します。
 
-## 適用場面
+## 適用シナリオ {#applicable-scenarios}
 
-| 場面 | 推奨方法 | 説明 |
+| シナリオ | 推奨する方法 | 説明 |
 |------|----------|------|
-| アプリケーションが JDBC を使用して Doris に直接接続し、専用プロキシを運用しない場合 | JDBC URL | クライアント側で負荷を分散し、追加のコンポーネントは不要 |
-| 既存の Nginx 環境があり、TCP レイヤーのリバースプロキシが必要な場合 | Nginx | 汎用の TCP リバースプロキシで、設定が簡単 |
-| ヘルスチェックを備えた高性能な TCP プロキシが必要な場合 | HAProxy | 多様なヘルスチェック方式を備えた専用の TCP/HTTP ロードバランサー |
-| 接続管理や読み書きの分離など、MySQL プロトコルを理解するプロキシが必要な場合 | ProxySQL | MySQL プロトコル向けに設計されたデータベースプロキシ |
-| ロードバランサーの背後でも実際のクライアント IP を保持する必要がある場合 | Proxy Protocol | Nginx または HAProxy と併用 |
+| アプリケーションが JDBC で Doris に直接接続し、専用プロキシを運用しない | JDBC URL | クライアント側でロードバランシングを行い、追加のコンポーネントは不要 |
+| 既存の Nginx 環境があり、TCP 層のリバースプロキシが必要 | Nginx | 汎用の TCP リバースプロキシで、設定が簡単 |
+| ヘルスチェックを備えた高性能な TCP プロキシが必要 | HAProxy | 多様なヘルスチェック方式を備えた専用の TCP/HTTP ロードバランサー |
+| 接続管理や読み書きの分離など、MySQL プロトコルを認識するプロキシが必要 | ProxySQL | MySQL プロトコル向けに設計されたデータベースプロキシ |
+| FE の動的な追加・削除と、SQL を使った能動的なヘルスチェックが必要 | NJet | 管理 API をオプションで利用できる TCP プロキシ |
+| ロードバランサーの背後でも実際のクライアント IP を保持する必要がある | Proxy Protocol | Nginx または HAProxy と併用 |
 
-## 前提条件
+## 前提条件 {#prerequisites}
 
-- FE ノードを 2 台以上配置し、各 FE プロセスが `query_port`（デフォルトは `9030`）で待ち受けていること。
-- プロキシサーバーとすべての FE ノード間でネットワーク通信が可能であること。
-- プロキシサービス用のポートが決まっていること（このドキュメントでは `6030` を例として使用します）。
-- Proxy Protocol が必要な場合は、Proxy Protocol V1 に対応する Doris バージョン（バージョン 2.1.1 以降）を使用すること。
+- FE ノードが少なくとも 2 台配置され、各 FE プロセスが `query_port`（デフォルトは `9030`）で待ち受けていること。
+- プロキシサーバーからすべての FE ノードへネットワーク接続できること。
+- プロキシサービス用のポートを決めてあること（このドキュメントでは `6030` を例として使用）。
+- Proxy Protocol が必要な場合、Doris のバージョンが Proxy Protocol V1 に対応していること（バージョン 2.1.1 以降で利用可能）。
 
-## クラスター構成例
+## クラスター構成の例 {#example-cluster-topology}
 
-このドキュメントでは、次の三台の FE ノードを例として使用します。
+このドキュメントでは、以下の三つの FE ノードを例に使用します。
 
 ```text
 192.168.1.101:9030
@@ -54,39 +56,39 @@
 192.168.1.103:9030
 ```
 
-プロキシサーバーを実行するノードは次のとおりです。
+プロキシサーバーを稼働させるノードは次のとおりです。
 
 ```text
 192.168.1.100
 ```
 
-## 負荷分散の方法
+## ロードバランシングの方法 {#load-balancing-options}
 
-### 方法 1: JDBC URL
+### オプション 1: JDBC URL {#option-1-jdbc-url}
 
 <!-- Knowledge type: Configuration parameter -->
 <!-- Applicable scenario: Application-side load balancing -->
 
-JDBC URL に組み込まれた負荷分散機能を使用します。MySQL Connector/J がクライアント側で FE ノード間の接続分散とフェイルオーバーを行います。
+JDBC URL に組み込まれているロードバランシング機能を使用します。MySQL Connector/J が、クライアント側で FE ノードへの接続分散とフェイルオーバーを行います。
 
 ```text
 jdbc:mysql:loadbalance://192.168.1.101:9030,192.168.1.102:9030,192.168.1.103:9030/test_db
 ```
 
-設定の詳細については、[MySQL の公式ドキュメント](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)を参照してください。
+詳細な設定については、[MySQL の公式ドキュメント](https://dev.mysql.com/doc/connector-j/en/connector-j-usagenotes-j2ee-concepts-managing-load-balanced-connections.html)を参照してください。
 
-### 方法 2: Nginx
+### オプション 2: Nginx {#option-2-nginx}
 
 <!-- Knowledge type: Operational procedure -->
 <!-- Applicable scenario: General-purpose TCP reverse proxy -->
 
-[Nginx](https://nginx.org/) の TCP リバースプロキシ機能（`stream` モジュール）を使用して Doris の負荷を分散します。
+[Nginx](https://nginx.org/) の TCP リバースプロキシ機能（`stream` モジュール）を使用して、Doris への接続を分散します。
 
-#### Nginx のインストール
+#### Nginx のインストール {#install-nginx}
 
-[Nginx の公式インストールドキュメント](https://nginx.org/en/docs/install.html)を参照してインストールしてください。次の例では、Ubuntu で Nginx 1.18.0 をコンパイルしてインストールします。
+インストール方法については、[Nginx の公式インストールドキュメント](https://nginx.org/en/docs/install.html)を参照してください。次の例では、Ubuntu 上で Nginx 1.18.0 をコンパイルしてインストールします。
 
-1. ビルドに必要な依存パッケージをインストールします。
+1. ビルドに必要なパッケージをインストールします。
 
     ```shell
     sudo apt-get install build-essential
@@ -107,11 +109,11 @@ jdbc:mysql:loadbalance://192.168.1.101:9030,192.168.1.102:9030,192.168.1.103:903
 
     :::tip
 
-    コンパイル時に必ず `--with-stream` を指定してください。指定しないと、Nginx は TCP リバースプロキシをサポートしません。
+    コンパイル時に必ず `--with-stream` を指定してください。指定しない場合、Nginx は TCP リバースプロキシに対応しません。
 
     :::
 
-#### リバースプロキシの設定
+#### リバースプロキシの設定 {#configure-the-reverse-proxy}
 
 1. 新しい設定ファイルを作成します。
 
@@ -147,13 +149,13 @@ jdbc:mysql:loadbalance://192.168.1.101:9030,192.168.1.102:9030,192.168.1.103:903
     | 項目 | 説明 |
     |--------|------|
     | `stream` | TCP リバースプロキシのコンテキスト。Nginx の stream モジュールが必要 |
-    | `upstream mysqld` | バックエンド FE ノードのプール。`hash $remote_addr consistent` はクライアント IP に基づいて一貫性ハッシュを行う |
+    | `upstream mysqld` | バックエンドの FE ノード群。`hash $remote_addr consistent` はクライアント IP に基づいてコンシステントハッシュを行う |
     | `weight` | ノードの重み。値が大きいほど多くの接続を受け取る |
-    | `max_fails` / `fail_timeout` | ヘルスチェックのパラメーター。`fail_timeout` 内の失敗回数が `max_fails` を超えると、ノードは利用不可と判定される |
+    | `max_fails` / `fail_timeout` | ヘルスチェックのパラメータ。`fail_timeout` の期間内の失敗回数が `max_fails` を超えると、そのノードを利用不可と判定する |
     | `listen 6030` | プロキシサービスの待ち受けポート |
     | `proxy_connect_timeout` / `proxy_timeout` | 接続とセッションのタイムアウト |
 
-#### Nginx の起動
+#### Nginx の起動 {#start-nginx}
 
 指定した設定ファイルで起動します。
 
@@ -162,9 +164,9 @@ cd /usr/local/nginx
 /usr/local/nginx/sbin/nginx -c conf.d/default.conf
 ```
 
-#### 動作確認
+#### 動作確認 {#verify}
 
-プロキシのポートを通じて接続します。
+プロキシポート経由で接続します。
 
 ```shell
 mysql -uroot -P6030 -h192.168.1.100
@@ -180,18 +182,18 @@ mysql> show databases;
 2 rows in set (0.00 sec)
 ```
 
-### 方法 3: HAProxy
+### オプション 3: HAProxy {#option-3-haproxy}
 
 <!-- Knowledge type: Operational procedure -->
 <!-- Applicable scenario: High-performance TCP load balancing -->
 
-[HAProxy](https://www.haproxy.org/) は C 言語で書かれた高性能な TCP/HTTP ロードバランサーです。
+[HAProxy](https://www.haproxy.org/) は、C で記述された高性能な TCP/HTTP ロードバランサーです。
 
-#### HAProxy のインストール
+#### HAProxy のインストール {#install-haproxy}
 
 1. HAProxy をダウンロードします（ダウンロード先: <https://src.fedoraproject.org/repo/pkgs/haproxy/>）。
 
-2. アーカイブを展開します。
+2. 展開します。
 
     ```shell
     tar -zxvf haproxy-2.6.15.tar.gz -C /opt/
@@ -207,9 +209,9 @@ mysql> show databases;
     make install PREFIX=/usr/local/haproxy
     ```
 
-#### HAProxy の設定
+#### HAProxy の設定 {#configure-haproxy}
 
-1. syslog のログ記録ルールを設定します。
+1. syslog のログ出力ルールを設定します。
 
     設定ファイルを開きます。
 
@@ -226,7 +228,7 @@ mysql> show databases;
     &~
     ```
 
-2. リモートログ記録を有効にします。
+2. リモートログ出力を有効にします。
 
     ```shell
     vim /etc/sysconfig/rsyslog
@@ -238,13 +240,13 @@ mysql> show databases;
     SYSLOGD_OPTIONS="-c 2 -r -m 0"
     ```
 
-    パラメーターの説明は次のとおりです。
+    パラメータの説明は次のとおりです。
 
-    | パラメーター | 説明 |
+    | パラメータ | 説明 |
     |------|------|
     | `-c 2` | 互換モードを使用する。デフォルトは `-c 5` |
-    | `-r` | リモートログ記録を有効にする |
-    | `-m 0` | タイムスタンプマークの間隔（分）。`0` はこの機能を無効にする |
+    | `-r` | リモートログ出力を有効にする |
+    | `-m 0` | タイムスタンプのマーク間隔（分）。`0` はこの機能を無効にする |
 
     変更を適用します。
 
@@ -252,7 +254,7 @@ mysql> show databases;
     systemctl restart rsyslog
     ```
 
-3. 負荷分散の設定ファイルを編集します。
+3. ロードバランシングの設定ファイルを編集します。
 
     ```shell
     vim /usr/local/haproxy/haproxy.cfg
@@ -300,11 +302,11 @@ mysql> show databases;
 
     | 項目 | 説明 |
     |--------|------|
-    | `frontend agent-front` | ポート `6030` で待ち受ける TCP モードのフロントエンドエントリーポイント |
-    | `backend forward-fe` | ラウンドロビン（`roundrobin`）アルゴリズムを使用するバックエンド FE ノードのプール |
-    | `check inter 3000 rise 2 fall 3` | `3000ms` ごとにヘルスチェックを実行する。`2` 回連続で成功すると稼働中、`3` 回連続で失敗すると停止中と判定する |
+    | `frontend agent-front` | TCP モードを使用し、ポート `6030` にバインドするフロントエンドの接続口 |
+    | `backend forward-fe` | ラウンドロビン（`roundrobin`）アルゴリズムを使用するバックエンドの FE ノード群 |
+    | `check inter 3000 rise 2 fall 3` | `3000ms` ごとにヘルスチェックを実行する。連続 `2` 回成功するとノードを稼働状態、連続 `3` 回失敗すると停止状態と判定する |
 
-#### HAProxy の起動
+#### HAProxy の起動 {#start-haproxy}
 
 1. サービスを起動します。
 
@@ -318,36 +320,36 @@ mysql> show databases;
     netstat -lnatp | grep -i haproxy
     ```
 
-#### 動作確認
+#### 動作確認 {#verify-1}
 
 ```shell
 mysql -h 192.168.1.100 -uroot -P6030 -p
 ```
 
-### 方法 4: ProxySQL
+### オプション 4: ProxySQL {#option-4-proxysql}
 
 <!-- Knowledge type: Operational procedure -->
 <!-- Applicable scenario: MySQL protocol-aware proxy -->
 
-[ProxySQL](https://proxysql.com/) は C 言語で書かれたオープンソースの MySQL データベースプロキシです。接続管理、読み書きの分離、負荷分散、フェイルオーバーを提供し、高い性能、設定の柔軟性、動的な管理機能を備えています。Web サービス、ビッグデータプラットフォーム、クラウドデータベースなどで一般的に使用されます。
+[ProxySQL](https://proxysql.com/) は、C で記述されたオープンソースの MySQL データベースプロキシです。接続管理、読み書きの分離、ロードバランシング、フェイルオーバーの機能を備え、高性能で柔軟な設定と動的な管理が可能です。Web サービス、ビッグデータプラットフォーム、クラウドデータベースなどで広く利用されています。
 
-#### ProxySQL のインストール
+#### ProxySQL のインストール {#install-proxysql}
 
-[ProxySQL の公式ドキュメント](https://proxysql.com/documentation/installing-proxysql/)を参照してインストールしてください。
+インストール方法については、[ProxySQL の公式ドキュメント](https://proxysql.com/documentation/installing-proxysql/)を参照してください。
 
-#### ProxySQL の設定
+#### ProxySQL の設定 {#configure-proxysql}
 
 ProxySQL には、設定ファイル `/etc/proxysql.cnf` と設定データベースファイル `/var/lib/proxysql/proxysql.db` が付属しています。
 
 :::caution
 
-`proxysql.db` が `/var/lib/proxysql` に存在する場合、ProxySQL サービスが `proxysql.cnf` を読み込んで解析するのは初回起動時だけです。それ以降の起動時には読み込みません。
+`proxysql.db` が `/var/lib/proxysql` に存在する場合、ProxySQL サービスが `proxysql.cnf` を読み込んで解析するのは初回起動時だけです。以降の起動では読み込みません。
 
-`proxysql.cnf` の変更を再起動後に反映するには、先に `/var/lib/proxysql/proxysql.db` を削除してからサービスを再起動する必要があります。これは初期化を伴う起動と同じで、新しい `proxysql.db` が生成され、元の設定ルールは消去されます。
+再起動後に `proxysql.cnf` の変更を反映するには、先に `/var/lib/proxysql/proxysql.db` を削除してからサービスを再起動する必要があります。これは初期化を伴う起動と同じで、新しい `proxysql.db` が生成され、元の設定ルールは消去されます。
 
 :::
 
-`proxysql.cnf` の主な内容を以下に示します。
+`proxysql.cnf` の主な内容は次のとおりです。
 
 ```text
 datadir="/var/lib/proxysql"         # Data directory
@@ -399,9 +401,9 @@ mysql_replication_hostgroups=
 )
 ```
 
-#### ProxySQL の管理データベースへの接続
+#### ProxySQL の管理データベースへの接続 {#connect-to-the-proxysql-admin-database}
 
-管理ポート（`6032`）を通じて ProxySQL に接続します。
+管理ポート（`6032`）経由で ProxySQL に接続します。
 
 ```shell
 mysql -uadmin -padmin -P6032 -hdoris01
@@ -451,13 +453,13 @@ ProxySQL > show tables;
 20 rows in set (0.000 sec)
 ```
 
-#### バックエンドの Doris FE の設定
+#### バックエンドの Doris FE の設定 {#configure-the-backend-doris-fe}
 
 `INSERT` 文を使用して、プロキシ対象の FE ノードとポートを `mysql_servers` テーブルに追加します。
 
 :::note
 
-`hostgroup_id` の `10` は書き込みグループ、`20` は読み取りグループを表します。ここでは読み書きの分離は不要なので、値は任意に設定できます。
+`hostgroup_id` に `10` を設定すると書き込みグループ、`20` を設定すると読み取りグループを表します。ここでは読み書きの分離は不要なので、任意の値を設定できます。
 
 :::
 
@@ -500,7 +502,7 @@ ProxySQL > show tables;
     ERROR 1045 (#2800): UNIQUE constraint failed: mysql_servers.hostgroup_id, mysql_servers.hostname, mysql_servers.port
     ```
 
-    同じ設定がすでに定義されています。テーブルを空にするか、そのホストの既存のエントリを削除できます。
+    同じ設定がすでに存在します。テーブルを空にするか、そのホストの既存のエントリを削除できます。
 
     ```sql
     ProxySQL > select * from mysql_servers;
@@ -518,9 +520,9 @@ ProxySQL > show tables;
     Query OK, 0 rows affected (0.348 sec)
     ```
 
-#### Doris FE ノードの監視設定
+#### Doris FE ノードの監視設定 {#configure-monitoring-for-doris-fe-nodes}
 
-Doris FE ノードを追加した後は、これらのバックエンドノードの監視も設定する必要があります。
+Doris FE ノードを追加したら、これらのバックエンドノードの監視も設定します。
 
 1. Doris に監視用ユーザーを作成します。
 
@@ -560,7 +562,7 @@ Doris FE ノードを追加した後は、これらのバックエンドノー�
     Query OK, 0 rows affected (0.348 sec)
     ```
 
-#### 監視結果の確認
+#### 監視結果の確認 {#verify-monitoring-results}
 
 ProxySQL の監視メトリクスは `monitor` データベースに保存されます。
 
@@ -586,7 +588,7 @@ ProxySQL > select * from mysql_server_connect_log;
 20 rows in set (0.000 sec)
 ```
 
-ハートビート監視ログを確認します。
+ハートビートの監視ログを確認します。
 
 ```sql
 ProxySQL > select * from mysql_server_ping_log;
@@ -602,18 +604,201 @@ ProxySQL > select * from mysql_server_ping_log;
 110 rows in set (0.001 sec)
 ```
 
-## クライアント IP の転送（Proxy Protocol）
+### オプション 5: NJet {#option-5-njet}
+
+[OpenNJet](https://github.com/OpenNJet/OpenNJet) は、TCP プロキシ、動的なアップストリーム管理、およびオプションの能動的な MySQL ヘルスチェックを提供します。以下の例では、前のセクションと同じプロキシおよび FE のアドレスを使用します。
+
+プロキシが分散するのは**接続**です。確立した MySQL セッションは一つの FE に留まり、SQL 文ごとの分散や中断したクエリの再実行は行いません。これらの設定は FE の MySQL ポートを対象とします。Stream Load は HTTP エンドポイントを使用し、BE にリダイレクトされることがあります。クライアントは、リダイレクト先として返されたアドレスに到達できる必要があります。
+
+#### NJet と設定ファイルの準備 {#prepare-njet-and-the-configuration-files}
+
+この例では、公式イメージ `tmlake/njet:4.0.2.0` と、そのインストール先プレフィックス `/usr/local/njet` を使用します。このイメージは Linux/AMD64 用です。ARM ホストでは、対応するイメージを使用するか、エミュレーションを設定してください。ネイティブインストールについては、[OpenNJet クイックスタート](https://njet.org.cn/docs/quickstart/)を参照し、モジュールと設定ファイルのパスをインストール環境に合わせて調整してください。
+
+以下の二つのファイルを同じディレクトリに保存します。FE のアドレスには、コンテナから到達できる必要があります。
+
+**`njet.conf`（データプレーン）:**
+
+```text
+worker_processes 1;
+cluster_name njet;
+node_name node1;
+
+helper ctrl modules/njt_helper_ctrl_module.so conf/njet_ctrl.conf;
+helper broker modules/njt_helper_broker_module.so;
+load_module modules/njt_http_upstream_member_module.so;
+
+events {
+    worker_connections 1024;
+}
+stream {
+    upstream mysqld {
+        zone mysqld 128k;
+        hash $remote_addr consistent;
+        server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+    }
+    server {
+        listen 6030;
+        proxy_connect_timeout 5s;
+        proxy_timeout 300s;
+        proxy_pass mysqld;
+    }
+}
+http {
+    dyn_kv_conf conf/iot-work.conf;
+}
+```
+
+`http` ブロックは、Doris へのトラフィックを `stream` で転送する場合でも、管理 API が使用するデータプレーンのモジュールを初期化します。この例でヘルパーが使用するのは `conf/njet_ctrl.conf` であり、別の `conf/ctrl.conf` や `conf/mqtt.conf` は使用しません。
+
+**`njet_ctrl.conf`（コントロールプレーン）:**
+
+```text
+load_module modules/njt_http_sendmsg_module.so;
+load_module modules/njt_http_upstream_api_module.so;
+load_module modules/njt_helper_health_check_module.so;
+load_module modules/njt_health_check_mysql_module.so;
+
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 127.0.0.1:8081;
+        location /api {
+            dyn_module_api;
+        }
+    }
+}
+```
+
+MySQL ヘルスチェックモジュールは明示的に読み込む必要があります。管理 API はコンテナ内のループバックアドレスで待ち受けます。以下の例では `docker exec` でアクセスします。
+
+#### 起動と動作確認 {#start-and-verify}
+
+両方の設定ファイルがあるディレクトリで次を実行します。
+
+```shell
+docker run -d --name doris-njet \
+  --platform linux/amd64 \
+  --cap-add=NET_ADMIN --cap-add=DAC_READ_SEARCH \
+  -p 6030:6030 \
+  -v "$PWD/njet.conf:/usr/local/njet/conf/njet.conf:ro" \
+  -v "$PWD/njet_ctrl.conf:/usr/local/njet/conf/njet_ctrl.conf:ro" \
+  tmlake/njet:4.0.2.0
+```
+
+両方のファイルを検証し、バックエンドの一覧を確認します。
+
+```shell
+docker exec doris-njet njet -t
+docker exec doris-njet curl --max-time 10 -sS \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+`njet -t` は両方の設定ファイルについて検証成功を報告します。API は HTTP 200 と、設定された三つの FE を含む JSON 配列を返します。`doris_user` を既存の Doris アカウントに置き換えて、プロキシ経由で接続します。
+
+```shell
+mysql -h192.168.1.100 -P6030 -u doris_user -p -e 'SELECT 1 AS connection_test;'
+```
+
+```text
++-----------------+
+| connection_test |
++-----------------+
+|               1 |
++-----------------+
+```
+
+主な設定は次のとおりです。
+
+| 設定 | 例 | 効果 |
+| --- | --- | --- |
+| `zone` | `mysqld 128k` | 動的なアップストリーム管理に必要な共有状態。 |
+| `hash` | `$remote_addr consistent` | クライアント IP のコンシステントハッシュを使用して新規接続の接続先を決める。同じ送信元 IP を共有するクライアントは、同じ FE に接続される場合がある。 |
+| `max_fails` / `fail_timeout` | `2` / `60s` | バックエンド接続の失敗を受動的に検出する。この設定では能動的な SQL チェックは行わない。 |
+| `listen` | `6030` | プロキシの MySQL プロトコル用ポート。Docker は `-p 6030:6030` で公開する。 |
+| `proxy_connect_timeout` / `proxy_timeout` | `5s` / `300s` | バックエンドへの接続タイムアウトとプロキシの非アクティブ時のタイムアウト。クエリやセッションの要件に合わせて調整する。 |
+
+#### FE の動的な追加と削除 {#dynamically-add-and-remove-an-fe}
+
+FE を追加するには、次のリクエストを送信します。
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{"server":"192.168.1.104:9030","weight":2,"max_fails":1,"fail_timeout":"5s"}' \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+API は HTTP 201 と、割り当てられた `id` を含む新しいメンバーを返します。当初の三つのメンバーからなる構成では、最初に追加するメンバーの ID は 3 です。削除時には、実際に返された ID を使用します。
+
+```shell
+docker exec doris-njet curl --max-time 10 -i -X DELETE \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/3
+```
+
+削除すると HTTP 200 が返され、その後の GET ではそのメンバーが一覧に表示されなくなります。コンテナを再作成する前に、設定ファイルの内容を意図したメンバー構成と一致させてください。
+
+#### 能動的な MySQL ヘルスチェックの設定 {#configure-active-mysql-health-checks}
+
+能動的な SQL チェックには、明示的な API 設定と、使用可能な Doris アカウントおよびデータベースが必要です。パスワードを置き換え、Doris 管理者として次を実行します。
+
+```sql
+CREATE DATABASE IF NOT EXISTS health_check_db;
+CREATE USER IF NOT EXISTS 'njet_health'@'%' IDENTIFIED BY '<replace-with-password>';
+GRANT SELECT_PRIV ON health_check_db.* TO 'njet_health'@'%';
+```
+
+以下のリクエストでも同じパスワードを使用します。TLS を使用しない FE の待ち受けポートでは `useSsl` を `false` にします。FE の待ち受けポートで TLS が設定されている場合にのみ `true` にしてください。
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "interval":"5s",
+    "jitter":"1s",
+    "timeout":"5s",
+    "passes":1,
+    "fails":1,
+    "sql":{
+      "select":"select 1",
+      "useSsl":false,
+      "user":"njet_health",
+      "password":"<replace-with-password>",
+      "db":"health_check_db"
+    }
+  }' \
+  http://127.0.0.1:8081/api/v1/hc/smysql/mysqld
+```
+
+設定に成功すると、HTTP 200 と `{"code":0,"msg":"success"}` が返されます。その後のチェックでは、各 FE に対して認証を行い、設定したデータベースを選択して `select 1` を実行します。
+
+| フィールド | 必須条件 / デフォルト | 説明 |
+| --- | --- | --- |
+| `interval`, `jitter`, `timeout` | この例では明示的に設定 | チェック間隔、タイマーのジッター、タイムアウト。期間として指定する。 |
+| `passes`, `fails` | この例では明示的に設定 | ヘルス状態を変更するために必要な連続成功回数と連続失敗回数。 |
+| `port` | 省略可能。デフォルトはアップストリームサーバーのポート | チェックに使用するポートを上書きする。 |
+| `sql.select` | 明示的に設定 | FE の検証に使用する SQL 文。 |
+| `sql.useSsl` | 省略可能。NJet のデフォルトは `true` | FE の待ち受けポートの TLS 設定と一致させる必要がある。 |
+| `sql.user`, `sql.password` | Doris アカウント用に設定 | ヘルスチェッカーが使用する認証情報。 |
+| `sql.db` | 必須。空文字列は不可 | ヘルスチェッカーが選択する既存のデータベース。 |
+
+API がタイムアウトする場合は、ヘルパーのパスとデータプレーンの `http` ブロックを確認してください。ヘルスチェックが失敗する場合は、データベース、認証情報、ネットワーク接続、TLS 設定を確認してください。設定リクエストが成功しただけでは、FE が正常であることは確認できません。詳細については、[OpenNJet のソースコードとドキュメント](https://github.com/OpenNJet/OpenNJet)および[JSON 設定形式](https://njet.org.cn/cases/njet_support_json/)を参照してください。
+
+## クライアント IP の転送（Proxy Protocol） {#client-ip-forwarding-proxy-protocol}
 
 <!-- Knowledge type: Configuration parameter / Operational procedure -->
 <!-- Applicable scenario: Allow lists / Audit / Access control -->
 
-通常、クライアントがプロキシサービス経由でバックエンドの Doris に接続すると、クライアントの IP 情報が失われ、Doris サーバーはプロキシサーバーの IP アドレスしか取得できません。
+多くの場合、クライアントがプロキシサービス経由でバックエンドの Doris に接続すると、クライアント IP の情報が失われ、Doris サーバーからはプロキシサーバーの IP アドレスしか取得できません。
 
-Doris はバージョン 2.1.1 以降、[Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) をサポートしています。このプロトコルにより、負荷分散を経由した後でも Doris は実際のクライアント IP を取得でき、許可リストや監査など、クライアント IP に基づくアクセス制御が可能になります。
+Doris はバージョン 2.1.1 以降、[Proxy Protocol](https://www.haproxy.org/download/1.8/doc/proxy-protocol.txt) に対応しています。このプロトコルを使うと、ロードバランシングを行った後でも Doris が実際のクライアント IP を取得できるため、許可リストや監査など、クライアント IP に基づくアクセス制御が可能になります。
 
-以下では、Doris、Nginx、HAProxy で Proxy Protocol を有効にする方法を説明します。
+以下のセクションでは、Doris、Nginx、HAProxy で Proxy Protocol を有効にする方法を説明します。
 
-### Doris で Proxy Protocol を有効にする
+### Doris で Proxy Protocol を有効にする {#enable-proxy-protocol-in-doris}
 
 FE の `fe.conf` に次の設定を追加します。
 
@@ -623,15 +808,15 @@ enable_proxy_protocol = true
 
 :::note
 
-1. Proxy Protocol V1 のみをサポートします。
-2. この機能が適用されるのは MySQL プロトコルのポートだけです。HTTP や ADBC など、ほかのプロトコルのポートには対応せず、影響も与えません。
-3. Doris 3.1 より前では、この機能を有効にするとすべての接続で Proxy Protocol を使用する必要があり、使用しない接続は失敗します。バージョン 3.1 以降では、Proxy Protocol を有効にした後も標準の MySQL 接続プロトコルを使用できます。
+1. 対応しているのは Proxy Protocol V1 のみです。
+2. この機能が適用されるのは MySQL プロトコルのポートのみです。HTTP や ADBC など、ほかのプロトコルのポートには対応せず、影響も与えません。
+3. Doris 3.1 より前のバージョンでは、有効にするとすべての接続で Proxy Protocol を使用する必要があり、使用しない接続は失敗します。バージョン 3.1 以降は、Proxy Protocol を有効にしても標準の MySQL 接続プロトコルを使用できます。
 
 :::
 
-### Nginx で Proxy Protocol を有効にする
+### Nginx で Proxy Protocol を有効にする {#enable-proxy-protocol-in-nginx}
 
-`proxy_protocol on;` を設定ファイルの `server` セクションに追加します。
+設定ファイルの `server` セクションに `proxy_protocol on;` を追加します。
 
 ```text
 events {
@@ -656,9 +841,9 @@ stream {
 }
 ```
 
-### HAProxy で Proxy Protocol を有効にする
+### HAProxy で Proxy Protocol を有効にする {#enable-proxy-protocol-in-haproxy}
 
-`backend` セクション（`haproxy.cfg` 内）で、`send-proxy` パラメーターを各 `server` 行に追加します。
+`haproxy.cfg` の `backend` セクションで、各 `server` 行に `send-proxy` パラメータを追加します。
 
 ```text
 backend forward-fe
@@ -669,7 +854,7 @@ backend forward-fe
     server fe-3 192.168.1.103:9030 weight 1 check inter 3000 rise 2 fall 3 send-proxy
 ```
 
-### IP 転送の確認
+### IP 転送の確認 {#verify-ip-forwarding}
 
 1. プロキシ経由で Doris に接続します。
 
@@ -689,36 +874,36 @@ backend forward-fe
     1 row in set (0.00 sec)
     ```
 
-3. `Host` 列に実際のクライアント IP が表示されれば、転送は成功しています。表示されない場合は、プロキシサービスの IP だけが見えます。
+3. `Host` 列に実際のクライアント IP が表示されていれば、確認は成功です。そうでなければ、プロキシサービスの IP しか見えていません。
 
     実際のクライアント IP は `fe.audit.log` にも記録されます。
 
-## よくある質問（FAQ）
+## よくある質問 {#faq}
 
-### Q: プロキシのポートへの接続時に `Connection refused` と表示される場合は？
+### Q: プロキシポート経由で接続すると `Connection refused` と表示されるのはなぜですか？ {#q-connecting-through-the-proxy-port-reports-connection-refused}
 
-プロキシサービスが起動していないか、待ち受けポートが設定と一致していません。プロキシプロセスが動作していることを確認し、`netstat -lnatp` で待ち受けポートを確認してください。
+プロキシサービスが起動していないか、待ち受けポートが設定と一致していません。プロキシプロセスが稼働していることを確認し、`netstat -lnatp` を使って待ち受けポートを確認してください。
 
-### Q: 接続は成功するものの、ときどきタイムアウトする場合は？
+### Q: 接続は成功するものの、ときどきタイムアウトするのはなぜですか？ {#q-connections-succeed-but-occasionally-time-out}
 
-バックエンド FE ノードに異常があるか、プロキシのタイムアウトが短すぎる可能性があります。`proxy_timeout` / `timeout server` の設定を確認し、ヘルスチェックログでバックエンドノードの状態を確認してください。
+バックエンドの FE ノードに問題があるか、プロキシのタイムアウトが短すぎます。`proxy_timeout` / `timeout server` の設定を確認し、ヘルスチェックログでバックエンドノードの状態を確認してください。
 
-### Q: Nginx の起動時に `unknown directive "stream"` と表示される場合は？
+### Q: Nginx が `unknown directive "stream"` というエラーで起動しないのはなぜですか？ {#q-nginx-fails-to-start-with-unknown-directive-stream}
 
 コンパイル時に stream モジュールが有効になっていません。`--with-stream` オプションを指定して Nginx を再コンパイルしてください。
 
-### Q: 再起動後も ProxySQL の `proxysql.cnf` の変更が反映されない場合は？
+### Q: ProxySQL の `proxysql.cnf` を変更して再起動しても反映されないのはなぜですか？ {#q-proxysql-changes-to-proxysqlcnf-do-not-take-effect-after-restart}
 
-`proxysql.db` がすでに存在しており、設定ファイルは初回起動時にしか読み込まれません。`/var/lib/proxysql/proxysql.db` を削除してからサービスを再起動してください。
+`proxysql.db` がすでに存在し、設定ファイルは初回起動時にしか読み込まれません。`/var/lib/proxysql/proxysql.db` を削除してから、サービスを再起動してください。
 
-### Q: ProxySQL の `mysql_servers` に追加すると `UNIQUE constraint failed` と表示される場合は？
+### Q: ProxySQL の `mysql_servers` への追加時に `UNIQUE constraint failed` と表示されるのはなぜですか？ {#q-inserting-into-mysql_servers-in-proxysql-reports-unique-constraint-failed}
 
-同じ `hostgroup_id` + `hostname` + `port` のレコードがテーブルにすでに存在します。テーブルを空にするか、既存のレコードを削除してから追加してください。
+同じ `hostgroup_id` + `hostname` + `port` を持つレコードがテーブルにすでに存在します。テーブルを空にするか、既存のレコードを削除してから追加してください。
 
-### Q: Proxy Protocol を有効にするとクライアントが接続できなくなる場合は（バージョン 3.1 より前）？
+### Q: Proxy Protocol を有効にした後、クライアントが接続できないのはなぜですか（3.1 より前のバージョン）？ {#q-clients-fail-to-connect-after-enabling-proxy-protocol-versions-before-31}
 
-この Doris バージョンではすべての接続に Proxy Protocol が必要で、標準の MySQL クライアントはそのままでは接続できません。バージョン 3.1 以降にアップグレードするか、必ず Proxy Protocol 対応のプロキシ経由で接続してください。
+この Doris バージョンでは、すべての接続で Proxy Protocol を使用する必要があり、標準の MySQL クライアントは対応していません。バージョン 3.1 以降にアップグレードするか、常に Proxy Protocol に対応したプロキシ経由で接続してください。
 
-### Q: `show processlist` にプロキシの IP が表示され続ける場合は？
+### Q: `show processlist` に引き続きプロキシの IP が表示されるのはなぜですか？ {#q-show-processlist-still-shows-the-proxy-ip}
 
-Doris で `enable_proxy_protocol` が有効になっていないか、プロキシ側で `proxy_protocol on` / `send-proxy` が設定されていません。FE の設定と、プロキシ側の Proxy Protocol の設定を確認してください。
+Doris で `enable_proxy_protocol` が有効になっていないか、プロキシ側に `proxy_protocol on` / `send-proxy` が設定されていません。FE の設定と、プロキシ側の Proxy Protocol の有効化設定を確認してください。
