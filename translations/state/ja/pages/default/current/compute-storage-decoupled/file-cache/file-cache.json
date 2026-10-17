@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "321e4b12913ce25199f5c49dbf3c57e9395b89fc059a7fadf9d87b1fc0ac67dc",
-    "sourceTechnicalHash": "985de34754eaf3131aa0cc8c98b97eaa24130f6b66934f23fddf9fe74b3b0a6d",
-    "targetHash": "db1b41be962558cae4b87bea8f21703cd9ba451bc0782d338c54088427c80f5c",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "da08596b2177e29d8e41b32bda274a7363d9d53dd79c55182d5498f157f18a39",
+    "sourceTechnicalHash": "00c6a89baa1b87bbe82de45a9925bc4f5994e2d0f007458b8e3b5da4138da87e",
+    "targetHash": "ff01c34a8e8dab5e7ccf8766e7b976bab8d5f556ad36c42f5e8d7ee1958ae4f9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T12:26:49.464Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T16:59:52.676Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "da08596b2177e29d8e41b32bda274a7363d9d53dd79c55182d5498f157f18a39",
+      "targetHash": "ff01c34a8e8dab5e7ccf8766e7b976bab8d5f556ad36c42f5e8d7ee1958ae4f9",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 189: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 221: expected [\"inlineCode\",null,null,\"total_size\"]; received [\"inlineCode\",null,null,\"file_cache_path\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"10\",\"10\",\"100\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"200\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.0.4\",\"300\",\"300\",\"4.0\",\"4.0\",\"4.0.3\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"8060\",\"85\",\"88\"]\nprotected node 188: expected [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"file_cache_ttl_seconds\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 189: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 190: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 221: expected [\"inlineCode\",null,null,\"total_size\"]; received [\"inlineCode\",null,null,\"file_cache_path\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
