@@ -8,13 +8,36 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/system-tables/information_schema/rowsets.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/rowsets.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "c192f32120aebff19386de4e80cbea2eab8da83a5a511213910ac0a47eed0e6d",
-    "sourceTechnicalHash": "1bd528d4d0200ec03a419a325ad494b56a97380a6d67c95779b6e27fae651425",
-    "targetHash": "88b20db937f205362d4b93343bc08428545685cf5bc95e7b7fd8f1e7de7f4996",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "b5aa606c0c9ff215343aa66426e0353ac8d57ecb57647ec61e77b34d80bf21d1",
+    "sourceTechnicalHash": "96268f83e6545b2009a0737db05e6e95e4bb2614dd7ac5e51eda620426db1485",
+    "targetHash": "dcc6fffa15c80e99ae671d06fed59f3fdd683a59330802b02d1effe8d71a8e92",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T17:24:17.286Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T16:42:38.538Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b5aa606c0c9ff215343aa66426e0353ac8d57ecb57647ec61e77b34d80bf21d1",
+      "targetHash": "dcc6fffa15c80e99ae671d06fed59f3fdd683a59330802b02d1effe8d71a8e92",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"64\",\"64\"]; received [\"1\",\"64\",\"64\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }
