@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/data-admin/backup-restore/backup.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/data-admin/backup-restore/backup.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "965e9af739e135d45b5a82b375265f04685519410cf1d381b10a3eb283ad30e2",
-    "sourceTechnicalHash": "ced9811510ca549931fbe7e1740b43dfe82d41057071fc020e54a5ad3e19420c",
-    "targetHash": "cf28fd3c9e7e8a883f80bd9bf4b01acf578192eeba0b84b13e5c82799e6aae08",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "fb1f0bdc5dab46fcc802e4cc62297de30c50ba14afcde89a3582f63f104cebf9",
+    "sourceTechnicalHash": "4c9d455a47405824e0a80d7ff042e1bbe6125bbcadccbeb3e152d942d1e2d9c9",
+    "targetHash": "3051a444ddb363798be34def963d0a9d08c08dcfeedc986c8f70079a4f0e5936",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:46:10.873Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T07:42:06.346Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "fb1f0bdc5dab46fcc802e4cc62297de30c50ba14afcde89a3582f63f104cebf9",
+      "targetHash": "3051a444ddb363798be34def963d0a9d08c08dcfeedc986c8f70079a4f0e5936",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"p1\"]; received [\"inlineCode\",null,null,\"example_tbl\"]\nprotected node 69: expected [\"inlineCode\",null,null,\"p2\"]; received [\"inlineCode\",null,null,\"p1\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"example_repo\"]; received [\"inlineCode\",null,null,\"exampledb_20241225\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"exampledb_20241225\"]; received [\"inlineCode\",null,null,\"example_repo\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"example_repo\"]; received [\"inlineCode\",null,null,\"exampledb_20241225\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"exampledb_20241225\"]; received [\"inlineCode\",null,null,\"example_repo\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"3.1.3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5\",\"5\",\"5\",\"5\",\"6\",\"6\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"p1\"]; received [\"inlineCode\",null,null,\"example_tbl\"]\nprotected node 69: expected [\"inlineCode\",null,null,\"p2\"]; received [\"inlineCode\",null,null,\"p1\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
