@@ -18,7 +18,7 @@ SELECT
     [ALL | DISTINCT | DISTINCTROW | ALL EXCEPT ( col_name1 [, col_name2, col_name3, ...] )]
     select_expr [, select_expr ...]
     [FROM table_references
-      [PARTITION partition_list]
+      [PARTITION (partition_list) | MAX_VISIBLE_PARTITION()]
       [TABLET tabletid_list]
       [TABLESAMPLE sample_value [ROWS | PERCENT]
         [REPEATABLE pos_seek]]
@@ -64,9 +64,11 @@ SELECT
 
    11. SELECT supports explicit partition selection using PARTITION containing a list of partitions or subpartitions (or both) following the name of the table in `table_reference`
 
-   12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: Limit the number of rows read from the table in the FROM clause, select a number of Tablets pseudo-randomly from the table according to the specified number of rows or percentages, and specify the number of seeds in REPEATABLE to return the selected samples again. In addition, you can also manually specify the TableID, Note that this can only be used for OLAP tables.
+   12. `MAX_VISIBLE_PARTITION()`: Selects the visible partition with the greatest partition key during query planning. It cannot be used together with `PARTITION(...)`. See [Query the maximum visible partition](#query-the-maximum-visible-partition) for details.
+
+   13. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: Limit the number of rows read from the table in the FROM clause, select a number of Tablets pseudo-randomly from the table according to the specified number of rows or percentages, and specify the number of seeds in REPEATABLE to return the selected samples again. In addition, you can also manually specify the TableID, Note that this can only be used for OLAP tables.
    
-   13. `hint_statement`:  hint in front of the selectlist indicates that hints can be used to influence the behavior of the optimizer in order to obtain the desired execution plan. Details refer to [joinHint using document] (https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview)
+   14. `hint_statement`:  hint in front of the selectlist indicates that hints can be used to influence the behavior of the optimizer in order to obtain the desired execution plan. Details refer to [joinHint using document] (https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview)
 
 **Syntax constraints:**
 
@@ -76,6 +78,56 @@ SELECT
 4. Where clause: The WHERE statement is executed to determine which rows should be included in the GROUP BY section, and HAVING is used to determine which rows in the result set should be used.
 5. The HAVING clause can refer to the total function, but the WHERE clause cannot refer to, such as count, sum, max, min, avg, at the same time, the where clause can refer to other functions except the total function. Column aliases cannot be used in the Where clause to define conditions.
 6. Group by followed by with rollup can count the results one or more times.
+
+### Query the maximum visible partition
+
+:::note
+This syntax targets the development version and requires the corresponding implementation to be merged. It is not available in released 4.x versions.
+:::
+
+`MAX_VISIBLE_PARTITION()` queries the visible partition with the greatest partition key:
+
+```sql
+SELECT *
+FROM <table_name> MAX_VISIBLE_PARTITION() [[AS] <table_alias>];
+```
+
+Only regular partitions whose visible version is greater than the initial version participate in selection. Temporary partitions are excluded.
+
+| Partition type | Selection rule |
+| --- | --- |
+| RANGE partition | Select the partition with the greatest upper bound |
+| LIST partition | Compare the greatest enumerated key in each partition and select the partition with the greatest key |
+| LIST DEFAULT partition | Select it only when no visible non-DEFAULT partition exists |
+| Unpartitioned table | Select its only partition when the table is visible |
+
+Multi-column partition keys are compared in partition-column order. If no visible partition exists, the query returns an empty result. This syntax supports only internal OLAP tables and asynchronous materialized views, and cannot be combined with `PARTITION(...)` or historical snapshot queries.
+
+It cannot be applied directly to a CTE reference; apply it to the base table inside the CTE definition instead.
+
+:::note
+"Visible" does not mean "non-empty." A partition can still be selected after `DELETE` removes all its rows. `TRUNCATE PARTITION` resets the partition version.
+:::
+
+The following example requires CREATE, INSERT, and SELECT privileges in the current database. The result comes from the visible partition with the greatest upper bound.
+
+```sql
+CREATE TABLE max_partition_example (d DATE, amount INT)
+DUPLICATE KEY(d)
+PARTITION BY RANGE(d) (
+    PARTITION p202601 VALUES LESS THAN ('2026-02-01'),
+    PARTITION p202602 VALUES LESS THAN ('2026-03-01')
+)
+DISTRIBUTED BY HASH(d) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
+INSERT INTO max_partition_example VALUES ('2026-01-15', 10), ('2026-02-15', 20);
+SELECT * FROM max_partition_example MAX_VISIBLE_PARTITION();
+```
+
+```text
+d           amount
+2026-02-15  20
+```
 
 **Join query:**
 
@@ -389,4 +441,3 @@ Recursive CTE is currently not supported.
    
       - In the inner join condition, in addition to supporting equal-valued joins, it also supports unequal-valued joins. For performance reasons, it is recommended to use equal-valued joins.
       - Other joins only support equivalent joins
-
