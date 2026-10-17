@@ -84,7 +84,7 @@ jobs:
       I18N_LOCALE: ${{ inputs.locale }}
     if: needs.discover.outputs.can_generate == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,6 +95,9 @@ jobs:
         with:
           node-version: 20
           cache: yarn
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
       - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v4
         with:
@@ -199,7 +202,7 @@ jobs:
           repositories: doris-website
           permission-contents: write
           permission-pull-requests: write
-      - name: Open reviewable PR with the configured write identity
+      - name: Run shared PR admission checks and open reviewable PR
         if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind != 'none'
         env:
           GH_TOKEN: ${{ steps.app.outputs.token || secrets.I18N_GITHUB_PAT }}

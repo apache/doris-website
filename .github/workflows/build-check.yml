@@ -107,11 +107,12 @@ jobs:
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs
                   node --test scripts/i18n/__tests__/workflow.test.cjs
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
+                  node --test scripts/i18n/__tests__/translate-document.test.cjs
 
             - name: Japanese translation gate
               run: |
                   BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                  node scripts/i18n/check-translations.cjs --base "$BASE_SHA"
+                  node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
 
             - name: Build
               env:

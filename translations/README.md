@@ -345,8 +345,9 @@ uses the same verified Codex CLI package and numbered ChatGPT auth
 snapshots in OSS as the Apache Doris code-review runner. The repository's
 `OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
-and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
-workflow; the separate T07 manual tool still supports the Responses API.
+and defaults to `gpt-6-sol`, with `xhigh` reasoning effort. A direct OpenAI API
+key is not used by this workflow; the separate T07 manual tool still supports
+the Responses API.
 To open a PR, configure one GitHub write identity. The preferred App path
 uses `I18N_GITHUB_APP_ID` and `I18N_GITHUB_APP_PRIVATE_KEY`; install the App on
 `apache/doris-website` with repository Contents and Pull requests write
@@ -365,8 +366,11 @@ missing OSS credentials leave discovery available without model calls.
 In `generate` mode, one run produces at most 10 target page candidates. The T08 planner
 and Codex adapter do not reject work based on an estimated or accumulated
 token allowance. The adapter still records actual usage for the run summary.
-Document length, chunk size, call timeout and the model's own context limits
-still apply. The adapter constrains the final answer with a JSON schema,
+Each model request translates one complete Markdown/MDX document. The automated
+workflow has no document-length or chunk-size limit and does not reuse individual
+text units. Each request has a ten-minute timeout; the generation job has a
+120-minute timeout. The model's own context and output limits still apply.
+The adapter constrains the final answer with a JSON schema,
 rejects tool calls and checks that Codex reports token usage.
 It runs in an isolated temporary directory with read-only sandboxing and no
 GitHub or OSS credentials in the model process. Refreshed auth is uploaded
@@ -387,25 +391,55 @@ The PR body lists the source commit, source links, source hashes, model,
 glossary version, failures and validation. The normal PR checks remain the
 merge gate.
 
+Each document gets at most three total attempts. A retry receives the validation
+errors from all earlier attempts, including details of changed protected content
+and broken internal links. Checks match product names as complete Latin words,
+case-insensitively, and permit localized prose-number formatting. Code, links,
+component attributes, technical metadata and heading IDs remain checked.
+MDX compilation follows Docusaurus by removing front matter first.
+
+If the third response still has content issues, the generator keeps that response
+as a candidate with warnings. The state record binds its attempt history and
+warnings to the exact source and target hashes. The PR translation gate recognizes
+that recorded fallback, and the PR body lists its warnings for review. Three
+requests that return no usable document remain an operational failure.
+
+Before pushing, the publisher runs `scripts/i18n/pr-preflight.cjs`, the same entry
+point used by the PR build workflow. It checks translation state, Markdown/MDX
+syntax and internal links using the PR link checker's resolver. Invalid syntax
+or broken links block publication even when the generator retained the third
+response. The full production build and human proofreading remain required
+before merging.
+
 ### Local T08 simulation
 
-From a committed checkout with dependencies installed, run:
+From a checkout with dependencies installed, run:
 
 ```bash
 node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-workflow-sim
+
+# Retain all ten third-attempt candidates with warnings.
+I18N_SIM_PAGES=10 I18N_SIM_SCENARIO=fallback \
+  node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-ten-page-sim
+
+# Translate a real page exceeding the former 60,000-character limit in one request.
+I18N_SIM_SOURCE_PATH=docs/admin-manual/config/be-config.md I18N_SIM_SCENARIO=success \
+  node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-long-page-sim
 ```
 
-The output directory must be empty. Set `I18N_SIM_SOURCE_PATH` to another
-pending Dev `.md` or `.mdx` file if the default example has already been
-translated. The simulator clones the current commit, runs real open-PR
-reconciliation and full planning against a GitHub CLI mock, then runs the
-translation engine with a schema-shaped Codex mock. It checks that an invalid
-model unit fails validation, that a 100,000-token usage report does not stop a
-valid candidate, and that publication pushes only managed Japanese files to a
-local bare Git repository and records a mock regular PR with its label. Each
-local step has a 20-minute timeout to accommodate the full native scan.
-`report.json` and step
-logs remain in the output directory. No real model call or GitHub write occurs.
+The output directory must be empty. The simulator copies the current scripts,
+including uncommitted edits, into a disposable clone. For a single page, it makes
+the selected Dev source pending only in that clone. Ten-page runs add isolated
+source fixtures there. Real open-PR reconciliation and full planning run against
+a GitHub CLI mock, followed by the production engine and a schema-shaped Codex
+mock. `I18N_SIM_SCENARIO` accepts `success` (one attempt), `retry` (two attempts,
+the default), or `fallback` (three attempts retained with warnings).
+
+The simulator also verifies three empty responses, token accounting, the shared
+PR admission checks, and publication of only managed Japanese targets/state to
+a local bare Git repository. Each local step has a 20-minute timeout for the
+full native scan. `report.json` and step logs remain in the output directory.
+No real model call or GitHub write occurs.
 
 ## Validation
 
