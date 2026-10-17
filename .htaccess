@@ -1,0 +1,38 @@
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "script-src 'self' https://cdnd.selectdb.com https://analytics.apache.org widget.kapa.ai www.google.com https://hcaptcha.com https://*.hcaptcha.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://analytics.apache.org proxy.kapa.ai kapa-widget-proxy-la7dkmplpq-uc.a.run.app metrics.kapa.ai https://hcaptcha.com https://*.hcaptcha.com www.google.com https://agent.velodb.io; frame-src 'self' www.google.com https://hcaptcha.com https://*.hcaptcha.com; worker-src 'self' https://cdnd.selectdb.com blob:; style-src 'self' https://cdnd.selectdb.com 'unsafe-inline' https://hcaptcha.com https://*.hcaptcha.com; font-src 'self' https://cdnd.selectdb.com data:;"
+</IfModule>
+
+# Legacy /docs/dev/* paths whose 1:1 target was retired (renamed slugs, removed
+# pages) — server-side 301 to the new Dev docs landing. Doing it here avoids
+# the SPA hydration mismatch that results from /404.html being served on a
+# path the React router still treats as inside the docs prefix.
+# Paths emitted by createRedirects (1:1 matches) live on disk and short-circuit
+# via the -f check, so this only fires for genuinely missing slugs.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_URI} ^/docs/dev/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^docs/dev(/.+)$ /docs/dev/getting-started/what-is-apache-doris [R=301,L]
+
+    RewriteCond %{REQUEST_URI} ^/zh-CN/docs/dev/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(zh-CN/)?docs/dev(/.+)$ /zh-CN/docs/dev/getting-started/what-is-apache-doris [R=301,L]
+
+    # Preserve a real 404 status for missing Chinese routes.
+    RewriteCond %{REQUEST_URI} ^/zh-CN/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ - [R=404,L]
+</IfModule>
+# The file is also copied inside each locale directory. Select the error page
+# by the original request URI while keeping the HTTP 404 status.
+ErrorDocument 404 /404.html
+<If "%{REQUEST_URI} =~ m#^/zh-CN/#">
+    ErrorDocument 404 /zh-CN/404.html
+</If>
+<If "%{REQUEST_URI} =~ m#^/ja/# && -f '%{DOCUMENT_ROOT}/ja/404.html'">
+    ErrorDocument 404 /ja/404.html
+</If>
