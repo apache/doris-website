@@ -266,6 +266,8 @@ Since version 4.1.4, the Iceberg identity partition metadata is delivered with e
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
 | list                                   | array                |                                         |
+| geometry | geometry | Development version: preserves CRS and raw XY WKB. See [spatial types](#iceberg-spatial-types). |
+| geography | geography | Development version: preserves CRS, edge algorithm and raw XY WKB. See [spatial types](#iceberg-spatial-types). |
 | other                                  | UNSUPPORTED          |                                         |
 
 Iceberg UUID maps directly to native Doris `UUID` in the dev version. Doris 4.1.5 maps it to `VARBINARY(16)`. Parquet writes retain the UUID logical annotation, including nested fields. See the [UUID type](../../sql-manual/basic-element/sql-data-types/uuid.md).
@@ -277,6 +279,48 @@ Iceberg UUID maps directly to native Doris `UUID` in the dev version. Doris 4.1.
 > You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
 >
 > Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
+
+### Spatial types (Iceberg V3) {#iceberg-spatial-types}
+
+The development version supports Iceberg V3 `geometry` and `geography` as Doris `GEOMETRY` and `GEOGRAPHY`. Spatial WKB values are read and written through Parquet. Spatial writes require top-level columns. Doris internal tables and spatial columns nested inside ARRAY, MAP or STRUCT cannot be written.
+
+Spatial types are supported through an Iceberg catalog. Generic file TVFs such as S3 or LOCAL reject Parquet GEOMETRY/GEOGRAPHY annotations, including nested fields. Unannotated BYTE_ARRAY columns retain their ordinary binary mapping.
+
+| Declaration | Default | Effect |
+| --- | --- | --- |
+| `GEOMETRY('<crs>')` | `OGC:CRS84` | Preserves the source coordinate reference system without transforming coordinates. |
+| `GEOGRAPHY('<crs>', '<algorithm>')` | `OGC:CRS84`, `spherical` | Preserves CRS and edge algorithm. Algorithms are spherical, vincenty, thomas, andoyer and karney. |
+
+Replace `iceberg_catalog` and `spatial_db` with an existing writable Iceberg catalog and database. Select them, then create an unpartitioned V3 table and insert typed values:
+
+```sql
+SWITCH iceberg_catalog;
+USE spatial_db;
+CREATE TABLE spatial_values (id INT, geom GEOMETRY, geog GEOGRAPHY)
+ENGINE=ICEBERG PROPERTIES ('format-version'='3', 'write.format.default'='parquet');
+INSERT INTO spatial_values VALUES
+(1, ST_GeometryFromWKBTyped('0101000000000000000000F03F0000000000000040'),
+    ST_GeogFromWKB('0101000000000000000000F03F0000000000000040')),
+(2, NULL, NULL);
+SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
+```
+
+```text
+1  POINT (1 2)  POINT (1 2)
+2  NULL         NULL
+```
+
+The example requires permission to create the table, insert data and query it in that catalog/database. Configure the [Iceberg REST metastore](../metastores/iceberg-rest.md) first if no catalog exists.
+
+Values preserve raw XY WKB bytes and support all seven basic WKB kinds, mixed child byte orders and EMPTY. EMPTY differs from SQL NULL. Z/M and embedded SRID are unsupported. Geography and recognized geographic Geometry CRS identifiers (`OGC:CRS84`, `EPSG:4326`) require defined X/Y coordinates in [-180,180]/[-90,90]; projected Geometry does not use that range. Other Geometry CRS strings are preserved without a CRS resolver or automatic conversion.
+
+Use `ST_AsText`, `ST_AsBinary`, `ST_X`, `ST_Y` and `ST_GeometryType` to inspect raw values. Typed `ST_AsBinary` returns raw WKB as `VARBINARY`, including bytes that are not valid UTF-8; the legacy STRING overload retains its existing return type. Typed measurements and relationships require default `GEOGRAPHY(OGC:CRS84, spherical)` and supported nonempty Point/LineString/Polygon shapes. Unsupported parameter or shape combinations fail explicitly. Other algorithms can be read and written, but cannot be used for these computations. `ST_Contains` supports Point/Point, LineString/Point and Polygon/Point; `ST_Within` supports the reversed pairs. `ST_Touches` requires at least one Point. Other containment or touch pairs fail explicitly. Spherical relations use all geodesic edges without closing an open LineString.
+
+`INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. CREATE and ALTER reject V2/ORC or nested spatial writes. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
+
+For Arrow Flight SQL clients, project spatial columns through `ST_AsBinary` or `ST_AsText`. Direct spatial-column result schemas are not supported; Iceberg Arrow storage mapping does not add GeoArrow or direct Flight spatial output.
+
+See [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) and [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md). Historical WKB constructors keep their STRING/EWKB behavior.
 
 ### Column Name Case
 
