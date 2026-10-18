@@ -103,6 +103,26 @@ existing source/technical hash algorithms unchanged. Offline Korean fixtures
 exercise these boundaries without real credentials or model calls; actual
 single-page generation is a separate validation step.
 
+The `Korean translation discovery` workflow is manual-only and defaults to a
+read-only dry run. It fixes the locale to `ko`, uses separate Korean artifacts,
+and shares the existing `japanese-translation-ja` lock with Japanese runs.
+After the workflow is merged, run discovery on master:
+
+```bash
+gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
+```
+
+For a bounded real validation, select one eligible English file from the plan
+and provide its exact repository-relative `.md` or `.mdx` path with
+`-f mode=validate -f path=<exact-source-file>`. Validation sets the page limit
+to one and rechecks active PRs before calling Codex. Generation checks the
+`translate-ko` label before loading auth, then uses the existing verified
+runtime and auth pool. A write credential enables a normal labeled PR after
+shared admission checks; otherwise a successful one-page validation remains
+an artifact and does not establish the PR publication path. Inspect generation
+warnings and normal PR checks before merging. There is no Korean generation
+schedule in this workflow.
+
 ## Search, navigation and four-language validation
 
 `check-configuration.cjs --all` validates each managed locale's scope and glossary
