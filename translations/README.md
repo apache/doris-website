@@ -103,6 +103,45 @@ existing source/technical hash algorithms unchanged. Offline Korean fixtures
 exercise these boundaries without real credentials or model calls; actual
 single-page generation is a separate validation step.
 
+## Search, navigation and four-language validation
+
+`check-configuration.cjs --all` validates each managed locale's scope and glossary
+without loading Docusaurus, an inventory or a model. Build Check runs it even
+for scope/glossary-only changes. The Korean coverage workflow is read-only and
+reports pending translations without blocking an English source change merely
+because Korean content is missing.
+
+The navigation and browser search checks accept `--locale ja` or `--locale ko`.
+They read the current build's translation manifest; the inventory is a historical
+comparison, not a route allowlist. Generated inventory batch IDs are historical
+metadata, and execution batches are selected dynamically.
+
+```bash
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only
+node scripts/i18n/verify-search.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only \
+  --source-locales en,zh-CN --themes --output /tmp/korean-search-check.json
+```
+
+These commands require a build made with Korean enabled. Local website builds
+use `DOCS_VERSIONS=current`; `--dev-only` records that 4.x was not built. Complete
+CI validation omits both flags and builds all four locales with `build:publish`,
+then verifies the shared resources, native routes, contexts and browser workers.
+Build and browser measurements are retained as the publish artifact measurements.
+Playwright/Chromium are installed in a separate tools directory in CI; local
+checks can use the same approach and set `NODE_PATH` to that directory's
+`node_modules`.
+
+SearchBar and SearchPage derive source-language index locations from the actual
+native version metadata. The native last version uses the locale root; other
+versions use their registered paths. This also works when a scoped build makes
+Dev the last version. Managed locales keep their own three context indexes at
+the locale root, including empty contexts; the empty root index is not a duplicate
+union. Korean verification covers Hangul, SQL, identifiers, IME composition,
+no-results/source links, mobile layout and every registered brand theme, including
+the embedded animation's theme-token bridge.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
