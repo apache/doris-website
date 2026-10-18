@@ -85,6 +85,18 @@ function referenceChecks(oldPage, newPage) {
     };
 }
 
+function validateSourcePaths(paths, scope) {
+    if (paths === undefined) return;
+    assert(Array.isArray(paths) && paths.length > 0 && paths.length <= 20, 'paths must contain 1 to 20 exact source files');
+    assert.equal(new Set(paths).size, paths.length, 'Duplicate exact source path');
+    for (const file of paths) {
+        assert(typeof file === 'string' && /\.mdx?$/.test(file) && !file.includes('\\') && !/[\x00-\x1f\x7f]/.test(file)
+            && file.split('/').every(part => part && part !== '.' && part !== '..')
+            && scope.groups.some(group => file.startsWith(`${group.sourceRoot}/`)),
+        `Exact source path is outside the managed scope: ${file}`);
+    }
+}
+
 async function plan({report, scope, records, baseline = [], active, readCurrent, readAt,
     resolved = {schemaVersion: 1, deletions: []}, chineseChangedPaths = [],
     limit = scope.maxBatchPages, tokenBudget = null, filters = {}}) {
@@ -96,6 +108,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     assert(Number.isInteger(limit) && limit >= 0 && limit <= scope.maxBatchPages, 'Limit exceeds managed batch size');
     assert(tokenBudget === null || Number.isInteger(tokenBudget) && tokenBudget >= 0, 'Invalid token budget');
     if (filters.locale && filters.locale !== scope.locale) throw new Error(`Unsupported locale: ${filters.locale}`);
+    validateSourcePaths(filters.paths, scope);
+    assert(!(filters.path && filters.paths), 'path and paths are mutually exclusive');
     const key = keyFor(scope.locale);
     const candidates = validateActive(active, scope);
     const resolvedDeletions = validateResolved(resolved);
@@ -106,6 +120,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const pages = report.groups.filter(group => managed(scope, group)).flatMap(group =>
         group.entries.filter(page => page.state !== 'draft' && page.state !== 'retain_english')
             .map(page => ({...page, groupId: group.id})));
+    const sourcePaths = new Set(pages.map(page => page.sourcePath));
+    for (const file of filters.paths ?? []) assert(sourcePaths.has(file), `Not a registered translatable source file: ${file}`);
     const current = new Set(pages.map(key));
     assert.equal(current.size, pages.length, 'Duplicate current identity');
     const removed = [...old.values()].filter(page => !current.has(key(page)) && page.disposition !== 'draft'
@@ -199,6 +215,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     assert.equal(allCounts.required, allCounts.mergedCurrent + allCounts.pending);
     const selectedTasks = tasks.filter(task => (!filters.plugin || task.pluginId === filters.plugin)
         && (!filters.version || task.version === filters.version)
+        && (!filters.paths || filters.paths.includes(task.sourcePath))
         && (!filters.path || task.sourcePath.startsWith(filters.path) || task.targetPath?.startsWith(filters.path)));
     const selected = [];
     let tokens = 0;
@@ -218,7 +235,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
 
 function argumentsFrom(argv) {
     const options = {}, known = new Set(['--source-ref', '--output', '--audit-output', '--active-candidates', '--locale', '--plugin',
-        '--version', '--path', '--limit', '--token-budget']);
+        '--version', '--path', '--paths', '--limit', '--token-budget']);
     for (let i = 0; i < argv.length; i += 2) {
         assert(known.has(argv[i]) && argv[i + 1] && !options[argv[i]], `Unknown or incomplete option: ${argv[i]}`);
         options[argv[i]] = argv[i + 1];
@@ -234,6 +251,9 @@ async function main() {
     const config = loadConfig(root);
     assert(scope.locale === locale, `Scope is for ${scope.locale}, not the managed ${locale}`);
     assert(config.locales[locale]?.sourceLocale === 'en', 'Planner requires an English primary source');
+    const sourcePaths = options['--paths'] === undefined ? undefined : JSON.parse(options['--paths']);
+    validateSourcePaths(sourcePaths, scope);
+    assert(!(options['--path'] && sourcePaths), 'path and paths are mutually exclusive');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
     if (options['--audit-output']) fs.writeFileSync(options['--audit-output'], JSON.stringify(report, null, 2) + '\n');
     const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
@@ -261,7 +281,8 @@ async function main() {
         chineseChangedPaths, readCurrent, readAt,
         limit: options['--limit'] === undefined ? scope.maxBatchPages : Number(options['--limit']),
         tokenBudget: options['--token-budget'] === undefined ? null : Number(options['--token-budget']),
-        filters: {locale: options['--locale'], plugin: options['--plugin'], version: options['--version'], path: options['--path']}});
+        filters: {locale: options['--locale'], plugin: options['--plugin'], version: options['--version'],
+            path: options['--path'], paths: sourcePaths}});
     const output = JSON.stringify(result, null, 2) + '\n';
     if (options['--output']) fs.writeFileSync(options['--output'], output);
     else process.stdout.write(output);
@@ -269,4 +290,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
-module.exports = {plan, validateActive, validateResolved, formattingOnly, argumentsFrom};
+module.exports = {plan, validateActive, validateResolved, validateSourcePaths, formattingOnly, argumentsFrom};

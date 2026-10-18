@@ -3,16 +3,31 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const yaml = require('js-yaml');
+const os = require('node:os');
+const {spawnSync} = require('node:child_process');
 const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const korean = load('korean-translation.yml');
 const japanese = load('japanese-translation.yml');
+
+test('one-page validation rejects an exact batch list before creating scan artifacts', t => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ko-validate-paths-'));
+    t.after(() => fs.rmSync(directory, {recursive:true,force:true}));
+    const output = path.join(directory,'scan');
+    const result = spawnSync(process.execPath, [path.resolve(workflows,'../../scripts/i18n/workflow-scan.cjs'),output], {
+        encoding:'utf8',env:{...process.env,I18N_LOCALE:'ko',I18N_MODE:'validate',I18N_PATHS:'["community/subscribe-mail-list.md"]'},
+    });
+    assert.equal(result.status,1);
+    assert.match(result.stderr,/Validation mode requires path, not a list/);
+    assert(!fs.existsSync(output));
+});
 
 test('Korean generation requires a manual choice and shares the existing whole-run lock', () => {
     assert.deepEqual(Object.keys(korean.on), ['workflow_dispatch']);
     assert.equal(korean.on.workflow_dispatch.inputs.mode.default, 'dry-run');
     assert.deepEqual(korean.on.workflow_dispatch.inputs.mode.options, ['dry-run', 'validate', 'generate']);
     assert.equal(korean.on.workflow_dispatch.inputs.locale, undefined);
+    assert.equal(korean.on.workflow_dispatch.inputs.paths.type, 'string');
     assert.deepEqual(korean.permissions, {'contents':'read', 'pull-requests':'read'});
     assert.deepEqual(korean.concurrency, japanese.concurrency);
     assert.equal(korean.concurrency.group, 'japanese-translation-ja');
@@ -47,6 +62,10 @@ test('Korean discovery and generation exchange Korean artifacts at the exact sca
     const execute = generate.find(step => step.id === 'translation');
     assert.equal(execute.env.I18N_MAX_PAGES, "${{ inputs.mode == 'validate' && '1' || '10' }}");
     assert.equal(execute.env.I18N_PATH, '${{ inputs.path }}');
+    for (const steps of [discover, generate]) {
+        const scan = steps.find(step => step.run?.includes('workflow-scan.cjs'));
+        assert.equal(scan.env.I18N_PATHS, '${{ inputs.paths }}');
+    }
     assert.equal(execute.env.I18N_CODEX_MODEL, japanese.jobs.generate.steps.find(step => step.id === 'translation').env.I18N_CODEX_MODEL);
 });
 

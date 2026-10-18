@@ -57,6 +57,8 @@ function summarize(plan, reconciliation, eligible, mode, language) {
 function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-scan.cjs <output-directory>');
+    assert(process.env.I18N_MODE !== 'validate' || !process.env.I18N_PATHS,
+        'Validation mode requires path, not a list of paths');
     fs.mkdirSync(output, {recursive: true});
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
     const planFile = path.join(output, 'plan.json');
@@ -64,7 +66,8 @@ function main() {
     const args = [path.join(__dirname, 'plan-translations.cjs'), '--source-ref', 'HEAD',
         '--active-candidates', path.join(output, 'active-candidates.json'), '--output', planFile,
         '--audit-output', auditFile, '--limit', process.env.I18N_LIMIT || '20'];
-    for (const [key, option] of [['I18N_PLUGIN', '--plugin'], ['I18N_VERSION', '--version'], ['I18N_PATH', '--path']]) {
+    for (const [key, option] of [['I18N_PLUGIN', '--plugin'], ['I18N_VERSION', '--version'],
+        ['I18N_PATH', '--path'], ['I18N_PATHS', '--paths']]) {
         if (process.env[key]) args.push(option, process.env[key]);
     }
     execFileSync(process.execPath, args, {cwd: root, stdio: 'inherit'});

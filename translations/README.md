@@ -603,6 +603,32 @@ No real model call or GitHub write occurs.
 
 ## Validation
 
+### Selecting an exact Korean manual batch
+
+The Korean workflow remains manual-only and defaults to `dry-run`. Its optional
+`paths` input accepts a JSON array of 1–20 exact English source files, so a bounded
+batch can select documents from different folders without including every page
+under a shared prefix:
+
+```bash
+gh workflow run korean-translation.yml --repo apache/doris-website --ref master \
+  -f mode=dry-run \
+  -f 'paths=["community/subscribe-mail-list.md","community/how-to-contribute/contribute-to-doris.mdx"]'
+```
+
+Use `paths` or the existing `path` prefix, not both. The same list is used in the
+fresh scan immediately before generation. `validate` still requires one exact
+`path`; use `generate` for a regular batch. The planner considers at most 20
+targets and generation still produces at most 10. Exact selection preserves
+full coverage counts, current-page and active-PR exclusion, human ownership,
+scope/version checks, and exact-master protection. Unknown, duplicate,
+malformed or out-of-scope source paths fail before model calls. This input does
+not enable scheduled generation.
+
+The planner CLI exposes the same filter as `--paths '<JSON array>'`.
+
+### Validation commands
+
 ```bash
 node --test scripts/i18n/__tests__/*.test.cjs scripts/i18n/poc/*.test.cjs
 node scripts/i18n/verify-fixture.cjs

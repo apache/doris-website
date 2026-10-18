@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {hash} = require('../state.cjs');
-const {plan, formattingOnly, validateActive, validateResolved} = require('../plan-translations.cjs');
+const {plan, formattingOnly, validateActive, validateResolved, validateSourcePaths, argumentsFrom} = require('../plan-translations.cjs');
 
 const sha = 'a'.repeat(40);
 const baselineSha = 'b'.repeat(40);
@@ -22,14 +22,14 @@ function page(docId, options = {}) {
         reviewStatus: 'unverified', change: options.change ?? 'new'};
 }
 async function run(pages, {old = [], records = [], removed = [], active, files = {}, historical = {}, reports = [],
-    chineseChangedPaths = [], limit = 20, tokenBudget = null} = {}) {
+    chineseChangedPaths = [], limit = 20, tokenBudget = null, filters = {}} = {}) {
     const all = Object.fromEntries(pages.map(item => [item.sourcePath, source]));
     const report = {schemaVersion: 1, sourceCommit: sha, baselineCommit: baselineSha,
         groups: scope.groups.map(group => ({...group, entries: pages.filter(item => item.pluginId === group.pluginId && item.version === group.version),
             unregistered: []})), removed, reports};
     return plan({report, scope, records: new Map(records.map(item => [JSON.stringify([item.pluginId, item.version, item.docId, 'ja']), item])),
         baseline: old, active, chineseChangedPaths, readCurrent: name => files[name] ?? all[name] ?? null,
-        readAt: (ref, name) => historical[`${ref}:${name}`] ?? null, limit, tokenBudget});
+        readAt: (ref, name) => historical[`${ref}:${name}`] ?? null, limit, tokenBudget, filters});
 }
 
 test('stable full scan includes new pages after baseline, isolates versions, and never requeues current pages', async () => {
@@ -189,6 +189,29 @@ test('default planning does not exclude a document because of estimated tokens',
     const result = await run([entry], {files: {[entry.sourcePath]: large}});
     assert.deepEqual(result.selected, [result.tasks[0].id]);
     assert(result.selectedEstimatedSourceTokens > 50000);
+});
+
+test('exact source lists select only requested native files while preserving full counts and limits', async () => {
+    const a = page('a'), b = page('b', {sourcePath:'docs/b.mdx'}), c = page('c', {pluginId:'community'});
+    const all = await run([a,b,c]);
+    const filtered = await run([a,b,c], {filters:{paths:[b.sourcePath,c.sourcePath]}});
+    assert.equal(filtered.counts.required, 3);
+    assert.deepEqual(filtered.tasks.map(task=>task.sourcePath), [b.sourcePath,c.sourcePath]);
+    assert.deepEqual(filtered.selected, all.tasks.filter(task=>task.sourcePath!==a.sourcePath).map(task=>task.id));
+    assert.equal((await run([a,b,c], {filters:{paths:[b.sourcePath,c.sourcePath]},limit:1})).selected.length, 1);
+    assert.equal((await run([page('done',{state:'current'})], {filters:{paths:['docs/done.md']}})).selected.length, 0);
+    const active = {schemaVersion:1,candidates:[{...b,locale:'ja',pr:'#456'}]};
+    const reserved = await run([a,b,c], {filters:{paths:[b.sourcePath,c.sourcePath]},active});
+    assert.deepEqual(reserved.selected, [reserved.tasks.find(task=>task.sourcePath===c.sourcePath).id]);
+});
+
+test('exact source lists reject ambiguous, duplicate, malformed and out-of-scope inputs', async () => {
+    for (const paths of [[], 'docs/a.md', ['docs/a.md','docs/a.md'], ['../docs/a.md'], ['/docs/a.md'],
+        ['i18n/ko/a.md'], ['docs/../a.md'], ['docs/a/'], ['docs/a.md/'], ['docs/a.md\n'], [null], Array.from({length:21},(_,i)=>`docs/${i}.md`)])
+        assert.throws(()=>validateSourcePaths(paths,scope), /paths|path|scope/i);
+    await assert.rejects(run([page('a')], {filters:{path:'docs/',paths:['docs/a.md']}}), /mutually exclusive/);
+    await assert.rejects(run([page('a')], {filters:{paths:['docs/missing.md']}}), /registered translatable source/);
+    assert.deepEqual(argumentsFrom(['--paths','["docs/a.md"]']), {'--paths':'["docs/a.md"]'});
 });
 
 test('active input rejects duplicate, out-of-scope and malformed candidates', () => {
