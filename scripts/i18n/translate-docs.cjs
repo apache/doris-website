@@ -9,6 +9,7 @@ const {structure} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
 const {checkedTask, safeFile, openAIAdapter, mockAdapter, translateDocument} = require('./translation-engine.cjs');
 const {translateManagedDocument} = require('./translate-document.cjs');
+const {checkFrontMatter} = require('./document-checks.cjs');
 
 function optionsFrom(argv) {
     const values = {}, tasks = [];
@@ -76,6 +77,17 @@ function statePathForRecord(state, record) {
     return state.sharded || state.shards.has(shard) ? shard : relative(state.root, state.file);
 }
 
+// Capture the inputs from the generation snapshot, before awaiting a model.
+// A later apply must not overwrite a newer, internally consistent translation.
+function stagedBaseline(state, task, previousTarget) {
+    const shard = stateFileFor(task);
+    const statePath = state.shards.has(shard) ? shard : relative(state.root, state.file);
+    const raw = state.shards.has(shard) ? state.shards.get(shard) : state.raw;
+    return {targetHash: previousTarget === null ? null : hash(previousTarget), statePath,
+        stateHash: raw === null ? null : hash(raw),
+        schemaHash: state.schemaRaw === null ? null : hash(state.schemaRaw)};
+}
+
 function writeAtomic(file, value) {
     const temp = path.join(path.dirname(file), `.translation-${randomUUID()}.tmp`);
     try {
@@ -96,6 +108,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
             && previousTarget !== null && hash(previousTarget) === existing.targetHash,
         'Existing target or identity changed; manual review required');
     }
+    const baseline = stagedBaseline(state, task, previousTarget);
     const wholeDocument = typeof adapter.translateDocument === 'function';
     let previousSource = null, baselineReason;
     if (existing) {
@@ -119,6 +132,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         previousTarget: canReuse ? previousTarget : null,
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern,
         maxDocumentChars, maxChunkChars});
+    if (!wholeDocument) checkFrontMatter(source, generated.target, target.locale);
     if (!wholeDocument && adapter.model !== 'fixture') {
         assert(generated.targetChanged,
             `Live candidate contains no ${target.language} text; review manually`);
@@ -131,7 +145,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         reviewStatus: 'machine', ownership: 'machine', translatedAt: new Date().toISOString(),
         glossaryVersion: glossary.version,
         ...(generated.generation ? {generation: generated.generation} : {})};
-    return {task, targetFile, previousTarget, target: generated.target, record,
+    return {task, targetFile, previousTarget, baseline, target: generated.target, record,
         units: generated.units, reusedUnits: generated.reusedUnits, requests: generated.requests,
         targetChanged: generated.targetChanged};
 }
@@ -197,7 +211,7 @@ async function applyStaged(root, planFile, relativeStage) {
     const scope = JSON.parse(fs.readFileSync(scopeFile(root, locale), 'utf8'));
     const stage = stageDirectory(root, relativeStage);
     const manifest = JSON.parse(fs.readFileSync(path.join(stage, 'manifest.json'), 'utf8'));
-    assert(manifest.schemaVersion === 1 && manifest.provider === 'openai' && manifest.liveCall === true
+    assert(manifest.schemaVersion === 2 && manifest.provider === 'openai' && manifest.liveCall === true
         && manifest.applied === false && manifest.sourceCommit === plan.sourceCommit
         && Array.isArray(manifest.candidates) && manifest.candidates.length > 0
         && manifest.candidates.length <= scope.maxBatchPages, 'Invalid staged live candidates');
@@ -225,11 +239,14 @@ async function applyStaged(root, planFile, relativeStage) {
             'Staged candidate was edited after validation');
         const parsed = await structure(source, path.extname(task.sourcePath));
         const translated = await structure(target, path.extname(task.targetPath));
+        checkFrontMatter(source, target, locale);
         assert.equal(protectionSignature(translated), protectionSignature(parsed), 'Staged protected content changed');
         assert.equal(item.record.sourceTechnicalHash, parsed.technicalHash, 'Staged source technical hash changed');
         const existing = state.data.pages.find(page => identity(page) === identity(task));
         const targetFile = safeFile(root, task.targetPath);
         const previousTarget = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : null;
+        assert.deepEqual(item.baseline, stagedBaseline(state, task, previousTarget),
+            'Translation baseline changed since staging; regenerate and review the candidate');
         assert(!previousTarget || existing, 'Untracked target needs human review');
         if (existing) assert(existing.sourcePath === task.sourcePath && existing.targetPath === task.targetPath
             && previousTarget !== null && hash(previousTarget) === existing.targetHash,
@@ -282,14 +299,14 @@ async function main() {
     const stageRelative = options['--stage-dir'] ?? '.i18n-build/translation-candidates';
     const stage = stageDirectory(root, stageRelative);
     fs.mkdirSync(stage, {recursive: true});
-    const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider,
+    const manifest = {schemaVersion: 2, sourceCommit: plan.sourceCommit, provider,
         model: adapter.model, glossaryVersion: glossary.version,
         liveCall: provider === 'openai', liveVerified: false,
         applied: false, usedTokens: adapter.usedTokens,
-        candidates: candidates.map(({task, record, units, reusedUnits, requests, targetChanged}) => ({
+        candidates: candidates.map(({task, record, baseline, units, reusedUnits, requests, targetChanged}) => ({
             id: task.id, kind: task.kind, sourcePath: task.sourcePath, targetPath: task.targetPath,
             sourceHash: record.sourceHash, targetHash: record.targetHash, units, reusedUnits, requests,
-            targetChanged, record,
+            targetChanged, baseline, record,
         }))};
     for (const candidate of candidates) {
         const folder = path.join(stage, candidate.task.id);
@@ -301,4 +318,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error.message); process.exitCode = 1;});
-module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState, statePathForRecord, targetFor, scopeFile, glossaryFile};
+module.exports = {optionsFrom, prepare, applyCandidates, applyStaged, readState, stagedBaseline, statePathForRecord, targetFor, scopeFile, glossaryFile};

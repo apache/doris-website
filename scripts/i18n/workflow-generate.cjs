@@ -1,5 +1,5 @@
 // Trusted-master automation only. The workflow supplies the requested mode and
-// model credential; this module writes only validated managed ja files/state.
+// model credential; this module writes only validated files/state for the selected managed locale.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, identity, languageName, pipelineLocale} = require('./state.cjs');
 const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
 const {codexAdapter} = require('./codex-adapter.cjs');
-const {prepare, applyCandidates, readState, statePathForRecord, targetFor} = require('./translate-docs.cjs');
+const {prepare, applyCandidates, readState, stagedBaseline, statePathForRecord, targetFor} = require('./translate-docs.cjs');
 const {markerPrefixFor} = require('./automation-naming.cjs');
 
 const root = path.resolve(__dirname, '../..');
@@ -51,6 +51,7 @@ function copyPair(primary, partner, scope, state, rootDir = root) {
         docId: partner.docId, sourcePath: partner.sourcePath, targetPath: partner.targetPath,
         sourceHash: partner.sourceHash};
     return {...primary, task: partner, targetFile, previousTarget, record,
+        baseline: stagedBaseline(state, partner, previousTarget),
         requests: 0, reusedFrom: primary.task.id};
 }
 

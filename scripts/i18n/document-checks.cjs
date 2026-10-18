@@ -1,6 +1,8 @@
 // Shared by generation retries and the PR preflight. Link resolution is the
 // same Python implementation used by check-md-links.yml.
+const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const matter = require('gray-matter');
 const os = require('node:os');
 const path = require('node:path');
 const {spawnSync} = require('node:child_process');
@@ -71,6 +73,23 @@ async function checkSyntax(target, extension) {
     }
 }
 
+function checkFrontMatter(source, target, locale) {
+    const before = matter(source).data;
+    const after = matter(target).data;
+    for (const key of ['title','description','sidebar_label','keywords']) {
+        if (!Object.hasOwn(before,key)) continue;
+        assert(Object.hasOwn(after,key), `Restore front matter field: ${key}`);
+        if (Array.isArray(before[key])) {
+            assert(Array.isArray(after[key]) && after[key].length === before[key].length
+                && after[key].every(value => typeof value === 'string' && value.trim()), `Restore complete front matter field: ${key}`);
+        } else if (typeof before[key] === 'string') {
+            assert(typeof after[key] === 'string' && (!before[key].trim() || after[key].trim()), `Restore front matter field: ${key}`);
+        } else assert.deepEqual(after[key],before[key],`Restore front matter field: ${key}`);
+    }
+    if (Object.hasOwn(before,'language') || Object.hasOwn(after,'language'))
+        assert.equal(after.language,locale,`Set front matter language to ${locale}`);
+}
+
 async function inspectDocument({source, translation, extension, glossary, targetLocale, targetScriptPattern,
     root, targetPath, preserveFormatting = false}) {
     let target = translation.replace(/^```(?:markdown|mdx?)\s*\n([\s\S]*)\n```\s*$/, '$1');
@@ -88,6 +107,7 @@ async function inspectDocument({source, translation, extension, glossary, target
         if (!preserveFormatting) target = aligned;
     });
     await check('syntax', () => checkSyntax(target, extension));
+    await check('frontmatter', () => checkFrontMatter(source, target, targetLocale));
     await check('protected-content', async () => {
         const translated = await structure(aligned, extension);
         if (signature(translated) !== signature(parsed))
@@ -112,4 +132,4 @@ async function inspectDocument({source, translation, extension, glossary, target
     return {target, issues};
 }
 
-module.exports = {policy, signature, isDocumentGeneration, acceptedFallback, checkLinks, checkSyntax, inspectDocument};
+module.exports = {policy, signature, isDocumentGeneration, acceptedFallback, checkLinks, checkSyntax, checkFrontMatter, inspectDocument};
