@@ -1,5 +1,7 @@
 const { getAssetOrigin } = require('./asset-origin');
 const assetOrigin = JSON.stringify(getAssetOrigin());
+const assetBase = require('../scripts/publish/shared-assets.cjs').enabled() ? '/' : null;
+const assetBaseExpression = assetBase ? JSON.stringify(assetBase) : 'it.baseUrl';
 
 module.exports = {
     ssrTemplate: `<!DOCTYPE html>
@@ -16,10 +18,10 @@ module.exports = {
       <%~ metaAttribute %>
     <% }); %>
     <% it.stylesheets.forEach((stylesheet) => { %>
-      <link rel="stylesheet" href="<%= ${assetOrigin} %><%= it.baseUrl %><%= stylesheet %>" />
+      <link rel="stylesheet" href="<%= ${assetOrigin} %><%= ${assetBaseExpression} %><%= stylesheet %>" />
     <% }); %>
     <% it.scripts.forEach((script) => { %>
-      <link rel="preload" href="<%= ${assetOrigin} %><%= it.baseUrl %><%= script %>" as="script">
+      <link rel="preload" href="<%= ${assetOrigin} %><%= ${assetBaseExpression} %><%= script %>" as="script">
     <% }); %>
   </head>
   <body <%~ it.bodyAttributes %>>
@@ -28,7 +30,7 @@ module.exports = {
       <%~ it.appHtml %>
     </div>
     <% it.scripts.forEach((script) => { %>
-      <script src="<%= ${assetOrigin} %><%= it.baseUrl %><%= script %>"></script>
+      <script src="<%= ${assetOrigin} %><%= ${assetBaseExpression} %><%= script %>"></script>
     <% }); %>
     <%~ it.postBodyTags %>
   </body>

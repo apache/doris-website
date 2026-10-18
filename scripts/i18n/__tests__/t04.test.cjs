@@ -43,6 +43,18 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.throws(() => buildScope(['translations/state/fr/docs.json'],versions,managed),/Unconfigured/);
 });
 
+test('publication changes exercise the complete optimized artifact on CI', () => {
+    for (const file of ['scripts/publish/optimize.cjs','scripts/build-locales.cjs',
+        'config/ssrTemplate.js','static/js/brand-theme-bootstrap.js']) {
+        const scope = buildScope([file],versions,['ja']);
+        assert.equal(scope.optimize_publish,true,file);
+        assert.equal(scope.docs_versions,'',file);
+        assert.equal(scope.need_full_build,true,file);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja']);
+    }
+    assert.equal(buildScope(['docs/example.md'],versions).optimize_publish,false);
+});
+
 test('A localized index admits only current, reviewed and in-scope native targets', () => {
     const page = (pluginId,version,status='current',indexable=true,locale='ja') => ({pluginId,version,status,indexable,useTarget:true,locale,
         permalink:`/${locale}/${pluginId}/${version}/${status}/${indexable}/`});

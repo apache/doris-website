@@ -121,3 +121,21 @@ test('an unsafe locale path is rejected before building it', async t => {
     await assert.rejects(buildLocales(data),/Unsafe locale/);
     assert.equal(fs.readFileSync(path.join(data.outDir,'previous.txt'),'utf8'),'previous complete site');
 });
+
+test('failed optimized resource verification preserves the previous complete artifact', async t => {
+    const previous = process.env.DORIS_OPTIMIZE_PUBLISH;
+    process.env.DORIS_OPTIMIZE_PUBLISH = 'true';
+    t.after(() => {
+        if (previous === undefined) delete process.env.DORIS_OPTIMIZE_PUBLISH;
+        else process.env.DORIS_OPTIMIZE_PUBLISH = previous;
+    });
+    const data = fixture(t,['en']);
+    const run = async args => {
+        const result = await data.run(args);
+        if (args[0] === 'build') fs.writeFileSync(path.join(args[2],'index.html'),
+            '<script src=/assets/js/missing.js></script>');
+        return result;
+    };
+    await assert.rejects(buildLocales({...data,run}),/Missing compiled asset/);
+    assert.equal(fs.readFileSync(path.join(data.outDir,'previous.txt'),'utf8'),'previous complete site');
+});
