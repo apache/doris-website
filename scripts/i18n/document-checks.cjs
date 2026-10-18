@@ -118,8 +118,10 @@ async function inspectDocument({source, translation, extension, glossary, target
             throw new Error(`Translate the complete document into ${targetLocale}`);
     });
     // Word boundaries apply to Latin identifiers, including those next to
-    // Japanese text. BEFORE must never count as the product term BE.
-    const contains = (text, term) => new RegExp(`(?<![A-Za-z0-9_])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9_])`, 'i').test(text);
+    // Japanese text. FE/BE process names are case-sensitive: ordinary English
+    // "be" and "Be" must not force a backend reference into a translation.
+    const contains = (text, term) => new RegExp(`(?<![A-Za-z0-9_])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9_])`,
+        ['FE', 'BE'].includes(term) ? '' : 'i').test(text);
     for (const term of glossary.keep) {
         if (contains(source, term) && !contains(target, term))
             issues.push({check: 'glossary', message: `Preserve product term: ${term}`});

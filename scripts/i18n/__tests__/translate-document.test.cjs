@@ -92,6 +92,33 @@ test('Latin word matching permits BEFORE and prose number localization; code sta
     assert(wrongNumber.issues.some(item => item.check === 'protected-content' && /numeric values/.test(item.message)));
 });
 
+test('ordinary English be does not request a backend term or a translation retry', async () => {
+    let requests = 0;
+    const result = await translateWholeDocument({...options,
+        source: '# Guide\n\nBe aware that the email subject can be anything.\n',
+        targetLocale: 'ko', targetScriptPattern: '[가-힣]',
+        adapter: {translateDocument: async ({feedback}) => {
+            requests++;
+            assert.deepEqual(feedback, []);
+            return {translation: '# 안내\n\n이메일 제목은 아무 내용이나 입력해도 됩니다.\n'};
+        }}});
+    assert.equal(requests, 1);
+    assert.deepEqual(result.generation.warnings, []);
+    assert(!result.target.includes('BE'));
+});
+
+test('actual FE and BE identifiers must retain their uppercase spelling', async () => {
+    const input = {...options, source: '# Guide\n\nRestart FE and BE.\n',
+        glossary: {...glossary, keep: ['FE', 'BE']}};
+    const valid = await inspectDocument({...input, translation: '# ガイド\n\nFEとBEを再起動します。\n'});
+    assert.deepEqual(valid.issues, []);
+    for (const term of ['FE', 'BE']) {
+        const invalid = await inspectDocument({...input,
+            translation: '# ガイド\n\n' + ['FE', 'BE'].map(item => item === term ? item.toLowerCase() : item).join('と') + 'を再起動します。\n'});
+        assert(invalid.issues.some(issue => issue.check === 'glossary' && issue.message === `Preserve product term: ${term}`));
+    }
+});
+
 test('whole-document MDX accepts existing explicit heading IDs', async () => {
     const source = '# Guide {#guide}\n\n<Widget label="Details" mode={1} />\n';
     const result = await translateWholeDocument({...options, source, extension: '.mdx',
