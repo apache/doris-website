@@ -12,7 +12,8 @@ export function PageLanguageSwitcher(): JSX.Element | null {
     const { pathname, search, hash } = useLocation();
     const path = normalizePathname(pathname, locales).replace(/\/+$/, '');
     const translations = locales.filter(locale => hasTranslatedPage(path, locale));
-    if (!translations.length || (currentLocale !== defaultLocale && !translations.includes(currentLocale))) return null;
+    // Fallback pages also need an exit to English or an available translation.
+    if (!translations.length) return null;
 
     const languages = [defaultLocale, ...translations];
     return (
