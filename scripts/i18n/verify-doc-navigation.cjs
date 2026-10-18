@@ -55,7 +55,7 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
             const label = dictionary['docs.navigation.sections']?.message ?? 'Documentation sections';
             const nav = $('nav').filter((_, node) => $(node).attr('aria-label') === label);
             assert(nav.length, `Missing document domain navigation: ${representative.permalink}`);
-            for (const node of nav.find('a[href]').toArray()) {
+            for (const node of nav.find('details a[href]').toArray()) {
                 const link = $(node).attr('href');
                 assert(link.startsWith(`/${locale}/docs/`), `Wrong domain locale: ${link}`);
                 read(new URL(link, 'https://doris.apache.org').pathname);

@@ -106,6 +106,7 @@ jobs:
                   node --test scripts/i18n/__tests__/search-version.test.cjs
                   node --test scripts/i18n/__tests__/configuration.test.cjs
                   node --test scripts/i18n/__tests__/search-verification.test.cjs
+                  node --test scripts/i18n/__tests__/korean-tokenizer.test.cjs
                   node --test scripts/i18n/__tests__/doc-navigation.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
                   node --test scripts/i18n/__tests__/multi-locale.test.cjs

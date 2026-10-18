@@ -193,3 +193,13 @@ test('Korean scope and glossary edits get offline JSON checks without forcing a 
     }
     assert.throws(() => buildScope(['translations/scope/fr.json'],versions,['ja','ko']), /Unconfigured/);
 });
+
+
+test('search implementation changes exercise full four-language publication and browser verification', () => {
+    for (const file of ['scripts/i18n/search-plugin.cjs','src/utils/searchVersion.js','src/theme/SearchPage/SearchPage.jsx']) {
+        const scope = buildScope([file],versions,['ja','ko']);
+        assert.equal(scope.optimize_publish,true,file);
+        assert.equal(scope.docs_versions,'',file);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko'],file);
+    }
+});
