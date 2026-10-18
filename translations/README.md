@@ -28,6 +28,25 @@ Build Check installs dependencies and runs the i18n unit tests before the
 translation gate. The gate checks source metadata and state without a site
 build; the scoped website build and static-page verification run afterward.
 
+## Korean preview and inventory
+
+Korean is registered as an optional documentation locale. Enable it locally with
+`DORIS_ENABLE_KO=true`, or enable both managed languages with
+`DORIS_ENABLE_LOCALES=ja,ko`. Production deployment still enables Japanese only.
+Korean ordinary pages use the existing English fallback.
+
+The initial Korean native inventory is pinned to the merged source commit in
+[inventory/ko/2026-10-18/summary.json](inventory/ko/2026-10-18/summary.json).
+It covers Dev, 4.x and community documentation. Its four current PoC pages have
+machine review status; the snapshot is a historical baseline rather than a
+live coverage count. Category and domain labels live in the three matching
+Korean plugin dictionaries; technical labels retained in English have explicit
+per-key reasons in `scope/ko.json`.
+
+Translation commands must select their locale explicitly now that both `ja`
+and `ko` are configured, for example `I18N_LOCALE=ko`. The site build flags
+select rendered languages; they do not select the translation pipeline locale.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
@@ -252,8 +271,8 @@ Run the offline native-metadata regression with
 `node --test scripts/i18n/__tests__/multi-locale.test.cjs`. For small real builds
 with both managed locales and with Korean disabled, run
 `node scripts/i18n/verify-multi-locale-fixture.cjs`; add `--browser` when
-Playwright and Chromium are installed. These fixtures declare Korean locally
-without registering or enabling it on the website.
+Playwright and Chromium are installed. These fixtures use their own minimal
+locale registration and do not enable a production deployment.
 
 Each locale also declares, in `translations/config.json`:
 

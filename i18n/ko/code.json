@@ -148,5 +148,47 @@
   },
   "theme.NavBar.navAriaLabel": {
     "message": "주 메뉴"
+  },
+  "docs.navigation.sections": {
+    "message": "문서 분류 탐색"
+  },
+  "docs.navigation.menu": {
+    "message": "메뉴"
+  },
+  "docs.navigation.sidebar": {
+    "message": "문서 목차"
+  },
+  "docs.navigation.closeSidebar": {
+    "message": "문서 목차 닫기"
+  },
+  "docs.navigation.sidebarNavigation": {
+    "message": "문서 목차 탐색"
+  },
+  "docs.navigation.switchLanguage": {
+    "message": "언어 변경"
+  },
+  "docs.navigation.openSidebar": {
+    "message": "문서 목차 열기"
+  },
+  "docs.navigation.browseSection": {
+    "message": "이 섹션 둘러보기"
+  },
+  "theme.TOC.homepage": {
+    "message": "Doris 홈페이지"
+  },
+  "theme.TOC.downloadPdf": {
+    "message": "PDF 다운로드"
+  },
+  "theme.TOC.forum": {
+    "message": "기술 포럼"
+  },
+  "theme.TOC.discussions": {
+    "message": "토론에서 질문하기"
+  },
+  "theme.TOC.slack": {
+    "message": "Slack에서 대화하기"
+  },
+  "theme.TOC.discord": {
+    "message": "Discord에서 대화하기"
   }
 }

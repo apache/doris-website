@@ -15,7 +15,8 @@ import { DiscordIconSmall } from '../../components/Icons/discord-icon-small';
 import { normalizePathname } from '@site/src/utils/locale';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 import { Spin } from 'antd';
-import Link from '@docusaurus/Link';
+import Link from '@site/src/components/home-next/LocalizedLink';
+import { translate } from '@docusaurus/Translate';
 
 import styles from './styles.module.css';
 
@@ -31,19 +32,12 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
     const isBrowser = useIsBrowser();
     const locale = currentLocale;
     const isCN = locale === 'zh-CN';
-    const uiText = isCN
-        ? {
-              homepage: 'Doris 首页',
-              downloadPdf: '下载 PDF',
-              onThisPage: '本页导航',
-              forum: '技术论坛',
-          }
-        : {
-              homepage: 'Doris Homepage',
-              downloadPdf: 'Download PDF',
-              onThisPage: 'On This Page',
-              forum: 'Forum',
-          };
+    const uiText = {
+        homepage: translate({id: 'theme.TOC.homepage', message: 'Doris Homepage'}),
+        downloadPdf: translate({id: 'theme.TOC.downloadPdf', message: 'Download PDF'}),
+        onThisPage: translate({id: 'theme.TOC.title', message: 'On This Page'}),
+        forum: translate({id: 'theme.TOC.forum', message: 'Forum'}),
+    };
     const [currentVersion, setCurrentVersion] = useState(DEFAULT_VERSION);
     const [loading, setLoading] = useState(false);
 
@@ -129,7 +123,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                 {!isCN ? (
                     <Link className="toc-icon-content group" to={'https://github.com/apache/doris/discussions'}>
                         <GithubIcon className="group-hover:text-primary" />
-                        <span className="group-hover:text-primary">Ask Questions on Discussion</span>
+                        <span className="group-hover:text-primary">{translate({id: 'theme.TOC.discussions', message: 'Ask Questions on Discussion'})}</span>
                     </Link>
                 ) : null}
 
@@ -141,7 +135,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         <div style={{ padding: '2px' }}>
                             <SlackIcon className="group-hover:text-primary" />
                         </div>
-                        <span className="group-hover:text-primary">Chat on Slack</span>
+                        <span className="group-hover:text-primary">{translate({id: 'theme.TOC.slack', message: 'Chat on Slack'})}</span>
                     </Link>
                 ) : null}
 
@@ -155,7 +149,7 @@ export default function TOC({ className, ...props }: Props): React.ReactElement 
                         <div style={{ padding: '2px' }}>
                              <DiscordIconSmall className="group-hover:text-primary" />
                         </div>
-                        <span className="group-hover:text-primary">Chat on Discord</span>
+                        <span className="group-hover:text-primary">{translate({id: 'theme.TOC.discord', message: 'Chat on Discord'})}</span>
                     </Link>
                 ) : null}
             </div>
