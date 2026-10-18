@@ -19,7 +19,8 @@ on:
         description: Optional repository-relative source path prefix
         type: string
       locale:
-        description: Optional translation locale; required once several are managed
+        default: ja
+        description: Configured translation locale (defaults to ja)
         type: string
   schedule:
     - cron: '23 4,16 * * *'
@@ -41,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      I18N_LOCALE: ${{ inputs.locale }}
+      I18N_LOCALE: ${{ inputs.locale || 'ja' }}
     outputs:
       can_generate: ${{ steps.scan.outputs.can_generate }}
       source_commit: ${{ steps.scan.outputs.source_commit }}
@@ -81,7 +82,7 @@ jobs:
   generate:
     needs: discover
     env:
-      I18N_LOCALE: ${{ inputs.locale }}
+      I18N_LOCALE: ${{ inputs.locale || 'ja' }}
     if: needs.discover.outputs.can_generate == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120

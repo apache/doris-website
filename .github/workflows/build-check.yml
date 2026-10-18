@@ -94,7 +94,7 @@ jobs:
                   yarn
                   yarn key-features:generate
 
-            - name: Japanese translation unit tests
+            - name: Translation unit tests
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
@@ -103,6 +103,8 @@ jobs:
                   node --test scripts/i18n/__tests__/search-input.test.cjs
                   node --test scripts/i18n/__tests__/search-contexts.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
+                  node --test scripts/i18n/__tests__/multi-locale.test.cjs
+                  node --test scripts/i18n/__tests__/inventory.test.cjs
                   node --test scripts/i18n/__tests__/planner.test.cjs
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs
                   node --test scripts/i18n/__tests__/workflow.test.cjs
@@ -110,10 +112,13 @@ jobs:
                   node --test scripts/i18n/__tests__/translate-document.test.cjs
                   node --test scripts/i18n/__tests__/incremental-document.test.cjs
 
-            - name: Japanese translation gate
+            - name: Translation gate for every managed locale
               run: |
                   BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                  node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+                  MANAGED_LOCALES=$(node scripts/i18n/managed-locales.cjs --all)
+                  for LOCALE in $MANAGED_LOCALES; do
+                      I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+                  done
 
             - name: Publish artifact optimization tests
               env:

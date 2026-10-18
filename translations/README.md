@@ -226,8 +226,34 @@ reintroduced page returns to normal native enumeration.
 The translation pipeline works on one locale per run. `scripts/i18n/state.cjs`
 exposes `pipelineLocale(root)`: a configuration that declares a single locale
 needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
-soon as several are managed. The two discovery workflows take a `locale` input
-and pass it through as that variable.
+soon as several are managed. An absent or unconfigured selector then fails
+before discovery or generation. The Japanese translation workflow defaults its
+manual input and scheduled runs to `ja`; the Japanese coverage audit always
+selects `ja`. A manual translation run can select another configured locale.
+
+Build Check runs PR admission once per configured translation locale, including
+locales disabled for the site build:
+
+```bash
+MANAGED_LOCALES=$(node scripts/i18n/managed-locales.cjs --all)
+for LOCALE in $MANAGED_LOCALES; do
+  I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+done
+```
+
+Without `--all`, `managed-locales.cjs` lists only enabled managed locales for
+publication checks. The publisher passes its selected locale to PR admission.
+Native inventory returns only that selected locale's pages and reports, plus
+repository-wide reports and all configured plugin/version metadata. SEO groups
+merge indexable translations by native plugin, version and doc ID, preserving
+actual source-language slugs and excluding stale or disabled translations.
+
+Run the offline native-metadata regression with
+`node --test scripts/i18n/__tests__/multi-locale.test.cjs`. For small real builds
+with both managed locales and with Korean disabled, run
+`node scripts/i18n/verify-multi-locale-fixture.cjs`; add `--browser` when
+Playwright and Chromium are installed. These fixtures declare Korean locally
+without registering or enabling it on the website.
 
 Each locale also declares, in `translations/config.json`:
 

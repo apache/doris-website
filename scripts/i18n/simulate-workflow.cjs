@@ -171,7 +171,7 @@ async function main() {
     writeExecutable(path.join(bin, 'codex-invalid'), codexMock('invalid', repo));
     const env = {...process.env, PATH: `${bin}:${process.env.PATH}`, GH_TOKEN: 'local-simulation',
         GITHUB_REPOSITORY: 'apache/doris-website', GITHUB_EVENT_NAME: 'workflow_dispatch',
-        GITHUB_RUN_ID: runId, I18N_PR_AUTH_KIND: 'pat', I18N_MODE: pages === 1 ? 'validate' : 'generate',
+        GITHUB_RUN_ID: runId, I18N_LOCALE: 'ja', I18N_PR_AUTH_KIND: 'pat', I18N_MODE: pages === 1 ? 'validate' : 'generate',
         I18N_PATH: selectedPath, I18N_MAX_PAGES: String(pages),
         I18N_LIMIT: '20', DORIS_ENABLE_JA: 'true', CODEX_HOME: auth,
         I18N_SIM_PR_RECORD: path.join(output, 'pull-request.json')};

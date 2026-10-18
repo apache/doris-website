@@ -57,7 +57,7 @@ function mergedCurrent(page, committedHash) {
 
 function buildGroup({group, pages, files, order, scope, committedHash, committedRecords}) {
     const key = keyFor(scope.locale);
-    const relevant = pages.filter(page => page.pluginId === group.pluginId && page.version === group.version);
+    const relevant = pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && page.locale === scope.locale);
     assert(relevant.length, `Missing native plugin/version: ${group.id}`);
     const identities = new Set();
     const routes = new Set();
@@ -147,12 +147,13 @@ async function collect(root) {
     for (const plugin of plugins) {
         const content = await plugin.loadContent();
         assert(content.translationManifest, 'Missing T02 native translation manifest');
-        pages.push(...content.translationManifest.pages);
-        reports.push(...content.translationManifest.reports);
+        const selectedPages = content.translationManifest.pages.filter(page => page.locale === locale);
+        pages.push(...selectedPages);
+        reports.push(...content.translationManifest.reports.filter(report => !report.locale || report.locale === locale));
         for (const version of content.loadedVersions) {
             versions.push({pluginId: plugin.options.id, version: version.versionName, order: sidebarOrder(version.sidebars)});
             const registered = new Map([...version.docs, ...version.drafts].map(doc => [doc.id, doc]));
-            for (const page of content.translationManifest.pages.filter(page => page.version === version.versionName)) {
+            for (const page of selectedPages.filter(page => page.version === version.versionName)) {
                 const doc = registered.get(page.docId);
                 assert(doc && applyTrailingSlash(doc.permalink, {trailingSlash: context.siteConfig.trailingSlash, baseUrl: context.baseUrl})
                     === page.englishPermalink, `Native route mismatch: ${key(page)}`);
@@ -162,7 +163,7 @@ async function collect(root) {
         }
         labels.push({pluginId: plugin.options.id, files: await plugin.getTranslationFiles({content})});
     }
-    return {pages, reports, versions, labels};
+    return {pages, reports: [...new Map(reports.map(report => [JSON.stringify(report), report])).values()], versions, labels};
 }
 
 function renderBatches(snapshot) {
