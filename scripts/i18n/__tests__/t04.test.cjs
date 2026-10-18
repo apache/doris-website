@@ -183,3 +183,23 @@ test('required legacy link gate follows managed locale fallback in the same vers
         assert.equal(existingLocalTarget(file,'../ai/not-a-page-t04.md'),false);
     }
 });
+
+
+test('Korean scope and glossary edits get offline JSON checks without forcing a website build', () => {
+    for (const file of ['translations/scope/ko.json', 'translations/glossary/ko.json']) {
+        const scope = buildScope([file], versions, ['ja','ko']);
+        assert.deepEqual(scope.json, [file]);
+        assert.equal(scope.skip_build, true);
+    }
+    assert.throws(() => buildScope(['translations/scope/fr.json'],versions,['ja','ko']), /Unconfigured/);
+});
+
+
+test('search implementation changes exercise full four-language publication and browser verification', () => {
+    for (const file of ['scripts/i18n/search-plugin.cjs','src/utils/searchVersion.js','src/theme/SearchPage/SearchPage.jsx']) {
+        const scope = buildScope([file],versions,['ja','ko']);
+        assert.equal(scope.optimize_publish,true,file);
+        assert.equal(scope.docs_versions,'',file);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko'],file);
+    }
+});

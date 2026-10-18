@@ -7,7 +7,7 @@ const {optimize} = require('../optimize.cjs');
 const redirect = require('@docusaurus/plugin-client-redirects/lib/createRedirectPageContent').default;
 
 const locales = ['en','zh-CN','ja'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
-function fixture(t) {
+function fixture(t, selectedLocales = locales) {
     const site = fs.mkdtempSync(path.join(os.tmpdir(),'doris-publish-test-'));
     t.after(() => fs.rmSync(site,{recursive:true,force:true}));
     const write = (name,content) => {
@@ -16,7 +16,7 @@ function fixture(t) {
         fs.writeFileSync(file,content);
     };
     write('.htaccess','# root controls\n');
-    for (const locale of locales) {
+    for (const locale of selectedLocales) {
         const prefix = locale.directory === '.' ? '' : locale.directory+'/';
         write(prefix+'index.html','<main>Real homepage</main>');
         write(prefix+'assets/shared/same.png',Buffer.alloc(65536,42));
@@ -156,3 +156,38 @@ test('Apache serves compacted legacy prefixes, Unicode paths, assets and query/f
 });
 
 module.exports = {fixture,locales};
+
+
+test('four-language publication shares assets and preserves Korean indexes, workers and redirects', async t => {
+    const selected = ['en','zh-CN','ja','ko'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
+    const {site,write} = fixture(t, selected);
+    const worker = 'self.onmessage = event => self.postMessage(event.data);';
+    write('ko/assets/js/ko.worker.0123abcd.js',worker);
+    write('ko/index.html','<html lang="ko"><script src="/assets/js/ko.worker.0123abcd.js"></script></html>');
+    const index = '[{"documents":[{"u":"/ko/docs/dev/current/","t":"한국어 문서"}]}]';
+    write('ko/search-index-docs-dev.json',index);
+    const result = optimize({site,locales:selected});
+    assert.equal(result.redirectPages,12);
+    assert.equal(fs.readFileSync(path.join(site,'assets/js/ko.worker.0123abcd.js'),'utf8'),worker);
+    assert.equal(fs.readFileSync(path.join(site,'ko/search-index-docs-dev.json'),'utf8'),index);
+    assert(!fs.existsSync(path.join(site,'ko/assets')));
+    require('../verify.cjs').verify(site);
+    const server = require('../serve.cjs').createServer(site);
+    await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
+    t.after(() => new Promise(resolve => server.close(resolve)));
+    const origin = `http://127.0.0.1:${server.address().port}`;
+    const response = await fetch(origin+'/ko/docs/dev/old/?from=test',{redirect:'manual'});
+    assert.equal(response.status,301);
+    assert.equal(new URL(response.headers.get('location'),origin).pathname,'/ko/docs/dev/current/');
+    assert.equal(new URL(response.headers.get('location'),origin).search,'?from=test');
+    assert.equal(await (await fetch(origin+'/assets/js/ko.worker.0123abcd.js')).text(),worker);
+    assert.equal(await (await fetch(origin+'/ko/search-index-docs-dev.json')).text(),index);
+});
+
+test('a fourth-language compiled filename collision rejects the artifact', t => {
+    const selected = ['en','zh-CN','ja','ko'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
+    const {site,write} = fixture(t, selected);
+    write('assets/js/collision.0123abcd.js','English');
+    write('ko/assets/js/collision.0123abcd.js','Korean');
+    assert.throws(() => optimize({site,locales:selected}),/filename collision/);
+});

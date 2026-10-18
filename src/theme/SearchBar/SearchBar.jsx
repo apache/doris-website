@@ -4,8 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { translate } from '@docusaurus/Translate';
-import { ReactContextError, useDocsPreferredVersion } from '@docusaurus/theme-common';
-import { useActivePlugin } from '@docusaurus/plugin-content-docs/client';
+import { useAllDocsData } from '@docusaurus/plugin-content-docs/client';
 import { fetchIndexesByWorker, searchByWorker } from '@yang1666204/docusaurus-search-local/dist/client/client/theme/searchByWorker'
 import { SuggestionTemplate } from './SuggestionTemplate';
 import { EmptyTemplate } from './EmptyTemplate';
@@ -15,7 +14,6 @@ import {
     searchBarShortcutHint,
     searchBarPosition,
     docsPluginIdForPreferredVersion,
-    indexDocs,
     searchContextByPaths,
     hideSearchBarWithNoSearchContext,
     useAllContextsWithNoSearchContext,
@@ -31,6 +29,7 @@ import { getLocalePrefix, normalizePathname } from '@site/src/utils/locale';
 import {searchWithLocaleFallback} from '@site/src/utils/searchInput';
 import {fetchContextIndexes, searchAcrossContexts} from '@site/src/utils/searchContexts';
 import {isTranslatedLocale} from '@site/src/utils/localization';
+import {searchIndexBaseUrl} from '@site/src/utils/searchVersion';
 
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 
@@ -47,21 +46,6 @@ async function fetchAutoCompleteJS() {
     return autoComplete;
 }
 
-function getVersionUrl(baseUrl, pathname, locales, currentLocale, defaultLocale) {
-    let versionUrl = `${baseUrl}`;
-    if (!versionUrl.endsWith('/')) {
-        versionUrl += '/';
-    }
-    const normalizedPathname = normalizePathname(pathname, locales);
-    if (normalizedPathname === '/docs' || normalizedPathname?.startsWith('/docs/')) {
-        const version = normalizedPathname.split('/')[2];
-        if (VERSIONS.includes(version) && version !== DEFAULT_VERSION) {
-            versionUrl += `docs/${version}/`;
-        }
-    }
-    return versionUrl;
-}
-
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
@@ -71,38 +55,13 @@ export default function SearchBar({ handleSearchBarToggle }) {
         siteConfig: { baseUrl },
         i18n: { currentLocale, defaultLocale, locales },
     } = useDocusaurusContext();
-    // It returns undefined for non-docs pages
-    const activePlugin = useActivePlugin();
     const [isDocsPage] = useIsDocPage(false);
-    let versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
-        : getVersionUrl(baseUrl, location.pathname, locales, currentLocale, defaultLocale);
+    const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
+    const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
+        : searchIndexBaseUrl(baseUrl, sourceVersions, {pathname: location.pathname});
 
-    // For non-docs pages while using plugin-content-docs with custom ids,
-    // this will throw an error of:
-    //   > Docusaurus plugin global data not found for "docusaurus-plugin-content-docs" plugin with id "default".
-    // It seems that we can not get the correct id for non-docs pages.
-    // try {
-    //     // The try-catch is a hack because useDocsPreferredVersion just throws an
-    //     // exception when versions are not used.
-    //     // The same hack is used in SearchPage.tsx
-    //     // eslint-disable-next-line react-hooks/rules-of-hooks
-    //     const { preferredVersion } = useDocsPreferredVersion(activePlugin?.pluginId ?? docsPluginIdForPreferredVersion);
-    //     console.log('preferredVersion',preferredVersion);
-
-    //     if (preferredVersion && !preferredVersion.isLast) {
-    //         versionUrl = preferredVersion.path + "/";
-    //     }
-    // }
-    // catch (e) {
-    //     if (indexDocs) {
-    //         if (e instanceof ReactContextError) {
-    //             /* ignore, happens when website doesn't use versions */
-    //         }
-    //         else {
-    //             throw e;
-    //         }
-    //     }
-    // }
+    const searchLabel = translate({id: 'theme.SearchBar.label', message: 'Search',
+        description: 'The ARIA label and placeholder for search button'});
 
     const history = useHistory();
     const searchBarRef = useRef(null);
@@ -456,12 +415,8 @@ export default function SearchBar({ handleSearchBarToggle }) {
             dir="ltr"
         >
             <input
-                placeholder={translate({
-                    id: 'theme.SearchBar.label',
-                    message: 'Search',
-                    description: 'The ARIA label and placeholder for search button',
-                })}
-                aria-label="Search"
+                placeholder={searchLabel}
+                aria-label={searchLabel}
                 className={clsx('navbar__search-input', styles.navbarSearchInput)}
                 onMouseEnter={onInputMouseEnter}
                 onFocus={onInputFocus}

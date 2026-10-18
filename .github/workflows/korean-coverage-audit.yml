@@ -1,0 +1,51 @@
+name: Korean coverage audit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '29 5 * * 1'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - 'versioned_docs/version-4.x/**'
+      - 'community/**'
+      - 'i18n/**'
+      - 'translations/**'
+      - 'sidebars.ts'
+      - 'sidebarsCommunity.json'
+      - 'versioned_sidebars/version-4.x-sidebars.json'
+      - 'scripts/i18n/**'
+      - '.github/workflows/korean-coverage-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Korean coverage audit
+    env:
+      I18N_LOCALE: ko
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - run: node scripts/i18n/check-configuration.cjs --all
+      - name: Recount native scope at checked-out source SHA
+        run: |
+          mkdir -p "$RUNNER_TEMP/korean-audit"
+          node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output "$RUNNER_TEMP/korean-audit/coverage.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: korean-coverage-${{ github.sha }}
+          path: ${{ runner.temp }}/korean-audit/coverage.json
+          if-no-files-found: warn
+          retention-days: 30

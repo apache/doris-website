@@ -74,6 +74,7 @@ jobs:
               id: detect
               run: |
                 BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                node scripts/i18n/check-configuration.cjs --all
                 node scripts/i18n/build-scope.cjs "$BASE_SHA"
 
             - name: Prepare swap for the localized build
@@ -102,6 +103,11 @@ jobs:
                   node --test scripts/i18n/__tests__/heading-ids.test.cjs
                   node --test scripts/i18n/__tests__/search-input.test.cjs
                   node --test scripts/i18n/__tests__/search-contexts.test.cjs
+                  node --test scripts/i18n/__tests__/search-version.test.cjs
+                  node --test scripts/i18n/__tests__/configuration.test.cjs
+                  node --test scripts/i18n/__tests__/search-verification.test.cjs
+                  node --test scripts/i18n/__tests__/korean-tokenizer.test.cjs
+                  node --test scripts/i18n/__tests__/doc-navigation.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
                   node --test scripts/i18n/__tests__/multi-locale.test.cjs
                   node --test scripts/i18n/__tests__/inventory.test.cjs
@@ -126,14 +132,28 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=2048
               run: |
                   node --test scripts/publish/__tests__/*.test.cjs
-                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                  if git diff --name-only "$BASE_SHA" HEAD | grep -Eq '^(scripts/publish/|config/(custom-docusaurus-plugin|ssrTemplate)\.js|scripts/build-locales\.cjs)'; then
+                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
                       node scripts/publish/verify-fixture.cjs
                   fi
+
+            - name: Install browser verification tools
+              if: steps.detect.outputs.optimize_publish == 'true'
+              run: |
+                  DORIS_BROWSER_TOOLS="$RUNNER_TEMP/doris-browser-tools"
+                  npm install --prefix "$DORIS_BROWSER_TOOLS" --no-save --no-package-lock playwright@1.64.1
+                  "$DORIS_BROWSER_TOOLS/node_modules/.bin/playwright" install --with-deps chromium
+                  echo "NODE_PATH=$DORIS_BROWSER_TOOLS/node_modules" >> "$GITHUB_ENV"
+
+            - name: Verify four-language publishing fixture in Chromium
+              if: steps.detect.outputs.optimize_publish == 'true'
+              env:
+                  NODE_OPTIONS: --max-old-space-size=4096
+              run: node scripts/publish/verify-fixture.cjs --verify-existing --browser
 
             - name: Build
               env:
                   DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.optimize_publish }}
+                  DORIS_ASSET_ORIGIN: ""
                   DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
                   DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
                   PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
@@ -145,12 +165,17 @@ jobs:
                   fi
 
                   echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all} LOCALES=${{ steps.detect.outputs.locale_csv }}"
-                  if [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enabled_locales }}" = "" ]; then
+                  mkdir -p .i18n-build
+                  free -m > .i18n-build/ci-memory-before.txt
+                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
+                      /usr/bin/time -v -o .i18n-build/ci-build-time.txt yarn build:publish --locales "${{ steps.detect.outputs.locale_csv }}"
+                  elif [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enabled_locales }}" = "" ]; then
                       PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
                   else
                       # Every locale gets a separate Node process and its real prefix.
                       yarn build:locales --locales "${{ steps.detect.outputs.locale_csv }}"
                   fi
+                  free -m > .i18n-build/ci-memory-after.txt
 
             - name: Verify localized static pages
               if: steps.detect.outputs.skip_build != 'true'
@@ -163,6 +188,15 @@ jobs:
                   for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
                       node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" $VERIFY_PARTIAL
                   done
+                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
+                      node scripts/publish/verify.cjs build
+                      for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
+                          node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
+                          EXTRA_ARGS=""
+                          if [ "$LOCALE" = "ko" ]; then EXTRA_ARGS="--source-locales en,zh-CN --themes"; fi
+                          /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" $EXTRA_ARGS
+                      done
+                  fi
                   rm -rf build
 
             - name: Upload publish artifact measurements
@@ -173,6 +207,9 @@ jobs:
                   path: |
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
+                      .i18n-build/ci-*.txt
+                      .i18n-build/browser-*-time.txt
+                      .i18n-build/browser-*.json
                   if-no-files-found: warn
                   retention-days: 14
 
