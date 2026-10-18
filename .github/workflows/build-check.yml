@@ -114,8 +114,19 @@ jobs:
                   BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
                   node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
 
+            - name: Publish artifact optimization tests
+              env:
+                  NODE_OPTIONS: --max-old-space-size=2048
+              run: |
+                  node --test scripts/publish/__tests__/*.test.cjs
+                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                  if git diff --name-only "$BASE_SHA" HEAD | grep -Eq '^(scripts/publish/|config/(custom-docusaurus-plugin|ssrTemplate)\.js|scripts/build-locales\.cjs)'; then
+                      node scripts/publish/verify-fixture.cjs
+                  fi
+
             - name: Build
               env:
+                  DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.optimize_publish }}
                   DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
                   DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
                   PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
@@ -146,6 +157,17 @@ jobs:
                       node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" $VERIFY_PARTIAL
                   done
                   rm -rf build
+
+            - name: Upload publish artifact measurements
+              if: always() && steps.detect.outputs.optimize_publish == 'true'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: publish-artifact-measurements
+                  path: |
+                      .i18n-build/publish-result.json
+                      .i18n-build/build-result.json
+                  if-no-files-found: warn
+                  retention-days: 14
 
             - name: Docs changed link gate
               continue-on-error: true

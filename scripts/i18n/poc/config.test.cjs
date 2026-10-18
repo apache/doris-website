@@ -64,3 +64,32 @@ test('SSR bootstrap, preload and stylesheet URLs use the same origin as webpack'
         else process.env.DORIS_ASSET_ORIGIN = original;
     }
 });
+
+test('optimized publication shares CDN assets while workers remain on the page origin', () => {
+    const previous = process.env.DORIS_OPTIMIZE_PUBLISH;
+    const origin = process.env.DORIS_ASSET_ORIGIN;
+    const templatePath = require.resolve('../../../config/ssrTemplate');
+    try {
+        process.env.DORIS_OPTIMIZE_PUBLISH = 'true';
+        process.env.DORIS_ASSET_ORIGIN = 'https://cdnd.selectdb.com';
+        for (const locale of ['/', '/zh-CN/', '/ja/']) {
+            assert.equal(paths(locale).publicPath,'https://cdnd.selectdb.com/');
+            assert.equal(paths(locale).workerPublicPath,'/');
+        }
+        delete require.cache[templatePath];
+        const html = require('eta').render(require(templatePath).ssrTemplate, {
+            htmlAttributes:'lang="ja"',bodyAttributes:'',version:'3.6.3',baseUrl:'/ja/',
+            headTags:'',metaAttributes:[],preBodyTags:'',postBodyTags:'',appHtml:'',noIndex:false,
+            stylesheets:['assets/css/main.css'],scripts:['assets/js/main.js'],
+        });
+        assert(html.includes('src="https://cdnd.selectdb.com/assets/js/main.js"'));
+        assert(html.includes('href="https://cdnd.selectdb.com/assets/css/main.css"'));
+        assert(!html.includes('/ja/assets/'));
+    } finally {
+        delete require.cache[templatePath];
+        if (previous === undefined) delete process.env.DORIS_OPTIMIZE_PUBLISH;
+        else process.env.DORIS_OPTIMIZE_PUBLISH = previous;
+        if (origin === undefined) delete process.env.DORIS_ASSET_ORIGIN;
+        else process.env.DORIS_ASSET_ORIGIN = origin;
+    }
+});
