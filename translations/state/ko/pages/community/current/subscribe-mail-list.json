@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "subscribe-mail-list",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/subscribe-mail-list.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/subscribe-mail-list.md",
+    "sourceCommit": "16813ae25c1dd541fb7074144ac2004f53107823",
+    "sourceHash": "4ccda3a3258f033d15102695cddfc90df24acd5c0870940e51d5f64b5af3d0db",
+    "sourceTechnicalHash": "407337e516093740d76c39f04e1da017aab47e2d79b57ba1721d0b4a56f4f3ec",
+    "targetHash": "0fb5d26d0a9eb9272f56e6b04e0e59762da4e5b3688c362fdf7f78f74072e5d1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T20:59:04.806Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ccda3a3258f033d15102695cddfc90df24acd5c0870940e51d5f64b5af3d0db",
+      "targetHash": "0fb5d26d0a9eb9272f56e6b04e0e59762da4e5b3688c362fdf7f78f74072e5d1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: BE"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"html\",null,null,\"<!-- Knowledge type: Procedural steps -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 절차 안내 -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Applicable scenarios: New user onboarding / Joining the community / Following community decisions -->\"]; received [\"html\",null,null,\"<!-- 적용 상황: 신규 사용자 시작 안내 / 커뮤니티 참여 / 커뮤니티 결정 사항 확인 -->\"]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: BE"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
