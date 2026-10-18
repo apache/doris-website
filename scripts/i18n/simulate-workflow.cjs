@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
-const {loadRecords, stateFileFor} = require('./state.cjs');
+const {hash, loadRecords, stateFileFor} = require('./state.cjs');
+const {structure} = require('./structure.cjs');
 
 const sourceRoot = path.resolve(__dirname, '../..');
 const sourcePath = process.env.I18N_SIM_SOURCE_PATH
@@ -17,7 +18,8 @@ const runId = '123456';
 const pages = Number(process.env.I18N_SIM_PAGES || '1');
 const scenario = process.env.I18N_SIM_SCENARIO || 'retry';
 assert([1, 10].includes(pages), 'Simulation supports one or ten pages');
-assert(['success', 'retry', 'fallback'].includes(scenario), 'Unknown simulation scenario');
+assert(['success', 'retry', 'fallback', 'incremental'].includes(scenario), 'Unknown simulation scenario');
+assert(scenario !== 'incremental' || pages === 1, 'Incremental simulation uses one page');
 
 function command(binary, args, options = {}) {
     return execFileSync(binary, args, {encoding: 'utf8', ...options}).trim();
@@ -37,6 +39,13 @@ const marker = 'Translation input:\\n';
 const payload = JSON.parse(prompt.slice(prompt.indexOf(marker) + marker.length));
 const {extractUnits} = require(${JSON.stringify(path.join(repo, 'scripts/i18n/translation-engine.cjs'))});
 (async () => {
+    if (payload.changes) {
+        const translations = payload.changes.map(change => ({id: change.id,
+            text: ${JSON.stringify(mode)} === 'invalid' ? '' : '訳' + change.text}));
+        fs.writeFileSync(answer, JSON.stringify({translations}));
+        process.stdout.write(JSON.stringify({type: 'turn.completed', usage: {total_tokens: 100000}}) + '\\n');
+        return;
+    }
     let translation = payload.document;
     const units = await extractUnits(translation, ${JSON.stringify(path.extname(sourcePath))});
     for (const unit of [...units].reverse()) translation = translation.slice(0, unit.start)
@@ -90,7 +99,7 @@ function runNode(root, script, args, env, logDir, expectedStatus = 0) {
     return result;
 }
 
-function main() {
+async function main() {
     const output = process.argv[2] ? path.resolve(process.argv[2])
         : fs.mkdtempSync(path.join(os.tmpdir(), 'doris-ja-workflow-sim-'));
     assert(process.argv.length <= 3, 'Usage: node scripts/i18n/simulate-workflow.cjs [empty-output-dir]');
@@ -115,8 +124,30 @@ function main() {
     // Include uncommitted implementation changes only in the disposable clone.
     for (const file of ['scripts/i18n', 'scripts/check_md_links_single.py', '.github/workflows'])
         fs.cpSync(path.join(sourceRoot, file), path.join(repo, file), {recursive: true});
-    let selectedPath = sourcePath;
-    if (pages === 10) {
+    let selectedPath = sourcePath, incrementalTarget;
+    if (scenario === 'incremental') {
+        selectedPath = 'docs/translation-simulation/incremental.md';
+        const targetPath = `i18n/ja/docusaurus-plugin-content-docs/current/${selectedPath.slice(5)}`;
+        const source = '# Guide\n\nDoris guide.\n\n'
+            + Array.from('ABCDEFGH', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+        incrementalTarget = '# ガイド\n\nDoris のガイド。\n\n'
+            + Array.from('ABCDEFGH', letter => `訳Paragraph ${letter}.`).join('\n\n') + '\n';
+        for (const file of [selectedPath, targetPath]) fs.mkdirSync(path.dirname(path.join(repo, file)), {recursive: true});
+        fs.writeFileSync(path.join(repo, selectedPath), source);
+        command('git', ['add', '.'], {cwd: repo});
+        command('git', ['commit', '-qm', 'Incremental simulation baseline source'], {cwd: repo});
+        const record = {pluginId: 'default', version: 'current', docId: 'translation-simulation/incremental',
+            locale: 'ja', sourceLocale: 'en', sourcePath: selectedPath, targetPath,
+            sourceCommit: command('git', ['rev-parse', 'HEAD'], {cwd: repo}), sourceHash: hash(source),
+            sourceTechnicalHash: (await structure(source, '.md')).technicalHash, targetHash: hash(incrementalTarget),
+            ownership: 'machine', reviewStatus: 'machine', translatedAt: new Date().toISOString(),
+            glossaryVersion: JSON.parse(fs.readFileSync(path.join(repo, 'translations/glossary/ja.json'), 'utf8')).version};
+        const statePath = path.join(repo, stateFileFor(record));
+        fs.mkdirSync(path.dirname(statePath), {recursive: true});
+        fs.writeFileSync(statePath, JSON.stringify({schemaVersion: 1, page: record}, null, 2) + '\n');
+        fs.writeFileSync(path.join(repo, targetPath), incrementalTarget);
+        fs.writeFileSync(path.join(repo, selectedPath), source.replace('Paragraph A.', 'Updated paragraph A.'));
+    } else if (pages === 10) {
         selectedPath = 'docs/translation-simulation/';
         fs.mkdirSync(path.join(repo, selectedPath), {recursive: true});
         for (let index = 0; index < pages; index++) fs.writeFileSync(path.join(repo, selectedPath, `page-${index}.md`),
@@ -163,7 +194,7 @@ function main() {
     const requests = generation.candidates.reduce((sum, candidate) => sum + candidate.requests, 0);
     assert(Number.isInteger(requests) && requests > 0);
     assert.equal(generation.usedTokens, requests * 100000);
-    const attempts = {success: 1, retry: 2, fallback: 3}[scenario];
+    const attempts = {success: 1, retry: 2, fallback: 3, incremental: 1}[scenario];
     assert.equal(requests, pages * attempts);
     assert(generation.candidates.every(candidate => candidate.generation.attempts === attempts
         && candidate.generation.acceptedWithWarnings === (scenario === 'fallback')));
@@ -175,6 +206,11 @@ function main() {
     const candidate = generation.candidates[0];
     const target = command('git', ['show', `${branch}:${candidate.targetPath}`], {cwd: remote});
     assert.match(target, /[\u3040-\u30ff\u3400-\u9fff]/);
+    if (scenario === 'incremental') {
+        assert.equal(candidate.generation.mode, 'incremental');
+        assert.equal(candidate.generation.sourceChange.ratio, 0.1);
+        assert.equal(target, incrementalTarget.replace('訳Paragraph A.', '訳Updated paragraph A.').trim());
+    }
     const state = [...loadRecords(repo, 'ja').values()];
     assert(state.some(page => page.sourcePath === candidate.sourcePath && page.reviewStatus === 'machine'
         && page.sourceHash === candidate.sourceHash && page.targetHash === candidate.targetHash));
@@ -189,6 +225,7 @@ function main() {
             usedTokens: generation.usedTokens},
         documents: generation.candidates.map(item => ({sourcePath: item.sourcePath,
             sourceChars: fs.readFileSync(path.join(repo, item.sourcePath), 'utf8').length,
+            mode: item.generation.mode, sourceChange: item.generation.sourceChange,
             attempts: item.generation.attempts, warnings: item.generation.warnings.length})),
         admission: {status: 'passed', checks: ['translation state', 'syntax', 'internal links']},
         pullRequest: {url: pr.url, draft: pr.draft, branch: pr.head, commit: branch, files: committedFiles, labels: pr.labels}};
@@ -196,4 +233,4 @@ function main() {
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 }
 
-try {main();} catch (error) {console.error(error); process.exitCode = 1;}
+main().catch(error => {console.error(error); process.exitCode = 1;});

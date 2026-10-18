@@ -72,18 +72,24 @@ async function checkSyntax(target, extension) {
 }
 
 async function inspectDocument({source, translation, extension, glossary, targetLocale, targetScriptPattern,
-    root, targetPath}) {
+    root, targetPath, preserveFormatting = false}) {
     let target = translation.replace(/^```(?:markdown|mdx?)\s*\n([\s\S]*)\n```\s*$/, '$1');
-    target = target.replace(/[\t ]+$/gm, '').replace(/\n*$/, '\n');
+    if (!preserveFormatting) target = target.replace(/[\t ]+$/gm, '').replace(/\n*$/, '\n');
     const issues = [];
     const check = async (name, fn) => {
         try {await fn();} catch (error) {issues.push({check: name, message: error.message});}
     };
     const parsed = await structure(source, extension);
-    await check('headings', async () => {target = await alignHeadings(parsed, target, extension);});
+    let aligned = target;
+    await check('headings', async () => {
+        aligned = await alignHeadings(parsed, target, extension);
+        // Older targets rely on the render-time heading bridge. Validate the
+        // same aligned view without adding anchors to untouched target blocks.
+        if (!preserveFormatting) target = aligned;
+    });
     await check('syntax', () => checkSyntax(target, extension));
     await check('protected-content', async () => {
-        const translated = await structure(target, extension);
+        const translated = await structure(aligned, extension);
         if (signature(translated) !== signature(parsed))
             throw new Error('Restore protected source content:\n' + protectionDifference(parsed, translated));
     });
