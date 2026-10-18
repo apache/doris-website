@@ -1,8 +1,6 @@
-// Print the locales whose translation state this checkout manages and whose
-// build is enabled, so a workflow can verify every one of them without naming
-// a language. The site configuration decides what a build serves; the
-// translation configuration decides what state exists.
+// Publication verifies enabled locales; PR admission must also check state for
+// disabled locales. --all selects the translation configuration alone.
 const {enabledLocales} = require('../../config/i18n');
 const {managedLocales} = require('./state.cjs');
 
-process.stdout.write(managedLocales(process.cwd(), enabledLocales()).join(' '));
+process.stdout.write(managedLocales(process.cwd(), process.argv.includes('--all') ? undefined : enabledLocales()).join(' '));

@@ -61,7 +61,7 @@ test('route groups span every managed locale while a manifest carries one', asyn
     const page = (locale, docId, indexable = true) => ({pluginId: 'default', version: 'current', docId, locale,
         status: 'current', useTarget: true, indexable,
         permalink: `/${locale}/docs/current/${docId}/`, englishPermalink: `/docs/current/${docId}/`,
-        alternates: {en: `/docs/current/${docId}/`, ...(indexable ? {[locale]: `/${locale}/docs/current/${docId}/`} : {})}});
+        alternates: {en: `/docs/current/${docId}/`, 'zh-CN': `/zh-CN/docs/current/${docId}/`, ...(indexable ? {[locale]: `/${locale}/docs/current/${docId}/`} : {})}});
     const allContent = {'docusaurus-plugin-content-docs': {
         default: {translationManifest: {pages: [page('ja', 'a'), page('ja', 'b', false)], reports: [
                 {kind: 'unsupported_source_route', sourcePath: 'i18n/zh-CN/x.md'},
@@ -75,7 +75,7 @@ test('route groups span every managed locale while a manifest carries one', asyn
         assert.equal(manifest.locale, locale);
         // Both locales group the indexable page; the non-indexable one contributes none.
         assert.deepEqual(Object.keys(globalData.alternates).sort(),
-            ['/docs/current/a/', '/ja/docs/current/a/']);
+            ['/docs/current/a/', '/ja/docs/current/a/', '/zh-CN/docs/current/a/']);
         assert.deepEqual(manifest.pages.map(item => item.docId), locale === 'ja' ? ['a', 'b'] : []);
         // Repository-wide reports stay, another locale's records do not.
         assert.deepEqual(manifest.reports.filter(report => report.kind === 'unsupported_source_route').length, 1);

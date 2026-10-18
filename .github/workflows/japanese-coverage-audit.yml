@@ -23,6 +23,8 @@ permissions:
 
 jobs:
   audit:
+    env:
+      I18N_LOCALE: ja
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -73,7 +73,7 @@ async function main() {
     const bodyFile = path.join(output, 'pr-body.md');
     const body = fs.readFileSync(bodyFile, 'utf8');
     assert(body.includes('bot-head=PENDING'), 'Missing PR ownership marker');
-    await require('./pr-preflight.cjs').preflight({root, base: manifest.sourceCommit});
+    await require('./pr-preflight.cjs').preflight({root, base: manifest.sourceCommit, locale});
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
         + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`);
     const remoteMaster = git('ls-remote', 'origin', 'refs/heads/master').split(/\s+/)[0];
