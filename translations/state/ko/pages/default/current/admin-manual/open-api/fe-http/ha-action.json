@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/ha-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/ha-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/ha-action.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "585172568679ae87462c3b26b85b1d1f8dc253efda0e92ceaa716a581d615803",
+    "sourceTechnicalHash": "4e7139d1904a1479c553e3cc38600aee43be47cc60ca71c97bb2ece99dc7a9dc",
+    "targetHash": "9affce5346ebecf9e1f2cb1b7a68e6ec689471bbd05319fff1aca0f270dda386",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:22:53.800Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "585172568679ae87462c3b26b85b1d1f8dc253efda0e92ceaa716a581d615803",
+      "targetHash": "9affce5346ebecf9e1f2cb1b7a68e6ec689471bbd05319fff1aca0f270dda386",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

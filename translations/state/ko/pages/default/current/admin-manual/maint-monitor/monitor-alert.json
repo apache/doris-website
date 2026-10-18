@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/maint-monitor/monitor-alert",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/maint-monitor/monitor-alert.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/monitor-alert.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "7ab6f3c72465c8b364418a5388b4873d2dccf817daf265142d14777c71491ac3",
+    "sourceTechnicalHash": "345de557805ff0b92c1c33da3dd05911aade47b7b2d263105949e8c5b7241c2b",
+    "targetHash": "1c0a2df44803dcc7b91234596857367d4f274230b4ea49f44fc93fa82173ac8e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:15:56.822Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7ab6f3c72465c8b364418a5388b4873d2dccf817daf265142d14777c71491ac3",
+      "targetHash": "1c0a2df44803dcc7b91234596857367d4f274230b4ea49f44fc93fa82173ac8e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

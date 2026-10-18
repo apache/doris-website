@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/extra-basepath-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/extra-basepath-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/extra-basepath-action.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "94f307289ee8eeb51db3433c8c18aca5502625dc76b117a4224d63ba32ebae17",
+    "sourceTechnicalHash": "c2e1f87212cc3d1bb6800d981d41fa4e417482f718fc146e77a91aecfa6acaa1",
+    "targetHash": "fa97b6eed305d29c24c6e02cbd231e39f23075c16d4123daa901c7afe1316047",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:21:17.986Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "94f307289ee8eeb51db3433c8c18aca5502625dc76b117a4224d63ba32ebae17",
+      "targetHash": "fa97b6eed305d29c24c6e02cbd231e39f23075c16d4123daa901c7afe1316047",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
