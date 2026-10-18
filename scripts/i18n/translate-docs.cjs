@@ -8,7 +8,7 @@ const {hash, identity, relative, loadConfig, pipelineLocale, stateFileFor, listS
 const {structure} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
 const {checkedTask, safeFile, openAIAdapter, mockAdapter, translateDocument} = require('./translation-engine.cjs');
-const {translateWholeDocument} = require('./translate-document.cjs');
+const {translateManagedDocument} = require('./translate-document.cjs');
 
 function optionsFrom(argv) {
     const values = {}, tasks = [];
@@ -97,11 +97,20 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         'Existing target or identity changed; manual review required');
     }
     const wholeDocument = typeof adapter.translateDocument === 'function';
-    const previousSource = existing && !wholeDocument ? readCommitted(root, existing.sourceCommit, existing.sourcePath) : null;
-    if (existing && !wholeDocument) assert(hash(previousSource) === existing.sourceHash, 'Previous source record is invalid');
+    let previousSource = null, baselineReason;
+    if (existing) {
+        try {previousSource = readCommitted(root, existing.sourceCommit, existing.sourcePath);}
+        catch (error) {
+            if (!wholeDocument) throw error;
+            baselineReason = 'previous-source-unavailable';
+        }
+        if (previousSource !== null) assert(hash(previousSource) === existing.sourceHash, 'Previous source record is invalid');
+    }
     const extension = path.extname(task.sourcePath);
     const canReuse = existing?.glossaryVersion === glossary.version;
-    const generated = wholeDocument ? await translateWholeDocument({source, extension, adapter, glossary,
+    const generated = wholeDocument ? await translateManagedDocument({source, extension, adapter, glossary,
+        previousSource, previousTarget,
+        baselineReason: baselineReason || (existing && !canReuse ? 'glossary-version-changed' : undefined),
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern, root, targetPath: task.targetPath,
         onAttempt: ({attempt, issues}) => process.stdout.write(`${task.sourcePath}: attempt ${attempt}/3: `
             + (issues.length ? issues.map(item => `${item.check}: ${item.message}`).join('; ') : 'passed') + '\n')})

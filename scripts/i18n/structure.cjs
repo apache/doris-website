@@ -78,6 +78,14 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
         content, headings, format, protectedNodes, proseNumbers, technicalMetadata,
+        // Raw top-level ranges let incremental translations keep untouched
+        // target blocks, including their original Markdown formatting.
+        blocks: [
+            ...(raw.length > content.length ? [{kind: 'frontmatter', start: 0, end: raw.length - content.length}] : []),
+            ...tree.children.map(node => ({kind: node.type === 'heading' ? `heading:${node.depth}` : node.type,
+                start: raw.length - content.length + offsets[node.position.start.offset],
+                end: raw.length - content.length + offsets[node.position.end.offset]})),
+        ],
         technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, fingerprintHeadings])),
         // A secondary comparison for planning only. The state sourceHash stays
         // byte-sensitive, so a formatting edit still needs an explicit review.

@@ -108,6 +108,7 @@ jobs:
                   node --test scripts/i18n/__tests__/workflow.test.cjs
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
                   node --test scripts/i18n/__tests__/translate-document.test.cjs
+                  node --test scripts/i18n/__tests__/incremental-document.test.cjs
 
             - name: Japanese translation gate
               run: |
