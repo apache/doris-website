@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/snapshot",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/snapshot.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/snapshot.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "816b6c44ea0a963cf0fd634fd82a76ecd7ad60833a1e7c87c87fac3eaacfe00e",
+    "sourceTechnicalHash": "fc175eb7e169599f482efbe4217b5dbf8a05b8b24455a7540113b5a79402feae",
+    "targetHash": "410c7136d9955de229291e9af417ff83442337997f49636d7117fca1644815fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:18:15.282Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "816b6c44ea0a963cf0fd634fd82a76ecd7ad60833a1e7c87c87fac3eaacfe00e",
+      "targetHash": "410c7136d9955de229291e9af417ff83442337997f49636d7117fca1644815fb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

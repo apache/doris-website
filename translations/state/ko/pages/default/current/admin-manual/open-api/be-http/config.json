@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/config",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/config.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/config.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "fea236c1f3f3c2713f542173aee05140661976c37bff70a1f0ecf7dc15aa1ca2",
+    "sourceTechnicalHash": "90a89e7e92965cf7ae80a912b8817b606000abb56ae4657def51711642e8424e",
+    "targetHash": "94cd0d9df7126eb719e8b414d37ec2d0576e1746e691d8193b33ecb6be1f2cd3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:16:16.288Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fea236c1f3f3c2713f542173aee05140661976c37bff70a1f0ecf7dc15aa1ca2",
+      "targetHash": "94cd0d9df7126eb719e8b414d37ec2d0576e1746e691d8193b33ecb6be1f2cd3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

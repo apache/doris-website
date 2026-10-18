@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/be-vlog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/be-vlog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/be-vlog.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "8879c248bfe430ac867b52a9fe650e3e53e3a4bd95d3754a82c875e8105c576d",
+    "sourceTechnicalHash": "f32b9e17642a7be8913577a34358e56f32344172bf190bd038b3e59454bafcb4",
+    "targetHash": "1b8c392710fcd17c1dab150e7ed98c511128025611d20241b531ad865a5d007d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:14:03.497Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8879c248bfe430ac867b52a9fe650e3e53e3a4bd95d3754a82c875e8105c576d",
+      "targetHash": "1b8c392710fcd17c1dab150e7ed98c511128025611d20241b531ad865a5d007d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

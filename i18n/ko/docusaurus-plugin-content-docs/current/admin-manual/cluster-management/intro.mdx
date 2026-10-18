@@ -1,0 +1,61 @@
+---
+{
+    "title": "클러스터 관리",
+    "language": "ko",
+    "description": "Apache Doris 클러스터 관리 가이드: 업그레이드, 탄력적 확장 및 축소, FQDN, 로드 밸런싱, 서비스 자동 시작, 복제본 관리."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 클러스터 관리 {#cluster-management}
+
+이 장에서는 프로덕션 환경에서 Apache Doris 클러스터를 안정적으로 운영하는 데 필요한 일상적인 운영 작업을 다룹니다. 여기에는 버전 업그레이드, 용량 변경, 네트워크 토폴로지, 복제본 유지 관리가 포함됩니다.
+
+## 클러스터 수명 주기 {#cluster-lifecycle}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="클러스터 업그레이드"
+    description="버전 호환성 규칙, 메타데이터 호환성 테스트, FE/BE 업그레이드 절차를 다루는 롤링 업그레이드 가이드"
+    link="upgrade"
+/>
+
+<GettingStartedCard
+    title="탄력적 확장 및 축소"
+    description="서비스 중단 없이 FE/BE 노드를 온라인으로 추가하거나 제거하고, 축소 시 DROP 또는 DECOMMISSION 사용"
+    link="elastic-expansion"
+/>
+</div>
+
+## 토폴로지 및 접근 {#topology-and-access}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FQDN"
+    description="신규 클러스터, 기존 클러스터 마이그레이션, Kubernetes 배포에서 FQDN(Fully Qualified Domain Name) 모드 활성화"
+    link="fqdn"
+/>
+
+<GettingStartedCard
+    title="FE 로드 밸런싱"
+    description="여러 FE를 사용하는 배포 환경의 로드 밸런싱 옵션(JDBC, Nginx, HAProxy, ProxySQL)과 Proxy Protocol을 통한 클라이언트 IP 전달"
+    link="load-balancing"
+/>
+</div>
+
+## 서비스 가용성 및 복제본 {#service-availability-and-replicas}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="서비스 자동 시작"
+    description="Systemd 또는 Supervisor를 사용하여 FE/BE/Broker의 부팅 시 자동 시작 및 자동 재시작 구성"
+    link="../maint-monitor/automatic-service-start"
+/>
+
+<GettingStartedCard
+    title="데이터 복제본 관리"
+    description="tablet 복제본의 균형 조정 및 복구를 위한 스케줄링 전략과 복제본 조회 및 관리 명령"
+    link="../maint-monitor/tablet-repair-and-balance"
+/>
+</div>

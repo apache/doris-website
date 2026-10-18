@@ -1,0 +1,29 @@
+---
+{
+    "title": "로그 관리",
+    "language": "ko",
+    "description": "Apache Doris의 FE 및 BE 프로세스에서 생성하는 로그 파일과 관리 방법을 소개합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 로그 관리 {#log-management}
+
+Apache Doris의 FE 및 BE 노드는 여러 유형의 로그 파일을 생성합니다. 이 장에서는 각 로그 파일의 내용과 로그 수준, 로그 로테이션 정책, 보존 정책을 설정하는 방법을 설명합니다.
+
+## FE 및 BE 로그 {#fe-and-be-logs}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FE 로그 관리"
+    description="Frontend (FE) 프로세스에서 생성하는 로그를 설명하며, fe.log, fe.warn.log, fe.audit.log, fe.out의 분류, 형식, 설정을 다룹니다"
+    link="fe-log"
+/>
+
+<GettingStartedCard
+    title="BE 로그 관리"
+    description="Backend (BE) 프로세스에서 생성하는 로그를 설명하며, be.INFO, be.WARNING, be.out의 분류, 형식, 설정을 다룹니다"
+    link="be-log"
+/>
+</div>

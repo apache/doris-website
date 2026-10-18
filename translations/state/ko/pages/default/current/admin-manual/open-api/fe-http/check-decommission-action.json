@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/check-decommission-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/check-decommission-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/check-decommission-action.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "6d77a8665473233a8614c8564a1e5f434919931e58b0378350c33267874a9a14",
+    "sourceTechnicalHash": "91e810495f5dbb045b419b6160f759fbe97b46cf21288ba30235b317bc3fc6ea",
+    "targetHash": "6298bf77fdc65fd21ebc9840f6eec4cd5eb2f183fe8caaf7e9fa62e0d6b451f8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:20:34.677Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6d77a8665473233a8614c8564a1e5f434919931e58b0378350c33267874a9a14",
+      "targetHash": "6298bf77fdc65fd21ebc9840f6eec4cd5eb2f183fe8caaf7e9fa62e0d6b451f8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
