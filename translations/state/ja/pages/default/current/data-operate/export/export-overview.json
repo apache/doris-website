@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/export/export-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/export/export-overview.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "730d8f2006fc230876e02034207fb738a9eeec48c884b6ed44501f0fc0891a52",
-    "sourceTechnicalHash": "2a1e433c9052f36fe5d6c30c1fdc9a4ac7537553d5c39db33a214a9c09a28ed8",
-    "targetHash": "d4fc20ff141e36bf3fc282f90aa80edb33ec296ad1118d9fb6c8ab62924127cc",
+    "sourceCommit": "5736ad75317fc096f00b6aaea3bc289a2862a41c",
+    "sourceHash": "76ce1d8b1f0de06f88750888df240fb26117bc98d71e54ec28ca60d8bfd6ee5b",
+    "sourceTechnicalHash": "f16279984f36194b9d10e82b6c6c877e96084d16f1b91a2bbeb2c55156f3fc80",
+    "targetHash": "52d223ae7380238a8559518becb2169692797741f472ab47add12aa0806e100a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.645Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-18T04:48:23.884Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "76ce1d8b1f0de06f88750888df240fb26117bc98d71e54ec28ca60d8bfd6ee5b",
+      "targetHash": "52d223ae7380238a8559518becb2169692797741f472ab47add12aa0806e100a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: アーキテクチャ選択の判断 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data export solution selection / Cross-system data exchange -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: データエクスポート方法の選択 / システム間のデータ交換 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"128\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"36\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

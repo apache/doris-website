@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-cg.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "8caac48161b3e51a6e61dfd7e04f5d57886c5526d4ae8f212e2b5f8ec5ab2f95",
-    "sourceTechnicalHash": "b456bd74493eb189d55ac2d9143b43e927b19828e50ecd091d06afc641078bb2",
-    "targetHash": "636cefde3846b016d0627f291905dc5710d83bbf49524ff7de988144b1d359ab",
+    "sourceCommit": "5736ad75317fc096f00b6aaea3bc289a2862a41c",
+    "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
+    "sourceTechnicalHash": "188ff26abb3f50b15ab553ab0c54635682f803eaa3f6eed71e6566c099a71d67",
+    "targetHash": "3826913472cfa42b55978de74937401d6f3bf69482d61ab826e40dce6a3a59c0",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T12:03:12.438Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-18T05:03:12.857Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "9711b1d30068618cce932643f85ceb3329794f33d73fa4c5d6c5007f14adf584",
+      "targetHash": "3826913472cfa42b55978de74937401d6f3bf69482d61ab826e40dce6a3a59c0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"doris\"]; received [\"inlineCode\",null,null,\"cg1\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"300\",\"300\",\"30000\",\"31012\",\"32767\",\"4\",\"4.1\",\"4.2\",\"4.3\",\"5\",\"500\",\"6\",\"6.1\",\"6.2\",\"8\",\"8\",\"8040\",\"8040\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"uniqueId\"]; received [\"inlineCode\",null,null,\"doris\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"cg1\"]; received [\"inlineCode\",null,null,\"uniqueId\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
