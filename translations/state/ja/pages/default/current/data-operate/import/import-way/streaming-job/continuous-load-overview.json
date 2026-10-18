@@ -8,13 +8,53 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "47e567c3b97c5e464352f9b48218c8aa2d7a0c02fabef1e2f75ee697a1901071",
-    "sourceTechnicalHash": "6d7f5d68c709dfc8d44fd4d881406c8e6543626e6f3c249a867bc25f1029d3d0",
-    "targetHash": "b40881d6ad766fe5384db613c934cc568566ed383e1f09af4df7cb4e41ded656",
+    "sourceCommit": "5736ad75317fc096f00b6aaea3bc289a2862a41c",
+    "sourceHash": "2a62e36f582bdc4c4beb28b06dbb21e0946f773c949e931f95cda74bd8351313",
+    "sourceTechnicalHash": "050d8c08e08c740ce37876b76fecc58f16b0ffb4e5988170ef13ae8c24df9f94",
+    "targetHash": "740cb1bfcbc1890b6abb374c3cc1c685ad5ce9bdc0271507b5676caff75f1e07",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-18T04:51:07.588Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a62e36f582bdc4c4beb28b06dbb21e0946f773c949e931f95cda74bd8351313",
+      "targetHash": "740cb1bfcbc1890b6abb374c3cc1c685ad5ce9bdc0271507b5676caff75f1e07",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジ種別: 機能概要 + アーキテクチャの選択判断 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 対象シナリオ: リアルタイムのデータ取り込み方式の選択 / 継続的データロードの運用 -->\"]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: BE"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: BE"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }
