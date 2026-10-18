@@ -47,6 +47,62 @@ Translation commands must select their locale explicitly now that both `ja`
 and `ko` are configured, for example `I18N_LOCALE=ko`. The site build flags
 select rendered languages; they do not select the translation pipeline locale.
 
+## Korean toolchain and script-driven execution
+
+Korean uses its own `scope/ko.json`, `glossary/ko.json`, inventory and page state.
+Select the pipeline explicitly with `I18N_LOCALE=ko`; rendering flags do not
+select a translation pipeline. A loop can recount and plan from the current
+committed checkout without fixed batch registration:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ko-coverage.json
+I18N_LOCALE=ko node scripts/i18n/plan-translations.cjs --source-ref HEAD --limit 10 \
+  --active-candidates /tmp/ko-active-candidates.json --output /tmp/ko-plan.json
+```
+
+The active-candidates file must come from the current open PR scan. A standalone
+plan without it does not establish cross-PR deduplication. Replan after source,
+target/state, HEAD or active PR changes; use the selected native task IDs rather
+than historical inventory batch IDs. Reports on a local feature-branch commit
+can include local candidates; merged coverage is recounted on merged master.
+The loop is implemented separately in its own worktree.
+
+The trusted-master Codex workflow translates whole documents or eligible changed
+blocks, with at most three attempts and cumulative feedback. A third-attempt
+candidate can retain content warnings: inspect `generation.acceptedWithWarnings`,
+`generation.warnings` and `generation.history` before publication. This is a
+review candidate, not a language/technical quality pass. Review status remains
+machine until actual human proofreading.
+
+The independent `translate-docs.cjs --provider openai` entry uses protected text
+units and its own validation; it is not the Codex workflow. It stages live bytes
+for explicit application. The locale selector also applies to that step:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/translate-docs.cjs \
+  --apply-staged .i18n-build/<reviewed-stage> --plan /tmp/ko-plan.json
+```
+
+Application binds current HEAD, source bytes, reviewed target bytes, state and
+ownership. Manual staging manifests use schema version 2 and freeze the original
+target, effective state file and shard-layout marker hashes before generation.
+Application refuses a newer matching target/state pair as well as inconsistent
+edits. Regenerate older version-1 stages before applying them; page state and
+Codex workflow artifact schemas remain version 1.
+
+Korean starts with the page-record marker and writes independent
+shards. Legacy records remain readable and existing shards retain precedence.
+Human-owned targets, edited target/state bytes, path drift and symlinks require
+review. Dev/4.x reuse requires the same doc ID, relative filename and full source
+hash; an existing partner is updated against its own baseline, not overwritten
+by a copy. Each reused target still receives its own link/state admission checks.
+
+Generation and admission retain visible front matter and keyword entries, and
+check any declared `language` against the target locale. These checks leave the
+existing source/technical hash algorithms unchanged. Offline Korean fixtures
+exercise these boundaries without real credentials or model calls; actual
+single-page generation is a separate validation step.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
@@ -173,7 +229,7 @@ commit. The 2026-10-12 inventory is only a comparison baseline. New registered
 pages enter the plan even when they have never appeared in that inventory.
 
 ```bash
-node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+I18N_LOCALE=ja node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --limit 20 --output /tmp/japanese-plan.json
 ```
 
@@ -309,7 +365,7 @@ node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --output /tmp/japanese-plan.json
 export OPENAI_API_KEY='<secret>'
 export I18N_MODEL='<explicit-model-id>'
-node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
   --task '<selected-task-id>' --stage-dir .i18n-build/translation-candidates
 ```
 
@@ -319,7 +375,7 @@ Review the candidate and manifest, then apply those **same bytes** without
 another model call:
 
 ```bash
-node scripts/i18n/translate-docs.cjs \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs \
   --apply-staged .i18n-build/translation-candidates \
   --plan /tmp/japanese-plan.json
 ```

@@ -6,7 +6,7 @@ const {identity, hash, loadRecords, loadRecordsAt, pipelineLocale} = require('./
 const {structure, alignHeadings} = require('./structure.cjs');
 const {collect} = require('./inventory.cjs');
 const {protectionSignature} = require('./protection.cjs');
-const {signature, isDocumentGeneration, acceptedFallback} = require('./document-checks.cjs');
+const {signature, isDocumentGeneration, acceptedFallback, checkFrontMatter} = require('./document-checks.cjs');
 
 async function checkTranslations({root, locale = pipelineLocale(root), pages, reports = [], files, records, previousRecords = new Map()}) {
     const changed = new Set(files);
@@ -55,6 +55,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             const ext = path.extname(page.sourcePath);
             const parsed = await structure(source, ext);
             const fallback = acceptedFallback(record, source, target);
+            if (!fallback) checkFrontMatter(source, target, locale);
             let aligned = target;
             try {aligned = await alignHeadings(parsed, target, ext);}
             catch (error) {if (!fallback) throw error;}
