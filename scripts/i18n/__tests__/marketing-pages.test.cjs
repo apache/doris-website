@@ -23,13 +23,24 @@ function modules(locale, pathname, enabled = true) {
             customFields: {defaultLocalePageLocales: ['ja'], translatedPagePaths: enabled ? {ja: pagePaths} : {}}},
         '@docusaurus/Translate': {translate: ({message}) => message},
         '@docusaurus/useDocusaurusContext': () => ({i18n}),
+        '@docusaurus/useBaseUrl': source => source,
         '@docusaurus/useGlobalData': () => ({}),
         '@docusaurus/router': {useLocation: () => location},
-        '@docusaurus/Link': ({to, autoAddBaseUrl, children, ...props}) =>
-            React.createElement('a', {...props, href: to.replace(/^pathname:\/\//, '')}, children),
+        '@docusaurus/Link': React.forwardRef(({to, href, autoAddBaseUrl = true, children, ...props}, ref) => {
+            const target = (to || href).replace(/^pathname:\/\//, '');
+            const baseUrl = locale === 'en' ? '' : `/${locale}`;
+            const destination = autoAddBaseUrl && target.startsWith('/') && !target.startsWith(`${baseUrl}/`)
+                ? baseUrl + target : target;
+            return React.createElement('a', {...props, ref, href: destination}, children);
+        }),
+        '@site/src/components/brand-theme/BrandThemeSwitcher': {BrandThemeSwitcher: () => null},
     };
     function load(file) {
         file = path.resolve(root, file);
+        if (!path.extname(file) || !fs.existsSync(file)) {
+            file = ['', '.ts', '.tsx', '.js', '.json'].map(extension => file + extension)
+                .find(candidate => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+        }
         if (cache.has(file)) return cache.get(file).exports;
         const module = {exports: {}};
         cache.set(file, module);
@@ -39,8 +50,8 @@ function modules(locale, pathname, enabled = true) {
         const resolve = name => {
             if (Object.hasOwn(imports, name)) return imports[name];
             if (name.endsWith('.scss')) return {};
-            if (name.startsWith('@site/')) return load(name.slice(6) + '.ts');
-            if (name.startsWith('.')) return load(path.resolve(path.dirname(file), name) + '.ts');
+            if (name.startsWith('@site/')) return load(name.slice(6));
+            if (name.startsWith('.')) return load(path.resolve(path.dirname(file), name));
             return require(name);
         };
         new Function('require', 'module', 'exports', outputText)(resolve, module, module.exports);
@@ -88,6 +99,26 @@ test('page language controls preserve query/hash and mark the active language', 
         assert.equal((html.match(/aria-current="page"/g) ?? []).length, 1);
         assert.match(html, /English/);
         assert.match(html, /日本語/);
+    }
+});
+
+test('fallback Chinese benchmark pages still offer English and available translations', () => {
+    const {PageLanguageSwitcher} = modules('zh-CN', '/zh-CN/why-doris/benchmarks/')
+        ('src/components/home-next/PageLanguageSwitcher.tsx');
+    const html = renderToStaticMarkup(React.createElement(PageLanguageSwitcher));
+    assert.match(html, /href="\/why-doris\/benchmarks\/\?from=test#tech"/);
+    assert.match(html, /href="\/ja\/why-doris\/benchmarks\/\?from=test#tech"/);
+    assert.doesNotMatch(html, /href="\/zh-CN\//);
+    assert.doesNotMatch(html, /aria-current="page"/);
+});
+
+test('desktop and mobile benchmark navigation always enters the English page', () => {
+    for (const locale of ['en', 'zh-CN', 'ja']) {
+        const {NavbarNext} = modules(locale, `/${locale}/docs/4.x/getting-started/what-is-apache-doris/`)
+            ('src/components/home-next/NavbarNext.tsx');
+        const html = renderToStaticMarkup(React.createElement(NavbarNext));
+        assert.equal((html.match(/href="\/why-doris\/benchmarks"/g) ?? []).length, 2, locale);
+        assert.doesNotMatch(html, /href="\/(zh-CN|ja)\/why-doris\/benchmarks/);
     }
 });
 
