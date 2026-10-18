@@ -204,13 +204,14 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: publish-artifact-measurements
+                  include-hidden-files: true
                   path: |
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/ci-*.txt
                       .i18n-build/browser-*-time.txt
                       .i18n-build/browser-*.json
-                  if-no-files-found: warn
+                  if-no-files-found: error
                   retention-days: 14
 
             - name: Docs changed link gate
