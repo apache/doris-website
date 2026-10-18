@@ -2,7 +2,7 @@ import React, { type JSX } from 'react';
 import Link from '@docusaurus/Link';
 import SearchBar from '@theme/SearchBar';
 import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import { translate } from '@docusaurus/Translate';
 import type { DocsDomain } from '@site/src/utils/docs-sidebar-scope';
 
 import styles from './DocsDomainNav.module.scss';
@@ -33,18 +33,14 @@ function DomainLinks({ domains, mobile = false }: { domains: DocsDomain[]; mobil
 }
 
 export default function DocsDomainNav({ domains }: DocsDomainNavProps): JSX.Element | null {
-    const {
-        i18n: { currentLocale },
-    } = useDocusaurusContext();
     const activeDomain = domains.find(domain => domain.isActive) ?? domains[0];
-    const isZH = currentLocale === 'zh-CN';
 
     if (!activeDomain) {
         return null;
     }
 
     return (
-        <nav className={styles.root} aria-label={isZH ? '文档分类导航' : 'Documentation sections'}>
+        <nav className={styles.root} aria-label={translate({id: 'docs.navigation.sections', message: 'Documentation sections'})}>
             <div className={styles.inner}>
                 <div className={styles.domainList}>
                     <DomainLinks domains={domains} />

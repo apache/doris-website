@@ -206,6 +206,7 @@ async function main() {
     const output = path.resolve(option('--output'));
     assert(!fs.existsSync(output), 'Use a new snapshot directory; never overwrite active batch assignments');
     const locale = pipelineLocale(root);
+    const key = keyFor(locale);
     const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     validateScope(scope, locale);
     const gitRead = file => {

@@ -22,5 +22,41 @@
     },
     "blog.search.noResults": {
         "message": "当前搜索词和分类下没有匹配的博客。"
+    },
+    "docs.navigation.sections": {
+        "message": "文档分类导航"
+    },
+    "docs.navigation.menu": {
+        "message": "目录"
+    },
+    "docs.navigation.sidebar": {
+        "message": "文档目录"
+    },
+    "docs.navigation.closeSidebar": {
+        "message": "关闭目录"
+    },
+    "docs.navigation.sidebarNavigation": {
+        "message": "文档目录导航"
+    },
+    "docs.navigation.switchLanguage": {
+        "message": "切换语言"
+    },
+    "docs.navigation.openSidebar": {
+        "message": "打开文档目录"
+    },
+    "docs.navigation.browseSection": {
+        "message": "浏览当前分类"
+    },
+    "theme.TOC.homepage": {
+        "message": "Doris 首页"
+    },
+    "theme.TOC.downloadPdf": {
+        "message": "下载 PDF"
+    },
+    "theme.TOC.title": {
+        "message": "本页导航"
+    },
+    "theme.TOC.forum": {
+        "message": "技术论坛"
     }
 }
