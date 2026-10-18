@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/contribute-to-doris",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/contribute-to-doris.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-to-doris.mdx",
+    "sourceCommit": "54237d9b6ae5f6f2bed49f0a660cd3d61b4b95ce",
+    "sourceHash": "6de310022dcecf60f26d4f9bf575fd961e4d2bdc3c6bc36cd8c2eb9bd831f75b",
+    "sourceTechnicalHash": "17c8e44a80a46dbba12d80f0886dd352023b1acb5d43c98d681c4bdfe941fe6e",
+    "targetHash": "899ffe972bc95bbf8ab399d2ca4690c090b7bba66629131b714b420c19d78de4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T21:22:50.551Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "6de310022dcecf60f26d4f9bf575fd961e4d2bdc3c6bc36cd8c2eb9bd831f75b",
+      "targetHash": "899ffe972bc95bbf8ab399d2ca4690c090b7bba66629131b714b420c19d78de4",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 71: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"inlineCode\",null,null,\"apache/doris-website\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"apache/doris-website\"]; received [\"inlineCode\",null,null,\"/blog\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected []; received [\"1\",\"5\"]\nprotected node 71: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"inlineCode\",null,null,\"apache/doris-website\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"apache/doris-website\"]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 71: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"inlineCode\",null,null,\"apache/doris-website\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"apache/doris-website\"]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 71: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"inlineCode\",null,null,\"apache/doris-website\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"apache/doris-website\"]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
