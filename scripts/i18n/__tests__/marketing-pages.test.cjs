@@ -12,20 +12,34 @@ const {generate} = require('../../key-features/generate');
 const root = path.resolve(__dirname, '../../..');
 const pagePaths = localeRegistry.find(locale => locale.code === 'ja').translatedPages;
 
-function modules(locale, pathname, enabled = true) {
+function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePaths}) {
     const cache = new Map();
-    const i18n = {currentLocale: locale, defaultLocale: 'en', locales: enabled ? ['en', 'zh-CN', 'ja'] : ['en', 'zh-CN'],
-        localeConfigs: Object.fromEntries(localeRegistry.map(record => [record.code, record]))};
+    const locales = enabled ? ['en', 'zh-CN', 'ja', 'ko'] : ['en', 'zh-CN'];
+    const i18n = {currentLocale: locale, defaultLocale: 'en', locales,
+        localeConfigs: Object.fromEntries(localeRegistry.filter(record => locales.includes(record.code)).map(record => [record.code, record]))};
+    const config = {url: 'https://doris.apache.org', trailingSlash: true, baseUrl: locale === 'en' ? '/' : `/${locale}/`,
+        customFields: {defaultLocalePageLocales: enabled ? ['ja','ko'] : [], translatedPagePaths: enabled ? translatedPages : {}}};
+    const prefix = locale === 'en' ? '' : `/${locale}`;
     const location = {pathname, search: '?from=test', hash: '#tech'};
     const imports = {
         '@generated/i18n': i18n,
-        '@generated/docusaurus.config': {baseUrl: locale === 'en' ? '/' : `/${locale}/`,
-            customFields: {defaultLocalePageLocales: ['ja'], translatedPagePaths: enabled ? {ja: pagePaths} : {}}},
+        '@generated/docusaurus.config': config,
         '@docusaurus/Translate': {translate: ({message}) => message},
-        '@docusaurus/useDocusaurusContext': () => ({i18n}),
+        '@docusaurus/useDocusaurusContext': () => ({i18n, siteConfig: config}),
         '@docusaurus/useBaseUrl': source => source,
-        '@docusaurus/useGlobalData': () => ({}),
+        '@docusaurus/useGlobalData': () => ({'doris-translation-status': {default: {
+            alternates: {}, locales: enabled ? ['ja','ko'] : [], prefixes: [`${prefix}/docs/dev`,`${prefix}/community`],
+            pageRoutes: ['/', '/download/', '/community-report/', ...pagePaths.map(page => `${page}/`)].map(page => prefix + page),
+        }}}),
         '@docusaurus/router': {useLocation: () => location},
+        '@docusaurus/Head': ({children}) => React.createElement(React.Fragment, null, children),
+        '@docusaurus/theme-common': {useThemeConfig: () => ({metadata: []})},
+        '@docusaurus/theme-common/internal': {DEFAULT_SEARCH_TAG: 'default', keyboardFocusedClassName: 'keyboard',
+            useAlternatePageUtils: () => ({createUrl: ({locale, fullyQualified}) => {
+                const plain = pathname.replace(/^\/(en|zh-CN|ja|ko)(?=\/|$)/, '') || '/';
+                return (fullyQualified ? config.url : '') + (locale === 'en' ? '' : `/${locale}`) + plain;
+            }})},
+        '@theme/SearchMetadata': () => null,
         '@docusaurus/Link': React.forwardRef(({to, href, autoAddBaseUrl = true, children, ...props}, ref) => {
             const target = (to || href).replace(/^pathname:\/\//, '');
             const baseUrl = locale === 'en' ? '' : `/${locale}`;
@@ -59,6 +73,58 @@ function modules(locale, pathname, enabled = true) {
     }
     return load;
 }
+
+function metadata(locale, pathname, enabled = true, translatedPages) {
+    const {default: SiteMetadata} = modules(locale, pathname, enabled, translatedPages)('src/theme/SiteMetadata/index.tsx');
+    return require('cheerio').load(renderToStaticMarkup(React.createElement(SiteMetadata)));
+}
+
+test('ordinary English fallbacks declare English and stay out of translated SEO groups', () => {
+    for (const locale of ['ja','ko']) for (const page of ['/', '/download/', '/community-report/']) {
+        const $ = metadata(locale, `/${locale}${page}`);
+        assert.equal($('html').attr('lang'), 'en-US');
+        assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${page}`);
+        assert.equal($('meta[property="og:url"]').attr('content'), `https://doris.apache.org${page}`);
+        assert.equal($('meta[property="og:locale"]').attr('content'), 'en_US');
+        assert.match($('meta[name="robots"]').attr('content'), /noindex/);
+        assert.equal($('link[hreflang="ja"],link[hreflang="ko"]').length, 0);
+    }
+    for (const [locale, pathname, lang] of [['en','/','en-US'], ['zh-CN','/zh-CN/','zh-Hans-CN']]) {
+        const $ = metadata(locale, pathname);
+        assert.equal($('html').attr('lang'), lang);
+        assert.equal($('meta[name="robots"]').length, 0);
+        assert.equal($('link[hreflang="ja"],link[hreflang="ko"]').length, 0);
+    }
+    assert.equal(modules('ko','/ko')('src/utils/localization.ts').defaultLocalePath('/ko'), '/');
+});
+
+test('translated pages keep their SEO while an untranslated Korean counterpart points to English', () => {
+    const pathname = '/why-doris/compare/';
+    const ja = metadata('ja', `/ja${pathname}`);
+    assert.equal(ja('html').attr('lang'), 'ja');
+    assert.equal(ja('meta[name="robots"]').length, 0);
+    assert.equal(ja('link[rel="canonical"]').attr('href'), `https://doris.apache.org/ja${pathname}`);
+    const ko = metadata('ko', `/ko${pathname}`);
+    assert.equal(ko('html').attr('lang'), 'en-US');
+    assert.equal(ko('link[rel="canonical"]').attr('href'), `https://doris.apache.org${pathname}`);
+    assert.match(ko('meta[name="robots"]').attr('content'), /noindex/);
+    assert.equal(ko('link[hreflang="ko"]').length, 0);
+    assert.equal(ko('link[hreflang="ja"]').attr('href'), `https://doris.apache.org/ja${pathname}`);
+    const translated = metadata('ko', `/ko${pathname}`, true, {ja: pagePaths, ko: ['/why-doris/compare']});
+    assert.equal(translated('html').attr('lang'), 'ko');
+    assert.equal(translated('meta[name="robots"]').length, 0);
+    assert.equal(translated('link[hreflang="ko"]').length, 1);
+});
+
+test('native page identification excludes documentation, search and generated error routes', () => {
+    for (const pathname of ['/ko/docs/dev/guide/', '/ko/community/join-community/', '/ko/search/', '/ko/404.html']) {
+        const routes = modules('ko', pathname)('src/utils/translation.ts').useTranslationRoutes();
+        assert.equal(routes.pageFallback, false, pathname);
+        assert.equal(metadata('ko', pathname)('html').attr('lang'), 'ko');
+    }
+    const disabled = metadata('en', '/', false);
+    assert.equal(disabled('link[hreflang="ja"],link[hreflang="ko"]').length, 0);
+});
 
 test('Japanese links retain translated pages and suffixes while other ordinary pages use English', () => {
     const {localizedHomeLink, hasTranslatedPage} = modules('ja', '/')('src/utils/localization.ts');

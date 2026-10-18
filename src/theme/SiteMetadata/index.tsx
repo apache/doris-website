@@ -8,7 +8,7 @@
 import React, {type JSX} from 'react';
 import Head from '@docusaurus/Head';
 import {useTranslationRoutes} from '@site/src/utils/translation';
-import {isDefaultLocaleBlogRoute} from '@site/src/utils/localization';
+import {defaultLocalePath, isDefaultLocaleBlogRoute} from '@site/src/utils/localization';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {PageMetadata, useThemeConfig} from '@docusaurus/theme-common';
@@ -31,11 +31,11 @@ function AlternateLangHeaders(): JSX.Element {
     i18n: {currentLocale, defaultLocale, localeConfigs},
   } = useDocusaurusContext();
   const alternatePageUtils = useAlternatePageUtils();
-  const {group, managed, translatedLocales} = useTranslationRoutes();
+  const {group, managed, translatedLocales, pageFallback} = useTranslationRoutes();
   const availableLocales = Object.entries(localeConfigs).filter(([locale]) =>
     group ? !!group[locale] : !managed || !translatedLocales.includes(locale));
 
-  const currentHtmlLang = localeConfigs[currentLocale]!.htmlLang;
+  const currentHtmlLang = localeConfigs[pageFallback ? defaultLocale : currentLocale]!.htmlLang;
 
   // HTML lang is a BCP 47 tag, but the Open Graph protocol requires
   // using underscores instead of dashes.
@@ -123,9 +123,10 @@ function CanonicalUrlHeaders({permalink}: {permalink?: string}) {
 
 export default function SiteMetadata(): JSX.Element {
   const {
-    i18n: {currentLocale},
+    i18n: {currentLocale, defaultLocale, localeConfigs},
   } = useDocusaurusContext();
   const {pathname} = useLocation();
+  const {pageFallback} = useTranslationRoutes();
 
   // TODO maybe move these 2 themeConfig to siteConfig?
   // These seems useful for other themes as well
@@ -134,6 +135,7 @@ export default function SiteMetadata(): JSX.Element {
   return (
     <>
       <Head>
+        <html lang={localeConfigs[pageFallback ? defaultLocale : currentLocale]!.htmlLang} />
         <meta name="twitter:card" content="summary_large_image" />
         {/* The keyboard focus class name need to be applied when SSR so links
         are outlined when JS is disabled */}
@@ -142,7 +144,13 @@ export default function SiteMetadata(): JSX.Element {
 
       {defaultImage && <PageMetadata image={defaultImage} />}
 
-      <CanonicalUrlHeaders />
+      <CanonicalUrlHeaders permalink={pageFallback ? defaultLocalePath(pathname) : undefined} />
+
+      {pageFallback && (
+        <Head>
+          <meta name="robots" content="noindex, follow" />
+        </Head>
+      )}
 
       {/* A locale without a translated blog serves the default locale's
           articles under its own /blog routes. The section stays browsable, but

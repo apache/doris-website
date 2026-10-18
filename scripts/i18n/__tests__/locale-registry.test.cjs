@@ -71,13 +71,15 @@ test('route groups span every managed locale while a manifest carries one', asyn
         default: {translationManifest: {pages: [page('ja', 'a'), page('ja', 'b', false)], reports: [
                 {kind: 'unsupported_source_route', sourcePath: 'i18n/zh-CN/x.md'},
                 {kind: 'source_deleted', locale: 'ja', docId: 'gone'}]}, loadedVersions: [{path: '/ja/docs/current'}]},
-    }};
+    }, 'docusaurus-plugin-content-pages': {default: [{permalink: '/ja/'}, {permalink: '/ja/download'}]}};
     for (const locale of ['en', 'ja']) {
         let globalData;
         const plugin = translationStatusPlugin({siteDir, i18n: {currentLocale: locale}});
         await plugin.allContentLoaded({allContent, actions: {setGlobalData: data => {globalData = data;}}});
         const manifest = JSON.parse(fs.readFileSync(path.join(siteDir, '.i18n-build/manifests', `${locale}.json`), 'utf8'));
         assert.equal(manifest.locale, locale);
+        assert.deepEqual(globalData.pageRoutes, ['/ja/', '/ja/download/']);
+        assert.deepEqual(manifest.pageRoutes, globalData.pageRoutes);
         // Both locales group the indexable page; the non-indexable one contributes none.
         assert.deepEqual(Object.keys(globalData.alternates).sort(),
             ['/docs/current/a/', '/ja/docs/current/a/', '/zh-CN/docs/current/a/']);
