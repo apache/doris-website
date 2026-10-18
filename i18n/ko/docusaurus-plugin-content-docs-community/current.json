@@ -1,0 +1,66 @@
+{
+  "version.label": {
+    "message": "커뮤니티",
+    "description": "The label for version current"
+  },
+  "sidebar.community.category.About the Community": {
+    "message": "커뮤니티 소개",
+    "description": "The label for category About the Community in sidebar community"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "기여 방법",
+    "description": "The label for category How to Contribute in sidebar community"
+  },
+  "sidebar.community.category.Documentation Contribution": {
+    "message": "문서 기여",
+    "description": "The label for category Documentation Contribution in sidebar community"
+  },
+  "sidebar.community.category.Development & Debugging": {
+    "message": "개발 및 디버깅",
+    "description": "The label for category Development & Debugging in sidebar community"
+  },
+  "sidebar.community.category.Source Code Compilation": {
+    "message": "소스 코드 컴파일",
+    "description": "The label for category Source Code Compilation in sidebar community"
+  },
+  "sidebar.community.category.IDE Setup": {
+    "message": "IDE 설정",
+    "description": "The label for category IDE Setup in sidebar community"
+  },
+  "sidebar.community.category.Code Style": {
+    "message": "코드 스타일",
+    "description": "The label for category Code Style in sidebar community"
+  },
+  "sidebar.community.category.Debugging & Profiling": {
+    "message": "디버깅 및 프로파일링",
+    "description": "The label for category Debugging & Profiling in sidebar community"
+  },
+  "sidebar.community.category.Testing": {
+    "message": "테스트",
+    "description": "The label for category Testing in sidebar community"
+  },
+  "sidebar.community.category.Data Source Extension": {
+    "message": "데이터 소스 확장",
+    "description": "The label for category Data Source Extension in sidebar community"
+  },
+  "sidebar.community.category.Plugin Development": {
+    "message": "플러그인 개발",
+    "description": "The label for category Plugin Development in sidebar community"
+  },
+  "sidebar.community.category.Data Format Reference": {
+    "message": "데이터 형식 참조",
+    "description": "The label for category Data Format Reference in sidebar community"
+  },
+  "sidebar.community.category.Release": {
+    "message": "릴리스",
+    "description": "The label for category Release in sidebar community"
+  },
+  "sidebar.community.category.Design Documents": {
+    "message": "설계 문서",
+    "description": "The label for category Design Documents in sidebar community"
+  },
+  "sidebar.community.link.Improvement Proposals": {
+    "message": "개선 제안",
+    "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
+  }
+}

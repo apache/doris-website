@@ -231,7 +231,9 @@ test('one model result creates separate Dev and 4.x targets and state records', 
     } finally {fs.rmSync(dir, {recursive: true, force: true});}
 });
 
-async function updateFixture(t, {sharded = true, human = false} = {}) {
+async function updateFixture(t, {sharded = true, human = false,
+    previousSource = '# Hello\n\nOld.\n', source = '# Hello\n\nNew.\n',
+    previousTarget = '# こんにちは {#hello}\n\n古い。\n'} = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-state-update-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -239,9 +241,7 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
         fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true});
         fs.writeFileSync(path.join(root, file), text);
     };
-    const previousSource = '# Hello\n\nOld.\n';
-    const source = '# Hello\n\nNew.\n';
-    const previousTarget = '# こんにちは {#hello}\n\n古い。\n';
+    put('scripts/check_md_links_single.py', fs.readFileSync(path.resolve(__dirname, '../../check_md_links_single.py'), 'utf8'));
     put('docs/guide.md', previousSource);
     put('translations/scope/ja.json', JSON.stringify(scope));
     git('init', '-q'); git('add', '.');
@@ -282,6 +282,82 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
     return {root, git, put, oldRecord, previousTarget, legacyPath, shardPath, plan, task, adapter, run,
         calls: () => calls};
 }
+
+test('workflow updates compare against the recorded translated source across multiple English commits', async t => {
+    const previousSource = '# Hello\n\n' + Array.from('ABCDEFGHI', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+    const previousTarget = '# こんにちは {#hello}\n\n' + Array.from('ABCDEFGHI', letter => `段落 ${letter}。`).join('\n\n') + '\n';
+    const firstUpdate = previousSource.replace('Paragraph A.', 'Updated A.');
+    const fixture = await updateFixture(t, {previousSource, previousTarget, source: firstUpdate});
+    const source = firstUpdate.replace('Paragraph I.', 'Updated I.');
+    fixture.put(fixture.task.sourcePath, source);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'second English update');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const task = {...fixture.task, sourceCommit, sourceHash: hash(source)};
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 100, translateDocument: async () => {
+        throw new Error('Unexpected full translation');
+    }, translateChanges: async input => {
+        calls++;
+        assert.equal(input.document, source);
+        assert.deepEqual(input.changes.map(item => item.previousText), ['Paragraph A.', 'Paragraph I.']);
+        assert.deepEqual(input.changes.map(item => item.text), ['Updated A.', 'Updated I.']);
+        return {translations: input.changes.map(item => ({id: item.id, text: item.text.replace('Updated', '更新した')}))};
+    }};
+    const manifest = await fixture.run({adapter, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, tasks: [task]}});
+    assert.deepEqual(manifest.failures, []);
+    assert.equal(calls, 1);
+    assert.equal(manifest.candidates[0].generation.mode, 'incremental');
+    assert.equal(manifest.candidates[0].generation.sourceChange.ratio, 0.2);
+    assert.equal(manifest.candidates[0].generation.acceptedWithWarnings, false);
+    const target = fs.readFileSync(path.join(fixture.root, task.targetPath), 'utf8');
+    assert.equal(target, previousTarget.replace('段落 A。', '更新した A.').replace('段落 I。', '更新した I.'));
+    const updated = loadRecords(fixture.root, 'ja').get(identity(task));
+    assert.equal(updated.sourceCommit, sourceCommit);
+    assert.equal(updated.sourceHash, hash(source));
+    assert.equal(updated.targetHash, hash(target));
+});
+
+test('existing Dev and 4.x translations are updated independently instead of copying over their wording', async t => {
+    const previousSource = '# Hello\n\n' + Array.from('ABCDEFGHI', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+    const previousTarget = '# こんにちは {#hello}\n\n' + Array.from('ABCDEFGHI', letter => `段落 ${letter}。`).join('\n\n') + '\n';
+    const source = previousSource.replace('Paragraph A.', 'Updated A.');
+    const fixture = await updateFixture(t, {sharded: false, previousSource, previousTarget, source});
+    const sourcePath = 'versioned_docs/version-4.x/guide.md';
+    const targetPath = 'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md';
+    const otherTarget = previousTarget.replace('段落 B。', '別の訳文 B。');
+    fixture.put(sourcePath, previousSource);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'old 4.x source');
+    const x4Record = {...fixture.oldRecord, version: '4.x', sourcePath, targetPath,
+        sourceCommit: fixture.git('rev-parse', 'HEAD'), targetHash: hash(otherTarget)};
+    fixture.put(targetPath, otherTarget);
+    fixture.put(fixture.legacyPath, JSON.stringify({schemaVersion: 1, pages: [fixture.oldRecord, x4Record]}));
+    fixture.put(sourcePath, source);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'update 4.x source');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const primary = {...fixture.task, sourceCommit};
+    const partner = {...primary, version: '4.x', groupId: '4X', id: 'T06-4X-000000000000002', sourcePath, targetPath};
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 100, translateDocument: async () => {
+        throw new Error('Unexpected full translation');
+    }, translateChanges: async ({changes}) => {
+        calls++;
+        return {translations: changes.map(item => ({id: item.id, text: '更新した A。'}))};
+    }};
+    const manifest = await fixture.run({adapter, maxPages: 2, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, selected: [primary.id, partner.id], tasks: [primary, partner]}});
+    assert.deepEqual(manifest.failures, []);
+    assert.equal(manifest.candidates.length, 2);
+    assert.equal(calls, 2);
+    assert(manifest.candidates.every(item => !item.reusedFrom && item.generation.mode === 'incremental'));
+    assert.equal(fs.readFileSync(path.join(fixture.root, primary.targetPath), 'utf8'),
+        previousTarget.replace('段落 A。', '更新した A。'));
+    assert.equal(fs.readFileSync(path.join(fixture.root, partner.targetPath), 'utf8'),
+        otherTarget.replace('段落 A。', '更新した A。'));
+});
 
 test('a paired target reserved by an open PR is not copied even when the supplied plan omits that reservation', async t => {
     const fixture = await updateFixture(t);

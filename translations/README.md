@@ -28,6 +28,140 @@ Build Check installs dependencies and runs the i18n unit tests before the
 translation gate. The gate checks source metadata and state without a site
 build; the scoped website build and static-page verification run afterward.
 
+## Korean preview and inventory
+
+Korean is registered as an optional documentation locale. Enable it locally with
+`DORIS_ENABLE_KO=true`, or enable both managed languages with
+`DORIS_ENABLE_LOCALES=ja,ko`. Production deployment still enables Japanese only.
+Korean ordinary pages use the existing English fallback.
+
+The initial Korean native inventory is pinned to the merged source commit in
+[inventory/ko/2026-10-18/summary.json](inventory/ko/2026-10-18/summary.json).
+It covers Dev, 4.x and community documentation. Its four current PoC pages have
+machine review status; the snapshot is a historical baseline rather than a
+live coverage count. Category and domain labels live in the three matching
+Korean plugin dictionaries; technical labels retained in English have explicit
+per-key reasons in `scope/ko.json`.
+
+Translation commands must select their locale explicitly now that both `ja`
+and `ko` are configured, for example `I18N_LOCALE=ko`. The site build flags
+select rendered languages; they do not select the translation pipeline locale.
+
+## Korean toolchain and script-driven execution
+
+Korean uses its own `scope/ko.json`, `glossary/ko.json`, inventory and page state.
+Select the pipeline explicitly with `I18N_LOCALE=ko`; rendering flags do not
+select a translation pipeline. A loop can recount and plan from the current
+committed checkout without fixed batch registration:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ko-coverage.json
+I18N_LOCALE=ko node scripts/i18n/plan-translations.cjs --source-ref HEAD --limit 10 \
+  --active-candidates /tmp/ko-active-candidates.json --output /tmp/ko-plan.json
+```
+
+The active-candidates file must come from the current open PR scan. A standalone
+plan without it does not establish cross-PR deduplication. Replan after source,
+target/state, HEAD or active PR changes; use the selected native task IDs rather
+than historical inventory batch IDs. Reports on a local feature-branch commit
+can include local candidates; merged coverage is recounted on merged master.
+The loop is implemented separately in its own worktree.
+
+The trusted-master Codex workflow translates whole documents or eligible changed
+blocks, with at most three attempts and cumulative feedback. A third-attempt
+candidate can retain content warnings: inspect `generation.acceptedWithWarnings`,
+`generation.warnings` and `generation.history` before publication. This is a
+review candidate, not a language/technical quality pass. Review status remains
+machine until actual human proofreading.
+
+The independent `translate-docs.cjs --provider openai` entry uses protected text
+units and its own validation; it is not the Codex workflow. It stages live bytes
+for explicit application. The locale selector also applies to that step:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/translate-docs.cjs \
+  --apply-staged .i18n-build/<reviewed-stage> --plan /tmp/ko-plan.json
+```
+
+Application binds current HEAD, source bytes, reviewed target bytes, state and
+ownership. Manual staging manifests use schema version 2 and freeze the original
+target, effective state file and shard-layout marker hashes before generation.
+Application refuses a newer matching target/state pair as well as inconsistent
+edits. Regenerate older version-1 stages before applying them; page state and
+Codex workflow artifact schemas remain version 1.
+
+Korean starts with the page-record marker and writes independent
+shards. Legacy records remain readable and existing shards retain precedence.
+Human-owned targets, edited target/state bytes, path drift and symlinks require
+review. Dev/4.x reuse requires the same doc ID, relative filename and full source
+hash; an existing partner is updated against its own baseline, not overwritten
+by a copy. Each reused target still receives its own link/state admission checks.
+
+Generation and admission retain visible front matter and keyword entries, and
+check any declared `language` against the target locale. These checks leave the
+existing source/technical hash algorithms unchanged. Offline Korean fixtures
+exercise these boundaries without real credentials or model calls; actual
+single-page generation is a separate validation step.
+
+The `Korean translation discovery` workflow is manual-only and defaults to a
+read-only dry run. It fixes the locale to `ko`, uses separate Korean artifacts,
+and shares the existing `japanese-translation-ja` lock with Japanese runs.
+After the workflow is merged, run discovery on master:
+
+```bash
+gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
+```
+
+For a bounded real validation, select one eligible English file from the plan
+and provide its exact repository-relative `.md` or `.mdx` path with
+`-f mode=validate -f path=<exact-source-file>`. Validation sets the page limit
+to one and rechecks active PRs before calling Codex. Generation checks the
+`translate-ko` label before loading auth, then uses the existing verified
+runtime and auth pool. A write credential enables a normal labeled PR after
+shared admission checks; otherwise a successful one-page validation remains
+an artifact and does not establish the PR publication path. Inspect generation
+warnings and normal PR checks before merging. There is no Korean generation
+schedule in this workflow.
+
+## Search, navigation and four-language validation
+
+`check-configuration.cjs --all` validates each managed locale's scope and glossary
+without loading Docusaurus, an inventory or a model. Build Check runs it even
+for scope/glossary-only changes. The Korean coverage workflow is read-only and
+reports pending translations without blocking an English source change merely
+because Korean content is missing.
+
+The navigation and browser search checks accept `--locale ja` or `--locale ko`.
+They read the current build's translation manifest; the inventory is a historical
+comparison, not a route allowlist. Generated inventory batch IDs are historical
+metadata, and execution batches are selected dynamically.
+
+```bash
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only
+node scripts/i18n/verify-search.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only \
+  --source-locales en,zh-CN --themes --output /tmp/korean-search-check.json
+```
+
+These commands require a build made with Korean enabled. Local website builds
+use `DOCS_VERSIONS=current`; `--dev-only` records that 4.x was not built. Complete
+CI validation omits both flags and builds all four locales with `build:publish`,
+then verifies the shared resources, native routes, contexts and browser workers.
+Build and browser measurements are retained as the publish artifact measurements.
+Playwright/Chromium are installed in a separate tools directory in CI; local
+checks can use the same approach and set `NODE_PATH` to that directory's
+`node_modules`.
+
+SearchBar and SearchPage derive source-language index locations from the actual
+native version metadata. The native last version uses the locale root; other
+versions use their registered paths. This also works when a scoped build makes
+Dev the last version. Managed locales keep their own three context indexes at
+the locale root, including empty contexts; the empty root index is not a duplicate
+union. Korean verification covers Hangul, SQL, identifiers, IME composition,
+no-results/source links, mobile layout and every registered brand theme, including
+the embedded animation's theme-token bridge.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
@@ -154,7 +288,7 @@ commit. The 2026-10-12 inventory is only a comparison baseline. New registered
 pages enter the plan even when they have never appeared in that inventory.
 
 ```bash
-node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+I18N_LOCALE=ja node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --limit 20 --output /tmp/japanese-plan.json
 ```
 
@@ -226,8 +360,34 @@ reintroduced page returns to normal native enumeration.
 The translation pipeline works on one locale per run. `scripts/i18n/state.cjs`
 exposes `pipelineLocale(root)`: a configuration that declares a single locale
 needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
-soon as several are managed. The two discovery workflows take a `locale` input
-and pass it through as that variable.
+soon as several are managed. An absent or unconfigured selector then fails
+before discovery or generation. The Japanese translation workflow defaults its
+manual input and scheduled runs to `ja`; the Japanese coverage audit always
+selects `ja`. A manual translation run can select another configured locale.
+
+Build Check runs PR admission once per configured translation locale, including
+locales disabled for the site build:
+
+```bash
+MANAGED_LOCALES=$(node scripts/i18n/managed-locales.cjs --all)
+for LOCALE in $MANAGED_LOCALES; do
+  I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+done
+```
+
+Without `--all`, `managed-locales.cjs` lists only enabled managed locales for
+publication checks. The publisher passes its selected locale to PR admission.
+Native inventory returns only that selected locale's pages and reports, plus
+repository-wide reports and all configured plugin/version metadata. SEO groups
+merge indexable translations by native plugin, version and doc ID, preserving
+actual source-language slugs and excluding stale or disabled translations.
+
+Run the offline native-metadata regression with
+`node --test scripts/i18n/__tests__/multi-locale.test.cjs`. For small real builds
+with both managed locales and with Korean disabled, run
+`node scripts/i18n/verify-multi-locale-fixture.cjs`; add `--browser` when
+Playwright and Chromium are installed. These fixtures use their own minimal
+locale registration and do not enable a production deployment.
 
 Each locale also declares, in `translations/config.json`:
 
@@ -264,7 +424,7 @@ node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --output /tmp/japanese-plan.json
 export OPENAI_API_KEY='<secret>'
 export I18N_MODEL='<explicit-model-id>'
-node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
   --task '<selected-task-id>' --stage-dir .i18n-build/translation-candidates
 ```
 
@@ -274,7 +434,7 @@ Review the candidate and manifest, then apply those **same bytes** without
 another model call:
 
 ```bash
-node scripts/i18n/translate-docs.cjs \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs \
   --apply-staged .i18n-build/translation-candidates \
   --plan /tmp/japanese-plan.json
 ```

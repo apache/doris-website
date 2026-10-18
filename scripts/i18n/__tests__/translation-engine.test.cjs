@@ -174,10 +174,12 @@ test('staged live candidate applies the exact reviewed bytes and state once', as
             sourceCommit, sourceHash: hash(source), sourceTechnicalHash: (await structure(source, '.md')).technicalHash,
             targetHash: hash(generated.target), reviewStatus: 'machine', ownership: 'machine',
             translatedAt: '2026-10-13T00:00:00.000Z', glossaryVersion: glossary.version};
-        fs.writeFileSync(path.join(stage, 'manifest.json'), JSON.stringify({schemaVersion: 1, provider: 'openai',
+        fs.writeFileSync(path.join(stage, 'manifest.json'), JSON.stringify({schemaVersion: 2, provider: 'openai',
             liveCall: true, liveVerified: false, applied: false, sourceCommit, glossaryVersion: glossary.version,
             candidates: [{id, sourceHash: hash(source), sourcePath: planned.sourcePath,
-                targetPath: planned.targetPath, targetHash: hash(generated.target), targetChanged: true, record}]}));
+                targetPath: planned.targetPath, targetHash: hash(generated.target), targetChanged: true,
+                baseline: {targetHash: null, statePath: 'translations/state/ja/docs.json',
+                    stateHash: hash('{"schemaVersion":1,"pages":[]}\n'), schemaHash: null}, record}]}));
         fs.writeFileSync(path.join(root, 'docs/a.md'), '# Changed\n');
         await assert.rejects(applyStaged(root, planFile, '.i18n-build/staged'), /Source changed since planning/);
         assert.equal(fs.existsSync(path.join(root, planned.targetPath)), false);

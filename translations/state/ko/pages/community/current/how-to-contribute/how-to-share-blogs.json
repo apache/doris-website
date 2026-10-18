@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/how-to-share-blogs",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/how-to-share-blogs.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/how-to-share-blogs.md",
+    "sourceCommit": "5e2a864d29ca9c932c4e14f08a2f800db37493eb",
+    "sourceHash": "f097fb1b367dbcbbfc8e3b053cdce3aa0c5f8bb01e7636ed5ee53acbe845a7e2",
+    "sourceTechnicalHash": "7a49022b27b01ae4ca7f6ac2825ab127434b3eb26c1bdc159374aef3bb891e2c",
+    "targetHash": "3110984babd9e4f5e32cecae9313d79ec0700669413ec99c158dfe4c8c060a0f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T17:46:57.626Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "f097fb1b367dbcbbfc8e3b053cdce3aa0c5f8bb01e7636ed5ee53acbe845a7e2",
+      "targetHash": "3110984babd9e4f5e32cecae9313d79ec0700669413ec99c158dfe4c8c060a0f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"link\",\"https://github.com/apache/doris-website\",null]\nprotected node 6: expected [\"link\",\"https://github.com/apache/doris-website\",null]; received [\"inlineCode\",null,null,\"/blog\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"link\",\"https://github.com/apache/doris-website\",null]\nprotected node 6: expected [\"link\",\"https://github.com/apache/doris-website\",null]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"link\",\"https://github.com/apache/doris-website\",null]\nprotected node 6: expected [\"link\",\"https://github.com/apache/doris-website\",null]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"/blog\"]; received [\"link\",\"https://github.com/apache/doris-website\",null]\nprotected node 6: expected [\"link\",\"https://github.com/apache/doris-website\",null]; received [\"inlineCode\",null,null,\"/blog\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -6,6 +6,7 @@ const {processDocMetadata} = require('@docusaurus/plugin-content-docs/lib/docs.j
 const {Globby, getPluginI18nPath, normalizeUrl, readLastUpdateData, aliasedSitePath, resolveMarkdownLinkPathname} = require('@docusaurus/utils');
 const {applyTrailingSlash} = require('@docusaurus/utils-common');
 const {hash, relative, identity, loadConfig, managedLocales, loadRecords, sourceLocaleFor, decide} = require('./state.cjs');
+const {mergeAlternates} = require('./alternates.cjs');
 const {structure, alignHeadings} = require('./structure.cjs');
 
 async function exists(file) { try { await fs.access(file); return true; } catch { return false; } }
@@ -157,6 +158,7 @@ module.exports = async function translationDocsPlugin(context, options) {
                 sourcePath: relative(context.siteDir, path.join(versions['zh-CN'][index].contentPathLocalized, target))});
         }
     }
+    mergeAlternates(pages);
     const pluginContext = activeLocale ? {...context, localizationDir: viewRoot(activeLocale)} : context;
     const plugin = await native.default(pluginContext, options);
     const byId = new Map(pages.map(page => [identity(page), page]));

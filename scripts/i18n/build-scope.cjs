@@ -41,6 +41,10 @@ function buildScope(files, versions, managed = []) {
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
             || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
+        else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
+            if (!locales.includes(match[2])) throw new Error(`Unconfigured locale: ${match[2]}`);
+            json.add(file); // Offline configuration checks cover these without a site build.
+        }
         // Translation configuration applies to every managed locale at once.
         else if (file === 'translations/config.json') {managed.forEach(locale => languages.add(locale)); build();}
         else if ((match = file.match(/^translations\/state\/([^/]+)\/[^/]+\.json$/))) {
@@ -59,7 +63,10 @@ function buildScope(files, versions, managed = []) {
         else {languages.add('en'); build();}
     }
     for (const version of wanted) if (!active.includes(version)) {wanted.delete(version); retired.add(version);}
-    const optimizePublish = files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    const searchChanged = files.some(file => /^scripts\/i18n\/search-plugin\.cjs$/.test(file)
+        || /^src\/theme\/(SearchBar|SearchPage)\/.+\.[jt]sx?$/.test(file)
+        || /^src\/utils\/(searchVersion|searchContexts|searchInput|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
+    const optimizePublish = searchChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     // Publication changes need the same complete artifact as deployment, on
     // the CI runner. Keep local checks scoped to fixtures and Dev versions.
     if (optimizePublish) {tier = 'full'; shared();}

@@ -1,5 +1,5 @@
 // Trusted-master automation only. The workflow supplies the requested mode and
-// model credential; this module writes only validated managed ja files/state.
+// model credential; this module writes only validated files/state for the selected managed locale.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, identity, languageName, pipelineLocale} = require('./state.cjs');
 const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs');
 const {codexAdapter} = require('./codex-adapter.cjs');
-const {prepare, applyCandidates, readState, statePathForRecord, targetFor} = require('./translate-docs.cjs');
+const {prepare, applyCandidates, readState, stagedBaseline, statePathForRecord, targetFor} = require('./translate-docs.cjs');
 const {markerPrefixFor} = require('./automation-naming.cjs');
 
 const root = path.resolve(__dirname, '../..');
@@ -42,10 +42,7 @@ function copyPair(primary, partner, scope, state, rootDir = root) {
     const targetFile = safeFile(rootDir, partner.targetPath);
     const previousTarget = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : null;
     const existing = state.data.pages.find(item => identity(item) === identity(partner));
-    assert(!previousTarget || existing, 'Untracked paired target needs human review');
-    if (existing) assert(existing.sourcePath === partner.sourcePath && existing.targetPath === partner.targetPath
-        && previousTarget !== null && hash(previousTarget) === existing.targetHash
-        && existing.ownership === 'machine', 'Paired target changed or is human maintained');
+    assert(!previousTarget && !existing, 'Existing paired translations must be updated against their own baseline');
     const source = fs.readFileSync(safeFile(rootDir, partner.sourcePath), 'utf8');
     assert.equal(hash(source), partner.sourceHash, 'Paired source changed');
     assert.equal(execFileSync('git', ['show', `HEAD:${partner.sourcePath}`], {cwd: rootDir, encoding: 'utf8'}), source,
@@ -54,6 +51,7 @@ function copyPair(primary, partner, scope, state, rootDir = root) {
         docId: partner.docId, sourcePath: partner.sourcePath, targetPath: partner.targetPath,
         sourceHash: partner.sourceHash};
     return {...primary, task: partner, targetFile, previousTarget, record,
+        baseline: stagedBaseline(state, partner, previousTarget),
         requests: 0, reusedFrom: primary.task.id};
 }
 
@@ -66,7 +64,13 @@ function ensureMasterFresh(sourceCommit) {
 }
 
 function bodyFor(manifest) {
-    const rows = manifest.candidates.map(item => `| ${item.kind} | ${item.version} | [\`${item.sourcePath}\`](https://github.com/apache/doris-website/blob/${manifest.sourceCommit}/${item.sourcePath}) | \`${item.sourceHash.slice(0, 12)}\` | ${item.reusedFrom ? `copied from \`${item.reusedFrom}\`` : 'model call'} |`);
+    const rows = manifest.candidates.map(item => {
+        const review = item.generation;
+        const mode = review?.mode === 'incremental'
+            ? `incremental (${(review.sourceChange.ratio * 100).toFixed(1)}%)`
+            : review?.reason ? `full (${review.reason})` : 'model call';
+        return `| ${item.kind} | ${item.version} | [\`${item.sourcePath}\`](https://github.com/apache/doris-website/blob/${manifest.sourceCommit}/${item.sourcePath}) | \`${item.sourceHash.slice(0, 12)}\` | ${item.reusedFrom ? `copied from \`${item.reusedFrom}\`` : mode} |`;
+    });
     const failures = manifest.failures.length ? manifest.failures.map(item => `- \`${item.id}\` (${item.sourcePath}): ${item.error}`).join('\n') : 'None.';
     const warnings = manifest.candidates.filter(item => item.generation?.acceptedWithWarnings)
         .map(item => {
@@ -82,7 +86,10 @@ function bodyFor(manifest) {
         '', '| Action | Version | English source | SHA-256 prefix | Generation |',
         '| --- | --- | --- | --- | --- |', ...rows, '', '## Failed or skipped tasks', '', failures, '',
         '## Candidates retained with warnings', '', ...(warnings.length ? warnings : ['None.']), '',
-        '## Validation', '', 'Each document is translated in one request, with at most three attempts.',
+        '## Validation', '', 'Updates at or below 30% translate only changed Markdown/MDX blocks and preserve other target blocks.',
+        'Change size is the sum of max(removed, added) non-empty English lines per diff hunk, divided by the larger old/new line count.',
+        'New documents, larger updates, glossary changes or baselines that cannot be aligned use full translation.',
+        'Generation uses at most three attempts per document. Deletions and code-only updates may need no model call.',
         'Each retry receives the earlier validation errors. Third-attempt content issues are retained as warnings above.',
         'Full attempt history and diagnostics are in generation.json and the page state records.',
         'Committed source hashes, managed paths, target/state hashes and the master SHA are checked before applying candidates.',
@@ -113,6 +120,7 @@ async function generate({plan, reconciliation, maxPages = 10, target,
         }
         let partner = pairFor(task, plan.tasks, scope);
         if (partner && (active.has(identity(partner)) || blocked.has(partner.targetPath) || !machineOwned(partner, state)
+            || state.data.pages.some(record => identity(record) === identity(partner))
             || candidates.length + 2 > maxPages)) partner = null;
         try {
             checkedTask(plan, id, scope, rootDir);

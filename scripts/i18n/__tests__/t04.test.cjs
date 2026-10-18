@@ -28,9 +28,9 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(stateOnly.locales,['ja']);
     assert.equal(stateOnly.docs_versions,'4.x');
     assert.deepEqual(stateOnly.json,[shard]);
-    assert.deepEqual(buildScope(['sidebars.ts'],versions).locales,['en','zh-CN','ja']);
-    assert.deepEqual(buildScope(['.github/workflows/cron-deploy-website.yml'],versions).locales,['en','zh-CN','ja']);
-    assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja']);
+    assert.deepEqual(buildScope(['sidebars.ts'],versions).locales,['en','zh-CN','ja','ko']);
+    assert.deepEqual(buildScope(['.github/workflows/cron-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko']);
+    assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko']);
     assert.equal(buildScope(['versions.json'],versions).need_full_build,true);
     assert.deepEqual(buildScope(['versioned_docs/version-1.2/a.md'],versions).retired,['1.2']);
     // Only a managed locale renders dictionary changes, so only its dictionary
@@ -50,7 +50,7 @@ test('publication changes exercise the complete optimized artifact on CI', () =>
         assert.equal(scope.optimize_publish,true,file);
         assert.equal(scope.docs_versions,'',file);
         assert.equal(scope.need_full_build,true,file);
-        assert.deepEqual(scope.locales,['en','zh-CN','ja']);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko']);
     }
     assert.equal(buildScope(['docs/example.md'],versions).optimize_publish,false);
 });
@@ -167,19 +167,39 @@ test('source-only edits report stale Japanese content; edited stale targets are 
     const page = {pluginId:'default',version:'current',docId:'test',locale:'ja',status:'stale_unknown',
         sourcePath:'docs/test.md',targetPath:'i18n/ja/docusaurus-plugin-content-docs/current/getting-started/intro.mdx'};
     const root = path.resolve(__dirname,'../../..');
-    const sourceEdit = await checkTranslations({root,pages:[page],files:['docs/test.md'],records:new Map()});
+    const sourceEdit = await checkTranslations({root,locale:'ja',pages:[page],files:['docs/test.md'],records:new Map()});
     assert.equal(sourceEdit.checked,0);
     assert.deepEqual(sourceEdit.errors,[]);
-    const targetEdit = await checkTranslations({root,pages:[page],files:[page.targetPath],records:new Map()});
+    const targetEdit = await checkTranslations({root,locale:'ja',pages:[page],files:[page.targetPath],records:new Map()});
     assert.equal(targetEdit.checked,1);
     assert.match(targetEdit.errors[0].message,/current source\/state/);
 });
 
-test('required legacy link gate follows Japanese fallback in the same version', () => {
+test('required legacy link gate follows managed locale fallback in the same version', () => {
     const {existingLocalTarget} = require('../../check_move.js');
-    for (const version of ['current','version-4.x']) {
-        const file = `i18n/ja/docusaurus-plugin-content-docs/${version}/getting-started/what-is-apache-doris.md`;
+    for (const locale of ['ja', 'ko']) for (const version of ['current','version-4.x']) {
+        const file = `i18n/${locale}/docusaurus-plugin-content-docs/${version}/getting-started/what-is-apache-doris.md`;
         assert.equal(existingLocalTarget(file,'../ai/ai-overview.md'),true);
         assert.equal(existingLocalTarget(file,'../ai/not-a-page-t04.md'),false);
+    }
+});
+
+
+test('Korean scope and glossary edits get offline JSON checks without forcing a website build', () => {
+    for (const file of ['translations/scope/ko.json', 'translations/glossary/ko.json']) {
+        const scope = buildScope([file], versions, ['ja','ko']);
+        assert.deepEqual(scope.json, [file]);
+        assert.equal(scope.skip_build, true);
+    }
+    assert.throws(() => buildScope(['translations/scope/fr.json'],versions,['ja','ko']), /Unconfigured/);
+});
+
+
+test('search implementation changes exercise full four-language publication and browser verification', () => {
+    for (const file of ['scripts/i18n/search-plugin.cjs','src/utils/searchVersion.js','src/theme/SearchPage/SearchPage.jsx']) {
+        const scope = buildScope([file],versions,['ja','ko']);
+        assert.equal(scope.optimize_publish,true,file);
+        assert.equal(scope.docs_versions,'',file);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko'],file);
     }
 });

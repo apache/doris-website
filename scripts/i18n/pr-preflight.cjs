@@ -3,11 +3,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
+const {pipelineLocale} = require('./state.cjs');
 const {checkLinks, checkSyntax} = require('./document-checks.cjs');
 
-async function preflight({root, base}) {
+async function preflight({root, base, locale = pipelineLocale(root)}) {
     execFileSync(process.execPath, [path.join(root, 'scripts/i18n/check-translations.cjs'), '--base', base],
-        {cwd: root, stdio: 'inherit'});
+        {cwd: root, stdio: 'inherit', env: {...process.env, I18N_LOCALE: locale}});
     const files = execFileSync('git', ['diff', '--name-only', '--diff-filter=AM', '-z', base, 'HEAD'],
         {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean)
         .filter(file => /^i18n\/[^/]+\/docusaurus-plugin-content-docs[^/]*\/.+\.mdx?$/.test(file));

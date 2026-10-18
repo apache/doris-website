@@ -1,0 +1,738 @@
+{
+  "version.label": {
+    "message": "4.x",
+    "description": "The label for version 4.x"
+  },
+  "sidebar.docs.category.Get Started": {
+    "message": "시작하기",
+    "description": "The label for category Get Started in sidebar docs"
+  },
+  "sidebar.docs.category.Getting Started": {
+    "message": "시작하기",
+    "description": "The label for category Getting Started in sidebar docs"
+  },
+  "sidebar.docs.category.Migration": {
+    "message": "마이그레이션",
+    "description": "The label for category Migration in sidebar docs"
+  },
+  "sidebar.docs.category.Features & Architecture": {
+    "message": "기능 및 아키텍처",
+    "description": "The label for category Features & Architecture in sidebar docs"
+  },
+  "sidebar.docs.category.Installation & Deployment": {
+    "message": "설치 및 배포",
+    "description": "The label for category Installation & Deployment in sidebar docs"
+  },
+  "sidebar.docs.category.Installation Preparation": {
+    "message": "설치 준비",
+    "description": "The label for category Installation Preparation in sidebar docs"
+  },
+  "sidebar.docs.category.Deploying Manually": {
+    "message": "수동 배포",
+    "description": "The label for category Deploying Manually in sidebar docs"
+  },
+  "sidebar.docs.category.Deploying on Kubernetes": {
+    "message": "Kubernetes 배포",
+    "description": "The label for category Deploying on Kubernetes in sidebar docs"
+  },
+  "sidebar.docs.category.Doris Operator Concepts and Capabilities": {
+    "message": "Doris Operator 개념 및 기능",
+    "description": "The label for category Doris Operator Concepts and Capabilities in sidebar docs"
+  },
+  "sidebar.docs.category.Preparation": {
+    "message": "준비",
+    "description": "The label for category Preparation in sidebar docs"
+  },
+  "sidebar.docs.category.Integrated Storage Compute": {
+    "message": "스토리지와 컴퓨팅 통합",
+    "description": "The label for category Integrated Storage Compute in sidebar docs"
+  },
+  "sidebar.docs.category.Separating Storage Compute": {
+    "message": "스토리지와 컴퓨팅 분리",
+    "description": "The label for category Separating Storage Compute in sidebar docs"
+  },
+  "sidebar.docs.category.Deploying on Cloud": {
+    "message": "클라우드 배포",
+    "description": "The label for category Deploying on Cloud in sidebar docs"
+  },
+  "sidebar.docs.category.Compute-Storage Decoupled Guide": {
+    "message": "스토리지와 컴퓨팅 분리 가이드",
+    "description": "The label for category Compute-Storage Decoupled Guide in sidebar docs"
+  },
+  "sidebar.docs.category.File Cache": {
+    "message": "파일 캐시",
+    "description": "The label for category File Cache in sidebar docs"
+  },
+  "sidebar.docs.category.Read/Write Separation": {
+    "message": "읽기/쓰기 분리",
+    "description": "The label for category Read/Write Separation in sidebar docs"
+  },
+  "sidebar.docs.category.Connection & Integration": {
+    "message": "연결 및 연동",
+    "description": "The label for category Connection & Integration in sidebar docs"
+  },
+  "sidebar.docs.category.Data Integration": {
+    "message": "데이터 통합",
+    "description": "The label for category Data Integration in sidebar docs"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "가이드",
+    "description": "The label for category Guides in sidebar docs"
+  },
+  "sidebar.docs.category.Table Design": {
+    "message": "테이블 설계",
+    "description": "The label for category Table Design in sidebar docs"
+  },
+  "sidebar.docs.category.Table Models": {
+    "message": "테이블 모델",
+    "description": "The label for category Table Models in sidebar docs"
+  },
+  "sidebar.docs.category.Unique Key Model": {
+    "message": "Unique Key 모델",
+    "description": "The label for category Unique Key Model in sidebar docs"
+  },
+  "sidebar.docs.category.Partitioning & Bucketing": {
+    "message": "파티셔닝 및 버킷팅",
+    "description": "The label for category Partitioning & Bucketing in sidebar docs"
+  },
+  "sidebar.docs.category.Indexes": {
+    "message": "인덱스",
+    "description": "The label for category Indexes in sidebar docs"
+  },
+  "sidebar.docs.category.Inverted Index (Fulltext)": {
+    "message": "역색인 (전문 검색)",
+    "description": "The label for category Inverted Index (Fulltext) in sidebar docs"
+  },
+  "sidebar.docs.category.Vector Index": {
+    "message": "벡터 인덱스",
+    "description": "The label for category Vector Index in sidebar docs"
+  },
+  "sidebar.docs.category.Storage Layout": {
+    "message": "스토리지 레이아웃",
+    "description": "The label for category Storage Layout in sidebar docs"
+  },
+  "sidebar.docs.category.Tiered Storage": {
+    "message": "계층형 스토리지",
+    "description": "The label for category Tiered Storage in sidebar docs"
+  },
+  "sidebar.docs.category.Data Loading": {
+    "message": "데이터 적재",
+    "description": "The label for category Data Loading in sidebar docs"
+  },
+  "sidebar.docs.category.Data Source": {
+    "message": "데이터 소스",
+    "description": "The label for category Data Source in sidebar docs"
+  },
+  "sidebar.docs.category.Loading Methods": {
+    "message": "데이터 적재 방법",
+    "description": "The label for category Loading Methods in sidebar docs"
+  },
+  "sidebar.docs.category.Continuous Load": {
+    "message": "지속적 데이터 적재",
+    "description": "The label for category Continuous Load in sidebar docs"
+  },
+  "sidebar.docs.category.MySQL (Experimental)": {
+    "message": "MySQL (실험적)",
+    "description": "The label for category MySQL (Experimental) in sidebar docs"
+  },
+  "sidebar.docs.category.Prerequisites": {
+    "message": "사전 요구 사항",
+    "description": "The label for category Prerequisites in sidebar docs"
+  },
+  "sidebar.docs.category.PostgreSQL (Experimental)": {
+    "message": "PostgreSQL (실험적)",
+    "description": "The label for category PostgreSQL (Experimental) in sidebar docs"
+  },
+  "sidebar.docs.category.OceanBase (Experimental)": {
+    "message": "OceanBase (실험적)",
+    "description": "The label for category OceanBase (Experimental) in sidebar docs"
+  },
+  "sidebar.docs.category.S3": {
+    "message": "S3",
+    "description": "The label for category S3 in sidebar docs"
+  },
+  "sidebar.docs.category.File Formats": {
+    "message": "파일 형식",
+    "description": "The label for category File Formats in sidebar docs"
+  },
+  "sidebar.docs.category.Complex Data Types Import": {
+    "message": "복합 데이터 타입 적재",
+    "description": "The label for category Complex Data Types Import in sidebar docs"
+  },
+  "sidebar.docs.category.Load Best Practices": {
+    "message": "데이터 적재 모범 사례",
+    "description": "The label for category Load Best Practices in sidebar docs"
+  },
+  "sidebar.docs.category.Data Update & Delete": {
+    "message": "데이터 업데이트 및 삭제",
+    "description": "The label for category Data Update & Delete in sidebar docs"
+  },
+  "sidebar.docs.category.Updating Data": {
+    "message": "데이터 업데이트",
+    "description": "The label for category Updating Data in sidebar docs"
+  },
+  "sidebar.docs.category.Deleting Data": {
+    "message": "데이터 삭제",
+    "description": "The label for category Deleting Data in sidebar docs"
+  },
+  "sidebar.docs.category.Data Export": {
+    "message": "데이터 내보내기",
+    "description": "The label for category Data Export in sidebar docs"
+  },
+  "sidebar.docs.category.Querying": {
+    "message": "쿼리 실행",
+    "description": "The label for category Querying in sidebar docs"
+  },
+  "sidebar.docs.category.User Defined Functions": {
+    "message": "사용자 정의 함수",
+    "description": "The label for category User Defined Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Materialized View": {
+    "message": "구체화된 뷰",
+    "description": "The label for category Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Async Materialized View": {
+    "message": "비동기 구체화된 뷰",
+    "description": "The label for category Async Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Performance & Tuning": {
+    "message": "성능 및 튜닝",
+    "description": "The label for category Performance & Tuning in sidebar docs"
+  },
+  "sidebar.docs.category.Performance Tuning Overview": {
+    "message": "성능 튜닝 개요",
+    "description": "The label for category Performance Tuning Overview in sidebar docs"
+  },
+  "sidebar.docs.category.Query Performance": {
+    "message": "쿼리 성능",
+    "description": "The label for category Query Performance in sidebar docs"
+  },
+  "sidebar.docs.category.Schema & Index Optimization": {
+    "message": "스키마 및 인덱스 최적화",
+    "description": "The label for category Schema & Index Optimization in sidebar docs"
+  },
+  "sidebar.docs.category.Join Optimization": {
+    "message": "조인 최적화",
+    "description": "The label for category Join Optimization in sidebar docs"
+  },
+  "sidebar.docs.category.Caching": {
+    "message": "캐싱",
+    "description": "The label for category Caching in sidebar docs"
+  },
+  "sidebar.docs.category.Execution Tuning": {
+    "message": "실행 튜닝",
+    "description": "The label for category Execution Tuning in sidebar docs"
+  },
+  "sidebar.docs.category.High Concurrency & Point Queries": {
+    "message": "높은 동시성 및 포인트 쿼리",
+    "description": "The label for category High Concurrency & Point Queries in sidebar docs"
+  },
+  "sidebar.docs.category.Distinct Counts": {
+    "message": "고유 값 집계",
+    "description": "The label for category Distinct Counts in sidebar docs"
+  },
+  "sidebar.docs.category.Load Performance": {
+    "message": "데이터 적재 성능",
+    "description": "The label for category Load Performance in sidebar docs"
+  },
+  "sidebar.docs.category.Optimization Technology Principles": {
+    "message": "최적화 기술 원리",
+    "description": "The label for category Optimization Technology Principles in sidebar docs"
+  },
+  "sidebar.docs.category.Lakehouse": {
+    "message": "레이크하우스",
+    "description": "The label for category Lakehouse in sidebar docs"
+  },
+  "sidebar.docs.category.Data Catalogs": {
+    "message": "데이터 Catalog",
+    "description": "The label for category Data Catalogs in sidebar docs"
+  },
+  "sidebar.docs.category.Iceberg Catalog": {
+    "message": "Iceberg Catalog",
+    "description": "The label for category Iceberg Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Paimon Catalog": {
+    "message": "Paimon Catalog",
+    "description": "The label for category Paimon Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Hudi Catalog": {
+    "message": "Hudi Catalog",
+    "description": "The label for category Hudi Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.MaxCompute Catalog": {
+    "message": "MaxCompute Catalog",
+    "description": "The label for category MaxCompute Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Metastores": {
+    "message": "메타스토어",
+    "description": "The label for category Metastores in sidebar docs"
+  },
+  "sidebar.docs.category.Storages": {
+    "message": "스토리지",
+    "description": "The label for category Storages in sidebar docs"
+  },
+  "sidebar.docs.category.File Format": {
+    "message": "파일 형식",
+    "description": "The label for category File Format in sidebar docs"
+  },
+  "sidebar.docs.category.Lakehouse Best Practices": {
+    "message": "레이크하우스 모범 사례",
+    "description": "The label for category Lakehouse Best Practices in sidebar docs"
+  },
+  "sidebar.docs.category.Data Governance": {
+    "message": "데이터 거버넌스",
+    "description": "The label for category Data Governance in sidebar docs"
+  },
+  "sidebar.docs.category.Solutions": {
+    "message": "솔루션",
+    "description": "The label for category Solutions in sidebar docs"
+  },
+  "sidebar.docs.category.Doris for AI": {
+    "message": "AI를 위한 Doris",
+    "description": "The label for category Doris for AI in sidebar docs"
+  },
+  "sidebar.docs.category.Observability with Doris": {
+    "message": "Doris를 활용한 관측 가능성",
+    "description": "The label for category Observability with Doris in sidebar docs"
+  },
+  "sidebar.docs.category.DOG Stack": {
+    "message": "DOG 스택",
+    "description": "The label for category DOG Stack in sidebar docs"
+  },
+  "sidebar.docs.category.Deployment": {
+    "message": "배포",
+    "description": "The label for category Deployment in sidebar docs"
+  },
+  "sidebar.docs.category.Custom Build": {
+    "message": "사용자 정의 빌드",
+    "description": "The label for category Custom Build in sidebar docs"
+  },
+  "sidebar.docs.category.Operate & Maintain": {
+    "message": "운영 및 유지 관리",
+    "description": "The label for category Operate & Maintain in sidebar docs"
+  },
+  "sidebar.docs.category.Administration": {
+    "message": "관리",
+    "description": "The label for category Administration in sidebar docs"
+  },
+  "sidebar.docs.category.Cluster Management": {
+    "message": "클러스터 관리",
+    "description": "The label for category Cluster Management in sidebar docs"
+  },
+  "sidebar.docs.category.Configuration": {
+    "message": "설정",
+    "description": "The label for category Configuration in sidebar docs"
+  },
+  "sidebar.docs.category.Security & Authentication": {
+    "message": "보안 및 인증",
+    "description": "The label for category Security & Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authentication": {
+    "message": "인증",
+    "description": "The label for category Authentication in sidebar docs"
+  },
+  "sidebar.docs.category.Authorization": {
+    "message": "권한 부여",
+    "description": "The label for category Authorization in sidebar docs"
+  },
+  "sidebar.docs.category.Data Encryption": {
+    "message": "데이터 암호화",
+    "description": "The label for category Data Encryption in sidebar docs"
+  },
+  "sidebar.docs.category.Encryption in Transit": {
+    "message": "전송 중 암호화",
+    "description": "The label for category Encryption in Transit in sidebar docs"
+  },
+  "sidebar.docs.category.Integrations": {
+    "message": "연동",
+    "description": "The label for category Integrations in sidebar docs"
+  },
+  "sidebar.docs.category.Workload Management": {
+    "message": "워크로드 관리",
+    "description": "The label for category Workload Management in sidebar docs"
+  },
+  "sidebar.docs.category.Resource Isolation": {
+    "message": "리소스 격리",
+    "description": "The label for category Resource Isolation in sidebar docs"
+  },
+  "sidebar.docs.category.Disaster Recovery": {
+    "message": "재해 복구",
+    "description": "The label for category Disaster Recovery in sidebar docs"
+  },
+  "sidebar.docs.category.Backup & Restore": {
+    "message": "백업 및 복원",
+    "description": "The label for category Backup & Restore in sidebar docs"
+  },
+  "sidebar.docs.category.Monitoring & Alerting": {
+    "message": "모니터링 및 알림",
+    "description": "The label for category Monitoring & Alerting in sidebar docs"
+  },
+  "sidebar.docs.category.Log Management": {
+    "message": "로그 관리",
+    "description": "The label for category Log Management in sidebar docs"
+  },
+  "sidebar.docs.category.System Tables": {
+    "message": "시스템 테이블",
+    "description": "The label for category System Tables in sidebar docs"
+  },
+  "sidebar.docs.category.information_schema": {
+    "message": "information_schema",
+    "description": "The label for category information_schema in sidebar docs"
+  },
+  "sidebar.docs.category.mysql": {
+    "message": "mysql",
+    "description": "The label for category mysql in sidebar docs"
+  },
+  "sidebar.docs.category.__internal_schema": {
+    "message": "__internal_schema",
+    "description": "The label for category __internal_schema in sidebar docs"
+  },
+  "sidebar.docs.category.HTTP API": {
+    "message": "HTTP API",
+    "description": "The label for category HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.FE HTTP API": {
+    "message": "FE HTTP API",
+    "description": "The label for category FE HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.BE HTTP API": {
+    "message": "BE HTTP API",
+    "description": "The label for category BE HTTP API in sidebar docs"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "문제 해결 및 자주 묻는 질문",
+    "description": "The label for category Troubleshooting & FAQ in sidebar docs"
+  },
+  "sidebar.docs.category.Troubleshooting": {
+    "message": "문제 해결",
+    "description": "The label for category Troubleshooting in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Management": {
+    "message": "메모리 관리",
+    "description": "The label for category Memory Management in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Analysis": {
+    "message": "메모리 분석",
+    "description": "The label for category Memory Analysis in sidebar docs"
+  },
+  "sidebar.docs.category.Memory Feature": {
+    "message": "메모리 기능",
+    "description": "The label for category Memory Feature in sidebar docs"
+  },
+  "sidebar.docs.category.FAQ": {
+    "message": "자주 묻는 질문",
+    "description": "The label for category FAQ in sidebar docs"
+  },
+  "sidebar.docs.category.SQL References": {
+    "message": "SQL 참조",
+    "description": "The label for category SQL References in sidebar docs"
+  },
+  "sidebar.docs.category.Basic Elements": {
+    "message": "기본 요소",
+    "description": "The label for category Basic Elements in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Data Types": {
+    "message": "SQL 데이터 타입",
+    "description": "The label for category SQL Data Types in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Data Type": {
+    "message": "숫자 데이터 타입",
+    "description": "The label for category Numeric Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.Datetime Data Type": {
+    "message": "날짜 및 시간 데이터 타입",
+    "description": "The label for category Datetime Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.String Data Type": {
+    "message": "문자열 데이터 타입",
+    "description": "The label for category String Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.Binary Data Type": {
+    "message": "바이너리 데이터 타입",
+    "description": "The label for category Binary Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.Semi-Structured Data Type": {
+    "message": "반정형 데이터 타입",
+    "description": "The label for category Semi-Structured Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.VARIANT": {
+    "message": "VARIANT",
+    "description": "The label for category VARIANT in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregation Data Type": {
+    "message": "집계 데이터 타입",
+    "description": "The label for category Aggregation Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.IP Data Type": {
+    "message": "IP 데이터 타입",
+    "description": "The label for category IP Data Type in sidebar docs"
+  },
+  "sidebar.docs.category.Conversion": {
+    "message": "변환",
+    "description": "The label for category Conversion in sidebar docs"
+  },
+  "sidebar.docs.category.Literal": {
+    "message": "리터럴",
+    "description": "The label for category Literal in sidebar docs"
+  },
+  "sidebar.docs.category.Operators": {
+    "message": "연산자",
+    "description": "The label for category Operators in sidebar docs"
+  },
+  "sidebar.docs.category.Conditional Operators": {
+    "message": "조건 연산자",
+    "description": "The label for category Conditional Operators in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Functions": {
+    "message": "SQL 함수",
+    "description": "The label for category SQL Functions in sidebar docs"
+  },
+  "sidebar.docs.category.AI Functions": {
+    "message": "AI 함수",
+    "description": "The label for category AI Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Vector Distance Functions": {
+    "message": "벡터 거리 함수",
+    "description": "The label for category Vector Distance Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Scalar Functions": {
+    "message": "스칼라 함수",
+    "description": "The label for category Scalar Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Numeric Functions": {
+    "message": "숫자 함수",
+    "description": "The label for category Numeric Functions in sidebar docs"
+  },
+  "sidebar.docs.category.String Functions": {
+    "message": "문자열 함수",
+    "description": "The label for category String Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Date Functions": {
+    "message": "날짜 함수",
+    "description": "The label for category Date Functions in sidebar docs"
+  },
+  "sidebar.docs.category.GIS Functions": {
+    "message": "GIS 함수",
+    "description": "The label for category GIS Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Encryption Functions": {
+    "message": "암호화 함수",
+    "description": "The label for category Encryption Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Bitwise Functions": {
+    "message": "비트 연산 함수",
+    "description": "The label for category Bitwise Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Array Functions": {
+    "message": "배열 함수",
+    "description": "The label for category Array Functions in sidebar docs"
+  },
+  "sidebar.docs.category.MAP Functions": {
+    "message": "MAP 함수",
+    "description": "The label for category MAP Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Struct Functions": {
+    "message": "구조체 함수",
+    "description": "The label for category Struct Functions in sidebar docs"
+  },
+  "sidebar.docs.category.JSON Functions": {
+    "message": "JSON 함수",
+    "description": "The label for category JSON Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Variant Functions": {
+    "message": "VARIANT 함수",
+    "description": "The label for category Variant Functions in sidebar docs"
+  },
+  "sidebar.docs.category.IP Functions": {
+    "message": "IP 함수",
+    "description": "The label for category IP Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Bitmap Functions": {
+    "message": "비트맵 함수",
+    "description": "The label for category Bitmap Functions in sidebar docs"
+  },
+  "sidebar.docs.category.HLL Functions": {
+    "message": "HLL 함수",
+    "description": "The label for category HLL Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Binary Functions": {
+    "message": "바이너리 함수",
+    "description": "The label for category Binary Functions in sidebar docs"
+  },
+  "sidebar.docs.category.System Functions": {
+    "message": "시스템 함수",
+    "description": "The label for category System Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Other Functions": {
+    "message": "기타 함수",
+    "description": "The label for category Other Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Quantile Functions": {
+    "message": "분위수 함수",
+    "description": "The label for category Quantile Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Conditional Functions": {
+    "message": "조건 함수",
+    "description": "The label for category Conditional Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Aggregate Functions": {
+    "message": "집계 함수",
+    "description": "The label for category Aggregate Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Combinators": {
+    "message": "조합자",
+    "description": "The label for category Combinators in sidebar docs"
+  },
+  "sidebar.docs.category.Analytic (Window) Functions": {
+    "message": "분석 (윈도우) 함수",
+    "description": "The label for category Analytic (Window) Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Table Functions": {
+    "message": "테이블 함수",
+    "description": "The label for category Table Functions in sidebar docs"
+  },
+  "sidebar.docs.category.Table Valued Functions": {
+    "message": "테이블 반환 함수",
+    "description": "The label for category Table Valued Functions in sidebar docs"
+  },
+  "sidebar.docs.category.SQL Statements": {
+    "message": "SQL 문",
+    "description": "The label for category SQL Statements in sidebar docs"
+  },
+  "sidebar.docs.category.Data Queries": {
+    "message": "데이터 쿼리",
+    "description": "The label for category Data Queries in sidebar docs"
+  },
+  "sidebar.docs.category.Data Modification": {
+    "message": "데이터 수정",
+    "description": "The label for category Data Modification in sidebar docs"
+  },
+  "sidebar.docs.category.DML": {
+    "message": "DML",
+    "description": "The label for category DML in sidebar docs"
+  },
+  "sidebar.docs.category.Load and Export": {
+    "message": "데이터 적재 및 내보내기",
+    "description": "The label for category Load and Export in sidebar docs"
+  },
+  "sidebar.docs.category.Backup and Restore": {
+    "message": "백업 및 복원",
+    "description": "The label for category Backup and Restore in sidebar docs"
+  },
+  "sidebar.docs.category.Account Management": {
+    "message": "계정 관리",
+    "description": "The label for category Account Management in sidebar docs"
+  },
+  "sidebar.docs.category.Session": {
+    "message": "세션",
+    "description": "The label for category Session in sidebar docs"
+  },
+  "sidebar.docs.category.Context": {
+    "message": "컨텍스트",
+    "description": "The label for category Context in sidebar docs"
+  },
+  "sidebar.docs.category.Variable": {
+    "message": "변수",
+    "description": "The label for category Variable in sidebar docs"
+  },
+  "sidebar.docs.category.Query": {
+    "message": "쿼리",
+    "description": "The label for category Query in sidebar docs"
+  },
+  "sidebar.docs.category.Connection": {
+    "message": "연결",
+    "description": "The label for category Connection in sidebar docs"
+  },
+  "sidebar.docs.category.Transaction": {
+    "message": "트랜잭션",
+    "description": "The label for category Transaction in sidebar docs"
+  },
+  "sidebar.docs.category.Data Catalog": {
+    "message": "데이터 Catalog",
+    "description": "The label for category Data Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Database": {
+    "message": "데이터베이스",
+    "description": "The label for category Database in sidebar docs"
+  },
+  "sidebar.docs.category.Table and Views": {
+    "message": "테이블 및 뷰",
+    "description": "The label for category Table and Views in sidebar docs"
+  },
+  "sidebar.docs.category.Table": {
+    "message": "테이블",
+    "description": "The label for category Table in sidebar docs"
+  },
+  "sidebar.docs.category.Index": {
+    "message": "인덱스",
+    "description": "The label for category Index in sidebar docs"
+  },
+  "sidebar.docs.category.View": {
+    "message": "뷰",
+    "description": "The label for category View in sidebar docs"
+  },
+  "sidebar.docs.category.Synchronous Materialized View": {
+    "message": "동기 구체화된 뷰",
+    "description": "The label for category Synchronous Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Asynchronous Materialized View": {
+    "message": "비동기 구체화된 뷰",
+    "description": "The label for category Asynchronous Materialized View in sidebar docs"
+  },
+  "sidebar.docs.category.Data and Status Management": {
+    "message": "데이터 및 상태 관리",
+    "description": "The label for category Data and Status Management in sidebar docs"
+  },
+  "sidebar.docs.category.Recycle": {
+    "message": "휴지통",
+    "description": "The label for category Recycle in sidebar docs"
+  },
+  "sidebar.docs.category.Function": {
+    "message": "함수",
+    "description": "The label for category Function in sidebar docs"
+  },
+  "sidebar.docs.category.Statistics": {
+    "message": "통계",
+    "description": "The label for category Statistics in sidebar docs"
+  },
+  "sidebar.docs.category.Instance Management": {
+    "message": "인스턴스 관리",
+    "description": "The label for category Instance Management in sidebar docs"
+  },
+  "sidebar.docs.category.Compute Management": {
+    "message": "컴퓨팅 관리",
+    "description": "The label for category Compute Management in sidebar docs"
+  },
+  "sidebar.docs.category.Storage Management": {
+    "message": "스토리지 관리",
+    "description": "The label for category Storage Management in sidebar docs"
+  },
+  "sidebar.docs.category.Security": {
+    "message": "보안",
+    "description": "The label for category Security in sidebar docs"
+  },
+  "sidebar.docs.category.Job": {
+    "message": "작업",
+    "description": "The label for category Job in sidebar docs"
+  },
+  "sidebar.docs.category.Plugin": {
+    "message": "플러그인",
+    "description": "The label for category Plugin in sidebar docs"
+  },
+  "sidebar.docs.category.Character Set": {
+    "message": "문자 집합",
+    "description": "The label for category Character Set in sidebar docs"
+  },
+  "sidebar.docs.category.Types": {
+    "message": "타입",
+    "description": "The label for category Types in sidebar docs"
+  },
+  "sidebar.docs.category.Info System and Help": {
+    "message": "시스템 정보 및 도움말",
+    "description": "The label for category Info System and Help in sidebar docs"
+  },
+  "sidebar.docs.doc.VARIANT Internal": {
+    "message": "VARIANT 내부 구조",
+    "description": "The label for the doc item VARIANT Internal in sidebar docs, linking to the doc sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide"
+  }
+}

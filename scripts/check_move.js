@@ -8,6 +8,8 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { sourceForLocalized } = require("./i18n/paths.cjs");
+const { managedLocales } = require("./i18n/state.cjs");
+const translationLocales = new Set(managedLocales(path.resolve(__dirname, "..")));
 
 const commitHash = process.argv[2];
 
@@ -55,10 +57,9 @@ function isLocalLink(link) {
 
 function existingLocalTarget(filePath, rawLink) {
   const candidates = [path.resolve(path.dirname(filePath), rawLink)];
-  // The Japanese docs plugin intentionally serves the English page when a
-  // translation is absent. Resolve its relative links from the same plugin
-  // and version of the English source; keep the EN/ZH gate unchanged.
-  if (filePath.startsWith("i18n/ja/")) {
+  // Managed docs locales serve English when a translation is absent. Resolve
+  // relative links from that same plugin/version; keep the EN/ZH gate unchanged.
+  if (filePath.startsWith("i18n/") && translationLocales.has(filePath.split("/")[1])) {
     const source = sourceForLocalized(filePath);
     if (source) candidates.push(path.resolve(path.dirname(source), rawLink));
   }

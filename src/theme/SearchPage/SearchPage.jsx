@@ -6,6 +6,7 @@ import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import { translate } from "@docusaurus/Translate";
 import { usePluralForm } from "@docusaurus/theme-common";
+import { useAllDocsData } from "@docusaurus/plugin-content-docs/client";
 import clsx from "clsx";
 import useSearchQuery from "../../hooks/use-search-query";
 import { fetchIndexesByWorker, searchByWorker } from '@yang1666204/docusaurus-search-local/dist/client/client/theme/searchByWorker'
@@ -15,13 +16,14 @@ import { highlightStemmed } from "../../utils/highlightStemmed";
 import { getStemmedPositions } from "../../utils/getStemmedPositions";
 import LoadingRing from "../LoadingRing/LoadingRing";
 import { concatDocumentPath } from "../../utils/concatDocumentPath";
-import { Mark, searchContextByPaths, useAllContextsWithNoSearchContext } from "../../utils/proxiedGenerated";
+import { Mark, searchContextByPaths, useAllContextsWithNoSearchContext, docsPluginIdForPreferredVersion } from "../../utils/proxiedGenerated";
 import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
 import styles from "./SearchPage.module.css";
 import { normalizeContextByPath } from "../../utils/normalizeContextByPath";
 import {searchWithLocaleFallback} from "../../utils/searchInput";
 import {fetchContextIndexes, searchAcrossContexts} from "../../utils/searchContexts";
 import {isTranslatedLocale} from "../../utils/localization";
+import {searchIndexBaseUrl} from "../../utils/searchVersion";
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 export default function SearchPage() {
     return (<Layout>
@@ -35,7 +37,9 @@ function SearchPageContent() {
     const { searchValue, searchContext, searchVersion, updateSearchPath, updateSearchContext, } = useSearchQuery();
     const [searchQuery, setSearchQuery] = useState(searchValue);
     const [searchResults, setSearchResults] = useState();
-    const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl : `${baseUrl}${searchVersion}`;
+    const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
+    const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
+        : searchIndexBaseUrl(baseUrl, sourceVersions, {versionPath: searchVersion});
     const pageTitle = useMemo(() => searchQuery
         ? translate({
             id: "theme.SearchPage.existingResultsTitle",
