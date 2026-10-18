@@ -18,6 +18,9 @@ on:
       path:
         description: Optional repository-relative source path prefix
         type: string
+      paths:
+        description: Optional JSON array of exact English .md/.mdx files (exclusive with path)
+        type: string
 
 permissions:
   contents: read
@@ -63,6 +66,7 @@ jobs:
           I18N_PLUGIN: ${{ inputs.plugin }}
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
+          I18N_PATHS: ${{ inputs.paths }}
           I18N_LIMIT: '20'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/korean-translation"
       - uses: actions/upload-artifact@v4
@@ -140,6 +144,7 @@ jobs:
           I18N_PLUGIN: ${{ inputs.plugin }}
           I18N_VERSION: ${{ inputs.version }}
           I18N_PATH: ${{ inputs.path }}
+          I18N_PATHS: ${{ inputs.paths }}
           I18N_LIMIT: '20'
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/korean-translation"
       - name: Verify the Korean PR label before model calls
