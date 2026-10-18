@@ -143,7 +143,7 @@ def resolve_internal(base_dir: str, target: str):
         # another redirect alone is not sufficient.
         path_part = _doc_redirects(site_root).get(path_part.rstrip("/"), path_part)
         rel = path_part.lstrip("/")
-        routed = re.match(r"(?:(ja|zh-CN)/)?(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
+        routed = re.match(r"(?:([a-z]{2}(?:-[A-Za-z0-9]+)*)/)?(docs/(dev|[^/]+)|community|releases|course)/(.*)", rel)
         if routed:
             locale, route, version, rest = routed.groups()
             if route.startswith("docs/"):
@@ -182,7 +182,7 @@ def resolve_internal(base_dir: str, target: str):
     site_root, _ = _find_site_roots(base_dir)
     if site_root:
         relative = os.path.relpath(full, site_root).replace(os.sep, "/")
-        localized = re.match(r"i18n/ja/docusaurus-plugin-content-docs(-[^/]+)?/(current|version-([^/]+))/(.*)", relative)
+        localized = re.match(r"i18n/[^/]+/docusaurus-plugin-content-docs(-[^/]+)?/(current|version-([^/]+))/(.*)", relative)
         if localized:
             suffix, _, version, rest = localized.groups()
             roots = {None: "docs", "-community": "community", "-releases": "releasenotes", "-course": "course"}
