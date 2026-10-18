@@ -30,7 +30,11 @@ module.exports = function translationStatusPlugin(context) {
             const pages = allPages.filter(page => page.locale === locale);
             const prefixes = Object.values(allContent['docusaurus-plugin-content-docs'] ?? {})
                 .flatMap(content => content.loadedVersions.map(version => version.path));
-            actions.setGlobalData({alternates, prefixes, locales});
+            // Use native page routes so ordinary-page fallback never captures
+            // localized documentation, search, or other plugin-owned UI.
+            const pageRoutes = [...new Set(Object.values(allContent['docusaurus-plugin-content-pages'] ?? {})
+                .flatMap(content => content ?? []).map(page => page.permalink.replace(/\/$/, '') + '/'))];
+            actions.setGlobalData({alternates, prefixes, locales, pageRoutes});
             // Reports that belong to no single locale describe the repository,
             // so they stay in every locale's manifest.
             const reports = manifests.flatMap(manifest => manifest.reports)
@@ -38,7 +42,7 @@ module.exports = function translationStatusPlugin(context) {
             const output = path.join(context.siteDir, '.i18n-build/manifests', `${locale}.json`);
             await fs.mkdir(path.dirname(output), {recursive: true});
             await fs.writeFile(output, JSON.stringify({schemaVersion: 1, locale,
-                pages, reports}, null, 2) + '\n');
+                pages, pageRoutes, reports}, null, 2) + '\n');
         },
     };
 };
