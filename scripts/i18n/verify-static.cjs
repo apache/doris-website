@@ -92,7 +92,35 @@ function verify({site, manifest, partial = false}) {
         }
         verified++;
     }
-    return {verified, skipped, partial, indexedPaths: indexedPaths.size,
+    const ordinaryPages = {verified: 0, fallback: 0};
+    const record = localeRegistry.find(item => item.code === locale);
+    for (const permalink of data.pageRoutes ?? []) {
+        const filename = path.join(site, decodeURIComponent(permalink), 'index.html');
+        assert(fs.existsSync(filename), `Missing ordinary page: ${permalink}`);
+        const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
+        const source = permalink.startsWith(`/${locale}/`) ? permalink.slice(locale.length + 1) : permalink;
+        const fallback = record?.ordinaryPages === false && !record.translatedPages?.includes(source.replace(/\/+$/, ''));
+        if (fallback) {
+            assert.equal($('html').attr('lang'), htmlLangFor('en'), `Fallback page language: ${permalink}`);
+            assert.equal($('link[rel="canonical"]').length, 1, `Duplicate ordinary canonical: ${permalink}`);
+            assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${source}`);
+            assert.equal($('meta[property="og:url"]').attr('content'), `https://doris.apache.org${source}`);
+            assert.equal($('meta[property="og:locale"]').attr('content'), 'en_US');
+            assert(($('meta[name="robots"]').attr('content') ?? '').includes('noindex'), `Indexed English fallback: ${permalink}`);
+            assert(!sitemapPaths.has(permalink), `Ordinary fallback in sitemap: ${permalink}`);
+            assert.equal($(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0, `Ordinary fallback alternate: ${permalink}`);
+            for (const sourceRoute of [source, `/zh-CN${source}`]) {
+                const source$ = counterpart(sourceRoute, 'ordinary fallback alternates');
+                if (source$) assert.equal(source$(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0,
+                    `Source advertises ordinary fallback: ${sourceRoute}`);
+            }
+            ordinaryPages.fallback++;
+        } else {
+            assert.equal($('html').attr('lang'), htmlLang, `Translated ordinary page language: ${permalink}`);
+        }
+        ordinaryPages.verified++;
+    }
+    return {verified, skipped, partial, indexedPaths: indexedPaths.size, ordinaryPages,
         states: Object.fromEntries([...new Set(data.pages.map(page => page.status))]
             .map(status => [status, data.pages.filter(page => page.status === status).length])), reports: data.reports};
 }
@@ -104,6 +132,6 @@ if (require.main === module) {
         partial: args.includes('--partial')});
     if (args.includes('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
     console.log(JSON.stringify({verified: result.verified, skipped: result.skipped, partial: result.partial,
-        states: result.states, reports: result.reports.length}));
+        states: result.states, ordinaryPages: result.ordinaryPages, reports: result.reports.length}));
 }
 module.exports = {verify};

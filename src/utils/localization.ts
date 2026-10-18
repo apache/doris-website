@@ -61,8 +61,7 @@ export function isDefaultLocaleBlogRoute(pathname: string): boolean {
  * so the page can point search engines at the copy worth ranking.
  */
 export function defaultLocalePath(permalink: string): string {
-    const prefix = `/${i18n.currentLocale}/`;
-    const path = permalink.startsWith(prefix) ? `/${permalink.slice(prefix.length)}` : permalink;
+    const path = normalizePathname(permalink, [i18n.currentLocale]);
     // Permalinks carry no trailing slash; the served URLs do.
     return applyTrailingSlash(path, { trailingSlash: siteConfig.trailingSlash, baseUrl: siteConfig.baseUrl });
 }
