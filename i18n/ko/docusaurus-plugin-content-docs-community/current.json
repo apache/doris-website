@@ -1,0 +1,11 @@
+{
+  "version.label": {
+    "message": "커뮤니티"
+  },
+  "sidebar.community.category.About the Community": {
+    "message": "커뮤니티 소개"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "기여 방법"
+  }
+}

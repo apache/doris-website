@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "version": "1",
+  "keep": [
+    "Apache Doris",
+    "Doris",
+    "SelectDB",
+    "FE",
+    "BE",
+    "SQL",
+    "DDL",
+    "DML",
+    "NULL",
+    "Catalog",
+    "Stream Load",
+    "Routine Load",
+    "JSON",
+    "CSV",
+    "HDFS",
+    "S3",
+    "JDBC",
+    "MySQL",
+    "PostgreSQL"
+  ],
+  "keepReasons": {
+    "Apache Doris": "Product name",
+    "Doris": "Product name",
+    "SelectDB": "Company and product name",
+    "FE": "Frontend process identifier",
+    "BE": "Backend process identifier",
+    "SQL": "Query language acronym",
+    "DDL": "SQL statement category",
+    "DML": "SQL statement category",
+    "NULL": "SQL literal",
+    "Catalog": "Doris connector object name",
+    "Stream Load": "Load method name",
+    "Routine Load": "Load method name",
+    "JSON": "Data format name",
+    "CSV": "Data format name",
+    "HDFS": "Storage system name",
+    "S3": "Storage service name",
+    "JDBC": "Driver interface name",
+    "MySQL": "Database and protocol name",
+    "PostgreSQL": "Database name"
+  },
+  "terms": [
+    {
+      "source": "table",
+      "target": "테이블"
+    },
+    {
+      "source": "database",
+      "target": "데이터베이스"
+    },
+    {
+      "source": "load",
+      "target": "데이터 적재"
+    },
+    {
+      "source": "query",
+      "target": "쿼리"
+    },
+    {
+      "source": "materialized view",
+      "target": "구체화된 뷰",
+      "required": true
+    }
+  ]
+}

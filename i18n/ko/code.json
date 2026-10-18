@@ -1,0 +1,152 @@
+{
+  "docs.translation.status.label": {
+    "message": "번역 상태"
+  },
+  "docs.translation.untranslated": {
+    "message": "이 페이지는 아직 한국어로 번역되지 않았습니다."
+  },
+  "docs.translation.showingSource": {
+    "message": "현재 버전의 영어 원문을 표시합니다."
+  },
+  "docs.translation.openSource": {
+    "message": "영어 원문 보기"
+  },
+  "docs.translation.openChineseSource": {
+    "message": "중국어 원문 보기"
+  },
+  "docs.translation.staleProse": {
+    "message": "한국어 번역에 원문의 최신 표현이 반영되지 않았습니다."
+  },
+  "docs.translation.sourceMissing": {
+    "message": "원문을 확인할 수 없어 한국어 번역을 표시하지 않습니다."
+  },
+  "docs.translation.unverified": {
+    "message": "한국어 번역의 내용이나 최신 상태를 확인하지 못했습니다."
+  },
+  "docs.translation.stale": {
+    "message": "한국어 번역에 원문의 최신 변경 사항이 반영되지 않았습니다."
+  },
+  "docs.translation.reviewedHuman": {
+    "message": "사람이 교정한 한국어 번역입니다."
+  },
+  "docs.translation.machine": {
+    "message": "이 페이지는 기계 번역되었습니다."
+  },
+  "docs.translation.translatedAt": {
+    "message": "번역일: "
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "이 문서는 Apache Doris의 {unreleased} 버전을 위한 문서입니다."
+  },
+  "theme.docs.versions.unreleasedText": {
+    "message": "개발 중인"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "사용 방법은 버전 {v4xLink} / {v3xLink} / {v21Link}의 공식 문서를 참고하세요."
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "현재 유지 관리되지 않는 {siteTitle} {versionLabel}의 문서입니다."
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "최신 버전"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "다른 버전"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "다른 언어"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "검색 결과가 없습니다"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "\"{context}\" 외의 모든 결과 보기"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "\"{context}\" 내의 모든 결과 보기"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "모든 결과 보기"
+  },
+  "theme.SearchBar.label": {
+    "message": "검색"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "\"{query}\" 검색 결과"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "문서 검색"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "전체"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "문서 {count}개를 찾았습니다"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "문서를 찾지 못했습니다"
+  },
+  "theme.SearchPage.searchSource": {
+    "message": "영어 원문 검색"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "문서 페이지"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "이전"
+  },
+  "theme.docs.paginator.next": {
+    "message": "다음"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "홈"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "현재 문서 경로"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "문서 탐색"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "탐색 메뉴 닫기"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "탐색 메뉴 열기/닫기"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "탐색 메뉴 접기"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "탐색 메뉴 접기"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "탐색 메뉴 펼치기"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "탐색 메뉴 펼치기"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "버전: {versionLabel}"
+  },
+  "theme.common.editThisPage": {
+    "message": "이 페이지 편집"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading} 직접 링크"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "본문으로 건너뛰기"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← 주 메뉴로 돌아가기"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "이 페이지의 내용"
+  },
+  "theme.TOC.title": {
+    "message": "이 페이지의 내용"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "주 메뉴"
+  }
+}

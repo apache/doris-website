@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "join-community",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/join-community.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/join-community.md",
+    "sourceCommit": "c1dc0ada58258822db4f31d9f05b11cf3e011b7b",
+    "sourceHash": "c0fb07e339e759ca4bf071efabafb60ecb13e1978173dc88e3de79e7a32949b9",
+    "sourceTechnicalHash": "7ba43a16e4a34f5071e5c95fdef1a9db9511fee84628708975f6e450281845db",
+    "targetHash": "12663afee635fe283e4bfde370320a7807b2c4fe4860776c9bd7246f1b8fb8cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T11:36:50.152Z",
+    "glossaryVersion": "1"
+  }
+}

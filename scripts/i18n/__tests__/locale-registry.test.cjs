@@ -28,27 +28,32 @@ function withEnv(values, run) {
 
 test('the locale registry keeps introduced locales opt-in behind one config', () => {
     const {locales, localeRegistry, enabledLocales, enabledLocaleRecords} = load();
-    assert.deepEqual(locales, ['en', 'zh-CN', 'ja']);
+    assert.deepEqual(locales, ['en', 'zh-CN', 'ja', 'ko']);
+    assert.deepEqual(localeRegistry.find(locale => locale.code === 'ko'),
+        {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false});
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').label, '日本語');
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').htmlLang, 'ja');
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN']);
     });
     // A developer switches one locale on; CI enables the locales in scope.
-    withEnv({DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
+    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
         assert.deepEqual(enabledLocaleRecords().map(locale => locale.htmlLang), ['en-US', 'zh-Hans-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ko'}, () => {
-        assert.deepEqual(enabledLocales(), ['en', 'zh-CN']);
+    withEnv({DORIS_ENABLE_KO: 'true', DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+        assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ko']);
+    });
+    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja,ko'}, () => {
+        assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja', 'ko']);
     });
 });
 
 test('a locale is managed only when it is both configured and enabled', () => {
-    assert.deepEqual(managedLocales(root), ['ja']);
+    assert.deepEqual(managedLocales(root), ['ja', 'ko']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN', 'ja']), ['ja']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN']), []);
 });
@@ -107,4 +112,20 @@ test('neither shipped locale translates the blog yet', () => {
     const {hasBlogTranslations} = load();
     assert.equal(hasBlogTranslations(root, 'zh-CN'), false);
     assert.equal(hasBlogTranslations(root, 'ja'), false);
+    assert.equal(hasBlogTranslations(root, 'ko'), false);
+});
+
+test('Korean pipeline requires an explicit locale and its own inventory before planning', () => {
+    const {pipelineLocale, inventoryBaseline, loadConfig} = require('../state.cjs');
+    assert.throws(() => pipelineLocale(root, ''), /Set I18N_LOCALE/);
+    assert.equal(pipelineLocale(root, 'ja'), 'ja');
+    assert.equal(pipelineLocale(root, 'ko'), 'ko');
+    // A language declaration never substitutes for a native inventory baseline.
+    const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-ko-inventory-'));
+    try {assert.throws(() => inventoryBaseline(empty, 'ko'), /Expected one ko inventory snapshot, found 0/);}
+    finally {fs.rmSync(empty, {recursive: true, force: true});}
+    const settings = loadConfig(root).locales.ko;
+    const script = new RegExp(settings.scriptPattern, 'u');
+    for (const text of ['한국어 데이터베이스', 'ᄒ', 'ㄱ']) assert(script.test(text));
+    for (const text of ['English SQL', '日本語 データベース']) assert(!script.test(text));
 });
