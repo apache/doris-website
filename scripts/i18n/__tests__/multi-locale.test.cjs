@@ -139,3 +139,40 @@ test('the publisher-selected locale is forwarded to the admission subprocess', a
         assert.equal(fs.readFileSync(path.join(root, 'selected-locale'), 'utf8'), locale);
     }
 });
+
+test('inventory CLI snapshots committed page records for the selected locale', async t => {
+    const root = directory(t);
+    const {write} = await createFixture(root);
+    write('.gitignore', 'node_modules\n.i18n-build/\n.docusaurus/\n');
+    write('sidebars.ts', 'module.exports = {};\n');
+    write('sidebarsCommunity.json', '{}\n');
+    write('translations/scope/ko.json', JSON.stringify({schemaVersion: 1, locale: 'ko', maxBatchPages: 20,
+        groups: [
+            {id: 'DEV', pluginId: 'default', version: 'current', sourceRoot: 'docs'},
+            {id: '4X', pluginId: 'default', version: '4.x', sourceRoot: 'versioned_docs/version-4.x'},
+            {id: 'COMMUNITY', pluginId: 'community', version: 'current', sourceRoot: 'community'},
+        ], retainEnglish: []}));
+    // Exercise the real CLI boundary without adding a production root override.
+    for (const file of ['inventory.cjs', 'state.cjs'])
+        write(`scripts/i18n/${file}`, fs.readFileSync(path.join(repoRoot, 'scripts/i18n', file), 'utf8'));
+    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']});
+    git('init', '-q');
+    git('add', '.');
+    git('-c', 'user.name=Inventory fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'native fixture');
+    const commit = git('rev-parse', 'HEAD').trim();
+    const output = path.join(root, 'snapshot');
+    const env = {...process.env, I18N_LOCALE: 'ko'};
+    for (const key of ['DOCS_VERSIONS', 'LANDING_ONLY', 'SKIP_DOCS', 'SKIP_COMMUNITY', 'SKIP_COURSE', 'SKIP_RELEASES']) delete env[key];
+    execFileSync(process.execPath, [path.join(root, 'scripts/i18n/inventory.cjs'), '--source-ref', commit, '--output', output],
+        {cwd: root, env, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
+    const summary = JSON.parse(fs.readFileSync(path.join(output, 'summary.json'), 'utf8'));
+    assert.equal(summary.locale, 'ko');
+    assert.equal(summary.sourceCommit, commit);
+    assert.equal(summary.nativeVersions.length, 3);
+    for (const group of ['dev', '4x', 'community']) {
+        const metadata = JSON.parse(fs.readFileSync(path.join(output, `${group}.json`), 'utf8'));
+        const entries = metadata.entryFiles.flatMap(file => JSON.parse(fs.readFileSync(path.join(output, file), 'utf8')).entries);
+        assert(entries.every(entry => entry.locale === 'ko'));
+        assert.equal(entries.find(entry => entry.docId === 'shared').mergedCurrent, true);
+    }
+});
