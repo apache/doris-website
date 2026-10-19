@@ -10,6 +10,30 @@ STRUCT 类型用于存储和处理结构化数据，可以包含不同类型的�
 
 ## 转换为 STRUCT
 
+### FROM FILE
+
+:::note
+自 4.2.0 起支持
+:::
+
+[FILE](../semi-structured/FILE.md) 支持显式转换为六字段 STRUCT，并保留 inline 原始字节。字段匹配及反向转换规则见 [FILE 类型转换](file-conversion.md)。
+
+```sql
+SELECT CAST(f AS STRUCT<uri:STRING, offset:BIGINT, size:BIGINT,
+    content_type:STRING, checksum:STRING, inline:VARBINARY>) AS s
+FROM (SELECT CAST(NAMED_STRUCT(
+    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE) AS f) t;
+```
+```text
++------------------------------------------------------------------------------------------------------------------+
+| s                                                                                                                |
++------------------------------------------------------------------------------------------------------------------+
+| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg", "offset":null, "size":3, "content_type":null, "checksum":null, "inline":0x616263} |
++------------------------------------------------------------------------------------------------------------------+
+```
+
 ### FROM String
 
 #### 严格模式
@@ -191,11 +215,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，整个 CAST 报错
@@ -244,19 +268,11 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 
 -- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
-+------------------------+
-
--- CAST 按照定义的顺序，而不是字段的名字
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
-+------------------------+
-| renamed_struct         |
-+------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- STRUCT 中的元素 CAST 失败，对应元素设置为 null

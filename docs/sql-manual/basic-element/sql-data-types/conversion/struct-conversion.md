@@ -10,6 +10,26 @@ STRUCT type is used to store and process structured data, which can contain fiel
 
 ## Cast to STRUCT
 
+### FROM FILE
+
+[FILE](../semi-structured/FILE.md) can be explicitly cast to a six-field STRUCT, preserving inline bytes. See [FILE Type Conversion](file-conversion.md) for field matching and the reverse conversion.
+
+```sql
+SELECT CAST(f AS STRUCT<uri:STRING, offset:BIGINT, size:BIGINT,
+    content_type:STRING, checksum:STRING, inline:VARBINARY>) AS s
+FROM (SELECT CAST(NAMED_STRUCT(
+    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE) AS f) t;
+```
+```text
++------------------------------------------------------------------------------------------------------------------+
+| s                                                                                                                |
++------------------------------------------------------------------------------------------------------------------+
+| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg", "offset":null, "size":3, "content_type":null, "checksum":null, "inline":0x616263} |
++------------------------------------------------------------------------------------------------------------------+
+```
+
 ### FROM String
 
 #### Strict Mode
@@ -190,11 +210,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the whole CAST reports an error
@@ -240,11 +260,11 @@ mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:Array<int>, a:
 ERROR 1105 (HY000): errCode = 2, detailMessage = can not cast from ...
 
 -- CAST is based on the defined order, not field names
-mysql> SELECT CAST(named_struct('a', 123, 'b', 'abc') AS STRUCT<b:string, a:int>) AS renamed_struct;
+mysql> SELECT CAST(named_struct('a', 123, 'b', '456') AS STRUCT<b:string, a:int>) AS renamed_struct;
 +------------------------+
 | renamed_struct         |
 +------------------------+
-| {"b":"123", "a":"abc"} |
+| {"b":"123", "a":456} |
 +------------------------+
 
 -- Element CAST fails, the corresponding element is set to null

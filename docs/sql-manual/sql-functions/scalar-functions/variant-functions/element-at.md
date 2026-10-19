@@ -2,18 +2,19 @@
 {
     "title": "ELEMENT_AT",
     "language": "en",
-    "description": "ELEMENT_AT extracts an element from an ARRAY, MAP, STRUCT, or VARIANT by index, key, or field name, with 1-based and negative array indexes."
+    "description": "ELEMENT_AT extracts an element from an ARRAY, MAP, STRUCT, VARIANT, or FILE by index, key, or field name, with 1-based and negative array indexes."
 }
 ---
 
 ## Function
 
-The `ELEMENT_AT` function is used to extract the element value from an array, map, struct, or variant based on the specified index or key.
+The `ELEMENT_AT` function is used to extract an element or field value from an array, map, struct, variant, or FILE based on the specified index, key, or field name.
 
 - When applied to an **ARRAY**, it returns the element at the specified position.  
 - When applied to a **MAP**, it returns the value corresponding to the specified key.  
 - When applied to a **STRUCT**, it returns the subfield at the specified position (starting from 1) or with the specified field name, equivalent to `STRUCT_ELEMENT`.  
 - When applied to a **VARIANT**, it returns the value of the specified subfield.
+- When applied to a **FILE**, it returns the value of the specified field.
 
 ## Syntax
 
@@ -23,13 +24,14 @@ ELEMENT_AT(container, key_or_index)
 
 ## Parameters
 
-- `container`: Can be `ARRAY`, `MAP`, `STRUCT`, or `VARIANT`.
+- `container`: Can be `ARRAY`, `MAP`, `STRUCT`, `VARIANT`, or `FILE`.
 - `key_or_index`:
   - For `ARRAY`: An integer, with indexing starting from **1**.  
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT` object access: A string key.
   - For a VARIANT array in Doris 5.0.0 and later: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
+  - For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, `checksum`, or `inline`. Names are case-insensitive.
 
 ## Return Value
 
@@ -37,8 +39,9 @@ ELEMENT_AT(container, key_or_index)
 - For `MAP`: Returns the value corresponding to the specified key (`V` type).  
 - For `STRUCT`: Returns the specified subfield value.  
 - For `VARIANT`: Returns a `VARIANT` type value. A missing key, index `0`, an out-of-range index, a string key on an array, an integer index on an object, and a key on a scalar value all return `NULL`.
-- If the index or key does not exist, returns `NULL` (for `STRUCT`, an out-of-bound position or a non-existent field name reports an error).  
-- If the parameter is `NULL`, returns `NULL`.
+- For `FILE`: Returns the selected field value with its corresponding type, or `NULL` when FILE or the field is `NULL`.
+- If the index or key does not exist, returns `NULL` (out-of-bound `STRUCT` positions and non-existent `STRUCT` or `FILE` field names report errors).
+- If the parameter is `NULL`, returns `NULL` (FILE requires a non-NULL constant field name).
 
 ## Notes
 
@@ -53,6 +56,7 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 ```
 
 4. For `VARIANT`, a JSON `null` member of a value computed in a query is returned as a VARIANT `null`, which is not SQL `NULL`. In data read from a table, `null` members of objects outside arrays are not stored, so the same access returns SQL `NULL`. See [NULL semantics](../../../basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics).
+5. For `FILE`, unknown field names, dynamic selectors, and numeric indexes produce errors.
 
 ## Examples
 
@@ -137,4 +141,22 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
     +-------------------------------------------+
     | NULL                                      |
     +-------------------------------------------+
+    ```
+
+6. Accessing a `FILE` field by its case-insensitive name.
+
+    ```sql
+    SELECT ELEMENT_AT(f, 'URI') AS uri,
+           ELEMENT_AT(f, 'size') AS size
+    FROM (SELECT CAST(NAMED_STRUCT(
+        'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+        'content_type', NULL, 'checksum', NULL, 'inline', NULL
+    ) AS FILE) AS f) t;
+    ```
+    ```text
+    +-------------------------+------+
+    | uri                     | size |
+    +-------------------------+------+
+    | s3://bucket/picture.jpg |    3 |
+    +-------------------------+------+
     ```

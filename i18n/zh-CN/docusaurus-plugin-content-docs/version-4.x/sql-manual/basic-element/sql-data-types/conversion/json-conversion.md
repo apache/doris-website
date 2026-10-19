@@ -10,6 +10,29 @@ Doris 中的 JSON 类型采用二进制编码存储，而不是文本存储，�
 
 ## 转换为 JSON
 
+### FROM FILE
+
+:::note
+自 4.2.0 起支持
+:::
+
+[FILE](../semi-structured/FILE.md) 支持显式转换为 JSON。转换结果是包含完整六字段的对象，inline 字节使用 Base64 字符串表示。
+
+```sql
+SELECT CAST(f AS JSON) AS j
+FROM (SELECT CAST(NAMED_STRUCT(
+    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE) AS f) t;
+```
+```text
++-----------------------------------------------------------------------------------------------------------+
+| j                                                                                                         |
++-----------------------------------------------------------------------------------------------------------+
+| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
++-----------------------------------------------------------------------------------------------------------+
+```
+
 ### FROM String
 
 当将字符串转换为 JSON 时，字符串内容必须符合 [RFC7159](https://datatracker.ietf.org/doc/html/rfc7159) 定义的有效 JSON 语法。解析器会验证字符串并将其转换为相应的 JSON 二进制格式。
@@ -117,6 +140,7 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT]Fa
 | STRING | String |
 | ARRAY | Array |
 | STRUCT | Object |
+| FILE（自 4.2.0 起支持） | Object |
 
 #### 示例
 
@@ -166,6 +190,27 @@ mysql> SELECT CAST(CAST(MAKEDATE(2021, 1) AS BIGINT) AS JSON);
 
 从 4.0 版本开始，在 JSON CAST 中出现溢出行为，在严格模式下报错，非严格模式下返回 NULL。
 :::
+
+### TO FILE
+
+:::note
+自 4.2.0 起支持
+:::
+
+JSON 对象还支持显式转换为 [FILE](../semi-structured/FILE.md)。对象必须恰好包含六个规定字段，且满足各字段的类型和取值约束；inline 使用 Base64 字符串或 null。完整规则和示例见 [FILE 类型转换](file-conversion.md)。
+
+```sql
+SELECT CAST(JSON_PARSE(
+    '{"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}'
+) AS FILE) AS f;
+```
+```text
++-----------------------------------------------------------------------------------------------------------+
+| f                                                                                                         |
++-----------------------------------------------------------------------------------------------------------+
+| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
++-----------------------------------------------------------------------------------------------------------+
+```
 
 ### TO Boolean
 
@@ -378,7 +423,7 @@ mysql> SELECT CAST(CAST('null' AS JSON) AS INT);
 | Number | BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DOUBLE, FLOAT, DECIMAL, STRING |
 | String | BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DOUBLE, FLOAT, DECIMAL, STRING, ARRAY, STRUCT |
 | Array | STRING, ARRAY |
-| Object | STRING, STRUCT |
+| Object | STRING, STRUCT, FILE（须满足字段约束）（自 4.2.0 起支持） |
 
 ### keywords
 JSON, JSONB, CAST, 类型转换，to_json
