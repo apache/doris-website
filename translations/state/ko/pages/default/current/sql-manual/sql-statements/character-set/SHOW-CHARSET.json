@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/character-set/SHOW-CHARSET",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/character-set/SHOW-CHARSET.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/character-set/SHOW-CHARSET.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f01b6aa6d1f29d4b9e1450b2529520e72dd2c28d804c6fdc4d738b922653a3c2",
+    "sourceTechnicalHash": "0472fd0dfa1403fcb46fab0ce76f2a6adc4d02bcfb4582eee585882ea17cdde5",
+    "targetHash": "79b1c5fc0ae27000e3d064d418e0799dbeb0872b4a1864b929ca88ade8622c41",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:06:23.041Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f01b6aa6d1f29d4b9e1450b2529520e72dd2c28d804c6fdc4d738b922653a3c2",
+      "targetHash": "79b1c5fc0ae27000e3d064d418e0799dbeb0872b4a1864b929ca88ade8622c41",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

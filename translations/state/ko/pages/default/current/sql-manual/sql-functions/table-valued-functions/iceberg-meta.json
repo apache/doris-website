@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "97bf5c2d25ff8b4edc21c3f748601fe2c2c43b338303eed959587ab6c59b6ed3",
+    "sourceTechnicalHash": "4f4526be1c8ed672472ecd0d4417214aebb15efdd64c8ecd5c814547957bbd97",
+    "targetHash": "4498da5d8deb3f180477f3173a95a86d63cc65a7bbe5af06eb692db99ffbb3b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:03:39.993Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "97bf5c2d25ff8b4edc21c3f748601fe2c2c43b338303eed959587ab6c59b6ed3",
+      "targetHash": "4498da5d8deb3f180477f3173a95a86d63cc65a7bbe5af06eb692db99ffbb3b5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

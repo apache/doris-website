@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+    "sourceTechnicalHash": "5ea5069c80d4612c301c7aaa7edef3e1cc6e83c5d72cb9c71ad0fd28cd8cc6f3",
+    "targetHash": "22d36c3f3487fc6eb0461faa05264b7d8b14289b7ab733602479f77ed72367c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:10:27.382Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+      "targetHash": "22d36c3f3487fc6eb0461faa05264b7d8b14289b7ab733602479f77ed72367c1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"code\",null,null,\"Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).\"]; received [\"code\",null,null,\"Doris는 `AWS Assume Role`을 사용한 S3 리소스 생성도 지원합니다. [AWS 통합](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication)을 참고하세요.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

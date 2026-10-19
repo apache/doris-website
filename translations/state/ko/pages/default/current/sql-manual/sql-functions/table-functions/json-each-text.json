@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/json-each-text",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/json-each-text.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/json-each-text.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2dfef7ad1ef162c6edcc4a51b9db30c202ec3f23749a12231e9dedbeb19b4bf6",
+    "sourceTechnicalHash": "b844306c81a7cd28d96863a9e802c19638d43c15ad8fbac99fa62e2c6b2d6e7e",
+    "targetHash": "fde72f293e296317d0758e5e22dd04c2b5763757eefe4efbfc848e5f9776d697",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:01:34.702Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2dfef7ad1ef162c6edcc4a51b9db30c202ec3f23749a12231e9dedbeb19b4bf6",
+      "targetHash": "fde72f293e296317d0758e5e22dd04c2b5763757eefe4efbfc848e5f9776d697",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

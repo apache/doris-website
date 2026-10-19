@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SET-PROPERTY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SET-PROPERTY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SET-PROPERTY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "28a8c785b38c1bdb3ab32e60dfaaefdead58e3d07847b4f8387c03d8861c1ea1",
+    "sourceTechnicalHash": "723ed7cb8a3437e16eebc2a7e64564bf7e7a11a8be6ada67765bf03dd22c31f4",
+    "targetHash": "3cc3b3bb6feeaca22a3d92998e660416ee42ce26fcda5a5854b19db4cbc09713",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:05:45.729Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "28a8c785b38c1bdb3ab32e60dfaaefdead58e3d07847b4f8387c03d8861c1ea1",
+      "targetHash": "3cc3b3bb6feeaca22a3d92998e660416ee42ce26fcda5a5854b19db4cbc09713",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

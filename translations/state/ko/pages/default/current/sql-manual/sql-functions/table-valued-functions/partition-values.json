@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/partition-values",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/partition-values.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/partition-values.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e59f301ec54840d65046513b3671cb3481e31d1ee0f1b40c233d482e56256a0d",
+    "sourceTechnicalHash": "d0e9f88a2a9433427461c31a5e74ab999ffbcbe947f058fc7f3adee23fad7474",
+    "targetHash": "49c1338a43f5f5777a7d7b99ad9a7cf0e4282af12c354ffad116ca1d3ae51339",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:03:20.961Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e59f301ec54840d65046513b3671cb3481e31d1ee0f1b40c233d482e56256a0d",
+      "targetHash": "49c1338a43f5f5777a7d7b99ad9a7cf0e4282af12c354ffad116ca1d3ae51339",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

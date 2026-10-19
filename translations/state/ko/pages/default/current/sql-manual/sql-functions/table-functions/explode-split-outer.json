@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-split-outer",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-split-outer.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-split-outer.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d84179ab2855720dbda865aaeb13f03afa7fded3d2c476276d75270d3cb45393",
+    "sourceTechnicalHash": "33098c16ef9229fdb9b3f3eec85d1664f4ab928263556dfc788ef1cf189cd79f",
+    "targetHash": "427c5931b1ba90b9d50bce66fbdaf1782cdc8ed60be5d3915e4902efb733e41e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:01:20.724Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d84179ab2855720dbda865aaeb13f03afa7fded3d2c476276d75270d3cb45393",
+      "targetHash": "427c5931b1ba90b9d50bce66fbdaf1782cdc8ed60be5d3915e4902efb733e41e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

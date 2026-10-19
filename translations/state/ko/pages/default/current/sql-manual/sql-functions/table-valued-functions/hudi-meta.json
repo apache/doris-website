@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/hudi-meta",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/hudi-meta.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+    "sourceTechnicalHash": "fd02c1e7ef30070b0d8528d1c765cd6a74df71a237cf8e8dade8cd6e3ce5857d",
+    "targetHash": "5b08358f289e0b4395bbddaead061b1a8f60508a4653d58c5c8d3f3982996a2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:02:52.893Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "adcef4cbccb0205841440f5636598dc2e8652fa03f2478ce20f8fc72a1ecc745",
+      "targetHash": "5b08358f289e0b4395bbddaead061b1a8f60508a4653d58c5c8d3f3982996a2c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

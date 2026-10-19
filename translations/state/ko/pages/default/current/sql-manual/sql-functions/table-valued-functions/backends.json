@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/backends",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/backends.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/backends.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c65ac0d8c3d778b24daab83bd09a369377a2a41bca1612e93c60226616384c0a",
+    "sourceTechnicalHash": "54b5390936eff63c9bc358230fd88b5d676bd2fb5417ba66154b795002346531",
+    "targetHash": "b70ebc92be0710260895200a3cf3b4e4c80b143c895b71d2dbc7b59a6630769b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:02:27.138Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c65ac0d8c3d778b24daab83bd09a369377a2a41bca1612e93c60226616384c0a",
+      "targetHash": "b70ebc92be0710260895200a3cf3b4e4c80b143c895b71d2dbc7b59a6630769b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

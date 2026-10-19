@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/frontends_disks",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/frontends_disks.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/frontends_disks.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "82c63621e77e4f8ed3ea5c4e79658f00bf9a8af1e5c8cb5709df0c1478e7cec5",
+    "sourceTechnicalHash": "12eb977444aafa12f7085fd6e8ee97d3a2fcae4ccafa0b781c4f622837e2e384",
+    "targetHash": "6ee87eb22d6336d866927e79134aa8496378338b4b6052c48103376c27e32fda",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:02:46.856Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "82c63621e77e4f8ed3ea5c4e79658f00bf9a8af1e5c8cb5709df0c1478e7cec5",
+      "targetHash": "6ee87eb22d6336d866927e79134aa8496378338b4b6052c48103376c27e32fda",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
