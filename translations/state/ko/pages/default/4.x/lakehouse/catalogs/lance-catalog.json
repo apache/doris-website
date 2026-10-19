@@ -11,10 +11,10 @@
     "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
     "sourceHash": "0170b6ca44943ddfd32b4628593ec69788791b2ed276a429b258ed80f5a22fdc",
     "sourceTechnicalHash": "a0e66ca41781b29c952cf6e852de18e4afbbcad01a9b020853fcad516ce96658",
-    "targetHash": "7a0872c95fa73cbdd40a80f56b8c83d76161450998c7a7986e35f838472a7993",
+    "targetHash": "a1b29ef8e224ab84b3739f1402b239073d82713cf28043cc3c3b0021ff433a4d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T10:45:13.528Z",
+    "translatedAt": "2026-10-19T17:58:58.828Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",

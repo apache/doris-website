@@ -52,7 +52,6 @@ PR 提交流程还可以参考：
 ```plain
 .
 ├── blog
-│   ├── 1.1 Release.md
 │   ├── Annoucing.md
 │   ├── jd.md
 │   ├── meituan.md
@@ -66,37 +65,36 @@ PR 提交流程还可以参考：
 │   ├── ......
 ├── docs
 │   ├── admin-manual
+│   │   ├── auth
 │   │   ├── cluster-management
 │   │   ├── config
 │   │   ├── data-admin
-│   │   ├── http-actions
+│   │   ├── log-management
 │   │   ├── maint-monitor
-│   │   ├── privilege-ldap
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   │   └── workload-group.md
+│   │   ├── open-api
+│   │   ├── system-tables
+│   │   ├── trouble-shooting
+│   │   ├── workload-management
+│   │   └── audit-plugin.md
 │   ├── ......
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 │       │   ├── current.json
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
-│       ├── docusaurus-plugin-content-docs-community
-│       └── local_build_docs.sh
+│       │   ├── version-3.x.json
+│       │   └── version-4.x.json
+│       └── docusaurus-plugin-content-docs-community
 ├── src
 │   ├── components
 │   │   ├── Icons
 │   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
+│   │   ├── PageColumn
+│   │   └── PageHeader
 │   ├── ......
 ├── static
 │   ├── images
@@ -105,20 +103,19 @@ PR 提交流程还可以参考：
 │   └── js
 │       └── redirect.js
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
-│   └── version-2.1
+│   ├── version-2.1
+│   ├── version-3.x
+│   └── version-4.x
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
-├── babel.config.js
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ├── build.sh
-├── buildVersions.sh
 ├── docusaurus.config.js
+├── local_build_docs.sh
 ├── package.json
 ├── README.md
-├── sidebars.json
+├── sidebars.ts
 ├── sidebarsCommunity.json
 ├── tsconfig.json
 └── versions.json
@@ -131,13 +128,14 @@ PR 提交流程还可以参考：
 | `blog/` | 博客文章 Markdown | 所有版本共用 |
 | `community/` | 英文社区文档 | 所有版本共用 |
 | `docs/` | 英文最新版（Dev / Master）文档 | 当前主干 |
-| `versioned_docs/version-X.X/` | 英文历史版本文档 | 1.2 / 2.0 / 2.1 等 |
+| `versioned_docs/version-X.X/` | 英文已发布版本文档 | 4.x / 3.x / 2.1（见 `versions.json`） |
 | `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | 中文最新版文档 | 当前主干 |
-| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 中文历史版本文档 | 1.2 / 2.0 / 2.1 等 |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 中文已发布版本文档 | 4.x / 3.x / 2.1（见 `versions.json`） |
 | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | 中文社区文档 | 所有版本共用 |
-| `sidebars.json` | 最新版文档侧边栏 | 中英文共用 |
-| `versioned_sidebars/version-X.X-sidebars.json` | 历史版本文档侧边栏 | 中英文共用 |
+| `sidebars.ts` | 最新版文档侧边栏 | 中英文共用 |
+| `versioned_sidebars/version-X.X-sidebars.json` | 已发布版本文档侧边栏 | 中英文共用 |
 | `sidebarsCommunity.json` | 社区文档侧边栏 | 所有版本共用 |
+| `versions.json` | 网站发布的已发布版本列表 | 所有已发布版本 |
 | `static/images/` | 文档图片资源 | 所有版本共用 |
 
 ## 博客目录
@@ -152,7 +150,7 @@ PR 提交流程还可以参考：
 
 修改文档时，根据修改类型需要同时改动不同文件：
 
-1. **修改已有文档内容**：需要同时更新 Master 分支最新文档版本以及相应的各版本（如 2.1、2.0、1.2 或多版本）。
+1. **修改已有文档内容**：需要同时更新 Master 分支最新文档版本以及相应的已发布版本（如 4.x、3.x、2.1 或其中多个版本）。
 2. **新增文档**：除了上传新的 Markdown 文件，还需要在 Sidebar 文件中添加新文档链接路径。
 3. **新增文档目录栏**：除了调整目录结构，还需要对新增的目录栏补充中文翻译。
 
@@ -161,8 +159,8 @@ PR 提交流程还可以参考：
 | 文件类型 | 作用 | 示例 |
 | --- | --- | --- |
 | Markdown 文件 | 文档正文内容 | `docs/admin-manual/xxx.md` |
-| Sidebar 文件 | 控制目录结构 | `sidebars.json` / `version-2.1-sidebars.json` |
-| 翻译文件 | 控制目录栏在中文文档中的显示 | `current.json` / `version-2.1.json` |
+| Sidebar 文件 | 控制目录结构 | `sidebars.ts` / `version-4.x-sidebars.json` |
+| 翻译文件 | 控制目录栏在中文文档中的显示 | `current.json` / `version-4.x.json` |
 
 :::caution 注意
 
@@ -192,38 +190,36 @@ PR 提交流程还可以参考：
 
 **2. 文档目录结构**
 
-Dev 版本中英文文档统一由根目录下 `sidebars.json` 控制。
+Dev 版本中英文文档统一由根目录下 `sidebars.ts` 控制。
 
-`sidebars.json` 示例：
+`sidebars.ts` 示例：
 
-```json
-{
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            {
-                "type": "category",
-                "label": "Install and Deploy",
-                "items": [
-                    "install/standard-deployment",
-                    {
-                        "type": "category",
-                        "label": "Docker Deployment",
-                        "items": [
-                            "install/construct-docker/build-docker-image",
-                            "install/construct-docker/run-docker-cluster"
-                        ]
-             }
-             ......
-         }
-     ]
- }
+```ts
+const sidebars: SidebarsConfig = {
+    docs: [
+        {
+            type: 'category',
+            label: 'Get Started',
+            collapsible: false,
+            collapsed: false,
+            items: [
+                {
+                    type: 'category',
+                    label: 'Getting Started',
+                    link: {type: 'doc', id: 'getting-started/intro'},
+                    collapsed: true,
+                    items: [
+                        'getting-started/what-is-apache-doris',
+                        'getting-started/quick-start',
+                        'getting-started/before-you-start-the-poc',
+                    ],
+                },
+                ......
+            ],
+        },
+        ......
+    ],
+};
 ```
 
 **3. 目录栏中文翻译**
@@ -232,8 +228,8 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 
 以目录栏「快速开始」为例：
 
-- `sidebar.docs.category.Getting Started` 与 `sidebars.json` 中的 `label` 层级对应
-- 编写格式为：`sidebar` + `.` + `docs` + `.` + `[type]` + `[label]`
+- `sidebar.docs.category.Getting Started` 与 `sidebars.ts` 中的 `label` 层级对应
+- 编写格式为：`sidebar` + `.` + `docs` + `.` + `[type]` + `.` + `[label]`
 
 ```json
 {
@@ -249,34 +245,33 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 }
 ```
 
-对应的 `sidebars.json` 片段：
+对应的 `sidebars.ts` 片段：
 
-```json
+```ts
 {
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            ......
-         }
-     ]
- }
+    type: 'category',
+    label: 'Getting Started',
+    link: {type: 'doc', id: 'getting-started/intro'},
+    collapsed: true,
+    items: [
+        'getting-started/what-is-apache-doris',
+        'getting-started/quick-start',
+        'getting-started/before-you-start-the-poc',
+    ],
+},
 ```
 
-### 2.1 / 2.0 / 1.2 历史版本
+### 4.x / 3.x / 2.1 已发布版本
 
 **1. 内容修改位置**
 
+网站发布的已发布版本列在根目录的 `versions.json` 中，目前为 4.x、3.x 和 2.1。仓库中仍保留 `version-1.2` 和 `version-2.0` 目录，但它们不在 `versions.json` 中，也不会构建到网站。
+
 | 版本 | 英文文档位置 | 中文文档位置 |
 | --- | --- | --- |
+| 4.x | `/versioned_docs/version-4.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x` |
+| 3.x | `/versioned_docs/version-3.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x` |
 | 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
-| 2.0 | `/versioned_docs/version-2.0` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0` |
-| 1.2 | `/versioned_docs/version-1.2` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2` |
 
 ```plain
 .
@@ -287,13 +282,13 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
 │   ├── version-2.1
+│   ├── version-3.x
+│   ├── version-4.x
 ```
 
 **2. 文档目录结构**
@@ -303,12 +298,12 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 ```plain
 .
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ```
 
-各版本 Sidebar 层级修改与 Dev 版本基本一致，此处不再举例。
+各版本的 Sidebar 文件为 JSON 格式，结构与 `sidebars.ts` 相同。各版本 Sidebar 层级修改与 Dev 版本基本一致，此处不再举例。
 
 **3. 目录栏中文翻译**
 
@@ -318,9 +313,9 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
+│       │   ├── version-3.x.json
+│       │   ├── version-4.x.json
 ```
 
 各版本中文文档 `label` 翻译与 Dev 版本基本一致，此处不再举例。
@@ -341,24 +336,24 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 ```json
 {
     "version.label": {
-        "message": "Next",
+        "message": "current",
         "description": "The label for version current"
     },
     "sidebar.community.category.How to Contribute": {
-        "message": "贡献指南",
+        "message": "参与贡献",
         "description": "The label for category How to Contribute in sidebar community"
     },
-    "sidebar.community.category.Release Process & Verification": {
-        "message": "版本发布与校验",
-        "description": "The label for category Release Process & Verification in sidebar community"
+    "sidebar.community.category.Documentation Contribution": {
+        "message": "贡献文档",
+        "description": "The label for category Documentation Contribution in sidebar community"
+    },
+    "sidebar.community.category.Release": {
+        "message": "版本与发布",
+        "description": "The label for category Release in sidebar community"
     },
     "sidebar.community.category.Design Documents": {
         "message": "设计文档",
         "description": "The label for category Design Documents in sidebar community"
-    },
-    "sidebar.community.category.Developer Guide": {
-        "message": "开发者手册",
-        "description": "The label for category Developer Guide in sidebar community"
     }
 }
 ```
