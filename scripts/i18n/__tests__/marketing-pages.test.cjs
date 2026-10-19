@@ -309,6 +309,28 @@ test('page translations leave global navigation in English', () => {
     }
 });
 
+test('the Slack community prompt stays English in every locale', () => {
+    const file = 'src/components/home-next/SlackCommunityNudge.tsx';
+    const source = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), 'utf8'),
+        ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    const ids = [];
+    function visit(node) {
+        const options = ts.isCallExpression(node) && node.expression.getText(source) === 'translate' && node.arguments[0];
+        if (options && ts.isObjectLiteralExpression(options)) {
+            ids.push(options.properties.find(property => property.name?.getText(source) === 'id').initializer.text);
+        }
+        ts.forEachChild(node, visit);
+    }
+    visit(source);
+    assert(ids.length > 0);
+    for (const {code} of localeRegistry) {
+        const dictionaryFile = path.join(root, 'i18n', code, 'code.json');
+        if (!fs.existsSync(dictionaryFile)) continue;
+        const dictionary = JSON.parse(fs.readFileSync(dictionaryFile, 'utf8'));
+        assert.deepEqual(ids.filter(id => dictionary[id]), [], code);
+    }
+});
+
 test('every registered translated page carries each of its marketing messages', () => {
     for (const [locale, pages] of Object.entries(registered)) {
         const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));

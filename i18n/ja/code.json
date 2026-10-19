@@ -1030,68 +1030,8 @@
     "message": "タグ",
     "description": "The title of the tag list page"
   },
-  "homepage.slackcommunitynudge.004": {
-    "message": "Apache Doris のコミュニティ、Summit、ドキュメントのリソース"
-  },
-  "homepage.slackcommunitynudge.005": {
-    "message": "Apache Doris のコミュニティと Summit のリソース"
-  },
-  "homepage.slackcommunitynudge.006": {
-    "message": "コミュニティ、Summit、ドキュメントの案内を閉じる"
-  },
-  "homepage.slackcommunitynudge.007": {
-    "message": "コミュニティと Summit の案内を閉じる"
-  },
-  "homepage.slackcommunitynudge.008": {
-    "message": "コミュニティのサポート"
-  },
-  "homepage.slackcommunitynudge.009": {
-    "message": "Doris を使っていますか？"
-  },
-  "homepage.slackcommunitynudge.010": {
-    "message": "Slack に参加して、セットアップや性能改善のヒント、Apache Doris のユーザーとメンテナーからの回答を得られます。"
-  },
-  "homepage.slackcommunitynudge.011": {
-    "message": "Slack に参加"
-  },
-  "homepage.slackcommunitynudge.013": {
-    "message": "10 月 21～22 日 · オンラインイベント"
-  },
-  "homepage.slackcommunitynudge.014": {
-    "message": "Summit を見る"
-  },
-  "homepage.slackcommunitynudge.015": {
-    "message": "ドキュメントに問題がありましたか？"
-  },
-  "homepage.slackcommunitynudge.016": {
-    "message": "フィードバックを共有し、Apache Doris ドキュメントの改善にご協力ください。"
-  },
-  "homepage.slackcommunitynudge.017": {
-    "message": "ドキュメントの問題を報告"
-  },
-  "homepage.slackcommunitynudge.018": {
-    "message": "閉じる"
-  },
-  "homepage.slackcommunitynudge.019": {
-    "message": "開く"
-  },
   "homepage.ecosystem.aiAgents": {
     "message": "AI エージェント"
-  },
-  "homepage.nudge.toggle": {
-    "message": "コミュニティと Summit のリソースを{action}"
-  },
-  "homepage.nudge.toggleDocs": {
-    "message": "コミュニティ、Summit、ドキュメントのリソースを{action}"
-  },
-  "homepage.nudge.benefit1": {
-    "message": "Doris のユーザーや開発者と交流できます。"
-  },
-  "homepage.nudge.benefit2": {
-    "message": "コミュニティの最新情報、学習リソース、イベント情報を得られます。"
-  },
-  "homepage.nudge.benefit3": {
-    "message": "コミュニティ活動、機能の議論、PR レビューに参加できます。"
   },
   "docs.translation.status.label": {
     "message": "翻訳状況"
