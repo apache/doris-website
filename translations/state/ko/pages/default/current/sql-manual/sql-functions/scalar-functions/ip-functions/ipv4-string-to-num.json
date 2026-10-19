@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c24a1d506ad8962f9c670ccf3ec635486b5ae84172669b9c8059daeda751631f",
+    "sourceTechnicalHash": "6e32b9b818b2702328f600d9bd8e4b386e18ab9fb285f4b51219f232d4a2368c",
+    "targetHash": "0e31b6ef2b32a0a2c83a3b261cd95de8a35a17eca8900e339bd9348c03a65985",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:07:49.327Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c24a1d506ad8962f9c670ccf3ec635486b5ae84172669b9c8059daeda751631f",
+      "targetHash": "0e31b6ef2b32a0a2c83a3b261cd95de8a35a17eca8900e339bd9348c03a65985",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

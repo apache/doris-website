@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a2e53904dbef0ed762fcd6ea2bacc2fe04b1a6f1cdaf0aaf676886b830d3c8f6",
+    "sourceTechnicalHash": "a4343150fc3bbeffd076b13c6e56a4dc897920e5d53dca509de9e2f162823318",
+    "targetHash": "7bdc1f00cfa8c4936dfbdbebe4dae56872da52517d05daff4cb262337de97ffb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:06:25.288Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2e53904dbef0ed762fcd6ea2bacc2fe04b1a6f1cdaf0aaf676886b830d3c8f6",
+      "targetHash": "7bdc1f00cfa8c4936dfbdbebe4dae56872da52517d05daff4cb262337de97ffb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

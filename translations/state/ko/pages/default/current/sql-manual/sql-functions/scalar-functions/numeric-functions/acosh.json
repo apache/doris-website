@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/acosh",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/acosh.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/acosh.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e6532e1e59ebce57cf625518c51d38c768279ff8a582b0f22b2e9618877858eb",
+    "sourceTechnicalHash": "cb0a028d1d91c78f7b54b533fbfc11e98add3682ff79d9f6cc4d2d6a08af8744",
+    "targetHash": "bba4ef0a95e09fe1a2fe63ec2f244faccf311b37ad0fc73757a1e443238c02e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:13:05.860Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e6532e1e59ebce57cf625518c51d38c768279ff8a582b0f22b2e9618877858eb",
+      "targetHash": "bba4ef0a95e09fe1a2fe63ec2f244faccf311b37ad0fc73757a1e443238c02e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

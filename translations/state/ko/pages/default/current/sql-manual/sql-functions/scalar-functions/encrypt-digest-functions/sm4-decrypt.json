@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-decrypt.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "1da31e44ee8757506f5a77fa621d987546a61803bc13bdb61cc714f0d1432e59",
+    "sourceTechnicalHash": "bcf2b5e88514ad93c43e6ea378f522c2f7e13306e9d5aeb0764267e5a5dd9b88",
+    "targetHash": "01d0af376e50036ce95b80a45baeaa9cc282831518fbce15d00ec4ad571d22c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:07:10.857Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1da31e44ee8757506f5a77fa621d987546a61803bc13bdb61cc714f0d1432e59",
+      "targetHash": "01d0af376e50036ce95b80a45baeaa9cc282831518fbce15d00ec4ad571d22c0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"128\",\"128\",\"128\",\"16\",\"4\",\"4\",\"4\",\"4\",\"4\"]; received [\"128\",\"128\",\"128\",\"128\",\"16\",\"16\",\"4\",\"4\",\"4\",\"4\",\"4\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

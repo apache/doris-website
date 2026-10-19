@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-remove",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-remove.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-remove.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "645ede3af1c947ce7e01c67ead31866185c7bad8c5d16dae2c4cdb1b94e0f185",
+    "sourceTechnicalHash": "8cec7a0a1d36247bc3878c26480792bac2b6b572e154f7a09c10dd681fa32fb4",
+    "targetHash": "b2a91aae7c4412c463cdda6b10346a3c60a7ce6d61899dbb97ec1836e8ead6e3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:10:48.465Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "645ede3af1c947ce7e01c67ead31866185c7bad8c5d16dae2c4cdb1b94e0f185",
+      "targetHash": "b2a91aae7c4412c463cdda6b10346a3c60a7ce6d61899dbb97ec1836e8ead6e3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

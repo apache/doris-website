@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-keys",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map-keys.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map-keys.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e845be5a9ef7ff01c71898efcb848b9ce5b2ae9643b43e30e15feff2f239059c",
+    "sourceTechnicalHash": "be2912567e3adb97aedb2907ed1b58009a0b6e8ce567695ca585b062ee464dc4",
+    "targetHash": "7c6fb7f9ccfc6008b933c290be52c3475a11e34c66962c4bed7c3136147cbdf4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:12:19.275Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e845be5a9ef7ff01c71898efcb848b9ce5b2ae9643b43e30e15feff2f239059c",
+      "targetHash": "7c6fb7f9ccfc6008b933c290be52c3475a11e34c66962c4bed7c3136147cbdf4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

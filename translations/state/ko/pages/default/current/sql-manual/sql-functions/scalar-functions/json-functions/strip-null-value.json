@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/strip-null-value.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f9b2d37cc9975d2f290a09abf20a0fdb6379374eb59c20068df3548b2aa32150",
+    "sourceTechnicalHash": "383d4c7df3bb54bf2519389ec0df8c918d4c3367a5390fca53ddac88989eec95",
+    "targetHash": "f349c1a2dd7957e1fbe75160624a4b7deb998d3df6071151027db1159fe88d30",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:11:24.480Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f9b2d37cc9975d2f290a09abf20a0fdb6379374eb59c20068df3548b2aa32150",
+      "targetHash": "f349c1a2dd7957e1fbe75160624a4b7deb998d3df6071151027db1159fe88d30",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

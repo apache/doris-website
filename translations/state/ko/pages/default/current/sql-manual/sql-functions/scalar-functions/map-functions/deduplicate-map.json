@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/deduplicate-map",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/deduplicate-map.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/deduplicate-map.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f0dc9711a648d6e5d38682bc774fffca7b767a68938cba91ffd15a0b9dbc1947",
+    "sourceTechnicalHash": "52e9775e204c2745c18fc3b3592aa01f845837f0536aae5f5c332ba6aa3c79ad",
+    "targetHash": "38897516a78c7891134ff5f2f20c0364d18c1ead9d011c9a95146e472067d2cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:11:26.410Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f0dc9711a648d6e5d38682bc774fffca7b767a68938cba91ffd15a0b9dbc1947",
+      "targetHash": "38897516a78c7891134ff5f2f20c0364d18c1ead9d011c9a95146e472067d2cd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
