@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD-TASK.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "dedae9dcf917c37aa614a1134c33b47ca9c9bb6f77d1e20ce326f5c041e5063d",
+    "sourceTechnicalHash": "2ccdd6034d1c2e5b0bba554b939096093067e8466f300d48fe59cebda4cb9750",
+    "targetHash": "d3b835b4ccf74dfe9f2110cd898fc1bda39e8de28d09d732c351e02821884e05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:24:23.613Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dedae9dcf917c37aa614a1134c33b47ca9c9bb6f77d1e20ce326f5c041e5063d",
+      "targetHash": "d3b835b4ccf74dfe9f2110cd898fc1bda39e8de28d09d732c351e02821884e05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

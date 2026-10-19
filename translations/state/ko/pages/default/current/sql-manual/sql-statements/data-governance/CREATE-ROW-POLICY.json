@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-governance/CREATE-ROW-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f1011b64b599bcf558592343325e454fb18225522a0076a24558643b234c01f0",
+    "sourceTechnicalHash": "1380d4677303dcc391b40386a4c6883fb51105827561d4e7b410dde9d890b2bd",
+    "targetHash": "31fe5f8cba51797e3e58dd8bb2da643e93511de8e2977d66884c1a377a387b8e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:20:08.007Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f1011b64b599bcf558592343325e454fb18225522a0076a24558643b234c01f0",
+      "targetHash": "31fe5f8cba51797e3e58dd8bb2da643e93511de8e2977d66884c1a377a387b8e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/SHOW-RESOURCES.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5dc23ff52fe2dc3f83dbb710fd8ed587f156f7484114b52ac152ebc8dc024207",
+    "sourceTechnicalHash": "e9f576f13b1fd540ed41b107e294171fc509ec1078eab2f4a3a123dd30f59f30",
+    "targetHash": "db69cf1664f443abe5bbcae9c8e5a4cf5c5f816972f491b2ce396afe8a492136",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:16:12.458Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5dc23ff52fe2dc3f83dbb710fd8ed587f156f7484114b52ac152ebc8dc024207",
+      "targetHash": "db69cf1664f443abe5bbcae9c8e5a4cf5c5f816972f491b2ce396afe8a492136",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/CANCEL-EXPORT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3494f2a53d6248313625d7502dc4a56ff7611170c4d9836b437c050bde67379e",
+    "sourceTechnicalHash": "9aa7bcebd99e708d920242173de30e4762bbb4d2baaa4d44e29c66cb28f549fc",
+    "targetHash": "f60e97d8acf4d26ff374d58996330fb57a2770fc4cb1f02d84b73069fa3fad38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:22:44.826Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3494f2a53d6248313625d7502dc4a56ff7611170c4d9836b437c050bde67379e",
+      "targetHash": "f60e97d8acf4d26ff374d58996330fb57a2770fc4cb1f02d84b73069fa3fad38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-governance/DROP-ROW-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-governance/DROP-ROW-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-governance/DROP-ROW-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "584a2047ab8f22477015532bfee3cc2b5ec10efd741f1f5d3321447a2a4eb5c2",
+    "sourceTechnicalHash": "adbc5011c1a528d59cb8c887bdc4b9120528dc1436ebf6f61ad2e69d3c54b26c",
+    "targetHash": "cb8f069c0dfe14c98ed4ba5b93b94dec5b87d100e2c22190798e0bd3e8c1ee33",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:20:09.567Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "584a2047ab8f22477015532bfee3cc2b5ec10efd741f1f5d3321447a2a4eb5c2",
+      "targetHash": "cb8f069c0dfe14c98ed4ba5b93b94dec5b87d100e2c22190798e0bd3e8c1ee33",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

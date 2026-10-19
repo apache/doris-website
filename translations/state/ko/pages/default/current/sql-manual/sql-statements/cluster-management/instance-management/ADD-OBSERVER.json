@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/ADD-OBSERVER.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "560ec912cfaf078dea2824996b2ea49d3d69a50526d62f23c57122df917f9b1e",
+    "sourceTechnicalHash": "e0693e26dc290f16419b5cd718e6270cbce7479e156576d53d3025653c2ad7cd",
+    "targetHash": "5e0584c64d2ec673c356562c2a5ec9cd49fdba9bdfb781bc140d7b7dbe448d44",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:16:23.875Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "560ec912cfaf078dea2824996b2ea49d3d69a50526d62f23c57122df917f9b1e",
+      "targetHash": "5e0584c64d2ec673c356562c2a5ec9cd49fdba9bdfb781bc140d7b7dbe448d44",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

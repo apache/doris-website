@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a5d6bfdec403a1f054ebac0495bb5ee3af8e372d1c9c75862932ce639c64faf5",
+    "sourceTechnicalHash": "b81f2cdd70da48507e4fca5f3ec4a4fbd1e3c76e6ef99b56deab46cf79ed821f",
+    "targetHash": "226519ba8f86616e8b61361254c710c640d41bc0e0f5d2aed75356faed5adc68",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:25:51.036Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a5d6bfdec403a1f054ebac0495bb5ee3af8e372d1c9c75862932ce639c64faf5",
+      "targetHash": "226519ba8f86616e8b61361254c710c640d41bc0e0f5d2aed75356faed5adc68",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"inlineCode\",null,null,\"******\"]; received [\"inlineCode\",null,null,\"CustomProperties\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"CustomProperties\"]; received [\"inlineCode\",null,null,\"******\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
