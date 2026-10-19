@@ -215,7 +215,7 @@
 }
 
 // ---------------------------------------------------------------------------
-// Event bar (sticky under the site navbar)
+// Top bar (sticky under the site navbar)
 // ---------------------------------------------------------------------------
 
 .hk-task__bar {
@@ -274,7 +274,7 @@
     white-space: nowrap;
 }
 
-.hk-task a.hk-task__event {
+.hk-task .hk-task__event {
     display: flex;
     min-width: 0;
     align-items: center;
@@ -282,28 +282,11 @@
     color: var(--brand-ink-soft);
     font-size: 14px;
     line-height: 1.3;
-    text-decoration: none;
 
     > span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-
-    &:hover {
-        color: var(--brand-ink);
-        text-decoration: none;
-
-        > span {
-            text-decoration: underline;
-            text-underline-offset: 3px;
-        }
-    }
-
-    svg {
-        width: 13px;
-        height: 13px;
-        color: var(--brand-primary-deep);
     }
 }
 
@@ -2164,10 +2147,6 @@
         --hk-wrap: min(720px, calc(100% - 48px));
     }
 
-    .hk-task__event-long {
-        display: none;
-    }
-
     .hk-task__grid {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -2264,7 +2243,7 @@
         padding: 10px 0 12px;
     }
 
-    .hk-task a.hk-task__event {
+    .hk-task .hk-task__event {
         flex: 1 1 100%;
         align-items: flex-start;
         gap: 6px;
@@ -2272,14 +2251,6 @@
         > span {
             white-space: normal;
         }
-
-        svg {
-            margin-top: 3px;
-        }
-    }
-
-    .hk-task__event-long {
-        display: inline;
     }
 }
 
@@ -2310,7 +2281,6 @@
     // Phone tap targets: 44px minimum.
     .hk-task__btn--sm,
     .hk-task a.hk-task__back,
-    .hk-task a.hk-task__event,
     .hk-task .hk-task__refs a,
     .hk-task__copy {
         min-height: 44px;

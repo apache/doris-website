@@ -11,8 +11,8 @@ import {
 } from './hackathonEvent';
 import './HackathonCourseTrack.scss';
 
-// The temporary "Hackathon" track inside the /course "Your Doris path" card.
-// `#hackathon` on the URL selects it, so posters and messages can link to it.
+// The permanent "Hackathon" track inside the /course "Your Doris path" card.
+// `#hackathon` on the URL selects it, so messages can link straight to it.
 
 export type CourseTrack = 'course' | 'hackathon';
 
@@ -101,12 +101,9 @@ export function CourseTrackSwitch({ track, onSelect }: CourseTrackSwitchProps): 
                 <small>Free course</small>
             </button>
             <button {...tabProps('hackathon', 1)}>
-                <strong>
-                    Hackathon
-                    <i className="hk-switch__led" aria-hidden="true" />
-                </strong>
+                <strong>Hackathon</strong>
                 <small>
-                    {HACKATHON_EVENT.city} · <span className="hk-nw">{HACKATHON_EVENT.dateShort}</span>
+                    Open tasks · <span className="hk-nw">start anytime</span>
                 </small>
             </button>
         </div>
@@ -125,24 +122,12 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
             hidden={hidden}
         >
             <div className="hk-track__event">
-                <p className="hk-track__kicker">
-                    {HACKATHON_EVENT.conference} · {HACKATHON_EVENT.city} · Hackathon
+                <p className="hk-track__kicker">Apache Doris Hackathon</p>
+                <h3 className="hk-track__headline">Build something real on Apache Doris — at your own pace.</h3>
+                <p className="hk-track__sub">
+                    Start any time and work at your own pace: one sitting or a few evenings. No Doris experience
+                    needed.
                 </p>
-                <h3 className="hk-track__headline">Build something real on Apache Doris — in one afternoon.</h3>
-                <a
-                    className="hk-ticket"
-                    href={HACKATHON_EVENT.eventUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${HACKATHON_EVENT.dateLong} · ${HACKATHON_EVENT.time} · ${HACKATHON_EVENT.room} (event page, opens in a new tab)`}
-                >
-                    <span>{HACKATHON_EVENT.dateLong}</span>
-                    <span>{HACKATHON_EVENT.time}</span>
-                    <span>
-                        {HACKATHON_EVENT.room} <i aria-hidden="true">↗</i>
-                    </span>
-                </a>
-                <p className="hk-track__sub">Drop in any time. No Doris experience needed.</p>
             </div>
             <div className="hk-track__head">
                 <h4>Track A · Build on Doris</h4>
@@ -172,7 +157,10 @@ export function HackathonTrackPanel({ hidden }: { hidden: boolean }): JSX.Elemen
             </Link>
             <div className="hk-track__badge">
                 <img src={badgeUrl} alt="Apache Doris Contributor badge" width="52" height="52" />
-                <p>Take part in a task, show us at the Doris table, collect your Contributor badge.</p>
+                <p>
+                    Take part in a task, share it in <code>{HACKATHON_EVENT.slackChannel}</code> on Slack, collect your
+                    Contributor badge.
+                </p>
             </div>
         </section>
     );

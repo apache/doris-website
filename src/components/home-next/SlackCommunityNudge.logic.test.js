@@ -138,7 +138,7 @@ test('does not show documentation feedback outside docs and community pages', ()
 });
 
 test('does not open on its own on the hackathon task pages', () => {
-    ['/course/hackathon', '/course/hackathon/glasgow-2026/a1-hybrid-search'].forEach(pathname => {
+    ['/course/hackathon', '/course/hackathon/a1-hybrid-search'].forEach(pathname => {
         assert.equal(allowsSlackNudgeAutoOpen(pathname), false, pathname);
     });
     ['/', '/course', '/docs/4.x/key-features/hybrid-search', '/course/hackathon-other'].forEach(pathname => {

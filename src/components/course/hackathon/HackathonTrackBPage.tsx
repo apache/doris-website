@@ -14,13 +14,13 @@ import {
     ConnectionCard,
     HackathonAllTasks,
     HackathonChecklistItem,
-    HackathonEventBar,
     HackathonHelpLine,
     HackathonRow,
     HackathonStarterKit,
     HackathonSubmit,
     HackathonTaskSwitch,
     HackathonTermList,
+    HackathonTopBar,
     PanelNote,
     RowsTable,
     START_SNIPPET,
@@ -205,10 +205,10 @@ export function HackathonTrackBPage(): JSX.Element {
     return (
         <LayoutNext
             title={`Track B · ${HACKATHON_TRACK_B.title} · Doris Hackathon`}
-            description={`${HACKATHON_TRACK_B.pitch} Track B of the ${HACKATHON_EVENT.name} at ${HACKATHON_EVENT.conference} ${HACKATHON_EVENT.city}.`}
+            description={`${HACKATHON_TRACK_B.pitch} Track B of the ${HACKATHON_EVENT.name}: self-paced, open to everyone.`}
         >
             <div className="hk-task hk-trackb">
-                <HackathonEventBar />
+                <HackathonTopBar />
                 <HackathonTaskSwitch current={HACKATHON_TRACK_B.code} />
 
                 <div className="hk-task__wrap hk-task__grid">
@@ -417,7 +417,7 @@ export function HackathonTrackBPage(): JSX.Element {
                                             <>
                                                 The repository&apos;s pull request template (dev + 4.x, English) and one
                                                 line that names your task, e.g.{' '}
-                                                <code>CoC 2026 Glasgow hackathon · Track B · B1</code>.
+                                                <code>Apache Doris Hackathon · Track B · B1</code>.
                                             </>
                                         ),
                                     },

@@ -19,7 +19,7 @@ export const BEFORE_IMAGE_PULLED: HackathonChecklistItem = {
     title: 'Docker is running and the Doris image is pulled.',
     body: (
         <>
-            About {HACKATHON_DORIS_DOWNLOAD}, once. Pull it before you arrive: the venue Wi-Fi is shared. Docker Desktop
+            About {HACKATHON_DORIS_DOWNLOAD}, once. Pull it ahead of time: it is a large download. Docker Desktop
             (macOS) and Docker Engine (Linux) both work.
         </>
     ),
@@ -321,7 +321,7 @@ export const TROUBLE = {
         problem: 'Stuck for more than 10 minutes',
         fix: (
             <>
-                Come to the Doris table and ask Mingyu, or post in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
+                Post in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
                 <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
             </>
         ),
