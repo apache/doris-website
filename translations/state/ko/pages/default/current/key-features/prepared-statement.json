@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/prepared-statement",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/prepared-statement.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/prepared-statement.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "fdc267dba9012490934edcf0689928200d0cedd68a99e0cb9b303c72551cbef7",
+    "sourceTechnicalHash": "5d345d872ccaf17ee319de64384c6f3e27537d8004f49fc3d7110b40f8dad499",
+    "targetHash": "a5717b03c94f8afa9748537fe09fee733eabbf9d69ee700df3f0ae2f0b16fe9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:19:39.451Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdc267dba9012490934edcf0689928200d0cedd68a99e0cb9b303c72551cbef7",
+      "targetHash": "a5717b03c94f8afa9748537fe09fee733eabbf9d69ee700df3f0ae2f0b16fe9c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 41: expected [\"link\",\"./group-commit\",null]; received [\"inlineCode\",null,null,\"INSERT INTO t VALUES (?, ?, ?)\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"INSERT INTO t VALUES (?, ?, ?)\"]; received [\"link\",\"./group-commit\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/stream-load",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/stream-load.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/stream-load.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "3aff2bc07fa1adfc6c04036675b4bd238e6ed37a19e38df4661506583e0855cf",
+    "sourceTechnicalHash": "652e0d09a4669688783c2d8ddba3973debb4651a34b787da04df51245006c7ca",
+    "targetHash": "ed1f7edba27f473ef6dc6fbf70ca882323edddd36104a127f6615ac2b1e30399",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:17:30.354Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3aff2bc07fa1adfc6c04036675b4bd238e6ed37a19e38df4661506583e0855cf",
+      "targetHash": "ed1f7edba27f473ef6dc6fbf70ca882323edddd36104a127f6615ac2b1e30399",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

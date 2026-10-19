@@ -1,0 +1,126 @@
+---
+title: Multi Catalog
+description: 하나의 Doris 클러스터에서 세 부분 이름을 사용해 내부 웨어하우스와 외부 시스템(Hive, Iceberg, JDBC, ES 등)을 아우르는 통합 쿼리를 실행합니다.
+keywords:
+  - Multi Catalog
+  - 통합 쿼리
+  - 외부 Catalog
+  - 세 부분 이름
+  - Hive Iceberg JDBC
+  - Apache Doris 통합 쿼리
+slug: /key-features/multi-catalog
+image: /images/next/key-features/multi-catalog.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - lakehouse
+    - federation
+    - external-catalog
+---
+
+> **요약** Apache Doris Multi Catalog는 외부 시스템(Hive, Iceberg, Hudi, Paimon, Delta Lake, MySQL, PostgreSQL, Oracle, Elasticsearch, BigQuery, MaxCompute 등)을 이름이 있는 Catalog로 등록하여 하나의 클러스터에서 통합 쿼리를 실행할 수 있게 합니다. 모든 테이블은 `<catalog>.<db>.<table>`로 참조하며, 하나의 SQL 문에서 여러 Catalog의 테이블을 조인할 수 있습니다. 내부 웨어하우스도 `internal`이라는 이름의 Catalog이므로, 데이터 복사 작업이나 별도의 쿼리 엔진 없이 하나의 권한 모델로 모든 소스를 관리할 수 있습니다.
+
+![Apache Doris Multi Catalog: 하나의 Doris 클러스터에서 세 부분 이름을 사용해 내부 웨어하우스와 외부 시스템(Hive, Iceberg, JDBC, ES 등)을 아우르는 통합 쿼리를 실행합니다.](/images/next/key-features/multi-catalog.jpg)
+## Apache Doris Multi Catalog를 사용하는 이유는 무엇인가요? {#why}
+
+Apache Doris Multi Catalog를 사용하면 여러 스토리지 시스템에 걸쳐 쿼리하기 위해 일반적으로 구축하는 데이터 복사 작업, CDC 파이프라인 또는 별도의 쿼리 엔진이 필요하지 않습니다. 대부분의 분석 팀은 이미 여러 스토리지 시스템을 운영하고 있습니다. 팩트 테이블은 오브젝트 스토리지의 Hive나 Iceberg에 있고, 차원 데이터와 운영 상태 데이터는 MySQL이나 PostgreSQL에 있습니다. 텍스트 중심 워크로드는 Elasticsearch에서 처리하고, 웨어하우스에는 정제된 데이터 마트를 저장합니다. 이 중 두 시스템에 걸친 질문에 답하려면 대개 데이터 최신성을 포기하거나 추가 비용을 부담해야 하며, 둘 다 발생하는 경우도 많습니다. [Catalog 통합](./catalog-integrations)을 통해 새 시스템을 연결하면 [메타데이터 캐시](./metadata-cache)를 채워 두고 SQL만으로 [레이크 테이블을 관리](./managing-lake-table)할 수 있습니다.
+
+Apache Doris는 각 시스템에 한 번 연결하여 해당 시스템의 데이터베이스와 테이블 목록을 파악하고, 사용자가 선택한 이름 아래에 노출합니다. 이후에는 `<catalog>.<db>.<table>`로 테이블을 참조하며, 쿼리에서 다른 테이블과 동일하게 사용할 수 있습니다.
+
+- Iceberg의 팩트 테이블과 MySQL의 차원 테이블을 조인하는 데는 파이프라인 대신 하나의 SELECT 문만 있으면 됩니다.
+- 웨어하우스와 레이크가 하나의 SQL 인터페이스, 하나의 사용자, 하나의 권한 모델을 공유합니다.
+- 새 소스를 추가하려면 배포 대신 `CREATE CATALOG`를 실행하면 됩니다.
+
+## Apache Doris Multi Catalog란 무엇인가요? {#what}
+
+Apache Doris Multi Catalog는 메타데이터 스택의 최상위에 있는 페더레이션 계층으로, 모든 항목을 Catalog, 데이터베이스, 테이블의 세 단계 네임스페이스로 구성합니다. 기본 제공 Catalog인 `internal`에는 Apache Doris 자체 테이블이 저장됩니다. 그 외의 모든 Catalog는 특정 유형의 소스와 통신하는 커넥터를 기반으로 하는 외부 Catalog입니다. 커넥터는 메타데이터 탐색, 타입 매핑, 파티션 프루닝, 읽기 작업을 처리하며 쓰기 작업 지원도 점차 확대되고 있습니다. 쿼리 옵티마이저는 모든 Catalog를 아우르는 실행 계획을 한 번에 수립하므로, Iceberg 테이블과 Apache Doris 테이블 간의 조인도 내부 테이블 간 조인과 동일한 MPP 엔진에서 실행됩니다.
+
+**주요 용어**
+
+- **`internal`**: Apache Doris의 네이티브 테이블을 저장하는 기본 제공 Catalog입니다. 생성하거나 이름을 변경하거나 삭제할 수 없습니다.
+- **외부 Catalog**: `CREATE CATALOG ... PROPERTIES ("type" = "...")`로 생성한 모든 Catalog를 말합니다. Apache Doris는 `hms`(Hive 및 Hive 호환 Metastore), `iceberg`, `hudi`, `paimon`, `jdbc`, `es`, `max_compute`, `bigquery`, `kafka`, `trino-connector` 등의 커넥터를 제공합니다.
+- **세 부분 이름**: `catalog.db.table`입니다. 단일 Catalog 세션 안에서 참조하든 여러 Catalog에 걸쳐 참조하든 항상 동일한 방식으로 해석됩니다.
+- **`SWITCH`와 `USE`**: `SWITCH iceberg_ctl`은 세션의 현재 Catalog를 전환합니다(데이터베이스를 전환하는 `USE`와 유사). `USE iceberg_ctl.iceberg_db`는 하나의 문으로 Catalog와 데이터베이스를 함께 전환합니다.
+- **메타데이터 캐시**: 외부 Catalog의 스키마, 파티션 목록, 파일 목록을 저장하여 실행 계획을 빠르게 수립할 수 있게 하는 FE 측 캐시입니다. TTL, 소스 측 이벤트 또는 `REFRESH CATALOG`를 통해 갱신됩니다.
+
+## Apache Doris Multi Catalog는 어떻게 작동하나요? {#how}
+
+Apache Doris Multi Catalog는 각 외부 소스를 이름이 있는 커넥터로 FE에 등록합니다. 그런 다음 모든 테이블 참조를 세 부분 이름으로 해석하고, 옵티마이저가 이를 아우르는 하나의 MPP 쿼리 실행 계획을 수립합니다.
+
+1. **Catalog를 등록합니다.** `CREATE CATALOG <name> PROPERTIES ("type" = "<type>", ...)`는 FE에 연결 정보를 기록합니다. 속성은 FE 편집 로그에 영구 저장되며, 그 외에는 아무것도 이동하지 않습니다. Apache Doris는 스키마나 데이터를 복사하지 않습니다.
+2. **필요할 때 탐색합니다.** 세션에서 Catalog에 처음 접근하면 커넥터가 데이터베이스와 테이블 목록을 조회하고, 스키마를 가져와 메타데이터 캐시를 채웁니다. 캐시되는 항목과 유지 기간은 [메타데이터 캐시](./metadata-cache)를 참조하세요.
+3. **세 부분 이름을 해석합니다.** 모든 테이블 참조는 `catalog.db.table`로 파싱됩니다. 한정되지 않은 이름에는 세션의 현재 Catalog와 데이터베이스가 사용됩니다. `SWITCH`, `USE`, 사용자 속성 `default_init_catalog`는 한정되지 않은 이름이 참조할 위치를 제어합니다.
+4. **하나의 쿼리 실행 계획을 수립합니다.** 옵티마이저는 각 Catalog의 커넥터에서 통계 정보를 가져오고, 조인 순서와 조건절 푸시다운을 결정한 뒤 하나의 분산 실행 계획을 생성합니다. 이 계획은 동일한 프래그먼트 그래프 안에서 `internal`의 Apache Doris tablet 스캔, Iceberg manifest 스캔, MySQL JDBC 데이터 조회, ES 쿼리를 함께 처리할 수 있습니다.
+5. **최신 상태를 유지합니다.** TTL과 소스 측 이벤트(Hive Metastore 이벤트, Iceberg 스냅샷 포인터, Paimon 스냅샷 다시 로드)가 캐시를 소스와 일치하도록 유지합니다. 그 외의 경우에는 `REFRESH CATALOG`, `REFRESH DATABASE`, `REFRESH TABLE`을 사용합니다.
+
+## 빠른 시작 {#quick-start}
+
+```sql
+-- Register a Hive catalog
+CREATE CATALOG hive_ctl PROPERTIES (
+  "type" = "hms",
+  "hive.metastore.uris" = "thrift://hms:9083"
+);
+
+-- Register a MySQL catalog for dimension tables
+CREATE CATALOG mysql_ctl PROPERTIES (
+  "type" = "jdbc",
+  "user" = "doris", "password" = "xxx",
+  "jdbc_url" = "jdbc:mysql://mysql:3306/dim",
+  "driver_url" = "mysql-connector-j-8.4.0.jar",
+  "driver_class" = "com.mysql.cj.jdbc.Driver"
+);
+
+-- One federated query, three catalogs
+SELECT o.region, SUM(f.amount), d.name
+FROM hive_ctl.sales.orders f
+JOIN internal.curated.region o ON f.region_id = o.id
+JOIN mysql_ctl.dim.product   d ON f.sku       = d.sku
+WHERE f.dt = CURRENT_DATE() GROUP BY 1, 3;
+```
+
+**예상 결과**
+
+```
++--------+-------------+----------+
+| region | SUM(amount) | name     |
++--------+-------------+----------+
+| EMEA   |     112_490 | Widget A |
+| APAC   |      87_310 | Widget B |
++--------+-------------+----------+
+```
+
+`SHOW CATALOGS`는 `internal`, `hive_ctl`, `mysql_ctl`을 나열합니다. 쿼리는 하나의 MPP 작업으로 계획되고 실행되므로 스테이징 테이블이 필요하지 않습니다.
+
+## Apache Doris Multi Catalog는 언제 사용해야 하나요? {#when}
+
+중간 ETL 단계 없이 웨어하우스와 하나 이상의 외부 소스에 접근하는 쿼리가 필요할 때 Apache Doris Multi Catalog를 사용하세요.
+
+**적합한 사용 사례**
+
+- Apache Doris로 먼저 ETL하지 않고 레이크(Hive, Iceberg, Hudi, Paimon, Delta Lake)와 Apache Doris 웨어하우스를 아우르는 통합 분석을 수행하는 경우.
+- 웨어하우스의 팩트 데이터를 MySQL, PostgreSQL, Oracle, SQL Server 또는 기타 JDBC 소스에 있는 운영 차원 데이터와 조인하는 경우.
+- Elasticsearch의 텍스트 검색 결과를 구조화된 필터와 함께 SQL 파이프라인으로 가져오는 경우.
+- 마이그레이션 및 병행 운영. Doris를 기존 Hive 또는 외부 웨어하우스에 연결하고, Doris를 통해 쿼리하면서 워크로드를 점진적으로 이전할 수 있습니다.
+- ZeroETL 데이터 통합. `INSERT INTO internal.x SELECT ... FROM hive_ctl.y`는 별도의 로더 없이 데이터를 Apache Doris로 수집합니다.
+
+**적합하지 않은 사용 사례**
+
+- 외부 Catalog를 쓰기 부하가 높은 OLTP 대상으로 사용하는 경우. Hive, Iceberg, JDBC Catalog는 다시 쓰기를 지원하지만, 처리량은 소스의 제약을 받으며 `internal`의 Apache Doris 테이블에 쓰는 수준에는 미치지 못합니다. 빈번한 쓰기는 `internal`에서 처리하고 배치로 원본에 다시 쓰세요.
+- 외부 소스에 트랜잭션 업데이트를 수행하는 경우. Apache Doris는 Catalog 간 트랜잭션을 제공하지 않으며, 대부분의 외부 Catalog는 내부 Catalog와 같은 방식의 행 수준 업데이트를 지원하지 않습니다. 이러한 작업에는 소스 자체의 DML을 사용하세요.
+- Catalog 간 DDL. `CREATE TABLE ... AS SELECT`는 Catalog 간 복사에 사용할 수 있지만, 두 Catalog에 *동일한* 테이블을 생성하는 것은 Apache Doris가 아닌 사용자의 책임입니다.
+- 하나의 쿼리에 두 컴퓨팅 풀을 결합하는 경우. 페더레이션은 컴퓨팅이 아닌 데이터 소스를 통합하는 기능입니다. 컴퓨팅 격리에 대해서는 [컴퓨팅 그룹](./compute-group)을 참조하세요.
+- 이 문서에서 모든 커넥터를 개별적으로 세밀하게 조정하려는 경우. 소스별 설정(AWS Glue, Iceberg REST, 개별 JDBC 방언, S3 호환 스토리지, Kerberos, IAM)은 별도의 [Catalog 통합](./catalog-integrations) 카드와 Catalog별 참조 문서를 확인하세요.
+
+## 추가 자료 {#further-reading}
+
+- [Catalog 통합](./catalog-integrations): 소스별 커넥터 참조 문서(Glue, Iceberg REST, JDBC 방언, 오브젝트 스토리지, 인증 모드).
+- [레이크 테이블 관리](./managing-lake-table): Multi Catalog를 통해 노출되는 Hive, Iceberg, Paimon 테이블에 대한 다시 쓰기, 스키마 진화, DML.
+- [메타데이터 캐시](./metadata-cache): FE가 외부 스키마, 파티션, 파일 목록을 캐시하고 최신 상태를 유지하는 방식.
+- [데이터 Catalog 개요](../lakehouse/catalog-overview): `CREATE`, `SWITCH`, `REFRESH`와 모든 Catalog가 공유하는 대소문자 구분 속성에 대한 사용자 가이드.
+- [레이크하우스 개요](../lakehouse/lakehouse-overview): Doris의 레이크하우스에서 Multi Catalog가 맡는 역할.
+- [CREATE CATALOG 참조](../sql-manual/sql-statements/catalog/CREATE-CATALOG): 전체 DDL 구문, 지원되는 타입, 속성 참조.
+- [SWITCH CATALOG 참조](../sql-manual/sql-statements/session/context/SWITCH-CATALOG): 세션 수준의 전환 동작.
+- [Iceberg](./iceberg): Doris의 통합 Catalog 스택에서 가장 깊이 통합된 기본 지원 커넥터로, 단순한 읽기 도구를 넘어 완전한 읽기 및 쓰기 엔진을 제공합니다.

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/maxcompute-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/maxcompute-catalog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/maxcompute-catalog.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ac74cb94b9865efa28ebf597993af374364e320e44cb0ce63b05896b922477e8",
+    "sourceTechnicalHash": "59c9de2fd453f4ff84e68d0337fa34bd36871258346f130a78cae3395b496259",
+    "targetHash": "bbc3962783454d21202647692fd54d9ab1c56bf9d535f194ab0467f8631be3c9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:27:26.238Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac74cb94b9865efa28ebf597993af374364e320e44cb0ce63b05896b922477e8",
+      "targetHash": "bbc3962783454d21202647692fd54d9ab1c56bf9d535f194ab0467f8631be3c9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"Usage Limitations\"]; received [\"link\",\"https://help.aliyun.com/zh/maxcompute/user-guide/overview-1\",null]\nprotected node 4: expected [\"link\",\"https://help.aliyun.com/zh/maxcompute/user-guide/overview-1\",null]; received [\"inlineCode\",null,null,\"Usage Limitations\"]\nprotected node 197: expected [\"inlineCode\",null,null,\"mc.endpoint\"]; received [\"link\",\"https://help.aliyun.com/zh/maxcompute/user-guide/endpoints\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

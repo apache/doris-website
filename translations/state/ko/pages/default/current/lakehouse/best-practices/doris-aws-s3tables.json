@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-aws-s3tables",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-aws-s3tables.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-aws-s3tables.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ff9b6a19eeadf33f02b9a3f616e5d1b6f2117dbe50a726990c47cfd56895c7b7",
+    "sourceTechnicalHash": "2bb217d583e66168b133d654bed3be06e4ef08d54d58dda8912c6f019d0c4ec5",
+    "targetHash": "df2e1c4a2eda416687acbd9204e12ff68949e23a56d84d820494074e2f1dbfd4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:21:19.098Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ff9b6a19eeadf33f02b9a3f616e5d1b6f2117dbe50a726990c47cfd56895c7b7",
+      "targetHash": "df2e1c4a2eda416687acbd9204e12ff68949e23a56d84d820494074e2f1dbfd4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"01\",\"02\",\"03\",\"04\",\"05\",\"06\",\"10\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\"]; received [\"01\",\"02\",\"03\",\"04\",\"05\",\"06\",\"10\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\"]\nprotected node 14: expected [\"code\",\"sql\",null,\"Doris > SELECT * FROM partition_table FOR VERSION AS OF 5670090782912867298;\\n+----------------------------+------+---------+-------+\\n| ts                         | id   | pt1     | pt2   |\\n+----------------------------+------+---------+-------+\\n| 2024-01-04 10:00:00.000000 | 1002 | us-sout | PART2 |\\n| 2024-01-03 08:00:00.000000 | 1000 | us-east | PART1 |\\n| 2024-01-01 08:00:00.000000 | 1000 | us-east | PART1 |\\n| 2024-01-02 10:00:00.000000 | 1002 | us-sout | PART2 |\\n+----------------------------+------+---------+-------+\\n\\nDoris > SELECT * FROM partition_table FOR VERSION AS OF 6834769222601914216;\\n+----------------------------+------+---------+-------+\\n| ts                         | id   | pt1     | pt2   |\\n+----------------------------+------+---------+-------+\\n| 2024-01-02 10:00:00.000000 | 1002 | us-sout | PART2 |\\n| 2024-01-01 08:00:00.000000 | 1000 | us-east | PART1 |\\n+----------------------------+------+---------+-------+\"]; received [\"code\",\"sql\",null,\"Doris > SELECT * FROM partition_table FOR VERSION AS OF 5670090782912867298;\\n+----------------------------+------+---------+-------+\\n| ts                         | id   | pt1     | pt2   |\\n+----------------------------+------+---------+-------+\\n| 2024-01-04 10:00:00.000000 | 1002 | us-sout | PART2 |\\n| 2024-01-03 08:00:00.000000 | 1000 | us-sout | PART1 |\\n| 2024-01-01 08:00:00.000000 | 1000 | us-east | PART1 |\\n| 2024-01-02 10:00:00.000000 | 1002 | us-sout | PART2 |\\n+----------------------------+------+---------+-------+\\n\\nDoris > SELECT * FROM partition_table FOR VERSION AS OF 6834769222601914216;\\n+----------------------------+------+---------+-------+\\n| ts                         | id   | pt1     | pt2   |\\n+----------------------------+------+---------+-------+\\n| 2024-01-02 10:00:00.000000 | 1002 | us-sout | PART2 |\\n| 2024-01-01 08:00:00.000000 | 1000 | us-east | PART1 |\\n+----------------------------+------+---------+-------+\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"01\",\"02\",\"03\",\"04\",\"05\",\"06\",\"10\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\"]; received [\"01\",\"02\",\"03\",\"04\",\"05\",\"06\",\"10\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

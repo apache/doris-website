@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/paimon-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/paimon-catalog.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/paimon-catalog.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6a7b4396b3108e9d2cb349f4b81873e8ccbfdff39879d71c4016b9d4a2e3b681",
+    "sourceTechnicalHash": "a59f9d21cfaec4e2fb3f7e0df6930839b84421d9da6e0be124e3874d476f72a3",
+    "targetHash": "75e0e319e191c8f77a60e8e4e2c33871914e522312c8eb2d87fe72a9257927a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:38:57.872Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6a7b4396b3108e9d2cb349f4b81873e8ccbfdff39879d71c4016b9d4a2e3b681",
+      "targetHash": "75e0e319e191c8f77a60e8e4e2c33871914e522312c8eb2d87fe72a9257927a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"paimon.table-option.*\"]; received [\"inlineCode\",null,null,\"CREATE CATALOG\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"CREATE CATALOG\"]; received [\"inlineCode\",null,null,\"ALTER CATALOG\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"ALTER CATALOG\"]; received [\"inlineCode\",null,null,\"paimon.table-option.*\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 53: expected [\"inlineCode\",null,null,\"@options\"]; received [\"link\",\"#time-travel-with-options\",null]\nprotected node 54: expected [\"link\",\"#time-travel-with-options\",null]; received [\"inlineCode\",null,null,\"@options\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

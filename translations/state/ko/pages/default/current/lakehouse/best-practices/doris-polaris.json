@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-polaris",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-polaris.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-polaris.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "9d209d465a3f19b2a3bb7a547587533daec8edb1847202a3f0fafa8e17f207f4",
+    "sourceTechnicalHash": "8bf879bdee14ef909127a9a37c62a6ebb79d4e38c6d7aa1b9923fa43fb1d8bb7",
+    "targetHash": "e823012d7d6f8356652d91fb3e1831308a83dbded7851369a720b142d25261f7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:20:21.412Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d209d465a3f19b2a3bb7a547587533daec8edb1847202a3f0fafa8e17f207f4",
+      "targetHash": "e823012d7d6f8356652d91fb3e1831308a83dbded7851369a720b142d25261f7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-oracle-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+    "sourceTechnicalHash": "bc982b10df710e4b5b677ddee2b560717c5659afe86ef317a499d111adfa5553",
+    "targetHash": "4f8fbbc001e0df6690432b71088d0c90177061cbad842acac36dc4da8c28a158",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:23:03.944Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+      "targetHash": "4f8fbbc001e0df6690432b71088d0c90177061cbad842acac36dc4da8c28a158",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\", and perform the same mapping as \"]; received [\"inlineCode\",null,null,\"로 설정하고 \"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

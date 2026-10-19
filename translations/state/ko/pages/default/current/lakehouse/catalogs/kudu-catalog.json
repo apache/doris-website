@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/kudu-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/kudu-catalog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/kudu-catalog.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5a6925159b62ef92b7029c8ea6740a8c627f23f68e3b24aa72ea8aa749248390",
+    "sourceTechnicalHash": "65c6ed153bd1ca693a981c5a714804f0d7e60e5dbefaac9a3df6920f26cc1005",
+    "targetHash": "01a01d5a53f5542d8935878681fb8effde418cc1e794cc8c329f8fadb4454c2f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:23:55.074Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a6925159b62ef92b7029c8ea6740a8c627f23f68e3b24aa72ea8aa749248390",
+      "targetHash": "01a01d5a53f5542d8935878681fb8effde418cc1e794cc8c329f8fadb4454c2f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"16\",\"17\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3.0.1\",\"3.0.1\",\"32\",\"4\",\"435\",\"64\",\"8\"]; received [\"1\",\"1\",\"16\",\"16\",\"17\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3.0.1\",\"3.0.1\",\"32\",\"4\",\"435\",\"64\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
