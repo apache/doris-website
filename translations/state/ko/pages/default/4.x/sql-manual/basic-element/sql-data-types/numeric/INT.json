@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/INT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "be163231911536f29f77838f1a9ff3019afa2f0a2d261d5488d1814bd17986bd",
+    "sourceTechnicalHash": "377cc441a7b1dfbd87011987935b387fa4fe495be7efb7bcb0cb07c6b5d88f3f",
+    "targetHash": "7d633e000d63028c7b60ae836c98de6099331c46254b0b43d5c84a1629126588",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:21.768Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "be163231911536f29f77838f1a9ff3019afa2f0a2d261d5488d1814bd17986bd",
+      "targetHash": "7d633e000d63028c7b60ae836c98de6099331c46254b0b43d5c84a1629126588",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/numeric/INT",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/INT.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "be163231911536f29f77838f1a9ff3019afa2f0a2d261d5488d1814bd17986bd",
+        "targetHash": "7d633e000d63028c7b60ae836c98de6099331c46254b0b43d5c84a1629126588",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/file-path-pattern",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/file-path-pattern.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/file-path-pattern.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "23a258f4a132c193b8b38e2e26d4f7308310acecfc63c72bd0257e9183c60b65",
+    "sourceTechnicalHash": "ce12160761d1228abd8e65d3295619e60b11aa482df2d6b613d5428c5ca38d34",
+    "targetHash": "4aa866315c64b48f1f4401cb597413e6c40f35f3fd2580b15b1888e9d0c88209",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:18.492Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "23a258f4a132c193b8b38e2e26d4f7308310acecfc63c72bd0257e9183c60b65",
+      "targetHash": "4aa866315c64b48f1f4401cb597413e6c40f35f3fd2580b15b1888e9d0c88209",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/file-path-pattern",
+        "sourcePath": "docs/sql-manual/basic-element/file-path-pattern.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/file-path-pattern.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "23a258f4a132c193b8b38e2e26d4f7308310acecfc63c72bd0257e9183c60b65",
+        "targetHash": "4aa866315c64b48f1f4401cb597413e6c40f35f3fd2580b15b1888e9d0c88209",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

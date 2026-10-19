@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/mysql-compatibility",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/mysql-compatibility.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-data/mysql-compatibility.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3bc37f9066f6321366d758ab978340fc32d8fd4f6b2d026799e43b8c3d3ab349",
+    "sourceTechnicalHash": "5e2da61e536b46ade651917a6dcf49515afe7a354a9345ff93c338640ec04b63",
+    "targetHash": "30ce388924a469991bbbdb57495e19a70e5e73d07636edbfb754dbf59a907a5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:53:37.847Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3bc37f9066f6321366d758ab978340fc32d8fd4f6b2d026799e43b8c3d3ab349",
+      "targetHash": "30ce388924a469991bbbdb57495e19a70e5e73d07636edbfb754dbf59a907a5c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

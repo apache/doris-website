@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2f2db332590ff56a611515d2e03d3aabfe1ec3b5e1683ac3412b3a41e558f5a7",
+    "sourceTechnicalHash": "09b6e1b7a0adb8889f44e93cc8adfd7ac2183edb33e69bb3a29d10cd43590272",
+    "targetHash": "680a5aedc8985959e689744c65e2959f615993647192df3ff9e5ba871404c982",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:54:07.307Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2f2db332590ff56a611515d2e03d3aabfe1ec3b5e1683ac3412b3a41e558f5a7",
+      "targetHash": "680a5aedc8985959e689744c65e2959f615993647192df3ff9e5ba871404c982",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+---
+{
+    "title": "실행 튜닝",
+    "language": "ko",
+    "description": "Apache Doris 실행 튜닝 안내: 병렬도 조정, RuntimeFilter 대기 시간, 데이터 편향 처리, Hint를 통한 CBO 규칙 제어."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+실행 튜닝은 부적절한 병렬도, 제때 적용되지 않는 RuntimeFilter, Shuffle 데이터 편향, 옵티마이저의 선택에 수동 개입이 필요한 상황 등 런타임에 드러나는 성능 병목을 해결합니다. 먼저 Profile에서 증상을 파악한 다음, 그에 맞는 튜닝 방법을 선택하세요.
+
+## 런타임 최적화 {#runtime-optimization}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="병렬도 튜닝"
+    description="단일 테이블 스캔, JOIN, 집계, 높은 동시성 시나리오별로 `parallel_pipeline_task_num` 설정을 권장하여 쿼리 지연 시간과 스케줄링 오버헤드 간의 균형을 맞출 수 있도록 안내합니다."
+    link="parallelism-tuning"
+/>
+
+<GettingStartedCard
+    title="RuntimeFilter 대기 시간 조정"
+    description="Profile에서 RuntimeFilter의 NOT_READY 상태를 확인하고, `runtime_filter_wait_time_ms`를 조정하여 Probe 측에서 실제로 필터링 효과를 얻을 수 있도록 합니다."
+    link="adjustment-of-runtimefilter-wait-time"
+/>
+
+<GettingStartedCard
+    title="데이터 편향 처리"
+    description="Join Key 또는 버킷 분포로 인해 특정 지점에 집중되는 실행 병목을 파악하고, Broadcast Join과 Leading Hint 등의 기법으로 Shuffle의 균형을 재조정합니다."
+    link="data-skew-handling"
+/>
+</div>
+
+## 옵티마이저 제어 {#optimizer-control}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Hint를 사용한 CBO 규칙 제어"
+    description="적응형 최적화만으로 충분하지 않을 때는 `USE_CBO_RULE` Hint를 사용하여 집계 푸시다운과 같은 비용 기반 재작성 규칙을 명시적으로 활성화합니다."
+    link="../tuning-plan/controlling-hints-with-cbo-rule"
+/>
+</div>
