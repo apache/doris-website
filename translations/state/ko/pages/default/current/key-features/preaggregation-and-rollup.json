@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/preaggregation-and-rollup",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/preaggregation-and-rollup.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/preaggregation-and-rollup.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e2e100e6c25aed1b21c17447ee129cd727fe656570fde0c65b009195ceae94cd",
+    "sourceTechnicalHash": "93d71f431b9f8681fe875d6fac4b1fda704f08c08945ee8ac8a4bb19cdcf6052",
+    "targetHash": "3082e8062c3b106054e43a8b881d26a43dd5321bf992aab0a7bdcaacc3fbb1de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:16:44.564Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e2e100e6c25aed1b21c17447ee129cd727fe656570fde0c65b009195ceae94cd",
+      "targetHash": "3082e8062c3b106054e43a8b881d26a43dd5321bf992aab0a7bdcaacc3fbb1de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,288 @@
+---
+{
+    "title": "Doris Catalog",
+    "language": "ko",
+    "description": "Doris Catalog는 여러 Doris 클러스터에 걸친 클러스터 간 연합 분석을 지원합니다. Arrow Flight 모드와 Virtual Cluster 모드를 모두 지원하므로 분산 데이터 웨어하우스 환경에서 여러 클러스터의 데이터를 효율적으로 쿼리하고 쓰며 연합 분석을 수행할 수 있습니다."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+이 기능은 버전 4.0.2부터 지원됩니다.
+
+이 기능은 실험적 기능입니다.
+:::
+
+## 사용 사례 {#use-cases}
+
+여러 Doris 클러스터에 걸쳐 클러스터 간 연합 분석을 수행합니다.
+
+이 솔루션은 JDBC Catalog로 다른 Doris 클러스터에 연결하는 방식과 달리, Arrow Flight 모드 또는 Virtual Cluster 모드를 통해 여러 Doris 클러스터에 걸친 연합 분석을 효율적으로 수행할 수 있습니다.
+
+## Catalog 구성 {#configure-catalog}
+
+### 구문 {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'doris', -- required
+    'fe_http_hosts' = 'http://<fe-host1>:<fe-http-port>,<fe-host2>:<fe-http-port>', -- required
+    'fe_arrow_hosts' = '<fe-host1>:<fe-arrow-flight-port>,<fe-host2>:<fe-arrow-flight-port>', -- required
+    'fe_thrift_hosts' = '<fe-host1>:<fe-thrift-port>,<fe-host2>:<fe-thrift-port>', -- required
+    'use_arrow_flight' = 'true/false', -- required
+    'user' = '', -- required
+    'password' = '', -- required
+    {QueryProperties},
+    {HttpClientProperties},
+    {CommonProperties}
+);
+```
+
+*   `fe_http_hosts`
+
+    원격 Doris 클러스터의 FE HTTP 서비스 엔드포인트 목록입니다.
+
+*   `fe_arrow_hosts`
+
+    원격 Doris 클러스터의 FE Arrow Flight 서비스 엔드포인트 목록입니다.
+
+*   `fe_thrift_hosts`
+
+    원격 Doris 클러스터의 FE Thrift 서비스 엔드포인트 목록입니다.
+
+    > 버전 4.0.2에서는 Master FE 주소를 입력하세요. 이 문제는 이후 버전에서 수정될 예정입니다.
+
+*   `use_arrow_flight`
+
+    Arrow Flight를 통해 원격 Doris 클러스터에 접근할지, 아니면 원격 테이블을 내부 테이블처럼 취급하여 실행 계획을 원격 Doris 클러스터로 보낼지 지정합니다.
+
+*   `{QueryProperties}`
+
+    선택적 속성입니다.
+
+    | 매개변수 이름                    | 설명                                                                                           | 기본값 |
+    |----------------------------------|-------------------------------------------------------------------------------------------------------|---------|
+    | `enable_parallel_result_sink`    | 활성화하면 로컬 Doris BE 노드가 원격 Doris 클러스터의 여러 BE 노드에서 데이터를 병렬로 가져옵니다. (Arrow Flight 모드용) | true    |
+    | `query_retry_count`              | 원격 Doris로 보낸 쿼리 요청이 실패했을 때의 최대 재시도 횟수입니다. (요청 수락 후 비동기 실행 중에 발생할 수 있는 실패는 포함하지 않습니다) | 3       |
+    | `query_timeout_sec`              | 원격 Doris로 쿼리를 보내는 작업의 제한 시간입니다. (요청 수락 후 비동기 실행 시간은 포함하지 않습니다) | 15      |
+    | `compatible`                     | 로컬 클러스터보다 버전이 낮은 원격 Doris에 접근할 때 메타데이터 형식 호환을 시도하는 데 사용합니다. 클러스터 버전이 같으면 활성화할 필요가 없습니다. | false   |
+
+*   `{HttpClientProperties}`
+
+    HttpClientProperties 영역에서는 HTTP Client 관련 매개변수를 구성합니다. 이 클라이언트는 원격 클러스터의 메타데이터를 동기화하기 위한 HTTP 요청을 보내는 데 사용됩니다. 모든 매개변수는 선택 사항입니다.
+
+    | 매개변수 이름                       | 설명                                                | 기본값 |
+    |-------------------------------------|-----------------------------------------------------------|---------|
+    | `metadata_http_ssl_enabled`         | HTTP 메타데이터 동기화에 SSL/TLS 암호화 통신을 활성화할지 지정합니다. | false   |
+    | `metadata_sync_retry_count`         | 실패한 HTTP 요청의 최대 재시도 횟수입니다.        | 3       |
+    | `metadata_max_idle_connections`     | HTTP 메타데이터 동기화 클라이언트의 최대 유휴 연결 수입니다. | 5       |
+    | `metadata_keep_alive_duration_sec`  | HTTP 메타데이터 동기화 클라이언트의 유휴 연결 유지 시간입니다. | 300     |
+    | `metadata_connect_timeout_sec`      | HTTP 메타데이터 동기화 클라이언트의 TCP 연결 제한 시간입니다. | 10      |
+    | `metadata_read_timeout_sec`         | HTTP 메타데이터 동기화 클라이언트의 소켓 읽기 제한 시간입니다. | 10      |
+    | `metadata_write_timeout_sec`        | HTTP 메타데이터 동기화 클라이언트의 소켓 쓰기 제한 시간입니다. | 10      |
+    | `metadata_call_timeout_sec`         | HTTP 메타데이터 동기화 클라이언트의 전체 HTTP 요청 제한 시간입니다. | 10      |
+
+*   `{CommonProperties}`
+
+    CommonProperties 영역에는 공통 속성을 입력합니다. Data Catalog 개요의 [공통 속성] 절을 참조하세요.
+
+## 접근 모드 {#access-modes}
+
+### Arrow Flight 모드 {#arrow-flight-mode}
+
+> 버전 4.0.2부터 지원됩니다.
+
+`use_arrow_flight` 속성을 `true`로 설정하면 Arrow Flight 모드가 됩니다.
+
+![Arrow Flight 모드](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
+
+이 모드에서는 클러스터 간 쿼리를 실행할 때 FE가 HTTP 프로토콜을 통해 Schema 등의 메타데이터를 동기화한 다음, 로컬 클러스터의 BE 노드가 Arrow Flight 인터페이스를 통해 원격 Doris 클러스터에 접근합니다.
+
+**장점**: 실행 계획에서 원격 클러스터로 보낼 쿼리 SQL만 생성하므로 FE의 오버헤드가 거의 없습니다.
+
+**단점**: aggregate pushdown, 제한적인 predicate pushdown 등 Doris 내부 테이블의 다양한 최적화 기능을 활용하지 못할 수 있습니다.
+
+### Virtual Cluster 모드 {#virtual-cluster-mode}
+
+> 버전 4.0.3부터 지원됩니다.
+
+`use_arrow_flight` 속성을 `false`로 설정하면 Virtual Cluster 모드가 됩니다.
+
+> 이 모드는 현재 스토리지와 컴퓨팅이 결합된 방식으로 배포된 Doris 클러스터만 지원합니다.
+
+![Virtual Cluster 모드](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
+
+이 모드에서는 클러스터 간 쿼리를 실행할 때 원격 Doris 클러스터의 Backend 노드를 쿼리 계획 수립을 위한 가상 노드로 취급합니다.
+
+FE는 HTTP 프로토콜을 통해 Schema 등의 메타데이터를 동기화합니다. BE는 내부 통신 프로토콜을 통해 데이터를 직접 전송합니다.
+
+**장점**: Doris 내부 테이블 쿼리의 최적화 기능을 사실상 모두 활용할 수 있습니다. 쿼리 실행 흐름은 단일 클러스터의 내부 실행 흐름과 동일합니다.
+
+**단점**: 원격 테이블이 크면 해당 테이블의 모든 정보(파티션 정보, 복제본 정보)를 가져옵니다. FE 메모리 사용량이 늘어나므로 FE 메모리를 증설해야 합니다. 상위 버전에서 하위 버전을 쿼리하는 경우처럼 클러스터 버전이 서로 다르면 쿼리가 실패할 수 있습니다.
+
+> 버전 4.1부터 Virtual Cluster 모드에서 insert 데이터 적재 기능을 지원합니다.
+
+## 컬럼 타입 매핑 {#column-type-mapping}
+
+### Arrow Flight 모드 {#arrow-flight-mode-1}
+
+이 모드에서 지원되는 컬럼 타입과 테이블 타입은 Arrow Flight SQL의 지원 범위에 따라 달라집니다. 현재 지원 기능과 제한 사항은 다음과 같습니다.
+
+-   모든 기본 타입을 지원합니다.
+-   모든 중첩 타입(Array, Map, Struct)을 지원합니다.
+-   hll, bitmap, variant 타입은 지원하지 않습니다.
+-   모든 테이블 모델(Duplicate, Aggregate, Unique 테이블)을 지원합니다.
+
+### Virtual Cluster 모드 {#virtual-cluster-mode-1}
+
+Virtual Cluster 모드에서는 모든 컬럼 타입과 모든 테이블 모델(Duplicate, Aggregate, Unique 테이블)을 지원합니다.
+
+## 쿼리 작업 {#query-operations}
+
+Catalog를 구성한 후 다음 방법으로 Catalog의 테이블 데이터를 쿼리할 수 있습니다.
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH doris_ctl;
+USE doris_db;
+SELECT * FROM doris_tbl LIMIT 10;
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+SELECT * FROM doris_tbl LIMIT 10;
+
+-- 3. use full qualified name to query
+SELECT * FROM doris_ctl.doris_db.doris_tbl LIMIT 10;
+```
+
+## 쿼리 최적화 {#query-optimization}
+
+### Arrow Flight 모드 {#arrow-flight-mode-2}
+
+이 모드에서 Doris는 조건자 또는 함수 조건의 pushdown을 시도하고, 이를 생성된 SQL에 연결합니다.
+
+EXPLAIN SQL을 통해 생성된 SQL 문을 확인할 수 있습니다.
+
+```sql
+...
+|   0:VREMOTE_DORIS_SCAN_NODE(68)                                                                                                                   |
+|      TABLE: test.test_time                                                                                                                        |
+|      QUERY: SELECT /*+ SET_VAR(enable_parallel_result_sink=true) */ `timestamp` FROM test.test_time WHERE (timestamp > '2025-11-03 00:00:00.000') |
+|      PREDICATES: (timestamp[#0] > '2025-11-03 00:00:00.000')
+...
+```
+
+### Virtual Cluster 모드 {#virtual-cluster-mode-2}
+
+이 모드에서도 실행 계획에는 `VOlapScanNode`가 표시됩니다.
+
+Join Runtime Filter 등 Doris의 내부 테이블 쿼리를 위한 다양한 최적화 기능을 계속 활용할 수 있습니다.
+
+```sql
+MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.example_tbl_duplicate b on (a.log_type = b.log_type) where error_code=2;
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| Explain String(Nereids Planner)                                                                                                           |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                                                                                           |
+|   OUTPUT EXPRS:                                                                                                                           |
+|     log_type[#16]                                                                                                                         |
+|     reason[#17]                                                                                                                           |
+|     log_time[#18]                                                                                                                         |
+|     log_type[#19]                                                                                                                         |
+|     error_code[#20]                                                                                                                       |
+|     error_msg[#21]                                                                                                                        |
+|     op_id[#22]                                                                                                                            |
+|     op_time[#23]                                                                                                                          |
+|   PARTITION: HASH_PARTITIONED: log_type[#6]                                                                                               |
+|                                                                                                                                           |
+|   HAS_COLO_PLAN_NODE: false                                                                                                               |
+|                                                                                                                                           |
+|   VRESULT SINK                                                                                                                            |
+|      MYSQL_PROTOCOL                                                                                                                       |
+|                                                                                                                                           |
+|   3:VHASH JOIN(200)                                                                                                                       |
+|   |  join op: INNER JOIN(BROADCAST)[]                                                                                                     |
+|   |  equal join conjunct: (log_type[#6] = log_type[#1])                                                                                   |
+|   |  cardinality=3                                                                                                                        |
+|   |  vec output tuple id: 3                                                                                                               |
+|   |  output tuple id: 3                                                                                                                   |
+|   |  vIntermediate tuple ids: 2                                                                                                           |
+|   |  hash output slot ids: 0 1 2 3 4 5 6 7                                                                                                |
+|   |  runtime filters: RF000[min_max] <- log_type[#1](1/1/1048576), RF001[in_or_bloom] <- log_type[#1](1/1/1048576)                        |
+|   |  final projections: log_type[#8], reason[#9], log_time[#10], log_type[#11], error_code[#12], error_msg[#13], op_id[#14], op_time[#15] |
+|   |  final project output tuple id: 3                                                                                                     |
+|   |  distribute expr lists: log_type[#6]                                                                                                  |
+|   |  distribute expr lists:                                                                                                               |
+|   |                                                                                                                                       |
+|   |----1:VEXCHANGE                                                                                                                        |
+|   |       offset: 0                                                                                                                       |
+|   |       distribute expr lists: log_type[#1]                                                                                             |
+|   |                                                                                                                                       |
+|   2:VOlapScanNode(187)                                                                                                                    |
+|      TABLE: demo.inner_table(inner_table), PREAGGREGATION: ON                                                                             |
+|      partitions=1/1 (inner_table)                                                                                                         |
+|      tablets=1/1, tabletList=1762832514491                                                                                                |
+|      cardinality=3, avgRowSize=901.6666, numNodes=1                                                                                       |
+|      pushAggOp=NONE                                                                                                                       |
+|      runtime filters: RF000[min_max] -> log_type[#6], RF001[in_or_bloom] -> log_type[#6]                                                  |
+|                                                                                                                                           |
+| PLAN FRAGMENT 1                                                                                                                           |
+|                                                                                                                                           |
+|   PARTITION: HASH_PARTITIONED: log_type[#1]                                                                                               |
+|                                                                                                                                           |
+|   HAS_COLO_PLAN_NODE: false                                                                                                               |
+|                                                                                                                                           |
+|   STREAM DATA SINK                                                                                                                        |
+|     EXCHANGE ID: 01                                                                                                                       |
+|     UNPARTITIONED                                                                                                                         |
+|                                                                                                                                           |
+|   0:VOlapScanNode(188)                                                                                                                    |
+|      TABLE: external.example_tbl_duplicate(example_tbl_duplicate), PREAGGREGATION: ON                                                     |
+|      PREDICATES: (error_code[#2] = 2)                                                                                                     |
+|      partitions=1/1 (example_tbl_duplicate)                                                                                               |
+|      tablets=1/1, tabletList=1762481736238                                                                                                |
+|      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
+|      pushAggOp=NONE
+```
+
+## 쓰기 작업 {#write-operations}
+
+> 버전 4.1부터 지원됩니다.
+
+Catalog를 구성한 후 Virtual Cluster 모드에서 다음 insert 방식으로 Catalog의 테이블에 데이터를 적재할 수 있습니다.
+
+```sql
+-- 1. switch to catalog, use database and insert
+SWITCH doris_ctl;
+USE doris_db;
+insert into doris_tbl values (1,2);
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+insert into doris_tbl values (1,2);
+
+-- 3. use full qualified name to insert
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+```
+
+### 지원되는 데이터 적재 형식 {#supported-import-forms}
+
+```sql
+-- 1. insert into values
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+
+-- 2. insert into select
+insert into doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+
+-- 3. insert overwrite
+insert overwrite table doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+```
+
+### 지원되지 않는 데이터 적재 기능 {#unsupported-import-capabilities}
+
+Catalog를 구성한 후에도 다음 데이터 적재 기능은 현재 지원되지 않습니다.
+
+-   [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)
+-   [트랜잭션](../../data-operate/transaction)

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/group-commit",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/group-commit.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/group-commit.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f698bcd7814f8c86ed209953dcada377c7686192ae627366c1eabfce782e9065",
+    "sourceTechnicalHash": "af0c2e2b75b0cf59ce23d76aef492e4a155f8029f61ef73a83a0884cac50d6f9",
+    "targetHash": "135bbb610f0cb33d75baa1649f6f4484c7119aaa478c580ffea3abe5e54a1fd9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:14:26.820Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f698bcd7814f8c86ed209953dcada377c7686192ae627366c1eabfce782e9065",
+      "targetHash": "135bbb610f0cb33d75baa1649f6f4484c7119aaa478c580ffea3abe5e54a1fd9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

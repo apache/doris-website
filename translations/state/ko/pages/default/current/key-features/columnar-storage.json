@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/columnar-storage",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/columnar-storage.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/columnar-storage.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+    "sourceTechnicalHash": "c42f941b4a19c25c106b1ac2b52ea3c5bf9e7311f54c8b29857304729528af41",
+    "targetHash": "f19b302da5b32cf0b5bc298509450f0536fc8b02a0e65e4f92b176068368afdc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:14:51.798Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+      "targetHash": "f19b302da5b32cf0b5bc298509450f0536fc8b02a0e65e4f92b176068368afdc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

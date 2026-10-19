@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/reciprocal-rank-fusion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/reciprocal-rank-fusion.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/reciprocal-rank-fusion.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+    "sourceTechnicalHash": "652f0f77792e568278aa057a5595894fee3bfeff69c514e4cfc83f33847408d9",
+    "targetHash": "7678a203e1f51870e73ff4a5c7bd742e7fe799d0687cdce571a3b0866d252d6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:21:36.931Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+      "targetHash": "7678a203e1f51870e73ff4a5c7bd742e7fe799d0687cdce571a3b0866d252d6b",
+      "warnings": [
+        {
+          "check": "glossary",
+          "message": "Preserve product term: Catalog"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 43: expected [\"inlineCode\",null,null,\"ROW_NUMBER() OVER (ORDER BY score() DESC)\"]; received [\"inlineCode\",null,null,\"SELECT\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"SELECT\"]; received [\"inlineCode\",null,null,\"ROW_NUMBER() OVER (ORDER BY score() DESC)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"link\",\"./analytic-functions\",null]; received [\"link\",\"./bm25\",null]\nprotected node 3: expected [\"inlineCode\",null,null,\"ROW_NUMBER()\"]; received [\"link\",\"./vector-index\",null]\nprotected node 4: expected [\"link\",\"./bm25\",null]; received [\"link\",\"./analytic-functions\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

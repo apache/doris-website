@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/hive-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/hive-catalog.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hive-catalog.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d9ce818f8a66b712d8e8c00095b775b2eee999d61ab6a6d6e85d652f27b9f9f6",
+    "sourceTechnicalHash": "c1d7b437973855ede29c47872282fbb81fe9aeeec4310ca29bc7ed89dc4e0e3a",
+    "targetHash": "53796a1df9ff4bd5ef5237999ebe1113eeab5a2fc9f110965628f2674e391013",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:30:04.945Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d9ce818f8a66b712d8e8c00095b775b2eee999d61ab6a6d6e85d652f27b9f9f6",
+      "targetHash": "53796a1df9ff4bd5ef5237999ebe1113eeab5a2fc9f110965628f2674e391013",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"iceberg\"]; received [\"link\",\"./iceberg-catalog#meta-cache\",null]\nprotected node 36: expected [\"link\",\"./iceberg-catalog#meta-cache\",null]; received [\"inlineCode\",null,null,\"iceberg\"]\nprotected node 144: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"Asia/Shanghai\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

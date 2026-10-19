@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/compute-node",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/compute-node.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/compute-node.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4bd3ea41d63132bf7d7f2199682cc80bf2675dfb7847e1b0d9b1883a60949e79",
+    "sourceTechnicalHash": "f9a926edf7790b513ebb181420d2aeab0d79a36151730b4b5036e12dbd7bb0bc",
+    "targetHash": "6129b563e60882f12f1daac31ca94f36fd2061a50c1976f5916a2ead8c976301",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:23:17.004Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4bd3ea41d63132bf7d7f2199682cc80bf2675dfb7847e1b0d9b1883a60949e79",
+      "targetHash": "6129b563e60882f12f1daac31ca94f36fd2061a50c1976f5916a2ead8c976301",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

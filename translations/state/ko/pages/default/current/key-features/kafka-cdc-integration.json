@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/kafka-cdc-integration",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/kafka-cdc-integration.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/kafka-cdc-integration.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "069040d369e31122d3f64af3d83bd5241c1ebdf55dd13623131c42446b93e145",
+    "sourceTechnicalHash": "8ac814551f9c096eb40eaa2a034475becc58b29ca9cc85a4565fcdd3db47743a",
+    "targetHash": "9fc2383b9fe7544a909f0ce00e6b74b5892a110e23ec750917b0d969daa29e26",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:17:19.888Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "069040d369e31122d3f64af3d83bd5241c1ebdf55dd13623131c42446b93e145",
+      "targetHash": "9fc2383b9fe7544a909f0ce00e6b74b5892a110e23ec750917b0d969daa29e26",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"inlineCode\",null,null,\"PRECOMMITTED\"]; received [\"inlineCode\",null,null,\"txn_operation: commit\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"txn_operation: commit\"]; received [\"inlineCode\",null,null,\"txn_operation: abort\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"txn_operation: abort\"]; received [\"inlineCode\",null,null,\"PRECOMMITTED\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

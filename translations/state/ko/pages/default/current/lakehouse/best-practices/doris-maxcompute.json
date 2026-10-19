@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-maxcompute",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-maxcompute.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-maxcompute.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+    "sourceTechnicalHash": "3fc2451a87dd722bc00648647c11296dd5efd3fda4779ad65867cd62867c5b5c",
+    "targetHash": "247cc0ee3f6f8ca057cf18a3478202966138d2beb4bed4d0fcd642de52fb7904",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:19:05.181Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc10288f13cfb3584d96da1e727032497995d7c2c5bbd47c3efe4b5d7ed7a687",
+      "targetHash": "247cc0ee3f6f8ca057cf18a3478202966138d2beb4bed4d0fcd642de52fb7904",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

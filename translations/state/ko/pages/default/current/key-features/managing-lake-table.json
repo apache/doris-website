@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/managing-lake-table",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/managing-lake-table.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/managing-lake-table.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+    "sourceTechnicalHash": "6c97e921f034613ac9944ef9d077d72c572607ac0fa02c332acc2e00495ae1ee",
+    "targetHash": "5074938de33b87a604bda04c5d26e7c1a8ee7f7945e395bfc8e601f5056bf7a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:17:29.184Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e6c89d385b6b29afec0828343f8d0fabb388e7a532429d2edf31571bf9d0161e",
+      "targetHash": "5074938de33b87a604bda04c5d26e7c1a8ee7f7945e395bfc8e601f5056bf7a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"link\",\"./multi-catalog\",null]; received [\"link\",\"./catalog-integrations\",null]\nprotected node 10: expected [\"link\",\"./catalog-integrations\",null]; received [\"link\",\"./multi-catalog\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/embedding",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/embedding.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/embedding.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+    "sourceTechnicalHash": "dd2cbb6c5237830b2b9ca6c69ea20b8c2ea6d5dc6ba4254c90bdb8f3d1a10fcf",
+    "targetHash": "475fe3b1bb6f2778d874f8057e57c0157dc43d13714ff1a6c97046711292a476",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:19:04.612Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+      "targetHash": "475fe3b1bb6f2778d874f8057e57c0157dc43d13714ff1a6c97046711292a476",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"EMBED()\"]; received [\"link\",\"./vector-index\",null]\nprotected node 2: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"inlineCode\",null,null,\"EMBED()\"]\nprotected node 3: expected [\"link\",\"./vector-index\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 11: expected [\"link\",\"../sql-manual/sql-functions/ai-functions/overview\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"link\",\"../sql-manual/sql-functions/ai-functions/overview\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"link\",\"./vector-index\",null]\nprotected node 3: expected [\"link\",\"./vector-index\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"EMBED()\"]; received [\"link\",\"./vector-index\",null]\nprotected node 2: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"inlineCode\",null,null,\"EMBED()\"]\nprotected node 3: expected [\"link\",\"./vector-index\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

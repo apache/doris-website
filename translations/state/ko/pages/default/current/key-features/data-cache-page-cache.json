@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-cache-page-cache",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-cache-page-cache.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/data-cache-page-cache.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0fef2c7d90e18062053be7194bcb6e826184003309f55f3001729db9823ee596",
+    "sourceTechnicalHash": "cbe7c7b504f3ba689a77ae492413b42bb0e2d561481105f112da765680925b7c",
+    "targetHash": "7db6754bcf2b3c3667ea6796a1c6d22e464a0b18a17aaa3e0ae718ff2b5342a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:14:06.700Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0fef2c7d90e18062053be7194bcb6e826184003309f55f3001729db9823ee596",
+      "targetHash": "7db6754bcf2b3c3667ea6796a1c6d22e464a0b18a17aaa3e0ae718ff2b5342a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/high-concurrency-point-query",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/high-concurrency-point-query.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/high-concurrency-point-query.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f27485d05bbbbab58808dd27da93f459eb13732ee62f2b835a655da801db7f19",
+    "sourceTechnicalHash": "e46a58c8f4226af59ed5d644d62f64fa1aceb416f1aada8ac9510418c4650187",
+    "targetHash": "15702e45f7aeff149399a31d6ee308bba9c8d6d9edfc37fc82b3fd47803f04dd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:15:03.971Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f27485d05bbbbab58808dd27da93f459eb13732ee62f2b835a655da801db7f19",
+      "targetHash": "15702e45f7aeff149399a31d6ee308bba9c8d6d9edfc37fc82b3fd47803f04dd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
