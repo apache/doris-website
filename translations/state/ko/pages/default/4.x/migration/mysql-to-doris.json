@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "migration/mysql-to-doris",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/migration/mysql-to-doris.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/migration/mysql-to-doris.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "45f1fc872f684682759ba306469c07dbf822e2e09ab7adbc7b075aac24d08327",
+    "sourceTechnicalHash": "06b2fecbc630a967f41fef7753322beb13f220477e777fb9f767efb19b5c8535",
+    "targetHash": "79a2537ae05f0a3d928192bf9870eb24c276648b39dba47cee9c135cc8986b0c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:19.853Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "45f1fc872f684682759ba306469c07dbf822e2e09ab7adbc7b075aac24d08327",
+      "targetHash": "79a2537ae05f0a3d928192bf9870eb24c276648b39dba47cee9c135cc8986b0c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/dictionary",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/dictionary.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/dictionary.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+    "sourceTechnicalHash": "bd8432953bc21831c33c7a3a91ab45ac99661d9a3624879d27bd78958033056b",
+    "targetHash": "ac60be5a261c6814c8a3ba69f1b94510018d2afc37cbbd1fe2b9c84a3d55cfc0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:25.660Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+      "targetHash": "ac60be5a261c6814c8a3ba69f1b94510018d2afc37cbbd1fe2b9c84a3d55cfc0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/dictionary",
+        "sourcePath": "docs/query-acceleration/dictionary.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/dictionary.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+        "targetHash": "ac60be5a261c6814c8a3ba69f1b94510018d2afc37cbbd1fe2b9c84a3d55cfc0",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "migration/other-olap-to-doris",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/migration/other-olap-to-doris.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/migration/other-olap-to-doris.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "31bf54c3de48002822c8717611b5f63c3eeee8c00aee9d9a59ba8080602e3446",
+    "sourceTechnicalHash": "f3a52718a16677ebf5d031d40360f557cef9e2c18ad0e3a2be4f141b718b9284",
+    "targetHash": "5dbb912130e4250efec2628664233dd90daf9a6e9bd4d5034de3571ea919e8db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:03.769Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "31bf54c3de48002822c8717611b5f63c3eeee8c00aee9d9a59ba8080602e3446",
+      "targetHash": "5dbb912130e4250efec2628664233dd90daf9a6e9bd4d5034de3571ea919e8db",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

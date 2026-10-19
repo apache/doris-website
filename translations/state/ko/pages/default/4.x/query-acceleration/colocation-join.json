@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/colocation-join",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/colocation-join.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/colocation-join.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+    "sourceTechnicalHash": "f902f87bc2bdf034bff8750dbd158a6d48d47c028f2e7fa0a2547d2543bf3156",
+    "targetHash": "3d084d571c0f35ee8faf9ba0c3634c7f2efd97f243d67bcb09721c8fcc87ae17",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:19.275Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+      "targetHash": "3d084d571c0f35ee8faf9ba0c3634c7f2efd97f243d67bcb09721c8fcc87ae17",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/colocation-join",
+        "sourcePath": "docs/query-acceleration/colocation-join.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/colocation-join.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+        "targetHash": "3d084d571c0f35ee8faf9ba0c3634c7f2efd97f243d67bcb09721c8fcc87ae17",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

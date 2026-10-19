@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/tpcds",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/tpcds.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/tpcds.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+    "sourceTechnicalHash": "0ef96fa0ad595eb3feeaa6612b7441c3e3cd9859077a6584ae35bfc01dbb4228",
+    "targetHash": "b1e64ee3521e8bb7f15bd7f6d37056f333fb6beeea2af6dc9e4459cd63aa0dd4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:20:02.915Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+      "targetHash": "b1e64ee3521e8bb7f15bd7f6d37056f333fb6beeea2af6dc9e4459cd63aa0dd4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/best-practices/tpcds",
+        "sourcePath": "docs/lakehouse/best-practices/tpcds.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/tpcds.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+        "targetHash": "b1e64ee3521e8bb7f15bd7f6d37056f333fb6beeea2af6dc9e4459cd63aa0dd4",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

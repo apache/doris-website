@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/kubernetes",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/kubernetes.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/kubernetes.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+    "sourceTechnicalHash": "30b5b80e6440fc5378b89038584c40aeeed4d4c1dd3084e2f4131525022f9c53",
+    "targetHash": "8c77ae38d7de9900785a59b4aceff44cdbfbe832b256ec9f4c97e7460ede04ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:35:02.691Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+      "targetHash": "8c77ae38d7de9900785a59b4aceff44cdbfbe832b256ec9f4c97e7460ede04ed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 236: expected [\"inlineCode\",null,null,\"permission denied\"]; received [\"inlineCode\",null,null,\"/var/log/pods\"]\nprotected node 237: expected [\"inlineCode\",null,null,\"/var/log/pods\"]; received [\"inlineCode\",null,null,\"permission denied\"]\nprotected node 256: expected [\"inlineCode\",null,null,\"USER_GUIDE.md\"]; received [\"link\",\"https://github.com/ai-observe/ai-observe-stack/tree/main/helm-charts\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"inlineCode\",null,null,\"global.imagePullSecrets\"]; received [\"inlineCode\",null,null,\"ai-observe-stack\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"ai-observe-stack\"]; received [\"inlineCode\",null,null,\"global.imagePullSecrets\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"imagePullSecrets\"]; received [\"inlineCode\",null,null,\"dog-k8s-collector\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

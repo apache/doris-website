@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-onelake",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-onelake.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-onelake.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a35da61d3f732b24b8a839f1d65cefe77b261040819e5615d8f2d9c99cbb3b36",
+    "sourceTechnicalHash": "c4d21051521c7bd53a5a9d93a193f04c54cd7277207078a3a2f11635301739b2",
+    "targetHash": "afbc5b1c3dae603551df14ce2a0ecaf3306845c97a11893df7429c6b9db18d38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:19:30.044Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a35da61d3f732b24b8a839f1d65cefe77b261040819e5615d8f2d9c99cbb3b36",
+      "targetHash": "afbc5b1c3dae603551df14ce2a0ecaf3306845c97a11893df7429c6b9db18d38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-onelake",
+        "sourcePath": "docs/lakehouse/best-practices/doris-onelake.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-onelake.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "a35da61d3f732b24b8a839f1d65cefe77b261040819e5615d8f2d9c99cbb3b36",
+        "targetHash": "afbc5b1c3dae603551df14ce2a0ecaf3306845c97a11893df7429c6b9db18d38",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
