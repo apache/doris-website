@@ -1,0 +1,261 @@
+---
+{
+    "title": "데이터 통합",
+    "language": "ko",
+    "description": "Apache Doris를 BI, 데이터 동기화, 스트림 처리, 로그 관측성, 개발 관리 및 데이터 모델링 도구와 통합합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 데이터 통합 {#data-integration}
+
+Apache Doris는 다양한 데이터 생태계 도구와의 통합을 지원합니다. 사용 사례에 적합한 도구를 선택하여 데이터 시각화, 데이터 마이그레이션 및 동기화, 실시간 수집, 로그 및 관측성 분석, 데이터베이스 개발 및 관리, 데이터 모델링 및 변환에 Doris를 활용할 수 있습니다.
+
+## BI 및 시각적 분석 {#bi-and-visual-analytics}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Apache Superset"
+    icon="/images/next/connection-integration/data-integration/logos/apache-superset.png"
+    description="Superset에서 Doris 데이터 소스를 구성하여 셀프서비스 분석을 수행하고 차트와 대시보드를 만듭니다"
+    link="./apache-superset"
+/>
+
+<GettingStartedCard
+    title="Metabase"
+    icon="/images/next/connection-integration/data-integration/logos/metabase.svg"
+    description="Metabase Doris Driver를 통해 Doris를 쿼리하고 대화형 분석 대시보드를 구축합니다"
+    link="./metabase"
+/>
+
+<GettingStartedCard
+    title="FineBI"
+    icon="/images/next/connection-integration/data-integration/logos/finebi.svg"
+    description="FineBI를 Doris에 연결하여 데이터 모델링, 다차원 분석 및 대시보드 구축을 수행합니다"
+    link="./finebi"
+/>
+
+<GettingStartedCard
+    title="Power BI"
+    icon="/images/next/connection-integration/data-integration/logos/powerbi.svg"
+    description="Doris 커넥터를 통해 Power BI Desktop에서 Doris 데이터를 쿼리하거나 가져옵니다"
+    link="./powerbi"
+/>
+
+<GettingStartedCard
+    title="Tableau"
+    icon="/images/next/connection-integration/data-integration/logos/tableau.svg"
+    description="공식 Tableau MySQL 커넥터를 통해 Doris에 접근하고 Doris 데이터를 시각화합니다"
+    link="./tableau"
+/>
+
+<GettingStartedCard
+    title="QuickSight"
+    icon="/images/next/connection-integration/data-integration/logos/quicksight.svg"
+    description="AWS QuickSight MySQL 데이터 소스를 사용하여 직접 쿼리 모드 또는 가져오기 모드로 Doris에 연결합니다"
+    link="./quicksight"
+/>
+
+<GettingStartedCard
+    title="Quick BI"
+    icon="/images/next/connection-integration/data-integration/logos/quickbi.png"
+    description="Alibaba Cloud Quick BI에서 Doris 데이터 소스와 데이터 세트를 생성하여 시각적 분석 보고서를 작성합니다"
+    link="./quickbi"
+/>
+
+<GettingStartedCard
+    title="Smartbi"
+    icon="/images/next/connection-integration/data-integration/logos/smartbi.jpeg"
+    description="Smartbi를 Doris와 통합하여 데이터 연결, 모델링 및 시각적 분석을 수행합니다"
+    link="./smartbi"
+/>
+</div>
+
+## 데이터베이스 개발 및 관리 {#database-development-and-management}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DataGrip"
+    icon="/images/next/connection-integration/data-integration/logos/datagrip.svg"
+    description="DataGrip MySQL 데이터 소스를 사용하여 Doris에 연결하고 내부 Catalog와 외부 Catalog를 쿼리하고 관리합니다"
+    link="./datagrip"
+/>
+
+<GettingStartedCard
+    title="DBeaver"
+    icon="/images/next/connection-integration/data-integration/logos/dbeaver.svg"
+    description="DBeaver MySQL 드라이버를 통해 Doris에 연결하여 SQL 쿼리와 시각적 데이터베이스 관리를 수행합니다"
+    link="./dbeaver"
+/>
+
+<GettingStartedCard
+    title="CloudDM"
+    icon="/images/next/connection-integration/data-integration/logos/clouddm.svg"
+    description="쿼리, 시각적 편집, 접근 제어 및 데이터베이스 CI/CD를 지원하는 CloudDM으로 Doris 데이터 소스를 관리합니다"
+    link="./clouddm"
+/>
+
+<GettingStartedCard
+    title="LibreDB Studio"
+    icon="/images/next/connection-integration/data-integration/logos/libredb-studio.svg"
+    description="LibreDB Studio의 MySQL 연결 유형을 사용하여 Doris에 연결하고 내부 Catalog를 탐색하며 브라우저에서 SQL을 실행합니다"
+    link="./libredb-studio"
+/>
+</div>
+
+## 데이터 마이그레이션, 동기화 및 대량 데이터 적재 {#data-migration-synchronization-and-bulk-loading}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="CloudCanal"
+    icon="/images/next/connection-integration/data-integration/logos/cloudcanal.svg"
+    description="CloudCanal을 사용하여 MySQL, Oracle, PostgreSQL, SQL Server 등의 소스에서 Doris로 데이터를 마이그레이션하거나 동기화합니다"
+    link="./cloudcanal"
+/>
+
+<GettingStartedCard
+    title="DataX Doriswriter"
+    icon="/images/next/connection-integration/data-integration/logos/datax.jpg"
+    description="DataX Doriswriter를 사용하여 다양한 소스의 데이터를 Stream Load를 통해 Doris로 동기화합니다"
+    link="./datax"
+/>
+
+<GettingStartedCard
+    title="Kettle Doris Plugin"
+    icon="/images/next/connection-integration/data-integration/logos/kettle.png"
+    description="Kettle 작업에서 Doris 플러그인을 사용하여 처리된 데이터를 Stream Load를 통해 Doris에 기록합니다"
+    link="./kettle"
+/>
+
+<GettingStartedCard
+    title="SeaTunnel Doris Sink"
+    icon="/images/next/connection-integration/data-integration/logos/seatunnel.png"
+    description="실시간 동기화와 exactly-once 쓰기를 지원하는 SeaTunnel Doris Sink로 분산 데이터 동기화를 수행합니다"
+    link="./seatunnel"
+/>
+
+<GettingStartedCard
+    title="Doris Streamloader"
+    icon="/images/next/connection-integration/data-integration/logos/doris.png"
+    description="Doris Streamloader를 사용하여 여러 파일을 여러 작업으로 동시에 Stream Load로 데이터 적재하고 중단된 전송을 재개할 수 있습니다"
+    link="./doris-streamloader"
+/>
+
+<GettingStartedCard
+    title="Spark Load"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="외부 Spark 리소스를 사용하여 대규모 과거 데이터의 전처리와 데이터 적재를 수행하고 Doris 클러스터의 데이터 가져오기 부담을 줄입니다"
+    link="./spark-load"
+/>
+
+<GettingStartedCard
+    title="Hive UDF"
+    icon="/images/next/connection-integration/data-integration/logos/hive.svg"
+    description="Hive 테이블에서 Bitmap과 HLL을 직접 생성하고 계산한 후 Hive Catalog 또는 Spark Load를 통해 Doris에 데이터 적재합니다."
+    link="./hive-udf"
+/>
+</div>
+
+## 스트리밍 수집 및 빅데이터 연산 {#streaming-ingestion-and-big-data-computing}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Flink Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/flink.png"
+    description="Flink에서 Doris 데이터를 읽고 쓰며, 스트림 및 배치 쓰기, Lookup Join, Flink CDC 기반 전체 데이터베이스 동기화를 지원합니다"
+    link="./flink-doris-connector/overview"
+/>
+
+<GettingStartedCard
+    title="Spark Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="Spark에서 RDD, DataFrame 또는 Spark SQL을 통해 Doris 데이터를 읽고 쓰며, 배치 및 스트리밍 쓰기를 지원합니다"
+    link="./spark-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Doris Kafka Connector"
+    icon="/images/next/connection-integration/data-integration/logos/kafka.png"
+    description="Kafka Connect를 사용하여 Kafka 토픽의 데이터를 Doris에 지속적으로 기록합니다"
+    link="./doris-kafka-connector"
+/>
+
+<GettingStartedCard
+    title="AutoMQ Load"
+    icon="/images/next/connection-integration/data-integration/logos/automq.png"
+    description="Doris Routine Load를 사용하여 AutoMQ의 Kafka 호환 토픽을 소비하고 데이터를 실시간으로 수집합니다"
+    link="./automq"
+/>
+</div>
+
+## 로깅 및 관측성 {#logging-and-observability}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Filebeat"
+    icon="/images/next/connection-integration/data-integration/logos/filebeat.svg"
+    description="Beats Doris 출력 플러그인을 사용하여 로그, 메트릭 또는 감사 데이터를 수집하고 Doris에 실시간으로 기록합니다"
+    link="./beats"
+/>
+
+<GettingStartedCard
+    title="Fluent Bit"
+    icon="/images/next/connection-integration/data-integration/logos/fluentbit.svg"
+    description="Fluent Bit Doris Output Plugin을 사용하여 로그를 수집하고 Stream Load를 통해 Doris에 기록합니다"
+    link="./fluentbit"
+/>
+
+<GettingStartedCard
+    title="Logstash"
+    icon="/images/next/connection-integration/data-integration/logos/logstash.svg"
+    description="Logstash Doris 출력 플러그인을 사용하여 로그를 수집하고 전처리한 후 Doris에 실시간으로 기록합니다"
+    link="./logstash"
+/>
+
+<GettingStartedCard
+    title="LoongCollector"
+    icon="/images/next/connection-integration/data-integration/logos/loongcollector.png"
+    description="LoongCollector Doris Flusher를 사용하여 로그를 수집하고 처리한 후 데이터를 Doris에 기록합니다"
+    link="./loongcollector"
+/>
+
+<GettingStartedCard
+    title="OpenTelemetry"
+    icon="/images/next/connection-integration/data-integration/logos/opentelemetry.svg"
+    description="OpenTelemetry의 로그, 트레이스 및 메트릭을 Doris로 내보내 통합 분석을 수행합니다"
+    link="./opentelemetry"
+/>
+
+<GettingStartedCard
+    title="Vector"
+    icon="/images/next/connection-integration/data-integration/logos/vector.svg"
+    description="Vector Doris Sink를 사용하여 로그, 메트릭 및 트레이스 데이터를 수집하고 변환한 후 Doris로 라우팅합니다"
+    link="./vector"
+/>
+
+<GettingStartedCard
+    title="Langfuse on Doris"
+    icon="/images/next/connection-integration/data-integration/logos/langfuse.svg"
+    description="LLM 애플리케이션의 관측성 분석을 위해 Doris를 분석 백엔드로 사용하는 Langfuse를 배포합니다"
+    link="./langfuse"
+/>
+</div>
+
+## 데이터 모델링 및 SQL 접근 {#data-modeling-and-sql-access}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="dbt Adapter"
+    icon="/images/next/connection-integration/data-integration/logos/dbt.svg"
+    description="dbt-for-apache-doris를 사용하여 Doris에서 dbt 모델을 실행하고 ELT 변환과 데이터 모델링을 수행합니다"
+    link="./dbt-doris-adapter"
+/>
+
+<GettingStartedCard
+    title="Kyuubi"
+    icon="/images/next/connection-integration/data-integration/logos/kyuubi.png"
+    description="Apache Kyuubi의 JDBC Engine을 사용하여 Doris를 SQL 쿼리 데이터 소스로 통합합니다"
+    link="./kyuubi"
+/>
+</div>

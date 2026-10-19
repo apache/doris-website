@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/cdc-sync",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/cdc-sync.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/cdc-sync.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "019dbfd8803946b5bf610e9236b24f83e8b8953e95f0ad88758c3d65e9c67e26",
+    "sourceTechnicalHash": "f202ec68f89fe7f60e72b80163075614430eba68b96cadf3e636d36adc14de6c",
+    "targetHash": "47fcda60df705fa9d1ed7a21884e39ec5df85a549d63accef222e85dd1a60260",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:45:34.897Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "019dbfd8803946b5bf610e9236b24f83e8b8953e95f0ad88758c3d65e9c67e26",
+      "targetHash": "47fcda60df705fa9d1ed7a21884e39ec5df85a549d63accef222e85dd1a60260",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

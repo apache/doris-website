@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/write",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/write.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/write.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "42fbef6b385af4fd2596adcfded89bd138b726c76a8d6b166a53d87867ac9aaf",
+    "sourceTechnicalHash": "5974fd0b1aaa2a3ec9b952468adde1995c6fe90a8d80bcffbb193dee4c00b611",
+    "targetHash": "e6595433ce804172337d66b5c41f060d04982ee6bd8acd59696cca6f2b717d12",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:48:11.569Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "42fbef6b385af4fd2596adcfded89bd138b726c76a8d6b166a53d87867ac9aaf",
+      "targetHash": "e6595433ce804172337d66b5c41f060d04982ee6bd8acd59696cca6f2b717d12",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"JsonDebeziumSchemaSerializer\"]; received [\"link\",\"./datastream-api.md#debezium\",null]\nprotected node 26: expected [\"link\",\"./datastream-api.md#debezium\",null]; received [\"inlineCode\",null,null,\"JsonDebeziumSchemaSerializer\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

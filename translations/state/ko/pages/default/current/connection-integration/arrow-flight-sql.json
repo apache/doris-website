@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/arrow-flight-sql",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/arrow-flight-sql.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/arrow-flight-sql.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "cc25a771477eee57946c21768c915cf8fb3bb4e1e5a59d98822cbb77850e0e6a",
+    "sourceTechnicalHash": "c1655967cf638456dc62e24c58d31cd837b8ef367cad8b4aae5e2386f6be0edc",
+    "targetHash": "67e58238c91db86cf8b26ba274799a316a6cbba28ef3a4ea85a9b1a90090729c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:46:41.050Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cc25a771477eee57946c21768c915cf8fb3bb4e1e5a59d98822cbb77850e0e6a",
+      "targetHash": "67e58238c91db86cf8b26ba274799a316a6cbba28ef3a4ea85a9b1a90090729c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

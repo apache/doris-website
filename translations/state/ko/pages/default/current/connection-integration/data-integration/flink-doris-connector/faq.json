@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/faq.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "141e4df33b402c84b52cd1d9657d39d354a8ca519123a7146a37ca1765110946",
+    "sourceTechnicalHash": "bbcd2447092ca823374ed174ec5e5e8b5bbecf814b6716929046f311e968e653",
+    "targetHash": "f230b18376b3b3ad05bf9aa995313b417bc6b91f1d59a7a1d5ed92dec6fd9fce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:46:41.267Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "141e4df33b402c84b52cd1d9657d39d354a8ca519123a7146a37ca1765110946",
+      "targetHash": "f230b18376b3b3ad05bf9aa995313b417bc6b91f1d59a7a1d5ed92dec6fd9fce",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"streaming_label_keep_max_second\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"streaming_label_keep_max_second\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"label_num_threshold\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.1.0\",\"1.1.0\",\"100\",\"100\",\"100\",\"10006\",\"12\",\"190958\",\"19650\",\"19650\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2000\",\"235\",\"25.1.0\",\"3\",\"3\",\"307\",\"307\",\"307\",\"3505530\",\"4\",\"5\",\"6\",\"7\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

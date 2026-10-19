@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/metabase",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/metabase.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/metabase.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ab451bf871a5f6c785845009a5bef7c96bdffa54f5f476d9ca1258403e25aae0",
+    "sourceTechnicalHash": "a7810245d248c3160c900827d0ddfed4fc6c5845dd2d0461985d1d1096206e2a",
+    "targetHash": "6504598ce6f0eaa85321d6c617f8e65697350c498f390be8c2ad3eae840fc89e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:47:11.764Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ab451bf871a5f6c785845009a5bef7c96bdffa54f5f476d9ca1258403e25aae0",
+      "targetHash": "6504598ce6f0eaa85321d6c617f8e65697350c498f390be8c2ad3eae840fc89e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

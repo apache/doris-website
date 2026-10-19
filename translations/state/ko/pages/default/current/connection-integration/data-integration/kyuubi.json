@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/kyuubi",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/kyuubi.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/kyuubi.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "28e0e05b62c03c49891584d9daafc21a96fd5e162e9cacb20517cab2ae53abc8",
+    "sourceTechnicalHash": "9cee55840eab44c923f31f3105f1f61b88c310c0577ea2f3a6994fe024d9162d",
+    "targetHash": "a1f4589c8334d0666e29706222eddd142fe642b83166b6054dbc32a4f6e4c37a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:45:52.958Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "28e0e05b62c03c49891584d9daafc21a96fd5e162e9cacb20517cab2ae53abc8",
+      "targetHash": "a1f4589c8334d0666e29706222eddd142fe642b83166b6054dbc32a4f6e4c37a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

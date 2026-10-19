@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/automq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/automq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/automq.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "207136b159139d1dcf415500385704de4d083dc079fce2b65ef25e4c6bebfb98",
+    "sourceTechnicalHash": "1411efbe5c62cf962b7eb4c69bcc0fa14c19703f1f7747624412d0aa2eb5042f",
+    "targetHash": "a840b8f1ce72ea9d16796b4004c3c4ba85934ce4f198a035de0cb74e32d873f9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:43:45.660Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "207136b159139d1dcf415500385704de4d083dc079fce2b65ef25e4c6bebfb98",
+      "targetHash": "a840b8f1ce72ea9d16796b4004c3c4ba85934ce4f198a035de0cb74e32d873f9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

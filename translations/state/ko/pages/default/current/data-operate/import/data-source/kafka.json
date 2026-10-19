@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/kafka",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/kafka.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/kafka.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+    "sourceTechnicalHash": "b6d1ffd1567d4fa4078d5d986e7723a47db6cfd9f3b24538072805d3a42b5f8c",
+    "targetHash": "305240b63d62bb89989d3c57dfcacf292f10f5fcb22e1bb97a31aeb3dfec4cf6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:51:14.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+      "targetHash": "305240b63d62bb89989d3c57dfcacf292f10f5fcb22e1bb97a31aeb3dfec4cf6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

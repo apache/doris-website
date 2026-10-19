@@ -1,0 +1,620 @@
+---
+{
+    "title": "파일 캐시 구성 및 사용 가이드(컴퓨팅-스토리지 분리형)",
+    "sidebar_label": "파일 캐시 구성",
+    "language": "ko",
+    "description": "컴퓨팅-스토리지 분리 모드의 Doris에서 쿼리 성능을 높이고 오브젝트 스토리지 비용을 줄이기 위한 파일 캐시 구성, 인덱스 전용 캐시 쓰기, 쿼리 수준 캐시 제어, 캐시 워밍업 및 축출, 적중률 모니터링, TTL 정책을 설명합니다.",
+    "keywords": ["Doris 파일 캐시", "컴퓨팅-스토리지 분리형 캐시", "파일 캐시", "인덱스 전용 캐시 쓰기", "캐시 워밍업", "피어 캐시 읽기", "캐시 할당량", "file_cache_query_limit_bytes", "TTL 캐시", "LRU", "캐시 적중률", "오브젝트 스토리지 가속"]
+}
+---
+
+<!-- Knowledge type: Architecture and design decisions -->
+<!-- Applicable scenarios: Compute-storage decoupled deployment / Query performance optimization / Object storage cost optimization -->
+
+컴퓨팅-스토리지 분리 모드에서는 데이터가 원격 오브젝트 스토리지(S3 또는 HDFS 등)에 저장됩니다. Doris는 BE 노드의 로컬 디스크를 파일 캐시 계층으로 사용하고, 다중 큐 LRU(Least Recently Used) 전략으로 캐시 공간을 효율적으로 관리합니다. 인덱스와 메타데이터의 접근 경로는 핫 데이터의 캐시 적중률을 극대화하도록 특별히 최적화되어 있습니다.
+
+여러 컴퓨팅 그룹을 사용하는 환경을 위해 Doris는 **캐시 워밍업** 기능을 제공합니다. 이 기능은 새 컴퓨팅 그룹이 시작될 때 지정된 테이블이나 파티션의 데이터를 미리 가져와 로컬 캐시를 빠르게 구성하고 첫 쿼리의 성능을 높입니다. [피어 캐시 읽기](./file-cache-peer-read)를 활성화하면 로컬 캐시에 없는 블록을 원격 스토리지에서 가져오기 전에 다른 BE의 캐시에서 읽습니다. 여기에는 다른 컴퓨팅 그룹의 BE도 포함됩니다.
+
+## 파일 캐시의 역할 {#the-role-of-file-cache}
+
+<!-- Knowledge type: Architecture and design decisions -->
+
+컴퓨팅-스토리지 분리 모드에서 원격 스토리지에 접근하면 일반적으로 다음 두 범주의 문제가 발생합니다.
+
+| 문제 | 설명 |
+|---|---|
+| 높은 접근 지연 시간 | 오브젝트 스토리지의 지연 시간은 로컬 디스크보다 훨씬 길며, 동시성이 높을 때 특히 두드러집니다 |
+| QPS / 대역폭 제한 | 오브젝트 스토리지에는 일반적으로 QPS 상한과 대역폭 제약이 있어, 동시성이 높은 쿼리에서 병목이 됩니다 |
+| 사용량 기반 비용 | 오브젝트 스토리지는 요청 횟수와 데이터 전송량에 따라 요금이 부과되므로, 접근 빈도가 높으면 운영 비용이 증가합니다 |
+
+Doris는 핫 데이터를 로컬 디스크에 캐싱하여 쿼리 지연 시간을 크게 줄이는 동시에 오브젝트 스토리지에 대한 직접 요청을 줄여 비용을 절감할 수 있습니다.
+
+### 캐싱되는 파일 유형 {#cached-file-types}
+
+Doris 파일 캐시는 주로 다음 두 유형의 파일을 캐싱합니다.
+
+- **Segment 데이터 파일**: Doris 내부 테이블 데이터의 기본 저장 단위입니다. 이 파일을 캐싱하면 데이터 읽기가 빨라지고 쿼리 성능이 향상됩니다.
+- **역색인 파일**: 쿼리의 필터 연산을 가속하는 데 사용됩니다. 이 파일을 캐싱하면 조건에 맞는 데이터를 더 빠르게 찾을 수 있으며 복잡한 쿼리 시나리오를 지원합니다.
+
+## 캐시 구성 {#cache-configuration}
+
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Pre-deployment configuration for compute-storage decoupled mode / BE parameter tuning -->
+
+Doris는 BE 구성 파일의 다음 매개변수로 파일 캐시 동작을 제어합니다.
+
+### 파일 캐시 활성화 {#enabling-file-cache}
+
+| 매개변수 | 기본값 | 설명 |
+|---|---|---|
+| `enable_file_cache` | `true` | 파일 캐시 기능의 활성화 여부입니다. 버전 4.1.5부터 기본적으로 활성화됩니다(이전 기본값은 `false`). 컴퓨팅-스토리지 분리 모드에서는 BE가 항상 강제로 활성화합니다. |
+
+:::caution
+
+`file_cache_path`의 기본값은 BE 배포 경로 아래의 스토리지 디렉터리입니다. `total_size`를 지정하지 않으면 디스크 사용률이 85%–88%에 이를 때까지 캐시가 커질 수 있으므로, `total_size`를 설정하여 크기를 제한하세요.
+
+:::
+
+동일한 이름의 세션 변수도 활성화해야 합니다. 값과 업그레이드 시 기본값은 [세션 변수](../../sql-manual/basic-element/session-variables.md#enable_file_cache) 참조 문서를 확인하세요.
+
+### 인덱스 전용 캐시 쓰기 구성 {#configuring-index-only-cache-writes}
+
+로컬 캐시 공간이 제한되어 있고 쿼리 성능이 인덱스와 Segment 메타데이터에 더 크게 좌우된다면 인덱스 전용 쓰기 정책을 활성화할 수 있습니다. 이 정책은 데이터 적재, Schema Change, Compaction 및 기타 쓰기 경로가 File Cache에 **능동적으로 기록하는** 내용을 제한합니다. 캐시 미스 이후 쿼리 측에서 수행하는 캐시 채우기나 캐시 워밍업에는 영향을 주지 않습니다.
+
+Doris는 전역 정책 하나와 Compaction 전용 정책 두 가지를 제공합니다.
+
+| 매개변수 | 유형 | 기본값 | 적용 범위 | 설명 |
+|---|---|---|---|---|
+| `enable_file_cache_write_index_file_only` | Boolean | `false` | 데이터 적재, Schema Change, Cumulative Compaction, Base Compaction을 포함한 컴퓨팅-스토리지 분리 모드의 모든 rowset 쓰기 | **Doris 4.0 계열의 4.0.8 이상 버전과 Doris 4.1 계열의 4.1.4 이상 버전에서 지원됩니다.** `true`로 설정하면 Segment 데이터를 능동적으로 캐싱하지 않습니다. Segment가 닫힌 후 footer와 내부 인덱스 범위를 동기적으로 사전 로드하며, 독립된 역색인 파일은 계속 File Cache에 기록합니다. 이 매개변수는 두 Compaction 전용 매개변수보다 우선합니다 |
+| `enable_file_cache_write_base_compaction_index_only` | Boolean | `false` | Base Compaction | 기존 Base Compaction 정책이 출력을 File Cache에 기록하기로 이미 결정한 경우에만, 독립된 역색인 파일은 계속 캐싱하면서 Segment 파일이 능동적으로 캐싱되는 것을 막습니다. 이 매개변수로 인해 원래 캐시를 우회할 Base Compaction 출력이 캐싱되지는 않습니다 |
+| `enable_file_cache_write_cumu_compaction_index_only` | Boolean | `false` | Cumulative Compaction | Cumulative Compaction 출력을 File Cache에 기록할 때, 독립된 역색인 파일은 계속 캐싱하면서 Segment 파일이 능동적으로 캐싱되는 것을 막습니다 |
+
+쓰기 경로는 다음 우선순위에 따라 캐시 동작을 결정합니다.
+
+1. `enable_file_cache=false`는 가장 높은 우선순위를 가지며, Segment footer/내부 인덱스 사전 로드와 독립된 역색인 쓰기를 포함한 모든 File Cache 쓰기를 비활성화합니다.
+2. `enable_file_cache=true`이고 `enable_file_cache_write_index_file_only=true`이면 전역 인덱스 전용 정책이 활성화됩니다. 두 Compaction 전용 매개변수는 더 이상 최종 동작을 바꾸지 않습니다. 적응형 쓰기, Compaction 보존 정책, 캐시 적중률 임계값, 요청 수준의 `write_file_cache` 설정으로도 Segment 데이터를 능동적으로 캐싱할 수 없습니다. 인덱스 관련 내용은 앞서 설명한 전역 정책에 따라 계속 기록됩니다.
+3. 전역 인덱스 전용 정책이 비활성화되어 있으면 Base/Cumulative Compaction 전용 매개변수는 해당 유형의 출력 중 **이미 캐싱 대상으로 선택된** 출력만 추가로 제한합니다. 다른 쓰기 시나리오나 쿼리 읽기 경로에는 영향을 주지 않습니다.
+4. 세 인덱스 전용 매개변수가 모두 `false`이면 기존의 능동적 캐시 쓰기, 적응형 쓰기, Compaction 출력 보존 동작이 그대로 유지됩니다.
+
+:::caution
+
+두 Compaction 전용 매개변수는 독립된 역색인 파일과 Segment 파일만 구분합니다. 전역 인덱스 전용 정책에서 사용하는 Segment footer/내부 인덱스 범위 사전 로드를 실행하지는 않습니다. 독립된 역색인과 Segment 내부 인덱스 및 메타데이터를 모두 능동적으로 보존하려면 `enable_file_cache_write_index_file_only`를 사용하세요.
+
+:::
+
+#### 전역 인덱스 전용 정책 활성화 {#enabling-the-global-index-only-policy}
+
+모든 BE 노드의 `be.conf`에 다음 설정을 구성합니다.
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=true
+enable_file_cache_write_base_compaction_index_only=false
+enable_file_cache_write_cumu_compaction_index_only=false
+```
+
+예상 동작은 다음과 같습니다.
+
+| 시나리오 | File Cache에 능동적으로 기록되는 내용 |
+|---|---|
+| 데이터 적재, Schema Change, Cumulative Compaction, Base Compaction | Segment 데이터는 능동적으로 기록하지 않습니다. Segment footer/내부 인덱스 범위는 동기적으로 사전 로드하며, 독립된 역색인 파일은 기록합니다 |
+| 쿼리의 데이터 페이지 읽기 | 동작이 유지됩니다. 캐시 미스 이후에도 기존 읽기 경로 규칙에 따라 Segment 데이터를 캐시에 채울 수 있습니다 |
+| 캐시 워밍업 | 동작이 유지됩니다 |
+| Packed File | 패킹된 작은 Segment 파일은 파일 전체를 캐싱하지 않습니다. 패킹된 독립형 소형 인덱스 파일은 계속 파일 전체를 캐싱할 수 있습니다 |
+
+전역 인덱스 전용 정책에서는 Segment footer/내부 인덱스 범위를 동기 읽기를 통해 캐시에 기록하며, `enable_flush_file_cache_async`의 제어를 받지 않습니다. 독립된 역색인 파일은 기존의 직접 쓰기 및 비동기 플러시 동작을 계속 사용합니다.
+
+#### Compaction 출력만 제한 {#restricting-only-compaction-output}
+
+데이터 적재와 Schema Change의 능동적 캐시 쓰기는 유지하면서 Compaction 출력으로 인한 캐시 부담을 줄이려면 다음과 같이 구성합니다.
+
+```properties
+enable_file_cache=true
+enable_file_cache_write_index_file_only=false
+enable_file_cache_write_base_compaction_index_only=true
+enable_file_cache_write_cumu_compaction_index_only=true
+```
+
+Cumulative Compaction은 기본적으로 출력을 캐시에 기록하므로, 해당 매개변수를 활성화하면 Segment 파일은 건너뛰고 독립된 역색인 파일만 유지합니다. Base Compaction은 여전히 먼저 `enable_file_cache_keep_base_compaction_output`과 입력 rowset의 캐시 적중률을 사용하여 출력의 캐싱 여부를 결정합니다. Base Compaction 인덱스 전용 매개변수는 이 결정이 내려진 후에만 기록할 내용을 제한합니다.
+
+#### 권장 사항 {#recommendations}
+
+- 이 세 매개변수는 BE 매개변수입니다. 노드마다 서로 다른 캐시 쓰기 정책을 사용하지 않도록 동일한 컴퓨팅 그룹의 모든 BE 노드에서 일관되게 설정하세요.
+- "인덱스 전용"이라고 해서 File Cache에 Segment 데이터가 전혀 없다는 뜻은 아닙니다. 쿼리 측에서 캐시 미스가 발생한 데이터 페이지를 읽을 때는 여전히 Segment 데이터를 캐시에 채울 수 있습니다.
+- 이 정책은 데이터 적재와 Compaction으로 인한 캐시 오염을 줄일 수 있지만, 쓰기 직후 대량의 데이터를 스캔하면 원격 스토리지 읽기가 늘어날 수 있습니다. 운영 쿼리 워크로드로 벤치마크를 수행하고, Index 큐의 축출과 SQL Profile의 인덱스 읽기 지표를 모니터링하세요.
+
+### 캐시 경로와 크기 구성 {#configuring-cache-paths-and-size}
+
+```plaintext
+file_cache_path  Default: the storage directory under the BE deployment path
+```
+
+이 매개변수는 JSON 배열입니다. 각 요소는 캐시 경로와 해당 속성을 지정합니다. 지원되는 필드는 다음과 같습니다.
+
+| 필드 | 설명 |
+|---|---|
+| `path` | 캐시 파일을 저장할 경로 |
+| `total_size` | 이 경로의 총 캐시 크기(바이트 단위) |
+| `ttl_percent` | TTL 큐에 할당할 공간의 비율 |
+| `normal_percent` | Normal 큐에 할당할 공간의 비율 |
+| `disposable_percent` | Disposable 큐에 할당할 공간의 비율 |
+| `index_percent` | Index 큐에 할당할 공간의 비율 |
+| `storage` | 캐시 저장소 유형: `disk`(기본값) 또는 `memory` |
+
+**구성 예시:**
+
+- 단일 경로 구성:
+
+    ```json
+    [{"path":"/path/to/file_cache","total_size":21474836480}]
+    ```
+
+- 다중 경로 구성:
+
+    ```json
+    [{"path":"/path/to/file_cache","total_size":21474836480},{"path":"/path/to/file_cache2","total_size":21474836480}]
+    ```
+
+- 메모리 저장소 구성:
+
+    ```json
+    [{"path": "xxx", "total_size":53687091200, "storage": "memory"}]
+    ```
+
+### 자동 캐시 비우기 {#automatic-cache-clearing}
+
+| 매개변수 | 기본값 | 설명 |
+|---|---|---|
+| `clear_file_cache` | `false` | BE가 재시작될 때 캐시된 데이터를 자동으로 비울지 여부입니다. `true`로 설정하면 재시작할 때마다 캐시를 비웁니다. |
+
+### 선제적 축출 {#proactive-eviction}
+
+선제적 축출은 캐시 사용률이 임계값에 도달하면 공간을 능동적으로 확보하여, 쿼리 실행 중 수동적 축출이 발생해 성능이 불안정해지는 것을 방지합니다.
+
+| 매개변수 | 기본값 | 설명 |
+|---|---|---|
+| `enable_evict_file_cache_in_advance` | `true` | 선제적 축출의 활성화 여부 |
+| `file_cache_enter_need_evict_cache_in_advance_percent` | `88` | 선제적 축출을 시작하는 사용률 임계값(%). 사용 중인 캐시 공간이나 inode 수가 이 비율에 도달하면 선제적 축출을 시작합니다 |
+| `file_cache_exit_need_evict_cache_in_advance_percent` | `85` | 선제적 축출을 중지하는 사용률 임계값(%). 사용 중인 캐시 공간이 이 비율로 줄어들면 축출을 중지합니다 |
+
+## 캐시 할당량 {#cache-quota}
+
+<!-- Knowledge type: Configuration parameters -->
+<!-- Applicable scenarios: Multi-user shared cache / Preventing large-query cache thrashing -->
+
+Doris는 서로 독립적인 두 가지 쿼리 수준 File Cache 제어 기능을 제공합니다. 쿼리가 이미 점유한 캐시 공간을 제어할지, 이후의 캐시 채우기를 중단할지에 따라 매개변수를 선택하세요.
+
+| 제어 방식 | 주요 매개변수 | 한도 도달 후 동작 | 사용 사례 |
+|---|---|---|---|
+| 캐시 점유율로 제한 | `file_cache_query_limit_percent` | 새 캐시 블록을 계속 기록할 수 있습니다. BE는 먼저 현재 쿼리에 대해 기록된 블록 중 해제 가능한 블록을 축출하고, 필요하면 다른 캐시 큐에서도 축출합니다 | 이후의 캐시 채우기를 허용하면서 쿼리의 캐시 점유 공간을 제한 |
+| 바이트 임계값으로 원격 스캔의 캐시 쓰기 중단 | `file_cache_query_limit_bytes` | 다음 캐시 블록으로 인해 허용된 바이트 수가 임계값을 초과하게 되면 해당 BE에서 쿼리가 remote-only-on-miss 모드로 전환됩니다. 이후 캐시 미스가 발생하면 File Cache에 더 이상 기록하지 않고 원격 스토리지에서 읽습니다 | 대규모 원격 스캔으로 인한 캐시 쓰기와 잦은 캐시 교체를 제한 |
+| TopN 지연 구체화 2단계의 캐시 쓰기 중단 | `enable_topn_lazy_mat_phase2_no_write_file_cache` | TopN 지연 구체화의 2단계 조회 읽기에서 캐시 미스가 발생하면 원격에서만 읽고 File Cache를 채우지 않습니다 | 재사용 빈도가 낮은 TopN 조회 읽기로 인한 캐시 오염 방지 |
+
+### 캐시 점유율로 제한 {#limit-by-cache-footprint-percentage}
+
+> 이 기능은 버전 4.0.3부터 지원됩니다.
+
+캐시 점유율 제한은 단일 쿼리가 각 File Cache 인스턴스에서 사용할 수 있는 최대 비율을 제어합니다. 여러 사용자나 복잡한 쿼리가 캐시 리소스를 공유할 때, 대규모 쿼리 하나가 캐시를 과도하게 점유하여 다른 핫 데이터를 축출할 위험을 줄입니다.
+
+이 기능은 BE 구성, FE 구성, 세션 변수의 세 수준에서 구성합니다.
+
+**BE 구성**
+
+| 매개변수 | 유형 | 기본값 | 설명 |
+|---|---|---|---|
+| `enable_file_cache_query_limit` | Boolean | `false` | BE 측 캐시 쿼리 제한의 마스터 스위치입니다. 활성화된 경우에만 BE가 FE에서 전달한 쿼리 제한 매개변수를 처리합니다 |
+
+**FE 구성**
+
+| 매개변수 | 유형 | 기본값 | 설명 |
+|---|---|---|---|
+| `file_cache_query_limit_max_percent` | Integer | `100` | 쿼리 할당량의 최대 제한값으로, 세션 변수의 상한을 검증하는 데 사용됩니다 |
+
+**세션 변수**
+
+| 변수 | 유형 | 기본값 | 설명 |
+|---|---|---|---|
+| `file_cache_query_limit_percent` | Integer | `-1` | 명시적으로 설정할 때는 값이 `[1, file_cache_query_limit_max_percent]` 범위에 있어야 합니다. 단일 쿼리가 사용할 수 있는 최대 캐시 비율을 지정합니다. 계산된 할당량은 256 MB 이상이어야 하며, 이보다 작으면 BE가 로그에 경고를 기록합니다 |
+
+이 제어 기능을 사용하기 전에 BE에서 `enable_file_cache`와 `enable_file_cache_query_limit`를 모두 활성화하고, 쿼리 세션의 `enable_file_cache`가 `true`인지 확인하세요.
+
+**사용 예시**
+
+```sql
+-- Limit a single query to using at most 50% of the cache
+SET file_cache_query_limit_percent = 50;
+
+-- Execute the query
+SELECT * FROM large_table;
+```
+
+이후 캐시 미스가 발생해도 File Cache에 계속 기록할 수 있습니다. 쿼리의 캐시 점유 공간이 할당량을 초과하면 BE는 쿼리 수준 LRU 기록과 다른 캐시 큐를 통해 공간을 확보합니다. 이 제어 기능은 쿼리를 추가 쓰기가 금지되는 모드로 전환하지 않습니다.
+
+### 바이트 임계값으로 원격 스캔의 캐시 쓰기 중단 {#stop-remote-scan-cache-writes-by-byte-threshold}
+
+`file_cache_query_limit_bytes`는 단일 SELECT 쿼리가 **각 BE**에서 원격 스캔 중 캐시 미스로 인해 수행하는 read-through File Cache 쓰기의 누적 허용 바이트 수를 제한합니다. 컴퓨팅-스토리지 분리 모드에서 BE의 `enable_file_cache=true`인 경우에만 적용됩니다. `enable_file_cache_query_limit`나 `file_cache_query_limit_max_percent`에는 의존하지 않습니다.
+
+동일한 쿼리의 병렬 Scanner는 한 BE에서 하나의 임계값을 공유하지만, 이 임계값은 쿼리 전체나 클러스터 전체의 합계가 아닙니다. 예를 들어, 쿼리가 10개의 BE에서 실행되고 임계값이 1 GiB이면 각 BE는 독립적으로 약 1 GiB까지 허용할 수 있습니다. 모든 BE를 합쳐 1 GiB로 제한하는 것이 아닙니다.
+
+**매개변수**
+
+| 매개변수 | 위치 | 유형 | 기본값 | 필수 여부 | 설명 |
+|---|---|---|---|---|---|
+| `file_cache_query_limit_bytes` | 세션 변수 | BigInt | `-1` | 예 | 각 BE에서 단일 쿼리에 적용되는 원격 스캔 캐시 채우기 임계값으로, 바이트 단위입니다. `0`보다 작은 값은 제어 기능을 비활성화하고, `0`은 쿼리 시작부터 캐시 채우기를 비활성화합니다. 양수 값은 캐시 블록 단위로 허용된 바이트 수를 누적합니다 |
+| `enable_file_cache_query_limit_segment_meta` | BE 구성 | Boolean | `false` | 아니요 | Segment footer와 Segment 메타데이터 캐시 쓰기를 동일한 바이트 임계값에 포함할지 여부입니다. 이 매개변수는 동적으로 구성할 수 있습니다. 이 제어 기능이 활성화되어 있으면 데이터 페이지와 역색인 쓰기에는 항상 바이트 임계값이 적용됩니다 |
+
+`file_cache_query_limit_bytes`는 다음과 같이 동작합니다.
+
+| 값 | 동작 |
+|---|---|
+| `< 0` | 이 제어 기능을 비활성화하고 기존의 캐시 미스 시 채우기 동작을 유지합니다 |
+| `= 0` | 모든 BE에서 쿼리 시작부터 remote-only-on-miss 모드를 적용합니다. 로컬 캐시에 완전히 포함된 요청 범위는 계속 로컬에서 읽을 수 있습니다. 완전히 포함되지 않은 범위는 캐시를 채우지 않고 원격 스토리지에서 직접 읽습니다 |
+| `> 0` | 누적 허용 바이트 수가 임계값을 초과하지 않는 동안 캐시 블록을 허용합니다. 다음 블록이 임계값을 초과하게 되면 해당 블록을 거부하며, 그 이후 해당 BE에서 이 쿼리의 캐시 미스는 더 이상 캐시를 채우지 않습니다 |
+
+허용 여부는 캐시 블록 단위로 판단하므로 실제 쓰기량이 임계값과 정확히 같아진다는 보장은 없습니다. 남은 허용량이 다음 캐시 블록보다 작으면 블록 전체를 건너뛰며, 이후 더 작은 블록이 들어와도 남은 허용량을 사용하지 않습니다. 쿼리가 한 BE에서 remote-only-on-miss 모드로 전환되면 해당 BE에서는 캐시 채우기가 재개되지 않습니다.
+
+**원격 스캔의 캐시 채우기 제한**
+
+다음 예시는 `large_table`이 컴퓨팅-스토리지 분리형 클러스터에 있고 모든 BE에서 File Cache가 활성화되어 있다고 가정합니다. 각 BE에서 최대 1 GiB의 원격 스캔 캐시 블록을 허용합니다.
+
+```sql
+SET enable_profile = true;
+SET profile_level = 2;
+SET file_cache_query_limit_bytes = 1073741824;
+
+SELECT COUNT(*) FROM large_table;
+```
+
+쿼리 결과는 달라지지 않습니다. 한 BE에서 다음 캐시 블록으로 인해 허용된 바이트 수가 1 GiB를 초과하게 되면, 이후 동일한 BE에서 해당 쿼리의 캐시 미스는 추가 로컬 캐시 쓰기 없이 원격 데이터를 읽습니다.
+
+일회성 스캔이 시작부터 File Cache를 채우지 않도록 하려면 임계값을 `0`으로 설정하고, 쿼리 실행 후 기본값으로 복원하세요.
+
+```sql
+SET file_cache_query_limit_bytes = 0;
+SELECT COUNT(*) FROM large_table;
+
+SET file_cache_query_limit_bytes = -1;
+```
+
+**Segment 메타데이터의 포함 여부**
+
+기본적으로 데이터 페이지와 역색인 캐시 쓰기는 임계값에 포함되지만, Segment footer와 Segment 메타데이터 쓰기는 포함되지 않습니다. 따라서 쿼리가 remote-only-on-miss 모드로 전환된 후에도 Segment footer와 메타데이터가 계속 기록될 수 있으며, Profile에 표시되는 총 쓰기량이 `file_cache_query_limit_bytes`를 초과할 수 있습니다.
+
+Segment footer와 메타데이터 채우기도 중단하려면 동일한 컴퓨팅 그룹의 모든 BE에 다음 구성을 설정하세요.
+
+```properties
+enable_file_cache_query_limit_segment_meta=true
+```
+
+이 매개변수는 BE 동적 구성 API를 통해 즉시 변경할 수 있습니다. 재시작 후에도 유지하려면 `be.conf`에 추가하거나 영구 동적 구성을 사용하세요. 자세한 내용은 [BE 구성](../../admin-manual/config/be-config.md)을 참조하세요.
+
+**Query Profile로 확인**
+
+Query Profile을 활성화한 후 Scanner 아래의 `FileCache` 지표 그룹을 확인하세요.
+
+| 지표 | 설명 |
+|---|---|
+| `RemoteOnlyOnMissTriggered` | 값이 `1`이면 Scanner가 쿼리의 remote-only-on-miss 모드 전환을 관찰했다는 뜻입니다 |
+| `RemoteOnlyOnMissThresholdBytes` | 쿼리에 구성된 바이트 임계값 |
+| `BytesWriteIntoCache` | File Cache에 실제로 기록된 총 바이트 수 |
+| `InvertedIndexBytesWriteIntoCache` | File Cache에 실제로 기록된 역색인 바이트 수 |
+| `SegmentFooterIndexBytesWriteIntoCache` | File Cache에 실제로 기록된 Segment footer 및 메타데이터 바이트 수 |
+| `NumSkipCacheIOTotal` | 캐시를 건너뛴 I/O 작업 수입니다. 다른 캐시 정책에 따라 건너뛴 I/O도 포함될 수 있으므로 `RemoteOnlyOnMissTriggered`와 함께 평가하세요 |
+
+허용된 바이트 수가 임계값과 정확히 같고 쿼리가 끝날 때까지 이후 캐시 블록이 이를 초과하려는 시도를 하지 않으면, `RemoteOnlyOnMissTriggered`는 `0`으로 유지될 수 있습니다. 상태는 후속 블록이 임계값을 초과하게 되는 경우에만 변경됩니다.
+
+**권장 사항 및 주의 사항**
+
+- 일회성 전체 스캔, 재사용 빈도가 낮은 ETL, 임시 쿼리에는 작은 양수 임계값이나 `0`을 사용하여 시작부터 캐시 채우기를 비활성화하고, 핫 데이터가 콜드 데이터로 대체되는 것을 방지하세요.
+- 이 매개변수는 쿼리 읽기에서 캐시 미스가 발생한 후의 File Cache 채우기를 제한합니다. 원격 읽기 바이트 수를 제한하거나 쿼리를 종료하지 않으며, 데이터 적재, Compaction, Schema Change, 명시적 캐시 워밍업으로 발생하는 캐시 쓰기에는 영향을 주지 않습니다.
+- remote-only-on-miss 모드에서도 로컬 캐시에 완전히 포함된 요청 범위는 계속 로컬에서 읽을 수 있습니다. 완전히 포함되지 않은 범위는 원격 스토리지에 직접 접근하므로 오브젝트 스토리지 I/O와 쿼리 지연 시간이 늘어날 수 있습니다.
+- 이후 캐시 미스 시 캐시 채우기를 허용하면서 쿼리가 점유하는 캐시 공간을 제한하려면 `file_cache_query_limit_percent`를 사용하세요. 지정된 양이 허용된 후 추가 채우기를 중단하려면 `file_cache_query_limit_bytes`를 사용하세요.
+- 기본적으로 Segment footer와 메타데이터를 제외하면 재사용성이 높은 메타데이터의 캐싱 이점을 유지할 수 있습니다. 임계값 도달 후 이러한 쓰기도 중단해야 하는 경우에만 `enable_file_cache_query_limit_segment_meta`를 활성화하고, Query Profile로 결과를 확인하세요.
+
+### TopN 지연 구체화 2단계의 캐시 쓰기 중단 {#stop-cache-writes-in-topn-lazy-materialization-phase-2}
+
+> 이 기능은 버전 4.0.8부터 지원됩니다.
+
+`ORDER BY ... LIMIT`가 포함된 쿼리는 TopN 지연 구체화를 사용합니다. 1단계에서는 정렬 컬럼만 읽어 후보 행을 선택하고, 2단계에서는 행 ID로 나머지 컬럼을 조회합니다. 2단계 읽기는 산발적이며 재사용되는 경우가 드물기 때문에, 이 데이터로 File Cache를 채우면 컴퓨팅-스토리지 분리 모드에서 핫 데이터가 쉽게 밀려납니다.
+
+| 변수 | 유형 | 기본값 | 설명 |
+|---|---|---|---|
+| `enable_topn_lazy_mat_phase2_no_write_file_cache` | Boolean | `false` | 활성화하면 TopN 지연 구체화의 2단계 읽기에서 File Cache 미스가 발생할 때 원격 스토리지에서 직접 읽고, 해당 범위를 File Cache에 채우지 않습니다 |
+
+**사용 예시**
+
+```sql
+SET enable_topn_lazy_mat_phase2_no_write_file_cache = true;
+
+SELECT * FROM large_table ORDER BY create_time DESC LIMIT 100;
+```
+
+**참고 사항**
+
+- 이 변수는 컴퓨팅-스토리지 분리 모드에서만 적용되며, 스토리지-컴퓨팅 통합 모드에서는 설정해도 효과가 없습니다.
+- TopN 지연 구체화의 2단계 조회 읽기에만 영향을 줍니다. 1단계의 정렬 컬럼 읽기, 다른 쿼리의 캐시 채우기, 데이터 적재·Compaction·캐시 워밍업의 캐시 쓰기에는 영향을 주지 않습니다.
+- 2단계에서 File Cache에 있는 범위는 계속 로컬에서 읽습니다. 캐시 미스가 발생한 범위는 원격 스토리지에 직접 접근하므로 오브젝트 스토리지 I/O가 늘어날 수 있습니다.
+- TopN 쿼리가 동일한 핫 행에 반복해서 적중한다면 캐시 채우기를 비활성화할 때 원격 읽기가 늘어날 수 있습니다. 쿼리 패턴에 맞춰 평가하세요.
+
+## 캐시 워밍업 {#cache-warmup}
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: New compute group going online / Fast loading of hot data -->
+
+Doris는 원격 스토리지의 데이터를 로컬 캐시로 미리 가져올 수 있는 캐시 워밍업 기능을 제공합니다. 다음 세 가지 워밍업 모드를 지원합니다.
+
+| 모드 | 설명 |
+|---|---|
+| 컴퓨팅 그룹 간 워밍업 | 컴퓨팅 그룹 A의 핫 데이터 캐시를 컴퓨팅 그룹 B에 워밍업합니다. Doris는 각 컴퓨팅 그룹의 테이블/파티션 접근 핫스팟을 주기적으로 수집하고, 이 정보를 바탕으로 선택적으로 워밍업합니다 |
+| 테이블 데이터 워밍업 | 지정된 테이블의 전체 데이터를 대상 컴퓨팅 그룹으로 가져옵니다 |
+| 파티션 데이터 워밍업 | 지정된 테이블의 특정 파티션 데이터를 대상 컴퓨팅 그룹으로 가져옵니다 |
+
+자세한 사용법은 [WARM-UP SQL 문서](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)를 참조하세요.
+
+캐시 워밍업은 원격 스토리지에서 데이터를 미리 가져옵니다. [피어 캐시 읽기](./file-cache-peer-read)는 쿼리 실행 시 이를 보완합니다. 로컬 캐시 미스가 발생하면 먼저 다른 BE에서 블록을 읽고, 어떤 BE에도 해당 블록이 없을 때만 원격 스토리지에서 읽으므로 워밍업으로 처리하지 못한 콜드 읽기를 처리할 수 있습니다.
+
+## 캐시 비우기 {#cache-clearing}
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Insufficient cache space / Test environment reset / Troubleshooting -->
+
+Doris는 동기 및 비동기 캐시 비우기 방식을 모두 제공합니다.
+
+| 방식 | 명령 | 설명 |
+|---|---|---|
+| 동기 비우기 | `curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=true'` | 비우기가 완료된 후에만 명령이 반환됩니다. Doris는 로컬 파일 시스템의 캐시 파일을 동기적으로 삭제하고 메모리 내 메타데이터를 비웁니다. 공간을 빠르게 확보하지만 현재 실행 중인 쿼리에 영향을 줄 수 있습니다. 일반적으로 빠른 테스트에 사용합니다 |
+| 비동기 비우기 | `curl 'http://BE_IP:WEB_PORT/api/file_cache?op=clear&sync=false'` | 명령은 즉시 반환되며 비우기 작업은 비동기적으로 실행됩니다. 캐시 공간이 점차 줄어드는 것을 확인할 수 있습니다. Doris는 메모리 내 메타데이터를 순회하며 캐시 파일을 하나씩 삭제하되, 현재 사용 중인 파일의 삭제는 미룹니다. 실행 중인 쿼리에 미치는 영향은 작지만 완전히 끝날 때까지 더 오래 걸립니다 |
+
+## 캐시 모니터링 {#cache-monitoring}
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Cache hit rate analysis / Troubleshooting / Performance tuning -->
+
+### 캐시 블록 상세 정보 {#cache-block-details}
+
+Doris 4.1부터 [`information_schema.file_cache_info`](../../admin-manual/system-tables/information_schema/file_cache_info.md)를 쿼리하여 블록 수준의 캐시 항목을 확인하고 tablet, BE, 캐시 경로 또는 캐시 유형별로 캐시 공간을 집계할 수 있습니다. Doris 4.0.x는 이 시스템 테이블을 지원하지 않습니다.
+
+### 핫스팟 정보 {#hotspot-information}
+
+Doris는 각 컴퓨팅 그룹의 캐시 핫스팟 정보를 10분마다 수집하여 내부 시스템 테이블 `__internal_schema.cloud_cache_hotspot`에 기록합니다. 다음 쿼리로 핫 데이터를 분석하여 캐시 계획에 활용할 수 있습니다.
+
+:::info 참고
+버전 3.0.4 이전에는 `SHOW CACHE HOTSPOT` 문으로 캐시 핫스팟 정보를 쿼리할 수 있었습니다. 버전 3.0.4부터는 이 문을 더 이상 지원하지 않습니다. 대신 시스템 테이블 `__internal_schema.cloud_cache_hotspot`을 직접 쿼리하세요.
+:::
+
+#### 모든 컴퓨팅 그룹에서 가장 자주 접근하는 테이블 확인 {#view-the-most-frequently-accessed-tables-across-all-compute-groups}
+
+```sql
+-- Equivalent to SHOW CACHE HOTSPOT "/" before version 3.0.4
+WITH t1 AS (
+    SELECT
+        cluster_id,
+        cluster_name,
+        table_id,
+        table_name,
+        insert_day,
+        SUM(query_per_day) AS query_per_day_total,
+        SUM(query_per_week) AS query_per_week_total
+    FROM __internal_schema.cloud_cache_hotspot
+    GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+    cluster_id AS ComputeGroupId,
+    cluster_name AS ComputeGroupName,
+    table_id AS TableId,
+    table_name AS TableName
+FROM (
+    SELECT
+        ROW_NUMBER() OVER (
+            PARTITION BY cluster_id
+            ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+        ) AS dr2,
+        *
+    FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+#### 특정 컴퓨팅 그룹에서 가장 자주 접근하는 테이블 확인 {#view-the-most-frequently-accessed-tables-in-a-specific-compute-group}
+
+`cluster_name = "compute_group_name0"`의 값을 실제 컴퓨팅 그룹 이름으로 바꾸세요.
+
+```sql
+-- Equivalent to SHOW CACHE HOTSPOT '/compute_group_name0' before version 3.0.4
+WITH t1 AS (
+    SELECT
+        cluster_id,
+        cluster_name,
+        table_id,
+        table_name,
+        insert_day,
+        SUM(query_per_day) AS query_per_day_total,
+        SUM(query_per_week) AS query_per_week_total
+    FROM __internal_schema.cloud_cache_hotspot
+    WHERE cluster_name = "compute_group_name0" -- Replace with the actual compute group name, e.g. "default_compute_group"
+    GROUP BY cluster_id, cluster_name, table_id, table_name, insert_day
+)
+SELECT
+    cluster_id AS ComputeGroupId,
+    cluster_name AS ComputeGroupName,
+    table_id AS TableId,
+    table_name AS TableName
+FROM (
+    SELECT
+        ROW_NUMBER() OVER (
+            PARTITION BY cluster_id
+            ORDER BY insert_day DESC, query_per_day_total DESC, query_per_week_total DESC
+        ) AS dr2,
+        *
+    FROM t1
+) t2
+WHERE dr2 = 1;
+```
+
+### 캐시 공간 및 적중률 지표 {#cache-space-and-hit-rate-metrics}
+
+<!-- Knowledge type: Configuration parameters -->
+
+다음 엔드포인트를 사용하여 BE 노드의 캐시 통계를 가져옵니다(`brpc_port`의 기본값은 8060).
+
+```bash
+curl {be_ip}:{brpc_port}/vars
+```
+
+반환되는 지표 이름에는 디스크 경로가 접두사로 붙습니다. 예를 들어 접두사 `_mnt_disk1_gavinchou_debug_doris_cloud_be0_storage_file_cache_`는 경로 `/mnt/disk1/gavinchou/debug/doris-cloud/be0_storage_file_cache/`에 해당합니다. 경로 접두사를 제외한 각 지표의 의미는 다음과 같습니다(모든 크기는 바이트 단위).
+
+| 지표 이름(경로 접두사 제외) | 설명 |
+|---|---|
+| `file_cache_cache_size` | 현재 파일 캐시의 총 크기 |
+| `file_cache_disposable_queue_cache_size` | 현재 Disposable 큐의 크기 |
+| `file_cache_disposable_queue_element_count` | 현재 Disposable 큐의 요소 수 |
+| `file_cache_disposable_queue_evict_size` | 시작 이후 Disposable 큐에서 축출된 누적 데이터양 |
+| `file_cache_index_queue_cache_size` | 현재 Index 큐의 크기 |
+| `file_cache_index_queue_element_count` | 현재 Index 큐의 요소 수 |
+| `file_cache_index_queue_evict_size` | 시작 이후 Index 큐에서 축출된 누적 데이터양 |
+| `file_cache_normal_queue_cache_size` | 현재 Normal 큐의 크기 |
+| `file_cache_normal_queue_element_count` | 현재 Normal 큐의 요소 수 |
+| `file_cache_normal_queue_evict_size` | 시작 이후 Normal 큐에서 축출된 누적 데이터양 |
+| `file_cache_total_evict_size` | 시작 이후 전체 파일 캐시에서 축출된 누적 데이터양 |
+| `file_cache_ttl_cache_evict_size` | 시작 이후 TTL 큐에서 축출된 누적 데이터양 |
+| `file_cache_ttl_cache_lru_queue_element_count` | 현재 TTL 큐의 요소 수 |
+| `file_cache_ttl_cache_size` | 현재 TTL 큐의 크기 |
+| `file_cache_evict_by_heat_[A]_to_[B]` | B 유형의 캐시 데이터를 위한 공간을 확보하기 위해 축출된 A 유형의 캐시 데이터양(만료 시간 기반 축출) |
+| `file_cache_evict_by_size_[A]_to_[B]` | B 유형의 캐시 데이터를 위한 공간을 확보하기 위해 축출된 A 유형의 캐시 데이터양(공간 기반 축출) |
+| `file_cache_evict_by_self_lru_[A]` | 새 데이터를 기록하기 위해 A 유형 큐가 자체적으로 축출한 A 유형의 캐시 데이터양(LRU 기반 축출) |
+| `file_cache_evict_not_downloaded_size` | 4.1.5에서 추가되었습니다. 다운로드 완료 전에 제거된 블록의 누적 논리적 범위 크기로, 바이트 단위입니다. 현재 다운로드 중인 블록은 제외하며, 다운로드된 데이터의 물리적 축출을 나타내지는 않습니다 |
+| `file_cache_evict_not_downloaded_num` | 4.1.5에서 추가되었습니다. 위와 같이 제거된 블록의 누적 개수 |
+| `file_cache_ttl_mgr_ttl_info_map_size` | 4.1.5에서 추가되었습니다. 현재 추적 중인 tablet TTL 정보 항목 수이며, 블록 수가 아닙니다 |
+
+버전 4.1.5부터 전체 및 큐별 축출 바이트 카운터는 완전히 다운로드된 블록만 집계합니다. 다운로드 완료 전에 제거된 블록은 별도의 새 카운터로 집계합니다. 다운로드 중에 삭제 대상으로 표시된 블록은 이 제거 카운터를 증가시키지 않습니다. 이에 해당하는 SQL 시스템 테이블 지표 이름은 `evict_not_downloaded_size`와 `evict_not_downloaded_num`입니다. [file_cache_statistics](../../admin-manual/system-tables/information_schema/file_cache_statistics.md)를 참조하세요.
+
+### SQL Profile 캐시 지표 {#sql-profile-cache-metrics}
+
+SQL Profile의 캐시 관련 지표는 `SegmentIterator` 노드 아래에 있습니다.
+
+| 지표 이름 | 설명 |
+|---|---|
+| `BytesScannedFromCache` | 파일 캐시에서 읽은 데이터양 |
+| `BytesScannedFromRemote` | 원격 스토리지에서 읽은 데이터양 |
+| `BytesWriteIntoCache` | 파일 캐시에 기록한 데이터양 |
+| `LocalIOUseTimer` | 파일 캐시에서 읽는 데 걸린 시간 |
+| `NumLocalIOTotal` | 파일 캐시 읽기 횟수 |
+| `NumRemoteIOTotal` | 원격 스토리지 읽기 횟수 |
+| `NumSkipCacheIOTotal` | 원격 스토리지에서 읽었지만 파일 캐시에는 기록하지 않은 읽기 횟수 |
+| `RemoteIOUseTimer` | 원격 스토리지에서 읽는 데 걸린 시간 |
+| `WriteCacheIOUseTimer` | 파일 캐시에 기록하는 데 걸린 시간 |
+
+인덱스 전용 캐시 쓰기를 활성화한 후에는 다음과 같이 분류된 지표를 모니터링하여 독립된 역색인과 Segment footer/내부 인덱스 데이터가 캐시에 적중하는지 확인하세요.
+
+| 지표 | 설명 |
+|---|---|
+| `InvertedIndexBytesScannedFromCache` / `InvertedIndexBytesScannedFromRemote` | File Cache / 원격 스토리지에서 읽은 독립된 역색인 데이터양 |
+| `InvertedIndexNumLocalIOTotal` / `InvertedIndexNumRemoteIOTotal` | 독립된 역색인의 로컬 / 원격 읽기 횟수 |
+| `InvertedIndexLocalIOUseTimer` / `InvertedIndexRemoteIOUseTimer` | 독립된 역색인의 로컬 / 원격 읽기에 걸린 시간 |
+| `SegmentFooterIndexBytesScannedFromCache` / `SegmentFooterIndexBytesScannedFromRemote` | File Cache / 원격 스토리지에서 읽은 Segment footer 및 내부 인덱스 데이터양 |
+| `SegmentFooterIndexNumLocalIOTotal` / `SegmentFooterIndexNumRemoteIOTotal` | Segment footer 및 내부 인덱스 데이터의 로컬 / 원격 읽기 횟수 |
+| `SegmentFooterIndexLocalIOUseTimer` / `SegmentFooterIndexRemoteIOUseTimer` | Segment footer 및 내부 인덱스 데이터의 로컬 / 원격 읽기에 걸린 시간 |
+
+전체 쿼리 성능 보고서는 [쿼리 성능 분석](../../query-acceleration/performance-tuning-overview/analysis-tools#doris-profile)에서 확인할 수 있습니다.
+
+`NumPeerIOTotal`, `PeerIOUseTimer`, `SameCGPeerIOTotal`, `CrossCGPeerIOTotal` 및 관련 카운터는 데이터가 다른 BE의 캐시에서 왔는지(피어 캐시 읽기)를 보여줍니다. [피어 캐시 읽기: Query Profile 카운터](./file-cache-peer-read#query-profile-counters)를 참조하세요.
+
+## TTL 캐시 정책 {#ttl-cache-policy}
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Keeping hot tables resident in cache / Preventing large queries from evicting hot data -->
+
+TTL(Time-To-Live) 캐시 정책을 사용하면 특정 테이블에 속한 데이터의 캐시 보존 기간을 설정할 수 있습니다. 이를 통해 작은 핫 테이블이나 최근 적재된 데이터가 캐시에 충분히 오래 남도록 하여, 대규모 쿼리로 실행되는 LRU 축출 로직에 의해 대체되는 것을 방지합니다.
+
+### 테이블 생성 시 TTL 설정 {#setting-ttl-at-table-creation}
+
+`file_cache_ttl_seconds`(초 단위)를 `PROPERTIES` 절에 지정하여 `CREATE TABLE` 실행 시 설정합니다.
+
+```sql
+CREATE TABLE IF NOT EXISTS customer (
+    C_CUSTKEY     INTEGER NOT NULL,
+    C_NAME        VARCHAR(25) NOT NULL,
+    C_ADDRESS     VARCHAR(40) NOT NULL,
+    C_NATIONKEY   INTEGER NOT NULL,
+    C_PHONE       CHAR(15) NOT NULL,
+    C_ACCTBAL     DECIMAL(15,2) NOT NULL,
+    C_MKTSEGMENT  CHAR(10) NOT NULL,
+    C_COMMENT     VARCHAR(117) NOT NULL
+)
+DUPLICATE KEY(C_CUSTKEY, C_NAME)
+DISTRIBUTED BY HASH(C_CUSTKEY) BUCKETS 32
+PROPERTIES (
+    "file_cache_ttl_seconds" = "300"
+);
+```
+
+버전 4.1.5부터 모든 쓰기 및 읽기 경로는 절대 보호 만료 시각을 `tablet creation time + file_cache_ttl_seconds`로 계산합니다. 위 예시에서는 각 tablet이 생성된 후 300초까지 보호됩니다. 이후의 데이터 적재, 읽기, Compaction, Schema Change, 워밍업은 타이머를 다시 시작하지 않습니다. 보호 만료 시각이 지난 데이터에는 일반 캐싱이 적용되며, 새로 데이터를 적재할 때마다 300초의 추가 보호가 보장되는 것은 아닙니다.
+
+`file_cache_ttl_seconds`의 유효 범위는 `0 <= value <= 4611686018427387903`입니다(즉, `Long.MAX_VALUE / 2`). 버전 4.1.4부터 `CREATE TABLE`과 `ALTER TABLE ... SET` 모두 이 값을 검증하며, 범위를 벗어나거나 형식이 잘못된 값은 다음 오류와 함께 거부됩니다.
+
+```text
+The value <v> formats error or is out of range (0 <= integer <= 4611686018427387903). Larger values may overflow in BE and change TTL cache to normal cache; please use 4611686018427387903 or a smaller value.
+```
+
+4.1.4 이전에는 상한을 검증하지 않아, 지나치게 큰 값이 BE 측에서 오버플로를 일으키고 TTL 캐시가 일반 캐시로 전환될 수 있었습니다.
+
+### 테이블의 TTL 설정 변경 {#modifying-the-ttl-setting-for-a-table}
+
+```sql
+ALTER TABLE customer SET ("file_cache_ttl_seconds" = "3000");
+```
+
+:::info 참고
+TTL 변경은 메타데이터 동기화 지연 후 적용됩니다. 테이블 생성 시 TTL을 설정하지 않았다면 `ALTER TABLE`로 추가할 수 있습니다. 새 보호 만료 시각도 여전히 tablet 생성 시간을 기준으로 합니다. 버전 4.1.5부터 만료된 TTL을 미래의 보호 만료 시각으로 연장하면 캐시된 일반 블록도 TTL 큐로 다시 이동합니다. TTL을 `0`으로 설정하면 일반 캐싱으로 돌아갑니다.
+:::
+
+## 실전 예시 {#practical-example}
+
+<!-- Knowledge type: Operational steps -->
+<!-- Applicable scenarios: Mixed large-and-small table scenarios / TTL policy tuning -->
+
+**시나리오 설명:**
+
+한 사용자의 데이터 테이블 전체 크기는 3 TB를 초과하지만, 사용 가능한 캐시 용량은 1.2 TB뿐입니다. 이 중 자주 접근하는 테이블은 두 개입니다.
+
+| 테이블 | 크기 | 접근 패턴 |
+|---|---|---|
+| `dimension_table` | 200 MB | 자주 접근하며 데이터 변경은 드뭅니다 |
+| `fact_table` | 100 GB | 매일 새 데이터가 적재되며 T+1 기준으로 쿼리할 수 있어야 합니다 |
+
+다른 대형 테이블에는 드물게 접근합니다.
+
+**문제:** 기본 LRU 정책에서는 대형 테이블 쿼리가 `dimension_table` 데이터를 캐시에서 축출하여 차원 테이블의 쿼리 성능이 불안정해질 수 있습니다.
+
+**해결 방법:** 자주 접근하는 두 테이블에 TTL을 설정하여 데이터가 캐시에 충분히 오래 보존되도록 합니다.
+
+```sql
+-- Dimension table: protect each tablet until 1 year after creation; use a longer TTL if it is already older than 1 year
+ALTER TABLE dimension_table SET ("file_cache_ttl_seconds" = "31536000");
+
+-- Fact table with new daily partitions: protect each new partition's tablets until 1 day after creation
+ALTER TABLE fact_table SET ("file_cache_ttl_seconds" = "86400");
+```
+
+## 자주 묻는 질문 {#faq}
+
+<!-- Knowledge type: Troubleshooting -->
+<!-- Applicable scenarios: Low cache hit rate / Cache configuration troubleshooting -->
+
+**Q: 캐시 적중률이 낮고 쿼리가 여전히 느립니다. 어떻게 문제를 해결하나요?**
+
+1. `curl {be_ip}:{brpc_port}/vars`를 사용하여 각 큐의 `evict_size` 지표를 확인하고 축출이 자주 발생하는지 판단합니다.
+2. SQL Profile에서 `BytesScannedFromRemote`와 `BytesScannedFromCache`의 비율을 확인하여 실제 적중률을 파악합니다.
+3. 대규모 쿼리가 핫 데이터를 자주 축출한다면 **캐시 쿼리 제한** 기능(`enable_file_cache_query_limit`)을 활성화하거나 핫 테이블에 **TTL 정책**을 구성하는 방안을 고려하세요.
+
+**Q: BE가 재시작되면 캐시 데이터가 사라집니다.**
+
+`clear_file_cache`가 `true`로 설정되어 있는지 확인하세요. 재시작 시 캐시를 비우지 않으려면 기본값인 `false`로 설정하세요.
+
+**Q: 새 컴퓨팅 그룹이 가동된 후 첫 쿼리가 매우 느립니다.**
+
+**캐시 워밍업** 기능으로 쿼리가 들어오기 전에 원격 스토리지의 핫 테이블이나 파티션 데이터를 새 컴퓨팅 그룹의 로컬 캐시에 미리 가져오세요. 자세한 사용법은 [WARM-UP SQL 문서](../../sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md)를 참조하세요. 다른 컴퓨팅 그룹이 해당 데이터를 이미 캐시에 보유하고 있다면, [피어 캐시 읽기](./file-cache-peer-read)를 활성화하여 새 컴퓨팅 그룹에서 캐시 미스가 발생할 때 해당 그룹의 BE에서 읽을 수 있습니다.
+
+**Q: 현재 캐시 공간이 가득 찼는지 어떻게 알 수 있나요?**
+
+`file_cache_cache_size` 지표를 `total_size` 설정값과 비교하세요. 이 값은 `file_cache_path`에 구성되어 있습니다. 한도에 가까워지고 있다면 용량을 확장해야 하는지, 각 큐의 할당 비율을 조정해야 하는지 확인하세요.

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/file-cache/file-cache",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "da08596b2177e29d8e41b32bda274a7363d9d53dd79c55182d5498f157f18a39",
+    "sourceTechnicalHash": "00c6a89baa1b87bbe82de45a9925bc4f5994e2d0f007458b8e3b5da4138da87e",
+    "targetHash": "60f9ed3041db6baef35d514ff4cbfe1eed60a3af9a484a2beb4c966d5ad1c64a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:45:52.559Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "da08596b2177e29d8e41b32bda274a7363d9d53dd79c55182d5498f157f18a39",
+      "targetHash": "60f9ed3041db6baef35d514ff4cbfe1eed60a3af9a484a2beb4c966d5ad1c64a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
