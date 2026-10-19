@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-CREATE-USER",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-CREATE-USER.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-CREATE-USER.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0900ce9cbb99293818f705e8bc8e6af97e15f734fcacf122255418d51527a5dc",
+    "sourceTechnicalHash": "05991edab559b38f8bd2769320ce5d745463f74fbe5dfe2305e3968969dcaf63",
+    "targetHash": "c5ea08a141b980ac0cb957a2b5ef6066386960b695e9e22d7103396da4483a2e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:05:34.685Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0900ce9cbb99293818f705e8bc8e6af97e15f734fcacf122255418d51527a5dc",
+      "targetHash": "c5ea08a141b980ac0cb957a2b5ef6066386960b695e9e22d7103396da4483a2e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

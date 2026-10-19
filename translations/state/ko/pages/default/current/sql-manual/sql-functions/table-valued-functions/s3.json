@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/s3",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+    "sourceTechnicalHash": "4ff1cd22b5dc41ce85bed37aa19664f201902e13c9386e041bd87777eb79559a",
+    "targetHash": "8208c26d56bef83687830dac5b940546393044b7173b618ad49f801fef6bebb8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:06:04.378Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+      "targetHash": "8208c26d56bef83687830dac5b940546393044b7173b618ad49f801fef6bebb8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

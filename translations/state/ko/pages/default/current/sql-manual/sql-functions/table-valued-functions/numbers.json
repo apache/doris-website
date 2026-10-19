@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/numbers",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/numbers.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/numbers.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0c36e4266f98a0104f9265473f26340a0fe16023c0e2a89f278e261428d08958",
+    "sourceTechnicalHash": "694f6f8b9f31e63933ac62f9333c52cbad2445db810638eeeb62652d1ddedf1f",
+    "targetHash": "48a7370417eed30f76171c220193da7fd6f32f11a0dd0af078b0667513d0f0ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:03:16.028Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0c36e4266f98a0104f9265473f26340a0fe16023c0e2a89f278e261428d08958",
+      "targetHash": "48a7370417eed30f76171c220193da7fd6f32f11a0dd0af078b0667513d0f0ef",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/catalog/SHOW-CATALOG",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/SHOW-CATALOG.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "407f5625cdb2ff7d97bc14965dc64c7822c3ec2d05007950a667e01ce33dff76",
+    "sourceTechnicalHash": "bfe0557270e79c334c32133a7a1860cff6ae2bd52976a9daa10d67e460d912c2",
+    "targetHash": "3db700988be91d47d19e05959e5df469964062a0deeacde3aff2e5afe29453e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:06:11.383Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "407f5625cdb2ff7d97bc14965dc64c7822c3ec2d05007950a667e01ce33dff76",
+      "targetHash": "3db700988be91d47d19e05959e5df469964062a0deeacde3aff2e5afe29453e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

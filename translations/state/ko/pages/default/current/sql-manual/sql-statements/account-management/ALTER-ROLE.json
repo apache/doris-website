@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/ALTER-ROLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/ALTER-ROLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "85e2f87aa4f6cf6bb40a87303b9af1043cfa861e963087449e6dfd845c321283",
+    "sourceTechnicalHash": "52f7309f43efac2747923cda9c1f92a56f8f945ab4aa095aa572558e25ac1855",
+    "targetHash": "a830679be4f970a6cae14f1d3d6feb905c5d65a05d58d3f11398f97355c141b7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:04:28.519Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85e2f87aa4f6cf6bb40a87303b9af1043cfa861e963087449e6dfd845c321283",
+      "targetHash": "a830679be4f970a6cae14f1d3d6feb905c5d65a05d58d3f11398f97355c141b7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d900f6be634efecc5fbd1f974fd6eec1616a58b3376f50ae0cdcdc6c1b936136",
+    "sourceTechnicalHash": "2d3651de0f7c8bb56ff3acab7c2f177ab89fc7b203c68b07ba10b517109b153d",
+    "targetHash": "2e39346f321d07eebd0444e3eab38d9be23912f793b9d872d4e1ecf894d65b06",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:04:40.859Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d900f6be634efecc5fbd1f974fd6eec1616a58b3376f50ae0cdcdc6c1b936136",
+      "targetHash": "2e39346f321d07eebd0444e3eab38d9be23912f793b9d872d4e1ecf894d65b06",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

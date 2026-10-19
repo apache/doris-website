@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/DROP-ROLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9970456bbde187edf424c53c29a9856a0847cfd8138175633936713c667e9db4",
+    "sourceTechnicalHash": "216ccf4ade420679f7a44fd8f22f68726211d97f87a6a104d41b1bc1248c5c72",
+    "targetHash": "7f6de3451cc3d53d5733a18618d52e511612659ef7419b798530b5493243da1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:04:49.914Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9970456bbde187edf424c53c29a9856a0847cfd8138175633936713c667e9db4",
+      "targetHash": "7f6de3451cc3d53d5733a18618d52e511612659ef7419b798530b5493243da1b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

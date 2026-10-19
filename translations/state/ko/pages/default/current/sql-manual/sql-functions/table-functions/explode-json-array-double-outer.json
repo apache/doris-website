@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-json-array-double-outer",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-json-array-double-outer.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-json-array-double-outer.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "672453b40e6efa675360c3deffb0395f172f27d59946c47d1ab76dfc99efa9fa",
+    "sourceTechnicalHash": "d3308c51c87b072bab19f195ef6cb89429d430071caf8e69f70247507cf78d6f",
+    "targetHash": "25b76537ecb69c3430a86a683a09cfd0bd668359e165742013137417000749b9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:00:12.976Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "672453b40e6efa675360c3deffb0395f172f27d59946c47d1ab76dfc99efa9fa",
+      "targetHash": "25b76537ecb69c3430a86a683a09cfd0bd668359e165742013137417000749b9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

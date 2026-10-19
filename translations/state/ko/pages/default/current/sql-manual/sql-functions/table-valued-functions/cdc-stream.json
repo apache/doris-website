@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/cdc-stream",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/cdc-stream.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/cdc-stream.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4ad33774a76e6b2085ec93a1eb0bb5069160fc61177cc941e6471f6eaec95bbe",
+    "sourceTechnicalHash": "b715c0088063e1f923b6339f742672a03225a6bd5f1cd164309d07b228ae9462",
+    "targetHash": "de597bc5a3ef11f67edc6dc3c68136274c49638e1c1a8eaf4c94936d9c023810",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:03:31.958Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ad33774a76e6b2085ec93a1eb0bb5069160fc61177cc941e6471f6eaec95bbe",
+      "targetHash": "de597bc5a3ef11f67edc6dc3c68136274c49638e1c1a8eaf4c94936d9c023810",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

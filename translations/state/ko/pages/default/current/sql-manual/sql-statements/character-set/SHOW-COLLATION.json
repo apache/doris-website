@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/character-set/SHOW-COLLATION",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/character-set/SHOW-COLLATION.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/character-set/SHOW-COLLATION.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6ff5e38868dcca9d89b3cab93294b9a91b8f246c4da158fb938d2dcc6681cba7",
+    "sourceTechnicalHash": "7ce3a56ff21090d26843fd64adda142ea0da24b22fd94ff999fc7ceb37e093f9",
+    "targetHash": "b57af7a6900775e3bdd3e753b7199f968c21ad7afbc8463303caefc7473acc7a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:06:38.524Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6ff5e38868dcca9d89b3cab93294b9a91b8f246c4da158fb938d2dcc6681cba7",
+      "targetHash": "b57af7a6900775e3bdd3e753b7199f968c21ad7afbc8463303caefc7473acc7a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

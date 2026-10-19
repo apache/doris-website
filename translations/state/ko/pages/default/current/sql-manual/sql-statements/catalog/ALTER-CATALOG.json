@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/catalog/ALTER-CATALOG",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/catalog/ALTER-CATALOG.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/ALTER-CATALOG.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1e77822ff370cfa2468461a2d5ec6d3642f5e9df708764415da4e278b0f0b42d",
+    "sourceTechnicalHash": "a0db26be21abc437bcd0e283204572b9f05a024d87c55ff91eccd7efcde34031",
+    "targetHash": "d44d2ef9e2e3cf1dfc6ae1c3b811c31858ce68def5e7cec4083597982d13b3ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:05:58.267Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1e77822ff370cfa2468461a2d5ec6d3642f5e9df708764415da4e278b0f0b42d",
+      "targetHash": "d44d2ef9e2e3cf1dfc6ae1c3b811c31858ce68def5e7cec4083597982d13b3ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

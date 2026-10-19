@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5c7186c36743b03ec1b0789b287556d4e757810c150de54ab4bd1fd375470679",
+    "sourceTechnicalHash": "e5abc599befb5e6dc29fbcc29e2ae1e10f028859fc52e7c4f3619bf3f8ab4ce2",
+    "targetHash": "ae04fd159db1bf2a51b0107cf358a6e1cf009b092e1869d59609791255a660fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:01:33.933Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5c7186c36743b03ec1b0789b287556d4e757810c150de54ab4bd1fd375470679",
+      "targetHash": "ae04fd159db1bf2a51b0107cf358a6e1cf009b092e1869d59609791255a660fc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

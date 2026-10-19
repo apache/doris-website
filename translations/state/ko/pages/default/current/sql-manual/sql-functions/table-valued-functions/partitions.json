@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/partitions",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/partitions.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/partitions.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "222ef37a4687c9dee3bfeb41836985714ef9696460cc817f07c7c952d7066fbc",
+    "sourceTechnicalHash": "7f814d9fb5d00c61ce59b7fe544c3fdb882761b0c3587be5a37e1837b6a167d7",
+    "targetHash": "e14f75fa3709a3625fab017b00be271adaf41faf1379fad580aefcd79be9fd00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:03:50.569Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "222ef37a4687c9dee3bfeb41836985714ef9696460cc817f07c7c952d7066fbc",
+      "targetHash": "e14f75fa3709a3625fab017b00be271adaf41faf1379fad580aefcd79be9fd00",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

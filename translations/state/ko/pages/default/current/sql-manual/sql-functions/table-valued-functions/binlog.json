@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/binlog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/binlog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/binlog.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9ce183c6ca41de947d30a6f055e6039e449cb78541e3b130d9f85820cef6dc90",
+    "sourceTechnicalHash": "ffdd2a2b81d793cb6cbe1486db4447e717ebc03343f096fe723044e6b215caea",
+    "targetHash": "d3d87c8caf3dc817b0646ebb17e5d627aa30cba2995472d27a0879611a2f936f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:02:41.806Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ce183c6ca41de947d30a6f055e6039e449cb78541e3b130d9f85820cef6dc90",
+      "targetHash": "d3d87c8caf3dc817b0646ebb17e5d627aa30cba2995472d27a0879611a2f936f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
