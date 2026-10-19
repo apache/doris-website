@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/BIGINT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/BIGINT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/BIGINT.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "bf2a52b6a070bab9380321121b563a08590d49a525e63de920b727a183cec274",
+    "sourceTechnicalHash": "42a50455b542a8e2cc9d5c358547d5f57630cb4d68402469f86fcf926fee2bf9",
+    "targetHash": "639224e770871b9f5216c7efface1f2bb91150db3becaa191619a42c0e49271b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:13:33.380Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bf2a52b6a070bab9380321121b563a08590d49a525e63de920b727a183cec274",
+      "targetHash": "639224e770871b9f5216c7efface1f2bb91150db3becaa191619a42c0e49271b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

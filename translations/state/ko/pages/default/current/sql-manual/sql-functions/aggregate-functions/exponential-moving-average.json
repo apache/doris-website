@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/exponential-moving-average",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/exponential-moving-average.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/exponential-moving-average.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0002fd3023048d68f0ead07edac5751ef6741e0ec61efdd0359ec77b57a9b159",
+    "sourceTechnicalHash": "4bb4d67b79267b9564406d220ce600764fb4edac5c3873cfafe94f1fdf0570fa",
+    "targetHash": "d781a7d31dac3f33080c0bb87729b521a104d068b47f99278c14455f58a3ab2e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:17:22.728Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0002fd3023048d68f0ead07edac5751ef6741e0ec61efdd0359ec77b57a9b159",
+      "targetHash": "d781a7d31dac3f33080c0bb87729b521a104d068b47f99278c14455f58a3ab2e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

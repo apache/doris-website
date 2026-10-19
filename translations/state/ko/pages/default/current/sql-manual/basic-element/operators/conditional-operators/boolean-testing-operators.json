@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/boolean-testing-operators.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "168545093d0d594a45519a7911815e3dc4f9efa1ff747fe9edc72edde08e2742",
+    "sourceTechnicalHash": "557c2ddbeb9dd49d39665b96a598ee59bb272390bd719b4b112fc37780061d44",
+    "targetHash": "d2a5fc31166223ea41875f67aeb5112aeece8dd2a772c70d7790edf2817f066c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:10:47.040Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "168545093d0d594a45519a7911815e3dc4f9efa1ff747fe9edc72edde08e2742",
+      "targetHash": "d2a5fc31166223ea41875f67aeb5112aeece8dd2a772c70d7790edf2817f066c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

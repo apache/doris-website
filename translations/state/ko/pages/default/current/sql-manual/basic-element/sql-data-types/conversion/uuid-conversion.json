@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/uuid-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/uuid-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/uuid-conversion.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "838b4469fc773eb450f974718bf215495c4f634d9e748307ce524f6aa3bf959f",
+    "sourceTechnicalHash": "87d46cc7951e508c23869d1b69c5ada43d53d01e379a362a21eaa0ed629a2657",
+    "targetHash": "ecfaa56c6eab6681a06e9afaaa80cb6046f2d1e4b16f00c33400fa07b71ce4e3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:14:01.949Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "838b4469fc773eb450f974718bf215495c4f634d9e748307ce524f6aa3bf959f",
+      "targetHash": "ecfaa56c6eab6681a06e9afaaa80cb6046f2d1e4b16f00c33400fa07b71ce4e3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

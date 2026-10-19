@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/BITMAP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/BITMAP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/BITMAP.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f819c0b9c57bf443e793aa861f7fdb0f70d60c36ac9214838b4d70a08cfb1bdb",
+    "sourceTechnicalHash": "4f0879b7d080e08bd2733ae643ef773bb7b588b8418a316bf9abd6e777660a63",
+    "targetHash": "f524de9f044c7d8eb9c068c682f0f7945e950b0d31928dbb69907dc9d2f91b2e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:11:47.235Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f819c0b9c57bf443e793aa861f7fdb0f70d60c36ac9214838b4d70a08cfb1bdb",
+      "targetHash": "f524de9f044c7d8eb9c068c682f0f7945e950b0d31928dbb69907dc9d2f91b2e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

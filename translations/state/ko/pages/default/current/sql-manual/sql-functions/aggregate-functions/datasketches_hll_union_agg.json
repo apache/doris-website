@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/datasketches_hll_union_agg.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "94094452a54b766e808ddc2b906400769b37e8d97d5aebf7de610614382da95c",
+    "sourceTechnicalHash": "31903913f344ad340b9f460f139f91e2b32a254b14db539298bc4b51b8a1d356",
+    "targetHash": "683196c786df80d0e062dd2ee9f84fde7db1e2ca62ce7ab6c181a536b93dd9bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:17:08.578Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "94094452a54b766e808ddc2b906400769b37e8d97d5aebf7de610614382da95c",
+      "targetHash": "683196c786df80d0e062dd2ee9f84fde7db1e2ca62ce7ab6c181a536b93dd9bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
