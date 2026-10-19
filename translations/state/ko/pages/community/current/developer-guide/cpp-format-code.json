@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/cpp-format-code",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/cpp-format-code.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/cpp-format-code.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9732d8f0d9c7ff1d027eb0888d2eb72c0d8a449a18239942de43073bef7a02af",
+    "sourceTechnicalHash": "cb0478282d457d382aaf8dcf45bc122e03fc8564c2b836bd576ef1811a7e25bc",
+    "targetHash": "7d01603d1969421c06f8225968850d213565a502d52a8c88a5d5440c46296644",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:17:09.552Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9732d8f0d9c7ff1d027eb0888d2eb72c0d8a449a18239942de43073bef7a02af",
+      "targetHash": "7d01603d1969421c06f8225968850d213565a502d52a8c88a5d5440c46296644",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

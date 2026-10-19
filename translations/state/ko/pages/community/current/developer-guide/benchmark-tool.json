@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/benchmark-tool",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/benchmark-tool.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/benchmark-tool.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "89de2ee64a969ee4ba46db8bf3d2a757469ef73e153df3f36f256a26ae2c9bb4",
+    "sourceTechnicalHash": "7dc3b1e54c2b06f76100366f236e7fa05b2b14419d645cb621fcd11d7a21b91d",
+    "targetHash": "b01d56c44943f40f001d9279b9aaacc6cf4bda82c709cbcebcd9194d3c047259",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:17:47.678Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89de2ee64a969ee4ba46db8bf3d2a757469ef73e153df3f36f256a26ae2c9bb4",
+      "targetHash": "b01d56c44943f40f001d9279b9aaacc6cf4bda82c709cbcebcd9194d3c047259",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 59: expected [\"inlineCode\",null,null,\"varchar\"]; received [\"inlineCode\",null,null,\"[1, 8]\"]\nprotected node 60: expected [\"inlineCode\",null,null,\"[1, 8]\"]; received [\"inlineCode\",null,null,\"varchar\"]\nprotected node 62: expected [\"inlineCode\",null,null,\"varchar\"]; received [\"inlineCode\",null,null,\"[1, 8]\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

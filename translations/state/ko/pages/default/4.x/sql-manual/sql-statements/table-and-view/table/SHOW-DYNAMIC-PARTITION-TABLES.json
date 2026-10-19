@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "227355c040db02e38d4ca76b887bb80f5abac246ff336faba79bf90cc9c5a9c9",
+    "sourceTechnicalHash": "003aad5e9744df9b86732398cd0c54aba5b936b07782c202bbbf1c647d630c0b",
+    "targetHash": "562bbc2887092a53df3f38a4cc2667c1db25d078b1cdee00079b1ddd33002dcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:13:37.749Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "227355c040db02e38d4ca76b887bb80f5abac246ff336faba79bf90cc9c5a9c9",
+      "targetHash": "562bbc2887092a53df3f38a4cc2667c1db25d078b1cdee00079b1ddd33002dcf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/SHOW-DYNAMIC-PARTITION-TABLES.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "227355c040db02e38d4ca76b887bb80f5abac246ff336faba79bf90cc9c5a9c9",
+        "targetHash": "562bbc2887092a53df3f38a4cc2667c1db25d078b1cdee00079b1ddd33002dcf",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

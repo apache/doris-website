@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-source-extension/trino-connector-developer-guide",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-source-extension/trino-connector-developer-guide.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/data-source-extension/trino-connector-developer-guide.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "025defbecc4c37d780b7f0d79515e252313be69583b8ae281b4e9232f4ca56c0",
+    "sourceTechnicalHash": "a309a9114368a6887fe0088ac59732661d63b2c387ee500f0682cbc340ad22af",
+    "targetHash": "5ff54ad13ab957e0ea5fad462577254370f42c31501ba51df11ae10bb6819c6e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:18:02.611Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "025defbecc4c37d780b7f0d79515e252313be69583b8ae281b4e9232f4ca56c0",
+      "targetHash": "5ff54ad13ab957e0ea5fad462577254370f42c31501ba51df11ae10bb6819c6e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

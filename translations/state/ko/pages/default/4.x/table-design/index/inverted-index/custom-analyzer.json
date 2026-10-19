@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/inverted-index/custom-analyzer",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/custom-analyzer.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/custom-analyzer.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c5ab59325ea38bb6a63728ac1861173d122cb20035981925b1fccc5872f3cf5a",
+    "sourceTechnicalHash": "c4620c84c3777c06fc0c845998297a713fec91f33bb8564fcd2f1fb7a8cd01c6",
+    "targetHash": "3b60a7270bf83447b35db127e01a77ed35cd64917ad53aa640657abceccd59ec",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:19:24.226Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c5ab59325ea38bb6a63728ac1861173d122cb20035981925b1fccc5872f3cf5a",
+      "targetHash": "3b60a7270bf83447b35db127e01a77ed35cd64917ad53aa640657abceccd59ec",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 79: expected [\"inlineCode\",null,null,\"1024\"]; received [\"inlineCode\",null,null,\"ngram\"]\nprotected node 80: expected [\"inlineCode\",null,null,\"ngram\"]; received [\"inlineCode\",null,null,\"1024\"]\nprotected node 84: expected [\"inlineCode\",null,null,\"1024\"]; received [\"inlineCode\",null,null,\"ngram\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

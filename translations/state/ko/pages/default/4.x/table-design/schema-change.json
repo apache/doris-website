@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/schema-change",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/schema-change.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/schema-change.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+    "sourceTechnicalHash": "37f9f63987b87c13241db21a42ad619c138839aac1b46106e270b92d0f52dd5e",
+    "targetHash": "cf5012d148a1c2a606f95b8ec812eb5db51b3810fe8e713b4919111637a2d7be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:13:44.686Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+      "targetHash": "cf5012d148a1c2a606f95b8ec812eb5db51b3810fe8e713b4919111637a2d7be",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/schema-change",
+        "sourcePath": "docs/table-design/schema-change.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/schema-change.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+        "targetHash": "cf5012d148a1c2a606f95b8ec812eb5db51b3810fe8e713b4919111637a2d7be",
+        "commit": "c5b54b1cd03719e14c660f23a1ea79359c00d843",
+        "pr": "https://github.com/apache/doris-website/pull/4387"
+      }
+    }
+  }
+}
