@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+    "sourceTechnicalHash": "46960c160bce347f907160c1e74fbfb7337d4c8ba7995cd3aaee589df6948c3e",
+    "targetHash": "51c495b350c9f5f09bf9e624746b0e70a36964fa8919f9ce6c978e79b3dea119",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:24:19.484Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+      "targetHash": "51c495b350c9f5f09bf9e624746b0e70a36964fa8919f9ce6c978e79b3dea119",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+        "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+        "targetHash": "51c495b350c9f5f09bf9e624746b0e70a36964fa8919f9ce6c978e79b3dea119",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

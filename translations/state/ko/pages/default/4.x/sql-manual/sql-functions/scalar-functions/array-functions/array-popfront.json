@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-popfront",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-popfront.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-popfront.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "aa12840505aa315e25108e67bee2630444b2a14ffe0de8083feba7afea373b1d",
+    "sourceTechnicalHash": "672cee53496b1e51852a73563ee80f57986ee4382fa19f829f4a4998c1689dbc",
+    "targetHash": "b56f8718c468f42136c86fabeebb1f0fa17966708b5d418c70d21fdc26770f75",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:28:04.534Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "aa12840505aa315e25108e67bee2630444b2a14ffe0de8083feba7afea373b1d",
+      "targetHash": "b56f8718c468f42136c86fabeebb1f0fa17966708b5d418c70d21fdc26770f75",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

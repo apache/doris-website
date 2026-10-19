@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-match-any",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "88a9455c4e5c37c8829f8f1e91e25cb29df12a600d669c971c69b069995f80dc",
+    "sourceTechnicalHash": "ec198cd445796b99ae166a927b663fce672f0dac943ce4b1e9f80baad6823122",
+    "targetHash": "501345ad60b117f47445d729fa465bd83dd273e7d30ef5b14d9361833de2647c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:24:20.664Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88a9455c4e5c37c8829f8f1e91e25cb29df12a600d669c971c69b069995f80dc",
+      "targetHash": "501345ad60b117f47445d729fa465bd83dd273e7d30ef5b14d9361833de2647c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-match-any",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-match-any.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "88a9455c4e5c37c8829f8f1e91e25cb29df12a600d669c971c69b069995f80dc",
+        "targetHash": "501345ad60b117f47445d729fa465bd83dd273e7d30ef5b14d9361833de2647c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

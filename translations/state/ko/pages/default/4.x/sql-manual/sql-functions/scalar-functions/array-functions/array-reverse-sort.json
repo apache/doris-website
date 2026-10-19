@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-reverse-sort.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "851b4d3d038a3ab584218bca3927507b0c387f4c5b0a6224453669a84721f9d1",
+    "sourceTechnicalHash": "f4f03b1d9bb09951b7b56651d9362da372799410b8746c5a33e5d82225a1914a",
+    "targetHash": "4487545e6af66b6d2b46e17cc9e3302d0ddf66046af6148bd040a8ebe4e21c1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:28:38.710Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "851b4d3d038a3ab584218bca3927507b0c387f4c5b0a6224453669a84721f9d1",
+      "targetHash": "4487545e6af66b6d2b46e17cc9e3302d0ddf66046af6148bd040a8ebe4e21c1b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
