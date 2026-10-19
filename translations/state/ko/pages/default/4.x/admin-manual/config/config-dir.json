@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/config/config-dir",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/config/config-dir.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/config/config-dir.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "63b8797d1aa8c24ce3f57ed50ab96c783f9d059ddb0ca923e20183a0fc3e7369",
+    "sourceTechnicalHash": "2d8fd59722da15fa3fff09ebbacaa14553388cd021588e5ed45ad37b774992e1",
+    "targetHash": "037e4768ad32a125c99365a72586ca5275e4653d1a3eb03a38036be6eab63c34",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:06:20.864Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "63b8797d1aa8c24ce3f57ed50ab96c783f9d059ddb0ca923e20183a0fc3e7369",
+      "targetHash": "037e4768ad32a125c99365a72586ca5275e4653d1a3eb03a38036be6eab63c34",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/config/config-dir",
+        "sourcePath": "docs/admin-manual/config/config-dir.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/config/config-dir.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "63b8797d1aa8c24ce3f57ed50ab96c783f9d059ddb0ca923e20183a0fc3e7369",
+        "targetHash": "037e4768ad32a125c99365a72586ca5275e4653d1a3eb03a38036be6eab63c34",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

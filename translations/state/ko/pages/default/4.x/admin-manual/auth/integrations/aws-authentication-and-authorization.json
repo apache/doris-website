@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-authentication-and-authorization",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-authentication-and-authorization.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+    "sourceTechnicalHash": "71be24afa3c907b3acc72a92909127fb22f41ccd21692e916450ffe45522278b",
+    "targetHash": "be4e4dd8236e1f6366c2c23121d9d0979feb57e7fee6514a012b7cb16f62850b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:07:32.261Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8164e0662b9952b58da4a78af3acd7ba8b33163cb42eb71a19ddb3ed5d4125e",
+      "targetHash": "be4e4dd8236e1f6366c2c23121d9d0979feb57e7fee6514a012b7cb16f62850b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

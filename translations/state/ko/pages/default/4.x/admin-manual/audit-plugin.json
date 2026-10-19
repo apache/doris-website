@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/audit-plugin",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/audit-plugin.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/audit-plugin.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ed13281ef8811da52c5d7f4eec5e0ce97eb4dc7c2ca834686f328bf51581b246",
+    "sourceTechnicalHash": "114ba716cf7f0eb16126861cbab175126301b316421eb46e7121f7f6c524c2fe",
+    "targetHash": "c72ee87d9ddbb36729f83bc642e658fc03d40b86b3760b05de78fe68b247c66b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:03:39.977Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed13281ef8811da52c5d7f4eec5e0ce97eb4dc7c2ca834686f328bf51581b246",
+      "targetHash": "c72ee87d9ddbb36729f83bc642e658fc03d40b86b3760b05de78fe68b247c66b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/audit-plugin",
+        "sourcePath": "docs/admin-manual/audit-plugin.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/audit-plugin.md",
+        "sourceCommit": "54237d9b6ae5f6f2bed49f0a660cd3d61b4b95ce",
+        "sourceHash": "ed13281ef8811da52c5d7f4eec5e0ce97eb4dc7c2ca834686f328bf51581b246",
+        "targetHash": "c72ee87d9ddbb36729f83bc642e658fc03d40b86b3760b05de78fe68b247c66b",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

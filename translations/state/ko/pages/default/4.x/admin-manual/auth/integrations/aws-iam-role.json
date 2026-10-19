@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-iam-role",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+    "sourceTechnicalHash": "9acc14fff6705932f0ebd5caa1134b3abab35f1aa65a4fd9c4d104c6be74f720",
+    "targetHash": "d856297546c494a69138fddd27c9e679dd8fd78fa5e383ef87c4427cdc9c9ed2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:10.724Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+      "targetHash": "d856297546c494a69138fddd27c9e679dd8fd78fa5e383ef87c4427cdc9c9ed2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/integrations/aws-iam-role",
+        "sourcePath": "docs/admin-manual/auth/integrations/aws-iam-role.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/integrations/aws-iam-role.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+        "targetHash": "d856297546c494a69138fddd27c9e679dd8fd78fa5e383ef87c4427cdc9c9ed2",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

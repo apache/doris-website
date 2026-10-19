@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/data-admin/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/data-admin/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/data-admin/overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b578f5d0182d44fd20dc455d8f81de30c3c877138cc70df5b760e65037cef40b",
+    "sourceTechnicalHash": "925527a8e759287d0f2e86e50d76169ea661881aca4e7f4003eef6b9c717d56e",
+    "targetHash": "ba1029fbb2b05c81f7bf03c762cec24ec037a0354f2cabb62f4f31ea722d20e9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:06:57.553Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b578f5d0182d44fd20dc455d8f81de30c3c877138cc70df5b760e65037cef40b",
+      "targetHash": "ba1029fbb2b05c81f7bf03c762cec24ec037a0354f2cabb62f4f31ea722d20e9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/data-admin/overview",
+        "sourcePath": "docs/admin-manual/data-admin/overview.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/data-admin/overview.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "b578f5d0182d44fd20dc455d8f81de30c3c877138cc70df5b760e65037cef40b",
+        "targetHash": "ba1029fbb2b05c81f7bf03c762cec24ec037a0354f2cabb62f4f31ea722d20e9",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

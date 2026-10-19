@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/types/SHOW-TYPECAST",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/types/SHOW-TYPECAST.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/types/SHOW-TYPECAST.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2733d55bbabd4b83d626b1bdc3bc3558d96fd08e27f76d00ce98a469e7089244",
+    "sourceTechnicalHash": "0c64f16eedf01764a8e94e4de5e2596c19a255277d9a15ad2e9aae8f90988b5e",
+    "targetHash": "1c7ab5192294f355bae59771cecfffca957a6ad8b459982c93df74fe4e5a46e8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:59:02.354Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2733d55bbabd4b83d626b1bdc3bc3558d96fd08e27f76d00ce98a469e7089244",
+      "targetHash": "1c7ab5192294f355bae59771cecfffca957a6ad8b459982c93df74fe4e5a46e8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

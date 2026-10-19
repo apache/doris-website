@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/hnsw",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/hnsw.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/vector-index/hnsw.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a2526ad820a5b5bd4764c054b5dd7d9cb1e6b75881dcec4ea2651a2e8e02bd97",
+    "sourceTechnicalHash": "7f35111b541a645d133ab561be6d63dbb00c11f79217ec08e3a734894005eabb",
+    "targetHash": "7722807e5ae824cbfee512ae7d5ba7378c3ef169158ca2031a24f8182d98033e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:04:18.141Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2526ad820a5b5bd4764c054b5dd7d9cb1e6b75881dcec4ea2651a2e8e02bd97",
+      "targetHash": "7722807e5ae824cbfee512ae7d5ba7378c3ef169158ca2031a24f8182d98033e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/transaction/SHOW-TRANSACTION",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/SHOW-TRANSACTION.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "895a09d67dd1b53cabd56e8c96b6afabf43c1e871ebd647b5f71a3d7754e6151",
+    "sourceTechnicalHash": "17a438240a8a09255f3e314aa1b5de230221fb787c3460a8c8068c531066a815",
+    "targetHash": "91b399b23ff5a36a1aa9ef34b714714192803bdf27832b587ba74487eb2a8d37",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:59:00.484Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "895a09d67dd1b53cabd56e8c96b6afabf43c1e871ebd647b5f71a3d7754e6151",
+      "targetHash": "91b399b23ff5a36a1aa9ef34b714714192803bdf27832b587ba74487eb2a8d37",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

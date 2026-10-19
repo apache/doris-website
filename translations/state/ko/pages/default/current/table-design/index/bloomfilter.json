@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/bloomfilter",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/bloomfilter.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/bloomfilter.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+    "sourceTechnicalHash": "e24225fde399ad4056003abfc23f09a59cf7e3e72f7732533520be72b3d76f60",
+    "targetHash": "dc716b38855976edf944d8117c679a2d6b81abb1c47ab3e3db6d670b487e044c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:01:25.412Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e6417f22674a837f9c0618e7567bacfb8ce65f6460300ee6cf7c6c5b61d61dea",
+      "targetHash": "dc716b38855976edf944d8117c679a2d6b81abb1c47ab3e3db6d670b487e044c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

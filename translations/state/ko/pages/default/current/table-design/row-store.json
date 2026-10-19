@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/row-store",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/row-store.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/row-store.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f01324f733d705f896a468e500a59a3e0ee66c820cbb041e9d570ba6c7790790",
+    "sourceTechnicalHash": "121266808a67d88c13da9146956acbcd453fb077cc25297f04fcdf3d2a4a5c85",
+    "targetHash": "70c6163812add4de22a35fc1db533c56345afbb00a2eec545626b03d1b06b50b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:04:05.329Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f01324f733d705f896a468e500a59a3e0ee66c820cbb041e9d570ba6c7790790",
+      "targetHash": "70c6163812add4de22a35fc1db533c56345afbb00a2eec545626b03d1b06b50b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

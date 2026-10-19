@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authorization/ranger-hive",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authorization/ranger-hive.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authorization/ranger-hive.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8d621e57b734f7eb8aad8bed61410936614243190f0d4d4714f57f57135b25a6",
+    "sourceTechnicalHash": "f05bc218506a01fbc76a25907ec4baf3ddcf92be8bbd9b5983e5195f776f6704",
+    "targetHash": "4ff092971f686717bcbe63a963f8b8569cc7f537cdf02cbd21dd38938a4c6170",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:16:48.260Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8d621e57b734f7eb8aad8bed61410936614243190f0d4d4714f57f57135b25a6",
+      "targetHash": "4ff092971f686717bcbe63a963f8b8569cc7f537cdf02cbd21dd38938a4c6170",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 205: expected [\"inlineCode\",null,null,\"core-site.xml\"]; received [\"inlineCode\",null,null,\"fe/conf/\"]\nprotected node 206: expected [\"inlineCode\",null,null,\"fe/conf/\"]; received [\"inlineCode\",null,null,\"core-site.xml\"]\nprotected node 214: expected [\"inlineCode\",null,null,\"domain_realm\"]; received [\"inlineCode\",null,null,\"/etc/krb5.conf\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"alice\"]; received [\"inlineCode\",null,null,\"hive_prod\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"hive_prod\"]; received [\"inlineCode\",null,null,\"alice\"]\nprotected node 86: expected [\"inlineCode\",null,null,\"ranger.plugin.hive.service.name\"]; received [\"inlineCode\",null,null,\"fe/conf/ranger-hive-security.xml\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 172: expected [\"inlineCode\",null,null,\"core-site.xml\"]; received [\"inlineCode\",null,null,\"WEB-INF/classes/conf/\"]\nprotected node 173: expected [\"inlineCode\",null,null,\"ranger-admin-site.xml\"]; received [\"inlineCode\",null,null,\"core-site.xml\"]\nprotected node 174: expected [\"inlineCode\",null,null,\"WEB-INF/classes/conf/\"]; received [\"inlineCode\",null,null,\"ranger-admin-site.xml\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 205: expected [\"inlineCode\",null,null,\"core-site.xml\"]; received [\"inlineCode\",null,null,\"fe/conf/\"]\nprotected node 206: expected [\"inlineCode\",null,null,\"fe/conf/\"]; received [\"inlineCode\",null,null,\"core-site.xml\"]\nprotected node 214: expected [\"inlineCode\",null,null,\"domain_realm\"]; received [\"inlineCode\",null,null,\"/etc/krb5.conf\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

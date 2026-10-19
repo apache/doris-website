@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/fe-certificate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/fe-certificate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+    "sourceTechnicalHash": "3674bfde8eef1b0789af1027e6d74c35488ecaaaa8c20b161844893b0c454fa2",
+    "targetHash": "f1fb255525085520915dc11bb82602c991f451d0923f16116b056b2012e57b16",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:00.440Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+      "targetHash": "f1fb255525085520915dc11bb82602c991f451d0923f16116b056b2012e57b16",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/fe-certificate",
+        "sourcePath": "docs/admin-manual/auth/fe-certificate.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/fe-certificate.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "d5bf68e5f09c16df7c00dc8ec94e31fdfc42726f32249bca2ad61e6f0bcfc41d",
+        "targetHash": "f1fb255525085520915dc11bb82602c991f451d0923f16116b056b2012e57b16",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

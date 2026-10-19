@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authentication-and-authorization",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication-and-authorization.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication-and-authorization.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "36e82c03adf6fc59eee707f71d8196390889a7c741b7d6e9f06d56c605b52f34",
+    "sourceTechnicalHash": "475554e5676ddb7d0e5fe2206b54a34b7b492aca25307492f191abfbe4905c39",
+    "targetHash": "c0b35393f668de36dbce1a03901befc3c1b059c2652998053305e9de23db3de9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:06:02.640Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "36e82c03adf6fc59eee707f71d8196390889a7c741b7d6e9f06d56c605b52f34",
+      "targetHash": "c0b35393f668de36dbce1a03901befc3c1b059c2652998053305e9de23db3de9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
