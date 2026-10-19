@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hamming_distance.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e4cb49096416136c455826f64de1379a987f843bf3513ca9faff096fc1301337",
+    "sourceTechnicalHash": "7b9c0f64c8839808781ae77d4580ae353938ae646c1ae14329ece2174e9b48d2",
+    "targetHash": "4286d9a22e22a28d7cd129e6d00a15cefdbc6eea3874d20a39038887f809fd7a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:19:14.840Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e4cb49096416136c455826f64de1379a987f843bf3513ca9faff096fc1301337",
+      "targetHash": "4286d9a22e22a28d7cd129e6d00a15cefdbc6eea3874d20a39038887f809fd7a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

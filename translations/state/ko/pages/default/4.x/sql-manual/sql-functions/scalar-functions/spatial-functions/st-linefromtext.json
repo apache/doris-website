@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6bb8c35859a6247c9ad2de4a56566a7b90740b140740b9fc786e26db55643cc7",
+    "sourceTechnicalHash": "261aa1b7b00e1e565660ceb4b7b85a84c2c195f3ec4138cf036ad26561dbce17",
+    "targetHash": "7fa5edb697ca05ec0717e257ca148ec0f6e70c3091153d2b59829a8f02886f8d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:18:12.575Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6bb8c35859a6247c9ad2de4a56566a7b90740b140740b9fc786e26db55643cc7",
+      "targetHash": "7fa5edb697ca05ec0717e257ca148ec0f6e70c3091153d2b59829a8f02886f8d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-linefromtext.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "6bb8c35859a6247c9ad2de4a56566a7b90740b140740b9fc786e26db55643cc7",
+        "targetHash": "7fa5edb697ca05ec0717e257ca148ec0f6e70c3091153d2b59829a8f02886f8d",
+        "commit": "a0914c0ab5093fb7b3fa636038e59d9608bd6180",
+        "pr": "https://github.com/apache/doris-website/pull/4381"
+      }
+    }
+  }
+}
