@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-aliyun-oss-tables",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e369e5c02fe678b454625f36c2b5cf9a82a457f68d7ea1375b9504244acf60ab",
+    "sourceTechnicalHash": "3343bd6be2e9359e92ffddddb0d8cfa9b5e5e38191addad80aaa9919c75a77be",
+    "targetHash": "0c4f9e55e67420b81054cf3bcd57def04ccfb772307d8650746f119fbc71c712",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:56:11.134Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e369e5c02fe678b454625f36c2b5cf9a82a457f68d7ea1375b9504244acf60ab",
+      "targetHash": "0c4f9e55e67420b81054cf3bcd57def04ccfb772307d8650746f119fbc71c712",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"oss.session_token\"]; received [\"inlineCode\",null,null,\"oss.secret_key\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"oss.secret_key\"]; received [\"inlineCode\",null,null,\"oss.session_token\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"oss.session_token\"]; received [\"inlineCode\",null,null,\"oss.secret_key\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"oss.secret_key\"]; received [\"inlineCode\",null,null,\"oss.session_token\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
