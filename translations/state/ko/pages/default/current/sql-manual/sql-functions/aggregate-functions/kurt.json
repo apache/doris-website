@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/kurt",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/kurt.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/kurt.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "1a42a827120d6bc2b2086c8dd8c52a5f26f9792e2b25cf321f28f43ff7e46c09",
+    "sourceTechnicalHash": "52df1499df385f2c6fdaa8e699d49b24a64730f32425ef9974983d1005a7dcd1",
+    "targetHash": "8bd4e309dc5fe0523aabaff08a25bf0498105c3a1176a019ba60fd83d947fe4a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:31:20.649Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1a42a827120d6bc2b2086c8dd8c52a5f26f9792e2b25cf321f28f43ff7e46c09",
+      "targetHash": "8bd4e309dc5fe0523aabaff08a25bf0498105c3a1176a019ba60fd83d947fe4a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

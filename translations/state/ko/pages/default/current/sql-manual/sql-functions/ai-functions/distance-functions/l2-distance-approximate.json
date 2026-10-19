@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "639bcebe1324b51c839b0008c6d3629c108a6a150e0f54dd7ecdbeb93d58da5e",
+    "sourceTechnicalHash": "183580802f54353e915da00a856727fc775598291d8013b178433c4d99ee2048",
+    "targetHash": "1a5beac8009aa175d9e7db55879993095c627345545098632922b963d6477fe3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:35:32.243Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "639bcebe1324b51c839b0008c6d3629c108a6a150e0f54dd7ecdbeb93d58da5e",
+      "targetHash": "1a5beac8009aa175d9e7db55879993095c627345545098632922b963d6477fe3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

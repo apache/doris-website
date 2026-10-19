@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-flatten",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-flatten.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-flatten.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "19ecdb11508a0c7350dcc64573c9186af076c673ca35b3e947ed6e2fa11f4b01",
+    "sourceTechnicalHash": "6be0c1ee059cc4080afc962391ecb71a3b7018d5e116c79525ca898dce08865d",
+    "targetHash": "c13bcdf25e28e1a79ec0b4e2355c0d91fbc477c790afa5cfb092e727630ec393",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:37:11.657Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "19ecdb11508a0c7350dcc64573c9186af076c673ca35b3e947ed6e2fa11f4b01",
+      "targetHash": "c13bcdf25e28e1a79ec0b4e2355c0d91fbc477c790afa5cfb092e727630ec393",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

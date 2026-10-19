@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ea4f96217d104cdf9d724ff8e6650dc6e73bfdcbc01842cb4866855a126c803b",
+    "sourceTechnicalHash": "b87cd22d5a4d02d1a22e4a40a25dc5176b0a870bcc5c553bc206b164325dc1a2",
+    "targetHash": "5d0d2f9e6b5cf4c2430b2db4c149bbf73f2b0c3d2ebfbbac825fad8d1c562451",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:35:19.556Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ea4f96217d104cdf9d724ff8e6650dc6e73bfdcbc01842cb4866855a126c803b",
+      "targetHash": "5d0d2f9e6b5cf4c2430b2db4c149bbf73f2b0c3d2ebfbbac825fad8d1c562451",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

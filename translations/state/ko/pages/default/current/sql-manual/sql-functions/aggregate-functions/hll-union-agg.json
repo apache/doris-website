@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/hll-union-agg",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/hll-union-agg.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+    "sourceTechnicalHash": "3fa5fc2580677e4d11a873e442b5836cdb36100de136bfc5c190303447f379df",
+    "targetHash": "f342a842d3b3d7fd9aa9302828bab51ec0d38935c468579c881a2b3d7d952905",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:31:15.012Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "21769d0f779555691a57421a3174b0ce597d652caadb0b642941e96b7b4d3b57",
+      "targetHash": "f342a842d3b3d7fd9aa9302828bab51ec0d38935c468579c881a2b3d7d952905",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

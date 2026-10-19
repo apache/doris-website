@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/var-samp",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/var-samp.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/var-samp.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "bae5c7c9f289aa0e3056b0255e1c622638e1329329482d6a04e14843e1efaba9",
+    "sourceTechnicalHash": "b022f899be29877d7610634498e2ca794ad19a54aa38e4d869aa0ade52619dd5",
+    "targetHash": "8a682894e14ea659f60782ce79cc6e3d88e7784de70fcfdd766c9f374c3cbca2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:34:02.973Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bae5c7c9f289aa0e3056b0255e1c622638e1329329482d6a04e14843e1efaba9",
+      "targetHash": "8a682894e14ea659f60782ce79cc6e3d88e7784de70fcfdd766c9f374c3cbca2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

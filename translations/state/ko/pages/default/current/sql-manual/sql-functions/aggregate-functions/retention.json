@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/retention",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/retention.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/retention.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5469828a51b3b7de7436d22dbd947450bd9187c36d1f8841ecb3f37d7b9fa5d7",
+    "sourceTechnicalHash": "3976eb80f47af068e1427a37a51bb5bd0ac452f6807158cd6591560181f306bd",
+    "targetHash": "3956030d3accd0e9025639ffcc11cd2e4fcf73016f443b82773b916a9841c0e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:33:24.904Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5469828a51b3b7de7436d22dbd947450bd9187c36d1f8841ecb3f37d7b9fa5d7",
+      "targetHash": "3956030d3accd0e9025639ffcc11cd2e4fcf73016f443b82773b916a9841c0e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

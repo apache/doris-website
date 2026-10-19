@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-summarize",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-summarize.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-summarize.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5edf9bba0d9c351b2a82d263178691e35f0c3fff2683a63b5291e830741d94f0",
+    "sourceTechnicalHash": "882bffb4e7a8b21a3ab6c2636662da2689b4089175d85fe4f545358f4fc098ac",
+    "targetHash": "1f76b473c12219a5737c8500a54b4103d72fcd9e72fb18b72069097b56e0847f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:34:45.404Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5edf9bba0d9c351b2a82d263178691e35f0c3fff2683a63b5291e830741d94f0",
+      "targetHash": "1f76b473c12219a5737c8500a54b4103d72fcd9e72fb18b72069097b56e0847f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
