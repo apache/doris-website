@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/active_queries",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/active_queries.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/active_queries.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "300618949cfd3b6a0f9b1c99d9add1549d683f6951ade0a5bf3bf96394334ccb",
+    "sourceTechnicalHash": "303a2e177c32207133ae194588b93cb64de0a3331f402ff654a81c6d5ac5127e",
+    "targetHash": "dafae1bc9e30f1cb68802d1c60f85252533c578ce78a2e6c7ec6a69828573272",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:07:30.947Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "300618949cfd3b6a0f9b1c99d9add1549d683f6951ade0a5bf3bf96394334ccb",
+      "targetHash": "dafae1bc9e30f1cb68802d1c60f85252533c578ce78a2e6c7ec6a69828573272",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

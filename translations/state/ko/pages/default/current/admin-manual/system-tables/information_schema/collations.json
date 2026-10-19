@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/collations",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/collations.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/collations.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7fe75479ba4baa368ca95eab1036a0f34c23da8836f442673090d165a62cf613",
+    "sourceTechnicalHash": "17c9b39e3bb018aeff6b8c174bfa0791386d3b04adde0621b07ee9a4f7f77af0",
+    "targetHash": "4c737680d818c6d9f4164a4718b71640c54eb74fcab4fedb0c1fb5042c1da158",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:07:48.704Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7fe75479ba4baa368ca95eab1036a0f34c23da8836f442673090d165a62cf613",
+      "targetHash": "4c737680d818c6d9f4164a4718b71640c54eb74fcab4fedb0c1fb5042c1da158",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

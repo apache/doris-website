@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/workload_policy",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/workload_policy.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/workload_policy.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "fa6d2c060bfdd35f1ef43c768e7b7e5e4d7ff4e9e8c865fd4e67aba2ca1ca153",
+    "sourceTechnicalHash": "e2c3f16be0830bf024ee37f2f5f879f4d8ae2db6c4f201d2e0b5fa11cc7d44e8",
+    "targetHash": "4c41d28de9b5d8a965968e87009dfa9a7f5d5bb579e1a1f0a8e2577428fd65b3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:10:51.349Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa6d2c060bfdd35f1ef43c768e7b7e5e4d7ff4e9e8c865fd4e67aba2ca1ca153",
+      "targetHash": "4c41d28de9b5d8a965968e87009dfa9a7f5d5bb579e1a1f0a8e2577428fd65b3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

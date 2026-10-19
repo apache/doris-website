@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/backend_active_tasks",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/backend_active_tasks.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/backend_active_tasks.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7a3af538b3dd6b4e4fded87b5afd39c4eab42a1393a4808a0babc745a32616db",
+    "sourceTechnicalHash": "2a487ef0b4db3f160f22c328c63e90b9b7c58c9db51e6c16001a52bb1b53193f",
+    "targetHash": "784a31bd7f320b9006d67ac2320e0a43636db4d9eb724f8268c481756c2356e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:07:31.646Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7a3af538b3dd6b4e4fded87b5afd39c4eab42a1393a4808a0babc745a32616db",
+      "targetHash": "784a31bd7f320b9006d67ac2320e0a43636db4d9eb724f8268c481756c2356e4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

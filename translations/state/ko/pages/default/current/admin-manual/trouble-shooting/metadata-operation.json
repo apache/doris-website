@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/metadata-operation",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/metadata-operation.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/metadata-operation.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f4928968f43f71fe8239711f8aace9a8ae39bd2fc699f474017fadb0c27c886d",
+    "sourceTechnicalHash": "4d5473f1e910bfc1a51499323ee41bdac67d1c67b382cdee10602cc08b29f99a",
+    "targetHash": "d3b992f7e2aee32abd98bc3168c6a16aa3822f0bd5e58f8c9592175c7eeb15d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:17:13.392Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f4928968f43f71fe8239711f8aace9a8ae39bd2fc699f474017fadb0c27c886d",
+      "targetHash": "d3b992f7e2aee32abd98bc3168c6a16aa3822f0bd5e58f8c9592175c7eeb15d7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

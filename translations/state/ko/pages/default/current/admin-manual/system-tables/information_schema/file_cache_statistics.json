@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/file_cache_statistics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/file_cache_statistics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/file_cache_statistics.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a10845de64c7dd1148425b410a57050f90e36ea257e4f1c806924a402022f756",
+    "sourceTechnicalHash": "c90b7e7a0f55d9b387bd57fb73764dbc6fbe8e6280cf778a1efb6ba3f72d4e87",
+    "targetHash": "3fabdd16fe94693de3ee479253ecae0d383b3c8448fd6fe8048462852f1ec4d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:08:57.994Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a10845de64c7dd1148425b410a57050f90e36ea257e4f1c806924a402022f756",
+      "targetHash": "3fabdd16fe94693de3ee479253ecae0d383b3c8448fd6fe8048462852f1ec4d0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-issue-faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-issue-faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-issue-faq.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "72a2293c1e0e36b3f9a70c757b033882b80c650261fed55b2a3cd3f906b97e43",
+    "sourceTechnicalHash": "12ca977d30250b7226490853c13203ae72708a22edf13977d983f7415274833f",
+    "targetHash": "48cbc485712a04d6681e80066ddc4ca93f93b0b9c13fcb0dafe8f84dda4422d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:13:10.084Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "72a2293c1e0e36b3f9a70c757b033882b80c650261fed55b2a3cd3f906b97e43",
+      "targetHash": "48cbc485712a04d6681e80066ddc4ca93f93b0b9c13fcb0dafe8f84dda4422d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
