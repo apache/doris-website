@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "79b5974c6750d926449451faeae2b524229267b4cfbf52db045188959cfa8b92",
+    "sourceTechnicalHash": "d0d476c56f07f03abdf9ce1979100f9a73a5f21d550c817b069a64c76fb0c685",
+    "targetHash": "c8d9f6e322a0ea0299de78dc5b8ecab5bda23ed4729daeea9b14ca97e79a5908",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:20.520Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "79b5974c6750d926449451faeae2b524229267b4cfbf52db045188959cfa8b92",
+      "targetHash": "c8d9f6e322a0ea0299de78dc5b8ecab5bda23ed4729daeea9b14ca97e79a5908",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/crc32.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "79b5974c6750d926449451faeae2b524229267b4cfbf52db045188959cfa8b92",
+        "targetHash": "c8d9f6e322a0ea0299de78dc5b8ecab5bda23ed4729daeea9b14ca97e79a5908",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "225c9d23f776b81f9f616ef27d8dd007021295b8d757e7795da44b1318b50466",
+    "sourceTechnicalHash": "b6a44fa5eeb1b346d3518845cff86e8bf1cb3a5c57515df270ffcca185315229",
+    "targetHash": "2d395adecc47f80bf547cb4f5eb7a2b8ae75b6af08b98fb3cf6e96c75390bba9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:20.667Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "225c9d23f776b81f9f616ef27d8dd007021295b8d757e7795da44b1318b50466",
+      "targetHash": "2d395adecc47f80bf547cb4f5eb7a2b8ae75b6af08b98fb3cf6e96c75390bba9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/md5sum.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "225c9d23f776b81f9f616ef27d8dd007021295b8d757e7795da44b1318b50466",
+        "targetHash": "2d395adecc47f80bf547cb4f5eb7a2b8ae75b6af08b98fb3cf6e96c75390bba9",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

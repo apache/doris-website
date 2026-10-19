@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/years-add",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-add.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/years-add.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "286b0ca2fd573aeda2703bb84a37b1cd6ce6b79ea781d08fd888dd53b585ab22",
+    "sourceTechnicalHash": "72c766a48ce3fccb54eec7304e9efcee6915b337823e33428169f36b01f8f4de",
+    "targetHash": "21d037c9ef40a0dc37d985eb720c5527e43a7590b18273775a850f35152d45c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:59:24.853Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "286b0ca2fd573aeda2703bb84a37b1cd6ce6b79ea781d08fd888dd53b585ab22",
+      "targetHash": "21d037c9ef40a0dc37d985eb720c5527e43a7590b18273775a850f35152d45c5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

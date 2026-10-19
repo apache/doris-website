@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+    "sourceTechnicalHash": "bd9349cced7e8176c85251bae8f76cb1ec3c20c3bfb7bea18c2c7e35a8428029",
+    "targetHash": "df5a57512a2ae7d18bc105f6c9c186a895a2e9eb980fbffa934998465d326e79",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:21.971Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+      "targetHash": "df5a57512a2ae7d18bc105f6c9c186a895a2e9eb980fbffa934998465d326e79",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "29ddd9382c119c175e62a229309d62da4c93e397ca7ffe6f89dde057f0a2ad53",
+        "targetHash": "df5a57512a2ae7d18bc105f6c9c186a895a2e9eb980fbffa934998465d326e79",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

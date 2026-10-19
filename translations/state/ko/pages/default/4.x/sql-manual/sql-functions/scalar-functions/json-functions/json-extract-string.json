@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+    "sourceTechnicalHash": "918529e966a5eb0ec5bdcb6f2bbda9e27fe87ebd026d31dbd077e8413e7958a5",
+    "targetHash": "58855203ea76c684382f92d68929b83acea027fa80726bc8f9481e19be80340c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:24.930Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+      "targetHash": "58855203ea76c684382f92d68929b83acea027fa80726bc8f9481e19be80340c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-string.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "3ceb3def93fd0547982bbb1e4be0744756f2bd1346ad77ca73c625024b6539a2",
+        "targetHash": "58855203ea76c684382f92d68929b83acea027fa80726bc8f9481e19be80340c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

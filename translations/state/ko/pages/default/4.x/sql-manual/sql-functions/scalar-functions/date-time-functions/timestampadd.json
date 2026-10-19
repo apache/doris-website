@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "82ee215d5d713a3881850f95f27823338f544cd06048a51cc71103fe89df3b45",
+    "sourceTechnicalHash": "7aa051266d7f97edbcdbe3ba43c95fab036cce8ca29dd4fced30acf856298c17",
+    "targetHash": "18c57059a385587151b5e2594c951cd5a854ac7f09ebd81a5a69076e4f3af320",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:19.930Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "82ee215d5d713a3881850f95f27823338f544cd06048a51cc71103fe89df3b45",
+      "targetHash": "18c57059a385587151b5e2594c951cd5a854ac7f09ebd81a5a69076e4f3af320",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampadd.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "82ee215d5d713a3881850f95f27823338f544cd06048a51cc71103fe89df3b45",
+        "targetHash": "18c57059a385587151b5e2594c951cd5a854ac7f09ebd81a5a69076e4f3af320",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

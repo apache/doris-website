@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+    "sourceTechnicalHash": "f6815f40f860236379d228e1eeb5d9763108c783c46ea1df30075a94dd2de405",
+    "targetHash": "b8d494ab798a4f3f2a32995b91e50e1ce79629fc07e2a0bc48c358f95e4d5167",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:22.681Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+      "targetHash": "b8d494ab798a4f3f2a32995b91e50e1ce79629fc07e2a0bc48c358f95e4d5167",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+        "targetHash": "b8d494ab798a4f3f2a32995b91e50e1ce79629fc07e2a0bc48c358f95e4d5167",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
