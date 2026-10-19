@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-or-null.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "57f93d048c83e4864801078a98128730d4968fd39b9dc19d5f59dd0fce43993d",
+    "sourceTechnicalHash": "7191f4f42fdf89a2bc6f14e04cdf14a5edbcedd1061f033ad49d3a77677781db",
+    "targetHash": "8a8c83aba2cc46403e00552d683990b71b591b7e25077636245ceef04fac2945",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:52:16.733Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "57f93d048c83e4864801078a98128730d4968fd39b9dc19d5f59dd0fce43993d",
+      "targetHash": "8a8c83aba2cc46403e00552d683990b71b591b7e25077636245ceef04fac2945",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

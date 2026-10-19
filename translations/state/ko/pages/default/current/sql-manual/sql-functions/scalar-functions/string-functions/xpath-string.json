@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/xpath-string",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/xpath-string.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/xpath-string.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ec5a67299789aeb48717d6bf0b2dc4095c364cbf63c7b8d04274d0f9e5be187c",
+    "sourceTechnicalHash": "11dc3b8766c730e7fb8198434c293a2151e869cb0d9789e77f5006ae5a939c46",
+    "targetHash": "d57814acf43e219ad96693b1c925482e28ff34cd704881e0b17a45a193e253cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:54:26.687Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ec5a67299789aeb48717d6bf0b2dc4095c364cbf63c7b8d04274d0f9e5be187c",
+      "targetHash": "d57814acf43e219ad96693b1c925482e28ff34cd704881e0b17a45a193e253cc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

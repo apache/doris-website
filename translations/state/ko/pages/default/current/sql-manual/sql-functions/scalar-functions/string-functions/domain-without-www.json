@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/domain-without-www.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a9de900099ccafe281a89ab5a1f23fd56fa8f5122269ee4317670e4706375eaa",
+    "sourceTechnicalHash": "51580149a86f96b076e714d37dbe281ba71f390da43bde80d078d1cb5d009e5a",
+    "targetHash": "a9f545efdf6beb7b06c40c001fbf92a254c4f53f28f0a51a58a326731fdaaea7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:47:51.697Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a9de900099ccafe281a89ab5a1f23fd56fa8f5122269ee4317670e4706375eaa",
+      "targetHash": "a9f545efdf6beb7b06c40c001fbf92a254c4f53f28f0a51a58a326731fdaaea7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

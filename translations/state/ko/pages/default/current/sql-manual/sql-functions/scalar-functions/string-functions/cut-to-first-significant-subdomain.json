@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/cut-to-first-significant-subdomain.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e462e705f7d8240570fca94a67ef131e21d106d398e41a4dc89a708ee26934f5",
+    "sourceTechnicalHash": "484fa22f239cc26ebaa2b2a5a9d79e6f9fff79139c2fc32bb9ef510b784f25bf",
+    "targetHash": "37d1baad4654999b3bb2796e53af4ca000dbbcf192db58e0fe622c6e60dd0130",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:47:45.254Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e462e705f7d8240570fca94a67ef131e21d106d398e41a4dc89a708ee26934f5",
+      "targetHash": "37d1baad4654999b3bb2796e53af4ca000dbbcf192db58e0fe622c6e60dd0130",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

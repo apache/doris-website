@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/rtrim",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/rtrim.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/rtrim.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6a980fc34196f248824c5fdc64997d9fa858548bd3b19bb8b0ba06a9a1771931",
+    "sourceTechnicalHash": "241de6182245ebb80532eaac5d9fa4fc02555e815b1ec3d6d87800e4c35dd07b",
+    "targetHash": "d60757c0cf46b0c26ec4a37794d726e9a907c3d0603a91031726070f53a7dcd9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:52:30.217Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6a980fc34196f248824c5fdc64997d9fa858548bd3b19bb8b0ba06a9a1771931",
+      "targetHash": "d60757c0cf46b0c26ec4a37794d726e9a907c3d0603a91031726070f53a7dcd9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/uncompress",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/uncompress.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/uncompress.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "410074051ace19020ee1f232a5cb40be5b0a300daec69194361b18ea77708035",
+    "sourceTechnicalHash": "c3b2ce6d2e95cb8914b73446ab73fd9e5372e228b467f79410836825ab20b5a5",
+    "targetHash": "5e4ae1a77d3a961cc48f47a438b9ad03a86171345489813a0ba4e64eb2cd4691",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:53:42.557Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "410074051ace19020ee1f232a5cb40be5b0a300daec69194361b18ea77708035",
+      "targetHash": "5e4ae1a77d3a961cc48f47a438b9ad03a86171345489813a0ba4e64eb2cd4691",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

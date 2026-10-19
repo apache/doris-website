@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/levenshtein",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/levenshtein.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/levenshtein.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3902baebb8d6750d44d0d38d1c5b473ff61aeeb6577c8b1c4536d96bbc1d8864",
+    "sourceTechnicalHash": "756f1bb226253d41180adb6a685bddd710863d73be382a9b802b6e2dc9d54839",
+    "targetHash": "b98132b8ea0dc59ca8eb0b8193472c114956bf9c6d4a4c968e946aa07a13e24c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:49:45.532Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3902baebb8d6750d44d0d38d1c5b473ff61aeeb6577c8b1c4536d96bbc1d8864",
+      "targetHash": "b98132b8ea0dc59ca8eb0b8193472c114956bf9c6d4a4c968e946aa07a13e24c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
