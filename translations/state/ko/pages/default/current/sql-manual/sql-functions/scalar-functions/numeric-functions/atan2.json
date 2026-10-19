@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/atan2",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/atan2.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/atan2.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4c18e6a974e5499cdb30f33eb93dddd61008fd6f05d103933858a96145c78411",
+    "sourceTechnicalHash": "69cfa209e5065ae758edfcd71675ab5cbf79f7a60b831d762ed673ed36bc72b3",
+    "targetHash": "b96ce730c18a39ae3dc5b43348675c8848dfd041f4fd3ea247f07e2bcc9cc754",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:36:26.944Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4c18e6a974e5499cdb30f33eb93dddd61008fd6f05d103933858a96145c78411",
+      "targetHash": "b96ce730c18a39ae3dc5b43348675c8848dfd041f4fd3ea247f07e2bcc9cc754",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

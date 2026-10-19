@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-asbinary.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d6d6eab7775735ade09988a5340d5e416cb2362dba64eaab3328b2796ee12ece",
+    "sourceTechnicalHash": "fc5b0ac0cc7fb8b8bbed096bdb96474c2161f5bca76f927dc91a6cb6f0817eee",
+    "targetHash": "bca57227e3832e06023ec317522e63d14de1cfb6416e6d78cf3d8e4b9128c55b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:41:48.534Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d6d6eab7775735ade09988a5340d5e416cb2362dba64eaab3328b2796ee12ece",
+      "targetHash": "bca57227e3832e06023ec317522e63d14de1cfb6416e6d78cf3d8e4b9128c55b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"01010000\"]; received [\"01010000\",\"16\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

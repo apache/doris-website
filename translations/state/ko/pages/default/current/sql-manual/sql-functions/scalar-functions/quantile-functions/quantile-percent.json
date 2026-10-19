@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-percent.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "09fd31ec61d42d9358650414d9dac519c9a0f33e85e5c4463fb36a8d38116feb",
+    "sourceTechnicalHash": "17ec74bfa38fac9a784437da259f100fd903ac1bc4b73fd483dece1bddf3720a",
+    "targetHash": "7b47998357ba1ab9dbd12e8a0576f707dec6beb61b1ec55894a2064fee820fd7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:40:31.594Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "09fd31ec61d42d9358650414d9dac519c9a0f33e85e5c4463fb36a8d38116feb",
+      "targetHash": "7b47998357ba1ab9dbd12e8a0576f707dec6beb61b1ec55894a2064fee820fd7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

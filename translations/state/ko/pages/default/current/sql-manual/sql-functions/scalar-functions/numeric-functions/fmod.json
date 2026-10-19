@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/fmod",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/fmod.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/fmod.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "23408e7ef997ac1f55e4f6de77ee4b96614d4635090b7c09ff6062cbc2629700",
+    "sourceTechnicalHash": "14f15f6614d8a06a2de6cdfe1d210790fbb1f8cba86d1038491d44c914ffa047",
+    "targetHash": "6cbbfa2b854a36288a4389e7ea8e81cd0909609858702e73b8dceb3d88795bf7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:36:48.152Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "23408e7ef997ac1f55e4f6de77ee4b96614d4635090b7c09ff6062cbc2629700",
+      "targetHash": "6cbbfa2b854a36288a4389e7ea8e81cd0909609858702e73b8dceb3d88795bf7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

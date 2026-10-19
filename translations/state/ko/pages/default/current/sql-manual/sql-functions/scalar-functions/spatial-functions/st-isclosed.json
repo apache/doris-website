@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-isclosed",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-isclosed.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-isclosed.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e5e71b66014d42b240fa295ab5904ca365a8f9f94b19e8578340491e9fe70978",
+    "sourceTechnicalHash": "29c046d84bacc7296b72a36674679c27648d9ffa6e3702ad83fdc73b8239a1d2",
+    "targetHash": "87c780b7d5c7b66349fd58418fda452b2576fd8fadcb19798175b3871f4e6266",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:42:03.564Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5e71b66014d42b240fa295ab5904ca365a8f9f94b19e8578340491e9fe70978",
+      "targetHash": "87c780b7d5c7b66349fd58418fda452b2576fd8fadcb19798175b3871f4e6266",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
