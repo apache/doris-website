@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/tablet-info",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/tablet-info.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/tablet-info.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ff6bc20dfdd5502c107b333c738ba922a87bdfc66580dd96151f0c662b749236",
+    "sourceTechnicalHash": "4864a129b74f3b8b66aa9dacee4cd88780a23c12d0b9cd57c20a887c0b3ac2b0",
+    "targetHash": "9a6cd5f2946c814ccf034ec704097d9edf5630abe577566ccf54df6a2a92ca5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:25:02.095Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ff6bc20dfdd5502c107b333c738ba922a87bdfc66580dd96151f0c662b749236",
+      "targetHash": "9a6cd5f2946c814ccf034ec704097d9edf5630abe577566ccf54df6a2a92ca5c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/be-http/tablet-info",
+        "sourcePath": "docs/admin-manual/open-api/be-http/tablet-info.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/tablet-info.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "ff6bc20dfdd5502c107b333c738ba922a87bdfc66580dd96151f0c662b749236",
+        "targetHash": "9a6cd5f2946c814ccf034ec704097d9edf5630abe577566ccf54df6a2a92ca5c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

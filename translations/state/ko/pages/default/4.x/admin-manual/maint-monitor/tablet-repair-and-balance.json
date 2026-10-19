@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/tablet-repair-and-balance",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+    "sourceTechnicalHash": "ed45bb56d82b7f7ae7f9c75e5a50218782d1dd73c352f3b72252718b81433a04",
+    "targetHash": "454f97c9905dec8052f502834ca7a034b91a13c6e60d50b1b723fa439d7a5a46",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:23:48.733Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+      "targetHash": "454f97c9905dec8052f502834ca7a034b91a13c6e60d50b1b723fa439d7a5a46",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/maint-monitor/tablet-repair-and-balance",
+        "sourcePath": "docs/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+        "targetHash": "454f97c9905dec8052f502834ca7a034b91a13c6e60d50b1b723fa439d7a5a46",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
