@@ -583,5 +583,362 @@
   },
   "marketing.pageLanguage": {
     "message": "페이지 언어"
+  },
+  "marketing.warehouse.001": {
+    "message": "데이터 웨어하우스"
+  },
+  "marketing.warehouse.002": {
+    "message": "Apache Doris: 실시간 인사이트를 위한 모던 데이터 웨어하우스"
+  },
+  "marketing.warehouse.003": {
+    "message": "Apache Doris는 익숙한 SQL 모델 위에서 지연 시간이 짧은 대시보드, 고동시성 BI, 운영 보고를 제공하는 모던 데이터 웨어하우스 계층입니다."
+  },
+  "marketing.warehouse.004": {
+    "message": "모던 데이터 웨어하우스,"
+  },
+  "marketing.warehouse.005": {
+    "message": "설계 목표는"
+  },
+  "marketing.warehouse.006": {
+    "message": "실시간"
+  },
+  "marketing.warehouse.007": {
+    "message": "인사이트"
+  },
+  "marketing.warehouse.008": {
+    "message": "하나의 실시간 분석 데이터베이스에서 배치와 스트리밍 데이터를 통합하고, BI를 가속하며, 신뢰할 수 있는 비즈니스 지표를 대규모로 제공합니다."
+  },
+  "marketing.warehouse.009": {
+    "message": "모던 데이터 웨어하우스가"
+  },
+  "marketing.warehouse.010": {
+    "message": "비즈니스를 바꾸는 이유."
+  },
+  "marketing.extra.009": {
+    "message": "웨어하우스가 통합되고 빠르며 실시간으로 동작하고 탄력적으로 확장되면 네 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.warehouse.011": {
+    "message": "데이터에 대한 신뢰"
+  },
+  "marketing.warehouse.012": {
+    "message": "분석 속도"
+  },
+  "marketing.warehouse.013": {
+    "message": "의사 결정의 최신성"
+  },
+  "marketing.warehouse.014": {
+    "message": "전체 운영 비용"
+  },
+  "marketing.warehouse.015": {
+    "message": "통합된 비즈니스 뷰"
+  },
+  "marketing.warehouse.016": {
+    "message": "주문, 고객, 결제, CRM, ERP, 광고, 로그 데이터가 신뢰할 수 있는 하나의 분석 계층으로 모여, 모든 팀이 같은 지표를 기준으로 일합니다."
+  },
+  "marketing.warehouse.017": {
+    "message": "더 빠른 BI와 셀프서비스 분석"
+  },
+  "marketing.warehouse.018": {
+    "message": "1초 미만의 SQL 응답 덕분에 Tableau, Power BI, Superset, Looker에서 드릴다운과 애드혹 질문을 끊김 없이 이어 갈 수 있습니다."
+  },
+  "marketing.warehouse.019": {
+    "message": "실시간 모니터링"
+  },
+  "marketing.warehouse.020": {
+    "message": "CDC, Kafka, Flink에서 데이터를 지속적으로 수집하므로 대시보드, 알림, 운영 보고서가 지금 일어나는 상황을 그대로 반영합니다."
+  },
+  "marketing.warehouse.021": {
+    "message": "확장성과 비용 효율"
+  },
+  "marketing.warehouse.022": {
+    "message": "시스템, 파이프라인, 서빙 계층을 추가하지 않아도 분석 규모는 테라바이트에서 페타바이트로 커지고, BI 동시성도 함께 확장됩니다."
+  },
+  "marketing.warehouse.023": {
+    "message": "이미 프로덕션에서 가동 중입니다."
+  },
+  "marketing.warehouse.024": {
+    "message": "세 팀이 Apache Doris를 데이터 웨어하우스의 분석 핵심으로 운영하고 있습니다. 대규모 환경과 실제 동시 접속 부하 속에서 실시간 비즈니스 데이터를 다룹니다."
+  },
+  "marketing.extra.010": {
+    "message": "사례 01 · SF Technology"
+  },
+  "marketing.warehouse.025": {
+    "message": "SF Express: BI와 애드혹 분석을 Presto에서 Apache Doris로"
+  },
+  "marketing.warehouse.026": {
+    "message": "SF Technology는 하루 100만 건이 넘는 쿼리를 처리하는 주력 BI 플랫폼을 Presto에서 Apache Doris로 옮겼습니다. 모든 애드혹 및 BI 워크로드를 이전하면서 P95 지연 시간을 70% 가까이 줄였습니다."
+  },
+  "marketing.warehouse.027": {
+    "message": "P95 쿼리 지연 시간 약 70% 감소, 10초 이내 쿼리 비율은 72%에서 88%로 증가"
+  },
+  "marketing.warehouse.028": {
+    "message": "하드웨어 48% 절감, 레이크하우스 쿼리의 데이터 캐시 적중률 96%"
+  },
+  "marketing.warehouse.029": {
+    "message": "애드혹 및 BI 워크로드 100% 이전, SQL 호환성 97%"
+  },
+  "marketing.warehouse.030": {
+    "message": "SF EXPRESS"
+  },
+  "marketing.extra.011": {
+    "message": "사례 02 · Xiaomi"
+  },
+  "marketing.warehouse.031": {
+    "message": "Xiaomi: Apache Doris와 Apache Paimon으로 구축한 통합 레이크하우스"
+  },
+  "marketing.warehouse.032": {
+    "message": "Xiaomi는 Presto, Druid, 여러 스토리지 포맷으로 흩어져 있던 환경을 Apache Doris와 Apache Paimon 기반의 단일 레이크하우스로 통합했고, 쿼리 속도는 이전보다 6배 빨라졌습니다."
+  },
+  "marketing.warehouse.033": {
+    "message": "평균 쿼리 지연 시간을 60초에서 10초로, 집계 쿼리는 40초에서 8초로 단축"
+  },
+  "marketing.warehouse.034": {
+    "message": "Presto 대비 5배 높은 동시 처리량, 부하 상황에서 지연 시간 25~75% 감소"
+  },
+  "marketing.warehouse.035": {
+    "message": "사용자 행동, 디바이스, 운영 분석 전반에서 핫 데이터는 Doris에, 콜드 데이터는 Paimon에 두는 단일 스택"
+  },
+  "marketing.warehouse.036": {
+    "message": "XIAOMI"
+  },
+  "marketing.extra.012": {
+    "message": "사례 03 · Cainiao"
+  },
+  "marketing.warehouse.037": {
+    "message": "Cainiao: 글로벌 물류를 위한 실시간 레이크하우스"
+  },
+  "marketing.warehouse.038": {
+    "message": "데이터 업데이트는 몇 초 안에 완료되고, 쿼리는 수백 밀리초 안에 응답할 수 있습니다."
+  },
+  "marketing.warehouse.039": {
+    "message": "실시간 데이터 플랫폼의 비용 90% 절감, 평균 응답 속도 72% 향상"
+  },
+  "marketing.warehouse.040": {
+    "message": "1,000~2,000 QPS의 포인트 쿼리를 10~100ms에, 200~300 QPS의 다중 테이블 조인을 1초 미만에 처리"
+  },
+  "marketing.warehouse.041": {
+    "message": "3개 리전에 걸친 25개 이상의 클러스터와 10,000개 이상의 CPU로 하루 8,000만 건의 택배에 대한 재고, 택배, 주문 현황을 추적"
+  },
+  "marketing.warehouse.042": {
+    "message": "CAINIAO"
+  },
+  "marketing.warehouse.043": {
+    "message": "데이터 웨어하우스의 요구 사항과"
+  },
+  "marketing.warehouse.044": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.warehouse.045": {
+    "message": "모던 데이터 웨어하우스가 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.warehouse.046": {
+    "message": "실시간 데이터 최신성"
+  },
+  "marketing.warehouse.047": {
+    "message": "비즈니스 팀은 지금 일어나는 일을 바로 확인해야 합니다. 이를 위해서는 스트리밍 수집, CDC, 증분 업데이트가 필요하고, 데이터는 야간 배치가 끝난 뒤가 아니라 몇 초 안에 쿼리할 수 있어야 합니다."
+  },
+  "marketing.warehouse.048": {
+    "message": "웨어하우스 워크로드를 위한 모델링"
+  },
+  "marketing.warehouse.049": {
+    "message": "모던 데이터 웨어하우스는 상세 레코드, 팩트 및 차원 테이블, 와이드 테이블, 집계 지표, 비즈니스용 데이터셋을 담아야 합니다. 탄탄한 모델링은 정의를 일관되게 유지하고 쿼리 속도를 높이며, 팀이 신뢰할 수 있는 데이터를 재사용할 수 있게 합니다."
+  },
+  "marketing.warehouse.050": {
+    "message": "증분 업데이트와 안정적인 배치"
+  },
+  "marketing.warehouse.051": {
+    "message": "웨어하우스 워크로드에는 증분 갱신과 대규모 배치 실행이 모두 필요합니다. 구체화된 뷰와 증분 계산은 전체를 다시 계산하지 않고도 집계, 롤업, 보고용 테이블을 최신 상태로 유지하고, 안정적인 배치 실행은 일 마감 작업, 백필, 과거 데이터 워크로드를 처리합니다."
+  },
+  "marketing.warehouse.052": {
+    "message": "레이크하우스와 개방형 아키텍처"
+  },
+  "marketing.warehouse.053": {
+    "message": "운영 데이터베이스, 이벤트 스트림, SaaS 애플리케이션, 개방형 레이크하우스 테이블에는 모두 중요한 비즈니스 데이터가 있습니다. 웨어하우스는 이 소스들을 통합하고, 모든 데이터를 또 다른 사일로로 복사하지 않고도 Iceberg, Hudi, Delta Lake, Hive의 데이터를 있는 그대로 쿼리해야 합니다."
+  },
+  "marketing.warehouse.054": {
+    "message": "엔터프라이즈 거버넌스와 운영"
+  },
+  "marketing.warehouse.055": {
+    "message": "웨어하우스가 공용 분석 기반이 되면 안전하고 신뢰할 수 있으며 감사 가능하고 운영하기 쉬워야 합니다. 이를 위해 세분화된 접근 제어, 워크로드 격리, 고가용성, 감사 로그, 간단한 운영이 필요하며, 그래야 모든 팀이 같은 플랫폼에 의지할 수 있습니다."
+  },
+  "marketing.extra.013": {
+    "message": "데이터 웨어하우스를 위한 Apache Doris 기능"
+  },
+  "marketing.warehouse.056": {
+    "message": "유연한 웨어하우스"
+  },
+  "marketing.warehouse.057": {
+    "message": "데이터 모델링"
+  },
+  "marketing.warehouse.058": {
+    "message": "데이터 모델"
+  },
+  "marketing.warehouse.059": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.warehouse.060": {
+    "message": "분석 함수"
+  },
+  "marketing.warehouse.061": {
+    "message": "파티셔닝과 버킷팅"
+  },
+  "marketing.warehouse.062": {
+    "message": "Unique Key"
+  },
+  "marketing.warehouse.063": {
+    "message": "실시간 수집과"
+  },
+  "marketing.warehouse.064": {
+    "message": "업데이트"
+  },
+  "marketing.warehouse.065": {
+    "message": "데이터 적재 트랜잭션"
+  },
+  "marketing.warehouse.066": {
+    "message": "데이터 Compaction"
+  },
+  "marketing.warehouse.067": {
+    "message": "데이터 업데이트 및 삭제"
+  },
+  "marketing.warehouse.068": {
+    "message": "Group Commit"
+  },
+  "marketing.warehouse.069": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.warehouse.070": {
+    "message": "증분 갱신과"
+  },
+  "marketing.warehouse.071": {
+    "message": "배치 실행"
+  },
+  "marketing.warehouse.072": {
+    "message": "배치 데이터 적재"
+  },
+  "marketing.warehouse.073": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.warehouse.074": {
+    "message": "디스크 스필(Spill to Disk)"
+  },
+  "marketing.warehouse.075": {
+    "message": "Binlog / Table Stream(출시 예정)"
+  },
+  "marketing.warehouse.076": {
+    "message": "레이크하우스"
+  },
+  "marketing.warehouse.077": {
+    "message": "컴퓨트 엔진"
+  },
+  "marketing.warehouse.078": {
+    "message": "Multi Catalog"
+  },
+  "marketing.warehouse.079": {
+    "message": "레이크 테이블 관리"
+  },
+  "marketing.warehouse.080": {
+    "message": "엔터프라이즈급"
+  },
+  "marketing.warehouse.081": {
+    "message": "거버넌스"
+  },
+  "marketing.warehouse.082": {
+    "message": "플러그형 인증"
+  },
+  "marketing.warehouse.083": {
+    "message": "Catalog 통합"
+  },
+  "marketing.warehouse.084": {
+    "message": "데이터 계보"
+  },
+  "marketing.warehouse.085": {
+    "message": "모던 데이터 웨어하우스 구축의"
+  },
+  "marketing.warehouse.086": {
+    "message": "해답은"
+  },
+  "marketing.extra.036": {
+    "message": "서빙"
+  },
+  "marketing.figures.018": {
+    "message": "구체화된 뷰 · 롤업 · 포인트 쿼리 · 1초 미만 BI"
+  },
+  "marketing.figures.019": {
+    "message": "집계 지표 · 비즈니스용 데이터셋"
+  },
+  "marketing.figures.020": {
+    "message": "정제된 상세 데이터 · 팩트·차원 테이블 · 와이드 테이블"
+  },
+  "marketing.figures.021": {
+    "message": "원본 레코드 · Stream Load · Routine Load · CDC · 몇 초 안에 반영"
+  },
+  "marketing.figures.022": {
+    "message": "BI 도구"
+  },
+  "marketing.figures.023": {
+    "message": "Tableau · Power BI"
+  },
+  "marketing.figures.024": {
+    "message": "대시보드"
+  },
+  "marketing.figures.025": {
+    "message": "보고서 · 운영"
+  },
+  "marketing.figures.026": {
+    "message": "애드혹 SQL"
+  },
+  "marketing.figures.027": {
+    "message": "분석가 · 노트북"
+  },
+  "marketing.figures.028": {
+    "message": "앱 · API"
+  },
+  "marketing.figures.029": {
+    "message": "데이터 서비스"
+  },
+  "marketing.figures.030": {
+    "message": "이벤트 스트림"
+  },
+  "marketing.figures.031": {
+    "message": "Kafka · Flink"
+  },
+  "marketing.figures.032": {
+    "message": "배치 · SaaS"
+  },
+  "marketing.figures.033": {
+    "message": "Parquet · CSV · API"
+  },
+  "marketing.figures.034": {
+    "message": "Iceberg · Paimon · S3"
+  },
+  "marketing.figures.035": {
+    "message": "Apache Doris 기반 모던 데이터 웨어하우스: OLTP, 스트림, 배치 소스의 데이터가 ODS 계층에 적재되고, DWD와 DWS 계층으로 모델링된 뒤 구체화된 뷰를 통해 BI 도구, 대시보드, 애드혹 SQL, 애플리케이션에 제공됩니다. 데이터 레이크는 복사 없이 직접 쿼리합니다."
+  },
+  "marketing.figures.036": {
+    "message": "그림 02 · 아래는 소스, 가운데는 Doris 계층, 위는 활용처"
+  },
+  "marketing.extra.037": {
+    "message": "점선 = 복사 없이 직접 쿼리"
+  },
+  "marketing.figures.037": {
+    "message": "활용처"
+  },
+  "marketing.figures.038": {
+    "message": "배치 + 스트리밍 · 단일 SQL 계층"
+  },
+  "marketing.figures.039": {
+    "message": "거버넌스"
+  },
+  "marketing.figures.040": {
+    "message": "세분화된 권한 · 워크로드 격리 · 감사 로그 · 고가용성"
+  },
+  "marketing.figures.041": {
+    "message": "레이크하우스"
+  },
+  "marketing.figures.queriedInPlace": {
+    "message": "복사 없이 직접 쿼리"
+  },
+  "marketing.figures.042": {
+    "message": "소스"
   }
 }

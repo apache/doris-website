@@ -28,6 +28,7 @@ const localeRegistry = [
     {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false,
         translatedPages: [
             '/use-cases/customer-facing-analytics',
+            '/use-cases/data-warehousing',
         ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
