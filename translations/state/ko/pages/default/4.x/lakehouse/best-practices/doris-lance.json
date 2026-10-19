@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-lance",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+    "sourceTechnicalHash": "94e6357a4cfc2f835b0ab1e52aeeac4dffe042e0c42b39d31df9ea3bef5ccc47",
+    "targetHash": "9e2c643586f010bad25f640b832e12244ba436250c93f8cc61b52d784eb56db4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:00:34.412Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+      "targetHash": "9e2c643586f010bad25f640b832e12244ba436250c93f8cc61b52d784eb56db4",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"lance_*\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"lance_*\"]\nprotected node 118: expected [\"inlineCode\",null,null,\"2 * c\"]; received [\"inlineCode\",null,null,\"c\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 164: expected [\"inlineCode\",null,null,\"LanceIndexCacheHits\"]; received [\"inlineCode\",null,null,\"LanceIndex\"]\nprotected node 165: expected [\"inlineCode\",null,null,\"LanceIndexCacheMisses\"]; received [\"inlineCode\",null,null,\"LanceIndexCacheHits\"]\nprotected node 166: expected [\"inlineCode\",null,null,\"LanceIndexObjectLoads\"]; received [\"inlineCode\",null,null,\"LanceIndexCacheMisses\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.25\",\"0.5\",\"0.75\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.49\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"12.5\",\"130.5\",\"152.6\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2.5\",\"229.6\",\"24415\",\"256\",\"256.7\",\"3\",\"3.125\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32000\",\"355.9\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.2\",\"4096\",\"4096\",\"4096\",\"5\",\"5\",\"572\",\"6\",\"6.25\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"65536\",\"65536\",\"7\",\"768\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"9.69\",\"95\",\"95\",\"95\",\"99.2\"]; received [\"0.25\",\"0.5\",\"0.75\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.49\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"12.5\",\"130.5\",\"152.6\",\"16\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2.5\",\"229.6\",\"24415\",\"256\",\"256.7\",\"3\",\"3.125\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32000\",\"355.9\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4.2\",\"4096\",\"4096\",\"4096\",\"5\",\"5\",\"572\",\"6\",\"6.25\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"64\",\"65536\",\"65536\",\"7\",\"768\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"9.69\",\"95\",\"95\",\"95\"]\nprotected node 49: expected [\"inlineCode\",null,null,\"m/2\"]; received [\"inlineCode\",null,null,\"m\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"m\"]; received [\"inlineCode\",null,null,\"m/2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"lance_*\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"lance_*\"]\nprotected node 118: expected [\"inlineCode\",null,null,\"2 * c\"]; received [\"inlineCode\",null,null,\"c\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

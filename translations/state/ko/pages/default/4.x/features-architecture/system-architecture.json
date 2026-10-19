@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "features-architecture/system-architecture",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/features-architecture/system-architecture.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/features-architecture/system-architecture.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c9fa2e126f1410ed74133eef9d43e164a2c7ee19a4501204dbebe070e0023c46",
+    "sourceTechnicalHash": "52ebc3c02d19d0746754865a869cb7ba6f68fc46918b291d61c356c4362d2013",
+    "targetHash": "dda85b0b13d24ccf009078d6f0b5e94f8450a8e9cf15327d6e876b12b8426795",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:39:03.358Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c9fa2e126f1410ed74133eef9d43e164a2c7ee19a4501204dbebe070e0023c46",
+      "targetHash": "dda85b0b13d24ccf009078d6f0b5e94f8450a8e9cf15327d6e876b12b8426795",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "features-architecture/system-architecture",
+        "sourcePath": "docs/features-architecture/system-architecture.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/features-architecture/system-architecture.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "c9fa2e126f1410ed74133eef9d43e164a2c7ee19a4501204dbebe070e0023c46",
+        "targetHash": "dda85b0b13d24ccf009078d6f0b5e94f8450a8e9cf15327d6e876b12b8426795",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

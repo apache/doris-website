@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "faq/lakehouse-faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/faq/lakehouse-faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/faq/lakehouse-faq.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1f8e4c05cf5a3fc58106830afa27431552a0abe8d6636fdf5be6992bc52dc44c",
+    "sourceTechnicalHash": "ae5db40644a46b288b8734613d96f8e05357d8e4a6ab3db0f8569391bf4742d2",
+    "targetHash": "36d5169e511324d44c07eee0ffae2fdde8c4228651e439794580d3744c0470f1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:38:40.678Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1f8e4c05cf5a3fc58106830afa27431552a0abe8d6636fdf5be6992bc52dc44c",
+      "targetHash": "36d5169e511324d44c07eee0ffae2fdde8c4228651e439794580d3744c0470f1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "faq/lakehouse-faq",
+        "sourcePath": "docs/faq/lakehouse-faq.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/faq/lakehouse-faq.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "1f8e4c05cf5a3fc58106830afa27431552a0abe8d6636fdf5be6992bc52dc44c",
+        "targetHash": "36d5169e511324d44c07eee0ffae2fdde8c4228651e439794580d3744c0470f1",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

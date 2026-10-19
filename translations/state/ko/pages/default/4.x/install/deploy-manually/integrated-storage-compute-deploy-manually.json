@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-manually/integrated-storage-compute-deploy-manually",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "249905350a4e4b80ef3f85a974222867979aadf8abf2618dadc4cb185c4fc377",
+    "sourceTechnicalHash": "cbff0bccbfffec51e9cd01b909f5427397fe66de696778302442e48ea728b04b",
+    "targetHash": "bb3a51839d6a9b2c9c7b43906b0bc6e66ac4499b2f19b90218827c92dd97401c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:39:30.131Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "249905350a4e4b80ef3f85a974222867979aadf8abf2618dadc4cb185c4fc377",
+      "targetHash": "bb3a51839d6a9b2c9c7b43906b0bc6e66ac4499b2f19b90218827c92dd97401c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "install/deploy-manually/integrated-storage-compute-deploy-manually",
+        "sourcePath": "docs/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-manually/integrated-storage-compute-deploy-manually.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "249905350a4e4b80ef3f85a974222867979aadf8abf2618dadc4cb185c4fc377",
+        "targetHash": "bb3a51839d6a9b2c9c7b43906b0bc6e66ac4499b2f19b90218827c92dd97401c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

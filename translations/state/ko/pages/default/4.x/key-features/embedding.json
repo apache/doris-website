@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/embedding",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/embedding.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/embedding.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+    "sourceTechnicalHash": "dd2cbb6c5237830b2b9ca6c69ea20b8c2ea6d5dc6ba4254c90bdb8f3d1a10fcf",
+    "targetHash": "1f9f59537be6c1546ced5fc5c372ba3c2ac56f0bd2f791529cdef6389dbf3827",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:49:39.687Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+      "targetHash": "1f9f59537be6c1546ced5fc5c372ba3c2ac56f0bd2f791529cdef6389dbf3827",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"EMBED()\"]; received [\"link\",\"./vector-index\",null]\nprotected node 3: expected [\"link\",\"./vector-index\",null]; received [\"inlineCode\",null,null,\"EMBED()\"]\nprotected node 11: expected [\"link\",\"../sql-manual/sql-functions/ai-functions/overview\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"link\",\"./vector-index\",null]\nprotected node 3: expected [\"link\",\"./vector-index\",null]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

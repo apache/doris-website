@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/hybrid-search",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/hybrid-search.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/hybrid-search.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "74856103a72e6be68fecfe66956660b212112b8d839d02caf1f8558168d15ca0",
+    "sourceTechnicalHash": "908ed0833ef67aa24ef470f75e5f2e364a7e02ec6f36447c31e2881fd16f04c6",
+    "targetHash": "1e3ba13a3499c153e1bf7cc27ad43b02da978482545cb1bd8eaafa238f8b8663",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:48:21.502Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "74856103a72e6be68fecfe66956660b212112b8d839d02caf1f8558168d15ca0",
+      "targetHash": "1e3ba13a3499c153e1bf7cc27ad43b02da978482545cb1bd8eaafa238f8b8663",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

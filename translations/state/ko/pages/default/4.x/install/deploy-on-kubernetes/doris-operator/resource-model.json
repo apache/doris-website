@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/doris-operator/resource-model",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/doris-operator/resource-model.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/doris-operator/resource-model.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ed592b339af755e2bed976e389440d9e8c31c7b24f1b65769905707bee96571c",
+    "sourceTechnicalHash": "69b914d0b0a1e217098fe8cf85cb2669316b8e776049a29373cef355ec8f61fb",
+    "targetHash": "419f6ea2ac7b30db660a40c7ebf38fddd45eaceca14a9c1867974bb0a0deda38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:42:05.550Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed592b339af755e2bed976e389440d9e8c31c7b24f1b65769905707bee96571c",
+      "targetHash": "419f6ea2ac7b30db660a40c7ebf38fddd45eaceca14a9c1867974bb0a0deda38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
