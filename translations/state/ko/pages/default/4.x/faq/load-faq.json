@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "faq/load-faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/faq/load-faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/faq/load-faq.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3a867eb1ab915ec0c62606f0725014a3d3ac949d1e7a766a2dc64f2d01745879",
+    "sourceTechnicalHash": "dcf1639c4d83db5f7cac92210f4b37b71541a9ffe06742c93198a8704dfd8908",
+    "targetHash": "d274b9a94bb94cef64c0259ef6b6cbac111915d3e69e91a2c6cca9f84501eca6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:38:45.235Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3a867eb1ab915ec0c62606f0725014a3d3ac949d1e7a766a2dc64f2d01745879",
+      "targetHash": "d274b9a94bb94cef64c0259ef6b6cbac111915d3e69e91a2c6cca9f84501eca6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "faq/load-faq",
+        "sourcePath": "docs/faq/load-faq.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/faq/load-faq.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "3a867eb1ab915ec0c62606f0725014a3d3ac949d1e7a766a2dc64f2d01745879",
+        "targetHash": "d274b9a94bb94cef64c0259ef6b6cbac111915d3e69e91a2c6cca9f84501eca6",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

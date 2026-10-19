@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/unique-key",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/unique-key.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/unique-key.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "75350ab4df426b009c6bc0b1e8bba1b44bc62cafedf5041ad91fdfd71cd2fa3d",
+    "sourceTechnicalHash": "138dc99cb89ee660aadf4f56523989fcb4b920693e0638ec386eae953a2636e6",
+    "targetHash": "46f1290a2cbcc0c069e49e82f658ad7f8ff4453110cb888d3c264c2bd276d4fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:53:32.890Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "75350ab4df426b009c6bc0b1e8bba1b44bc62cafedf5041ad91fdfd71cd2fa3d",
+      "targetHash": "46f1290a2cbcc0c069e49e82f658ad7f8ff4453110cb888d3c264c2bd276d4fb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"UNIQUE KEY(...)\"]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"inlineCode\",null,null,\"UNIQUE KEY(...)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

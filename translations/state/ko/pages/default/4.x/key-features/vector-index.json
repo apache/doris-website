@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/vector-index",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/vector-index.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/vector-index.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2fa15f7d2229b5748aa8a7c79c4a0070465f4149382314dbbabdf3042b478da7",
+    "sourceTechnicalHash": "0991bc6c4d9b52c449d93a94d470e4eae615fa6fa4d09b234e619efab679ac79",
+    "targetHash": "668ead915d972af79b372f1ef9be96523eb023dec380a6104408b33b3011fb89",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:52:59.968Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2fa15f7d2229b5748aa8a7c79c4a0070465f4149382314dbbabdf3042b478da7",
+      "targetHash": "668ead915d972af79b372f1ef9be96523eb023dec380a6104408b33b3011fb89",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 55: expected [\"inlineCode\",null,null,\"EMBED()\"]; received [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]\nprotected node 56: expected [\"inlineCode\",null,null,\"ARRAY<FLOAT>\"]; received [\"inlineCode\",null,null,\"EMBED()\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 41: expected [\"inlineCode\",null,null,\"score()\"]; received [\"inlineCode\",null,null,\"ORDER BY\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"ORDER BY\"]; received [\"inlineCode\",null,null,\"score()\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

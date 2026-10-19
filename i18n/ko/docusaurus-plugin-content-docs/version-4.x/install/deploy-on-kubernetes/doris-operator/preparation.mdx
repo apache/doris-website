@@ -1,0 +1,47 @@
+---
+{
+    "title": "준비 사항",
+    "language": "ko",
+    "description": "클라우드 Kubernetes 서비스에서 Doris Operator로 Doris를 배포하기 위한 환경 준비 사항과 배포 권장 사항입니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris Operator로 Apache Doris를 배포하기 전에 클라우드 환경의 Kubernetes 서비스, 노드 시스템 매개변수, 이미지 레지스트리, 스토리지 및 권한 요구 사항을 확인하세요.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Alibaba Cloud Container Service 배포 권장 사항"
+    description="Doris Operator로 Doris를 배포하기 전에 ACK 또는 ACS를 준비하세요"
+    link="on-alibaba"
+/>
+
+<GettingStartedCard
+    title="AWS EKS 배포 권장 사항"
+    description="Doris Operator로 Doris를 배포하기 전에 Amazon EKS를 준비하세요"
+    link="on-aws"
+/>
+</div>
+
+## Pod 보안 요구 사항 {#pod-security-requirements}
+
+공식 Doris FE 및 BE 이미지는 현재 root 사용자로 실행됩니다. 시작 스크립트가 `/opt/apache-doris` 아래의 구성 파일을 업데이트하며, 시스템 설정을 초기화할 수도 있기 때문입니다. 배포 전에 Doris 네임스페이스에 적용되는 보안 정책이 컨테이너를 UID `0`으로 실행하는 것을 허용하는지 확인하세요.
+
+예를 들어, `DorisCluster` 리소스에서 컨테이너 보안 컨텍스트를 명시적으로 구성할 수 있습니다.
+
+```yaml
+spec:
+  feSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+  beSpec:
+    containerSecurityContext:
+      runAsUser: 0
+      runAsNonRoot: false
+```
+
+이 구성은 Kubernetes 어드미션 정책을 우회하지 않습니다. 클러스터에서 `restricted` Pod Security Standard를 적용하거나 Kyverno 또는 OPA Gatekeeper 등의 도구로 non-root 정책을 적용하는 경우, 클러스터 관리자에게 Doris를 위한 예외를 네임스페이스 또는 워크로드 범위로 생성하도록 요청하세요. 클러스터 전체의 정책을 완화하지 마세요.
+
+BE에 `enableWorkloadGroup: true`가 설정되어 있으면 Doris Operator는 cgroups를 관리하기 위해 BE 컨테이너를 privileged 모드로 실행합니다. 보안 정책에서 privileged 컨테이너도 허용하는지 확인하거나 이 기능을 비활성화하세요.

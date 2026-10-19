@@ -1,0 +1,120 @@
+---
+title: 증분 구체화된 뷰
+description: 파티션 기반 비동기 구체화된 뷰는 REFRESH AUTO 모드에서 기본 데이터가 변경된 파티션만 다시 생성하므로 대시보드를 최신 상태로 유지합니다.
+keywords:
+  - 증분 구체화된 뷰
+  - REFRESH AUTO
+  - 파티션 기반 MV
+  - 비동기 구체화된 뷰
+  - Apache Doris MV
+  - 파티션 새로 고침
+slug: /key-features/incremental-materialized-view
+image: /images/next/key-features/incremental-materialized-view.jpg
+last_update:
+  date: 2026-05-10
+  author: Apache Doris
+featureCard:
+  tags:
+    - materialized-view
+    - performance
+---
+
+> **요약** Apache Doris 증분 구체화된 뷰는 [`PARTITION BY`](./partitioning-and-bucketing)와 `REFRESH AUTO`를 사용하는 파티션 기반 비동기 MTMV입니다. Apache Doris는 파티션별로 데이터가 최신 상태인지 추적하므로, 오늘 데이터를 적재하면 오늘의 뷰 파티션만 새로 고치고 나머지 29일은 그대로 유지합니다. 최신 날짜와 최신 상태가 아닌 날짜를 함께 조회하는 쿼리도 뷰를 활용합니다. 옵티마이저는 유효한 파티션을 MV에서 읽고, 최신 상태가 아닌 파티션은 기본 테이블에서 읽어 `UNION ALL`로 결합합니다.
+
+![Apache Doris 증분 구체화된 뷰: 파티션 기반 비동기 구체화된 뷰는 REFRESH AUTO 모드에서 기본 데이터가 변경된 파티션만 다시 생성하므로 대시보드를 최신 상태로 유지합니다.](/images/next/key-features/incremental-materialized-view.jpg)
+## Apache Doris에서 증분 구체화된 뷰를 사용하는 이유는 무엇인가요? {#why}
+
+Apache Doris 증분 구체화된 뷰는 데이터를 적재할 때마다 뷰 전체를 다시 집계하는 대신, 기본 데이터가 변경된 파티션만 다시 계산하여 파티션 기반 대시보드를 최신 상태로 유지합니다. 일별로 파티션을 나눈 팩트 테이블과, 내일의 대시보드에 사용할 집계 데이터를 담는 구체화된 뷰가 있다고 가정해 보겠습니다. 오늘의 데이터 적재는 오늘 파티션에만 데이터를 쓰지만, 단순한 새로 고침 방식은 여전히 뷰 전체를 다시 계산합니다. 이 새로 고침은 변경되지 않은 29일을 다시 집계하느라 한 시간 동안 실행되고, 완료될 때쯤이면 대시보드는 이미 최신 상태가 아닙니다.
+
+- 30일 분량의 파티션으로 나눈 팩트 테이블에서 매번 가장 최근 날짜에만 데이터를 적재하는 경우입니다. 전체 새로 고침은 변경되지 않은 29일을 다시 집계합니다.
+- MV 새로 고침에 걸리는 시간이 데이터 적재 간격보다 길어 데이터 적재 일정을 따라가지 못하는 BI 대시보드입니다.
+- 객체 스토리지를 통해 모든 파티션을 다시 읽는 데 시간과 비용이 많이 드는 Hive 또는 Iceberg 기반 [레이크하우스 테이블](./managing-lake-table)입니다.
+
+파티션 기반 비동기 MV에서 `REFRESH AUTO`를 사용하면 실제로 변경된 부분만 처리할 수 있습니다. Apache Doris는 파티션별로 최신 상태 여부를 추적하고, 기본 데이터가 변경된 파티션에만 `INSERT OVERWRITE`를 실행하며, 뷰의 나머지 부분은 그대로 유지합니다.
+
+## Apache Doris 증분 구체화된 뷰란 무엇인가요? {#what}
+
+Apache Doris 증분 구체화된 뷰는 `REFRESH AUTO`로 생성한 파티션 기반 비동기 구체화된 뷰(MTMV)입니다. Apache Doris는 `PARTITION BY`에서 지정한 기본 테이블 하나를 기준으로 뷰의 파티션을 도출합니다. 선택적으로 `DATE_TRUNC`를 사용하면 일별 기본 파티션을 월별 뷰 파티션으로 묶을 수 있습니다. 기본 파티션의 데이터가 변경되면 여기에 매핑된 뷰 파티션만 무효로 표시됩니다. 다음 새로 고침에서는 무효한 파티션을 대상으로 `INSERT OVERWRITE` 문을 하나씩 실행합니다.
+
+**주요 용어**
+
+- **`MTMV`**: 모든 비동기 MV의 기반이 되는 내부 테이블 유형입니다. Duplicate 모델 OLAP 테이블이며, 파티션은 사용자가 아닌 새로 고침 작업이 관리합니다.
+- **`REFRESH AUTO`**: 파티션 기반 증분 새로 고침을 먼저 시도하고, MV 정의에서 파티션을 도출할 수 없을 때만 전체 새로 고침으로 전환하는 새로 고침 방식입니다. 이 동작을 사용하지 않으려면 `REFRESH COMPLETE`를 선택합니다.
+- **`Partition derivation`**: FE가 MV의 SQL을 분석하여 MV 파티션 컬럼을 기본 파티션 컬럼에 매핑하는 과정입니다. 도출에 실패하면 Doris는 생성 시점에 파티션 절을 거부합니다.
+- **`Partition invalidation`**: 해당 파티션의 기반 데이터가 변경될 때 설정되는 파티션별 무효 표시입니다. `SHOW PARTITIONS FROM <mv>`로 확인할 수 있습니다.
+- **`Partition-granularity transparent rewrite`**: 재작성기가 유효한 MV 파티션을 읽고 나머지는 기본 테이블에서 읽어 `UNION ALL`로 결합하는 기능입니다. 따라서 파티션 하나가 최신 상태가 아니어도 MV 전체가 사용 대상에서 제외되지 않습니다.
+
+## Apache Doris 증분 구체화된 뷰는 어떻게 작동하나요? {#how}
+
+Apache Doris 증분 구체화된 뷰는 생성 시점에 각 MV 파티션을 기본 파티션에 매핑합니다. 데이터가 적재되면 영향을 받은 MV 파티션만 무효로 표시하고, 다음 새로 고침에서 `INSERT OVERWRITE`로 해당 파티션만 다시 생성합니다. 아래의 다섯 단계는 선언, 구체화, 무효화, 새로 고침, 파티션 단위 재작성 과정을 설명합니다.
+
+1. **파티션 매핑을 선언합니다.** `PARTITION BY (DATE_TRUNC(o_orderdate, 'MONTH'))`는 Apache Doris가 `orders.o_orderdate`에서 MV의 파티션을 도출하도록 지정합니다. 내부 테이블과 Hive 테이블을 모두 사용할 수 있습니다. Iceberg, Paimon, Hudi는 3.1부터 파티션 기반 새로 고침을 지원하며, Iceberg와 Paimon은 기본 데이터 변경 자동 감지도 지원합니다. Hudi는 수동 새로 고침이 필요합니다.
+2. **Apache Doris가 파티션 구조를 생성합니다.** 생성 시점에 FE는 기본 파티션을 순회하면서 롤업 함수를 적용하고, 이에 맞는 MV 파티션을 생성합니다. 새 기본 파티션이 생기면 다음 새로 고침에서 새 MV 파티션이 생성됩니다.
+3. **데이터 적재는 뷰 전체가 아닌 파티션을 무효화합니다.** `orders`의 `p_2026_05_08` 파티션에 데이터를 적재하면 키 집합에 해당 날짜가 포함되는 MV 파티션만 무효로 표시됩니다. 참조하는 비파티션 테이블에 데이터를 적재하면 기본적으로 여전히 모든 파티션이 무효화됩니다. 해당 테이블에서 삽입만 수행하고 업데이트는 전혀 하지 않는다는 것을 알고 있다면 `excluded_trigger_tables`에 해당 테이블을 지정하세요.
+4. **새로 고침 작업은 무효한 파티션만 다시 생성합니다.** 각 무효 파티션은 하나의 `INSERT OVERWRITE`로 처리됩니다. `refresh_partition_num` 속성은 문 하나로 처리할 파티션 수(기본값 1)를 제어하여 트랜잭션 단위의 세밀함과 처리량 사이의 균형을 조절합니다. 실패하면 작업이 중지되며, 이미 반영된 파티션은 롤백하지 않습니다.
+5. **옵티마이저가 파티션 단위로 쿼리를 재작성합니다.** 최신 날짜와 최신 상태가 아닌 날짜를 함께 조회하는 쿼리는 최신 날짜의 데이터를 MV에서 읽고, 최신 상태가 아닌 날짜의 데이터는 기본 테이블에서 읽어 `UNION ALL`로 결합합니다. 최신 상태에서 뒤처진 시간이 N초 미만인 파티션도 재작성기가 허용하도록 하려면 `grace_period`를 설정하세요.
+
+## 빠른 시작 {#quick-start}
+
+```sql
+CREATE TABLE lineitem (
+  l_orderkey INT, l_extendedprice DECIMAL(15,2),
+  l_discount DECIMAL(15,2), l_ordertime DATETIME
+) DUPLICATE KEY(l_orderkey)
+PARTITION BY RANGE(l_ordertime)
+  (FROM ('2026-05-01') TO ('2026-05-09') INTERVAL 1 DAY)
+DISTRIBUTED BY HASH(l_orderkey) BUCKETS 3;
+
+CREATE MATERIALIZED VIEW daily_revenue
+BUILD IMMEDIATE REFRESH AUTO ON SCHEDULE EVERY 1 HOUR
+PARTITION BY (DATE_TRUNC(l_ordertime, 'DAY'))
+DISTRIBUTED BY RANDOM BUCKETS 2 AS
+SELECT DATE_TRUNC(l_ordertime, 'DAY') AS d,
+       SUM(l_extendedprice * (1 - l_discount)) AS revenue
+FROM lineitem GROUP BY DATE_TRUNC(l_ordertime, 'DAY');
+```
+
+**예상 결과**
+
+`2026-05-08` 기본 파티션에만 새 행을 적재한 후, `SHOW PARTITIONS FROM daily_revenue`로 MV 파티션 하나만 변경되었음을 확인할 수 있습니다.
+
+```
++--------------+--------+---------------------+
+| PartitionName| State  | VisibleVersionTime  |
++--------------+--------+---------------------+
+| p_20260507   | NORMAL | 2026-05-07 14:00:02 |
+| p_20260508   | NORMAL | 2026-05-08 15:00:01 |
++--------------+--------+---------------------+
+```
+
+이전 파티션은 다시 계산되지 않았으므로 기존 `VisibleVersionTime`을 유지합니다. `p_20260508`만 하루치 데이터를 대상으로 하는 하나의 `INSERT OVERWRITE` 문으로 다시 생성되었습니다.
+
+## Apache Doris 증분 구체화된 뷰는 언제 사용해야 하나요? {#when}
+
+Apache Doris 증분 구체화된 뷰는 주로 데이터가 추가되며 일별 또는 시간별로 파티션을 나눈 팩트 테이블, DWD/DWS/ADS 다계층 모델링, 로컬에 구체화하려는 Hive/Iceberg/Paimon 레이크하우스 테이블에 사용하세요. 일 초 미만의 지연으로 최신 상태를 유지해야 하는 경우(동기 MV 사용), 파티션이 없는 기본 테이블, Apache Doris가 기본 데이터 변경을 자동으로 감지할 수 없는 Hudi 테이블에는 적합하지 않습니다.
+
+**적합한 경우**
+
+- 주로 데이터가 추가되며 일별 또는 시간별로 파티션을 나눈 팩트 테이블로, 후속 대시보드가 동일한 컬럼을 기준으로 집계하는 경우입니다.
+- 데이터 적재 빈도가 높은 기본 계층이 파티션 매핑된 MV를 통해 더 큰 단위로 집계하는 표현 계층에 데이터를 제공하는 다계층(DWD, DWS, ADS) 모델링입니다.
+- 비용이 적게 드는 증분 새로 고침을 통해 Doris 로컬 스토리지에 구체화하려는 Hive, Iceberg(3.1+), Paimon(3.1+) 레이크하우스 테이블입니다.
+- 가장 최근 파티션이 잠시 최신 상태가 아니더라도 파티션 단위 재작성을 통해 MV에서 계속 결과를 제공할 수 있는 장기간 조회 쿼리입니다.
+
+**적합하지 않은 경우**
+
+- 수 초 단위의 실시간 최신성이 필요한 경우입니다. 대신 [동기 구체화된 뷰](../query-acceleration/materialized-view/sync-materialized-view)를 사용하세요. 동기 MV는 기본 테이블의 쓰기 경로에 통합됩니다.
+- 파티션 컬럼이 없는 테이블입니다. 파티션 매핑이 없으면 MV는 전체 새로 고침으로 동작하므로 증분 방식의 이점을 얻을 수 없습니다.
+- 파티션을 도출할 수 없는 MV 정의입니다. Apache Doris는 여덟 가지 도출 규칙 중 하나라도 충족하지 못하면 생성 시점에 `PARTITION BY` 절을 거부합니다. 예를 들어 파티션 컬럼을 집계하거나(`min(o_orderdate)`), OUTER JOIN에서 NULL이 생성되는 쪽에 두거나, `GROUP BY` 또는 윈도 함수의 `PARTITION BY`에서 제외하거나, `DATE_TRUNC` 이외의 롤업 함수를 사용하는 경우 등이 있습니다.
+- Hudi 기본 테이블입니다. 현재 Apache Doris는 Hudi의 기본 데이터 변경을 감지할 수 없으므로 수동 새로 고침만 의미가 있으며, 증분 처리 여부를 자동으로 결정할 수 없습니다.
+- Apache Doris를 거치지 않고 Spark나 Flink에서도 데이터를 쓰는 테이블입니다. 메타데이터 캐시는 이러한 쓰기를 감지하지 못하므로 MV는 여전히 동기화된 상태라고 판단합니다. 외부에서 데이터를 쓸 때마다 수동으로 새로 고침을 강제 실행하거나 다른 가속 방식을 선택하세요.
+
+## 더 읽어보기 {#further-reading}
+
+- [비동기 구체화된 뷰 개요: 새로 고침 모드, 투명한 재작성, 레이크하우스 주의 사항](../query-acceleration/materialized-view/async-materialized-view/overview)
+- [비동기 MV 모범 사례: 시나리오 평가, 새로 고침 전략, 파티션 기반 MV 예제](../query-acceleration/materialized-view/async-materialized-view/use-guide)
+- [`CREATE ASYNC MATERIALIZED VIEW`: 전체 구문, 파티션 도출 규칙, 테이블 속성](../sql-manual/sql-statements/table-and-view/async-materialized-view/CREATE-ASYNC-MATERIALIZED-VIEW)
+- [동기 구체화된 뷰: 실시간 단일 테이블 가속](../query-acceleration/materialized-view/sync-materialized-view)
+- [사전 집계 및 Rollup](./preaggregation-and-rollup): 데이터 적재별 Aggregate Key 처리 경로와 비동기 MV를 보완하는 동기 MV / ROLLUP입니다.
+- [쿼리 캐시](./query-cache): 또 다른 사전 집계 방식입니다. MV를 통해 미리 계산하거나 첫 읽기 시점에 캐시합니다.
+- [데이터 계보](./data-lineage): 감사 로그의 `chosen_m_views` 컬럼으로 실제 트래픽을 처리하는 MV를 확인하는 방법입니다.
+- [Iceberg](./iceberg): 증분 MV의 기본 테이블 소스로 널리 사용됩니다. 스냅샷 간 차이를 활용하여 적은 비용으로 변경 사항을 캡처할 수 있습니다.

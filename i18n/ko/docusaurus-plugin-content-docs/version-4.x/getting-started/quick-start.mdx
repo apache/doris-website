@@ -1,0 +1,269 @@
+---
+{
+    "title": "5분 빠른 시작",
+    "language": "ko",
+    "sidebar_label": "Apache Doris 빠른 시작",
+    "description": "Docker 또는 바이너리를 사용해 로컬에 Apache Doris를 빠르게 배포하고, 클러스터를 구성한 뒤 첫 SQL 쿼리를 실행합니다."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**이 튜토리얼을 완료하면 다음 작업을 할 수 있습니다.**
+
+- Docker를 사용해 5분 안에 완전한 Doris 클러스터 시작하기
+- MySQL 클라이언트로 클러스터에 연결하고 노드 상태 확인하기
+- 데이터베이스와 테이블을 생성하고 첫 데이터 쿼리 실행하기
+
+:::tip 배포 방법 선택
+
+- **빠르게 체험하고 싶으신가요?** Docker 배포를 사용하면 5분 안에 준비할 수 있습니다.
+- **프로덕션 배포를 자세히 이해하고 싶으신가요?** FE/BE 분리 설정을 포함하는 로컬 전체 배포 방식을 사용하세요.
+
+:::
+
+## Docker로 빠르게 배포하기 {#quick-deployment-with-docker}
+
+최신 버전부터는 Docker를 사용해 빠르게 배포할 수 있습니다.
+
+### 1단계 (1/2): 클러스터 시작 {#step-1-12-start-the-cluster}
+
+다음 명령을 실행하면 시작 스크립트를 다운로드하고 클러스터를 한 번에 시작할 수 있습니다. 버전을 지정하지 않으면 기본적으로 최신 릴리스(`doris-latest`)를 다운로드합니다.
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
+```
+
+버전을 지정하려면 `-v` 매개변수를 사용하세요.
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
+```
+
+### 2단계 (2/2): 클러스터 상태 확인 {#step-2-22-verify-cluster-status}
+
+MySQL 클라이언트로 클러스터에 연결하고 FE와 BE 상태를 확인하세요.
+
+```sql
+-- Purpose: verify that the FE node has joined the cluster
+-- Expected: both Join and Alive columns are true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+```
+
+```sql
+-- Purpose: verify that the BE node is heartbeating normally
+-- Expected: the Alive column is 1
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+```
+
+**출력 설명:** `Alive=true`(FE) 또는 `Alive=1`(BE)이면 노드가 정상적으로 실행 중임을 나타냅니다.
+
+---
+
+## 로컬 환경에서 전체 배포 {#local-full-deployment}
+
+:::info 환경 요구 사항
+
+- **운영 체제:** Ubuntu 등 일반적인 AMD/ARM Linux 환경
+- **Java 환경:** JDK 17+
+- **사용자 권한:** Doris 전용 사용자를 생성하고 root는 사용하지 마세요.
+
+:::
+
+### 1단계 (1/4): 바이너리 패키지 다운로드 {#step-1-14-download-the-binary-package}
+
+Apache Doris [다운로드 페이지](https://doris.apache.org/download)에서 시스템에 맞는 바이너리 패키지를 다운로드하고 원하는 디렉터리에 압축을 푸세요.
+
+### 2단계 (2/4): 시스템 환경 구성 {#step-2-24-configure-the-system-environment}
+
+**최대 파일 핸들 수 늘리기**(열린 파일이 너무 많아 발생하는 오류 방지):
+
+```bash
+vi /etc/security/limits.conf
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+**가상 메모리 영역 수 제한 늘리기:**
+
+```bash
+cat >> /etc/sysctl.conf << EOF
+vm.max_map_count = 2000000
+EOF
+sysctl -p
+```
+
+### 3단계 (3/4): FE 배포 {#step-3-34-deploy-the-fe}
+
+1. **FE 구성:** `apache-doris/fe/conf/fe.conf`를 편집하세요.
+
+   ```properties
+   # Specify the Java environment
+   JAVA_HOME=/home/doris/jdk
+
+   # Specify the FE listening IP (adjust based on the actual network segment)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **FE 시작:**
+
+   ```bash
+   apache-doris/fe/bin/start_fe.sh --daemon
+   ```
+
+3. **FE 상태 확인:**
+
+   ```sql
+   -- Purpose: confirm that the FE has started and joined the cluster
+   -- Expected: Join=true, Alive=true, IsMaster=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   ```
+
+### 4단계 (4/4): BE 배포 {#step-4-44-deploy-the-be}
+
+1. **BE 구성:** `apache-doris/be/conf/be.conf`를 편집하세요.
+
+   ```properties
+   # Specify the BE listening IP (must be in the same network segment as the FE's priority_networks)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **BE 시작:**
+
+   ```bash
+   apache-doris/be/bin/start_be.sh --daemon
+   ```
+
+3. **클러스터에 BE 등록:**
+
+   ```sql
+   -- Purpose: add the BE node to the cluster
+   ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
+   ```
+
+4. **BE 상태 확인:**
+
+   ```sql
+   -- Purpose: confirm that the BE is registered and heartbeating normally
+   -- Expected: Alive=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   ```
+
+---
+
+## 첫 쿼리 실행 {#run-your-first-query}
+
+Docker와 로컬 배포 중 어떤 방식을 사용했든 클러스터가 실행되면 다음 단계에 따라 Doris SQL 기능을 체험할 수 있습니다.
+
+### 클러스터에 연결 {#connect-to-the-cluster}
+
+```sql
+mysql -uroot -P9030 -h127.0.0.1
+```
+
+### 데이터베이스와 테이블 생성 {#create-a-database-and-table}
+
+```sql
+-- Purpose: create a demo database and table
+create database demo;
+use demo;
+
+create table mytable
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",
+    k3 CHAR(10) COMMENT "string column",
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+)
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
+### 테스트 데이터 적재 {#load-test-data}
+
+```sql
+-- Purpose: insert a few rows of test data
+insert into mytable values
+(1, 0.14, 'a1', 20),
+(2, 1.04, 'b2', 21),
+(3, 3.14, 'c3', 22),
+(4, 4.35, 'd4', 23);
+```
+
+### 쿼리 실행 {#run-a-query}
+
+```sql
+-- Purpose: verify that the data was loaded successfully
+-- Expected: 4 rows are returned
+select * from demo.mytable;
+```
+
+**출력 예시:**
+
+```
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 | 0.14 | a1   |   20 |
+|    2 | 1.04 | b2   |   21 |
+|    3 | 3.14 | c3   |   22 |
+|    4 | 4.35 | d4   |   23 |
++------+------+------+------+
+```
+
+---
+
+## 자주 묻는 질문 {#faq}
+
+### 질문: Docker 배포는 프로덕션 환경에 적합한가요? {#q-is-docker-deployment-suitable-for-production}
+
+아니요. Docker 배포는 로컬 개발과 테스트만을 위한 방식이며, 컨테이너를 삭제하면 데이터가 손실됩니다. 프로덕션 환경에서는 로컬 전체 배포 또는 다중 노드 배포를 사용하세요.
+
+### 질문: Mac에 Docker를 어떻게 설치하나요? {#q-how-do-i-install-docker-on-mac}
+
+[Docker Desktop](https://www.docker.com/products/docker-desktop/)을 다운로드하고 설치하세요.
+
+### 질문: Mac에 Docker Desktop을 설치한 후 "Docker environment not detected"가 표시됩니다. 어떻게 해야 하나요? {#q-after-installing-docker-desktop-on-mac-i-see-docker-environment-not-detected-what-should-i-do}
+
+심볼릭 링크를 생성하세요.
+
+```shell
+sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+```
+
+### 질문: Mac의 Docker에서 "error getting credentials" 오류가 발생합니다. 어떻게 해야 하나요? {#q-docker-on-mac-reports-error-getting-credentials-what-should-i-do}
+
+임시 해결 방법으로 `credsStore` 필드를 `~/.docker/config.json`에서 제거하세요. 참고: 이 방법은 인증 정보를 일반 텍스트로 저장하므로 로컬 개발에만 사용해야 합니다.
+
+### 질문: BE 노드를 추가한 후에도 "Dead"로 표시됩니다. 무엇을 확인해야 하나요? {#q-a-be-node-still-shows-dead-after-being-added-what-should-i-check}
+
+BE의 `priority_networks`가 FE와 동일한 네트워크 대역에 있는지 확인하고, BE 포트(9050/9060/8040/8060)가 방화벽에 의해 차단되지 않았는지 확인하세요.
+
+### 질문: WSL2에서 로컬 배포를 실행하는데 BE가 클러스터에 참여하지 않습니다. 무엇이 문제인가요? {#q-running-the-local-deployment-under-wsl2--the-be-never-joins-the-cluster-whats-wrong}
+
+WSL2의 루프백은 배포판별 네임스페이스로 분리되어 있어 FE와 BE가 `127.0.0.1`을 통해 서로 통신할 수 없습니다. 따라서 기본 설정인 `priority_networks=127.0.0.1/32`를 사용하면 WSL2에서 BE 등록이나 하트비트가 실패합니다.
+
+해결하려면 `ip addr show eth0`를 실행해 실제 WSL 네트워크 대역(일반적으로 `172.16.0.0/12` 또는 `172.x.x.x/20`)을 확인한 다음, `priority_networks`를 해당 대역으로 설정하세요. 이 설정은 `fe/conf/fe.conf`와 `be/conf/be.conf` 모두에 적용해야 합니다. 그런 다음 FE와 BE를 다시 시작하고 `ALTER SYSTEM ADD BACKEND`를 다시 실행하세요.
+
+### 질문: 클러스터가 전반적으로 정상 상태인지 어떻게 확인하나요? {#q-how-do-i-confirm-that-the-cluster-is-healthy-overall}
+
+`SHOW FRONTENDS;`와 `SHOW BACKENDS;`를 실행하고 모든 노드의 `Alive` 열이 `true`인지 확인하세요.
+
+---
+
+## 다음 단계 {#next-steps}
+
+- [데이터 모델링 가이드]: Doris 데이터 모델과 파티셔닝 전략 알아보기 (NEXT-TODO)
+- [SQL 작업 시작하기]: 데이터 적재, 쿼리, 업데이트 방법 알아보기 (NEXT-TODO)
+- [클러스터 관리]: 프로덕션 수준의 클러스터 운영 방법 익히기 (NEXT-TODO)
+
+:::caution 경고(로컬 배포에만 적용)
+
+다음 내용은 **로컬 개발 및 테스트 전용**입니다. **프로덕션 환경에서는 사용하지 마세요**.
+
+1. **데이터가 쉽게 손실됨:** Docker 배포에서는 컨테이너를 삭제하면 데이터가 손실되며, 단일 복제본 인스턴스에는 데이터 이중화가 없습니다.
+2. **단일 복제본 구성:** 예시의 테이블 생성 문은 모두 단일 복제본을 사용합니다. 프로덕션 환경에서는 데이터 신뢰성을 보장하기 위해 다중 복제본 스토리지를 사용하세요.
+
+:::

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/reciprocal-rank-fusion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/reciprocal-rank-fusion.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/reciprocal-rank-fusion.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+    "sourceTechnicalHash": "652f0f77792e568278aa057a5595894fee3bfeff69c514e4cfc83f33847408d9",
+    "targetHash": "d130443f52d78f6608e5c83ce20c4df5487107765ec34ec09ed7594aba3948a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:52:06.143Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0a30652b953d5c2fb2c9a45251bfed8bfd659f1b39fb845ca4b09eac6344ad04",
+      "targetHash": "d130443f52d78f6608e5c83ce20c4df5487107765ec34ec09ed7594aba3948a1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"link\",\"./analytic-functions\",null]; received [\"link\",\"./bm25\",null]\nprotected node 3: expected [\"inlineCode\",null,null,\"ROW_NUMBER()\"]; received [\"link\",\"./vector-index\",null]\nprotected node 4: expected [\"link\",\"./bm25\",null]; received [\"link\",\"./analytic-functions\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
