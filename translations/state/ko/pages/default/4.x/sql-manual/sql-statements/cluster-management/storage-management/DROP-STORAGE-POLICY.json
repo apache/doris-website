@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+    "sourceTechnicalHash": "18dc23e2d842c46cb5ca665c7597f277d4b77bc95d2863ef04aeabbb8dbc2998",
+    "targetHash": "77a1a4373a20a8690d5e4573fe7dcf3927d8066f02a7eefcfcfd4565eac04217",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:58.211Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+      "targetHash": "77a1a4373a20a8690d5e4573fe7dcf3927d8066f02a7eefcfcfd4565eac04217",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/DROP-STORAGE-POLICY.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "a1e4a00c680970e6b15a09a91d984dda9db6be7d13461e768f693d2c21bbce3d",
+        "targetHash": "77a1a4373a20a8690d5e4573fe7dcf3927d8066f02a7eefcfcfd4565eac04217",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

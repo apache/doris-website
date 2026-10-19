@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "500d23650c686d2a0cf227889f916f28b93cbdb1c70efe66156d9bea5c420459",
+    "sourceTechnicalHash": "6369769eef40410ed3970dc98abfe34776e54d534ad0c12f826f1d9f3060f43c",
+    "targetHash": "cf79bb0349a2db3e62bc2e8782c3fb14321881eb830c956916c5c9bd3f23f6a5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:54.255Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "500d23650c686d2a0cf227889f916f28b93cbdb1c70efe66156d9bea5c420459",
+      "targetHash": "cf79bb0349a2db3e62bc2e8782c3fb14321881eb830c956916c5c9bd3f23f6a5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "500d23650c686d2a0cf227889f916f28b93cbdb1c70efe66156d9bea5c420459",
+        "targetHash": "cf79bb0349a2db3e62bc2e8782c3fb14321881eb830c956916c5c9bd3f23f6a5",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

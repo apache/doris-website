@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+    "sourceTechnicalHash": "b4ebe210555bfdf23b515860edfe0478fedb9c94460dfd0a93fa3245c5e087ca",
+    "targetHash": "4622585a1c69970353fbffce6002cd85fb6bed3aa07ff97098a705e88db02da9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:58.108Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+      "targetHash": "4622585a1c69970353fbffce6002cd85fb6bed3aa07ff97098a705e88db02da9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-VAULT.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "c32be7cdea3c5906280001ba1f50457cf147894354d6759022d0c884e84365c8",
+        "targetHash": "4622585a1c69970353fbffce6002cd85fb6bed3aa07ff97098a705e88db02da9",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

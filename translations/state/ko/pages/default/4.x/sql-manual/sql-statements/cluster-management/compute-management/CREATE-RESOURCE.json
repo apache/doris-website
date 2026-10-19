@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+    "sourceTechnicalHash": "5ea5069c80d4612c301c7aaa7edef3e1cc6e83c5d72cb9c71ad0fd28cd8cc6f3",
+    "targetHash": "22d36c3f3487fc6eb0461faa05264b7d8b14289b7ab733602479f77ed72367c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:54.551Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+      "targetHash": "22d36c3f3487fc6eb0461faa05264b7d8b14289b7ab733602479f77ed72367c1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+        "targetHash": "22d36c3f3487fc6eb0461faa05264b7d8b14289b7ab733602479f77ed72367c1",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}
