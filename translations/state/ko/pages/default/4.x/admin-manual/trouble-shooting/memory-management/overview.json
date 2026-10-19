@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "07ce71b93f2ab4f87fab496946116169793f9b296661247a50b7fdfd4f9c150f",
+    "sourceTechnicalHash": "18857a965e72b2cdea194d5c3055149cb7f897602d5a761e6d6f9f37566899c3",
+    "targetHash": "0fdf7efccc16098b233478439752151d7a2ad3caaeec15a0f4818b58771e0456",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:50:18.936Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "07ce71b93f2ab4f87fab496946116169793f9b296661247a50b7fdfd4f9c150f",
+      "targetHash": "0fdf7efccc16098b233478439752151d7a2ad3caaeec15a0f4818b58771e0456",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/overview",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/overview.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/overview.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "07ce71b93f2ab4f87fab496946116169793f9b296661247a50b7fdfd4f9c150f",
+        "targetHash": "0fdf7efccc16098b233478439752151d7a2ad3caaeec15a0f4818b58771e0456",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

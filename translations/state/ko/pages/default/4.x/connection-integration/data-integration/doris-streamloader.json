@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/doris-streamloader",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/doris-streamloader.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
+    "sourceTechnicalHash": "a86693a509552566f5e0e82d32185567ef3d6d7be9f285772214d9680fa42b21",
+    "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:54:31.047Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
+      "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "connection-integration/data-integration/doris-streamloader",
+        "sourcePath": "docs/connection-integration/data-integration/doris-streamloader.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/doris-streamloader.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "7acc01b42a31a5bfce304c0b2d3358723f846feb2e507c09456d4c021b7d4223",
+        "targetHash": "0e5149b3dc6967b9e229e5a171b107db286818d74e2e0fe33784834216ccfa4e",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

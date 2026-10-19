@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "ai/ai-function-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/ai/ai-function-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
+    "sourceTechnicalHash": "3001a20159aeb47f42108af480abb173193fa80d2386dace1cdb20cbd4dae4ac",
+    "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:52:15.415Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
+      "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "ai/ai-function-overview",
+        "sourcePath": "docs/ai/ai-function-overview.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/ai/ai-function-overview.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
+        "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/routine_load_job",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/routine_load_job.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/routine_load_job.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "11614db21ede2b1b17bc6109e0b1727786b195fe111fdbca136cb8736e87df72",
+    "sourceTechnicalHash": "8f9f20202128dfe112002c045b3dca386baf69113e893a1cff5aeb66f784fc94",
+    "targetHash": "5f927b1f1dbd94227861d04df4646cc1cbb9945dd8c15a3c67657bebfd61ee9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:45:58.969Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "11614db21ede2b1b17bc6109e0b1727786b195fe111fdbca136cb8736e87df72",
+      "targetHash": "5f927b1f1dbd94227861d04df4646cc1cbb9945dd8c15a3c67657bebfd61ee9c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/system-tables/information_schema/routine_load_job",
+        "sourcePath": "docs/admin-manual/system-tables/information_schema/routine_load_job.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/routine_load_job.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "11614db21ede2b1b17bc6109e0b1727786b195fe111fdbca136cb8736e87df72",
+        "targetHash": "5f927b1f1dbd94227861d04df4646cc1cbb9945dd8c15a3c67657bebfd61ee9c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

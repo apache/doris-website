@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/dbeaver",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/dbeaver.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/dbeaver.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "24783e79e90a3548ac7b75c304682fcfd61fdaf3e2d74d515b541d770536005f",
+    "sourceTechnicalHash": "7485cbfe5bc3410bc3b0cff0caf426ed02220f32be72fefcd69f8ee940b44d6f",
+    "targetHash": "40cc1dfe8112198c4d1a2aa03f4e7c0f6ac5bc61b36946efe21842c61ef72e36",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:54:16.515Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "24783e79e90a3548ac7b75c304682fcfd61fdaf3e2d74d515b541d770536005f",
+      "targetHash": "40cc1dfe8112198c4d1a2aa03f4e7c0f6ac5bc61b36946efe21842c61ef72e36",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "connection-integration/data-integration/dbeaver",
+        "sourcePath": "docs/connection-integration/data-integration/dbeaver.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/dbeaver.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "24783e79e90a3548ac7b75c304682fcfd61fdaf3e2d74d515b541d770536005f",
+        "targetHash": "40cc1dfe8112198c4d1a2aa03f4e7c0f6ac5bc61b36946efe21842c61ef72e36",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

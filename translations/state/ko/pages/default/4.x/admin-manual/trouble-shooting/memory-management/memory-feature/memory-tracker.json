@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+    "sourceTechnicalHash": "91cfae8692af2c259e4abb27eec32bc7203b9fcbbc4c8931a2cda3b85895d512",
+    "targetHash": "8060fe4813951e5cc6c8eda5d8423635257d6c8d3e37b52306eab83826a7131a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:50:10.762Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+      "targetHash": "8060fe4813951e5cc6c8eda5d8423635257d6c8d3e37b52306eab83826a7131a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+        "targetHash": "8060fe4813951e5cc6c8eda5d8423635257d6c8d3e37b52306eab83826a7131a",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
