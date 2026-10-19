@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-notification",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5663dea632a6e961837174dd02a1b7f3e189315e1ac777116aa399c8d37fa156",
+    "sourceTechnicalHash": "d1c4dbb4d4fd09d440e5c4d98a59845cd38b89f0477b4738e336b559ffbc498d",
+    "targetHash": "296b6c9e92aa8b301894fd4e7d3ad9319282d107aa44701a64e3096275ab0bb6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:01:38.815Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5663dea632a6e961837174dd02a1b7f3e189315e1ac777116aa399c8d37fa156",
+      "targetHash": "296b6c9e92aa8b301894fd4e7d3ad9319282d107aa44701a64e3096275ab0bb6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"inlineCode\",null,null,\"s3://example-bucket/data/*.csv\"]; received [\"inlineCode\",null,null,\"us-east-1\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"us-east-1\"]; received [\"inlineCode\",null,null,\"s3://example-bucket/data/*.csv\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 45: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

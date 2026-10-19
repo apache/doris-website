@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/incremental/overview.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "df1f7e70c9f4d746cfec7229a129026bfc5cd4f93ce5280a4c7bf7a06870b4ba",
+    "sourceTechnicalHash": "71b79e2cd2eb2e597b3b05b341ce52e7aba562de3f11596e6bf486fcc0c7f19c",
+    "targetHash": "d01cd40c68319f906fbd88646c8dc0fbb9e9aa6813be8552813133403dc491a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:01:06.959Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "df1f7e70c9f4d746cfec7229a129026bfc5cd4f93ce5280a4c7bf7a06870b4ba",
+      "targetHash": "d01cd40c68319f906fbd88646c8dc0fbb9e9aa6813be8552813133403dc491a6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"DETAIL\"]; received [\"inlineCode\",null,null,\"@incr\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"@incr\"]; received [\"inlineCode\",null,null,\"DETAIL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

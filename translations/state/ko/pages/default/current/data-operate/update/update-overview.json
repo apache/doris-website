@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/update-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/update-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/update/update-overview.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a5fdc425fd27bf3f3d58f5456ce952907d5fb5f9fab885e445fbb0aff029f9b5",
+    "sourceTechnicalHash": "a86de6c2bc5b2e504290072d570497441f710c8799a319e994bae53ecb2c25ae",
+    "targetHash": "7bd19a5c3d9949b059b6d04837cfb1e9120e646142a5f2a3c7174868ed319230",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:01:24.802Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a5fdc425fd27bf3f3d58f5456ce952907d5fb5f9fab885e445fbb0aff029f9b5",
+      "targetHash": "7bd19a5c3d9949b059b6d04837cfb1e9120e646142a5f2a3c7174868ed319230",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

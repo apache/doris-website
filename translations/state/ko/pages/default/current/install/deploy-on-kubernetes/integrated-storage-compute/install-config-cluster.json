@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/install-config-cluster.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "cd22ab94ec5012929caff1e0ca2e9d916563b24cc1ec33898e689a0241aed77d",
+    "sourceTechnicalHash": "171066805d6a281271565e80fc9c9f0e9a61dc7e137100cb003bf3adc3582299",
+    "targetHash": "b9ea806165223701c8e821b377aacb615e903dbcf6265fecafcc530eaaf205a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:09:49.985Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cd22ab94ec5012929caff1e0ca2e9d916563b24cc1ec33898e689a0241aed77d",
+      "targetHash": "b9ea806165223701c8e821b377aacb615e903dbcf6265fecafcc530eaaf205a7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 68: expected [\"inlineCode\",null,null,\"meta_dir\"]; received [\"link\",\"#fe-customized-startup-configuration\",null]\nprotected node 69: expected [\"inlineCode\",null,null,\"LOG_DIR\"]; received [\"inlineCode\",null,null,\"meta_dir\"]\nprotected node 70: expected [\"link\",\"#fe-customized-startup-configuration\",null]; received [\"inlineCode\",null,null,\"LOG_DIR\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

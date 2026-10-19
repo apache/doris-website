@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-doris-cluster.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "13b63a635c68f4d7c368dd59829160b11cf1ba481960c3068da5dcac61022e14",
+    "sourceTechnicalHash": "5daba717bd1401a329573f410f6ce387c495b334ba9bbf41fd1f9d5efced1236",
+    "targetHash": "126b1a97d11323acc769a0d91bd8392ea6a0db9082f842aad17ab25748995b5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:05:16.231Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "13b63a635c68f4d7c368dd59829160b11cf1ba481960c3068da5dcac61022e14",
+      "targetHash": "126b1a97d11323acc769a0d91bd8392ea6a0db9082f842aad17ab25748995b5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

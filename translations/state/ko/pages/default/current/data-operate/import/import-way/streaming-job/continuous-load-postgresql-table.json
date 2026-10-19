@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-postgresql-table",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "3d7cd8411f1c3367254819687d23b825a41bd4b94ecb18ebaf6912b9c85c9593",
+    "sourceTechnicalHash": "2b34cee584df9be347573e9278e85ce2f08dfca451b28183b79d628d8f3434b7",
+    "targetHash": "b14ad52492839bc98bc3f04d49b83939b9a36e78be66e68088340fd10c1ecb04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:58:44.538Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3d7cd8411f1c3367254819687d23b825a41bd4b94ecb18ebaf6912b9c85c9593",
+      "targetHash": "b14ad52492839bc98bc3f04d49b83939b9a36e78be66e68088340fd10c1ecb04",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 76: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 77: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

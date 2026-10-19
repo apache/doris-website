@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
+    "sourceTechnicalHash": "9c495e6fb067ae4589571ad04d37d69067c1d2aa463c392f389886dd063d978f",
+    "targetHash": "a9a1863dffb92428a801837eddbf8cffe3513193c8abd7f9fb0393d6b726cd2e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:57:30.238Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
+      "targetHash": "a9a1863dffb92428a801837eddbf8cffe3513193c8abd7f9fb0393d6b726cd2e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
