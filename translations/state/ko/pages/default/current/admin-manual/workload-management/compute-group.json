@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/compute-group",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/compute-group.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/workload-management/compute-group.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4e4b8edb0ebc33a6db9734a33deb0319b5c6a0d6a3e0ca4f1a5b03922884e6ae",
+    "sourceTechnicalHash": "92891303b17487673512d3c1fe86ac9b7f92ae00f5bfc90927dd0cd24c92ed58",
+    "targetHash": "042cf7a8630c5f3917fcf423cfe7bea320811b30591329bf665a4ce7a898b540",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:13:28.964Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4e4b8edb0ebc33a6db9734a33deb0319b5c6a0d6a3e0ca4f1a5b03922884e6ae",
+      "targetHash": "042cf7a8630c5f3917fcf423cfe7bea320811b30591329bf665a4ce7a898b540",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

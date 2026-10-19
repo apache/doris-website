@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/table_options",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/table_options.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/table_options.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "98ec6a2e09a131710cd659890dffe1cfd1066bb0752707474714cbd9fe2d30ed",
+    "sourceTechnicalHash": "19cdd7a07e3b11c0344ce3ec59e4b0aee53ec577d6a2a904952f84f2f987ff04",
+    "targetHash": "90b01f83f9e1694589ae41c52876dff566b1349fa3e071b8f72d3dfee68e12a0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:09:55.491Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "98ec6a2e09a131710cd659890dffe1cfd1066bb0752707474714cbd9fe2d30ed",
+      "targetHash": "90b01f83f9e1694589ae41c52876dff566b1349fa3e071b8f72d3dfee68e12a0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

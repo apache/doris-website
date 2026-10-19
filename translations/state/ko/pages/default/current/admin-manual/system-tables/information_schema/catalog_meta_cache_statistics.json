@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/catalog_meta_cache_statistics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5f0aab1d329fff4e1c14fbaed6c27bbb1bf9cbb67819bf191a8326af9a98bc0d",
+    "sourceTechnicalHash": "31f817e30405b296e988eff3ec0d7384981bf77e5bf34ed6f45e69487764447e",
+    "targetHash": "ab481249a71d01b0cc4380259d6e612b8e8efa7223ce4d147310b9fc03173c50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:08:10.314Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5f0aab1d329fff4e1c14fbaed6c27bbb1bf9cbb67819bf191a8326af9a98bc0d",
+      "targetHash": "ab481249a71d01b0cc4380259d6e612b8e8efa7223ce4d147310b9fc03173c50",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

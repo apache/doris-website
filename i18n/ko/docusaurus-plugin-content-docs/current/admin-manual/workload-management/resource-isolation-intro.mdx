@@ -1,0 +1,43 @@
+---
+{
+    "title": "리소스 격리",
+    "language": "ko",
+    "description": "Apache Doris 리소스 격리 장의 안내 페이지입니다. 물리적 격리를 위한 Resource Group과 Compute Group, 프로세스 내 논리적 격리를 위한 Workload Group을 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris는 노드 수준의 물리적 격리와 단일 프로세스 내의 논리적 격리라는 상호 보완적인 두 가지 리소스 격리 계층을 제공합니다. 배포 아키텍처와 격리 요구 사항에 맞는 방식을 선택하세요.
+
+## 물리적 격리 {#physical-isolation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Resource Group"
+    description="스토리지-컴퓨팅 통합 아키텍처에서 BE 노드에 태그를 지정하여 서로 격리된 노드 그룹으로 나누고, 읽기/쓰기 분리와 멀티테넌트 환경을 지원합니다."
+    link="resource-group"
+/>
+
+<GettingStartedCard
+    title="Compute Group"
+    description="스토리지-컴퓨팅 분리 아키텍처에서 이름이 지정된 컴퓨팅 그룹을 생성하고 관리하여 컴퓨팅 계층에서 서로 다른 워크로드 간의 하드 격리를 구현합니다."
+    link="compute-group"
+/>
+</div>
+
+## 논리적 격리 {#logical-isolation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Workload Group"
+    description="추가 노드 없이 단일 BE 프로세스 내에서 쿼리 또는 사용자 세션의 CPU, 메모리 및 I/O 리소스를 제한합니다."
+    link="workload-group"
+/>
+
+<GettingStartedCard
+    title="Workload Group을 Compute Group에 바인딩"
+    description="Workload Group을 지정한 Compute Group에 바인딩하여 물리적 리소스 제어와 논리적 리소스 제어를 결합하고, 멀티테넌트 환경에서 세밀한 격리를 구현합니다."
+    link="workload-group-bind-compute-group"
+/>
+</div>

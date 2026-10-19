@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/backend_metrics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/backend_metrics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/backend_metrics.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a408f8aed14c003f570b3d2ff3426d8f4ac50b317040d3169e5f8260162b8c41",
+    "sourceTechnicalHash": "ed706529cc199fa233ab95694ed822dab7ce599ae74d9bc4cdc782b1cb540d91",
+    "targetHash": "907140c3d1f899b2b4852685a699637b7729059ef5be4f17301273e42500c510",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:07:36.679Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a408f8aed14c003f570b3d2ff3426d8f4ac50b317040d3169e5f8260162b8c41",
+      "targetHash": "907140c3d1f899b2b4852685a699637b7729059ef5be4f17301273e42500c510",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

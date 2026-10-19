@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/frontend_metrics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/frontend_metrics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/frontend_metrics.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "927c2528b083b54345320d865759d84fa515ce13c04b3f5cfce3515848413966",
+    "sourceTechnicalHash": "002f55cc75cf14486750d130d23aae1d652f78778aa0d0995097d1caa394c9c1",
+    "targetHash": "5d0bdefbc390ac655efc27ace414dc84b2aec97ddac34a0a64bd8ac439556876",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:08:36.035Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "927c2528b083b54345320d865759d84fa515ce13c04b3f5cfce3515848413966",
+      "targetHash": "5d0bdefbc390ac655efc27ace414dc84b2aec97ddac34a0a64bd8ac439556876",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
