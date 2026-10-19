@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/REVOKE-FROM",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ba1d3e20a4de83e80e0148a0d36bb43703d5ae5e5e048d3ff233d9a3685a446c",
+    "sourceTechnicalHash": "d8e531340274357318b61f8db6f99c96ae86c243b054eb15d3f2543e2b07703a",
+    "targetHash": "3d24fb6eb0cc10763176a28a867c83473f67c21ee3fa82f9d3696b5010fe81aa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:44.012Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ba1d3e20a4de83e80e0148a0d36bb43703d5ae5e5e048d3ff233d9a3685a446c",
+      "targetHash": "3d24fb6eb0cc10763176a28a867c83473f67c21ee3fa82f9d3696b5010fe81aa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/REVOKE-FROM",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "ba1d3e20a4de83e80e0148a0d36bb43703d5ae5e5e048d3ff233d9a3685a446c",
+        "targetHash": "3d24fb6eb0cc10763176a28a867c83473f67c21ee3fa82f9d3696b5010fe81aa",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

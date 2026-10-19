@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/trim-in",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/trim-in.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/trim-in.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a2afc0d34f08b00b8d09bb6e0a32feec1f0f25df022d0ff81d93ee9396a5ae96",
+    "sourceTechnicalHash": "55dc40aeb8c5a2047ac935a1146334e8d13247f406cd1345133c4563e04d11fc",
+    "targetHash": "bcf0e206e7614e3b3135d61aa717e6330763ccf81925cc4338045b7d628cbdd8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:30:29.003Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2afc0d34f08b00b8d09bb6e0a32feec1f0f25df022d0ff81d93ee9396a5ae96",
+      "targetHash": "bcf0e206e7614e3b3135d61aa717e6330763ccf81925cc4338045b7d628cbdd8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
