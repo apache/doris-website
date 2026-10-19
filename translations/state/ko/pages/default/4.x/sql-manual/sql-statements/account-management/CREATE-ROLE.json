@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/CREATE-ROLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5e57abd27c77f76db7b6e55f1dfd437545644abd9d7c470b648ed57f90290615",
+    "sourceTechnicalHash": "dadc3ac617b2ffc850d655e996119c319e9c886098e53feef6aebedbf7779561",
+    "targetHash": "491636786a3078809786b8fda7d00cb08810b8859fc421895a6797631e87eec9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:43.235Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5e57abd27c77f76db7b6e55f1dfd437545644abd9d7c470b648ed57f90290615",
+      "targetHash": "491636786a3078809786b8fda7d00cb08810b8859fc421895a6797631e87eec9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/CREATE-ROLE",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/CREATE-ROLE.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "5e57abd27c77f76db7b6e55f1dfd437545644abd9d7c470b648ed57f90290615",
+        "targetHash": "491636786a3078809786b8fda7d00cb08810b8859fc421895a6797631e87eec9",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/posexplode",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/posexplode.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/posexplode.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "dd25fd61edca87cd24f549c0042b23cd717d2380e9ab33d8d2f283e84815da22",
+    "sourceTechnicalHash": "be4c7b2d1868ecfd050efe8963d71e11d836fca342e46a92be9a7ead2ba1dbbc",
+    "targetHash": "3a0095bdfbeb76e4c9514405a673c80ef242ec931e09c7ad7604195f1c08f934",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:40.100Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dd25fd61edca87cd24f549c0042b23cd717d2380e9ab33d8d2f283e84815da22",
+      "targetHash": "3a0095bdfbeb76e4c9514405a673c80ef242ec931e09c7ad7604195f1c08f934",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-functions/posexplode",
+        "sourcePath": "docs/sql-manual/sql-functions/table-functions/posexplode.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/posexplode.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "dd25fd61edca87cd24f549c0042b23cd717d2380e9ab33d8d2f283e84815da22",
+        "targetHash": "3a0095bdfbeb76e4c9514405a673c80ef242ec931e09c7ad7604195f1c08f934",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

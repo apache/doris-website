@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/SHOW-GRANTS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+    "sourceTechnicalHash": "95a0b9d880040f6c5df1829657ef4e7ee05b731bce2a5c9af8c0c15ef51fdd1d",
+    "targetHash": "745062ce65dabdc1b9eb2ca0023b1187877c56537bd6ee6e0e15f4786ef862da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:44.605Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+      "targetHash": "745062ce65dabdc1b9eb2ca0023b1187877c56537bd6ee6e0e15f4786ef862da",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/SHOW-GRANTS",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/SHOW-GRANTS.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "30a2d016fc796392a978149ab8673f989cffabd8c3aa99f20ccd0ec660cd415a",
+        "targetHash": "745062ce65dabdc1b9eb2ca0023b1187877c56537bd6ee6e0e15f4786ef862da",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

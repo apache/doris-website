@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/jobs",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8bea49a8621c76f2b952334683e0ab3aa5a271892ebdc7b5ac79a611c270d864",
+    "sourceTechnicalHash": "3c3bc2261bae1c1351765b02dbc1859c8ff33685221cbbce293017239cad995c",
+    "targetHash": "a7418c9d9388de707a495dff92b523ca05ad4f0b1c9a868c31b59586e87aa5d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:31:52.071Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8bea49a8621c76f2b952334683e0ab3aa5a271892ebdc7b5ac79a611c270d864",
+      "targetHash": "a7418c9d9388de707a495dff92b523ca05ad4f0b1c9a868c31b59586e87aa5d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

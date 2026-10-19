@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/explode-split",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/explode-split.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d7004d9b12c7f1d4a143a76bbbd7610a8fe146c3a39664c9c44924d70e32cab2",
+    "sourceTechnicalHash": "45750881c9b3e7d39d2252c5bf785769e78545ca9b15a5d77485ef4e9d974cdf",
+    "targetHash": "6a7511b5d2400d7a601d45a34cdc42e88f1a1fd87621b36940f1a0ed90afbcd6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:39.261Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d7004d9b12c7f1d4a143a76bbbd7610a8fe146c3a39664c9c44924d70e32cab2",
+      "targetHash": "6a7511b5d2400d7a601d45a34cdc42e88f1a1fd87621b36940f1a0ed90afbcd6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-functions/explode-split",
+        "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-split.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-split.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "d7004d9b12c7f1d4a143a76bbbd7610a8fe146c3a39664c9c44924d70e32cab2",
+        "targetHash": "6a7511b5d2400d7a601d45a34cdc42e88f1a1fd87621b36940f1a0ed90afbcd6",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}
