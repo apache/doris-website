@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5a0bb5a2a99ee7d78609928f27415212727712dbe0d3a255638c9f8cb6c27f84",
+    "sourceTechnicalHash": "227790287dff161fba9ef03ce1955ecedf2084534a668d6fe7b840a4868d4671",
+    "targetHash": "994d3c23d72c5a00f46a821fa7f32d18da607e12f3914fe9ca8206b08a906eab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:21.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a0bb5a2a99ee7d78609928f27415212727712dbe0d3a255638c9f8cb6c27f84",
+      "targetHash": "994d3c23d72c5a00f46a821fa7f32d18da607e12f3914fe9ca8206b08a906eab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sm4-encrypt.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "5a0bb5a2a99ee7d78609928f27415212727712dbe0d3a255638c9f8cb6c27f84",
+        "targetHash": "994d3c23d72c5a00f46a821fa7f32d18da607e12f3914fe9ca8206b08a906eab",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

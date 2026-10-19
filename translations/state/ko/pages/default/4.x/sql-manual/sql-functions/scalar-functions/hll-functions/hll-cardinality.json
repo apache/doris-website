@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e21b185e94040ce93d699d909edbc89f888b48a8dc0a75bc1e22779e416c09a4",
+    "sourceTechnicalHash": "9b6d79a5edbe08930c1721127d7af47823733097f0828bdd41da296ed39e04bc",
+    "targetHash": "e3da409e2eeb7914fb0a3afeb927a0d941cc2cee0d9cdf5749eb10b2ab1c8843",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:21.582Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e21b185e94040ce93d699d909edbc89f888b48a8dc0a75bc1e22779e416c09a4",
+      "targetHash": "e3da409e2eeb7914fb0a3afeb927a0d941cc2cee0d9cdf5749eb10b2ab1c8843",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "e21b185e94040ce93d699d909edbc89f888b48a8dc0a75bc1e22779e416c09a4",
+        "targetHash": "e3da409e2eeb7914fb0a3afeb927a0d941cc2cee0d9cdf5749eb10b2ab1c8843",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
