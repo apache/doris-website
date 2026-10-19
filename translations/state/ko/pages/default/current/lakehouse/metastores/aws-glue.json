@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/aws-glue",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/aws-glue.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/metastores/aws-glue.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "9d924ec1171547e0004bd14b429b35ec48ff95f014bf5b0fd26a0fa2366c2f3a",
+    "sourceTechnicalHash": "a82db051612f65c0cbdc5dfe9daf3e67708cb7ea50330d1f4bf242ceaf3d443f",
+    "targetHash": "4a9734659a864d1c3e04cfd7d8779e48ee2dd7bd4694a7c8b8cfcce2a21e3146",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:45:13.891Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d924ec1171547e0004bd14b429b35ec48ff95f014bf5b0fd26a0fa2366c2f3a",
+      "targetHash": "4a9734659a864d1c3e04cfd7d8779e48ee2dd7bd4694a7c8b8cfcce2a21e3146",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

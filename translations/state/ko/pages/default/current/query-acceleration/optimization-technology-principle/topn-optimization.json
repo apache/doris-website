@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/topn-optimization",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ea58aae5192fa98d0658026c943f6c6940c117999a9c5a2da2a33ccbd6f7cd81",
+    "sourceTechnicalHash": "4d0da710a6703ab5fefb8167dd30e45b0bd352414e170382b1c4218fae6de4da",
+    "targetHash": "b6b50a8d4760d8675a0094e6e5976a62e9d24009e92eae543b52f86b3a75a2d4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:50:36.820Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ea58aae5192fa98d0658026c943f6c6940c117999a9c5a2da2a33ccbd6f7cd81",
+      "targetHash": "b6b50a8d4760d8675a0094e6e5976a62e9d24009e92eae543b52f86b3a75a2d4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
