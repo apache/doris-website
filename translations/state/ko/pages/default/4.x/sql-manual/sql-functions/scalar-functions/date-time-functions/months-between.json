@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-between",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-between.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-between.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "57047ce4b283a376b1d7799d52fef43c3ddb18be6dec404ff33258999ab56e45",
+    "sourceTechnicalHash": "f9a50f3f805ff78104bb6575f37fad012c8ed1021042258730e3dfe41f12d9e4",
+    "targetHash": "622c87c207ff94062986d1c2971a04eb4aad70c1f482f71e23c547897d51d4ea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:53.749Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "57047ce4b283a376b1d7799d52fef43c3ddb18be6dec404ff33258999ab56e45",
+      "targetHash": "622c87c207ff94062986d1c2971a04eb4aad70c1f482f71e23c547897d51d4ea",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

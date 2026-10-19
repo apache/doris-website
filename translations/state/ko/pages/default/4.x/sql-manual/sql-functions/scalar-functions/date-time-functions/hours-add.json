@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hours-add.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fdb5798e78285ebb744fbfcaaefc21e5f991d945b6ddca5dd4b396c2d0b7f9de",
+    "sourceTechnicalHash": "37d5639e18c2fb5ac7ca37305d4052154e92dfba6f77417083b380be5f92f235",
+    "targetHash": "ac6691715bf028fcfad3f7185658e39a90c3bc10712a092724bc20bc8fda5825",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:42:37.083Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdb5798e78285ebb744fbfcaaefc21e5f991d945b6ddca5dd4b396c2d0b7f9de",
+      "targetHash": "ac6691715bf028fcfad3f7185658e39a90c3bc10712a092724bc20bc8fda5825",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"link\",\"./date-add\",null]; received [\"inlineCode\",null,null,\"HOUR\"]\nprotected node 2: expected [\"link\",\"https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add\",null]; received [\"link\",\"./date-add\",null]\nprotected node 3: expected [\"inlineCode\",null,null,\"HOUR\"]; received [\"link\",\"https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html#function_date-add\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

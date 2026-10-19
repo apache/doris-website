@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curdate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+    "sourceTechnicalHash": "50544b07ca8326934c6e5ac4de492880f3a32f4826b70543fec9c03217204fdf",
+    "targetHash": "99761f894ab20ca2ba1d51164d7ea8a7cd103208d155fc0983d934621da936ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:38:49.907Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+      "targetHash": "99761f894ab20ca2ba1d51164d7ea8a7cd103208d155fc0983d934621da936ad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curdate",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+        "targetHash": "99761f894ab20ca2ba1d51164d7ea8a7cd103208d155fc0983d934621da936ad",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

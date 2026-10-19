@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/convert-tz.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ac2597a5e3cea01e0461227f62627fbfedbf005c12d19d5a6f32836c83e5fc62",
+    "sourceTechnicalHash": "6da699222a77d462784ad9b3e7869be6fef397caeeee51bcd28bf7b25426fc1c",
+    "targetHash": "372e01eaa9e7cf4ed2064ab32c9908fddc12206bbd051965eb6e7efde10f3f76",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:40:11.180Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac2597a5e3cea01e0461227f62627fbfedbf005c12d19d5a6f32836c83e5fc62",
+      "targetHash": "372e01eaa9e7cf4ed2064ab32c9908fddc12206bbd051965eb6e7efde10f3f76",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

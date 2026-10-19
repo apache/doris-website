@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-add.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2023136ce135dcf7580badd0a206ee4bd3353ceb412bbb40d0ff5be8e4f374d8",
+    "sourceTechnicalHash": "4d2ad8a49d24d778f27829727c411ac2e0712901d6d9e8429067156acb9af4b4",
+    "targetHash": "b69c7b13e69a81c1bc970169cb3d2fd0c1f840bd4930452d61f26d1c8c91c719",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:46:14.398Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2023136ce135dcf7580badd0a206ee4bd3353ceb412bbb40d0ff5be8e4f374d8",
+      "targetHash": "b69c7b13e69a81c1bc970169cb3d2fd0c1f840bd4930452d61f26d1c8c91c719",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

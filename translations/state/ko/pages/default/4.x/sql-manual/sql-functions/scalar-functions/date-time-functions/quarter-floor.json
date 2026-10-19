@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/quarter-floor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4856b9bbdf5de324fbbe497c87bd2bf5fcce78b65d93af4010a834576d9e69f9",
+    "sourceTechnicalHash": "59cdb660d485c3842b1d878495c59a37263cc0150e3875ec0e165158260c418e",
+    "targetHash": "190804056b3e40a603644f04e3e6cf5aef4b347cf21f822bd77a20f5c0b9d393",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:45:23.243Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4856b9bbdf5de324fbbe497c87bd2bf5fcce78b65d93af4010a834576d9e69f9",
+      "targetHash": "190804056b3e40a603644f04e3e6cf5aef4b347cf21f822bd77a20f5c0b9d393",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
