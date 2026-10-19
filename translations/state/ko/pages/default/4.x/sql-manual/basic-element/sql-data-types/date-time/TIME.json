@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/TIME",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIME.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIME.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cad6b0f8e16e6a3979919420922ab70d8b46c29793019685ef3d66189b73f594",
+    "sourceTechnicalHash": "89fb5abea300f5c890875044521edc375026daca42b6e1a387ac83b6a120646f",
+    "targetHash": "5e4ba7c025b03d275b20e39f99e01a44f4527fba25df1837ffcb345a91c40994",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:21.062Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cad6b0f8e16e6a3979919420922ab70d8b46c29793019685ef3d66189b73f594",
+      "targetHash": "5e4ba7c025b03d275b20e39f99e01a44f4527fba25df1837ffcb345a91c40994",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/date-time/TIME",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/TIME.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/TIME.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "cad6b0f8e16e6a3979919420922ab70d8b46c29793019685ef3d66189b73f594",
+        "targetHash": "5e4ba7c025b03d275b20e39f99e01a44f4527fba25df1837ffcb345a91c40994",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

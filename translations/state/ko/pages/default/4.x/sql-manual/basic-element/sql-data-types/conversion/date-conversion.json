@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/date-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/date-conversion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e97fee1f0d5bb162cbb75876be80bb594ad6099b41abb54305d7a6dc0eb8548d",
+    "sourceTechnicalHash": "68eb4cea05075bc66f61b64d9f86d86ee300180575309bd0eadc830463097ba1",
+    "targetHash": "51f150925ff870fce4a76fce05a1a60a5fd150236573b232133b7a705bd89ba1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:01:12.512Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e97fee1f0d5bb162cbb75876be80bb594ad6099b41abb54305d7a6dc0eb8548d",
+      "targetHash": "51f150925ff870fce4a76fce05a1a60a5fd150236573b232133b7a705bd89ba1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"xml\",null,\"<datetime>       ::= <date> ((\\\"T\\\" | \\\" \\\") <time> <whitespace>* <offset>?)?\\n                   | <digit>{14} <fraction>? <whitespace>* <offset>?\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<date>           ::= <year> (\\\"-\\\" | \\\"/\\\") <month1> (\\\"-\\\" | \\\"/\\\") <day1>\\n                   | <year> <month2> <day2>\\n\\n<year>           ::= <digit>{2} | <digit>{4} ; 1970 as the boundary\\n<month1>         ::= <digit>{1,2}            ; 01–12\\n<day1>           ::= <digit>{1,2}            ; 01–28/29/30/31 depending on the month\\n\\n<month2>         ::= <digit>{2}              ; 01–12\\n<day2>           ::= <digit>{2}              ; 01–28/29/30/31 depending on the month\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<time>           ::= <hour1> (\\\":\\\" <minute1> (\\\":\\\" <second1> <fraction>?)?)?\\n                   | <hour2> (<minute2> (<second2> <fraction>?)?)?\\n\\n<hour1>           ::= <digit>{1,2}      ; 00–23\\n<minute1>         ::= <digit>{1,2}      ; 00–59\\n<second1>         ::= <digit>{1,2}      ; 00–59\\n\\n<hour2>           ::= <digit>{2}        ; 00–23\\n<minute2>         ::= <digit>{2}        ; 00–59\\n<second2>         ::= <digit>{2}        ; 00–59\\n\\n<fraction>        ::= \\\".\\\" <digit>*\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<offset>         ::= ( \\\"+\\\" | \\\"-\\\" ) <hour-offset> [ \\\":\\\"? <minute-offset> ]\\n ; received [\"code\",\"xml\",null,\"<datetime>       ::= <date> ((\\\"T\\\" | \\\" \\\") <time> <whitespace>* <offset>?)?\\n                   | <digit>{14} <fraction>? <whitespace>* <offset>?\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<date>           ::= <year> (\\\"-\\\" | \\\"/\\\") <month1> (\\\"-\\\" | \\\"/\\\") <day1>\\n                   | <year> <month2> <day2>\\n\\n<year>           ::= <digit>{2} | <digit>{4} ; 1970 as the boundary\\n<month1>         ::= <digit>{1,2}            ; 01–12\\n<day1>           ::= <digit>{1,2}            ; 01–28/29/30/31 depending on the month\\n\\n<month2>         ::= <digit>{2}              ; 01–12\\n<day2>           ::= <digit>{2}              ; 01–28/29/30/31 depending on the month\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<time>           ::= <hour1> (\\\":\\\" <minute1> (\\\":\\\" <second1> <fraction>?)?)?\\n                   | <hour2> (<minute2> (<second2> <fraction>?)?)?\\n\\n<hour1>           ::= <digit>{1,2}      ; 00–23\\n<minute1>         ::= <digit>{1,2}      ; 00–59\\n<second1>         ::= <digit>{1,2}      ; 00–59\\n\\n<hour2>         ::= <digit>{2}        ; 00–23\\n<minute2>         ::= <digit>{2}        ; 00–59\\n<second2>         ::= <digit>{2}        ; 00–59\\n\\n<fraction>        ::= \\\".\\\" <digit>*\\n\\n––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––\\n\\n<offset>         ::= ( \\\"+\\\" | \\\"-\\\" ) <hour-offset> [ \\\":\\\"? <minute-offset> ]\\n   "
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 130: expected [\"inlineCode\",null,null,\"00012\"]; received [\"inlineCode\",null,null,\"<day> ::= <digit>{1,2}\"]\nprotected node 131: expected [\"inlineCode\",null,null,\"<day> ::= <digit>{1,2}\"]; received [\"inlineCode\",null,null,\"00012\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

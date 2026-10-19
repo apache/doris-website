@@ -1,0 +1,31 @@
+---
+{
+    "title": "스키마 및 인덱스 최적화",
+    "language": "ko",
+    "description": "테이블 스키마, 인덱스 설계, 스캔 최적화를 통해 Apache Doris의 쿼리 성능을 높입니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+잘 설계된 테이블 스키마, 적절한 인덱스 선택, 효율적인 스캔 전략은 쿼리 성능의 상한을 결정합니다. 다음 순서에 따라 단계별로 최적화하세요.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="테이블 스키마 설계 최적화"
+    description="데이터 편향을 방지하고 병렬성을 최대한 활용할 수 있도록 테이블 모델, 파티셔닝 및 버킷팅 컬럼, Key 컬럼, 필드 타입을 선택합니다."
+    link="optimizing-table-schema"
+/>
+
+<GettingStartedCard
+    title="테이블 인덱스 설계 최적화"
+    description="쿼리 패턴에 따라 접두사 인덱스, BloomFilter, NGram BloomFilter 또는 역색인을 선택하고 적절한 컬럼에 적용합니다."
+    link="optimizing-table-index"
+/>
+
+<GettingStartedCard
+    title="테이블 스캔 최적화"
+    description="파티션 프루닝, 접두사 인덱스 푸시다운, Runtime Filter를 활용하여 각 쿼리에서 스캔하는 데이터양을 줄입니다."
+    link="optimizing-table-scanning"
+/>
+</div>

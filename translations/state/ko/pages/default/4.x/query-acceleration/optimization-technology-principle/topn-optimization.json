@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/topn-optimization",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/topn-optimization.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e71b7eeb3b963cc4ed390ee93f2b35d9aa23a40acd5b3c26f55ce96fc3d322d5",
+    "sourceTechnicalHash": "4d0da710a6703ab5fefb8167dd30e45b0bd352414e170382b1c4218fae6de4da",
+    "targetHash": "f15e525d94d6c34d7ccccde9175908d97d4f27526f78299466d8625eb5670215",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:55:58.453Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e71b7eeb3b963cc4ed390ee93f2b35d9aa23a40acd5b3c26f55ce96fc3d322d5",
+      "targetHash": "f15e525d94d6c34d7ccccde9175908d97d4f27526f78299466d8625eb5670215",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 30: expected [\"inlineCode\",null,null,\"SORT LIMIT\"]; received [\"inlineCode\",null,null,\"VOlapScanNode\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"VOlapScanNode\"]; received [\"inlineCode\",null,null,\"SORT LIMIT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

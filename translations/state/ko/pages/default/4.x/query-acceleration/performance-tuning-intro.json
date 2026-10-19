@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/performance-tuning-intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/performance-tuning-intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/performance-tuning-intro.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+    "sourceTechnicalHash": "fe34c18d60fc54d3746809de5efe174821d755507753d8a36b3616e2f26edd80",
+    "targetHash": "cbf43f25b861d3c45662a3ac6bd4125bf3ca35cfe402b1bd86b6957c3ea9ccca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:14.761Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+      "targetHash": "cbf43f25b861d3c45662a3ac6bd4125bf3ca35cfe402b1bd86b6957c3ea9ccca",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/performance-tuning-intro",
+        "sourcePath": "docs/query-acceleration/performance-tuning-intro.mdx",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-intro.mdx",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+        "targetHash": "cbf43f25b861d3c45662a3ac6bd4125bf3ca35cfe402b1bd86b6957c3ea9ccca",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

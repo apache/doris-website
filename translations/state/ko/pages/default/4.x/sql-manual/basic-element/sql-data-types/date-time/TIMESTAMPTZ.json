@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e3f67a57d561bdb73202fbe0c242068c56670acf4c881d615d09edf848738fe9",
+    "sourceTechnicalHash": "dbf20085afde27f24d7968c03a3b86a23fe51199739ba4455ca260e8ec6ee253",
+    "targetHash": "dd5a4244e819c4b93735e3adb90778b835e1a0cb56933905802b313100566191",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:55:05.874Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3f67a57d561bdb73202fbe0c242068c56670acf4c881d615d09edf848738fe9",
+      "targetHash": "dd5a4244e819c4b93735e3adb90778b835e1a0cb56933905802b313100566191",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

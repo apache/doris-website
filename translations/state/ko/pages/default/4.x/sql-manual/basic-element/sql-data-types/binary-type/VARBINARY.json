@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/binary-type/VARBINARY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "afc80c94f400a9ccd7c3026010915f4bd7f8782640869ccd656ea276a7549862",
+    "sourceTechnicalHash": "243064a2baa164f170425638f6f4fae0cfef2612cfa9a1fbc98382ce29f4cd9b",
+    "targetHash": "bc930bfe4cc605b838d3208c4baa222608558f5267bb0c2bc8a9e2a549c35b5a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:53:27.919Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "afc80c94f400a9ccd7c3026010915f4bd7f8782640869ccd656ea276a7549862",
+      "targetHash": "bc930bfe4cc605b838d3208c4baa222608558f5267bb0c2bc8a9e2a549c35b5a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]; received [\"16\",\"16\",\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

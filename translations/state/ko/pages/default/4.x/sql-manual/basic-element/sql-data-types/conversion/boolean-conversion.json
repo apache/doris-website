@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/boolean-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/boolean-conversion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a803cddc9db2af327a71cfd799d1581d54082c8529fd49939d86ddf39e2e524e",
+    "sourceTechnicalHash": "905efe2c56b420166369d747b02a62d6136545bac49af0437e2c3c535bdfc8f5",
+    "targetHash": "744f9d43a69af91cab1446e5b0a785630f26fdda523df9c942d5dc3009d2eb6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:20.421Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a803cddc9db2af327a71cfd799d1581d54082c8529fd49939d86ddf39e2e524e",
+      "targetHash": "744f9d43a69af91cab1446e5b0a785630f26fdda523df9c942d5dc3009d2eb6b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/conversion/boolean-conversion",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/boolean-conversion.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/boolean-conversion.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "a803cddc9db2af327a71cfd799d1581d54082c8529fd49939d86ddf39e2e524e",
+        "targetHash": "744f9d43a69af91cab1446e5b0a785630f26fdda523df9c942d5dc3009d2eb6b",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

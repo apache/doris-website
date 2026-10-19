@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/BOOLEAN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ed80a13ba056c04f52ad0f00c62405cf260253e88c4992678214f02309ea7cd8",
+    "sourceTechnicalHash": "3de0165591e3ff9ba1a406b4c4d4fe42218f8b5eb19b6417dae93e61a6ec49e1",
+    "targetHash": "5f2b956ea468d7d9c4379e4c61395e9459550dae734fc98d6d75c36b969082ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:21.383Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed80a13ba056c04f52ad0f00c62405cf260253e88c4992678214f02309ea7cd8",
+      "targetHash": "5f2b956ea468d7d9c4379e4c61395e9459550dae734fc98d6d75c36b969082ae",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/numeric/BOOLEAN",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/BOOLEAN.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "ed80a13ba056c04f52ad0f00c62405cf260253e88c4992678214f02309ea7cd8",
+        "targetHash": "5f2b956ea468d7d9c4379e4c61395e9459550dae734fc98d6d75c36b969082ae",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
