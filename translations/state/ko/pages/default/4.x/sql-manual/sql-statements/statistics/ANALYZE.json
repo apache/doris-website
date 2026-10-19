@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/statistics/ANALYZE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7fff46f665bc5c1bfa9968a5cf8f0d5533f84b60149324aa47683796f8bfad71",
+    "sourceTechnicalHash": "01577e3e555e96d4d2972afe2d1172bcb187f66aa87a4bee7e30de25084df2f0",
+    "targetHash": "e7e5d826a6122e1a65f9156cb7acb7f945999109c833848bbd4dc929532e5e3e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:00:12.210Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "7fff46f665bc5c1bfa9968a5cf8f0d5533f84b60149324aa47683796f8bfad71",
+      "targetHash": "e7e5d826a6122e1a65f9156cb7acb7f945999109c833848bbd4dc929532e5e3e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\\n\"]; received [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\\n\"]; received [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\\n\"]; received [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\\n\"]; received [\"code\",\"sql\",null,\"ANALYZE TABLE lineitem WITH SAMPLE ROWS 100000;\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
