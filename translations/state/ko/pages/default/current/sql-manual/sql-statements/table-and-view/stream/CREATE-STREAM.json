@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "aebe6117548d85ebb44d5c443c27ea3e64ecd54a3c742669119b77cf50a23018",
+    "sourceTechnicalHash": "f950fb076dd5a6e16f724a16fcc1826ae5c7ba299aa1edf31594111667b79f01",
+    "targetHash": "c6885fa6a937eae47312a584be681d4481cadb25a1f50719e767b840c88fa5a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:46:06.964Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "aebe6117548d85ebb44d5c443c27ea3e64ecd54a3c742669119b77cf50a23018",
+      "targetHash": "c6885fa6a937eae47312a584be681d4481cadb25a1f50719e767b840c88fa5a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

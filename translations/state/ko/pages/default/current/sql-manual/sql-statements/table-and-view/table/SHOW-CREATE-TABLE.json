@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/SHOW-CREATE-TABLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7e8f40eb691cbf43ec66191f6b51cea0726646d7f30cfab495b45ff3a9836b8c",
+    "sourceTechnicalHash": "36e3ed441deec70e30b468704314938ebda53447957d2b55cb6a8bf9058cabad",
+    "targetHash": "8b40d5accb0be1319ef9fdbb63cd4c226bfcec731e4b0edd77e935a9ea731dc4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:48:56.130Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7e8f40eb691cbf43ec66191f6b51cea0726646d7f30cfab495b45ff3a9836b8c",
+      "targetHash": "8b40d5accb0be1319ef9fdbb63cd4c226bfcec731e4b0edd77e935a9ea731dc4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

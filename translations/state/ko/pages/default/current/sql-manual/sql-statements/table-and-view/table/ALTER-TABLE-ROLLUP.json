@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ROLLUP.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7abde5ba503c98fc85475520a305993846407955a4df42dcded1b7a7bfe3d8ca",
+    "sourceTechnicalHash": "f49496c2a855bceb5359ffd686cc957cc88bd76435326ce54d947d03cbc70d32",
+    "targetHash": "e9d4b92aacbc376c4288d4fc320d43f5ff1fe6ebea43fdabe7687c3db1200ae1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:48:13.893Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7abde5ba503c98fc85475520a305993846407955a4df42dcded1b7a7bfe3d8ca",
+      "targetHash": "e9d4b92aacbc376c4288d4fc320d43f5ff1fe6ebea43fdabe7687c3db1200ae1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

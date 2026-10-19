@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/plugin/INSTALL-PLUGIN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/plugin/INSTALL-PLUGIN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/plugin/INSTALL-PLUGIN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "84855047348dbd1b95210c4aa804f024cf26735642eabac4d0196b9db5919bee",
+    "sourceTechnicalHash": "e5a3c5bfe0d6b8868364c7477a119a857eb101f8d4e588db662b0a06dada6c7c",
+    "targetHash": "75f290e6f4b5e5073d70e13f641b1d25cfc9dbcf548aafc074f95c2e7c80a478",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:38:34.662Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "84855047348dbd1b95210c4aa804f024cf26735642eabac4d0196b9db5919bee",
+      "targetHash": "75f290e6f4b5e5073d70e13f641b1d25cfc9dbcf548aafc074f95c2e7c80a478",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

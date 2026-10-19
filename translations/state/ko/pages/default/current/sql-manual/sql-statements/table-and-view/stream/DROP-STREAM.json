@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/DROP-STREAM",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/DROP-STREAM.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/DROP-STREAM.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cb52e0c6bcf25e0c486c81299b95aca9610fed36b5738602c6a9ea63ae650e3f",
+    "sourceTechnicalHash": "9314c6c7457db5c779b4afbfd2554b33ce25b64dd3c7b03f675fa4436a4ab23b",
+    "targetHash": "a307e42b4ba066491f7cc77a23c71450936047508e1277a604d1d168308edb39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:45:42.682Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb52e0c6bcf25e0c486c81299b95aca9610fed36b5738602c6a9ea63ae650e3f",
+      "targetHash": "a307e42b4ba066491f7cc77a23c71450936047508e1277a604d1d168308edb39",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

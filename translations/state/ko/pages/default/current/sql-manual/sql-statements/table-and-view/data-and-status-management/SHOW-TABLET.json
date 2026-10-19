@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "591386fc4ddf7c9043df5c304737d649ff059c04a992e8097aed019fc3e3609f",
+    "sourceTechnicalHash": "517dfd55e7a8886e1180799df6f4298d61e26d54f28812b482c4030efa79609e",
+    "targetHash": "ca7ee5aab1cd3e292331d9fe8af170deb4d70ebbd446b72edf485cea24d9cc4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:45:56.041Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "591386fc4ddf7c9043df5c304737d649ff059c04a992e8097aed019fc3e3609f",
+      "targetHash": "ca7ee5aab1cd3e292331d9fe8af170deb4d70ebbd446b72edf485cea24d9cc4d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

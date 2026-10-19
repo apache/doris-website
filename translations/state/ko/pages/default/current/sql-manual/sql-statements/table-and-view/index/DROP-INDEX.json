@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/index/DROP-INDEX",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/index/DROP-INDEX.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/index/DROP-INDEX.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2a5f775ba0dfeec836cc8e8c05368d1b0787f00056254c02f238defdc51bc966",
+    "sourceTechnicalHash": "e09b09f4f230da4093e8fda565612f9eb6ad6b9cc502d5a7d3a4015d17c8845b",
+    "targetHash": "5540050885b955d0a2aa0f9c7cd83628ddfc6e9e1250d7d90d4999c90cdcb828",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:45:16.764Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a5f775ba0dfeec836cc8e8c05368d1b0787f00056254c02f238defdc51bc966",
+      "targetHash": "5540050885b955d0a2aa0f9c7cd83628ddfc6e9e1250d7d90d4999c90cdcb828",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
