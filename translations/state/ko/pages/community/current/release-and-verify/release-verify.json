@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-verify",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-verify.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/release-and-verify/release-verify.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "385109806bd16926815fab6a08afa1477a644903bf2cd01b3fcf5092553c9593",
+    "sourceTechnicalHash": "d955c2ae60914e8834b1fe30b3393e8e5be10f90c794c68208c796b6f820f345",
+    "targetHash": "db3760c286653bccbf36ef03478f8352906e0a86d79ac5537d31a1615564c8d4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:00.168Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "385109806bd16926815fab6a08afa1477a644903bf2cd01b3fcf5092553c9593",
+      "targetHash": "db3760c286653bccbf36ef03478f8352906e0a86d79ac5537d31a1615564c8d4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/docs-format-specification",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/docs-format-specification.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/docs-format-specification.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a60fc3e28bc9e7309d726035a8322fe86027c43ae83f9051827f6fb7312017c7",
+    "sourceTechnicalHash": "67a4aa97886b1f44413cb449bd5ee0f58a94ca997884f6336abe98d3a330a310",
+    "targetHash": "8e1ccf5e2ea31c4a7411c847e04f002daf0bb78da3fcd0ce5b9e03b38ee4fd67",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:40:47.642Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a60fc3e28bc9e7309d726035a8322fe86027c43ae83f9051827f6fb7312017c7",
+      "targetHash": "8e1ccf5e2ea31c4a7411c847e04f002daf0bb78da3fcd0ce5b9e03b38ee4fd67",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

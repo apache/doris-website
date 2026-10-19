@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/community-badges",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/community-badges.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/community-badges.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "726fa863e1766c4a0a1999f0adeba3e85268db7e097a83a5d61aa4234ec8bea9",
+    "sourceTechnicalHash": "be014d60ac106c61f8c3e4f65a0001a51832cbb9a9dd10c4572d39d31d3d8d15",
+    "targetHash": "967486fde9dd53afcc5cf0f402698493a3761e725f3625e96fef198bbbc53131",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:35.138Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "726fa863e1766c4a0a1999f0adeba3e85268db7e097a83a5d61aa4234ec8bea9",
+      "targetHash": "967486fde9dd53afcc5cf0f402698493a3761e725f3625e96fef198bbbc53131",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

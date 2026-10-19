@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-win",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-win.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/source-install/compilation-win.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ae83839f16c2116e72cbbe390c339b04ae9de7f24217fa5803a5e9a4e4c82f35",
+    "sourceTechnicalHash": "50df77ba9a47d6960e4f23338f25952a4433e69867005aa2b7f5c95427cf279a",
+    "targetHash": "a819c94615bb5138aec33d66a835a1ba92b4435e59949ba95f2d928997a6b4ea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:40:57.026Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae83839f16c2116e72cbbe390c339b04ae9de7f24217fa5803a5e9a4e4c82f35",
+      "targetHash": "a819c94615bb5138aec33d66a835a1ba92b4435e59949ba95f2d928997a6b4ea",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
