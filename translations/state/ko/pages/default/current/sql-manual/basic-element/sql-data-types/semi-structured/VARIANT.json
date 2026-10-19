@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5f4dac3e961dca1731fd41a2a5dc303cd76b5e86a43d7441d1b290b99d9cef2e",
+    "sourceTechnicalHash": "61b32cd8a351043737a5f003e444bba59bef96976fa84e66683bd7102670449a",
+    "targetHash": "ba30e80e0aac1fe126b1b2cd9c20c26185aaa53392f9371f6bde63302301429f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:27:30.478Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5f4dac3e961dca1731fd41a2a5dc303cd76b5e86a43d7441d1b290b99d9cef2e",
+      "targetHash": "ba30e80e0aac1fe126b1b2cd9c20c26185aaa53392f9371f6bde63302301429f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 112: expected [\"inlineCode\",null,null,\"b\"]; received [\"inlineCode\",null,null,\"a\"]\nprotected node 113: expected [\"inlineCode\",null,null,\"a\"]; received [\"inlineCode\",null,null,\"b\"]\nprotected node 145: expected [\"inlineCode\",null,null,\"json\"]; received [\"inlineCode\",null,null,\"DESC\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]; received [\"inlineCode\",null,null,\"s3()\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"s3()\"]; received [\"inlineCode\",null,null,\"hdfs()\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"hdfs()\"]; received [\"inlineCode\",null,null,\"INSERT INTO ... SELECT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 73: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"TRY_PARSE_TO_VARIANT\"]\nprotected node 74: expected [\"inlineCode\",null,null,\"TRY_PARSE_TO_VARIANT\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 83: expected [\"inlineCode\",null,null,\"null\"]; received [\"inlineCode\",null,null,\"{\\\"a\\\": null, \\\"b\\\": 1}\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 112: expected [\"inlineCode\",null,null,\"b\"]; received [\"inlineCode\",null,null,\"a\"]\nprotected node 113: expected [\"inlineCode\",null,null,\"a\"]; received [\"inlineCode\",null,null,\"b\"]\nprotected node 145: expected [\"inlineCode\",null,null,\"json\"]; received [\"inlineCode\",null,null,\"DESC\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

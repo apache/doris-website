@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/operator-precedence",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/operator-precedence.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/operator-precedence.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "190096440b6317c9e2eaef951c15d38d5eb848c85c8136e15483599f5d82f840",
+    "sourceTechnicalHash": "995fb426112315d41e4b25f4906683ede51cf7e1cccf757127ba5cd964289c0e",
+    "targetHash": "d28f18ce62ef6ba6ac01b14337606dc0075dc1ae6acaa22630db459a0ef29cee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:11:06.647Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "190096440b6317c9e2eaef951c15d38d5eb848c85c8136e15483599f5d82f840",
+      "targetHash": "d28f18ce62ef6ba6ac01b14337606dc0075dc1ae6acaa22630db459a0ef29cee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

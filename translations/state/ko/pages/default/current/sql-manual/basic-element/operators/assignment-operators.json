@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/assignment-operators",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/assignment-operators.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/assignment-operators.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "1bc3568ce97fa218363e3d8aa17b077f70cb3aa1b03bb91b8890a4c63b324a0c",
+    "sourceTechnicalHash": "e912d528e624162f30ae1ed237db70534916c0b636e85293583bfb257202fddf",
+    "targetHash": "96b2a39302a386c7f0e1684cdc248e463e2074acd159d3efcec6d70a034bbae6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:10:37.643Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1bc3568ce97fa218363e3d8aa17b077f70cb3aa1b03bb91b8890a4c63b324a0c",
+      "targetHash": "96b2a39302a386c7f0e1684cdc248e463e2074acd159d3efcec6d70a034bbae6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

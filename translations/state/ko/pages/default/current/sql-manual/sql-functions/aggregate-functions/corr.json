@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/corr",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/corr.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/corr.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d69e01da8d1343acf78d9e51e2c6f444b42c71bad56eb5fb2320093836ad8974",
+    "sourceTechnicalHash": "e758179f465c26ec26f8f5c8ca19b91c95e8c7edb47dfbbb82ca6b7b5ad10662",
+    "targetHash": "8a270dd332cddfd16e00cecdec5f9366fc38a455bceae369f36d1fae7d0052a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:16:32.161Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d69e01da8d1343acf78d9e51e2c6f444b42c71bad56eb5fb2320093836ad8974",
+      "targetHash": "8a270dd332cddfd16e00cecdec5f9366fc38a455bceae369f36d1fae7d0052a7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

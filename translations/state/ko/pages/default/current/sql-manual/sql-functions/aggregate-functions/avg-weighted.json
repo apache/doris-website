@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/avg-weighted",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/avg-weighted.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+    "sourceTechnicalHash": "29a07a8534f559a7e567b8161b90d5b197e21b5c6bb60cacbbcacd1abba19f13",
+    "targetHash": "05fcf2f779885c53a60ac8df544324e85e91b89671082e2301d36ac12a68e72e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:15:40.676Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2f39788ba916b589823833f7484e5ff01b86cc6632aad3e67c9b836dc7f55869",
+      "targetHash": "05fcf2f779885c53a60ac8df544324e85e91b89671082e2301d36ac12a68e72e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

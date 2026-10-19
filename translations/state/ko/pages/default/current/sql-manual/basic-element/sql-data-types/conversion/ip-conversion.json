@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/ip-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/ip-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/ip-conversion.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "3f8947c121018d2ff91d7aa1f1f1e238c945c41eefdc125627ad651931d1298e",
+    "sourceTechnicalHash": "d6f2325851c6a31a4969ef4071d2c5f8a387b9700e625b6945e66c2ea7cf962f",
+    "targetHash": "be17bf71a37265fd0a6e1de1848fbab46685d0d23311bcf1d1c0509eeed463ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:13:32.432Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3f8947c121018d2ff91d7aa1f1f1e238c945c41eefdc125627ad651931d1298e",
+      "targetHash": "be17bf71a37265fd0a6e1de1848fbab46685d0d23311bcf1d1c0509eeed463ee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

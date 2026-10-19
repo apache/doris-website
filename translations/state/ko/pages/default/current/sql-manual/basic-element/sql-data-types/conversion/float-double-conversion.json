@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/float-double-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/float-double-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/float-double-conversion.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5c28061ad36ea5c202467587b9d9e6fc71ad70fd4e5ed4dd4f485a2a7abd190f",
+    "sourceTechnicalHash": "d439d1c655d2dbf9dc123e7f47d2ce6246700b4da8115177df7b24850e681a65",
+    "targetHash": "932d8d77d27146e0014bf83ab279e62e917c3119e320f83439b947c61007e470",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:13:07.399Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5c28061ad36ea5c202467587b9d9e6fc71ad70fd4e5ed4dd4f485a2a7abd190f",
+      "targetHash": "932d8d77d27146e0014bf83ab279e62e917c3119e320f83439b947c61007e470",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

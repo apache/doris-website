@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/ip/IPV6",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/ip/IPV6.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/ip/IPV6.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "3c52ab31c8095057e5823b811920cf2cc92208f1b34c01b79292b9d17f086ed9",
+    "sourceTechnicalHash": "5be5d2f832b9152dc4e45848b14c3906cb6530529befcde8c96f706f6c9d58f1",
+    "targetHash": "6439a78f7dd630b1a6860f56b95e3e5cdafda6e6e1ae72bf0b6807190d1c9006",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:14:56.269Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3c52ab31c8095057e5823b811920cf2cc92208f1b34c01b79292b9d17f086ed9",
+      "targetHash": "6439a78f7dd630b1a6860f56b95e3e5cdafda6e6e1ae72bf0b6807190d1c9006",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

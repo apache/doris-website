@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/count-map",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/count-map.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/count-map.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "520adba0733c4c4054f13b930235804e053ad18c49775b047b7dfc006fc7c05a",
+    "sourceTechnicalHash": "0b32eefeee0119fedb33f717f8a71c47d509d2a45d8ccca4d34fbabbd9581c21",
+    "targetHash": "b2ba7f29e9d015457ed6973953dd68b256b5b5fa1a56a2d81a1c9ec15646c482",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:16:44.263Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "520adba0733c4c4054f13b930235804e053ad18c49775b047b7dfc006fc7c05a",
+      "targetHash": "b2ba7f29e9d015457ed6973953dd68b256b5b5fa1a56a2d81a1c9ec15646c482",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

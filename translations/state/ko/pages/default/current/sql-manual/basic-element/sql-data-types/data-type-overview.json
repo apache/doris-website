@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/data-type-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e52763bfe5049662e821e2803c80906ae056d069d6642ef978934256b6c2df18",
+    "sourceTechnicalHash": "160f6733d9a32ab9d947e0c293aebf4712208d6b64bd065e0d932aaeadb2793d",
+    "targetHash": "34628a1e8e43fc3e4dbc6d6769683a826b76aab6d76187ccf011850b86f74062",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:15:35.033Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e52763bfe5049662e821e2803c80906ae056d069d6642ef978934256b6c2df18",
+      "targetHash": "34628a1e8e43fc3e4dbc6d6769683a826b76aab6d76187ccf011850b86f74062",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"link\",\"../sql-data-types/numeric/FLOATING-POINT.md\",null]; received [\"inlineCode\",null,null,\"float\"]\nprotected node 8: expected [\"link\",\"../sql-data-types/numeric/FLOATING-POINT.md\",null]; received [\"inlineCode\",null,null,\"double\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"float\"]; received [\"link\",\"../sql-data-types/numeric/FLOATING-POINT.md\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1048576\",\"127\",\"127\",\"127\",\"128\",\"128\",\"16\",\"16\",\"16\",\"1677\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2147483643\",\"2147483647\",\"2147483648\",\"2262\",\"255\",\"32767\",\"32768\",\"4\",\"4\",\"4\",\"4\",\"4.0\",\"6\",\"6\",\"65533\",\"8\",\"9223372036854775807\",\"9223372036854775808\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1048576\",\"127\",\"127\",\"127\",\"128\",\"128\",\"16\",\"16\",\"16\",\"16\",\"1677\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2147483643\",\"2147483647\",\"2147483648\",\"2262\",\"255\",\"32767\",\"32768\",\"4\",\"4\",\"4\",\"4\",\"4.0\",\"6\",\"6\",\"65533\",\"8\",\"9223372036854775807\",\"9223372036854775808\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

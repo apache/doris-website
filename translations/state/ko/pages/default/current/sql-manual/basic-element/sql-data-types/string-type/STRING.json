@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/string-type/STRING",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/string-type/STRING.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ae7d4809e87949be838c96574600ca5fb487bdced3e3de807ffd5137445118e9",
+    "sourceTechnicalHash": "2501e9e2c9b8de79737059e570d6db5cda7fa0768e53e93abd725fe91c266c53",
+    "targetHash": "e07066d33e85df76cdc45d88e3caeef85193557ca9a90c7dd327aba04c1dad5c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:14:44.136Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae7d4809e87949be838c96574600ca5fb487bdced3e3de807ffd5137445118e9",
+      "targetHash": "e07066d33e85df76cdc45d88e3caeef85193557ca9a90c7dd327aba04c1dad5c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
