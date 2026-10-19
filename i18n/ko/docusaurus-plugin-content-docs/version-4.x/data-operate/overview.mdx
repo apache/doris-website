@@ -1,0 +1,39 @@
+---
+{
+    "title": "데이터 작업",
+    "language": "ko",
+    "description": "Apache Doris에서 데이터를 적재, 업데이트, 삭제 및 내보내는 방법을 설명하고, 데이터 수집 방식, 쓰기 동작 방식 및 결과 집합 내보내기를 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris는 데이터 수집부터 데이터 내보내기까지 전체 파이프라인을 아우르는 포괄적인 데이터 작업 기능을 제공합니다. 다양한 데이터 소스에서 데이터를 적재하고, 트랜잭션을 보장하면서 데이터를 업데이트하거나 삭제하며, 쿼리 결과나 테이블 데이터를 외부 스토리지 시스템으로 내보낼 수 있습니다.
+
+또한 Apache Doris는 Apache Iceberg 테이블 데이터를 직접 관리하는 기능도 지원합니다. 여기에는 Iceberg 테이블에 대한 직접 쿼리 가속, 쓰기, 업데이트 및 삭제 작업이 포함됩니다. 자세한 내용은 Iceberg Catalog의 데이터 관리 섹션을 참조하세요.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="데이터 적재"
+    description="Stream Load, Broker Load, Routine Load, INSERT 및 스트리밍 데이터 동기화 작업을 통해 파일, 메시지 큐, 트랜잭션 데이터베이스 및 다른 OLAP 시스템에서 데이터를 적재합니다."
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="데이터 업데이트 및 삭제"
+    description="기존 데이터를 업데이트하고, DELETE, TRUNCATE, 원자적 덮어쓰기 등의 방법으로 데이터를 삭제하며, 트랜잭션을 통해 여러 쓰기 작업을 하나의 원자적 단위로 결합합니다."
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="데이터 내보내기"
+    description="EXPORT, SELECT INTO OUTFILE 또는 mysqldump를 사용하여 쿼리 결과나 테이블 데이터를 HDFS, 객체 스토리지 또는 로컬 파일 시스템으로 내보냅니다."
+    link="./export/export-overview"
+/>
+
+<GettingStartedCard
+    title="Iceberg 데이터 관리"
+    description="Iceberg Catalog를 생성하여 Iceberg 테이블 데이터에 연결하고 데이터 작업을 수행합니다."
+    link="../lakehouse/catalogs/iceberg-catalog"
+/>
+</div>

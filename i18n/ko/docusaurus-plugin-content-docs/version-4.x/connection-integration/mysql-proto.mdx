@@ -1,0 +1,171 @@
+---
+{
+    "title": "MySQL 프로토콜로 연결하기",
+    "language": "ko",
+    "description": "Apache Doris의 MySQL 네트워크 프로토콜 호환성을 소개하고, MySQL CLI와 Java, Go, Rust, Python, C++ 등 주요 언어의 연결 예제를 제공합니다."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Apache Doris는 **MySQL 네트워크 통신 프로토콜**과 완벽하게 호환됩니다. 따라서 이 프로토콜을 따르는 모든 클라이언트 도구, 시각화 도구, 주요 프로그래밍 언어용 MySQL 드라이버 / 라이브러리는 **Doris 전용 드라이버를 설치할 필요 없이** Doris에 직접 연결할 수 있습니다.
+
+> Doris FE는 기본적으로 `9030` 포트에서 MySQL 프로토콜 서비스를 제공합니다. 이 포트는 `query_port` 설정 항목에 해당하며, `fe.conf`에서 설정합니다.
+
+## 주요 사용 사례 {#typical-use-cases}
+
+MySQL 프로토콜 연결은 사용 목적에 따라 다음 두 가지 대표적인 시나리오로 나뉩니다.
+
+| 시나리오 | 주요 용도 | 권장 방법 |
+| --- | --- | --- |
+| 명령줄 / 스크립트 접근 | 운영 문제 해결, 임시 쿼리, 자동화 스크립트 | MySQL CLI |
+| 애플리케이션 통합 | 백엔드 서비스, 데이터 처리 프로그램, ETL 작업 | 해당 언어용 MySQL 드라이버(Java / Go / Rust / Python / C++ 등) |
+
+## 연결 전 준비 {#preparation-before-connecting}
+
+연결하기 전에 다음 정보를 확인하세요.
+
+| 항목 | 설명 | 예시 |
+| --- | --- | --- |
+| `FE_IP` | Doris FE 노드의 IP 주소 또는 호스트 이름 | `172.20.63.118` |
+| `FE_QUERY_PORT` | FE의 MySQL 프로토콜 서비스 포트. `query_port` 설정 항목에 해당하며 `fe.conf`에서 설정합니다. | `9030` |
+| `USER` | 로그인 계정 | `root` |
+| `PASSWORD` | 로그인 비밀번호(기본 `root` 계정의 비밀번호는 비어 있음) | - |
+
+> 포트를 변경하려면 FE 노드의 `query_port` 설정 항목을 `fe.conf`에서 수정한 후 FE를 재시작하세요.
+
+## 연결 예제 {#connection-examples}
+
+다음은 MySQL 클라이언트 / 언어별 드라이버의 최소 구성 연결 예제입니다. 아래 탭에서 원하는 예제를 선택하세요.
+
+<Tabs groupId="mysql-client">
+
+<TabItem value="mysql-cli" label="MySQL CLI" default>
+
+명령줄 작업, 임시 쿼리, 스크립트를 통한 호출 등에 적합합니다.
+
+### 1. MySQL 클라이언트 다운로드 및 압축 해제 {#1-download-and-extract-the-mysql-client}
+
+[MySQL 공식 웹사이트](https://dev.mysql.com/downloads/mysql/)에서 MySQL 클라이언트를 다운로드하세요. Doris는 **MySQL 5.7 이상**의 클라이언트 버전과 호환됩니다.
+
+압축을 해제하면 `mysql` 명령줄 도구를 `bin/` 디렉터리에서 찾을 수 있습니다.
+
+### 2. Doris에 연결 {#2-connect-to-doris}
+
+다음 명령을 실행하여 Doris에 연결하세요.
+
+```shell
+mysql -h FE_IP -P FE_QUERY_PORT -u USER -p
+```
+
+Enter를 누른 후 비밀번호를 입력하세요(기본적으로 `root` 계정에는 비밀번호가 없으므로 Enter만 누르면 됩니다).
+
+### 3. 로그인 확인 {#3-verify-login}
+
+로그인에 성공하면 다음 메시지가 표시됩니다.
+
+```text
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 236
+Server version: 5.7.99 Doris version doris-2.0.3-rc06-37d31a5
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+Java 애플리케이션을 Doris와 통합하는 경우에 적합합니다. Doris는 연결에 **MySQL JDBC Connector**를 사용할 것을 권장합니다.
+
+### 1. JDBC 드라이버 추가 {#1-add-the-jdbc-driver}
+
+프로젝트에 MySQL JDBC Connector 의존성을 추가하세요(MySQL 5.1.49 이상 권장).
+
+### 2. 연결 코드 작성 {#2-write-the-connection-code}
+
+```java
+String user = "user_name";
+String password = "user_password";
+String url = "jdbc:mysql://FE_IP:FE_QUERY_PORT/demo"
+        + "?useUnicode=true"
+        + "&characterEncoding=utf8"
+        + "&useTimezone=true"
+        + "&serverTimezone=Asia/Shanghai"
+        + "&useSSL=false"
+        + "&allowPublicKeyRetrieval=true";
+
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("show databases")) {
+
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columnCount = metaData.getColumnCount();
+    while (rs.next()) {
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.println(rs.getObject(i));
+        }
+    }
+} catch (SQLException e) {
+    log.error("get JDBC connection exception.", e);
+}
+```
+
+### 3. 자주 사용하는 JDBC URL 매개변수 {#3-common-jdbc-url-parameters}
+
+| 매개변수 | 의미 | 권장 값 / 예시 | 필수 여부 |
+| --- | --- | --- | --- |
+| `useUnicode` | Unicode 문자 집합 사용 여부 | `true` | 아니요 |
+| `characterEncoding` | 문자 인코딩 | `utf8` | 아니요 |
+| `useTimezone` | 시간대 변환 활성화 여부 | `true` | 아니요 |
+| `serverTimezone` | 서버 시간대 | `Asia/Shanghai` | 아니요 |
+| `useSSL` | 연결 시 SSL 사용 여부 | `false` | 아니요 |
+| `allowPublicKeyRetrieval` | 서버에서 공개 키를 가져오도록 허용할지 여부(MySQL 8 드라이버에서 일반적으로 필요) | `true` | 아니요 |
+| `sessionVariables` | 연결 시 초기화할 세션 변수 | `key1=val1,key2=val2` | 아니요 |
+
+### 4. 세션 변수 초기화(선택 사항) {#4-initialize-session-variables-optional}
+
+연결 시 세션 변수를 초기화해야 한다면 다음 URL 형식을 사용하세요.
+
+```text
+jdbc:mysql://FE_IP:FE_QUERY_PORT/demo?sessionVariables=key1=val1,key2=val2
+```
+
+</TabItem>
+
+<TabItem value="go" label="Go">
+
+:::info 추가 예정
+MySQL 드라이버를 통해 Go에서 Doris에 연결하는 예제는 향후 릴리스에서 추가될 예정입니다.
+:::
+
+</TabItem>
+
+<TabItem value="rust" label="Rust">
+
+:::info 추가 예정
+MySQL 드라이버를 통해 Rust에서 Doris에 연결하는 예제는 향후 릴리스에서 추가될 예정입니다.
+:::
+
+</TabItem>
+
+<TabItem value="python" label="Python">
+
+:::info 추가 예정
+MySQL 드라이버를 통해 Python에서 Doris에 연결하는 예제는 향후 릴리스에서 추가될 예정입니다.
+:::
+
+</TabItem>
+
+<TabItem value="cpp" label="C++">
+
+:::info 추가 예정
+MySQL Connector를 통해 C++에서 Doris에 연결하는 예제는 향후 릴리스에서 추가될 예정입니다.
+:::
+
+</TabItem>
+
+</Tabs>

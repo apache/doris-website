@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/google-cloud-storage",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/google-cloud-storage.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/google-cloud-storage.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b9e69e4038bdab0b313343414b46fc777f26321137ad700689fbca132d9c9d19",
+    "sourceTechnicalHash": "85b76277bc835d3e05927b9510a6cdc900596d7ffd7e144021a9418a2702656d",
+    "targetHash": "052ba3ab6cdaccc7d9da308ed6b19d3134a50891d8177a5ff82df4a3912fa153",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:14:03.607Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b9e69e4038bdab0b313343414b46fc777f26321137ad700689fbca132d9c9d19",
+      "targetHash": "052ba3ab6cdaccc7d9da308ed6b19d3134a50891d8177a5ff82df4a3912fa153",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/data-source/google-cloud-storage",
+        "sourcePath": "docs/data-operate/import/data-source/google-cloud-storage.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/google-cloud-storage.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "b9e69e4038bdab0b313343414b46fc777f26321137ad700689fbca132d9c9d19",
+        "targetHash": "052ba3ab6cdaccc7d9da308ed6b19d3134a50891d8177a5ff82df4a3912fa153",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

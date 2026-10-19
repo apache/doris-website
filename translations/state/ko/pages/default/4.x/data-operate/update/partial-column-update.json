@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/update/partial-column-update",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/update/partial-column-update.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/update/partial-column-update.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "30052012a8457a9a9bdd6291ec54fccfb64487b834dc42db8f8a5728f1a5c9e5",
+    "sourceTechnicalHash": "fda45a3da5148c51482071e8cebb2c764f4edbf5d36c4df66bdfc3bfac203349",
+    "targetHash": "f8ba6261353a6baeb2900633026b0e5ea8553aa4a65fee5c8a9dfcc9ce30bce2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:22:20.141Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "30052012a8457a9a9bdd6291ec54fccfb64487b834dc42db8f8a5728f1a5c9e5",
+      "targetHash": "f8ba6261353a6baeb2900633026b0e5ea8553aa4a65fee5c8a9dfcc9ce30bce2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

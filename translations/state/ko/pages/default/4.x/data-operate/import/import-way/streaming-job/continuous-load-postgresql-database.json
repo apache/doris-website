@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-postgresql-database",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "38c8570d44569f85c317c4c39e64319e83a9c55c4f2348d94a2ee9771e9adf4d",
+    "sourceTechnicalHash": "d5acc16549ae2f33f9be9e50d154761d3aa9bee8a81f85ea0872931ec533b9ab",
+    "targetHash": "53c69971561555ddc550a27f585da84b16165224be8481282bacab1060de88e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:18:55.669Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "38c8570d44569f85c317c4c39e64319e83a9c55c4f2348d94a2ee9771e9adf4d",
+      "targetHash": "53c69971561555ddc550a27f585da84b16165224be8481282bacab1060de88e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

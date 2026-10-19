@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
+    "sourceTechnicalHash": "f8b1209a68f3e4c0a30a8244226e58f8beee42dd22fe1c09a044ea8756414a68",
+    "targetHash": "f78c0d94473236e98e10abecaa94d985e0908a456146c2416ff62246a136b4e7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:18:11.291Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
+      "targetHash": "f78c0d94473236e98e10abecaa94d985e0908a456146c2416ff62246a136b4e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase",
+        "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
+        "targetHash": "f78c0d94473236e98e10abecaa94d985e0908a456146c2416ff62246a136b4e7",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
