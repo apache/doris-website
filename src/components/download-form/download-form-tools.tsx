@@ -26,6 +26,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
     const architecture = useWatch('architecture', form);
     const version = useWatch('version', form);
     const tarBall = useWatch('tarBall', form);
+    const downloadTypes = data.find(item => item.value === tool)?.downloadTypes || [DownloadTypeEnum.Binary, DownloadTypeEnum.Source];
     const isOperatorBinary = tool === ToolsEnum.Operator && tarBall === DownloadTypeEnum.Binary;
 
     const getOptions = useMemo(() => {
@@ -101,7 +102,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             } else {
                 form.setFieldValue('version', getOptions[0].value);
             }
-            form.setFieldValue('tarBall', DownloadTypeEnum.Binary);
+            form.setFieldValue('tarBall', downloadTypes[0]);
         }
     }, [tool]);
 
@@ -209,16 +210,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     label="Tarball"
                     isCascader={false}
                     popupExtraClass={popupExtraClass}
-                    options={[
-                        {
-                            label: DownloadTypeEnum.Binary,
-                            value: DownloadTypeEnum.Binary,
-                        },
-                        {
-                            label: DownloadTypeEnum.Source,
-                            value: DownloadTypeEnum.Source,
-                        },
-                    ]}
+                    options={downloadTypes.map(type => ({ label: type, value: type }))}
                 />
             </Form.Item>
             {isOperatorBinary ? (

@@ -7,6 +7,11 @@ const rootDir = path.resolve(__dirname, '../../..');
 
 const ecosystemProjects = [
   {
+    name: 'Doris Shade',
+    docId: 'ecosystem/doris-shade',
+    versions: ['4.1.0'],
+  },
+  {
     name: 'Doris Flink Connector',
     docId: 'ecosystem/doris-flink-connector',
     versions: ['26.1.1', '26.1.0', '26.0.0', '25.1.0', '25.0.0'],

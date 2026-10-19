@@ -7,6 +7,7 @@ export type Option = {
     source?: string;
     Binary?: string;
     Source?: string;
+    downloadTypes?: DownloadTypeEnum[];
     children?: (Option & { version?: string })[];
     majorVersion?: string;
 };
@@ -29,6 +30,7 @@ export enum ToolsEnum {
     Spark = 'Spark Doris Connector',
     StreamLoader = 'Doris Streamloader',
     Operator = 'Doris Operator',
+    Shade = 'Doris Shade',
 }
 
 export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
@@ -37,6 +39,7 @@ export const TOOL_RELEASE_NOTES: Record<ToolsEnum, string> = {
     [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
     [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
     [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+    [ToolsEnum.Shade]: '/releases/ecosystem/doris-shade',
 };
 
 /**
@@ -63,6 +66,7 @@ export const ACTIVE_TOOL_LINES: Record<ToolsEnum, string[]> = {
     [ToolsEnum.Spark]: ['26'],
     [ToolsEnum.StreamLoader]: ['1.0.3'],
     [ToolsEnum.Operator]: ['26'],
+    [ToolsEnum.Shade]: ['4.1.0'],
 };
 
 export function isActiveToolVersion(tool: ToolsEnum, version: string): boolean {
@@ -3417,6 +3421,21 @@ export const TOOL_VERSIONS = [
         label: ToolsEnum.Operator,
         value: ToolsEnum.Operator,
         children: DORIS_OPERATOR_VERSIONS,
+    },
+    {
+        label: ToolsEnum.Shade,
+        value: ToolsEnum.Shade,
+        downloadTypes: [DownloadTypeEnum.Source],
+        children: [
+            {
+                label: '4.1.0',
+                value: '4.1.0',
+                gz: 'https://www.apache.org/dyn/closer.lua/doris/doris-shade/4.1.0/apache-doris-shade-4.1.0-src.tar.gz?action=download',
+                Source: 'https://www.apache.org/dyn/closer.lua/doris/doris-shade/4.1.0/apache-doris-shade-4.1.0-src.tar.gz?action=download',
+                asc: 'https://downloads.apache.org/doris/doris-shade/4.1.0/apache-doris-shade-4.1.0-src.tar.gz.asc',
+                sha512: 'https://downloads.apache.org/doris/doris-shade/4.1.0/apache-doris-shade-4.1.0-src.tar.gz.sha512',
+            },
+        ],
     },
 ];
 

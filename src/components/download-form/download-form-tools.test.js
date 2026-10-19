@@ -60,6 +60,7 @@ test('every ecosystem download tool maps to its release notes page', () => {
         [ToolsEnum.Spark]: '/releases/ecosystem/doris-spark-connector',
         [ToolsEnum.StreamLoader]: '/releases/ecosystem/doris-streamloader',
         [ToolsEnum.Operator]: '/releases/ecosystem/doris-operator',
+        [ToolsEnum.Shade]: '/releases/ecosystem/doris-shade',
     });
 });
 

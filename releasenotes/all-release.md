@@ -21,3 +21,4 @@ This document presents release notes for Apache Doris Core and Doris ecosystem p
 | Doris Skills | [Release Notes](./ecosystem/doris-skills.md) | [apache/doris-skills](https://github.com/apache/doris-skills) |
 | Doris CLI | [Release Notes](./ecosystem/doris-cli.md) | [apache/doris-cli](https://github.com/apache/doris-cli) |
 | Doris Streamloader | [Release Notes](./ecosystem/doris-streamloader.md) | [apache/doris-streamloader](https://github.com/apache/doris-streamloader) |
+| Doris Shade | [Release Notes](./ecosystem/doris-shade.md) | [apache/doris-shade](https://github.com/apache/doris-shade) |
