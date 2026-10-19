@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "getting-started/quick-start",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/getting-started/quick-start.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/getting-started/quick-start.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c1f1c82c39f02f2368e4f214b72a7be258983de46fcb04615078a1dd8d35a60b",
+    "sourceTechnicalHash": "9c1b0c02f50f363922e3fa34e6e59b15977943a1ada12454ef9ea76ad9bf6367",
+    "targetHash": "5ba43308c1bbb4bfa415ee3592f9cd10c78e8e160acbe65ae58c78438d89a7f9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:02:15.111Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c1f1c82c39f02f2368e4f214b72a7be258983de46fcb04615078a1dd8d35a60b",
+      "targetHash": "5ba43308c1bbb4bfa415ee3592f9cd10c78e8e160acbe65ae58c78438d89a7f9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-best-practices/routine-load-best-practices",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-best-practices/routine-load-best-practices.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/load-best-practices/routine-load-best-practices.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d800a94209c540553531c1b0ff9c819a7537597ee21cd622052d863461732097",
+    "sourceTechnicalHash": "81b12967c8db3cbcd095e7db046660e79381040096882d70bd3d9876e64bbc85",
+    "targetHash": "61e8910874cc7b647b2c9e14ac29bfe2e3e83f30cfe0516e3efd5da99b553636",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:59:23.546Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d800a94209c540553531c1b0ff9c819a7537597ee21cd622052d863461732097",
+      "targetHash": "61e8910874cc7b647b2c9e14ac29bfe2e3e83f30cfe0516e3efd5da99b553636",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

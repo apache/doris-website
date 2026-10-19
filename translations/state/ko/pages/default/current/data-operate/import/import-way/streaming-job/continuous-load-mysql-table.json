@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-mysql-table",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d62005014c4520682968b5c33223d0747eeac92585562e8c3a4e0de5a704ce9e",
+    "sourceTechnicalHash": "2f63485fcb9cb1070f993e858ead67e83f6d9a7bc39a6e050c659dc3fea1e790",
+    "targetHash": "b05aa70a8b7e95713993b00000ea2e3cf9330754fc5a01345a00c8fe16f8bbea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:57:23.625Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d62005014c4520682968b5c33223d0747eeac92585562e8c3a4e0de5a704ce9e",
+      "targetHash": "b05aa70a8b7e95713993b00000ea2e3cf9330754fc5a01345a00c8fe16f8bbea",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

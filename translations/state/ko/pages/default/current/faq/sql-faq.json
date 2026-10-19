@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/sql-faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/sql-faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/faq/sql-faq.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6368556a4756749e84a9fcdfd1fc7bee6d8449d8159bcdaf4a373439f6e35b7b",
+    "sourceTechnicalHash": "da7b171ff8e7663afbd923ba0233a9a694a77e36d3a2783c7018042a5f30f32f",
+    "targetHash": "cba84f7a573b20adfb99e644424e03db8bfbc29dd6a2a9cb3abad65e78a5af97",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:01:22.410Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6368556a4756749e84a9fcdfd1fc7bee6d8449d8159bcdaf4a373439f6e35b7b",
+      "targetHash": "cba84f7a573b20adfb99e644424e03db8bfbc29dd6a2a9cb3abad65e78a5af97",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

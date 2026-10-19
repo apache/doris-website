@@ -1,0 +1,33 @@
+---
+{
+    "title": "데이터 업데이트 및 삭제",
+    "language": "ko",
+    "description": "Apache Doris에서 데이터를 업데이트하고 삭제하며, 트랜잭션을 통해 쓰기 작업을 관리합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 데이터 업데이트 및 삭제 {#data-update-and-delete}
+
+Apache Doris는 데이터를 업데이트하고 삭제하는 유연한 메커니즘을 제공하며, 트랜잭션 기능을 통해 쓰기 작업의 신뢰성과 일관성을 보장합니다.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="데이터 업데이트"
+    description="SQL UPDATE, 부분 컬럼 업데이트, Unique Key 모델의 Upsert를 통해 기존 데이터를 업데이트합니다"
+    link="./update/update-overview"
+/>
+
+<GettingStartedCard
+    title="데이터 삭제"
+    description="DELETE, 일괄 삭제, TRUNCATE, 원자적 덮어쓰기, 임시 파티션을 사용하여 데이터를 정리합니다"
+    link="./delete/delete-overview"
+/>
+
+<GettingStartedCard
+    title="트랜잭션"
+    description="명시적 트랜잭션과 암시적 트랜잭션을 사용하여 여러 쓰기 작업을 하나의 원자적 단위로 묶습니다"
+    link="./transaction"
+/>
+</div>

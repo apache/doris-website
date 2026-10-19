@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/insert-into-values-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/insert-into-values-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-values-manual.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "1f9b2dc29ddada32e9ee16d24f1f7874eb7012a6a68c41d88ef58a7330958191",
+    "sourceTechnicalHash": "2f4d8df5b47745d46f4a4e2736f7376d5ae8166a743c0016a9c26e91078f2661",
+    "targetHash": "a6cab21263f06f5355925f11a74b1833cdd86b0731a306d5e5551590435df1a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:57:31.419Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1f9b2dc29ddada32e9ee16d24f1f7874eb7012a6a68c41d88ef58a7330958191",
+      "targetHash": "a6cab21263f06f5355925f11a74b1833cdd86b0731a306d5e5551590435df1a1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/preparation/cluster-planning",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/preparation/cluster-planning.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/preparation/cluster-planning.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "98cc6623a4232da72425eefe614f4fa16cee18d420e8681ae5133f821856004a",
+    "sourceTechnicalHash": "1bd84f2098e919fcb6c88e347c99576108157e6468d5976d7105bd2c08499150",
+    "targetHash": "a8d30f2186b163ec799ed223dedada40ee22e6e3fb22e0ff0374c3927a99d594",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:04:11.660Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "98cc6623a4232da72425eefe614f4fa16cee18d420e8681ae5133f821856004a",
+      "targetHash": "a8d30f2186b163ec799ed223dedada40ee22e6e3fb22e0ff0374c3927a99d594",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
