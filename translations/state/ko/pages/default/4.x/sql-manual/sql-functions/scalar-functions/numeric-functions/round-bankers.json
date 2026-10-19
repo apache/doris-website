@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+    "sourceTechnicalHash": "9bdf9e00a841205989b5fc8223fe715e63ce0affb05dc3734706f8b4041f8429",
+    "targetHash": "58dd3739d78f37fd23080806696babae4ad08f5aaa7d9a7a35f5ba7b8bfaf228",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:08:03.473Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+      "targetHash": "58dd3739d78f37fd23080806696babae4ad08f5aaa7d9a7a35f5ba7b8bfaf228",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/round-bankers.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "18e3e4c1bd9d6ddb0b294989dd5979c7bc4dbc03188bc5a5c301866d4bb815a5",
+        "targetHash": "58dd3739d78f37fd23080806696babae4ad08f5aaa7d9a7a35f5ba7b8bfaf228",
+        "commit": "a0914c0ab5093fb7b3fa636038e59d9608bd6180",
+        "pr": "https://github.com/apache/doris-website/pull/4381"
+      }
+    }
+  }
+}

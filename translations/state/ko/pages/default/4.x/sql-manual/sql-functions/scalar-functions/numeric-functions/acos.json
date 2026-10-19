@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/acos",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/acos.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/numeric-functions/acos.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "144b868a63e7c1942ebe38705891409ad7155e8893facd28edd0230061843269",
+    "sourceTechnicalHash": "a785318e22b5035c8bdd28d8cb3cb57b4da7024ab6437ca9fa8d3008b4156d91",
+    "targetHash": "3c63f847b05983a42139faff112687949227190ae149e17d0938eb75a15fa468",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:07:58.836Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "144b868a63e7c1942ebe38705891409ad7155e8893facd28edd0230061843269",
+      "targetHash": "3c63f847b05983a42139faff112687949227190ae149e17d0938eb75a15fa468",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/acos",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/acos.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/acos.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "144b868a63e7c1942ebe38705891409ad7155e8893facd28edd0230061843269",
+        "targetHash": "3c63f847b05983a42139faff112687949227190ae149e17d0938eb75a15fa468",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

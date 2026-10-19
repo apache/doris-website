@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/map-functions/map-size.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/map-functions/map-size.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d854bcb4c2c65eb46f0321f9b9e23eb1a993e594815bb7efab07a54a86068417",
+    "sourceTechnicalHash": "87994db13645237cdb73a1461d41f26c2b918707923ad8b83a1aa5a3a4b7d605",
+    "targetHash": "b649bed536da7f1a423d8a1ee364e505e38710123592c11cf8694d8a88511fb3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:07:58.440Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d854bcb4c2c65eb46f0321f9b9e23eb1a993e594815bb7efab07a54a86068417",
+      "targetHash": "b649bed536da7f1a423d8a1ee364e505e38710123592c11cf8694d8a88511fb3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-size",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map-size.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map-size.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "d854bcb4c2c65eb46f0321f9b9e23eb1a993e594815bb7efab07a54a86068417",
+        "targetHash": "b649bed536da7f1a423d8a1ee364e505e38710123592c11cf8694d8a88511fb3",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
