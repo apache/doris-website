@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/conditional-functions/not-null-or-empty.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "80cd081f2677fa4fd60495232e12ba3305a2da4e7d8e905fcd93fc2b4363b93b",
+    "sourceTechnicalHash": "8d90044786488f1bdbeef5e52f54e79c1766321ab8fd666d1ed8ac588cb3a0b1",
+    "targetHash": "645bf3c0dd500d91f290b5248677844534bdfccbe39072c8e60ae11725f19efb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:46:40.341Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80cd081f2677fa4fd60495232e12ba3305a2da4e7d8e905fcd93fc2b4363b93b",
+      "targetHash": "645bf3c0dd500d91f290b5248677844534bdfccbe39072c8e60ae11725f19efb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

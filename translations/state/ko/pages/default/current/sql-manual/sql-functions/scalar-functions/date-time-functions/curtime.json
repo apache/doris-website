@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curtime",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/curtime.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/curtime.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "63da3bfb2be77411f574b739f16343a3b93ef6cd326364a16cfc69d9a58c0c4c",
+    "sourceTechnicalHash": "77ccca33daedeac8f773bdbf5ea052cfc84e4264546ff0cac16318bfe249a3c9",
+    "targetHash": "eb1d52c5d0ca78bae4b89cb27bf42e190e270e9b3a77d65cda77735d66a87b54",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:47:19.762Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "63da3bfb2be77411f574b739f16343a3b93ef6cd326364a16cfc69d9a58c0c4c",
+      "targetHash": "eb1d52c5d0ca78bae4b89cb27bf42e190e270e9b3a77d65cda77735d66a87b54",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

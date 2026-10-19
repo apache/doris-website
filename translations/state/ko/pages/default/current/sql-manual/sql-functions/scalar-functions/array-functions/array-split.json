@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-split",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-split.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-split.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4ccd6bd26c671e7cb343a7205097d7ed807d317353254c2c77b57857843038ca",
+    "sourceTechnicalHash": "ca58eadac947db185f60190de377a31318e90c1a9c1d24376fb76f536196a7d1",
+    "targetHash": "7d9c40726377d2c43baf85d459211e2e7720b5ec17ebdc9bc8b8ba3029becc91",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:42:35.839Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ccd6bd26c671e7cb343a7205097d7ed807d317353254c2c77b57857843038ca",
+      "targetHash": "7d9c40726377d2c43baf85d459211e2e7720b5ec17ebdc9bc8b8ba3029becc91",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

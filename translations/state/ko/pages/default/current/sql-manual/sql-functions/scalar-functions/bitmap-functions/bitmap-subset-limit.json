@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-subset-limit.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "e5eefa4b606c8e7e69d4790d33eab325581a843c8040512699c052992c7d8496",
+    "sourceTechnicalHash": "0efeaf792cd9bc64a4ed909a6f28eb6673d376af74c08dc213bbea6eaf2d0347",
+    "targetHash": "5f26f0c46d6d676aa34217a4bdce293e8e5ea008152f5b97fe9a29b39250081f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:45:10.625Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5eefa4b606c8e7e69d4790d33eab325581a843c8040512699c052992c7d8496",
+      "targetHash": "5f26f0c46d6d676aa34217a4bdce293e8e5ea008152f5b97fe9a29b39250081f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-max",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-max.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-max.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7b530b5536ff59d22e0229718158d3e6d5dd60f64000a1493f4e88b90c7d8c29",
+    "sourceTechnicalHash": "3db5a9134ce79bba9c13163375f942617f1bfc7f14ee79a6c48343a25d83660e",
+    "targetHash": "4140ef2be793e5c67df398c11bba1d7f0b5c22b3f9947e4b79402d5390aa17c9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:41:48.352Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7b530b5536ff59d22e0229718158d3e6d5dd60f64000a1493f4e88b90c7d8c29",
+      "targetHash": "4140ef2be793e5c67df398c11bba1d7f0b5c22b3f9947e4b79402d5390aa17c9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

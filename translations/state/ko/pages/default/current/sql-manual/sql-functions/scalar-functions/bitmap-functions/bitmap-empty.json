@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-empty",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-empty.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-empty.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "dab50ea71c8a4e4287ff6ae1861836a15ed46b48bb01c15cc9889e806c127702",
+    "sourceTechnicalHash": "8e6a3863489c76c282d81b1aa3029225d1b53987e89667aa4dd1130388e83a64",
+    "targetHash": "7ce59d82081333401d161844b94aacda6374923421ddd06277e1512f9a8329c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:43:53.597Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dab50ea71c8a4e4287ff6ae1861836a15ed46b48bb01c15cc9889e806c127702",
+      "targetHash": "7ce59d82081333401d161844b94aacda6374923421ddd06277e1512f9a8329c0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/nullif",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/conditional-functions/nullif.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/conditional-functions/nullif.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ae99910bf88a5a9f3324e03b6f7b58430993532f1a9be6ce4d5e64cc2c34371c",
+    "sourceTechnicalHash": "c51d3a636fdaa932d2ea5178d830439c2a3c082b9c5c3591e5bf4712495cd944",
+    "targetHash": "dc739d5d8719c74a0176d553c78b9c1b5fb0bb298d0ecc9b0b1bcaa28198bf48",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:46:52.725Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae99910bf88a5a9f3324e03b6f7b58430993532f1a9be6ce4d5e64cc2c34371c",
+      "targetHash": "dc739d5d8719c74a0176d553c78b9c1b5fb0bb298d0ecc9b0b1bcaa28198bf48",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
