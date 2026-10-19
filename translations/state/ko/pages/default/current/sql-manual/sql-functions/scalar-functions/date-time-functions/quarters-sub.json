@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-sub.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c3a716131b88495b03fe82713706f53c3e7c689d92213170ff57125893ce4f24",
+    "sourceTechnicalHash": "89a75f6b455e4d235705f622cde140aa72f6acf0a89833f9b75915b81aa07787",
+    "targetHash": "7ee4f48d2f6b055c9a71d5bb9ab0d7c62629a520f86bd7f2b1a1fea2f973a6b1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:58:47.856Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c3a716131b88495b03fe82713706f53c3e7c689d92213170ff57125893ce4f24",
+      "targetHash": "7ee4f48d2f6b055c9a71d5bb9ab0d7c62629a520f86bd7f2b1a1fea2f973a6b1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
