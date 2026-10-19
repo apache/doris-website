@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/int-to-uuid.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b6b90a95c5d072fe6833fd97b106fe8d0f86e3e081d46a2f1235e8e6b995f2a2",
+    "sourceTechnicalHash": "15ff5ebfac132d1150c6d5d7cfbb6d3e62141b01b6d71834cedcc2efba159ff6",
+    "targetHash": "ecc71d341e443653c8958da5390408ae1e3fa74ff16862f4d43c07f4bce8ba93",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:19:13.445Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b6b90a95c5d072fe6833fd97b106fe8d0f86e3e081d46a2f1235e8e6b995f2a2",
+      "targetHash": "ecc71d341e443653c8958da5390408ae1e3fa74ff16862f4d43c07f4bce8ba93",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

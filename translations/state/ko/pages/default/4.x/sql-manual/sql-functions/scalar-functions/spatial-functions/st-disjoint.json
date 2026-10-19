@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1118879b1938801594a2ec2708ca35d417eab04fb34a2de4b58f39b38311fb01",
+    "sourceTechnicalHash": "0a680ef88fa368c1e62d5d0f0593d205aaed6eb05d4cb975fe911b85e4b010d8",
+    "targetHash": "33343e770bcaa1fd6fce0d010a848af08fa931acc14fd3f35320648949f79833",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:18:11.600Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1118879b1938801594a2ec2708ca35d417eab04fb34a2de4b58f39b38311fb01",
+      "targetHash": "33343e770bcaa1fd6fce0d010a848af08fa931acc14fd3f35320648949f79833",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-disjoint.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "1118879b1938801594a2ec2708ca35d417eab04fb34a2de4b58f39b38311fb01",
+        "targetHash": "33343e770bcaa1fd6fce0d010a848af08fa931acc14fd3f35320648949f79833",
+        "commit": "a0914c0ab5093fb7b3fa636038e59d9608bd6180",
+        "pr": "https://github.com/apache/doris-website/pull/4381"
+      }
+    }
+  }
+}
