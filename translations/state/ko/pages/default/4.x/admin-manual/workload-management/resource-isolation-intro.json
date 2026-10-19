@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/resource-isolation-intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+    "sourceTechnicalHash": "a8daf870cd195736992f02abfd2e2d58405140e5f6658652c5d54164681e61d2",
+    "targetHash": "c71c6498e263117ac3136c0584d6977030cba0acdfa3d441597cd59ef57accd1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:51:10.751Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+      "targetHash": "c71c6498e263117ac3136c0584d6977030cba0acdfa3d441597cd59ef57accd1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/workload-management/resource-isolation-intro",
+        "sourcePath": "docs/admin-manual/workload-management/resource-isolation-intro.mdx",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-isolation-intro.mdx",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+        "targetHash": "c71c6498e263117ac3136c0584d6977030cba0acdfa3d441597cd59ef57accd1",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

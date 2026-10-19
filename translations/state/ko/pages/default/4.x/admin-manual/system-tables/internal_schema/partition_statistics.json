@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/internal_schema/partition_statistics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/internal_schema/partition_statistics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/internal_schema/partition_statistics.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "89684a9b8d4ce6287d6f1b3dbc659781dbe6a94c68e496ff321f7650c547a180",
+    "sourceTechnicalHash": "0016f09ad73a2012cf2ede49c9e0eaa0e2d6dab806c51b234e0674052754404a",
+    "targetHash": "bee2732b954ac7831de61ccb24b0abc51401c9d56a4a26da7b389fbe975b7983",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:48:06.924Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89684a9b8d4ce6287d6f1b3dbc659781dbe6a94c68e496ff321f7650c547a180",
+      "targetHash": "bee2732b954ac7831de61ccb24b0abc51401c9d56a4a26da7b389fbe975b7983",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/system-tables/internal_schema/partition_statistics",
+        "sourcePath": "docs/admin-manual/system-tables/internal_schema/partition_statistics.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/internal_schema/partition_statistics.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "89684a9b8d4ce6287d6f1b3dbc659781dbe6a94c68e496ff321f7650c547a180",
+        "targetHash": "bee2732b954ac7831de61ccb24b0abc51401c9d56a4a26da7b389fbe975b7983",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
