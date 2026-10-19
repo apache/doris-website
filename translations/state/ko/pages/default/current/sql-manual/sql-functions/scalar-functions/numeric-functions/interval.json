@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/interval",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/interval.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/interval.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b07125c640318eaa68639e8031095b11c3b532fbc833e45595b05bdb935f11ce",
+    "sourceTechnicalHash": "47fc0be5ae18492ea051d7f30152ba3a75c5fc8d8d1b622d7349b43d27ef427c",
+    "targetHash": "d2ec6500bbaa1ad1ebbb9d90461c2a6a7bb6c6fc78e93a5ef34ecd637c6632d7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:37:17.324Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b07125c640318eaa68639e8031095b11c3b532fbc833e45595b05bdb935f11ce",
+      "targetHash": "d2ec6500bbaa1ad1ebbb9d90461c2a6a7bb6c6fc78e93a5ef34ecd637c6632d7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

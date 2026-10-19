@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/radians",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/radians.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/radians.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fba9a594b2561dc5d2a5022e9a61a6b3bc4767c4f6ea64c77e24dd2b3fbfaef7",
+    "sourceTechnicalHash": "063e89df67ee44a2e8df9b70aa5d0d57163e7558f6dde2ec824548e3545f9c1d",
+    "targetHash": "63009d43293dc722ba85b9e9a8f901f61a4589258864ef6c71981bb9c0131664",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:38:18.775Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fba9a594b2561dc5d2a5022e9a61a6b3bc4767c4f6ea64c77e24dd2b3fbfaef7",
+      "targetHash": "63009d43293dc722ba85b9e9a8f901f61a4589258864ef6c71981bb9c0131664",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

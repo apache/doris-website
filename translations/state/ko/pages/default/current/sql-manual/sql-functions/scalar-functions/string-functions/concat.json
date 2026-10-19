@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/concat",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/concat.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/concat.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "79a809cef2d63b530949e2e2dccb615ff17c619d723fb6d91cfb7937180f328e",
+    "sourceTechnicalHash": "085995ccd291f3e1cc9fddc43cb2e0e076087f367718e2908ecb8a94848e37a1",
+    "targetHash": "74acfd5a21d4a76892502924832a7bb576d7983fe785e11925b2c7c4c034b125",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:43:51.647Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "79a809cef2d63b530949e2e2dccb615ff17c619d723fb6d91cfb7937180f328e",
+      "targetHash": "74acfd5a21d4a76892502924832a7bb576d7983fe785e11925b2c7c4c034b125",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

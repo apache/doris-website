@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/conv",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/conv.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/conv.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "28fa89347deb4203cbcf2b2aed81e172bd203684ed424d05e8de19f3c52cb561",
+    "sourceTechnicalHash": "3c1035aee39708f0396736c335dba5287cb205d08cf031b4c61266496146ced1",
+    "targetHash": "0ba4575920a31cd7fcb9f20d0d736e1c40a34236950a4f1e9514311fab745c74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:36:15.228Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "28fa89347deb4203cbcf2b2aed81e172bd203684ed424d05e8de19f3c52cb561",
+      "targetHash": "0ba4575920a31cd7fcb9f20d0d736e1c40a34236950a4f1e9514311fab745c74",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

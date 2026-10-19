@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/truncate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/truncate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/truncate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5db4080137542ef7609b68e420ddd9251a60d46934fb694146cd87d5999004b2",
+    "sourceTechnicalHash": "1e73277cef99dedb3573a42ff819e48daeef8245c92fe5be90949c4750aece93",
+    "targetHash": "44c9631d43b93f89aec1b58db60e7fe334aa0a0f81c0574067b2671341920bc7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:39:38.155Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5db4080137542ef7609b68e420ddd9251a60d46934fb694146cd87d5999004b2",
+      "targetHash": "44c9631d43b93f89aec1b58db60e7fe334aa0a0f81c0574067b2671341920bc7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

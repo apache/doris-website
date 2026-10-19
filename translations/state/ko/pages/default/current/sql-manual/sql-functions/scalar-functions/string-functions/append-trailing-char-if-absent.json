@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/append-trailing-char-if-absent.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+    "sourceTechnicalHash": "02905433255307879a8835e84207a37cd75299b2c7f7d88333283c1cd6e4c810",
+    "targetHash": "1ecaa0d3b5214c0daff07e8246eff7c8ed1b9b009dbbee5a03d0cd70263d0c6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:43:07.082Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0f7885043c7aa4ee03372d5b30361a3b60e7125ad1ba1d4cb4330c0ea381e5cc",
+      "targetHash": "1ecaa0d3b5214c0daff07e8246eff7c8ed1b9b009dbbee5a03d0cd70263d0c6b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

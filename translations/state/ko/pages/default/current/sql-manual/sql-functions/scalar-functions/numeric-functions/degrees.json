@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/degrees",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/degrees.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/degrees.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "47296d3d6eaf8ee017e1b08eda62fccef1bd32f4ece239d037fef867273a06a1",
+    "sourceTechnicalHash": "cb416c9259dd247685f175e157108a75dcf54ad1d420f66b1bc4b8f2d01ae8e1",
+    "targetHash": "4e6ddbb0f8f50543dd01df3329658b794dfe74429cf32dbf7a97aec31eefd6c1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:36:33.999Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "47296d3d6eaf8ee017e1b08eda62fccef1bd32f4ece239d037fef867273a06a1",
+      "targetHash": "4e6ddbb0f8f50543dd01df3329658b794dfe74429cf32dbf7a97aec31eefd6c1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

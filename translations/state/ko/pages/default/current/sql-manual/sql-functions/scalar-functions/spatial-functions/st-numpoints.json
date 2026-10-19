@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numpoints.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "257c56596e0dc1180a8da66b6f818661f35820022864b67f5069fc345dbaf500",
+    "sourceTechnicalHash": "add197030a5865a6fb41ee613246e38339dcfefd203407b84ca70a15d7d3b625",
+    "targetHash": "4503861d7deb89aa1ebb9b0785d9bbbd818ff2a787651945df9cab9fd6ff6e9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:42:46.979Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "257c56596e0dc1180a8da66b6f818661f35820022864b67f5069fc345dbaf500",
+      "targetHash": "4503861d7deb89aa1ebb9b0785d9bbbd818ff2a787651945df9cab9fd6ff6e9e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

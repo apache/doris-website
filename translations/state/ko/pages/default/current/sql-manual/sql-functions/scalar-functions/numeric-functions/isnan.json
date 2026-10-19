@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/isnan",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/isnan.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/isnan.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4b19419fda3b66a4d71318760de69e14e71db822fe5c9fe6669ea142aa795d71",
+    "sourceTechnicalHash": "f9511fb2535645b8a0d076be2973654a3cca5fa7dd6d8b8041186ca38b1a0967",
+    "targetHash": "d3fd96ce21945f6f4fc3a55173792bf039fce120faa9d46c2937abd34c6c8fd1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:37:28.982Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b19419fda3b66a4d71318760de69e14e71db822fe5c9fe6669ea142aa795d71",
+      "targetHash": "d3fd96ce21945f6f4fc3a55173792bf039fce120faa9d46c2937abd34c6c8fd1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

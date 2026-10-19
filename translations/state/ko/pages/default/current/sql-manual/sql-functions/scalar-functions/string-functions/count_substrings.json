@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/count_substrings",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/count_substrings.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/count_substrings.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a9193df1a6bf75c4902a59b84ef108038353f6f28a30f646739f67f1fe104446",
+    "sourceTechnicalHash": "feaf54a18a5cf5f93c2c5a81ac8680959fc241f40e832574f6f63c3703b5f6ba",
+    "targetHash": "49e630ac3d7eb0d228ef56723a7cbc2dc42d8360ae33d5f05a8bfec1d53c9561",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:44:01.228Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a9193df1a6bf75c4902a59b84ef108038353f6f28a30f646739f67f1fe104446",
+      "targetHash": "49e630ac3d7eb0d228ef56723a7cbc2dc42d8360ae33d5f05a8bfec1d53c9561",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

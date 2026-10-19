@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/format-round",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/format-round.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "809aec173514d2ddab23f23fd27a9a1fc9ca6dbe0049d1ad272cad4433600ce6",
+    "sourceTechnicalHash": "5cbe7260e65d6544eef5187ba074b3c6daa5d1860d9d55676d515ec666aae4f2",
+    "targetHash": "a800f0b9cb4d2f66ad480dc7dcd9ec06d94f9f24ef7e4fe6bc1a5113341b2415",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:37:08.953Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "809aec173514d2ddab23f23fd27a9a1fc9ca6dbe0049d1ad272cad4433600ce6",
+      "targetHash": "a800f0b9cb4d2f66ad480dc7dcd9ec06d94f9f24ef7e4fe6bc1a5113341b2415",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
