@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/distinct-counts/bitmap-precise-deduplication",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/distinct-counts/bitmap-precise-deduplication.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/distinct-counts/bitmap-precise-deduplication.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "1a5c4473d3ec05390e8bf9743ffb9adfe98525f4cf36bce2b3cedc7e24ade3da",
+    "sourceTechnicalHash": "cedb811b90efe87560ff8d714071fe9b8b5378c19c7e2759fab1facdf8636144",
+    "targetHash": "6eccd4430dc6d8affc2ff3fe0af6b667cda0f1785288c02a741da7cb02014b6a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:47:12.324Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1a5c4473d3ec05390e8bf9743ffb9adfe98525f4cf36bce2b3cedc7e24ade3da",
+      "targetHash": "6eccd4430dc6d8affc2ff3fe0af6b667cda0f1785288c02a741da7cb02014b6a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

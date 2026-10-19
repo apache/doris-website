@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/faq.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "2c05c52f415811ab8e1ecab8e1c4c524e5a898b41eaccc96f9b469f4c3e3492d",
+    "sourceTechnicalHash": "e6e5d67b1b12f8f48cb49f83c26b29dd28d6bdec67dca91d8fe05b3b95d36fd2",
+    "targetHash": "93dbeaff41149a7d3a85b015cca384a10bd0e12d63a86cd4a5eb39172cd1b8f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:50:10.990Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2c05c52f415811ab8e1ecab8e1c4c524e5a898b41eaccc96f9b469f4c3e3492d",
+      "targetHash": "93dbeaff41149a7d3a85b015cca384a10bd0e12d63a86cd4a5eb39172cd1b8f4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

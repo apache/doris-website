@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a271ff0827914190054d693c8251fabe10db2de706f099d6a0fb4ca3ed07e91c",
+    "sourceTechnicalHash": "a5cf2239b1b3e1c9c7e2247e434caa7e5cd9170bb85b2df33af79cc2a016ad51",
+    "targetHash": "f3d171942ecef0e304b06be903cad93c1098fec4d86e27b29d47db95b6157c04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:51:49.912Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a271ff0827914190054d693c8251fabe10db2de706f099d6a0fb4ca3ed07e91c",
+      "targetHash": "f3d171942ecef0e304b06be903cad93c1098fec4d86e27b29d47db95b6157c04",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/statistics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/statistics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/statistics.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ec30c737a92c9263279a76c9f919b39ff23fd569cb5e370e1a5a2750f2e84fd1",
+    "sourceTechnicalHash": "97add7416bd3eb69e9275929967c15539606fcdb75b7bbbc2d53728c143acb4a",
+    "targetHash": "c30eba8196e867d6cb26b398909af0625077b8539ecb1009663f17ed2bfd0ed8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:44:33.243Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ec30c737a92c9263279a76c9f919b39ff23fd569cb5e370e1a5a2750f2e84fd1",
+      "targetHash": "c30eba8196e867d6cb26b398909af0625077b8539ecb1009663f17ed2bfd0ed8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/join-optimization-intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/join-optimization-intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/join-optimization-intro.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "8a58110213d8343fff8b037092b8d48134020ee2d6fb9b1681620ed38f13f917",
+    "sourceTechnicalHash": "9bcab2aa21a93445f1c37fa9332efbe4fe91abc7635beaa604f1e9754b54a9c1",
+    "targetHash": "5715dc659a503626be3044b409af9e5e2789a215ff0a143c90b5ec33a1383e37",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:47:34.256Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8a58110213d8343fff8b037092b8d48134020ee2d6fb9b1681620ed38f13f917",
+      "targetHash": "5715dc659a503626be3044b409af9e5e2789a215ff0a143c90b5ec33a1383e37",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
