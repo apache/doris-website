@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/bootstrap-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/bootstrap-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/bootstrap-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fa0ec3dbd6d21135db54408bf5813c77d358ea9be66b7f7a621b75a11d750be8",
+    "sourceTechnicalHash": "d646f14a9aece6f565ea60a0fdc09473d04e78228bd812fb07bb3d75b780c908",
+    "targetHash": "c6dceebdd4d93d5e30874a5d8adedf96b11eb03c9e8eba91248796b3900bd7bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:26:09.181Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa0ec3dbd6d21135db54408bf5813c77d358ea9be66b7f7a621b75a11d750be8",
+      "targetHash": "c6dceebdd4d93d5e30874a5d8adedf96b11eb03c9e8eba91248796b3900bd7bd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/bootstrap-action",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/bootstrap-action.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/bootstrap-action.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "fa0ec3dbd6d21135db54408bf5813c77d358ea9be66b7f7a621b75a11d750be8",
+        "targetHash": "c6dceebdd4d93d5e30874a5d8adedf96b11eb03c9e8eba91248796b3900bd7bd",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

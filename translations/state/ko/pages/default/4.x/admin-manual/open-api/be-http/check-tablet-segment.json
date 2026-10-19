@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/check-tablet-segment",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cb334a73094db4d382cee390cf2fe061350dadc922afaa11369f173dc003be71",
+    "sourceTechnicalHash": "3605ad4cd9c51bd4db6ef46b5c0f1ad6fd3381383226b79f28213ed3449c1362",
+    "targetHash": "6e3c5f35f2047f2216d1809c436bafe82cd62da6982053ac64ed02c2493d437a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:24:56.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb334a73094db4d382cee390cf2fe061350dadc922afaa11369f173dc003be71",
+      "targetHash": "6e3c5f35f2047f2216d1809c436bafe82cd62da6982053ac64ed02c2493d437a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"code\",null,null,\"The return is all tablets on the current BE node that have lost segment:\\n\\n```\\n{\\n    status: \\\"Success\\\",\\n    msg: \\\"Succeed to check all tablet segment\\\",\\n    num: 3,\\n    bad_tablets: [\\n        11190,\\n        11210,\\n        11216\\n    ],\\n    set_bad: true,\\n    host: \\\"172.3.0.101\\\"\\n}\\n```\"]; received [\"code\",null,null,\"현재 BE 노드에서 segment가 유실된 모든 tablet을 반환합니다:\\n\\n```\\n{\\n    status: \\\"Success\\\",\\n    msg: \\\"Succeed to check all tablet segment\\\",\\n    num: 3,\\n    bad_tablets: [\\n        11190,\\n        11210,\\n        11216\\n    ],\\n    set_bad: true,\\n    host: \\\"172.3.0.101\\\"\\n}\\n```\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

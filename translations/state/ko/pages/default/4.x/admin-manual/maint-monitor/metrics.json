@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/metrics",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+    "sourceTechnicalHash": "a4487a8d869dc8c9819c186219230c8329c7ebeddd9bfee93ec3f1893981097b",
+    "targetHash": "3a5cb406507f30c3494a9154db48b5545dfe768801bd280a52c2e0186a38dc5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:23:40.773Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+      "targetHash": "3a5cb406507f30c3494a9154db48b5545dfe768801bd280a52c2e0186a38dc5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/maint-monitor/metrics",
+        "sourcePath": "docs/admin-manual/maint-monitor/metrics.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/metrics.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+        "targetHash": "3a5cb406507f30c3494a9154db48b5545dfe768801bd280a52c2e0186a38dc5d",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

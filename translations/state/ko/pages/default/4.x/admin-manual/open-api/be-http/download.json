@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/download",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/download.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/download.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fc27dbff6d35b4fa597b746297334a49324eb349c8c9378a1c5cc4004df3f837",
+    "sourceTechnicalHash": "654375836d1db1a3cdf91ce56314944054c6929faab9bae108e9edcb081f1b27",
+    "targetHash": "d62e8eb2e14eb62d49821ba6d2b755c9d40b71b7c2adadcd439907dd92ab2146",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:24:26.746Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc27dbff6d35b4fa597b746297334a49324eb349c8c9378a1c5cc4004df3f837",
+      "targetHash": "d62e8eb2e14eb62d49821ba6d2b755c9d40b71b7c2adadcd439907dd92ab2146",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/be-http/download",
+        "sourcePath": "docs/admin-manual/open-api/be-http/download.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/download.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "fc27dbff6d35b4fa597b746297334a49324eb349c8c9378a1c5cc4004df3f837",
+        "targetHash": "d62e8eb2e14eb62d49821ba6d2b755c9d40b71b7c2adadcd439907dd92ab2146",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

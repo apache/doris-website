@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/query-profile-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/query-profile-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/query-profile-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cf36c17328c439fd427ef3b521d00d24cd959f02181ea22460158a200f50ceaf",
+    "sourceTechnicalHash": "d530b8d73ca2ab02dd1ed4a85b88ab17423450220467a9150a720be99b13b4cf",
+    "targetHash": "ab796db910124a6d9848f0cf969a603ee14369c6afa2c7a5f58707021d82cfe0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:31:58.875Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf36c17328c439fd427ef3b521d00d24cd959f02181ea22460158a200f50ceaf",
+      "targetHash": "ab796db910124a6d9848f0cf969a603ee14369c6afa2c7a5f58707021d82cfe0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

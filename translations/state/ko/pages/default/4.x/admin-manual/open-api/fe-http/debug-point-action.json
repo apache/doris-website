@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/debug-point-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/debug-point-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/debug-point-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "93bb1f2bbb5d577e1bd1384a2009b7d7879fdcf39912d63dd71d2c4bda982acd",
+    "sourceTechnicalHash": "25c0325f92b7cdce959fd7d3ac54e83b2925eef3227ac679bc3f31dea2a5d14d",
+    "targetHash": "a771928eab744439331b3bdd5bb8ef9448db551f3a9f3515b4fc51013ec1f5eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:28:16.688Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "93bb1f2bbb5d577e1bd1384a2009b7d7879fdcf39912d63dd71d2c4bda982acd",
+      "targetHash": "a771928eab744439331b3bdd5bb8ef9448db551f3a9f3515b4fc51013ec1f5eb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
