@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/mask-last-n.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1875ea61b169f5ebc75b476cac42fc3f8a3c4d711aae35509d80717ad516c7de",
+    "sourceTechnicalHash": "c4a5b90bc75c0557e825fa2342e4a6d502b567003340bd04e9a93cc96a56ba72",
+    "targetHash": "7227b683495c3e84cd266967362763bdf2e7cba664a54434fc044d5036816c21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:50:10.507Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1875ea61b169f5ebc75b476cac42fc3f8a3c4d711aae35509d80717ad516c7de",
+      "targetHash": "7227b683495c3e84cd266967362763bdf2e7cba664a54434fc044d5036816c21",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

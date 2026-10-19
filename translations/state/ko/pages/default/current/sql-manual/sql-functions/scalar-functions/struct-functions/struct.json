@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/struct-functions/struct",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/struct-functions/struct.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/struct-functions/struct.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "06df78c8bdfb558acfc1bdd34ef1907cdf403997435262a905e09bd97fb84628",
+    "sourceTechnicalHash": "ea03c126c44b3404c5b622929f15fb2dc372c544f8844f10780bca7be5244ac2",
+    "targetHash": "c50c56e2c2e9ff75429f67a134817db261104b2b9edae8caca4bbb179109178f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:54:39.258Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "06df78c8bdfb558acfc1bdd34ef1907cdf403997435262a905e09bd97fb84628",
+      "targetHash": "c50c56e2c2e9ff75429f67a134817db261104b2b9edae8caca4bbb179109178f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

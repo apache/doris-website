@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/mask.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/mask.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f8c25d4dd29ebe31dc1898edf3d2257fb50da390e9d84f8f350023b7db7285c0",
+    "sourceTechnicalHash": "31614e55df69ed63868d68fb22b7b6c6039680621c66f2ec119a688c27cc18b8",
+    "targetHash": "b29f0f5c33a281e7bd2283d4ff1cadffd94e3d9366c7863d6636fb07be3c03ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:50:13.924Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f8c25d4dd29ebe31dc1898edf3d2257fb50da390e9d84f8f350023b7db7285c0",
+      "targetHash": "b29f0f5c33a281e7bd2283d4ff1cadffd94e3d9366c7863d6636fb07be3c03ed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

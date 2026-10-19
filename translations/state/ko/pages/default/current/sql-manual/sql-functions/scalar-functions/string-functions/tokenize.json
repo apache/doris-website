@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/tokenize",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/tokenize.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/tokenize.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ebfbf044e63e2df4c4373a97ba67241d21a43c20414ee80b9d532b9f5d94b90b",
+    "sourceTechnicalHash": "2c2088900504ce996295683347a65723951ef51554aa3f699ce6b777333bbdbd",
+    "targetHash": "83780e92b25b2a3094bd5d0dd8487bc795b3e60dc0dcd0fe288e3dab84e22d95",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:53:46.301Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ebfbf044e63e2df4c4373a97ba67241d21a43c20414ee80b9d532b9f5d94b90b",
+      "targetHash": "83780e92b25b2a3094bd5d0dd8487bc795b3e60dc0dcd0fe288e3dab84e22d95",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

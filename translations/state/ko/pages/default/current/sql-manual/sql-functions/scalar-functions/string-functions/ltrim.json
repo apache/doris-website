@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ltrim",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ltrim.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ltrim.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "80b583050f391ac642e364bb73a52fb5e0f25f38acc2606f47a6228250d864da",
+    "sourceTechnicalHash": "c3eb018b3e453de1f8b737779d63e2d1d9546907c7f1ef1e8d98fdd53084e7fe",
+    "targetHash": "6b9d7a24dd6071f4f1c817af656e3d9d67872ec16c4d96df0644ddde4f1cdb50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:49:49.008Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80b583050f391ac642e364bb73a52fb5e0f25f38acc2606f47a6228250d864da",
+      "targetHash": "6b9d7a24dd6071f4f1c817af656e3d9d67872ec16c4d96df0644ddde4f1cdb50",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/unhex",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/unhex.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/unhex.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "42dbd56911167944d7bdb45e67cfd9f51d4d83777a08a71ffdc082adc9e8052f",
+    "sourceTechnicalHash": "2464025b80638db0261bf8b2769c9f74bb9057f7c3a9d1cdf29120f877ee89fe",
+    "targetHash": "eb3945d7eb695de93aaaf5421ac3a6ea372559a66494bb83c4a394568432f2a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:54:08.718Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "42dbd56911167944d7bdb45e67cfd9f51d4d83777a08a71ffdc082adc9e8052f",
+      "targetHash": "eb3945d7eb695de93aaaf5421ac3a6ea372559a66494bb83c4a394568432f2a9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

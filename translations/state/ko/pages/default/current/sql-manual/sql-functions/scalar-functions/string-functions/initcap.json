@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/initcap",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/initcap.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/initcap.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a26e9e257b158f440528febef0900b04fe3012565f1f9238b79770afd53518e2",
+    "sourceTechnicalHash": "8ac08a8fcb97ebd4c71fe1ed49a2ba6a161e3b63c07ccb9737de252272973f14",
+    "targetHash": "5d7352a7beae0862df94fb8a30251ed5f5c532c651403b07e0213004a585f81c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:48:44.653Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a26e9e257b158f440528febef0900b04fe3012565f1f9238b79770afd53518e2",
+      "targetHash": "5d7352a7beae0862df94fb8a30251ed5f5c532c651403b07e0213004a585f81c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

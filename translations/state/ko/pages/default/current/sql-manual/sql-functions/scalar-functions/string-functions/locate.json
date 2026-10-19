@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/locate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/locate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/locate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "42cc96c13b780429a3d14b8ec2c3b845b301b873c865e59af00853cf6b22e79c",
+    "sourceTechnicalHash": "bdae3bfc00d582fa3d432e3ab556e3661ce402955a9d7184a9b79cee1da58953",
+    "targetHash": "a614770de677b9d7fa6fce31c968cb7f8c4d880288fff78726553551e0857487",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:49:55.018Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "42cc96c13b780429a3d14b8ec2c3b845b301b873c865e59af00853cf6b22e79c",
+      "targetHash": "a614770de677b9d7fa6fce31c968cb7f8c4d880288fff78726553551e0857487",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

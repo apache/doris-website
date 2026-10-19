@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/find-in-set",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/find-in-set.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/find-in-set.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "937320abcf7d98cfcb6d47060c12fe9760cc1a426da519e122e5cd90e9a0ee14",
+    "sourceTechnicalHash": "cf2cbfe1003b464304e8ddad7cfcfd425fb4b1e1f30ffd4e41590120f8662ddd",
+    "targetHash": "593a0ba573b38f222ed32475ebba3ab040e3b97de56f066e85aa65c2a860f7f5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:48:34.280Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "937320abcf7d98cfcb6d47060c12fe9760cc1a426da519e122e5cd90e9a0ee14",
+      "targetHash": "593a0ba573b38f222ed32475ebba3ab040e3b97de56f066e85aa65c2a860f7f5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
