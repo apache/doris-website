@@ -1897,6 +1897,12 @@
   "marketing.compare.255": {
     "message": "次の事例"
   },
+  "marketing.compare.showCase": {
+    "message": "{name} の事例を表示"
+  },
+  "marketing.compare.goToCase": {
+    "message": "事例 {number} へ移動"
+  },
   "marketing.compare.256": {
     "message": "比較項目"
   },

@@ -174,7 +174,7 @@ export function CoverFlowSection({ cases, sub }: CoverFlowSectionProps): JSX.Ele
                             left: `${(i / cases.length) * 100}%`,
                             width: `${100 / cases.length}%`,
                         }}
-                        aria-label={`Show ${c.name} case`}
+                        aria-label={translate({ id: "marketing.compare.showCase", message: "Show {name} case" }, { name: c.name })}
                     />
                 ))}
                 <div className="cmp-cf__track">
@@ -243,7 +243,7 @@ export function CoverFlowSection({ cases, sub }: CoverFlowSectionProps): JSX.Ele
                             type="button"
                             className={i === active ? 'cmp-cf__dot cmp-cf__dot--on' : 'cmp-cf__dot'}
                             onClick={() => setActive(i)}
-                            aria-label={`Go to case ${i + 1}`}
+                            aria-label={translate({ id: "marketing.compare.goToCase", message: "Go to case {number}" }, { number: i + 1 })}
                         />
                     ))}
                 </div>
