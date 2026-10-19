@@ -25,7 +25,10 @@ const localeRegistry = [
             '/use-cases/observability',
             '/use-cases/ai',
         ]},
-    {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false},
+    {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false,
+        translatedPages: [
+            '/use-cases/customer-facing-analytics',
+        ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
 // ja reads DORIS_ENABLE_JA, ko reads DORIS_ENABLE_KO. CI enables

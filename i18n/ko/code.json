@@ -190,5 +190,398 @@
   },
   "theme.TOC.discord": {
     "message": "Discord에서 대화하기"
+  },
+  "marketing.customer.001": {
+    "message": "고객 대면 분석"
+  },
+  "marketing.customer.002": {
+    "message": "Apache Doris: 실시간 데이터 기반 고객 대면 분석"
+  },
+  "marketing.customer.003": {
+    "message": "Apache Doris로 1초 미만에 응답하는 인터랙티브 고객 대면 분석을 제공하세요. 실시간 데이터, 고동시성, 테넌트 격리를 하나의 엔진에서 처리합니다."
+  },
+  "marketing.customer.004": {
+    "message": "고객 대면 분석,"
+  },
+  "marketing.customer.005": {
+    "message": "원동력은"
+  },
+  "marketing.customer.006": {
+    "message": "실시간"
+  },
+  "marketing.customer.007": {
+    "message": "데이터"
+  },
+  "marketing.customer.008": {
+    "message": "1초 미만에 응답하는 인터랙티브 분석을 대규모로, 고객에게 직접 제공합니다."
+  },
+  "marketing.customer.009": {
+    "message": "실시간이"
+  },
+  "marketing.customer.010": {
+    "message": "제품을 바꾸는 이유."
+  },
+  "marketing.extra.004": {
+    "message": "분석이 내부 보고서를 넘어 제품 안으로 들어오면 네 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.customer.011": {
+    "message": "사용자 경험"
+  },
+  "marketing.customer.012": {
+    "message": "참여도"
+  },
+  "marketing.customer.013": {
+    "message": "매출"
+  },
+  "marketing.customer.014": {
+    "message": "의사 결정 속도"
+  },
+  "marketing.customer.015": {
+    "message": "더 나은 사용자 경험"
+  },
+  "marketing.customer.016": {
+    "message": "사용자가 접속하는 순간 대시보드가 로드되므로, 분석이 기다려야 하는 보고서가 아니라 제품의 자연스러운 일부로 느껴집니다."
+  },
+  "marketing.customer.017": {
+    "message": "참여도와 유지율 향상"
+  },
+  "marketing.customer.018": {
+    "message": "실시간으로 빠르게 반응하는 분석은 제품 데이터를 사용자가 다시 찾아올 이유로 바꿉니다."
+  },
+  "marketing.customer.019": {
+    "message": "수익화"
+  },
+  "marketing.customer.020": {
+    "message": "고객 대면 분석이 자사 제품 안에서 매출을 만들어 내는 프리미엄 기능이 됩니다."
+  },
+  "marketing.customer.021": {
+    "message": "더 빠른 의사 결정"
+  },
+  "marketing.customer.022": {
+    "message": "실시간 신호를 활용하면 팀이 어제의 데이터에 뒤늦게 반응하는 대신, 기회가 아직 열려 있을 때 행동할 수 있습니다."
+  },
+  "marketing.customer.023": {
+    "message": "이미 프로덕션에서 운영 중입니다."
+  },
+  "marketing.customer.024": {
+    "message": "세 팀이 Apache Doris를 사용해 실제 동시 접속 부하 속에서 실시간 데이터로 고객에게 1초 미만에 응답하는 분석을 제공하고 있습니다."
+  },
+  "marketing.extra.005": {
+    "message": "사례 01 · JD.com"
+  },
+  "marketing.customer.025": {
+    "message": "JD.com 검색창을 위한 실시간 OLAP"
+  },
+  "marketing.customer.026": {
+    "message": "Flink의 윈도우 연산을 Doris로 대체하면 개발 효율을 높이고 차원 변경에 유연하게 대응할 수 있을 뿐 아니라 컴퓨팅 리소스도 줄일 수 있습니다."
+  },
+  "marketing.customer.027": {
+    "message": "JD.com 검색창을 위한 실시간 분석입니다. 전체 검색 트래픽, A/B 테스트 실시간 모니터링, 인기 급상승 검색어를 모두 SKU 단위까지 세분화하여 비즈니스 분석가에게 제공합니다."
+  },
+  "marketing.customer.028": {
+    "message": "하루 100억 행 처리"
+  },
+  "marketing.customer.029": {
+    "message": "10,000 QPS에서 쿼리 지연 시간 최저 150ms"
+  },
+  "marketing.customer.030": {
+    "message": "초당 100만 행 실시간 수집"
+  },
+  "marketing.extra.006": {
+    "message": "사례 02 · Xanh SM"
+  },
+  "marketing.customer.031": {
+    "message": "Xanh SM의 실시간 추천"
+  },
+  "marketing.customer.032": {
+    "message": "Apache Doris와 스토리지-컴퓨트 분리 모드 덕분에 단일 스토리지 계층에서 두 워크로드를 모두 실행할 수 있었고, 성능을 희생하지 않고도 인프라 비용과 복잡성을 줄였습니다."
+  },
+  "marketing.customer.033": {
+    "message": "베트남의 대표적인 전기차 차량 호출 플랫폼 Xanh SM은 Apache Doris에서 분석과 실시간 서빙을 함께 실행하여 개인화된 목적지 추천을 제공합니다."
+  },
+  "marketing.customer.034": {
+    "message": "초당 175,000건을 1초 미만의 지연 시간으로 기록"
+  },
+  "marketing.customer.035": {
+    "message": "대부분의 시간대에서 평균 쿼리 지연 시간 약 76ms"
+  },
+  "marketing.customer.036": {
+    "message": "P9999 지연 시간이 100ms를 넘는 경우는 드물게 발생"
+  },
+  "marketing.extra.007": {
+    "message": "사례 03 · ZTO Express"
+  },
+  "marketing.customer.037": {
+    "message": "ZTO Express의 실시간 분석"
+  },
+  "marketing.customer.038": {
+    "message": "ZTO Express는 하루 5억 건의 레코드 업데이트를 처리하는 실시간 분석을 재구축했습니다. 자주 사용하는 필터 필드에 역색인을 적용해 모니터링, 다차원 분석, 정밀 필터링을 지원합니다."
+  },
+  "marketing.customer.039": {
+    "message": "1분 넘게 걸리던 다차원 필터 쿼리를 1초 미만으로 단축(60배), 5~10분 걸리던 복잡한 집계는 1분 미만으로 단축"
+  },
+  "marketing.customer.040": {
+    "message": "핵심 쿼리의 동시성을 50 미만에서 100 이상으로 높이고, 타임아웃 비율은 30%에서 5% 미만으로 감소"
+  },
+  "marketing.customer.041": {
+    "message": "기존 하드웨어의 3분의 1로 운영하면서 하루 5억 건의 업데이트를 몇 초 안에 쿼리에 반영"
+  },
+  "marketing.customer.042": {
+    "message": "ZTO EXPRESS"
+  },
+  "marketing.customer.043": {
+    "message": "고객 대면 분석의 요구 사항과"
+  },
+  "marketing.customer.044": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.customer.045": {
+    "message": "고객 대면 분석은 내부 BI와는 다른 워크로드입니다. 서빙 엔진이 반드시 갖춰야 할 네 가지 요구 사항과, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.customer.046": {
+    "message": "엔드 투 엔드 낮은 지연 시간"
+  },
+  "marketing.customer.047": {
+    "message": "고객 대면 애플리케이션에는 최신 데이터와 빠른 응답이 모두 필요합니다. 새 이벤트는 몇 초 안에 쿼리할 수 있어야 하고, 분석 쿼리는 대시보드, 임베디드 분석, 제품 내 워크플로를 위해 1초 미만에 결과를 반환해야 합니다."
+  },
+  "marketing.customer.048": {
+    "message": "고동시성"
+  },
+  "marketing.customer.049": {
+    "message": "수천 명의 사용자가 동시에 쿼리할 수 있습니다. 분석 엔진은 단일 쿼리 벤치마크에서뿐 아니라 높은 동시 부하에서도 낮은 지연 시간을 유지해야 합니다."
+  },
+  "marketing.customer.050": {
+    "message": "멀티 테넌시와 리소스 격리"
+  },
+  "marketing.customer.051": {
+    "message": "고객 대면 분석은 하나의 플랫폼에서 여러 테넌트, 사용자, 임베디드 애플리케이션을 지원하는 경우가 많습니다. 엔진은 데이터, 워크로드, 리소스를 격리하여 한 테넌트의 활동이 다른 테넌트의 성능, 보안, 사용 경험에 절대 영향을 주지 않도록 해야 합니다."
+  },
+  "marketing.customer.052": {
+    "message": "레이크하우스와 개방형 데이터 액세스"
+  },
+  "marketing.customer.053": {
+    "message": "데이터는 이미 개방형 레이크하우스 포맷, 객체 스토리지, 기존 데이터 레이크 아키텍처에 있습니다. 분석 엔진은 데이터가 있는 곳에서 바로 쿼리하고 실시간 서빙 데이터와 결합하여, 데이터를 한 번 더 복사하지 않고도 최신 인사이트를 제공해야 합니다."
+  },
+  "marketing.extra.008": {
+    "message": "고객 대면 분석을 위한 Apache Doris 기능"
+  },
+  "marketing.customer.054": {
+    "message": "수집에서 쿼리까지"
+  },
+  "marketing.customer.055": {
+    "message": "몇 초 만에"
+  },
+  "marketing.customer.056": {
+    "message": "데이터 적재 트랜잭션"
+  },
+  "marketing.customer.057": {
+    "message": "데이터 Compaction"
+  },
+  "marketing.customer.058": {
+    "message": "데이터 업데이트 및 삭제"
+  },
+  "marketing.customer.059": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.customer.060": {
+    "message": "Group Commit"
+  },
+  "marketing.customer.061": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.customer.062": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.customer.063": {
+    "message": "Unique Key"
+  },
+  "marketing.customer.064": {
+    "message": "고동시성에서도"
+  },
+  "marketing.customer.065": {
+    "message": "1초 미만 응답"
+  },
+  "marketing.customer.066": {
+    "message": "데이터 프루닝"
+  },
+  "marketing.customer.067": {
+    "message": "고동시성 포인트 쿼리"
+  },
+  "marketing.customer.068": {
+    "message": "벡터화 실행"
+  },
+  "marketing.customer.069": {
+    "message": "컬럼형 스토리지"
+  },
+  "marketing.customer.070": {
+    "message": "준비된 문(Prepared Statement)"
+  },
+  "marketing.customer.071": {
+    "message": "Query Cache"
+  },
+  "marketing.customer.072": {
+    "message": "Condition Cache"
+  },
+  "marketing.customer.073": {
+    "message": "멀티 테넌트와"
+  },
+  "marketing.customer.074": {
+    "message": "리소스 격리"
+  },
+  "marketing.customer.075": {
+    "message": "워크로드 그룹"
+  },
+  "marketing.customer.076": {
+    "message": "Resource Group"
+  },
+  "marketing.customer.077": {
+    "message": "컴퓨트 그룹"
+  },
+  "marketing.customer.078": {
+    "message": "파이프라인 실행 엔진"
+  },
+  "marketing.customer.079": {
+    "message": "레이크하우스"
+  },
+  "marketing.customer.080": {
+    "message": "통합"
+  },
+  "marketing.customer.081": {
+    "message": "Parquet 리더 최적화"
+  },
+  "marketing.customer.082": {
+    "message": "Data Cache 및 Page Cache"
+  },
+  "marketing.customer.083": {
+    "message": "메타데이터 캐시"
+  },
+  "marketing.customer.084": {
+    "message": "고객 대면 분석 구축의"
+  },
+  "marketing.customer.085": {
+    "message": "해답은"
+  },
+  "marketing.extra.021": {
+    "message": "테넌트 A"
+  },
+  "marketing.extra.022": {
+    "message": "임베디드 대시보드"
+  },
+  "marketing.extra.023": {
+    "message": "테넌트 B"
+  },
+  "marketing.extra.024": {
+    "message": "고객 포털"
+  },
+  "marketing.extra.025": {
+    "message": "테넌트 C"
+  },
+  "marketing.extra.026": {
+    "message": "모바일·웹 앱"
+  },
+  "marketing.extra.027": {
+    "message": "+ 더 많은 테넌트"
+  },
+  "marketing.extra.028": {
+    "message": "API · 데이터 제품"
+  },
+  "marketing.figures.001": {
+    "message": "제품 이벤트"
+  },
+  "marketing.figures.002": {
+    "message": "Kafka · 클릭스트림"
+  },
+  "marketing.figures.003": {
+    "message": "OLTP · CDC"
+  },
+  "marketing.figures.004": {
+    "message": "MySQL · PostgreSQL"
+  },
+  "marketing.figures.005": {
+    "message": "배치 작업"
+  },
+  "marketing.figures.006": {
+    "message": "Spark · Flink · 파일"
+  },
+  "marketing.figures.007": {
+    "message": "데이터 레이크"
+  },
+  "marketing.figures.008": {
+    "message": "Iceberg · S3"
+  },
+  "marketing.extra.029": {
+    "message": "요청"
+  },
+  "marketing.extra.030": {
+    "message": "MySQL 프로토콜 · REST"
+  },
+  "marketing.extra.031": {
+    "message": "테넌트 격리"
+  },
+  "marketing.extra.032": {
+    "message": "워크로드 그룹"
+  },
+  "marketing.extra.033": {
+    "message": "서빙"
+  },
+  "marketing.extra.034": {
+    "message": "캐시 · 포인트 쿼리"
+  },
+  "marketing.figures.009": {
+    "message": "Apache Doris 기반 고객 대면 분석: 여러 테넌트의 사용자가 임베디드 대시보드, 포털, 앱에서 쿼리합니다. 모든 요청은 Doris를 거쳐 테넌트별로 격리되고 캐시나 포인트 쿼리로 1초 안에 응답을 받습니다. 그동안 제품 이벤트, CDC, 배치 데이터는 몇 초 안에 들어오고, 데이터 레이크는 복사 없이 직접 쿼리합니다."
+  },
+  "marketing.figures.010": {
+    "message": "그림 01 · 다수의 테넌트, 하나의 서빙 경로, 몇 초 전 데이터"
+  },
+  "marketing.extra.035": {
+    "message": "점선 = 복사 없이 직접 쿼리"
+  },
+  "marketing.figures.011": {
+    "message": "자사 제품"
+  },
+  "marketing.figures.012": {
+    "message": "APACHE DORIS"
+  },
+  "marketing.figures.013": {
+    "message": "최신 데이터"
+  },
+  "marketing.figures.014": {
+    "message": "10,000+ QPS · 수천 명의 동시 사용자"
+  },
+  "marketing.figures.015": {
+    "message": "단일 SQL 계층"
+  },
+  "marketing.figures.016": {
+    "message": "1초 미만"
+  },
+  "marketing.figures.017": {
+    "message": "몇 초 안에 수집 · Stream Load · CDC"
+  },
+  "marketing.useCases.001": {
+    "message": "시나리오"
+  },
+  "marketing.useCases.002": {
+    "message": "성과"
+  },
+  "marketing.useCases.003": {
+    "message": "각 기능 항목은 해당 기능 문서로 연결됩니다. 그 이면의 엔지니어링 세부 사항은 다음에서 확인하세요:"
+  },
+  "marketing.useCases.004": {
+    "message": "Apache Doris 블로그"
+  },
+  "marketing.useCases.005": {
+    "message": "관련 사용 사례"
+  },
+  "marketing.useCases.006": {
+    "message": "기반 기능"
+  },
+  "marketing.useCases.007": {
+    "message": "시작하기"
+  },
+  "marketing.useCases.008": {
+    "message": "데모 체험하기(출시 예정)"
+  },
+  "marketing.pageLanguage": {
+    "message": "페이지 언어"
   }
 }
