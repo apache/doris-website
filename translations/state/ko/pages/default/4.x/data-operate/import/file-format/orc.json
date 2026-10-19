@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/file-format/orc",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/file-format/orc.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/file-format/orc.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "dc24d17af311b9a5c4d528b6ce53930a81c5648ee288d701af2f2d317de479a8",
+    "sourceTechnicalHash": "caf6cb9ac324e2350c10fc621b633a2aa8f56b4374a3e2c705547e2ae48a4d32",
+    "targetHash": "1a21a6f756514a2bc5425f7d0a47954eb41c7ce6cf8498cd6a13a62733862784",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:15:44.940Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dc24d17af311b9a5c4d528b6ce53930a81c5648ee288d701af2f2d317de479a8",
+      "targetHash": "1a21a6f756514a2bc5425f7d0a47954eb41c7ce6cf8498cd6a13a62733862784",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/file-format/orc",
+        "sourcePath": "docs/data-operate/import/file-format/orc.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/file-format/orc.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "dc24d17af311b9a5c4d528b6ce53930a81c5648ee288d701af2f2d317de479a8",
+        "targetHash": "1a21a6f756514a2bc5425f7d0a47954eb41c7ce6cf8498cd6a13a62733862784",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/stream-load-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "02acf9e4e47c71f94a2d3554725f0db4bb09fe728130bf246b94d52c7a0f4e83",
+    "sourceTechnicalHash": "2e9f4c474a5b0d205921ba7b91220ad4d79157499bfbb6b653db0ae726ac3901",
+    "targetHash": "48976f0891729c4c63717361f38af7dc7d22b28fa8729f33d6cffa386d1d5787",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:30:49.517Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "02acf9e4e47c71f94a2d3554725f0db4bb09fe728130bf246b94d52c7a0f4e83",
+      "targetHash": "48976f0891729c4c63717361f38af7dc7d22b28fa8729f33d6cffa386d1d5787",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"LOAD_PRIV\"]; received [\"inlineCode\",null,null,\"LOAD\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"LOAD\"]; received [\"inlineCode\",null,null,\"LOAD_PRIV\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"10240\",\"1200\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3000\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]; received [\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"100\",\"100\",\"10240\",\"1200\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"20180601\",\"259200\",\"259200\",\"3\",\"3\",\"3000\",\"4\",\"4.0\",\"4.0.0\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"50\",\"600\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

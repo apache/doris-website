@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-best-practices/group-commit-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-best-practices/group-commit-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-best-practices/group-commit-manual.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0ca7be2fbae2151af90810dc33a4087b76a71c2effd7c09e91409c5e71aff21a",
+    "sourceTechnicalHash": "eee879ac3fa912f1e1c60625b30f3efbdb150f1bd68dd64a1bcd1bd9cd46967d",
+    "targetHash": "22992423a313b9752f9bafec0c449049bc789428a8c58403c7b28ec5ff49e909",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:19:16.968Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ca7be2fbae2151af90810dc33a4087b76a71c2effd7c09e91409c5e71aff21a",
+      "targetHash": "22992423a313b9752f9bafec0c449049bc789428a8c58403c7b28ec5ff49e909",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/load-best-practices/group-commit-manual",
+        "sourcePath": "docs/data-operate/import/load-best-practices/group-commit-manual.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/load-best-practices/group-commit-manual.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "0ca7be2fbae2151af90810dc33a4087b76a71c2effd7c09e91409c5e71aff21a",
+        "targetHash": "22992423a313b9752f9bafec0c449049bc789428a8c58403c7b28ec5ff49e909",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

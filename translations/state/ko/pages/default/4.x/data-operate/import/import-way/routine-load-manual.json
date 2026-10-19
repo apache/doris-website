@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/routine-load-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/routine-load-manual.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
+    "sourceTechnicalHash": "fbcfff5f84b5613f6b6276ebfbcf1369920231ca8619ad4af65106a07a0ab05d",
+    "targetHash": "9c87806acc472bf75c26747347d646cccee952c635050da50c491770e5deded1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:30:06.589Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bad960aa934b5e0e236c0846bcd8c548f7fbf0b6c385a536c5258dfe30d17a89",
+      "targetHash": "9c87806acc472bf75c26747347d646cccee952c635050da50c491770e5deded1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 64: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"CREATE ROUTINE LOAD\"]\nprotected node 65: expected [\"inlineCode\",null,null,\"CREATE ROUTINE LOAD\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

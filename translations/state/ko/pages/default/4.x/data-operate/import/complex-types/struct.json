@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/complex-types/struct",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/complex-types/struct.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/complex-types/struct.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+    "sourceTechnicalHash": "fc39112471a1ef3dc1f20f04c9d10bc17a3148851b79c01666db57a08621de21",
+    "targetHash": "3bdb05d6df1d9fd9fa0a5f550695c2ec83d2006f96ccf3fbb2f65075636940ef",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:13:29.159Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+      "targetHash": "3bdb05d6df1d9fd9fa0a5f550695c2ec83d2006f96ccf3fbb2f65075636940ef",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/complex-types/struct",
+        "sourcePath": "docs/data-operate/import/complex-types/struct.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/struct.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+        "targetHash": "3bdb05d6df1d9fd9fa0a5f550695c2ec83d2006f96ccf3fbb2f65075636940ef",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

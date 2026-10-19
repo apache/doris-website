@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/azure-storage",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/azure-storage.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/azure-storage.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+    "sourceTechnicalHash": "e2765d0af602c56c87610d34335a1c0e0f424e67c4e233251526cd2583b11a4a",
+    "targetHash": "dd7ce41113fb23cb39d3fc6e573540dc41bb1fd0aea1fadb3652fa31452d8533",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:13:50.915Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+      "targetHash": "dd7ce41113fb23cb39d3fc6e573540dc41bb1fd0aea1fadb3652fa31452d8533",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/data-source/azure-storage",
+        "sourcePath": "docs/data-operate/import/data-source/azure-storage.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/azure-storage.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "215614aa3636568b042e71678e6890b2bd4b7402a9e796699a013a78468d7e36",
+        "targetHash": "dd7ce41113fb23cb39d3fc6e573540dc41bb1fd0aea1fadb3652fa31452d8533",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
