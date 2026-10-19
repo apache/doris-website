@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/corr-welford",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/corr-welford.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/corr-welford.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e5ea782a0489e5b8fa0251c8750f404c3581520e688cc1e567f1f44c4513b4f3",
+    "sourceTechnicalHash": "4fe89a253ef45e72aaa0e6070e8dc1f27014bc0a93d0e7f176d7d70d8f0bba2f",
+    "targetHash": "2d3afd30a000e0781c6a98a6a0a57fdc0bb701dfabde7a0be307d56926b68d0a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:10:47.944Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5ea782a0489e5b8fa0251c8750f404c3581520e688cc1e567f1f44c4513b4f3",
+      "targetHash": "2d3afd30a000e0781c6a98a6a0a57fdc0bb701dfabde7a0be307d56926b68d0a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

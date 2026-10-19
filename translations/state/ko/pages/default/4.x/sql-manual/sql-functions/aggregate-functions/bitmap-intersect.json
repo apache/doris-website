@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-intersect",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e3473d0a8f20f0b00f855ecc2ef6ad123099d1b11090186a242d3c50574feada",
+    "sourceTechnicalHash": "e4694caa2267cb82f6a2a20ba509ee5e467544263334b62284f8442224bf32d5",
+    "targetHash": "a94f4748c4bea45eaa56362cedf6dd404a9cbd9aae1eb666fd4afff6320940ed",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:08.782Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3473d0a8f20f0b00f855ecc2ef6ad123099d1b11090186a242d3c50574feada",
+      "targetHash": "a94f4748c4bea45eaa56362cedf6dd404a9cbd9aae1eb666fd4afff6320940ed",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-intersect",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-intersect.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "e3473d0a8f20f0b00f855ecc2ef6ad123099d1b11090186a242d3c50574feada",
+        "targetHash": "a94f4748c4bea45eaa56362cedf6dd404a9cbd9aae1eb666fd4afff6320940ed",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

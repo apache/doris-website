@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bool-xor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "45a253ddacb3ba75e070e2e9f1bc0130a85e870034f40a84fcc9162bd9ff22c7",
+    "sourceTechnicalHash": "df6623821b47605217c66613b2e2cf9f696b5cd6d658059695cbe30396b8188d",
+    "targetHash": "2584763bdeb5f3dbcbeb2ef88fa07d71d4b6250b11f94d618f7570724157acad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:09.183Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "45a253ddacb3ba75e070e2e9f1bc0130a85e870034f40a84fcc9162bd9ff22c7",
+      "targetHash": "2584763bdeb5f3dbcbeb2ef88fa07d71d4b6250b11f94d618f7570724157acad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/bool-xor",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bool-xor.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "45a253ddacb3ba75e070e2e9f1bc0130a85e870034f40a84fcc9162bd9ff22c7",
+        "targetHash": "2584763bdeb5f3dbcbeb2ef88fa07d71d4b6250b11f94d618f7570724157acad",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

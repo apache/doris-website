@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-syy",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "078c79ba58e79cc818f19062b0d2b5e54f6572b1c979a3b737824c0b57d2ae48",
+    "sourceTechnicalHash": "eb597de8fdbe7d679db57e13ceca53fd5de74b34fbedeacbfaf106ff0681ecd6",
+    "targetHash": "2c99f3c8fc251ace67f09cc7074c6c47dbbe161eb47e7c170ad86a704571eafd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:11.954Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "078c79ba58e79cc818f19062b0d2b5e54f6572b1c979a3b737824c0b57d2ae48",
+      "targetHash": "2c99f3c8fc251ace67f09cc7074c6c47dbbe161eb47e7c170ad86a704571eafd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/regr-syy",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/regr-syy.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "078c79ba58e79cc818f19062b0d2b5e54f6572b1c979a3b737824c0b57d2ae48",
+        "targetHash": "2c99f3c8fc251ace67f09cc7074c6c47dbbe161eb47e7c170ad86a704571eafd",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "41267b8a890c26709692f86935e0a0f0984cea676554c27b16f19936c7c7e2c5",
+    "sourceTechnicalHash": "b55c5a7cdd1e0b1441407841c1a8434c5bfaf5a1340adea49bac19c435e9c3f1",
+    "targetHash": "8800db58f99fbf9780120a8cf3a64ccbae2ba99d7f6427f8bb3c479e1e7a5f5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:14:00.454Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "41267b8a890c26709692f86935e0a0f0984cea676554c27b16f19936c7c7e2c5",
+      "targetHash": "8800db58f99fbf9780120a8cf3a64ccbae2ba99d7f6427f8bb3c479e1e7a5f5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

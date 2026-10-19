@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/VARIANT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4b0b9bffc68fe4c78fbb779df6a9ba8ef2e7735165d6a346ce8915a92fedc777",
+    "sourceTechnicalHash": "3b41bf2b469b7d3c9746f3e8125215c3828bab846ef21c878dcc620979cf44c4",
+    "targetHash": "86083d32211d1e27be7b532527355b0206c7d978dd60d82b84c5f00f3cb00ac1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:16:13.865Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b0b9bffc68fe4c78fbb779df6a9ba8ef2e7735165d6a346ce8915a92fedc777",
+      "targetHash": "86083d32211d1e27be7b532527355b0206c7d978dd60d82b84c5f00f3cb00ac1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 116: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 117: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
