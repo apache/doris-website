@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/SHOW-PROCESSLIST.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ca876803fa3e9ecb520daaecbdc8e43eee97c31bc15604038a7ae5a9223a1483",
+    "sourceTechnicalHash": "b82e1174f0b966a48ed4a84788664f06932e626757f943f21757ed643a2f672a",
+    "targetHash": "4c6af0692e0244e499d102fbf5794d6389e80da069e4459cd2c4e61194654852",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:40:31.662Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ca876803fa3e9ecb520daaecbdc8e43eee97c31bc15604038a7ae5a9223a1483",
+      "targetHash": "4c6af0692e0244e499d102fbf5794d6389e80da069e4459cd2c4e61194654852",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

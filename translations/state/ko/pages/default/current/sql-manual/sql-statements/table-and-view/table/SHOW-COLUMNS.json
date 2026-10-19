@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-COLUMNS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/SHOW-COLUMNS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/SHOW-COLUMNS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8ff0b532f4e2d675793a3c619fc24c9632a1cb3b8a15b04cb33399167f2b41ab",
+    "sourceTechnicalHash": "6093158c5304cddbde90317282a6873d93323a16c07afc02485c1fab4dba79bf",
+    "targetHash": "3dc9c694830381d4411da7160bdbebf883d9a92fbb9addd730213545fde5fb5f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:48:49.220Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8ff0b532f4e2d675793a3c619fc24c9632a1cb3b8a15b04cb33399167f2b41ab",
+      "targetHash": "3dc9c694830381d4411da7160bdbebf883d9a92fbb9addd730213545fde5fb5f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

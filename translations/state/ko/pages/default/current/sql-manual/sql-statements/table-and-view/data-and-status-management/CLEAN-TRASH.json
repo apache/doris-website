@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CLEAN-TRASH.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fe07d7fc65e05041e5fabeb0fd86a171989aba850af61066426affbdbb14a583",
+    "sourceTechnicalHash": "b69e74b8aa7bdc0d0c8387e18290852c96f8e61994a5dc63d6afe34a9777ccd5",
+    "targetHash": "b52e613168853526dd2e1a24fe9fd54290b2310a8d1b2a4d144b73d3741d8895",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:43:01.883Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fe07d7fc65e05041e5fabeb0fd86a171989aba850af61066426affbdbb14a583",
+      "targetHash": "b52e613168853526dd2e1a24fe9fd54290b2310a8d1b2a4d144b73d3741d8895",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

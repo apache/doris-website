@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/ADMIN-CHECK-TABLET.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b6e27cfe11b6f3ee62fdd16ea1215f6fc72ffedf797f3c11743c039e52e42569",
+    "sourceTechnicalHash": "1b0920e6b44a5b9f5d722c76f57b9eca759061d6dc2dbd4e003b18a57a7e2dd2",
+    "targetHash": "ec74a497aa0f8e16825fc812113efa1f7067ee0318299b46cf6c375bf70cd0e5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:42:47.006Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b6e27cfe11b6f3ee62fdd16ea1215f6fc72ffedf797f3c11743c039e52e42569",
+      "targetHash": "ec74a497aa0f8e16825fc812113efa1f7067ee0318299b46cf6c375bf70cd0e5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

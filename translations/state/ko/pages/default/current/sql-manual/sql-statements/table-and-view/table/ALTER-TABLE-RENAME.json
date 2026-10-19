@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-RENAME.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a574e1bf3875a1de62e4bcb7f51a8f2d88d65b1e06933b066d5c0eb06d31ae88",
+    "sourceTechnicalHash": "9bc83acdde0564e41797d6c8619a54823b22895c4c591ce13481fcf19b0333c0",
+    "targetHash": "8529a4c9ab3a39856ac8e6af75eeab5944bb224841b309ab6fe3d74943834cba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:47:40.348Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a574e1bf3875a1de62e4bcb7f51a8f2d88d65b1e06933b066d5c0eb06d31ae88",
+      "targetHash": "8529a4c9ab3a39856ac8e6af75eeab5944bb224841b309ab6fe3d74943834cba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

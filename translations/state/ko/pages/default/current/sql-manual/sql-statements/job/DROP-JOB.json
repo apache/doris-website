@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/DROP-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/DROP-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/DROP-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "34c6f5b9d3bdce8d6164e33586896a4e4af7443ed1b7d33762f91ee6fd6215f0",
+    "sourceTechnicalHash": "a7bd9eea3db8dd01506020ca5b587a9c418c33275089c438ba8873ed1cf689c2",
+    "targetHash": "7a773fbaefae4ead3e9f2570bb096cbc8563b4a51c331877648afc124dba2555",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:38:10.307Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "34c6f5b9d3bdce8d6164e33586896a4e4af7443ed1b7d33762f91ee6fd6215f0",
+      "targetHash": "7a773fbaefae4ead3e9f2570bb096cbc8563b4a51c331877648afc124dba2555",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

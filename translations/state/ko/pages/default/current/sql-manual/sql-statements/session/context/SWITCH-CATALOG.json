@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/context/SWITCH-CATALOG",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/context/SWITCH-CATALOG.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/context/SWITCH-CATALOG.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "590e8260804b98c191b69209a9d8bbbd8748930b3cbbb8b722dc1fae7952ed9f",
+    "sourceTechnicalHash": "812a966ea3bccb1f127fd6f00c17ca6e84f7c508cb5206b937be38a347c7e8da",
+    "targetHash": "daed4269596707a6aaa4a8d8ad1b6ad986de74af578dc26c15026bee51630e71",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:39:15.614Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "590e8260804b98c191b69209a9d8bbbd8748930b3cbbb8b722dc1fae7952ed9f",
+      "targetHash": "daed4269596707a6aaa4a8d8ad1b6ad986de74af578dc26c15026bee51630e71",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

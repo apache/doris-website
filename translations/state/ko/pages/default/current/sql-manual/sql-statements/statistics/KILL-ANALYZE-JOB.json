@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/KILL-ANALYZE-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "722ad8feffd110c2bb95fd043c039bfb0be6626ab678871ab882ba47ad4a4e24",
+    "sourceTechnicalHash": "e664b151e42078c4a4d7619b2f6f3b392a2b69c5617d5c37dbf394fa93b179f5",
+    "targetHash": "827607c0107617c78fc679e4a96cf505d53584b4661fb65fe266dc051ea897cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:41:11.240Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "722ad8feffd110c2bb95fd043c039bfb0be6626ab678871ab882ba47ad4a4e24",
+      "targetHash": "827607c0107617c78fc679e4a96cf505d53584b4661fb65fe266dc051ea897cd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

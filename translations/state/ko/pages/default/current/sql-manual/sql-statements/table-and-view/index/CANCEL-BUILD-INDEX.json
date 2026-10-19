@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/index/CANCEL-BUILD-INDEX.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9800c6153cc574731cb85c5c962dd4acd39e4c3b96ef2097860d03f7da47ebc5",
+    "sourceTechnicalHash": "9d5fb27f63d3fb419b1d952854169103066f68c193d9cec103737268a3e5b15e",
+    "targetHash": "94a93321df5460a08aed0ab5af91834f564e403d4d042d1d9a7c46d4984729f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:45:19.876Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9800c6153cc574731cb85c5c962dd4acd39e4c3b96ef2097860d03f7da47ebc5",
+      "targetHash": "94a93321df5460a08aed0ab5af91834f564e403d4d042d1d9a7c46d4984729f2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
