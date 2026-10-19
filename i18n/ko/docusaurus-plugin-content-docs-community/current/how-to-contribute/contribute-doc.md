@@ -52,7 +52,6 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 ```plain
 .
 ├── blog
-│   ├── 1.1 Release.md
 │   ├── Annoucing.md
 │   ├── jd.md
 │   ├── meituan.md
@@ -66,37 +65,36 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 │   ├── ......
 ├── docs
 │   ├── admin-manual
+│   │   ├── auth
 │   │   ├── cluster-management
 │   │   ├── config
 │   │   ├── data-admin
-│   │   ├── http-actions
+│   │   ├── log-management
 │   │   ├── maint-monitor
-│   │   ├── privilege-ldap
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   │   └── workload-group.md
+│   │   ├── open-api
+│   │   ├── system-tables
+│   │   ├── trouble-shooting
+│   │   ├── workload-management
+│   │   └── audit-plugin.md
 │   ├── ......
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 │       │   ├── current.json
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
-│       ├── docusaurus-plugin-content-docs-community
-│       └── local_build_docs.sh
+│       │   ├── version-3.x.json
+│       │   └── version-4.x.json
+│       └── docusaurus-plugin-content-docs-community
 ├── src
 │   ├── components
 │   │   ├── Icons
 │   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
+│   │   ├── PageColumn
+│   │   └── PageHeader
 │   ├── ......
 ├── static
 │   ├── images
@@ -105,20 +103,19 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 │   └── js
 │       └── redirect.js
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
-│   └── version-2.1
+│   ├── version-2.1
+│   ├── version-3.x
+│   └── version-4.x
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
-├── babel.config.js
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ├── build.sh
-├── buildVersions.sh
 ├── docusaurus.config.js
+├── local_build_docs.sh
 ├── package.json
 ├── README.md
-├── sidebars.json
+├── sidebars.ts
 ├── sidebarsCommunity.json
 ├── tsconfig.json
 └── versions.json
@@ -131,13 +128,14 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 | `blog/` | 블로그 게시글 Markdown 파일 | 모든 버전에서 공유 |
 | `community/` | 영어 커뮤니티 문서 | 모든 버전에서 공유 |
 | `docs/` | 영어 최신 버전(Dev / Master) 문서 | 현재 메인 브랜치 |
-| `versioned_docs/version-X.X/` | 영어 이전 버전 문서 | 1.2 / 2.0 / 2.1 등 |
+| `versioned_docs/version-X.X/` | 영어 릴리스 버전 문서 | 4.x / 3.x / 2.1(`versions.json`에 나열됨) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | 중국어 최신 버전 문서 | 현재 메인 브랜치 |
-| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 중국어 이전 버전 문서 | 1.2 / 2.0 / 2.1 등 |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 중국어 릴리스 버전 문서 | 4.x / 3.x / 2.1(`versions.json`에 나열됨) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | 중국어 커뮤니티 문서 | 모든 버전에서 공유 |
-| `sidebars.json` | 최신 버전 문서의 사이드바 | 중국어와 영어에서 공유 |
-| `versioned_sidebars/version-X.X-sidebars.json` | 이전 버전 문서의 사이드바 | 중국어와 영어에서 공유 |
+| `sidebars.ts` | 최신 버전 문서의 사이드바 | 중국어와 영어에서 공유 |
+| `versioned_sidebars/version-X.X-sidebars.json` | 릴리스 버전 문서의 사이드바 | 중국어와 영어에서 공유 |
 | `sidebarsCommunity.json` | 커뮤니티 문서의 사이드바 | 모든 버전에서 공유 |
+| `versions.json` | 웹사이트에 게시되는 릴리스 버전 | 모든 릴리스 버전 |
 | `static/images/` | 문서 이미지 리소스 | 모든 버전에서 공유 |
 
 ## 블로그 디렉터리 {#blog-directory}
@@ -152,7 +150,7 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 
 문서를 수정할 때는 변경 유형에 따라 여러 파일을 함께 수정해야 합니다:
 
-1. **기존 문서 내용 수정**: Master 브랜치의 최신 문서와 해당 버전 브랜치의 문서를 모두 업데이트해야 합니다(예: 2.1, 2.0, 1.2 또는 여러 버전).
+1. **기존 문서 내용 수정**: Master 브랜치의 최신 문서와 해당 릴리스 버전의 문서를 모두 업데이트해야 합니다(예: 4.x, 3.x, 2.1 또는 그중 여러 버전).
 2. **새 문서 추가**: 새 Markdown 파일을 업로드하는 것과 함께 사이드바 파일에 새 문서의 링크 경로도 추가해야 합니다.
 3. **새 문서 카테고리 추가**: 디렉터리 구조를 조정하는 것과 함께 새 카테고리의 중국어 번역도 추가해야 합니다.
 
@@ -161,8 +159,8 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 | 파일 유형 | 용도 | 예시 |
 | --- | --- | --- |
 | Markdown 파일 | 문서 본문 내용 | `docs/admin-manual/xxx.md` |
-| 사이드바 파일 | 디렉터리 구조 관리 | `sidebars.json` / `version-2.1-sidebars.json` |
-| 번역 파일 | 중국어 문서에서 카테고리가 표시되는 방식 관리 | `current.json` / `version-2.1.json` |
+| 사이드바 파일 | 디렉터리 구조 관리 | `sidebars.ts` / `version-4.x-sidebars.json` |
+| 번역 파일 | 중국어 문서에서 카테고리가 표시되는 방식 관리 | `current.json` / `version-4.x.json` |
 
 :::caution 참고
 
@@ -192,38 +190,36 @@ PR 제출 절차는 다음 문서도 참고할 수 있습니다:
 
 **2. 문서 디렉터리 구조**
 
-Dev 버전의 중국어 및 영어 문서는 모두 루트 디렉터리의 `sidebars.json`으로 관리합니다.
+Dev 버전의 중국어 및 영어 문서는 모두 루트 디렉터리의 `sidebars.ts`로 관리합니다.
 
-`sidebars.json` 예시:
+`sidebars.ts` 예시:
 
-```json
-{
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            {
-                "type": "category",
-                "label": "Install and Deploy",
-                "items": [
-                    "install/standard-deployment",
-                    {
-                        "type": "category",
-                        "label": "Docker Deployment",
-                        "items": [
-                            "install/construct-docker/build-docker-image",
-                            "install/construct-docker/run-docker-cluster"
-                        ]
-             }
-             ......
-         }
-     ]
- }
+```ts
+const sidebars: SidebarsConfig = {
+    docs: [
+        {
+            type: 'category',
+            label: 'Get Started',
+            collapsible: false,
+            collapsed: false,
+            items: [
+                {
+                    type: 'category',
+                    label: 'Getting Started',
+                    link: {type: 'doc', id: 'getting-started/intro'},
+                    collapsed: true,
+                    items: [
+                        'getting-started/what-is-apache-doris',
+                        'getting-started/quick-start',
+                        'getting-started/before-you-start-the-poc',
+                    ],
+                },
+                ......
+            ],
+        },
+        ......
+    ],
+};
 ```
 
 **3. 카테고리의 중국어 번역**
@@ -232,8 +228,8 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 
 "시작하기" 카테고리를 예로 들면 다음과 같습니다:
 
-- `sidebar.docs.category.Getting Started`는 `label` 계층 구조에 대응합니다. 이 구조는 `sidebars.json`에 정의되어 있습니다.
-- 형식은 다음과 같습니다: `sidebar` + `.` + `docs` + `.` + `[type]` + `[label]`.
+- `sidebar.docs.category.Getting Started`는 `label` 계층 구조에 대응합니다. 이 구조는 `sidebars.ts`에 정의되어 있습니다.
+- 형식은 다음과 같습니다: `sidebar` + `.` + `docs` + `.` + `[type]` + `.` + `[label]`.
 
 ```json
 {
@@ -249,34 +245,33 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 }
 ```
 
-이에 대응하는 `sidebars.json` 일부는 다음과 같습니다:
+이에 대응하는 `sidebars.ts` 일부는 다음과 같습니다:
 
-```json
+```ts
 {
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            ......
-         }
-     ]
- }
+    type: 'category',
+    label: 'Getting Started',
+    link: {type: 'doc', id: 'getting-started/intro'},
+    collapsed: true,
+    items: [
+        'getting-started/what-is-apache-doris',
+        'getting-started/quick-start',
+        'getting-started/before-you-start-the-poc',
+    ],
+},
 ```
 
-### 2.1 / 2.0 / 1.2 이전 버전 {#21--20--12-historical-versions}
+### 4.x / 3.x / 2.1 릴리스 버전 {#4x--3x--21-released-versions}
 
 **1. 내용 수정 위치**
 
+웹사이트에 게시되는 릴리스 버전은 루트 디렉터리의 `versions.json`에 나열되어 있으며, 현재는 4.x, 3.x, 2.1입니다. 저장소에는 `version-1.2`와 `version-2.0` 디렉터리가 아직 남아 있지만, 이 디렉터리는 `versions.json`에 나열되어 있지 않으며 웹사이트에 빌드되지 않습니다.
+
 | 버전 | 영어 문서 위치 | 중국어 문서 위치 |
 | --- | --- | --- |
+| 4.x | `/versioned_docs/version-4.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x` |
+| 3.x | `/versioned_docs/version-3.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x` |
 | 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
-| 2.0 | `/versioned_docs/version-2.0` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0` |
-| 1.2 | `/versioned_docs/version-1.2` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2` |
 
 ```plain
 .
@@ -287,13 +282,13 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
 │   ├── version-2.1
+│   ├── version-3.x
+│   ├── version-4.x
 ```
 
 **2. 문서 디렉터리 구조**
@@ -303,12 +298,12 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 ```plain
 .
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ```
 
-각 버전의 사이드바 계층 구조를 수정하는 방법은 Dev 버전과 기본적으로 같으므로 여기서는 예시를 생략합니다.
+릴리스 버전의 사이드바 파일은 JSON 형식이지만 `sidebars.ts`와 같은 구조를 사용합니다. 각 버전의 사이드바 계층 구조를 수정하는 방법은 Dev 버전과 기본적으로 같으므로 여기서는 예시를 생략합니다.
 
 **3. 카테고리의 중국어 번역**
 
@@ -318,9 +313,9 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
+│       │   ├── version-3.x.json
+│       │   ├── version-4.x.json
 ```
 
 각 버전의 중국어 문서에 대한 `label` 번역 방법은 Dev 버전과 기본적으로 같으므로 여기서는 예시를 생략합니다.
@@ -341,24 +336,24 @@ Dev 버전 카테고리의 중국어 번역 파일은 `i18n/zh-CN/docusaurus-plu
 ```json
 {
     "version.label": {
-        "message": "Next",
+        "message": "current",
         "description": "The label for version current"
     },
     "sidebar.community.category.How to Contribute": {
-        "message": "贡献指南",
+        "message": "参与贡献",
         "description": "The label for category How to Contribute in sidebar community"
     },
-    "sidebar.community.category.Release Process & Verification": {
-        "message": "版本发布与校验",
-        "description": "The label for category Release Process & Verification in sidebar community"
+    "sidebar.community.category.Documentation Contribution": {
+        "message": "贡献文档",
+        "description": "The label for category Documentation Contribution in sidebar community"
+    },
+    "sidebar.community.category.Release": {
+        "message": "版本与发布",
+        "description": "The label for category Release in sidebar community"
     },
     "sidebar.community.category.Design Documents": {
         "message": "设计文档",
         "description": "The label for category Design Documents in sidebar community"
-    },
-    "sidebar.community.category.Developer Guide": {
-        "message": "开发者手册",
-        "description": "The label for category Developer Guide in sidebar community"
     }
 }
 ```

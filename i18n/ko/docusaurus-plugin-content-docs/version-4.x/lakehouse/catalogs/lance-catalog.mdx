@@ -432,9 +432,9 @@ REST Namespace는 테이블 버전을 직접 관리할 수 있습니다(`managed
 
 제한 사항:
 
-- Doris는 `DescribeTable`이 반환한 `table_uri`의 데이터세트를 읽으며, `table_uri`가 없으면 `location`에서 읽습니다. 어느 쪽이든 완전한 스토리지 URI여야 합니다. `location`이 비어 있거나, 함께 반환된 `table_uri`가 다른 위치를 가리키면 쿼리는 오류로 실패하고 아무것도 읽지 않습니다. 단, 사전 서명된 자격 증명과 같은 쿼리 문자열 차이는 제외합니다. `s3+ddb` URI도 거부됩니다. 해당 DynamoDB 커밋 핸들러가 읽기 시 버전을 기록하고 확정하기 때문입니다. Doris는 관리형 테이블을 캐시하지 않고 읽을 때마다 describe를 수행하며, FE와 BE는 해당 describe가 반환한 위치와 스토리지 구성으로 읽습니다.
+- Doris는 `table_uri`(`DescribeTable`이 반환한 값)가 가리키는 데이터세트를 읽고, `location`은 `table_uri`가 없을 때 대신 사용합니다. 어느 쪽이든 완전한 스토리지 URI여야 합니다. `location`이 비어 있거나, 함께 반환된 `table_uri`가 다른 위치를 가리키면 쿼리는 오류로 실패하고 아무것도 읽지 않습니다. 단, 사전 서명된 자격 증명과 같은 쿼리 문자열 차이는 제외합니다. `s3+ddb` URI도 거부됩니다. 해당 DynamoDB 커밋 핸들러가 읽기 시 버전을 기록하고 확정하기 때문입니다. Doris는 관리형 테이블을 캐시하지 않고 읽을 때마다 describe를 수행하며, FE와 BE는 해당 describe가 반환한 위치와 스토리지 구성으로 읽습니다.
 - Doris는 테이블 디렉터리의 정규 경로인 `_versions/<u64::MAX - version>.manifest`에서 버전 번호로 버전을 읽습니다. 브랜치의 경우 `tree/<branch>/` 아래에서 읽으며, Lance의 이전 명명 규칙에서는 `_versions/<version>.manifest`를 사용합니다. Namespace가 선택한 버전에 대해 기록한 manifest는 해당 경로이거나 그 옆의 스테이징된 manifest(`<canonical path>-<id>`)여야 합니다. `FOR TIME AS OF`에서는 해당 `main` 또는 브랜치에 기록된 모든 버전의 manifest도 이 조건을 충족해야 합니다. 커밋 시간이 선택을 결정하기 때문입니다. 다른 위치에 기록된 버전은 읽을 수 없습니다. 쿼리가 오류로 실패하며 기록된 경로와 정규 경로를 표시합니다. 쿼리 실행 중 Namespace가 테이블을 이동해도 같은 방식으로 실패할 수 있으며, 다시 시도하면 성공합니다.
-- Namespace가 스테이징된 manifest에만 기록하고 정규 manifest는 존재하지 않는 버전은 읽을 수 없습니다. 커밋이 확정되지 않았거나 정리 작업으로 버전이 제거된 경우입니다. 쿼리는 실패하며 두 원인을 모두 표시합니다. 해당 `main` 또는 브랜치에 대한 `FOR TIME AS OF`는 그 버전이 적용되었을 수 있는 모든 타임스탬프에서 실패합니다. 커밋 시간을 알 수 없기 때문입니다. 최신 버전의 경우에는 writer 또는 Namespace를 사용하는 다른 리더가 이를 확정할 때까지 모든 타임스탬프에서 실패합니다. 이 경우 `FOR VERSION AS OF` 없이 테이블을 읽거나 스키마를 로딩하는 작업도 실패합니다. Lance 자체 Namespace 구현은 버전을 기록하기 전에 확정하므로, 미확정 버전은 커밋이 중단되었거나 스테이징된 manifest를 기록하는 Namespace에서만 나타납니다. Doris는 테이블을 읽는 동안 절대 쓰지 않습니다.
+- Namespace가 스테이징된 manifest에만 기록하고 정규 manifest는 존재하지 않는 버전은 읽을 수 없습니다. 커밋이 확정되지 않았거나 정리 작업으로 버전이 제거된 경우입니다. 쿼리는 실패하며 두 원인을 모두 표시합니다. `FOR TIME AS OF`를 해당 `main` 또는 브랜치에 사용하면 그 버전이 적용되었을 수 있는 모든 타임스탬프에서 실패합니다. 커밋 시간을 알 수 없기 때문입니다. 최신 버전의 경우에는 writer 또는 Namespace를 사용하는 다른 리더가 이를 확정할 때까지 모든 타임스탬프에서 실패합니다. 이 경우 `FOR VERSION AS OF` 없이 테이블을 읽거나 스키마를 로딩하는 작업도 실패합니다. Lance 자체 Namespace 구현은 버전을 기록하기 전에 확정하므로, 미확정 버전은 커밋이 중단되었거나 스테이징된 manifest를 기록하는 Namespace에서만 나타납니다. Doris는 테이블을 읽는 동안 절대 쓰지 않습니다.
 
 ## Lance 인덱스 조회 {#inspect-lance-indexes}
 
@@ -455,7 +455,7 @@ Doris는 실행 시점의 최신 데이터세트 스냅샷에서 인덱스 메�
 | `Seq_in_index` | 인덱스에서 열의 위치이며 `1`부터 시작합니다. 여러 필드의 인덱스는 필드마다 한 행을 생성합니다. |
 | `Column_name` | 인덱싱된 필드입니다. 중첩 필드의 인덱스는 필드 경로를 `.`으로 연결하여 표시하며, 문자, 숫자 및 `_` 이외의 문자가 포함된 경로 세그먼트는 백틱으로 묶습니다. 예: `` attributes.`child.with.dot` ``. |
 | `Index_type` | Lance SDK가 보고하는 인덱스 유형입니다. 예: `BTree`, `INVERTED`, `IVF_FLAT`, `IVF_SQ`, `IVF_PQ`, `IVF_HNSW_FLAT`, `IVF_HNSW_SQ`, `IVF_HNSW_PQ`. |
-| `Properties` | 고정된 인덱스 상세 정보 집합을 담은 JSON 객체입니다. 최상위에는 `metric_type`과 `target_partition_size`, `compression` 아래에는 `type`, `num_bits`, `num_sub_vectors`, `rotation_type`, `hnsw` 아래에는 `construction_ef`, `max_connections`, `max_level`이 있습니다. 키는 정렬되며, 인덱스 상세 정보에 이러한 필드가 하나도 없으면 값은 `{}`입니다. |
+| `Properties` | 고정된 인덱스 상세 정보 집합을 담은 JSON 객체입니다. `metric_type`과 `target_partition_size`는 최상위에, `type`, `num_bits`, `num_sub_vectors`, `rotation_type`은 `compression` 아래에, `construction_ef`, `max_connections`, `max_level`은 `hnsw` 아래에 있습니다. 키는 정렬되며, 인덱스 상세 정보에 이러한 필드가 하나도 없으면 값은 `{}`입니다. |
 
 다음 행은 `IVF_PQ` 벡터 인덱스와 중첩 필드의 `BTree` 인덱스를 보여줍니다.
 
@@ -623,9 +623,9 @@ WHERE active
 
 ### 배열 레이블 조건자 {#array-label-predicates}
 
-Apache Doris 4.1.5부터 배열 레이블 푸시다운은 직접적인 Lance `list<utf8>` 열과 `NULL`이 아닌 문자열 리터럴에 대한 `array_contains`를 지원합니다. 이전 빌드에서는 이러한 조건이 Doris에 남을 수 있습니다. 이 최적화에 의존하기 전에 `EXPLAIN`을 확인하세요. `NULL` 배열은 여전히 `NULL`을 반환하고, 빈 배열은 일치하지 않으며, 중복 레이블이 있어도 결과 행이 중복되지 않습니다.
+Apache Doris 4.1.5부터 배열 레이블 푸시다운은 `array_contains`를 지원합니다. 대상은 직접적인 Lance `list<utf8>` 열과 `NULL`이 아닌 문자열 리터럴입니다. 이전 빌드에서는 이러한 조건이 Doris에 남을 수 있습니다. 이 최적화에 의존하기 전에 `EXPLAIN`을 확인하세요. `NULL` 배열은 여전히 `NULL`을 반환하고, 빈 배열은 일치하지 않으며, 중복 레이블이 있어도 결과 행이 중복되지 않습니다.
 
-`id` 열과 `list<utf8>` 타입의 `labels` 열이 있는 Lance 테이블의 예제입니다.
+`id` 열과 `labels` 열(`list<utf8>` 타입)이 있는 Lance 테이블의 예제입니다.
 
 ```sql
 EXPLAIN
@@ -653,8 +653,8 @@ WHERE array_contains(labels, 'red')
 
 | 근거 | 의미 |
 |---|---|
-| `EXPLAIN`의 `lancePushdownPredicate` | Lance로 전송되는 조건입니다. 남은 `predicates:` 조건은 Doris가 평가합니다. |
-| `EXPLAIN`의 `lanceScalarIndexScan=SEGMENT` 및 `lanceGroupingIndex` | 스칼라 세그먼트 스캔이 계획되었음을 나타내며 선택된 논리 인덱스를 식별합니다. 이것만으로 실행 시 인덱스를 사용했다고 입증할 수는 없습니다. |
+| `lancePushdownPredicate`(`EXPLAIN` 출력) | Lance로 전송되는 조건입니다. 남은 `predicates:` 조건은 Doris가 평가합니다. |
+| `lanceScalarIndexScan=SEGMENT` 및 `lanceGroupingIndex`(`EXPLAIN` 출력) | 스칼라 세그먼트 스캔이 계획되었음을 나타내며 선택된 논리 인덱스를 식별합니다. 이것만으로 실행 시 인덱스를 사용했다고 입증할 수는 없습니다. |
 | Profile의 `LanceScalarIndexSegmentsSearched` | 계측된 스칼라 세그먼트 경로에서 실제로 수행된 검색입니다. |
 | Profile의 `LanceScalarIndexCandidateRows` | 해당 경로가 보고한 후보 행이며, 최종 결과 행과 같지는 않을 수 있습니다. 일부 `NOT` 표현식과 같은 여집합 마스크는 후보 수를 보고하지 않을 수 있습니다. |
 | Profile의 `LanceScalarIndexSegmentFallbacks` | 계획된 스칼라 세그먼트 경로에서 다른 경로로 대체된 작업입니다. |
@@ -679,11 +679,11 @@ JOIN internal.demo.allowed_users a
 | IN Filter | `column IN (...)` |
 | Min/Max Filter | `column >= min_value`, `column <= max_value` 또는 둘 다 |
 
-Runtime Filter의 열과 값은 Lance SQL이 지원하는 스칼라 타입으로 안전하게 변환할 수 있어야 합니다. 다른 Runtime Filter 유형, NULL이 포함된 IN Filter, 안전하게 변환할 수 없는 데이터 타입이나 값은 푸시다운하지 않습니다. 푸시다운되지 않은 Runtime Filter도 Doris가 계속 평가하므로 쿼리 정확성은 유지됩니다. Lance에서 조기에 필터링하여 얻는 성능 이점만 사라집니다.
+Runtime Filter의 열과 값은 Lance SQL이 지원하는 스칼라 타입으로 안전하게 변환할 수 있어야 합니다. 다른 Runtime Filter 유형, `NULL`이 포함된 IN Filter, 안전하게 변환할 수 없는 데이터 타입이나 값은 푸시다운하지 않습니다. 푸시다운되지 않은 Runtime Filter도 Doris가 계속 평가하므로 쿼리 정확성은 유지됩니다. Lance에서 조기에 필터링하여 얻는 성능 이점만 사라집니다.
 
 Lance Scanner를 생성하기 전에 준비된 Runtime Filter만 해당 Scanner의 푸시다운 조건에 포함할 수 있습니다. 나중에 도착한 Runtime Filter도 Doris가 평가하지만, 이미 생성된 Scanner에는 푸시다운되지 않을 수 있습니다.
 
-Runtime Filter 조건은 일반 SQL 조건자에서 생성한 Substrait 조건과 결합되며, 어느 한쪽이 다른 쪽을 대체하지 않습니다. `EXPLAIN`의 `runtime filters` 항목은 계획된 Runtime Filter를 보여줍니다. Runtime Filter가 하나 이상 푸시다운되면 Runtime Profile의 `LanceRuntimeFilterPushedIds`와 `LanceRuntimeFilterSkippedIds`가 푸시다운된 Filter ID와 건너뛴 Filter ID를 식별합니다.
+Runtime Filter 조건은 일반 SQL 조건자에서 생성한 Substrait 조건과 결합되며, 어느 한쪽이 다른 쪽을 대체하지 않습니다. `runtime filters` 항목(`EXPLAIN` 출력)은 계획된 Runtime Filter를 보여줍니다. Runtime Filter가 하나 이상 푸시다운되면 Runtime Profile의 `LanceRuntimeFilterPushedIds`와 `LanceRuntimeFilterSkippedIds`가 푸시다운된 Filter ID와 건너뛴 Filter ID를 식별합니다.
 
 현재 Runtime Filter 푸시다운은 일반 Lance 테이블 스캔에만 적용됩니다. `vector_search()` 또는 전문 검색이 후보를 생성하는 동안에는 사용하지 않습니다.
 
@@ -809,7 +809,7 @@ ORDER BY _distance ASC, user_id;
 
 `vector_search()`의 관계 스키마에는 Lance 원본 테이블의 모든 열과, 최근접 이웃 쿼리를 위해 Lance Scanner가 생성한 `_distance` 열이 포함됩니다. 최종 SQL 결과에는 `SELECT`로 프로젝션한 열만 포함됩니다. Doris는 `_distance`를 `FLOAT`로 노출합니다. 이는 일반적인 유사도 점수가 아니라 거리이며, 값이 작을수록 두 벡터가 가깝다는 뜻입니다. 원본 테이블에는 `_distance`라는 열이 이미 있어서는 안 됩니다. SQL 관계는 최종 표시 순서를 보장하지 않으므로, 결정적인 최근접 이웃 순서가 필요하면 `ORDER BY _distance ASC`를 명시하세요. 거리가 같은 행의 순서를 결정하도록 고유한 열을 추가하는 것이 좋습니다.
 
-`table`은 정확히 세 부분의 `catalog.database.table` 이름으로 파싱되어야 합니다. 다단계 Lance Namespace는 `.`이 포함된 하나의 Doris 데이터베이스 이름에 매핑되므로 데이터베이스 부분을 백틱으로 묶으세요. 예를 들어 `doris.analytics` Namespace의 `items` 테이블에는 다음 값을 사용합니다.
+`table`은 정확히 세 부분의 `catalog.database.table` 이름으로 파싱되어야 합니다. 다단계 Lance Namespace는 `.`이 포함된 하나의 Doris 데이터베이스 이름에 매핑되므로 데이터베이스 부분을 백틱으로 묶으세요. 예를 들어 `items` 테이블(`doris.analytics` Namespace)에는 다음 값을 사용합니다.
 
 ```sql
 "table" = "lance_catalog.`doris.analytics`.items"
@@ -826,7 +826,7 @@ ORDER BY _distance ASC, user_id;
 | `query_vector` | 예 | - | 단일 벡터 열의 경우 JSON 숫자 배열, 다중 벡터 열의 경우 비어 있지 않은 JSON 행렬입니다. 각 하위 벡터의 차원은 열과 일치해야 하며, 각 값은 유한하고 요소 타입으로 표현할 수 있어야 합니다. |
 | `top_k` | 아니요 | `10` | `offset`만큼 건너뛴 후 반환할 결과 수입니다. 양의 정수여야 합니다. |
 | `offset` | 아니요 | `0` | 벡터 검색 내부에서 건너뛸 최근접 이웃 수입니다. 음이 아닌 정수여야 합니다. `top_k + offset`은 부호 없는 32비트 정수의 최댓값을 초과할 수 없습니다. |
-| `metric` | 아니요 | `l2` | 거리 메트릭: `l2`, `cosine`, `dot` 또는 `hamming`. `dot_product`는 `dot`의 별칭입니다. `uint8` 벡터는 `hamming`만 지원하며, 현재 지원되는 나머지 벡터 요소 타입은 `l2`, `cosine`, `dot`을 지원합니다. `cosine`, `dot` 또는 `hamming` 인덱스를 쿼리할 때는 `metric`을 명시적으로 설정하세요. 정수 다중 벡터 열과 다중 벡터 `hamming`은 지원하지 않습니다. |
+| `metric` | 아니요 | `l2` | 거리 메트릭: `l2`, `cosine`, `dot` 또는 `hamming`. `dot_product`는 `dot`의 별칭입니다. `uint8` 벡터는 `hamming`만 지원하며, 현재 지원되는 나머지 벡터 요소 타입은 `l2`, `cosine`, `dot`을 지원합니다. `metric`은 `cosine`, `dot` 또는 `hamming` 인덱스를 쿼리할 때 명시적으로 설정하세요. 정수 다중 벡터 열과 다중 벡터 `hamming`은 지원하지 않습니다. |
 | `distance_lower_bound` | 아니요 | 제한 없음 | 단일 벡터 검색의 포함 하한 거리입니다. 유한한 `FLOAT`여야 합니다. |
 | `distance_upper_bound` | 아니요 | 제한 없음 | 단일 벡터 검색의 미포함 상한 거리입니다. 유한한 `FLOAT`여야 합니다. 양쪽 경계를 모두 설정하면 `FLOAT`로 변환한 후 하한이 더 작아야 합니다. |
 | `filter` | 아니요 | - | Lance가 평가하는 Lance SQL 조건입니다. 실행 시점은 `prefilter`로 제어합니다. |
@@ -843,7 +843,7 @@ ORDER BY _distance ASC, user_id;
 
 반경 쿼리에는 `distance_upper_bound`를 설정하고, 구간 `[lower, upper)`에는 양쪽 경계를 함께 설정하세요. 생략한 경계에는 제한이 없습니다. 거리는 선택한 메트릭을 사용합니다. `l2`는 **유클리드 거리의 제곱**이므로 기하학적 반경 `r`은 상한 `r * r`에 해당합니다. 음수 경계도 허용되며, 이는 `dot`과 같은 메트릭에 유용합니다. 저장된 벡터가 Float64를 사용해도 경계는 `FLOAT` 정밀도를 사용합니다. 유한하지 않은 경계, 오버플로, 같은 경계 및 역전된 구간은 거부됩니다.
 
-예를 들어 기존 Lance Catalog 테이블인 `lance_catalog.default.items`에 `user_id`와 3차원 Float32 `embedding` 열이 있다고 가정합니다.
+예를 들어 기존 Lance Catalog 테이블인 `lance_catalog.default.items`에 `user_id`와 삼차원 Float32 `embedding` 열이 있다고 가정합니다.
 
 | user_id | embedding | `[0, 0, 0]`까지의 L2 거리 제곱 |
 |---|---|---|
@@ -874,7 +874,7 @@ ORDER BY _distance;
 +---------+-----------+
 ```
 
-하한을 제거하면 행 1도 반환됩니다. 상한 `0`만 사용하면 아무 행도 반환되지 않습니다. `prefilter=true`이면 `filter`가 벡터 검색 전에 후보를 제한하고, 기본값인 `prefilter=false`이면 후보 생성 후에 필터링합니다. `offset`은 거리 범위를 적용한 후 결과를 건너뜁니다. 출력 스키마는 바뀌지 않으며, 테이블 열에 `FLOAT` 타입의 `_distance`가 추가됩니다. `EXPLAIN`은 `lanceDistanceRange=[1.0, 4.0)`를 표시합니다.
+하한을 제거하면 행 1도 반환됩니다. 상한 `0`만 사용하면 아무 행도 반환되지 않습니다. `prefilter=true`이면 `filter`가 벡터 검색 전에 후보를 제한하고, 기본값인 `prefilter=false`이면 후보 생성 후에 필터링합니다. `offset`은 거리 범위를 적용한 후 결과를 건너뜁니다. 출력 스키마는 바뀌지 않으며, 테이블 열에 `_distance`(`FLOAT` 타입)가 추가됩니다. `EXPLAIN`은 `lanceDistanceRange=[1.0, 4.0)`를 표시합니다.
 
 거리 경계는 준비된 문에서 `?` 매개변수를 지원합니다. 각 실행은 자체 경계 값을 검증하고 사용하며, NULL 경계는 거부됩니다. 한쪽에 제한을 두지 않으려면 해당 속성을 생략하세요.
 
@@ -923,7 +923,7 @@ ORDER BY _distance;
 
 쿼리의 `metric`은 인덱스를 구축할 때 사용한 메트릭과 일치해야 합니다. 그렇지 않으면 요청한 메트릭이 해당 열 타입에서 지원되는 경우 Doris는 Flat Search를 사용합니다. 결과는 정확하지만 벡터를 직접 스캔해야 하므로 일반적으로 성능이 낮아집니다.
 
-`metric`을 생략하면 Doris는 인덱스 선택 시 이를 `l2`로 취급합니다. 따라서 `cosine`, `dot` 또는 `hamming`으로 구축한 인덱스를 사용할 때는 `metric`을 명시적으로 설정하세요. 예를 들어 `uint8` 벡터 인덱스에는 `"metric" = "hamming"`이 필요합니다. 그렇지 않으면 지원하지 않는 `l2` 메트릭을 사용하여 쿼리가 실패합니다.
+`metric`을 생략하면 Doris는 인덱스 선택 시 이를 `l2`로 취급합니다. 따라서 `metric`은 `cosine`, `dot` 또는 `hamming`으로 구축한 인덱스를 사용할 때 명시적으로 설정하세요. 예를 들어 `uint8` 벡터 인덱스에는 `"metric" = "hamming"`이 필요합니다. 그렇지 않으면 지원하지 않는 `l2` 메트릭을 사용하여 쿼리가 실패합니다.
 
 `EXPLAIN`으로 인덱스 사용 여부를 확인하세요. `lanceSearchIndexSegments` 값이 `0`보다 크면 인덱스 검색을 나타내고, `0`이면 Flat Search를 나타냅니다.
 
@@ -1104,7 +1104,7 @@ Lance Cache는 인덱스, 메타데이터 및 데이터 파일 내용을 재사�
 |---|---|---|
 | 인덱스 캐시 | BE 메모리 | 로딩된 Lance 인덱스 내용으로, 반복적인 인덱스 로딩을 줄입니다. |
 | 메타데이터 캐시 | BE 메모리 | Lance 리더가 사용하는 메타데이터로, 반복 읽기와 파싱을 줄입니다. |
-| 데이터 캐시 | BE 로컬 디스크. 메모리 계층의 크기는 읽기 블록 하나에 해당 | Dataset의 `data/` 디렉터리 바로 아래에서 `.lance`로 끝나는 파일의 데이터를 블록 단위로 캐시합니다. |
+| 데이터 캐시 | BE 로컬 디스크. 메모리 계층의 크기는 읽기 블록 하나에 해당 | `.lance`로 끝나는 파일(Dataset의 `data/` 디렉터리 바로 아래)의 데이터를 블록 단위로 캐시합니다. |
 
 데이터 캐시는 Lance 리더 내부에서 Foyer를 사용하며, 자체 디렉터리와 용량은 아래의 `lance_*` BE 매개변수로 구성합니다. Doris의 일반 File Cache 디렉터리나 용량 설정은 사용하지 않습니다. 인덱스 파일, manifest 및 삭제 파일은 이 디스크 데이터 캐시를 거치지 않으며 기존 Lance 읽기 및 캐시 경로를 계속 사용합니다.
 
@@ -1224,7 +1224,7 @@ TVF를 사용하기 전에 Lance SDK 또는 다른 Lance writer로 대상 문자
 
 ### 구문 및 예제 {#syntax-and-example-1}
 
-다음 쿼리는 범주가 `storage`인 문서 중에서 `lance database`를 검색한 후, `published = true`를 Doris Post-filter로 적용합니다.
+다음 쿼리는 `lance database`를 검색하되 범주가 `storage`인 문서로 한정한 후, `published = true`를 Doris Post-filter로 적용합니다.
 
 ```sql
 SELECT document_id, title, _score
@@ -1268,7 +1268,7 @@ ORDER BY _score DESC, document_id;
 | 매개변수 | 필수 여부 | 기본값 | 설명 |
 |---|---|---|---|
 | `table` | 예 | - | Lance Catalog의 테이블을 식별하는, 세 부분으로 구성된 정규화된 `catalog.database.table` 이름입니다. 다단계 Namespace가 `.`이 포함된 데이터베이스 이름에 매핑되면 데이터베이스 부분을 백틱으로 묶으세요. 사용자에게 해당 테이블의 `SELECT` 권한이 있어야 합니다. |
-| `column` | 예 | - | FTS 역색인이 있는 문자열 열입니다. Doris `TEXT`에 매핑되는 Arrow `utf8`와 `large_utf8`를 지원합니다. |
+| `column` | 예 | - | FTS 역색인이 있는 문자열 열입니다. Arrow `utf8`와 `large_utf8`를 지원하며, 이 타입은 Doris `TEXT`에 매핑됩니다. |
 | `query` | 예 | - | 비어 있지 않은 검색 텍스트입니다. FTS 인덱스를 생성할 때 구성한 토크나이저로 처리합니다. |
 | `query_type` | 아니요 | `match` | 쿼리 유형입니다. 유효한 값은 `match`와 `phrase`입니다. |
 | `operator` | 아니요 | `or` | Match 쿼리 전용입니다. `or`는 하나 이상의 쿼리 용어가 일치해야 하고, `and`는 모든 쿼리 용어가 일치해야 합니다. Phrase 쿼리에서는 이 매개변수를 설정할 수 없습니다. |
@@ -1337,7 +1337,7 @@ ORDER BY _score DESC;
 - `version`과 `timestamp`는 함께 사용할 수 없으며, `tag`는 나머지 세 매개변수 중 어느 것과도 함께 사용할 수 없습니다. 매개변수를 빈 값으로 설정하면 무시되지 않고 오류가 발생합니다.
 - 출력 스키마, 검색 열, 벡터 인덱스 및 FTS 인덱스 메타데이터, Fragment는 모두 선택한 스냅샷에서 가져옵니다. 후보 생성, 필터링, Top-K 및 두 단계 읽기는 모두 해당 스냅샷을 읽습니다. 과거 버전은 그 버전에 커밋된 인덱스를 사용합니다. 벡터 인덱스 생성 전 버전은 Flat Search를 사용하고, FTS 인덱스 생성 전 버전은 `full_text_search()`로 검색할 수 없으며, `coverage_mode`는 해당 버전의 Fragment를 검사합니다.
 - 선택할 수 없거나 인덱스 파일이 누락된 스냅샷은 오류가 발생합니다. 검색은 최신 버전으로 대체되지 않습니다. Lance의 정리 작업으로 제거된 버전은 찾을 수 없다고 보고됩니다. 태그로 유지되는 버전은 정리 작업 중에도 인덱스 파일을 유지합니다. 다른 방식으로 삭제된 인덱스 파일은 실행 시 실패를 일으키며, 오류에 데이터세트 버전이 표시됩니다.
-- 준비된 문의 모든 `EXECUTE`를 포함하여 실행할 때마다 스냅샷을 다시 선택하므로, 최신 버전, 미래 시점, 브랜치 및 이동된 태그는 매번 다른 버전을 선택할 수 있습니다. 네 매개변수는 상수여야 합니다. 준비된 문에서 `vector_search()`는 `query_vector`, `top_k`, `offset`, `filter`에만 자리표시자(`?`)를 허용하고, `full_text_search()`는 허용하지 않습니다.
+- 준비된 문의 모든 `EXECUTE`를 포함하여 실행할 때마다 스냅샷을 다시 선택하므로, 최신 버전, 미래 시점, 브랜치 및 이동된 태그는 매번 다른 버전을 선택할 수 있습니다. 네 매개변수는 상수여야 합니다. 준비된 문에서 `vector_search()`는 자리표시자(`?`)를 `query_vector`, `top_k`, `offset`, `filter`에만 허용하고, `full_text_search()`는 허용하지 않습니다.
 - 각 검색 관계는 자체 스냅샷을 선택합니다. 한 문에서 같은 테이블에 대한 두 관계, 예를 들어 `vector_search()`와 테이블 자체를 조인하는 경우, 그 사이에 새 버전이 커밋되면 서로 다른 버전을 읽을 수 있습니다. 같은 버전을 읽으려면 양쪽 모두 고정하세요. 검색 함수에는 `version`, 테이블에는 `FOR VERSION AS OF`를 사용합니다.
 - `CREATE TABLE AS SELECT`는 새 테이블의 스키마를 위해 한 번, 행을 위해 한 번 쿼리를 두 번 계획하므로, 변경되는 선택자는 매번 다른 버전을 선택할 수 있습니다. 하나의 버전을 정확히 복사하려면 `version`을 설정하세요.
 - `EXPLAIN`은 선택한 버전을 `lanceVersion`, 브랜치를 `lanceBranch`, REST Namespace의 버전 관리 여부를 `lanceManagedVersioning`으로 표시합니다. `EXPLAIN`도 스냅샷을 다시 선택하므로, 실제 실행에서 읽은 정보는 쿼리 Profile에 기록됩니다. `LanceDatasetVersion`과 `LanceDatasetUri`가 `LanceSearchType` 등 Lance Scanner의 다른 정보와 함께 표시됩니다. URI에는 브랜치 디렉터리가 포함되고 쿼리 문자열과 비밀번호는 제외됩니다.

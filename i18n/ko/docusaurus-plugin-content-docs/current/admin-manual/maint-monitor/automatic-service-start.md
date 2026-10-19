@@ -115,7 +115,7 @@ RestartSec=30
 StartLimitInterval=120
 StartLimitBurst=3
 KillMode=none
-ExecStart=/home/doris/fe/bin/start_fe.sh --daemon0
+ExecStart=/home/doris/fe/bin/start_fe.sh --daemon 
 ExecStop=/home/doris/fe/bin/stop_fe.sh
 
 [Install]
