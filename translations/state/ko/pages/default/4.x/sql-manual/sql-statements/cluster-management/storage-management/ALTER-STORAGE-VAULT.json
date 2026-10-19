@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5d8f7bbb4010b3ef582716225ffa414aa2ff71d3fbf500f4776429c23d29c933",
+    "sourceTechnicalHash": "c2fcffd029deef552abe149d2c2f7e2b82d18e08cbd934a6a340836a8e0c8f3d",
+    "targetHash": "ef69607017570a1ad6a8a75351778afb9350945bcd814b55adec8eb16792c0e6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:57.760Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5d8f7bbb4010b3ef582716225ffa414aa2ff71d3fbf500f4776429c23d29c933",
+      "targetHash": "ef69607017570a1ad6a8a75351778afb9350945bcd814b55adec8eb16792c0e6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/ALTER-STORAGE-VAULT.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "5d8f7bbb4010b3ef582716225ffa414aa2ff71d3fbf500f4776429c23d29c933",
+        "targetHash": "ef69607017570a1ad6a8a75351778afb9350945bcd814b55adec8eb16792c0e6",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

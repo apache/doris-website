@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "290dcba0952bf516d8003596dad3bd80cc01f357f822ce163e55c59175c16c5e",
+    "sourceTechnicalHash": "b805cd3b5f0149f7936e508b80e2704482414fe7adef21755031ed4ec97f8071",
+    "targetHash": "19ad8929c71157425352888bf0a04d2f20c0cf6040b74f30b31582cc5e0786be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:54.799Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "290dcba0952bf516d8003596dad3bd80cc01f357f822ce163e55c59175c16c5e",
+      "targetHash": "19ad8929c71157425352888bf0a04d2f20c0cf6040b74f30b31582cc5e0786be",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/CREATE-WORKLOAD-POLICY.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "290dcba0952bf516d8003596dad3bd80cc01f357f822ce163e55c59175c16c5e",
+        "targetHash": "19ad8929c71157425352888bf0a04d2f20c0cf6040b74f30b31582cc5e0786be",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

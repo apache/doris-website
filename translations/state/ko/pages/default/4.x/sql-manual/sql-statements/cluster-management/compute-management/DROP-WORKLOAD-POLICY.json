@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f33c83cfe328335951f509d3374cf492d242d9b8bfe36848a69b57de484267b3",
+    "sourceTechnicalHash": "98aad682c8a530c8e747f1faeec2a19ca93e05aed5a4f15a8d6b009399786635",
+    "targetHash": "4b287f86cba5d09fd03892e577c84ca45d2de2d1ef67061bc55f35d222b9846d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:55.112Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f33c83cfe328335951f509d3374cf492d242d9b8bfe36848a69b57de484267b3",
+      "targetHash": "4b287f86cba5d09fd03892e577c84ca45d2de2d1ef67061bc55f35d222b9846d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-POLICY.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "f33c83cfe328335951f509d3374cf492d242d9b8bfe36848a69b57de484267b3",
+        "targetHash": "4b287f86cba5d09fd03892e577c84ca45d2de2d1ef67061bc55f35d222b9846d",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

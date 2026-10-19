@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+    "sourceTechnicalHash": "425f65a57d1f3a270c55a815acead26554ad248cf97939c1da4afab4a6bdec3e",
+    "targetHash": "2d25a3dd5d9d6e3f17ef2f2d75fde311b25bd7a5633f74617fc10b278262635d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:57.861Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+      "targetHash": "2d25a3dd5d9d6e3f17ef2f2d75fde311b25bd7a5633f74617fc10b278262635d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+        "targetHash": "2d25a3dd5d9d6e3f17ef2f2d75fde311b25bd7a5633f74617fc10b278262635d",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

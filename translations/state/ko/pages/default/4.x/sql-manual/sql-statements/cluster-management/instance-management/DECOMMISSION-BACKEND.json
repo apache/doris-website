@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "257bda4eae6b40a8209e606e966f8d646fc0acbef1a3502a26a0cac079471bf6",
+    "sourceTechnicalHash": "5975c08575a38cf37b5685da0dff558b690feb88e77c8009cc78dfdd4ff7c561",
+    "targetHash": "e1e76ea16e8674062cb58b9a1dcc21bf605442784cd194198fccc0b41a04e087",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:56.124Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "257bda4eae6b40a8209e606e966f8d646fc0acbef1a3502a26a0cac079471bf6",
+      "targetHash": "e1e76ea16e8674062cb58b9a1dcc21bf605442784cd194198fccc0b41a04e087",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DECOMMISSION-BACKEND.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "257bda4eae6b40a8209e606e966f8d646fc0acbef1a3502a26a0cac079471bf6",
+        "targetHash": "e1e76ea16e8674062cb58b9a1dcc21bf605442784cd194198fccc0b41a04e087",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}
