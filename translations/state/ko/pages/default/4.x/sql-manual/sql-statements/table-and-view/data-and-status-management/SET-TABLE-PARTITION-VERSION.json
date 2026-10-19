@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2782f051e6917c20283a384716f78ba77e3914348659fe8e5ec600f57c91a0b5",
+    "sourceTechnicalHash": "f1b7d58f6b925b83cdeba2f8c741937c9e03178fbeb7fc87bf20f986f63ce7d2",
+    "targetHash": "a1e32302b4114636a32e009e54f1cfe1fae70874474f9f1874c2827190d7901f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:56.284Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2782f051e6917c20283a384716f78ba77e3914348659fe8e5ec600f57c91a0b5",
+      "targetHash": "a1e32302b4114636a32e009e54f1cfe1fae70874474f9f1874c2827190d7901f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SET-TABLE-PARTITION-VERSION.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "2782f051e6917c20283a384716f78ba77e3914348659fe8e5ec600f57c91a0b5",
+        "targetHash": "a1e32302b4114636a32e009e54f1cfe1fae70874474f9f1874c2827190d7901f",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

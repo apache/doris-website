@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/job/PAUSE-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/PAUSE-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/PAUSE-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "471c11f532a20d7ea79363ba54e00609d9f2b3e5534984daade9eb16ae408cc5",
+    "sourceTechnicalHash": "f591f62f9faca5569eb11c3d9a8a35588ca99e65a536f0845fcb49bfd144e59b",
+    "targetHash": "44ea42d099f407757ed693cb02d56a849e272a6174325f64cc079f512ee91c62",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:50.733Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "471c11f532a20d7ea79363ba54e00609d9f2b3e5534984daade9eb16ae408cc5",
+      "targetHash": "44ea42d099f407757ed693cb02d56a849e272a6174325f64cc079f512ee91c62",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/job/PAUSE-JOB",
+        "sourcePath": "docs/sql-manual/sql-statements/job/PAUSE-JOB.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/PAUSE-JOB.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "471c11f532a20d7ea79363ba54e00609d9f2b3e5534984daade9eb16ae408cc5",
+        "targetHash": "44ea42d099f407757ed693cb02d56a849e272a6174325f64cc079f512ee91c62",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5b30baa82150c61d877de07e4f29f1700d22c7c4d3f2814d64144020ff7f2479",
+    "sourceTechnicalHash": "1839cd6e725e0fa139465cdbf49b96701300f6e8c970f4a3dce61d4785304571",
+    "targetHash": "00ff80a4a43778d95181217bdfe6e8747752fac0662a73f98d1e30d5f4ac7020",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:55.502Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5b30baa82150c61d877de07e4f29f1700d22c7c4d3f2814d64144020ff7f2479",
+      "targetHash": "00ff80a4a43778d95181217bdfe6e8747752fac0662a73f98d1e30d5f4ac7020",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REBALANCE-DISK.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "5b30baa82150c61d877de07e4f29f1700d22c7c4d3f2814d64144020ff7f2479",
+        "targetHash": "00ff80a4a43778d95181217bdfe6e8747752fac0662a73f98d1e30d5f4ac7020",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

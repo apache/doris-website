@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-query/SELECT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "487935a7779ee25948d245adb231d3536ecd3c12d3dbabea375dc388f9cbaf19",
+    "sourceTechnicalHash": "e940903aa0b466e8d23ced42700ff72d77f7afa1f2239982c2d5993d25e8bbf3",
+    "targetHash": "12a8e26dc2172b49ffc6051ca19a93eeb0c557ea3ebdc4a6aa6cac6149a7af3c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:03:18.708Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "487935a7779ee25948d245adb231d3536ecd3c12d3dbabea375dc388f9cbaf19",
+      "targetHash": "12a8e26dc2172b49ffc6051ca19a93eeb0c557ea3ebdc4a6aa6cac6149a7af3c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 22: expected [\"link\",\"https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview\",null]; received [\"link\",\"https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview)를\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

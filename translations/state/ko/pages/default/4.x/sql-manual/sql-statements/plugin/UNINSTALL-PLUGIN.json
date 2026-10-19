@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c0a143bc935517d8a92728e11a10c52dc6ae9aaca549f1cd4f7a5a488e95262b",
+    "sourceTechnicalHash": "9a8ce97658d7e90548bfb960dea02a006e7e2f8924b587b1a6eb17488b626ebb",
+    "targetHash": "450eac5727947b610a89228c877dc812cf120ccf9e84a264c638fd17d62aacc2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:51.154Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c0a143bc935517d8a92728e11a10c52dc6ae9aaca549f1cd4f7a5a488e95262b",
+      "targetHash": "450eac5727947b610a89228c877dc812cf120ccf9e84a264c638fd17d62aacc2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN",
+        "sourcePath": "docs/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/plugin/UNINSTALL-PLUGIN.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "c0a143bc935517d8a92728e11a10c52dc6ae9aaca549f1cd4f7a5a488e95262b",
+        "targetHash": "450eac5727947b610a89228c877dc812cf120ccf9e84a264c638fd17d62aacc2",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

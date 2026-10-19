@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/variable/UNSET-VARIABLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0c76c424b2203094a721a83e8781c3367fbab1b9c71d9702f25b9d55dd98a83c",
+    "sourceTechnicalHash": "2911afdd02d9d7558966c0284924b80edeea2868d52c8d246b5b63f7cd1121d1",
+    "targetHash": "dd1eb8ba7338d9a4ee356cfa37082b1af7e53ca41313f917be960881064feae6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:53.429Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0c76c424b2203094a721a83e8781c3367fbab1b9c71d9702f25b9d55dd98a83c",
+      "targetHash": "dd1eb8ba7338d9a4ee356cfa37082b1af7e53ca41313f917be960881064feae6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/session/variable/UNSET-VARIABLE",
+        "sourcePath": "docs/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/variable/UNSET-VARIABLE.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "0c76c424b2203094a721a83e8781c3367fbab1b9c71d9702f25b9d55dd98a83c",
+        "targetHash": "dd1eb8ba7338d9a4ee356cfa37082b1af7e53ca41313f917be960881064feae6",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

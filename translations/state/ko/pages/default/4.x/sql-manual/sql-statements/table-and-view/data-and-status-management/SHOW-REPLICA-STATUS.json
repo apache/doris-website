@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6972ea03879b2abf007edfe0a9e9c1dd577ff2d1f501350b2eb673225ee8a3be",
+    "sourceTechnicalHash": "64fab725f813f6fe20c208c2482132372dbd9fc6aecdee80baa950eed578f178",
+    "targetHash": "0981d127a8a8a971ec43b5a97cffe9817e0afc682f5ef997903dec749a16e52f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:56.941Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6972ea03879b2abf007edfe0a9e9c1dd577ff2d1f501350b2eb673225ee8a3be",
+      "targetHash": "0981d127a8a8a971ec43b5a97cffe9817e0afc682f5ef997903dec749a16e52f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-STATUS.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "6972ea03879b2abf007edfe0a9e9c1dd577ff2d1f501350b2eb673225ee8a3be",
+        "targetHash": "0981d127a8a8a971ec43b5a97cffe9817e0afc682f5ef997903dec749a16e52f",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}

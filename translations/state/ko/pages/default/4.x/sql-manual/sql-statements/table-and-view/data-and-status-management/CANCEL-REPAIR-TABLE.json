@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3d71e5d2d2d0d9f3e713db792f420f1b479067cc680f9b2b25118228ebff9ea9",
+    "sourceTechnicalHash": "ecc03ff5b4c147ebce896c4a72e6e0159ba9c3322ca2c3a8bc1905af2ede17e5",
+    "targetHash": "04e51e2b25e0561cd8acb109626a232b92bfeb47b0979dac830759669b2c8b1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:57:55.618Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3d71e5d2d2d0d9f3e713db792f420f1b479067cc680f9b2b25118228ebff9ea9",
+      "targetHash": "04e51e2b25e0561cd8acb109626a232b92bfeb47b0979dac830759669b2c8b1f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/CANCEL-REPAIR-TABLE.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "3d71e5d2d2d0d9f3e713db792f420f1b479067cc680f9b2b25118228ebff9ea9",
+        "targetHash": "04e51e2b25e0561cd8acb109626a232b92bfeb47b0979dac830759669b2c8b1f",
+        "commit": "1b802a09c9d97332b15f061929e652ba0e861633",
+        "pr": "https://github.com/apache/doris-website/pull/4385"
+      }
+    }
+  }
+}
