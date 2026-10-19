@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-with-ldb-toolchain",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-with-ldb-toolchain.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-ldb-toolchain.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "947b5311f04c927e3e7587fb1f64c51c6c9f2a93669e53c9570ec0e98cd80f25",
+    "sourceTechnicalHash": "85481d07a677671f028b74d495320ade462fe6cb753943d12c55322b9a9860d8",
+    "targetHash": "8195efc93ff70ccd22bf74864302b9a0574d53519df46acec5ec5136098ae66b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:40.723Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "947b5311f04c927e3e7587fb1f64c51c6c9f2a93669e53c9570ec0e98cd80f25",
+      "targetHash": "8195efc93ff70ccd22bf74864302b9a0574d53519df46acec5ec5136098ae66b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

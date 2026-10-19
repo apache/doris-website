@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/pull-request",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/pull-request.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/pull-request.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ed3064f9e7c889c04c77929170c2de07d4c4987a8803f2cc3277406e120ef018",
+    "sourceTechnicalHash": "f07de74b6e5343debdcb895bc90af8cdf7b26ca24a345800f55fba9ca1b9341a",
+    "targetHash": "2699fb34e9cc07996894d2a408f62bba144cfe0330720892cf794fdd92a3cfa6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:25.130Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed3064f9e7c889c04c77929170c2de07d4c4987a8803f2cc3277406e120ef018",
+      "targetHash": "2699fb34e9cc07996894d2a408f62bba144cfe0330720892cf794fdd92a3cfa6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"link\",\"https://github.com/apache/doris\",null]; received [\"inlineCode\",null,null,\"apache/doris\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"apache/doris\"]; received [\"link\",\"https://github.com/apache/doris\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

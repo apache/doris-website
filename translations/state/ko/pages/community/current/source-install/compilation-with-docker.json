@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "source-install/compilation-with-docker",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/source-install/compilation-with-docker.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/source-install/compilation-with-docker.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
+    "sourceTechnicalHash": "5aca82ee484f3ef00d45063253cf63ac4764fd87117566e956949b471170ae8d",
+    "targetHash": "cf7db5c681a997480fc1a4bef5760048c05e7de1f39ae67b5f79ea56b9553bc6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:57.199Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a1eb2b58ab6125ed5cf8ad953f970abc79d380854778245b00393ab0f4d6e48",
+      "targetHash": "cf7db5c681a997480fc1a4bef5760048c05e7de1f39ae67b5f79ea56b9553bc6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

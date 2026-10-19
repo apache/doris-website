@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-complete",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-complete.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/release-and-verify/release-complete.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f55e0c2d595675fb42c828264aec37b18a7e7365b11a1be8da6f2b4f072d1b93",
+    "sourceTechnicalHash": "2f5e4fb744fa45169b4c9418ec795925254225c3380ee21b2a8dd909ad2d6984",
+    "targetHash": "7fcc348d2dd4809663d216468ccebd77ffa9014ea822972070e69ca04494f124",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:41:34.257Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f55e0c2d595675fb42c828264aec37b18a7e7365b11a1be8da6f2b4f072d1b93",
+      "targetHash": "7fcc348d2dd4809663d216468ccebd77ffa9014ea822972070e69ca04494f124",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 47: expected [\"inlineCode\",null,null,\"No public key\"]; received [\"inlineCode\",null,null,\"Release\"]\nprotected node 48: expected [\"inlineCode\",null,null,\"Release\"]; received [\"inlineCode\",null,null,\"No public key\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
