@@ -3,15 +3,39 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const {execFileSync} = require('node:child_process');
+const {execFileSync, spawnSync} = require('node:child_process');
 const {hash, identity, inventoryBaseline, loadRecordsAt, pipelineLocale} = require('./state.cjs');
 const {collect, validateScope} = require('./inventory.cjs');
 
 const keyFor = locale => page => identity({...page,locale});
-const refContent = (root,ref,file) => {
-    try {return execFileSync('git',['show',`${ref}:${file}`],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore'],maxBuffer:16*1024*1024});}
-    catch {return null;}
-};
+// One `git show` per page is several thousand processes for a full-scope
+// audit. Read the same blobs through one `git cat-file --batch` process and
+// keep only the SHA-256 the audit compares.
+function refHashes(root, ref, files) {
+    const unique = [...new Set(files)], hashes = new Map();
+    if (!unique.length) return hashes;
+    const result = spawnSync('git', ['cat-file', '--batch'], {
+        cwd: root, maxBuffer: 512 * 1024 * 1024,
+        input: unique.map(file => `${ref}:${file}`).join('\n') + '\n',
+    });
+    if (result.error) throw result.error;
+    if (result.status !== 0)
+        throw new Error(`git cat-file --batch failed: ${result.stderr.toString().trim()}`);
+    let offset = 0;
+    for (const file of unique) {
+        const newline = result.stdout.indexOf(0x0a, offset);
+        assert(newline >= 0, `Truncated git cat-file output at ${file}`);
+        const header = result.stdout.toString('utf8', offset, newline);
+        offset = newline + 1;
+        if (header.endsWith(' missing')) {hashes.set(file, null); continue;}
+        const match = header.match(/^[0-9a-f]+ blob (\d+)$/);
+        assert(match, `Unexpected git cat-file header for ${file}: ${header}`);
+        const size = Number(match[1]);
+        hashes.set(file, hash(result.stdout.toString('utf8', offset, offset + size)));
+        offset += size + 1;
+    }
+    return hashes;
+}
 function baselineEntries(root) {
     return ['dev','4x','community'].flatMap(group => {
         const meta = JSON.parse(fs.readFileSync(path.join(root,`${group}.json`),'utf8'));
@@ -62,22 +86,27 @@ async function audit({root,sourceRef,baseline,native}) {
     const current = new Set(), groups = [];
     const files = group => execFileSync('git',['ls-tree','-r','--name-only',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
         .split('\n').filter(file => /\.(md|mdx)$/.test(file));
-    for (const group of scope.groups) {
-        const pages = native.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version);
+    const scoped = scope.groups.map(group => ({group,
+        pages:native.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version)}));
+    const sourceHashes = refHashes(root, commit, scoped.flatMap(({pages}) => pages.map(page => page.englishPath)));
+    const targetHashes = refHashes(root, commit, scoped.flatMap(({pages}) => pages
+        .filter(page => page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget)
+        .map(page => page.targetPath)));
+    for (const {group, pages} of scoped) {
         assert(pages.length,`Missing native group ${group.id}`);
         const sourceFiles = files(group), seen = new Set(), entries = [];
         for (const page of pages) {
             assert(page.englishPath.startsWith(group.sourceRoot+'/'),`Wrong source root: ${page.englishPath}`);
             assert(sourceFiles.includes(page.englishPath),`Native page missing at source ref: ${page.englishPath}`);
-            assert.equal(hash(refContent(root,commit,page.englishPath)),hash(fs.readFileSync(path.join(root,page.englishPath),'utf8')),
+            assert.equal(sourceHashes.get(page.englishPath),hash(fs.readFileSync(path.join(root,page.englishPath),'utf8')),
                 `Source differs from ${commit}: ${page.englishPath}`);
             assert(!seen.has(page.englishPath),`Duplicate native source ${page.englishPath}`);
             seen.add(page.englishPath); current.add(key(page));
             const previous = old.get(key(page));
             const disposition = page.draft ? 'draft' : scope.retainEnglish.some(entry => key(entry) === key(page)) ? 'retain_english' : 'translate';
             const mergedCurrent = page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
-                    && refContent(root,commit,page.targetPath) !== null
-                    && hash(refContent(root,commit,page.targetPath)) === page.targetHash
+                    && targetHashes.get(page.targetPath) !== null
+                    && targetHashes.get(page.targetPath) === page.targetHash
                 && committedRecords.get(key(page))?.targetHash === page.targetHash;
             const state = disposition !== 'translate' ? disposition : page.status === 'current'
                 ? mergedCurrent ? 'current' : 'unverified' : page.status;
@@ -106,14 +135,15 @@ async function audit({root,sourceRef,baseline,native}) {
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
         'translations/config.json',`translations/scope/${locale}.json`];
     routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
-    if (refContent(root, commit, `translations/state/${locale}/shards.schema.json`) !== null)
-        routingInputs.push(`translations/state/${locale}/shards.schema.json`);
+    const schemaPath = `translations/state/${locale}/shards.schema.json`;
+    if (refHashes(root, commit, [schemaPath]).get(schemaPath) !== null) routingInputs.push(schemaPath);
     routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', `translations/state/${locale}/pages`],
         {cwd:root,encoding:'utf8'}).split('\n').filter(Boolean));
-    for (const file of routingInputs) assert.equal(refContent(root,commit,file),fs.readFileSync(path.join(root,file),'utf8'),
+    const routingHashes = refHashes(root, commit, routingInputs);
+    for (const file of routingInputs) assert.equal(routingHashes.get(file),hash(fs.readFileSync(path.join(root,file),'utf8')),
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
-        routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,hash(refContent(root,commit,file))])),
+        routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,routingHashes.get(file)])),
         groups,removed,labels,sidebar,reports:native.reports};
 }
 if (require.main === module) {

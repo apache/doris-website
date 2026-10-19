@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  group: check-file-sizes-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   check-file-sizes:
     runs-on: ubuntu-latest
@@ -11,7 +15,12 @@ jobs:
       - name: Checkout PR
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+
+      - name: Fetch base commit
+        # Only the base tree is needed for `git diff --name-only`; its blobs
+        # would otherwise re-download the whole repository at the base commit.
+        run: git fetch --depth=1 --filter=blob:none origin ${{ github.event.pull_request.base.sha }}
 
       - name: Get changed files in PR
         id: changed

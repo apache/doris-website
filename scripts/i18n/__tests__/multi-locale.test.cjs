@@ -106,26 +106,67 @@ test('native doc metadata, browser groups and per-locale manifests agree, includ
     }
 });
 
-test('scheduled Japanese jobs select ja and PR admission checks every configured locale with fail-fast behavior', async t => {
+test('scheduled Japanese jobs select ja and PR admission checks only changed locales with fail-fast behavior', async t => {
     const workflow = file => yaml.load(fs.readFileSync(path.join(repoRoot, '.github/workflows', file), 'utf8'));
     const translation = workflow('japanese-translation.yml');
     assert.equal(translation.on.workflow_dispatch.inputs.locale.default, 'ja');
     for (const job of ['discover', 'generate']) assert.equal(translation.jobs[job].env.I18N_LOCALE, "${{ inputs.locale || 'ja' }}");
     assert.equal(workflow('japanese-coverage-audit.yml').jobs.audit.env.I18N_LOCALE, 'ja');
-    const gate = workflow('build-check.yml').jobs['build-and-deploy'].steps.find(step => step.name === 'Translation gate for every managed locale');
+    const gate = workflow('build-check.yml').jobs['build-and-deploy'].steps.find(step => step.name === 'Translation gate for changed locales');
     const {root, write} = await createFixture(directory(t));
     for (const file of ['scripts/i18n/managed-locales.cjs', 'scripts/i18n/state.cjs', 'config/i18n.js']) write(file, fs.readFileSync(path.join(repoRoot, file), 'utf8'));
     write('scripts/i18n/pr-preflight.cjs', "require('node:fs').appendFileSync('calls', process.env.I18N_LOCALE + '\\n'); process.exit(process.env.I18N_LOCALE === process.env.FAIL_LOCALE ? 1 : 0);\n");
-    execFileSync('git', ['init', '-q'], {cwd: root});
-    execFileSync('git', ['-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '--allow-empty', '-qm', 'base'], {cwd: root});
-    execFileSync('git', ['update-ref', 'refs/remotes/origin/master', 'HEAD'], {cwd: root});
-    for (const fail of ['', 'ko', 'ja']) {
+    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']});
+    const commit = files => {
+        git('add', '-f', ...files);
+        git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'change');
+    };
+    const run = fail => {
         write('calls', '');
         const result = spawnSync('bash', ['-e', '-c', gate.run.replace('${{ github.base_ref }}', 'master')],
             {cwd: root, encoding: 'utf8', env: {...process.env, FAIL_LOCALE: fail, DORIS_ENABLE_JA: '', DORIS_ENABLE_LOCALES: ''}});
-        assert.equal(result.status, fail ? 1 : 0, result.stderr);
-        assert.equal(fs.readFileSync(path.join(root, 'calls'), 'utf8'), fail === 'ja' ? 'ja\n' : 'ja\nko\n');
-    }
+        return {status: result.status, calls: fs.readFileSync(path.join(root, 'calls'), 'utf8'), stderr: result.stderr};
+    };
+    const jaTarget = 'i18n/ja/docusaurus-plugin-content-docs/current/01-shared.md';
+    const koTarget = 'i18n/ko/docusaurus-plugin-content-docs/current/01-shared.md';
+    git('init', '-q');
+    git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '--allow-empty', '-qm', 'base');
+    git('update-ref', 'refs/remotes/origin/master', 'HEAD');
+
+    write(jaTarget, '# ja\n');
+    write(koTarget, '# ko\n');
+    commit([jaTarget, koTarget]);
+    let result = run('');
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.calls, 'ja\nko\n');
+    result = run('ja');
+    assert.equal(result.status, 1, result.stderr);
+    assert.equal(result.calls, 'ja\n');
+
+    git('reset', '--hard', 'origin/master');
+    write(jaTarget, '# ja\n');
+    commit([jaTarget]);
+    result = run('');
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.calls, 'ja\n');
+
+    git('reset', '--hard', 'origin/master');
+    write(koTarget, '# ko\n');
+    commit([koTarget]);
+    result = run('ko');
+    assert.equal(result.status, 1, result.stderr);
+    assert.equal(result.calls, 'ko\n');
+
+    git('reset', '--hard', 'origin/master');
+    result = run('');
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.calls, '');
+
+    fs.appendFileSync(path.join(root, 'scripts/i18n/state.cjs'), '\n// shared change\n');
+    commit(['scripts/i18n/state.cjs']);
+    result = run('');
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.calls, 'ja\nko\n');
 });
 
 test('the publisher-selected locale is forwarded to the admission subprocess', async t => {

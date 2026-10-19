@@ -32,11 +32,15 @@ jobs:
         environment: Production
         steps:
             - name: Checkout ${{ github.ref }} ( ${{ github.event.pull_request.head.sha }} )
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                 ref: ${{ github.event.pull_request.head.sha }}
                 fetch-depth: 0
-                  
+                # Full history is needed for merge-base/check_move, but the
+                # object database is ~1.7GB. Trees and commits are enough;
+                # checkout fetches the blobs the working tree needs.
+                filter: blob:none
+
             - name: Set up Python
               uses: actions/setup-python@v4
               with:
@@ -46,6 +50,7 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: 20
+                  cache: yarn
             
             - name: Refactor PR commits and check move
               run: |
@@ -91,7 +96,6 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   npm install -g yarn
-                  yarn cache clean
                   yarn
                   yarn key-features:generate
 
@@ -121,12 +125,23 @@ jobs:
                   node --test scripts/i18n/__tests__/translate-document.test.cjs
                   node --test scripts/i18n/__tests__/incremental-document.test.cjs
 
-            - name: Translation gate for every managed locale
+            - name: Translation gate for changed locales
               run: |
                   BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
-                  MANAGED_LOCALES=$(node scripts/i18n/managed-locales.cjs --all)
-                  for LOCALE in $MANAGED_LOCALES; do
-                      I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+                  CHANGED=$(git diff --name-only "$BASE_SHA" HEAD)
+                  # A shared input can change every locale's admission result;
+                  # otherwise only locales whose own translation inputs changed
+                  # need the full inventory load.
+                  SHARED=false
+                  if printf '%s\n' "$CHANGED" | grep -qE '^(scripts/i18n/|translations/config\.json$|config/i18n\.js$|docusaurus\.config\.js$|versions\.json$|sidebars[^/]*\.(ts|json)$|versioned_sidebars/)'; then
+                      SHARED=true
+                  fi
+                  for LOCALE in $(node scripts/i18n/managed-locales.cjs --all); do
+                      if [ "$SHARED" = true ] || printf '%s\n' "$CHANGED" | grep -qE "^i18n/$LOCALE/|^translations/(state|scope|glossary|inventory|protection-exceptions)/$LOCALE([/.]|$)"; then
+                          I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
+                      else
+                          echo "No $LOCALE translation changes; skipping the admission gate for this locale."
+                      fi
                   done
 
             - name: Publish artifact optimization tests
