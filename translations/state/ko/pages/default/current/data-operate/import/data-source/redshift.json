@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/redshift",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/redshift.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/redshift.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+    "sourceTechnicalHash": "c2ac105a31955ed67c896b8c6096831e77bcba2c8c134c6b21cac16f173d1230",
+    "targetHash": "8df08246581ee75a9d7b9134959207d33f6c4fbf7102e40aa08c3a0215b67ead",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:52:15.061Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+      "targetHash": "8df08246581ee75a9d7b9134959207d33f6c4fbf7102e40aa08c3a0215b67ead",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"100\",\"100\",\"2\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.2\",\"3.3\",\"3.4\",\"4\",\"5\",\"65535\"]; received [\"1\",\"1\",\"1\",\"100\",\"100\",\"2\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.2\",\"3.3\",\"3.4\",\"4\",\"5\",\"65535\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

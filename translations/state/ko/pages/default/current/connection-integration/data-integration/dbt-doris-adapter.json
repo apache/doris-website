@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/dbt-doris-adapter",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/dbt-doris-adapter.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/dbt-doris-adapter.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+    "sourceTechnicalHash": "698f1cd7707c15efb95a0c79234f5bafe246c050b4ea82c58a672703444381b4",
+    "targetHash": "79c6bbbb3281b9625be00db6f498192ef2601cdf742cadbdbfec4ec169649a09",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:52:25.025Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+      "targetHash": "79c6bbbb3281b9625be00db6f498192ef2601cdf742cadbdbfec4ec169649a09",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 185: expected [\"inlineCode\",null,null,\"function_column.sequence_type\"]; received [\"inlineCode\",null,null,\"__DORIS_SEQUENCE_COL__\"]\nprotected node 186: expected [\"inlineCode\",null,null,\"__DORIS_SEQUENCE_COL__\"]; received [\"inlineCode\",null,null,\"function_column.sequence_type\"]\nprotected node 281: expected [\"inlineCode\",null,null,\"hash\"]; received [\"inlineCode\",null,null,\"distributed_by\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 303: expected [\"inlineCode\",null,null,\"REFRESH MATERIALIZED VIEW ... AUTO|COMPLETE\"]; received [\"inlineCode\",null,null,\"dbt run\"]\nprotected node 304: expected [\"inlineCode\",null,null,\"dbt run\"]; received [\"inlineCode\",null,null,\"REFRESH MATERIALIZED VIEW ... AUTO|COMPLETE\"]\nprotected node 319: expected [\"inlineCode\",null,null,\"check\"]; received [\"inlineCode\",null,null,\"snapshots/\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

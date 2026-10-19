@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/langfuse",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/langfuse.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/langfuse.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+    "sourceTechnicalHash": "b6d69269d4b6578148f2351a7bc1a1ac202f111711ce2cfe229c06351927517b",
+    "targetHash": "969b17b199503a3ae803c065106fb84817a7ba6dd758c4eee7aa9732edfed91f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:46:32.200Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+      "targetHash": "969b17b199503a3ae803c065106fb84817a7ba6dd758c4eee7aa9732edfed91f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

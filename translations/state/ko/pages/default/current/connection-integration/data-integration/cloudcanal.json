@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/cloudcanal",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/cloudcanal.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/cloudcanal.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f91cfd860165a66dc453303c16e4c2e2dc8679c038257da0fde9c3a1c3f50877",
+    "sourceTechnicalHash": "0e4d9f2d5926c29c44244858289d4ad2e30dc2ac6adb4b3dac9297dbf9739158",
+    "targetHash": "95d805373d3971361524371788247ddf58164b2650e9eae0c573456aaf388802",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:43:41.534Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f91cfd860165a66dc453303c16e4c2e2dc8679c038257da0fde9c3a1c3f50877",
+      "targetHash": "95d805373d3971361524371788247ddf58164b2650e9eae0c573456aaf388802",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

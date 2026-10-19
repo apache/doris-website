@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/flink-doris-connector/data-type-mapping",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/data-type-mapping.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/data-type-mapping.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c49fec81c83416f14142fc31cd990d32738a3205b3bcc072f87b1162ee0b8fdc",
+    "sourceTechnicalHash": "167765b2ec6f68a33852aab19e1ed20d532ae0f103c8778878614c82e100e7b3",
+    "targetHash": "1a33e7af79d29705b7aef0139c21fce24be812e4cb0548bcce428e47828885b6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:44:18.632Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c49fec81c83416f14142fc31cd990d32738a3205b3bcc072f87b1162ee0b8fdc",
+      "targetHash": "1a33e7af79d29705b7aef0139c21fce24be812e4cb0548bcce428e47828885b6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

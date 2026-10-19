@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/tableau",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/tableau.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/tableau.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7712fe8c0436809309f66b9c4902e0a8a56ed678472e562d957026fee28f5b34",
+    "sourceTechnicalHash": "1e416e9d3bb4fc4b3201ce80dd1de6ac487bce2a4ddc7b5fc6e3ffbfd79d54d8",
+    "targetHash": "51e9ddb55ac2a3d882e8c3429cdd2206d3529e8998f59de88aa7f1ac2300e485",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:47:20.575Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7712fe8c0436809309f66b9c4902e0a8a56ed678472e562d957026fee28f5b34",
+      "targetHash": "51e9ddb55ac2a3d882e8c3429cdd2206d3529e8998f59de88aa7f1ac2300e485",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
