@@ -365,15 +365,15 @@ before discovery or generation. The Japanese translation workflow defaults its
 manual input and scheduled runs to `ja`; the Japanese coverage audit always
 selects `ja`. A manual translation run can select another configured locale.
 
-Build Check runs PR admission once per configured translation locale, including
-locales disabled for the site build:
-
-```bash
-MANAGED_LOCALES=$(node scripts/i18n/managed-locales.cjs --all)
-for LOCALE in $MANAGED_LOCALES; do
-  I18N_LOCALE="$LOCALE" node scripts/i18n/pr-preflight.cjs --base "$BASE_SHA"
-done
-```
+Build Check runs PR admission for every configured translation locale, including
+locales disabled for the site build, when a shared input changes. Otherwise it
+runs only the locales whose own translation inputs changed, so a Korean-only PR
+does not pay for the Japanese inventory load and an English-only docs PR skips
+both admission gates. The selection lives in the `Translation gate for changed
+locales` step of `.github/workflows/build-check.yml`; shared inputs are
+`scripts/i18n/`, `translations/config.json`, `config/i18n.js`,
+`docusaurus.config.js`, `versions.json`, the site sidebars, and
+`versioned_sidebars/`.
 
 Without `--all`, `managed-locales.cjs` lists only enabled managed locales for
 publication checks. The publisher passes its selected locale to PR admission.

@@ -10,8 +10,17 @@ on:
       - 'docs/**'
       - 'versioned_docs/version-4.x/**'
       - 'community/**'
-      - 'i18n/**'
-      - 'translations/**'
+      - 'i18n/ko/**'
+      - 'translations/config.json'
+      - 'translations/inventory/ko/**'
+      - 'translations/scope/ko.json'
+      - 'translations/glossary/ko.json'
+      - 'translations/state/ko/**'
+      - 'translations/protection-exceptions/ko.json'
+      - 'docusaurus.config.js'
+      - 'versions.json'
+      - 'config/i18n.js'
+      - 'config/versions-plugin.js'
       - 'sidebars.ts'
       - 'sidebarsCommunity.json'
       - 'versioned_sidebars/version-4.x-sidebars.json'
@@ -20,6 +29,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: korean-coverage-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   audit:
@@ -30,7 +43,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # The audit only reads HEAD; its git comparisons never need history.
+          fetch-depth: 1
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
