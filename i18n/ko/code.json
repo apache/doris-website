@@ -2602,5 +2602,242 @@
   },
   "marketing.compare.255": {
     "message": "다음 사례"
+  },
+  "marketing.benchmarkLabels.internal": {
+    "message": "내부 테이블 포맷"
+  },
+  "marketing.benchmarkLabels.iceberg": {
+    "message": "Iceberg 테이블 포맷"
+  },
+  "marketing.benchmarkLabels.100m": {
+    "message": "1억 행"
+  },
+  "marketing.benchmarkLabels.10m": {
+    "message": "1,000만 행"
+  },
+  "marketing.benchmarkLabels.1m": {
+    "message": "100만 행"
+  },
+  "marketing.benchmarkLabels.retrieval": {
+    "message": "검색 및 조회"
+  },
+  "marketing.benchmarkLabels.analytics": {
+    "message": "분석 롤업"
+  },
+  "marketing.benchmarkLabels.semi": {
+    "message": "반정형 페이로드"
+  },
+  "marketing.benchmarkLabels.8queries": {
+    "message": "8개 쿼리"
+  },
+  "marketing.benchmarkLabels.6queries": {
+    "message": "6개 쿼리"
+  },
+  "marketing.benchmarks.001": {
+    "message": "각 엔진이 자체 기본 포맷으로 데이터를 읽고 씁니다."
+  },
+  "marketing.benchmarks.002": {
+    "message": "모든 엔진이 같은 Apache Iceberg 데이터셋을 읽으므로 엔진만 달라집니다."
+  },
+  "marketing.benchmarks.003": {
+    "message": "공식 리더보드 규모입니다. 약 1억 행."
+  },
+  "marketing.benchmarks.004": {
+    "message": "단일 머신에서도 실행할 수 있는 전체 검증 규모입니다. 약 1,000만 행."
+  },
+  "marketing.benchmarks.005": {
+    "message": "빠른 스모크 테스트 규모입니다. 약 100만 행."
+  },
+  "marketing.benchmarks.006": {
+    "message": "13개 쿼리로 이루어진 스타 스키마 벤치마크로, 대규모 조인과 집계가 많습니다."
+  },
+  "marketing.benchmarks.007": {
+    "message": "대표적인 의사 결정 지원 벤치마크로, 정규화된 스키마에 대한 22개의 애드혹 쿼리로 구성됩니다."
+  },
+  "marketing.benchmarks.008": {
+    "message": "가장 어려운 의사 결정 지원 벤치마크로, 분석 엔진이 해야 하는 작업 대부분을 다루는 99개 쿼리로 구성됩니다."
+  },
+  "marketing.benchmarks.009": {
+    "message": "관측 항목 조회, 트레이스 재생, 생성에서 도구 호출로 이어지는 체인 확장, 대용량 텍스트 본문에서의 장애 키워드/문구 검색."
+  },
+  "marketing.benchmarks.010": {
+    "message": "트레이스 수준의 실패 및 비용 요약, 모델·관측 유형별 롤업, 도구 사용 분포, 운영 진단."
+  },
+  "marketing.benchmarks.011": {
+    "message": "변화하는 페이로드 필드에 대한 필터링과 집계: 릴리스 링, 고객 등급, 검색 전략, 중첩된 공급자/도구 진단."
+  },
+  "marketing.benchmarks.012": {
+    "message": "직접 확인하는"
+  },
+  "marketing.benchmarks.013": {
+    "message": "진짜 속도."
+  },
+  "marketing.benchmarks.014": {
+    "message": "사람들이 Apache Doris에서 실제로 실행하는 두 가지 워크로드, 즉 전통적인 SQL 분석과 AI 에이전트 관측성 로그를 다룹니다. 두 워크로드 모두 현실적으로 검토할 만한 엔진들과 비교했습니다. 스크립트와 원본 측정 결과는 공개되어 있습니다."
+  },
+  "marketing.benchmarks.015": {
+    "message": "총 실행 시간"
+  },
+  "marketing.benchmarks.016": {
+    "message": "쿼리별 상세 숨기기 ↑"
+  },
+  "marketing.benchmarks.017": {
+    "message": "쿼리별 상세 보기 ↓"
+  },
+  "marketing.benchmarks.018": {
+    "message": "쿼리별 실행 시간"
+  },
+  "marketing.benchmarks.019": {
+    "message": "규모"
+  },
+  "marketing.benchmarks.020": {
+    "message": "쿼리"
+  },
+  "marketing.benchmarks.021": {
+    "message": "실패"
+  },
+  "marketing.benchmarks.022": {
+    "message": "s"
+  },
+  "marketing.benchmarks.failedTooltip": {
+    "message": "실패"
+  },
+  "marketing.benchmarks.023": {
+    "message": "완료"
+  },
+  "marketing.benchmarks.024": {
+    "message": "막대에 마우스를 올리면 정확한 실행 시간을 볼 수 있습니다. 빗금 친 막대는 시간 초과를 뜻합니다."
+  },
+  "marketing.benchmarks.025": {
+    "message": "윗부분이 끊긴 막대는 표시 범위를 넘는 값입니다. 마우스를 올리면 실제 수치를 볼 수 있습니다."
+  },
+  "marketing.benchmarks.026": {
+    "message": "보고서 보기 ↗"
+  },
+  "marketing.benchmarks.027": {
+    "message": "보고서 보기(출시 예정)"
+  },
+  "marketing.benchmarks.028": {
+    "message": "측정 항목"
+  },
+  "marketing.benchmarks.029": {
+    "message": "벤치마크별로 선택한 쿼리의 실행 시간을 쿼리마다 측정해 합산합니다."
+  },
+  "marketing.benchmarks.030": {
+    "message": "쿼리당 실행 횟수"
+  },
+  "marketing.benchmarks.031": {
+    "message": "각 쿼리는 최소 3회 실행합니다. 콜드는 첫 번째 실행, 핫은 두 번째와 세 번째 실행 중 더 빠른 결과입니다."
+  },
+  "marketing.benchmarks.032": {
+    "message": "캐시 제어"
+  },
+  "marketing.benchmarks.033": {
+    "message": "모든 엔진에서 결과 캐시를 비활성화합니다. 콜드 실행 전에는 Doris BE 캐시를 비웁니다."
+  },
+  "marketing.benchmarks.034": {
+    "message": "동일한 하드웨어"
+  },
+  "marketing.benchmarks.035": {
+    "message": "모든 엔진이 같은 리전과 VPC를 사용하며, 각 클러스터는 동일한 머신 클래스를 사용합니다."
+  },
+  "marketing.benchmarks.036": {
+    "message": "동일한 데이터"
+  },
+  "marketing.benchmarks.037": {
+    "message": "실행 전에 같은 원본 데이터를 각 엔진에 해당 엔진의 기본 포맷으로 적재합니다."
+  },
+  "marketing.benchmarks.038": {
+    "message": "투명성"
+  },
+  "marketing.benchmarks.039": {
+    "message": "모든 스크립트, 쿼리, 설정, 실행별 메타데이터를 저장소에 공개합니다."
+  },
+  "marketing.benchmarks.040": {
+    "message": "벤치마크 스크립트 복제"
+  },
+  "marketing.benchmarks.041": {
+    "message": "벤치마크를 실행할 머신으로 벤치마크 저장소를 가져옵니다."
+  },
+  "marketing.benchmarks.042": {
+    "message": "Doris 클러스터 엔드포인트 설정"
+  },
+  "marketing.benchmarks.043": {
+    "message": "설정 파일을 열고 Doris 클러스터의 호스트, 포트, 사용자, 비밀번호, 데이터베이스를 입력합니다."
+  },
+  "marketing.benchmarks.044": {
+    "message": "서드파티 도구 설치"
+  },
+  "marketing.benchmarks.045": {
+    "message": "실행기는 몇 가지 CLI 클라이언트(mysql, jq, hyperfine)를 사용합니다. make 타깃 하나로 모두 설치할 수 있습니다."
+  },
+  "marketing.benchmarks.046": {
+    "message": "벤치마크 실행 및 보고서 생성"
+  },
+  "marketing.benchmarks.047": {
+    "message": "실행을 시작한 다음 보고서를 수집합니다. 실행기는 진행하면서 쿼리별 요약을 출력합니다."
+  },
+  "marketing.benchmarks.048": {
+    "message": "5분 만에"
+  },
+  "marketing.benchmarks.049": {
+    "message": "직접 실행해 보세요."
+  },
+  "marketing.benchmarks.050": {
+    "message": "위의 모든 수치는 공개된 스크립트로 재현할 수 있습니다. 네 단계, 네 개의 셸 명령이면 됩니다. 단계를 클릭하면 실행되는 명령을 볼 수 있습니다."
+  },
+  "marketing.benchmarks.051": {
+    "message": "측정 방법"
+  },
+  "marketing.benchmarks.052": {
+    "message": "전체 방법론 읽기 ↗"
+  },
+  "marketing.benchmarks.053": {
+    "message": "— 단계 0"
+  },
+  "marketing.benchmarks.054": {
+    "message": "내 데이터로 Apache"
+  },
+  "marketing.benchmarks.055": {
+    "message": "직접"
+  },
+  "marketing.benchmarks.056": {
+    "message": "사용해 보세요."
+  },
+  "marketing.benchmarks.057": {
+    "message": "시작하기"
+  },
+  "marketing.benchmarks.058": {
+    "message": "Apache Doris 벤치마크: SQL 분석과 에이전트 관측성"
+  },
+  "marketing.benchmarks.059": {
+    "message": "ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, DuckDB와 비교한 Apache Doris 벤치마크 결과입니다. 정형 분석(SSB, TPC-H, TPC-DS)과 AI 에이전트 관측성 워크로드를 다룹니다."
+  },
+  "marketing.benchmarks.060": {
+    "message": "정형 분석, 쿼리별 비교."
+  },
+  "marketing.benchmarks.061": {
+    "message": "ClickHouse, Redshift, Snowflake, Trino와 Doris를 비교한 벤치마크:"
+  },
+  "marketing.benchmarks.062": {
+    "message": "Star Schema Benchmark"
+  },
+  "marketing.benchmarks.063": {
+    "message": "TPC-H"
+  },
+  "marketing.benchmarks.064": {
+    "message": ","
+  },
+  "marketing.benchmarks.065": {
+    "message": "TPC-DS"
+  },
+  "marketing.benchmarks.066": {
+    "message": ". 세 벤치마크 모두 조인과 분석 SQL의 비중이 크며, Doris는 바로 이런 워크로드를 위해 만들어졌습니다. 벤치마크를 클릭하면 쿼리별 시간을 볼 수 있습니다."
+  },
+  "marketing.benchmarks.067": {
+    "message": "에이전트 관측성, 쿼리별 비교."
+  },
+  "marketing.benchmarks.068": {
+    "message": "AI 에이전트 관측성 로그를 다룹니다. 트레이스 재생, 장애 문구 검색, 변화하는 페이로드 필드에 대한 롤업이 포함됩니다. 같은 데이터에서 Doris를 ClickHouse, Elasticsearch, OpenSearch, PostgreSQL, DuckDB와 비교합니다. 워크로드를 클릭하면 쿼리별 시간을 볼 수 있습니다."
   }
 }
