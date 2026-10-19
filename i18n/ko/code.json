@@ -1648,5 +1648,173 @@
   },
   "marketing.figures.116": {
     "message": "프롬프트와 검색 개선"
+  },
+  "marketing.features.hero": {
+    "message": "알아야 할 모든 것,{lineBreak}{doris}"
+  },
+  "marketing.features.003": {
+    "message": "Apache Doris의 핵심 기술과 주요 기능을 한곳에 정리한 참조 목록"
+  },
+  "marketing.features.004": {
+    "message": "기능 검색 - “레이크하우스”, “MPP”, “인덱스” 등을 입력해 보세요…"
+  },
+  "marketing.features.005": {
+    "message": "검색어 지우기"
+  },
+  "marketing.features.006": {
+    "message": "기능"
+  },
+  "marketing.features.007": {
+    "message": "정식 문서"
+  },
+  "marketing.features.008": {
+    "message": "문서"
+  },
+  "marketing.features.noResults": {
+    "message": "{query}에 해당하는 기능이 없습니다. 더 일반적인 단어로 검색하거나 {clear}."
+  },
+  "marketing.features.011": {
+    "message": "검색어를 지우세요"
+  },
+  "marketing.features.012": {
+    "message": "주요 기능"
+  },
+  "marketing.features.013": {
+    "message": "실시간 분석, 레이크하우스 페더레이션, 하이브리드 검색을 포함해 Apache Doris의 핵심 기술과 주요 기능을 한곳에 정리한 참조 목록입니다."
+  },
+  "marketing.featureTags.ai": {
+    "message": "AI"
+  },
+  "marketing.featureTags.analytics": {
+    "message": "분석"
+  },
+  "marketing.featureTags.authentication": {
+    "message": "인증"
+  },
+  "marketing.featureTags.authorization": {
+    "message": "권한 부여"
+  },
+  "marketing.featureTags.bulk-ingestion": {
+    "message": "대량 수집"
+  },
+  "marketing.featureTags.caching": {
+    "message": "캐싱"
+  },
+  "marketing.featureTags.catalog": {
+    "message": "Catalog"
+  },
+  "marketing.featureTags.cdc": {
+    "message": "CDC"
+  },
+  "marketing.featureTags.coming-soon": {
+    "message": "출시 예정"
+  },
+  "marketing.featureTags.data-loading": {
+    "message": "데이터 적재"
+  },
+  "marketing.featureTags.data-management": {
+    "message": "데이터 관리"
+  },
+  "marketing.featureTags.data-streaming": {
+    "message": "데이터 스트리밍"
+  },
+  "marketing.featureTags.data-types": {
+    "message": "데이터 타입"
+  },
+  "marketing.featureTags.delete": {
+    "message": "삭제"
+  },
+  "marketing.featureTags.external-catalog": {
+    "message": "외부 Catalog"
+  },
+  "marketing.featureTags.federation": {
+    "message": "페더레이션"
+  },
+  "marketing.featureTags.governance": {
+    "message": "거버넌스"
+  },
+  "marketing.featureTags.iceberg": {
+    "message": "Iceberg"
+  },
+  "marketing.featureTags.ingest": {
+    "message": "수집"
+  },
+  "marketing.featureTags.integration": {
+    "message": "통합"
+  },
+  "marketing.featureTags.lakehouse": {
+    "message": "레이크하우스"
+  },
+  "marketing.featureTags.load": {
+    "message": "적재"
+  },
+  "marketing.featureTags.materialized-view": {
+    "message": "구체화된 뷰"
+  },
+  "marketing.featureTags.memory-management": {
+    "message": "메모리 관리"
+  },
+  "marketing.featureTags.metadata": {
+    "message": "메타데이터"
+  },
+  "marketing.featureTags.multi-tenancy": {
+    "message": "멀티 테넌시"
+  },
+  "marketing.featureTags.observability": {
+    "message": "관측성"
+  },
+  "marketing.featureTags.performance": {
+    "message": "성능"
+  },
+  "marketing.featureTags.query-acceleration": {
+    "message": "쿼리 가속"
+  },
+  "marketing.featureTags.query-engine": {
+    "message": "쿼리 엔진"
+  },
+  "marketing.featureTags.ranking": {
+    "message": "순위 지정"
+  },
+  "marketing.featureTags.real-time-ingest": {
+    "message": "실시간 수집"
+  },
+  "marketing.featureTags.reliability": {
+    "message": "신뢰성"
+  },
+  "marketing.featureTags.resource-management": {
+    "message": "리소스 관리"
+  },
+  "marketing.featureTags.search": {
+    "message": "검색"
+  },
+  "marketing.featureTags.security": {
+    "message": "보안"
+  },
+  "marketing.featureTags.semi-structured": {
+    "message": "반정형"
+  },
+  "marketing.featureTags.sql": {
+    "message": "SQL"
+  },
+  "marketing.featureTags.storage": {
+    "message": "스토리지"
+  },
+  "marketing.featureTags.storage-compute-decoupled": {
+    "message": "스토리지-컴퓨트 분리"
+  },
+  "marketing.featureTags.streaming": {
+    "message": "스트리밍"
+  },
+  "marketing.featureTags.table-design": {
+    "message": "테이블 설계"
+  },
+  "marketing.featureTags.table-format": {
+    "message": "테이블 포맷"
+  },
+  "marketing.featureTags.update": {
+    "message": "업데이트"
+  },
+  "marketing.featureTags.upsert": {
+    "message": "UPSERT"
   }
 }

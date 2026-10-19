@@ -27,6 +27,7 @@ const localeRegistry = [
         ]},
     {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false,
         translatedPages: [
+            '/why-doris/key-features',
             '/use-cases/customer-facing-analytics',
             '/use-cases/data-warehousing',
             '/use-cases/observability',
