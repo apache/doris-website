@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/auto-partitioning",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/auto-partitioning.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/auto-partitioning.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "08885daca4ac8937c0676669c81ef537c238fe9bd3f5b1319a9dfdfebdbd81f1",
+    "sourceTechnicalHash": "dc7c9d5f9b9740573cc46c225d6bcddb8afb3670cddfa2a134abab03a58d1500",
+    "targetHash": "d1ea5401585da65191ac5e64993faafc6599405d9c9ae44962d4a3a9fa408d88",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:18:48.963Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "08885daca4ac8937c0676669c81ef537c238fe9bd3f5b1319a9dfdfebdbd81f1",
+      "targetHash": "d1ea5401585da65191ac5e64993faafc6599405d9c9ae44962d4a3a9fa408d88",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"partitions_definition\"]; received [\"link\",\"../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE\",null]\nprotected node 22: expected [\"link\",\"../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE\",null]; received [\"inlineCode\",null,null,\"partitions_definition\"]\nprotected node 70: expected [\"inlineCode\",null,null,\"max_auto_partition_num\"]; received [\"link\",\"../../admin-manual/config/fe-config\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

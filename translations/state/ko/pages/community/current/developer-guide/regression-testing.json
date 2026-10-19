@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/regression-testing",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/regression-testing.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/regression-testing.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0a4397b7166e070c2a65324325252ac02624f77c773d87cfab4d5be1cf07dfc7",
+    "sourceTechnicalHash": "8d1ffd81043a3c93fe4b18195eaf323d53a8b813f5d785e809f129455edf10a4",
+    "targetHash": "f840a187fc0a21a8b0c86b310484f53a9b31ef2a8a13f663c4866a3141b55a3a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:27:50.029Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0a4397b7166e070c2a65324325252ac02624f77c773d87cfab4d5be1cf07dfc7",
+      "targetHash": "f840a187fc0a21a8b0c86b310484f53a9b31ef2a8a13f663c4866a3141b55a3a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 23: expected [\"inlineCode\",null,null,\".out\"]; received [\"inlineCode\",null,null,\"regression-test/data/<group>/\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"regression-test/data/<group>/\"]; received [\"inlineCode\",null,null,\".out\"]\nprotected node 257: expected [\"inlineCode\",null,null,\"qt\"]; received [\"inlineCode\",null,null,\".out\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 38: expected [\"code\",\"text\",null,\"./${DORIS_HOME}\\n    |-- run-regression-test.sh               Regression test launch script\\n    |-- regression-test\\n    |   |-- plugins                          Plugins directory\\n    |   |-- conf\\n    |   |   |-- logback.xml                  Logging configuration file\\n    |   |   |-- regression-conf.groovy       Default configuration file\\n    |   |\\n    |   |-- framework                        Regression test framework source code\\n    |   |-- data                             Input and output files for cases\\n    |   |   |-- demo                         Input and output files for demo cases\\n    |   |   |-- correctness                  Input and output for correctness tests\\n    |   |   |-- performance                  Input and output for performance tests\\n    |   |   |-- utils                        Input and output for other utilities\\n    |   |\\n    |   |-- suites                           Regression test cases\\n    |       |-- demo                         Demo cases\\n    |       |-- correctness                  Correctness test cases\\n    |       |-- performance                  Performance test cases\\n    |       |-- utils                        Other utility cases\\n    |\\n    |-- output\\n        |-- regression-test\\n            |-- log                          Regression test logs\"]; received [\"code\",\"text\",null,\"./${DORIS_HOME}\\n    |-- run-regression-test.sh               Regression test launch script\\n    |-- regression-test\\n    |   |-- plugins                          Plugins directory\\n    |   |-- conf\\n    |   |   |-- logback.xml                  Logging configuration file\\n    |   |   |-- regression-conf.groovy       Default configuration file\\n    |   |   |\\n    |   |-- framework                        Regression test framework source code\\n    |   |-- data                             Input and output files for cases\\n    |   |   |-- demo                         Input and output files for demo cases\\n    |   |   |-- correctness                  Input and output for correctness tests\\n    |   |   |-- performance                  Input and output for performance tests\\n    |   |   |-- utils                        Input and output for other utilities\\n    |   |\\n    |   |-- suites                           Regression test cases\\n    |       |-- demo                         Demo cases\\n    |       |-- correctness                  Correctness test cases\\n    |       |-- performance                  Performance test cases\\n    |       |-- utils                        Other utility cases\\n    |\\n    |-- output\\n        |-- regression-test\\n            |-- log                          Regression test logs\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 80: expected [\"inlineCode\",null,null,\"defaultDb\"]; received [\"inlineCode\",null,null,\"regression-conf.groovy\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"regression-conf.groovy\"]; received [\"inlineCode\",null,null,\"defaultDb\"]\nprotected node 117: expected [\"inlineCode\",null,null,\"CONTAINER_UID\"]; received [\"inlineCode\",null,null,\"docker/thirdparties/custom_settings.env\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 23: expected [\"inlineCode\",null,null,\".out\"]; received [\"inlineCode\",null,null,\"regression-test/data/<group>/\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"regression-test/data/<group>/\"]; received [\"inlineCode\",null,null,\".out\"]\nprotected node 257: expected [\"inlineCode\",null,null,\"qt\"]; received [\"inlineCode\",null,null,\".out\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

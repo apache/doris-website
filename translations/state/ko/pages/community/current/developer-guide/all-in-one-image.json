@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/all-in-one-image",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/all-in-one-image.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/all-in-one-image.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7c1ddcd70b0fff15ef2f855c8dd0cb5a4a02aeb7fffb776a3f8555421a0a4eb3",
+    "sourceTechnicalHash": "24e5089859bb7b56d1f2cc25c16513cf994ee212aca4a7af2c3b63701034bb88",
+    "targetHash": "1297b45159dda58d01239597e6d251a2df3523adf09f7a9f86adfc9cdfc0c644",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:24:07.692Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7c1ddcd70b0fff15ef2f855c8dd0cb5a4a02aeb7fffb776a3f8555421a0a4eb3",
+      "targetHash": "1297b45159dda58d01239597e6d251a2df3523adf09f7a9f86adfc9cdfc0c644",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"docker()\"]; received [\"inlineCode\",null,null,\"regression-test/suites/cloud_p0\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"regression-test/suites/cloud_p0\"]; received [\"inlineCode\",null,null,\"docker()\"]\nprotected node 46: expected [\"inlineCode\",null,null,\"HEALTHCHECK\"]; received [\"inlineCode\",null,null,\"healthy\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"inlineCode\",null,null,\"-full\"]; received [\"inlineCode\",null,null,\"DORIS_IMAGE\"]\nprotected node 37: expected [\"inlineCode\",null,null,\"DORIS_IMAGE\"]; received [\"inlineCode\",null,null,\"-full\"]\nprotected node 150: expected [\"inlineCode\",null,null,\"fe-2\"]; received [\"inlineCode\",null,null,\"ha\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

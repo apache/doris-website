@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/debug-tool",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/debug-tool.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/debug-tool.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1833713dcf3f1d0f7c0a74680f00a6623c1dcf52c7696b8f237c9030711bf64b",
+    "sourceTechnicalHash": "b4282e6dee51884f6482184fb05af57f4e550afdc7081786ff1dae65564de46c",
+    "targetHash": "88438bce6280a6124d6ed59b0df2368fe3674d4522e723f87d54d307cd0d4680",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:23:05.460Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1833713dcf3f1d0f7c0a74680f00a6623c1dcf52c7696b8f237c9030711bf64b",
+      "targetHash": "88438bce6280a6124d6ed59b0df2368fe3674d4522e723f87d54d307cd0d4680",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 106: expected [\"link\",\"https://gperftools.github.io/gperftools/heapprofile.html\",null]; received [\"inlineCode\",null,null,\"HEAPPROFILE\"]\nprotected node 107: expected [\"inlineCode\",null,null,\"HEAPPROFILE\"]; received [\"link\",\"https://gperftools.github.io/gperftools/heapprofile.html\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

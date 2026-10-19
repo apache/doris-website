@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/java-format-code",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/java-format-code.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/java-format-code.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7bf89f963c1b96263f4848f56dd01d97e7cd8c58812208e68da1c3b685ca748f",
+    "sourceTechnicalHash": "e3ccee40e6f9001829a7069057bb957eb5281c0045635888b4fa3e091d653529",
+    "targetHash": "8c35829d4b3593923a8efcf2ab313696725d79c77bb94a2a0c9e0cb610cde14f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:18:12.626Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7bf89f963c1b96263f4848f56dd01d97e7cd8c58812208e68da1c3b685ca748f",
+      "targetHash": "8c35829d4b3593923a8efcf2ab313696725d79c77bb94a2a0c9e0cb610cde14f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

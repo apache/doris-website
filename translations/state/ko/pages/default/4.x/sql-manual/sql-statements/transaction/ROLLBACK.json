@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/transaction/ROLLBACK",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/transaction/ROLLBACK.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/transaction/ROLLBACK.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "819aba3d2cc944a9ca434f13f3ccfb69cd4b9f9eb3604deb5508977759cca3d0",
+    "sourceTechnicalHash": "6edb1f155d90809b6a28301386414b09b485c833a5809448a135be3dd847973d",
+    "targetHash": "c1cb27d26ae0f51fbd85d2df3ce8000645d5ff5ecffd6e5b448e9738f7d9be6e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:13:39.301Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "819aba3d2cc944a9ca434f13f3ccfb69cd4b9f9eb3604deb5508977759cca3d0",
+      "targetHash": "c1cb27d26ae0f51fbd85d2df3ce8000645d5ff5ecffd6e5b448e9738f7d9be6e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/transaction/ROLLBACK",
+        "sourcePath": "docs/sql-manual/sql-statements/transaction/ROLLBACK.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/ROLLBACK.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "819aba3d2cc944a9ca434f13f3ccfb69cd4b9f9eb3604deb5508977759cca3d0",
+        "targetHash": "c1cb27d26ae0f51fbd85d2df3ce8000645d5ff5ecffd6e5b448e9738f7d9be6e",
+        "commit": "c5b54b1cd03719e14c660f23a1ea79359c00d843",
+        "pr": "https://github.com/apache/doris-website/pull/4387"
+      }
+    }
+  }
+}
