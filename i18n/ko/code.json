@@ -1333,5 +1333,320 @@
   },
   "marketing.figures.082": {
     "message": "쿼리"
+  },
+  "marketing.ai.001": {
+    "message": "AI를 위한 분석"
+  },
+  "marketing.ai.002": {
+    "message": "Apache Doris: 에이전트 시대, AI를 위한 분석"
+  },
+  "marketing.ai.003": {
+    "message": "Apache Doris는 AI 애플리케이션, RAG 시스템, AI 관측성을 위한 고성능 분석 기반입니다. 실시간 분석, 하이브리드 검색, AI 네이티브 SQL을 하나의 엔진에서 제공합니다."
+  },
+  "marketing.ai.004": {
+    "message": "실시간"
+  },
+  "marketing.ai.005": {
+    "message": "AI를 위한 분석,"
+  },
+  "marketing.ai.006": {
+    "message": "에이전트 시대에 맞춰"
+  },
+  "marketing.ai.007": {
+    "message": "Apache Doris를 사용하면 AI 애플리케이션이 신뢰할 수 있고 쿼리 가능한 엔터프라이즈 데이터에 실시간으로 접근할 수 있습니다. 데이터를 이해하는 에이전트를 구축하고, RAG 품질을 높이고, AI 동작을 모니터링하며, 정형·반정형·비정형 데이터 전반에서 분석과 하이브리드 검색을 대규모로 실행하세요."
+  },
+  "marketing.ai.008": {
+    "message": "에이전트 시대에"
+  },
+  "marketing.ai.009": {
+    "message": "AI를 위한 분석이"
+  },
+  "marketing.ai.010": {
+    "message": "중요한 이유."
+  },
+  "marketing.extra.019": {
+    "message": "분석 기반이 최신 데이터를 유지하고, 하이브리드 검색을 지원하며, 관측 가능하고, 하나로 통합되어 있으면 다섯 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.ai.011": {
+    "message": "의사 결정 품질"
+  },
+  "marketing.ai.012": {
+    "message": "애플리케이션 컨텍스트"
+  },
+  "marketing.ai.013": {
+    "message": "검색 관련성"
+  },
+  "marketing.ai.014": {
+    "message": "에이전트 가시성"
+  },
+  "marketing.ai.015": {
+    "message": "전체 운영 비용"
+  },
+  "marketing.ai.016": {
+    "message": "실시간 AI 의사 결정"
+  },
+  "marketing.ai.017": {
+    "message": "AI 에이전트가 실시간 운영 데이터를 쿼리하여, 사용자 상호 작용이나 비즈니스 프로세스가 아직 진행 중일 때 바로 행동합니다."
+  },
+  "marketing.ai.018": {
+    "message": "데이터를 이해하는 애플리케이션"
+  },
+  "marketing.ai.019": {
+    "message": "코파일럿, 에이전트, RAG 시스템이 최신의 신뢰할 수 있는 엔터프라이즈 데이터에서 컨텍스트와 메모리를 얻고, 믿을 수 있는 작업을 수행합니다."
+  },
+  "marketing.ai.020": {
+    "message": "RAG와 지식 검색"
+  },
+  "marketing.ai.021": {
+    "message": "SQL 필터, 전문 검색, BM25, 벡터 검색을 하나의 쿼리로 실행하므로 LLM이 정확한 컨텍스트를 얻고 환각이 줄어듭니다."
+  },
+  "marketing.ai.022": {
+    "message": "AI 관측성"
+  },
+  "marketing.ai.023": {
+    "message": "프롬프트, 응답, 트레이스, 도구 호출, 토큰 사용량, 비용을 쿼리 가능한 하나의 저장소에 모아 디버깅과 지속적인 품질 관리에 활용합니다."
+  },
+  "marketing.ai.024": {
+    "message": "단순해진 AI 데이터 스택"
+  },
+  "marketing.ai.025": {
+    "message": "하나의 엔진으로 실시간 분석, 전문 검색과 벡터 검색, 로그 분석, AI 네이티브 SQL을 처리하므로 운영할 파이프라인이 줄어듭니다."
+  },
+  "marketing.ai.026": {
+    "message": "AI를 위한 분석의 요구 사항과"
+  },
+  "marketing.ai.027": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.ai.028": {
+    "message": "AI를 위한 분석 플랫폼이 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.ai.029": {
+    "message": "AI 애플리케이션을 위한 엔드 투 엔드 낮은 지연 시간"
+  },
+  "marketing.ai.030": {
+    "message": "AI 애플리케이션과 자율 에이전트는 최신 데이터를 바탕으로 실시간으로 행동합니다. 새 이벤트, CDC 업데이트, 스트리밍 데이터는 몇 초 안에 쿼리할 수 있어야 하고, 분석 쿼리는 동시성이 높은 프로덕션 트래픽에서도 1초 미만에 결과를 반환해야 합니다."
+  },
+  "marketing.ai.031": {
+    "message": "정형·텍스트·벡터 데이터를 아우르는 하이브리드 검색"
+  },
+  "marketing.ai.032": {
+    "message": "AI 애플리케이션은 문서, 로그, 프롬프트, 응답, 피드백, 지식 베이스, 지원 티켓, 임베딩을 넘나들며 검색합니다. SQL, 키워드 검색, 벡터 검색은 각각 문제의 일부만 해결합니다. AI를 위한 분석은 구조화된 필터, 전문 검색, 의미 유사도, 관련성 기반 순위 지정을 하나의 워크플로로 결합합니다."
+  },
+  "marketing.ai.033": {
+    "message": "AI 네이티브 데이터를 위한 유연한 스키마"
+  },
+  "marketing.ai.034": {
+    "message": "AI 네이티브 애플리케이션은 모델, 에이전트, 도구, 프레임워크, 워크플로에서 끊임없이 바뀌는 반정형 이벤트를 만들어 냅니다. 플랫폼은 무거운 ETL 없이 동적 JSON, 중첩 필드, 스키마 변경, 빠른 필터링, 애드혹 SQL을 처리해야 하며, 그래야 팀이 모든 에이전트 단계, 도구 호출, 검색 이벤트, 모델 응답을 직접 분석할 수 있습니다."
+  },
+  "marketing.ai.035": {
+    "message": "AI 관측성 데이터 분석"
+  },
+  "marketing.ai.036": {
+    "message": "AI 관측성은 로그, 메트릭, 트레이스를 넘어섭니다. 팀은 모델 호출, 프롬프트, 응답, 도구 실행, 검색 이벤트, 토큰 사용량, 지연 시간, 비용, 평가 점수, 사용자 피드백을 한곳에서 분석합니다. 서빙 계층은 대량의 AI 네이티브 데이터에 대해 유연한 스키마, 빠른 검색, 인터랙티브 집계를 처리해야 합니다."
+  },
+  "marketing.ai.037": {
+    "message": "LLM 생태계 통합"
+  },
+  "marketing.ai.038": {
+    "message": "AI 애플리케이션은 에이전트 프레임워크, LLMOps 플랫폼, 관측성 도구, MCP 워크플로, 사용자 지정 파이프라인으로 이루어진, 빠르게 변하는 생태계에 의존합니다. 플랫폼은 이 생태계와 연결되어야 하며, 그래야 에이전트, 코파일럿, RAG 시스템, LLMOps 도구가 SQL, API, 커넥터, MCP를 통해 신뢰할 수 있는 데이터를 읽고 AI 신호를 기록할 수 있습니다."
+  },
+  "marketing.extra.020": {
+    "message": "AI를 위한 Apache Doris 기능"
+  },
+  "marketing.ai.039": {
+    "message": "실시간 수집과"
+  },
+  "marketing.ai.040": {
+    "message": "저지연 서빙"
+  },
+  "marketing.ai.041": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.ai.042": {
+    "message": "Group Commit"
+  },
+  "marketing.ai.043": {
+    "message": "MPP 아키텍처"
+  },
+  "marketing.ai.044": {
+    "message": "고동시성 포인트 쿼리"
+  },
+  "marketing.ai.045": {
+    "message": "고객 대면 분석"
+  },
+  "marketing.ai.046": {
+    "message": "프롬프트, 트레이스, 비용, 품질을"
+  },
+  "marketing.ai.047": {
+    "message": "아우르는 AI 관측성"
+  },
+  "marketing.ai.048": {
+    "message": "Stream Load"
+  },
+  "marketing.ai.049": {
+    "message": "역색인"
+  },
+  "marketing.ai.050": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.ai.051": {
+    "message": "AI 에이전트 시대를 위한 관측성"
+  },
+  "marketing.ai.052": {
+    "message": "VARIANT 기반"
+  },
+  "marketing.ai.053": {
+    "message": "유연한 JSON 분석"
+  },
+  "marketing.ai.054": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "marketing.ai.055": {
+    "message": "SQL·텍스트·벡터를 아우르는"
+  },
+  "marketing.ai.056": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.ai.057": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.ai.058": {
+    "message": "전문 검색"
+  },
+  "marketing.ai.059": {
+    "message": "BM25 관련도 점수 산정"
+  },
+  "marketing.ai.060": {
+    "message": "벡터 인덱스"
+  },
+  "marketing.ai.061": {
+    "message": "임베딩"
+  },
+  "marketing.ai.062": {
+    "message": "역순위 융합(Reciprocal Rank Fusion)"
+  },
+  "marketing.ai.063": {
+    "message": "AI 네이티브 SQL과"
+  },
+  "marketing.ai.064": {
+    "message": "툴체인 통합"
+  },
+  "marketing.ai.065": {
+    "message": "LLM SQL 함수"
+  },
+  "marketing.ai.066": {
+    "message": "MCP 서버"
+  },
+  "marketing.ai.067": {
+    "message": "시맨틱 레이어(출시 예정)"
+  },
+  "marketing.ai.068": {
+    "message": "AI를 위한 분석 구축의"
+  },
+  "marketing.ai.069": {
+    "message": "해답은"
+  },
+  "marketing.figures.083": {
+    "message": "문서 · 로그"
+  },
+  "marketing.figures.084": {
+    "message": "텍스트 · JSON · 티켓"
+  },
+  "marketing.figures.085": {
+    "message": "임베딩"
+  },
+  "marketing.figures.086": {
+    "message": "임베딩 모델에서 생성"
+  },
+  "marketing.figures.087": {
+    "message": "스트림 · CDC"
+  },
+  "marketing.figures.088": {
+    "message": "주문 · 세션"
+  },
+  "marketing.figures.089": {
+    "message": "SQL 필터"
+  },
+  "marketing.figures.090": {
+    "message": "시간 · ACL"
+  },
+  "marketing.figures.091": {
+    "message": "벡터"
+  },
+  "marketing.figures.092": {
+    "message": "임베딩"
+  },
+  "marketing.figures.093": {
+    "message": "Apache Doris 기반 AI를 위한 분석: 문서, 임베딩, 스트림이 Doris의 데이터를 최신 상태로 유지합니다. AI 애플리케이션이 질문하면 Doris는 SQL 필터, 전문 검색, 벡터 검색을 결합한 하나의 하이브리드 쿼리로 답하고, LLM이 응답을 생성합니다. 그 트레이스, 토큰, 비용, 피드백은 다시 Doris에 기록되어 다음 라운드를 개선합니다."
+  },
+  "marketing.figures.094": {
+    "message": "그림 04 · 에이전트 루프: 질문 → 검색 → 생성 → 기록 → 개선, 모두 하나의 엔진에서"
+  },
+  "marketing.figures.095": {
+    "message": "입력"
+  },
+  "marketing.figures.096": {
+    "message": "수집 · 서빙"
+  },
+  "marketing.figures.097": {
+    "message": "몇 초 안에 수집 · 1초 미만 응답"
+  },
+  "marketing.figures.098": {
+    "message": "단일 하이브리드 쿼리"
+  },
+  "marketing.figures.099": {
+    "message": "RRF 융합 → 순위화된 컨텍스트"
+  },
+  "marketing.figures.100": {
+    "message": "동적 JSON · 에이전트 이벤트 · 도구 호출"
+  },
+  "marketing.figures.101": {
+    "message": "AI 관측성"
+  },
+  "marketing.figures.102": {
+    "message": "프롬프트 · 트레이스 · 토큰 · 비용 · 평가"
+  },
+  "marketing.figures.103": {
+    "message": "생태계"
+  },
+  "marketing.figures.104": {
+    "message": "LLM SQL · MCP 서버 · API"
+  },
+  "marketing.figures.105": {
+    "message": "에이전트 루프"
+  },
+  "marketing.figures.106": {
+    "message": "질문"
+  },
+  "marketing.figures.107": {
+    "message": "컨텍스트"
+  },
+  "marketing.figures.108": {
+    "message": "AI 애플리케이션"
+  },
+  "marketing.figures.109": {
+    "message": "에이전트 · 코파일럿 · RAG 앱"
+  },
+  "marketing.figures.110": {
+    "message": "프롬프트 + 컨텍스트"
+  },
+  "marketing.figures.111": {
+    "message": "컨텍스트로 답변"
+  },
+  "marketing.figures.112": {
+    "message": "트레이스 · 토큰 · 비용"
+  },
+  "marketing.figures.113": {
+    "message": "트레이스 · 피드백"
+  },
+  "marketing.figures.114": {
+    "message": "토큰 · 비용 · 평가"
+  },
+  "marketing.figures.115": {
+    "message": "기록"
+  },
+  "marketing.figures.116": {
+    "message": "프롬프트와 검색 개선"
   }
 }

@@ -30,6 +30,7 @@ const localeRegistry = [
             '/use-cases/customer-facing-analytics',
             '/use-cases/data-warehousing',
             '/use-cases/observability',
+            '/use-cases/ai',
         ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
