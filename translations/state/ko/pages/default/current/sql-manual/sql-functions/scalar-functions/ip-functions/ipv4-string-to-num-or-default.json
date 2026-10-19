@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num-or-default",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num-or-default.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-string-to-num-or-default.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0cd9e57348c012c99ffb31377f77fa257ef1f70df021c358f710308dee1f2ed5",
+    "sourceTechnicalHash": "402294ece01d5b128ceaf7c3d608517661f6f97d5f11a1bd1a08a1a9674d471e",
+    "targetHash": "abadd14238bec656cc114a9d4bc306112915d3d63d55f4a0873935253262c9bb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:07:38.399Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0cd9e57348c012c99ffb31377f77fa257ef1f70df021c358f710308dee1f2ed5",
+      "targetHash": "abadd14238bec656cc114a9d4bc306112915d3d63d55f4a0873935253262c9bb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"0\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

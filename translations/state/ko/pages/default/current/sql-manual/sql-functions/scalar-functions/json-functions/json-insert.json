@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-insert",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-insert.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-insert.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "66347c867efa173f543c3208eb9e4fa1bfd40b8ac6478065aa06324bb8f67ab3",
+    "sourceTechnicalHash": "c754cd786b3f91c27a26b9771e0db6e0b3283bd0f6aef98d8c71f84ba67a95d5",
+    "targetHash": "e2e98d1ff7f2cc580438b6b50a38a1bcedd4a923d0eff5cda58121e8d7f3c56f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:10:14.423Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "66347c867efa173f543c3208eb9e4fa1bfd40b8ac6478065aa06324bb8f67ab3",
+      "targetHash": "e2e98d1ff7f2cc580438b6b50a38a1bcedd4a923d0eff5cda58121e8d7f3c56f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+    "sourceTechnicalHash": "d9114cd33db5e17091d287d89db7cbb552ad16025f6ec3672a8ca967a5542b5a",
+    "targetHash": "8ede45ea2f752d196be4807708acfb1717ff03404dce1b5adf1ccc159190625b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:08:03.869Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+      "targetHash": "8ede45ea2f752d196be4807708acfb1717ff03404dce1b5adf1ccc159190625b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

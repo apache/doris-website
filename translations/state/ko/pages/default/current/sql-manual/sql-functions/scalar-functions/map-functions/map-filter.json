@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-filter",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map-filter.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map-filter.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ce65178fd9c87aff2ed52e22ef4caa136e625c9b65da5da87e0f6d140fe6ec41",
+    "sourceTechnicalHash": "1289579e27718cbcff6dde1b3c74a17de1649e21db38450123f2da1e7d6ae8e3",
+    "targetHash": "f815585f98daff681f3356c0cc7356b38fc867f700f290f6a66943c1813b2365",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:12:06.376Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ce65178fd9c87aff2ed52e22ef4caa136e625c9b65da5da87e0f6d140fe6ec41",
+      "targetHash": "f815585f98daff681f3356c0cc7356b38fc867f700f290f6a66943c1813b2365",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
