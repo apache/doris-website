@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/jdbc-mysql-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-mysql-catalog.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "2e953ecf983aefbf0958e5cd372daa0948d50134c54968a32131d5a185e017a1",
-    "sourceTechnicalHash": "e10ced9db39e046712f98897f99b44b2bff022540b0c10996ec279843b263dee",
-    "targetHash": "e96e30249fc2618dbf009667c4ecf3dc3b1ca7def635e4e6df9a01016c72931c",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+    "sourceTechnicalHash": "09a12719acea0d26a5ab73dfc597cb283c89b8fedbc13e499c69897e8ef2ee21",
+    "targetHash": "5148a362d73c630dd2f72ab910c2074748b71b6dfe6782c8c752a3248a8f299d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.226Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-19T05:51:18.037Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+      "targetHash": "5148a362d73c630dd2f72ab910c2074748b71b6dfe6782c8c752a3248a8f299d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 49: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = PoolInitializationException: Failed to initialize pool: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: CommunicationsException: Communications link failure\\n    \\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: SSLHandshakeException\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = PoolInitializationException: Failed to initialize pool: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: CommunicationsException: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: SSLHandshakeException\"]\nprotected node 50: expected [\"code\",null,null,\"WARN: Establishing SSL connection without server's identity verification is not recommended. \\nAccording to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. \\nFor compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. \\nYou need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.\"]; received [\"code\",null,null,\"WARN: Establishing SSL connection without server's identity verification is not recommended.\\nAccording to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set.\\nFor compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'.\\nYou need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0000\",\"0000\",\"1\",\"1\",\"2.0.13\",\"2.1.5\",\"3\",\"3306\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5.7\",\"6\",\"686\",\"7\",\"8\",\"8\",\"8\",\"8\",\"8.0\",\"8.0.31\",\"8.0.31\",\"819\"]; received [\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0000\",\"0000\",\"1\",\"1\",\"2\",\"2.0.13\",\"2.1.5\",\"3\",\"3\",\"3306\",\"4\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5.7\",\"6\",\"686\",\"7\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8.0\",\"8.0.31\",\"8.0.31\",\"819\"]\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"zeroDateTimeBehavior=convertToNull\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 36: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed: \\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = (10.16.10.6)[INTERNAL_ERROR]UdfRuntimeException: get next block failed:\\nCAUSED BY: SQLException: Zero date value prohibited\\nCAUSED BY: DataReadException: Zero date value prohibited\"]\nprotected node 49: expected [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = PoolInitializationException: Failed to initialize pool: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: CommunicationsException: Communications link failure\\n    \\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: SSLHandshakeException\"]; received [\"code\",\"text\",null,\"ERROR 1105 (HY000): errCode = 2, detailMessage = PoolInitializationException: Failed to initialize pool: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: CommunicationsException: Communications link failure\\n\\nThe last packet successfully received from the server was 7 milliseconds ago.  The last packet sent successfully to the server was 4 milliseconds ago.\\nCAUSED BY: SSLHandshakeException\"]\nprotected node 50: expected [\"code\",null,null,\"WARN: Establishing SSL connection without server's identity verification is not recommended. \\nAccording to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set. \\nFor compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'. \\nYou need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.\"]; received [\"code\",null,null,\"WARN: Establishing SSL connection without server's identity verification is not recommended.\\nAccording to MySQL 5.5.45+, 5.6.26+ and 5.7.6+ requirements SSL connection must be established by default if explicit option isn't set.\\nFor compliance with existing applications not using SSL the verifyServerCertificate property is set to 'false'.\\nYou need either to explicitly disable SSL by setting useSSL=false, or set useSSL=true and provide truststore for server certificate verification.\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
