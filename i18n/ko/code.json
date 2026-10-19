@@ -940,5 +940,398 @@
   },
   "marketing.figures.042": {
     "message": "소스"
+  },
+  "marketing.observability.001": {
+    "message": "관측성"
+  },
+  "marketing.observability.002": {
+    "message": "Apache Doris: AI 에이전트 시대를 위한 관측성"
+  },
+  "marketing.observability.003": {
+    "message": "Apache Doris는 로그, 메트릭, 트레이스, AI 에이전트 이벤트를 위한 고성능 분석 기반입니다. 실시간 수집, 전문 검색, OLAP, 하이브리드 벡터 검색을 하나의 엔진에서 제공합니다."
+  },
+  "marketing.observability.004": {
+    "message": "실시간"
+  },
+  "marketing.observability.005": {
+    "message": "AI 에이전트 시대에 맞춰"
+  },
+  "marketing.observability.006": {
+    "message": "Apache Doris는 로그, 메트릭, 트레이스, AI 에이전트 이벤트를 하나의 고성능 분석 엔진으로 통합합니다. 팀은 더 빠르게 문제를 해결하고, 비용을 관리하며, AI 품질을 꾸준히 개선할 수 있습니다."
+  },
+  "marketing.observability.007": {
+    "message": "에이전트 시대에"
+  },
+  "marketing.observability.008": {
+    "message": "관측성이"
+  },
+  "marketing.observability.009": {
+    "message": "중요한 이유."
+  },
+  "marketing.extra.014": {
+    "message": "로그, 트레이스, 메트릭, AI 에이전트 이벤트 전반의 관측성을 통합하면 다섯 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.observability.010": {
+    "message": "장애 감지"
+  },
+  "marketing.observability.011": {
+    "message": "사용자 경험"
+  },
+  "marketing.observability.012": {
+    "message": "대규모 환경의 비용"
+  },
+  "marketing.observability.013": {
+    "message": "AI 품질"
+  },
+  "marketing.observability.014": {
+    "message": "시스템 동작과 비즈니스 성과의 연결"
+  },
+  "marketing.observability.015": {
+    "message": "더 빠른 장애 감지"
+  },
+  "marketing.observability.016": {
+    "message": "로그, 트레이스, 에이전트 이벤트가 분석 가능한 실행 데이터가 되므로, 장애가 확산되기 전에 이상 징후와 근본 원인이 드러납니다."
+  },
+  "marketing.observability.017": {
+    "message": "사용자 경험과 SLA"
+  },
+  "marketing.observability.018": {
+    "message": "시스템 상태를 실제 사용자 영향과 연결합니다. 지연 시간, 오류, 답변 정확도, 작업 완료 여부, 응답이 근거에 기반했는지까지 확인할 수 있습니다."
+  },
+  "marketing.observability.019": {
+    "message": "대규모에서도 낮은 비용"
+  },
+  "marketing.observability.020": {
+    "message": "텔레메트리가 늘어나도 핫 데이터는 빠르게 조회되어 문제 해결에 쓰이고, 추세는 집계 데이터로 파악하며, 과거 데이터는 더 저렴한 스토리지로 옮겨집니다."
+  },
+  "marketing.observability.021": {
+    "message": "지속적인 AI 개선"
+  },
+  "marketing.observability.022": {
+    "message": "프롬프트, 응답, RAG 컨텍스트, 도구 호출, 평가 점수, 사용자 피드백을 통해 검색, 프롬프트, 작업 완료에서 개선할 지점을 찾을 수 있습니다."
+  },
+  "marketing.observability.023": {
+    "message": "비즈니스를 고려한 운영"
+  },
+  "marketing.observability.024": {
+    "message": "모든 신호를 영향을 받는 고객, 테넌트, 워크플로와 연결하고, AI 실패가 전환율, 지원 부담, 매출에 미치는 비용까지 파악합니다."
+  },
+  "marketing.observability.025": {
+    "message": "이미 프로덕션에서 가동 중입니다."
+  },
+  "marketing.observability.026": {
+    "message": "세 팀이 Apache Doris를 관측성의 분석 기반으로 운영하고 있습니다. 대규모 실시간 운영 데이터를 로그, 메트릭, 이벤트 전반에서 다룹니다."
+  },
+  "marketing.extra.015": {
+    "message": "사례 01 · PB급 로그"
+  },
+  "marketing.observability.027": {
+    "message": "MiniMax: Grafana Loki에서 Apache Doris로 옮긴 PB급 로그 시스템"
+  },
+  "marketing.observability.028": {
+    "message": "Grafana Loki에서 전환한 뒤 MiniMax의 모든 사업 부문은 Apache Doris 기반 로그 시스템을 사용합니다. 이 시스템은 페타바이트급 데이터를 99.9% 이상의 가용성으로 제공하고, 수십억 줄의 로그에 대한 쿼리에 몇 초 안에 응답합니다."
+  },
+  "marketing.observability.029": {
+    "message": "모든 사업 부문에서 99.9% 이상의 가용성을 갖춘 PB급 로그 스토리지"
+  },
+  "marketing.observability.030": {
+    "message": "로그 10억 건에 대한 키워드 및 집계 쿼리가 2초 이내에 응답"
+  },
+  "marketing.observability.031": {
+    "message": "초 단위 수집 지연 시간과 10GB/s 쓰기 처리량"
+  },
+  "marketing.observability.032": {
+    "message": "5:1 압축과 계층형 스토리지로 스토리지 비용 70% 절감"
+  },
+  "marketing.extra.016": {
+    "message": "사례 02 · 로그와 시계열"
+  },
+  "marketing.observability.033": {
+    "message": "NetEase: Elasticsearch와 InfluxDB를 Apache Doris로 대체"
+  },
+  "marketing.observability.034": {
+    "message": "NetEase는 Eagle 모니터링 플랫폼을 Elasticsearch에서, IM 시계열 플랫폼을 InfluxDB에서 Apache Doris로 옮겼습니다. 이제 두 플랫폼 모두 Apache Doris에서 더 빠른 쿼리와 더 적은 스토리지로 운영되며, 테이블을 재구축하지 않고도 인덱스를 변경할 수 있습니다."
+  },
+  "marketing.observability.035": {
+    "message": "모니터링 로그에서 Elasticsearch 대비 쿼리 속도 11배 향상, 스토리지 비용 70% 절감"
+  },
+  "marketing.observability.036": {
+    "message": "시계열 워크로드에서 InfluxDB 대비 스토리지 67% 절감, 서버 수는 절반"
+  },
+  "marketing.observability.037": {
+    "message": "최대 100만 TPS에서 피크 쓰기 처리량 1GB/s"
+  },
+  "marketing.observability.038": {
+    "message": "테이블을 다시 쓰지 않고 역색인을 증분 방식으로 추가하거나 삭제"
+  },
+  "marketing.extra.017": {
+    "message": "사례 03 · Elasticsearch 마이그레이션"
+  },
+  "marketing.observability.039": {
+    "message": "Tencent Music: Elasticsearch를 대체하고 비용 80% 절감"
+  },
+  "marketing.observability.040": {
+    "message": "Tencent Music Entertainment는 태그 기반 검색과 분석을 Elasticsearch에서 Apache Doris로 옮겼습니다. Apache Doris에서는 역색인을 사용해 전문 검색과 집계를 하나의 SQL 쿼리로 처리합니다."
+  },
+  "marketing.observability.041": {
+    "message": "Elasticsearch 대비 전체 운영 비용 80% 절감"
+  },
+  "marketing.observability.042": {
+    "message": "스토리지 사용량 72% 감소(동일 데이터셋 기준 697.7GB → 195.4GB)"
+  },
+  "marketing.observability.043": {
+    "message": "쓰기 속도 4배 향상, 수집 시간은 10시간 이상에서 3시간 미만으로 단축"
+  },
+  "marketing.observability.044": {
+    "message": "알림이 하루 20건 이상에서 한 달 한 자릿수로 감소"
+  },
+  "marketing.observability.045": {
+    "message": "모던 관측성의 요구 사항과"
+  },
+  "marketing.observability.046": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.observability.047": {
+    "message": "모던 관측성 플랫폼이 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.observability.048": {
+    "message": "모든 신호를 실시간으로 수집"
+  },
+  "marketing.observability.049": {
+    "message": "관측 데이터는 애플리케이션, Kubernetes, API, 게이트웨이, 데이터베이스, AI 시스템에서 끊임없이 들어옵니다. 플랫폼은 대량의 로그, 트레이스, 메트릭, AI 에이전트 이벤트를 짧은 지연 시간으로 받아들여야 하며, 그래야 LLM 요청과 도구 호출부터 RAG 검색, 토큰 비용, 평가, 사용자 피드백까지 모든 신호를 거의 실시간으로 쿼리할 수 있습니다."
+  },
+  "marketing.observability.050": {
+    "message": "무거운 ETL 없이 동적 JSON 분석"
+  },
+  "marketing.observability.051": {
+    "message": "로그, 트레이스, 도구 출력, 모델 응답, 에이전트 이벤트는 필드가 계속 바뀌는 중첩 JSON으로 들어오는 경우가 많습니다. 플랫폼은 스키마 변경을 처리하고 새 필드를 즉시 쿼리할 수 있게 해야 하며, 그래야 팀이 파이프라인을 다시 구축하지 않고도 새로운 신호를 필터링하고 조사하고 분석할 수 있습니다."
+  },
+  "marketing.observability.052": {
+    "message": "로그와 에이전트 신호에 대한 빠른 전문 검색"
+  },
+  "marketing.observability.053": {
+    "message": "관측 데이터에는 검색할 텍스트가 가득합니다. 오류 메시지, 스택 트레이스, 로그 줄뿐 아니라 프롬프트, 모델 응답, 도구 출력, 에이전트 실패 원인도 있습니다. 팀은 대규모 환경에서 장애를 찾고 요청을 추적하며 에이전트 동작을 조사하기 위해 빠른 키워드 검색과 전문 검색이 필요합니다."
+  },
+  "marketing.observability.054": {
+    "message": "메트릭, 비용, 품질에 대한 인터랙티브 분석"
+  },
+  "marketing.observability.055": {
+    "message": "관측성은 검색만으로 끝나지 않습니다. 팀은 대규모 텔레메트리 데이터를 나누고 집계하고 드릴다운하여 안정성, 비용, AI 품질을 분석합니다. P99 지연 시간과 SLA 추세, 토큰 사용량, 모델 비용, RAG 품질, 에이전트 작업 완료율이 그 대상입니다. 이를 위해서는 빠른 검색과 함께 고성능 분석 엔진이 필요합니다."
+  },
+  "marketing.observability.056": {
+    "message": "AI 에이전트 관측성을 위한 하이브리드 검색"
+  },
+  "marketing.observability.057": {
+    "message": "AI 에이전트 관측성에는 로그 키워드 검색 이상의 기능이 필요합니다. 팀은 프롬프트, 응답, 도구 호출, 트레이스 전반에서 구조화된 메타데이터를 전문 검색 및 시맨틱 검색과 결합하여, 하나의 쿼리로 정확히 일치하는 항목, 유사한 실패, 환각이 포함된 출력, 반복되는 에이전트 동작을 찾아냅니다."
+  },
+  "marketing.extra.018": {
+    "message": "관측성을 위한 Apache Doris 기능"
+  },
+  "marketing.observability.058": {
+    "message": "로그와 에이전트 트레이스의"
+  },
+  "marketing.observability.059": {
+    "message": "실시간 수집"
+  },
+  "marketing.observability.060": {
+    "message": "Stream Load"
+  },
+  "marketing.observability.061": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.observability.062": {
+    "message": "Group Commit"
+  },
+  "marketing.observability.063": {
+    "message": "수직 컴팩션"
+  },
+  "marketing.observability.064": {
+    "message": "VARIANT 기반"
+  },
+  "marketing.observability.065": {
+    "message": "반정형 데이터 분석"
+  },
+  "marketing.observability.066": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "marketing.observability.067": {
+    "message": "역색인과 BM25 기반"
+  },
+  "marketing.observability.068": {
+    "message": "빠른 전문 검색"
+  },
+  "marketing.observability.069": {
+    "message": "역색인"
+  },
+  "marketing.observability.070": {
+    "message": "전문 검색"
+  },
+  "marketing.observability.071": {
+    "message": "BM25 관련도 점수 산정"
+  },
+  "marketing.observability.072": {
+    "message": "관측성 대시보드를 위한"
+  },
+  "marketing.observability.073": {
+    "message": "인터랙티브 분석"
+  },
+  "marketing.observability.074": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.observability.075": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.observability.076": {
+    "message": "벡터화 실행"
+  },
+  "marketing.observability.077": {
+    "message": "Query Cache"
+  },
+  "marketing.observability.078": {
+    "message": "준비된 문(Prepared Statement)"
+  },
+  "marketing.observability.079": {
+    "message": "정형·텍스트·벡터 데이터를 아우르는"
+  },
+  "marketing.observability.080": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.observability.081": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.observability.082": {
+    "message": "벡터 인덱스"
+  },
+  "marketing.observability.083": {
+    "message": "임베딩"
+  },
+  "marketing.observability.084": {
+    "message": "역순위 융합(Reciprocal Rank Fusion)"
+  },
+  "marketing.observability.085": {
+    "message": "AI 에이전트 시대 관측성 구축의"
+  },
+  "marketing.observability.086": {
+    "message": "해답은"
+  },
+  "marketing.figures.043": {
+    "message": "앱 · 서비스"
+  },
+  "marketing.figures.044": {
+    "message": "로그 · 트레이스 · OTel"
+  },
+  "marketing.figures.045": {
+    "message": "호스트 · K8S"
+  },
+  "marketing.figures.046": {
+    "message": "메트릭 · 파드 로그"
+  },
+  "marketing.figures.047": {
+    "message": "로그 수집기"
+  },
+  "marketing.figures.048": {
+    "message": "Vector · Fluent Bit"
+  },
+  "marketing.figures.049": {
+    "message": "AI 에이전트"
+  },
+  "marketing.figures.050": {
+    "message": "프롬프트 · 도구 호출"
+  },
+  "marketing.figures.051": {
+    "message": "대시보드"
+  },
+  "marketing.figures.052": {
+    "message": "알림 · SLO"
+  },
+  "marketing.figures.053": {
+    "message": "P99 · 오류율"
+  },
+  "marketing.figures.054": {
+    "message": "원인 조사"
+  },
+  "marketing.figures.055": {
+    "message": "AI 품질"
+  },
+  "marketing.figures.056": {
+    "message": "평가 · 피드백"
+  },
+  "marketing.figures.057": {
+    "message": "동적 JSON"
+  },
+  "marketing.figures.058": {
+    "message": "역색인"
+  },
+  "marketing.figures.059": {
+    "message": "전문 검색 · BM25"
+  },
+  "marketing.figures.060": {
+    "message": "컬럼형"
+  },
+  "marketing.figures.061": {
+    "message": "5:1 압축"
+  },
+  "marketing.figures.062": {
+    "message": "전문 검색"
+  },
+  "marketing.figures.063": {
+    "message": "BM25 · 키워드"
+  },
+  "marketing.figures.064": {
+    "message": "집계"
+  },
+  "marketing.figures.065": {
+    "message": "P99 · SLA · 비용"
+  },
+  "marketing.figures.066": {
+    "message": "하이브리드"
+  },
+  "marketing.figures.067": {
+    "message": "키워드 + 벡터"
+  },
+  "marketing.figures.068": {
+    "message": "핫 · SSD"
+  },
+  "marketing.figures.069": {
+    "message": "웜"
+  },
+  "marketing.figures.070": {
+    "message": "콜드 · S3 / HDFS"
+  },
+  "marketing.figures.071": {
+    "message": "현재"
+  },
+  "marketing.figures.072": {
+    "message": "7일"
+  },
+  "marketing.figures.073": {
+    "message": "30일"
+  },
+  "marketing.figures.074": {
+    "message": "1년"
+  },
+  "marketing.figures.075": {
+    "message": "Apache Doris 기반 관측성: 로그, 메트릭, 트레이스, AI 에이전트 이벤트가 수집기를 거쳐 Doris로 들어옵니다. Doris는 VARIANT, 역색인, 컬럼형 스토리지로 데이터를 보관하고, 데이터는 시간이 지나면서 핫 SSD에서 콜드 객체 스토리지로 이동합니다. 전문 검색, 집계, 하이브리드 쿼리는 Grafana, 알림, 애드혹 SQL, AI 품질 검토에 쓰입니다."
+  },
+  "marketing.figures.076": {
+    "message": "그림 03 · 신호가 들어와 핫에서 콜드로 이동하는 내내 쿼리 가능"
+  },
+  "marketing.figures.077": {
+    "message": "신호"
+  },
+  "marketing.figures.078": {
+    "message": "OTel Collector · Vector · Kafka"
+  },
+  "marketing.figures.079": {
+    "message": "저장"
+  },
+  "marketing.figures.080": {
+    "message": "데이터 수명 주기 · 계층형 스토리지"
+  },
+  "marketing.figures.081": {
+    "message": "최신 데이터는 SSD에서 빠르게 · 과거 데이터는 객체 스토리지에서 저렴하게"
+  },
+  "marketing.figures.082": {
+    "message": "쿼리"
   }
 }

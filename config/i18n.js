@@ -29,6 +29,7 @@ const localeRegistry = [
         translatedPages: [
             '/use-cases/customer-facing-analytics',
             '/use-cases/data-warehousing',
+            '/use-cases/observability',
         ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
