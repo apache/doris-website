@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/trim-array",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/trim-array.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/trim-array.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a1910c7b8b917f9371c243bb606cd4567a1a1d0fc17201a73a74f3d46316a36b",
+    "sourceTechnicalHash": "1a89af1165bd2692963dc1594ad9b136aaad54444b1b5650a54b1ad6f4029e5b",
+    "targetHash": "10e4878e241bf78944371ba15691e624d130c7502f046c964bcb93c4921e282d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:43:22.749Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a1910c7b8b917f9371c243bb606cd4567a1a1d0fc17201a73a74f3d46316a36b",
+      "targetHash": "10e4878e241bf78944371ba15691e624d130c7502f046c964bcb93c4921e282d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

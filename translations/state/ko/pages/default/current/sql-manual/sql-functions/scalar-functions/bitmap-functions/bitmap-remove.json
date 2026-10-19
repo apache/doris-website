@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-remove.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d940b930c32912dfdf8db5bd342f91ce282a9bb088bceec1f47482e1d754d983",
+    "sourceTechnicalHash": "302a1c4cbb94601dd049171f61c36247839274c0bd022e690e971c15cccc68d9",
+    "targetHash": "fab48a5f140dd7a90953621d8ca9c6d5a7c8c8d31e40059501a5ce3a57da89b2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:44:57.384Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d940b930c32912dfdf8db5bd342f91ce282a9bb088bceec1f47482e1d754d983",
+      "targetHash": "fab48a5f140dd7a90953621d8ca9c6d5a7c8c8d31e40059501a5ce3a57da89b2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

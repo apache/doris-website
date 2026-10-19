@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-min",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-min.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-min.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "8b1abb7070bd32377dcd63aa169a0dafae8565d82c621d2adc6471975570f119",
+    "sourceTechnicalHash": "0ae7b2b0bf3a02069ed358242b12803ead92e8699cda959519c3f063077c28a0",
+    "targetHash": "e92618d99de9feb00eec4f69ae7273ac6a8c4dd654bbcdb8f17e41548c086fcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:41:47.787Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8b1abb7070bd32377dcd63aa169a0dafae8565d82c621d2adc6471975570f119",
+      "targetHash": "e92618d99de9feb00eec4f69ae7273ac6a8c4dd654bbcdb8f17e41548c086fcf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

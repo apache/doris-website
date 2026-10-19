@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitshiftright.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "919f85e3c5d6b0e5e545d0159063e2da14994483f9516546c3b86203f49cf96a",
+    "sourceTechnicalHash": "c178851e8b2a53ce69595391d80c9ed891fb872eac2a5b5074e23e7c0d4ec5da",
+    "targetHash": "a834670677b65a74dddf537edfb2caeb7bec2153788266d4b58486c10498af33",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:46:16.643Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "919f85e3c5d6b0e5e545d0159063e2da14994483f9516546c3b86203f49cf96a",
+      "targetHash": "a834670677b65a74dddf537edfb2caeb7bec2153788266d4b58486c10498af33",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

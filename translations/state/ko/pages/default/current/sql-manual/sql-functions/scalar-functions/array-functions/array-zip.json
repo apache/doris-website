@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-zip",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-zip.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-zip.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ba4b6d28e56d6c6bd40776b7b083ddf27ad85bde2674cb9a32fd70ec4a4ceef5",
+    "sourceTechnicalHash": "59598b58ead26c8a0cf43b5ae6c76d8b67d85830b625463d26c165a2a5018e58",
+    "targetHash": "c40163e61311ab3ad9a00b4f103a307d7ab0a82a4b52e6e275d122603ef58efe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:43:03.943Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ba4b6d28e56d6c6bd40776b7b083ddf27ad85bde2674cb9a32fd70ec4a4ceef5",
+      "targetHash": "c40163e61311ab3ad9a00b4f103a307d7ab0a82a4b52e6e275d122603ef58efe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

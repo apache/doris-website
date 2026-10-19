@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-shuffle.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "9d661d14611e87bd3b9a64b748fe57b39b542282875ba61c2a0350cfa9e6d6f7",
+    "sourceTechnicalHash": "1cd47ff6aab23f72e4273510c4309df6c074c87e352de78009bccfb417e8e9d9",
+    "targetHash": "e9b68ba660659708fa2fb3b22fbaed098c99254824def7566c29ba5ea8fb508c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:42:18.615Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d661d14611e87bd3b9a64b748fe57b39b542282875ba61c2a0350cfa9e6d6f7",
+      "targetHash": "e9b68ba660659708fa2fb3b22fbaed098c99254824def7566c29ba5ea8fb508c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

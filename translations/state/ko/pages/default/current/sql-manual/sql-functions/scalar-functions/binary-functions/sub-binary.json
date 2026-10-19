@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/binary-functions/sub-binary.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "641a1431d2bcee01249f2dec6c0eb922994a02f84268e420ef8c8a00f547d35a",
+    "sourceTechnicalHash": "e04dd68d5f698a404131121e283a9ed199fdc982529bfffcc62015f55245a6fa",
+    "targetHash": "b9731e1c339ed2bc841830ebb874b6470edd7232689a68ea9edc1fd1b0a836c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:43:22.443Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "641a1431d2bcee01249f2dec6c0eb922994a02f84268e420ef8c8a00f547d35a",
+      "targetHash": "b9731e1c339ed2bc841830ebb874b6470edd7232689a68ea9edc1fd1b0a836c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
