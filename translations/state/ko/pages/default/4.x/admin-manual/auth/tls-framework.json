@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/tls-framework",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+    "sourceTechnicalHash": "67992242190d81f957842223e23c04ea92718900e2e5399c7961bdcffbca2472",
+    "targetHash": "4a92310143e058d90b91057a6ad0433b073bd59f7d304881ca9c1c3a2462ab19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:25.004Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+      "targetHash": "4a92310143e058d90b91057a6ad0433b073bd59f7d304881ca9c1c3a2462ab19",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/tls-framework",
+        "sourcePath": "docs/admin-manual/auth/tls-framework.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/tls-framework.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+        "targetHash": "4a92310143e058d90b91057a6ad0433b073bd59f7d304881ca9c1c3a2462ab19",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

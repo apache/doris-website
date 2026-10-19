@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/aggregate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/aggregate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/data-model/aggregate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f68f9b11fdb49cbea6ee654a219ccda04211f0364729e68fc1f3a6e631d8297a",
+    "sourceTechnicalHash": "00d93b390bf8d9be570c6ff536c02bba61714ae4b0422935b4727567189fa919",
+    "targetHash": "6044a2ff9cf40235022c81299fb6b0eecd8a6fa608ee18bf38a4e57162074b7a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:00:47.431Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f68f9b11fdb49cbea6ee654a219ccda04211f0364729e68fc1f3a6e631d8297a",
+      "targetHash": "6044a2ff9cf40235022c81299fb6b0eecd8a6fa608ee18bf38a4e57162074b7a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

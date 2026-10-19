@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/TRUNCATE-TABLE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9a22a8306640928094d72449ae30990c16b202576d2439ae732f4e3e83ee6301",
+    "sourceTechnicalHash": "fa702de9a1673e5c3d078d6bab34c4a7bf529eb57525f4d5a8f48512b64eb923",
+    "targetHash": "3dad3679bb86dbfa7511a5f0a2611ac6724a28ba568aec1b0b0a0e218fcc5950",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:58:23.566Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9a22a8306640928094d72449ae30990c16b202576d2439ae732f4e3e83ee6301",
+      "targetHash": "3dad3679bb86dbfa7511a5f0a2611ac6724a28ba568aec1b0b0a0e218fcc5950",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

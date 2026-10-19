@@ -1,0 +1,251 @@
+---
+{
+    "title": "Apache Doris 테이블 설계 가이드",
+    "language": "ko",
+    "description": "Apache Doris 테이블 설계를 위한 종합 가이드: 테이블 모델, 데이터 타입, 파티셔닝과 버케팅, 인덱스, 스토리지 최적화, 스키마 변경을 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+{/* Knowledge type: section navigation / concept entry point */}
+{/* Use cases: creating a new table / optimizing the structure of an existing table */}
+
+Apache Doris에서 테이블 설계는 쓰기 성능, 쿼리 효율, 스토리지 비용을 직접 결정합니다. 이 장은 대표적인 설계 시나리오를 중심으로 구성되어 있으며, 테이블을 처음부터 설계하거나 기존 테이블의 구조를 최적화하는 데 도움을 줍니다.
+
+## 설계 절차 {#design-workflow}
+
+Doris 테이블 설계는 일반적으로 다음 단계로 진행합니다.
+
+1. **테이블 모델 선택**: 데이터를 저장하고, 중복을 제거하고, 집계하는 방식을 결정합니다.
+2. **컬럼과 데이터 타입 정의**: 비즈니스 필드에 적합한 타입을 선택합니다.
+3. **파티셔닝과 버케팅 계획**: 데이터를 고르게 분산하고 프루닝을 활용할 수 있도록 합니다.
+4. **인덱스 추가**: 포인트 쿼리, 범위 스캔, 전문 검색의 속도를 높입니다.
+5. **스토리지 최적화**: 압축, 행·열 하이브리드 스토리지, 핫/콜드 계층화를 통해 비용을 줄입니다.
+6. **스키마 변경**: 비즈니스 변화에 따라 스키마를 조정하거나 자동 증가 컬럼을 사용합니다.
+
+## 테이블 생성 {#creating-a-table}
+
+Doris에서 테이블을 생성하려면 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) 문을 사용합니다. 기존 테이블을 바탕으로 새 테이블을 만들려면 다음을 사용할 수 있습니다.
+
+- [CREATE TABLE ... LIKE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): 기존 테이블의 구조를 재사용합니다.
+- [CREATE TABLE ... AS SELECT (CTAS)](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE): 쿼리 결과를 기반으로 테이블을 생성합니다.
+
+### 테이블 이름 규칙 {#table-name-rules}
+
+Doris의 테이블 이름은 기본적으로 대소문자를 구분하며, 최대 길이는 64바이트입니다. 다음 설정으로 이 동작을 조정할 수 있습니다.
+
+| 설정 | 기본값 | 설명 |
+| --- | --- | --- |
+| [lower_case_table_names](../admin-manual/config/fe-config.md) | 대소문자 구분 | 클러스터를 처음 초기화할 때만 설정할 수 있으며, 이후에는 변경할 수 없음 |
+| [table_name_length_limit](../admin-manual/config/fe-config.md) | 64바이트 | 너무 큰 값으로 설정하는 것은 권장하지 않음 |
+
+### 주요 테이블 속성 {#key-table-properties}
+
+테이블을 생성할 때 PROPERTIES에 일반적으로 사용하는 속성을 지정할 수 있습니다. 자세한 내용은 [CREATE TABLE](../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)을 참조하세요.
+
+| 속성 | 용도 |
+| --- | --- |
+| `buckets` | 테이블 내 데이터 분산의 세분화 수준을 결정 |
+| `storage_medium` | HDD, SSD, 원격 공유 스토리지 등의 저장 매체를 제어 |
+| `replication_num` | 중복성과 신뢰성을 확보하기 위한 데이터 복제본 수를 제어 |
+| `storage_policy` | 핫/콜드 데이터 계층화에 사용할 마이그레이션 정책을 설정 |
+
+:::tip
+테이블 속성은 파티션 수준에서 적용됩니다. 테이블 속성을 수정하면 이후에 생성되는 파티션에만 적용되며, 기존 파티션에는 영향을 주지 않습니다. 자세한 내용은 [ALTER TABLE PROPERTY](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PROPERTY)와 [ALTER TABLE DISTRIBUTION](../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-DISTRIBUTION)을 참조하세요. [동적 파티셔닝](data-partitioning/dynamic-partitioning.md)에서는 이러한 속성을 별도로 설정할 수 있습니다.
+:::
+
+## 테이블 모델 선택 {#choosing-a-table-model}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="테이블 모델 개요"
+    description="Duplicate, Aggregate, Unique 모델을 비교하고 사용 시나리오에 적합한 데이터 저장 및 중복 제거 방식을 선택합니다"
+    link="./data-model/intro"
+/>
+
+<GettingStartedCard
+    title="Duplicate 모델"
+    description="원시 상세 데이터를 보존하며, 로그와 이벤트 등 중복 제거나 집계가 필요 없는 시나리오에 적합합니다"
+    link="./data-model/duplicate"
+/>
+
+<GettingStartedCard
+    title="Unique 모델"
+    description="기본 키를 기준으로 중복을 제거하고 높은 동시성의 실시간 업데이트를 지원하며, CDC와 주문 등 기본 키를 기준으로 데이터를 업데이트하는 시나리오에 적합합니다"
+    link="./data-model/unique"
+/>
+
+<GettingStartedCard
+    title="Aggregate 모델"
+    description="차원별로 데이터를 사전 집계하여 보고서 및 다차원 분석 쿼리의 성능을 높입니다"
+    link="./data-model/aggregate"
+/>
+
+<GettingStartedCard
+    title="모델 선택 팁"
+    description="대표적인 비즈니스 시나리오에 따른 테이블 모델 및 Key 컬럼 설계 권장 사항을 확인합니다"
+    link="./data-model/tips"
+/>
+</div>
+
+## 컬럼과 데이터 타입 정의 {#defining-columns-and-data-types}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="데이터 타입"
+    description="숫자, 문자열, 날짜, 반정형 타입 등 Doris가 지원하는 모든 데이터 타입을 확인합니다"
+    link="./data-type"
+/>
+</div>
+
+## 파티셔닝과 버케팅 계획 {#planning-partitioning-and-bucketing}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="데이터 분산 개념"
+    description="파티셔닝과 버케팅이 데이터를 tablet에 매핑하는 방식을 이해하고 여러 노드의 스토리지 및 컴퓨팅 성능을 충분히 활용합니다"
+    link="./data-partitioning/basic-concepts"
+/>
+
+<GettingStartedCard
+    title="기본 개념"
+    description="파티션, 버킷, tablet, 복제본 등 데이터 분산과 관련된 기본 용어를 알아봅니다"
+    link="./data-partitioning/basic-concepts"
+/>
+
+<GettingStartedCard
+    title="수동 파티셔닝"
+    description="테이블 생성 시 파티션 범위를 명시적으로 정의하며, 파티션이 고정되어 있고 세밀한 제어가 필요한 시나리오에 적합합니다"
+    link="./data-partitioning/manual-partitioning"
+/>
+
+<GettingStartedCard
+    title="동적 파티셔닝"
+    description="시간 차원에 따라 파티션을 자동으로 생성하고 정리하여 시계열 테이블 운영을 간소화합니다"
+    link="./data-partitioning/dynamic-partitioning"
+/>
+
+<GettingStartedCard
+    title="자동 파티셔닝"
+    description="유입되는 데이터를 기반으로 파티션을 자동 생성하므로 파티션 범위를 미리 정의할 필요가 없습니다"
+    link="./data-partitioning/auto-partitioning"
+/>
+
+<GettingStartedCard
+    title="데이터 버케팅"
+    description="파티션 내에 데이터가 고르게 분산되도록 적절한 버케팅 컬럼과 버킷 수를 선택합니다"
+    link="./data-partitioning/data-bucketing"
+/>
+
+<GettingStartedCard
+    title="일반적인 문제"
+    description="파티셔닝 및 버케팅 설계에서 흔히 발생하는 실수와 문제 해결 방법을 알아봅니다"
+    link="./data-partitioning/common-issues"
+/>
+</div>
+
+## 쿼리 가속: 인덱스 {#accelerating-queries-indexes}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="인덱스 개요"
+    description="Doris가 지원하는 다양한 인덱스 타입과 각 타입에 적합한 쿼리 시나리오를 비교합니다"
+    link="./index/index-overview"
+/>
+
+<GettingStartedCard
+    title="접두사 인덱스"
+    description="정렬 키를 기반으로 하는 내장 인덱스로, 동등 조건 및 범위 쿼리의 속도를 높입니다"
+    link="./index/prefix-index"
+/>
+
+<GettingStartedCard
+    title="BloomFilter 인덱스"
+    description="카디널리티가 높은 컬럼의 동등 조건 쿼리를 가속하고 불필요한 데이터 스캔을 줄입니다"
+    link="./index/bloomfilter"
+/>
+
+<GettingStartedCard
+    title="NGram BloomFilter 인덱스"
+    description="완전한 역색인을 도입하지 않고 LIKE 퍼지 매칭 쿼리의 속도를 높입니다"
+    link="./index/ngram-bloomfilter-index"
+/>
+
+<GettingStartedCard
+    title="역색인(전문 검색)"
+    description="토큰화된 전문 검색과 키워드 및 구문 매칭을 지원하며, 로그 및 텍스트 분석에 적합합니다"
+    link="./index/inverted-index/overview"
+/>
+
+<GettingStartedCard
+    title="벡터 인덱스"
+    description="HNSW, IVF 등의 알고리즘을 기반으로 고차원 벡터의 유사도 검색 속도를 높입니다"
+    link="./index/vector-index/hnsw"
+/>
+</div>
+
+## 스토리지 최적화 {#optimizing-storage}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="스토리지 형식"
+    description="Doris 컬럼형 스토리지 형식 V3의 설계와 장점을 알아봅니다"
+    link="./storage-format"
+/>
+
+<GettingStartedCard
+    title="데이터 압축"
+    description="적절한 압축 알고리즘을 선택하여 스토리지 비용과 쿼리 성능의 균형을 맞춥니다"
+    link="./column-compression"
+/>
+
+<GettingStartedCard
+    title="행·열 하이브리드 스토리지"
+    description="컬럼 스토리지에 행 스토리지를 추가하여 컬럼 수가 많은 테이블의 포인트 쿼리 속도를 높입니다"
+    link="./row-store"
+/>
+
+<GettingStartedCard
+    title="핫/콜드 데이터 계층화"
+    description="콜드 데이터를 SSD/HDD 또는 S3, HDFS 등의 원격 스토리지로 내려보내 스토리지 비용을 줄입니다"
+    link="./tiered-storage/overview"
+/>
+</div>
+
+## 스키마 변경 {#evolving-the-schema}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="스키마 변경"
+    description="ALTER TABLE로 컬럼과 타입을 추가, 삭제, 수정하고 경량 변경과 중량 변경의 차이를 알아봅니다"
+    link="./schema-change"
+/>
+
+<GettingStartedCard
+    title="자동 증가 컬럼"
+    description="자동 증가 컬럼을 사용하여 고유한 숫자 ID를 자동으로 생성하고 데이터 쓰기를 간소화합니다"
+    link="./auto-increment"
+/>
+</div>
+
+## 특수 테이블과 모범 사례 {#special-tables-and-best-practices}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="테이블 설계 모범 사례"
+    description="테이블 모델, Key 컬럼, 파티셔닝과 버케팅, 인덱스 등에 대한 주요 설계 권장 사항을 정리합니다"
+    link="./data-model/tips"
+/>
+</div>
+
+## 설계 시 고려 사항 {#design-considerations}
+
+{/* Knowledge type: considerations / design constraints */}
+
+| 설계 항목 | 설명 | 영향 |
+| --- | --- | --- |
+| 데이터 모델 | 테이블 생성 후에는 **변경할 수 없으므로**, 적합한 [데이터 모델](./data-model/intro.mdx)을 미리 선택해야 함 | 이후의 쓰기 및 쿼리 패턴을 결정 |
+| 버킷 수 | 이미 생성된 파티션의 버킷 수는 변경할 수 없지만, [파티션 교체](../data-operate/delete/table-temp-partition.md)를 통해 조정할 수 있음. 동적 파티셔닝에서 이후에 생성될 파티션의 버킷 수는 변경할 수 있음 | 데이터 균형과 쿼리 병렬성에 영향 |
+| 컬럼 변경 | VALUE 컬럼 추가 및 삭제는 경량 작업으로 수초 내에 완료되며, KEY 컬럼 추가 및 삭제나 데이터 타입 수정은 중량 작업임 | 대규모 데이터셋에서는 가능한 한 KEY 컬럼 변경을 피해야 함 |
+| 스토리지 정책 | [핫/콜드 계층화](./tiered-storage/overview.md)를 사용하여 콜드 데이터를 HDD, S3 또는 HDFS로 마이그레이션 | 스토리지 비용을 크게 절감 |

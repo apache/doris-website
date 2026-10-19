@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/log-management/fe-log",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/log-management/fe-log.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/log-management/fe-log.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+    "sourceTechnicalHash": "072ac97a8f3a636630306bcc98138111545611eb24a4456debd41df8e0ff27a5",
+    "targetHash": "9839c732cb2e4e944e352ef1910bb48bf10948a523e9dddcbb9aa182d68b61e4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:11:16.730Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+      "targetHash": "9839c732cb2e4e944e352ef1910bb48bf10948a523e9dddcbb9aa182d68b61e4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"fe.audit.log\"]; received [\"link\",\"#log-categories\",null]\nprotected node 8: expected [\"link\",\"#log-categories\",null]; received [\"inlineCode\",null,null,\"fe.audit.log\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

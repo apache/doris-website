@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/automatic-service-start",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/automatic-service-start.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/automatic-service-start.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6fc335287cad909f2b65a7b0b4e1792ef06df9d5507975af1c39198c6eefea36",
+    "sourceTechnicalHash": "2906eadd40f23be6f8bf3b76969fe60fe9a85ab0dd8bde10909b3b510690782d",
+    "targetHash": "02b93dde15474afe4caab2a5e5256b4b211a8c9db0155615e681108cb0007a89",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:09:17.268Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6fc335287cad909f2b65a7b0b4e1792ef06df9d5507975af1c39198c6eefea36",
+      "targetHash": "02b93dde15474afe4caab2a5e5256b4b211a8c9db0155615e681108cb0007a89",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

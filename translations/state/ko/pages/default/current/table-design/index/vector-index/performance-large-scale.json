@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/vector-index/performance-large-scale",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/vector-index/performance-large-scale.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/vector-index/performance-large-scale.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8361f4d44a0d0462bead8c32631348cf3a1a1d3f940c9fc10c3bc08619b947f1",
+    "sourceTechnicalHash": "a4cfce1e1cbc8d6582f5b6fc0ffa73ae106d941b1400ab5ea24d71fef7210a04",
+    "targetHash": "d79f031458ce7e58fe1e62979a96537d7db75e022f35bc48ca1a6f01fd46ad6f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:03:32.983Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8361f4d44a0d0462bead8c32631348cf3a1a1d3f940c9fc10c3bc08619b947f1",
+      "targetHash": "d79f031458ce7e58fe1e62979a96537d7db75e022f35bc48ca1a6f01fd46ad6f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

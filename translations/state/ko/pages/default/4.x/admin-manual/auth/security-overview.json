@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/security-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/security-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/security-overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "53f866ba350869eec3d9e85ebc4d03cdfe3b16a50455ecffe63a448bb82c332a",
+    "sourceTechnicalHash": "708e1cf67a7a4b68a57a8a09b62d6c0bd59efdbfaccb113bb8e005de7fb91785",
+    "targetHash": "7a8c6a64baa0c5f04385343b605e3410497be50f25ff7dff965019d2eb04fa67",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:16.883Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "53f866ba350869eec3d9e85ebc4d03cdfe3b16a50455ecffe63a448bb82c332a",
+      "targetHash": "7a8c6a64baa0c5f04385343b605e3410497be50f25ff7dff965019d2eb04fa67",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/security-overview",
+        "sourcePath": "docs/admin-manual/auth/security-overview.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/security-overview.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "53f866ba350869eec3d9e85ebc4d03cdfe3b16a50455ecffe63a448bb82c332a",
+        "targetHash": "7a8c6a64baa0c5f04385343b605e3410497be50f25ff7dff965019d2eb04fa67",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

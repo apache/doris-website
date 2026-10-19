@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/intro.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d0d82e16cab529bd2bc4c60fe18470405354c662e900ce5f90177ccecd8885db",
+    "sourceTechnicalHash": "2a146254f50f407db2d442dd78412e70eeff8e8205c1d25b2c57f8fbe219f458",
+    "targetHash": "ee815d9535d6b4cc1f16c6a597bb55c72a7ec9c3f81907644cfc673a1ea6a5d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:42.512Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d0d82e16cab529bd2bc4c60fe18470405354c662e900ce5f90177ccecd8885db",
+      "targetHash": "ee815d9535d6b4cc1f16c6a597bb55c72a7ec9c3f81907644cfc673a1ea6a5d3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/intro",
+        "sourcePath": "docs/admin-manual/cluster-management/intro.mdx",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/intro.mdx",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "d0d82e16cab529bd2bc4c60fe18470405354c662e900ce5f90177ccecd8885db",
+        "targetHash": "ee815d9535d6b4cc1f16c6a597bb55c72a7ec9c3f81907644cfc673a1ea6a5d3",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

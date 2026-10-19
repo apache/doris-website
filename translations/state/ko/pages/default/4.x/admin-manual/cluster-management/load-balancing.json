@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/load-balancing",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0353523b8451d1d59a1f80727b4795ea2208b6e05930131a47948690e3d25477",
+    "sourceTechnicalHash": "1f5de42adc86092f684d262bafcf15639040ff9d114a54faff1cf874e7ef7503",
+    "targetHash": "4ee93be6d87c94e12df8afcb5eeaf496e07121351869600505c9b23e738133b7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:49.076Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0353523b8451d1d59a1f80727b4795ea2208b6e05930131a47948690e3d25477",
+      "targetHash": "4ee93be6d87c94e12df8afcb5eeaf496e07121351869600505c9b23e738133b7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/load-balancing",
+        "sourcePath": "docs/admin-manual/cluster-management/load-balancing.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/load-balancing.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "0353523b8451d1d59a1f80727b4795ea2208b6e05930131a47948690e3d25477",
+        "targetHash": "4ee93be6d87c94e12df8afcb5eeaf496e07121351869600505c9b23e738133b7",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

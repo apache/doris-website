@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/elastic-expansion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/elastic-expansion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/elastic-expansion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+    "sourceTechnicalHash": "c1ca5f24cb99b017b9eaf4c6d74d03b4b9ba592141ed6f02416db02126bb91dc",
+    "targetHash": "80c7a5adfc5e1db91edcc9588c0e7b3229f318b2d67bd3b11aa3e7475cace465",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:29.316Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+      "targetHash": "80c7a5adfc5e1db91edcc9588c0e7b3229f318b2d67bd3b11aa3e7475cace465",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/elastic-expansion",
+        "sourcePath": "docs/admin-manual/cluster-management/elastic-expansion.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/elastic-expansion.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "4ee93bb676416316b0f5e9a627f3f1d8b1643206f29f078480dfa5ac4ffbc93e",
+        "targetHash": "80c7a5adfc5e1db91edcc9588c0e7b3229f318b2d67bd3b11aa3e7475cace465",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

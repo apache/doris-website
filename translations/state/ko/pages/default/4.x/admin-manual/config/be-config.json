@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/config/be-config",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/config/be-config.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/config/be-config.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f649765410b35492127be8cbc210d5a54201e8648dae51fd836fdcd33ed853f4",
+    "sourceTechnicalHash": "09a8bab17f548b57360b1dc6eaaeac12df040a5a5705850c949f2b24ea461e50",
+    "targetHash": "a7ea8ad9d2f6c94638e5fcf7b66897daa30852ce8b9f5247ec418022d3522bb0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:17:45.678Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f649765410b35492127be8cbc210d5a54201e8648dae51fd836fdcd33ed853f4",
+      "targetHash": "a7ea8ad9d2f6c94638e5fcf7b66897daa30852ce8b9f5247ec418022d3522bb0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 194: expected [\"inlineCode\",null,null,\"403 Forbidden\"]; received [\"inlineCode\",null,null,\"Stream load forward is disabled\"]\nprotected node 195: expected [\"inlineCode\",null,null,\"Stream load forward is disabled\"]; received [\"inlineCode\",null,null,\"403 Forbidden\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

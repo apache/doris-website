@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/data-admin/recyclebin",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/data-admin/recyclebin.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/data-admin/recyclebin.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+    "sourceTechnicalHash": "5a3ac57d61ff6dcaa1d0fdb12b797f7511def6f2a0a6f9bd2cb9091dd44f6893",
+    "targetHash": "0b0c7ae5b16b655835a85f98a9cf57dadf8e31524159b632f1e5684d69b4e96b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:07:01.975Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+      "targetHash": "0b0c7ae5b16b655835a85f98a9cf57dadf8e31524159b632f1e5684d69b4e96b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/data-admin/recyclebin",
+        "sourcePath": "docs/admin-manual/data-admin/recyclebin.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/data-admin/recyclebin.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+        "targetHash": "0b0c7ae5b16b655835a85f98a9cf57dadf8e31524159b632f1e5684d69b4e96b",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

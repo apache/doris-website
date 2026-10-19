@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/certificate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/certificate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/certificate.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+    "sourceTechnicalHash": "c9b1c554a7c56cf797bac04bb61dd3ee8c9ea524b9d5e752a5bc317ee2feeefc",
+    "targetHash": "21a1e4bbf40f83316129e56447ee19d97ef7dd660e88a2c447b2f5d9922a406c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:04:36.910Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+      "targetHash": "21a1e4bbf40f83316129e56447ee19d97ef7dd660e88a2c447b2f5d9922a406c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/certificate",
+        "sourcePath": "docs/admin-manual/auth/certificate.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/certificate.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "efbfc5df855603b3fb9c93c65fa16dfab974c63a71d763c4f755a0b143532e59",
+        "targetHash": "21a1e4bbf40f83316129e56447ee19d97ef7dd660e88a2c447b2f5d9922a406c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

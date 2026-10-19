@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-partitioning/data-bucketing",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-partitioning/data-bucketing.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+    "sourceTechnicalHash": "b5258fa3ea20b88e3418b0cb93a756ed8d254aeeef526a406b460a3f186fdff7",
+    "targetHash": "850eadb1aa1f7be26c5532dfec8f8f9a29159f03b5300f4ed99b38771ae530e3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:01:42.127Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+      "targetHash": "850eadb1aa1f7be26c5532dfec8f8f9a29159f03b5300f4ed99b38771ae530e3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/transaction/BEGIN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/transaction/BEGIN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/transaction/BEGIN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "85b229fa700afd4136e428dbb23ea7baeb039d750a87625536effbbc671f1435",
+    "sourceTechnicalHash": "1ff227da6e1906dc20f67db6fd6a37adfe12d51d2cca2037ef8657e8140c34ac",
+    "targetHash": "2cddc6ec5ba192e9ea4d81863fec34811bcb50d4518600f5b2e4972aeda09554",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:58:24.902Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85b229fa700afd4136e428dbb23ea7baeb039d750a87625536effbbc671f1435",
+      "targetHash": "2cddc6ec5ba192e9ea4d81863fec34811bcb50d4518600f5b2e4972aeda09554",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
