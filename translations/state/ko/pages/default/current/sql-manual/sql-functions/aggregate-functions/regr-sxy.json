@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-sxy",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ed32cf82dca3dc27d7e31213ab33172308d572960457a2a27e88331e5ed12e7d",
+    "sourceTechnicalHash": "db54729e075ee7297f9006df015b1125e67601378d59eb7eb3f4174b26762bf7",
+    "targetHash": "074c9ee71a449a18f12630babdcace1be960768d666389a38d704ca0c2626145",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:32:45.988Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed32cf82dca3dc27d7e31213ab33172308d572960457a2a27e88331e5ed12e7d",
+      "targetHash": "074c9ee71a449a18f12630babdcace1be960768d666389a38d704ca0c2626145",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

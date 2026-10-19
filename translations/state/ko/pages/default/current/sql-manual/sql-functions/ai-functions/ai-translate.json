@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-translate",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-translate.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-translate.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "43738adf3659de81b78eff5da99a2bc083ca9e6b04b337cb1bedf979a5379a61",
+    "sourceTechnicalHash": "41c77e6d9f1d090c2bcc9603f65e04eaff1e8cb91de63c850698bbb119e0431e",
+    "targetHash": "9189d2574df68513fc1292126469ee760bb62ec332e0b2a83229b49286a342a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:34:53.653Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "43738adf3659de81b78eff5da99a2bc083ca9e6b04b337cb1bedf979a5379a61",
+      "targetHash": "9189d2574df68513fc1292126469ee760bb62ec332e0b2a83229b49286a342a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

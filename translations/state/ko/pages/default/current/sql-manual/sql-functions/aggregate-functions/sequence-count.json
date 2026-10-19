@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sequence-count",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/sequence-count.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/sequence-count.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "32d1801d74fa6e40e619bf4eece54e478742dab7f4bc1a31d517d786896e72fc",
+    "sourceTechnicalHash": "654c05b1616839fa94be91286097db6c56a028ca7968c377e7d5584b77bf93da",
+    "targetHash": "7855761e689c4753400edeefa59cfe6dadc23757f902cdff813c2d9c48f809a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:34:04.623Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "32d1801d74fa6e40e619bf4eece54e478742dab7f4bc1a31d517d786896e72fc",
+      "targetHash": "7855761e689c4753400edeefa59cfe6dadc23757f902cdff813c2d9c48f809a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/embed",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
+    "sourceTechnicalHash": "dbe51ba33ee3b36651525acfe1fa7ddbb3e253196985d5d369f61f518ae35f44",
+    "targetHash": "c203236637205e1904200a49e5e8aa99f75a0717841ffabda101ee9cba325be6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:35:57.177Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
+      "targetHash": "c203236637205e1904200a49e5e8aa99f75a0717841ffabda101ee9cba325be6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

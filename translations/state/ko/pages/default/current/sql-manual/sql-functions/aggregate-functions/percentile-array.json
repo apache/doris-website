@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-array",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile-array.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile-array.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7732dfad156610c7ba13e240e19a6ec1f0879bd421a773526dcfa25d2129cfb3",
+    "sourceTechnicalHash": "5cc53d18a19ffbe776c6b839e0da7f64133c06baa949a1601440084d8ead9b51",
+    "targetHash": "4d658f9df55100dafa29fc3344ec2793c8214280157f791711c4e2563034d0fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:32:14.319Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7732dfad156610c7ba13e240e19a6ec1f0879bd421a773526dcfa25d2129cfb3",
+      "targetHash": "4d658f9df55100dafa29fc3344ec2793c8214280157f791711c4e2563034d0fd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
