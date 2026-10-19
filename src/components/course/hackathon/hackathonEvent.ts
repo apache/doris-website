@@ -1,24 +1,19 @@
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 
-// Temporary pages for the Apache Doris session at the Community over Code 2026
-// hackathon (Glasgow). The /course entry and the four Track A task pages read
-// everything event-specific from here, so the whole hackathon block can be
-// switched off or removed after the event without touching the course itself.
+// Permanent task pages for the Apache Doris Hackathon. The /course entry and
+// the task pages read everything hackathon-specific from here, so the whole
+// hackathon block can be switched off or changed without touching the course
+// itself. Nothing here is tied to a date or a venue.
 
 /** Shows the "Doris 101 | Hackathon" switch in the /course path card. */
 export const HACKATHON_COURSE_TRACK_ENABLED = true;
 
 export const HACKATHON_EVENT = {
     name: 'Apache Doris Hackathon',
-    conference: 'Community over Code 2026',
-    city: 'Glasgow',
-    dateLong: 'Tuesday 13 October',
-    dateShort: 'Tue 13 Oct',
-    time: '11:20–15:00',
-    room: 'Wee Dram Room',
-    eventUrl: 'https://events.apache.org/events/2026/community-over-code/doris.html',
-    basePath: '/course/hackathon/glasgow-2026',
-    // Set to null to render a dashed "TBA" placeholder instead.
+    basePath: '/course/hackathon',
+    // Set to null to render a dashed "TBA" placeholder instead. The file and
+    // folder names are the published starter-kit artifact; they keep their
+    // original name so existing downloads and submissions stay valid.
     starterKitUrl:
         'https://github.com/morningman/demo-env/releases/download/for-hackathon/doris-hackathon-glasgow-2026.zip' as
             string | null,
@@ -27,15 +22,13 @@ export const HACKATHON_EVENT = {
     /** Participants open a pull request that adds <their GitHub ID>/ under this folder. */
     submitUrl: 'https://github.com/morningman/demo-env/tree/main/doris-hackathon-glasgow-2026' as string | null,
     submitLabel: 'morningman/demo-env' as string | null,
-    deadline: '31 October' as string | null,
     /** Apache Doris Slack channel for questions, submissions and badges. */
     slackChannel: '#dev',
 } as const;
 
 /** Tracked entry to the Apache Doris Slack (see developer_docs/slack-utm-convention.md). */
 export const HACKATHON_SLACK_URL = buildSlackEntryUrl({
-    medium: 'event',
-    campaign: 'coc2026_hackathon',
+    medium: 'website',
     content: 'hackathon_task_page',
 });
 
@@ -63,7 +56,7 @@ export interface HackathonTaskMeta {
     slug: string;
     title: string;
     duration: string;
-    /** Poster pitch, used on the task tiles. */
+    /** Short pitch, used on the task tiles. */
     pitch: string;
 }
 
@@ -106,7 +99,7 @@ export function getHackathonTask(code: HackathonTaskCode): HackathonTaskMeta {
     return task;
 }
 
-/** Site-relative route of a task page, e.g. /course/hackathon/glasgow-2026/a1-hybrid-search */
+/** Site-relative route of a task page, e.g. /course/hackathon/a1-hybrid-search */
 export function hackathonTaskPath(task: HackathonTaskMeta): string {
     return `${HACKATHON_EVENT.basePath}/${task.slug}`;
 }

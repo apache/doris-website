@@ -484,8 +484,8 @@ export function PanelNote({ children }: { children: ReactNode }): JSX.Element {
     );
 }
 
-/** Sticky bar above every hackathon page: back to /course and the event details. */
-export function HackathonEventBar(): JSX.Element {
+/** Sticky bar above every hackathon page: back to /course and the open-task note. */
+export function HackathonTopBar(): JSX.Element {
     return (
         <div className="hk-task__bar">
             <div className="hk-task__wrap hk-task__bar-in">
@@ -494,15 +494,9 @@ export function HackathonEventBar(): JSX.Element {
                     <span>Course</span>
                 </Link>
                 <span className="hk-task__tag">{HACKATHON_EVENT.name}</span>
-                <a className="hk-task__event" href={HACKATHON_EVENT.eventUrl} target="_blank" rel="noopener noreferrer">
-                    <span>
-                        <span className="hk-task__event-long">
-                            {HACKATHON_EVENT.conference} {HACKATHON_EVENT.city} ·{' '}
-                        </span>
-                        {HACKATHON_EVENT.dateShort} · {HACKATHON_EVENT.time} · {HACKATHON_EVENT.room}
-                    </span>
-                    <IconExternal />
-                </a>
+                <span className="hk-task__event">
+                    <span>Self-paced tasks · start anytime · no sign-up</span>
+                </span>
             </div>
         </div>
     );
@@ -539,8 +533,9 @@ export function HackathonTaskSwitch({ current }: { current: string }): JSX.Eleme
 export function HackathonHelpLine(): JSX.Element {
     return (
         <p className="hk-task__help">
-            <b>Stuck for more than 10 minutes?</b> Come to the Doris table and ask Mingyu, or post in{' '}
-            <code>{HACKATHON_EVENT.slackChannel}</code> on the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>.
+            <b>Stuck?</b> Ask in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
+            <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>. Maintainers and other participants are there to
+            help.
         </p>
     );
 }
@@ -559,7 +554,7 @@ export const TRACK_A_SUBMIT_STEPS: ReactNode[] = [
 ];
 
 /**
- * How to submit and the badge. `steps` says what each track submits; showing
+ * How to submit and the badge. `steps` says what each track submits; sharing
  * the work, Slack and the badge rules are the same for both tracks.
  */
 export function HackathonSubmit({
@@ -586,25 +581,17 @@ export function HackathonSubmit({
                     ))}
                     <li>
                         <p>
-                            <strong>Show it</strong> at the Doris table (a 2-minute demo is plenty), or at the
-                            show-and-tell around 14:30.
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <strong>
-                                Join the <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>
-                            </strong>{' '}
-                            and say hi in <code>{HACKATHON_EVENT.slackChannel}</code>: questions, submissions and badges
-                            are all handled there.
+                            <strong>Share it</strong> in <code>{HACKATHON_EVENT.slackChannel}</code> on the{' '}
+                            <a href={HACKATHON_SLACK_URL}>Apache Doris Slack</a>: a link to your pull request or
+                            repository, plus a screenshot or a short demo. Questions, submissions and badges are all
+                            handled there.
                         </p>
                     </li>
                 </ol>
                 <p className="hk-task__late">
-                    Everyone who takes part in a task on site gets the <strong>Apache Doris Contributor badge</strong>:
-                    no merged pull request to Doris needed. Didn&apos;t finish by 15:00? Keep going — submissions are
-                    open until {HACKATHON_EVENT.deadline ?? <HackathonTba name="DEADLINE" />}. Teams are fine, but not
-                    needed: list every member&apos;s GitHub ID in {membersIn}.
+                    Everyone who takes part in a task gets the <strong>Apache Doris Contributor badge</strong>: no
+                    merged pull request to Doris needed. There is no deadline, so take as long as you need. Teams are
+                    fine, but not needed: list every member&apos;s GitHub ID in {membersIn}.
                 </p>
                 <div className="hk-task__submit-badge">
                     <Link to="/community/how-to-contribute/community-badges">
@@ -649,10 +636,10 @@ export function HackathonTaskPage({ content }: { content: HackathonTaskContent }
     return (
         <LayoutNext
             title={`${task.title} · Doris Hackathon`}
-            description={`${content.hook} A Track A task for the ${HACKATHON_EVENT.name} at ${HACKATHON_EVENT.conference} ${HACKATHON_EVENT.city}.`}
+            description={`${content.hook} A Track A task in the ${HACKATHON_EVENT.name}: self-paced, with a starter kit and a runnable local Doris.`}
         >
             <div className="hk-task">
-                <HackathonEventBar />
+                <HackathonTopBar />
                 <HackathonTaskSwitch current={task.code} />
 
                 <div className="hk-task__wrap hk-task__grid">

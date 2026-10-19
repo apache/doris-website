@@ -55,7 +55,7 @@ function CoursePath(): JSX.Element {
         >
             <div className="course-landing__path-header">
                 <h2 id="course-path-title">Your Doris path</h2>
-                <span>6 available · more to come</span>
+                <span>{hackathonOn ? 'Self-paced · open to everyone' : '6 available · more to come'}</span>
             </div>
             {HACKATHON_COURSE_TRACK_ENABLED ? (
                 <>

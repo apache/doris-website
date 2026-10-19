@@ -89,6 +89,16 @@ function buildRedirectIndex() {
     add('/course', '/learning');
     add('/zh-CN/course', '/zh-CN/learning');
 
+    // The hackathon task pages used to live under an event-specific
+    // /course/hackathon/glasgow-2026 prefix. They are permanent now, so the
+    // old URLs (posters, QR codes, bookmarks) redirect to the new ones.
+    for (const locale of ENABLED_LOCALES) {
+        const prefix = locale === 'en' ? '' : `/${locale}`;
+        for (const page of ['a1-hybrid-search', 'a2-mcp', 'a3-log-search', 'a4-agent-traces', 'track-b']) {
+            add(`${prefix}/course/hackathon/${page}`, `${prefix}/course/hackathon/glasgow-2026/${page}`);
+        }
+    }
+
     // /vendors lost its navigation entry in the new-homepage refactor and has
     // no obvious successor page, so it lands on the homepage. Its source is
     // parked at src/pages/_vendors (underscore = not routed).
