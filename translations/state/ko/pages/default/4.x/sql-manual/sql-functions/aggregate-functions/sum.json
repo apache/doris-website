@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/sum",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sum.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/sum.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "26706f57f7a11cd39c50b37b394294dfaea24a84fe6ba2827a33de6784217387",
+    "sourceTechnicalHash": "17cc6b03c26fd0add5c21e26f32cdd87947e91b27d7d97302f64b0bb260d758f",
+    "targetHash": "a379aa1da60d90967102e9f71a07179d1d314bb3475dfd33a0210137e7b30853",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:12.502Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "26706f57f7a11cd39c50b37b394294dfaea24a84fe6ba2827a33de6784217387",
+      "targetHash": "a379aa1da60d90967102e9f71a07179d1d314bb3475dfd33a0210137e7b30853",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/sum",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/sum.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/sum.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "26706f57f7a11cd39c50b37b394294dfaea24a84fe6ba2827a33de6784217387",
+        "targetHash": "a379aa1da60d90967102e9f71a07179d1d314bb3475dfd33a0210137e7b30853",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

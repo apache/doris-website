@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+    "sourceTechnicalHash": "6a99bf4da14c52ef76b49c9f031184316d09a8c55bf20d3f71855a966deb0237",
+    "targetHash": "b3c6fa5ae0e14f98ce5a565df8311e3e9938121d06db714bbe36300cd7784a4f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:10.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+      "targetHash": "b3c6fa5ae0e14f98ce5a565df8311e3e9938121d06db714bbe36300cd7784a4f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-array",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile-approx-array.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "def2b34c597c5bc690350fecc45499ca2884a091d33e47b2f167b480b457a561",
+        "targetHash": "b3c6fa5ae0e14f98ce5a565df8311e3e9938121d06db714bbe36300cd7784a4f",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

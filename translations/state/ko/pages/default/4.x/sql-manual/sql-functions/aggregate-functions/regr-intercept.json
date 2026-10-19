@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-intercept",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-intercept.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-intercept.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2a6d5bb98b2fb826f67151ea7c4c46d8b962930b9afb9487adc05b9fd5694f6b",
+    "sourceTechnicalHash": "9af76858fd5bc7a4d487584945d00252e4e2433dea440b1905e61cfcb32512a6",
+    "targetHash": "ca033230b555abfa69b924afbed996fe8e5d25add1beae53f21ef167a7acf13a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:09:11.558Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a6d5bb98b2fb826f67151ea7c4c46d8b962930b9afb9487adc05b9fd5694f6b",
+      "targetHash": "ca033230b555abfa69b924afbed996fe8e5d25add1beae53f21ef167a7acf13a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/regr-intercept",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/regr-intercept.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/regr-intercept.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "2a6d5bb98b2fb826f67151ea7c4c46d8b962930b9afb9487adc05b9fd5694f6b",
+        "targetHash": "ca033230b555abfa69b924afbed996fe8e5d25add1beae53f21ef167a7acf13a",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

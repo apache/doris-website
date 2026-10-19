@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/array-agg",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/array-agg.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/array-agg.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9308ae9ff4b600490009d744d902f606a34d356e2607ced9b4b9df4e9d081f86",
+    "sourceTechnicalHash": "ed9537d8a0b813325293c0676fbd309f57b23e2388c9a06d7afc7387c364633e",
+    "targetHash": "e084435113f40f1cd1ce0d55a4eab5067ab4aecd6c67e10795a17c4fbe6761cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:10:20.528Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9308ae9ff4b600490009d744d902f606a34d356e2607ced9b4b9df4e9d081f86",
+      "targetHash": "e084435113f40f1cd1ce0d55a4eab5067ab4aecd6c67e10795a17c4fbe6761cf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
