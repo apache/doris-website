@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/second-ceil.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4d3918b5e8d06b3b606cef23ced39a616f30a1f6ee15ba62d8946a1fdc4e0c67",
+    "sourceTechnicalHash": "18f31533321d5feb90d91caf4f1fd2770381a15abbc554a0666e4ed7cf4d065b",
+    "targetHash": "29fef3ebdc8eca0fbcc90911c123512e93b6b29de20b38d7dfb34a8c4ca9a667",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:58:56.241Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4d3918b5e8d06b3b606cef23ced39a616f30a1f6ee15ba62d8946a1fdc4e0c67",
+      "targetHash": "29fef3ebdc8eca0fbcc90911c123512e93b6b29de20b38d7dfb34a8c4ca9a667",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

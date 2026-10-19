@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/quarters-diff.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "8928bdd7c5430c581ccd94d416934eb0ca9a6c526ae4b46ab88b0dfa6d69f508",
+    "sourceTechnicalHash": "7ac32c7804625d36d3fb44dd737e50acd1228b4c3262b2d664c515a28accc8d0",
+    "targetHash": "5ec5561604710df9a685893e75d5cf2f70590c6256e457ecbf6af865aed1d037",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:58:12.083Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8928bdd7c5430c581ccd94d416934eb0ca9a6c526ae4b46ab88b0dfa6d69f508",
+      "targetHash": "5ec5561604710df9a685893e75d5cf2f70590c6256e457ecbf6af865aed1d037",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

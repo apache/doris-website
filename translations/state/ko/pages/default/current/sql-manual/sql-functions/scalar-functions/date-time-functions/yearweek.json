@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/yearweek.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4bf7feaac15998fb214e9f59b51dc0475ab234380cca5c7a086f79ac85837bf3",
+    "sourceTechnicalHash": "9e6177912e3fcf52d3dec1ddd68e3382a897e58c8f086af14b0a8dcce5724f50",
+    "targetHash": "cc020ccf0fc19684afe34aae35b98dce17f3e85523306d8382b2e04b1c7ef7fc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:01:42.313Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4bf7feaac15998fb214e9f59b51dc0475ab234380cca5c7a086f79ac85837bf3",
+      "targetHash": "cc020ccf0fc19684afe34aae35b98dce17f3e85523306d8382b2e04b1c7ef7fc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

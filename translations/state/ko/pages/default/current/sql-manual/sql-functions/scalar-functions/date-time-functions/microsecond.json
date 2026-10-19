@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/microsecond.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "df28f8997c3c847d1458745eedd539753f9a3cd60447941b5d412dff5011e986",
+    "sourceTechnicalHash": "de9a91c7198fcb08879411ea610221480d430567d3259742769268826b966cce",
+    "targetHash": "67718c9936f3a8c31d8b3c2707511375f6f70c004afe1efadc1eca41d84a780c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:55:46.310Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "df28f8997c3c847d1458745eedd539753f9a3cd60447941b5d412dff5011e986",
+      "targetHash": "67718c9936f3a8c31d8b3c2707511375f6f70c004afe1efadc1eca41d84a780c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

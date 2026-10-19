@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/aes-encrypt.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ae1ef3e94f89f5b3d15b1757af9c520f9208be4355bf7a5727dd46a683f67af9",
+    "sourceTechnicalHash": "25fb69290fee7594d69dbfce07cecf4e35daf5871a1f6f379409400c9a8d8158",
+    "targetHash": "4281d2c607d0ad3bd6eedb0f454731e25ac49c2a95b988e33c4794836eebcf7c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:01:38.654Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae1ef3e94f89f5b3d15b1757af9c520f9208be4355bf7a5727dd46a683f67af9",
+      "targetHash": "4281d2c607d0ad3bd6eedb0f454731e25ac49c2a95b988e33c4794836eebcf7c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

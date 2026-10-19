@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/next-day",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/next-day.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/next-day.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "7dbb675ba44e6ffbb05a90e945e73fc6991c34ed6e934675a34224d62db1bf3f",
+    "sourceTechnicalHash": "ccf7586cfba1bd19d2e00d51cd79a5eebbd6b513bbbb90fb18c20645450f9431",
+    "targetHash": "29e5a761b723743981a41728507c67732fd01e792e1a85be357cce479de1c8e0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:57:38.789Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7dbb675ba44e6ffbb05a90e945e73fc6991c34ed6e934675a34224d62db1bf3f",
+      "targetHash": "29e5a761b723743981a41728507c67732fd01e792e1a85be357cce479de1c8e0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

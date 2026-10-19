@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/week-floor.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c013965cdb541ea3504a09b54eb81e348f3fd7d9d747479d8b43e46d8508a012",
+    "sourceTechnicalHash": "b81a1a8dea3d3cc514a57f7b5081e54b0ba305715d0eaf8d04c91e2953ee7d9e",
+    "targetHash": "6d8cf4251d13841c7e501c8be891f06e3f6e3b68e06628880b828e30de439abe",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:01:02.236Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c013965cdb541ea3504a09b54eb81e348f3fd7d9d747479d8b43e46d8508a012",
+      "targetHash": "6d8cf4251d13841c7e501c8be891f06e3f6e3b68e06628880b828e30de439abe",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

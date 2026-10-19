@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-add",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-add.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-add.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ac7bbb21f6ad4e045e9533f662795edc361d42293d2c6eba8ecd9aa7faf38387",
+    "sourceTechnicalHash": "e65fa7d815351bf0d4eedf8fdaf443519fbacff591e3b7768f0da764a56155c7",
+    "targetHash": "21cd42966cd4762795006d8038adb3468cc5373ac1b5f3a577bc9ff4b4dba5ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:56:07.374Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac7bbb21f6ad4e045e9533f662795edc361d42293d2c6eba8ecd9aa7faf38387",
+      "targetHash": "21cd42966cd4762795006d8038adb3468cc5373ac1b5f3a577bc9ff4b4dba5ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
