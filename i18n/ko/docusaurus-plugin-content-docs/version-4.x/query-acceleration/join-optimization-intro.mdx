@@ -1,0 +1,37 @@
+---
+{
+    "title": "Join 최적화",
+    "language": "ko",
+    "description": "Apache Doris Join 최적화 장 안내: Colocation Join, Distribute Hint를 통한 shuffle 방식 조정, Leading Hint를 통한 Join 순서 제어를 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris는 대부분의 Join 쿼리 시나리오에서 별도 설정 없이도 우수한 성능을 제공합니다. 하지만 성능 요구 사항이 엄격한 시나리오에서는 테이블의 Colocation을 구성하고 Hint로 옵티마이저를 유도하여 성능을 더 최적화할 수 있습니다. 먼저 Colocation Join을 사용해 버킷 기반 equi-join의 네트워크 shuffle을 제거하고, 이후 옵티마이저가 최적이 아닌 선택을 하는 경우 Distribute Hint와 Leading Hint로 shuffle 방식과 Join 순서를 세밀하게 조정하는 것이 좋습니다.
+
+## Colocation {#colocation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Colocation Join"
+    description="관련 테이블의 데이터를 동일한 bucketing 규칙에 따라 같은 BE 노드에 배치하여, bucketing 열에 대한 equi-join을 로컬에서 완료하고 노드 간 데이터 전송을 완전히 제거합니다."
+    link="colocation-join"
+/>
+</div>
+
+## Hint 튜닝 {#hint-tuning}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Hint로 Join Shuffle 방식 조정"
+    description="[shuffle] 및 [broadcast] Distribute Hint를 사용해 Join의 오른쪽 테이블에 대한 옵티마이저의 데이터 분산 방식 선택을 재정의하고, 특정 시나리오에 맞게 수동으로 튜닝합니다."
+    link="tuning/tuning-plan/adjusting-join-shuffle"
+/>
+
+<GettingStartedCard
+    title="Leading Hint로 Join 순서 제어"
+    description="CBO가 선택한 Join 순서가 최적이 아닌 경우 Leading Hint를 사용해 여러 테이블의 Join 순서를 수동으로 지정할 수 있으며, left-deep tree, right-deep tree, bushy tree 등 다양한 형태를 지원합니다."
+    link="tuning/tuning-plan/reordering-join-with-leading-hint"
+/>
+</div>

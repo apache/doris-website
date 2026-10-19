@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/lance-hybrid-search",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+    "sourceTechnicalHash": "3f05cc51c538369f5d60fe1dfc25e6d30d7e027759d221c3bb25664d9257b9ac",
+    "targetHash": "16c79803b941a367bcb0454e7a2b311e14c66f2e2c071968e93c75dc241a3141",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:22:56.679Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+      "targetHash": "16c79803b941a367bcb0454e7a2b311e14c66f2e2c071968e93c75dc241a3141",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

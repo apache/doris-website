@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/caching-intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/caching-intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/caching-intro.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0f0868d39a9e9e3a3e675930d0d00d095136e3aef983c61ed88315bdf0f7ef64",
+    "sourceTechnicalHash": "c2f7882b9724e5789c92ab5da1df870890fbc0aaf815add832e3bc08ddeb210f",
+    "targetHash": "2a7c05d5e1e90ea850dd0bf1fc5db2011ff10c3192e49a20b6e573d48518be39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:16.010Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0f0868d39a9e9e3a3e675930d0d00d095136e3aef983c61ed88315bdf0f7ef64",
+      "targetHash": "2a7c05d5e1e90ea850dd0bf1fc5db2011ff10c3192e49a20b6e573d48518be39",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/caching-intro",
+        "sourcePath": "docs/query-acceleration/caching-intro.mdx",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/caching-intro.mdx",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "0f0868d39a9e9e3a3e675930d0d00d095136e3aef983c61ed88315bdf0f7ef64",
+        "targetHash": "2a7c05d5e1e90ea850dd0bf1fc5db2011ff10c3192e49a20b6e573d48518be39",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

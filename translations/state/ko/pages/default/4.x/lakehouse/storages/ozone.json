@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/ozone",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/ozone.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/ozone.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b39d091c3635b5ca793809a46f4472a510f07aad8e519cec94e394addcac5bd3",
+    "sourceTechnicalHash": "9204aa52e57bef44686b89db2a5c2dfe5e4f5f248cff25ef9abe8abf12a90c28",
+    "targetHash": "fb124e578d0e6f6142a4b11700d776a28ec4262e97e60071674e30487cf70e7c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:24:42.354Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b39d091c3635b5ca793809a46f4472a510f07aad8e519cec94e394addcac5bd3",
+      "targetHash": "fb124e578d0e6f6142a4b11700d776a28ec4262e97e60071674e30487cf70e7c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/storages/ozone",
+        "sourcePath": "docs/lakehouse/storages/ozone.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/ozone.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "b39d091c3635b5ca793809a46f4472a510f07aad8e519cec94e394addcac5bd3",
+        "targetHash": "fb124e578d0e6f6142a4b11700d776a28ec4262e97e60071674e30487cf70e7c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

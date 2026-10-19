@@ -1,0 +1,31 @@
+---
+{
+    "title": "고동시성 포인트 쿼리",
+    "language": "ko",
+    "description": "높은 동시성과 포인트 쿼리를 위한 Apache Doris 안내: row store와 short path를 기반으로 한 기본 키 포인트 쿼리 최적화와, 딕셔너리를 통해 디멘션 테이블 조인을 인메모리 키-값 조회로 가속하는 방법을 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris는 분석에 최적화된 컬럼 기반 스토리지에 더해, 높은 동시성과 낮은 지연 시간이 필요한 온라인 포인트 쿼리와 키-값 조회를 위한 전용 최적화 경로를 제공합니다. row store와 short path는 Unique 테이블의 기본 키 포인트 쿼리에 높은 QPS와 낮은 지연 시간을 제공합니다. 딕셔너리는 디멘션 조인을 인메모리 키-값 조회로 변환합니다.
+
+## 기본 키 포인트 쿼리 {#primary-key-point-queries}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="고동시성 포인트 쿼리"
+    description="Unique 기본 키 테이블에서 row store, short path, PreparedStatement를 활성화하여 기본 키 포인트 쿼리의 QPS와 응답 지연 시간을 온라인 서비스에 적합한 수준으로 개선합니다."
+    link="high-concurrent-point-query"
+/>
+</div>
+
+## 키-값 조회 {#key-value-lookups}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="딕셔너리 가속"
+    description="디멘션 컬럼을 메모리에 미리 로드하고 dict_get 함수로 LEFT OUTER JOIN을 대체하여 키-값 조회가 빈번한 시나리오에서 쿼리 성능을 크게 높입니다."
+    link="dictionary"
+/>
+</div>

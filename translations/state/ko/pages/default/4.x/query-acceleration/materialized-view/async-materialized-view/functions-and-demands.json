@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/functions-and-demands",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/materialized-view/async-materialized-view/functions-and-demands.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0459707e472ae002d98b176274e11d381bcf0153ad06757e7486da0bc7a0886a",
+    "sourceTechnicalHash": "1e3ebf88a90d12deafb681c4736179b9ef171e79de9c363c457043399a43438b",
+    "targetHash": "e4a4dce135e6f0ae4df9343854966ed1a4e8b41307b43efa71d094ec1591957c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:37:45.755Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0459707e472ae002d98b176274e11d381bcf0153ad06757e7486da0bc7a0886a",
+      "targetHash": "e4a4dce135e6f0ae4df9343854966ed1a4e8b41307b43efa71d094ec1591957c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 251: expected [\"inlineCode\",null,null,\"mv11_0\"]; received [\"inlineCode\",null,null,\"o_orderdate > '2023-12-08'\"]\nprotected node 252: expected [\"inlineCode\",null,null,\"o_orderdate > '2023-12-08'\"]; received [\"inlineCode\",null,null,\"mv11_0\"]\nprotected node 314: expected [\"inlineCode\",null,null,\"max_persistence_task_count\"]; received [\"inlineCode\",null,null,\"fe.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

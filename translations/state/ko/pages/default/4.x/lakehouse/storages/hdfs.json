@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/hdfs",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/hdfs.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/hdfs.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ae3ec4a5529b835416074b21d175763e3da90fb406b8d2ab014e8c2e61934b76",
+    "sourceTechnicalHash": "55ac0ac0b38b3c2a81ae710e69e8de8318095dd185a697168aba2c9a356696bf",
+    "targetHash": "72ffd6ce0067fb873de9dbccbbf92c98baf134d8bb07dc29ab70be8aa726783f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:24:16.317Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae3ec4a5529b835416074b21d175763e3da90fb406b8d2ab014e8c2e61934b76",
+      "targetHash": "72ffd6ce0067fb873de9dbccbbf92c98baf134d8bb07dc29ab70be8aa726783f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/storages/hdfs",
+        "sourcePath": "docs/lakehouse/storages/hdfs.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/hdfs.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "ae3ec4a5529b835416074b21d175763e3da90fb406b8d2ab014e8c2e61934b76",
+        "targetHash": "72ffd6ce0067fb873de9dbccbbf92c98baf134d8bb07dc29ab70be8aa726783f",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

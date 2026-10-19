@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-snowflake-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-snowflake-catalog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-snowflake-catalog.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7347ecf695e1e8ba3bb26418d59f49d9ab8379ad657cd2b0bc1882334930fa3b",
+    "sourceTechnicalHash": "4f87606ecff71c306e47066f2fa9872c50c0defe8354048b8922b574c77f5491",
+    "targetHash": "01a68cd31e1351972555e52e1967a3b9f2e3dbfbcc96f315b66a066cedd650fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:19:43.069Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7347ecf695e1e8ba3bb26418d59f49d9ab8379ad657cd2b0bc1882334930fa3b",
+      "targetHash": "01a68cd31e1351972555e52e1967a3b9f2e3dbfbcc96f315b66a066cedd650fb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-snowflake-catalog",
+        "sourcePath": "docs/lakehouse/best-practices/doris-snowflake-catalog.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-snowflake-catalog.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "7347ecf695e1e8ba3bb26418d59f49d9ab8379ad657cd2b0bc1882334930fa3b",
+        "targetHash": "01a68cd31e1351972555e52e1967a3b9f2e3dbfbcc96f315b66a066cedd650fb",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
