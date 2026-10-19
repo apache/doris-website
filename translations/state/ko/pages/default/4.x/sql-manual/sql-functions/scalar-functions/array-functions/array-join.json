@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-join",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-join.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-join.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ed90ec505addca611d2d4180404dd7797e6fbd9497212ccd0c20785bd78c1e0e",
+    "sourceTechnicalHash": "80e1530e679c412b0602ac9b5359fafc45571c18262a81ef69a523f1f12a9f85",
+    "targetHash": "262cb35239473ff6d387a3c89e8fc3bcea42d76d32e655487881fefff918db85",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:27:37.944Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed90ec505addca611d2d4180404dd7797e6fbd9497212ccd0c20785bd78c1e0e",
+      "targetHash": "262cb35239473ff6d387a3c89e8fc3bcea42d76d32e655487881fefff918db85",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

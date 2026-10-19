@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-avg",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b8bc92e862a34434a78ca153ee2b07229a1c476cb959ca7b1edffdb02af5d03c",
+    "sourceTechnicalHash": "8c88a164fe83f15943b8212a0e6f7ab1b4cdc8673ee6972c3851b19c6b75d04a",
+    "targetHash": "999becc657a948b585acfba8067d859ee55b6f109dcca610100bdece33555fbc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:24:20.068Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b8bc92e862a34434a78ca153ee2b07229a1c476cb959ca7b1edffdb02af5d03c",
+      "targetHash": "999becc657a948b585acfba8067d859ee55b6f109dcca610100bdece33555fbc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-avg",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-avg.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "b8bc92e862a34434a78ca153ee2b07229a1c476cb959ca7b1edffdb02af5d03c",
+        "targetHash": "999becc657a948b585acfba8067d859ee55b6f109dcca610100bdece33555fbc",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}
