@@ -190,5 +190,2654 @@
   },
   "theme.TOC.discord": {
     "message": "Discord에서 대화하기"
+  },
+  "marketing.customer.001": {
+    "message": "고객 대면 분석"
+  },
+  "marketing.customer.002": {
+    "message": "Apache Doris: 실시간 데이터 기반 고객 대면 분석"
+  },
+  "marketing.customer.003": {
+    "message": "Apache Doris로 1초 미만에 응답하는 인터랙티브 고객 대면 분석을 제공하세요. 실시간 데이터, 고동시성, 테넌트 격리를 하나의 엔진에서 처리합니다."
+  },
+  "marketing.customer.004": {
+    "message": "고객 대면 분석,"
+  },
+  "marketing.customer.005": {
+    "message": "원동력은"
+  },
+  "marketing.customer.006": {
+    "message": "실시간"
+  },
+  "marketing.customer.007": {
+    "message": "데이터"
+  },
+  "marketing.customer.008": {
+    "message": "1초 미만에 응답하는 인터랙티브 분석을 대규모로, 고객에게 직접 제공합니다."
+  },
+  "marketing.customer.009": {
+    "message": "실시간이"
+  },
+  "marketing.customer.010": {
+    "message": "제품을 바꾸는 이유."
+  },
+  "marketing.extra.004": {
+    "message": "분석이 내부 보고서를 넘어 제품 안으로 들어오면 네 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.customer.011": {
+    "message": "사용자 경험"
+  },
+  "marketing.customer.012": {
+    "message": "참여도"
+  },
+  "marketing.customer.013": {
+    "message": "매출"
+  },
+  "marketing.customer.014": {
+    "message": "의사 결정 속도"
+  },
+  "marketing.customer.015": {
+    "message": "더 나은 사용자 경험"
+  },
+  "marketing.customer.016": {
+    "message": "사용자가 접속하는 순간 대시보드가 로드되므로, 분석이 기다려야 하는 보고서가 아니라 제품의 자연스러운 일부로 느껴집니다."
+  },
+  "marketing.customer.017": {
+    "message": "참여도와 유지율 향상"
+  },
+  "marketing.customer.018": {
+    "message": "실시간으로 빠르게 반응하는 분석은 제품 데이터를 사용자가 다시 찾아올 이유로 바꿉니다."
+  },
+  "marketing.customer.019": {
+    "message": "수익화"
+  },
+  "marketing.customer.020": {
+    "message": "고객 대면 분석이 자사 제품 안에서 매출을 만들어 내는 프리미엄 기능이 됩니다."
+  },
+  "marketing.customer.021": {
+    "message": "더 빠른 의사 결정"
+  },
+  "marketing.customer.022": {
+    "message": "실시간 신호를 활용하면 팀이 어제의 데이터에 뒤늦게 반응하는 대신, 기회가 아직 열려 있을 때 행동할 수 있습니다."
+  },
+  "marketing.customer.023": {
+    "message": "이미 프로덕션에서 운영 중입니다."
+  },
+  "marketing.customer.024": {
+    "message": "세 팀이 Apache Doris를 사용해 실제 동시 접속 부하 속에서 실시간 데이터로 고객에게 1초 미만에 응답하는 분석을 제공하고 있습니다."
+  },
+  "marketing.extra.005": {
+    "message": "사례 01 · JD.com"
+  },
+  "marketing.customer.025": {
+    "message": "JD.com 검색창을 위한 실시간 OLAP"
+  },
+  "marketing.customer.026": {
+    "message": "Flink의 윈도우 연산을 Doris로 대체하면 개발 효율을 높이고 차원 변경에 유연하게 대응할 수 있을 뿐 아니라 컴퓨팅 리소스도 줄일 수 있습니다."
+  },
+  "marketing.customer.027": {
+    "message": "JD.com 검색창을 위한 실시간 분석입니다. 전체 검색 트래픽, A/B 테스트 실시간 모니터링, 인기 급상승 검색어를 모두 SKU 단위까지 세분화하여 비즈니스 분석가에게 제공합니다."
+  },
+  "marketing.customer.028": {
+    "message": "하루 100억 행 처리"
+  },
+  "marketing.customer.029": {
+    "message": "10,000 QPS에서 쿼리 지연 시간 최저 150ms"
+  },
+  "marketing.customer.030": {
+    "message": "초당 100만 행 실시간 수집"
+  },
+  "marketing.extra.006": {
+    "message": "사례 02 · Xanh SM"
+  },
+  "marketing.customer.031": {
+    "message": "Xanh SM의 실시간 추천"
+  },
+  "marketing.customer.032": {
+    "message": "Apache Doris와 스토리지-컴퓨트 분리 모드 덕분에 단일 스토리지 계층에서 두 워크로드를 모두 실행할 수 있었고, 성능을 희생하지 않고도 인프라 비용과 복잡성을 줄였습니다."
+  },
+  "marketing.customer.033": {
+    "message": "베트남의 대표적인 전기차 차량 호출 플랫폼 Xanh SM은 Apache Doris에서 분석과 실시간 서빙을 함께 실행하여 개인화된 목적지 추천을 제공합니다."
+  },
+  "marketing.customer.034": {
+    "message": "초당 175,000건을 1초 미만의 지연 시간으로 기록"
+  },
+  "marketing.customer.035": {
+    "message": "대부분의 시간대에서 평균 쿼리 지연 시간 약 76ms"
+  },
+  "marketing.customer.036": {
+    "message": "P9999 지연 시간이 100ms를 넘는 경우는 드물게 발생"
+  },
+  "marketing.extra.007": {
+    "message": "사례 03 · ZTO Express"
+  },
+  "marketing.customer.037": {
+    "message": "ZTO Express의 실시간 분석"
+  },
+  "marketing.customer.038": {
+    "message": "ZTO Express는 하루 5억 건의 레코드 업데이트를 처리하는 실시간 분석을 재구축했습니다. 자주 사용하는 필터 필드에 역색인을 적용해 모니터링, 다차원 분석, 정밀 필터링을 지원합니다."
+  },
+  "marketing.customer.039": {
+    "message": "1분 넘게 걸리던 다차원 필터 쿼리를 1초 미만으로 단축(60배), 5~10분 걸리던 복잡한 집계는 1분 미만으로 단축"
+  },
+  "marketing.customer.040": {
+    "message": "핵심 쿼리의 동시성을 50 미만에서 100 이상으로 높이고, 타임아웃 비율은 30%에서 5% 미만으로 감소"
+  },
+  "marketing.customer.041": {
+    "message": "기존 하드웨어의 3분의 1로 운영하면서 하루 5억 건의 업데이트를 몇 초 안에 쿼리에 반영"
+  },
+  "marketing.customer.042": {
+    "message": "ZTO EXPRESS"
+  },
+  "marketing.customer.043": {
+    "message": "고객 대면 분석의 요구 사항과"
+  },
+  "marketing.customer.044": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.customer.045": {
+    "message": "고객 대면 분석은 내부 BI와는 다른 워크로드입니다. 서빙 엔진이 반드시 갖춰야 할 네 가지 요구 사항과, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.customer.046": {
+    "message": "엔드 투 엔드 낮은 지연 시간"
+  },
+  "marketing.customer.047": {
+    "message": "고객 대면 애플리케이션에는 최신 데이터와 빠른 응답이 모두 필요합니다. 새 이벤트는 몇 초 안에 쿼리할 수 있어야 하고, 분석 쿼리는 대시보드, 임베디드 분석, 제품 내 워크플로를 위해 1초 미만에 결과를 반환해야 합니다."
+  },
+  "marketing.customer.048": {
+    "message": "고동시성"
+  },
+  "marketing.customer.049": {
+    "message": "수천 명의 사용자가 동시에 쿼리할 수 있습니다. 분석 엔진은 단일 쿼리 벤치마크에서뿐 아니라 높은 동시 부하에서도 낮은 지연 시간을 유지해야 합니다."
+  },
+  "marketing.customer.050": {
+    "message": "멀티 테넌시와 리소스 격리"
+  },
+  "marketing.customer.051": {
+    "message": "고객 대면 분석은 하나의 플랫폼에서 여러 테넌트, 사용자, 임베디드 애플리케이션을 지원하는 경우가 많습니다. 엔진은 데이터, 워크로드, 리소스를 격리하여 한 테넌트의 활동이 다른 테넌트의 성능, 보안, 사용 경험에 절대 영향을 주지 않도록 해야 합니다."
+  },
+  "marketing.customer.052": {
+    "message": "레이크하우스와 개방형 데이터 액세스"
+  },
+  "marketing.customer.053": {
+    "message": "데이터는 이미 개방형 레이크하우스 포맷, 객체 스토리지, 기존 데이터 레이크 아키텍처에 있습니다. 분석 엔진은 데이터가 있는 곳에서 바로 쿼리하고 실시간 서빙 데이터와 결합하여, 데이터를 한 번 더 복사하지 않고도 최신 인사이트를 제공해야 합니다."
+  },
+  "marketing.extra.008": {
+    "message": "고객 대면 분석을 위한 Apache Doris 기능"
+  },
+  "marketing.customer.054": {
+    "message": "수집에서 쿼리까지"
+  },
+  "marketing.customer.055": {
+    "message": "몇 초 만에"
+  },
+  "marketing.customer.056": {
+    "message": "데이터 적재 트랜잭션"
+  },
+  "marketing.customer.057": {
+    "message": "데이터 Compaction"
+  },
+  "marketing.customer.058": {
+    "message": "데이터 업데이트 및 삭제"
+  },
+  "marketing.customer.059": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.customer.060": {
+    "message": "Group Commit"
+  },
+  "marketing.customer.061": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.customer.062": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.customer.063": {
+    "message": "Unique Key"
+  },
+  "marketing.customer.064": {
+    "message": "고동시성에서도"
+  },
+  "marketing.customer.065": {
+    "message": "1초 미만 응답"
+  },
+  "marketing.customer.066": {
+    "message": "데이터 프루닝"
+  },
+  "marketing.customer.067": {
+    "message": "고동시성 포인트 쿼리"
+  },
+  "marketing.customer.068": {
+    "message": "벡터화 실행"
+  },
+  "marketing.customer.069": {
+    "message": "컬럼형 스토리지"
+  },
+  "marketing.customer.070": {
+    "message": "준비된 문(Prepared Statement)"
+  },
+  "marketing.customer.071": {
+    "message": "Query Cache"
+  },
+  "marketing.customer.072": {
+    "message": "Condition Cache"
+  },
+  "marketing.customer.073": {
+    "message": "멀티 테넌트와"
+  },
+  "marketing.customer.074": {
+    "message": "리소스 격리"
+  },
+  "marketing.customer.075": {
+    "message": "워크로드 그룹"
+  },
+  "marketing.customer.076": {
+    "message": "Resource Group"
+  },
+  "marketing.customer.077": {
+    "message": "컴퓨트 그룹"
+  },
+  "marketing.customer.078": {
+    "message": "파이프라인 실행 엔진"
+  },
+  "marketing.customer.079": {
+    "message": "레이크하우스"
+  },
+  "marketing.customer.080": {
+    "message": "통합"
+  },
+  "marketing.customer.081": {
+    "message": "Parquet 리더 최적화"
+  },
+  "marketing.customer.082": {
+    "message": "Data Cache 및 Page Cache"
+  },
+  "marketing.customer.083": {
+    "message": "메타데이터 캐시"
+  },
+  "marketing.customer.084": {
+    "message": "고객 대면 분석 구축의"
+  },
+  "marketing.customer.085": {
+    "message": "해답은"
+  },
+  "marketing.extra.021": {
+    "message": "테넌트 A"
+  },
+  "marketing.extra.022": {
+    "message": "임베디드 대시보드"
+  },
+  "marketing.extra.023": {
+    "message": "테넌트 B"
+  },
+  "marketing.extra.024": {
+    "message": "고객 포털"
+  },
+  "marketing.extra.025": {
+    "message": "테넌트 C"
+  },
+  "marketing.extra.026": {
+    "message": "모바일·웹 앱"
+  },
+  "marketing.extra.027": {
+    "message": "+ 더 많은 테넌트"
+  },
+  "marketing.extra.028": {
+    "message": "API · 데이터 제품"
+  },
+  "marketing.figures.001": {
+    "message": "제품 이벤트"
+  },
+  "marketing.figures.002": {
+    "message": "Kafka · 클릭스트림"
+  },
+  "marketing.figures.003": {
+    "message": "OLTP · CDC"
+  },
+  "marketing.figures.004": {
+    "message": "MySQL · PostgreSQL"
+  },
+  "marketing.figures.005": {
+    "message": "배치 작업"
+  },
+  "marketing.figures.006": {
+    "message": "Spark · Flink · 파일"
+  },
+  "marketing.figures.007": {
+    "message": "데이터 레이크"
+  },
+  "marketing.figures.008": {
+    "message": "Iceberg · S3"
+  },
+  "marketing.extra.029": {
+    "message": "요청"
+  },
+  "marketing.extra.030": {
+    "message": "MySQL 프로토콜 · REST"
+  },
+  "marketing.extra.031": {
+    "message": "테넌트 격리"
+  },
+  "marketing.extra.032": {
+    "message": "워크로드 그룹"
+  },
+  "marketing.extra.033": {
+    "message": "서빙"
+  },
+  "marketing.extra.034": {
+    "message": "캐시 · 포인트 쿼리"
+  },
+  "marketing.figures.009": {
+    "message": "Apache Doris 기반 고객 대면 분석: 여러 테넌트의 사용자가 임베디드 대시보드, 포털, 앱에서 쿼리합니다. 모든 요청은 Doris를 거쳐 테넌트별로 격리되고 캐시나 포인트 쿼리로 1초 안에 응답을 받습니다. 그동안 제품 이벤트, CDC, 배치 데이터는 몇 초 안에 들어오고, 데이터 레이크는 복사 없이 직접 쿼리합니다."
+  },
+  "marketing.figures.010": {
+    "message": "그림 01 · 다수의 테넌트, 하나의 서빙 경로, 몇 초 전 데이터"
+  },
+  "marketing.extra.035": {
+    "message": "점선 = 복사 없이 직접 쿼리"
+  },
+  "marketing.figures.011": {
+    "message": "자사 제품"
+  },
+  "marketing.figures.012": {
+    "message": "APACHE DORIS"
+  },
+  "marketing.figures.013": {
+    "message": "최신 데이터"
+  },
+  "marketing.figures.014": {
+    "message": "10,000+ QPS · 수천 명의 동시 사용자"
+  },
+  "marketing.figures.015": {
+    "message": "단일 SQL 계층"
+  },
+  "marketing.figures.016": {
+    "message": "1초 미만"
+  },
+  "marketing.figures.017": {
+    "message": "몇 초 안에 수집 · Stream Load · CDC"
+  },
+  "marketing.useCases.001": {
+    "message": "시나리오"
+  },
+  "marketing.useCases.002": {
+    "message": "성과"
+  },
+  "marketing.useCases.003": {
+    "message": "각 기능 항목은 해당 기능 문서로 연결됩니다. 그 이면의 엔지니어링 세부 사항은 다음에서 확인하세요:"
+  },
+  "marketing.useCases.004": {
+    "message": "Apache Doris 블로그"
+  },
+  "marketing.useCases.005": {
+    "message": "관련 사용 사례"
+  },
+  "marketing.useCases.006": {
+    "message": "기반 기능"
+  },
+  "marketing.useCases.007": {
+    "message": "시작하기"
+  },
+  "marketing.useCases.008": {
+    "message": "데모 체험하기(출시 예정)"
+  },
+  "marketing.pageLanguage": {
+    "message": "페이지 언어"
+  },
+  "marketing.warehouse.001": {
+    "message": "데이터 웨어하우스"
+  },
+  "marketing.warehouse.002": {
+    "message": "Apache Doris: 실시간 인사이트를 위한 모던 데이터 웨어하우스"
+  },
+  "marketing.warehouse.003": {
+    "message": "Apache Doris는 익숙한 SQL 모델 위에서 지연 시간이 짧은 대시보드, 고동시성 BI, 운영 보고를 제공하는 모던 데이터 웨어하우스 계층입니다."
+  },
+  "marketing.warehouse.004": {
+    "message": "모던 데이터 웨어하우스,"
+  },
+  "marketing.warehouse.005": {
+    "message": "설계 목표는"
+  },
+  "marketing.warehouse.006": {
+    "message": "실시간"
+  },
+  "marketing.warehouse.007": {
+    "message": "인사이트"
+  },
+  "marketing.warehouse.008": {
+    "message": "하나의 실시간 분석 데이터베이스에서 배치와 스트리밍 데이터를 통합하고, BI를 가속하며, 신뢰할 수 있는 비즈니스 지표를 대규모로 제공합니다."
+  },
+  "marketing.warehouse.009": {
+    "message": "모던 데이터 웨어하우스가"
+  },
+  "marketing.warehouse.010": {
+    "message": "비즈니스를 바꾸는 이유."
+  },
+  "marketing.extra.009": {
+    "message": "웨어하우스가 통합되고 빠르며 실시간으로 동작하고 탄력적으로 확장되면 네 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.warehouse.011": {
+    "message": "데이터에 대한 신뢰"
+  },
+  "marketing.warehouse.012": {
+    "message": "분석 속도"
+  },
+  "marketing.warehouse.013": {
+    "message": "의사 결정의 최신성"
+  },
+  "marketing.warehouse.014": {
+    "message": "전체 운영 비용"
+  },
+  "marketing.warehouse.015": {
+    "message": "통합된 비즈니스 뷰"
+  },
+  "marketing.warehouse.016": {
+    "message": "주문, 고객, 결제, CRM, ERP, 광고, 로그 데이터가 신뢰할 수 있는 하나의 분석 계층으로 모여, 모든 팀이 같은 지표를 기준으로 일합니다."
+  },
+  "marketing.warehouse.017": {
+    "message": "더 빠른 BI와 셀프서비스 분석"
+  },
+  "marketing.warehouse.018": {
+    "message": "1초 미만의 SQL 응답 덕분에 Tableau, Power BI, Superset, Looker에서 드릴다운과 애드혹 질문을 끊김 없이 이어 갈 수 있습니다."
+  },
+  "marketing.warehouse.019": {
+    "message": "실시간 모니터링"
+  },
+  "marketing.warehouse.020": {
+    "message": "CDC, Kafka, Flink에서 데이터를 지속적으로 수집하므로 대시보드, 알림, 운영 보고서가 지금 일어나는 상황을 그대로 반영합니다."
+  },
+  "marketing.warehouse.021": {
+    "message": "확장성과 비용 효율"
+  },
+  "marketing.warehouse.022": {
+    "message": "시스템, 파이프라인, 서빙 계층을 추가하지 않아도 분석 규모는 테라바이트에서 페타바이트로 커지고, BI 동시성도 함께 확장됩니다."
+  },
+  "marketing.warehouse.023": {
+    "message": "이미 프로덕션에서 가동 중입니다."
+  },
+  "marketing.warehouse.024": {
+    "message": "세 팀이 Apache Doris를 데이터 웨어하우스의 분석 핵심으로 운영하고 있습니다. 대규모 환경과 실제 동시 접속 부하 속에서 실시간 비즈니스 데이터를 다룹니다."
+  },
+  "marketing.extra.010": {
+    "message": "사례 01 · SF Technology"
+  },
+  "marketing.warehouse.025": {
+    "message": "SF Express: BI와 애드혹 분석을 Presto에서 Apache Doris로"
+  },
+  "marketing.warehouse.026": {
+    "message": "SF Technology는 하루 100만 건이 넘는 쿼리를 처리하는 주력 BI 플랫폼을 Presto에서 Apache Doris로 옮겼습니다. 모든 애드혹 및 BI 워크로드를 이전하면서 P95 지연 시간을 70% 가까이 줄였습니다."
+  },
+  "marketing.warehouse.027": {
+    "message": "P95 쿼리 지연 시간 약 70% 감소, 10초 이내 쿼리 비율은 72%에서 88%로 증가"
+  },
+  "marketing.warehouse.028": {
+    "message": "하드웨어 48% 절감, 레이크하우스 쿼리의 데이터 캐시 적중률 96%"
+  },
+  "marketing.warehouse.029": {
+    "message": "애드혹 및 BI 워크로드 100% 이전, SQL 호환성 97%"
+  },
+  "marketing.warehouse.030": {
+    "message": "SF EXPRESS"
+  },
+  "marketing.extra.011": {
+    "message": "사례 02 · Xiaomi"
+  },
+  "marketing.warehouse.031": {
+    "message": "Xiaomi: Apache Doris와 Apache Paimon으로 구축한 통합 레이크하우스"
+  },
+  "marketing.warehouse.032": {
+    "message": "Xiaomi는 Presto, Druid, 여러 스토리지 포맷으로 흩어져 있던 환경을 Apache Doris와 Apache Paimon 기반의 단일 레이크하우스로 통합했고, 쿼리 속도는 이전보다 6배 빨라졌습니다."
+  },
+  "marketing.warehouse.033": {
+    "message": "평균 쿼리 지연 시간을 60초에서 10초로, 집계 쿼리는 40초에서 8초로 단축"
+  },
+  "marketing.warehouse.034": {
+    "message": "Presto 대비 5배 높은 동시 처리량, 부하 상황에서 지연 시간 25~75% 감소"
+  },
+  "marketing.warehouse.035": {
+    "message": "사용자 행동, 디바이스, 운영 분석 전반에서 핫 데이터는 Doris에, 콜드 데이터는 Paimon에 두는 단일 스택"
+  },
+  "marketing.warehouse.036": {
+    "message": "XIAOMI"
+  },
+  "marketing.extra.012": {
+    "message": "사례 03 · Cainiao"
+  },
+  "marketing.warehouse.037": {
+    "message": "Cainiao: 글로벌 물류를 위한 실시간 레이크하우스"
+  },
+  "marketing.warehouse.038": {
+    "message": "데이터 업데이트는 몇 초 안에 완료되고, 쿼리는 수백 밀리초 안에 응답할 수 있습니다."
+  },
+  "marketing.warehouse.039": {
+    "message": "실시간 데이터 플랫폼의 비용 90% 절감, 평균 응답 속도 72% 향상"
+  },
+  "marketing.warehouse.040": {
+    "message": "1,000~2,000 QPS의 포인트 쿼리를 10~100ms에, 200~300 QPS의 다중 테이블 조인을 1초 미만에 처리"
+  },
+  "marketing.warehouse.041": {
+    "message": "3개 리전에 걸친 25개 이상의 클러스터와 10,000개 이상의 CPU로 하루 8,000만 건의 택배에 대한 재고, 택배, 주문 현황을 추적"
+  },
+  "marketing.warehouse.042": {
+    "message": "CAINIAO"
+  },
+  "marketing.warehouse.043": {
+    "message": "데이터 웨어하우스의 요구 사항과"
+  },
+  "marketing.warehouse.044": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.warehouse.045": {
+    "message": "모던 데이터 웨어하우스가 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.warehouse.046": {
+    "message": "실시간 데이터 최신성"
+  },
+  "marketing.warehouse.047": {
+    "message": "비즈니스 팀은 지금 일어나는 일을 바로 확인해야 합니다. 이를 위해서는 스트리밍 수집, CDC, 증분 업데이트가 필요하고, 데이터는 야간 배치가 끝난 뒤가 아니라 몇 초 안에 쿼리할 수 있어야 합니다."
+  },
+  "marketing.warehouse.048": {
+    "message": "웨어하우스 워크로드를 위한 모델링"
+  },
+  "marketing.warehouse.049": {
+    "message": "모던 데이터 웨어하우스는 상세 레코드, 팩트 및 차원 테이블, 와이드 테이블, 집계 지표, 비즈니스용 데이터셋을 담아야 합니다. 탄탄한 모델링은 정의를 일관되게 유지하고 쿼리 속도를 높이며, 팀이 신뢰할 수 있는 데이터를 재사용할 수 있게 합니다."
+  },
+  "marketing.warehouse.050": {
+    "message": "증분 업데이트와 안정적인 배치"
+  },
+  "marketing.warehouse.051": {
+    "message": "웨어하우스 워크로드에는 증분 갱신과 대규모 배치 실행이 모두 필요합니다. 구체화된 뷰와 증분 계산은 전체를 다시 계산하지 않고도 집계, 롤업, 보고용 테이블을 최신 상태로 유지하고, 안정적인 배치 실행은 일 마감 작업, 백필, 과거 데이터 워크로드를 처리합니다."
+  },
+  "marketing.warehouse.052": {
+    "message": "레이크하우스와 개방형 아키텍처"
+  },
+  "marketing.warehouse.053": {
+    "message": "운영 데이터베이스, 이벤트 스트림, SaaS 애플리케이션, 개방형 레이크하우스 테이블에는 모두 중요한 비즈니스 데이터가 있습니다. 웨어하우스는 이 소스들을 통합하고, 모든 데이터를 또 다른 사일로로 복사하지 않고도 Iceberg, Hudi, Delta Lake, Hive의 데이터를 있는 그대로 쿼리해야 합니다."
+  },
+  "marketing.warehouse.054": {
+    "message": "엔터프라이즈 거버넌스와 운영"
+  },
+  "marketing.warehouse.055": {
+    "message": "웨어하우스가 공용 분석 기반이 되면 안전하고 신뢰할 수 있으며 감사 가능하고 운영하기 쉬워야 합니다. 이를 위해 세분화된 접근 제어, 워크로드 격리, 고가용성, 감사 로그, 간단한 운영이 필요하며, 그래야 모든 팀이 같은 플랫폼에 의지할 수 있습니다."
+  },
+  "marketing.extra.013": {
+    "message": "데이터 웨어하우스를 위한 Apache Doris 기능"
+  },
+  "marketing.warehouse.056": {
+    "message": "유연한 웨어하우스"
+  },
+  "marketing.warehouse.057": {
+    "message": "데이터 모델링"
+  },
+  "marketing.warehouse.058": {
+    "message": "데이터 모델"
+  },
+  "marketing.warehouse.059": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.warehouse.060": {
+    "message": "분석 함수"
+  },
+  "marketing.warehouse.061": {
+    "message": "파티셔닝과 버킷팅"
+  },
+  "marketing.warehouse.062": {
+    "message": "Unique Key"
+  },
+  "marketing.warehouse.063": {
+    "message": "실시간 수집과"
+  },
+  "marketing.warehouse.064": {
+    "message": "업데이트"
+  },
+  "marketing.warehouse.065": {
+    "message": "데이터 적재 트랜잭션"
+  },
+  "marketing.warehouse.066": {
+    "message": "데이터 Compaction"
+  },
+  "marketing.warehouse.067": {
+    "message": "데이터 업데이트 및 삭제"
+  },
+  "marketing.warehouse.068": {
+    "message": "Group Commit"
+  },
+  "marketing.warehouse.069": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.warehouse.070": {
+    "message": "증분 갱신과"
+  },
+  "marketing.warehouse.071": {
+    "message": "배치 실행"
+  },
+  "marketing.warehouse.072": {
+    "message": "배치 데이터 적재"
+  },
+  "marketing.warehouse.073": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.warehouse.074": {
+    "message": "디스크 스필(Spill to Disk)"
+  },
+  "marketing.warehouse.075": {
+    "message": "Binlog / Table Stream(출시 예정)"
+  },
+  "marketing.warehouse.076": {
+    "message": "레이크하우스"
+  },
+  "marketing.warehouse.077": {
+    "message": "컴퓨트 엔진"
+  },
+  "marketing.warehouse.078": {
+    "message": "Multi Catalog"
+  },
+  "marketing.warehouse.079": {
+    "message": "레이크 테이블 관리"
+  },
+  "marketing.warehouse.080": {
+    "message": "엔터프라이즈급"
+  },
+  "marketing.warehouse.081": {
+    "message": "거버넌스"
+  },
+  "marketing.warehouse.082": {
+    "message": "플러그형 인증"
+  },
+  "marketing.warehouse.083": {
+    "message": "Catalog 통합"
+  },
+  "marketing.warehouse.084": {
+    "message": "데이터 계보"
+  },
+  "marketing.warehouse.085": {
+    "message": "모던 데이터 웨어하우스 구축의"
+  },
+  "marketing.warehouse.086": {
+    "message": "해답은"
+  },
+  "marketing.extra.036": {
+    "message": "서빙"
+  },
+  "marketing.figures.018": {
+    "message": "구체화된 뷰 · 롤업 · 포인트 쿼리 · 1초 미만 BI"
+  },
+  "marketing.figures.019": {
+    "message": "집계 지표 · 비즈니스용 데이터셋"
+  },
+  "marketing.figures.020": {
+    "message": "정제된 상세 데이터 · 팩트·차원 테이블 · 와이드 테이블"
+  },
+  "marketing.figures.021": {
+    "message": "원본 레코드 · Stream Load · Routine Load · CDC · 몇 초 안에 반영"
+  },
+  "marketing.figures.022": {
+    "message": "BI 도구"
+  },
+  "marketing.figures.023": {
+    "message": "Tableau · Power BI"
+  },
+  "marketing.figures.024": {
+    "message": "대시보드"
+  },
+  "marketing.figures.025": {
+    "message": "보고서 · 운영"
+  },
+  "marketing.figures.026": {
+    "message": "애드혹 SQL"
+  },
+  "marketing.figures.027": {
+    "message": "분석가 · 노트북"
+  },
+  "marketing.figures.028": {
+    "message": "앱 · API"
+  },
+  "marketing.figures.029": {
+    "message": "데이터 서비스"
+  },
+  "marketing.figures.030": {
+    "message": "이벤트 스트림"
+  },
+  "marketing.figures.031": {
+    "message": "Kafka · Flink"
+  },
+  "marketing.figures.032": {
+    "message": "배치 · SaaS"
+  },
+  "marketing.figures.033": {
+    "message": "Parquet · CSV · API"
+  },
+  "marketing.figures.034": {
+    "message": "Iceberg · Paimon · S3"
+  },
+  "marketing.figures.035": {
+    "message": "Apache Doris 기반 모던 데이터 웨어하우스: OLTP, 스트림, 배치 소스의 데이터가 ODS 계층에 적재되고, DWD와 DWS 계층으로 모델링된 뒤 구체화된 뷰를 통해 BI 도구, 대시보드, 애드혹 SQL, 애플리케이션에 제공됩니다. 데이터 레이크는 복사 없이 직접 쿼리합니다."
+  },
+  "marketing.figures.036": {
+    "message": "그림 02 · 아래는 소스, 가운데는 Doris 계층, 위는 활용처"
+  },
+  "marketing.extra.037": {
+    "message": "점선 = 복사 없이 직접 쿼리"
+  },
+  "marketing.figures.037": {
+    "message": "활용처"
+  },
+  "marketing.figures.038": {
+    "message": "배치 + 스트리밍 · 단일 SQL 계층"
+  },
+  "marketing.figures.039": {
+    "message": "거버넌스"
+  },
+  "marketing.figures.040": {
+    "message": "세분화된 권한 · 워크로드 격리 · 감사 로그 · 고가용성"
+  },
+  "marketing.figures.041": {
+    "message": "레이크하우스"
+  },
+  "marketing.figures.queriedInPlace": {
+    "message": "복사 없이 직접 쿼리"
+  },
+  "marketing.figures.042": {
+    "message": "소스"
+  },
+  "marketing.observability.001": {
+    "message": "관측성"
+  },
+  "marketing.observability.002": {
+    "message": "Apache Doris: AI 에이전트 시대를 위한 관측성"
+  },
+  "marketing.observability.003": {
+    "message": "Apache Doris는 로그, 메트릭, 트레이스, AI 에이전트 이벤트를 위한 고성능 분석 기반입니다. 실시간 수집, 전문 검색, OLAP, 하이브리드 벡터 검색을 하나의 엔진에서 제공합니다."
+  },
+  "marketing.observability.004": {
+    "message": "실시간"
+  },
+  "marketing.observability.005": {
+    "message": "AI 에이전트 시대에 맞춰"
+  },
+  "marketing.observability.006": {
+    "message": "Apache Doris는 로그, 메트릭, 트레이스, AI 에이전트 이벤트를 하나의 고성능 분석 엔진으로 통합합니다. 팀은 더 빠르게 문제를 해결하고, 비용을 관리하며, AI 품질을 꾸준히 개선할 수 있습니다."
+  },
+  "marketing.observability.007": {
+    "message": "에이전트 시대에"
+  },
+  "marketing.observability.008": {
+    "message": "관측성이"
+  },
+  "marketing.observability.009": {
+    "message": "중요한 이유."
+  },
+  "marketing.extra.014": {
+    "message": "로그, 트레이스, 메트릭, AI 에이전트 이벤트 전반의 관측성을 통합하면 다섯 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.observability.010": {
+    "message": "장애 감지"
+  },
+  "marketing.observability.011": {
+    "message": "사용자 경험"
+  },
+  "marketing.observability.012": {
+    "message": "대규모 환경의 비용"
+  },
+  "marketing.observability.013": {
+    "message": "AI 품질"
+  },
+  "marketing.observability.014": {
+    "message": "시스템 동작과 비즈니스 성과의 연결"
+  },
+  "marketing.observability.015": {
+    "message": "더 빠른 장애 감지"
+  },
+  "marketing.observability.016": {
+    "message": "로그, 트레이스, 에이전트 이벤트가 분석 가능한 실행 데이터가 되므로, 장애가 확산되기 전에 이상 징후와 근본 원인이 드러납니다."
+  },
+  "marketing.observability.017": {
+    "message": "사용자 경험과 SLA"
+  },
+  "marketing.observability.018": {
+    "message": "시스템 상태를 실제 사용자 영향과 연결합니다. 지연 시간, 오류, 답변 정확도, 작업 완료 여부, 응답이 근거에 기반했는지까지 확인할 수 있습니다."
+  },
+  "marketing.observability.019": {
+    "message": "대규모에서도 낮은 비용"
+  },
+  "marketing.observability.020": {
+    "message": "텔레메트리가 늘어나도 핫 데이터는 빠르게 조회되어 문제 해결에 쓰이고, 추세는 집계 데이터로 파악하며, 과거 데이터는 더 저렴한 스토리지로 옮겨집니다."
+  },
+  "marketing.observability.021": {
+    "message": "지속적인 AI 개선"
+  },
+  "marketing.observability.022": {
+    "message": "프롬프트, 응답, RAG 컨텍스트, 도구 호출, 평가 점수, 사용자 피드백을 통해 검색, 프롬프트, 작업 완료에서 개선할 지점을 찾을 수 있습니다."
+  },
+  "marketing.observability.023": {
+    "message": "비즈니스를 고려한 운영"
+  },
+  "marketing.observability.024": {
+    "message": "모든 신호를 영향을 받는 고객, 테넌트, 워크플로와 연결하고, AI 실패가 전환율, 지원 부담, 매출에 미치는 비용까지 파악합니다."
+  },
+  "marketing.observability.025": {
+    "message": "이미 프로덕션에서 가동 중입니다."
+  },
+  "marketing.observability.026": {
+    "message": "세 팀이 Apache Doris를 관측성의 분석 기반으로 운영하고 있습니다. 대규모 실시간 운영 데이터를 로그, 메트릭, 이벤트 전반에서 다룹니다."
+  },
+  "marketing.extra.015": {
+    "message": "사례 01 · PB급 로그"
+  },
+  "marketing.observability.027": {
+    "message": "MiniMax: Grafana Loki에서 Apache Doris로 옮긴 PB급 로그 시스템"
+  },
+  "marketing.observability.028": {
+    "message": "Grafana Loki에서 전환한 뒤 MiniMax의 모든 사업 부문은 Apache Doris 기반 로그 시스템을 사용합니다. 이 시스템은 페타바이트급 데이터를 99.9% 이상의 가용성으로 제공하고, 수십억 줄의 로그에 대한 쿼리에 몇 초 안에 응답합니다."
+  },
+  "marketing.observability.029": {
+    "message": "모든 사업 부문에서 99.9% 이상의 가용성을 갖춘 PB급 로그 스토리지"
+  },
+  "marketing.observability.030": {
+    "message": "로그 10억 건에 대한 키워드 및 집계 쿼리가 2초 이내에 응답"
+  },
+  "marketing.observability.031": {
+    "message": "초 단위 수집 지연 시간과 10GB/s 쓰기 처리량"
+  },
+  "marketing.observability.032": {
+    "message": "5:1 압축과 계층형 스토리지로 스토리지 비용 70% 절감"
+  },
+  "marketing.extra.016": {
+    "message": "사례 02 · 로그와 시계열"
+  },
+  "marketing.observability.033": {
+    "message": "NetEase: Elasticsearch와 InfluxDB를 Apache Doris로 대체"
+  },
+  "marketing.observability.034": {
+    "message": "NetEase는 Eagle 모니터링 플랫폼을 Elasticsearch에서, IM 시계열 플랫폼을 InfluxDB에서 Apache Doris로 옮겼습니다. 이제 두 플랫폼 모두 Apache Doris에서 더 빠른 쿼리와 더 적은 스토리지로 운영되며, 테이블을 재구축하지 않고도 인덱스를 변경할 수 있습니다."
+  },
+  "marketing.observability.035": {
+    "message": "모니터링 로그에서 Elasticsearch 대비 쿼리 속도 11배 향상, 스토리지 비용 70% 절감"
+  },
+  "marketing.observability.036": {
+    "message": "시계열 워크로드에서 InfluxDB 대비 스토리지 67% 절감, 서버 수는 절반"
+  },
+  "marketing.observability.037": {
+    "message": "최대 100만 TPS에서 피크 쓰기 처리량 1GB/s"
+  },
+  "marketing.observability.038": {
+    "message": "테이블을 다시 쓰지 않고 역색인을 증분 방식으로 추가하거나 삭제"
+  },
+  "marketing.extra.017": {
+    "message": "사례 03 · Elasticsearch 마이그레이션"
+  },
+  "marketing.observability.039": {
+    "message": "Tencent Music: Elasticsearch를 대체하고 비용 80% 절감"
+  },
+  "marketing.observability.040": {
+    "message": "Tencent Music Entertainment는 태그 기반 검색과 분석을 Elasticsearch에서 Apache Doris로 옮겼습니다. Apache Doris에서는 역색인을 사용해 전문 검색과 집계를 하나의 SQL 쿼리로 처리합니다."
+  },
+  "marketing.observability.041": {
+    "message": "Elasticsearch 대비 전체 운영 비용 80% 절감"
+  },
+  "marketing.observability.042": {
+    "message": "스토리지 사용량 72% 감소(동일 데이터셋 기준 697.7GB → 195.4GB)"
+  },
+  "marketing.observability.043": {
+    "message": "쓰기 속도 4배 향상, 수집 시간은 10시간 이상에서 3시간 미만으로 단축"
+  },
+  "marketing.observability.044": {
+    "message": "알림이 하루 20건 이상에서 한 달 한 자릿수로 감소"
+  },
+  "marketing.observability.045": {
+    "message": "모던 관측성의 요구 사항과"
+  },
+  "marketing.observability.046": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.observability.047": {
+    "message": "모던 관측성 플랫폼이 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.observability.048": {
+    "message": "모든 신호를 실시간으로 수집"
+  },
+  "marketing.observability.049": {
+    "message": "관측 데이터는 애플리케이션, Kubernetes, API, 게이트웨이, 데이터베이스, AI 시스템에서 끊임없이 들어옵니다. 플랫폼은 대량의 로그, 트레이스, 메트릭, AI 에이전트 이벤트를 짧은 지연 시간으로 받아들여야 하며, 그래야 LLM 요청과 도구 호출부터 RAG 검색, 토큰 비용, 평가, 사용자 피드백까지 모든 신호를 거의 실시간으로 쿼리할 수 있습니다."
+  },
+  "marketing.observability.050": {
+    "message": "무거운 ETL 없이 동적 JSON 분석"
+  },
+  "marketing.observability.051": {
+    "message": "로그, 트레이스, 도구 출력, 모델 응답, 에이전트 이벤트는 필드가 계속 바뀌는 중첩 JSON으로 들어오는 경우가 많습니다. 플랫폼은 스키마 변경을 처리하고 새 필드를 즉시 쿼리할 수 있게 해야 하며, 그래야 팀이 파이프라인을 다시 구축하지 않고도 새로운 신호를 필터링하고 조사하고 분석할 수 있습니다."
+  },
+  "marketing.observability.052": {
+    "message": "로그와 에이전트 신호에 대한 빠른 전문 검색"
+  },
+  "marketing.observability.053": {
+    "message": "관측 데이터에는 검색할 텍스트가 가득합니다. 오류 메시지, 스택 트레이스, 로그 줄뿐 아니라 프롬프트, 모델 응답, 도구 출력, 에이전트 실패 원인도 있습니다. 팀은 대규모 환경에서 장애를 찾고 요청을 추적하며 에이전트 동작을 조사하기 위해 빠른 키워드 검색과 전문 검색이 필요합니다."
+  },
+  "marketing.observability.054": {
+    "message": "메트릭, 비용, 품질에 대한 인터랙티브 분석"
+  },
+  "marketing.observability.055": {
+    "message": "관측성은 검색만으로 끝나지 않습니다. 팀은 대규모 텔레메트리 데이터를 나누고 집계하고 드릴다운하여 안정성, 비용, AI 품질을 분석합니다. P99 지연 시간과 SLA 추세, 토큰 사용량, 모델 비용, RAG 품질, 에이전트 작업 완료율이 그 대상입니다. 이를 위해서는 빠른 검색과 함께 고성능 분석 엔진이 필요합니다."
+  },
+  "marketing.observability.056": {
+    "message": "AI 에이전트 관측성을 위한 하이브리드 검색"
+  },
+  "marketing.observability.057": {
+    "message": "AI 에이전트 관측성에는 로그 키워드 검색 이상의 기능이 필요합니다. 팀은 프롬프트, 응답, 도구 호출, 트레이스 전반에서 구조화된 메타데이터를 전문 검색 및 시맨틱 검색과 결합하여, 하나의 쿼리로 정확히 일치하는 항목, 유사한 실패, 환각이 포함된 출력, 반복되는 에이전트 동작을 찾아냅니다."
+  },
+  "marketing.extra.018": {
+    "message": "관측성을 위한 Apache Doris 기능"
+  },
+  "marketing.observability.058": {
+    "message": "로그와 에이전트 트레이스의"
+  },
+  "marketing.observability.059": {
+    "message": "실시간 수집"
+  },
+  "marketing.observability.060": {
+    "message": "Stream Load"
+  },
+  "marketing.observability.061": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.observability.062": {
+    "message": "Group Commit"
+  },
+  "marketing.observability.063": {
+    "message": "수직 컴팩션"
+  },
+  "marketing.observability.064": {
+    "message": "VARIANT 기반"
+  },
+  "marketing.observability.065": {
+    "message": "반정형 데이터 분석"
+  },
+  "marketing.observability.066": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "marketing.observability.067": {
+    "message": "역색인과 BM25 기반"
+  },
+  "marketing.observability.068": {
+    "message": "빠른 전문 검색"
+  },
+  "marketing.observability.069": {
+    "message": "역색인"
+  },
+  "marketing.observability.070": {
+    "message": "전문 검색"
+  },
+  "marketing.observability.071": {
+    "message": "BM25 관련도 점수 산정"
+  },
+  "marketing.observability.072": {
+    "message": "관측성 대시보드를 위한"
+  },
+  "marketing.observability.073": {
+    "message": "인터랙티브 분석"
+  },
+  "marketing.observability.074": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.observability.075": {
+    "message": "사전 집계와 롤업"
+  },
+  "marketing.observability.076": {
+    "message": "벡터화 실행"
+  },
+  "marketing.observability.077": {
+    "message": "Query Cache"
+  },
+  "marketing.observability.078": {
+    "message": "준비된 문(Prepared Statement)"
+  },
+  "marketing.observability.079": {
+    "message": "정형·텍스트·벡터 데이터를 아우르는"
+  },
+  "marketing.observability.080": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.observability.081": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.observability.082": {
+    "message": "벡터 인덱스"
+  },
+  "marketing.observability.083": {
+    "message": "임베딩"
+  },
+  "marketing.observability.084": {
+    "message": "역순위 융합(Reciprocal Rank Fusion)"
+  },
+  "marketing.observability.085": {
+    "message": "AI 에이전트 시대 관측성 구축의"
+  },
+  "marketing.observability.086": {
+    "message": "해답은"
+  },
+  "marketing.figures.043": {
+    "message": "앱 · 서비스"
+  },
+  "marketing.figures.044": {
+    "message": "로그 · 트레이스 · OTel"
+  },
+  "marketing.figures.045": {
+    "message": "호스트 · K8S"
+  },
+  "marketing.figures.046": {
+    "message": "메트릭 · 파드 로그"
+  },
+  "marketing.figures.047": {
+    "message": "로그 수집기"
+  },
+  "marketing.figures.048": {
+    "message": "Vector · Fluent Bit"
+  },
+  "marketing.figures.049": {
+    "message": "AI 에이전트"
+  },
+  "marketing.figures.050": {
+    "message": "프롬프트 · 도구 호출"
+  },
+  "marketing.figures.051": {
+    "message": "대시보드"
+  },
+  "marketing.figures.052": {
+    "message": "알림 · SLO"
+  },
+  "marketing.figures.053": {
+    "message": "P99 · 오류율"
+  },
+  "marketing.figures.054": {
+    "message": "원인 조사"
+  },
+  "marketing.figures.055": {
+    "message": "AI 품질"
+  },
+  "marketing.figures.056": {
+    "message": "평가 · 피드백"
+  },
+  "marketing.figures.057": {
+    "message": "동적 JSON"
+  },
+  "marketing.figures.058": {
+    "message": "역색인"
+  },
+  "marketing.figures.059": {
+    "message": "전문 검색 · BM25"
+  },
+  "marketing.figures.060": {
+    "message": "컬럼형"
+  },
+  "marketing.figures.061": {
+    "message": "5:1 압축"
+  },
+  "marketing.figures.062": {
+    "message": "전문 검색"
+  },
+  "marketing.figures.063": {
+    "message": "BM25 · 키워드"
+  },
+  "marketing.figures.064": {
+    "message": "집계"
+  },
+  "marketing.figures.065": {
+    "message": "P99 · SLA · 비용"
+  },
+  "marketing.figures.066": {
+    "message": "하이브리드"
+  },
+  "marketing.figures.067": {
+    "message": "키워드 + 벡터"
+  },
+  "marketing.figures.068": {
+    "message": "핫 · SSD"
+  },
+  "marketing.figures.069": {
+    "message": "웜"
+  },
+  "marketing.figures.070": {
+    "message": "콜드 · S3 / HDFS"
+  },
+  "marketing.figures.071": {
+    "message": "현재"
+  },
+  "marketing.figures.072": {
+    "message": "7일"
+  },
+  "marketing.figures.073": {
+    "message": "30일"
+  },
+  "marketing.figures.074": {
+    "message": "1년"
+  },
+  "marketing.figures.075": {
+    "message": "Apache Doris 기반 관측성: 로그, 메트릭, 트레이스, AI 에이전트 이벤트가 수집기를 거쳐 Doris로 들어옵니다. Doris는 VARIANT, 역색인, 컬럼형 스토리지로 데이터를 보관하고, 데이터는 시간이 지나면서 핫 SSD에서 콜드 객체 스토리지로 이동합니다. 전문 검색, 집계, 하이브리드 쿼리는 Grafana, 알림, 애드혹 SQL, AI 품질 검토에 쓰입니다."
+  },
+  "marketing.figures.076": {
+    "message": "그림 03 · 신호가 들어와 핫에서 콜드로 이동하는 내내 쿼리 가능"
+  },
+  "marketing.figures.077": {
+    "message": "신호"
+  },
+  "marketing.figures.078": {
+    "message": "OTel Collector · Vector · Kafka"
+  },
+  "marketing.figures.079": {
+    "message": "저장"
+  },
+  "marketing.figures.080": {
+    "message": "데이터 수명 주기 · 계층형 스토리지"
+  },
+  "marketing.figures.081": {
+    "message": "최신 데이터는 SSD에서 빠르게 · 과거 데이터는 객체 스토리지에서 저렴하게"
+  },
+  "marketing.figures.082": {
+    "message": "쿼리"
+  },
+  "marketing.ai.001": {
+    "message": "AI를 위한 분석"
+  },
+  "marketing.ai.002": {
+    "message": "Apache Doris: 에이전트 시대, AI를 위한 분석"
+  },
+  "marketing.ai.003": {
+    "message": "Apache Doris는 AI 애플리케이션, RAG 시스템, AI 관측성을 위한 고성능 분석 기반입니다. 실시간 분석, 하이브리드 검색, AI 네이티브 SQL을 하나의 엔진에서 제공합니다."
+  },
+  "marketing.ai.004": {
+    "message": "실시간"
+  },
+  "marketing.ai.005": {
+    "message": "AI를 위한 분석,"
+  },
+  "marketing.ai.006": {
+    "message": "에이전트 시대에 맞춰"
+  },
+  "marketing.ai.007": {
+    "message": "Apache Doris를 사용하면 AI 애플리케이션이 신뢰할 수 있고 쿼리 가능한 엔터프라이즈 데이터에 실시간으로 접근할 수 있습니다. 데이터를 이해하는 에이전트를 구축하고, RAG 품질을 높이고, AI 동작을 모니터링하며, 정형·반정형·비정형 데이터 전반에서 분석과 하이브리드 검색을 대규모로 실행하세요."
+  },
+  "marketing.ai.008": {
+    "message": "에이전트 시대에"
+  },
+  "marketing.ai.009": {
+    "message": "AI를 위한 분석이"
+  },
+  "marketing.ai.010": {
+    "message": "중요한 이유."
+  },
+  "marketing.extra.019": {
+    "message": "분석 기반이 최신 데이터를 유지하고, 하이브리드 검색을 지원하며, 관측 가능하고, 하나로 통합되어 있으면 다섯 가지가 한꺼번에 달라집니다."
+  },
+  "marketing.ai.011": {
+    "message": "의사 결정 품질"
+  },
+  "marketing.ai.012": {
+    "message": "애플리케이션 컨텍스트"
+  },
+  "marketing.ai.013": {
+    "message": "검색 관련성"
+  },
+  "marketing.ai.014": {
+    "message": "에이전트 가시성"
+  },
+  "marketing.ai.015": {
+    "message": "전체 운영 비용"
+  },
+  "marketing.ai.016": {
+    "message": "실시간 AI 의사 결정"
+  },
+  "marketing.ai.017": {
+    "message": "AI 에이전트가 실시간 운영 데이터를 쿼리하여, 사용자 상호 작용이나 비즈니스 프로세스가 아직 진행 중일 때 바로 행동합니다."
+  },
+  "marketing.ai.018": {
+    "message": "데이터를 이해하는 애플리케이션"
+  },
+  "marketing.ai.019": {
+    "message": "코파일럿, 에이전트, RAG 시스템이 최신의 신뢰할 수 있는 엔터프라이즈 데이터에서 컨텍스트와 메모리를 얻고, 믿을 수 있는 작업을 수행합니다."
+  },
+  "marketing.ai.020": {
+    "message": "RAG와 지식 검색"
+  },
+  "marketing.ai.021": {
+    "message": "SQL 필터, 전문 검색, BM25, 벡터 검색을 하나의 쿼리로 실행하므로 LLM이 정확한 컨텍스트를 얻고 환각이 줄어듭니다."
+  },
+  "marketing.ai.022": {
+    "message": "AI 관측성"
+  },
+  "marketing.ai.023": {
+    "message": "프롬프트, 응답, 트레이스, 도구 호출, 토큰 사용량, 비용을 쿼리 가능한 하나의 저장소에 모아 디버깅과 지속적인 품질 관리에 활용합니다."
+  },
+  "marketing.ai.024": {
+    "message": "단순해진 AI 데이터 스택"
+  },
+  "marketing.ai.025": {
+    "message": "하나의 엔진으로 실시간 분석, 전문 검색과 벡터 검색, 로그 분석, AI 네이티브 SQL을 처리하므로 운영할 파이프라인이 줄어듭니다."
+  },
+  "marketing.ai.026": {
+    "message": "AI를 위한 분석의 요구 사항과"
+  },
+  "marketing.ai.027": {
+    "message": "Apache Doris의 해법."
+  },
+  "marketing.ai.028": {
+    "message": "AI를 위한 분석 플랫폼이 잘 해내야 하는 다섯 가지와, 각각을 충족하는 Apache Doris의 구체적인 기능을 소개합니다."
+  },
+  "marketing.ai.029": {
+    "message": "AI 애플리케이션을 위한 엔드 투 엔드 낮은 지연 시간"
+  },
+  "marketing.ai.030": {
+    "message": "AI 애플리케이션과 자율 에이전트는 최신 데이터를 바탕으로 실시간으로 행동합니다. 새 이벤트, CDC 업데이트, 스트리밍 데이터는 몇 초 안에 쿼리할 수 있어야 하고, 분석 쿼리는 동시성이 높은 프로덕션 트래픽에서도 1초 미만에 결과를 반환해야 합니다."
+  },
+  "marketing.ai.031": {
+    "message": "정형·텍스트·벡터 데이터를 아우르는 하이브리드 검색"
+  },
+  "marketing.ai.032": {
+    "message": "AI 애플리케이션은 문서, 로그, 프롬프트, 응답, 피드백, 지식 베이스, 지원 티켓, 임베딩을 넘나들며 검색합니다. SQL, 키워드 검색, 벡터 검색은 각각 문제의 일부만 해결합니다. AI를 위한 분석은 구조화된 필터, 전문 검색, 의미 유사도, 관련성 기반 순위 지정을 하나의 워크플로로 결합합니다."
+  },
+  "marketing.ai.033": {
+    "message": "AI 네이티브 데이터를 위한 유연한 스키마"
+  },
+  "marketing.ai.034": {
+    "message": "AI 네이티브 애플리케이션은 모델, 에이전트, 도구, 프레임워크, 워크플로에서 끊임없이 바뀌는 반정형 이벤트를 만들어 냅니다. 플랫폼은 무거운 ETL 없이 동적 JSON, 중첩 필드, 스키마 변경, 빠른 필터링, 애드혹 SQL을 처리해야 하며, 그래야 팀이 모든 에이전트 단계, 도구 호출, 검색 이벤트, 모델 응답을 직접 분석할 수 있습니다."
+  },
+  "marketing.ai.035": {
+    "message": "AI 관측성 데이터 분석"
+  },
+  "marketing.ai.036": {
+    "message": "AI 관측성은 로그, 메트릭, 트레이스를 넘어섭니다. 팀은 모델 호출, 프롬프트, 응답, 도구 실행, 검색 이벤트, 토큰 사용량, 지연 시간, 비용, 평가 점수, 사용자 피드백을 한곳에서 분석합니다. 서빙 계층은 대량의 AI 네이티브 데이터에 대해 유연한 스키마, 빠른 검색, 인터랙티브 집계를 처리해야 합니다."
+  },
+  "marketing.ai.037": {
+    "message": "LLM 생태계 통합"
+  },
+  "marketing.ai.038": {
+    "message": "AI 애플리케이션은 에이전트 프레임워크, LLMOps 플랫폼, 관측성 도구, MCP 워크플로, 사용자 지정 파이프라인으로 이루어진, 빠르게 변하는 생태계에 의존합니다. 플랫폼은 이 생태계와 연결되어야 하며, 그래야 에이전트, 코파일럿, RAG 시스템, LLMOps 도구가 SQL, API, 커넥터, MCP를 통해 신뢰할 수 있는 데이터를 읽고 AI 신호를 기록할 수 있습니다."
+  },
+  "marketing.extra.020": {
+    "message": "AI를 위한 Apache Doris 기능"
+  },
+  "marketing.ai.039": {
+    "message": "실시간 수집과"
+  },
+  "marketing.ai.040": {
+    "message": "저지연 서빙"
+  },
+  "marketing.ai.041": {
+    "message": "Kafka 및 CDC 통합"
+  },
+  "marketing.ai.042": {
+    "message": "Group Commit"
+  },
+  "marketing.ai.043": {
+    "message": "MPP 아키텍처"
+  },
+  "marketing.ai.044": {
+    "message": "고동시성 포인트 쿼리"
+  },
+  "marketing.ai.045": {
+    "message": "고객 대면 분석"
+  },
+  "marketing.ai.046": {
+    "message": "프롬프트, 트레이스, 비용, 품질을"
+  },
+  "marketing.ai.047": {
+    "message": "아우르는 AI 관측성"
+  },
+  "marketing.ai.048": {
+    "message": "Stream Load"
+  },
+  "marketing.ai.049": {
+    "message": "역색인"
+  },
+  "marketing.ai.050": {
+    "message": "증분 구체화된 뷰"
+  },
+  "marketing.ai.051": {
+    "message": "AI 에이전트 시대를 위한 관측성"
+  },
+  "marketing.ai.052": {
+    "message": "VARIANT 기반"
+  },
+  "marketing.ai.053": {
+    "message": "유연한 JSON 분석"
+  },
+  "marketing.ai.054": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "marketing.ai.055": {
+    "message": "SQL·텍스트·벡터를 아우르는"
+  },
+  "marketing.ai.056": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.ai.057": {
+    "message": "하이브리드 검색"
+  },
+  "marketing.ai.058": {
+    "message": "전문 검색"
+  },
+  "marketing.ai.059": {
+    "message": "BM25 관련도 점수 산정"
+  },
+  "marketing.ai.060": {
+    "message": "벡터 인덱스"
+  },
+  "marketing.ai.061": {
+    "message": "임베딩"
+  },
+  "marketing.ai.062": {
+    "message": "역순위 융합(Reciprocal Rank Fusion)"
+  },
+  "marketing.ai.063": {
+    "message": "AI 네이티브 SQL과"
+  },
+  "marketing.ai.064": {
+    "message": "툴체인 통합"
+  },
+  "marketing.ai.065": {
+    "message": "LLM SQL 함수"
+  },
+  "marketing.ai.066": {
+    "message": "MCP 서버"
+  },
+  "marketing.ai.067": {
+    "message": "시맨틱 레이어(출시 예정)"
+  },
+  "marketing.ai.068": {
+    "message": "AI를 위한 분석 구축의"
+  },
+  "marketing.ai.069": {
+    "message": "해답은"
+  },
+  "marketing.figures.083": {
+    "message": "문서 · 로그"
+  },
+  "marketing.figures.084": {
+    "message": "텍스트 · JSON · 티켓"
+  },
+  "marketing.figures.085": {
+    "message": "임베딩"
+  },
+  "marketing.figures.086": {
+    "message": "임베딩 모델에서 생성"
+  },
+  "marketing.figures.087": {
+    "message": "스트림 · CDC"
+  },
+  "marketing.figures.088": {
+    "message": "주문 · 세션"
+  },
+  "marketing.figures.089": {
+    "message": "SQL 필터"
+  },
+  "marketing.figures.090": {
+    "message": "시간 · ACL"
+  },
+  "marketing.figures.091": {
+    "message": "벡터"
+  },
+  "marketing.figures.092": {
+    "message": "임베딩"
+  },
+  "marketing.figures.093": {
+    "message": "Apache Doris 기반 AI를 위한 분석: 문서, 임베딩, 스트림이 Doris의 데이터를 최신 상태로 유지합니다. AI 애플리케이션이 질문하면 Doris는 SQL 필터, 전문 검색, 벡터 검색을 결합한 하나의 하이브리드 쿼리로 답하고, LLM이 응답을 생성합니다. 그 트레이스, 토큰, 비용, 피드백은 다시 Doris에 기록되어 다음 라운드를 개선합니다."
+  },
+  "marketing.figures.094": {
+    "message": "그림 04 · 에이전트 루프: 질문 → 검색 → 생성 → 기록 → 개선, 모두 하나의 엔진에서"
+  },
+  "marketing.figures.095": {
+    "message": "입력"
+  },
+  "marketing.figures.096": {
+    "message": "수집 · 서빙"
+  },
+  "marketing.figures.097": {
+    "message": "몇 초 안에 수집 · 1초 미만 응답"
+  },
+  "marketing.figures.098": {
+    "message": "단일 하이브리드 쿼리"
+  },
+  "marketing.figures.099": {
+    "message": "RRF 융합 → 순위화된 컨텍스트"
+  },
+  "marketing.figures.100": {
+    "message": "동적 JSON · 에이전트 이벤트 · 도구 호출"
+  },
+  "marketing.figures.101": {
+    "message": "AI 관측성"
+  },
+  "marketing.figures.102": {
+    "message": "프롬프트 · 트레이스 · 토큰 · 비용 · 평가"
+  },
+  "marketing.figures.103": {
+    "message": "생태계"
+  },
+  "marketing.figures.104": {
+    "message": "LLM SQL · MCP 서버 · API"
+  },
+  "marketing.figures.105": {
+    "message": "에이전트 루프"
+  },
+  "marketing.figures.106": {
+    "message": "질문"
+  },
+  "marketing.figures.107": {
+    "message": "컨텍스트"
+  },
+  "marketing.figures.108": {
+    "message": "AI 애플리케이션"
+  },
+  "marketing.figures.109": {
+    "message": "에이전트 · 코파일럿 · RAG 앱"
+  },
+  "marketing.figures.110": {
+    "message": "프롬프트 + 컨텍스트"
+  },
+  "marketing.figures.111": {
+    "message": "컨텍스트로 답변"
+  },
+  "marketing.figures.112": {
+    "message": "트레이스 · 토큰 · 비용"
+  },
+  "marketing.figures.113": {
+    "message": "트레이스 · 피드백"
+  },
+  "marketing.figures.114": {
+    "message": "토큰 · 비용 · 평가"
+  },
+  "marketing.figures.115": {
+    "message": "기록"
+  },
+  "marketing.figures.116": {
+    "message": "프롬프트와 검색 개선"
+  },
+  "marketing.features.hero": {
+    "message": "알아야 할 모든 것,{lineBreak}{doris}"
+  },
+  "marketing.features.003": {
+    "message": "Apache Doris의 핵심 기술과 주요 기능을 한곳에 정리한 참조 목록"
+  },
+  "marketing.features.004": {
+    "message": "기능 검색 - “레이크하우스”, “MPP”, “인덱스” 등을 입력해 보세요…"
+  },
+  "marketing.features.005": {
+    "message": "검색어 지우기"
+  },
+  "marketing.features.006": {
+    "message": "기능"
+  },
+  "marketing.features.007": {
+    "message": "정식 문서"
+  },
+  "marketing.features.008": {
+    "message": "문서"
+  },
+  "marketing.features.noResults": {
+    "message": "{query}에 해당하는 기능이 없습니다. 더 일반적인 단어로 검색하거나 {clear}."
+  },
+  "marketing.features.011": {
+    "message": "검색어를 지우세요"
+  },
+  "marketing.features.012": {
+    "message": "주요 기능"
+  },
+  "marketing.features.013": {
+    "message": "실시간 분석, 레이크하우스 페더레이션, 하이브리드 검색을 포함해 Apache Doris의 핵심 기술과 주요 기능을 한곳에 정리한 참조 목록입니다."
+  },
+  "marketing.featureTags.ai": {
+    "message": "AI"
+  },
+  "marketing.featureTags.analytics": {
+    "message": "분석"
+  },
+  "marketing.featureTags.authentication": {
+    "message": "인증"
+  },
+  "marketing.featureTags.authorization": {
+    "message": "권한 부여"
+  },
+  "marketing.featureTags.bulk-ingestion": {
+    "message": "대량 수집"
+  },
+  "marketing.featureTags.caching": {
+    "message": "캐싱"
+  },
+  "marketing.featureTags.catalog": {
+    "message": "Catalog"
+  },
+  "marketing.featureTags.cdc": {
+    "message": "CDC"
+  },
+  "marketing.featureTags.coming-soon": {
+    "message": "출시 예정"
+  },
+  "marketing.featureTags.data-loading": {
+    "message": "데이터 적재"
+  },
+  "marketing.featureTags.data-management": {
+    "message": "데이터 관리"
+  },
+  "marketing.featureTags.data-streaming": {
+    "message": "데이터 스트리밍"
+  },
+  "marketing.featureTags.data-types": {
+    "message": "데이터 타입"
+  },
+  "marketing.featureTags.delete": {
+    "message": "삭제"
+  },
+  "marketing.featureTags.external-catalog": {
+    "message": "외부 Catalog"
+  },
+  "marketing.featureTags.federation": {
+    "message": "페더레이션"
+  },
+  "marketing.featureTags.governance": {
+    "message": "거버넌스"
+  },
+  "marketing.featureTags.iceberg": {
+    "message": "Iceberg"
+  },
+  "marketing.featureTags.ingest": {
+    "message": "수집"
+  },
+  "marketing.featureTags.integration": {
+    "message": "통합"
+  },
+  "marketing.featureTags.lakehouse": {
+    "message": "레이크하우스"
+  },
+  "marketing.featureTags.load": {
+    "message": "적재"
+  },
+  "marketing.featureTags.materialized-view": {
+    "message": "구체화된 뷰"
+  },
+  "marketing.featureTags.memory-management": {
+    "message": "메모리 관리"
+  },
+  "marketing.featureTags.metadata": {
+    "message": "메타데이터"
+  },
+  "marketing.featureTags.multi-tenancy": {
+    "message": "멀티 테넌시"
+  },
+  "marketing.featureTags.observability": {
+    "message": "관측성"
+  },
+  "marketing.featureTags.performance": {
+    "message": "성능"
+  },
+  "marketing.featureTags.query-acceleration": {
+    "message": "쿼리 가속"
+  },
+  "marketing.featureTags.query-engine": {
+    "message": "쿼리 엔진"
+  },
+  "marketing.featureTags.ranking": {
+    "message": "순위 지정"
+  },
+  "marketing.featureTags.real-time-ingest": {
+    "message": "실시간 수집"
+  },
+  "marketing.featureTags.reliability": {
+    "message": "신뢰성"
+  },
+  "marketing.featureTags.resource-management": {
+    "message": "리소스 관리"
+  },
+  "marketing.featureTags.search": {
+    "message": "검색"
+  },
+  "marketing.featureTags.security": {
+    "message": "보안"
+  },
+  "marketing.featureTags.semi-structured": {
+    "message": "반정형"
+  },
+  "marketing.featureTags.sql": {
+    "message": "SQL"
+  },
+  "marketing.featureTags.storage": {
+    "message": "스토리지"
+  },
+  "marketing.featureTags.storage-compute-decoupled": {
+    "message": "스토리지-컴퓨트 분리"
+  },
+  "marketing.featureTags.streaming": {
+    "message": "스트리밍"
+  },
+  "marketing.featureTags.table-design": {
+    "message": "테이블 설계"
+  },
+  "marketing.featureTags.table-format": {
+    "message": "테이블 포맷"
+  },
+  "marketing.featureTags.update": {
+    "message": "업데이트"
+  },
+  "marketing.featureTags.upsert": {
+    "message": "UPSERT"
+  },
+  "marketing.compare.001": {
+    "message": "비교 대상"
+  },
+  "marketing.compare.002": {
+    "message": "vs"
+  },
+  "marketing.compare.003": {
+    "message": "출시 예정"
+  },
+  "marketing.compare.004": {
+    "message": "Apache Doris vs. 다른 제품 — 선택 가이드"
+  },
+  "marketing.compare.005": {
+    "message": "워크로드에 맞는 실시간 분석 데이터베이스를 선택하세요. 아키텍처, 성능, 총비용 측면에서 Apache Doris를 ClickHouse, Elasticsearch, Trino/Presto와 비교해 보세요."
+  },
+  "marketing.extra.001": {
+    "message": "Apache Doris를 선택해야 할 때"
+  },
+  "marketing.extra.002": {
+    "message": "주요 사례"
+  },
+  "marketing.extra.003": {
+    "message": "핵심 차이점"
+  },
+  "marketing.compare.006": {
+    "message": "Doris와 ClickHouse는 모두 대표적인 실시간 분석 데이터베이스입니다. 현대 데이터 팀이 매일 실행하는 워크로드에서는 Doris가 앞서 있습니다."
+  },
+  "marketing.compare.007": {
+    "message": "더 빠른 조인"
+  },
+  "marketing.compare.008": {
+    "message": "와이드 테이블로 우회할 필요 없는 분산 다중 테이블 조인."
+  },
+  "marketing.compare.009": {
+    "message": "MPP 아키텍처와 비용 기반 옵티마이저가 Broadcast, Shuffle, Colocate 조인 중 하나를 자동으로 선택합니다. Doris는 TPC-DS 전체 쿼리를 완료하지만, ClickHouse는 쿼리의 약 50%에서 실패합니다."
+  },
+  "marketing.compare.010": {
+    "message": "비용 절감"
+  },
+  "marketing.compare.011": {
+    "message": "오픈 소스로 제공되는 스토리지-컴퓨트 분리."
+  },
+  "marketing.compare.012": {
+    "message": "탄력적인 컴퓨트는 리밸런싱 없이 확장됩니다. 이 비용 모델은 오픈 소스 3.0 이상에서 제공되므로 상용 클라우드에 종속되지 않습니다."
+  },
+  "marketing.compare.013": {
+    "message": "동시 쿼리"
+  },
+  "marketing.compare.014": {
+    "message": "쿼리 속도를 희생하지 않는 실시간 UPSERT."
+  },
+  "marketing.compare.015": {
+    "message": "Merge-on-Write는 빈번한 업데이트 중에도 읽기 성능을 안정적으로 유지합니다. 완전한 ACID를 지원하고 MySQL과 호환되며, 100개 미만이 아니라 수천 개의 동시 쿼리를 처리합니다."
+  },
+  "marketing.compare.016": {
+    "message": "같은 SQL 워크로드를 운영하는 인터넷 규모 기업들의 실제 프로덕션 마이그레이션 사례입니다. 결과는 크게 달랐습니다."
+  },
+  "marketing.compare.017": {
+    "message": "숏폼 동영상 · DAU 6억 이상"
+  },
+  "marketing.compare.018": {
+    "message": "사례 01"
+  },
+  "marketing.compare.019": {
+    "message": "ClickHouse를 Apache Doris로 교체한 뒤 Kuaishou는 통합 레이크하우스 아키텍처로 성공적으로 업그레이드하여 스토리지를 통합하고 데이터 파이프라인을 단순화했습니다."
+  },
+  "marketing.compare.020": {
+    "message": "레이크하우스 직접 쿼리"
+  },
+  "marketing.compare.021": {
+    "message": ": 데이터 적재 없이 더 짧아진 파이프라인"
+  },
+  "marketing.compare.022": {
+    "message": "구체화된 뷰 재작성"
+  },
+  "marketing.compare.023": {
+    "message": "기반으로 시나리오 전반의 쿼리 가속"
+  },
+  "marketing.compare.024": {
+    "message": "자동 구체화 기반의"
+  },
+  "marketing.compare.025": {
+    "message": "유연한 데이터 거버넌스"
+  },
+  "marketing.compare.026": {
+    "message": "지원"
+  },
+  "marketing.compare.027": {
+    "message": "음악 스트리밍 · MAU 8억"
+  },
+  "marketing.compare.028": {
+    "message": "사례 02"
+  },
+  "marketing.compare.029": {
+    "message": "분석 엔진을 ClickHouse에서 Apache Doris로 마이그레이션한 뒤, 플랫폼은 데이터 적시성을 효과적으로 높이고 운영 비용을 줄였으며 파편화된 데이터 관리 문제를 해결했습니다."
+  },
+  "marketing.compare.030": {
+    "message": "탁월한"
+  },
+  "marketing.compare.031": {
+    "message": "다중 테이블"
+  },
+  "marketing.compare.032": {
+    "message": "및"
+  },
+  "marketing.compare.033": {
+    "message": "페더레이션 쿼리"
+  },
+  "marketing.compare.034": {
+    "message": "성능"
+  },
+  "marketing.compare.035": {
+    "message": "MySQL 프로토콜 호환"
+  },
+  "marketing.compare.036": {
+    "message": ": 운영 부담 감소"
+  },
+  "marketing.compare.037": {
+    "message": "부분 컬럼 업데이트"
+  },
+  "marketing.compare.038": {
+    "message": "기능으로 다양한 데이터 업데이트 패턴 지원"
+  },
+  "marketing.compare.039": {
+    "message": "전자상거래 SaaS · 판매자 500만 이상"
+  },
+  "marketing.compare.040": {
+    "message": "사례 03"
+  },
+  "marketing.compare.041": {
+    "message": "Apache Doris는 대부분의 시나리오에서 ClickHouse보다 쿼리 응답 시간이 빠르며, 특히 복잡한 조인 시나리오에서는 성능이 월등히 뛰어납니다."
+  },
+  "marketing.compare.042": {
+    "message": "핵심 비즈니스 쿼리 속도 향상"
+  },
+  "marketing.compare.043": {
+    "message": "2~3배"
+  },
+  "marketing.compare.044": {
+    "message": "복잡한 조인 쿼리 속도 향상"
+  },
+  "marketing.compare.045": {
+    "message": "2~10배"
+  },
+  "marketing.compare.046": {
+    "message": "ClickHouse에서"
+  },
+  "marketing.compare.047": {
+    "message": "OOM이 발생한 쿼리 전부"
+  },
+  "marketing.compare.048": {
+    "message": "성공적으로 실행"
+  },
+  "marketing.compare.049": {
+    "message": "중요한 모든 항목을 나란히 비교합니다."
+  },
+  "marketing.compare.050": {
+    "message": "시스템 아키텍처"
+  },
+  "marketing.compare.051": {
+    "message": "MPP 분산 아키텍처"
+  },
+  "marketing.compare.052": {
+    "message": "MySQL 프로토콜 호환, 표준 SQL"
+  },
+  "marketing.compare.053": {
+    "message": "CBO 자동 최적화"
+  },
+  "marketing.compare.054": {
+    "message": "Scatter-Gather 아키텍처"
+  },
+  "marketing.compare.055": {
+    "message": "SQL 유사 문법, 비표준"
+  },
+  "marketing.compare.056": {
+    "message": "수동 튜닝 필요"
+  },
+  "marketing.compare.057": {
+    "message": "조인 쿼리 성능"
+  },
+  "marketing.compare.058": {
+    "message": "2~10배 빠른 노드 간 분산 처리"
+  },
+  "marketing.compare.059": {
+    "message": "CBO가 조인 전략 선택"
+  },
+  "marketing.compare.060": {
+    "message": "TPC-DS 전체 쿼리 통과"
+  },
+  "marketing.compare.061": {
+    "message": "효율적인 메모리 사용으로 OOM 방지"
+  },
+  "marketing.compare.062": {
+    "message": "서브쿼리 + 와이드 테이블 모델링"
+  },
+  "marketing.compare.063": {
+    "message": "CBO 없음, 수동 튜닝"
+  },
+  "marketing.compare.064": {
+    "message": "TPC-DS 쿼리의 약 50% 실패"
+  },
+  "marketing.compare.065": {
+    "message": "대규모 쿼리에서 OOM 빈발"
+  },
+  "marketing.compare.066": {
+    "message": "실시간 업데이트"
+  },
+  "marketing.compare.067": {
+    "message": "Merge-on-Write 엔진"
+  },
+  "marketing.compare.068": {
+    "message": "강한 일관성, 즉시 조회 가능"
+  },
+  "marketing.compare.069": {
+    "message": "성능 저하 없는 고처리량 UPSERT"
+  },
+  "marketing.compare.070": {
+    "message": "ReplacingMergeTree, 최종 일관성"
+  },
+  "marketing.compare.071": {
+    "message": "FINAL 사용 시 2~10배 느려짐"
+  },
+  "marketing.compare.072": {
+    "message": "빈번한 업데이트 → 병합 오버헤드"
+  },
+  "marketing.compare.073": {
+    "message": "트랜잭션 지원"
+  },
+  "marketing.compare.074": {
+    "message": "완전한 ACID 트랜잭션"
+  },
+  "marketing.compare.075": {
+    "message": "원자적 배치 수집"
+  },
+  "marketing.compare.076": {
+    "message": "트랜잭션 미지원"
+  },
+  "marketing.compare.077": {
+    "message": "일부 데이터만 조회될 수 있음"
+  },
+  "marketing.compare.078": {
+    "message": "쿼리 동시성"
+  },
+  "marketing.compare.079": {
+    "message": "수천 개의 동시 쿼리, 10배 이상"
+  },
+  "marketing.compare.080": {
+    "message": "효율적인 메모리 관리"
+  },
+  "marketing.compare.081": {
+    "message": "보통 동시 쿼리 100개 미만"
+  },
+  "marketing.compare.082": {
+    "message": "메모리 집약적 워크로드로 클러스터가 불안정해짐"
+  },
+  "marketing.compare.083": {
+    "message": "데이터 API와 레이크하우스"
+  },
+  "marketing.compare.084": {
+    "message": "Arrow-Flight 고처리량 프로토콜"
+  },
+  "marketing.compare.085": {
+    "message": "Hive / Hudi / Iceberg / Parquet"
+  },
+  "marketing.compare.086": {
+    "message": "자동 확장 + 다중 복제본 밸런싱"
+  },
+  "marketing.compare.087": {
+    "message": "JDBC만 지원"
+  },
+  "marketing.compare.088": {
+    "message": "제한적인 레이크하우스 통합"
+  },
+  "marketing.compare.089": {
+    "message": "확장 시 수동 리밸런싱 필요"
+  },
+  "marketing.compare.090": {
+    "message": "스토리지-컴퓨트 분리"
+  },
+  "marketing.compare.091": {
+    "message": "오픈 소스 3.0 이상"
+  },
+  "marketing.compare.092": {
+    "message": "탄력적 컴퓨트, 확장 시 리밸런싱 불필요"
+  },
+  "marketing.compare.093": {
+    "message": "최대 70% 비용 절감"
+  },
+  "marketing.compare.094": {
+    "message": "상용 Cloud 에디션에서만 제공"
+  },
+  "marketing.compare.095": {
+    "message": "강하게 결합되어 확장 시 리밸런싱 필요"
+  },
+  "marketing.compare.096": {
+    "message": "피크에 대비한 과잉 프로비저닝 필요"
+  },
+  "marketing.compare.097": {
+    "message": "오픈 소스 라이선스"
+  },
+  "marketing.compare.098": {
+    "message": "Apache 재단, 커뮤니티가 유지 관리"
+  },
+  "marketing.compare.099": {
+    "message": "상업 회사가 통제"
+  },
+  "marketing.compare.100": {
+    "message": "Doris와 Elasticsearch는 모두 관측성, 보안, 실시간 분석에 쓰입니다. Doris는 별도의 DSL 없이도 스토리지 비용, 쓰기 효율, 분석 깊이에서 앞서 있습니다."
+  },
+  "marketing.compare.101": {
+    "message": "압축률"
+  },
+  "marketing.compare.102": {
+    "message": "훨씬 작은 스토리지 사용량."
+  },
+  "marketing.compare.103": {
+    "message": "Doris는 로그와 메트릭을 1:5~1:10으로 압축하는 반면, Elasticsearch는 1:1.5에 그칩니다. 같은 데이터를 훨씬 적은 디스크에 저장할 수 있습니다."
+  },
+  "marketing.compare.104": {
+    "message": "쓰기 오버헤드"
+  },
+  "marketing.compare.105": {
+    "message": "높은 쓰기 처리량, 낮은 오버헤드."
+  },
+  "marketing.compare.106": {
+    "message": "Doris는 여러 복제본에 대해 인덱스를 한 번만 생성하여 오버헤드를 10% 미만으로 유지합니다. Elasticsearch는 복제본마다 인덱스를 따로 생성하며, 중복 제거 시에는 쓰기마다 최대 3배의 비용이 듭니다."
+  },
+  "marketing.compare.107": {
+    "message": "더 빠른 검색"
+  },
+  "marketing.compare.108": {
+    "message": "DSL 없이 전문 검색과 SQL."
+  },
+  "marketing.compare.109": {
+    "message": "프로덕션 마이그레이션 사례에서 전문 검색이 2~3배 빨라졌으며, 다중 테이블 조인, 구체화된 뷰, 개방형 MySQL 생태계까지 함께 활용할 수 있습니다."
+  },
+  "marketing.compare.110": {
+    "message": "관측성, 금융 보안, 물류 분야에서 Elasticsearch를 Doris로 옮긴 실제 사례입니다. 같은 워크로드에 비용은 크게 줄었습니다."
+  },
+  "marketing.compare.111": {
+    "message": "관측성 · GuanceDB"
+  },
+  "marketing.compare.112": {
+    "message": "Elasticsearch를 Apache Doris로 교체하면서 GuanceDB는 데이터 처리 속도 향상과 비용 절감에서 큰 진전을 이뤘습니다."
+  },
+  "marketing.compare.113": {
+    "message": "비용 70% 절감"
+  },
+  "marketing.compare.114": {
+    "message": "(Elasticsearch 교체 후)"
+  },
+  "marketing.compare.115": {
+    "message": "빠른 전문 검색 성능"
+  },
+  "marketing.compare.116": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "marketing.compare.117": {
+    "message": "기반의 반정형 로그 추적"
+  },
+  "marketing.compare.118": {
+    "message": "핀테크 · 보안 분석"
+  },
+  "marketing.compare.119": {
+    "message": "Apache Doris로 아키텍처를 통합한 뒤 쓰기 처리량, 복잡한 쿼리 응답, 스토리지 효율이 모두 크게 향상되었습니다."
+  },
+  "marketing.compare.120": {
+    "message": "4배 향상된"
+  },
+  "marketing.compare.121": {
+    "message": "쓰기 속도"
+  },
+  "marketing.compare.122": {
+    "message": "3배 향상된"
+  },
+  "marketing.compare.123": {
+    "message": "쿼리 성능"
+  },
+  "marketing.compare.124": {
+    "message": "스토리지 50% 절감"
+  },
+  "marketing.compare.125": {
+    "message": "(동일 데이터 기준)"
+  },
+  "marketing.compare.126": {
+    "message": "물류 · 연간 택배 230억 건 이상"
+  },
+  "marketing.compare.127": {
+    "message": "Doris 도입 후 쿼리 성능은 5~10배 향상되고 동시 처리 능력은 두 배가 되었으며, 분석의 90%가 10분에서 1분 미만으로 줄었습니다."
+  },
+  "marketing.compare.128": {
+    "message": "2배 향상된"
+  },
+  "marketing.compare.129": {
+    "message": "고동시성 보고서 분석"
+  },
+  "marketing.compare.130": {
+    "message": "65% 절감된"
+  },
+  "marketing.compare.131": {
+    "message": "스토리지 공간"
+  },
+  "marketing.compare.132": {
+    "message": "표준 SQL"
+  },
+  "marketing.compare.133": {
+    "message": "기반으로 운영과 사용 간소화"
+  },
+  "marketing.compare.134": {
+    "message": "오픈 소스"
+  },
+  "marketing.compare.135": {
+    "message": "Apache License 2.0"
+  },
+  "marketing.compare.136": {
+    "message": "Apache Software Foundation, 벤더 중립"
+  },
+  "marketing.compare.137": {
+    "message": "라이선스 변경: Apache 2.0 → Elastic License → AGPL"
+  },
+  "marketing.compare.138": {
+    "message": "상업 회사인 Elastic이 운영"
+  },
+  "marketing.compare.139": {
+    "message": "사업 단위 간 엄격한 읽기/쓰기 분리"
+  },
+  "marketing.compare.140": {
+    "message": "스토리지-컴퓨트 통합형과 분리형 모두 지원"
+  },
+  "marketing.compare.141": {
+    "message": "혼합 쿼리 패턴 간 워크로드 격리"
+  },
+  "marketing.compare.142": {
+    "message": "스레드 그룹 격리, 컴퓨트 격리는 약함"
+  },
+  "marketing.compare.143": {
+    "message": "스토리지-컴퓨트 통합형만 지원"
+  },
+  "marketing.compare.144": {
+    "message": "제한적인 워크로드 탄력성"
+  },
+  "marketing.compare.145": {
+    "message": "실시간 수집"
+  },
+  "marketing.compare.146": {
+    "message": "복제본 간 인덱스를 한 번만 생성: 높은 처리량, 낮은 오버헤드"
+  },
+  "marketing.compare.147": {
+    "message": "외부 도구 없이 Push와 Pull(Kafka에서) 지원"
+  },
+  "marketing.compare.148": {
+    "message": "Logstash 및 Beats 호환"
+  },
+  "marketing.compare.149": {
+    "message": "복제본마다 인덱스 생성, 최대 3배의 쓰기 오버헤드"
+  },
+  "marketing.compare.150": {
+    "message": "Push만 지원, Pull에는 Logstash 같은 외부 도구 필요"
+  },
+  "marketing.compare.151": {
+    "message": "전반적으로 더 무거운 수집 파이프라인"
+  },
+  "marketing.compare.152": {
+    "message": "실시간 스토리지"
+  },
+  "marketing.compare.153": {
+    "message": "1:5~1:10 압축률: 디스크 사용량을 크게 절감"
+  },
+  "marketing.compare.154": {
+    "message": "기본 키 모델에서 Merge-on-Write와 Merge-on-Read 모두 지원"
+  },
+  "marketing.compare.155": {
+    "message": "강한 일관성의 집계를 원본 데이터와 함께 보관"
+  },
+  "marketing.compare.156": {
+    "message": "변화하는 비즈니스 요구에 맞춘 유연한 Schema Change"
+  },
+  "marketing.compare.157": {
+    "message": "1:1.5 압축률"
+  },
+  "marketing.compare.158": {
+    "message": "기본 키는 Merge-on-Write만 지원, 최대 3배의 쓰기 오버헤드"
+  },
+  "marketing.compare.159": {
+    "message": "집계는 최종 일관성만 보장, 원본 데이터와 함께 보관 불가"
+  },
+  "marketing.compare.160": {
+    "message": "제한적인 Schema Change"
+  },
+  "marketing.compare.161": {
+    "message": "실시간 쿼리"
+  },
+  "marketing.compare.162": {
+    "message": "포인트 쿼리, 집계, 분석 모두 빠름"
+  },
+  "marketing.compare.163": {
+    "message": "다중 테이블 조인, 구체화된 뷰, UDF, 레이크하우스"
+  },
+  "marketing.compare.164": {
+    "message": "표준 SQL로 쉽게 사용"
+  },
+  "marketing.compare.165": {
+    "message": "개방형 MySQL 생태계"
+  },
+  "marketing.compare.166": {
+    "message": "포인트 쿼리에 강하지만 분석에는 약함"
+  },
+  "marketing.compare.167": {
+    "message": "다중 테이블 조인 불가, 단순한 워크로드만 가능"
+  },
+  "marketing.compare.168": {
+    "message": "학습 곡선이 가파른 자체 DSL"
+  },
+  "marketing.compare.169": {
+    "message": "독자적인 Elasticsearch 생태계"
+  },
+  "marketing.compare.170": {
+    "message": "총소유비용(TCO)"
+  },
+  "marketing.compare.171": {
+    "message": "오픈 소스 스토리지-컴퓨트 분리"
+  },
+  "marketing.compare.172": {
+    "message": "리밸런싱 없이 확장되는 탄력적 컴퓨트"
+  },
+  "marketing.compare.173": {
+    "message": "프로덕션 마이그레이션에서 최대 70% 비용 절감"
+  },
+  "marketing.compare.174": {
+    "message": "강하게 결합된 스토리지와 컴퓨트"
+  },
+  "marketing.compare.175": {
+    "message": "피크 워크로드에 대비한 과잉 프로비저닝 필요"
+  },
+  "marketing.compare.176": {
+    "message": "Doris와 Trino/Presto는 모두 주류 레이크하우스 쿼리 엔진입니다. Doris는 데이터 웨어하우스와 레이크하우스 쿼리 엔진을 통합하여 같은 SQL을 양쪽 모두에서 훨씬 빠르게 실행합니다."
+  },
+  "marketing.compare.177": {
+    "message": "내부 테이블"
+  },
+  "marketing.compare.178": {
+    "message": "완전히 벡터화된 C++ 엔진."
+  },
+  "marketing.compare.179": {
+    "message": "Doris는 내부 테이블 쿼리를 Presto/Trino보다 최대 10배 빠르게 실행합니다. 완전히 벡터화된 C++ 엔진은 Trino라면 다운스트림 시스템에 넘겨야 하는 웨어하우스 워크로드까지 처리합니다."
+  },
+  "marketing.compare.180": {
+    "message": "더 빠른 레이크하우스"
+  },
+  "marketing.compare.181": {
+    "message": "외부 테이블에서 더 뛰어난 가속."
+  },
+  "marketing.compare.182": {
+    "message": "두 엔진이 같은 외부 Hive 테이블을 쿼리한 TPC-DS 1TB 벤치마크에서 Doris는 레이크하우스 쿼리를 Presto/Trino보다 2~3배 빠르게 실행했습니다."
+  },
+  "marketing.compare.183": {
+    "message": "동시 QPS"
+  },
+  "marketing.compare.184": {
+    "message": "인터랙티브 분석을 넘어 실시간 분석까지."
+  },
+  "marketing.compare.185": {
+    "message": "수천 개의 동시 쿼리를 처리하는 고동시성 실시간 분석을 위해 설계되어, Trino가 목표로 하는 인터랙티브 전용 워크로드를 훨씬 뛰어넘습니다."
+  },
+  "marketing.compare.186": {
+    "message": "네트워킹, 게임, 물류 분야에서 Trino/Presto를 Doris로 옮긴 실제 사례입니다. 같은 SQL로 아키텍처는 더 단순해지고 쿼리는 더 빨라졌습니다."
+  },
+  "marketing.compare.187": {
+    "message": "네트워킹 · 빅데이터 플랫폼"
+  },
+  "marketing.compare.188": {
+    "message": "여러 기술 스택을 Apache Doris로 대체하여 통합 레이크하우스를 구현했고, 쿼리 성능과 시스템 안정성을 크게 높였으며, 리소스 비용을 30% 절감했습니다."
+  },
+  "marketing.compare.189": {
+    "message": "통합 레이크하우스"
+  },
+  "marketing.compare.190": {
+    "message": "구축: Trino, Pinot, Iceberg, Kyuubi 대체"
+  },
+  "marketing.compare.191": {
+    "message": "크게 향상된"
+  },
+  "marketing.compare.192": {
+    "message": "및 시스템 안정성"
+  },
+  "marketing.compare.193": {
+    "message": "30% 절감된"
+  },
+  "marketing.compare.194": {
+    "message": "리소스 비용"
+  },
+  "marketing.compare.195": {
+    "message": "게임 · 중국 3대 게임사"
+  },
+  "marketing.compare.196": {
+    "message": "Presto에서는 다차원 분석 쿼리에 20~40초가 걸렸지만, Doris는 이를 1~2초로 줄였습니다."
+  },
+  "marketing.compare.197": {
+    "message": "쿼리 시간 단축:"
+  },
+  "marketing.compare.198": {
+    "message": "20~40초 → 1~2초"
+  },
+  "marketing.compare.199": {
+    "message": "구체화된 뷰 자동 매칭"
+  },
+  "marketing.compare.200": {
+    "message": "기능으로 복잡한 분석 가속"
+  },
+  "marketing.compare.201": {
+    "message": "대폭 향상된"
+  },
+  "marketing.compare.202": {
+    "message": "다차원 분석 성능"
+  },
+  "marketing.compare.203": {
+    "message": "Apache Doris로 마이그레이션한 뒤 전체 쿼리 성능이 2배 이상 향상되었고, 통합 아키텍처 덕분에 데이터 사일로와 리소스 중복이 사라졌습니다."
+  },
+  "marketing.compare.204": {
+    "message": "2배 이상 향상된"
+  },
+  "marketing.compare.205": {
+    "message": "전체 쿼리 성능"
+  },
+  "marketing.compare.206": {
+    "message": "해소된"
+  },
+  "marketing.compare.207": {
+    "message": "데이터 사일로"
+  },
+  "marketing.compare.208": {
+    "message": "및 리소스 중복"
+  },
+  "marketing.compare.209": {
+    "message": "더 빨라진"
+  },
+  "marketing.compare.210": {
+    "message": "실시간 분석"
+  },
+  "marketing.compare.211": {
+    "message": "및 애드혹 쿼리"
+  },
+  "marketing.compare.212": {
+    "message": "통합 아키텍처: 데이터 웨어하우스와 레이크하우스"
+  },
+  "marketing.compare.213": {
+    "message": "내장 스토리지 계층"
+  },
+  "marketing.compare.214": {
+    "message": "전체 분석 스택을 하나의 엔진으로"
+  },
+  "marketing.compare.215": {
+    "message": "이기종 소스를 아우르는 페더레이션 쿼리 엔진"
+  },
+  "marketing.compare.216": {
+    "message": "내장 스토리지 계층 없음"
+  },
+  "marketing.compare.217": {
+    "message": "서빙용 웨어하우스를 별도로 운영해야 함"
+  },
+  "marketing.compare.218": {
+    "message": "실행 엔진"
+  },
+  "marketing.compare.219": {
+    "message": "C++로 구현된 완전 벡터화 엔진"
+  },
+  "marketing.compare.220": {
+    "message": "별도 설정 없이 고성능 데이터 처리"
+  },
+  "marketing.compare.221": {
+    "message": "내부 테이블 쿼리 최대 10배 빠름"
+  },
+  "marketing.compare.222": {
+    "message": "주로 Java 기반 실행"
+  },
+  "marketing.compare.223": {
+    "message": "벡터화 엔진은 아직 개발 중(Hummingbird 프로젝트)"
+  },
+  "marketing.compare.224": {
+    "message": "내부 테이블 성능이 더 느림"
+  },
+  "marketing.compare.225": {
+    "message": "쿼리 최적화"
+  },
+  "marketing.compare.226": {
+    "message": "조인, 집계, 정렬을 위한 비용 기반 옵티마이저(CBO)"
+  },
+  "marketing.compare.227": {
+    "message": "통계 정보 자동 수집"
+  },
+  "marketing.compare.228": {
+    "message": "수동 힌트 없이 복잡한 쿼리 튜닝"
+  },
+  "marketing.compare.229": {
+    "message": "비용 기반 최적화 지원"
+  },
+  "marketing.compare.230": {
+    "message": "통계 정보 수집이 불완전"
+  },
+  "marketing.compare.231": {
+    "message": "효과를 보려면 수동 전체 수집 필요"
+  },
+  "marketing.compare.232": {
+    "message": "캐싱"
+  },
+  "marketing.compare.233": {
+    "message": "TTL, 자동 새로 고침, 증분 동기화를 지원하는 메타데이터 캐시"
+  },
+  "marketing.compare.234": {
+    "message": "로컬 SSD 핫 데이터 캐시로 네트워크 I/O 감소"
+  },
+  "marketing.compare.235": {
+    "message": "SQL 캐시와 파티션 캐시 내장"
+  },
+  "marketing.compare.236": {
+    "message": "Alluxio 같은 외부 캐싱 솔루션에 의존"
+  },
+  "marketing.compare.237": {
+    "message": "내장 메타데이터 캐시나 쿼리 캐시 없음"
+  },
+  "marketing.compare.238": {
+    "message": "운영하고 튜닝할 시스템이 추가됨"
+  },
+  "marketing.compare.239": {
+    "message": "구체화된 뷰"
+  },
+  "marketing.compare.240": {
+    "message": "다양한 데이터 전략을 지원하는 증분 갱신"
+  },
+  "marketing.compare.241": {
+    "message": "자동 재작성을 통한 투명한 쿼리 가속"
+  },
+  "marketing.compare.242": {
+    "message": "옵티마이저가 최적의 MV를 자동으로 매칭"
+  },
+  "marketing.compare.243": {
+    "message": "수동 전체 갱신만 지원"
+  },
+  "marketing.compare.244": {
+    "message": "투명한 쿼리 재작성 없음"
+  },
+  "marketing.compare.245": {
+    "message": "쿼리마다 사용자가 MV를 직접 선택해야 함"
+  },
+  "marketing.compare.246": {
+    "message": "사용 사례"
+  },
+  "marketing.compare.247": {
+    "message": "고동시성 실시간 분석"
+  },
+  "marketing.compare.248": {
+    "message": "인터랙티브 애드혹 분석"
+  },
+  "marketing.compare.249": {
+    "message": "서빙과 레이크하우스 쿼리를 아우르는 통합 엔진"
+  },
+  "marketing.compare.250": {
+    "message": "인터랙티브 분석만 지원"
+  },
+  "marketing.compare.251": {
+    "message": "여러 소스를 아우르는 페더레이션 쿼리에 강함"
+  },
+  "marketing.compare.252": {
+    "message": "서빙에는 별도 웨어하우스와 함께 사용"
+  },
+  "marketing.compare.256": {
+    "message": "비교 항목"
+  },
+  "marketing.compare.257": {
+    "message": "추천"
+  },
+  "marketing.compare.showCase": {
+    "message": "{name} 사례 보기"
+  },
+  "marketing.compare.253": {
+    "message": "★ 추천 사례"
+  },
+  "marketing.compare.254": {
+    "message": "이전 사례"
+  },
+  "marketing.compare.goToCase": {
+    "message": "{number}번째 사례로 이동"
+  },
+  "marketing.compare.255": {
+    "message": "다음 사례"
+  },
+  "marketing.benchmarkLabels.internal": {
+    "message": "내부 테이블 포맷"
+  },
+  "marketing.benchmarkLabels.iceberg": {
+    "message": "Iceberg 테이블 포맷"
+  },
+  "marketing.benchmarkLabels.100m": {
+    "message": "1억 행"
+  },
+  "marketing.benchmarkLabels.10m": {
+    "message": "1,000만 행"
+  },
+  "marketing.benchmarkLabels.1m": {
+    "message": "100만 행"
+  },
+  "marketing.benchmarkLabels.retrieval": {
+    "message": "검색 및 조회"
+  },
+  "marketing.benchmarkLabels.analytics": {
+    "message": "분석 롤업"
+  },
+  "marketing.benchmarkLabels.semi": {
+    "message": "반정형 페이로드"
+  },
+  "marketing.benchmarkLabels.8queries": {
+    "message": "8개 쿼리"
+  },
+  "marketing.benchmarkLabels.6queries": {
+    "message": "6개 쿼리"
+  },
+  "marketing.benchmarks.001": {
+    "message": "각 엔진이 자체 기본 포맷으로 데이터를 읽고 씁니다."
+  },
+  "marketing.benchmarks.002": {
+    "message": "모든 엔진이 같은 Apache Iceberg 데이터셋을 읽으므로 엔진만 달라집니다."
+  },
+  "marketing.benchmarks.003": {
+    "message": "공식 리더보드 규모입니다. 약 1억 행."
+  },
+  "marketing.benchmarks.004": {
+    "message": "단일 머신에서도 실행할 수 있는 전체 검증 규모입니다. 약 1,000만 행."
+  },
+  "marketing.benchmarks.005": {
+    "message": "빠른 스모크 테스트 규모입니다. 약 100만 행."
+  },
+  "marketing.benchmarks.006": {
+    "message": "13개 쿼리로 이루어진 스타 스키마 벤치마크로, 대규모 조인과 집계가 많습니다."
+  },
+  "marketing.benchmarks.007": {
+    "message": "대표적인 의사 결정 지원 벤치마크로, 정규화된 스키마에 대한 22개의 애드혹 쿼리로 구성됩니다."
+  },
+  "marketing.benchmarks.008": {
+    "message": "가장 어려운 의사 결정 지원 벤치마크로, 분석 엔진이 해야 하는 작업 대부분을 다루는 99개 쿼리로 구성됩니다."
+  },
+  "marketing.benchmarks.009": {
+    "message": "관측 항목 조회, 트레이스 재생, 생성에서 도구 호출로 이어지는 체인 확장, 대용량 텍스트 본문에서의 장애 키워드/문구 검색."
+  },
+  "marketing.benchmarks.010": {
+    "message": "트레이스 수준의 실패 및 비용 요약, 모델·관측 유형별 롤업, 도구 사용 분포, 운영 진단."
+  },
+  "marketing.benchmarks.011": {
+    "message": "변화하는 페이로드 필드에 대한 필터링과 집계: 릴리스 링, 고객 등급, 검색 전략, 중첩된 공급자/도구 진단."
+  },
+  "marketing.benchmarks.012": {
+    "message": "직접 확인하는"
+  },
+  "marketing.benchmarks.013": {
+    "message": "진짜 속도."
+  },
+  "marketing.benchmarks.014": {
+    "message": "사람들이 Apache Doris에서 실제로 실행하는 두 가지 워크로드, 즉 전통적인 SQL 분석과 AI 에이전트 관측성 로그를 다룹니다. 두 워크로드 모두 현실적으로 검토할 만한 엔진들과 비교했습니다. 스크립트와 원본 측정 결과는 공개되어 있습니다."
+  },
+  "marketing.benchmarks.015": {
+    "message": "총 실행 시간"
+  },
+  "marketing.benchmarks.016": {
+    "message": "쿼리별 상세 숨기기 ↑"
+  },
+  "marketing.benchmarks.017": {
+    "message": "쿼리별 상세 보기 ↓"
+  },
+  "marketing.benchmarks.018": {
+    "message": "쿼리별 실행 시간"
+  },
+  "marketing.benchmarks.019": {
+    "message": "규모"
+  },
+  "marketing.benchmarks.020": {
+    "message": "쿼리"
+  },
+  "marketing.benchmarks.021": {
+    "message": "실패"
+  },
+  "marketing.benchmarks.022": {
+    "message": "s"
+  },
+  "marketing.benchmarks.failedTooltip": {
+    "message": "실패"
+  },
+  "marketing.benchmarks.023": {
+    "message": "완료"
+  },
+  "marketing.benchmarks.024": {
+    "message": "막대에 마우스를 올리면 정확한 실행 시간을 볼 수 있습니다. 빗금 친 막대는 시간 초과를 뜻합니다."
+  },
+  "marketing.benchmarks.025": {
+    "message": "윗부분이 끊긴 막대는 표시 범위를 넘는 값입니다. 마우스를 올리면 실제 수치를 볼 수 있습니다."
+  },
+  "marketing.benchmarks.026": {
+    "message": "보고서 보기 ↗"
+  },
+  "marketing.benchmarks.027": {
+    "message": "보고서 보기(출시 예정)"
+  },
+  "marketing.benchmarks.028": {
+    "message": "측정 항목"
+  },
+  "marketing.benchmarks.029": {
+    "message": "벤치마크별로 선택한 쿼리의 실행 시간을 쿼리마다 측정해 합산합니다."
+  },
+  "marketing.benchmarks.030": {
+    "message": "쿼리당 실행 횟수"
+  },
+  "marketing.benchmarks.031": {
+    "message": "각 쿼리는 최소 3회 실행합니다. 콜드는 첫 번째 실행, 핫은 두 번째와 세 번째 실행 중 더 빠른 결과입니다."
+  },
+  "marketing.benchmarks.032": {
+    "message": "캐시 제어"
+  },
+  "marketing.benchmarks.033": {
+    "message": "모든 엔진에서 결과 캐시를 비활성화합니다. 콜드 실행 전에는 Doris BE 캐시를 비웁니다."
+  },
+  "marketing.benchmarks.034": {
+    "message": "동일한 하드웨어"
+  },
+  "marketing.benchmarks.035": {
+    "message": "모든 엔진이 같은 리전과 VPC를 사용하며, 각 클러스터는 동일한 머신 클래스를 사용합니다."
+  },
+  "marketing.benchmarks.036": {
+    "message": "동일한 데이터"
+  },
+  "marketing.benchmarks.037": {
+    "message": "실행 전에 같은 원본 데이터를 각 엔진에 해당 엔진의 기본 포맷으로 적재합니다."
+  },
+  "marketing.benchmarks.038": {
+    "message": "투명성"
+  },
+  "marketing.benchmarks.039": {
+    "message": "모든 스크립트, 쿼리, 설정, 실행별 메타데이터를 저장소에 공개합니다."
+  },
+  "marketing.benchmarks.040": {
+    "message": "벤치마크 스크립트 복제"
+  },
+  "marketing.benchmarks.041": {
+    "message": "벤치마크를 실행할 머신으로 벤치마크 저장소를 가져옵니다."
+  },
+  "marketing.benchmarks.042": {
+    "message": "Doris 클러스터 엔드포인트 설정"
+  },
+  "marketing.benchmarks.043": {
+    "message": "설정 파일을 열고 Doris 클러스터의 호스트, 포트, 사용자, 비밀번호, 데이터베이스를 입력합니다."
+  },
+  "marketing.benchmarks.044": {
+    "message": "서드파티 도구 설치"
+  },
+  "marketing.benchmarks.045": {
+    "message": "실행기는 몇 가지 CLI 클라이언트(mysql, jq, hyperfine)를 사용합니다. make 타깃 하나로 모두 설치할 수 있습니다."
+  },
+  "marketing.benchmarks.046": {
+    "message": "벤치마크 실행 및 보고서 생성"
+  },
+  "marketing.benchmarks.047": {
+    "message": "실행을 시작한 다음 보고서를 수집합니다. 실행기는 진행하면서 쿼리별 요약을 출력합니다."
+  },
+  "marketing.benchmarks.048": {
+    "message": "5분 만에"
+  },
+  "marketing.benchmarks.049": {
+    "message": "직접 실행해 보세요."
+  },
+  "marketing.benchmarks.050": {
+    "message": "위의 모든 수치는 공개된 스크립트로 재현할 수 있습니다. 네 단계, 네 개의 셸 명령이면 됩니다. 단계를 클릭하면 실행되는 명령을 볼 수 있습니다."
+  },
+  "marketing.benchmarks.051": {
+    "message": "측정 방법"
+  },
+  "marketing.benchmarks.052": {
+    "message": "전체 방법론 읽기 ↗"
+  },
+  "marketing.benchmarks.053": {
+    "message": "— 단계 0"
+  },
+  "marketing.benchmarks.054": {
+    "message": "내 데이터로 Apache"
+  },
+  "marketing.benchmarks.055": {
+    "message": "직접"
+  },
+  "marketing.benchmarks.056": {
+    "message": "사용해 보세요."
+  },
+  "marketing.benchmarks.057": {
+    "message": "시작하기"
+  },
+  "marketing.benchmarks.058": {
+    "message": "Apache Doris 벤치마크: SQL 분석과 에이전트 관측성"
+  },
+  "marketing.benchmarks.059": {
+    "message": "ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, DuckDB와 비교한 Apache Doris 벤치마크 결과입니다. 정형 분석(SSB, TPC-H, TPC-DS)과 AI 에이전트 관측성 워크로드를 다룹니다."
+  },
+  "marketing.benchmarks.060": {
+    "message": "정형 분석, 쿼리별 비교."
+  },
+  "marketing.benchmarks.061": {
+    "message": "ClickHouse, Redshift, Snowflake, Trino와 Doris를 비교한 벤치마크:"
+  },
+  "marketing.benchmarks.062": {
+    "message": "Star Schema Benchmark"
+  },
+  "marketing.benchmarks.063": {
+    "message": "TPC-H"
+  },
+  "marketing.benchmarks.064": {
+    "message": ","
+  },
+  "marketing.benchmarks.065": {
+    "message": "TPC-DS"
+  },
+  "marketing.benchmarks.066": {
+    "message": ". 세 벤치마크 모두 조인과 분석 SQL의 비중이 크며, Doris는 바로 이런 워크로드를 위해 만들어졌습니다. 벤치마크를 클릭하면 쿼리별 시간을 볼 수 있습니다."
+  },
+  "marketing.benchmarks.067": {
+    "message": "에이전트 관측성, 쿼리별 비교."
+  },
+  "marketing.benchmarks.068": {
+    "message": "AI 에이전트 관측성 로그를 다룹니다. 트레이스 재생, 장애 문구 검색, 변화하는 페이로드 필드에 대한 롤업이 포함됩니다. 같은 데이터에서 Doris를 ClickHouse, Elasticsearch, OpenSearch, PostgreSQL, DuckDB와 비교합니다. 워크로드를 클릭하면 쿼리별 시간을 볼 수 있습니다."
   }
 }

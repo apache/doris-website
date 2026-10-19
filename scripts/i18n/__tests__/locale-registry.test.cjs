@@ -29,8 +29,10 @@ function withEnv(values, run) {
 test('the locale registry keeps introduced locales opt-in behind one config', () => {
     const {locales, localeRegistry, enabledLocales, enabledLocaleRecords} = load();
     assert.deepEqual(locales, ['en', 'zh-CN', 'ja', 'ko']);
-    assert.deepEqual(localeRegistry.find(locale => locale.code === 'ko'),
-        {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false});
+    const {translatedPages, ...korean} = localeRegistry.find(locale => locale.code === 'ko');
+    assert.deepEqual(korean, {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false});
+    // Translated product pages are registered one by one, as routes without a trailing slash.
+    assert(translatedPages.every(page => page.startsWith('/') && !page.endsWith('/')));
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').label, '日本語');
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').htmlLang, 'ja');
     withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {

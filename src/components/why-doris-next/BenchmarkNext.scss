@@ -1314,3 +1314,15 @@
         .b-card-desc { font-size: 12.5px; padding-top: 12px; }
     }
 }
+
+// Korean wraps between words, not between syllables, and its glyphs fill the
+// em box that the tight leading of the uppercase display type leaves empty.
+// Placed last so it outranks the equally specific title rules above.
+.bench-next:lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+
+    :is(.b-hero-title, .b-cmp-title, .b-repro-title, .b-cta-title) {
+        line-height: 1.12;
+    }
+}

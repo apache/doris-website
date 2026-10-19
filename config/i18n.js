@@ -25,7 +25,16 @@ const localeRegistry = [
             '/use-cases/observability',
             '/use-cases/ai',
         ]},
-    {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false},
+    {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false,
+        translatedPages: [
+            '/why-doris/compare',
+            '/why-doris/benchmarks',
+            '/why-doris/key-features',
+            '/use-cases/customer-facing-analytics',
+            '/use-cases/data-warehousing',
+            '/use-cases/observability',
+            '/use-cases/ai',
+        ]},
 ];
 const locales = localeRegistry.map(locale => locale.code);
 // ja reads DORIS_ENABLE_JA, ko reads DORIS_ENABLE_KO. CI enables

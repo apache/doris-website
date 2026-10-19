@@ -237,6 +237,8 @@ export function SlackCommunityNudge(): JSX.Element {
     return (
         <aside
             className={`slack-community-nudge${isOpen ? ' slack-community-nudge--open' : ''}`}
+            // The prompt is English in every locale, like the footer.
+            lang="en"
             aria-label={showDocsFeedback
                 ? translate({ id: "homepage.slackcommunitynudge.004", message: "Apache Doris community, Summit, and documentation resources" })
                 : translate({ id: "homepage.slackcommunitynudge.005", message: "Apache Doris community and Summit resources" })}

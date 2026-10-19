@@ -11,6 +11,46 @@ const {generate} = require('../../key-features/generate');
 
 const root = path.resolve(__dirname, '../../..');
 const pagePaths = localeRegistry.find(locale => locale.code === 'ja').translatedPages;
+// The pages each locale actually registers, as the site configuration reads them.
+const registered = Object.fromEntries(localeRegistry.filter(locale => locale.translatedPages?.length)
+    .map(locale => [locale.code, locale.translatedPages]));
+const placeholders = text => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort();
+
+// Every marketing.* message a page renders: the translate() calls and <Translate>
+// elements reachable from its route module. Global navigation and theme chrome use
+// other namespaces, so the prefix alone separates page content from them.
+function pageMessages(page) {
+    const messages = new Map(), seen = new Set();
+    function visitFile(file) {
+        file = [file, ...['.ts', '.tsx', '.js'].map(extension => file + extension), path.join(file, 'index.tsx')]
+            .find(candidate => /\.[jt]sx?$/.test(candidate) && fs.existsSync(candidate) && fs.statSync(candidate).isFile());
+        if (!file || seen.has(file)) return;
+        seen.add(file);
+        const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true,
+            file.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+        function visit(node) {
+            if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+                const name = node.moduleSpecifier.text;
+                if (name.startsWith('@site/')) visitFile(path.join(root, name.slice(6)));
+                else if (name.startsWith('.')) visitFile(path.resolve(path.dirname(file), name));
+            }
+            const options = ts.isCallExpression(node) && node.expression.getText(source) === 'translate' && node.arguments[0];
+            if (options && ts.isObjectLiteralExpression(options)) {
+                const value = key => options.properties.find(property => property.name?.getText(source) === key)?.initializer?.text;
+                if (value('id')?.startsWith('marketing.')) messages.set(value('id'), value('message'));
+            }
+            if (ts.isJsxElement(node) && node.openingElement.tagName.getText(source) === 'Translate') {
+                const id = node.openingElement.attributes.properties.find(property => property.name?.getText(source) === 'id')?.initializer?.text;
+                const message = node.children.find(child => ts.isJsxExpression(child) && child.expression)?.expression.text;
+                if (id?.startsWith('marketing.')) messages.set(id, message ?? '');
+            }
+            ts.forEachChild(node, visit);
+        }
+        visit(source);
+    }
+    visitFile(path.join(root, 'src/pages', page, 'index'));
+    return messages;
+}
 
 function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePaths}) {
     const cache = new Map();
@@ -234,7 +274,6 @@ test('every marketing translation exists and retains interpolation placeholders'
                         const id = value('id');
                         if (id?.startsWith('marketing.')) {
                             assert.equal(typeof dictionary[id]?.message, 'string', id);
-                            const placeholders = text => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort();
                             assert.deepEqual(placeholders(dictionary[id].message), placeholders(value('message')), id);
                             checked++;
                         }
@@ -250,20 +289,72 @@ test('every marketing translation exists and retains interpolation placeholders'
     assert.match(dictionary['marketing.features.noResults'].message, /\{query\}.*\{clear\}/);
 });
 
-test('Japanese page translations leave global navigation in English', () => {
-    const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n/ja/code.json'), 'utf8'));
+test('page translations leave global navigation in English', () => {
     const source = ts.createSourceFile('NavbarNext.tsx', fs.readFileSync(path.join(root,
         'src/components/home-next/NavbarNext.tsx'), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-    function visit(node) {
-        if (ts.isCallExpression(node) && node.expression.getText(source) === 'translate') {
-            const options = node.arguments[0];
-            if (options && ts.isObjectLiteralExpression(options)) {
-                const value = key => options.properties.find(property => property.name?.getText(source) === key)?.initializer?.text;
-                const id = value('id'), message = value('message');
-                assert.equal(dictionary[id]?.message ?? message, message, id);
+    for (const locale of Object.keys(registered)) {
+        const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));
+        function visit(node) {
+            if (ts.isCallExpression(node) && node.expression.getText(source) === 'translate') {
+                const options = node.arguments[0];
+                if (options && ts.isObjectLiteralExpression(options)) {
+                    const value = key => options.properties.find(property => property.name?.getText(source) === key)?.initializer?.text;
+                    const id = value('id'), message = value('message');
+                    assert.equal(dictionary[id]?.message ?? message, message, `${locale} ${id}`);
+                }
             }
+            ts.forEachChild(node, visit);
+        }
+        visit(source);
+    }
+});
+
+test('the Slack community prompt stays English in every locale', () => {
+    const file = 'src/components/home-next/SlackCommunityNudge.tsx';
+    const source = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), 'utf8'),
+        ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    const ids = [];
+    function visit(node) {
+        const options = ts.isCallExpression(node) && node.expression.getText(source) === 'translate' && node.arguments[0];
+        if (options && ts.isObjectLiteralExpression(options)) {
+            ids.push(options.properties.find(property => property.name?.getText(source) === 'id').initializer.text);
         }
         ts.forEachChild(node, visit);
     }
     visit(source);
+    assert(ids.length > 0);
+    for (const {code} of localeRegistry) {
+        const dictionaryFile = path.join(root, 'i18n', code, 'code.json');
+        if (!fs.existsSync(dictionaryFile)) continue;
+        const dictionary = JSON.parse(fs.readFileSync(dictionaryFile, 'utf8'));
+        assert.deepEqual(ids.filter(id => dictionary[id]), [], code);
+    }
+});
+
+test('every registered translated page carries each of its marketing messages', () => {
+    for (const [locale, pages] of Object.entries(registered)) {
+        const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));
+        for (const page of pages) {
+            const messages = pageMessages(page);
+            assert(messages.size > 0, `${locale} ${page}`);
+            for (const [id, message] of messages) {
+                assert.equal(typeof dictionary[id]?.message, 'string', `${locale} ${page} ${id}`);
+                assert.deepEqual(placeholders(dictionary[id].message), placeholders(message), `${locale} ${id}`);
+            }
+        }
+    }
+});
+
+test('registered pages link every locale that translated them, from each of those locales', () => {
+    for (const page of new Set(Object.values(registered).flat())) {
+        const group = {en: `${page}/`, ...Object.fromEntries(Object.keys(registered)
+            .filter(locale => registered[locale].includes(page)).map(locale => [locale, `/${locale}${page}/`]))};
+        for (const [locale, pathname] of Object.entries(group)) {
+            const load = modules(locale, pathname, true, registered);
+            assert.deepEqual(load('src/utils/translation.ts').useTranslationRoutes().group, group, `${locale} ${page}`);
+            const html = renderToStaticMarkup(React.createElement(load('src/components/home-next/PageLanguageSwitcher.tsx').PageLanguageSwitcher));
+            for (const target of Object.values(group)) assert(html.includes(`href="${target}?from=test#tech"`), `${locale} ${page} ${target}`);
+            assert.equal((html.match(/aria-current="page"/g) ?? []).length, 1, `${locale} ${page}`);
+        }
+    }
 });

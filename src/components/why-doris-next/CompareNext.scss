@@ -356,6 +356,12 @@
 
 }
 
+// Korean wraps between words, not between syllables.
+.cmp-next:lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
 // All responsive behavior for the page chrome is now driven by the fluid
 // CSS tokens (--cn-fs-*, --cn-container-pad, --cn-card-pad-*, etc.) and the
 // breakpoint mixins applied inline above. No standalone media queries needed.
