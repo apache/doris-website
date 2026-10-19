@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-sub",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-sub.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-sub.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b10f088b1f748ffca1898cf69e18cf1c824e68f4dea750065c33650eb553f82f",
+    "sourceTechnicalHash": "138e0a0d10fc9b99835eeca88340d54d05834ca1c8074109b674c3649acbe9ea",
+    "targetHash": "b341831c9ab5c111e1fe436f8cf1042f65ccece73bcbd02f327bf22f121bcfbb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:26.063Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b10f088b1f748ffca1898cf69e18cf1c824e68f4dea750065c33650eb553f82f",
+      "targetHash": "b341831c9ab5c111e1fe436f8cf1042f65ccece73bcbd02f327bf22f121bcfbb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

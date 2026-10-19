@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-ceil.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8ae5b8a28ecec193aa4aa1005dcbc56eaf1a6270d26405452410046e9e478624",
+    "sourceTechnicalHash": "259926f666e0cc334ef95a6e8175c81e07dfef1312cb05512cd643728a5dd9b7",
+    "targetHash": "9c53f93b410c76e0d1a49d6945614f6474f3fd2f6a50c0548f785e8d937bbc4b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:42:01.999Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8ae5b8a28ecec193aa4aa1005dcbc56eaf1a6270d26405452410046e9e478624",
+      "targetHash": "9c53f93b410c76e0d1a49d6945614f6474f3fd2f6a50c0548f785e8d937bbc4b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/month-ceil.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e1d7d0b50343a7b2e12b1a470c41717bf3c308093f50b3f1a026300997af3e60",
+    "sourceTechnicalHash": "4981a6a0b8518ac0daa0d2ca678c338a2d81d4b7c47ee50bdec19b6f6508bbd1",
+    "targetHash": "977fcb29d3cdcd68aa3f42081a36995db29f274a60ff8e2bee0717e4f1e9adf1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:40.142Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e1d7d0b50343a7b2e12b1a470c41717bf3c308093f50b3f1a026300997af3e60",
+      "targetHash": "977fcb29d3cdcd68aa3f42081a36995db29f274a60ff8e2bee0717e4f1e9adf1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

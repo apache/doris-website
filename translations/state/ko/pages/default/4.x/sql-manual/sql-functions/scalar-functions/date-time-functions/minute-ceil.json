@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0d8bb1bafb80f02a24272977ecf62ff2f7bbe8a3e71b9c2db4b1181d028dae34",
+    "sourceTechnicalHash": "eb41b9f9fb7644a71b30a89faae6978676476853bf4a5f0da5a32601913303ce",
+    "targetHash": "3dec30dfbb875bd8b43ab6a9a07eff55d898977b72c57d2a54a8087db7475baa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:43:52.930Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0d8bb1bafb80f02a24272977ecf62ff2f7bbe8a3e71b9c2db4b1181d028dae34",
+      "targetHash": "3dec30dfbb875bd8b43ab6a9a07eff55d898977b72c57d2a54a8087db7475baa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

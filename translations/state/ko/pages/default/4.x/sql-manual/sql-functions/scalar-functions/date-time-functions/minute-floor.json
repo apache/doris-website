@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-floor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b05cc0cdf39beae77834f63a2489cfad14dd15ee143dadd7460207e8f824ae30",
+    "sourceTechnicalHash": "54e243877e735145ebc4541b8d6da6f8df4a92af594d566db24c41dc5ce71549",
+    "targetHash": "acd8a810abae849c86c2000aa25458fefb0b9dba1dd2e00e327ed36249c32f62",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:01.821Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b05cc0cdf39beae77834f63a2489cfad14dd15ee143dadd7460207e8f824ae30",
+      "targetHash": "acd8a810abae849c86c2000aa25458fefb0b9dba1dd2e00e327ed36249c32f62",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-ceil.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "09ae9deb382434cf51847e33a8bf78c19654421bb4d6a545093731695e251611",
+    "sourceTechnicalHash": "ae3bb8b539a11bf7d19247d3c5ad66d281b4dcf9ab068531c21d0477ba28272b",
+    "targetHash": "ab18237cb9352fa260c517aeb81f0ae2a241d35bcabfc39d3830a6b7fd1c7d5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:40:33.321Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "09ae9deb382434cf51847e33a8bf78c19654421bb4d6a545093731695e251611",
+      "targetHash": "ab18237cb9352fa260c517aeb81f0ae2a241d35bcabfc39d3830a6b7fd1c7d5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3d250102108390c4613933d52b7c12a5ea2f40f6f8d27ed1136535d318eb64a6",
+    "sourceTechnicalHash": "3c888d315323c6bbeec18250a2058f9000322a66ce319a3b9b32354a32eede4d",
+    "targetHash": "cdfa930f183c68ac0465904a2f2c4f477549650c61c707bdd170a5af3beb087c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:38:48.948Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3d250102108390c4613933d52b7c12a5ea2f40f6f8d27ed1136535d318eb64a6",
+      "targetHash": "cdfa930f183c68ac0465904a2f2c4f477549650c61c707bdd170a5af3beb087c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitor.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "3d250102108390c4613933d52b7c12a5ea2f40f6f8d27ed1136535d318eb64a6",
+        "targetHash": "cdfa930f183c68ac0465904a2f2c4f477549650c61c707bdd170a5af3beb087c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

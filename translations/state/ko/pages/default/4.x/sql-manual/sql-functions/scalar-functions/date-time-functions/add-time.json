@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/add-time",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/add-time.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/add-time.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a1b0c83f8d878269e2eb3dc8cb4bed986eea7115aa6ee1b1f82c9e496e758501",
+    "sourceTechnicalHash": "78ebccfd1a6e5c404f3d1b1b4886228825dc55d79f5fcdee3b63fb806c054c05",
+    "targetHash": "e30b3db4146c239d21967423c1a5a789a4db9a7e8f301e1fe4fb43f6bdaea204",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:39:52.154Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a1b0c83f8d878269e2eb3dc8cb4bed986eea7115aa6ee1b1f82c9e496e758501",
+      "targetHash": "e30b3db4146c239d21967423c1a5a789a4db9a7e8f301e1fe4fb43f6bdaea204",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
