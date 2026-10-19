@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/SHOW-LAST-INSERT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e5a80c538ab3b8ee5dbfa254a33420c850f64fb038fa4db0ff48802582166292",
+    "sourceTechnicalHash": "f817356aac3ad0ca633b8d50c161e43b0cae056429e6c5c72f92c175efb90e52",
+    "targetHash": "00cf621cb60705fa1c921be114e504323116a68a0dcd2561a3c2b0f2aa87c9bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:20:51.925Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5a80c538ab3b8ee5dbfa254a33420c850f64fb038fa4db0ff48802582166292",
+      "targetHash": "00cf621cb60705fa1c921be114e504323116a68a0dcd2561a3c2b0f2aa87c9bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

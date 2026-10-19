@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/MYSQL-LOAD.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c021f4c158766d6d19877df0a4bcfc36562c2a3dcd204098ddd3a0ea2caa9378",
+    "sourceTechnicalHash": "84cf4d3389998ebc44e8809202580ac5b58a905e7474f7635ca8c5a9d3587969",
+    "targetHash": "2a6cf078ad465c0d2ee39cc5c348de9d9ea92fcff3f26eb090361ccdaca5d549",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:23:35.789Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c021f4c158766d6d19877df0a4bcfc36562c2a3dcd204098ddd3a0ea2caa9378",
+      "targetHash": "2a6cf078ad465c0d2ee39cc5c348de9d9ea92fcff3f26eb090361ccdaca5d549",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

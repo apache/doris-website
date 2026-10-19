@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-FOLLOWER.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "21f3c6adde7a8c6f9de91f4c35b345999fe4184f2454c1798c7583eae130c6ce",
+    "sourceTechnicalHash": "331d1416d47bcf77c833fcc9a0ad42b5dde2a0c0abc1a8373703a40024423d8e",
+    "targetHash": "8c1578de07fa142a68b1993841e5bd1616de2cc3632943344d0bf2f4ff36fd58",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:16:46.850Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "21f3c6adde7a8c6f9de91f4c35b345999fe4184f2454c1798c7583eae130c6ce",
+      "targetHash": "8c1578de07fa142a68b1993841e5bd1616de2cc3632943344d0bf2f4ff36fd58",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

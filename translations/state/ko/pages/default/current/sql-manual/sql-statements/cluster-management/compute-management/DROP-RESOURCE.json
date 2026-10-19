@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6e2930f9348e2d5d9c042fabb581acc083e3c203ea3f56eb4b475de61a4669da",
+    "sourceTechnicalHash": "774871b609c397467cf7d0ae26c27b868c694027d6b7cfd13d47dd8daf5d805b",
+    "targetHash": "40663c148cbd683f6d5949162253d01d8596cec03386c5b563142f5c0bb34653",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:15:42.261Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6e2930f9348e2d5d9c042fabb581acc083e3c203ea3f56eb4b475de61a4669da",
+      "targetHash": "40663c148cbd683f6d5949162253d01d8596cec03386c5b563142f5c0bb34653",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

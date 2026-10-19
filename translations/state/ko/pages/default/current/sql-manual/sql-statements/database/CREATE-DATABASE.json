@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/database/CREATE-DATABASE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/database/CREATE-DATABASE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/database/CREATE-DATABASE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "17965b92d4ccd5fc1cbff2912183cb1cae61eaf5d136a324908f209825d7ad36",
+    "sourceTechnicalHash": "29907cfd80d069b5a52fc09083286f86e8b2f8ec54889dcba69a3f08d4ac8eac",
+    "targetHash": "0609c91d0a7cf65461eef16abb2939dc41398821c8717c7884660859ab47e1d4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:25:07.296Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "17965b92d4ccd5fc1cbff2912183cb1cae61eaf5d136a324908f209825d7ad36",
+      "targetHash": "0609c91d0a7cf65461eef16abb2939dc41398821c8717c7884660859ab47e1d4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

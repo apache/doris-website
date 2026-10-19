@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/database/ALTER-DATABASE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/database/ALTER-DATABASE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
+    "sourceTechnicalHash": "759d18bab855e8ffdd75e39bb3b7d29344333d3b3f2726df97b1f8426b29fc58",
+    "targetHash": "b4753fb599ac184d55d8690602307dc3e21b2e62f7590a3fc32b0e89c2dd6b3b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:25:03.404Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c18426fc5374af5b67eedce528caddcb35cc2f3264ed1f944b4969bfca28764c",
+      "targetHash": "b4753fb599ac184d55d8690602307dc3e21b2e62f7590a3fc32b0e89c2dd6b3b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

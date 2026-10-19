@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/CANCEL-TASK",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CANCEL-TASK.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+    "sourceTechnicalHash": "078f979635d6b7df5f2e1c490559d936aaf7e5188ca0f15029c435f43afb4206",
+    "targetHash": "930cc2bd92973834dd2f69bca20fdb28ea55695d7d3dbded0e91675fce6e08df",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:26:04.283Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e4c644c1af39f5839807a59d7996874a30e1fe04a7429ed8bd6d3a77c07f9745",
+      "targetHash": "930cc2bd92973834dd2f69bca20fdb28ea55695d7d3dbded0e91675fce6e08df",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

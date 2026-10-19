@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-BACKEND.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+    "sourceTechnicalHash": "751644f2b356444746408a839fcd1b80b59d5cdebe883c6a8f760b55ac37048b",
+    "targetHash": "34c0717407a727c78591f033b41a61d1d471b8d9bb757739342bddfd3be7507e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:17:11.705Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0739c1625bcb2004aab14fa63341b1b2217d3713435af07fed93d1acec7336d1",
+      "targetHash": "34c0717407a727c78591f033b41a61d1d471b8d9bb757739342bddfd3be7507e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

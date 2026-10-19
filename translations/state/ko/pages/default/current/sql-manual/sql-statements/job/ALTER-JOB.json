@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/ALTER-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/ALTER-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/ALTER-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1858982063830e2a004306697bb77d29d1a6596ee3fb3034f9f2f7f54362ca9e",
+    "sourceTechnicalHash": "fee84e03b098506ea9a6db7918f88c08b224c492caf9051cc319cb38d2466780",
+    "targetHash": "ba5c56f81e8c52a007d0db04f0735d356b8ff0e468c1f3700442e4114f40d5cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:26:31.660Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1858982063830e2a004306697bb77d29d1a6596ee3fb3034f9f2f7f54362ca9e",
+      "targetHash": "ba5c56f81e8c52a007d0db04f0735d356b8ff0e468c1f3700442e4114f40d5cf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

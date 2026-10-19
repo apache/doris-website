@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/function/DROP-FUNCTION",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/function/DROP-FUNCTION.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/function/DROP-FUNCTION.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "285c8ca04a4fb477fbe0181672a6b4fdf47cd90139004b9d4795a0c620abd43c",
+    "sourceTechnicalHash": "6582b68e69c305b32c99436530261f0a5bc839846f816583bf8bf2514ce7fbe5",
+    "targetHash": "bd90b1753a742615e754bce9b2354e8f9232f949687fc6ce729a0469b00bc21e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:25:41.531Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "285c8ca04a4fb477fbe0181672a6b4fdf47cd90139004b9d4795a0c620abd43c",
+      "targetHash": "bd90b1753a742615e754bce9b2354e8f9232f949687fc6ce729a0469b00bc21e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

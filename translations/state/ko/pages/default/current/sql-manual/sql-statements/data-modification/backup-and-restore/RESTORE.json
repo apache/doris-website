@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/RESTORE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c233788b44167ab23a1792e03a02653540a1b19388e4e59b8ba1214ccfdc561a",
+    "sourceTechnicalHash": "e7dce39819fedfe82f0d48738bd372b39901ca6b9c3c4a64a37f49b50ec03667",
+    "targetHash": "5f4c4326463726a9cd73ff451b4109fa6d1f80b9bfd7cba58597e66df323a02a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:23:29.400Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c233788b44167ab23a1792e03a02653540a1b19388e4e59b8ba1214ccfdc561a",
+      "targetHash": "5f4c4326463726a9cd73ff451b4109fa6d1f80b9bfd7cba58597e66df323a02a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"01\",\"04\",\"04\",\"04\",\"04\",\"05\",\"05\",\"05\",\"05\",\"08\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"11\",\"12\",\"16\",\"16\",\"17\",\"18\",\"18\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.6\",\"2.1.6\",\"2018\",\"2018\",\"2018\",\"2018\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3600\",\"4\",\"40\",\"45\",\"45\"]; received [\"01\",\"04\",\"04\",\"04\",\"04\",\"05\",\"05\",\"05\",\"05\",\"08\",\"08\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"11\",\"12\",\"16\",\"16\",\"17\",\"18\",\"18\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.6\",\"2.1.6\",\"2018\",\"2018\",\"2018\",\"2018\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3600\",\"4\",\"40\",\"45\",\"45\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

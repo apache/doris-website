@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-governance/SHOW-SQL_BLOCK_RULE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e0a5fcfa2b1dce11fc5f52a7e44230f33e80aebc608cf6e0a7f7caba128c77a5",
+    "sourceTechnicalHash": "deec423ab438f9cbb9bc8b495427fbc0fb430339d87a406c9cfaedd809235a52",
+    "targetHash": "5e215a4c5df1f4002378399b3ba47be6eb6e361693585e669f713de2ff4c725e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:20:23.393Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e0a5fcfa2b1dce11fc5f52a7e44230f33e80aebc608cf6e0a7f7caba128c77a5",
+      "targetHash": "5e215a4c5df1f4002378399b3ba47be6eb6e361693585e669f713de2ff4c725e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

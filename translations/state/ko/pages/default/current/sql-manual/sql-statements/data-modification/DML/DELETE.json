@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/DELETE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/DELETE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/DELETE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "46740f8f426514500a1de9b6b6279e166165c06ad86f47ce4b029766c5f72f18",
+    "sourceTechnicalHash": "fe2cd516798bcc2433615257b2b8cf8ad0ec4b1fbec94dcf2d69ab16087639ad",
+    "targetHash": "091e3ab771adb6bf501c1255ded7f4804fb85936b15e6e54e21819bf4fcfc16a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:21:22.928Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "46740f8f426514500a1de9b6b6279e166165c06ad86f47ce4b029766c5f72f18",
+      "targetHash": "091e3ab771adb6bf501c1255ded7f4804fb85936b15e6e54e21819bf4fcfc16a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
