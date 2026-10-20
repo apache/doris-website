@@ -32,7 +32,7 @@ build; the scoped website build and static-page verification run afterward.
 
 Korean is registered as an optional documentation locale. Enable it locally with
 `DORIS_ENABLE_KO=true`, or enable both managed languages with
-`DORIS_ENABLE_LOCALES=ja,ko`. Production deployment still enables Japanese only.
+`DORIS_ENABLE_LOCALES=ja,ko`. Production deployment enables both Japanese and Korean.
 Korean ordinary pages use the existing English fallback.
 
 The initial Korean native inventory is pinned to the merged source commit in
@@ -103,10 +103,17 @@ existing source/technical hash algorithms unchanged. Offline Korean fixtures
 exercise these boundaries without real credentials or model calls; actual
 single-page generation is a separate validation step.
 
-The `Korean translation discovery` workflow is manual-only and defaults to a
-read-only dry run. It fixes the locale to `ko`, uses separate Korean artifacts,
-and shares the existing `japanese-translation-ja` lock with Japanese runs.
-After the workflow is merged, run discovery on master:
+The `Korean translation discovery` workflow runs at 04:43 and 16:43 UTC daily
+and on manual dispatch. It fixes the locale to `ko`, uses separate Korean
+artifacts, and shares the existing `japanese-translation-ja` lock with Japanese
+runs. The schedule starts twenty minutes after the Japanese one, so a Korean run
+waits while a Japanese run is still in progress. A scheduled run generates a
+batch when eligible Korean documents are pending, with the same limits as a
+manual `generate` run: the planner considers at most 20 targets and a batch has
+at most 10 pages. It opens a normal labeled PR that maintainers review and merge
+like any other; nothing is merged automatically. With nothing pending, a
+scheduled run only scans and makes no model call. Manual dispatch defaults to a
+read-only dry run. To run discovery on master:
 
 ```bash
 gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
@@ -120,8 +127,7 @@ to one and rechecks active PRs before calling Codex. Generation checks the
 runtime and auth pool. A write credential enables a normal labeled PR after
 shared admission checks; otherwise a successful one-page validation remains
 an artifact and does not establish the PR publication path. Inspect generation
-warnings and normal PR checks before merging. There is no Korean generation
-schedule in this workflow.
+warnings and normal PR checks before merging.
 
 ## Search, navigation and four-language validation
 
@@ -605,7 +611,7 @@ No real model call or GitHub write occurs.
 
 ### Selecting an exact Korean manual batch
 
-The Korean workflow remains manual-only and defaults to `dry-run`. Its optional
+Manual Korean dispatch defaults to `dry-run`. Its optional
 `paths` input accepts a JSON array of 1–20 exact English source files, so a bounded
 batch can select documents from different folders without including every page
 under a shared prefix:
@@ -622,8 +628,8 @@ fresh scan immediately before generation. `validate` still requires one exact
 targets and generation still produces at most 10. Exact selection preserves
 full coverage counts, current-page and active-PR exclusion, human ownership,
 scope/version checks, and exact-master protection. Unknown, duplicate,
-malformed or out-of-scope source paths fail before model calls. This input does
-not enable scheduled generation.
+malformed or out-of-scope source paths fail before model calls. Scheduled runs
+do not use this input; they plan from the full scope.
 
 The planner CLI exposes the same filter as `--paths '<JSON array>'`.
 

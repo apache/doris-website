@@ -5,6 +5,7 @@ const path = require('node:path');
 const yaml = require('js-yaml');
 const os = require('node:os');
 const {spawnSync} = require('node:child_process');
+const {allowGeneration} = require('../workflow-generate.cjs');
 const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const korean = load('korean-translation.yml');
@@ -22,8 +23,11 @@ test('one-page validation rejects an exact batch list before creating scan artif
     assert(!fs.existsSync(output));
 });
 
-test('Korean generation requires a manual choice and shares the existing whole-run lock', () => {
-    assert.deepEqual(Object.keys(korean.on), ['workflow_dispatch']);
+test('Korean generation runs on its schedule or a manual choice and shares the existing whole-run lock', () => {
+    assert.deepEqual(Object.keys(korean.on), ['workflow_dispatch', 'schedule']);
+    // Twice daily, offset from the Japanese runs that hold the same lock.
+    assert.deepEqual(korean.on.schedule, [{cron: '43 4,16 * * *'}]);
+    assert.deepEqual(japanese.on.schedule, [{cron: '23 4,16 * * *'}]);
     assert.equal(korean.on.workflow_dispatch.inputs.mode.default, 'dry-run');
     assert.deepEqual(korean.on.workflow_dispatch.inputs.mode.options, ['dry-run', 'validate', 'generate']);
     assert.equal(korean.on.workflow_dispatch.inputs.locale, undefined);
@@ -37,13 +41,23 @@ test('Korean generation requires a manual choice and shares the existing whole-r
     for (const job of Object.values(korean.jobs)) {
         assert.equal(job.env.I18N_LOCALE, 'ko');
         for (const step of job.steps) {
-            if (step.env?.I18N_MODE) assert.equal(step.env.I18N_MODE, "${{ inputs.mode || 'dry-run' }}");
+            if (step.env?.I18N_MODE) assert.equal(step.env.I18N_MODE, "${{ inputs.mode || 'generate' }}");
             if (step.uses?.startsWith('actions/checkout@')) {
                 assert.equal(step.with['fetch-depth'], 0);
                 assert.equal(step.with['persist-credentials'], false);
             }
         }
     }
+});
+
+test('a scheduled run resolves to a mode that the generation gate accepts', () => {
+    // Discovery marks every scheduled run eligible, so the input-less fallback
+    // must be a mode that workflow-generate.cjs will run, not a dry run.
+    const step = korean.jobs.generate.steps.find(item => item.id === 'translation');
+    const fallback = /\|\| '([a-z-]+)' \}\}$/.exec(step.env.I18N_MODE)[1];
+    assert.equal(allowGeneration({I18N_MODE: fallback, GITHUB_EVENT_NAME: 'schedule', I18N_MAX_PAGES: '10'}), true);
+    assert.equal(allowGeneration({I18N_MODE: korean.on.workflow_dispatch.inputs.mode.default,
+        GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), false);
 });
 
 test('Korean discovery and generation exchange Korean artifacts at the exact scanned commit', () => {
