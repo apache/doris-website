@@ -15,6 +15,8 @@ Lance 支持自 Apache Doris 4.2 版本开始提供。
 
 [Lance](https://docs.lancedb.com/lance) 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog，或通过 `s3()` 和 `local()` 表值函数（TVF）读取 Lance 数据集。
 
+Lance 的类型映射请参阅 [Doris 数据类型映射](../catalogs/lance-catalog/doris-type-mapping.md)。
+
 ## 支持的功能
 
 | 功能 | 支持情况 |

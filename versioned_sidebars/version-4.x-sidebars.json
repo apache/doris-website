@@ -792,7 +792,17 @@
                 "id": "lakehouse/catalog-overview"
               },
               "items": [
-                "lakehouse/catalogs/hive-catalog",
+                {
+                  "type": "category",
+                  "label": "Hive Catalog",
+                  "link": {
+                    "type": "doc",
+                    "id": "lakehouse/catalogs/hive-catalog"
+                  },
+                  "items": [
+                    "lakehouse/catalogs/hive-catalog/doris-type-mapping"
+                  ]
+                },
                 {
                   "type": "category",
                   "label": "Iceberg Catalog",
@@ -801,6 +811,7 @@
                     "id": "lakehouse/catalogs/iceberg-catalog"
                   },
                   "items": [
+                    "lakehouse/catalogs/iceberg-catalog/doris-type-mapping",
                     "lakehouse/best-practices/doris-iceberg",
                     "lakehouse/best-practices/doris-aws-s3tables",
                     "lakehouse/best-practices/doris-aliyun-oss-tables",
@@ -815,7 +826,17 @@
                     "lakehouse/best-practices/doris-dlf-iceberg"
                   ]
                 },
-                "lakehouse/catalogs/lance-catalog",
+                {
+                  "type": "category",
+                  "label": "Lance Catalog",
+                  "link": {
+                    "type": "doc",
+                    "id": "lakehouse/catalogs/lance-catalog"
+                  },
+                  "items": [
+                    "lakehouse/catalogs/lance-catalog/doris-type-mapping"
+                  ]
+                },
                 {
                   "type": "category",
                   "label": "Paimon Catalog",
@@ -824,6 +845,7 @@
                     "id": "lakehouse/catalogs/paimon-catalog"
                   },
                   "items": [
+                    "lakehouse/catalogs/paimon-catalog/doris-type-mapping",
                     "lakehouse/best-practices/doris-paimon",
                     "lakehouse/best-practices/doris-dlf-paimon"
                   ]

@@ -705,12 +705,18 @@ const sidebars: SidebarsConfig = {
                     label: 'Data Catalogs',
                     link: {type: 'doc', id: 'lakehouse/catalog-overview'},
                     items: [
-                        'lakehouse/catalogs/hive-catalog',
+                        {
+                            type: 'category',
+                            label: 'Hive Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/hive-catalog'},
+                            items: ['lakehouse/catalogs/hive-catalog/doris-type-mapping'],
+                        },
                         {
                             type: 'category',
                             label: 'Iceberg Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/iceberg-catalog'},
                             items: [
+                                'lakehouse/catalogs/iceberg-catalog/doris-type-mapping',
                                 'lakehouse/best-practices/doris-iceberg-capability-matrix',
                                 'lakehouse/best-practices/doris-iceberg',
                                 'lakehouse/best-practices/doris-aws-s3tables',
@@ -731,10 +737,16 @@ const sidebars: SidebarsConfig = {
                             label: 'Paimon Catalog',
                             link: {type: 'doc', id: 'lakehouse/catalogs/paimon-catalog'},
                             items: [
+                                'lakehouse/catalogs/paimon-catalog/doris-type-mapping',
                                 'lakehouse/best-practices/doris-paimon-capability-matrix',
                                 'lakehouse/best-practices/doris-paimon',
                                 'lakehouse/best-practices/doris-dlf-paimon',
                             ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Lance Catalog',
+                            items: ['lakehouse/catalogs/lance-catalog/doris-type-mapping'],
                         },
                         'lakehouse/catalogs/fluss-catalog',
                         {

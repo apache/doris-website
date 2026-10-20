@@ -215,28 +215,7 @@ The optional Catalog property `hive.parquet.time-zone` specifies the writer time
 
 ## Column Type Mapping
 
-| Hive Type     | Doris Type    | Comment                                        |
-| ------------- | ------------- | ---------------------------------------------- |
-| boolean       | boolean       |                                                |
-| tinyint       | tinyint       |                                                |
-| smallint      | smallint      |                                                |
-| int           | int           |                                                |
-| bigint        | bigint        |                                                |
-| date          | date          |                                                |
-| timestamp     | datetime(6)   | Mapped to datetime with precision 6            |
-| float         | float         |                                                |
-| double        | double        |                                                |
-| decimal(P, S) | decimal(P, S) | Defaults to decimal(9, 0) if precision not specified |
-| char(N)       | char(N)       |                                                |
-| varchar(N)    | varchar(N)    |                                                |
-| string        | string        |                                                |
-| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
-| timestamp with local time zone | TIMESTAMPTZ | Since 4.1.5, this type always maps to `TIMESTAMPTZ`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
-| array         | array         |                                                |
-| map           | map           |                                                |
-| struct        | struct        |                                                |
-| other         | unsupported   |                                                |
-
+See [Hive to Doris Data Type Mapping](hive-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
 
 ## Examples
 ### Hive Metastore
