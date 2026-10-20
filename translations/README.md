@@ -113,8 +113,8 @@ batch when eligible Korean documents are pending, with the same limits as a
 manual `generate` run: the planner considers at most 20 targets and a batch has
 at most 10 pages. It opens a normal labeled PR that maintainers review and merge
 like any other; nothing is merged automatically. With nothing pending, a
-scheduled run only scans and makes no model call. Manual dispatch defaults to a
-read-only dry run. To run discovery on master:
+scheduled run only scans and makes no model call. Manual dispatch also defaults
+to `generate`; choose `dry-run` for read-only discovery on master:
 
 ```bash
 gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
@@ -492,7 +492,7 @@ attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Japanese manual dispatch defaults to `generate` (Korean to `dry-run`) and
+Manual dispatch defaults to `generate` in both workflows and
 accepts optional plugin, version and source path prefix filters, or an exact
 `paths` list. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one

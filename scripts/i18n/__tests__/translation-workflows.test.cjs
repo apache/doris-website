@@ -25,9 +25,9 @@ test('one-page validation rejects an exact batch list before creating scan artif
 
 test('each language workflow passes one fixed locale to the shared run under one lock', () => {
     const expected = {
-        ja: {workspace: 'japanese-translation', mode: 'generate', cron: '23 4,16 * * *'},
+        ja: {workspace: 'japanese-translation', cron: '23 4,16 * * *'},
         // Twenty minutes later; the shared lock queues it behind a Japanese run.
-        ko: {workspace: 'korean-translation', mode: 'dry-run', cron: '43 4,16 * * *'},
+        ko: {workspace: 'korean-translation', cron: '43 4,16 * * *'},
     };
     for (const [locale, workflow] of Object.entries(callers)) {
         assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch', 'schedule']);
@@ -35,7 +35,8 @@ test('each language workflow passes one fixed locale to the shared run under one
         const inputs = workflow.on.workflow_dispatch.inputs;
         // No locale input: each workflow runs only its own language.
         assert.deepEqual(Object.keys(inputs), ['mode', 'plugin', 'version', 'path', 'paths']);
-        assert.equal(inputs.mode.default, expected[locale].mode);
+        // Manual runs generate by default, like scheduled ones; dry-run stays selectable.
+        assert.equal(inputs.mode.default, 'generate');
         assert.deepEqual(inputs.mode.options, ['dry-run', 'validate', 'generate']);
         assert.deepEqual(workflow.permissions, {'contents': 'read', 'pull-requests': 'read'});
         assert.deepEqual(workflow.concurrency, {group: 'docs-translation', 'cancel-in-progress': false, queue: 'max'});
@@ -50,15 +51,17 @@ test('each language workflow passes one fixed locale to the shared run under one
     }
 });
 
-test('a scheduled run resolves to a mode that the generation gate accepts', () => {
+test('scheduled and default manual runs resolve to a mode that the generation gate accepts', () => {
     // Discovery marks every scheduled run eligible, so the input-less fallback
     // must be a mode that workflow-generate.cjs will run, not a dry run.
     for (const workflow of Object.values(callers)) {
         const fallback = /\|\| '([a-z-]+)' \}\}$/.exec(workflow.jobs.translation.with.mode)[1];
         assert.equal(allowGeneration({I18N_MODE: fallback, GITHUB_EVENT_NAME: 'schedule', I18N_MAX_PAGES: '10'}), true);
+        assert.equal(allowGeneration({I18N_MODE: workflow.on.workflow_dispatch.inputs.mode.default,
+            GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
     }
-    assert.equal(allowGeneration({I18N_MODE: callers.ko.on.workflow_dispatch.inputs.mode.default,
-        GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), false);
+    // Choosing dry-run by hand still never reaches the generator.
+    assert.equal(allowGeneration({I18N_MODE: 'dry-run', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), false);
 });
 
 test('the shared run names no language and sets mode and filters once', () => {
