@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "e4f2c79061892cd0d5cc98abe1cb7bcf1f0151d7e5b5db1d54fe888e6434367a",
-    "sourceTechnicalHash": "d3633a5c461d931c15b930df41259630dfd40d2263f49b3eda7ddf59543c90eb",
-    "targetHash": "41ab0cb0d92330e7b7984ffa6b89074a1d6b3171a2a1b0b80d9b325f39c601c1",
+    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
+    "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+    "sourceTechnicalHash": "408f21865827e3c77b88e77938cafd65940e3dd6144d8ce82967d25472e763ae",
+    "targetHash": "1eb5081eceea34098424984975436550b4ea92b58927d457761ac95924a6feb2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.226Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-20T05:11:38.717Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+      "targetHash": "1eb5081eceea34098424984975436550b4ea92b58927d457761ac95924a6feb2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]; received [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"16\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]\nprotected node 6: expected [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]; received [\"inlineCode\",null,null,\"encrypt\"]\nprotected node 7: expected [\"link\",\"https://learn.microsoft.com/zh-cn/sql/connect/jdbc/using-ssl-encryption?view=sql-server-ver16\",null]; received [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"<databaseName>\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"<databaseName>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/jdbc-pg-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-pg-catalog.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "4aeaaac0be3b07633a2d3ba18dc8568873b98bef994ad93a8d70259f63e0e5d0",
-    "sourceTechnicalHash": "189c1e77d4fab0aeb7fb1ecffd2b074906127fe3c4c244ae7a25dd9e384b76e4",
-    "targetHash": "3d476b2fca279dc0d53452d6f67e80d7fe92cb5b9251c7cbefebe6b401b2b57c",
+    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
+    "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+    "sourceTechnicalHash": "f8aacc8d81cb44cfeb93bb9bbd5430beed9588dd3222735db7bef643a0e9e199",
+    "targetHash": "d6622ff38920383f4fe0267c4eb55f2509be79e11e27c3d3021aaa03f44031b8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.226Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-20T05:09:03.202Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c6d80cd1541139acf1ce158d2f2ad78129874511b529b13b4ad65379c7cf2d7",
+      "targetHash": "d6622ff38920383f4fe0267c4eb55f2509be79e11e27c3d3021aaa03f44031b8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 21: expected [\"inlineCode\",null,null,\"JAVA_OPTS\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"JAVA_OPTS\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"11\",\"2\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"42\",\"42.5\",\"5432\",\"6\",\"8\"]; received [\"1\",\"1\",\"11\",\"2\",\"2\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"42\",\"42.5\",\"5432\",\"6\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }
