@@ -7,6 +7,7 @@ const {languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 const {statePathFor} = require('./workflow-prs.cjs');
 const {botBranchFor, botBranchPattern} = require('./automation-naming.cjs');
+const {checkMaster} = require('./master-drift.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -74,10 +75,15 @@ async function main() {
     const body = fs.readFileSync(bodyFile, 'utf8');
     assert(body.includes('bot-head=PENDING'), 'Missing PR ownership marker');
     await require('./pr-preflight.cjs').preflight({root, base: manifest.sourceCommit, locale});
+    // The branch stays on the source commit; the PR checks run against current master.
+    const drift = checkMaster({root, sourceCommit: manifest.sourceCommit, locale,
+        pages: new Map(manifest.candidates.map(item => [item.id,
+            [item.sourcePath, item.targetPath, item.statePath ?? statePathFor(locale)]]))});
+    assert(!drift.affected.length, `master changed ${drift.affected.join(', ')} after the source commit; rescan required`);
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
-        + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`);
-    const remoteMaster = git('ls-remote', 'origin', 'refs/heads/master').split(/\s+/)[0];
-    assert.equal(remoteMaster, manifest.sourceCommit, 'master advanced before publish; rescan required');
+        + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`
+        + (drift.moved ? `Master was at \`${drift.head}\` when publishing; none of its ${drift.files.length} `
+            + 'changed files since the source commit affect this batch.\n' : ''));
     // gh configures Git's credential helper from GH_TOKEN. The token is never
     // placed in a remote URL, command argument, log or generated file.
     execFileSync('gh', ['auth', 'setup-git'], {cwd: root, stdio: 'inherit'});

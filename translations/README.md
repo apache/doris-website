@@ -104,10 +104,11 @@ exercise these boundaries without real credentials or model calls; actual
 single-page generation is a separate validation step.
 
 The `Korean translation discovery` workflow runs at 04:43 and 16:43 UTC daily
-and on manual dispatch. It fixes the locale to `ko`, uses separate Korean
-artifacts, and shares the existing `japanese-translation-ja` lock with Japanese
-runs. The schedule starts twenty minutes after the Japanese one, so a Korean run
-waits while a Japanese run is still in progress. A scheduled run generates a
+and on manual dispatch. Like the Japanese workflow, it calls the shared
+`.github/workflows/translation-run.yml`, here with the locale fixed to `ko` and
+its own `korean-translation-*` artifacts; both workflows hold the same
+`docs-translation` lock. The schedule starts twenty minutes after the Japanese
+one, so a Korean run waits while a Japanese run is still in progress. A scheduled run generates a
 batch when eligible Korean documents are pending, with the same limits as a
 manual `generate` run: the planner considers at most 20 targets and a batch has
 at most 10 pages. It opens a normal labeled PR that maintainers review and merge
@@ -367,9 +368,9 @@ The translation pipeline works on one locale per run. `scripts/i18n/state.cjs`
 exposes `pipelineLocale(root)`: a configuration that declares a single locale
 needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
 soon as several are managed. An absent or unconfigured selector then fails
-before discovery or generation. The Japanese translation workflow defaults its
-manual input and scheduled runs to `ja`; the Japanese coverage audit always
-selects `ja`. A manual translation run can select another configured locale.
+before discovery or generation. The Japanese coverage audit always
+selects `ja`. Neither translation workflow accepts a locale input: the Japanese
+workflow passes `ja` and the Korean workflow `ko` to the shared run.
 
 Build Check runs PR admission for every configured translation locale, including
 locales disabled for the site build, when a shared input changes. Otherwise it
@@ -471,10 +472,15 @@ be applied to managed translation files. The offline fixture does not establish
 live model quality, latency, cost or availability. A real limited call and
 review are recommended before running batch generation.
 
-## Asynchronous Japanese discovery and generation
+## Asynchronous discovery and generation
 
 `.github/workflows/japanese-translation.yml` runs at 04:23 and 16:23 UTC daily
-and on manual dispatch. It has no push trigger. Every run first recounts
+and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
+minutes later. Each sets only its triggers, manual defaults and the lock, then
+calls `.github/workflows/translation-run.yml` with its locale and artifact
+prefix, so both languages run the same steps. Neither has a push trigger.
+The description below uses Japanese; Korean differs only in its locale, label,
+artifact names and manual default. Every run first recounts
 the current native Dev, 4.x and community documents, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
@@ -486,22 +492,28 @@ attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Manual dispatch defaults to `generate` and accepts optional plugin, version and
-source path filters. `validate` mode requires one exact English source path
+Japanese manual dispatch defaults to `generate` (Korean to `dry-run`) and
+accepts optional plugin, version and source path prefix filters, or an exact
+`paths` list. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
 page. It provides a single-page live check after OSS model access is available.
 With OSS access but no GitHub write credential, `validate` still writes the
 candidate to the generation artifact and makes no GitHub write.
 `dry-run` remains available for read-only discovery. Full scans recover
 pending work from new or changed source documents and earlier failed runs.
-One workflow-level concurrency group covers every trigger, mode and locale.
+One concurrency group, `docs-translation`, covers both workflows, every
+trigger and every mode. Rename it only while no translation run is queued or
+running; otherwise the run in flight and the next one hold different locks.
 Only one complete run can execute at a time; `cancel-in-progress: false`
 preserves it when another run is requested. `queue: max` lets up to 100
 pending runs wait instead of replacing the previous pending run; see
 [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
 Each queued run takes a fresh master checkout and recounts pending documents.
-Translation PR
-merges do not trigger this workflow. It does not participate in website
+The generation job checks out master again instead of the discovery commit,
+because it can wait for a runner long after discovery, then reconciles open PRs
+and replans. When master and the open-PR reservations are unchanged since
+discovery, it reuses the discovery plan instead of recounting every native
+document. Translation PR merges do not trigger this workflow. It does not participate in website
 builds or release deployment.
 
 The mode controls generation directly: manual `generate` runs and scheduled
@@ -545,7 +557,9 @@ The generator calls the model once for exact Dev/4.x pairs whose doc ID,
 relative source path and normalized source hash match. It writes two separate
 state records. Human-owned or changed targets, moves, deletions and other
 protected tasks stay in the manual queue. The robot opens a regular PR with
-machine review status and the `translate-ja` label, and never merges it.
+machine review status and the `translate-ja` label, and never merges it. The
+run checks that the label exists before loading Codex auth, because the
+publisher applies it only after the model calls and the branch push.
 Maintainers review and merge PRs when ready. Multiple batches can remain open:
 their documents are excluded, while unrelated pending documents can form the
 next batch. This exclusion includes stale candidates and manually edited
@@ -570,6 +584,21 @@ warnings to the exact source and target hashes. The PR translation gate recogniz
 that recorded fallback, and the PR body lists its warnings for review. Three
 requests that return no usable document remain an operational failure.
 
+Master usually moves while a batch waits for a runner or for the model.
+Generation checks it before the first model call, before each page and after the
+last one, and the publisher checks it again before pushing
+(`scripts/i18n/master-drift.cjs`). A merge that touches none of the batch's files
+leaves the batch valid: the PR branch stays on the source commit, the PR body
+notes the newer master, and the normal PR checks run against current master. A
+merge that changes a batch page's English source, target or state shard drops
+that page, which stays pending for the next run; the publisher stops instead.
+A merge that changes translation configuration, routing identity or the
+pipeline itself discards the batch before any further model call: the
+locale's scope, glossary, protection exceptions, inventory or top-level state
+files, `translations/config.json`, `config/i18n.js`, `docusaurus.config.js`,
+`versions.json` or `scripts/i18n/`. So does a master that no longer contains
+the source commit.
+
 Before pushing, the publisher runs `scripts/i18n/pr-preflight.cjs`, the same entry
 point used by the PR build workflow. It checks translation state, Markdown/MDX
 syntax and internal links using the PR link checker's resolver. Invalid syntax
@@ -591,6 +620,10 @@ I18N_SIM_PAGES=10 I18N_SIM_SCENARIO=fallback \
 # Translate a real page exceeding the former 60,000-character limit in one request.
 I18N_SIM_SOURCE_PATH=docs/admin-manual/config/be-config.md I18N_SIM_SCENARIO=success \
   node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-long-page-sim
+
+# A merge lands on master after discovery: unrelated, to the selected page,
+# or to the Japanese glossary.
+I18N_SIM_MASTER_DRIFT=unrelated node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-drift-sim
 ```
 
 The output directory must be empty. The simulator copies the current scripts,
@@ -600,6 +633,10 @@ source fixtures there. Real open-PR reconciliation and full planning run against
 a GitHub CLI mock, followed by the production engine and a schema-shaped Codex
 mock. `I18N_SIM_SCENARIO` accepts `success` (one attempt), `retry` (two attempts,
 the default), or `fallback` (three attempts retained with warnings).
+`I18N_SIM_MASTER_DRIFT` pushes one more commit to the local remote after
+discovery: `unrelated` publishes normally and records the newer master in the PR
+body, `page` skips the selected page without a model request, and `config` stops
+the batch before any model request.
 
 The simulator also verifies three empty responses, token accounting, the shared
 PR admission checks, and publication of only managed Japanese targets/state to
@@ -609,10 +646,10 @@ No real model call or GitHub write occurs.
 
 ## Validation
 
-### Selecting an exact Korean manual batch
+### Selecting an exact manual batch
 
-Manual Korean dispatch defaults to `dry-run`. Its optional
-`paths` input accepts a JSON array of 1–20 exact English source files, so a bounded
+Both translation workflows take an optional `paths` input on manual dispatch.
+It accepts a JSON array of 1–20 exact English source files, so a bounded
 batch can select documents from different folders without including every page
 under a shared prefix:
 
