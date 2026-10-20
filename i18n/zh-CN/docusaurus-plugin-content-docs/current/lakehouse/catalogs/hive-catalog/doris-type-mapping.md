@@ -23,8 +23,8 @@
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
-| timestamp with local time zone| TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
+| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`。 |
+| timestamp with local time zone| TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`。精度最高为 6，超过的部分会丢失。 |
 | array         | array         |                           |
 | map           | map           |                           |
 | struct        | struct        |                           |
@@ -32,7 +32,7 @@
 
 ## 使用说明
 
-复合类型的子字段递归使用上述映射。`TIMESTAMPTZ` 表示时间点，按会话 `time_zone` 展示。4.2 中 `enable.mapping.varbinary` 和 `enable.mapping.timestamp_tz` 仅为兼容标记，设为 `false` 不会恢复 `STRING` 或 `DATETIME` 旧映射。
+复合类型的子字段递归使用上述映射。`TIMESTAMPTZ` 表示时间点，按会话 `time_zone` 展示。
 
 Hive Catalog 从 Hive Metastore 的类型字符串推断 Schema。`timestamp` 映射为 `DATETIME(6)`，不会因为底层文件保存了纳秒就自动映射为 `TIMESTAMP_NS`。`uniontype` 等未列为支持的类型不受支持。
 

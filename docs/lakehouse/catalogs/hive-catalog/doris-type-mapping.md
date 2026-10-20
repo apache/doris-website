@@ -23,8 +23,8 @@ The following table describes how Doris 4.2 (`branch-4.2`) maps Hive external-ta
 | char(N)       | char(N)       |                                                |
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
-| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
-| timestamp with local time zone | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
+| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. |
+| timestamp with local time zone | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. Precision is capped at 6, so higher precision is lost. |
 | array         | array         |                                                |
 | map           | map           |                                                |
 | struct        | struct        |                                                |
@@ -32,7 +32,7 @@ The following table describes how Doris 4.2 (`branch-4.2`) maps Hive external-ta
 
 ## Usage Notes
 
-Child fields of complex types use the same mappings recursively. `TIMESTAMPTZ` represents an instant displayed in the session `time_zone`. In 4.2, `enable.mapping.varbinary` and `enable.mapping.timestamp_tz` are compatibility markers; setting either to `false` does not restore the legacy `STRING` or `DATETIME` mapping.
+Child fields of complex types use the same mappings recursively. `TIMESTAMPTZ` represents an instant displayed in the session `time_zone`.
 
 Hive Catalog derives schemas from Hive Metastore type strings. `timestamp` maps to `DATETIME(6)`; nanosecond data in the underlying file does not automatically change the mapping to `TIMESTAMP_NS`. Types not listed as supported, including `uniontype`, are unsupported.
 

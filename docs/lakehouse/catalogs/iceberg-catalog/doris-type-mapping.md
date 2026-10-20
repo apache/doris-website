@@ -18,10 +18,10 @@ The following table describes how Doris 4.2 (`branch-4.2`) maps Iceberg external
 | decimal(P, S)                          | decimal(P, S)        |                                         |
 | date                                   | date                 |                                         |
 | timestamp (Timestamp without timezone) | datetime(6)          | Mapped to datetime with precision 6     |
-| timestamptz (Timestamp with timezone) | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
+| timestamptz (Timestamp with timezone) | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. Precision is capped at 6, so higher precision is lost. |
 | fixed(N) | VARBINARY(N) | Since 4.1.5, the fixed binary width is preserved. |
 | string                                 | string               |                                         |
-| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
+| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. |
 | uuid | UUID | Native `UUID` in 4.2; Doris 4.1.5 maps this to `VARBINARY(16)`. |
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
@@ -34,7 +34,7 @@ The following table describes how Doris 4.2 (`branch-4.2`) maps Iceberg external
 
 ## Usage Notes
 
-Child fields of complex types use the same mappings recursively. `TIMESTAMPTZ` represents an instant displayed in the session `time_zone`. In 4.2, `enable.mapping.varbinary` and `enable.mapping.timestamp_tz` are compatibility markers; setting either to `false` does not restore the legacy `STRING` or `DATETIME` mapping.
+Child fields of complex types use the same mappings recursively. `TIMESTAMPTZ` represents an instant displayed in the session `time_zone`.
 
 `timestamp` and `timestamptz` use microsecond precision. Only timezone-naive `timestamp_ns` maps to `TIMESTAMP_NS`. Its range is `1677-09-21 00:12:43.145224192` through `2262-04-11 23:47:16.854775807`; values outside this range cannot be represented.
 

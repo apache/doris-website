@@ -18,10 +18,10 @@
 | decimal(P, S)                          | decimal(P, S)        |                       |
 | date                                   | date                 |                       |
 | timestamp (Timestamp without timezone) | datetime(6)          | 固定映射到精度为 6 的 datetime |
-| timestamptz (Timestamp with timezone)  | TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
+| timestamptz (Timestamp with timezone)  | TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`。精度最高为 6，超过的部分会丢失。 |
 | fixed(N) | VARBINARY(N) | 自 4.1.5 版本起保留固定二进制宽度。 |
 | string                                 | string               |                       |
-| binary                                 | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
+| binary                                 | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`。 |
 | uuid | UUID | 4.2 映射为原生 `UUID`；4.1.5 映射为 `VARBINARY(16)`。 |
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
@@ -34,7 +34,7 @@
 
 ## 使用说明
 
-复合类型的子字段递归使用上述映射。`TIMESTAMPTZ` 表示时间点，按会话 `time_zone` 展示。4.2 中 `enable.mapping.varbinary` 和 `enable.mapping.timestamp_tz` 仅为兼容标记，设为 `false` 不会恢复 `STRING` 或 `DATETIME` 旧映射。
+复合类型的子字段递归使用上述映射。`TIMESTAMPTZ` 表示时间点，按会话 `time_zone` 展示。
 
 `timestamp` 和 `timestamptz` 使用微秒精度；只有不带时区的 `timestamp_ns` 映射为 `TIMESTAMP_NS`。`TIMESTAMP_NS` 的范围为 `1677-09-21 00:12:43.145224192` 至 `2262-04-11 23:47:16.854775807`，超出范围的值不能表示。
 
