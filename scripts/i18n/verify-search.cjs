@@ -110,6 +110,14 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             assert(await page.locator('section article mark').count(), `Missing result highlight: ${probe.query}`);
             const labels = await page.locator('select option').allTextContents();
             for (const label of Object.values(settings.searchContextLabels)) assert(labels.includes(label), `Missing context label: ${label}`);
+            if (locale === 'ru' && probe.query === 'отчеты') {
+                const target = await newPage();
+                await open(target, links[0]);
+                await target.locator('.theme-doc-markdown mark').first().waitFor();
+                assert((await target.locator('.theme-doc-markdown mark').allTextContents())
+                    .some(text => /отчёты/i.test(text)), 'Russian target highlighting lost ё/е equivalence');
+                await target.close();
+            }
             results.push({...probe,results:links.length,indexRequests:requests});
             await page.close();
         }
