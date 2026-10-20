@@ -43,7 +43,10 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
             assert(fs.existsSync(filename(page.permalink)), `Missing native route: ${page.permalink}`);
             routes++;
         }
-        const representative = pages.find(page => page.status === 'current' && page.indexable) ?? pages[0];
+        // Native standalone docs can be current without belonging to a sidebar.
+        // Cover their routes above, and inspect navigation on a sidebar member.
+        const candidates = [...pages.filter(page => page.status === 'current' && page.indexable), ...pages];
+        const representative = candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
         const $ = read(representative.permalink);
         assert.equal($('.theme-doc-markdown').attr('lang'), representative.contentLocale, representative.permalink);
         const sidebar = $('.theme-doc-sidebar-container');

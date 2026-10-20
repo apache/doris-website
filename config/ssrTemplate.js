@@ -26,9 +26,7 @@ module.exports = {
   </head>
   <body <%~ it.bodyAttributes %>>
     <%~ it.preBodyTags %>
-    <div id="__docusaurus">
-      <%~ it.appHtml %>
-    </div>
+    <div id="__docusaurus"><%~ it.appHtml %></div>
     <% it.scripts.forEach((script) => { %>
       <script src="<%= ${assetOrigin} %><%= ${assetBaseExpression} %><%= script %>"></script>
     <% }); %>

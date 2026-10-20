@@ -73,6 +73,10 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
         const page = await context.newPage();
         if (viewport) await page.setViewportSize(viewport);
         page.on('pageerror', error => errors.push({url:page.url(),message:error.message}));
+        page.on('console', message => {
+            if (message.type() === 'error' && /onRecoverableError|Minified React error|Hydration failed/i.test(message.text()))
+                errors.push({url:page.url(),message:message.text()});
+        });
         page.on('response', response => {if (response.url().startsWith(origin) && response.status() >= 400) failed.push({url:response.url(),status:response.status()});});
         page.on('worker', worker => {workers.push(worker.url());assert.equal(new URL(worker.url()).origin, origin, 'Cross-origin worker');});
         return page;
@@ -132,6 +136,35 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             assert(!requests.includes(`/${locale}/${indexFiles['']}`), 'Everywhere fetched a duplicate union index');
             results.push({everywhere:probe.query,results:links.length,indexRequests:requests});
             await page.close();
+        }
+        const current = data.pages.find(page => page.pluginId === 'default' && page.version === 'current'
+            && page.docId === 'getting-started/what-is-apache-doris' && page.status === 'current' && page.useTarget);
+        if (current) {
+            const navigation = await newPage();
+            await open(navigation, current.permalink + '?i18nProbe=1#core-highlights');
+            const source = new URL(await navigation.locator('[data-translation-status] a[hreflang="en"]').getAttribute('href'), origin);
+            assert.equal(source.pathname, current.englishPermalink);
+            assert.equal(source.search, '?i18nProbe=1');
+            assert.equal(source.hash, '#core-highlights');
+            const linked = await navigation.locator('a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
+            const fallback = data.pages.find(page => page.pluginId === 'default' && page.version === 'current'
+                && !page.draft && !page.useTarget && linked.some(link => route(link) === route(page.permalink)));
+            if (locale === 'ru') assert(fallback, 'Russian SPA verification needs a linked English fallback');
+            if (fallback) {
+                // Use an actual native Link, including a collapsed sidebar entry.
+                await navigation.locator('a[href]').evaluateAll((nodes, target) => {
+                    nodes.find(node => new URL(node.href).pathname.replace(/\/$/, '') === target.replace(/\/$/, '')).click();
+                }, fallback.permalink);
+                await navigation.waitForFunction(expected => document.querySelector('.theme-doc-markdown')?.lang === expected, fallback.contentLocale);
+                await navigation.locator(`link[rel="alternate"][hreflang="${locale}"]`).waitFor({state:'detached'});
+                await navigation.waitForFunction(expected => new URL(document.querySelector('link[rel="canonical"]').href).pathname === expected, fallback.englishPermalink);
+                assert.match(await navigation.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+                await navigation.reload();
+                await navigation.waitForSelector('html[data-has-hydrated="true"]');
+                assert.equal(await navigation.locator('.theme-doc-markdown').getAttribute('lang'), fallback.contentLocale);
+                results.push({navigationFallback:fallback.permalink,spaSEO:true,sourceSuffix:source.search + source.hash,refresh:true});
+            }
+            await navigation.close();
         }
         const devPage = data.pages.find(page => page.pluginId === 'default' && page.version === 'current' && !page.draft);
         if (!devOnly || devPage) {
