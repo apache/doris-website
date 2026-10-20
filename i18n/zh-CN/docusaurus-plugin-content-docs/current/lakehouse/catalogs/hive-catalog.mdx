@@ -91,7 +91,7 @@ Doris 4.1.x 之前的版本，元数据缓存主要由 FE 配置项全局控制�
 
 ### 缓存属性配置 {#meta-cache-unified-model}
 
-每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Hive 的 `<engine>` 为 `hive`。包含 Iceberg 表的 Hive Metastore Catalog 还会使用 [Iceberg Catalog](./iceberg-catalog#meta-cache) 中描述的 `iceberg` 模块。
+每个缓存模块使用统一的配置键格式：`meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`。Hive 的 `<engine>` 为 `hive`。包含 Iceberg 表的 Hive Metastore Catalog 还会使用 [Iceberg Catalog](./iceberg-catalog.mdx#meta-cache) 中描述的 `iceberg` 模块。
 
 | 属性 | 示例 | 含义 |
 |---|---|---|
@@ -275,27 +275,7 @@ CREATE CATALOG hive_legacy_int96 PROPERTIES (
 
 ## 列类型映射
 
-| Hive Type     | Doris Type    | Comment                   |
-| ------------- | ------------- | ------------------------- |
-| boolean       | boolean       |                           |
-| tinyint       | tinyint       |                           |
-| smallint      | smallint      |                           |
-| int           | int           |                           |
-| bigint        | bigint        |                           |
-| date          | date          |                           |
-| timestamp     | datetime(6)   | 固定映射到精度为 6 的 datetime     |
-| float         | float         |                           |
-| double        | double        |                           |
-| decimal(P, S) | decimal(P, S) | 如果未指定精度，默认为 decimal(9, 0) |
-| char(N)       | char(N)       |                           |
-| varchar(N)    | varchar(N)    |                           |
-| string        | string        |                           |
-| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
-| timestamp with local time zone| TIMESTAMPTZ | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
-| array         | array         |                           |
-| map           | map           |                           |
-| struct        | struct        |                           |
-| other         | unsupported   |                           |
+请参阅[Hive 与 Doris 数据类型映射](hive-catalog/doris-type-mapping.md)，了解 Doris 4.2 的完整映射表、精度和不支持的类型。
 
 ## 基础示例
 ### Hive Metastore

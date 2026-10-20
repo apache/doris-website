@@ -334,26 +334,7 @@ ORDER BY engine_name, entry_name;
 
 ## 列类型映射
 
-| Paimon Type                        | Doris Type    | Comment                                |
-| ---------------------------------- | ------------- | -------------------------------------- |
-| boolean                              | boolean                   |                                                                                                                                                                               |
-| tinyint                              | tinyint                   |                                                                                                                                                                               |
-| smallint                             | smallint                  |                                                                                                                                                                               |
-| integer                              | int                       |                                                                                                                                                                               |
-| bigint                               | bigint                    |                                                                                                                                                                               |
-| float                                | float                     |                                                                                                                                                                               |
-| double                               | double                    |                                                                                                                                                                               |
-| decimal(P, S)                        | decimal(P, S)             |                                                                                                                                                                               |
-| varchar                              | string                    |                                                                                                                                                                               |
-| char                                 | string                    |                                                                                                                                                                               |
-| binary, varbinary                    | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
-| date                                 | date                      |                                                                                                                                                                               |
-| timestamp\_without\_time\_zone     | datetime(N)               | 会根据精度进行对应映射。如果精度大于 6，则最大映射到 6。（可能导致精度丢失）                                                                                                |
-| timestamp\_with\_local\_time\_zone | TIMESTAMPTZ(N) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(N)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
-| array                                | array                     |                                                                                                                                                                               |
-| map                                  | map                       |                                                                                                                                                                               |
-| row                                  | struct                    |                                                                                                                                                                               |
-| other                                | UNSUPPORTED               |                                                                                                                                                                               |
+请参阅[Paimon 与 Doris 数据类型映射](paimon-catalog/doris-type-mapping.md)，了解 Doris 4.2 的完整映射表、精度和不支持的类型。
 
 在两个 Paimon JNI Scanner 路径上，Doris 都会保留带引号的顶层列名和嵌套 `STRUCT` 字段名的原始大小写与字符。
 包含逗号（`region,code`）、井号（`nested#value`）、冒号（`colon:name`）、空格或 Unicode 字符的名称，除普通
@@ -366,14 +347,6 @@ SQL 标识符引用外无需额外转义。读取时列按不区分大小写的�
 :::
 
 自 4.1.5 版本起，显式执行 `REFRESH TABLE`、`REFRESH DATABASE` 或 `REFRESH CATALOG` 时，也会使 Paimon 的相应元数据缓存失效。外部表结构变更、删除后重建等操作后，可用刷新命令重新加载元数据；已开始执行的查询仍使用其已选定的快照。
-
-> 注：
->
-> 自 4.1.5 版本起，`timestamp_without_time_zone` 映射到 `DATETIME(N)`，`timestamp_with_local_time_zone` 固定映射到 `TIMESTAMPTZ(N)`。后者表示时间点，按会话 `time_zone` 展示；设为 `enable.mapping.timestamp_tz=false` 不能恢复旧映射。
->
-> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型（该功能自 3.0.8 版本支持）。
->
-> 4.0.3 后开始支持，可以映射 `timestamp_with_local_time_zone` 到 Doris 的 `timestamptz` 类型。
 
 ## 基础示例
 

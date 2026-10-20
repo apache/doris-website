@@ -15,6 +15,8 @@ Lance support is available starting from Apache Doris 4.2.
 
 [Lance](https://docs.lancedb.com/lance) is a columnar data format designed for analytics and AI workloads. Doris can read Lance datasets through a Lance Catalog or through the `s3()` and `local()` table-valued functions (TVFs).
 
+For Lance type mappings, see [Doris Data Type Mapping](../catalogs/lance-catalog/doris-type-mapping.md).
+
 ## Supported Features
 
 | Feature | Support |
