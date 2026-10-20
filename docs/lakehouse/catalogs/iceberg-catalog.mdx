@@ -318,7 +318,7 @@ Use `ST_AsText`, `ST_AsBinary`, `ST_X`, `ST_Y` and `ST_GeometryType` to inspect 
 
 `INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. CREATE and ALTER reject V2/ORC or nested spatial writes. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
 
-Before dispatching a plan containing spatial types, FE checks every participating BE for spatial support. A BE that does not support spatial types or has not yet advertised support through heartbeat causes rejection before plan dispatch. Plans without spatial types do not require this capability. All participating FEs must still support spatial types.
+All participating FEs and BEs must support spatial types. This feature does not provide mixed-version execution compatibility for upgrades from 4.x to 5.0.
 
 For Arrow Flight SQL clients, project spatial columns through `ST_AsBinary` or `ST_AsText`. Direct spatial-column result schemas are not supported; Iceberg Arrow storage mapping does not add GeoArrow or direct Flight spatial output.
 

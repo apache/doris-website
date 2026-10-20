@@ -334,7 +334,7 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 `INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。CREATE 和 ALTER 拒绝 V2、ORC 或嵌套空间写入。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
 
-下发含空间类型的计划前，FE 会检查所有参与 BE 的空间能力；任一 BE 不支持或尚未通过心跳报告支持时，查询会在下发计划前报错。执行计划不含空间类型的查询不需要该能力。所有参与 FE 仍需支持空间类型。
+所有参与 FE 和 BE 均需支持空间类型。本功能不提供 4.x 升级到 5.0 期间的混合版本执行兼容。
 
 使用 Arrow Flight SQL 客户端时，请通过 `ST_AsBinary` 或 `ST_AsText` 投影空间列。当前不支持直接空间列的结果 schema；Iceberg Arrow 存储映射不代表支持 GeoArrow 或 Flight 直接输出空间类型。
 
