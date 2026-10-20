@@ -30,7 +30,7 @@
     "message": "사람이 교정한 한국어 번역입니다."
   },
   "docs.translation.machine": {
-    "message": "이 페이지는 기계 번역되었습니다."
+    "message": "이 페이지는 대규모 언어 모델(LLM)로 번역되었습니다."
   },
   "docs.translation.translatedAt": {
     "message": "번역일: "

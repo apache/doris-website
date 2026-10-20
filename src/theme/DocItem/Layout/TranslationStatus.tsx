@@ -27,7 +27,8 @@ function description(state: TranslationState): string {
         message: 'The translation does not reflect the latest changes to the source.'});
     return state.reviewStatus === 'human'
         ? translate({id: 'docs.translation.reviewedHuman', message: 'This translation was reviewed by a person.'})
-        : translate({id: 'docs.translation.machine', message: 'This page is machine translated.'});
+        : translate({id: 'docs.translation.machine',
+            message: 'This page was translated by a large language model (LLM).'});
 }
 
 export default function TranslationStatus({state}: {state: TranslationState}): JSX.Element {
