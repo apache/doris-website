@@ -33,6 +33,12 @@
     {
       "pluginId": "default",
       "version": "current",
+      "key": "sidebar.docs.category.Hive Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
       "key": "sidebar.docs.category.Iceberg Catalog",
       "reason": "Named Doris Catalog connector; preserve its documented connector name."
     },
@@ -40,6 +46,12 @@
       "pluginId": "default",
       "version": "current",
       "key": "sidebar.docs.category.Paimon Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Lance Catalog",
       "reason": "Named Doris Catalog connector; preserve its documented connector name."
     },
     {
@@ -117,7 +129,19 @@
     {
       "pluginId": "default",
       "version": "4.x",
+      "key": "sidebar.docs.category.Hive Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
       "key": "sidebar.docs.category.Iceberg Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Lance Catalog",
       "reason": "Named Doris Catalog connector; preserve its documented connector name."
     },
     {
