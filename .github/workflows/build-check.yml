@@ -119,7 +119,7 @@ jobs:
                   node --test scripts/i18n/__tests__/planner.test.cjs
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs
                   node --test scripts/i18n/__tests__/korean-toolchain.test.cjs
-                  node --test scripts/i18n/__tests__/korean-workflow.test.cjs
+                  node --test scripts/i18n/__tests__/translation-workflows.test.cjs
                   node --test scripts/i18n/__tests__/workflow.test.cjs
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
                   node --test scripts/i18n/__tests__/translate-document.test.cjs

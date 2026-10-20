@@ -255,6 +255,10 @@
     "message": "데이터 Catalog",
     "description": "The label for category Data Catalogs in sidebar docs"
   },
+  "sidebar.docs.category.Hive Catalog": {
+    "message": "Hive Catalog",
+    "description": "The label for category Hive Catalog in sidebar docs"
+  },
   "sidebar.docs.category.Iceberg Catalog": {
     "message": "Iceberg Catalog",
     "description": "The label for category Iceberg Catalog in sidebar docs"
@@ -262,6 +266,10 @@
   "sidebar.docs.category.Paimon Catalog": {
     "message": "Paimon Catalog",
     "description": "The label for category Paimon Catalog in sidebar docs"
+  },
+  "sidebar.docs.category.Lance Catalog": {
+    "message": "Lance Catalog",
+    "description": "The label for category Lance Catalog in sidebar docs"
   },
   "sidebar.docs.category.Hudi Catalog": {
     "message": "Hudi Catalog",

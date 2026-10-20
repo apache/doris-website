@@ -109,8 +109,9 @@ test('native doc metadata, browser groups and per-locale manifests agree, includ
 test('scheduled Japanese jobs select ja and PR admission checks only changed locales with fail-fast behavior', async t => {
     const workflow = file => yaml.load(fs.readFileSync(path.join(repoRoot, '.github/workflows', file), 'utf8'));
     const translation = workflow('japanese-translation.yml');
-    assert.equal(translation.on.workflow_dispatch.inputs.locale.default, 'ja');
-    for (const job of ['discover', 'generate']) assert.equal(translation.jobs[job].env.I18N_LOCALE, "${{ inputs.locale || 'ja' }}");
+    assert.equal(translation.on.workflow_dispatch.inputs.locale, undefined);
+    assert.equal(translation.jobs.translation.with.locale, 'ja');
+    assert.equal(workflow('translation-run.yml').env.I18N_LOCALE, '${{ inputs.locale }}');
     assert.equal(workflow('japanese-coverage-audit.yml').jobs.audit.env.I18N_LOCALE, 'ja');
     const gate = workflow('build-check.yml').jobs['build-and-deploy'].steps.find(step => step.name === 'Translation gate for changed locales');
     const {root, write} = await createFixture(directory(t));

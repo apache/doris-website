@@ -20,6 +20,11 @@ const scenario = process.env.I18N_SIM_SCENARIO || 'retry';
 assert([1, 10].includes(pages), 'Simulation supports one or ten pages');
 assert(['success', 'retry', 'fallback', 'incremental'].includes(scenario), 'Unknown simulation scenario');
 assert(scenario !== 'incremental' || pages === 1, 'Incremental simulation uses one page');
+// A merge that lands on master after discovery: unrelated, to the selected page,
+// or to the translation configuration.
+const drift = process.env.I18N_SIM_MASTER_DRIFT || '';
+assert(['', 'unrelated', 'page', 'config'].includes(drift), 'Unknown master drift');
+assert(!drift || pages === 1, 'Master drift simulation uses one page');
 
 function command(binary, args, options = {}) {
     return execFileSync(binary, args, {encoding: 'utf8', ...options}).trim();
@@ -50,6 +55,8 @@ const {extractUnits} = require(${JSON.stringify(path.join(repo, 'scripts/i18n/tr
     const units = await extractUnits(translation, ${JSON.stringify(path.extname(sourcePath))});
     for (const unit of [...units].reverse()) translation = translation.slice(0, unit.start)
         + '訳' + unit.text + translation.slice(unit.end);
+    // Like a real model, localize a declared front matter language.
+    translation = translation.replace(/("language":\\s*")en(")/, '$1ja$2');
     if (${JSON.stringify(mode)} === 'invalid') translation = '';
     if (${JSON.stringify(mode)} === 'retry' && payload.feedback.length === 0)
         translation = translation.replace(/^#{1,6} .*$/gm, '');
@@ -179,6 +186,44 @@ async function main() {
     runNode(repo, 'scripts/i18n/workflow-scan.cjs', [scan], env, logs);
     const plan = JSON.parse(fs.readFileSync(path.join(scan, 'plan.json'), 'utf8'));
     assert.equal(plan.selected.length, pages);
+    if (drift) {
+        const other = path.join(output, 'other');
+        command('git', ['clone', '--shared', '-q', remote, other]);
+        command('git', ['config', '--local', 'user.name', 'Local Simulator'], {cwd: other});
+        command('git', ['config', '--local', 'user.email', 'local@example.invalid'], {cwd: other});
+        const file = {unrelated: 'blog/translation-simulation-drift.md', config: 'translations/glossary/ja.json',
+            page: plan.tasks.find(task => task.id === plan.selected[0]).sourcePath}[drift];
+        fs.mkdirSync(path.dirname(path.join(other, file)), {recursive: true});
+        fs.appendFileSync(path.join(other, file), drift === 'config' ? '\n' : '\nMaster drift simulation.\n');
+        command('git', ['add', '.'], {cwd: other});
+        command('git', ['commit', '-qm', `Master drift simulation: ${drift}`], {cwd: other});
+        command('git', ['push', '-q', 'origin', 'HEAD:master'], {cwd: other});
+    }
+    if (drift === 'page' || drift === 'config') {
+        // Neither model sees a request: the page is skipped, or the batch stops first.
+        const results = ['invalid', 'valid'].map(kind => {
+            const result = runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan],
+                {...env, CODEX_BIN: path.join(bin, `codex-${kind}`), I18N_SIM_PHASE: `-${kind}`}, logs, 1);
+            const file = path.join(scan, 'generation.json');
+            if (drift === 'config') {
+                assert.match(result.stderr, /master changed translations\/glossary\/ja\.json after the source commit/);
+                assert(!fs.existsSync(file));
+                return {exitCode: result.status, error: result.stderr.trim()};
+            }
+            const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+            assert.equal(manifest.candidates.length, 0);
+            assert.equal(manifest.usedTokens, 0);
+            assert.match(manifest.failures[0].error, /master changed this page after the source commit/);
+            assert.equal(manifest.master.moved, true);
+            return {exitCode: result.status, error: manifest.failures[0].error, master: manifest.master};
+        });
+        const report = {kind: 'local simulation; no external model or GitHub writes', output, drift,
+            sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath: selectedPath, generation: results,
+            pullRequest: null};
+        fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
+        process.stdout.write(JSON.stringify(report, null, 2) + '\n');
+        return;
+    }
     const failed = {...env, CODEX_BIN: path.join(bin, 'codex-invalid'), I18N_SIM_PHASE: '-invalid'};
     runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan], failed, logs, pages === 1 ? 1 : 0);
     const failure = JSON.parse(fs.readFileSync(path.join(scan, 'generation.json'), 'utf8'));
@@ -201,6 +246,12 @@ async function main() {
     runNode(repo, 'scripts/i18n/workflow-publish.cjs', [scan], env, logs);
     const pr = JSON.parse(fs.readFileSync(env.I18N_SIM_PR_RECORD, 'utf8'));
     assert.match(pr.body, /Shared PR admission checks: passed/);
+    if (drift === 'unrelated') {
+        // Published from the source commit; the PR checks run against current master.
+        assert.equal(generation.master.moved, true);
+        assert.match(pr.body, /Master moved to `[a-f0-9]{40}` during generation; none of its 1 changed files affect this batch/);
+        assert.match(pr.body, /Master was at `[a-f0-9]{40}` when publishing; none of its 1 changed files/);
+    } else assert.equal(generation.master.moved, false);
     assert.equal(pr.head, `i18n/ja-automated-${runId}`);
     const branch = command('git', ['rev-parse', `refs/heads/${pr.head}`], {cwd: remote});
     const candidate = generation.candidates[0];
@@ -217,7 +268,8 @@ async function main() {
     const expectedFiles = [...new Set(generation.candidates.flatMap(item => [item.targetPath, item.statePath]))].sort();
     const committedFiles = command('git', ['diff', '--name-only', plan.sourceCommit, branch], {cwd: repo}).split('\n').sort();
     assert.deepEqual(committedFiles, expectedFiles);
-    const report = {kind: 'local simulation; no external model or GitHub writes', output,
+    const report = {kind: 'local simulation; no external model or GitHub writes', output, drift: drift || null,
+        master: generation.master,
         sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath: selectedPath, scenario,
         invalidModel: {exitCode: pages === 1 ? 1 : 0, error: failure.failures[0].error, usedTokens: failure.usedTokens},
         generation: {candidates: generation.candidates.length, failures: generation.failures.length,

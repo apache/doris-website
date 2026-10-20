@@ -9,6 +9,7 @@ const {checkedTask, managedPath, safeFile} = require('./translation-engine.cjs')
 const {codexAdapter} = require('./codex-adapter.cjs');
 const {prepare, applyCandidates, readState, stagedBaseline, statePathForRecord, targetFor} = require('./translate-docs.cjs');
 const {markerPrefixFor} = require('./automation-naming.cjs');
+const {checkMaster, pageFiles} = require('./master-drift.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const allowedKinds = new Set(['translate_new', 'translate_backlog', 'update']);
@@ -55,14 +56,6 @@ function copyPair(primary, partner, scope, state, rootDir = root) {
         requests: 0, reusedFrom: primary.task.id};
 }
 
-function ensureMasterFresh(sourceCommit) {
-    const repository = process.env.GITHUB_REPOSITORY || 'apache/doris-website';
-    assert.equal(repository, 'apache/doris-website', 'Unexpected repository');
-    const actual = execFileSync('git', ['ls-remote', `https://github.com/${repository}.git`, 'refs/heads/master'],
-        {encoding: 'utf8'}).trim().split(/\s+/)[0];
-    assert.equal(actual, sourceCommit, 'master advanced during generation; discard this batch and rescan');
-}
-
 function bodyFor(manifest) {
     const rows = manifest.candidates.map(item => {
         const review = item.generation;
@@ -79,8 +72,10 @@ function bodyFor(manifest) {
             return `- \`${item.sourcePath}\`: third attempt retained for review. `
                 + detail.slice(0, 1500) + (detail.length > 1500 ? '…' : '');
         });
+    const master = manifest.master?.moved ? [`Master moved to \`${manifest.master.head}\` during generation; `
+        + `none of its ${manifest.master.changedFiles} changed files affect this batch.`] : [];
     return [`## ${manifest.language} translation candidate`, '',
-        `Source commit: \`${manifest.sourceCommit}\``,
+        `Source commit: \`${manifest.sourceCommit}\``, ...master,
         `Model: \`${manifest.model}\`; glossary: \`${manifest.glossaryVersion}\``,
         `Review status: machine. ${manifest.language} proofreading and the normal PR checks are still required.`,
         '', '| Action | Version | English source | SHA-256 prefix | Generation |',
@@ -92,14 +87,16 @@ function bodyFor(manifest) {
         'Generation uses at most three attempts per document. Deletions and code-only updates may need no model call.',
         'Each retry receives the earlier validation errors. Third-attempt content issues are retained as warnings above.',
         'Full attempt history and diagnostics are in generation.json and the page state records.',
-        'Committed source hashes, managed paths, target/state hashes and the master SHA are checked before applying candidates.',
+        'Committed source hashes, managed paths and target/state hashes are checked before applying candidates.',
+        'Master is checked before each model call and before publishing: unrelated merges are allowed, a page changed on master is dropped, and a translation configuration or tooling change discards the batch.',
         'The publisher runs the shared PR translation-state, syntax and internal-link checks before pushing.',
         'The normal PR build and human proofreading are still required before merging.',
         '', `${markerPrefixFor(manifest.language)}PENDING -->`, ''].join('\n');
 }
 
-async function generate({plan, reconciliation, maxPages = 10, target,
-    adapter, glossary, rootDir = root, ensureFresh = ensureMasterFresh, output}) {
+async function generate({plan, reconciliation, maxPages = 10, target, adapter, glossary, rootDir = root,
+    ensureFresh = (sourceCommit, pages) => checkMaster({root: rootDir, sourceCommit, locale: target.locale, pages}),
+    output}) {
     assert(Number.isInteger(maxPages) && maxPages > 0 && maxPages <= 20, 'Invalid page limit');
     assert(plan.schemaVersion === 1 && plan.sourceCommit === execFileSync('git', ['rev-parse', 'HEAD'],
         {cwd: rootDir, encoding: 'utf8'}).trim(), 'Plan does not match trusted checkout');
@@ -108,6 +105,22 @@ async function generate({plan, reconciliation, maxPages = 10, target,
     const blocked = new Set(reconciliation.blockedTargets);
     const active = new Set((reconciliation.active?.candidates ?? []).map(identity));
     const candidates = [], failures = [], consumed = new Set();
+    // Master is checked before the first model call, before each page and after
+    // the last one, so no model call goes to a page master has already changed.
+    const pages = new Map();
+    for (const task of plan.selected.map(id => plan.tasks.find(item => item.id === id)).filter(Boolean)) {
+        for (const item of [task, pairFor(task, plan.tasks, scope)].filter(Boolean))
+            pages.set(item.id, pageFiles(item, target.locale));
+    }
+    const stale = new Set();
+    let drift = {moved: false};
+    const refresh = () => {
+        drift = ensureFresh(plan.sourceCommit, pages) ?? drift;
+        for (const id of drift.affected ?? []) stale.add(id);
+    };
+    const staleFailure = task => ({id: task.id, sourcePath: task.sourcePath,
+        error: 'master changed this page after the source commit; it stays pending for the next run'});
+    refresh();
     for (const id of plan.selected) {
         if (candidates.length >= maxPages) break;
         const task = plan.tasks.find(item => item.id === id);
@@ -122,11 +135,17 @@ async function generate({plan, reconciliation, maxPages = 10, target,
         if (partner && (active.has(identity(partner)) || blocked.has(partner.targetPath) || !machineOwned(partner, state)
             || state.data.pages.some(record => identity(record) === identity(partner))
             || candidates.length + 2 > maxPages)) partner = null;
+        // Outside the per-page catch: a batch-wide change must stop the run.
+        refresh();
+        if (stale.has(id)) {
+            failures.push(staleFailure(task));
+            continue;
+        }
         try {
             checkedTask(plan, id, scope, rootDir);
             const primary = await prepare({root: rootDir, plan, taskId: id, scope, state, adapter, glossary, target});
             candidates.push(primary);
-            if (partner) try {
+            if (partner && !stale.has(partner.id)) try {
                 const copy = copyPair(primary, partner, scope, state, rootDir);
                 candidates.push(copy);
                 consumed.add(partner.id);
@@ -137,10 +156,20 @@ async function generate({plan, reconciliation, maxPages = 10, target,
             failures.push({id, sourcePath: task.sourcePath, error: error.message});
         }
     }
+    let discarded = null;
+    if (candidates.length) {
+        try {refresh();} catch (error) {discarded = error;}
+        // A copy shares its primary's translation, so it goes with it.
+        const dropped = candidates.filter(item => stale.has(item.task.id) || stale.has(item.reusedFrom));
+        for (const item of dropped) failures.push(staleFailure(item.task));
+        candidates.splice(0, candidates.length, ...candidates.filter(item => !dropped.includes(item)));
+    }
     const manifest = {schemaVersion: 1, sourceCommit: plan.sourceCommit, provider: 'codex',
         locale: target.locale, language: target.language,
         model: adapter.model, glossaryVersion: glossary.version, liveCall: adapter.usedTokens > 0,
         liveVerified: false, usedTokens: adapter.usedTokens,
+        ...(drift.head ? {master: {head: drift.head, moved: drift.moved, changedFiles: drift.files.length}} : {}),
+        ...(discarded ? {discarded: discarded.message} : {}),
         candidates: candidates.map(item => ({id: item.task.id, kind: item.task.kind,
             pluginId: item.task.pluginId, version: item.task.version, docId: item.task.docId,
             sourcePath: item.task.sourcePath, sourceHash: item.task.sourceHash,
@@ -150,8 +179,8 @@ async function generate({plan, reconciliation, maxPages = 10, target,
             ...(item.record.generation ? {generation: item.record.generation} : {})})), failures};
     fs.mkdirSync(output, {recursive: true});
     fs.writeFileSync(path.join(output, 'generation.json'), JSON.stringify(manifest, null, 2) + '\n');
+    if (discarded) throw discarded;
     if (candidates.length) {
-        ensureFresh(plan.sourceCommit);
         for (const item of candidates) checkedTask({...plan, selected: [...plan.selected, item.task.id]},
             item.task.id, scope, rootDir);
         for (const item of candidates) {
@@ -195,7 +224,9 @@ async function main() {
         `created=${manifest.candidates.length > 0}\n`);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
         `\nGenerated ${manifest.candidates.length} ${manifest.language} page candidates at ${manifest.sourceCommit}; `
-        + `${manifest.failures.length} failed or need manual handling. No translation is merged yet.\n`);
+        + `${manifest.failures.length} failed or need manual handling. No translation is merged yet.\n`
+        + (manifest.master?.moved ? `Master moved to ${manifest.master.head} meanwhile; none of its `
+            + `${manifest.master.changedFiles} changed files affect the remaining candidates.\n` : ''));
     process.stdout.write(JSON.stringify({candidates: manifest.candidates.length,
         failures: manifest.failures.length, usedTokens: manifest.usedTokens}) + '\n');
     if (process.env.I18N_MODE === 'validate' && manifest.candidates.length === 0)
