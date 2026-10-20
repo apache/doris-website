@@ -176,6 +176,7 @@ const sidebars: SidebarsConfig = {
                         'connection-integration/data-integration/datagrip',
                         'connection-integration/data-integration/datax',
                         'connection-integration/data-integration/dbeaver',
+                        'connection-integration/data-integration/dbine',
                         'connection-integration/data-integration/dbt-doris-adapter',
                         'connection-integration/data-integration/doris-kafka-connector',
                         'connection-integration/data-integration/doris-streamloader',
