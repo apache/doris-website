@@ -31,6 +31,9 @@ For Lance type mappings, see [Doris Data Type Mapping](../catalogs/lance-catalog
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
 
+<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->
+For Catalog configuration, predicate pushdown, and vector search details, see [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog).
+
 ## Query a Lance Dataset with a File TVF
 
 The `uri` or `file_path` must point directly to the **root directory of one Lance dataset**, rather than an internal file such as `data/*.lance`.
@@ -63,4 +66,5 @@ To read a local dataset, use `local()` and specify the dataset root with `file_p
 
 ## References
 
+- [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog)
 - [Lance Format Documentation](https://docs.lancedb.com/lance)
