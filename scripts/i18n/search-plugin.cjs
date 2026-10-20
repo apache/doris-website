@@ -45,6 +45,8 @@ function indexGroups(allDocuments, selected) {
 function targetFingerprint(root, locale) {
     const digester = createHash('sha256');
     digester.update(fs.readFileSync(__filename)); // Bust caches when indexing behavior changes.
+    // The shared normalizer also changes indexed tokens independently of this file.
+    digester.update(fs.readFileSync(require.resolve('../../src/utils/searchNormalization.js')));
     function scan(dir) {
         if (!fs.existsSync(dir)) return;
         for (const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b) => a.name.localeCompare(b.name))) {
