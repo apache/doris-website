@@ -1,4 +1,4 @@
-// Small real builds: no production ko registration or full-version site build.
+// Small real five-language builds, including Russian disabled.
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -53,9 +53,9 @@ async function main() {
         await fs.rm(fixture, {recursive: true, force: true});
         await createFixture(fixture);
         const result = spawnSync(process.execPath, [path.join(root, 'scripts/build-locales.cjs'), '--site-dir', fixture],
-            {stdio: 'inherit', env: {...process.env, FIXTURE_DISABLE_KO: disabled ? 'true' : '', NODE_OPTIONS: '--max-old-space-size=4096'}});
+            {stdio: 'inherit', env: {...process.env, FIXTURE_DISABLE_RU: disabled ? 'true' : '', NODE_OPTIONS: '--max-old-space-size=4096'}});
         assert.equal(result.status, 0, 'Multi-locale fixture build failed');
-        const locales = disabled ? ['ja'] : ['ja', 'ko'];
+        const locales = disabled ? ['ja', 'ko'] : ['ja', 'ko', 'ru'];
         const site = path.join(fixture, 'build');
         const verification = Object.fromEntries(locales.map(locale => [locale, verify({site,
             manifest: path.join(fixture, '.i18n-build/manifests', `${locale}.json`)})]));

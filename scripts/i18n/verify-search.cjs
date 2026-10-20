@@ -8,6 +8,7 @@ const route = url => new URL(url, 'https://doris.apache.org').pathname.replace(/
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
     ko: {database:'데이터베이스', query:'쿼리', community:'커뮤니티'},
+    ru: {database:'данных', query:'запрос', community:'сообщество'},
 };
 
 function checkIndexes({site, locale, manifest}) {
@@ -96,6 +97,8 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             {ctx:'docs/dev',query:corpus[locale].database}, {ctx:'docs/dev',query:corpus[locale].query},
             {ctx:'docs/dev',query:'SQL'}, {ctx:'docs/dev',query:'query_vector'},
             {ctx:'docs/4.x',query:'SQL'}, {ctx:'community',query:corpus[locale].community},
+            ...(locale === 'ru' ? ['ЗАПРОСЫ', 'отчёты', 'отчеты', 'ОТЧЁТЫ', 'match',
+                'query_vector()', '(SQL)', 'SQL запрос'].map(query => ({ctx:'docs/dev',query})) : []),
         ].filter(probe => (!devOnly || probe.ctx !== 'docs/4.x') && summary.contexts[probe.ctx] > 0);
         for (const probe of probes) {
             const page = await newPage();

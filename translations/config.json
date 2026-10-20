@@ -22,6 +22,17 @@
         "docs/4.x": "4.x 문서",
         "community": "커뮤니티"
       }
+    },
+    "ru": {
+      "sourceLocale": "en",
+      "sourceOverrides": [],
+      "languageName": "Russian",
+      "scriptPattern": "[\\u0400-\\u04ff]",
+      "searchContextLabels": {
+        "docs/dev": "Документация Dev",
+        "docs/4.x": "Документация 4.x",
+        "community": "Сообщество"
+      }
     }
   }
 }

@@ -65,7 +65,7 @@ function buildScope(files, versions, managed = []) {
     for (const version of wanted) if (!active.includes(version)) {wanted.delete(version); retired.add(version);}
     const searchChanged = files.some(file => /^scripts\/i18n\/search-plugin\.cjs$/.test(file)
         || /^src\/theme\/(SearchBar|SearchPage)\/.+\.[jt]sx?$/.test(file)
-        || /^src\/utils\/(searchVersion|searchContexts|searchInput|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
+        || /^src\/utils\/(searchVersion|searchContexts|searchInput|searchNormalization|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
     const optimizePublish = searchChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     // Publication changes need the same complete artifact as deployment, on
     // the CI runner. Keep local checks scoped to fixtures and Dev versions.

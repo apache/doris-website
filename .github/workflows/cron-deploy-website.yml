@@ -26,6 +26,7 @@ jobs:
         env:
             DORIS_ENABLE_JA: 'true'
             DORIS_ENABLE_KO: 'true'
+            DORIS_ENABLE_RU: 'true'
         steps:
             - name: Checkout
               # v4 (the pinned @master commit predates the `filter` input) with

@@ -158,36 +158,36 @@ test('Apache serves compacted legacy prefixes, Unicode paths, assets and query/f
 module.exports = {fixture,locales};
 
 
-test('four-language publication shares assets and preserves Korean indexes, workers and redirects', async t => {
-    const selected = ['en','zh-CN','ja','ko'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
+for (const locale of ['ko','ru']) test(`five-language publication preserves ${locale} indexes, workers and redirects`, async t => {
+    const selected = ['en','zh-CN','ja','ko','ru'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
     const {site,write} = fixture(t, selected);
     const worker = 'self.onmessage = event => self.postMessage(event.data);';
-    write('ko/assets/js/ko.worker.0123abcd.js',worker);
-    write('ko/index.html','<html lang="ko"><script src="/assets/js/ko.worker.0123abcd.js"></script></html>');
-    const index = '[{"documents":[{"u":"/ko/docs/dev/current/","t":"한국어 문서"}]}]';
-    write('ko/search-index-docs-dev.json',index);
+    write(`${locale}/assets/js/${locale}.worker.0123abcd.js`,worker);
+    write(`${locale}/index.html`,`<html lang="${locale}"><script src="/assets/js/${locale}.worker.0123abcd.js"></script></html>`);
+    const index = JSON.stringify([{documents:[{u:`/${locale}/docs/dev/current/`,t:locale === 'ru' ? 'Русский документ' : '한국어 문서'}]}]);
+    write(`${locale}/search-index-docs-dev.json`,index);
     const result = optimize({site,locales:selected});
-    assert.equal(result.redirectPages,12);
-    assert.equal(fs.readFileSync(path.join(site,'assets/js/ko.worker.0123abcd.js'),'utf8'),worker);
-    assert.equal(fs.readFileSync(path.join(site,'ko/search-index-docs-dev.json'),'utf8'),index);
-    assert(!fs.existsSync(path.join(site,'ko/assets')));
+    assert.equal(result.redirectPages,15);
+    assert.equal(fs.readFileSync(path.join(site,`assets/js/${locale}.worker.0123abcd.js`),'utf8'),worker);
+    assert.equal(fs.readFileSync(path.join(site,`${locale}/search-index-docs-dev.json`),'utf8'),index);
+    assert(!fs.existsSync(path.join(site,`${locale}/assets`)));
     require('../verify.cjs').verify(site);
     const server = require('../serve.cjs').createServer(site);
     await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
     t.after(() => new Promise(resolve => server.close(resolve)));
     const origin = `http://127.0.0.1:${server.address().port}`;
-    const response = await fetch(origin+'/ko/docs/dev/old/?from=test',{redirect:'manual'});
+    const response = await fetch(origin+`/${locale}/docs/dev/old/?from=test`,{redirect:'manual'});
     assert.equal(response.status,301);
-    assert.equal(new URL(response.headers.get('location'),origin).pathname,'/ko/docs/dev/current/');
+    assert.equal(new URL(response.headers.get('location'),origin).pathname,`/${locale}/docs/dev/current/`);
     assert.equal(new URL(response.headers.get('location'),origin).search,'?from=test');
-    assert.equal(await (await fetch(origin+'/assets/js/ko.worker.0123abcd.js')).text(),worker);
-    assert.equal(await (await fetch(origin+'/ko/search-index-docs-dev.json')).text(),index);
+    assert.equal(await (await fetch(origin+`/assets/js/${locale}.worker.0123abcd.js`)).text(),worker);
+    assert.equal(await (await fetch(origin+`/${locale}/search-index-docs-dev.json`)).text(),index);
 });
 
-test('a fourth-language compiled filename collision rejects the artifact', t => {
-    const selected = ['en','zh-CN','ja','ko'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
+test('a fifth-language compiled filename collision rejects the artifact', t => {
+    const selected = ['en','zh-CN','ja','ko','ru'].map(locale => ({locale,directory:locale === 'en' ? '.' : locale}));
     const {site,write} = fixture(t, selected);
     write('assets/js/collision.0123abcd.js','English');
-    write('ko/assets/js/collision.0123abcd.js','Korean');
+    write('ru/assets/js/collision.0123abcd.js','Russian');
     assert.throws(() => optimize({site,locales:selected}),/filename collision/);
 });

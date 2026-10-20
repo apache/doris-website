@@ -111,6 +111,7 @@ jobs:
                   node --test scripts/i18n/__tests__/configuration.test.cjs
                   node --test scripts/i18n/__tests__/search-verification.test.cjs
                   node --test scripts/i18n/__tests__/korean-tokenizer.test.cjs
+                  node --test scripts/i18n/__tests__/russian-search.test.cjs
                   node --test scripts/i18n/__tests__/doc-navigation.test.cjs
                   node --test scripts/i18n/__tests__/marketing-pages.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
@@ -161,7 +162,7 @@ jobs:
                   "$DORIS_BROWSER_TOOLS/node_modules/.bin/playwright" install --with-deps chromium
                   echo "NODE_PATH=$DORIS_BROWSER_TOOLS/node_modules" >> "$GITHUB_ENV"
 
-            - name: Verify four-language publishing fixture in Chromium
+            - name: Verify five-language publishing fixture in Chromium
               if: steps.detect.outputs.optimize_publish == 'true'
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
@@ -210,7 +211,7 @@ jobs:
                       for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
                           EXTRA_ARGS=""
-                          if [ "$LOCALE" = "ko" ]; then EXTRA_ARGS="--source-locales en,zh-CN --themes"; fi
+                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS="--source-locales en,zh-CN --themes"; fi
                           /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" $EXTRA_ARGS
                       done
                   fi

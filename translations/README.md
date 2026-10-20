@@ -28,6 +28,47 @@ Build Check installs dependencies and runs the i18n unit tests before the
 translation gate. The gate checks source metadata and state without a site
 build; the scoped website build and static-page verification run afterward.
 
+## Russian documentation launch
+
+Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
+or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
+workflows explicitly enable all three; default local builds still serve English
+and Chinese. Ordinary Russian pages link to English until individually registered.
+No Russian product landing page, translation workflow, model call or generation
+schedule is introduced here.
+
+The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
+1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
+have independent state shards and machine review status. They have not received
+human Russian proofreading. The historical baseline has zero merged translations;
+use a fresh audit on merged master to report published coverage.
+
+```bash
+I18N_LOCALE=ru node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ru-coverage.json
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json
+node scripts/i18n/verify-search.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json --source-locales en,zh-CN --themes
+```
+
+Russian search uses the English and Russian Lunr analyzers together so ASCII
+identifiers survive trimming. Indexing and the UI worker boundary share
+length-preserving punctuation and `ё`/`е` normalization. Case and representative
+inflections are supported by the analyzers; this is not synonym expansion or
+transliteration, and arbitrary Russian word forms are not guaranteed to match.
+Displayed documents retain their original spelling and highlight positions.
+Japanese and Korean keep their existing analyzer choices. The browser check
+exercises actual workers and all three Russian contexts; local `--dev-only`
+results cannot establish full-version validation.
+
+Deployments retain `build:publish` and strict static verification of every enabled
+managed locale before replacing the public artifact. Search changes select all
+five locales and all active versions in Build Check. A successful PR check does
+not establish deployment or public URL acceptance. After merge, verify the
+production source/deploy SHAs, `/ru/docs/`, Dev/4.x samples and fallbacks,
+`/ru/community/`, search, language/version switches, query/hash, mobile themes,
+canonical/alternate links and noindex/sitemap behavior. To roll back public
+Russian routes, remove only `DORIS_ENABLE_RU` from both deployment workflows and
+rebuild through the existing process; retain source translations and state.
+
 ## Korean preview and inventory
 
 Korean is registered as an optional documentation locale. Enable it locally with
