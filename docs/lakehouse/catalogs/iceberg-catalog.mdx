@@ -266,8 +266,8 @@ Since version 4.1.4, the Iceberg identity partition metadata is delivered with e
 | struct                                 | struct (supported from version 2.1.3) |                                         |
 | map                                    | map (supported from version 2.1.3)    |                                         |
 | list                                   | array                |                                         |
-| geometry | geometry | Development version: preserves CRS and raw XY WKB. See [spatial types](#iceberg-spatial-types). |
-| geography | geography | Development version: preserves CRS, edge algorithm and raw XY WKB. See [spatial types](#iceberg-spatial-types). |
+| geometry | geometry | Development version: preserves CRS and raw WKB (XY, XYZ, XYM and XYZM). See [spatial types](#iceberg-spatial-types). |
+| geography | geography | Development version: preserves CRS, edge algorithm and raw WKB (XY, XYZ, XYM and XYZM). See [spatial types](#iceberg-spatial-types). |
 | other                                  | UNSUPPORTED          |                                         |
 
 Iceberg UUID maps directly to native Doris `UUID` in the dev version. Doris 4.1.5 maps it to `VARBINARY(16)`. Parquet writes retain the UUID logical annotation, including nested fields. See the [UUID type](../../sql-manual/basic-element/sql-data-types/uuid.md).
@@ -312,11 +312,13 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 The example requires permission to create the table, insert data and query it in that catalog/database. Configure the [Iceberg REST metastore](../metastores/iceberg-rest.md) first if no catalog exists.
 
-Values preserve raw XY WKB bytes and support all seven basic WKB kinds, mixed child byte orders and EMPTY. EMPTY differs from SQL NULL. Z/M and embedded SRID are unsupported. Geography and recognized geographic Geometry CRS identifiers (`OGC:CRS84`, `EPSG:4326`) require defined X/Y coordinates in [-180,180]/[-90,90]; projected Geometry does not use that range. Other Geometry CRS strings are preserved without a CRS resolver or automatic conversion.
+Values preserve raw WKB (XY, XYZ, XYM and XYZM) bytes and support all seven basic WKB kinds, mixed child byte orders and EMPTY. EMPTY differs from SQL NULL. Standard ISO WKB Z/M ordinates are retained; PostGIS EWKB dimension flags and embedded SRID are unsupported. Geography and recognized geographic Geometry CRS identifiers (`OGC:CRS84`, `EPSG:4326`) require defined X/Y coordinates in [-180,180]/[-90,90]; projected Geometry does not use that range. Other Geometry CRS strings are preserved without a CRS resolver or automatic conversion.
 
-Use `ST_AsText`, `ST_AsBinary`, `ST_X`, `ST_Y` and `ST_GeometryType` to inspect raw values. Typed `ST_AsBinary` returns raw WKB as `VARBINARY`, including bytes that are not valid UTF-8; the legacy STRING overload retains its existing return type. Typed measurements and relationships require default `GEOGRAPHY(OGC:CRS84, spherical)` and supported nonempty Point/LineString/Polygon shapes. Unsupported parameter or shape combinations fail explicitly. Other algorithms can be read and written, but cannot be used for these computations. `ST_Contains` supports Point/Point, LineString/Point and Polygon/Point; `ST_Within` supports the reversed pairs. `ST_Touches` requires at least one Point. Other containment or touch pairs fail explicitly. Spherical relations use all geodesic edges without closing an open LineString.
+Use `ST_AsText`, `ST_AsBinary`, `ST_X`, `ST_Y` and `ST_GeometryType` to inspect raw values. Typed `ST_AsBinary` returns raw WKB as `VARBINARY`, including bytes that are not valid UTF-8; the legacy STRING overload retains its existing return type. ST_AsText includes dimension markers and all ordinates; ST_X/ST_Y return the point's X/Y. Typed measurements and relationships support only XY and require default `GEOGRAPHY(OGC:CRS84, spherical)` and supported nonempty Point/LineString/Polygon shapes. Unsupported parameter or shape combinations fail explicitly. Other algorithms can be read and written, but cannot be used for these computations. `ST_Contains` supports Point/Point, LineString/Point and Polygon/Point; `ST_Within` supports the reversed pairs. `ST_Touches` requires at least one Point. Other containment or touch pairs fail explicitly. Spherical relations use all geodesic edges without closing an open LineString.
 
 `INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. CREATE and ALTER reject V2/ORC or nested spatial writes. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
+
+Before dispatching a plan containing spatial types, FE checks every participating BE for spatial support. A BE that does not support spatial types or has not yet advertised support through heartbeat causes rejection before plan dispatch. Plans without spatial types do not require this capability. All participating FEs must still support spatial types.
 
 For Arrow Flight SQL clients, project spatial columns through `ST_AsBinary` or `ST_AsText`. Direct spatial-column result schemas are not supported; Iceberg Arrow storage mapping does not add GeoArrow or direct Flight spatial output.
 

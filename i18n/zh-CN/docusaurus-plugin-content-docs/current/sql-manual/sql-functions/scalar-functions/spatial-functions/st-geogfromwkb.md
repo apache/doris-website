@@ -2,7 +2,7 @@
 {
     "title": "ST_GEOGFROMWKB（开发版）",
     "language": "zh-CN",
-    "description": "将十六进制二维 XY WKB 构造为 GEOGRAPHY 类型值，保留原始字节并使用默认空间参数，适用于 Iceberg V3 空间列写入。支持基础几何与 EMPTY；输入为 NULL 或包含非法 WKB、未支持的维度或 SRID 元数据时返回 NULL。"
+    "description": "将十六进制ISO WKB（XY、XYZ、XYM、XYZM） 构造为 GEOGRAPHY 类型值，保留原始字节并使用默认空间参数，适用于 Iceberg V3 空间列写入。支持基础几何与 EMPTY；输入为 NULL 或包含非法 WKB、不支持的 EWKB 标记或内嵌 SRID时返回 NULL。"
 }
 ---
 
@@ -27,7 +27,7 @@ under the License.
 
 ## 描述
 
-将十六进制二维 XY WKB 构造为 GEOGRAPHY 类型值，保留原始字节，使用默认参数 OGC:CRS84, spherical。输入为 NULL 时返回 NULL。
+将十六进制ISO WKB（XY、XYZ、XYM、XYZM） 构造为 GEOGRAPHY 类型值，保留原始字节，使用默认参数 OGC:CRS84, spherical。输入为 NULL 时返回 NULL。
 
 本函数属于支持 Iceberg V3 空间类型的开发版本，返回值用于 Iceberg 空间列。历史函数 `ST_GEOMETRYFROMWKB` 和 `ST_GEOMFROMWKB` 继续返回采用历史几何编码的 STRING 值。
 
@@ -41,11 +41,11 @@ ST_GEOGFROMWKB(<wkb_hex>)
 
 | 参数 | 描述 |
 | --- | --- |
-| `<wkb_hex>` | 包含标准二维 XY WKB 十六进制内容的 STRING。支持 Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygon 和 GeometryCollection，包括 EMPTY 值；不支持 Z/M 和内嵌 SRID。 |
+| `<wkb_hex>` | 包含标准ISO WKB（XY、XYZ、XYM、XYZM） 十六进制内容的 STRING。支持 Point、LineString、Polygon、MultiPoint、MultiLineString、MultiPolygon 和 GeometryCollection，包括 EMPTY 值；保留 Z/M，不支持 PostGIS EWKB 维度标记和内嵌 SRID。 |
 
 ## 返回值
 
-返回可空的 `GEOGRAPHY` 类型值，默认参数为 `OGC:CRS84, spherical`。非法十六进制或 WKB、不支持的维度或 SRID、无穷坐标及超出地理范围的坐标返回 NULL。EMPTY 是几何值，与 SQL NULL 不同。
+返回可空的 `GEOGRAPHY` 类型值，默认参数为 `OGC:CRS84, spherical`。非法十六进制或 WKB、不支持的 EWKB 标记或内嵌 SRID、无穷坐标及超出地理范围的坐标返回 NULL。EMPTY 是几何值，与 SQL NULL 不同。
 
 ## 示例
 

@@ -282,8 +282,8 @@ ORDER BY engine_name, entry_name;
 | struct                                 | struct（2.1.3 版本开始支持） |                       |
 | map                                    | map（2.1.3 版本开始支持）    |                       |
 | list                                   | array                |                       |
-| geometry | geometry | 开发版本支持，保留 CRS 和原始 XY WKB，参见[空间类型](#iceberg-spatial-types)。 |
-| geography | geography | 开发版本支持，保留 CRS、边算法和原始 XY WKB，参见[空间类型](#iceberg-spatial-types)。 |
+| geometry | geometry | 开发版本支持，保留 CRS 和原始 WKB（XY、XYZ、XYM、XYZM），参见[空间类型](#iceberg-spatial-types)。 |
+| geography | geography | 开发版本支持，保留 CRS、边算法和原始 WKB（XY、XYZ、XYM、XYZM），参见[空间类型](#iceberg-spatial-types)。 |
 | other                                  | UNSUPPORTED          |                       |
 
 dev 版本的 Iceberg UUID 直接映射到 Doris 原生 `UUID`，4.1.5 则映射到 `VARBINARY(16)`。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记，包括嵌套字段。详见 [UUID 类型](../../sql-manual/basic-element/sql-data-types/uuid.md)。
@@ -328,11 +328,13 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 示例要求在对应 catalog/database 中有建表、写入和查询权限；没有 catalog 时，请先配置 [Iceberg REST metastore](../metastores/iceberg-rest.md)。
 
-值保留原始 XY WKB 字节，支持七种基础 WKB 类型、子几何混合字节序及 EMPTY。EMPTY 与 SQL NULL 不同；不支持 Z/M 和内嵌 SRID。Geography 及已识别地理 CRS 的 Geometry（`OGC:CRS84`、`EPSG:4326`）要求已定义的 X/Y 坐标位于 [-180,180]/[-90,90]，投影 Geometry 不使用这一范围。其他 Geometry CRS 字符串按原样保留，不提供 CRS 解析或自动转换。
+值保留原始 WKB（XY、XYZ、XYM、XYZM） 字节，支持七种基础 WKB 类型、子几何混合字节序及 EMPTY。EMPTY 与 SQL NULL 不同；支持标准 ISO WKB 的 Z/M 保留，不支持 PostGIS EWKB 维度标记和内嵌 SRID。Geography 及已识别地理 CRS 的 Geometry（`OGC:CRS84`、`EPSG:4326`）要求已定义的 X/Y 坐标位于 [-180,180]/[-90,90]，投影 Geometry 不使用这一范围。其他 Geometry CRS 字符串按原样保留，不提供 CRS 解析或自动转换。
 
-通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。typed 测量和关系计算要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains` 支持 Point/Point、LineString/Point 和 Polygon/Point，`ST_Within` 支持反向组合。`ST_Touches` 要求至少一个参数为 Point；其他包含或接触组合明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
+通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。ST_AsText 输出维度标记及全部坐标，ST_X/ST_Y 返回点的 X/Y。typed 测量和关系计算仅支持 XY，要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains` 支持 Point/Point、LineString/Point 和 Polygon/Point，`ST_Within` 支持反向组合。`ST_Touches` 要求至少一个参数为 Point；其他包含或接触组合明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
 
 `INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。CREATE 和 ALTER 拒绝 V2、ORC 或嵌套空间写入。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
+
+下发含空间类型的计划前，FE 会检查所有参与 BE 的空间能力；任一 BE 不支持或尚未通过心跳报告支持时，查询会在下发计划前报错。执行计划不含空间类型的查询不需要该能力。所有参与 FE 仍需支持空间类型。
 
 使用 Arrow Flight SQL 客户端时，请通过 `ST_AsBinary` 或 `ST_AsText` 投影空间列。当前不支持直接空间列的结果 schema；Iceberg Arrow 存储映射不代表支持 GeoArrow 或 Flight 直接输出空间类型。
 

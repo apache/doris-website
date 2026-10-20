@@ -2,7 +2,7 @@
 {
     "title": "ST_GEOMETRYFROMWKBTYPED (Development)",
     "language": "en",
-    "description": "Constructs typed GEOMETRY from hexadecimal XY WKB for Iceberg V3 columns, preserving bytes with default parameters. NULL or invalid input returns NULL."
+    "description": "Constructs typed GEOMETRY from hexadecimal ISO WKB for Iceberg V3 columns, preserving bytes with default parameters. NULL or invalid input returns NULL."
 }
 ---
 
@@ -27,7 +27,7 @@ under the License.
 
 ## Description
 
-Constructs a typed GEOMETRY value from hexadecimal two-dimensional XY WKB. The value preserves the original bytes and uses OGC:CRS84. NULL input returns NULL.
+Constructs a typed GEOMETRY value from hexadecimal ISO WKB (XY, XYZ, XYM and XYZM). The value preserves the original bytes and uses OGC:CRS84. NULL input returns NULL.
 
 This function belongs to the development version with Iceberg V3 spatial support. Use the typed result for Iceberg spatial columns. Historical `ST_GEOMETRYFROMWKB` and `ST_GEOMFROMWKB` continue to return legacy STRING geometry values.
 
@@ -41,11 +41,11 @@ ST_GEOMETRYFROMWKBTYPED(<wkb_hex>)
 
 | Parameter | Description |
 | --- | --- |
-| `<wkb_hex>` | STRING containing hexadecimal standard XY WKB. Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon and GeometryCollection are supported, including EMPTY values. Z/M and embedded SRID metadata are unsupported. |
+| `<wkb_hex>` | STRING containing hexadecimal standard ISO WKB (XY, XYZ, XYM and XYZM). Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon and GeometryCollection are supported, including EMPTY values. Z/M ordinates are retained. PostGIS EWKB dimension flags and embedded SRID metadata are unsupported. |
 
 ## Return Value
 
-Returns a nullable value of type `GEOMETRY` with default parameters `OGC:CRS84`. Invalid hexadecimal/WKB, unsupported dimensions/SRID, infinite coordinates or coordinates outside the geographic range return NULL. EMPTY is a geometry value distinct from SQL NULL.
+Returns a nullable value of type `GEOMETRY` with default parameters `OGC:CRS84`. Invalid hexadecimal/WKB, unsupported EWKB flags/embedded SRID, infinite coordinates or coordinates outside the geographic range return NULL. EMPTY is a geometry value distinct from SQL NULL.
 
 ## Example
 
