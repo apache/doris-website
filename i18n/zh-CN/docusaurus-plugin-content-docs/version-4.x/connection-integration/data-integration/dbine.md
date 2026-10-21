@@ -11,7 +11,7 @@
 
 ## 概述
 
-[DBine](https://dbine.com) 是一款免费、开源（MIT 许可）的桌面数据库管理工具，支持 Windows、macOS 和 Linux，可以在同一个窗口中使用 130 多种数据库和云服务。它提供 Apache Doris 连接类型，通过 MySQL 协议连接 FE。
+[DBine](https://dbine.com) 是一款免费、开源（Apache 2.0 许可）的桌面数据库管理工具，支持 Windows、macOS 和 Linux，可以在同一个窗口中使用 130 多种数据库和云服务。它提供 Apache Doris 连接类型，通过 MySQL 协议连接 FE。
 
 阅读本文后，你可以完成以下任务：
 
