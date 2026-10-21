@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/load-memory-analysis.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+    "sourceTechnicalHash": "63ed87ed0674487416f9e5e7e8fd98f1439db1fe950690a2417abb30327a9827",
+    "targetHash": "6694fd09b88bb5863195ed436bf2625871ca6e831e65e612c6df8be537708e7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:46:50.403Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "750fcb96fc1a78617f626f46b26276930409f135aa6a430f4eca5cf79f2e9dfc",
+      "targetHash": "6694fd09b88bb5863195ed436bf2625871ca6e831e65e612c6df8be537708e7f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

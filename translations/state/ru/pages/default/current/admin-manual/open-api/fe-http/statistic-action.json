@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/statistic-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/statistic-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/statistic-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6c3186267d486851506c2dac2cf66f24ad7a7cb5ea1e1cb9fab1a59d185bf342",
+    "sourceTechnicalHash": "3c285b49791864cf47d619634dcfb572f00d581c46f487eb462d5567944692c2",
+    "targetHash": "fb4b8b19eb821dffc6e22ba6ec330add29c8d53067f3850f55de99e06e53aabb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:38:49.728Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c3186267d486851506c2dac2cf66f24ad7a7cb5ea1e1cb9fab1a59d185bf342",
+      "targetHash": "fb4b8b19eb821dffc6e22ba6ec330add29c8d53067f3850f55de99e06e53aabb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

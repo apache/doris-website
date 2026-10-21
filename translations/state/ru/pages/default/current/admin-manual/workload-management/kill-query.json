@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/kill-query",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/kill-query.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/kill-query.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b6b3b1a9aff6fb27f6e269cb59f1041b7347209da608c9c9cb2bf570086eca23",
+    "sourceTechnicalHash": "a32378767717523afda460ba3cff6d4fd4fc594df4ae215e7d15bf05cd95838a",
+    "targetHash": "ae0246faa9a35c3a1676e676df170b6d2ff972f6807638fcec2216fc48d34ae6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:49:25.866Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b6b3b1a9aff6fb27f6e269cb59f1041b7347209da608c9c9cb2bf570086eca23",
+      "targetHash": "ae0246faa9a35c3a1676e676df170b6d2ff972f6807638fcec2216fc48d34ae6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

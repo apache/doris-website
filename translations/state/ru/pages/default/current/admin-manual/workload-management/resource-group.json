@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/resource-group",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/resource-group.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-group.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "996562bcf5094fa091ec1d1865d6ed6c2a829ff32991913cc80a82f64d2a3246",
+    "sourceTechnicalHash": "440a187bb4dfe3949ab7dc3054bd61676e7b29ffa00d7c0320b96408c4befb9f",
+    "targetHash": "e8b3abecae8d9b5a4a0893f708777b583ed46af5d1b38cd4435a12f80faa720f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:49:49.098Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "996562bcf5094fa091ec1d1865d6ed6c2a829ff32991913cc80a82f64d2a3246",
+      "targetHash": "e8b3abecae8d9b5a4a0893f708777b583ed46af5d1b38cd4435a12f80faa720f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
