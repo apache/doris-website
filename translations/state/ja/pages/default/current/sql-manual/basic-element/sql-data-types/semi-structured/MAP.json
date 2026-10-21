@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "51816178cc61439f2fe5fc304ca243ecf485cc8c8c5dd9dcbc60bec34b4c652a",
-    "sourceTechnicalHash": "16d6bebab203446ee807fedada18854be920d7bdfd86d4a00b7e1bcde0cfb750",
-    "targetHash": "e540e4306dbfbd23bc34507fcc037ced0f178cf2cea6252ca9b1d9624dcc08f3",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "f09a0cf8e44fa39ed0d695327fc9df356a9ce46d248a9f56b79d518e1af65def",
+    "sourceTechnicalHash": "cabf575c18c9411be0998548d1ddb61386127bd961a03031c0e66fee8e32af11",
+    "targetHash": "9d4304d8f8286f64cc748eea020f0b85b566ac1cd4f73032ee51c65c4348b544",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.344Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:59:22.266Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "f09a0cf8e44fa39ed0d695327fc9df356a9ce46d248a9f56b79d518e1af65def",
+      "targetHash": "9d4304d8f8286f64cc748eea020f0b85b566ac1cd4f73032ee51c65c4348b544",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"key_type\"]; received [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"value_type\"]; received [\"inlineCode\",null,null,\"key_type\"]\nprotected node 37: expected [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]; received [\"inlineCode\",null,null,\"value_type\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"9\"]; received [\"1\",\"9\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"MAP<INT, INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"MAP<BIGINT, BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"MAP<INT, INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"MAP<BIGINT, BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"INT\"]; received [\"inlineCode\",null,null,\"MAP<INT, INT>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"key_type\"]; received [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"value_type\"]; received [\"inlineCode\",null,null,\"key_type\"]\nprotected node 37: expected [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]; received [\"inlineCode\",null,null,\"value_type\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

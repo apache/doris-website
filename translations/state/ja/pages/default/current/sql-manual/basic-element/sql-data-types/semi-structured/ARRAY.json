@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "029508a024937fa8ab31835e767208b190ea745dddab438f2022642b8815be29",
-    "sourceTechnicalHash": "ae1760276d769393111f272080d4989b6de313566c71f8fda1ebc4d19dcf4a37",
-    "targetHash": "14f77fb2507b7e11a844030f791931348ac525386185a8db1004c679c841063c",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "17ec32b4be83df1a72b30501d29caae15773ae9c6e0f946fb2e0c9a8811d4027",
+    "sourceTechnicalHash": "397ff853d315a0f60653f1d491e4aa232699218da51f231e61d1e0c4acb637c1",
+    "targetHash": "520eaa5bb61586e305b83d4c8eb9cfc7c45999f81b15b4a3d8b44f099797e267",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.344Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:57:24.135Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "17ec32b4be83df1a72b30501d29caae15773ae9c6e0f946fb2e0c9a8811d4027",
+      "targetHash": "520eaa5bb61586e305b83d4c8eb9cfc7c45999f81b15b4a3d8b44f099797e267",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"ARRAY<INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"ARRAY<BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"ARRAY<INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"ARRAY<BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"ARRAY<INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"ARRAY<BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"ARRAY<INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"ARRAY<BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

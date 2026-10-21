@@ -1,33 +1,33 @@
 ---
 {
-    "title": "CAST 式",
+    "title": "CAST式",
     "language": "ja",
-    "description": "CAST は、あるデータ型の値を別のデータ型に変換します。"
+    "description": "CASTは、あるデータ型の値を別のデータ型に変換します。"
 }
 ---
 
-## 概要
+## はじめに {#introduction}
 
-CAST は、あるデータ型の値を別のデータ型に変換します。
-TRY_CAST は、変換に失敗する可能性がある場合にエラーを発生させる代わりに SQL の NULL 値を返す、安全な型変換の仕組みです。
+CASTは、あるデータ型の値を別のデータ型に変換します。
+TRY_CASTは、変換に失敗した場合にエラーをスローせず、SQLのNULL値を返す安全な型変換機能です。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 CAST( <source_expr> AS <target_data_type> )
 TRY_CAST( <source_expr> AS <target_data_type> )
 ```
 
-## 引数
+## 引数 {#arguments}
 
-- source_expr  
-  別のデータ型に変換する、サポート対象の任意のデータ型の式。
-- target_data_type  
-  変換先のデータ型。型に追加の属性がある場合（たとえば DECIMAL(p, s) の精度とスケール）、必要に応じて指定します。
+- source_expr
+  別のデータ型に変換する、サポートされている任意のデータ型の式。
+- target_data_type
+  変換先のデータ型。型が追加の属性をサポートする場合（たとえばDECIMAL(p, s)の精度とスケール）、必要に応じて指定します。
 
-## 厳格モード
+## 厳格モード {#strict-mode}
 
-Doris 4.0 より前の CAST の動作は MySQL などのデータベースシステムに倣い、CAST 操作でエラーが発生しないようにしていました。たとえば、MySQL で次の SQL を実行すると、
+Doris 4.0より前は、DorisのCASTはMySQLなどのデータベースシステムと同様に、CAST操作でできるだけエラーが発生しないように動作していました。たとえば、MySQLで次のSQLを実行するとします。
 
 ```sql
 select cast('abc' as signed);
@@ -38,15 +38,15 @@ select cast('abc' as signed);
 0
 ```
 
-Doris 4.0 からは PostgreSQL の方式に倣い、より厳格な動作を採用しています。無効な変換が行われた場合、混乱を招く可能性のある結果を生成する代わりに、Doris は直接エラーを報告します。
+Doris 4.0以降は、PostgreSQLの動作に倣って、より厳密な方法を採用しています。無効な変換が行われた場合、混乱を招く可能性のある結果を生成する代わりに、Dorisは直接エラーを報告します。
 
-Doris 4.0 では、新しい変数 `enable_strict_cast` が導入されました。次のようにして有効にできます。
+Doris 4.0では、新しい変数`enable_strict_cast`が導入されました。次のように有効にできます。
 
 ```sql
 set enable_strict_cast = true;
 ```
 
-厳格モードでは、不正な CAST 操作を行うと直接エラーになります。
+厳格モードでは、不正なCAST操作は直接エラーになります。
 
 ```sql
 mysql> select cast('abc' as int);
@@ -54,12 +54,12 @@ ERROR 1105 (HY000): errCode = 2, detailMessage = abc can't cast to INT in strict
 ```
 
 厳格モードには次の利点があります。
-1. CAST 操作で予期しない値が返されるのを防げます。
-2. すべてのデータを正常に型変換できるとシステムが想定できます（不正なデータは直接エラーになるため）。これにより、計算時の最適化を改善できます。
+1. CAST操作中に予期しない値が返されるのを防げます
+2. システムはすべてのデータを正常に型変換できると見なせるため（不正なデータは直接エラーになります）、計算時により効果的な最適化が可能になります
 
-## 例
+## 例 {#examples}
 
-### 通常の CAST 変換
+### 通常のCAST変換 {#normal-cast-conversion}
 
 ```sql
 SELECT CAST('123' AS INT);
@@ -73,9 +73,11 @@ SELECT CAST('123' AS INT);
 +--------------------+
 ```
 
-### 失敗する可能性がある変換での TRY_CAST の使用
+### TRY_CASTを使用した、失敗する可能性のある変換の処理 {#using-try_cast-to-handle-potentially-failed-conversions}
 
-変換に失敗する可能性がある場合、TRY_CAST を使うと、代わりに NULL を返してクエリのエラーを防げます。
+4.1.5以降、変換中に算術オーバーフローが発生した場合も、TRY_CASTのクエリ全体が失敗する代わりに、該当する行にNULLが返されます。内部実行エラーやサポートされていない型変換では、引き続き失敗する可能性があります。TRY_CASTはすべてのエラーを抑制するわけではありません。
+
+変換が失敗する可能性がある場合、TRY_CASTを使用すると、代わりにNULLを返してクエリエラーを防げます。
 
 ```sql
 SELECT TRY_CAST('abc' AS INT);
@@ -89,30 +91,30 @@ SELECT TRY_CAST('abc' AS INT);
 +------------------------+
 ```
 
-## 動作
+## 動作 {#behavior}
 
-CAST を変換先の target_data_type によって分類すると、次のとおりです。
+CASTをtarget_data_typeによって分類します。
 
-- [ARRAY への CAST](./array-conversion.md)
-- [BOOLEAN への CAST](./boolean-conversion.md)
-- [DATE への CAST](./date-conversion.md)
-- [TIME への CAST](./time-conversion.md)
-- [DATETIME への CAST](./datetime-conversion.md)
-- [TIMESTAMP_NS への CAST](./timestamp-ns-conversion.md)
-- [TIMESTAMPTZ への CAST](./timestamptz-conversion.md)
-- [整数型（INT など）への CAST](./int-conversion.md)
-- [浮動小数点型（FLOAT/DOUBLE）への CAST](./float-double-conversion.md)
-- [DECIMAL への CAST](./decimal-conversion.md)
-- [CHAR/VARCHAR/STRING への CAST](./cast-to-string.md)
-- [JSON への CAST / JSON から他の型への変換](./json-conversion.md)
-- [MAP への CAST](./map-conversion.md)
-- [STRUCT への CAST](./struct-conversion.md)
-- [IP への CAST](./ip-conversion.md)
+- [ARRAYへの変換](./array-conversion.md)
+- [BOOLEANへの変換](./boolean-conversion.md)
+- [DATEへの変換](./date-conversion.md)
+- [TIMEへの変換](./time-conversion.md)
+- [DATETIMEへの変換](./datetime-conversion.md)
+- [TIMESTAMP_NSへの変換](./timestamp-ns-conversion.md)
+- [TIMESTAMPTZへの変換](./timestamptz-conversion.md)
+- [整数型（INTなど）への変換](./int-conversion.md)
+- [浮動小数点型（FLOAT/DOUBLE）への変換](./float-double-conversion.md)
+- [DECIMALへの変換](./decimal-conversion.md)
+- [CHAR/VARCHAR/STRINGへの変換](./cast-to-string.md)
+- [JSONへの変換／JSONから他の型への変換](./json-conversion.md)
+- [MAPへの変換](./map-conversion.md)
+- [STRUCTへの変換](./struct-conversion.md)
+- [IPへの変換](./ip-conversion.md)
 
-## 暗黙的な CAST
+## 暗黙的なCAST {#implicit-cast}
 
-一部の関数は暗黙的な CAST を引き起こすことがあり、場合によっては予期しない動作につながります。
-暗黙的な CAST が行われるかどうかは、EXPLAIN 文で確認できます。
+一部の関数では暗黙的なCASTが行われることがあり、場合によっては予期しない動作につながります。
+EXPLAIN文を使用すると、暗黙的なCASTが行われるかどうかを確認できます。
 
 ```sql
 EXPLAIN SELECT length(123);
@@ -124,4 +126,19 @@ length(CAST(123 AS varchar(65533)))
 ...
 ```
 
-上の実行計画から、システムが整数 123 を文字列型に変換する CAST を自動的に実行していることがわかります。これは暗黙的な CAST の例です。
+上の実行計画から、システムがCAST変換を自動的に行い、整数の123を文字列型に変換していることがわかります。これは暗黙的なCASTの例です。
+
+算術オーバーフローとNULL入力：
+
+```sql
+SELECT TRY_CAST(CAST(1000 AS DECIMAL(9, 0)) AS DECIMAL(3, 0)) AS overflow_value,
+       TRY_CAST(NULL AS INT) AS null_value;
+```
+
+```text
++----------------+------------+
+| overflow_value | null_value |
++----------------+------------+
+| NULL           | NULL       |
++----------------+------------+
+```
