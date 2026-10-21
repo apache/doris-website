@@ -12,11 +12,11 @@
 
 ## 概述
 
-Timestamp Oracle（TSO）是 Master FE 上的单调时间戳分配服务，为 Doris 的事务及增量处理提供全局排序依据。该功能当前仅在 dev 版本可用，由 FE 配置 `enable_feature_binlog` 控制，默认关闭。TSO 的物理部分可能主动向前推进，因此不能把它当作精确的墙上时钟。
+Timestamp Oracle（TSO）是 Master FE 上的单调时间戳分配服务，为 Doris 的事务及增量处理提供全局排序依据。该功能当前仅在 dev 版本可用，由 FE 配置 `enable_feature_changelog` 控制，默认关闭。TSO 的物理部分可能主动向前推进，因此不能把它当作精确的墙上时钟。
 
 ## 基本用法
 
-1. 在 FE 配置文件 `fe.conf` 中设置 `enable_feature_binlog = true`，并重启 FE。该配置是实验性配置，不能动态修改；多 FE 集群应保持配置一致。启用 Binlog 前请同时评估该功能对集群的影响。
+1. 在 FE 配置文件 `fe.conf` 中设置 `enable_feature_changelog = true`，并重启 FE。该配置是实验性配置，不能动态修改；多 FE 集群应保持配置一致。启用 Changelog 前请同时评估该功能对集群的影响。
 2. 确认集群已有就绪的 Master FE，并准备有效的 Doris 用户名和密码。
 3. 查询只读状态接口。下面的命令使用默认 HTTP 端口，并提示输入 root 密码：
 
@@ -42,7 +42,7 @@ Master FE 预留未来的分配窗口，并将窗口终点和已提交 TSO 状�
 
 ## 配置参考
 
-以下参数均为 FE 配置，详见 [FE 配置](../config/fe-config.md)。基础开关 `enable_feature_binlog` 为 `boolean` 类型，默认 `false`，不可动态修改，且不只作用于 Master FE。
+以下参数均为 FE 配置，详见 [FE 配置](../config/fe-config.md)。基础开关 `enable_feature_changelog` 为 `boolean` 类型，默认 `false`，不可动态修改，且不只作用于 Master FE。
 
 | 参数 | 类型 | 默认值 | 可动态修改 | 仅 Master FE | 描述 |
 | --- | --- | --- | --- | --- | --- |
@@ -63,4 +63,4 @@ Master FE 预留未来的分配窗口，并将窗口终点和已提交 TSO 状�
 
 ## 建议
 
-保持 FE 时钟同步，使用接口观察状态，并结合 FE 日志排查校准和分配失败。除明确的测试场景外，不要修改调试时钟偏移。只有在理解 Binlog 及依赖功能的前提下才启用基础开关，不应仅为获取一个墙上时间值而启用它。
+保持 FE 时钟同步，使用接口观察状态，并结合 FE 日志排查校准和分配失败。除明确的测试场景外，不要修改调试时钟偏移。只有在理解 Changelog 及依赖功能的前提下才启用基础开关，不应仅为获取一个墙上时间值而启用它。

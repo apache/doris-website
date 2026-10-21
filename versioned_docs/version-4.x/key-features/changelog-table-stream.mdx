@@ -1,17 +1,17 @@
 ---
-title: Binlog / Table Stream
+title: Changelog / Table Stream
 description: A row-level change feed Doris tables will expose to downstream consumers.
 keywords:
-  - binlog
+  - changelog
   - table stream
   - row-level CDC
   - change data capture
   - Apache Doris CDC
   - STREAM object
-slug: /key-features/binlog-table-stream
+slug: /key-features/changelog-table-stream
 image: /images/next/key-features/binlog-table-stream.jpg
 last_update:
-  date: 2026-05-10
+  date: 2026-10-21
   author: Apache Doris
 unlisted: true
 featureCard:
@@ -21,60 +21,72 @@ featureCard:
     - coming-soon
 ---
 
-> **TL;DR** Apache Doris Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a row-format binlog, a `STREAM` object that pins offsets per partition, and consumption metadata. The feature is not GA yet, and the default `binlog.ttl_seconds` is 86,400 seconds (one day). For general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector). **Status: Coming Soon (Preview).**
+> **TL;DR** Apache Doris Table Stream is the upcoming public API for reading row-level changes (insert, update, delete) out of a Doris table, the way you read a MySQL binlog. The plumbing is already in the codebase: a per-table changelog, a `STREAM` object that pins offsets per partition, and consumption metadata. The feature is not GA yet, and the default `changelog.ttl_seconds` is 86,400 seconds (one day). For general CDC out of Doris, use the [Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector). **Status: Coming Soon (Preview).**
 
-![Apache Doris Binlog / Table Stream: A row-level change feed Doris tables will expose to downstream consumers.](/images/next/key-features/binlog-table-stream.jpg)
+![Apache Doris Changelog / Table Stream: A row-level change feed Doris tables will expose to downstream consumers.](/images/next/key-features/binlog-table-stream.jpg)
 :::caution Status: Coming Soon
-The `STREAM` object, `binlog.format = ROW`, and the consumption metadata views described here are present in the Doris source tree but not yet released as a stable, user-facing API. Syntax and semantics may change before GA. Production CDC pipelines today should use [Kafka and CDC Integration](./kafka-cdc-integration).
+The `STREAM` object, the `changelog.enable` table property, and the consumption metadata views described here are present in the Doris source tree but not yet released as a stable, user-facing API. Syntax and semantics may change before GA. Production CDC pipelines today should use [Kafka and CDC Integration](./kafka-cdc-integration).
 :::
 
-## Why use binlog and table stream in Apache Doris? {#why}
+## Why use changelog and table stream in Apache Doris? {#why}
 
-Apache Doris binlog and table stream give downstream consumers a row-level change feed, so a Flink job, audit trail, or search index can react to every insert, update, and delete without re-reading the table. Apache Doris is good at [ingesting change data](./kafka-cdc-integration). Getting change data back out is harder. If a downstream system (a Flink job, an audit trail, another Doris cluster, a search index) needs to react to every insert, [update, and delete](./data-update-delete), the options today are awkward:
+Apache Doris changelog and table stream give downstream consumers a row-level change feed, so a Flink job, audit trail, or search index can react to every insert, update, and delete without re-reading the table. Apache Doris is good at [ingesting change data](./kafka-cdc-integration). Getting change data back out is harder. If a downstream system (a Flink job, an audit trail, another Doris cluster, a search index) needs to react to every insert, [update, and delete](./data-update-delete), the options today are awkward:
 
 - Re-read the table on a timer and diff. Cheap to write, expensive to run, never real-time.
 - Have producers double-write to Kafka and Doris. Two sinks, two failure modes.
 
-Binlog and Table Stream close that gap. The binlog records every committed change at the row level. The Table Stream is a named cursor over that log: a consumer attaches to a stream, reads the changes since its last offset, and acknowledges. Same idea as MySQL binlog, Snowflake Streams, or a Postgres logical replication slot, expressed as a first-class Doris object.
+Changelog and Table Stream close that gap. The changelog records every committed change at the row level. The Table Stream is a named cursor over that log: a consumer attaches to a stream, reads the changes since its last offset, and acknowledges. Same idea as MySQL binlog, Snowflake Streams, or a Postgres logical replication slot, expressed as a first-class Doris object.
 
-## What is the Apache Doris binlog and table stream? {#what}
+## What is the Apache Doris changelog and table stream? {#what}
 
-Apache Doris binlog is the per-table change log Doris maintains, and Apache Doris table stream is the consumer-facing object that exposes it as row-level CDC. The binlog comes in two formats: `STATEMENT_AND_SNAPSHOT`, which records DDL plus snapshots, and `ROW`, which records every committed row delta for generic CDC consumers.
+Apache Doris changelog is the per-table, row-level change log Doris maintains, and Apache Doris table stream is the consumer-facing object that exposes it as row-level CDC. The changelog records every committed row change with its commit timestamp and, optionally, the values before the change. It is separate from the binlog that cross-cluster replication (CCR) uses: the changelog has its own `changelog.*` properties, and a table cannot enable both.
 
-A table stream is the consumer-facing object on top of the row-format binlog. A stream is created with `CREATE STREAM <name> ON <base_table>`, owns its own offsets per partition, and exposes a SQL surface: `SHOW CREATE STREAM` and an `information_schema` view of consumption progress.
+A table stream is the consumer-facing object on top of the changelog. A stream is created with `CREATE STREAM <name> ON TABLE <base_table>`, owns its own offsets per partition, and exposes a SQL surface: `SHOW CREATE STREAM` and an `information_schema` view of consumption progress.
 
 **Key terms**
 
-- **`binlog.enable`**: per-table property. `true` turns on the binlog for that table.
-- **`binlog.format`**: per-table property. `STATEMENT_AND_SNAPSHOT` records DDL plus snapshots; `ROW` is the row-delta format Table Stream consumes.
-- **`binlog.ttl_seconds`** / **`binlog.max_bytes`** / **`binlog.max_history_nums`**: retention knobs. Default TTL is one day; the byte and history caps default to effectively unlimited.
+- **`changelog.enable`**: per-table property. `true` turns on the changelog for that table. It can only be set when the table is created.
+- **`changelog.need_historical_value`**: per-table property. `true` also records the values before each update and delete; Unique Key Merge-on-Write tables only.
+- **`changelog.ttl_seconds`**: retention knob. Default TTL is one day, and it can be changed after the table is created.
 - **`STREAM`**: a Doris catalog object that wraps a base table and tracks per-partition offsets for one consumer.
-- **Stream consume type**: `default`, `append_only`, or `min_delta`. Controls whether the stream emits full row deltas, inserts only, or the minimal change set.
+- **Stream consume type**: `detail`, `append_only`, or `min_delta` (the default). Controls whether the stream emits every row change, inserts only, or the minimal change set.
 - **Stream lag**: visible version of the partition minus the stream's recorded offset. Surfaced as the `LAG` column.
 
-## How does the Apache Doris binlog and table stream work? {#how}
+## How does the Apache Doris changelog and table stream work? {#how}
 
-The Apache Doris binlog records row-level deltas at the BE, and a table stream wraps that log with per-partition offsets so a downstream consumer can read changes incrementally and acknowledge them.
+The Apache Doris changelog records row-level deltas at the BE, and a table stream wraps that log with per-partition offsets so a downstream consumer can read changes incrementally and acknowledge them.
 
-1. **Turn the binlog on.** `ALTER TABLE t SET ("binlog.enable" = "true", "binlog.format" = "ROW")`. The BE starts retaining row-level deltas alongside tablet data, governed by `binlog.ttl_seconds` and the size and history caps. Table Stream requires the `ROW` format.
-2. **Create a stream over the table.** `CREATE STREAM s ON t PROPERTIES ("type" = "default")`. The FE materializes a `STREAM` object, snaps the current visible version of every partition as the starting offset, and registers it under the database. `show_initial_rows = true` flips that so the first read returns the historical state.
+1. **Turn the changelog on when you create the table.** `CREATE TABLE t (...) PROPERTIES ("changelog.enable" = "true")`. The changelog cannot be turned on for an existing table. The BE retains row-level deltas alongside tablet data, governed by `changelog.ttl_seconds`.
+2. **Create a stream over the table.** `CREATE STREAM s ON TABLE t PROPERTIES ("type" = "min_delta")`. The FE materializes a `STREAM` object, snaps the current visible version of every partition as the starting offset, and registers it under the database. `show_initial_rows = true` flips that so the first read returns the historical state.
 3. **Consume.** A downstream reader (an external CDC connector today, native consumer endpoints over time) reads from the stream. Each batch advances the per-partition offset and stamps a consumption timestamp.
-4. **Trim.** Once every active stream has moved past a binlog entry, and the entry is older than `binlog.ttl_seconds`, the BE garbage-collects it. A stream that falls behind retention is marked `IS_STALE = true` with a reason.
+4. **Trim.** Changes older than `changelog.ttl_seconds` expire whether or not every stream has read them, and background compaction then reclaims their storage. A stream whose offset falls outside that window has to be reset from a fresh snapshot.
 5. **Observe.** `information_schema.table_streams` lists every stream and its base table. `table_stream_consumption` reports `UNIT` (the partition), `CONSUMPTION_STATUS`, `LAG`, and `LAST_CONSUMPTION_TIME` per partition. That is the lag dashboard.
 
 ## Quick start {#quick-start}
 
 ```sql
--- 1. Enable row-format binlog on the source table
-ALTER TABLE orders SET (
-  "binlog.enable" = "true",
-  "binlog.format" = "ROW",
-  "binlog.ttl_seconds" = "86400"
+-- 1. Enable the changelog when the source table is created
+CREATE TABLE orders (
+  order_id   BIGINT,
+  order_date DATE,
+  status     VARCHAR(16),
+  amount     DECIMAL(10, 2)
+)
+UNIQUE KEY(order_id, order_date)
+PARTITION BY RANGE(order_date) (
+  PARTITION p_2026_05 VALUES [('2026-05-01'), ('2026-06-01'))
+)
+DISTRIBUTED BY HASH(order_id) BUCKETS 8
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true",
+  "changelog.enable" = "true",
+  "changelog.need_historical_value" = "true",
+  "changelog.ttl_seconds" = "86400"
 );
 
 -- 2. Create a Table Stream over it (planned syntax, subject to change)
-CREATE STREAM orders_cdc ON orders
-PROPERTIES ("type" = "default", "show_initial_rows" = "false");
+CREATE STREAM orders_cdc ON TABLE orders
+PROPERTIES ("type" = "min_delta", "show_initial_rows" = "false");
 
 -- 3. Inspect the stream and its lag
 SHOW CREATE STREAM orders_cdc;
@@ -92,11 +104,11 @@ WHERE STREAM_NAME = 'orders_cdc';
 +---------+------------+-----------+--------------------+-----+----------------------+
 ```
 
-`LAG = 0` means the consumer is caught up to the partition's visible version. As writes commit upstream, `LAG` grows; as the consumer reads, it shrinks. A non-`N/A` `STALE_REASON` means retention rolled past the offset and a re-snapshot is needed.
+`LAG = 0` means the consumer is caught up to the partition's visible version. As writes commit upstream, `LAG` grows; as the consumer reads, it shrinks. A consumer that falls further behind than `changelog.ttl_seconds` needs a re-snapshot; `STALE_REASON` does not report that case, so compare the consumption delay with the retention.
 
-## When should you use the Apache Doris binlog and table stream? {#when}
+## When should you use the Apache Doris changelog and table stream? {#when}
 
-Once GA, use the Apache Doris binlog and table stream when a downstream system needs row-level change events from a Doris table without re-reading the whole table.
+Once GA, use the Apache Doris changelog and table stream when a downstream system needs row-level change events from a Doris table without re-reading the whole table.
 
 **Good fit (once GA)**
 
@@ -108,7 +120,7 @@ Once GA, use the Apache Doris binlog and table stream when a downstream system n
 **Not a good fit (especially today)**
 
 - Production CDC pipelines, right now. The `STREAM` object is in the source tree but not announced as GA. Use [Kafka and CDC Integration](./kafka-cdc-integration) instead.
-- Long-paused consumers on short binlog retention. If `LAG` outruns what `binlog.ttl_seconds` keeps, the stream goes stale and the consumer has to reseed.
+- Long-paused consumers on short changelog retention. If a consumer falls further behind than `changelog.ttl_seconds`, the changes it still needs expire and the consumer has to reseed.
 - Storage-compute decoupled clusters. Table Stream's support model there is still in flight.
 - Reading external catalog tables (Hive, Iceberg). Table Stream is scoped to internal OLAP tables only.
 
@@ -117,4 +129,4 @@ Once GA, use the Apache Doris binlog and table stream when a downstream system n
 - [Kafka and CDC Integration](./kafka-cdc-integration): the supported way to move change data into and around Doris today.
 - [Data Update and Delete](./data-update-delete): how Unique Key Merge-on-Write tables represent the deletes and out-of-order updates a row stream will carry.
 - [Iceberg](./iceberg): an external destination for replicated tables — land CDC into Iceberg via SQL without leaving Doris.
-- [Unique Key](./unique-key): the upstream table model that captures one-row-per-key state cleanly for downstream binlog consumers.
+- [Unique Key](./unique-key): the upstream table model that captures one-row-per-key state cleanly for downstream changelog consumers.

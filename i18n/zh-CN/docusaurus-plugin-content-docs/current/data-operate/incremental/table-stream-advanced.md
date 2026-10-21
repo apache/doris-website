@@ -231,7 +231,7 @@ WHERE o.__DORIS_STREAM_CHANGE_TYPE_COL__ IN ('APPEND', 'UPDATE_AFTER');
 | `DROP TABLE` 基表 | Stream 仍然保留，但无法再读取。请用 `DROP STREAM ... FORCE` 删除 |
 | `DROP DATABASE` | 库内的 Stream 一并删除。位于其它库、以本库的表为基表的 Stream 会保留，同样需要 `FORCE` 删除 |
 
-不允许在开启 Row Binlog 的基表上执行的 DDL（如 `MODIFY COLUMN`）见 [Row Binlog](row-binlog#对表-ddl-的约束)。
+不允许在开启 Changelog 的基表上执行的 DDL（如 `MODIFY COLUMN`）见 [Changelog](changelog#对表-ddl-的约束)。
 
 ## 监控与故障恢复
 
@@ -245,7 +245,7 @@ IVM 创建的内部 Stream 也会出现在相关系统表中。可以观察其�
 | 关注点 | 数据来源 | 说明 |
 |---|---|---|
 | 积压 | `information_schema.table_stream_consumption` 的 `LAG` | 定期查询，对长时间不为 `0` 或持续增长的分区告警 |
-| 状态 | `information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` | 反映 Stream 状态，但当前实现不会报告 TTL 过期。需将消费延迟与基表的 `binlog.ttl_seconds` 对比，并关注位点过期报错，见 [保留与清理](row-binlog#保留与清理) |
+| 状态 | `information_schema.table_streams` 的 `ENABLED`、`IS_STALE`、`STALE_REASON` | 反映 Stream 状态，但当前实现不会报告 TTL 过期。需将消费延迟与基表的 `changelog.ttl_seconds` 对比，并关注位点过期报错，见 [保留与清理](changelog#保留与清理) |
 | 消费历史 | `information_schema.table_stream_consumption` 的 `LAST_CONSUMPTION_TIME` | 判断消费任务是否按计划运行 |
 
 ### 故障恢复
@@ -253,7 +253,7 @@ IVM 创建的内部 Stream 也会出现在相关系统表中。可以观察其�
 | 场景 | 处理 |
 |---|---|
 | 消费语句失败 | 位点不变，请在所需变更仍处于保留窗口内时重跑 |
-| 所需变更已因 `binlog.ttl_seconds` 过期 | 用 `@reset()` 全量重载下游并重新对齐位点。位点过期时 `min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更 |
+| 所需变更已因 `changelog.ttl_seconds` 过期 | 用 `@reset()` 全量重载下游并重新对齐位点。位点过期时 `min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更 |
 | 消费成功但调度系统没记录到 | 如果重跑，本轮读到的是下一批变更，不会重复消费上一批。要让重复执行完全无副作用，目标表建议使用 Unique Key 模型（按主键写入天然幂等） |
 | 下游数据错误需要重建 | 用 `@snapshot()` 恢复到消费位点对应的状态后继续增量消费；或者用 `@reset()` 全量重刷并把位点推进到当前 |
 | FE 重启、主从切换 | 位点持久化在元数据中，重启后继续消费 |
@@ -265,9 +265,9 @@ IVM 创建的内部 Stream 也会出现在相关系统表中。可以观察其�
 | 错误信息 | 原因 | 处理 |
 |---|---|---|
 | `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | FE 未开启 `enable_table_stream` | 修改 `fe.conf` 并重启 FE |
-| `Insert plan with Table stream failed. should enable binlog feature in FE config.` | FE 未开启 `enable_feature_binlog` | 修改 `fe.conf` 并重启 FE |
-| `Base Olap table ... need to enable row binlog for table stream` | 基表未开启 Row Binlog | 重建基表并开启 `binlog.enable` + `binlog.format = ROW` |
-| `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` | `min_delta` / 默认类型要求 before 镜像 | 基表开启 `binlog.need_historical_value`，或改用 `append_only` |
+| `Insert plan with Table stream failed. should enable changelog feature in FE config.` | FE 未开启 `enable_feature_changelog` | 修改 `fe.conf` 并重启 FE |
+| `Base Olap table ... need to enable changelog for table stream` | 基表未开启 Changelog | 重建基表并设置 `"changelog.enable" = "true"` |
+| `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` | `min_delta` / 默认类型要求 before 镜像 | 重建基表并开启 `changelog.need_historical_value`，或改用 `append_only` |
 | `not supported type: xxx` | `type` 取值不合法 | 使用 `append_only` / `min_delta` / `detail` |
 | `target offset already consumed` | 并发消费同一分区，本事务提交时位点已被推进 | 重跑即可读到新的一批；避免并发消费 |
 | `Cloud Table Stream consumption only supports a normal INSERT into a local OLAP table` | 存算分离模式下在显式事务、Group Commit 中消费，或目标不是内表 | 改用普通 `INSERT INTO ... SELECT` |

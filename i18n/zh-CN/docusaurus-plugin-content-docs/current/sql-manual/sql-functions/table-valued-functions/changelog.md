@@ -1,27 +1,27 @@
 ---
 {
-    "title": "BINLOG",
+    "title": "CHANGELOG",
     "language": "zh-CN",
-    "description": "表函数，返回一张开启了 Row Binlog 的内表的原始行级变更记录，用于排查变更记录内容。"
+    "description": "表函数，返回一张开启了 Changelog 的内表的原始行级变更记录，用于排查变更记录内容。"
 }
 ---
 
 ## 描述
 
-表函数，返回一张开启了 Row Binlog 的内表的原始行级变更记录。每条记录包含基表的可见列（变更后的值）、操作类型、提交时间戳、事务内序号，以及可选的变更前的值。
+表函数，返回一张开启了 [Changelog](../../../data-operate/incremental/changelog) 的内表的原始行级变更记录。每条记录包含基表的可见列（变更后的值）、操作类型、提交时间戳、事务内序号，以及可选的变更前的值。
 
 该函数直接读取存储的原始记录，不做折叠或过滤。
 
 :::caution
-`binlog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](../../../data-operate/incremental/table-stream) 或 [`@incr` 增量查询](../../../data-operate/incremental/incremental-query)。
+`changelog()` 主要用于内部调试，不建议在正式数据处理流程中使用。它的输出格式和参数可能随版本变化，正式的增量消费请使用 [Table Stream](../../../data-operate/incremental/table-stream) 或 [`@incr` 增量查询](../../../data-operate/incremental/incremental-query)。
 :::
 
-该功能自 5.0.0 版本起提供，目前处于实验阶段。
+该功能自 5.0.0 版本起提供，目前处于实验阶段。早期开发版本中该函数名为 `binlog()`。
 
 ## 语法
 
 ```sql
-BINLOG(
+CHANGELOG(
     "table" = "<table_name>"
     [, "db" = "<db_name>"]
     [, "partition" = "<partition_name>[, ...]"]
@@ -33,7 +33,7 @@ BINLOG(
 
 | 字段 | 描述 |
 |---|---|
-| **`<table_name>`** | 表名。该表必须是内表且已开启 Row Binlog（`"binlog.enable" = "true"`、`"binlog.format" = "ROW"`） |
+| **`<table_name>`** | 表名。该表必须是内表且已开启 Changelog（`"changelog.enable" = "true"`） |
 
 ## 可选参数 (Optional Parameters)
 
@@ -47,44 +47,48 @@ BINLOG(
 
 | 字段名 | 类型 | 描述 |
 |---|---|---|
-| 基表的可见列 | 与基表相同 | 变更后的值。删除记录在开启 `binlog.need_historical_value` 时为删除前的值，否则仅 key 列有值 |
-| `__DORIS_BINLOG_OP__` | TINYINT | 操作类型：`0` 新增，`1` 更新，`2` 删除 |
-| `__DORIS_BINLOG_TSO__` | BIGINT | 提交时间戳（TSO） |
-| `__DORIS_BINLOG_LSN__` | BIGINT | 事务内序号 |
-| `__BEFORE__<列名>__` | 与原列相同 | 变更前的值，每个非 key 列对应一个。仅基表开启 `binlog.need_historical_value` 时存在，新增记录中为 NULL |
+| 基表的可见列 | 与基表相同 | 变更后的值。删除记录在开启 `changelog.need_historical_value` 时为删除前的值，否则仅 key 列有值 |
+| `__DORIS_CHANGELOG_OP__` | BIGINT | 操作类型：`0` 新增，`1` 更新，`2` 删除 |
+| `__DORIS_CHANGELOG_TSO__` | BIGINT | 提交时间戳（TSO） |
+| `__DORIS_CHANGELOG_LSN__` | BIGINT | 事务内序号 |
+| `__DORIS_CHANGELOG_BEFORE_<列名>__` | 与原列相同 | 变更前的值，每个非 key 列对应一个。仅基表开启 `changelog.need_historical_value` 时存在，新增记录中为 NULL |
+
+`SELECT *` 返回基表的可见列，开启 `changelog.need_historical_value` 时还返回 `__DORIS_CHANGELOG_BEFORE_<列名>__` 列；其它隐藏列需要显式列出。所有隐藏列和 before 镜像列的列名都以保留前缀 `__DORIS_` 开头，视图、CTAS 表和物化视图都不能使用这样的列名。要在 `changelog()` 之上定义它们，需要列出所需的列，并为这些列指定别名。
 
 ## 示例
 
 查看 `demo.orders` 表中订单 1 的完整变更历史：
 
 ```sql
-SELECT __DORIS_BINLOG_OP__ AS op, __DORIS_BINLOG_TSO__ AS tso,
-       order_id, status, amount, __BEFORE__status__, __BEFORE__amount__
-FROM BINLOG("db" = "demo", "table" = "orders")
+SELECT __DORIS_CHANGELOG_OP__ AS op, __DORIS_CHANGELOG_TSO__ AS tso,
+       order_id, status, amount,
+       __DORIS_CHANGELOG_BEFORE_status__ AS before_status,
+       __DORIS_CHANGELOG_BEFORE_amount__ AS before_amount
+FROM CHANGELOG("db" = "demo", "table" = "orders")
 WHERE order_id = 1
-ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__;
+ORDER BY __DORIS_CHANGELOG_TSO__, __DORIS_CHANGELOG_LSN__;
 ```
 
 ```text
-+------+--------------------+----------+---------+--------+--------------------+--------------------+
-| op   | tso                | order_id | status  | amount | __BEFORE__status__ | __BEFORE__amount__ |
-+------+--------------------+----------+---------+--------+--------------------+--------------------+
-|    0 | 469067680972800000 |        1 | created | 100.00 | NULL               |               NULL |
-|    1 | 469067681287372800 |        1 | paid    | 100.00 | created            |             100.00 |
-|    2 | 469067681628160003 |        1 | paid    | 100.00 | paid               |             100.00 |
-+------+--------------------+----------+---------+--------+--------------------+--------------------+
++------+--------------------+----------+---------+--------+---------------+---------------+
+| op   | tso                | order_id | status  | amount | before_status | before_amount |
++------+--------------------+----------+---------+--------+---------------+---------------+
+|    0 | 469067680972800000 |        1 | created | 100.00 | NULL          |          NULL |
+|    1 | 469067681287372800 |        1 | paid    | 100.00 | created       |        100.00 |
+|    2 | 469067681628160003 |        1 | paid    | 100.00 | paid          |        100.00 |
++------+--------------------+----------+---------+--------+---------------+---------------+
 ```
 
 只读取某个分区的变更数量：
 
 ```sql
-SELECT __DORIS_BINLOG_OP__, COUNT(*)
-FROM BINLOG("table" = "orders", "partition" = "p20260914")
-GROUP BY __DORIS_BINLOG_OP__;
+SELECT __DORIS_CHANGELOG_OP__, COUNT(*)
+FROM CHANGELOG("table" = "orders", "partition" = "p20260914")
+GROUP BY __DORIS_CHANGELOG_OP__;
 ```
 
-表未开启 Row Binlog 时报错：
+表未开启 Changelog 时报错：
 
 ```text
-ERROR 1105 (HY000): errCode = 2, detailMessage = binlog<row> is not enabled for table=orders
+ERROR 1105 (HY000): errCode = 2, detailMessage = changelog is not enabled for table=orders
 ```

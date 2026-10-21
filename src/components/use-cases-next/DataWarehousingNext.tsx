@@ -182,7 +182,7 @@ const content: UseCasePageContent = {
                     { label: translate({ id: "marketing.warehouse.072", message: "Batch Load" }), href: `${KF}/batch-load` },
                     { label: translate({ id: "marketing.warehouse.073", message: "Incremental Materialized View" }), href: `${KF}/incremental-materialized-view` },
                     { label: translate({ id: "marketing.warehouse.074", message: "Spill to Disk" }), href: `${KF}/spill-to-disk` },
-                    { label: translate({ id: "marketing.warehouse.075", message: "Binlog / Table Stream (coming soon)" }), href: `${KF}/binlog-table-stream` },
+                    { label: translate({ id: "marketing.warehouse.075", message: "Changelog / Table Stream (coming soon)" }), href: `${KF}/changelog-table-stream` },
                 ],
             },
             {

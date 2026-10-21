@@ -21,7 +21,7 @@
         "row-level incremental refresh",
         "REFRESH INCREMENTAL",
         "INCREMENTAL FALLBACK",
-        "Row Binlog",
+        "Changelog",
         "Table Stream"
     ]
 }
@@ -36,7 +36,7 @@ import TabItem from '@theme/TabItem';
 Incremental View Maintenance (IVM) maintains an asynchronous materialized view based on row-level changes in its base tables. A regular asynchronous materialized view recomputes all of its data or every affected partition; IVM computes only the rows inserted, updated and deleted in the base tables between two refreshes and applies those changes to the materialized view.
 
 :::caution Experimental feature
-IVM is available since Doris 5.0.0. It is experimental and disabled by default. Before using it, enable Row Binlog and Table Stream in the FE configuration. See [Prerequisites](#prerequisites).
+IVM is available since Doris 5.0.0. It is experimental and disabled by default. Before using it, enable changelog and Table Stream in the FE configuration. See [Prerequisites](#prerequisites).
 :::
 
 {/* Knowledge type: Scenario selection */}
@@ -74,9 +74,9 @@ Doris supports four refresh methods for asynchronous materialized views. IVM cor
 
 ## How it works
 
-IVM reuses the Row Binlog and Table Stream capabilities of Doris:
+IVM reuses the changelog and Table Stream capabilities of Doris:
 
-![How IVM works: base table changes flow into Row Binlog and then into internal Table Streams; the delta plan combines unconsumed changes with a consistent snapshot to update the materialized view and advances the consumption offsets in the same transaction](/images/next/query-acceleration/ivm-workflow.jpg)
+![How IVM works: base table changes flow into the changelog and then into internal Table Streams; the delta plan combines unconsumed changes with a consistent snapshot to update the materialized view and advances the consumption offsets in the same transaction](/images/next/query-acceleration/ivm-workflow.jpg)
 
 When a materialized view that supports IVM is created, Doris creates an internal Table Stream for every base table that participates in incremental maintenance. The names of internal Streams start with `__doris_ivm_stream_`. You do not need to create, consume or drop these Streams.
 
@@ -93,11 +93,11 @@ At refresh time, Doris generates a delta plan from the unconsumed changes of eac
 2. Set the following options in `fe.conf` on every FE and restart the FEs:
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
-Both options are static (non-dynamic) configurations. `enable_feature_binlog` turns on Row Binlog and the global commit timestamp; `enable_table_stream` turns on Table Stream DDL and internal Stream management.
+Both options are static (non-dynamic) configurations. `enable_feature_changelog` turns on changelog and the global commit timestamp; `enable_table_stream` turns on Table Stream DDL and internal Stream management.
 
 ### Base table requirements
 
@@ -105,8 +105,8 @@ Base tables that participate in incremental maintenance must be Doris OLAP inter
 
 | Base table model | Supported | Requirements and behavior |
 |---|---|---|
-| Unique Key Merge-on-Write | Yes | Row Binlog and the before image must be enabled; inserts, updates and deletes are all handled |
-| Duplicate Key | Yes | Row Binlog must be enabled; only appended changes are provided, and deletes executed through delete predicates are not recorded |
+| Unique Key Merge-on-Write | Yes | Changelog and the before image must be enabled; inserts, updates and deletes are all handled |
+| Duplicate Key | Yes | Changelog must be enabled; only appended changes are provided, and deletes executed through delete predicates are not recorded |
 | Unique Key Merge-on-Read | No | Use Merge-on-Write instead |
 | Aggregate Key | Not for incremental maintenance | Can only be used as a table listed in `excluded_trigger_tables` that does not trigger incremental refresh |
 | External tables | No | The incremental base tables of an IVM must be Doris internal tables |
@@ -116,13 +116,12 @@ For workloads that need to handle updates and deletes, use a Unique Key Merge-on
 ```sql
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 ```
 
-Row Binlog can only be enabled when the table is created and cannot be disabled afterwards. For the full list of table model, column type, write method and DDL restrictions, see [Row Binlog](../../../data-operate/incremental/row-binlog).
+Changelog can only be enabled when the table is created and cannot be disabled afterwards. For the full list of table model, column type, write method and DDL restrictions, see [Changelog](../../../data-operate/incremental/changelog).
 
 {/* Knowledge type: Step-by-step guide */}
 {/* Use cases: First-time setup / Feature verification */}
@@ -133,7 +132,7 @@ The following example creates an IVM that aggregates orders by status. The first
 
 The steps are:
 
-1. Create a Unique Key Merge-on-Write base table with Row Binlog enabled.
+1. Create a Unique Key Merge-on-Write base table with changelog enabled.
 2. Create the IVM with `REFRESH INCREMENTAL FALLBACK`.
 3. Run a `COMPLETE` refresh to build the full baseline.
 4. Change the base table data and run an incremental refresh.
@@ -141,7 +140,7 @@ The steps are:
 
 ### Step 1: Create the base table and load initial data
 
-Create a base table that supports updates and deletes, with Row Binlog and the before image enabled:
+Create a base table that supports updates and deletes, with changelog and the before image enabled:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ivm_demo;
@@ -157,9 +156,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 INSERT INTO orders VALUES
@@ -278,7 +276,7 @@ IVM checks the definition SQL when the materialized view is created. With an exp
 
 ### Example tables
 
-The examples in this section use three base tables: the customer table `customers`, the sales table `sales` and the refund table `refunds`. All three are Unique Key Merge-on-Write tables with Row Binlog and the before image enabled. You can run them in the `ivm_demo` database created in [Quick start](#quick-start):
+The examples in this section use three base tables: the customer table `customers`, the sales table `sales` and the refund table `refunds`. All three are Unique Key Merge-on-Write tables with changelog and the before image enabled. You can run them in the `ivm_demo` database created in [Quick start](#quick-start):
 
 ```sql
 CREATE TABLE customers (
@@ -291,9 +289,8 @@ DISTRIBUTED BY HASH(customer_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 CREATE TABLE sales (
@@ -307,9 +304,8 @@ DISTRIBUTED BY HASH(sale_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 CREATE TABLE refunds (
@@ -322,9 +318,8 @@ DISTRIBUTED BY HASH(refund_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 INSERT INTO customers VALUES
@@ -359,10 +354,10 @@ Every example follows the same steps: run its `CREATE MATERIALIZED VIEW`, then r
 | `GROUPING SETS`, `ROLLUP`, `CUBE` | Can be used with `GROUPING()` and `GROUPING_ID()`; the same restrictions as `GROUP BY` apply |
 | `SELECT DISTINCT` | Handled as a `GROUP BY` without aggregate functions; the same restrictions as `GROUP BY` apply |
 | `INNER JOIN`, `CROSS JOIN` | Multi-table joins and self-joins are supported |
-| `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, `FULL OUTER JOIN` | The side that keeps all its rows (the left side of a LEFT JOIN, the right side of a RIGHT JOIN, both sides of a FULL JOIN) must not be a Duplicate Key table without Row Binlog listed in `excluded_trigger_tables`, because the rows of such a table have no fixed row identity |
+| `LEFT OUTER JOIN`, `RIGHT OUTER JOIN`, `FULL OUTER JOIN` | The side that keeps all its rows (the left side of a LEFT JOIN, the right side of a RIGHT JOIN, both sides of a FULL JOIN) must not be a Duplicate Key table without changelog listed in `excluded_trigger_tables`, because the rows of such a table have no fixed row identity |
 | Nested outer joins | The side of an outer join that can be padded with `NULL` is itself a join. The more complex that side, the larger the incremental refresh plan |
 | `UNION ALL` | Branches can come from different tables, the same table, or constant rows |
-| Chained IVM | Another IVM is used as a base table. The IVM used as a base table must enable Row Binlog and the before image |
+| Chained IVM | Another IVM is used as a base table. The IVM used as a base table must enable changelog and the before image |
 
 The examples below are grouped by category.
 
@@ -803,7 +798,7 @@ Result:
 </TabItem>
 <TabItem value="chained" label="Chained IVM">
 
-Uses one IVM as a base table of another to split a complex computation into layers, for example a lower-level IVM that performs the join and an upper-level IVM that aggregates. An IVM used as a base table is itself a Unique Key Merge-on-Write table, so like other Merge-on-Write base tables it must enable Row Binlog and the before image. Otherwise the upper-level IVM cannot be created; for example, creation fails with `row binlog is not enabled for table` when Row Binlog is not enabled.
+Uses one IVM as a base table of another to split a complex computation into layers, for example a lower-level IVM that performs the join and an upper-level IVM that aggregates. An IVM used as a base table is itself a Unique Key Merge-on-Write table, so like other Merge-on-Write base tables it must enable changelog and the before image. Otherwise the upper-level IVM cannot be created; for example, creation fails with `changelog is not enabled for table` when changelog is not enabled.
 
 ```sql
 CREATE MATERIALIZED VIEW mv_sales_city_detail
@@ -811,9 +806,8 @@ BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 )
 AS
 SELECT s.sale_id, c.city, s.amount
@@ -1192,7 +1186,7 @@ The `RefreshMode` of all these tasks is `COMPLETE`, and `IvmFallbackReason` is e
 
 **Baseline invalidation of some partitions**
 
-The following base table operations change only metadata and produce no Row Binlog, so an incremental refresh cannot tell from the changes which rows were deleted or replaced. The materialized view partitions that read these base table partitions must be rebuilt:
+The following base table operations change only metadata and write no change records to the changelog, so an incremental refresh cannot tell from the changes which rows were deleted or replaced. The materialized view partitions that read these base table partitions must be rebuilt:
 
 - `TRUNCATE TABLE`, including truncating only some partitions
 - `ALTER TABLE ... DROP PARTITION`
@@ -1207,7 +1201,7 @@ If the materialized view is not partitioned, or Doris cannot determine the affec
 
 The following situations invalidate the baseline of the whole materialized view and put it in the `SCHEMA_CHANGE` state, which you can check in the `State` and `SchemaChangeDetail` columns of `mv_infos`:
 
-- A base table runs `DROP COLUMN`, `MODIFY COLUMN`, `RENAME COLUMN`, `RENAME` (renaming the table) or `REPLACE WITH TABLE`. `ADD COLUMN` does not invalidate the baseline. Tables with Row Binlog do not allow `MODIFY COLUMN` and `RENAME COLUMN`, see [Row Binlog DDL restrictions](../../../data-operate/incremental/row-binlog#ddl-restrictions).
+- A base table runs `DROP COLUMN`, `MODIFY COLUMN`, `RENAME COLUMN`, `RENAME` (renaming the table) or `REPLACE WITH TABLE`. `ADD COLUMN` does not invalidate the baseline. Tables with changelog do not allow `MODIFY COLUMN` and `RENAME COLUMN`, see [changelog DDL restrictions](../../../data-operate/incremental/changelog#ddl-restrictions).
 - A base table runs `REPLACE PARTITION` without strict range matching, or a partition operation from the previous list cannot be placed on specific materialized view partitions.
 - A property change widens what the materialized view maintains: removing a base table from `excluded_trigger_tables`, widening or removing `ivm_partition_window_limit`, or widening the range of `partition_sync_limit`.
 
@@ -1355,11 +1349,11 @@ For all materialized view properties, see [CREATE ASYNC MATERIALIZED VIEW](../..
 ## Limitations and notes
 
 - IVM can only be enabled when the materialized view is created. You cannot turn a regular materialized view into an IVM with `ALTER MATERIALIZED VIEW`, nor change an IVM to another default refresh method. To switch, recreate the materialized view.
-- Enabling Row Binlog adds write and storage overhead. Unique Key MoW tables also need to read and store the values before each update. Enable it only for base tables that really need IVM, and evaluate load throughput with realistic workloads before going to production.
+- Enabling changelog adds write and storage overhead. Unique Key MoW tables also need to read and store the values before each update. Enable it only for base tables that really need IVM, and evaluate load throughput with realistic workloads before going to production.
 - IVM still refreshes through asynchronous tasks and does not provide real-time consistency with base table transactions. Refresh latency depends on the trigger method, queueing time and the execution time of the delta plan. The minimum scheduled interval is 1 minute, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval).
 - Complex nested outer joins enlarge the delta plan, especially complex subtrees on the null-producing side. When planning or refresh becomes too expensive, simplify the joins or materialize the complex subtree as a lower-level IVM first.
 - `MIN`, `MAX` and Bitmap aggregations require a complete recomputation in some delete scenarios. In production, use `INCREMENTAL FALLBACK` or `AUTO` and monitor `IvmFallbackReason`.
-- The table model, column type, schema change and delete restrictions of Row Binlog apply directly to IVM. See [Supported scope and limitations of Row Binlog](../../../data-operate/incremental/row-binlog#supported-scope-and-limitations).
+- The table model, column type, schema change and delete restrictions of the changelog apply directly to IVM. See [Supported scope and limitations of the changelog](../../../data-operate/incremental/changelog#supported-scope-and-limitations).
 
 {/* Knowledge type: FAQ / Troubleshooting */}
 {/* Use cases: Creation failure / Refresh fallback / Baseline rebuild / Data latency */}
@@ -1370,7 +1364,7 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 
 | Problem | Diagnosis and handling |
 |---|---|
-| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` fails | Check that `enable_feature_binlog` and `enable_table_stream` are enabled on the FEs, that the base tables meet the table model and Row Binlog requirements, and that the definition SQL is within the IVM support scope |
+| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` fails | Check that `enable_feature_changelog` and `enable_table_stream` are enabled on the FEs, that the base tables meet the table model and changelog requirements, and that the definition SQL is within the IVM support scope |
 | A strict incremental refresh task shows `RefreshMode` `COMPLETE`, or `IvmRebuiltPartitions` is greater than 0 | This is the automatic rebuild of a first refresh or of an invalidated baseline, not an error. See [First refresh and baseline rebuild](#first-refresh-and-baseline-rebuild) for when it happens |
 | A `PARTITIONS` refresh without `FALLBACK` fails with `The refresh baseline of MV ... was invalidated` | The baseline of the whole materialized view is invalid. Refresh with `COMPLETE`, `AUTO` or `PARTITIONS FALLBACK` instead |
 | `ON SCHEDULE EVERY 30 SECOND` fails with `interval time unit can not be second` | The minimum scheduled interval is `EVERY 1 MINUTE`, and the unit can only be `MINUTE`, `HOUR`, `DAY` or `WEEK`. Use `ON COMMIT` when lower latency is needed, see [Setting the automatic refresh interval](#setting-the-automatic-refresh-interval) |
@@ -1391,7 +1385,7 @@ When creation fails, a refresh falls back, or the data is not updated, use the t
 5. **Use Unique Key MoW for update and delete workloads.** Duplicate Key tables only suit append-only data.
 6. **Isolate resources for refresh tasks.** Use `workload_group` to keep complex delta plans from competing with online queries.
 7. **Monitor tasks and Stream backlog.** Watch `tasks("type"="mv")`, `mv_infos` and `information_schema.table_stream_consumption` together.
-8. **Review fallback reasons regularly.** Occasional fallbacks protect correctness; continuous fallbacks indicate that the query shape, Binlog continuity or the baseline needs attention.
+8. **Review fallback reasons regularly.** Occasional fallbacks protect correctness; continuous fallbacks indicate that the query shape, changelog continuity or the baseline needs attention.
 
 {/* Knowledge type: Step-by-step guide */}
 {/* Use cases: Cleaning up the example environment */}
@@ -1413,7 +1407,7 @@ When an IVM is dropped, Doris also cleans up its internal Table Streams. No sepa
 - Overall capabilities and use cases of asynchronous materialized views: [Async Materialized View Overview](overview)
 - Creating, querying and maintaining asynchronous materialized views: [Manage and Query Async Materialized Views](functions-and-demands)
 - Refresh strategy selection and resource planning: [Async Materialized View Best Practices](use-guide)
-- How to enable Row Binlog and its limitations: [Row Binlog](../../../data-operate/incremental/row-binlog)
+- How to enable changelog and its limitations: [Changelog](../../../data-operate/incremental/changelog)
 - Consumption, offset and snapshot semantics of Table Streams: [Table Stream Basics](../../../data-operate/incremental/table-stream)
 - Manual refresh syntax: [REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 - Viewing the mapping between an IVM and its internal Streams: [MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)

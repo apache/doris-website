@@ -107,7 +107,7 @@ Reach for Apache Doris load transactions when several inserts must move together
 - [Stream Load](./stream-load): the synchronous HTTP load that hosts the 2PC variant.
 - [Group Commit](./group-commit): the right tool for high-frequency small inserts that don't need explicit `BEGIN ... COMMIT`.
 - [Kafka and CDC Integration](./kafka-cdc-integration): how Routine Load and Flink CDC build on this transaction model for exactly-once.
-- [Binlog Table Stream](./binlog-table-stream): the change feed produced once committed rows become visible.
+- [Changelog / Table Stream](./changelog-table-stream): the change feed produced once committed rows become visible.
 - [Transactions, isolation, and Label retention](https://doris.apache.org/docs/data-operate/transaction/)
 - [Stream Load 2PC walkthrough](https://doris.apache.org/docs/data-operate/import/import-way/stream-load-manual/)
 - [How Flink's real-time writes to Doris stay both fast and exactly-once](https://doris.apache.org/blog/Flink-realtime-write/)

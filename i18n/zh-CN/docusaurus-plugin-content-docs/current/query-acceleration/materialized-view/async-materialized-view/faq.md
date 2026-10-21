@@ -304,7 +304,7 @@ IVM 对应 `INCREMENTAL`，只计算基表两次刷新之间的行级变化；�
 
 ### Q17：IVM 为什么回退到完整刷新？
 
-`INCREMENTAL FALLBACK` 和 `AUTO` 会在增量结果无法安全计算时回退。例如，删除值可能改变 `MIN` 或 `MAX`，删除影响 Bitmap 聚合，Row Binlog 连续性被破坏，或者增量计划布局发生变化。通过 `tasks("type"="mv")` 的 `IvmFallbackReason` 查看稳定的回退原因，详见 [刷新和回退](incremental-materialized-view#刷新和回退)。
+`INCREMENTAL FALLBACK` 和 `AUTO` 会在增量结果无法安全计算时回退。例如，删除值可能改变 `MIN` 或 `MAX`，删除影响 Bitmap 聚合，Changelog 连续性被破坏，或者增量计划布局发生变化。通过 `tasks("type"="mv")` 的 `IvmFallbackReason` 查看稳定的回退原因，详见 [刷新和回退](incremental-materialized-view#刷新和回退)。
 
 ## 查询与透明改写
 

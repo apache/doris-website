@@ -12,11 +12,11 @@
 
 ## Overview
 
-Timestamp Oracle (TSO) allocates monotonically increasing timestamps on the Master FE, providing a global ordering reference for Doris transactions and incremental processing. It is currently available only in dev and is controlled by the FE configuration `enable_feature_binlog`, which defaults to `false`. The physical component can advance proactively, so a TSO is not an exact wall-clock reading.
+Timestamp Oracle (TSO) allocates monotonically increasing timestamps on the Master FE, providing a global ordering reference for Doris transactions and incremental processing. It is currently available only in dev and is controlled by the FE configuration `enable_feature_changelog`, which defaults to `false`. The physical component can advance proactively, so a TSO is not an exact wall-clock reading.
 
 ## Basic usage
 
-1. Set `enable_feature_binlog = true` in the FE configuration file `fe.conf` and restart FE. This experimental configuration cannot be changed dynamically; keep it consistent across FEs. Assess the cluster impact of enabling Binlog before changing it.
+1. Set `enable_feature_changelog = true` in the FE configuration file `fe.conf` and restart FE. This experimental configuration cannot be changed dynamically; keep it consistent across FEs. Assess the cluster impact of enabling changelog before changing it.
 2. Ensure the cluster has a ready Master FE and prepare valid Doris credentials.
 3. Query the read-only status endpoint. This command uses the default HTTP port and prompts for the root password:
 
@@ -42,7 +42,7 @@ The Master FE reserves a future allocation window and persists its boundary toge
 
 ## Configuration reference
 
-These are FE configurations; see [FE Configuration](../config/fe-config.md). The base switch `enable_feature_binlog` is a `boolean`, defaults to `false`, is not mutable, and is not restricted to the Master FE.
+These are FE configurations; see [FE Configuration](../config/fe-config.md). The base switch `enable_feature_changelog` is a `boolean`, defaults to `false`, is not mutable, and is not restricted to the Master FE.
 
 | Parameter | Type | Default | Mutable | Master only | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -63,4 +63,4 @@ These are FE configurations; see [FE Configuration](../config/fe-config.md). The
 
 ## Best practices
 
-Synchronize FE clocks, inspect status with the HTTP endpoint, and use FE logs to diagnose calibration or allocation failures. Keep the debug clock offset unchanged outside deliberate tests. Enable the base switch only after assessing Binlog and its dependent features; obtaining a wall-clock value alone is not a reason to enable it.
+Synchronize FE clocks, inspect status with the HTTP endpoint, and use FE logs to diagnose calibration or allocation failures. Keep the debug clock offset unchanged outside deliberate tests. Enable the base switch only after assessing changelog and its dependent features; obtaining a wall-clock value alone is not a reason to enable it.

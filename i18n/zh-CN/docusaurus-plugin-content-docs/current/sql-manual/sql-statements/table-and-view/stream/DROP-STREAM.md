@@ -8,7 +8,7 @@
 
 ## 描述
 
-该语句用于删除一个 Table Stream。删除 Stream 不影响基表及其 Row Binlog。
+该语句用于删除一个 Table Stream。删除 Stream 不影响基表及其 Changelog。
 
 ## 语法
 

@@ -525,7 +525,7 @@ const sidebars: SidebarsConfig = {
             link: {type: 'doc', id: 'data-operate/incremental/overview'},
             items: [
                 'data-operate/incremental/quick-start',
-                'data-operate/incremental/row-binlog',
+                'data-operate/incremental/changelog',
                 'data-operate/incremental/incremental-query',
                 'data-operate/incremental/table-stream',
                 'data-operate/incremental/table-stream-advanced',
@@ -2369,9 +2369,9 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
-                                'sql-manual/sql-functions/table-valued-functions/binlog',
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
+                                'sql-manual/sql-functions/table-valued-functions/changelog',
                                 'sql-manual/sql-functions/table-valued-functions/file',
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
                                 'sql-manual/sql-functions/table-valued-functions/frontends_disks',

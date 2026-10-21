@@ -231,7 +231,7 @@ This statement advances only the offset of `orders_stream`; the offset of `users
 | `DROP TABLE` on the base table | The Stream stays but can no longer be read. Drop it with `DROP STREAM ... FORCE` |
 | `DROP DATABASE` | Streams in that database are dropped with it. Streams in other databases whose base tables were in the dropped database stay and also need `FORCE` to drop |
 
-DDL that is not allowed on a base table with Row Binlog (such as `MODIFY COLUMN`) is listed in [Row Binlog](row-binlog#ddl-restrictions).
+DDL that is not allowed on a base table with changelog (such as `MODIFY COLUMN`) is listed in [Changelog](changelog#ddl-restrictions).
 
 ## Monitoring and recovery
 
@@ -245,7 +245,7 @@ The internal Streams created by IVM also appear in these system tables. You can 
 | Watch | Source | Notes |
 |---|---|---|
 | Backlog | `LAG` in `information_schema.table_stream_consumption` | Query it regularly and alert on partitions where it stays non-zero or keeps growing |
-| State | `ENABLED`, `IS_STALE`, and `STALE_REASON` in `information_schema.table_streams` | Show the Stream's state, but do not report TTL expiration in the current implementation. Monitor consumption delay against the base table's `binlog.ttl_seconds` and check for expired-offset errors; see [Retention and cleanup](row-binlog#retention-and-cleanup) |
+| State | `ENABLED`, `IS_STALE`, and `STALE_REASON` in `information_schema.table_streams` | Show the Stream's state, but do not report TTL expiration in the current implementation. Monitor consumption delay against the base table's `changelog.ttl_seconds` and check for expired-offset errors; see [Retention and cleanup](changelog#retention-and-cleanup) |
 | Consumption history | `LAST_CONSUMPTION_TIME` in `information_schema.table_stream_consumption` | Tells whether the consumption job runs as scheduled |
 
 ### Recovery
@@ -253,7 +253,7 @@ The internal Streams created by IVM also appear in these system tables. You can 
 | Situation | Action |
 |---|---|
 | The consuming statement failed | The offset is unchanged; rerun it while the required changes are still within the retention window |
-| Required changes have expired according to `binlog.ttl_seconds` | Reload downstream in full with `@reset()` and realign the offsets. `min_delta` reads fail on expired offsets; `detail` and `append_only` skip expired changes |
+| Required changes have expired according to `changelog.ttl_seconds` | Reload downstream in full with `@reset()` and realign the offsets. `min_delta` reads fail on expired offsets; `detail` and `append_only` skip expired changes |
 | Consumption succeeded but the scheduler did not record it | A rerun reads the next batch of changes and does not consume the previous batch again. To make repeated runs completely free of side effects, use a Unique Key model for the target table (writes by primary key are naturally idempotent) |
 | Downstream data is wrong and must be rebuilt | Restore the state corresponding to the consumption offset with `@snapshot()` and continue incremental consumption, or reload in full with `@reset()` which also advances the offset to the current point |
 | FE restart or master switch | Offsets are persisted in the metadata and consumption continues after a restart |
@@ -265,9 +265,9 @@ The internal Streams created by IVM also appear in these system tables. You can 
 | Error message | Cause | Action |
 |---|---|---|
 | `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | `enable_table_stream` is not enabled on the FE | Update `fe.conf` and restart the FE |
-| `Insert plan with Table stream failed. should enable binlog feature in FE config.` | `enable_feature_binlog` is not enabled on the FE | Update `fe.conf` and restart the FE |
-| `Base Olap table ... need to enable row binlog for table stream` | Row Binlog is not enabled on the base table | Recreate the base table with `binlog.enable` + `binlog.format = ROW` |
-| `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` | `min_delta` (the default type) needs before images | Enable `binlog.need_historical_value` on the base table, or use `append_only` |
+| `Insert plan with Table stream failed. should enable changelog feature in FE config.` | `enable_feature_changelog` is not enabled on the FE | Update `fe.conf` and restart the FE |
+| `Base Olap table ... need to enable changelog for table stream` | Changelog is not enabled on the base table | Recreate the base table with `"changelog.enable" = "true"` |
+| `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` | `min_delta` (the default type) needs before images | Recreate the base table with `changelog.need_historical_value` enabled, or use `append_only` |
 | `not supported type: xxx` | Invalid `type` value | Use `append_only` / `min_delta` / `detail` |
 | `target offset already consumed` | Concurrent consumption of the same partition; the offset was advanced before this transaction committed | Rerun to read the next batch; avoid concurrent consumers |
 | `Cloud Table Stream consumption only supports a normal INSERT into a local OLAP table` | In the decoupled mode, consuming inside an explicit transaction or with Group Commit, or the target is not an internal table | Use a plain `INSERT INTO ... SELECT` |

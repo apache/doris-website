@@ -304,7 +304,7 @@ IVM corresponds to `INCREMENTAL` and computes only the row-level changes of the 
 
 ### Q17: Why does an IVM fall back to a complete refresh?
 
-`INCREMENTAL FALLBACK` and `AUTO` fall back when the incremental result cannot be computed safely. For example, a deleted value may change `MIN` or `MAX`, a delete affects a Bitmap aggregation, the continuity of Row Binlog is broken, or the delta plan layout has changed. Check the stable fallback reason in `IvmFallbackReason` of `tasks("type"="mv")`. See [Refresh and fallback](incremental-materialized-view#refresh-and-fallback).
+`INCREMENTAL FALLBACK` and `AUTO` fall back when the incremental result cannot be computed safely. For example, a deleted value may change `MIN` or `MAX`, a delete affects a Bitmap aggregation, the continuity of the changelog is broken, or the delta plan layout has changed. Check the stable fallback reason in `IvmFallbackReason` of `tasks("type"="mv")`. See [Refresh and fallback](incremental-materialized-view#refresh-and-fallback).
 
 ## Query and Transparent Rewrite
 
