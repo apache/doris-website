@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/how-to-share-blogs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/how-to-share-blogs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/how-to-contribute/how-to-share-blogs.md",
+    "sourceCommit": "7426acd4834f573b9c06e1161d7fa97ecb2a345f",
+    "sourceHash": "f097fb1b367dbcbbfc8e3b053cdce3aa0c5f8bb01e7636ed5ee53acbe845a7e2",
+    "sourceTechnicalHash": "7a49022b27b01ae4ca7f6ac2825ab127434b3eb26c1bdc159374aef3bb891e2c",
+    "targetHash": "0d33f946fd03d2a3c0c2f94e5700de1d8e582560384a2bffbde957e841c80193",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T08:20:55.064Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f097fb1b367dbcbbfc8e3b053cdce3aa0c5f8bb01e7636ed5ee53acbe845a7e2",
+      "targetHash": "0d33f946fd03d2a3c0c2f94e5700de1d8e582560384a2bffbde957e841c80193",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
