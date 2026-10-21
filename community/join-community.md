@@ -56,7 +56,7 @@ The purpose and use case of each channel is as follows:
 | Twitter | Global user cases, release updates, event announcements | <https://twitter.com/doris_apache> |
 | LinkedIn | Expand your technical network, recruiting and industry updates | <https://www.linkedin.com/company/doris-apache/> |
 | YouTube | Overseas Meetup and technical sharing video recordings | <https://www.youtube.com/hashtag/apachedoris> |
-| Bilibili | Domestic Meetup and technical sharing video recordings | <https://space.bilibili.com/362350065> |
+| Bilibili | Domestic Meetup and technical sharing video recordings | <https://space.bilibili.com/362350065> |。
 
 ## Choose a Channel by Scenario
 
