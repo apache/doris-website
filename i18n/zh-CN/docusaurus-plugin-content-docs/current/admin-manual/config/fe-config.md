@@ -445,7 +445,7 @@ FE 之间元数据 HTTP 接口（`image`、`role`、`check`、`put`、`journal_i
 
 </version>
 
-TSO 使用 `enable_feature_binlog` 作为基础开关；该开关默认关闭、不可动态修改。以下为当前支持的 TSO 参数；使用方法与注意事项见 [TSO](../cluster-management/tso.md)。
+TSO 使用 `enable_feature_changelog` 作为基础开关；该开关默认关闭、不可动态修改。以下为当前支持的 TSO 参数；使用方法与注意事项见 [TSO](../cluster-management/tso.md)。
 
 | 参数 | 类型 | 默认值 | 可动态修改 | 仅 Master FE | 描述 |
 | --- | --- | --- | --- | --- | --- |

@@ -15,10 +15,10 @@
         "DETAIL",
         "changes by time window",
         "stateless incremental read",
-        "__DORIS_BINLOG_OP__",
-        "Row Binlog query",
+        "__DORIS_CHANGELOG_OP__",
+        "changelog query",
         "external scheduler incremental ETL",
-        "INCR query requires ROW binlog enabled on base table",
+        "INCR query requires changelog enabled on base table",
         "Table Stream vs @incr"
     ]
 }
@@ -27,7 +27,7 @@
 <!-- Knowledge type: Operations guide + Syntax description -->
 <!-- Use cases: Ad-hoc incremental reads by time range / External systems managing their own positions -->
 
-On a table with [Row Binlog](row-binlog) enabled, besides consuming changes through a [Table Stream](table-stream), you can read the changes of the table within a time window directly in a query with `@incr`, without creating any object or recording a consumption offset. It is a stateless, ordinary query and can be combined freely with WHERE, JOIN, aggregation, and so on.
+On a table with [changelog](changelog) enabled, besides consuming changes through a [Table Stream](table-stream), you can read the changes of the table within a time window directly in a query with `@incr`, without creating any object or recording a consumption offset. It is a stateless, ordinary query and can be combined freely with WHERE, JOIN, aggregation, and so on.
 
 :::caution Experimental feature
 This feature is available since version 5.0.0 and is experimental. Use `@incr` in the integrated storage-compute mode for now; support in the compute-storage decoupled mode is still being completed.
@@ -49,9 +49,9 @@ This feature is available since version 5.0.0 and is experimental. Use `@incr` i
 
 <!-- Knowledge type: Environment requirements -->
 
-- Doris 5.0.0 or later, with `enable_feature_binlog = true` on the FE.
-- Row Binlog enabled on the base table, otherwise the query fails with `INCR query requires ROW binlog enabled on base table.`.
-- For `MIN_DELTA` mode, a Unique Key MoW base table with `binlog.need_historical_value` enabled.
+- Doris 5.0.0 or later, with `enable_feature_changelog = true` on the FE.
+- Changelog enabled on the base table, otherwise the query fails with `INCR query requires changelog enabled on base table.`.
+- For `MIN_DELTA` mode, a Unique Key MoW base table with `changelog.need_historical_value` enabled.
 - The integrated storage-compute mode for now.
 
 ## Syntax
@@ -73,11 +73,11 @@ SELECT ... FROM <table_name>@incr(
 
 | Parameter | Default | Description |
 |---|---|---|
-| `startTimestamp` | first retained TSO | Optional. Start of the window, format `yyyy-MM-dd HH:mm:ss`, parsed in the session `time_zone`. Changes whose commit time is **greater than or equal to** the start are returned, subject to the base table's `binlog.ttl_seconds` |
+| `startTimestamp` | first retained TSO | Optional. Start of the window, format `yyyy-MM-dd HH:mm:ss`, parsed in the session `time_zone`. Changes whose commit time is **greater than or equal to** the start are returned, subject to the base table's `changelog.ttl_seconds` |
 | `endTimestamp` | unbounded | Optional. End of the window, same format. Changes whose commit time is **less than** the end are returned |
 | `incrementType` | `MIN_DELTA` | Optional. Incremental mode, see [The three incremental modes](#the-three-incremental-modes) |
 
-All three parameters can be omitted; `t@incr()` reads retained changes in `MIN_DELTA` mode. An explicit start outside the retention window fails in `MIN_DELTA`; `DETAIL` and `APPEND_ONLY` move the effective start to the first retained TSO. See [Retention and cleanup](row-binlog#retention-and-cleanup). The window is a left-closed, right-open interval `[startTimestamp, endTimestamp)`; a start later than the end, or a start in the future, returns an empty result when the start passes retention validation.
+All three parameters can be omitted; `t@incr()` reads retained changes in `MIN_DELTA` mode. An explicit start outside the retention window fails in `MIN_DELTA`; `DETAIL` and `APPEND_ONLY` move the effective start to the first retained TSO. See [Retention and cleanup](changelog#retention-and-cleanup). The window is a left-closed, right-open interval `[startTimestamp, endTimestamp)`; a start later than the end, or a start in the future, returns an empty result when the start passes retention validation.
 
 ### Result columns
 
@@ -85,9 +85,9 @@ The result contains the visible columns of the base table plus the following hid
 
 | Hidden column | Description |
 |---|---|
-| `__DORIS_BINLOG_OP__` | Change type: `0` insert (APPEND), `1` delete (DELETE), `2` before update (UPDATE_BEFORE), `3` after update (UPDATE_AFTER) |
-| `__DORIS_BINLOG_TSO__` | Commit timestamp of the change |
-| `__DORIS_BINLOG_LSN__` | Sequence number within the transaction, used for ordering together with the TSO |
+| `__DORIS_CHANGELOG_OP__` | Change type: `0` insert (APPEND), `1` delete (DELETE), `2` before update (UPDATE_BEFORE), `3` after update (UPDATE_AFTER) |
+| `__DORIS_CHANGELOG_TSO__` | Commit timestamp of the change |
+| `__DORIS_CHANGELOG_LSN__` | Sequence number within the transaction, used for ordering together with the TSO |
 
 ## The three incremental modes
 
@@ -95,9 +95,9 @@ The result contains the visible columns of the base table plus the following hid
 
 | Mode | Output | Base table requirements |
 |---|---|---|
-| `APPEND_ONLY` | Rows inserted within the window. Updates and deletes are not emitted | Row Binlog enabled |
-| `MIN_DELTA` | The net change of each key within the window; see the folding rules below | MoW tables must have `binlog.need_historical_value` enabled |
-| `DETAIL` | Every change within the window; an update is split into an UPDATE_BEFORE row and an UPDATE_AFTER row | Row Binlog enabled |
+| `APPEND_ONLY` | Rows inserted within the window. Updates and deletes are not emitted | Changelog enabled |
+| `MIN_DELTA` | The net change of each key within the window; see the folding rules below | MoW tables must have `changelog.need_historical_value` enabled |
+| `DETAIL` | Every change within the window; an update is split into an UPDATE_BEFORE row and an UPDATE_AFTER row | Changelog enabled |
 
 `MIN_DELTA` compares the state of each key at the start and at the end of the window:
 
@@ -134,7 +134,7 @@ DELETE FROM orders WHERE order_id = 5;              -- delete order 5 again
 ### MIN_DELTA: net changes between 10:03 and 10:10
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
@@ -159,7 +159,7 @@ Order 5 was inserted and deleted within the window; its net change is empty, so 
 ### APPEND_ONLY: rows inserted within the same window
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
@@ -182,13 +182,13 @@ The update of order 1 and the deletion of order 2 are filtered out; the insert o
 ### DETAIL: every change within the same window
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
     "incrementType"  = "DETAIL"
 )
-ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
+ORDER BY __DORIS_CHANGELOG_TSO__, __DORIS_CHANGELOG_LSN__, op;
 ```
 
 ```text
@@ -209,7 +209,7 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
 This example assumes that all changes since table creation are still within the retention window. Otherwise, omitting the window reads only retained changes.
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr()
 ORDER BY order_id;
 ```
@@ -231,8 +231,8 @@ Counting from table creation, every key is absent at the start, so every key tha
 <!-- Knowledge type: Usage recommendations -->
 <!-- Use cases: Periodic increments driven by an external scheduler -->
 
-- When an external scheduler drives the increments, use the previous `endTimestamp` as the next `startTimestamp`; within the retention window, the left-closed, right-open window guarantees no gaps and no duplicates. Keep consumption delay below `binlog.ttl_seconds`. Note that windows are defined by commit time: a transaction that is still running does not appear in the current window and shows up in the window that contains its commit.
-- If only the latest values matter and the values before an update are not needed, keep only the rows with `__DORIS_BINLOG_OP__ IN (0, 1, 3)`.
+- When an external scheduler drives the increments, use the previous `endTimestamp` as the next `startTimestamp`; within the retention window, the left-closed, right-open window guarantees no gaps and no duplicates. Keep consumption delay below `changelog.ttl_seconds`. Note that windows are defined by commit time: a transaction that is still running does not appear in the current window and shows up in the window that contains its commit.
+- If only the latest values matter and the values before an update are not needed, keep only the rows with `__DORIS_CHANGELOG_OP__ IN (0, 1, 3)`.
 - An `@incr` query reads all change records within the window; the larger the window, the more it reads. Specify the window whenever possible.
 
 ## Limitations and common errors
@@ -241,8 +241,8 @@ Counting from table creation, every key is absent at the start, so every key tha
 
 | Limitation | Error message | Action |
 |---|---|---|
-| The base table must have Row Binlog enabled | `INCR query requires ROW binlog enabled on base table.` | Recreate the base table with `binlog.enable` + `binlog.format = ROW`, see [Row Binlog](row-binlog#enabling-row-binlog) |
-| `MIN_DELTA` requires a Unique Key MoW table with `binlog.need_historical_value` enabled | `MIN_DELTA INCR query requires base table to be UNIQUE KEY with enable_unique_key_merge_on_write=true` or `... requires base table to enable binlog.need_historical_value=true` | Recreate the base table accordingly, or use `APPEND_ONLY` / `DETAIL` |
+| The base table must have changelog enabled | `INCR query requires changelog enabled on base table.` | Recreate the base table with `"changelog.enable" = "true"`, see [Changelog](changelog#enabling-changelog) |
+| `MIN_DELTA` requires a Unique Key MoW table with `changelog.need_historical_value` enabled | `MIN_DELTA INCR query requires base table to be UNIQUE KEY with enable_unique_key_merge_on_write=true` or `... requires base table to enable changelog.need_historical_value=true` | Recreate the base table accordingly, or use `APPEND_ONLY` / `DETAIL` |
 | Only the base index can be read | - | Materialized views and rollups cannot be specified |
 | The `PREAGGOPEN` hint is not supported | - | Remove the hint |
 | Only `startTimestamp`, `endTimestamp`, and `incrementType` are accepted | `Unsupported parameter in incr query` | Check the spelling of the parameter names |

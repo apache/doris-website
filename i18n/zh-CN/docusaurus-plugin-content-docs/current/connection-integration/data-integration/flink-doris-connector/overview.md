@@ -2,7 +2,7 @@
 {
     "title": "Flink Doris Connector 概述",
     "language": "zh-CN",
-    "description": "Flink Doris Connector 能力总览：读取 Doris 数据、增量读取 Doris Binlog、写入 Doris 数据、Lookup Join 维表关联、整库同步，以及版本兼容和安装方式。"
+    "description": "Flink Doris Connector 能力总览：读取 Doris 数据、增量读取 Doris Changelog、写入 Doris 数据、Lookup Join 维表关联、整库同步，以及版本兼容和安装方式。"
 }
 ---
 
@@ -15,7 +15,7 @@
 | 能力 | 说明 | 典型场景 |
 | --- | --- | --- |
 | [读取 Doris 数据](./read.md) | 从 BE 并行读取，数据不经过 FE；支持 Thrift 和 Arrow Flight SQL 两种协议 | 以 Doris 表作为 Flink 作业的输入、批量导出 |
-| [增量读取 Doris Binlog](./incremental-read.md) | 持续消费表的行级变更（insert、update、delete），可先读取快照再读取增量；需要 Connector 26.3.0+ 和 Doris 5.0.0+ | 将 Doris 表的变更实时同步到下游 |
+| [增量读取 Doris Changelog](./incremental-read.md) | 持续消费表的行级变更（insert、update、delete），可先读取快照再读取增量；需要 Connector 26.4.0+ 和 Doris 5.0.0+ | 将 Doris 表的变更实时同步到下游 |
 | [写入 Doris 数据](./write.md) | 在 Flink 中攒批后通过 Stream Load 写入；提供流式写入（基于 Checkpoint，Exactly-Once）、攒批写入和 S3 TVF 写入三种模式 | 实时数据入库、CDC 变更落地、部分列更新 |
 | [Lookup Join 维表关联](./lookup-join.md) | 将上游数据攒批后异步查询 Doris 维表 | 流数据打宽 |
 | [整库同步](./cdc-sync.md) | 集成 Flink CDC，一条命令同步 MySQL、Oracle、PostgreSQL、SQLServer、DB2、MongoDB 整库，自动建表并同步 DDL | 业务库实时同步到 Doris |

@@ -2,7 +2,7 @@
 {
     "title": "Flink Doris Connector Overview",
     "language": "en",
-    "description": "Capabilities of Flink Doris Connector: reading Doris data, incremental reading with Doris Binlog, writing Doris data, Lookup Join, and full-database sync, plus version compatibility and installation."
+    "description": "Capabilities of Flink Doris Connector: reading Doris data, incremental reading with Doris changelog, writing Doris data, Lookup Join, and full-database sync, plus version compatibility and installation."
 }
 ---
 
@@ -15,7 +15,7 @@
 | Capability | Description | Typical scenarios |
 | --- | --- | --- |
 | [Reading Data from Doris](./read.md) | Reads from BEs in parallel without routing data through FE; supports the Thrift and Arrow Flight SQL protocols | Using a Doris table as the input of a Flink job, bulk export |
-| [Incremental Reading with Doris Binlog](./incremental-read.md) | Continuously consumes the row-level changes (insert, update, delete) of a table, optionally starting from a snapshot; requires Connector 26.3.0+ and Doris 5.0.0+ | Syncing the changes of a Doris table to downstream systems in real time |
+| [Incremental Reading with Doris Changelog](./incremental-read.md) | Continuously consumes the row-level changes (insert, update, delete) of a table, optionally starting from a snapshot; requires Connector 26.4.0+ and Doris 5.0.0+ | Syncing the changes of a Doris table to downstream systems in real time |
 | [Writing Data to Doris](./write.md) | Batches data in Flink and writes it through Stream Load; offers streaming write (Checkpoint-based, Exactly-Once), batch write, and S3 TVF write | Real-time ingestion, landing CDC changes, partial column updates |
 | [Lookup Join](./lookup-join.md) | Batches upstream records and queries the Doris dimension table asynchronously | Enriching streams with dimension data |
 | [Full-Database Sync](./cdc-sync.md) | Integrates Flink CDC to sync an entire MySQL, Oracle, PostgreSQL, SQLServer, DB2, or MongoDB database with one command, creating tables and syncing DDL automatically | Syncing business databases to Doris in real time |

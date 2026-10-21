@@ -8,7 +8,7 @@
 
 # Reading Data from Doris
 
-Flink Doris Connector can use a Doris table as the source of a Flink job. By default it reads a bounded snapshot of the table; to continuously read row-level changes, see [Incremental Reading with Doris Binlog](./incremental-read.md).
+Flink Doris Connector can use a Doris table as the source of a Flink job. By default it reads a bounded snapshot of the table; to continuously read row-level changes, see [Incremental Reading with Doris Changelog](./incremental-read.md).
 
 ## Read Principle {#how-it-works}
 
@@ -83,7 +83,7 @@ For reading with `DorisSource`, see [DataStream API](./datastream-api.md#source)
 
 ## Options {#options}
 
-The general connection options are listed in [Connection Options and TLS](./connection.md#common-options); the options for incremental reading are listed in [Incremental Reading with Doris Binlog](./incremental-read.md#options).
+The general connection options are listed in [Connection Options and TLS](./connection.md#common-options); the options for incremental reading are listed in [Incremental Reading with Doris Changelog](./incremental-read.md#options).
 
 | Key                         | Default Value | Required | Comment                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |

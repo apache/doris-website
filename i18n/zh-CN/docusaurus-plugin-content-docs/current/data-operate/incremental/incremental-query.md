@@ -2,7 +2,7 @@
 {
     "title": "增量查询",
     "language": "zh-CN",
-    "description": "在开启 Row Binlog 的 Doris 表上用 @incr 按时间窗口读取行级变更，不建 Table Stream、不记位点。APPEND_ONLY / MIN_DELTA / DETAIL 三种增量模式的语法、参数、示例与限制。",
+    "description": "在开启 Changelog 的 Doris 表上用 @incr 按时间窗口读取行级变更，不建 Table Stream、不记位点。APPEND_ONLY / MIN_DELTA / DETAIL 三种增量模式的语法、参数、示例与限制。",
     "keywords": [
         "@incr",
         "Doris 增量查询",
@@ -15,10 +15,10 @@
         "DETAIL",
         "按时间窗口取增量",
         "无状态增量读取",
-        "__DORIS_BINLOG_OP__",
-        "Row Binlog 查询",
+        "__DORIS_CHANGELOG_OP__",
+        "Changelog 查询",
         "外部调度 增量 ETL",
-        "INCR query requires ROW binlog enabled on base table",
+        "INCR query requires changelog enabled on base table",
         "Table Stream 与 @incr 对比"
     ]
 }
@@ -27,7 +27,7 @@
 <!-- 知识类型: 操作指南 + 语法说明 -->
 <!-- 适用场景: 临时按时间段取增量 / 外部系统自管消费位点 -->
 
-在开启了 [Row Binlog](row-binlog) 的表上，除了通过 [Table Stream](table-stream) 消费变更，还可以用 `@incr` 直接在查询里按时间窗口读取表的变更，不需要创建任何对象，也不记录消费位点。它是无状态的普通查询，可以和 WHERE、JOIN、聚合等任意组合。
+在开启了 [Changelog](changelog) 的表上，除了通过 [Table Stream](table-stream) 消费变更，还可以用 `@incr` 直接在查询里按时间窗口读取表的变更，不需要创建任何对象，也不记录消费位点。它是无状态的普通查询，可以和 WHERE、JOIN、聚合等任意组合。
 
 :::caution 实验性功能
 该功能自 5.0.0 版本起提供，目前处于实验阶段。`@incr` 当前请在存算一体模式下使用，存算分离模式的支持仍在完善中。
@@ -49,9 +49,9 @@
 
 <!-- 知识类型: 环境要求 -->
 
-- Doris 5.0.0 及以上版本，FE 已开启 `enable_feature_binlog = true`。
-- 基表已开启 Row Binlog，否则报 `INCR query requires ROW binlog enabled on base table.`。
-- 使用 `MIN_DELTA` 模式时，基表必须是 Unique Key MoW 表并开启 `binlog.need_historical_value`。
+- Doris 5.0.0 及以上版本，FE 已开启 `enable_feature_changelog = true`。
+- 基表已开启 Changelog，否则报 `INCR query requires changelog enabled on base table.`。
+- 使用 `MIN_DELTA` 模式时，基表必须是 Unique Key MoW 表并开启 `changelog.need_historical_value`。
 - 当前请在存算一体模式下使用。
 
 ## 语法
@@ -73,11 +73,11 @@ SELECT ... FROM <table_name>@incr(
 
 | 参数 | 默认值 | 说明 |
 |---|---|---|
-| `startTimestamp` | 第一个仍保留的 TSO | 可选。窗口起点，格式 `yyyy-MM-dd HH:mm:ss`，按会话 `time_zone` 解析。返回提交时间 **大于等于** 起点的变更，受基表 `binlog.ttl_seconds` 限制 |
+| `startTimestamp` | 第一个仍保留的 TSO | 可选。窗口起点，格式 `yyyy-MM-dd HH:mm:ss`，按会话 `time_zone` 解析。返回提交时间 **大于等于** 起点的变更，受基表 `changelog.ttl_seconds` 限制 |
 | `endTimestamp` | 不限 | 可选。窗口终点，格式同上。返回提交时间 **小于** 终点的变更 |
 | `incrementType` | `MIN_DELTA` | 可选。增量模式，见 [三种增量模式](#三种增量模式) |
 
-三个参数都可以省略，`t@incr()` 按 `MIN_DELTA` 读取保留窗口内的变更。显式起点超出保留窗口时，`MIN_DELTA` 报错，`DETAIL` 和 `APPEND_ONLY` 将实际起点推进到第一个仍保留的 TSO，见 [保留与清理](row-binlog#保留与清理)。窗口为左闭右开区间 `[startTimestamp, endTimestamp)`；起点通过保留窗口校验后，若晚于终点或位于未来，则返回空结果。
+三个参数都可以省略，`t@incr()` 按 `MIN_DELTA` 读取保留窗口内的变更。显式起点超出保留窗口时，`MIN_DELTA` 报错，`DETAIL` 和 `APPEND_ONLY` 将实际起点推进到第一个仍保留的 TSO，见 [保留与清理](changelog#保留与清理)。窗口为左闭右开区间 `[startTimestamp, endTimestamp)`；起点通过保留窗口校验后，若晚于终点或位于未来，则返回空结果。
 
 ### 结果列
 
@@ -85,9 +85,9 @@ SELECT ... FROM <table_name>@incr(
 
 | 隐藏列 | 说明 |
 |---|---|
-| `__DORIS_BINLOG_OP__` | 变更类型：`0` 新增（APPEND），`1` 删除（DELETE），`2` 更新前（UPDATE_BEFORE），`3` 更新后（UPDATE_AFTER） |
-| `__DORIS_BINLOG_TSO__` | 变更的提交时间戳 |
-| `__DORIS_BINLOG_LSN__` | 事务内序号，与 TSO 一起用于排序 |
+| `__DORIS_CHANGELOG_OP__` | 变更类型：`0` 新增（APPEND），`1` 删除（DELETE），`2` 更新前（UPDATE_BEFORE），`3` 更新后（UPDATE_AFTER） |
+| `__DORIS_CHANGELOG_TSO__` | 变更的提交时间戳 |
+| `__DORIS_CHANGELOG_LSN__` | 事务内序号，与 TSO 一起用于排序 |
 
 ## 三种增量模式
 
@@ -95,9 +95,9 @@ SELECT ... FROM <table_name>@incr(
 
 | 模式 | 输出 | 对基表的要求 |
 |---|---|---|
-| `APPEND_ONLY` | 窗口内新增的行。更新、删除不输出 | 开启 Row Binlog |
-| `MIN_DELTA` | 窗口内每个 key 的净变化，折叠规则见下表 | MoW 表需开启 `binlog.need_historical_value` |
-| `DETAIL` | 窗口内的每一条变更，更新拆成 UPDATE_BEFORE 和 UPDATE_AFTER 两行 | 开启 Row Binlog |
+| `APPEND_ONLY` | 窗口内新增的行。更新、删除不输出 | 开启 Changelog |
+| `MIN_DELTA` | 窗口内每个 key 的净变化，折叠规则见下表 | MoW 表需开启 `changelog.need_historical_value` |
+| `DETAIL` | 窗口内的每一条变更，更新拆成 UPDATE_BEFORE 和 UPDATE_AFTER 两行 | 开启 Changelog |
 
 `MIN_DELTA` 按 key 比较窗口起点和终点的状态：
 
@@ -134,7 +134,7 @@ DELETE FROM orders WHERE order_id = 5;              -- 又删除订单 5
 ### MIN_DELTA：10:03 到 10:10 之间的净变化
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
@@ -159,7 +159,7 @@ ORDER BY order_id, op;
 ### APPEND_ONLY：同一窗口内新增的行
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
@@ -182,13 +182,13 @@ ORDER BY order_id;
 ### DETAIL：同一窗口内的每一条变更
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr(
     "startTimestamp" = "2026-09-14 10:03:00",
     "endTimestamp"   = "2026-09-14 10:10:00",
     "incrementType"  = "DETAIL"
 )
-ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
+ORDER BY __DORIS_CHANGELOG_TSO__, __DORIS_CHANGELOG_LSN__, op;
 ```
 
 ```text
@@ -209,7 +209,7 @@ ORDER BY __DORIS_BINLOG_TSO__, __DORIS_BINLOG_LSN__, op;
 本例假设建表以来的全部变更仍处于保留窗口内；否则，省略窗口仅读取尚未过期的变更。
 
 ```sql
-SELECT order_id, status, amount, __DORIS_BINLOG_OP__ AS op
+SELECT order_id, status, amount, __DORIS_CHANGELOG_OP__ AS op
 FROM orders@incr()
 ORDER BY order_id;
 ```
@@ -231,8 +231,8 @@ ORDER BY order_id;
 <!-- 知识类型: 使用建议 -->
 <!-- 适用场景: 用外部调度系统做周期性增量 -->
 
-- 用外部调度系统做增量时，把上一次的 `endTimestamp` 作为下一次的 `startTimestamp`，在保留窗口内，左闭右开的时间窗口保证不重不漏。请将消费延迟控制在 `binlog.ttl_seconds` 以内。要注意窗口是按提交时间划分的，正在执行、尚未提交的事务不会出现在当前窗口，而会出现在它提交后的窗口里。
-- 只需要最新值、不需要更新前的值时，可以只保留 `__DORIS_BINLOG_OP__ IN (0, 1, 3)` 的行。
+- 用外部调度系统做增量时，把上一次的 `endTimestamp` 作为下一次的 `startTimestamp`，在保留窗口内，左闭右开的时间窗口保证不重不漏。请将消费延迟控制在 `changelog.ttl_seconds` 以内。要注意窗口是按提交时间划分的，正在执行、尚未提交的事务不会出现在当前窗口，而会出现在它提交后的窗口里。
+- 只需要最新值、不需要更新前的值时，可以只保留 `__DORIS_CHANGELOG_OP__ IN (0, 1, 3)` 的行。
 - `@incr` 查询会读取窗口内的全部变更记录，窗口越大、读取越多，请尽量指定窗口。
 
 ## 限制与常见错误
@@ -241,8 +241,8 @@ ORDER BY order_id;
 
 | 限制 | 报错信息 | 处理 |
 |---|---|---|
-| 基表必须开启 Row Binlog | `INCR query requires ROW binlog enabled on base table.` | 重建基表并开启 `binlog.enable` + `binlog.format = ROW`，见 [Row Binlog](row-binlog#开启方式) |
-| `MIN_DELTA` 模式要求基表是 Unique Key MoW 表并开启 `binlog.need_historical_value` | `MIN_DELTA INCR query requires base table to be UNIQUE KEY with enable_unique_key_merge_on_write=true` 或 `... requires base table to enable binlog.need_historical_value=true` | 基表按要求重建，或改用 `APPEND_ONLY` / `DETAIL` |
+| 基表必须开启 Changelog | `INCR query requires changelog enabled on base table.` | 重建基表并设置 `"changelog.enable" = "true"`，见 [Changelog](changelog#开启方式) |
+| `MIN_DELTA` 模式要求基表是 Unique Key MoW 表并开启 `changelog.need_historical_value` | `MIN_DELTA INCR query requires base table to be UNIQUE KEY with enable_unique_key_merge_on_write=true` 或 `... requires base table to enable changelog.need_historical_value=true` | 基表按要求重建，或改用 `APPEND_ONLY` / `DETAIL` |
 | 只能读取基表（base index） | - | 不支持指定物化视图或 rollup |
 | 不支持 `PREAGGOPEN` hint | - | 去掉该 hint |
 | 只接受 `startTimestamp`、`endTimestamp`、`incrementType` 三个参数 | `Unsupported parameter in incr query` | 检查参数名拼写 |

@@ -21,7 +21,7 @@
         "行级增量刷新",
         "REFRESH INCREMENTAL",
         "INCREMENTAL FALLBACK",
-        "Row Binlog",
+        "Changelog",
         "Table Stream"
     ]
 }
@@ -36,7 +36,7 @@ import TabItem from '@theme/TabItem';
 物化视图增量维护（Incremental View Maintenance，IVM）根据基表的行级变化维护异步物化视图。普通异步物化视图会重算全部数据或受影响的整个分区；IVM 只计算基表两次刷新之间的新增、更新和删除，并把这些变化应用到物化视图。
 
 :::caution 实验性功能
-IVM 从 Doris 5.0.0 开始支持，目前处于实验阶段，默认关闭。使用前需要在 FE 配置中开启 Row Binlog 和 Table Stream，详见 [前置条件](#前置条件)。
+IVM 从 Doris 5.0.0 开始支持，目前处于实验阶段，默认关闭。使用前需要在 FE 配置中开启 Changelog 和 Table Stream，详见 [前置条件](#前置条件)。
 :::
 
 {/* 知识类型: 场景选型 */}
@@ -74,9 +74,9 @@ Doris 支持四种异步物化视图刷新方式。IVM 对应 `INCREMENTAL`，�
 
 ## 工作原理
 
-IVM 复用 Doris 的 Row Binlog 和 Table Stream 能力：
+IVM 复用 Doris 的 Changelog 和 Table Stream 能力：
 
-![IVM 工作原理：基表变化依次进入 Row Binlog 和内部 Table Stream，增量计划结合未消费变化与一致性快照更新物化视图，并在同一事务中推进消费位点](/images/next/query-acceleration/ivm-workflow.jpg)
+![IVM 工作原理：基表变化依次进入 Changelog 和内部 Table Stream，增量计划结合未消费变化与一致性快照更新物化视图，并在同一事务中推进消费位点](/images/next/query-acceleration/ivm-workflow.jpg)
 
 创建支持 IVM 的物化视图时，Doris 为每张参与增量维护的基表创建一个内部 Table Stream。内部 Stream 的名称以 `__doris_ivm_stream_` 开头。用户不需要创建、消费或删除这些 Stream。
 
@@ -93,11 +93,11 @@ IVM 复用 Doris 的 Row Binlog 和 Table Stream 能力：
 2. 在所有 FE 的 `fe.conf` 中设置以下配置并重启 FE：
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
-这两个配置均为非动态配置。`enable_feature_binlog` 开启 Row Binlog 和全局提交时间戳，`enable_table_stream` 开启 Table Stream DDL 和内部 Stream 管理。
+这两个配置均为非动态配置。`enable_feature_changelog` 开启 Changelog 和全局提交时间戳，`enable_table_stream` 开启 Table Stream DDL 和内部 Stream 管理。
 
 ### 基表要求
 
@@ -105,8 +105,8 @@ IVM 复用 Doris 的 Row Binlog 和 Table Stream 能力：
 
 | 基表模型 | 是否支持 | 要求与行为 |
 |---|---|---|
-| Unique Key Merge-on-Write | 支持 | 必须开启 Row Binlog 和 before 镜像，可处理新增、更新和删除 |
-| Duplicate Key | 支持 | 必须开启 Row Binlog；只提供追加变化，不记录通过删除谓词执行的删除 |
+| Unique Key Merge-on-Write | 支持 | 必须开启 Changelog 和 before 镜像，可处理新增、更新和删除 |
+| Duplicate Key | 支持 | 必须开启 Changelog；只提供追加变化，不记录通过删除谓词执行的删除 |
 | Unique Key Merge-on-Read | 不支持 | 请改用 Merge-on-Write |
 | Aggregate Key | 不支持增量维护 | 仅可作为 `excluded_trigger_tables` 中不参与增量触发的表 |
 | 外表 | 不支持 | IVM 的增量基表必须是 Doris 内表 |
@@ -116,13 +116,12 @@ IVM 复用 Doris 的 Row Binlog 和 Table Stream 能力：
 ```sql
 PROPERTIES (
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 ```
 
-Row Binlog 只能在建表时开启，开启后不能关闭。完整的表模型、列类型、写入方式和 DDL 限制见 [Row Binlog](../../../data-operate/incremental/row-binlog)。
+Changelog 只能在建表时开启，开启后不能关闭。完整的表模型、列类型、写入方式和 DDL 限制见 [Changelog](../../../data-operate/incremental/changelog)。
 
 {/* 知识类型: 操作步骤 */}
 {/* 适用场景: 首次配置 / 功能验证 */}
@@ -133,7 +132,7 @@ Row Binlog 只能在建表时开启，开启后不能关闭。完整的表模型
 
 执行流程如下：
 
-1. 创建开启 Row Binlog 的 Unique Key Merge-on-Write 基表。
+1. 创建开启 Changelog 的 Unique Key Merge-on-Write 基表。
 2. 使用 `REFRESH INCREMENTAL FALLBACK` 创建 IVM。
 3. 执行 `COMPLETE` 刷新，建立完整基线。
 4. 修改基表数据并执行增量刷新。
@@ -141,7 +140,7 @@ Row Binlog 只能在建表时开启，开启后不能关闭。完整的表模型
 
 ### 第 1 步：创建基表并写入初始数据
 
-创建支持更新和删除的基表，同时开启 Row Binlog 和 before 镜像：
+创建支持更新和删除的基表，同时开启 Changelog 和 before 镜像：
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ivm_demo;
@@ -157,9 +156,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 INSERT INTO orders VALUES
@@ -278,7 +276,7 @@ IVM 在创建物化视图时检查定义 SQL。使用显式 `REFRESH INCREMENTAL
 
 ### 示例表
 
-本节示例使用三张基表：客户表 `customers`、销售表 `sales` 和退款表 `refunds`。三张表都是开启了 Row Binlog 和 before 镜像的 Unique Key Merge-on-Write 表，可以在 [快速上手](#快速上手) 创建的 `ivm_demo` 数据库中执行：
+本节示例使用三张基表：客户表 `customers`、销售表 `sales` 和退款表 `refunds`。三张表都是开启了 Changelog 和 before 镜像的 Unique Key Merge-on-Write 表，可以在 [快速上手](#快速上手) 创建的 `ivm_demo` 数据库中执行：
 
 ```sql
 CREATE TABLE customers (
@@ -291,9 +289,8 @@ DISTRIBUTED BY HASH(customer_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 CREATE TABLE sales (
@@ -307,9 +304,8 @@ DISTRIBUTED BY HASH(sale_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 CREATE TABLE refunds (
@@ -322,9 +318,8 @@ DISTRIBUTED BY HASH(refund_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 
 INSERT INTO customers VALUES
@@ -359,10 +354,10 @@ INSERT INTO refunds VALUES
 | `GROUPING SETS`、`ROLLUP`、`CUBE` | 可以配合 `GROUPING()`、`GROUPING_ID()` 使用，限制与 `GROUP BY` 相同 |
 | `SELECT DISTINCT` | 按不带聚合函数的 `GROUP BY` 处理，限制与 `GROUP BY` 相同 |
 | `INNER JOIN`、`CROSS JOIN` | 支持多表连接和自连接 |
-| `LEFT OUTER JOIN`、`RIGHT OUTER JOIN`、`FULL OUTER JOIN` | 保留全部行的一侧（LEFT JOIN 的左侧、RIGHT JOIN 的右侧、FULL JOIN 的两侧）不能是 `excluded_trigger_tables` 中未开启 Row Binlog 的 Duplicate Key 表，这类表的行没有固定的行标识 |
+| `LEFT OUTER JOIN`、`RIGHT OUTER JOIN`、`FULL OUTER JOIN` | 保留全部行的一侧（LEFT JOIN 的左侧、RIGHT JOIN 的右侧、FULL JOIN 的两侧）不能是 `excluded_trigger_tables` 中未开启 Changelog 的 Duplicate Key 表，这类表的行没有固定的行标识 |
 | 嵌套外连接 | 外连接中可能被补 `NULL` 的一侧本身又是一个 Join。这一侧越复杂，增量刷新计划越大 |
 | `UNION ALL` | 分支可以来自不同的表、同一张表或常量行 |
-| 链式 IVM | 以另一个 IVM 作为基表。作为基表的 IVM 需要开启 Row Binlog 和 before 镜像 |
+| 链式 IVM | 以另一个 IVM 作为基表。作为基表的 IVM 需要开启 Changelog 和 before 镜像 |
 
 下面按类别给出示例。
 
@@ -803,7 +798,7 @@ FROM refunds;
 </TabItem>
 <TabItem value="chained" label="链式 IVM">
 
-以一个 IVM 作为另一个 IVM 的基表，把复杂计算拆成多层，例如下层 IVM 负责 Join，上层 IVM 负责聚合。作为基表的 IVM 本身是 Unique Key Merge-on-Write 表，需要像其他 Merge-on-Write 基表一样开启 Row Binlog 和 before 镜像，否则无法创建上层 IVM，例如未开启 Row Binlog 时报错 `row binlog is not enabled for table`。
+以一个 IVM 作为另一个 IVM 的基表，把复杂计算拆成多层，例如下层 IVM 负责 Join，上层 IVM 负责聚合。作为基表的 IVM 本身是 Unique Key Merge-on-Write 表，需要像其他 Merge-on-Write 基表一样开启 Changelog 和 before 镜像，否则无法创建上层 IVM，例如未开启 Changelog 时报错 `changelog is not enabled for table`。
 
 ```sql
 CREATE MATERIALIZED VIEW mv_sales_city_detail
@@ -811,9 +806,8 @@ BUILD DEFERRED REFRESH INCREMENTAL ON MANUAL
 DISTRIBUTED BY RANDOM BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 )
 AS
 SELECT s.sale_id, c.city, s.amount
@@ -1192,7 +1186,7 @@ IVM -> PARTITIONS -> COMPLETE
 
 **部分分区的基线失效**
 
-以下基表操作只修改元数据，不产生 Row Binlog。增量刷新无法从变化数据中得知哪些行被删除或替换，因此读取了这些基表分区的物化视图分区需要重建：
+以下基表操作只修改元数据，不会在 Changelog 中产生变更记录。增量刷新无法从变化数据中得知哪些行被删除或替换，因此读取了这些基表分区的物化视图分区需要重建：
 
 - `TRUNCATE TABLE`，包括只截断部分分区
 - `ALTER TABLE ... DROP PARTITION`
@@ -1207,7 +1201,7 @@ IVM -> PARTITIONS -> COMPLETE
 
 以下情况会使整个物化视图的基线失效，物化视图进入 `SCHEMA_CHANGE` 状态，可以通过 `mv_infos` 的 `State` 和 `SchemaChangeDetail` 列查看：
 
-- 基表执行 `DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、`RENAME`（重命名表）或 `REPLACE WITH TABLE`。`ADD COLUMN` 不会使基线失效。开启 Row Binlog 的表不允许 `MODIFY COLUMN` 和 `RENAME COLUMN`，见 [Row Binlog 对表 DDL 的约束](../../../data-operate/incremental/row-binlog#对表-ddl-的约束)。
+- 基表执行 `DROP COLUMN`、`MODIFY COLUMN`、`RENAME COLUMN`、`RENAME`（重命名表）或 `REPLACE WITH TABLE`。`ADD COLUMN` 不会使基线失效。开启 Changelog 的表不允许 `MODIFY COLUMN` 和 `RENAME COLUMN`，见 [Changelog 对表 DDL 的约束](../../../data-operate/incremental/changelog#对表-ddl-的约束)。
 - 基表执行不使用严格范围匹配的 `REPLACE PARTITION`，或者上一节的分区操作无法定位到具体的物化视图分区。
 - 修改物化视图属性扩大了维护范围：从 `excluded_trigger_tables` 中移除基表、扩大或移除 `ivm_partition_window_limit`，或者扩大 `partition_sync_limit` 的同步范围。
 
@@ -1355,11 +1349,11 @@ PROPERTIES (
 ## 限制和注意事项
 
 - IVM 只能在创建物化视图时启用。不能通过 `ALTER MATERIALIZED VIEW` 把普通物化视图改为 IVM，也不能把 IVM 改为其他默认刷新方式。需要切换时，请重建物化视图。
-- 开启 Row Binlog 会增加写入和存储开销。Unique Key MoW 表还需要读取并保存更新前的值。只为确实需要 IVM 的基表开启，并在生产上线前使用真实负载评估导入吞吐。
+- 开启 Changelog 会增加写入和存储开销。Unique Key MoW 表还需要读取并保存更新前的值。只为确实需要 IVM 的基表开启，并在生产上线前使用真实负载评估导入吞吐。
 - IVM 仍通过异步任务刷新，不提供与基表事务同步的实时一致性。刷新延迟取决于触发方式、排队时间和增量计划的执行时间。定时触发的最小间隔为 1 分钟，见 [设置自动刷新间隔](#设置自动刷新间隔)。
 - 复杂的嵌套外连接会扩大增量计划，尤其是空值产生端的复杂子树。遇到规划或刷新开销过高时，可以简化 Join，或者先把复杂子树物化为下层 IVM。
 - `MIN`、`MAX` 和 Bitmap 聚合在部分删除场景下需要完整重算。生产环境建议使用 `INCREMENTAL FALLBACK` 或 `AUTO`，并监控 `IvmFallbackReason`。
-- Row Binlog 的表模型、列类型、Schema Change 和删除行为限制会直接影响 IVM，详见 [Row Binlog 的支持范围与限制](../../../data-operate/incremental/row-binlog#支持范围与限制)。
+- Changelog 的表模型、列类型、Schema Change 和删除行为限制会直接影响 IVM，详见 [Changelog 的支持范围与限制](../../../data-operate/incremental/changelog#支持范围与限制)。
 
 {/* 知识类型: 常见问题 / 故障排查 */}
 {/* 适用场景: 创建失败 / 刷新回退 / 基线重建 / 数据延迟 */}
@@ -1370,7 +1364,7 @@ PROPERTIES (
 
 | 问题 | 排查与处理 |
 |---|---|
-| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` 创建失败 | 检查 FE 是否开启 `enable_feature_binlog` 和 `enable_table_stream`，基表是否满足模型与 Row Binlog 要求，以及定义 SQL 是否在 IVM 支持范围内 |
+| `CREATE MATERIALIZED VIEW ... REFRESH INCREMENTAL` 创建失败 | 检查 FE 是否开启 `enable_feature_changelog` 和 `enable_table_stream`，基表是否满足模型与 Changelog 要求，以及定义 SQL 是否在 IVM 支持范围内 |
 | 严格增量刷新任务的 `RefreshMode` 为 `COMPLETE`，或 `IvmRebuiltPartitions` 大于 0 | 这是首次刷新或基线失效后的自动重建，不是错误。触发条件见 [首次刷新和基线重建](#首次刷新和基线重建) |
 | 不带 `FALLBACK` 的 `PARTITIONS` 刷新报错 `The refresh baseline of MV ... was invalidated` | 整个物化视图的基线已失效，改用 `COMPLETE`、`AUTO` 或 `PARTITIONS FALLBACK` 刷新 |
 | `ON SCHEDULE EVERY 30 SECOND` 报错 `interval time unit can not be second` | 定时刷新的最小间隔是 `EVERY 1 MINUTE`，单位只支持 `MINUTE`、`HOUR`、`DAY`、`WEEK`。需要更低延迟时改用 `ON COMMIT`，见 [设置自动刷新间隔](#设置自动刷新间隔) |
@@ -1391,7 +1385,7 @@ PROPERTIES (
 5. **更新和删除场景使用 Unique Key MoW。** Duplicate Key 表只适合追加型数据。
 6. **为刷新任务隔离资源。** 通过 `workload_group` 避免复杂增量计划与在线查询争抢资源。
 7. **监控任务和 Stream 积压。** 同时观察 `tasks("type"="mv")`、`mv_infos` 和 `information_schema.table_stream_consumption`。
-8. **定期检查回退原因。** 偶发回退可以保证正确性；持续回退说明查询形态、Binlog 连续性或基线需要处理。
+8. **定期检查回退原因。** 偶发回退可以保证正确性；持续回退说明查询形态、Changelog 连续性或基线需要处理。
 
 {/* 知识类型: 操作步骤 */}
 {/* 适用场景: 示例环境清理 */}
@@ -1413,7 +1407,7 @@ DROP DATABASE ivm_demo;
 - 异步物化视图的整体能力和适用场景：[异步物化视图概述](overview)
 - 创建、查询和维护异步物化视图：[创建、查询与维护异步物化视图](functions-and-demands)
 - 刷新策略选型与资源规划：[异步物化视图使用指南](use-guide)
-- Row Binlog 的开启方式和限制：[Row Binlog](../../../data-operate/incremental/row-binlog)
+- Changelog 的开启方式和限制：[Changelog](../../../data-operate/incremental/changelog)
 - Table Stream 的消费、位点和快照语义：[Table Stream 基础](../../../data-operate/incremental/table-stream)
 - 手动刷新语法：[REFRESH MATERIALIZED VIEW](../../../sql-manual/sql-statements/table-and-view/async-materialized-view/REFRESH-MATERIALIZED-VIEW)
 - 查看 IVM 与内部 Stream 映射：[MV_INFOS](../../../sql-manual/sql-functions/table-valued-functions/mv_infos)

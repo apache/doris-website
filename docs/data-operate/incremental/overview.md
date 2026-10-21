@@ -2,12 +2,12 @@
 {
     "title": "Change Data and Incremental Consumption Overview",
     "language": "en",
-    "description": "Row-level change data in Doris 5.0: Row Binlog records inserts, updates and deletes; Table Stream consumes them by offset; @incr queries them by time window; IVM maintains async materialized views by row.",
+    "description": "Row-level change data in Doris 5.0: the changelog records inserts, updates and deletes; Table Stream consumes them by offset; @incr queries them by time window; IVM maintains async materialized views by row.",
     "keywords": [
         "Doris incremental consumption",
         "Doris change data",
-        "Row Binlog",
-        "row-level binlog",
+        "Changelog",
+        "row-level change log",
         "Table Stream",
         "Incremental View Maintenance",
         "IVM",
@@ -19,7 +19,7 @@
         "Change Data Capture",
         "UPDATE_BEFORE UPDATE_AFTER",
         "append_only min_delta detail",
-        "enable_feature_binlog",
+        "enable_feature_changelog",
         "enable_table_stream",
         "Merge-on-Write"
     ]
@@ -29,7 +29,7 @@
 <!-- Knowledge type: Concept description + Selection guide -->
 <!-- Use cases: Incremental ETL / Downstream sync / Change auditing / Incremental reads by time window -->
 
-Starting from version 5.0, Doris can record a row-level change log (Row Binlog) for internal tables and offers two ways to read those changes:
+Starting from version 5.0, Doris can record the row-level changes of internal tables in a changelog and offers two ways to read those changes:
 
 - **Table Stream**: a named consumption object that remembers how far you have consumed. Each read returns only the changes since the last consumption, and reading plus writing into the target table happen in one transaction.
 - **Incremental query (`@incr`)**: no object to create. Read the changes of a table within a time window you specify.
@@ -46,26 +46,26 @@ This feature is available since version 5.0.0. It is experimental and disabled b
 
 Incremental processing inside Doris usually runs into these problems:
 
-| Problem | Without change records | With Row Binlog |
+| Problem | Without change records | With changelog |
 |---|---|---|
 | Downstream wants increments but cannot get them | The upstream table receives many updates and deletes every day, so downstream reports, wide tables, and aggregate tables can only be recomputed in full, or rely on an `update_time` column maintained by the application | A Table Stream returns only the changes between two consumptions, so downstream processes the increment |
 | Updates and deletes are invisible | An update on a Unique Key table overwrites the old value and a deleted row simply disappears, so there is no way to know afterwards what was changed or deleted | Every insert, update (with the values before and after), and delete of each row is recorded |
 | Increments of multiple tables do not line up | When joining incremental data with a dimension table, the dimension table is in its "current" state while the increment covers "a period in the past" | `<stream>@snapshot()` reads the dimension table image aligned with the consumption offset |
 
-Row Binlog records every insert, update (with values before and after the update), and delete of each row, together with a globally monotonic commit timestamp. Table Stream and incremental query read those records in different ways.
+The changelog records every insert, update (with values before and after the update), and delete of each row, together with a globally monotonic commit timestamp. Table Stream and incremental query read those records in different ways.
 
 ## Two layers
 
 <!-- Knowledge type: Architecture description -->
 
-![Two layers of incremental consumption: Row Binlog feeds Table Stream and incremental queries](/images/next/data-operate/incremental/two-layers.png)
+![Two layers of incremental consumption: the changelog feeds Table Stream and incremental queries](/images/next/data-operate/incremental/two-layers.png)
 
 | Capability | Object needed | Who tracks the position | Best for |
 |---|---|---|---|
 | Table Stream | `CREATE STREAM` required | Doris keeps a consumption offset per partition | Continuous incremental ETL, downstream sync, exactly-once consumption |
 | Incremental query `@incr` | Nothing to create | You choose the time window | Ad-hoc analysis, external schedulers that manage their own positions |
 
-IVM sits on top of these two layers. It uses the changes recorded by Row Binlog and the internal Table Streams that Doris creates automatically, but the user entry points remain `CREATE MATERIALIZED VIEW` and `REFRESH MATERIALIZED VIEW`.
+IVM sits on top of these two layers. It uses the changes recorded in the changelog and the internal Table Streams that Doris creates automatically, but the user entry points remain `CREATE MATERIALIZED VIEW` and `REFRESH MATERIALIZED VIEW`.
 
 ## Typical scenarios
 
@@ -87,14 +87,14 @@ IVM sits on top of these two layers. It uses the changes recorded by Row Binlog 
 
 <!-- Knowledge type: Support matrix -->
 
-| Table model | Row Binlog | Before image | Available change types |
+| Table model | Changelog | Before image | Available change types |
 |---|---|---|---|
 | Duplicate Key | Supported | Not supported | APPEND only |
-| Unique Key (Merge-on-Write, without cluster key) | Supported | Supported (`binlog.need_historical_value = true`) | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
+| Unique Key (Merge-on-Write, without cluster key) | Supported | Supported (`changelog.need_historical_value = true`) | APPEND / UPDATE_BEFORE / UPDATE_AFTER / DELETE |
 | Unique Key (Merge-on-Read) | Not supported | - | - |
 | Aggregate Key | Not supported | - | - |
 
-Other restrictions (auto-increment columns, VARIANT columns, schema change scope, and so on) are listed in [Row Binlog](row-binlog#supported-scope-and-limitations).
+Other restrictions (auto-increment columns, VARIANT columns, schema change scope, and so on) are listed in [Changelog](changelog#supported-scope-and-limitations).
 
 ### Choosing a consumption type
 
@@ -106,7 +106,7 @@ Other restrictions (auto-increment columns, VARIANT columns, schema change scope
 | The net change of each key between two consumptions | `min_delta` (default) | Multiple modifications of the same key fold into one UPDATE_BEFORE + UPDATE_AFTER pair; a key inserted and then deleted is not emitted |
 | The complete record of every modification | `detail` | Emitted row by row, never folded |
 
-UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so the base table must be a MoW table with `binlog.need_historical_value` enabled.
+UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so the base table must be a MoW table with `changelog.need_historical_value` enabled.
 
 ## Prerequisites
 
@@ -117,17 +117,17 @@ UPDATE_BEFORE and DELETE rows in `min_delta` and `detail` need before images, so
 2. **FE configuration**: enable the following two items in `fe.conf` and restart the FE (neither is a dynamic configuration):
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
-    `enable_feature_binlog` controls Row Binlog and the allocation of commit timestamps (TSO); `enable_table_stream` controls the Table Stream DDL. When it is off, creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.`.
+    `enable_feature_changelog` controls changelog and the allocation of commit timestamps (TSO); `enable_feature_binlog` only controls CCR binlog and is not needed here. `enable_table_stream` controls the Table Stream DDL. When it is off, creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.`.
 
-3. **Enable Row Binlog at table creation**: Row Binlog can only be enabled when the table is created. An existing table cannot be switched on through `ALTER TABLE`; recreate the table and reload the data.
-4. **Deployment mode**: Row Binlog and Table Stream work in both the integrated storage-compute mode and the compute-storage decoupled mode. Use `@incr` incremental queries in the integrated mode for now; support in the decoupled mode is still being completed.
+3. **Enable changelog at table creation**: Changelog can only be enabled when the table is created. An existing table cannot be switched on through `ALTER TABLE`; recreate the table and reload the data.
+4. **Deployment mode**: Changelog and Table Stream work in both the integrated storage-compute mode and the compute-storage decoupled mode. Use `@incr` incremental queries in the integrated mode for now; support in the decoupled mode is still being completed.
 
 :::tip Write overhead
-With Row Binlog enabled, every write additionally generates and persists change records, and MoW tables also need to read the old values. Load throughput drops noticeably. Enable it only on tables that really need incremental consumption, and evaluate with a realistic workload before going to production.
+With changelog enabled, every write additionally generates and persists change records, and MoW tables also need to read the old values. Load throughput drops noticeably. Enable it only on tables that really need incremental consumption, and evaluate with a realistic workload before going to production.
 :::
 
 ## FAQ
@@ -136,12 +136,12 @@ With Row Binlog enabled, every write additionally generates and persists change 
 
 | Question | Answer |
 |---|---|
-| Can Row Binlog be enabled on an existing table? | No. Row Binlog can only be enabled at table creation; create a new table with Row Binlog enabled and reload the data, see [Row Binlog](row-binlog#enabling-row-binlog) |
+| Can changelog be enabled on an existing table? | No. Changelog can only be enabled at table creation; create a new table with changelog enabled and reload the data, see [Changelog](changelog#enabling-changelog) |
 | Table Stream or `@incr`? | Continuous incremental ETL that must be exactly-once: Table Stream. Ad-hoc analysis, looking back at changes in a period, or an external system that already manages its own positions: `@incr`, see [Differences from Table Stream](incremental-query#differences-from-table-stream) |
 | Creating a Stream fails with `Table Stream is experimental. Please set enable_table_stream=true to enable it.` | `enable_table_stream` is not enabled on the FE; update `fe.conf` and restart the FE |
-| Does it work in the compute-storage decoupled mode? | Row Binlog and Table Stream do; use `@incr` in the integrated storage-compute mode for now |
-| How does Row Binlog affect writes? | Every write additionally generates and persists change records, and MoW tables also read the old values, so load throughput drops noticeably. Enable it only on tables that need incremental consumption and evaluate with a realistic workload |
-| Are change records cleaned up automatically? | Yes. `binlog.ttl_seconds` controls retention (one day by default); incremental reads filter expired records, and background compaction reclaims their storage. Consume changes within the retention window; see [Retention and cleanup](row-binlog#retention-and-cleanup) |
+| Does it work in the compute-storage decoupled mode? | Changelog and Table Stream do; use `@incr` in the integrated storage-compute mode for now |
+| How does changelog affect writes? | Every write additionally generates and persists change records, and MoW tables also read the old values, so load throughput drops noticeably. Enable it only on tables that need incremental consumption and evaluate with a realistic workload |
+| Are change records cleaned up automatically? | Yes. `changelog.ttl_seconds` controls retention (one day by default); incremental reads filter expired records, and background compaction reclaims their storage. Consume changes within the retention window; see [Retention and cleanup](changelog#retention-and-cleanup) |
 
 ## Reading guide
 
@@ -150,8 +150,8 @@ With Row Binlog enabled, every write additionally generates and persists change 
 | Page | Content |
 |---|---|
 | [Quick Start](quick-start) | A 10-minute walkthrough: create the table, create the Stream, write data, view changes, consume |
-| [Row Binlog](row-binlog) | How to enable it, properties, supported scope, the change record model, DDL restrictions, overhead and troubleshooting |
+| [Changelog](changelog) | How to enable it, properties, supported scope, the change record model, DDL restrictions, overhead and troubleshooting |
 | [Incremental Query](incremental-query) | `@incr` time-window queries and the three incremental modes |
 | [Table Stream Basics](table-stream) | Creating and managing Streams, the three consumption types, initial rows, reading versus consuming, virtual columns |
 | [Table Stream Advanced](table-stream-advanced) | Partition-level offsets, snapshot and reset, consistent joins, concurrent consumption, the effect of base table changes, monitoring and recovery |
-| [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) | Maintains async materialized views by row using Row Binlog and internal Table Streams |
+| [Incremental View Maintenance (IVM)](../../query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view) | Maintains async materialized views by row using the changelog and internal Table Streams |

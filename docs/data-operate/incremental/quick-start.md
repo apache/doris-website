@@ -2,14 +2,13 @@
 {
     "title": "Quick Start",
     "language": "en",
-    "description": "10-minute walkthrough of Doris Row Binlog and Table Stream: create a table with Row Binlog, create a Stream, write data, view changes, consume them downstream.",
+    "description": "10-minute walkthrough of Doris changelog and Table Stream: create a table with changelog, create a Stream, write data, view changes, consume them downstream.",
     "keywords": [
         "Doris Table Stream quick start",
-        "Row Binlog example",
+        "changelog example",
         "CREATE STREAM",
-        "binlog.enable",
-        "binlog.format ROW",
-        "binlog.need_historical_value",
+        "changelog.enable",
+        "changelog.need_historical_value",
         "min_delta",
         "show_initial_rows",
         "__DORIS_STREAM_CHANGE_TYPE_COL__",
@@ -24,9 +23,9 @@
 ---
 
 <!-- Knowledge type: Operations guide -->
-<!-- Use cases: First use of Row Binlog / Table Stream -->
+<!-- Use cases: First use of changelog / Table Stream -->
 
-This page walks through the basic usage of Row Binlog and Table Stream with an orders table: record the inserts, updates, and deletes of the orders, then consume them exactly-once into a downstream table. All you need is a MySQL client and about 10 minutes.
+This page walks through the basic usage of changelog and Table Stream with an orders table: record the inserts, updates, and deletes of the orders, then consume them exactly-once into a downstream table. All you need is a MySQL client and about 10 minutes.
 
 ## Prerequisites
 
@@ -36,7 +35,7 @@ This page walks through the basic usage of Row Binlog and Table Stream with an o
 - Add the following to `fe.conf` on every FE and restart the FEs (neither is a dynamic configuration):
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
@@ -44,18 +43,18 @@ This page walks through the basic usage of Row Binlog and Table Stream with an o
 
 ## Overview of the steps
 
-1. Create the `orders` table with Row Binlog enabled and write the first batch of data.
+1. Create the `orders` table with changelog enabled and write the first batch of data.
 2. Create a `min_delta` Table Stream on `orders`.
 3. Write a second batch containing an update, a delete, and inserts.
 4. View the changes through the Stream and understand the change type of each row.
 5. Consume the changes into a downstream table with `INSERT INTO ... SELECT`.
 6. Check the consumption progress in `information_schema.table_stream_consumption`.
 
-## Step 1: Create a table with Row Binlog enabled
+## Step 1: Create a table with changelog enabled
 
 <!-- Knowledge type: Operational steps -->
 
-Row Binlog can only be enabled at table creation. Create a Unique Key Merge-on-Write table and turn on `binlog.need_historical_value`, so that updates and deletes also record the values before the change:
+Changelog can only be enabled at table creation. Create a Unique Key Merge-on-Write table and turn on `changelog.need_historical_value`, so that updates and deletes also record the values before the change:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS demo;
@@ -71,9 +70,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 ```
 
@@ -271,12 +269,12 @@ DROP TABLE orders;
 | The Stream is empty right after creation | With `show_initial_rows = false`, the data that already exists when the Stream is created is not emitted as changes. Write new changes and query again |
 | `SELECT * FROM orders_stream` shows no change type | Virtual columns are not included in `SELECT *`; list `__DORIS_STREAM_CHANGE_TYPE_COL__` and `__DORIS_STREAM_SEQUENCE_COL__` explicitly |
 | The same changes keep coming back on every query | A plain `SELECT` only reads changes and never advances the offset. They stop coming back once consumed with `INSERT INTO ... SELECT ... FROM orders_stream` |
-| Enabling Row Binlog on an existing table | Row Binlog can only be enabled at table creation; create a new table with Row Binlog enabled and reload the data, see [Row Binlog](row-binlog#enabling-row-binlog) |
+| Enabling changelog on an existing table | Changelog can only be enabled at table creation; create a new table with changelog enabled and reload the data, see [Changelog](changelog#enabling-changelog) |
 | `LAST_CONSUMPTION_TIME` shows `-1` | The partition has never been consumed |
 
 ## Next steps
 
 - The differences between the three consumption types, the meaning of `show_initial_rows`, and the transactional semantics of reading versus consuming: [Table Stream Basics](table-stream)
 - Consuming partition by partition, snapshot reads, joining dimension tables, and the effect of base table DDL on Streams: [Table Stream Advanced](table-stream-advanced)
-- Row Binlog properties, supported scope, and limitations: [Row Binlog](row-binlog)
+- Changelog properties, supported scope, and limitations: [Changelog](changelog)
 - Reading changes by time window without creating a Stream: [Incremental Query](incremental-query)

@@ -8,7 +8,7 @@
 
 # 读取 Doris 数据
 
-Flink Doris Connector 可以把 Doris 表作为 Flink 作业的数据源。默认读取表当前的有界快照；如需持续读取表的行级变更，见 [增量读取 Doris Binlog](./incremental-read.md)。
+Flink Doris Connector 可以把 Doris 表作为 Flink 作业的数据源。默认读取表当前的有界快照；如需持续读取表的行级变更，见 [增量读取 Doris Changelog](./incremental-read.md)。
 
 ## 读取原理 {#how-it-works}
 
@@ -83,7 +83,7 @@ SELECT * FROM student;
 
 ## 配置项 {#options}
 
-连接相关的通用配置项见 [连接配置与 TLS](./connection.md#common-options)，增量读取相关的配置项见 [增量读取 Doris Binlog](./incremental-read.md#options)。
+连接相关的通用配置项见 [连接配置与 TLS](./connection.md#common-options)，增量读取相关的配置项见 [增量读取 Doris Changelog](./incremental-read.md#options)。
 
 | Key                         | Default Value | Required | Comment                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
