@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/lance.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/lance.md",
-    "sourceCommit": "69844e587f1925ac22d3620ce09c2b7d34aac951",
-    "sourceHash": "01bcd9061851878058f0884db5a2d14b5c383d5f681b118887c33b3e0e07abbc",
-    "sourceTechnicalHash": "421d6de82ae495a8765e613d22be7cc6a6955d5ce1130ed1116e3f042b284e18",
-    "targetHash": "f9e9f21c91893cb3fa8ce8bcfff64e7a43a98f5e07870c4ced29eb14b7120240",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
+    "sourceTechnicalHash": "6edfbb409e9d1fd2daad98998a2d97cf9707972c7c82db0312d0d9dcf9be7e3f",
+    "targetHash": "6301c1f059214cae6cf687aade0d92422022b0ecfec4bbcffb7e961aa5f52f13",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:46:10.867Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T01:18:57.127Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "previous-source-unavailable",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
+      "targetHash": "6301c1f059214cae6cf687aade0d92422022b0ecfec4bbcffb7e961aa5f52f13",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"3\",\"3\",\"4\",\"4\",\"4.2\"]; received [\"1\",\"1\",\"1\",\"3\",\"3\",\"4\",\"4\",\"4.2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }
