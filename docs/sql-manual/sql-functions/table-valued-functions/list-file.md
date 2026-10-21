@@ -1,19 +1,19 @@
 ---
 {
-    "title": "LIST_FILE",
+    "title": "LIST_FILES",
     "language": "en",
-    "description": "List S3 objects and return path and FILE metadata."
+    "description": "List S3 files and directories with path, size, and FILE metadata."
 }
 ---
 
 ## Description
 
-Lists S3 directory objects using an existing resource, with one row per file. It can list only the current directory or recurse into subdirectories. This TVF returns metadata rather than reading file contents. An empty directory returns zero rows.
+Lists S3 files using an existing resource and returns metadata without reading file contents. By default, it recursively lists files in all subdirectories. With `recursive=false`, it returns immediate files and subdirectories; directory rows have `size=0` and `file=NULL`.
 
 ## Syntax
 
 ```sql
-LIST_FILE(
+LIST_FILES(
     "resource" = "<resource_name>",
     "uri" = "s3://<bucket>/<directory>/"
     [, "recursive" = "<true_or_false>"]
@@ -24,72 +24,59 @@ LIST_FILE(
 
 | Parameter | Description |
 | --- | --- |
-| resource | Required nonempty string property naming an existing S3 resource. Requires USAGE privilege. |
-| uri | Required string property; an `s3://bucket/directory/` or path-style `http(s)://host/bucket/directory/` URI. Its bucket comes from the URI and need not match the resource bucket. The directory prefix is passed through without encoding or decoding. |
-| recursive | Optional string property, default `false`. `true` lists descendants; `false` lists the current directory only. Only true/false are accepted, case-insensitively. |
+| resource | Required nonempty string naming an existing S3 resource. Requires USAGE privilege. |
+| uri | Required string; an `s3://bucket/directory/` or path-style `http(s)://host/bucket/directory/` URI. Its bucket comes from the URI and need not match the resource bucket. The directory prefix is passed through without encoding or decoding. |
+| recursive | Optional string, default `true`. `true` lists files at every depth and omits directories, including empty directory marker objects. `false` lists only immediate files and subdirectories. Only true/false are accepted, case-insensitively. |
 
-Property names are case-insensitive. Unknown properties produce errors. `"name" = "value"` is Doris's named-property TVF syntax, as in S3/HDFS TVFs; it is not a positional argument or SQL filter.
+Property names are case-insensitive. Unknown properties produce errors. Use Doris's named-property TVF syntax, `"name" = "value"`.
 
 ## Return Value
 
 | Column | Type | Nullable | Meaning |
 | --- | --- | --- | --- |
-| path | STRING | No | S3 object path constructed from the bucket and raw object key; no URI escaping. |
-| file | FILE | No | uri=path, size=object length, inferred content_type; checksum is `ETAG:<etag>` when the listing ETag is nonempty after removing surrounding quotes, otherwise NULL; offset/inline are NULL. |
+| path | STRING | No | S3 path constructed from the bucket and raw object key, without URI escaping. Directory paths end in `/`. |
+| size | BIGINT | No | File size in bytes; `0` for directories. |
+| file | FILE | Yes | NULL for directories. For files: uri=path, size=object length, inferred content_type; checksum is `ETAG:<etag>` when the listing ETag is nonempty after removing surrounding quotes, otherwise NULL; offset/inline are NULL. |
 
-Returns only `path` and `file`. Use `ELEMENT_AT(file, 'size')` to retrieve the object size.
+Objects whose keys end in `/` are directory markers. The marker for the directory being listed is omitted. An empty directory has no recursive results, while its parent includes it in a non-recursive listing. Ordinary zero-byte files are returned in both modes with a non-NULL `file` value.
 
 ## Example
 
-Use the existing `file_test_s3_resource`; the caller needs USAGE privilege. See [TO_FILE](../scalar-functions/to-file.md) for resource configuration. The outputs show two files in the test directory. Actual row order and metadata depend on the storage service; checksum is NULL when no ETag is returned.
+Use an existing S3 resource named `file_test_s3_resource` with USAGE privilege; see [TO_FILE](../scalar-functions/to-file.md) for configuration. Suppose `s3://bucket/a/` contains the zero-byte file `empty.txt`, the three-byte file `b/c.png`, and the empty directory marker `empty/`.
 
-Non-recursive: list files in the current directory only.
+List immediate entries:
 
 ```sql
-SELECT *
-FROM LIST_FILE(
-    "resource" = "file_test_s3_resource",
-    "uri" = "s3://linrrzqqq/doris-file-type-test/",
-    "recursive" = "false"
-);
+SELECT path, size, file IS NULL AS is_directory
+FROM LIST_FILES("resource"="file_test_s3_resource", "uri"="s3://bucket/a/", "recursive"="false")
+ORDER BY path;
 ```
 
 ```text
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| path                                                     | file                                                                                                                                                                                        |
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg | {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null} |
-+----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+path                     size  is_directory
+s3://bucket/a/b/          0     1
+s3://bucket/a/empty.txt   0     0
+s3://bucket/a/empty/      0     1
 ```
 
-Recursive: include files in subdirectories.
+List files recursively using the default:
 
 ```sql
-SELECT *
-FROM LIST_FILE(
-    "resource" = "file_test_s3_resource",
-    "uri" = "s3://linrrzqqq/doris-file-type-test/",
-    "recursive" = "true"
-);
+SELECT path, size, file IS NULL AS is_directory
+FROM LIST_FILES("resource"="file_test_s3_resource", "uri"="s3://bucket/a/")
+ORDER BY path;
 ```
 
 ```text
-+---------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| path                                                          | file                                                                                                                                                                                            |
-+---------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg      | {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null}     |
-| s3://linrrzqqq/doris-file-type-test/recursive-test/fltest.jpg | {"uri":"s3://linrrzqqq/doris-file-type-test/recursive-test/fltest.jpg","offset":null,"size":46050,"content_type":"image/jpeg","checksum":"ETAG:CF413A96214E07F3E7CCB82A8B19F792","inline":null} |
-+---------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+path                     size  is_directory
+s3://bucket/a/b/c.png     3     0
+s3://bucket/a/empty.txt   0     0
 ```
 
-If `doris-file-type-test/empty/` contains no objects, zero rows are returned:
+List an empty directory:
 
 ```sql
-SELECT *
-FROM LIST_FILE(
-    "resource" = "file_test_s3_resource",
-    "uri" = "s3://linrrzqqq/doris-file-type-test/empty/"
-);
+SELECT * FROM LIST_FILES("resource"="file_test_s3_resource", "uri"="s3://bucket/a/empty/");
 ```
 
 ```text

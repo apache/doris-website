@@ -98,15 +98,16 @@ SELECT TO_FILE('file_test_s3_resource', 's3://linrrzqqq/doris-file-type-test/my-
 
 ### 通过目录列举获取
 
-[LIST_FILE](../../../sql-functions/table-valued-functions/list-file.md) 返回 path 和 file，每个对象一行，支持通过参数控制是否递归子目录。列举只获取元数据，不下载文件正文。
+[LIST_FILES](../../../sql-functions/table-valued-functions/list-file.md) 返回 path、size 和 file，默认递归列举文件；设置 `recursive=false` 时包含直接子目录，目录行的 size=0、file=NULL。列举只获取元数据，不下载文件正文。
 
 ```sql
 SELECT path, file
-FROM LIST_FILE(
+FROM LIST_FILES(
     "resource" = "file_test_s3_resource",
     "uri" = "s3://linrrzqqq/doris-file-type-test/",
     "recursive" = "false"
-);
+)
+WHERE file IS NOT NULL;
 ```
 ```text
 +----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

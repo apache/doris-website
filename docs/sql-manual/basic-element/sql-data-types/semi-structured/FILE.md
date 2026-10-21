@@ -94,15 +94,16 @@ SELECT TO_FILE('file_test_s3_resource', 's3://linrrzqqq/doris-file-type-test/my-
 
 ### Obtain FILE values from a directory listing
 
-[LIST_FILE](../../../sql-functions/table-valued-functions/list-file.md) returns path and file, with one row per object. It supports optional recursion into subdirectories and obtains metadata without downloading contents.
+[LIST_FILES](../../../sql-functions/table-valued-functions/list-file.md) returns path, size, and file. It recursively lists files by default; with `recursive=false`, it includes immediate subdirectories with size=0 and file=NULL. Listing obtains metadata without downloading contents.
 
 ```sql
 SELECT path, file
-FROM LIST_FILE(
+FROM LIST_FILES(
     "resource" = "file_test_s3_resource",
     "uri" = "s3://linrrzqqq/doris-file-type-test/",
     "recursive" = "false"
-);
+)
+WHERE file IS NOT NULL;
 ```
 ```text
 +----------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

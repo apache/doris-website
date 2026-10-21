@@ -37,7 +37,7 @@ TO_FILE(<resource_name>, <uri>)
 | offset | NULL。 |
 | size | 远端长度，单位为字节；0 表示合法的空文件。 |
 | content_type | 合法的远端 MIME 类型，缺失或非法时根据完整原始对象 key 中的文件名推断，默认 `application/octet-stream`。 |
-| checksum | 使用 HEAD 返回的 ETag；去掉一对外层双引号后保存为 `ETAG:<etag>`，与 LIST_FILE 一致。转换后为空或缺失时为 NULL。不获取 SHA/CRC 摘要值。 |
+| checksum | 使用 HEAD 返回的 ETag；去掉一对外层双引号后保存为 `ETAG:<etag>`，与 LIST_FILES 一致。转换后为空或缺失时为 NULL。不获取 SHA/CRC 摘要值。 |
 | inline | NULL；函数不下载文件正文。 |
 
 ## 示例

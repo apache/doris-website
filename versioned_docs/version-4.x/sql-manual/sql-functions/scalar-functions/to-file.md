@@ -37,7 +37,7 @@ Returns nullable `FILE`. For a non-NULL URI, metadata access failures fail the q
 | offset | NULL. |
 | size | Remote length in bytes; 0 is a valid empty file. |
 | content_type | Valid remote MIME type, or a type inferred from the filename in the complete raw object key; fallback is `application/octet-stream`. |
-| checksum | Uses the HEAD ETag; one pair of surrounding double quotes is removed before storing `ETAG:<etag>`, matching LIST_FILE. Missing or empty values after conversion yield NULL. SHA/CRC digest values are not retrieved. |
+| checksum | Uses the HEAD ETag; one pair of surrounding double quotes is removed before storing `ETAG:<etag>`, matching LIST_FILES. Missing or empty values after conversion yield NULL. SHA/CRC digest values are not retrieved. |
 | inline | NULL; file contents are not downloaded. |
 
 ## Example
