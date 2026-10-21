@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-diff.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8b276b20582f047138a03f978a0bfa02ef29bef49f8aacfb9e1614b0b117338e",
+    "sourceTechnicalHash": "c59a5e58d476441571bfc79bbe5c70687c13a1858d3084f0ea6e5aae66de8121",
+    "targetHash": "56f4ca392776fe2cd03fce56242dbc57a5921c8292a2f81f1207f1c8ab07975f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:56.251Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8b276b20582f047138a03f978a0bfa02ef29bef49f8aacfb9e1614b0b117338e",
+      "targetHash": "56f4ca392776fe2cd03fce56242dbc57a5921c8292a2f81f1207f1c8ab07975f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

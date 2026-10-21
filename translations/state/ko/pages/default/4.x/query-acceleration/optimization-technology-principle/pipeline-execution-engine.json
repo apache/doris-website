@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+    "sourceTechnicalHash": "6e6b786a46a01748f85f86ae8d22c395f1a149a4b7b83bb44b7bd93a088b87da",
+    "targetHash": "8c6f84e9f877c959354ac8e04af1d3cf9f05493c341ac13f684308d7e3858461",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:14.393Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+      "targetHash": "8c6f84e9f877c959354ac8e04af1d3cf9f05493c341ac13f684308d7e3858461",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+        "sourcePath": "docs/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+        "targetHash": "8c6f84e9f877c959354ac8e04af1d3cf9f05493c341ac13f684308d7e3858461",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

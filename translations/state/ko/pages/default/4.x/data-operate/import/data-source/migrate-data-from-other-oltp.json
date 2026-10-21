@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/migrate-data-from-other-oltp",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "52bd4bf3d46f13aa99c9f347e8d8a8a8736a966397f15a82bbe39813a7ef9df4",
+    "sourceTechnicalHash": "59ba3e4652b33d8337940521ebf469d5881cf2d6734dbdd2fc08dcb2d89aeb16",
+    "targetHash": "323ec2946507b89a54f52886058e147fb9f6da692bb39e31871750bf6f55760e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:16:34.064Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "52bd4bf3d46f13aa99c9f347e8d8a8a8736a966397f15a82bbe39813a7ef9df4",
+      "targetHash": "323ec2946507b89a54f52886058e147fb9f6da692bb39e31871750bf6f55760e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

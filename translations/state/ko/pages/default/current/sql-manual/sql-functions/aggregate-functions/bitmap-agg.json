@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-agg",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-agg.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-agg.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "cf7e69659d254e1f6ca971fa3df774f2417aa9fa96af61da4346f391246c2eb3",
+    "sourceTechnicalHash": "e85635d2822420a044d20d63e78489acefb0d3bdd057880da953204954c0d971",
+    "targetHash": "8abe6ee0da5b597556ffc894fb6be8d0274b265fd45b81a1a18da5aebde920fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:15:44.921Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf7e69659d254e1f6ca971fa3df774f2417aa9fa96af61da4346f391246c2eb3",
+      "targetHash": "8abe6ee0da5b597556ffc894fb6be8d0274b265fd45b81a1a18da5aebde920fb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/security/CREATE-ENCRYPTKEY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/security/CREATE-ENCRYPTKEY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/security/CREATE-ENCRYPTKEY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0437e78e5a680dbbb0252b6bc9e9b26b2d27f5fafebf1ca2c9f021730a3fbe92",
+    "sourceTechnicalHash": "860b920073f90b9fe921dafba3d6c6232674ce54bf033fc2829f6437767f2220",
+    "targetHash": "b76326b42f35fe2df62f56fbdcac75cd51b0fc7fa5034ad429c3e08e6a744aad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:39:02.638Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0437e78e5a680dbbb0252b6bc9e9b26b2d27f5fafebf1ca2c9f021730a3fbe92",
+      "targetHash": "b76326b42f35fe2df62f56fbdcac75cd51b0fc7fa5034ad429c3e08e6a744aad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

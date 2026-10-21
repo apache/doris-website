@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/opentelemetry",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/opentelemetry.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/opentelemetry.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e2758b6238934e3ca0f05ddb690ef4729d2774af1bc1528a05ff05eeb2bfb4e3",
+    "sourceTechnicalHash": "be997022421946186289f35b90327fea9d248d1c64be317d56dd45dd792ae888",
+    "targetHash": "b6a75d7fbf6ff889f55b82387e97ced0985528c7cc2e0970b267f051c5851724",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:56:00.415Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e2758b6238934e3ca0f05ddb690ef4729d2774af1bc1528a05ff05eeb2bfb4e3",
+      "targetHash": "b6a75d7fbf6ff889f55b82387e97ced0985528c7cc2e0970b267f051c5851724",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "connection-integration/data-integration/opentelemetry",
+        "sourcePath": "docs/connection-integration/data-integration/opentelemetry.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/opentelemetry.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "e2758b6238934e3ca0f05ddb690ef4729d2774af1bc1528a05ff05eeb2bfb4e3",
+        "targetHash": "b6a75d7fbf6ff889f55b82387e97ced0985528c7cc2e0970b267f051c5851724",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

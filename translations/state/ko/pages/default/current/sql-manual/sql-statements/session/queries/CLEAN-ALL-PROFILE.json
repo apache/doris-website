@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/CLEAN-ALL-PROFILE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "771273be0b9dc412a9c2431e69f74456e429b2cb9ebebc338c207a1cfb930f36",
+    "sourceTechnicalHash": "cfb5896af53f82cf73dd69759b65b4c8039c08769a4a35a590de318ca400e23e",
+    "targetHash": "4a94600f2d59c4b8b2e2e905b24eecf11fa3e1bf98f0c9e7ad3fb64100532572",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:39:29.373Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "771273be0b9dc412a9c2431e69f74456e429b2cb9ebebc338c207a1cfb930f36",
+      "targetHash": "4a94600f2d59c4b8b2e2e905b24eecf11fa3e1bf98f0c9e7ad3fb64100532572",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

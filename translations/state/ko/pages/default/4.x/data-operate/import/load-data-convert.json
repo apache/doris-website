@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/load-data-convert",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/load-data-convert.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/load-data-convert.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e67c9e8efa977beab8966343ae50f07db3c456d6577ce1bb6ef4d6349968c768",
+    "sourceTechnicalHash": "9b0cac09c383d9e25a83b0296e955a7e9b7cc145e08af6a65eda3376e35fafee",
+    "targetHash": "7dafab18b97f020a878126f412b25ac0afe5a68096cad3f0e6c1582285a22489",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:19:40.124Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e67c9e8efa977beab8966343ae50f07db3c456d6577ce1bb6ef4d6349968c768",
+      "targetHash": "7dafab18b97f020a878126f412b25ac0afe5a68096cad3f0e6c1582285a22489",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/import/load-data-convert",
+        "sourcePath": "docs/data-operate/import/load-data-convert.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/load-data-convert.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "e67c9e8efa977beab8966343ae50f07db3c456d6577ce1bb6ef4d6349968c768",
+        "targetHash": "7dafab18b97f020a878126f412b25ac0afe5a68096cad3f0e6c1582285a22489",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-execution/intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-execution/intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/intro.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "41f5292ddd4b683851d1d43f29bf5538c972fb71fc774287c389a7fa93824c1b",
+    "sourceTechnicalHash": "e1134bbbc0f645b5b04521ce6acb8838cd1cee962c799dc318954332489f8152",
+    "targetHash": "85efdc48153e56c99e911d27383ba88f36a628521b0143e9ae2869631617a939",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:49:50.157Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "41f5292ddd4b683851d1d43f29bf5538c972fb71fc774287c389a7fa93824c1b",
+      "targetHash": "85efdc48153e56c99e911d27383ba88f36a628521b0143e9ae2869631617a939",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

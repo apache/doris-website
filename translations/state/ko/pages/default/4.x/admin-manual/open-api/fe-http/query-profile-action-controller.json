@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/query-profile-action-controller",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/query-profile-action-controller.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/query-profile-action-controller.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cea497eb478e5430de0c668c875278a23d59e68ff8678bcf7db6076f0f9a5f21",
+    "sourceTechnicalHash": "48a5a26850a35ba7cf2056f74552fa4999355569b7aa095146daff156bc6b99b",
+    "targetHash": "4d0648e7f854606a44de6fd59757f3fec4b05053ed85bb5b778f9d6374044dbc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:29:10.840Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cea497eb478e5430de0c668c875278a23d59e68ff8678bcf7db6076f0f9a5f21",
+      "targetHash": "4d0648e7f854606a44de6fd59757f3fec4b05053ed85bb5b778f9d6374044dbc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/query-profile-action-controller",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/query-profile-action-controller.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/query-profile-action-controller.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "cea497eb478e5430de0c668c875278a23d59e68ff8678bcf7db6076f0f9a5f21",
+        "targetHash": "4d0648e7f854606a44de6fd59757f3fec4b05053ed85bb5b778f9d6374044dbc",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

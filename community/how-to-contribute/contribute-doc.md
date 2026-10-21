@@ -52,7 +52,6 @@ The following is the main directory tree of the [apache/doris-website](https://g
 ```plain
 .
 ├── blog
-│   ├── 1.1 Release.md
 │   ├── Annoucing.md
 │   ├── jd.md
 │   ├── meituan.md
@@ -66,37 +65,36 @@ The following is the main directory tree of the [apache/doris-website](https://g
 │   ├── ......
 ├── docs
 │   ├── admin-manual
+│   │   ├── auth
 │   │   ├── cluster-management
 │   │   ├── config
 │   │   ├── data-admin
-│   │   ├── http-actions
+│   │   ├── log-management
 │   │   ├── maint-monitor
-│   │   ├── privilege-ldap
-│   │   ├── multi-tenant.md
-│   │   ├── optimization.md
-│   │   ├── query-profile.md
-│   │   └── sql-interception.md
-│   │   └── workload-group.md
+│   │   ├── open-api
+│   │   ├── system-tables
+│   │   ├── trouble-shooting
+│   │   ├── workload-management
+│   │   └── audit-plugin.md
 │   ├── ......
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 │       │   ├── current.json
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
-│       ├── docusaurus-plugin-content-docs-community
-│       └── local_build_docs.sh
+│       │   ├── version-3.x.json
+│       │   └── version-4.x.json
+│       └── docusaurus-plugin-content-docs-community
 ├── src
 │   ├── components
 │   │   ├── Icons
 │   │   ├── More
-│   │   ├── PageBanner
-│   │   └── PageColumn
+│   │   ├── PageColumn
+│   │   └── PageHeader
 │   ├── ......
 ├── static
 │   ├── images
@@ -105,20 +103,19 @@ The following is the main directory tree of the [apache/doris-website](https://g
 │   └── js
 │       └── redirect.js
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
-│   └── version-2.1
+│   ├── version-2.1
+│   ├── version-3.x
+│   └── version-4.x
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
-├── babel.config.js
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ├── build.sh
-├── buildVersions.sh
 ├── docusaurus.config.js
+├── local_build_docs.sh
 ├── package.json
 ├── README.md
-├── sidebars.json
+├── sidebars.ts
 ├── sidebarsCommunity.json
 ├── tsconfig.json
 └── versions.json
@@ -131,13 +128,14 @@ The following table summarizes the purpose of each directory to help you quickly
 | `blog/` | Blog article Markdown files | Shared across all versions |
 | `community/` | English community documentation | Shared across all versions |
 | `docs/` | English latest version (Dev / Master) documentation | Current main branch |
-| `versioned_docs/version-X.X/` | English historical version documentation | 1.2 / 2.0 / 2.1, etc. |
+| `versioned_docs/version-X.X/` | English documentation for released versions | 4.x / 3.x / 2.1 (listed in `versions.json`) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | Chinese latest version documentation | Current main branch |
-| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | Chinese historical version documentation | 1.2 / 2.0 / 2.1, etc. |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | Chinese documentation for released versions | 4.x / 3.x / 2.1 (listed in `versions.json`) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | Chinese community documentation | Shared across all versions |
-| `sidebars.json` | Sidebar for the latest version of the documentation | Shared between Chinese and English |
-| `versioned_sidebars/version-X.X-sidebars.json` | Sidebar for historical version documentation | Shared between Chinese and English |
+| `sidebars.ts` | Sidebar for the latest version of the documentation | Shared between Chinese and English |
+| `versioned_sidebars/version-X.X-sidebars.json` | Sidebar for released version documentation | Shared between Chinese and English |
 | `sidebarsCommunity.json` | Sidebar for community documentation | Shared across all versions |
+| `versions.json` | Released versions published on the website | All released versions |
 | `static/images/` | Documentation image resources | Shared across all versions |
 
 ## Blog Directory
@@ -152,7 +150,7 @@ If you want to contribute to the blog or share your technical insights, you are 
 
 When modifying documentation, depending on the type of change, you need to modify different files at the same time:
 
-1. **Modifying existing documentation content**: You need to update both the latest documentation version on the Master branch and the corresponding version branches (such as 2.1, 2.0, 1.2, or multiple versions).
+1. **Modifying existing documentation content**: You need to update both the latest documentation version on the Master branch and the corresponding released versions (such as 4.x, 3.x, 2.1, or several of them).
 2. **Adding new documentation**: In addition to uploading the new Markdown file, you also need to add the new documentation link path in the sidebar file.
 3. **Adding a new documentation category**: In addition to adjusting the directory structure, you also need to add the Chinese translation for the new category.
 
@@ -161,8 +159,8 @@ The file types that need to be modified are as follows:
 | File type | Purpose | Example |
 | --- | --- | --- |
 | Markdown file | Documentation body content | `docs/admin-manual/xxx.md` |
-| Sidebar file | Controls the directory structure | `sidebars.json` / `version-2.1-sidebars.json` |
-| Translation file | Controls how categories are displayed in the Chinese documentation | `current.json` / `version-2.1.json` |
+| Sidebar file | Controls the directory structure | `sidebars.ts` / `version-4.x-sidebars.json` |
+| Translation file | Controls how categories are displayed in the Chinese documentation | `current.json` / `version-4.x.json` |
 
 :::caution Note
 
@@ -192,38 +190,36 @@ All documentation must include both Chinese and English versions. Otherwise, the
 
 **2. Documentation directory structure**
 
-For the Dev version, both Chinese and English documentation are controlled by `sidebars.json` in the root directory.
+For the Dev version, both Chinese and English documentation are controlled by `sidebars.ts` in the root directory.
 
-Example of `sidebars.json`:
+Example of `sidebars.ts`:
 
-```json
-{
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            {
-                "type": "category",
-                "label": "Install and Deploy",
-                "items": [
-                    "install/standard-deployment",
-                    {
-                        "type": "category",
-                        "label": "Docker Deployment",
-                        "items": [
-                            "install/construct-docker/build-docker-image",
-                            "install/construct-docker/run-docker-cluster"
-                        ]
-             }
-             ......
-         }
-     ]
- }
+```ts
+const sidebars: SidebarsConfig = {
+    docs: [
+        {
+            type: 'category',
+            label: 'Get Started',
+            collapsible: false,
+            collapsed: false,
+            items: [
+                {
+                    type: 'category',
+                    label: 'Getting Started',
+                    link: {type: 'doc', id: 'getting-started/intro'},
+                    collapsed: true,
+                    items: [
+                        'getting-started/what-is-apache-doris',
+                        'getting-started/quick-start',
+                        'getting-started/before-you-start-the-poc',
+                    ],
+                },
+                ......
+            ],
+        },
+        ......
+    ],
+};
 ```
 
 **3. Chinese translation for categories**
@@ -232,8 +228,8 @@ The Chinese translation file for Dev version categories is located at `i18n/zh-C
 
 Taking the category "Getting Started" as an example:
 
-- `sidebar.docs.category.Getting Started` corresponds to the `label` hierarchy in `sidebars.json`.
-- The format is: `sidebar` + `.` + `docs` + `.` + `[type]` + `[label]`.
+- `sidebar.docs.category.Getting Started` corresponds to the `label` hierarchy in `sidebars.ts`.
+- The format is: `sidebar` + `.` + `docs` + `.` + `[type]` + `.` + `[label]`.
 
 ```json
 {
@@ -249,34 +245,33 @@ Taking the category "Getting Started" as an example:
 }
 ```
 
-The corresponding `sidebars.json` snippet:
+The corresponding `sidebars.ts` snippet:
 
-```json
+```ts
 {
-    "docs": [
-            {
-                "type": "category",
-                "label": "Getting Started",
-                "items": [
-                    "get-starting/quick-start",
-                    "get-starting/what-is-apache-doris"
-                ]
-            },
-            ......
-         }
-     ]
- }
+    type: 'category',
+    label: 'Getting Started',
+    link: {type: 'doc', id: 'getting-started/intro'},
+    collapsed: true,
+    items: [
+        'getting-started/what-is-apache-doris',
+        'getting-started/quick-start',
+        'getting-started/before-you-start-the-poc',
+    ],
+},
 ```
 
-### 2.1 / 2.0 / 1.2 Historical Versions
+### 4.x / 3.x / 2.1 Released Versions
 
 **1. Where to modify content**
 
+The released versions published on the website are listed in `versions.json` in the root directory, currently 4.x, 3.x, and 2.1. The `version-1.2` and `version-2.0` directories still exist in the repository, but they are not listed in `versions.json` and are not built into the website.
+
 | Version | English documentation location | Chinese documentation location |
 | --- | --- | --- |
+| 4.x | `/versioned_docs/version-4.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x` |
+| 3.x | `/versioned_docs/version-3.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x` |
 | 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
-| 2.0 | `/versioned_docs/version-2.0` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.0` |
-| 1.2 | `/versioned_docs/version-1.2` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-1.2` |
 
 ```plain
 .
@@ -287,13 +282,13 @@ The corresponding `sidebars.json` snippet:
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
 │       │   ├── current
-│       │   ├── version-1.2
-│       │   ├── version-2.0
 │       │   ├── version-2.1
+│       │   ├── version-3.x
+│       │   ├── version-4.x
 ├── versioned_docs
-│   ├── version-1.2
-│   ├── version-2.0
 │   ├── version-2.1
+│   ├── version-3.x
+│   ├── version-4.x
 ```
 
 **2. Documentation directory structure**
@@ -303,12 +298,12 @@ For each version, both Chinese and English documentation are controlled by `vers
 ```plain
 .
 ├── versioned_sidebars
-│   ├── version-1.2-sidebars.json
-│   ├── version-2.0-sidebars.json
-│   └── version-2.1-sidebars.json
+│   ├── version-2.1-sidebars.json
+│   ├── version-3.x-sidebars.json
+│   └── version-4.x-sidebars.json
 ```
 
-The sidebar hierarchy for each version is modified in essentially the same way as for the Dev version, so no example is given here.
+The versioned sidebar files are JSON, but they use the same structure as `sidebars.ts`. The sidebar hierarchy for each version is modified in essentially the same way as for the Dev version, so no example is given here.
 
 **3. Chinese translation for categories**
 
@@ -318,9 +313,9 @@ The Chinese translation files for the categories of each version are located at 
 ├── i18n
 │   └── zh-CN
 │       ├── docusaurus-plugin-content-docs
-│       │   ├── version-1.2.json
-│       │   ├── version-2.0.json
 │       │   ├── version-2.1.json
+│       │   ├── version-3.x.json
+│       │   ├── version-4.x.json
 ```
 
 The `label` translation for the Chinese documentation of each version is essentially the same as for the Dev version, so no example is given here.
@@ -341,24 +336,24 @@ Example of the Chinese translation file:
 ```json
 {
     "version.label": {
-        "message": "Next",
+        "message": "current",
         "description": "The label for version current"
     },
     "sidebar.community.category.How to Contribute": {
-        "message": "贡献指南",
+        "message": "参与贡献",
         "description": "The label for category How to Contribute in sidebar community"
     },
-    "sidebar.community.category.Release Process & Verification": {
-        "message": "版本发布与校验",
-        "description": "The label for category Release Process & Verification in sidebar community"
+    "sidebar.community.category.Documentation Contribution": {
+        "message": "贡献文档",
+        "description": "The label for category Documentation Contribution in sidebar community"
+    },
+    "sidebar.community.category.Release": {
+        "message": "版本与发布",
+        "description": "The label for category Release in sidebar community"
     },
     "sidebar.community.category.Design Documents": {
         "message": "设计文档",
         "description": "The label for category Design Documents in sidebar community"
-    },
-    "sidebar.community.category.Developer Guide": {
-        "message": "开发者手册",
-        "description": "The label for category Developer Guide in sidebar community"
     }
 }
 ```

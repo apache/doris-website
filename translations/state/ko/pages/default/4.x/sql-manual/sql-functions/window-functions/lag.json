@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/lag",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/lag.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/lag.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "25f8ab9b6ef16f7ea199f525aa0dfd2920db2a19178f6533da5a05f0672d90a1",
+    "sourceTechnicalHash": "1315f0915d2decf0d1b52480bb11980718e2f4d012e814563924e8e7141a65e5",
+    "targetHash": "a204479c9b22b4d25f80dee0cf04a08a7874ffa8052c152bfe422259ce4fac94",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:42.193Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "25f8ab9b6ef16f7ea199f525aa0dfd2920db2a19178f6533da5a05f0672d90a1",
+      "targetHash": "a204479c9b22b4d25f80dee0cf04a08a7874ffa8052c152bfe422259ce4fac94",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/window-functions/lag",
+        "sourcePath": "docs/sql-manual/sql-functions/window-functions/lag.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/lag.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "25f8ab9b6ef16f7ea199f525aa0dfd2920db2a19178f6533da5a05f0672d90a1",
+        "targetHash": "a204479c9b22b4d25f80dee0cf04a08a7874ffa8052c152bfe422259ce4fac94",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

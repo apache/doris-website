@@ -15,6 +15,8 @@ Lance support is available starting from Apache Doris 4.2.
 
 [Lance](https://docs.lancedb.com/lance) is a columnar data format designed for analytics and AI workloads. Doris can read Lance datasets through a Lance Catalog or through the `s3()` and `local()` table-valued functions (TVFs).
 
+For Lance type mappings, see [Doris Data Type Mapping](../catalogs/lance-catalog/doris-type-mapping.md).
+
 ## Supported Features
 
 | Feature | Support |
@@ -28,6 +30,9 @@ Lance support is available starting from Apache Doris 4.2.
 | Writing to Lance | Not supported |
 | Time Travel | Not supported |
 | Full-Text Search / Hybrid Search | Not supported |
+
+<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->
+For Catalog configuration, predicate pushdown, and vector search details, see [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog).
 
 ## Query a Lance Dataset with a File TVF
 
@@ -61,4 +66,5 @@ To read a local dataset, use `local()` and specify the dataset root with `file_p
 
 ## References
 
+- [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog)
 - [Lance Format Documentation](https://docs.lancedb.com/lance)

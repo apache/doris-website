@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/DROP-STATS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/DROP-STATS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+    "sourceTechnicalHash": "ead23ea17a92c98ba1a2e00e15d127ebf6655bc6905b01d83694b235f9496112",
+    "targetHash": "fa32fd2575137878de34eda1ae72f4c1148c31101ac1a6246361b0c48e9be961",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:41:00.259Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0f82b90082ee7d82543ab2dd83661c263351b32a94812c55a0f24e3a11e3cf11",
+      "targetHash": "fa32fd2575137878de34eda1ae72f4c1148c31101ac1a6246361b0c48e9be961",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

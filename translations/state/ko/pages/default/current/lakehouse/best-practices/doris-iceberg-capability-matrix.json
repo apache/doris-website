@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-iceberg-capability-matrix",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-iceberg-capability-matrix.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-iceberg-capability-matrix.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c8ba4835ddcdadb92b7c3ce9f6dcd8fa18fb8912f649e299cf7955de0aae216d",
+    "sourceTechnicalHash": "c2ec3e396b1c5b545380fe8bcd4525a2af9d745123cae92bb639ca0f2a5da88e",
+    "targetHash": "d826ac4cef1d42bb9dc524a9ab79ea9d3fb51de5b6bc36e619ae6921dd496610",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:22:22.511Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8ba4835ddcdadb92b7c3ce9f6dcd8fa18fb8912f649e299cf7955de0aae216d",
+      "targetHash": "d826ac4cef1d42bb9dc524a9ab79ea9d3fb51de5b6bc36e619ae6921dd496610",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 307: expected [\"mdxJsxFlowElement\",\"tr\",[]]; received [\"mdxJsxTextElement\",\"td\",[{\"type\":\"mdxJsxAttribute\",\"name\":\"align\",\"value\":\"center\"}]]\nprotected node 308: expected [\"mdxJsxTextElement\",\"td\",[]]; received [\"mdxJsxFlowElement\",\"tr\",[]]\nprotected node 309: expected [\"mdxJsxTextElement\",\"code\",[]]; received [\"mdxJsxTextElement\",\"td\",[]]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

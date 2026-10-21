@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/conditional-functions/coalesce.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "4b807805cb3233fd482c170bd812dbcc1b52b7e797d23e7a83a37cd89dc05c35",
+    "sourceTechnicalHash": "9bf741a403bc6bfbd5854e49c7b87da135a7f8c06821820c0e9d9eb3e710bb50",
+    "targetHash": "258d41e78672f56339b3e8c3a3cd41c593917e7e62dad9583adb0b92ebc9df25",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:46:22.574Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b807805cb3233fd482c170bd812dbcc1b52b7e797d23e7a83a37cd89dc05c35",
+      "targetHash": "258d41e78672f56339b3e8c3a3cd41c593917e7e62dad9583adb0b92ebc9df25",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

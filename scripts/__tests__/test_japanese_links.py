@@ -15,6 +15,8 @@ class JapaneseLinkResolution(unittest.TestCase):
                 '/docs/4.x/reference/topic': 'versioned_docs/version-4.x/reference/topic.md',
                 '/ja/docs/dev/reference/topic': 'i18n/ja/docusaurus-plugin-content-docs/current/reference/topic.md',
                 '/ja/docs/4.x/reference/topic': 'i18n/ja/docusaurus-plugin-content-docs/version-4.x/reference/topic.mdx',
+                '/ko/docs/dev/reference/topic': 'i18n/ko/docusaurus-plugin-content-docs/current/reference/topic.md',
+                '/ko/docs/4.x/reference/topic': 'i18n/ko/docusaurus-plugin-content-docs/version-4.x/reference/topic.mdx',
                 '/zh-CN/docs/dev/reference/topic': 'i18n/zh-CN/docusaurus-plugin-content-docs/current/reference/topic.mdx',
                 '/zh-CN/docs/4.x/reference/topic': 'i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/reference/topic.md',
             }
@@ -105,6 +107,25 @@ class JapaneseLinkResolution(unittest.TestCase):
             source.write_text('# Next\n')
             self.assertEqual(resolve_internal(str(localized), 'next.mdx'), str(source))
             self.assertEqual(resolve_internal(str(localized), '/ja/community/guide/next'), str(source))
+
+
+    def test_korean_fallback_uses_same_plugin_and_version(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / 'static').mkdir()
+            for plugin, version, source_root in (
+                ('docusaurus-plugin-content-docs', 'current', 'docs'),
+                ('docusaurus-plugin-content-docs', 'version-4.x', 'versioned_docs/version-4.x'),
+                ('docusaurus-plugin-content-docs-community', 'current', 'community'),
+            ):
+                with self.subTest(plugin=plugin, version=version):
+                    base = root / f'i18n/ko/{plugin}/{version}/guide'
+                    base.mkdir(parents=True)
+                    source = root / source_root / 'reference/topic.mdx'
+                    source.parent.mkdir(parents=True)
+                    source.write_text('# English fallback\n')
+                    self.assertEqual(resolve_internal(str(base), '../reference/topic.mdx'), str(source))
+                    self.assertIsNone(resolve_internal(str(base), '../reference/missing.mdx'))
 
 
 if __name__ == '__main__':

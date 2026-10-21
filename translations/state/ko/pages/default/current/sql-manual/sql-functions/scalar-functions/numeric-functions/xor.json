@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/xor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/xor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/xor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "286e610edcdabd5b89cd892d7cb751139b6bfbb77604df92abfb9363224ca32c",
+    "sourceTechnicalHash": "dc4418cfba977259349347598b8c9a5e4547cd57762a5db996198a3d9f8ee8d9",
+    "targetHash": "4a1871a37bf943ddf5ead0361865ea478e9b72430e869338bd1b55c1fbc8f2a2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:39:32.321Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "286e610edcdabd5b89cd892d7cb751139b6bfbb77604df92abfb9363224ca32c",
+      "targetHash": "4a1871a37bf943ddf5ead0361865ea478e9b72430e869338bd1b55c1fbc8f2a2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 :::note
 This is an experimental feature.
 
-Lance Catalog is supported starting from Apache Doris 4.2.
+Lance Catalog is supported starting from Apache Doris 4.1.4.
 :::
 
 Lance is a columnar data format designed for analytics and AI workloads. Doris can use a Lance Catalog to discover databases and tables in a Lance Namespace and directly query Lance datasets stored on a local file system, S3-compatible object storage, or Alibaba Cloud OSS.
@@ -35,8 +35,8 @@ Doris currently provides read-only access to Lance. Creating, writing, updating,
 |---|---|
 | Filesystem Catalog | Supports warehouses on a local file system, `file://`, `s3://`, or `oss://` |
 | REST Catalog | Supports Lance REST Namespace with no authentication, Bearer Token, API Key, or custom HTTP headers |
-| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, and `SHOW INDEX` (Filesystem Catalogs only) |
-| System tables (`table$...`) | Not supported; use `SHOW INDEX` for index metadata |
+| Metadata access | Supports `SHOW DATABASES`, `SHOW TABLES`, `DESC`, `SHOW INDEX`, and the `lance_index_entries` TVF (the last two only for Filesystem Catalogs) |
+| System tables (`table$...`) | Not supported; use `SHOW INDEX` and the `lance_index_entries` TVF for index metadata |
 | Data queries | Supports column pruning, parallel Lance Fragment scans, and snapshot-consistent reads of the current version |
 | Predicate pushdown | Supports pushing compatible static scalar predicates and join Runtime Filters down to Lance |
 | File TVFs | Supports querying Lance datasets directly through `s3()` and `local()` |
@@ -469,65 +469,46 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 `SHOW INDEX` requires the `SHOW` privilege on the table. For a REST Catalog, the statement is rejected with the error `SHOW INDEX is not supported for Lance REST catalogs`.
 
-## Type Mapping
-
-| Lance / Arrow Type | Doris Type | Description |
-|---|---|---|
-| `null` (nullable field) | `NULL` | Every value is SQL NULL; non-nullable Null fields are unsupported |
-| `duration(s/ms/us/ns)` | `BIGINT` | Preserves the signed count in the declared unit; does not normalize to seconds |
-| `bool` | `BOOLEAN` | |
-| `int8` | `TINYINT` | |
-| `uint8` | `SMALLINT` | Losslessly widened unsigned integer |
-| `int16` | `SMALLINT` | |
-| `uint16` | `INT` | Losslessly widened unsigned integer |
-| `int32` | `INT` | |
-| `uint32` | `BIGINT` | Losslessly widened unsigned integer |
-| `int64` | `BIGINT` | |
-| `uint64` | `LARGEINT` | Losslessly widened unsigned integer |
-| `float16` | `FLOAT` | Widened to a 32-bit floating-point value |
-| `float32` | `FLOAT` | |
-| `float64` | `DOUBLE` | |
-| `decimal128(P,S)` | `DECIMAL(P,S)` | Maximum precision is 38 |
-| `decimal256(P,S)` | `DECIMAL(P,S)` | Maximum precision is 76 |
-| `utf8`, `large_utf8` | `TEXT` | |
-| `arrow.json` Extension | `JSON` | Requires `utf8` or `large_utf8` storage |
-| `lance.json` Extension | `JSON` | Requires `large_binary` storage; read as the logical JSON type |
-| `lance.bfloat16` Extension | `FLOAT` | Requires `fixed_size_binary(2)` storage; widened to Float32 without precision loss |
-| `binary`, `large_binary` | `VARBINARY(2147483647)` | |
-| `fixed_size_binary(N)` | `VARBINARY(N)` | Preserves the fixed byte width |
-| `date32(day)`, `date64(ms)` | `DATE` | A `date64` value must represent a complete calendar day |
-| `time32(s)` | `TIME(0)` | |
-| `time32(ms)` | `TIME(3)` | |
-| `time64(us)`, `time64(ns)` | `TIME(6)` | Nanosecond precision is truncated to microseconds |
-| Timezone-naive `timestamp(s)` | `DATETIME` | Not converted according to the Session Time Zone |
-| Timezone-naive `timestamp(ms)` | `DATETIME(3)` | Not converted according to the Session Time Zone |
-| Timezone-naive `timestamp(us)`, `timestamp(ns)` | `DATETIME(6)` | Nanosecond precision is truncated to microseconds |
-| Timezone-aware `timestamp` | `TIMESTAMPTZ(0-6)` | Preserves the instant and displays it in the Doris Session Time Zone |
-| `struct` | `STRUCT` | Child fields are mapped recursively |
-| `list`, `large_list`, `fixed_size_list` | `ARRAY` | Element types are mapped recursively |
-| `map` | `MAP` | Key and value types are mapped recursively |
-
-Doris recognizes these extensions through `ARROW:extension:name` metadata and validates their storage types. JSON extensions map to Doris `JSON` (internally `JSONB`). An ordinary `utf8`/`large_utf8` column containing JSON text still maps to `TEXT`; its contents do not automatically change its type. JSON read support does not imply pushdown of arbitrary JSON path expressions; see [Predicate Pushdown](#predicate-pushdown) for the supported scope.
-
-Reading JSON, Duration, Null, and BFloat16 requires the corresponding type support in both the FE and the BEs serving the query. Older builds may still report these types as unsupported; verify schema discovery and actual reads when upgrading.
-
-The following types are not currently supported:
-
-- Non-nullable Arrow `null` fields.
-- Arrow/Lance Extension types not listed as supported, such as Lance Blob v2; known extensions with incompatible storage types are also unsupported.
-- Complex types whose child types cannot be mapped recursively.
-- Arrow Dictionary types that preserve the Dictionary marker.
-
-For an unsupported top-level column, `DESC` on a Catalog table and `DESC FUNCTION` on a Lance file TVF both preserve the column and display `unknown type: UNSUPPORTED_TYPE`. If any child of a complex type cannot be mapped, the whole top-level complex column is marked unsupported. Queries can still project only supported columns. Doris reports an error during analysis when SQL projects an unsupported column. For example:
-
-```sql
-SELECT * EXCEPT(blob_col)
-FROM lance_catalog.default.all_types;
-```
+### List Physical Index Entries with lance_index_entries
 
 :::note
-Some Lance Java SDK versions may lose the Dictionary marker while reading a Schema and expose a Dictionary column as its physical index type. This behavior does not mean that Doris supports the logical Dictionary values and must not be relied upon.
+`lance_index_entries` is supported starting from Apache Doris 4.1.5.
 :::
+
+`SHOW INDEX` provides the logical view of the indexes of a Lance table: index name, indexed columns, index type, and properties, in the fixed MySQL-style 13-column result set. The physical identity of an index entry, its UUID and dataset version, does not fit into that fixed schema. The read-only table-valued function `lance_index_entries` provides this physical view. It returns one row for each physical index entry recorded in the latest dataset snapshot:
+
+```sql
+SELECT *
+FROM lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32");
+```
+
+`table` must be a fully qualified, three-part `catalog.database.table` name. Identifiers support backtick quoting, so if a multilevel Namespace maps to a database name containing `.`, quote the database part with backticks.
+
+The TVF returns the following fixed columns:
+
+| Column | Type | Description |
+|---|---|---|
+| `CatalogName` | STRING | Catalog name. |
+| `DatabaseName` | STRING | Database name. |
+| `TableName` | STRING | Table name. |
+| `IndexName` | STRING | Name of the Lance logical index. One logical index produces multiple rows when it has several physical entries with different UUIDs. |
+| `IndexUuid` | STRING | UUID of this physical index entry. |
+| `DatasetVersion` | BIGINT | Dataset version recorded on this physical index entry, that is, the dataset version at which the entry was written. Physical entries of the same logical index can carry different dataset versions. It is always `1` or greater. |
+
+The following row illustrates the result for the `IVF_PQ` index shown above. `IndexUuid` and `DatasetVersion` are illustrative values:
+
+```text
+CatalogName    DatabaseName  TableName      IndexName             IndexUuid                             DatasetVersion
+lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47  12
+```
+
+`lance_index_entries` only reads index metadata through `Dataset.getIndexes()`. It does not read row counts or statistics, and it does not modify the dataset. The result can be filtered with ordinary predicates, for example `WHERE IndexName = ...`. Rows are sorted by `(IndexName, IndexUuid)`. The read is fully validated and all-or-error: a blank or overlong name, a missing UUID, a non-positive `DatasetVersion`, a duplicate UUID, or a raw entry count above 16,384 fails the entire query instead of returning a truncated result. The reserved system indexes that Lance maintains internally, `__lance_frag_reuse` and `__lance_mem_wal`, are validated but not displayed.
+
+`lance_index_entries` requires the `SHOW` privilege on the table. For a REST Catalog, the TVF is rejected with the error `lance_index_entries is not supported for Lance REST catalogs`.
+
+## Type Mapping
+
+See [Lance to Doris Data Type Mapping](lance-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
 
 ## Predicate Pushdown
 
@@ -545,8 +526,9 @@ Doris converts semantically compatible predicates into Substrait expressions and
 | `utf8`, `large_utf8` | Supported |
 | `date32(day)` | Supported |
 | Timezone-naive `timestamp(s/ms/us)` | Supported |
+| `list<utf8>` | Built-in `array_contains` with a non-`NULL` string literal; see [Array Label Predicates](#array-label-predicates) |
 
-Predicates on other readable types, including `float16`, `decimal256`, Binary, `date64`, Time, nanosecond Timestamp, timezone-aware Timestamp, and complex types, currently remain in Doris.
+Predicates on other readable types, including `float16`, `decimal256`, Binary, `date64`, Time, nanosecond Timestamp, timezone-aware Timestamp, and complex types other than the array membership case above, currently remain in Doris.
 
 ### Operators Supported for Pushdown
 
@@ -559,13 +541,14 @@ Predicates on other readable types, including `float16`, `decimal256`, Binary, `
 | Boolean column, `NOT` Boolean column | Direct Boolean column reference |
 | `LIKE`, `NOT LIKE` | Direct `utf8` or `large_utf8` column and a string literal pattern without backslash escapes, an explicit `ESCAPE` clause, or an embedded NUL character |
 | `starts_with`, `ends_with` | Built-in function with a direct `utf8` or `large_utf8` column and a string literal |
+| `array_contains(labels, 'red')` | Direct `list<utf8>` column and a non-`NULL` string literal |
 | `AND` | Top-level conjuncts can be pushed down independently, with unsupported conjuncts retained in Doris |
 | `OR` | Both branches must be fully convertible |
 | `NOT` | The operand must be fully convertible |
 
 The following forms are generally not pushed down:
 
-- Functions other than the supported built-in string functions, or arithmetic expressions applied to a column. A user-defined function named `like`, `starts_with`, or `ends_with` is not treated as the corresponding built-in function.
+- Functions other than the supported built-in string and array membership functions, or arithmetic expressions applied to a column. A user-defined function named `like`, `starts_with`, `ends_with`, or `array_contains` is not treated as the corresponding built-in function.
 - String predicates whose pattern contains an embedded NUL character. `LIKE` and `NOT LIKE` patterns that use a backslash escape or an explicit `ESCAPE` clause also remain in Doris.
 - An empty `IN` list or an `IN` list containing `NULL`.
 - An `OR` or `NOT` expression in which only part of the expression can be converted.
@@ -581,6 +564,46 @@ WHERE active
   AND starts_with(name, 'A')
   AND country LIKE 'C%';
 ```
+
+### Array Label Predicates
+
+Starting from Apache Doris 4.1.5, array-label pushdown supports `array_contains` on a direct Lance `list<utf8>` column with a non-`NULL` string literal. Older builds may keep these conditions in Doris; check `EXPLAIN` before relying on this optimization. A `NULL` array still produces `NULL`, an empty array does not match, and duplicate labels do not duplicate result rows.
+
+For a Lance table with an `id` column and a `labels` column of type `list<utf8>`:
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+This matches arrays containing both labels, regardless of their order or adjacency. Replacing `AND` with `OR` matches either label. `NOT (array_contains(labels, 'red'))` is also convertible and preserves SQL `NULL` semantics. These examples apply to ordinary table scans; they do not change the distinction between a search TVF's `filter` parameter and an outer `WHERE` condition.
+
+The following remain Doris residual predicates:
+
+- `array_contains(labels, NULL)`: Doris can match a `NULL` element; Lance's membership function has different `NULL`-needle semantics.
+- `array_contains_all(labels, ['red', 'blue'])`: Doris tests an ordered, contiguous subsequence. It cannot be replaced with Lance's set-containment function or two independent membership predicates.
+- Dynamic needles, expressions or casts around the array column, and other array element/container types, including `large_list`, fixed-size lists, and `list<large_utf8>`.
+
+### Predicate Pushdown and Scalar Index Use
+
+Predicate pushdown means Lance evaluates a condition; it does not guarantee index use. For ordinary scans, Doris can assign a physical BTree, Bitmap, or LabelList segment to each scan task. Same-column `IN`, `AND`, `OR`, and `NOT` combinations can use the selected index when Lance supports the complete expression. `OR` requires safe candidates from both branches; `NOT` cannot negate an incompletely evaluated subtree. Unsupported index expressions fall back to a scan within the assigned fragment domain.
+
+Each task selects **one logical scalar index**. A query combining label, category, and numeric predicates does not imply that Doris intersects all three indexes. The complete pushed condition is rechecked before applying the scan limit, and fragments outside index coverage are still read. Without a usable index, compatible predicates can still be pushed down and evaluated by a Lance scan.
+
+Use the following evidence together:
+
+| Evidence | Meaning |
+|---|---|
+| `lancePushdownPredicate` in `EXPLAIN` | Conditions sent to Lance. Remaining `predicates:` conditions are evaluated by Doris. |
+| `lanceScalarIndexScan=SEGMENT` and `lanceGroupingIndex` in `EXPLAIN` | A scalar segment scan was planned and identifies the selected logical index. This alone does not prove runtime index use. |
+| `LanceScalarIndexSegmentsSearched` in Profile | Actual searches on the instrumented scalar segment path. |
+| `LanceScalarIndexCandidateRows` in Profile | Candidate rows reported by that path, not necessarily final result rows. Complement masks, such as some `NOT` expressions, may not report a candidate cardinality. |
+| `LanceScalarIndexSegmentFallbacks` in Profile | Tasks that fell back from the planned scalar segment path. |
+
+Enable `enable_profile` to inspect these counters. Compare the same SQL, projection, dataset version, and cache state when measuring an optimization. These counters describe ordinary scalar segment scans and must not be used alone to infer scalar-index use inside ANN or full-text prefiltering.
 
 ### Runtime Filter Pushdown
 

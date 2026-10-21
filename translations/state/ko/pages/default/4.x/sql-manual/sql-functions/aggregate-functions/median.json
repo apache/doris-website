@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/median",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/median.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/median.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "66869fb96827ce63ee4017d4520b2fc160f34374b7d294cbca76fb54e74c4e29",
+    "sourceTechnicalHash": "20b9a702944f61a63bd28531738cdbb5b7f40ada2b4c78db67cad411f2bee506",
+    "targetHash": "d091f9e283dabca59641a2433ad9850a24b985280219246806a0b9a5e5cf050d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:11:29.834Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "66869fb96827ce63ee4017d4520b2fc160f34374b7d294cbca76fb54e74c4e29",
+      "targetHash": "d091f9e283dabca59641a2433ad9850a24b985280219246806a0b9a5e5cf050d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

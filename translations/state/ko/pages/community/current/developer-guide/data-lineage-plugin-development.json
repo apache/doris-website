@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/data-lineage-plugin-development",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/data-lineage-plugin-development.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/data-lineage-plugin-development.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8343125666e24bdfd0d25a1ad11206b968ded264e4b95c1be99895bad7d32aaf",
+    "sourceTechnicalHash": "ef501b52e03a55fb17ac9c0f1c57d011a4c1527035b205705a80f88efefa20af",
+    "targetHash": "b9e3c430adc745e87df85ea2ffc6d506e0845fd231909eed87700c9a16edfed5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:22:41.375Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8343125666e24bdfd0d25a1ad11206b968ded264e4b95c1be99895bad7d32aaf",
+      "targetHash": "b9e3c430adc745e87df85ea2ffc6d506e0845fd231909eed87700c9a16edfed5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 235: expected [\"inlineCode\",null,null,\"4.0.6\"]; received [\"inlineCode\",null,null,\"github.com/apache/doris\"]\nprotected node 236: expected [\"inlineCode\",null,null,\"github.com/apache/doris\"]; received [\"inlineCode\",null,null,\"4.0.6\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

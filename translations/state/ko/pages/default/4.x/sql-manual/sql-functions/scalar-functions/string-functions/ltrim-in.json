@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "16dcaad7f2b89ef02dadee1186f5faef50afea86bc7983d7bbd2862f168c4121",
+    "sourceTechnicalHash": "e1ee3aab3318fc708efc9292adea91ad825a1b5e4a28362972d0a2fae704dbd7",
+    "targetHash": "6aa1560f2cbb9e1cef86c1f9dd57ff610544c916f0754338da1879d47ddd010c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:18:16.588Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "16dcaad7f2b89ef02dadee1186f5faef50afea86bc7983d7bbd2862f168c4121",
+      "targetHash": "6aa1560f2cbb9e1cef86c1f9dd57ff610544c916f0754338da1879d47ddd010c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ltrim-in.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "16dcaad7f2b89ef02dadee1186f5faef50afea86bc7983d7bbd2862f168c4121",
+        "targetHash": "6aa1560f2cbb9e1cef86c1f9dd57ff610544c916f0754338da1879d47ddd010c",
+        "commit": "2ff42a50f6b4bfe6ce0d33a3731ce73e830c6e40",
+        "pr": "https://github.com/apache/doris-website/pull/4382"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-compact",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-compact.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-compact.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "82f05821110ea1c4be6cf53d6e0dfda77009fae0f795287ec7c893ef407b3837",
+    "sourceTechnicalHash": "85344524a6101e033be73682a98cf6578216a0c94cb30b05f015bb41c90aa55d",
+    "targetHash": "ebb73c42863565fec545d1803492fe424fc090cffceef895d27b5c19c40b8214",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:36:24.868Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "82f05821110ea1c4be6cf53d6e0dfda77009fae0f795287ec7c893ef407b3837",
+      "targetHash": "ebb73c42863565fec545d1803492fe424fc090cffceef895d27b5c19c40b8214",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

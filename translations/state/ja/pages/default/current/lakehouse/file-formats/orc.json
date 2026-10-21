@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/orc.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/orc.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "0ceb1cf3a7e7588f03e5efdb6b1762e0d2cf1ecaba79eca39976f70fce7ed349",
-    "sourceTechnicalHash": "7230e06f343205ef7d4cb70c19d73654c9270e5721dd2105321b25824d5b15d8",
-    "targetHash": "367053a8732d3abd7e943a4b5b8dad6e523d8e22dac0ba0b912e1db32db327df",
+    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
+    "sourceHash": "8fd46e01c8042a80934136aff3642b756d0c4c91092b0dba704b8cd4153f5ac6",
+    "sourceTechnicalHash": "ba93dc4db9299c2cd1c7d4c6924c0a9ef1ff306eeeff33791855a42c2d766ee4",
+    "targetHash": "5d9cd7ce53d07e0897e15284140e4bcc637921f47bcf01787a99ebb63647d0b7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:46:10.867Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-20T05:25:23.085Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8fd46e01c8042a80934136aff3642b756d0c4c91092b0dba704b8cd4153f5ac6",
+      "targetHash": "5d9cd7ce53d07e0897e15284140e4bcc637921f47bcf01787a99ebb63647d0b7",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0.4\",\"1\",\"16\",\"2\",\"2.1\",\"2.1\",\"2.1.6\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"3.0\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.1.0\",\"3.1.0\",\"4\",\"4.1.5\",\"4.1.5\",\"8\",\"8\",\"8\"]; received [\"0\",\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"16\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.6\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"3.0\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.1.0\",\"3.1.0\",\"4\",\"4.1.5\",\"4.1.5\",\"8\",\"8\",\"8\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

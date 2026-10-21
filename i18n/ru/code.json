@@ -1,0 +1,194 @@
+{
+  "docs.translation.status.label": {
+    "message": "Статус перевода"
+  },
+  "docs.translation.untranslated": {
+    "message": "Эта страница ещё не переведена на русский язык."
+  },
+  "docs.translation.showingSource": {
+    "message": "Показан актуальный английский оригинал для этой версии."
+  },
+  "docs.translation.openSource": {
+    "message": "Открыть английский оригинал"
+  },
+  "docs.translation.openChineseSource": {
+    "message": "Открыть китайский оригинал"
+  },
+  "docs.translation.staleProse": {
+    "message": "Русский перевод не отражает последние изменения формулировок в оригинале."
+  },
+  "docs.translation.sourceMissing": {
+    "message": "Оригинал недоступен для проверки, поэтому русский перевод не показан."
+  },
+  "docs.translation.unverified": {
+    "message": "Содержание или актуальность русского перевода не подтверждены."
+  },
+  "docs.translation.stale": {
+    "message": "Русский перевод не отражает последние изменения оригинала."
+  },
+  "docs.translation.reviewedHuman": {
+    "message": "Русский перевод проверен человеком."
+  },
+  "docs.translation.machine": {
+    "message": "Эта страница переведена с помощью языковой модели."
+  },
+  "docs.translation.translatedAt": {
+    "message": "Дата перевода: "
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Это документация для {unreleased} версии Apache Doris."
+  },
+  "theme.docs.versions.unreleasedText": {
+    "message": "разрабатываемой"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Обратитесь к официальной документации версий {v4xLink} / {v3xLink} / {v21Link}."
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Документация для {siteTitle} {versionLabel} больше не поддерживается."
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "Последняя версия"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Другие версии"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Другие языки"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "Ничего не найдено"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "Все результаты за пределами «{context}»"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "Все результаты в разделе «{context}»"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "Все результаты"
+  },
+  "theme.SearchBar.label": {
+    "message": "Поиск"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "Результаты поиска «{query}»"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "Поиск по документации"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "Везде"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "Найден {count} документ|Найдено {count} документа|Найдено {count} документов|Найдено {count} документа"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "Документы не найдены"
+  },
+  "theme.SearchPage.searchSource": {
+    "message": "Искать в английском оригинале"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Страницы документации"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Назад"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Далее"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Главная"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Путь к текущей странице"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Навигация по документации"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Закрыть навигацию"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Показать или скрыть навигацию"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Свернуть навигацию"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Свернуть навигацию"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Развернуть навигацию"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Развернуть навигацию"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Версия: {versionLabel}"
+  },
+  "theme.common.editThisPage": {
+    "message": "Редактировать страницу"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Прямая ссылка на {heading}"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Перейти к содержимому"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← В главное меню"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "На этой странице"
+  },
+  "theme.TOC.title": {
+    "message": "На этой странице"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Главное меню"
+  },
+  "docs.navigation.sections": {
+    "message": "Разделы документации"
+  },
+  "docs.navigation.menu": {
+    "message": "Меню"
+  },
+  "docs.navigation.sidebar": {
+    "message": "Содержание документации"
+  },
+  "docs.navigation.closeSidebar": {
+    "message": "Закрыть содержание"
+  },
+  "docs.navigation.sidebarNavigation": {
+    "message": "Навигация по содержанию"
+  },
+  "docs.navigation.switchLanguage": {
+    "message": "Сменить язык"
+  },
+  "docs.navigation.openSidebar": {
+    "message": "Открыть содержание"
+  },
+  "docs.navigation.browseSection": {
+    "message": "Перейти к разделу"
+  },
+  "theme.TOC.homepage": {
+    "message": "Главная Doris"
+  },
+  "theme.TOC.downloadPdf": {
+    "message": "Скачать PDF"
+  },
+  "theme.TOC.forum": {
+    "message": "Технический форум"
+  },
+  "theme.TOC.discussions": {
+    "message": "Задать вопрос в Discussions"
+  },
+  "theme.TOC.slack": {
+    "message": "Обсудить в Slack"
+  },
+  "theme.TOC.discord": {
+    "message": "Обсудить в Discord"
+  }
+}

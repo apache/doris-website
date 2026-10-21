@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-or",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bit-or.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bit-or.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "919ae27ec7a9d6eb0f8fed1aacbe70af5cf7f1bbd64176e7b113d44f67a10aa6",
+    "sourceTechnicalHash": "c2ccec673fd10900fc6031ce96db304812ae8d1a83f8f7c63f532ec50e9c5296",
+    "targetHash": "c64f79bd6672d584a660e0be538bc5c1cc57e2ee13bbbf57f3b39e892459f4cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:30:51.173Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "919ae27ec7a9d6eb0f8fed1aacbe70af5cf7f1bbd64176e7b113d44f67a10aa6",
+      "targetHash": "c64f79bd6672d584a660e0be538bc5c1cc57e2ee13bbbf57f3b39e892459f4cf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

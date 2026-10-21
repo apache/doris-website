@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/iceberg-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/iceberg-catalog.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/iceberg-catalog.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "45a577aaaf6b001ab61a60357f58ee47d8d0d813c56d988e38dd3d9cccdfed6e",
+    "sourceTechnicalHash": "b43395b962e2ba5846db11c6354f8f1eb34a4296d696a7dbba792201e77d2789",
+    "targetHash": "bdc2c9c0c3b1dfbe99b37b4aafe8cc2c5ade461880707c8c15dc913a9178c4a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:31:37.347Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "45a577aaaf6b001ab61a60357f58ee47d8d0d813c56d988e38dd3d9cccdfed6e",
+      "targetHash": "bdc2c9c0c3b1dfbe99b37b4aafe8cc2c5ade461880707c8c15dc913a9178c4a7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

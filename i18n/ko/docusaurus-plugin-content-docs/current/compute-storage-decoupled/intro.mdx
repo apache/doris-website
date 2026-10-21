@@ -1,0 +1,77 @@
+---
+{
+    "title": "컴퓨팅-스토리지 분리 운영 가이드",
+    "language": "ko",
+    "description": "Apache Doris 컴퓨팅-스토리지 분리 아키텍처 운영 가이드: 컴퓨팅 그룹 관리, Storage Vault 구성, 파일 캐시, 읽기-쓰기 분리, 클러스터 업그레이드를 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+컴퓨팅-스토리지 분리 아키텍처는 컴퓨팅 노드와 원격 공유 스토리지를 분리하여 컴퓨팅과 스토리지를 각각 독립적으로 탄력적으로 확장할 수 있게 합니다. 이 가이드는 컴퓨팅-스토리지 분리 클러스터의 구성과 운영 방법을 안내합니다.
+
+## 클러스터 운영 {#cluster-operations}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="컴퓨팅 그룹 운영"
+    description="하나 이상의 BE 노드를 컴퓨팅 그룹으로 묶습니다. 컴퓨팅-스토리지 분리 모드에서 컴퓨팅 그룹을 생성하고 확장하며 관리하는 방법을 알아봅니다."
+    link="managing-compute-cluster"
+/>
+
+<GettingStartedCard
+    title="Storage Vault 관리"
+    description="컴퓨팅-스토리지 분리 모드에서 사용하는 원격 공유 스토리지(Storage Vault)를 구성합니다. 여러 Vault 구성과 테이블별 스토리지 위치 지정을 지원합니다."
+    link="managing-storage-vault"
+/>
+
+<GettingStartedCard
+    title="데이터 회수"
+    description="Doris가 컴퓨팅-스토리지 분리 아키텍처에서 삭제된 데이터가 차지하는 스토리지 공간을 안전하고 효율적으로 회수하는 방식과 데이터 수명 주기를 관리하는 방법을 알아봅니다."
+    link="recycler"
+/>
+
+<GettingStartedCard
+    title="업그레이드"
+    description="롤링 업그레이드를 사용하여 업스트림 워크로드에 미치는 영향을 최소화하면서 컴퓨팅-스토리지 분리 모드의 Doris 클러스터를 업그레이드하는 단계별 가이드입니다."
+    link="upgrade"
+/>
+</div>
+
+## File Cache {#file-cache}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="File Cache 개요"
+    description="로컬 디스크 캐싱으로 원격 스토리지 접근 속도를 높입니다. 다중 큐 LRU 전략, 새 컴퓨팅 그룹의 캐시 워밍업, 세부 구성 방법을 다룹니다."
+    link="file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="File Cache 내부 구조"
+    description="파일 캐시 구현을 자세히 살펴봅니다. 1 MB 경계에 맞춘 분할, 프리페치 메커니즘, 로컬 파일 시스템의 블록 파일 관리를 다룹니다."
+    link="file-cache/file-cache-internals"
+/>
+
+<GettingStartedCard
+    title="피어 캐시 읽기"
+    description="로컬 File Cache에 블록이 없으면 객체 스토리지에 접근하기 전에 다른 BE(다른 컴퓨팅 그룹 포함)에서 해당 블록을 읽습니다. 확장과 그룹 간 콜드 읽기를 가속합니다."
+    link="file-cache/file-cache-peer-read"
+/>
+</div>
+
+## 읽기-쓰기 분리 {#read-write-separation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="읽기-쓰기 분리"
+    description="File Cache의 능동적 증분 워밍업 메커니즘을 통해 가용 영역 간 고가용성과 읽기-쓰기 분리 아키텍처를 지원하여 쿼리 지연 시간을 줄이고 장애 조치 응답 속도를 높입니다."
+    link="rw/read-write-separation"
+/>
+
+<GettingStartedCard
+    title="읽기-쓰기 분리를 위한 캐시 최적화 모범 사례"
+    description="여러 컴퓨팅 그룹을 사용하는 읽기-쓰기 분리 배포 환경에서 캐시 적중률을 최적화하여 읽기 전용 컴퓨팅 그룹이 원격 객체 스토리지에서 데이터를 자주 가져오지 않도록 하고 쿼리 성능을 향상합니다."
+    link="rw/file-cache-rw-compute-group-best-practice"
+/>
+</div>

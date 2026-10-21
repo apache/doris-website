@@ -3,6 +3,7 @@ const {hash} = require('./state.cjs');
 const headingsPlugin = require('@docusaurus/mdx-loader/lib/remark/headings').default;
 const {escapeMarkdownHeadingIds} = require('@docusaurus/utils');
 const {getFormat} = require('@docusaurus/mdx-loader/lib/format.js');
+const {normalizedNumbers} = require('./protection.cjs');
 
 function withoutPositions(value) {
     if (Array.isArray(value)) return value.map(withoutPositions);
@@ -55,6 +56,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         }});
     });
     const protectedNodes = [];
+    const proseNumbers = [];
     visit(tree, node => {
         if (['code', 'inlineCode', 'html', 'mdxjsEsm', 'mdxFlowExpression', 'mdxTextExpression'].includes(node.type)) {
             protectedNodes.push([node.type, node.lang ?? null, node.meta ?? null, node.value]);
@@ -64,6 +66,7 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         }
         if (node.type.startsWith('mdxJsx')) protectedNodes.push([node.type, node.name, withoutPositions(node.attributes)]);
         if (node.type === 'text') {
+            proseNumbers.push(...normalizedNumbers(node.value));
             const numbers = node.value.match(/\d+(?:\.\d+)*/g);
             if (numbers) protectedNodes.push(['numbers', numbers]);
         }
@@ -74,7 +77,15 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
         .filter(([key]) => !['title', 'description', 'sidebar_label'].includes(key))
         .sort(([a], [b]) => a.localeCompare(b)));
     return {
-        content, headings, format, protectedNodes, technicalMetadata,
+        content, headings, format, protectedNodes, proseNumbers, technicalMetadata,
+        // Raw top-level ranges let incremental translations keep untouched
+        // target blocks, including their original Markdown formatting.
+        blocks: [
+            ...(raw.length > content.length ? [{kind: 'frontmatter', start: 0, end: raw.length - content.length}] : []),
+            ...tree.children.map(node => ({kind: node.type === 'heading' ? `heading:${node.depth}` : node.type,
+                start: raw.length - content.length + offsets[node.position.start.offset],
+                end: raw.length - content.length + offsets[node.position.end.offset]})),
+        ],
         technicalHash: hash(JSON.stringify([technicalMetadata, protectedNodes, fingerprintHeadings])),
         // A secondary comparison for planning only. The state sourceHash stays
         // byte-sensitive, so a formatting edit still needs an explicit review.

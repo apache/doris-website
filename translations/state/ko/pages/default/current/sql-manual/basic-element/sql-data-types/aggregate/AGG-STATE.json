@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6c5832cc2b4eeb47dfaafefe4f5cc899798f3f8533f1c8de7a6fd09af98d9216",
+    "sourceTechnicalHash": "6d57217e59599f81f1a45f7b1c9d98500f44ea465ffaa6353b07e94b593db110",
+    "targetHash": "58071a5ce9a53d2f1684d810ffe8d4492ff09cc25c25d720ce3bfe10ff6ab352",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:12:38.571Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c5832cc2b4eeb47dfaafefe4f5cc899798f3f8533f1c8de7a6fd09af98d9216",
+      "targetHash": "58071a5ce9a53d2f1684d810ffe8d4492ff09cc25c25d720ce3bfe10ff6ab352",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",null,null,\"  AGG_STATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table.\\n  User does not need to specify length and default value. The actual stored data size is related to the function implementation.\"]; received [\"code\",null,null,\"  AGG_STATE는 키 컬럼으로 사용할 수 없으며, 테이블을 생성할 때 집계 함수의 시그니처도 함께 선언해야 합니다.\\n  사용자는 길이와 기본값을 지정할 필요가 없습니다. 실제 저장되는 데이터의 크기는 함수 구현에 따라 달라집니다.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

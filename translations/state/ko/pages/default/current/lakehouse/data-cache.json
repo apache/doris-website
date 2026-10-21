@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/data-cache",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/data-cache.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/data-cache.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "88f16654885ff4f70746f99dc25255dadeba02752d74bdc4325c10414b16d88f",
+    "sourceTechnicalHash": "b7856b205e5860441d4be5c753d0cb5b168a654b25c75eb0d5a172af70ba2bd3",
+    "targetHash": "5103133c45d4afa0adc43cec100ccf66c958ac3adae1c8474b378615dbc4042d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:28:45.214Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88f16654885ff4f70746f99dc25255dadeba02752d74bdc4325c10414b16d88f",
+      "targetHash": "5103133c45d4afa0adc43cec100ccf66c958ac3adae1c8474b378615dbc4042d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 22: expected [\"inlineCode\",null,null,\"enable_file_cache = false\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 23: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_file_cache = false\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 66: expected [\"inlineCode\",null,null,\"RemoteOnlyOnMissTriggered\"]; received [\"inlineCode\",null,null,\"FileCache\"]\nprotected node 67: expected [\"inlineCode\",null,null,\"RemoteOnlyOnMissThresholdBytes\"]; received [\"inlineCode\",null,null,\"RemoteOnlyOnMissTriggered\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"FileCache\"]; received [\"inlineCode\",null,null,\"RemoteOnlyOnMissThresholdBytes\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

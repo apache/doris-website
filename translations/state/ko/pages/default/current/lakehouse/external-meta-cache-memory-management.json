@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/external-meta-cache-memory-management",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/external-meta-cache-memory-management.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/external-meta-cache-memory-management.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6346492aa66c52ff363203753c77978409bba884c5d3f9c3ec73426e5c06e48d",
+    "sourceTechnicalHash": "c49e6451f486c0f659cd59d5d60221f4b7acf33608dd5a45f30da71162352586",
+    "targetHash": "e365c587fb2e36a13ab5165314427be23e64f2a81f9be5137fe13443069aea0c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:27:49.149Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6346492aa66c52ff363203753c77978409bba884c5d3f9c3ec73426e5c06e48d",
+      "targetHash": "e365c587fb2e36a13ab5165314427be23e64f2a81f9be5137fe13443069aea0c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 220: expected [\"inlineCode\",null,null,\"external_meta_cache_max_weight\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 221: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"external_meta_cache_max_weight\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

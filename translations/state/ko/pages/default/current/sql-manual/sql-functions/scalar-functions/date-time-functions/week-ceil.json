@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/week-ceil",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/week-ceil.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/week-ceil.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "33cae71c2b71687a8f3c46c27c0c60066de75dac3fa2ae7f369b886a9d21e40d",
+    "sourceTechnicalHash": "7dc85e76a4f36f972b6d15a7119ce8955ebb99659d82b7cbd7b50501266db8a2",
+    "targetHash": "b1c6efbe699fbaeea5dbf043e67227eaeaa2614d2eb6990a7c202f2453325653",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:00:51.363Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "33cae71c2b71687a8f3c46c27c0c60066de75dac3fa2ae7f369b886a9d21e40d",
+      "targetHash": "b1c6efbe699fbaeea5dbf043e67227eaeaa2614d2eb6990a7c202f2453325653",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

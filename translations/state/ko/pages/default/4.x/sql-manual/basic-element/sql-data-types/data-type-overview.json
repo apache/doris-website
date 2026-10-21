@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/data-type-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/data-type-overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d4989b5f81974a5a96e8a8ecb0650f90fad5cec88d70d8f46aa89d056bc5166a",
+    "sourceTechnicalHash": "d4f90249d3970498d55d03f34ad826cafe26eced3365ab9a1dd1774fa905d389",
+    "targetHash": "05ce999c1da2227b9645e60b0da1258064abcd665bbaf433abef665e15636676",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:54:56.445Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d4989b5f81974a5a96e8a8ecb0650f90fad5cec88d70d8f46aa89d056bc5166a",
+      "targetHash": "05ce999c1da2227b9645e60b0da1258064abcd665bbaf433abef665e15636676",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

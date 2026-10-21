@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/sync-materialized-view/CREATE-MATERIALIZED-VIEW.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "185a3846950a5a34d0b7abb78bf3220fe78b9d5d2b11e5fb757ca03459b9b292",
+    "sourceTechnicalHash": "3e7000f65ac5f5d958cf067ed74837c9688d23dda32cfafc0086c7afe7f24edd",
+    "targetHash": "16259a3fdb0a529f1b36b9af0e3e13b42fac2d327b1d7a93599aec51fa7a0ce6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:59:49.578Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "185a3846950a5a34d0b7abb78bf3220fe78b9d5d2b11e5fb757ca03459b9b292",
+      "targetHash": "16259a3fdb0a529f1b36b9af0e3e13b42fac2d327b1d7a93599aec51fa7a0ce6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

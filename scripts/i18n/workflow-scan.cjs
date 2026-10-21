@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {languageName, pipelineLocale} = require('./state.cjs');
+const {hash, languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
@@ -34,7 +34,14 @@ function changedPaths(before, head) {
     catch {return null;}
 }
 
-function summarize(plan, reconciliation, eligible, mode, language) {
+// Everything a plan depends on besides the planner itself: the checkout, the
+// open-PR reservations (blocked targets included) and the requested filters.
+function planInputs(head, activeCandidates, env = process.env) {
+    return hash(JSON.stringify({head, activeCandidates, filters: ['I18N_PLUGIN', 'I18N_VERSION', 'I18N_PATH', 'I18N_PATHS']
+        .map(key => env[key] || '').concat(env.I18N_LIMIT || '20')}));
+}
+
+function summarize(plan, reconciliation, eligible, mode, language, reused = false) {
     const exceptionKinds = new Map();
     for (const item of [...plan.exceptions, ...reconciliation.exceptions])
         exceptionKinds.set(item.kind, (exceptionKinds.get(item.kind) ?? 0) + 1);
@@ -42,6 +49,8 @@ function summarize(plan, reconciliation, eligible, mode, language) {
         `## ${language} translation discovery`,
         '',
         `- Source commit: \`${plan.sourceCommit}\``,
+        `- Plan: ${reused ? 'reused from discovery; master and open-PR reservations are unchanged'
+            : 'recounted from the native documents'}`,
         `- Mode: \`${mode}\`; generation eligible: **${eligible}**`,
         `- Required: ${plan.counts.required}; merged current: ${plan.counts.mergedCurrent}; pending: ${plan.counts.pending}`,
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
@@ -57,28 +66,43 @@ function summarize(plan, reconciliation, eligible, mode, language) {
 function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-scan.cjs <output-directory>');
+    assert(process.env.I18N_MODE !== 'validate' || !process.env.I18N_PATHS,
+        'Validation mode requires path, not a list of paths');
     fs.mkdirSync(output, {recursive: true});
     const reconciliation = JSON.parse(fs.readFileSync(path.join(output, 'open-pr-reconciliation.json'), 'utf8'));
     const planFile = path.join(output, 'plan.json');
     const auditFile = path.join(output, 'coverage.json');
-    const args = [path.join(__dirname, 'plan-translations.cjs'), '--source-ref', 'HEAD',
-        '--active-candidates', path.join(output, 'active-candidates.json'), '--output', planFile,
-        '--audit-output', auditFile, '--limit', process.env.I18N_LIMIT || '20'];
-    for (const [key, option] of [['I18N_PLUGIN', '--plugin'], ['I18N_VERSION', '--version'], ['I18N_PATH', '--path']]) {
-        if (process.env[key]) args.push(option, process.env[key]);
-    }
-    execFileSync(process.execPath, args, {cwd: root, stdio: 'inherit'});
-    const plan = JSON.parse(fs.readFileSync(planFile, 'utf8'));
-    const audit = JSON.parse(fs.readFileSync(auditFile, 'utf8'));
-    const blocked = new Set(reconciliation.blockedTargets);
-    const originalSelected = plan.selected.length;
-    plan.selected = plan.selected.filter(id => !blocked.has(plan.tasks.find(task => task.id === id)?.targetPath));
-    plan.selectedCount = plan.selected.length;
-    plan.selectedEstimatedSourceTokens = plan.selected.reduce((total, id) =>
-        total + (plan.tasks.find(task => task.id === id)?.estimatedSourceTokens || 0), 0);
-    plan.blockedSelected = originalSelected - plan.selected.length;
-    fs.writeFileSync(planFile, JSON.stringify(plan, null, 2) + '\n');
+    const activeFile = path.join(output, 'active-candidates.json');
     const event = process.env.GITHUB_EVENT_NAME || 'workflow_dispatch';
+    const inputs = planInputs(execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).trim(),
+        fs.readFileSync(activeFile, 'utf8'));
+    // The generation job downloads the discovery plan. Recounting every native
+    // document takes minutes, so an unchanged plan is reused.
+    const previous = fs.existsSync(planFile) && fs.existsSync(auditFile)
+        ? JSON.parse(fs.readFileSync(planFile, 'utf8')) : null;
+    const reused = event !== 'push' && previous?.planInputs === inputs;
+    let plan = previous;
+    if (!reused) {
+        const args = [path.join(__dirname, 'plan-translations.cjs'), '--source-ref', 'HEAD',
+            '--active-candidates', activeFile, '--output', planFile,
+            '--audit-output', auditFile, '--limit', process.env.I18N_LIMIT || '20'];
+        for (const [key, option] of [['I18N_PLUGIN', '--plugin'], ['I18N_VERSION', '--version'],
+            ['I18N_PATH', '--path'], ['I18N_PATHS', '--paths']]) {
+            if (process.env[key]) args.push(option, process.env[key]);
+        }
+        execFileSync(process.execPath, args, {cwd: root, stdio: 'inherit'});
+        plan = JSON.parse(fs.readFileSync(planFile, 'utf8'));
+        const blocked = new Set(reconciliation.blockedTargets);
+        const originalSelected = plan.selected.length;
+        plan.selected = plan.selected.filter(id => !blocked.has(plan.tasks.find(task => task.id === id)?.targetPath));
+        plan.selectedCount = plan.selected.length;
+        plan.selectedEstimatedSourceTokens = plan.selected.reduce((total, id) =>
+            total + (plan.tasks.find(task => task.id === id)?.estimatedSourceTokens || 0), 0);
+        plan.blockedSelected = originalSelected - plan.selected.length;
+        plan.planInputs = inputs;
+        fs.writeFileSync(planFile, JSON.stringify(plan, null, 2) + '\n');
+    }
+    const audit = JSON.parse(fs.readFileSync(auditFile, 'utf8'));
     const mode = process.env.I18N_MODE || 'dry-run';
     const changed = event === 'push' ? changedPaths(process.env.GITHUB_EVENT_BEFORE, plan.sourceCommit) : [];
     const locale = pipelineLocale(root);
@@ -91,7 +115,7 @@ function main() {
     }
     const eligible = event === 'schedule' || event === 'workflow_dispatch' && ['generate', 'validate'].includes(mode)
         || event === 'push' && changed !== null && relevantPush(changed, audit, scope);
-    const summary = summarize(plan, reconciliation, eligible, mode, languageName(root, locale));
+    const summary = summarize(plan, reconciliation, eligible, mode, languageName(root, locale), reused);
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
     else process.stdout.write(summary);
     if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT,
@@ -102,4 +126,4 @@ function main() {
 if (require.main === module) {
     try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
 }
-module.exports = {relevantPush, changedPaths, summarize, rulesFor};
+module.exports = {relevantPush, changedPaths, summarize, rulesFor, planInputs};

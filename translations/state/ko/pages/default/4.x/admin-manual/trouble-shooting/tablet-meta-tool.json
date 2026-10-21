@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/tablet-meta-tool",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/tablet-meta-tool.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/tablet-meta-tool.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "180ed4e25707b430afb0834d2d22b3f013ab5783c97500339acb44b2d740cd7b",
+    "sourceTechnicalHash": "a44b0c2cd1f4b5f387e4825c38962752cf6fdf3e60108365ef27d12d3b290a68",
+    "targetHash": "8f70f589a20552e423cc1cbf94309d40c26bdb6470dc272f44d76b964e2d7a03",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:50:36.350Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "180ed4e25707b430afb0834d2d22b3f013ab5783c97500339acb44b2d740cd7b",
+      "targetHash": "8f70f589a20552e423cc1cbf94309d40c26bdb6470dc272f44d76b964e2d7a03",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/tablet-meta-tool",
+        "sourcePath": "docs/admin-manual/trouble-shooting/tablet-meta-tool.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/tablet-meta-tool.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "180ed4e25707b430afb0834d2d22b3f013ab5783c97500339acb44b2d740cd7b",
+        "targetHash": "8f70f589a20552e423cc1cbf94309d40c26bdb6470dc272f44d76b964e2d7a03",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

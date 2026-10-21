@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/time-to-sec.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "bf40540db1127d1f5af40b9d8bddd66ba656dbe225d2a33a6e70b3caf2643a14",
+    "sourceTechnicalHash": "d99fec937385c68ddfdeb3d18f806315bdd9aac5b8bbe7226840698d2e445622",
+    "targetHash": "f88480fd0640b03109cdbd62ca1c1e996e302794d76a59faf4b705e57cb515ca",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:56.954Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bf40540db1127d1f5af40b9d8bddd66ba656dbe225d2a33a6e70b3caf2643a14",
+      "targetHash": "f88480fd0640b03109cdbd62ca1c1e996e302794d76a59faf4b705e57cb515ca",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

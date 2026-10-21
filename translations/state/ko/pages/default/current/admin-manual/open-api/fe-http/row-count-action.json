@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/row-count-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/row-count-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/row-count-action.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "bc324d82d3b6c7cf56fd6f9c1aa51d616f2570e53cab9cc7104c19f382126c8e",
+    "sourceTechnicalHash": "ea8ac34c2d8fc2677d60be8d9dc0e4811be3bf11bb92dde06662b6b05702db61",
+    "targetHash": "eb1da10167443ed2d61497300506c9d2d332022d244e614f8fe5c4bb1d354b57",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:25:34.287Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bc324d82d3b6c7cf56fd6f9c1aa51d616f2570e53cab9cc7104c19f382126c8e",
+      "targetHash": "eb1da10167443ed2d61497300506c9d2d332022d244e614f8fe5c4bb1d354b57",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

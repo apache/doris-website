@@ -6,6 +6,7 @@ const {identity, hash, loadRecords, loadRecordsAt, pipelineLocale} = require('./
 const {structure, alignHeadings} = require('./structure.cjs');
 const {collect} = require('./inventory.cjs');
 const {protectionSignature} = require('./protection.cjs');
+const {signature, isDocumentGeneration, acceptedFallback, checkFrontMatter} = require('./document-checks.cjs');
 
 async function checkTranslations({root, locale = pipelineLocale(root), pages, reports = [], files, records, previousRecords = new Map()}) {
     const changed = new Set(files);
@@ -15,6 +16,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
         || (stateChanged
             && JSON.stringify(records.get(identity(page))) !== JSON.stringify(previousRecords.get(identity(page)))));
     const errors = [];
+    const warnings = [];
     const exceptionFile = path.join(root,`translations/protection-exceptions/${locale}.json`);
     const exceptionData = fs.existsSync(exceptionFile)
         ? JSON.parse(fs.readFileSync(exceptionFile,'utf8')) : {schemaVersion:1, pages:[]};
@@ -52,12 +54,19 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             const target = fs.readFileSync(path.join(root,page.targetPath),'utf8');
             const ext = path.extname(page.sourcePath);
             const parsed = await structure(source, ext);
-            const aligned = await alignHeadings(parsed, target, ext);
+            const fallback = acceptedFallback(record, source, target);
+            if (!fallback) checkFrontMatter(source, target, locale);
+            let aligned = target;
+            try {aligned = await alignHeadings(parsed, target, ext);}
+            catch (error) {if (!fallback) throw error;}
             const exception = exceptions.find(entry => identity(entry) === identity(page)
                 && entry.sourceHash === page.sourceHash && entry.targetHash === page.targetHash && entry.reason?.trim());
-            if (!exception && protectionSignature(await structure(aligned, ext)) !== protectionSignature(parsed)) {
+            const compare = isDocumentGeneration(record, source, target) ? signature : protectionSignature;
+            if (!exception && !fallback && compare(await structure(aligned, ext)) !== compare(parsed)) {
                 throw new Error('Protected code, links, numbers, MDX or metadata differ from the source');
             }
+            if (fallback) warnings.push({path: page.targetPath, message: 'Third attempt retained for manual review',
+                issues: record.generation.warnings});
             if (record.sourceTechnicalHash !== parsed.technicalHash) throw new Error('sourceTechnicalHash does not match the current source');
             const committed = execFileSync('git', ['show', `${record.sourceCommit}:${page.sourcePath}`],
                 {cwd:root, encoding:'utf8', stdio:['ignore','pipe','ignore'], maxBuffer:16*1024*1024});
@@ -74,7 +83,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             errors.push({path:record.targetPath, message:'Edited state has no native source identity'});
         }
     }
-    return {checked: selected.length, errors, freshness: Object.fromEntries([...new Set(pages.map(page => page.status))]
+    return {checked: selected.length, errors, warnings, freshness: Object.fromEntries([...new Set(pages.map(page => page.status))]
         .map(status => [status, pages.filter(page => page.status === status).length])), reports};
 }
 async function main() {

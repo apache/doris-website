@@ -1,0 +1,53 @@
+---
+{
+    "title": "캐싱",
+    "language": "ko",
+    "description": "Apache Doris 캐싱 가속화 장 안내: 쿼리 결과를 위한 SQL Cache, 필터 결과를 위한 Condition Cache, 외부 테이블 쿼리를 위한 데이터 캐시, 컴퓨팅-스토리지 분리 모드의 File Cache와 피어 캐시 읽기를 소개합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris는 여러 계층의 캐싱으로 쿼리를 가속화합니다. 결과 수준 캐싱은 동일한 SQL의 쿼리 결과를 재사용하고, 세그먼트 수준 캐싱은 필터 조건의 연산 결과를 재사용합니다. 파일 수준 캐싱은 원격 레이크하우스 데이터와 컴퓨팅-스토리지 분리 모드의 내부 테이블 데이터를 로컬 디스크에 캐싱합니다. 워크로드 특성에 맞는 캐싱 전략을 선택하세요.
+
+## 결과 및 필터 캐시 {#result-and-filter-caches}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="SQL Cache"
+    description="SQL 텍스트와 테이블/파티션 버전을 기준으로 전체 쿼리 결과를 캐싱합니다. T+1 또는 업데이트 빈도가 낮은 시나리오에 적합합니다. 캐시 적중 시 전체 연산 과정을 건너뛸 수 있습니다."
+    link="sql-cache-manual"
+/>
+
+<GettingStartedCard
+    title="Condition Cache"
+    description="세그먼트에 대한 필터 조건의 결과를 캐싱합니다. 동일한 조건으로 쿼리를 반복하면 캐싱된 결과를 바로 재사용하여 중복 스캔과 필터 연산을 피할 수 있습니다."
+    link="condition-cache"
+/>
+</div>
+
+## 외부 테이블 파일 캐시 {#external-table-file-cache}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Data Cache"
+    description="HDFS와 객체 스토리지의 파일을 로컬 디스크에 캐싱하여 Hive, Iceberg, Hudi, Paimon 등 외부 테이블에 대한 쿼리를 가속화합니다. 캐시 워밍업, 할당량, 수용 제어를 지원합니다."
+    link="../lakehouse/data-cache"
+/>
+</div>
+
+## 컴퓨팅-스토리지 분리 모드의 파일 캐시 {#compute-storage-decoupled-file-cache}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="File Cache (컴퓨팅-스토리지 분리)"
+    description="컴퓨팅-스토리지 분리 모드에서 객체 스토리지의 내부 테이블 데이터를 BE의 로컬 디스크에 캐싱합니다. 다중 큐 LRU, 캐시 워밍업, 캐시 할당량, TTL 정책을 다룹니다."
+    link="../compute-storage-decoupled/file-cache/file-cache"
+/>
+
+<GettingStartedCard
+    title="Peer Cache Read"
+    description="로컬 File Cache에서 캐시 미스가 발생하면 객체 스토리지에 접근하기 전에 다른 BE(다른 컴퓨팅 그룹의 BE 포함)에서 블록을 읽습니다. 확장 시 데이터 읽기와 그룹 간 콜드 읽기를 가속화합니다."
+    link="../compute-storage-decoupled/file-cache/file-cache-peer-read"
+/>
+</div>

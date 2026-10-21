@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-cross-product.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "99a77818f49cf8623a5907153f2781032abec2b09673ae1fed332613391da8a8",
+    "sourceTechnicalHash": "d1315579219a25fcaae9162e0c00c553375de638f40b05b802e7a7e8a47f5a7f",
+    "targetHash": "8a3fc1e667f7f14d26b573ec41a3d4cef5d56c7d50a010eee812ee40c21c691a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:25:46.875Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "99a77818f49cf8623a5907153f2781032abec2b09673ae1fed332613391da8a8",
+      "targetHash": "8a3fc1e667f7f14d26b573ec41a3d4cef5d56c7d50a010eee812ee40c21c691a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

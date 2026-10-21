@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-functions/unnest",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-functions/unnest.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-functions/unnest.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "31d2f1d648be1c556e37f5e4adcd989b21a55317071ec202cd7c1cbf9aad3d10",
+    "sourceTechnicalHash": "8ce44e7280e058c5c336298ac79a721ea7a2d9a9bed37c515d4d84351eecdc79",
+    "targetHash": "8ef5e270fb2c967aed2f0930a397e34d5adf53a687018ae91a8f35ecb949b0fd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:40.234Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "31d2f1d648be1c556e37f5e4adcd989b21a55317071ec202cd7c1cbf9aad3d10",
+      "targetHash": "8ef5e270fb2c967aed2f0930a397e34d5adf53a687018ae91a8f35ecb949b0fd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-functions/unnest",
+        "sourcePath": "docs/sql-manual/sql-functions/table-functions/unnest.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/unnest.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "31d2f1d648be1c556e37f5e4adcd989b21a55317071ec202cd7c1cbf9aad3d10",
+        "targetHash": "8ef5e270fb2c967aed2f0930a397e34d5adf53a687018ae91a8f35ecb949b0fd",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

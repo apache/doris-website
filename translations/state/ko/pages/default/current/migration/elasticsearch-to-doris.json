@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "migration/elasticsearch-to-doris",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/migration/elasticsearch-to-doris.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/migration/elasticsearch-to-doris.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "20b11ecf1f5db2e62a2008a1804a3e4a7f9b5aea65289fad5926664759b45a3b",
+    "sourceTechnicalHash": "9c6a73479cc71c75c8c44ab87f2627603ec2d07f2c537f9c4de1eeffef979fd8",
+    "targetHash": "74b8d06d64b8bb6199a7420c6aedf1a91bd10a4213384bca12ad55765f6f9353",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:46:00.358Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "20b11ecf1f5db2e62a2008a1804a3e4a7f9b5aea65289fad5926664759b45a3b",
+      "targetHash": "74b8d06d64b8bb6199a7420c6aedf1a91bd10a4213384bca12ad55765f6f9353",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

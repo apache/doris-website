@@ -1,0 +1,51 @@
+---
+{
+    "title": "설치 및 배포",
+    "language": "ko",
+    "description": "Apache Doris를 설치하고 배포하는 데 적합한 방법을 선택하세요."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 설치 및 배포 {#installation-and-deployment}
+
+이 장에서는 Apache Doris의 설치 및 배포 방법을 안내합니다. 먼저 요구 사항에 맞는 배포 모드를 선택한 다음, 해당 배포 가이드를 참조하세요.
+
+## 배포 전 준비 {#pre-deployment-preparation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="배포 모드 선택"
+    description="스토리지와 컴퓨팅의 통합형 및 분리형, 수동 배포와 Kubernetes 배포, 클라우드 배포를 비교합니다"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="설치 준비"
+    description="환경을 점검하고, 클러스터 규모를 계획하고, 운영 체제 요구 사항을 확인합니다"
+    link="preparation/env-checking"
+/>
+</div>
+
+## 배포 방법 {#deployment-methods}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="수동 배포"
+    description="물리 머신이나 가상 머신에 Apache Doris를 직접 설치합니다"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Kubernetes 배포"
+    description="Doris Operator를 사용하여 Kubernetes에 Apache Doris를 배포합니다"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="클라우드 배포"
+    description="AWS와 같은 퍼블릭 클라우드 플랫폼에 Apache Doris를 배포합니다"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>

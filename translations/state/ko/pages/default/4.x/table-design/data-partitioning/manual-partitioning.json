@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/manual-partitioning",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/manual-partitioning.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/manual-partitioning.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1c9282bfc86a7f695fb09e12778425aba150ef1f9e11792f9b6c2f7a6a8c35f0",
+    "sourceTechnicalHash": "22df53fcb4cbb621fd150922eac9c0414e2045df7c031aee7457b2c0d8784dd0",
+    "targetHash": "75a1f4a82abc5a0e45f8dfd897c5c8bb6c7a1f5874c75c2f2f3d025240239b7f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:15:22.041Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c9282bfc86a7f695fb09e12778425aba150ef1f9e11792f9b6c2f7a6a8c35f0",
+      "targetHash": "75a1f4a82abc5a0e45f8dfd897c5c8bb6c7a1f5874c75c2f2f3d025240239b7f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

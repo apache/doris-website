@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/DML/MERGE-INTO",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/DML/MERGE-INTO.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/DML/MERGE-INTO.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4b16a2de691425477abcc58b642e6fb0f8fe7fb24f8dd4bcc2e8fd33cf633503",
+    "sourceTechnicalHash": "4b760c9612cd63d908fa58366ad978c2f90072e7ce790eaf42592dff419183fd",
+    "targetHash": "484e0a859c1f5b1356dbaef29dd827f4a65ca3d2d3f294824c54e47b2090a640",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:21:29.106Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4b16a2de691425477abcc58b642e6fb0f8fe7fb24f8dd4bcc2e8fd33cf633503",
+      "targetHash": "484e0a859c1f5b1356dbaef29dd827f4a65ca3d2d3f294824c54e47b2090a640",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

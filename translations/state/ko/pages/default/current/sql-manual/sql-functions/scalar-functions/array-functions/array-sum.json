@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-sum",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-sum.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-sum.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "865840fe2178ebf443dbecb306d4daaee0bf47e9b8a3c0a1b1e5e496c058f8a6",
+    "sourceTechnicalHash": "21bce646a0d07d5b2424c8993d5593947d6db4fc49a766c150c55e9542a9372f",
+    "targetHash": "5f6f391715569cd35785c197430558661662f5d415ddeaf08a91b98489296124",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:42:25.973Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "865840fe2178ebf443dbecb306d4daaee0bf47e9b8a3c0a1b1e5e496c058f8a6",
+      "targetHash": "5f6f391715569cd35785c197430558661662f5d415ddeaf08a91b98489296124",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

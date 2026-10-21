@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/load-balancing.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "486f80a5da5e2d73ab7d357dcd8113ec8c0ef12f971aefe41d4ec0a281d9bbb4",
-    "sourceTechnicalHash": "b62a3916983f83673afff98efc7fb25e4f7adf3d11e47943ab9c2e73aaf512b2",
-    "targetHash": "0b3fd4cb63225e39947ae8935095a3b2eb4b8a87ce5624245ef8de74884de0c8",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "0353523b8451d1d59a1f80727b4795ea2208b6e05930131a47948690e3d25477",
+    "sourceTechnicalHash": "1f5de42adc86092f684d262bafcf15639040ff9d114a54faff1cf874e7ef7503",
+    "targetHash": "4bc2df00e817cb1074da616048cfe4170d13fa6c49d3cbf8903463ece6a0b9f3",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.110Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T07:12:18.721Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0353523b8451d1d59a1f80727b4795ea2208b6e05930131a47948690e3d25477",
+      "targetHash": "4bc2df00e817cb1074da616048cfe4170d13fa6c49d3cbf8903463ece6a0b9f3",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 167: expected [\"inlineCode\",null,null,\"proxy_protocol on;\"]; received [\"inlineCode\",null,null,\"server\"]\nprotected node 168: expected [\"inlineCode\",null,null,\"server\"]; received [\"inlineCode\",null,null,\"proxy_protocol on;\"]\nprotected node 170: expected [\"inlineCode\",null,null,\"backend\"]; received [\"inlineCode\",null,null,\"haproxy.cfg\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1.18.0\",\"2\",\"2\",\"2.1.1\",\"2.1.1\",\"200\",\"200\",\"200\",\"201\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"5\",\"64\"]; received [\"1\",\"1\",\"1\",\"1\",\"1.18.0\",\"2\",\"2\",\"2\",\"2.1.1\",\"2.1.1\",\"200\",\"200\",\"200\",\"201\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"5\",\"5\",\"64\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"proxysql.db\"]; received [\"inlineCode\",null,null,\"/var/lib/proxysql\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"/var/lib/proxysql\"]; received [\"inlineCode\",null,null,\"proxysql.db\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1.18.0\",\"2\",\"2\",\"2.1.1\",\"2.1.1\",\"200\",\"200\",\"200\",\"201\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"5\",\"64\"]; received [\"1\",\"1\",\"1\",\"1.18.0\",\"2\",\"2\",\"2.1.1\",\"2.1.1\",\"200\",\"200\",\"200\",\"201\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"5\",\"5\",\"64\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"proxysql.db\"]; received [\"inlineCode\",null,null,\"/var/lib/proxysql\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"/var/lib/proxysql\"]; received [\"inlineCode\",null,null,\"proxysql.db\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 167: expected [\"inlineCode\",null,null,\"proxy_protocol on;\"]; received [\"inlineCode\",null,null,\"server\"]\nprotected node 168: expected [\"inlineCode\",null,null,\"server\"]; received [\"inlineCode\",null,null,\"proxy_protocol on;\"]\nprotected node 170: expected [\"inlineCode\",null,null,\"backend\"]; received [\"inlineCode\",null,null,\"haproxy.cfg\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

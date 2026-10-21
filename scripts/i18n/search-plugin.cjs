@@ -4,14 +4,16 @@
 // context labels from the translation configuration.
 const fs = require('node:fs');
 const path = require('node:path');
+const lunr = require('lunr');
 const {createHash} = require('node:crypto');
 const nativeModule = require('@yang1666204/docusaurus-search-local/dist/server/server');
 const native = nativeModule.default;
 const {processPluginOptions} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/processPluginOptions');
 const {processDocInfos} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/processDocInfos');
 const {scanDocuments} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/scanDocuments');
-const {buildIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
+const {buildIndex: buildNativeIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
 const {loadConfig, managedLocales} = require('./state.cjs');
+const {normalizeRussianSearch} = require('../../src/utils/searchNormalization.js');
 
 const contexts = ['docs/dev', 'docs/4.x', 'community'];
 const normalize = url => url.replace(/\/+$/, '');
@@ -22,7 +24,7 @@ function groupFor(page) {
     return null;
 }
 function localizedOptions(options, locale, labels) {
-    return {...options, language:[locale.split('-')[0]],
+    return {...options, language:locale === 'ru' ? ['en', 'ru'] : [locale.split('-')[0]],
         docsRouteBasePath:['docs','community',`${locale}/docs`,`${locale}/community`],
         // A locale without configured labels falls back to the context path.
         searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
@@ -42,6 +44,9 @@ function indexGroups(allDocuments, selected) {
 }
 function targetFingerprint(root, locale) {
     const digester = createHash('sha256');
+    digester.update(fs.readFileSync(__filename)); // Bust caches when indexing behavior changes.
+    // The shared normalizer also changes indexed tokens independently of this file.
+    digester.update(fs.readFileSync(require.resolve('../../src/utils/searchNormalization.js')));
     function scan(dir) {
         if (!fs.existsSync(dir)) return;
         for (const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b) => a.name.localeCompare(b.name))) {
@@ -77,6 +82,21 @@ function localizedPages(plugins, locale) {
     }
     return selected;
 }
+// Spaced-language tokenizers otherwise keep SQL call punctuation attached to
+// identifiers (for example match(query_vector,...)). Replace delimiters with
+// equal-length spaces for indexing, preserving the original display text and
+// highlight offsets. Language-specific tokenizers can still override this one.
+function buildLocalizedIndexes(documents, config) {
+    const original = lunr.tokenizer;
+    const tokenizer = Object.assign((value, metadata) => original(
+        typeof value === 'string' ? (config.language.includes('ru')
+            ? normalizeRussianSearch(value) : value.replace(/[()\[\]{},"';`]/g, ' ')) : value, metadata), original);
+    try {
+        lunr.tokenizer = tokenizer;
+        return buildNativeIndex(documents, config);
+    } finally {lunr.tokenizer = original;}
+}
+
 async function buildLocalizedIndex(buildData, config, filename, locale) {
     const selected = localizedPages(buildData.plugins || [], locale);
     const nativePaths = processDocInfos(buildData, config).flatMap(item => item.paths);
@@ -86,7 +106,7 @@ async function buildLocalizedIndex(buildData, config, filename, locale) {
     const allDocuments = await scanDocuments([...unique.values()], config);
     const write = (group, documents) => {
         const name = filename.replace('{dir}', group ? `-${group.replace(/\//g,'-')}` : '');
-        fs.writeFileSync(path.join(buildData.outDir,name), JSON.stringify(buildIndex(documents,config)));
+        fs.writeFileSync(path.join(buildData.outDir,name), JSON.stringify(buildLocalizedIndexes(documents,config)));
     };
     for (const [group, documents] of indexGroups(allDocuments, selected)) write(group, documents);
     fs.writeFileSync(path.join(buildData.outDir,`${locale}-search-summary.json`), JSON.stringify({schemaVersion:1,locale,
@@ -118,3 +138,5 @@ module.exports.groupFor = groupFor;
 module.exports.localizedPages = localizedPages;
 module.exports.indexGroups = indexGroups;
 module.exports.buildLocalizedIndex = buildLocalizedIndex;
+
+module.exports.buildLocalizedIndexes = buildLocalizedIndexes;

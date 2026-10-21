@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/types/SHOW-DATA-TYPES",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "111c0a6cac0a72804554cd2ca7519b3c4bda10f7270e11d0d00b415512ccc5e6",
+    "sourceTechnicalHash": "94a71a7fb3f5af0260f3e43a750f3980198f4f66278d335574982a17c6b30a5e",
+    "targetHash": "41baaa7b46d55dfd428d6b6f9e4176b5002555fb23ff5109007cd96a05873904",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:14:43.163Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "111c0a6cac0a72804554cd2ca7519b3c4bda10f7270e11d0d00b415512ccc5e6",
+      "targetHash": "41baaa7b46d55dfd428d6b6f9e4176b5002555fb23ff5109007cd96a05873904",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",null,null,\"This statement is used to view all supported data types.\"]; received [\"code\",null,null,\"이 문은 지원되는 모든 데이터 타입을 확인하는 데 사용됩니다.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

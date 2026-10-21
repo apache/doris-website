@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-quote",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-quote.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-quote.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "60ea01f06e9195c772a7c87752168f51067e9cbf0ea9b98b548e2fc2a9eaed7e",
+    "sourceTechnicalHash": "5d5729f2949fd221eae895106f5993914cd055e220663982c7029e766d35480d",
+    "targetHash": "b857872169f22b192d134320c6bd51d7ccb719985015ff6849d63bba35d0430a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:10:52.605Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "60ea01f06e9195c772a7c87752168f51067e9cbf0ea9b98b548e2fc2a9eaed7e",
+      "targetHash": "b857872169f22b192d134320c6bd51d7ccb719985015ff6849d63bba35d0430a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

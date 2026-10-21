@@ -1,0 +1,304 @@
+---
+{
+    "title": "파티셔닝과 버키팅의 작동 방식",
+    "sidebar_label": "작동 방식",
+    "language": "ko",
+    "description": "Doris 파티셔닝과 버키팅의 기반이 되는 데이터 분산 모델을 설명합니다. 파티션, 버킷, Tablet, 노드뿐 아니라 고급 파티션 및 버킷 모드, 설계 권장 사항, 운영 지침도 다룹니다."
+}
+---
+
+
+{/* Knowledge type: Concept introduction / Procedure */}
+{/* Applicable scenarios: Table design / Data organization and management */}
+
+이 페이지에서는 Doris가 데이터를 파티션, 버킷, Tablet에 분산하는 방식을 설명합니다. 고급 파티션 및 버킷 모드, 설계 권장 사항, 운영 명령도 다룹니다. 권장 초기 구성과 선택 기준은 [파티셔닝과 버키팅](./overview)에서 먼저 확인하고, 기반 모델을 이해하고 싶을 때 이 페이지를 읽어 보세요.
+
+## 1. 개요 {#1-overview}
+
+Doris는 테이블의 데이터를 **파티션**과 **버킷**이라는 두 단계로 나누어 클러스터에 분산합니다.
+
+- **파티션**: 시간이나 지역 같은 컬럼 값을 기준으로 테이블을 더 작은 부분집합으로 수평 분할하여 쿼리 프루닝과 데이터 수명 주기 관리를 쉽게 합니다.
+- **버킷**: 각 파티션의 데이터를 여러 데이터 샤드(Tablet)에 균등하게 분산하여 클러스터의 병렬 처리 능력을 충분히 활용합니다.
+
+![Doris 데이터 파티셔닝](/images/next/table-design/data-partitioning.jpg)
+
+데이터 흐름은 다음과 같이 요약할 수 있습니다.
+
+```
+Table ──► Partition ──► Bucket ──► Tablet (data shard, stored on BE nodes)
+```
+
+파티셔닝과 버키팅을 잘 설계하면 **더 빠른 쿼리**(파티션 프루닝과 병렬 스캔), **더 쉬운 관리**(시간 기준 보관 또는 정리), **더 균등한 쓰기**(핫스팟 위험 감소)라는 세 가지 이점을 동시에 얻을 수 있습니다.
+
+## 2. 핵심 개념 {#2-core-concepts}
+
+### 2.1 테이블 구조: 행과 컬럼 {#21-table-structure-rows-and-columns}
+
+Doris에서 데이터는 논리적으로 테이블 형태로 표현됩니다. 테이블은 행(Row)과 컬럼(Column)으로 구성됩니다.
+
+| 개념 | 설명                       |
+| ------- | --------------------------------- |
+| 행     | 사용자 데이터의 한 행                |
+| 컬럼  | 데이터 행의 각 필드를 나타냄 |
+
+컬럼은 다시 두 가지 유형으로 나눌 수 있습니다.
+
+| 컬럼 유형 | 비즈니스 매핑 | 설명                                                                                                |
+| ----------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| Key 컬럼   | 차원 컬럼 | CREATE TABLE 문에서 `unique key`, `aggregate key` 또는 `duplicate key` 키워드 뒤에 지정하는 컬럼 |
+| Value 컬럼 | 지표 컬럼    | Key 컬럼 이외의 컬럼으로, 테이블 생성 시 집계 방식을 지정함            |
+
+Aggregate 모델에서는 Key 컬럼 값이 동일한 행을 하나의 행으로 집계하며, Value 컬럼의 집계 방식은 사용자가 테이블 생성 시 지정합니다. Aggregate 모델에 대한 자세한 내용은 [Doris 데이터 모델](../../table-design/data-model/intro.mdx)을 참조하세요.
+
+### 2.2 파티션 {#22-partition}
+
+파티션은 테이블의 특정 컬럼 값을 기준으로 데이터를 서로 겹치지 않는 더 작은 부분집합으로 나눕니다. 각 데이터 행은 반드시 하나의 특정 파티션에 속하며, 파티션은 가장 작은 논리적 관리 단위입니다.
+
+Doris는 두 가지 **파티션 유형**을 지원합니다.
+
+- **Range 파티션**: 숫자 또는 시간 범위로 분할하며, 주로 시계열 데이터에 사용합니다.
+- **List 파티션**: 열거된 값의 집합으로 분할하며, 주로 지역이나 범주 같은 이산 차원으로 데이터를 나눌 때 사용합니다.
+
+테이블 생성 시 파티션을 지정하지 않으면 Doris는 테이블의 모든 데이터를 포함하는 기본 파티션을 생성합니다. 이 파티션은 사용자에게 드러나지 않습니다.
+
+파티션을 잘 설계하면 다음과 같은 이점이 있습니다.
+
+- **더 빠른 쿼리**: 파티션 프루닝은 쿼리 조건에 맞지 않는 파티션을 건너뛰므로, Doris가 스캔하는 데이터와 I/O가 줄어듭니다. 데이터셋이 클수록 효과가 큽니다.
+- **더 쉬운 관리**: 시간이나 지역으로 분할하면 보관, 정리, 백업이 간단해집니다. 예를 들어 시간으로 파티셔닝하면 과거 데이터와 새로 들어오는 데이터를 별도로 관리할 수 있습니다.
+
+### 2.3 버킷 {#23-bucket}
+
+버키팅은 일정한 규칙에 따라 파티션 내 데이터를 서로 겹치지 않는 더 작은 데이터 단위로 나눕니다. 각 데이터 행은 반드시 하나의 특정 버킷에 속합니다.
+
+파티션은 컬럼 값의 범위나 목록에 따라 데이터를 나눕니다. 버키팅의 목적은 파티션 내 버킷에 데이터를 **균등하게** 분산하여 데이터 편향을 줄이고 병렬 스캔을 지원하는 것입니다. 실제 결과는 버키팅 방식과 키 값의 분포에 따라 달라집니다.
+
+Doris는 두 가지 **버키팅 방식**을 지원합니다.
+
+- **Hash 버키팅**: 버키팅 컬럼 값의 `crc32` 해시를 계산한 뒤 버킷 수로 나눈 나머지를 사용하여 데이터를 균등하게 분산합니다.
+- **Random 버키팅**: 데이터를 버킷에 무작위로 할당합니다. Random 버키팅을 사용할 때는 `load_to_single_tablet` 매개변수를 함께 사용하여 소규모 데이터를 빠르게 쓰도록 최적화할 수 있습니다.
+
+버키팅을 잘 설계하면 다음과 같은 이점이 있습니다.
+
+- **더 균등한 데이터 분산**: 적절한 버킷 키를 선택하면 데이터 편향과 노드 또는 디스크 간 부하 불균형의 위험을 줄일 수 있습니다.
+- **핫스팟 감소**: 작업을 여러 버킷에 분산하면 과부하를 줄이고 안정성을 높일 수 있습니다.
+- **더 높은 동시 처리 성능**: Doris는 동일한 파티션의 여러 버킷을 병렬로 읽어 처리량을 높입니다.
+
+### 2.4 Tablet과 노드 아키텍처 {#24-tablet-and-node-architecture}
+
+버킷은 물리적으로 **Tablet(데이터 샤드)**에 대응합니다. Tablet은 Doris에서 가장 작은 데이터 관리 단위이며, 데이터 이동과 복제 같은 작업의 기본 물리 단위이기도 합니다.
+
+Doris 클러스터는 두 가지 유형의 노드로 구성됩니다.
+
+- **FE 노드(Frontend)**: 테이블 및 Tablet 정보 같은 클러스터 메타데이터를 관리하며, SQL 파싱과 실행 계획 수립을 담당합니다.
+- **BE 노드(Backend)**: Tablet 데이터를 저장하고 연산 작업을 실행합니다. FE는 BE에서 나온 결과를 취합하여 사용자에게 반환합니다.
+
+데이터를 쓰고 쿼리할 때 파티션과 버킷은 다음과 같이 함께 작동합니다.
+
+- **데이터 쓰기**: 데이터 행은 먼저 파티셔닝 전략에 따라 해당 파티션에 할당된 다음, 버키팅 전략에 따라 파티션 내 특정 Tablet에 매핑됩니다.
+- **쿼리 실행**: FE 옵티마이저는 쿼리 조건을 기준으로 관련 없는 파티션과 버킷을 프루닝하여 스캔 범위를 최소화합니다. JOIN 또는 집계 쿼리에서는 노드 간 Shuffle이 발생할 수 있습니다. 파티셔닝과 버키팅을 적절히 설계하고 필요에 따라 [Colocate](#52-colocate)를 함께 사용하면 Shuffle 비용을 크게 줄일 수 있습니다.
+
+## 3. 첫 번째 CREATE TABLE 예제 {#3-the-first-create-table-example}
+
+Doris에서 테이블 생성은 동기식 명령입니다. SQL 문 실행이 완료되면 결과가 반환되며, 성공 결과가 반환되면 테이블이 생성된 것입니다. 전체 CREATE TABLE 구문은 [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)을 참조하거나, `HELP CREATE TABLE`을 사용하여 추가 도움말을 확인하세요.
+
+다음은 Range 파티셔닝 + Hash 버키팅을 사용하는 최소 구성의 CREATE TABLE 예제입니다.
+
+```sql
+-- Range Partition
+CREATE TABLE example_range_tbl
+(
+    `user_id` LARGEINT NOT NULL COMMENT "User ID",
+    `date` DATE NOT NULL COMMENT "Data ingestion date",
+    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
+    `city` VARCHAR(20) COMMENT "User's city",
+    `age` SMALLINT COMMENT "User age",
+    `sex` TINYINT COMMENT "User gender",
+    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
+    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
+    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
+    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
+)
+PARTITION BY RANGE(`date`)
+(
+    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
+    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
+    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
+    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
+)
+DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
+PROPERTIES
+(
+    "replication_num" = "1"
+);
+```
+
+**이 예제로 쓰기 및 쿼리 과정 이해하기**:
+
+- 쓰기 시 각 데이터 행은 먼저 `date`에 따라 해당 Range 파티션에 배치됩니다(예: `2017-02-15`는 `p201702`에 배치됨). 그런 다음 `user_id`의 해시 값에 따라 해당 파티션의 16개 Tablet 중 하나에 매핑됩니다.
+- 쿼리에 `WHERE date = '2017-02-15'` 조건이 있으면 옵티마이저는 `p201702` 파티션만 스캔합니다. 여기에 `user_id = 123` 조건도 추가하면 Tablet 하나만 조회합니다.
+
+## 4. 고급: 파티션 모드 {#4-advanced-partition-modes}
+
+Doris는 테이블 생성 시 파티션을 수동으로 선언하는 방식 외에도 시간 일정에 따른 자동 파티션 생성(Dynamic Partition)과 유입 데이터에 따른 필요 시 파티션 생성(Auto Partition)을 지원합니다. 세 가지 모드를 비교하면 다음과 같습니다.
+
+| 파티션 모드 | 파티션 생성 시점             | 적용 시나리오                                       |
+| -------------- | --------------------------------------- | ---------------------------------------------------------- |
+| 수동 파티션 | 테이블 생성 시 명시적으로 선언하거나 `ALTER`로 추가 | 파티션 구성이 안정적이며 세밀한 제어가 필요한 경우       |
+| 동적 파티션 | 시간 일정 규칙에 따라 시스템이 자동으로 생성하거나 회수 | 과거 N일/주/월의 롤링 파티션을 자동으로 유지하려는 시계열 데이터 |
+| 자동 파티션  | 데이터 쓰기 시 필요에 따라 생성 | 멀티 테넌트나 시간 값이 드문드문 들어오는 경우처럼 파티션 값을 예측할 수 없어 사전 생성을 피해야 하는 경우 |
+
+자동 파티셔닝과 동적 파티셔닝을 함께 사용하는 예제를 비롯해 각 모드에서 바로 사용할 수 있는 CREATE TABLE 예제는 [자동 파티셔닝](./auto-partitioning), [동적 파티셔닝](./dynamic-partitioning), [수동 파티셔닝](./manual-partitioning)을 참조하세요.
+
+## 5. 고급: 버키팅 {#5-advanced-bucketing}
+
+### 5.1 자동 버키팅 {#51-auto-bucketing}
+
+버킷 수를 얼마로 설정할지 확실하지 않다면 `BUCKETS AUTO`를 설정하여 Doris가 예상 데이터 크기(`estimate_partition_size`)를 기준으로 버킷 수를 결정하도록 할 수 있습니다. 이 방식은 매우 큰 테이블에는 적합하지 않습니다. 자세한 내용은 [데이터 버키팅](./data-bucketing)을 참조하세요.
+
+### 5.2 Colocate {#52-colocate}
+
+여러 대형 테이블에서 JOIN 또는 집계 쿼리를 자주 수행한다면 **Colocate** 전략을 활성화하여 버키팅 컬럼 값이 같은 데이터를 동일한 물리 노드에 배치할 수 있습니다. 이렇게 하면 노드 간 Shuffle을 피하고 쿼리 성능을 크게 높일 수 있습니다. 자세한 사용법은 Colocate Join 문서를 참조하세요.
+
+## 6. 설계 권장 사항 {#6-design-recommendations}
+
+파티셔닝과 버키팅을 적절히 설계하려면 쿼리 성능, 데이터 관리, 시스템 안정성 사이의 균형을 맞춰야 합니다. 다음은 일반적인 지침입니다.
+
+### 6.1 설계 목표 {#61-design-goals}
+
+1. **균등한 데이터 분산**: 카디널리티가 높은 컬럼을 버키팅 컬럼으로 선택하여 데이터 편향으로 일부 노드에 과부하가 걸리지 않도록 합니다.
+2. **쿼리 성능 최적화**: 파티션 프루닝은 스캔할 데이터양을 크게 줄이고, 적절한 버킷 수는 연산 병렬성을 높입니다. 필요에 따라 Colocate를 사용하여 Shuffle 비용을 줄이세요.
+3. **유연한 데이터 관리**: 시간으로 파티셔닝하면 콜드/핫 계층화(HDD/SSD)가 쉬워지며, 과거 파티션을 삭제하여 저장 공간을 회수할 수 있습니다.
+
+### 6.2 경험적 권장값과 한도 {#62-empirical-values-and-limits}
+
+- **메타데이터 규모**: 각 Tablet의 메타데이터는 FE와 BE 모두에 저장되므로 규모를 적절히 제어해야 합니다.
+  - Tablet 10백만 개당 FE에 최소 약 100 GB의 메모리가 필요합니다.
+  - 단일 BE가 담당하는 Tablet 수는 20,000개 미만이어야 합니다.
+- **쓰기 처리량**:
+  - 파티션당 버킷 수는 128개 미만을 권장합니다. 버킷이 너무 많으면 쓰기 성능에 큰 영향을 줍니다.
+  - 쓰기가 분산되어 작은 파일이 너무 많이 생성되지 않도록 각 쓰기는 소수의 파티션에 집중해야 합니다.
+- **파티션/버키팅 컬럼 선택**:
+  - 파티션 컬럼은 시간 또는 카디널리티가 낮은 열거형 컬럼을 우선 선택하세요.
+  - 버키팅 컬럼은 균등한 분산을 위해 카디널리티가 높은 컬럼(예: `user_id`)을 선택하세요.
+  - 단일 Tablet의 데이터 크기는 1-10 GB를 권장합니다.
+
+## 7. 파티션 조회 및 수정 {#7-viewing-and-modifying-partitions}
+
+### 7.1 SHOW CREATE TABLE로 CREATE TABLE 문 조회 {#71-view-the-create-table-statement-via-show-create-table}
+
+`SHOW CREATE TABLE`을 사용하면 파티션 정보를 포함한 테이블의 전체 CREATE TABLE 문을 확인할 수 있습니다.
+
+```sql
+> show create table  example_range_tbl 
++-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
+| Table             | Create Table                                                                                            |                                                                                                            
++-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
+| example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |                                                                                                            
+|                   |   `user_id` largeint(40) NOT NULL COMMENT 'User ID',                                                     |                                                                                                            
+|                   |   `date` date NOT NULL COMMENT 'Data ingestion date',                                                      |                                                                                                            
+|                   |   `timestamp` datetime NOT NULL COMMENT 'Data ingestion timestamp',                                             |                                                                                                            
+|                   |   `city` varchar(20) NULL COMMENT 'User city',                                                       |                                                                                                            
+|                   |   `age` smallint(6) NULL COMMENT 'User age',                                                            |                                                                                                            
+|                   |   `sex` tinyint(4) NULL COMMENT 'User gender',                                                             |                                                                                                            
+|                   |   `last_visit_date` datetime REPLACE NULL DEFAULT "1970-01-01 00:00:00" COMMENT 'User last visit time', |                                                                                                            
+|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user spending',                                          |                                                                                                            
+|                   |   `max_dwell_time` int(11) MAX NULL DEFAULT "0" COMMENT 'Maximum user dwell time',                             |                                                                                                            
+|                   |   `min_dwell_time` int(11) MIN NULL DEFAULT "99999" COMMENT 'Minimum user dwell time'                          |                                                                                                            
+|                   | )                                                                                                       |                                                                                                            
+|                   | PARTITION BY RANGE(`date`)                                                                              |                                                                                                            
+|                   | (PARTITION p201701 VALUES [('0000-01-01'), ('2017-02-01')),                                             |                                                                                                            
+|                   | PARTITION p201702 VALUES [('2017-02-01'), ('2017-03-01')),                                              |                                                                                                            
+|                   | PARTITION p201703 VALUES [('2017-03-01'), ('2017-04-01')))                                              |                                                                                                            
+|                   | DISTRIBUTED BY HASH(`user_id`) BUCKETS 16                                                               |                                                                                                            
+|                   | PROPERTIES (                                                                                            |                                                                                                            
+|                   | "replication_allocation" = "tag.location.default: 1",                                                   |                                                                                                            
+|                   | "storage_format" = "V2",                                                                                |                                                                                                            
+|                   | "light_schema_change" = "true",                                                                         |                                                                                                            
+|                   | "disable_auto_compaction" = "false"                                                                     |                                                                                                            
+|                   | );                                                                                                      |                                                                                                            
++-------------------+---------------------------------------------------------------------------------------------------------+   
+```
+
+### 7.2 SHOW PARTITIONS로 파티션 목록 조회 {#72-view-the-partition-list-via-show-partitions}
+
+`SHOW PARTITIONS FROM <table_name>`을 사용하면 테이블의 파티션 목록과 상세 정보를 확인할 수 있습니다.
+
+```sql
+> show partitions from example_range_tbl
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
+| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium 
+| CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |                                                                                                     
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
+| 28731       | p201701       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2017-02-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
+| 28732       | p201702       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-02-01]; ..types: [DATEV2]; keys: [2017-03-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
+| 28733       | p201703       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-03-01]; ..types: [DATEV2]; keys: [2017-04-01]; ) | user_id         | 16      | 1              | HDD           
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
++-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
+```
+
+### 7.3 파티션 수정 {#73-modify-partitions}
+
+`ALTER TABLE ADD PARTITION`을 사용하면 테이블에 새 파티션을 추가할 수 있습니다.
+
+```sql
+ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
+```
+
+다른 파티션 수정 작업은 SQL 매뉴얼의 [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)을 참조하세요.
+
+### 7.4 파티션 검색 {#74-partition-lookup}
+
+`partitions` 테이블 함수와 `information_schema.partitions` 시스템 테이블은 클러스터의 파티션 정보를 기록합니다. 파티션을 자동으로 관리할 때 이를 사용하여 파티션 정보를 추출할 수 있습니다.
+
+#### 지정한 값이 속한 파티션 찾기 {#find-the-partition-that-a-given-value-belongs-to}
+
+Auto Partition 테이블에서 값에 해당하는 파티션을 찾습니다.
+
+```sql
+mysql> select * from partitions("catalog"="internal", "database"="optest", "table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+| PartitionId | PartitionName   | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium | CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize  | IsInMemory | ReplicaAllocation       | IsMutable | SyncWithBaseTables | UnsyncTables |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+|      127095 | p20080101000000 |              2 | 2024-11-14 17:29:02 | NORMAL | TRADE_DATE   | [types: [DATEV2]; keys: [2008-01-01]; ..types: [DATEV2]; keys: [2009-01-01]; ) | TRADE_DATE      |      10 |              1 | HDD           | 9999-12-31 23:59:59 |                     | \N                       | 985.000 B |          0 | tag.location.default: 1 |         1 |                  1 | \N           |
++-------------+-----------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------+---------------------+---------------------+--------------------------+-----------+------------+-------------------------+-----------+--------------------+--------------+
+1 row in set (0.30 sec)
+```
+
+List 파티션 테이블에서 해당 파티션을 찾습니다.
+
+```sql
+mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' and TABLE_NAME='list_table1' and PARTITION_NAME=auto_partition_name('list', null);
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME  | PARTITION_NAME | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | list_table1 | pX             | NULL              |                          0 |                             0 | LIST             | NULL                | str                  | NULL                    | (NULL)                |          1 |           1266 |        1266 |               0 |            0 |         0 |           0 | 2024-11-14 19:58:45 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------+----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+-----------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.24 sec)
+```
+
+#### 지정한 시작값을 갖는 파티션 찾기 {#find-partitions-with-a-given-starting-point}
+
+```sql
+mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE_VALUE' and PARTITION_DESCRIPTION like "[('2012-01-01'),%";
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME        | PARTITION_NAME  | SUBPARTITION_NAME | PARTITION_ORDINAL_POSITION | SUBPARTITION_ORDINAL_POSITION | PARTITION_METHOD | SUBPARTITION_METHOD | PARTITION_EXPRESSION | SUBPARTITION_EXPRESSION | PARTITION_DESCRIPTION            | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | MAX_DATA_LENGTH | INDEX_LENGTH | DATA_FREE | CREATE_TIME | UPDATE_TIME         | CHECK_TIME          | CHECKSUM | PARTITION_COMMENT | NODEGROUP | TABLESPACE_NAME |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+| internal      | optest       | DAILY_TRADE_VALUE | p20120101000000 | NULL              |                          0 |                             0 | RANGE            | NULL                | TRADE_DATE           | NULL                    | [('2012-01-01'), ('2013-01-01')) |          1 |            985 |         985 |               0 |            0 |         0 |           0 | 2024-11-14 17:29:02 | 0000-00-00 00:00:00 |        0 |                   |           |                 |
++---------------+--------------+-------------------+-----------------+-------------------+----------------------------+-------------------------------+------------------+---------------------+----------------------+-------------------------+----------------------------------+------------+----------------+-------------+-----------------+--------------+-----------+-------------+---------------------+---------------------+----------+-------------------+-----------+-----------------+
+1 row in set (0.65 sec)
+```
+
+## 8. 추가 자료 {#8-further-reading}
+
+- [수동 파티셔닝](./manual-partitioning)
+- [동적 파티셔닝](./dynamic-partitioning)
+- [자동 파티셔닝](./auto-partitioning)
+- [데이터 버키팅](./data-bucketing)
+- [일반적인 문제](./common-issues)
+- [CREATE TABLE 구문](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
+- [ALTER TABLE PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)

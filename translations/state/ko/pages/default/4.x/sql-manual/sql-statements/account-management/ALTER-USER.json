@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/ALTER-USER",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/ALTER-USER.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
+    "sourceTechnicalHash": "e9c8c75b27065c17d1320a61e96067ed919458b15c902d39880a5b22ce747b9c",
+    "targetHash": "9375cc626c9eea52e6d0bb2e0f2c1485fb6cc1add139cda848136fec3f75754b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:43.115Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
+      "targetHash": "9375cc626c9eea52e6d0bb2e0f2c1485fb6cc1add139cda848136fec3f75754b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/ALTER-USER",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/ALTER-USER.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "7aab4a596cee53212a31d2ca44023ba0b350fdcf79002a595adb11c10f891979",
+        "targetHash": "9375cc626c9eea52e6d0bb2e0f2c1485fb6cc1add139cda848136fec3f75754b",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

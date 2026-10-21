@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/hour-floor.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "2a4051a245236efea406111a0cbcaf507e9d3ddc92a5ab9199d3eff18b35c782",
+    "sourceTechnicalHash": "24d3dc4ab555ade99ccf1fc142f4f017767abf384093a903006f820a581bac19",
+    "targetHash": "7432cd39f8dac3e37ff3f8b44c58d6291fe8f83fb394d8b21a6375e7b10b3186",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:55:42.266Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a4051a245236efea406111a0cbcaf507e9d3ddc92a5ab9199d3eff18b35c782",
+      "targetHash": "7432cd39f8dac3e37ff3f8b44c58d6291fe8f83fb394d8b21a6375e7b10b3186",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

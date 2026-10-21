@@ -42,7 +42,8 @@ function buildNavItems(
             label: translate({ id: "homepage.navbar.001", message: "Why Doris" }),
             items: [
                 { label: translate({ id: "homepage.navbar.002", message: "Doris vs. Others" }), href: '/why-doris/compare' },
-                { label: translate({ id: "homepage.navbar.003", message: "Benchmarks" }), href: '/why-doris/benchmarks' },
+                // Enter through English from every locale; the page offers its own language controls.
+                { label: translate({ id: "homepage.navbar.003", message: "Benchmarks" }), href: 'pathname:///why-doris/benchmarks' },
                 { label: translate({ id: "homepage.navbar.004", message: "Key Features" }), href: '/why-doris/key-features' },
                 { label: translate({ id: "homepage.navbar.005", message: "User Stories" }), href: '/why-doris/users' },
             ],

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/disk-capacity",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/disk-capacity.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/disk-capacity.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1c87f65dd60bd8b53f73b5c7a7cc8a834c186490bba8891cb1740226a57b7081",
+    "sourceTechnicalHash": "a1d84958dba3258341dd96b813cfa2a1836747c31cca4f4903459caaffb0c91e",
+    "targetHash": "9a1033d67e6e18d06b8557bfec5b8a024b1b4f29f024d611a90cc36b6d665bf2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:07:45.151Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1c87f65dd60bd8b53f73b5c7a7cc8a834c186490bba8891cb1740226a57b7081",
+      "targetHash": "9a1033d67e6e18d06b8557bfec5b8a024b1b4f29f024d611a90cc36b6d665bf2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/maint-monitor/disk-capacity",
+        "sourcePath": "docs/admin-manual/maint-monitor/disk-capacity.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/disk-capacity.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "1c87f65dd60bd8b53f73b5c7a7cc8a834c186490bba8891cb1740226a57b7081",
+        "targetHash": "9a1033d67e6e18d06b8557bfec5b8a024b1b4f29f024d611a90cc36b6d665bf2",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

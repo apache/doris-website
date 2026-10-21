@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weekofyear.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "da400dfb498dec78b8345ed65134723105435b28e22c0ad099ca4ef9253ee887",
+    "sourceTechnicalHash": "73a3466cc7385c2a70376957a23a11fe4183ecd6bad568d2cad0f830acd0014e",
+    "targetHash": "73bb6bed2586425f4ac0f97365a87ed3df86d81636df4f0d05f32996835b6318",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:00:48.430Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "da400dfb498dec78b8345ed65134723105435b28e22c0ad099ca4ef9253ee887",
+      "targetHash": "73bb6bed2586425f4ac0f97365a87ed3df86d81636df4f0d05f32996835b6318",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/system-functions/session-user",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/system-functions/session-user.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/system-functions/session-user.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "634bc088be4108f529f8aff4d64fa8486076cfb0227596be870c8df89fc66bb4",
+    "sourceTechnicalHash": "9863d8e15f4929ccf09714660cc56f89db71facda53d4fc92bdbc9bf60b68283",
+    "targetHash": "0d627025dd03f8a9ecc190a796cdaae9df8c4b838e2573e769a1b0ac2cd992b8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:54:54.312Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "634bc088be4108f529f8aff4d64fa8486076cfb0227596be870c8df89fc66bb4",
+      "targetHash": "0d627025dd03f8a9ecc190a796cdaae9df8c4b838e2573e769a1b0ac2cd992b8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

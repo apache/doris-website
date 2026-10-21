@@ -87,6 +87,11 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
             fs.rmSync(destination,{recursive:true,force:true});
             fs.renameSync(item.resultDir,destination);
         }
+        if (require('./publish/shared-assets.cjs').enabled()) {
+            report.optimization = require('./publish/optimize.cjs').optimize({site:assembled, locales:report.locales});
+            report.optimization.verification = require('./publish/verify.cjs').verify(assembled);
+            fs.writeFileSync(path.join(reportDir,'publish-result.json'),JSON.stringify(report.optimization,null,2)+'\n');
+        }
         verifyStamp();
         // Prepare every locale before touching the old complete artifact. Root
         // controls come from the default locale; localized files stay beneath

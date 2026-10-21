@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/system-tables/information_schema/tables",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/system-tables/information_schema/tables.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/system-tables/information_schema/tables.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "d1cae8b064259c0e29453408dcdd6241480dca80ae7d8fa486bebafddadc8417",
+    "sourceTechnicalHash": "8c9c1b1829828f06448cc940c94b43c9c0c1821271161d1db78780285c477f83",
+    "targetHash": "88150c39cb9f11162433d3b50631c5ecaa35b8cbee5ec233182a1c5a96bd60c4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:46:45.957Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d1cae8b064259c0e29453408dcdd6241480dca80ae7d8fa486bebafddadc8417",
+      "targetHash": "88150c39cb9f11162433d3b50631c5ecaa35b8cbee5ec233182a1c5a96bd60c4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/system-tables/information_schema/tables",
+        "sourcePath": "docs/admin-manual/system-tables/information_schema/tables.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/tables.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "d1cae8b064259c0e29453408dcdd6241480dca80ae7d8fa486bebafddadc8417",
+        "targetHash": "88150c39cb9f11162433d3b50631c5ecaa35b8cbee5ec233182a1c5a96bd60c4",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

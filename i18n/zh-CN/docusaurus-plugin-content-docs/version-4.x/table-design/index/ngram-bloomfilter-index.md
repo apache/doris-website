@@ -97,7 +97,7 @@ COMMENT 'username ngram_bf index'
 SHOW CREATE TABLE table_name;
 
 -- 方式 2：IndexType 为 NGRAM_BF 标识为 NGram BloomFilter 索引
-SHOW INDEX FROM idx_name;
+SHOW INDEX FROM table_name;
 ```
 
 ### 删除索引

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/asof-join",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/asof-join.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-data/asof-join.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "283f35c607fadcb5d47f902677e7361d2a5b5fbafa16d08ec2838fa1d937b232",
+    "sourceTechnicalHash": "91172ad69d4a8455bd5326fc840ef67ec5dd94ec6690021ec56242b0e6952e75",
+    "targetHash": "dc0a72b6d810c4ee3952d3100c734cdb5c60c74520143ac2936f94a3bc5be5f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:53:19.541Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "283f35c607fadcb5d47f902677e7361d2a5b5fbafa16d08ec2838fa1d937b232",
+      "targetHash": "dc0a72b6d810c4ee3952d3100c734cdb5c60c74520143ac2936f94a3bc5be5f4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

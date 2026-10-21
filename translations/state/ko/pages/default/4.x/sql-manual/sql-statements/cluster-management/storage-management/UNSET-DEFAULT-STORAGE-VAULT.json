@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8009913461d8d4277f32fa7258831cbf721899a961f0963bc4a67f8a1803dade",
+    "sourceTechnicalHash": "5ebf2bf464f1e2f16effa866f9c2ba4e2313aa341f35b1f7500d2db5c9f6bc76",
+    "targetHash": "1e528721d7995fead6f85ca1ed037fbc25ec066d5190d32ff92c7c177d66da1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:58.829Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8009913461d8d4277f32fa7258831cbf721899a961f0963bc4a67f8a1803dade",
+      "targetHash": "1e528721d7995fead6f85ca1ed037fbc25ec066d5190d32ff92c7c177d66da1f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/UNSET-DEFAULT-STORAGE-VAULT.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "8009913461d8d4277f32fa7258831cbf721899a961f0963bc4a67f8a1803dade",
+        "targetHash": "1e528721d7995fead6f85ca1ed037fbc25ec066d5190d32ff92c7c177d66da1f",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/config/ms-config",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/config/ms-config.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/config/ms-config.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a7dbf4061a9ee8c9251f5133dd41a22746d3f455be17f34c0e851a0d47fba739",
+    "sourceTechnicalHash": "a38446236635fce679ec0ddec310a0d43c6a648dec4383f328edd97fc3059194",
+    "targetHash": "d5b4215121d9095a289d1510bc798c6accab91c725a64af3330def52fb7bcc9e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:06:34.125Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a7dbf4061a9ee8c9251f5133dd41a22746d3f455be17f34c0e851a0d47fba739",
+      "targetHash": "d5b4215121d9095a289d1510bc798c6accab91c725a64af3330def52fb7bcc9e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/config/ms-config",
+        "sourcePath": "docs/admin-manual/config/ms-config.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/config/ms-config.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "a7dbf4061a9ee8c9251f5133dd41a22746d3f455be17f34c0e851a0d47fba739",
+        "targetHash": "d5b4215121d9095a289d1510bc798c6accab91c725a64af3330def52fb7bcc9e",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

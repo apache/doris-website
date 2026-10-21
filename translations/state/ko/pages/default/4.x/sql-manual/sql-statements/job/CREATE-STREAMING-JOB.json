@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/job/CREATE-STREAMING-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6ece6c0632091655838b822f565d6bd5d113baa550f035a096c452d54a47a292",
+    "sourceTechnicalHash": "b8c529b4785e4c657d9c109384f437cf34fc55eb9ceac0e490686224b693aa14",
+    "targetHash": "6b9c78fd01a92564db4e3407d5063eba41ea850e6c04906e84d92647a680f37c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:59:25.736Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6ece6c0632091655838b822f565d6bd5d113baa550f035a096c452d54a47a292",
+      "targetHash": "6b9c78fd01a92564db4e3407d5063eba41ea850e6c04906e84d92647a680f37c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

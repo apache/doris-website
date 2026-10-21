@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-numgeometries.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0ed88acd82a11357cc0debd2ebaefe825966837e7af96fc75e09b7274b9b67df",
+    "sourceTechnicalHash": "25017bc9ec1990e592f1d7dd2bddb5328007231df043d36eefa7d14781deb408",
+    "targetHash": "f982771dcfb001942bd0b176ed214b26c293d7cb45c4d8f57dfe7bc7534056c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:19:02.596Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ed88acd82a11357cc0debd2ebaefe825966837e7af96fc75e09b7274b9b67df",
+      "targetHash": "f982771dcfb001942bd0b176ed214b26c293d7cb45c4d8f57dfe7bc7534056c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

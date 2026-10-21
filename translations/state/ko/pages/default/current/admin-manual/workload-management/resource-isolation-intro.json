@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/resource-isolation-intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/workload-management/resource-isolation-intro.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+    "sourceTechnicalHash": "a8daf870cd195736992f02abfd2e2d58405140e5f6658652c5d54164681e61d2",
+    "targetHash": "c71c6498e263117ac3136c0584d6977030cba0acdfa3d441597cd59ef57accd1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T23:13:16.479Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "65184792d602bf40261062ffe8f01b108e2e6738d0a895235b6125bca502fcee",
+      "targetHash": "c71c6498e263117ac3136c0584d6977030cba0acdfa3d441597cd59ef57accd1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

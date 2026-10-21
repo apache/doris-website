@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/week",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/week.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/week.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "bb55f2d6508544fe546bdb86fdeacf6d5e7a9b2d3bcd9d5e4f2ce17506f7f2cf",
+    "sourceTechnicalHash": "17d7138cb621525584b8053272f65c28ec72e4efd0f91819b294d3fae1057eac",
+    "targetHash": "8ee70fb23f6d1da0b4c1eec3ab50c83eacf1a6a31a86ece895d2e96b7a44d081",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:58:24.213Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bb55f2d6508544fe546bdb86fdeacf6d5e7a9b2d3bcd9d5e4f2ce17506f7f2cf",
+      "targetHash": "8ee70fb23f6d1da0b4c1eec3ab50c83eacf1a6a31a86ece895d2e96b7a44d081",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

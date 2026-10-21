@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authentication/internal",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication/internal.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/internal.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
+    "targetHash": "48004759a5181c66d5a5c53368241009aa8c42e902ec0d0910541d26cf07e0d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:03:52.477Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+      "targetHash": "48004759a5181c66d5a5c53368241009aa8c42e902ec0d0910541d26cf07e0d9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/authentication/internal",
+        "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
+        "sourceCommit": "54237d9b6ae5f6f2bed49f0a660cd3d61b4b95ce",
+        "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+        "targetHash": "48004759a5181c66d5a5c53368241009aa8c42e902ec0d0910541d26cf07e0d9",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

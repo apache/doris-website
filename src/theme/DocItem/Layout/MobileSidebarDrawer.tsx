@@ -1,6 +1,8 @@
 import React, { type JSX, useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
+import { translate } from '@docusaurus/Translate';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useLocation } from '@docusaurus/router';
 import { useActivePlugin, useActiveVersion, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
@@ -13,6 +15,7 @@ import { getDocsSidebarScope, supportsDocsDomainNavigation } from '@site/src/uti
 import styles from './MobileSidebarDrawer.module.css';
 
 export default function MobileSidebarDrawer(): JSX.Element | null {
+    const isBrowser = useIsBrowser();
     const sidebar = useDocsSidebar();
     const activePlugin = useActivePlugin();
     const activeVersion = useActiveVersion(activePlugin?.pluginId);
@@ -21,7 +24,6 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
     const alternatePageUtils = useAlternatePageUtils();
-    const isZH = currentLocale === 'zh-CN';
     const usesDomainNavigation = supportsDocsDomainNavigation(activePlugin?.pluginId, activeVersion?.name);
     const [open, setOpen] = useState(false);
     const [localeOpen, setLocaleOpen] = useState(false);
@@ -67,7 +69,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     const scopedSidebarItems = usesDomainNavigation ? sidebarScope.scopedItems : sidebar.items;
     const drawerLabel = usesDomainNavigation && sidebarScope.activeDomain
         ? sidebarScope.activeDomain.label
-        : (isZH ? '目录' : 'Menu');
+        : translate({id: 'docs.navigation.menu', message: 'Menu'});
 
     const drawer = (
         <div className={clsx(open && styles.open)} aria-hidden={!open}>
@@ -78,7 +80,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
             />
             <aside
                 className={styles.drawer}
-                aria-label={isZH ? '文档目录' : 'Docs sidebar'}
+                aria-label={translate({id: 'docs.navigation.sidebar', message: 'Docs sidebar'})}
             >
                 <div className={styles.header}>
                     <span>{drawerLabel}</span>
@@ -86,7 +88,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                         type="button"
                         className={styles.close}
                         onClick={close}
-                        aria-label={isZH ? '关闭目录' : 'Close docs sidebar'}
+                        aria-label={translate({id: 'docs.navigation.closeSidebar', message: 'Close docs sidebar'})}
                     >
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                             <path
@@ -100,7 +102,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 </div>
                 <nav
                     className={styles.body}
-                    aria-label={isZH ? '文档目录导航' : 'Docs sidebar navigation'}
+                    aria-label={translate({id: 'docs.navigation.sidebarNavigation', message: 'Docs sidebar navigation'})}
                 >
                     <ul className={clsx(ThemeClassNames.docs.docSidebarMenu, 'menu__list', styles.menu)}>
                         <DocSidebarItems
@@ -138,7 +140,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                                 type="button"
                                 className={styles.toolbarIconBtn}
                                 onClick={() => setLocaleOpen(o => !o)}
-                                aria-label={isZH ? '切换语言' : 'Switch language'}
+                                aria-label={translate({id: 'docs.navigation.switchLanguage', message: 'Switch language'})}
                                 aria-haspopup="true"
                                 aria-expanded={localeOpen}
                             >
@@ -190,7 +192,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     type="button"
                     className={clsx(styles.toolbarIconBtn, usesDomainNavigation && styles.toolbarMenuBtn)}
                     onClick={() => setOpen(true)}
-                    aria-label={isZH ? '打开文档目录' : 'Open docs sidebar'}
+                    aria-label={translate({id: 'docs.navigation.openSidebar', message: 'Open docs sidebar'})}
                     aria-expanded={open}
                 >
                     <svg className={styles.toolbarIcon} viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -198,13 +200,13 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                     </svg>
                     {usesDomainNavigation && (
                         <span className={styles.toolbarMenuLabel}>
-                            {isZH ? '浏览当前分类' : 'Browse this section'}
+                            {translate({id: 'docs.navigation.browseSection', message: 'Browse this section'})}
                         </span>
                     )}
                 </button>
             </div>
 
-            {typeof document !== 'undefined' && createPortal(drawer, document.body)}
+            {isBrowser && createPortal(drawer, document.body)}
         </>
     );
 }

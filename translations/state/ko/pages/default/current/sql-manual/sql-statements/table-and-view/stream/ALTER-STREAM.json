@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7ff6ca0af64c6bcbbea5b380f37f117b4420c54ce124077167e35df52fc08a05",
+    "sourceTechnicalHash": "4592f9e01743b36bb6485e74efbb417ecca359ae34008cfac50c29f144306e23",
+    "targetHash": "3a3a561897e50c1943cd02e409c46ccbf785b5e815f234703940dc91c54d4a77",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:45:52.907Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7ff6ca0af64c6bcbbea5b380f37f117b4420c54ce124077167e35df52fc08a05",
+      "targetHash": "3a3a561897e50c1943cd02e409c46ccbf785b5e815f234703940dc91c54d4a77",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"inlineCode\",null,null,\"STREAM_COMMENT\"]; received [\"inlineCode\",null,null,\"information_schema.table_streams\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"information_schema.table_streams\"]; received [\"inlineCode\",null,null,\"STREAM_COMMENT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

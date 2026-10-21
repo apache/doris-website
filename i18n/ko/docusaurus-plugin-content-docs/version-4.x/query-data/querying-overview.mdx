@@ -1,0 +1,105 @@
+---
+{
+    "title": "데이터 쿼리",
+    "language": "ko",
+    "description": "사용 사례별로 Apache Doris의 쿼리 기능을 살펴보세요. SQL 호환성, 다중 테이블 조인, 집계 분석, 반정형 데이터 쿼리, 사용자 정의 함수를 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# 데이터 쿼리 {#data-querying}
+
+Apache Doris는 표준 SQL을 지원하고 MySQL과 높은 호환성을 제공하며, 고성능 조인 쿼리, 풍부한 분석 함수, 반정형 데이터 접근, 사용자 정의 함수도 제공합니다. 아래에서 사용 시나리오에 맞는 문서를 선택하세요.
+
+## SQL 호환성 {#sql-compatibility}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="MySQL 호환성"
+    description="Doris와 MySQL의 차이점을 빠르게 확인할 수 있는 참고 자료로, 데이터 타입, DDL/DML 구문, SQL 함수, 주요 SQL Mode 차이점을 다룹니다."
+    link="mysql-compatibility"
+/>
+</div>
+
+## 다중 테이블 조인 {#multi-table-joins}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="조인 (JOIN)"
+    description="INNER / LEFT / RIGHT / FULL / SEMI / ANTI 등의 JOIN 유형과 Broadcast, Shuffle, Bucket Shuffle, Colocate라는 네 가지 분산 JOIN 구현 방식을 다룹니다."
+    link="join"
+/>
+
+<GettingStartedCard
+    title="시계열 최근접 매칭을 위한 ASOF JOIN"
+    description="왼쪽 테이블의 각 행에 대해 시간 방향을 기준으로 오른쪽 테이블에서 가장 가까운 행을 찾아, 윈도우 함수 없이 시계열 데이터를 정렬할 수 있습니다."
+    link="asof-join"
+/>
+
+<GettingStartedCard
+    title="서브쿼리"
+    description="스칼라, 비스칼라, 상관, 비상관 서브쿼리의 구문, 제약 사항, Mark Join 처리 방식을 다룹니다."
+    link="subquery"
+/>
+
+<GettingStartedCard
+    title="공통 테이블 식 (CTE)"
+    description="WITH 절로 임시 결과 집합을 정의합니다. 중첩 및 재귀 CTE를 지원하며, 계층 탐색이나 그래프 탐색 등의 시나리오에 적합합니다."
+    link="cte"
+/>
+</div>
+
+## 집계 및 분석 {#aggregation-and-analytics}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="다차원 집계 분석"
+    description="ROLLUP, CUBE, GROUPING SETS를 사용하여 단일 SQL 문으로 다차원 집계 분석을 수행합니다."
+    link="multi-dimensional-analytics"
+/>
+
+<GettingStartedCard
+    title="분석 함수 (윈도우 함수)"
+    description="OVER 절로 결과 집합을 파티션으로 나누고 윈도우를 지정하여 순위, 누적 합계, 이동 평균, 전년 대비 및 전분기 대비 비교 등을 지원합니다."
+    link="window-function"
+/>
+</div>
+
+## 반정형 및 복합 데이터 {#semi-structured-and-complex-data}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="복합 타입 쿼리"
+    description="Array, Map, Struct, JSON 등의 복합 타입을 쿼리하고, 전용 SQL 함수로 반정형 데이터를 처리합니다."
+    link="complex-type"
+/>
+
+<GettingStartedCard
+    title="열을 행으로 변환 (Lateral View)"
+    description="LATERAL VIEW와 EXPLODE 등의 생성 함수를 함께 사용하여 단일 행을 여러 행으로 확장하고, 열을 행으로 변환하는 SQL 쿼리를 수행합니다."
+    link="lateral-view"
+/>
+</div>
+
+## 사용자 정의 함수 (UDF) {#user-defined-functions-udf}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Java UDF / UDAF / UDWF / UDTF"
+    description="Java로 UDF/UDAF/UDWF/UDTF 사용자 정의 함수를 작성합니다. 타입 매핑, 등록 구문, 모범 사례, 예제를 다룹니다."
+    link="udf/java-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="Python UDF / UDAF / UDWF / UDTF"
+    description="Python으로 UDF/UDAF/UDTF를 작성합니다. 생성, 벡터화, 환경 구성, 일반적인 문제 해결 방법을 다룹니다."
+    link="udf/python-user-defined-function"
+/>
+
+<GettingStartedCard
+    title="별칭 함수"
+    description="CREATE ALIAS FUNCTION으로 함수나 표현식 일부에 대한 새로운 시그니처를 등록하여 마이그레이션 호환성을 높이고 복잡한 쿼리를 더 간편하게 작성합니다."
+    link="udf/alias-function"
+/>
+</div>

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/REFRESH-LDAP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0b18b3c938a0f8e72362162da6daedfaa204d2d4cb40587842d8de31e85187ca",
+    "sourceTechnicalHash": "e01303025a3583fa3ba7cbb97a9af27a4eacfec5c819930ccb28a5672090cb9f",
+    "targetHash": "8d3f1440b9232a7aece0ef8c97f23d1ef49654e9c8b1ebc49f938f1664e39857",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:29:43.869Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0b18b3c938a0f8e72362162da6daedfaa204d2d4cb40587842d8de31e85187ca",
+      "targetHash": "8d3f1440b9232a7aece0ef8c97f23d1ef49654e9c8b1ebc49f938f1664e39857",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/REFRESH-LDAP",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/REFRESH-LDAP.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "0b18b3c938a0f8e72362162da6daedfaa204d2d4cb40587842d8de31e85187ca",
+        "targetHash": "8d3f1440b9232a7aece0ef8c97f23d1ef49654e9c8b1ebc49f938f1664e39857",
+        "commit": "08d0139a49673f6dce7a3d3cfb0f95779a1bdbb2",
+        "pr": "https://github.com/apache/doris-website/pull/4383"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ngram-search",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ngram-search.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ngram-search.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7c22162a29c3db08c21dc98a28a90b4f152b4d2991c470b913930169b130364f",
+    "sourceTechnicalHash": "2c3fed25bb27fd84495a68ffc329f70589b24b276dbc1a5c29bf0f9c5963e1d8",
+    "targetHash": "1640ae37fe2ec1a4674e02002fc63e3011cd7aab410cb6d3dae588b9b4992233",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:50:32.325Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7c22162a29c3db08c21dc98a28a90b4f152b4d2991c470b913930169b130364f",
+      "targetHash": "1640ae37fe2ec1a4674e02002fc63e3011cd7aab410cb6d3dae588b9b4992233",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

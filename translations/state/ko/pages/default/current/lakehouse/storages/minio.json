@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/minio",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/minio.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/minio.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+    "sourceTechnicalHash": "e56c9c6ebdce825424900c8318d1abc6ca373cd97f527d778822476eadd4ae8b",
+    "targetHash": "ed6ef64dc31fa0fe754f3a6bd4c25e071c314fc282a2902b69b8dc3c0c405f0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:45:15.588Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a786a8f80095dd2871cc6eb70f16360f44302f58386cc164c4ab3efef6a85be5",
+      "targetHash": "ed6ef64dc31fa0fe754f3a6bd4c25e071c314fc282a2902b69b8dc3c0c405f0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

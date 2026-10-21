@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/recycle/DROP-CATALOG-RECYCLE-BIN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/recycle/DROP-CATALOG-RECYCLE-BIN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/recycle/DROP-CATALOG-RECYCLE-BIN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7550abb7dfbb08b5f516c35802685a4bcc8fbeb27cba1b795b41fcef8454b49d",
+    "sourceTechnicalHash": "7c7226fb4eace001f86b66412c03e7f1c97b602d1511ae27be447f57d7f71705",
+    "targetHash": "6db668511f5e4d9a9e59b4295d09af0eb8ac6471497fecb341f559a6bf5e163e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:38:43.426Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7550abb7dfbb08b5f516c35802685a4bcc8fbeb27cba1b795b41fcef8454b49d",
+      "targetHash": "6db668511f5e4d9a9e59b4295d09af0eb8ac6471497fecb341f559a6bf5e163e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

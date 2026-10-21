@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/asin",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/asin.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/asin.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d153b24ead67732c32cfe7bffc614f049e7edbb15c940ac5183eeab862dda421",
+    "sourceTechnicalHash": "8df635e526f19e8aa330c126ae0c03e1d0f66c8264d13455ecbd188a18b56490",
+    "targetHash": "6fbad8effdb7bd090af256faf0da6951df7aa5d146a17ef9148fc150ab2e40a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:13:22.491Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d153b24ead67732c32cfe7bffc614f049e7edbb15c940ac5183eeab862dda421",
+      "targetHash": "6fbad8effdb7bd090af256faf0da6951df7aa5d146a17ef9148fc150ab2e40a6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

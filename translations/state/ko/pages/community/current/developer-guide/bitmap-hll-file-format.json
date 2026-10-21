@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/bitmap-hll-file-format",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/bitmap-hll-file-format.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/bitmap-hll-file-format.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b01a2e299fb7753ee169f4d5929a1d8680ad3f0f16ebabbda4589c5df5d6e633",
+    "sourceTechnicalHash": "b7d7ad05edf93a813eb57bb11e7b8679712a49b57080151af2e19d3a99124d4e",
+    "targetHash": "8218f35d1909322e799222aefec9a4659bc7786b32335a7e09b7d68edde6d198",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:17:05.595Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b01a2e299fb7753ee169f4d5929a1d8680ad3f0f16ebabbda4589c5df5d6e633",
+      "targetHash": "8218f35d1909322e799222aefec9a4659bc7786b32335a7e09b7d68edde6d198",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

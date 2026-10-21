@@ -1,8 +1,11 @@
-// Static document scope/navigation checks, alongside the browser PoC verifier.
+// Native route coverage and representative navigation UI. verify-static covers
+// body language and SEO on every page; this avoids parsing the same site twice.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const cheerio = require('cheerio');
+const {inventoryBaseline} = require('./state.cjs');
+const root = path.resolve(__dirname, '../..');
 
 function verifyRedirect(html, target) {
     const $ = cheerio.load(html);
@@ -12,65 +15,93 @@ function verifyRedirect(html, target) {
     const canonical = $('link[rel="canonical"]').attr('href');
     assert(canonical, 'Missing redirect canonical URL');
     assert.equal(new URL(canonical, origin).href, expected);
-    // Native client redirects have a meta refresh and script, with no anchor.
     const refresh = $('meta[http-equiv="refresh"]').attr('content');
     assert(refresh?.startsWith('0; url='), 'Missing immediate native redirect');
     assert.equal(new URL(refresh.slice('0; url='.length), origin).href, expected);
 }
 
-function verify({site, snapshot, devOnly = false}) {
+function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale), devOnly = false,
+    manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`)}) {
     const summary = JSON.parse(fs.readFileSync(path.join(snapshot, 'summary.json'), 'utf8'));
+    assert.equal(summary.locale, locale, 'Inventory belongs to a different locale');
+    const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+    assert.equal(data.locale, locale, 'Translation manifest belongs to a different locale');
+    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
+    const dictionary = JSON.parse(fs.readFileSync(path.join(root, `i18n/${locale}/code.json`), 'utf8'));
+    const filename = route => path.join(site, decodeURIComponent(route), 'index.html');
+    const read = route => {
+        assert(fs.existsSync(filename(route)), `Missing static document/entry: ${route}`);
+        return cheerio.load(fs.readFileSync(filename(route), 'utf8'));
+    };
     let routes = 0;
     const checks = [];
-    const read = route => {
-        const file = path.join(site, decodeURIComponent(route), 'index.html');
-        assert(fs.existsSync(file), `Missing static document/entry: ${route}`);
-        return cheerio.load(fs.readFileSync(file, 'utf8'));
-    };
-    for (const group of summary.groups.filter(group => !devOnly || group.version !== '4.x')) {
-        const data = JSON.parse(fs.readFileSync(path.join(snapshot, `${group.id.toLowerCase()}.json`), 'utf8'));
-        const entries = data.entryFiles.flatMap(file => JSON.parse(fs.readFileSync(path.join(snapshot, file), 'utf8')).entries);
-        assert.equal(entries.length, group.counts.registered);
-        for (const entry of entries.filter(entry => entry.disposition !== 'draft')) {
-            const $ = read(entry.permalink);
-            assert.equal($('.theme-doc-markdown').attr('lang'), entry.mergedCurrent ? 'ja' : 'en', entry.permalink);
+    for (const group of scope.groups.filter(group => !devOnly || group.version !== '4.x')) {
+        // Use the current build manifest, not a historical snapshot allowlist.
+        const pages = data.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && !page.draft);
+        assert(pages.length, `Missing built native group: ${group.id}`);
+        for (const page of pages) {
+            assert(fs.existsSync(filename(page.permalink)), `Missing native route: ${page.permalink}`);
             routes++;
         }
-        const representative = entries.find(entry => entry.mergedCurrent);
+        // Native standalone docs can be current without belonging to a sidebar.
+        // Cover their routes above, and inspect navigation on a sidebar member.
+        const candidates = [...pages.filter(page => page.status === 'current' && page.indexable), ...pages];
+        const representative = candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
         const $ = read(representative.permalink);
-        const sidebar = $('.theme-doc-sidebar-container').text();
-        const expected = group.id === 'COMMUNITY'
-            ? ['コミュニティについて', '貢献する方法', '開発とデバッグ', 'リリース', '設計ドキュメント']
-            // The repository's tabbed sidebar initially renders Get Started.
-            : ['入門', '機能とアーキテクチャ', 'インストールとデプロイ', '接続と連携'];
-        for (const label of expected) assert(sidebar.includes(label), `Missing Japanese sidebar label ${label}: ${representative.permalink}`);
+        assert.equal($('.theme-doc-markdown').attr('lang'), representative.contentLocale, representative.permalink);
+        const sidebar = $('.theme-doc-sidebar-container');
+        assert(sidebar.length, `Missing document sidebar: ${representative.permalink}`);
+        const links = sidebar.find('a[href]').map((_, node) => $(node).attr('href')).get();
+        for (const link of links.filter(link => link.startsWith(`/${locale}/`))) read(new URL(link, 'https://doris.apache.org').pathname);
+        const domains = [];
         if (group.pluginId === 'default') {
-            const domains = $('nav[aria-label="Documentation sections"]').text();
-            for (const label of ['入門', 'ガイド', 'ソリューション', '運用と保守', 'SQL リファレンス']) {
-                assert(domains.includes(label), `Missing Japanese document domain: ${label}`);
+            const label = dictionary['docs.navigation.sections']?.message ?? 'Documentation sections';
+            const nav = $('nav').filter((_, node) => $(node).attr('aria-label') === label);
+            assert(nav.length, `Missing document domain navigation: ${representative.permalink}`);
+            for (const node of nav.find('details a[href]').toArray()) {
+                const link = $(node).attr('href');
+                assert(link.startsWith(`/${locale}/docs/`), `Wrong domain locale: ${link}`);
+                read(new URL(link, 'https://doris.apache.org').pathname);
+                domains.push($(node).text());
             }
+            assert(domains.length, 'No document domains');
         }
-        const links = $('.theme-doc-sidebar-container a[href]').map((i, node) => $(node).attr('href')).get();
-        for (const link of links.filter(link => link.startsWith('/ja/'))) {
-            read(new URL(link, 'https://doris.apache.org').pathname);
-        }
-        checks.push({group: group.id, routes: group.counts.required, sidebarLabels: expected, sidebarLinks: links.length});
+        checks.push({group: group.id, routes: pages.length, sample: representative.permalink,
+            contentLocale: representative.contentLocale, sidebarLinks: links.length, domains: [...new Set(domains)]});
     }
     if (!devOnly) {
-        const $ = read('/ja/docs/');
-        const target = '/ja/docs/4.x/getting-started/what-is-apache-doris/';
-        verifyRedirect($.html(), target);
-        checks.push({entry: '/ja/docs/', target});
+        const entry = `/${locale}/docs/`;
+        const origin = 'https://doris.apache.org';
+        let target;
+        if (fs.existsSync(filename(entry))) {
+            const html = read(entry);
+            target = new URL(html('link[rel="canonical"]').attr('href'), origin).pathname;
+            verifyRedirect(html.html(), target);
+        } else {
+            const redirects = JSON.parse(fs.readFileSync(path.join(site, '.publish/redirects.json'), 'utf8')).redirects;
+            const redirect = redirects.find(([from]) => from.replace(/\/$/, '') === entry.replace(/\/$/, ''));
+            assert(redirect, `Missing compacted stable entry: ${entry}`);
+            const url = new URL(redirect[1], origin);
+            assert.equal(url.origin, origin, 'Stable entry must remain on this site');
+            target = url.pathname;
+        }
+        assert(data.pages.some(page => page.pluginId === 'default' && page.version === '4.x' && page.permalink === target),
+            `Stable entry is not a registered 4.x document: ${target}`);
+        read(target);
+        checks.push({entry, target});
     }
-    return {sourceCommit: summary.sourceCommit, devOnly, routes, checks};
+    return {locale, snapshotSourceCommit: summary.sourceCommit, manifest, devOnly, routes, bodyLanguageSamples: checks.filter(check => check.sample).length, checks};
 }
 if (require.main === module) {
-    const args = process.argv.slice(2);
-    const option = name => args[args.indexOf(name) + 1];
-    const result = verify({site: path.resolve(option('--site')),
-        snapshot: args.includes('--snapshot') ? path.resolve(option('--snapshot')) : path.resolve(__dirname, '../../translations/inventory/ja/2026-10-12'),
-        devOnly: args.includes('--dev-only')});
-    if (args.includes('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
-    console.log(JSON.stringify(result));
+    try {
+        const args = process.argv.slice(2);
+        const option = name => args.includes(name) ? args[args.indexOf(name) + 1] : undefined;
+        const locale = option('--locale') ?? 'ja';
+        const result = verify({site: path.resolve(option('--site')), locale,
+            snapshot: option('--snapshot') ? path.resolve(option('--snapshot')) : undefined,
+            manifest: option('--manifest') ? path.resolve(option('--manifest')) : undefined, devOnly: args.includes('--dev-only')});
+        if (option('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
+        console.log(JSON.stringify(result));
+    } catch (error) {console.error(error); process.exitCode = 1;}
 }
 module.exports = {verify, verifyRedirect};

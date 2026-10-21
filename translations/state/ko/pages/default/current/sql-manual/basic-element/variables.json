@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/variables",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/variables.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/variables.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6c3d4b7d7693306963c2b4286b8f315719e3e2381755bd07789d1983d95ab664",
+    "sourceTechnicalHash": "98c455aa1a47e17aa4dc13eb61945108434887702c0061ec4c0d490bb8307f98",
+    "targetHash": "3179a3667a1438d42f3916c6dbf5237285c3ef11894f41793e0138dae6662306",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:15:28.170Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c3d4b7d7693306963c2b4286b8f315719e3e2381755bd07789d1983d95ab664",
+      "targetHash": "3179a3667a1438d42f3916c6dbf5237285c3ef11894f41793e0138dae6662306",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ef90fac7d96f679af32e70987f5275ec1ab6269840b3bca300be5523887d2bd3",
+    "sourceTechnicalHash": "7bbb6663b5846c8b2ba0a31f8134783e0c06f3e8cdb86a067e0cb858b568513b",
+    "targetHash": "9257c5c0dc36833f703fd13faa304287e7082fce228175638002ad837ed37bf0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:54:38.846Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ef90fac7d96f679af32e70987f5275ec1ab6269840b3bca300be5523887d2bd3",
+      "targetHash": "9257c5c0dc36833f703fd13faa304287e7082fce228175638002ad837ed37bf0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

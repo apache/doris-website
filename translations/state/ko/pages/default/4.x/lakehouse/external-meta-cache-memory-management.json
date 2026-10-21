@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/external-meta-cache-memory-management",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/external-meta-cache-memory-management.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/external-meta-cache-memory-management.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "72597ce4562d915ddd39e56fe82e053732f278d40652c4cdd3d52eaa190dc8eb",
+    "sourceTechnicalHash": "f7a6e7e202124cce0a24cbd5fa8fab95dc0f73e39f15285493dc64e9913150d1",
+    "targetHash": "d8eca08d59b1791e51f0b74899b45464a672ef4769ae2dc40d2d77ea97bc7c35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:29:28.921Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "72597ce4562d915ddd39e56fe82e053732f278d40652c4cdd3d52eaa190dc8eb",
+      "targetHash": "d8eca08d59b1791e51f0b74899b45464a672ef4769ae2dc40d2d77ea97bc7c35",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 136: expected [\"inlineCode\",null,null,\"CachingCatalog\"]; received [\"inlineCode\",null,null,\"paimon.cache-enabled\"]\nprotected node 137: expected [\"inlineCode\",null,null,\"paimon.cache-enabled\"]; received [\"inlineCode\",null,null,\"CachingCatalog\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

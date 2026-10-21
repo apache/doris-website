@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+    "sourceTechnicalHash": "98038fec513aee6b8cf966e7bb2b1477e327e33d5dc696f4791f430de0dc7be3",
+    "targetHash": "45fdc821601c1c86d5db8f35390f68d9b9c26083189e40e00c20eca2773d7f39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:03:10.211Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+      "targetHash": "45fdc821601c1c86d5db8f35390f68d9b9c26083189e40e00c20eca2773d7f39",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

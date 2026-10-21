@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/time-format",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/time-format.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/time-format.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "92bddbcea4b27b297d24823f88237cbdd0823b02b1fec41ffbaf38cee01e4e1b",
+    "sourceTechnicalHash": "480fd4c5ffa466e5baf9dab455d65ef48541d9608dd505985f8faa5578511203",
+    "targetHash": "698fc6763b9a5a38e0ab854fa1405dced2a6bc7fa8d7625bff8c1a0557308597",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:59:48.685Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "92bddbcea4b27b297d24823f88237cbdd0823b02b1fec41ffbaf38cee01e4e1b",
+      "targetHash": "698fc6763b9a5a38e0ab854fa1405dced2a6bc7fa8d7625bff8c1a0557308597",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

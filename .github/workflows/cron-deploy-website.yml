@@ -25,6 +25,8 @@ jobs:
         environment: Production
         env:
             DORIS_ENABLE_JA: 'true'
+            DORIS_ENABLE_KO: 'true'
+            DORIS_ENABLE_RU: 'true'
         steps:
             - name: Checkout
               # v4 (the pinned @master commit predates the `filter` input) with
@@ -86,7 +88,7 @@ jobs:
                   yarn
                   node ./scripts/update_github_info.js
                   yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:locales
+                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
                   touch build/.dummy
                   cp .asf-site.yaml ./build/.asf.yaml
                   cp versions.json ./build/

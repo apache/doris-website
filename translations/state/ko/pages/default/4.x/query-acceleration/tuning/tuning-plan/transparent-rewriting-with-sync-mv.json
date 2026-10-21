@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a271ff0827914190054d693c8251fabe10db2de706f099d6a0fb4ca3ed07e91c",
+    "sourceTechnicalHash": "a5cf2239b1b3e1c9c7e2247e434caa7e5cd9170bb85b2df33af79cc2a016ad51",
+    "targetHash": "f3d171942ecef0e304b06be903cad93c1098fec4d86e27b29d47db95b6157c04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:17.274Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a271ff0827914190054d693c8251fabe10db2de706f099d6a0fb4ca3ed07e91c",
+      "targetHash": "f3d171942ecef0e304b06be903cad93c1098fec4d86e27b29d47db95b6157c04",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv",
+        "sourcePath": "docs/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/transparent-rewriting-with-sync-mv.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "a271ff0827914190054d693c8251fabe10db2de706f099d6a0fb4ca3ed07e91c",
+        "targetHash": "f3d171942ecef0e304b06be903cad93c1098fec4d86e27b29d47db95b6157c04",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

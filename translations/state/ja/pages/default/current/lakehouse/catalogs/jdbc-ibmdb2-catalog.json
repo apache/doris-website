@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/jdbc-ibmdb2-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-ibmdb2-catalog.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "7b5b77e1670474399eff58ff75558f48e09361e4f96ced6972915a278fd6e514",
-    "sourceTechnicalHash": "41489201fc1741d94cbbdb6a2652ae4584356557ab37fa57d4519b09f67e6044",
-    "targetHash": "c50840fa67cf4a4707863c2254bd8f73d7dffa69675497c2de17cd97b82d3ad8",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "8fecbe0c3524229ba316236be6680b3786cd4a23c9b631bd5582ab566476a07c",
+    "sourceTechnicalHash": "cc5c8ffdef36317041e407ed9a3dc18523813201a0a37382f117cdda4269a3b5",
+    "targetHash": "fae0e5cb817036eb79a65281d6f03a418e37250a4015d2c77138e902d1d2a4e6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.226Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-19T05:47:20.192Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8fecbe0c3524229ba316236be6680b3786cd4a23c9b631bd5582ab566476a07c",
+      "targetHash": "fae0e5cb817036eb79a65281d6f03a418e37250a4015d2c77138e902d1d2a4e6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 14: expected [\"inlineCode\",null,null,\"-Ddb2.jcc.charsetDecoderEncoder=3\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"-Ddb2.jcc.charsetDecoderEncoder=3\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

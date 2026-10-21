@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/delta-lake-catalog",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/delta-lake-catalog.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/delta-lake-catalog.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ef36159a43b8afe8e22234f85cbb4c72d09037236b54caf0a78756e4d913af12",
+    "sourceTechnicalHash": "da8edc473de4ed392eb47d57b65cedf8dcf478aabda3ce69b460e65eb5a774ba",
+    "targetHash": "3a1caafe902642b95b305190badc71b8670edb047cd2ab1be645343eed5d0a38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:21:16.111Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ef36159a43b8afe8e22234f85cbb4c72d09037236b54caf0a78756e4d913af12",
+      "targetHash": "3a1caafe902642b95b305190badc71b8670edb047cd2ab1be645343eed5d0a38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

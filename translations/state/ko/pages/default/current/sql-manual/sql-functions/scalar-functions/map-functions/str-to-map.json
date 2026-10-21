@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/str-to-map",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/str-to-map.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/str-to-map.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "6c20f2dc6f978bc12fe195d545bb49266984025cc03a29ef7d852607b8a8d335",
+    "sourceTechnicalHash": "2221f7bb8bea19f07fe21d520d9e58cf0f2a195873d3f7661e58ab79fc6f2e4a",
+    "targetHash": "c067642815542af38b1992c896c0ffac181b6f177b854164a879177766387795",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:12:34.047Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c20f2dc6f978bc12fe195d545bb49266984025cc03a29ef7d852607b8a8d335",
+      "targetHash": "c067642815542af38b1992c896c0ffac181b6f177b854164a879177766387795",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

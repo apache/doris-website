@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 :::note
 这是一个实验性功能。
 
-Lance Catalog 自 Apache Doris 4.2 版本开始支持。
+Lance Catalog 自 Apache Doris 4.1.4 版本开始支持。
 :::
 
 Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lance Catalog 发现 Lance Namespace 中的数据库和表，并直接查询存储在本地文件系统、S3 兼容对象存储或阿里云 OSS 中的 Lance 数据集。
@@ -35,8 +35,8 @@ Lance 是面向分析和 AI 场景的列式数据格式。Doris 可以通过 Lan
 |---|---|
 | Filesystem Catalog | 支持本地文件系统、`file://`、`s3://` 和 `oss://` Warehouse |
 | REST Catalog | 支持 Lance REST Namespace，以及无认证、Bearer Token、API Key 和自定义 HTTP Header |
-| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC` 和 `SHOW INDEX`（仅 Filesystem Catalog） |
-| 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` |
+| 元数据访问 | 支持 `SHOW DATABASES`、`SHOW TABLES`、`DESC`、`SHOW INDEX` 和 `lance_index_entries` TVF（后两者仅 Filesystem Catalog） |
+| 系统表（`table$...`） | 暂不支持；索引元数据请使用 `SHOW INDEX` 和 `lance_index_entries` TVF |
 | 数据查询 | 支持列裁剪、并行扫描 Lance Fragment 和当前版本的快照一致性读取 |
 | 谓词下推 | 支持将部分静态标量谓词和 Join Runtime Filter 下推到 Lance 执行 |
 | 文件 TVF | 支持通过 `s3()` 和 `local()` 直接查询 Lance 数据集 |
@@ -469,65 +469,46 @@ nested_index   nested_label_btree    1             attributes.`child.with.dot`  
 
 `SHOW INDEX` 需要用户拥有该表的 `SHOW` 权限。对于 REST Catalog，该语句会被拒绝并返回错误 `SHOW INDEX is not supported for Lance REST catalogs`。
 
-## 类型映射
-
-| Lance / Arrow 类型 | Doris 类型 | 说明 |
-|---|---|---|
-| `null`（可空字段） | `NULL` | 所有值均为 SQL NULL；非可空 Null 字段不支持 |
-| `duration(s/ms/us/ns)` | `BIGINT` | 保留字段声明单位的有符号计数，不统一转换为秒 |
-| `bool` | `BOOLEAN` | |
-| `int8` | `TINYINT` | |
-| `uint8` | `SMALLINT` | 无符号整数无损提升 |
-| `int16` | `SMALLINT` | |
-| `uint16` | `INT` | 无符号整数无损提升 |
-| `int32` | `INT` | |
-| `uint32` | `BIGINT` | 无符号整数无损提升 |
-| `int64` | `BIGINT` | |
-| `uint64` | `LARGEINT` | 无符号整数无损提升 |
-| `float16` | `FLOAT` | 提升为 32 位浮点数 |
-| `float32` | `FLOAT` | |
-| `float64` | `DOUBLE` | |
-| `decimal128(P,S)` | `DECIMAL(P,S)` | 最大精度为 38 |
-| `decimal256(P,S)` | `DECIMAL(P,S)` | 最大精度为 76 |
-| `utf8`、`large_utf8` | `TEXT` | |
-| `arrow.json` Extension | `JSON` | 底层类型为 `utf8` 或 `large_utf8` |
-| `lance.json` Extension | `JSON` | 底层类型为 `large_binary`；按 JSON 逻辑类型读取 |
-| `lance.bfloat16` Extension | `FLOAT` | 底层类型为 `fixed_size_binary(2)`；无损提升为 Float32 |
-| `binary`、`large_binary` | `VARBINARY(2147483647)` | |
-| `fixed_size_binary(N)` | `VARBINARY(N)` | 保留固定字节宽度 |
-| `date32(day)`、`date64(ms)` | `DATE` | `date64` 应表示完整自然日 |
-| `time32(s)` | `TIME(0)` | |
-| `time32(ms)` | `TIME(3)` | |
-| `time64(us)`、`time64(ns)` | `TIME(6)` | 纳秒精度截断为微秒 |
-| 无时区 `timestamp(s)` | `DATETIME` | 不随 Session Time Zone 转换 |
-| 无时区 `timestamp(ms)` | `DATETIME(3)` | 不随 Session Time Zone 转换 |
-| 无时区 `timestamp(us)`、`timestamp(ns)` | `DATETIME(6)` | 纳秒精度截断为微秒 |
-| 带时区 `timestamp` | `TIMESTAMPTZ(0-6)` | 保存时间点，按 Doris Session Time Zone 展示 |
-| `struct` | `STRUCT` | 子字段递归映射 |
-| `list`、`large_list`、`fixed_size_list` | `ARRAY` | 元素类型递归映射 |
-| `map` | `MAP` | Key 和 Value 类型递归映射 |
-
-Doris 根据 `ARROW:extension:name` 元数据识别上述扩展类型，并校验其底层存储类型。JSON 扩展映射为 Doris `JSON`（内部类型 `JSONB`），普通 `utf8`/`large_utf8` 列即使包含 JSON 文本，仍映射为 `TEXT`，不会自动变成 JSON。支持 JSON 读取不代表任意 JSON 路径表达式都能下推；下推范围见[谓词下推](#谓词下推)。
-
-JSON、Duration、Null 和 BFloat16 读取需要 FE 与参与查询的 BE 均包含对应类型支持。旧构建可能仍显示不支持；升级时应同时确认 Schema 识别和实际读取能力。
-
-当前不支持以下类型：
-
-- 非可空的 Arrow `null` 字段。
-- 未列为支持的 Arrow/Lance Extension 类型，例如 Lance Blob v2；已知扩展类型的底层存储与上表不匹配时也不支持。
-- 无法递归映射其子类型的复杂类型。
-- 保留了 Dictionary 标记的 Arrow Dictionary 类型。
-
-对于不支持的顶层列，Catalog 表的 `DESC` 和 Lance 文件 TVF 的 `DESC FUNCTION` 都会保留该列，并显示 `unknown type: UNSUPPORTED_TYPE`。如果复杂类型的任一子字段无法映射，则整个顶层复杂列会标记为不支持。查询只投影支持的列仍可正常执行；当 SQL 投影不支持的列时，Doris 会在分析阶段报错。例如：
-
-```sql
-SELECT * EXCEPT(blob_col)
-FROM lance_catalog.default.all_types;
-```
+### 使用 lance_index_entries 查看物理索引条目
 
 :::note
-部分 Lance Java SDK 版本可能在读取 Schema 时丢失 Dictionary 标记，并将 Dictionary 列暴露为物理索引类型。该结果不代表 Doris 已支持 Dictionary 的逻辑值，请勿依赖这一行为。
+`lance_index_entries` 自 Apache Doris 4.1.5 起支持。
 :::
+
+`SHOW INDEX` 提供 Lance 表索引的逻辑视图：索引名、被索引列、索引类型和属性，使用固定的 MySQL 风格 13 列结果集。索引条目的物理身份（UUID 和数据集版本）无法放入该固定 Schema，因此由只读表函数 `lance_index_entries` 提供物理视图。它为最新数据集快照中记录的每个物理索引条目返回一行：
+
+```sql
+SELECT *
+FROM lance_index_entries("table" = "lance_catalog.default.vs_ivf_pq_f32");
+```
+
+`table` 必须是完整的三部分 `catalog.database.table` 名称。标识符支持反引号引用，多级 Namespace 映射为包含 `.` 的数据库名时，需要使用反引号引用数据库部分。
+
+该 TVF 返回以下固定列：
+
+| 列 | 类型 | 说明 |
+|---|---|---|
+| `CatalogName` | STRING | Catalog 名。 |
+| `DatabaseName` | STRING | 数据库名。 |
+| `TableName` | STRING | 表名。 |
+| `IndexName` | STRING | Lance 逻辑索引名。一个逻辑索引存在多个不同 UUID 的物理条目时会输出多行。 |
+| `IndexUuid` | STRING | 该物理索引条目的 UUID。 |
+| `DatasetVersion` | BIGINT | 物理索引条目上记录的数据集版本，即该条目写入时的数据集版本。同一逻辑索引的不同物理条目可能对应不同的数据集版本。恒大于等于 `1`。 |
+
+下面的示例展示了上文中 `IVF_PQ` 索引对应的一行结果，其中 `IndexUuid` 和 `DatasetVersion` 为示意值：
+
+```text
+CatalogName    DatabaseName  TableName      IndexName             IndexUuid                             DatasetVersion
+lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-4e6f-9a1c-2d5e8f0b3a47  12
+```
+
+`lance_index_entries` 只通过 `Dataset.getIndexes()` 读取索引元数据，不读取行数或统计信息，也不会修改数据集。结果可以使用普通谓词过滤，例如 `WHERE IndexName = ...`。结果按 `(IndexName, IndexUuid)` 排序。读取经过完整校验且为 all-or-error：空白或超长名称、缺失 UUID、非正 `DatasetVersion`、重复 UUID，或原始条目数超过 16,384，都会使整个查询失败，而不是返回截断后的部分结果。Lance 内部维护的保留系统索引（`__lance_frag_reuse` 和 `__lance_mem_wal`）会被校验但不会展示。
+
+`lance_index_entries` 需要用户拥有该表的 `SHOW` 权限。对于 REST Catalog，该 TVF 会被拒绝并返回错误 `lance_index_entries is not supported for Lance REST catalogs`。
+
+## 类型映射
+
+请参阅[Lance 与 Doris 数据类型映射](lance-catalog/doris-type-mapping.md)，了解 Doris 4.2 的完整映射表、精度和不支持的类型。
 
 ## 谓词下推
 
@@ -545,8 +526,9 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | `utf8`、`large_utf8` | 支持 |
 | `date32(day)` | 支持 |
 | 无时区 `timestamp(s/ms/us)` | 支持 |
+| `list<utf8>` | 内置 `array_contains`，标签为非 `NULL` 字符串字面量；详见[数组标签谓词](#数组标签谓词) |
 
-其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp 和复杂类型，当前保留为 Doris 侧谓词。
+其他可读取类型，例如 `float16`、`decimal256`、Binary、`date64`、Time、纳秒 Timestamp、带时区 Timestamp，以及上述数组成员判断以外的复杂类型，当前保留为 Doris 侧谓词。
 
 ### 支持下推的操作符
 
@@ -559,13 +541,14 @@ Doris 会将语义兼容的谓词转换为 Substrait 表达式，并交给 Lance
 | 布尔列、`NOT` 布尔列 | 直接引用布尔列 |
 | `LIKE`、`NOT LIKE` | 直接引用 `utf8` 或 `large_utf8` 列，模式为字符串字面量，且不包含反斜杠转义、显式 `ESCAPE` 子句或 NUL 字符 |
 | `starts_with`、`ends_with` | 使用内置函数，第一个参数直接引用 `utf8` 或 `large_utf8` 列，第二个参数为字符串字面量 |
+| `array_contains(labels, 'red')` | 直接引用 `list<utf8>` 列，标签为非 `NULL` 字符串字面量 |
 | `AND` | 顶层 Conjunct 可以分别下推，不能下推的部分保留在 Doris |
 | `OR` | 两个分支都能完整转换时下推 |
 | `NOT` | 操作数能完整转换时下推 |
 
 以下形式通常不会下推：
 
-- 除上述内置字符串函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with` 或 `ends_with` 的用户自定义函数不会按同名内置函数下推。
+- 除上述内置字符串函数和数组成员判断函数之外的函数，或列上的算术表达式。名称为 `like`、`starts_with`、`ends_with` 或 `array_contains` 的用户自定义函数不会按同名内置函数下推。
 - 模式包含 NUL 字符的字符串谓词。使用反斜杠转义或显式 `ESCAPE` 子句的 `LIKE`、`NOT LIKE` 也保留在 Doris。
 - `IN` 列表为空或包含 `NULL`。
 - `OR` 或 `NOT` 中只有部分表达式可转换。
@@ -581,6 +564,46 @@ WHERE active
   AND starts_with(name, 'A')
   AND country LIKE 'C%';
 ```
+
+### 数组标签谓词
+
+从 Apache Doris 4.1.5 开始，数组标签下推支持对直接引用的 Lance `list<utf8>` 列执行 `array_contains`，标签必须为非 `NULL` 字符串字面量。较早的构建版本可能仍将这些条件保留在 Doris，请先通过 `EXPLAIN` 确认。`NULL` 数组仍返回 `NULL`，空数组不匹配，重复标签不会导致结果行重复。
+
+对于包含 `id` 列和 `list<utf8>` 类型 `labels` 列的 Lance 表：
+
+```sql
+EXPLAIN
+SELECT id
+FROM lance_catalog.default.items
+WHERE array_contains(labels, 'red')
+  AND array_contains(labels, 'blue');
+```
+
+该条件匹配同时包含两个标签的数组，不要求标签顺序或相邻位置。将 `AND` 改为 `OR` 表示匹配任一标签。`NOT (array_contains(labels, 'red'))` 也可以转换，并保留 SQL 的 `NULL` 语义。这些示例适用于普通表扫描，不改变搜索 TVF 的 `filter` 参数与外层 `WHERE` 条件的区别。
+
+以下条件仍保留在 Doris 求值：
+
+- `array_contains(labels, NULL)`：Doris 可以匹配数组中的 `NULL` 元素，Lance 成员判断函数对 `NULL` 标签的语义不同。
+- `array_contains_all(labels, ['red', 'blue'])`：Doris 判断有序、连续的子序列，不能替换为 Lance 的集合包含函数或两个独立的成员判断条件。
+- 动态标签、数组列上的表达式或类型转换，以及其他数组元素或容器类型，包括 `large_list`、定长列表和 `list<large_utf8>`。
+
+### 谓词下推与标量索引使用
+
+谓词下推表示由 Lance 求值，不保证使用索引。普通扫描中，Doris 可以为每个扫描任务指定一个物理 BTree、Bitmap 或 LabelList 索引段。对于同列的 `IN`、`AND`、`OR`、`NOT` 组合，Lance 支持相应完整表达式时可以使用选中的索引。`OR` 的两个分支都必须提供安全的候选集，`NOT` 不能对仅求值一部分的子树取反。不支持的索引表达式会回退为分配的 Fragment 范围内的扫描。
+
+每个任务选择**一个逻辑标量索引**。同时包含标签、类别和数值条件的查询，并不表示 Doris 会对三个索引求交集。下推的完整条件会在扫描 LIMIT 生效前再次检查，索引未覆盖的 Fragment 仍会读取。没有可用索引时，兼容的谓词也可以下推，由 Lance 扫描求值。
+
+应结合以下信息验证：
+
+| 验证信息 | 含义 |
+|---|---|
+| `EXPLAIN` 中的 `lancePushdownPredicate` | 已发送给 Lance 的条件；剩余的 `predicates:` 条件由 Doris 求值。 |
+| `EXPLAIN` 中的 `lanceScalarIndexScan=SEGMENT` 和 `lanceGroupingIndex` | 已规划标量索引段扫描，并显示选中的逻辑索引；不能单独证明运行时使用了索引。 |
+| Profile 中的 `LanceScalarIndexSegmentsSearched` | 已埋点的标量索引段路径实际执行的搜索次数。 |
+| Profile 中的 `LanceScalarIndexCandidateRows` | 该路径报告的候选行数，不一定等于最终结果行数。部分 `NOT` 表达式等补集掩码可能不报告候选集基数。 |
+| Profile 中的 `LanceScalarIndexSegmentFallbacks` | 从规划的标量索引段路径回退的任务数。 |
+
+开启 `enable_profile` 后查看这些计数器。衡量优化效果时，应保持 SQL、投影列、数据集版本和缓存状态一致。这些计数器描述普通标量索引段扫描，不能单独用于判断 ANN 或全文搜索预过滤内部是否使用了标量索引。
 
 ### Runtime Filter 下推
 

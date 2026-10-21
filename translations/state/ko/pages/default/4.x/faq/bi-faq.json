@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "faq/bi-faq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/faq/bi-faq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/faq/bi-faq.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4f45bc61fb90074ee09a8bbb32e6d1ee3c5e117f22b9f0478eb613273f56bef0",
+    "sourceTechnicalHash": "355285d476462eb1a9ed03587f3d007b05cf6d9df489a4085241eea91c9f18d4",
+    "targetHash": "b94eb5f74fd123dbf95449b6d13e382d18f223d8bed1ee517f9f14645ebe5881",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:21:01.179Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4f45bc61fb90074ee09a8bbb32e6d1ee3c5e117f22b9f0478eb613273f56bef0",
+      "targetHash": "b94eb5f74fd123dbf95449b6d13e382d18f223d8bed1ee517f9f14645ebe5881",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "faq/bi-faq",
+        "sourcePath": "docs/faq/bi-faq.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/faq/bi-faq.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "4f45bc61fb90074ee09a8bbb32e6d1ee3c5e117f22b9f0478eb613273f56bef0",
+        "targetHash": "b94eb5f74fd123dbf95449b6d13e382d18f223d8bed1ee517f9f14645ebe5881",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

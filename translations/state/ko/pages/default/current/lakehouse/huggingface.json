@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/huggingface",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/huggingface.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/huggingface.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "cf59a85bfb12b0cb975ebbe065d0f53b3c5298398c2088188b643b9d4c6d0391",
+    "sourceTechnicalHash": "e1a98f6218d23f049d749052de294285a4197b0db3a1a16ad6f26251b05e7485",
+    "targetHash": "f4851e966bcc31f74b2ecff6561fa3e827547b84cec36d834bf51263a2cf5fe1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:24:10.405Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cf59a85bfb12b0cb975ebbe065d0f53b3c5298398c2088188b643b9d4c6d0391",
+      "targetHash": "f4851e966bcc31f74b2ecff6561fa3e827547b84cec36d834bf51263a2cf5fe1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -39,8 +39,12 @@ function buildScope(files, versions, managed = []) {
         else if (/^(blog|community|releasenotes|course)\//.test(file)) {languages.add('en'); build();}
         else if (/^sidebars(Community|Releases|Course)\./.test(file)) shared();
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
-            || /^scripts\/(key-features|last-update)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
+            || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
             || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
+        else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
+            if (!locales.includes(match[2])) throw new Error(`Unconfigured locale: ${match[2]}`);
+            json.add(file); // Offline configuration checks cover these without a site build.
+        }
         // Translation configuration applies to every managed locale at once.
         else if (file === 'translations/config.json') {managed.forEach(locale => languages.add(locale)); build();}
         else if ((match = file.match(/^translations\/state\/([^/]+)\/[^/]+\.json$/))) {
@@ -52,14 +56,23 @@ function buildScope(files, versions, managed = []) {
             languages.add(match[1]); wanted.add(match[2]); json.add(file); build();
         }
         else if (file === 'static/.htaccess') shared();
+        else if (/^static\/js\/(brand-theme|course-rail)-bootstrap\.js$/.test(file)) shared();
         else if (/^(static|\.github|\.claude|\.agents|\.vscode|\.idea|scripts|website-quality-governance|translations|plan-doc)\//.test(file)
             || /\.(py|sh)$/.test(file)
             || /^(README.md|AGENTS.md|TOC.md|LICENSE|NOTICE|store_format_v3.md|cspell.json|author.yml|buildVersions.json|\.gitignore|\.prettier.*|\.eslintrc.*)$/.test(file)) {}
         else {languages.add('en'); build();}
     }
     for (const version of wanted) if (!active.includes(version)) {wanted.delete(version); retired.add(version);}
+    const searchChanged = files.some(file => /^scripts\/i18n\/search-plugin\.cjs$/.test(file)
+        || /^src\/theme\/(SearchBar|SearchPage)\/.+\.[jt]sx?$/.test(file)
+        || /^src\/utils\/(searchVersion|searchContexts|searchInput|searchNormalization|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
+    const optimizePublish = searchChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    // Publication changes need the same complete artifact as deployment, on
+    // the CI runner. Keep local checks scoped to fixtures and Dev versions.
+    if (optimizePublish) {tier = 'full'; shared();}
     const selected = locales.filter(locale => languages.has(locale));
     return {tier, skip_build: tier === 'skip', need_full_build: tier === 'full',
+        optimize_publish: optimizePublish,
         docs_versions: tier === 'full' ? '' : active.filter(version => wanted.has(version)).join(',') || versions[0] || 'current',
         locales: selected,
         // Only the opt-in locales have to be switched on for the build.

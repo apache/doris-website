@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-max.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "027d23a822bb96b388724307c20e98224551954a2f73197d01687b827527b345",
+    "sourceTechnicalHash": "dbb34ff57c4cf1c8f003b694c009ec07583c5d786ba87c753a2533424ac0b33d",
+    "targetHash": "1f27c7d62b71512f779e0fcd69f2bd2b94e25eb1d0f9c9224c31851b4949e82c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:44:33.985Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "027d23a822bb96b388724307c20e98224551954a2f73197d01687b827527b345",
+      "targetHash": "1f27c7d62b71512f779e0fcd69f2bd2b94e25eb1d0f9c9224c31851b4949e82c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

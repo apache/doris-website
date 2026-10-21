@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate-uniq.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f513ab600ef88721a39604d187540c7bdb1bfcf949175e71f0202416d260b4b8",
+    "sourceTechnicalHash": "4eb8e6da46b114022ee5d425c15764c98db4b9016087e875d23e6ba4d4fb9807",
+    "targetHash": "a20d272e2722fc29319c58e587cda5da224f86e93958750cd9effb6076d4c0da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:26:18.201Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f513ab600ef88721a39604d187540c7bdb1bfcf949175e71f0202416d260b4b8",
+      "targetHash": "a20d272e2722fc29319c58e587cda5da224f86e93958750cd9effb6076d4c0da",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -33,3 +33,17 @@ Returns basic information about the Rowset.
 | CREATION_TIME          | datetime    | The creation time of the Rowset.                             |
 | NEWEST_WRITE_TIMESTAMP | datetime    | The most recent write time of the Rowset.                    |
 | SCHEMA_VERSION         | int         | The Schema version number of the table corresponding to the Rowset data. |
+| COMMIT_TSO | varchar(64) | Rowset TSO range as `[start_tso-end_tso]` (dev only). The default is `[-1--1]` when no range is recorded. |
+
+## COMMIT_TSO usage
+
+This column is a string: do not sort it as a single BIGINT or compare it directly with numeric `-1`. An absent range appears as `[-1--1]`; a single commit value is also displayed as a start/end range.
+
+```sql
+SELECT BACKEND_ID, ROWSET_ID, COMMIT_TSO
+FROM information_schema.rowsets
+WHERE COMMIT_TSO <> '[-1--1]'
+LIMIT 20;
+```
+
+The result lists rowsets with recorded ranges, or is empty if no ranges have been recorded. See [TSO](../../cluster-management/tso.md) for status inspection and configuration.

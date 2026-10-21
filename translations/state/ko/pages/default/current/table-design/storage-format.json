@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/storage-format",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/storage-format.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/storage-format.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b7f86b8b9a197f7cf8ff2fe1f2c90aa98adab2e17438cc5a28110b7b56d2bf17",
+    "sourceTechnicalHash": "ffcd25ca5be78e7c699ec02a4a9d8ef836c0bfd7bd58085b928f06c1cbeedad4",
+    "targetHash": "a923ea5b9dce0e150beb28d099d0480f80b3ff660be664962cd8c7be647bbcd0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:30.979Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b7f86b8b9a197f7cf8ff2fe1f2c90aa98adab2e17438cc5a28110b7b56d2bf17",
+      "targetHash": "a923ea5b9dce0e150beb28d099d0480f80b3ff660be664962cd8c7be647bbcd0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"BINARY_PLAIN_ENCODING_V2\"]; received [\"inlineCode\",null,null,\"[length(varuint)][raw data]\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "22531121d0410c34dc2de5bc9fcd72faaf468d820b21d02d5dd2cb50d085f6df",
+    "sourceTechnicalHash": "6af4aef0ad1979a02a626fb23a1d9e482090b91e9b9354c11be598360fd87c35",
+    "targetHash": "f6114a1c4899ebe7ff8e1ce802052d1eca6b2358fb2b805bf26aef17150cf75a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:45:56.881Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "22531121d0410c34dc2de5bc9fcd72faaf468d820b21d02d5dd2cb50d085f6df",
+      "targetHash": "f6114a1c4899ebe7ff8e1ce802052d1eca6b2358fb2b805bf26aef17150cf75a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SET-FRONTEND-CONFIG.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "22531121d0410c34dc2de5bc9fcd72faaf468d820b21d02d5dd2cb50d085f6df",
+        "targetHash": "f6114a1c4899ebe7ff8e1ce802052d1eca6b2358fb2b805bf26aef17150cf75a",
+        "commit": "2c139725db8886cd41e62091c6636887be96be63",
+        "pr": "https://github.com/apache/doris-website/pull/4384"
+      }
+    }
+  }
+}

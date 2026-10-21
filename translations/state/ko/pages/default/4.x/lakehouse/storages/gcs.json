@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/gcs",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/gcs.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/gcs.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1fa09b9f5d79e8a5655418ea930e234032aec031399fd1250c4e6d5049496699",
+    "sourceTechnicalHash": "16050ad2fe128d0baacad37b32ea5bdbc1382561b091ab87d028fee7fb75b0dc",
+    "targetHash": "5f178166e82388aec60851fd4d5103be3d3804f0550b4ce4a7fa29512fedff27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:24:05.911Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1fa09b9f5d79e8a5655418ea930e234032aec031399fd1250c4e6d5049496699",
+      "targetHash": "5f178166e82388aec60851fd4d5103be3d3804f0550b4ce4a7fa29512fedff27",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/storages/gcs",
+        "sourcePath": "docs/lakehouse/storages/gcs.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/gcs.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "1fa09b9f5d79e8a5655418ea930e234032aec031399fd1250c4e6d5049496699",
+        "targetHash": "5f178166e82388aec60851fd4d5103be3d3804f0550b4ce4a7fa29512fedff27",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

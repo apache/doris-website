@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/log",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/log.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/observability/log.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "76932378bc5d338825ea7d3a4264426095656f2a6f14f0f95de15f9de99b0047",
+    "sourceTechnicalHash": "84f4a03f54d5181a2e0e085218f6f9862224e4d696c544d3b2370e9dabd8abb3",
+    "targetHash": "c18c887a8d0ccb0ab7274ff19ae5006f2e70a44c23583d87fae793c986ef11d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:29:12.088Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "76932378bc5d338825ea7d3a4264426095656f2a6f14f0f95de15f9de99b0047",
+      "targetHash": "c18c887a8d0ccb0ab7274ff19ae5006f2e70a44c23583d87fae793c986ef11d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

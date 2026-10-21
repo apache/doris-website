@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/seaweedfs",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/seaweedfs.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/seaweedfs.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+    "sourceTechnicalHash": "73e3b08b3b882ea92feedf2af698730434c0cc86dddf1f55144c679bdee30144",
+    "targetHash": "a5a281ec0b9eeb7918253a6f25576a5613a7d80a4d2e488d8f50c806d4801f3b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:24:48.348Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+      "targetHash": "a5a281ec0b9eeb7918253a6f25576a5613a7d80a4d2e488d8f50c806d4801f3b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "lakehouse/storages/seaweedfs",
+        "sourcePath": "docs/lakehouse/storages/seaweedfs.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/storages/seaweedfs.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "98efaa96c8000e100762f99bd87e15fd8419ef85dc46166f0c34518468e1b868",
+        "targetHash": "a5a281ec0b9eeb7918253a6f25576a5613a7d80a4d2e488d8f50c806d4801f3b",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

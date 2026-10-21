@@ -216,7 +216,7 @@ The startup configuration of the BE service in a storage-compute decoupled clust
 Use the following command to deploy the ConfigMap containing the custom startup configuration to the Kubernetes cluster:
 
 ```shell
-kubectl -n ${namespace} -f ${beConfigMapFileName}.yaml
+kubectl apply -n ${namespace} -f ${beConfigMapFileName}.yaml
 ```
 
 Parameter descriptions:

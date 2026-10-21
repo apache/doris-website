@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/dogstack/search",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/dogstack/search.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/observability/dogstack/search.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "8ec1a30970ab94883c55836aff861cbd338f234b3ab22e77c601c0525b4ceb7f",
+    "sourceTechnicalHash": "ddda46e7f5c746a7ecd83c01c35958c5cb1bcd057fd2f235c271bf38d0edf0f8",
+    "targetHash": "3ff13c40953af8aaaf0bdb1355e6ef4da8270186a223338eae6af41b3a4b6447",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:47:16.819Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8ec1a30970ab94883c55836aff861cbd338f234b3ab22e77c601c0525b4ceb7f",
+      "targetHash": "3ff13c40953af8aaaf0bdb1355e6ef4da8270186a223338eae6af41b3a4b6447",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

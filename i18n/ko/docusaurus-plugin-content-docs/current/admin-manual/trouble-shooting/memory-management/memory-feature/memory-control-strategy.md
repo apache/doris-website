@@ -1,0 +1,79 @@
+---
+{
+    "title": "메모리 제어 전략",
+    "language": "ko",
+    "description": "Doris Allocator는 시스템에서 대용량 메모리 블록을 할당하기 위한 통합 진입점입니다."
+}
+---
+
+Doris Allocator는 시스템에서 대용량 메모리 블록을 할당하기 위한 통합 진입점입니다. 적절한 시점에 메모리 할당 제한 과정에 개입하여 메모리를 효율적으로 할당하고 제어할 수 있도록 합니다.
+
+Doris MemoryArbitrator는 Doris BE 프로세스의 메모리 사용량을 실시간으로 모니터링하는 메모리 중재자입니다. 메모리 상태를 주기적으로 갱신하고 메모리 관련 통계의 스냅샷을 수집합니다.
+
+Doris MemoryReclamation은 가용 메모리가 부족할 때 메모리 GC를 트리거하여 메모리 일부를 회수하는 메모리 회수자입니다. 이를 통해 클러스터에서 실행되는 대부분의 태스크가 안정적으로 동작하도록 합니다.
+
+## Doris Allocator {#doris-allocator}
+
+![메모리 관리 개요](/images/memory-management-overview.png)
+
+Allocator는 시스템에 메모리를 요청하고, 이 과정에서 MemTracker를 사용하여 할당하고 해제하는 메모리의 크기를 추적합니다. 연산자를 배치 단위로 실행하는 데 필요한 대용량 메모리는 여러 데이터 구조에서 관리합니다.
+
+쿼리 실행 중 대용량 메모리 블록의 할당은 주로 Arena, HashTable, PODArray 데이터 구조에서 관리합니다. Allocator는 Arena, PODArray, HashTable의 통합 메모리 인터페이스 역할을 하여 일관된 메모리 관리와 로컬 메모리 재사용을 구현합니다.
+
+![메모리 할당자](/images/memory-allocator.png)
+
+Allocator는 범용 메모리 할당자를 사용하여 메모리를 요청합니다. Doris에서 TCMalloc을 사용하던 시기에는 높은 동시성 테스트에서 TCMalloc의 CentralFreeList에 있는 Spin Lock이 전체 쿼리 시간의 40%를 차지했습니다. aggressive memory decommit을 비활성화하면 성능을 효과적으로 개선할 수 있지만, 메모리가 많이 낭비됩니다. 따라서 별도의 스레드를 사용하여 TCMalloc 캐시를 주기적으로 회수해야 했습니다. Jemalloc은 높은 동시성 환경에서 TCMalloc보다 성능이 우수하며, 성숙하고 안정적입니다. Doris는 1.2.2에서 Jemalloc으로 전환했습니다. 튜닝 후에는 대부분의 시나리오에서 TCMalloc과 비슷한 성능을 내면서도 메모리를 더 적게 사용합니다. 높은 동시성 시나리오의 성능도 크게 향상되었습니다.
+
+### Arena {#arena}
+
+Arena는 메모리 블록 목록을 유지하고 이 블록에서 메모리를 할당하여 alloc 요청에 응답하는 메모리 풀입니다. 시스템에 메모리를 요청하는 횟수를 줄여 성능을 개선합니다. 메모리 블록은 Chunk라고 하며, 메모리 풀의 수명 주기 내내 유지되다가 소멸 시 일괄 해제됩니다. 이 수명 주기는 보통 쿼리의 수명 주기와 같습니다. Arena는 메모리 정렬도 지원하며, 주로 Shuffle 과정에서 직렬화/역직렬화된 데이터, HashTable의 직렬화된 Key 등을 저장하는 데 사용됩니다.
+
+Chunk의 초기 크기는 4096바이트이며, 내부적으로 커서를 사용하여 메모리가 할당된 위치를 기록합니다. 현재 Chunk의 남은 공간이 메모리 요청을 충족하지 못하면 새 Chunk를 요청하여 목록에 추가합니다. 시스템에 메모리를 요청하는 횟수를 줄이기 위해 현재 Chunk가 128M보다 작으면 새로 요청하는 Chunk의 크기를 매번 두 배로 늘립니다. 현재 Chunk가 128M보다 크면 메모리 낭비를 줄이기 위해 현재 메모리 요청을 충족하는 범위에서 새로 요청하는 Chunk의 크기를 최대 128M로 할당합니다. 기본적으로 이전 Chunk는 이후 alloc에 더 이상 사용되지 않습니다.
+
+### HashTable {#hashtable}
+
+Doris의 HashTable은 주로 Hash Join, 집계, 집합 연산, 윈도우 함수에 사용됩니다. 주로 사용하는 PartitionedHashTable은 최대 16개의 하위 HashTable을 포함하며, 두 HashTable의 병렬 병합을 지원합니다. 각 하위 Hash Join은 독립적으로 확장되므로 전체 메모리 사용량을 줄일 수 있으며, 확장 시 발생하는 지연도 분산됩니다.
+
+HashTable이 8M보다 작으면 4배로 확장하고, 8M보다 크면 2배로 확장합니다. HashTable이 2G보다 작을 때 확장 기준은 50%입니다. 즉, HashTable이 50% 채워지면 확장이 트리거됩니다. HashTable이 2G보다 커지면 확장 기준을 75%로 조정합니다. 메모리 낭비를 줄이기 위해 일반적으로 HashTable을 구축하기 전에 데이터 양에 따라 미리 확장합니다. 또한 Doris는 시나리오별로 다른 HashTable을 설계했습니다. 예를 들어 집계 시나리오에서는 PHmap을 사용하여 동시 처리 성능을 최적화합니다.
+
+### PODArray {#podarray}
+
+PODArray는 POD 타입의 동적 배열입니다. std::vector와 달리 요소를 초기화하지 않으며, 일부 std::vector 인터페이스를 지원하고 메모리 정렬과 2배 단위의 확장을 지원합니다. PODArray가 소멸할 때는 각 요소의 소멸자를 호출하지 않고 메모리 블록 전체를 바로 해제합니다. 주로 String 같은 컬럼의 데이터를 저장하는 데 사용됩니다. 이 밖에도 함수 계산과 표현식 필터링에 널리 사용됩니다.
+
+### 메모리 재사용 {#memory-reuse}
+
+Doris는 실행 계층에서 메모리를 폭넓게 재사용하여 눈에 띄는 메모리 병목을 대부분 해소했습니다. 예를 들어 데이터 블록인 Block은 Query 실행 전반에 걸쳐 재사용됩니다. Shuffle의 Sender 측에서는 항상 Block 하나를 유지하여 데이터를 받고, RPC 전송에서도 Block 하나를 번갈아 사용합니다. 스토리지 계층에서는 Tablet을 읽을 때 predicate 컬럼을 재사용하여 읽기, 필터링, 상위 계층 Block으로의 복사, Clear를 수행합니다. Aggregate Key 테이블에 데이터를 적재할 때는 캐시된 데이터를 보관하는 MemTable이 일정 크기에 도달하면 사전 집계 후 크기를 줄이고 쓰기를 계속합니다.
+
+또한 Doris는 데이터 Scan을 시작하기 전에 Scanner 수와 스레드 수를 기준으로 Free Block을 여러 개 미리 할당합니다. Scanner가 스케줄링될 때마다 여기서 Block을 가져와 스토리지 계층에 전달하여 데이터를 읽습니다. 읽기가 완료되면 Block을 생산자 큐에 넣어 상위 계층 연산자가 소비하고 후속 계산을 수행할 수 있도록 합니다. 상위 계층 연산자는 데이터를 복사한 후 다음 Scanner 스케줄링에서 재사용할 수 있도록 Block을 Free Block에 반환합니다. 이 과정을 통해 메모리를 재사용합니다. 데이터 Scan이 완료되면 앞서 사전 할당을 수행한 스레드에서 Free Block을 일괄 해제하여, 메모리 할당과 해제가 서로 다른 스레드에서 이루어질 때 발생하는 추가 오버헤드를 방지합니다. Free Block의 수는 데이터 Scan의 동시성도 어느 정도 제어합니다.
+
+## 메모리 GC {#memory-gc}
+
+Doris BE는 시스템에서 프로세스의 물리 메모리 사용량과 현재 시스템 가용 메모리를 주기적으로 가져오고, 모든 쿼리, 데이터 적재, compaction 태스크의 MemTracker 스냅샷을 수집합니다. BE 프로세스 메모리가 제한을 초과하거나 시스템의 가용 메모리가 부족하면 Doris는 캐시를 해제하고 일부 쿼리 또는 데이터 적재를 종료하여 메모리를 확보합니다. 이 과정은 별도의 GC 스레드에서 주기적으로 실행됩니다.
+
+![메모리 GC](/images/memory-gc.png)
+
+Doris BE 프로세스 메모리가 SoftMemLimit(기본값은 전체 시스템 메모리의 81%)을 초과하거나 시스템의 남은 가용 메모리가 Warning 워터마크(일반적으로 3.2GB 이하)보다 적으면 Minor GC가 트리거됩니다. 이때 Allocator가 메모리를 할당하는 시점에 쿼리를 일시 중지하고, 캐시의 데이터를 강제로 적재하며, 일부 Data Page Cache와 만료된 Segment Cache를 해제합니다. 해제된 메모리가 프로세스 메모리의 10%보다 적고 쿼리 메모리 초과 할당이 활성화되어 있으면, 초과 할당 비율이 큰 쿼리부터 취소합니다. 이는 프로세스 메모리의 10%가 해제되거나 취소할 수 있는 쿼리가 없어질 때까지 진행됩니다. 그런 다음 시스템 메모리 상태 수집 주기와 GC 주기를 줄입니다. 다른 쿼리는 남은 메모리가 확인되면 계속 실행됩니다.
+
+BE 프로세스 메모리가 MemLimit(기본값은 전체 시스템 메모리의 90%)을 초과하거나 시스템의 남은 가용 메모리가 Low 워터마크(일반적으로 1.6GB 이하)보다 적으면 Full GC가 트리거됩니다. 위 작업에 더해 캐시 데이터를 강제로 flush할 때 데이터 적재도 일시 중지하고, 모든 Data Page Cache와 그 밖의 캐시 대부분을 해제합니다. 해제된 메모리가 20%보다 적으면 정해진 전략에 따라 모든 쿼리와 데이터 적재의 MemTracker 목록을 탐색하고, 메모리 사용량이 큰 쿼리, 메모리 초과 할당 비율이 큰 데이터 적재, 메모리 사용량이 큰 데이터 적재를 차례로 취소합니다. 이 과정은 프로세스 메모리의 20%가 해제될 때까지 이어집니다. 그런 다음 시스템 메모리 상태 수집 주기와 GC 주기를 늘리고, 다른 쿼리와 데이터 적재는 계속 실행됩니다. GC 소요 시간은 일반적으로 수백 us에서 수십 ms 사이입니다.
+
+## 메모리 제한 및 워터마크 계산 방법 {#memory-limit-and-watermark-calculation-method}
+
+- 프로세스 메모리 제한 MemLimit = `be.conf/mem_limit * PhysicalMemory`이며, 기본값은 전체 시스템 메모리의 90%입니다. 자세한 내용은 관련 문서를 참조하세요.
+
+- 프로세스 메모리 소프트 제한 SoftMemLimit = `be.conf/mem_limit * PhysicalMemory * be.conf/soft_mem_limit_frac`이며, 기본값은 전체 시스템 메모리의 81%입니다.
+
+- 시스템의 남은 가용 메모리 하한 워터마크 LowWaterMark = `be.conf/max_sys_mem_available_low_water_mark_bytes`이며, 기본값은 -1입니다. 이 경우 LowWaterMark = `min(PhysicalMemory - MemLimit, PhysicalMemory * 0.05)`이며, 메모리가 64G인 시스템에서 LowWaterMark 값은 3.2 GB보다 약간 작습니다(실제 `PhysicalMemory` 값이 64G보다 작은 경우가 많기 때문입니다).
+
+- 시스템의 남은 가용 메모리 경고 워터마크 WarningWaterMark = `2 * LowWaterMark`이며, 메모리가 64G인 시스템에서 `WarningWaterMark`의 기본값은 6.4 GB보다 약간 작습니다.
+
+## 시스템의 남은 가용 메모리 계산 {#calculation-of-remaining-available-memory-in-the-system}
+
+오류 메시지에 표시된 가용 메모리가 하한 워터마크보다 적으면 이 역시 프로세스 메모리 초과로 처리합니다. 시스템 가용 메모리는 `MemAvailable` 값으로 나타내며, 이 값은 `/proc/meminfo`에서 가져옵니다. `MemAvailable`이 부족한 상태에서 메모리를 계속 요청하면 std::bad_alloc이 반환되거나 BE 프로세스에서 OOM이 발생할 수 있습니다. 프로세스 메모리 통계 갱신과 BE 메모리 GC에는 어느 정도 지연이 있으므로, OOM을 최대한 방지하기 위해 소량의 메모리 버퍼를 하한 워터마크로 예약합니다.
+
+여기서 `MemAvailable`은 현재 여유 메모리, 버퍼, 캐시, 메모리 단편화 등의 요인을 바탕으로 운영체제가 산정한 값으로, 가능한 한 swap을 유발하지 않으면서 사용자 프로세스에 제공할 수 있는 총 메모리 양입니다. 간단한 계산식은 `MemAvailable = MemFree - LowWaterMark + (PageCache - min(PageCache / 2, LowWaterMark))`입니다. 이는 `available` 값과 같으며, `free` 명령으로 확인할 수 있습니다. 자세한 내용은 다음을 참조하세요.
+
+[MemAvailable이 MemFree+Buffers+Cached보다 훨씬 작은 이유](https://serverfault.com/questions/940196/why-is-memavailable-a-lot-less-than-memfreebufferscached)
+
+[Linux MemAvailable](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=34e431b0ae398fc54ea69ff85ec700722c9da773)
+
+기본 하한 워터마크는 3.2G(2.1.5 이전에는 1.6G)이며, 메모리가 지나치게 낭비되지 않도록 `MemTotal`, `vm/min_free_kbytes`, `confg::mem_limit`, `config::max_sys_mem_available_low_water_mark_bytes`를 기준으로 계산합니다. 여기서 `MemTotal`은 전체 시스템 메모리이며, 이 값도 `/proc/meminfo`에서 가져옵니다. `vm/min_free_kbytes`는 운영체제가 메모리 GC 과정을 위해 예약한 버퍼이며, 값은 보통 0.4%에서 5% 사이입니다. 일부 클라우드 서버에서는 `vm/min_free_kbytes`가 5%일 수 있으며, 이 경우 시스템 가용 메모리가 실제보다 적게 표시됩니다. `config::max_sys_mem_available_low_water_mark_bytes`를 늘리면 메모리가 64G를 초과하는 시스템에서 Full GC를 위한 메모리 버퍼를 더 많이 확보하고, 반대로 줄이면 메모리를 최대한 활용할 수 있습니다.

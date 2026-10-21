@@ -2,7 +2,7 @@
 {
     "title": "FE 负载均衡",
     "language": "zh-CN",
-    "description": "介绍 Doris 多 FE 节点的负载均衡方案：JDBC、Nginx、HAProxy、ProxySQL，以及通过 Proxy Protocol 实现客户端 IP 透传。",
+    "description": "介绍 Doris 多 FE 节点的负载均衡方案：JDBC、Nginx、HAProxy、ProxySQL、NJet，以及通过 Proxy Protocol 实现客户端 IP 透传。",
     "keywords": [
         "Doris 负载均衡",
         "FE 高可用",
@@ -11,6 +11,7 @@
         "Nginx TCP 反向代理",
         "HAProxy",
         "ProxySQL",
+        "NJet",
         "Proxy Protocol",
         "客户端 IP 透传",
         "query_port 9030",
@@ -25,7 +26,7 @@
 
 用户通过 FE 的查询端口（`query_port`，默认 `9030`）使用 MySQL 协议连接 Doris。当部署多个 FE 节点时，可以在 FE 之上部署负载均衡层，实现 Doris 查询入口的高可用与连接分发。
 
-本文档介绍四种适用于 Doris 的负载均衡方案，并说明如何通过 Proxy Protocol 在代理层后透传客户端真实 IP。
+本文档介绍五种适用于 Doris 的负载均衡方案，并说明如何通过 Proxy Protocol 在代理层后透传客户端真实 IP。
 
 ## 适用场景
 
@@ -35,6 +36,7 @@
 | 已有 Nginx 基础设施，需要 TCP 层反向代理 | Nginx | 通用 TCP 反向代理，配置简单 |
 | 需要高性能 TCP 代理与健康检查 | HAProxy | 专业 TCP/HTTP 负载均衡，支持丰富的健康检查策略 |
 | 需要 MySQL 协议感知的代理（连接管理、读写分离等） | ProxySQL | 面向 MySQL 协议的数据库代理 |
+| 需要动态管理上游 FE 并进行主动 SQL 健康检查 | NJet | TCP 代理及可选的管理 API |
 | 需要在负载均衡后保留客户端真实 IP | Proxy Protocol | 配合 Nginx 或 HAProxy 使用 |
 
 ## 前置条件
@@ -602,6 +604,189 @@ ProxySQL > select * from mysql_server_ping_log;
 110 rows in set (0.001 sec)
 ```
 
+### 方案五：NJet
+
+[OpenNJet](https://github.com/OpenNJet/OpenNJet) 提供 TCP 代理、动态上游管理以及可选的 MySQL 主动健康检查。以下示例沿用前文的代理节点和 FE 地址。
+
+代理按**连接**分配流量。已建立的 MySQL 会话会保持在同一个 FE 上，不会逐条 SQL 分配，也不会重放中断的查询。这些配置只覆盖 FE 的 MySQL 端口。Stream Load 使用 HTTP 端点，可能重定向到 BE；客户端需要能够访问重定向返回的地址。
+
+#### 准备 NJet 和配置文件
+
+示例使用官方 `tmlake/njet:4.0.2.0` 镜像，安装前缀为 `/usr/local/njet`。该镜像为 Linux/AMD64，ARM 主机需要使用匹配的镜像或配置模拟运行。原生安装参见 [OpenNJet 快速开始](https://njet.org.cn/docs/quickstart/)，并按实际安装位置调整模块和配置路径。
+
+将以下两个文件保存到同一目录，确保容器能够访问 FE 地址。
+
+**`njet.conf`（数据面）：**
+
+```text
+worker_processes 1;
+cluster_name njet;
+node_name node1;
+
+helper ctrl modules/njt_helper_ctrl_module.so conf/njet_ctrl.conf;
+helper broker modules/njt_helper_broker_module.so;
+load_module modules/njt_http_upstream_member_module.so;
+
+events {
+    worker_connections 1024;
+}
+stream {
+    upstream mysqld {
+        zone mysqld 128k;
+        hash $remote_addr consistent;
+        server 192.168.1.101:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.102:9030 weight=1 max_fails=2 fail_timeout=60s;
+        server 192.168.1.103:9030 weight=1 max_fails=2 fail_timeout=60s;
+    }
+    server {
+        listen 6030;
+        proxy_connect_timeout 5s;
+        proxy_timeout 300s;
+        proxy_pass mysqld;
+    }
+}
+http {
+    dyn_kv_conf conf/iot-work.conf;
+}
+```
+
+虽然 Doris 流量由 `stream` 转发，管理 API 仍需要 `http` 块来初始化数据面模块。Helper 使用 `conf/njet_ctrl.conf`；本例不需要单独的 `conf/ctrl.conf` 或 `conf/mqtt.conf`。
+
+**`njet_ctrl.conf`（控制面）：**
+
+```text
+load_module modules/njt_http_sendmsg_module.so;
+load_module modules/njt_http_upstream_api_module.so;
+load_module modules/njt_helper_health_check_module.so;
+load_module modules/njt_health_check_mysql_module.so;
+
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 127.0.0.1:8081;
+        location /api {
+            dyn_module_api;
+        }
+    }
+}
+```
+
+必须显式加载 MySQL 健康检查模块。管理 API 监听容器内的回环地址，以下通过 `docker exec` 访问。
+
+#### 启动和验证
+
+在包含两个配置文件的目录中执行：
+
+```shell
+docker run -d --name doris-njet \
+  --platform linux/amd64 \
+  --cap-add=NET_ADMIN --cap-add=DAC_READ_SEARCH \
+  -p 6030:6030 \
+  -v "$PWD/njet.conf:/usr/local/njet/conf/njet.conf:ro" \
+  -v "$PWD/njet_ctrl.conf:/usr/local/njet/conf/njet_ctrl.conf:ro" \
+  tmlake/njet:4.0.2.0
+```
+
+检查两个配置文件并查看上游列表：
+
+```shell
+docker exec doris-njet njet -t
+docker exec doris-njet curl --max-time 10 -sS \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+`njet -t` 会报告两个配置文件均验证成功。API 返回 HTTP 200 和包含三个 FE 的 JSON 数组。通过代理连接 Doris，将 `doris_user` 替换为已有的 Doris 用户：
+
+```shell
+mysql -h192.168.1.100 -P6030 -u doris_user -p -e 'SELECT 1 AS connection_test;'
+```
+
+```text
++-----------------+
+| connection_test |
++-----------------+
+|               1 |
++-----------------+
+```
+
+关键配置：
+
+| 配置 | 示例值 | 作用 |
+| --- | --- | --- |
+| `zone` | `mysqld 128k` | 动态上游管理需要的共享状态空间。 |
+| `hash` | `$remote_addr consistent` | 对客户端 IP 做一致性 Hash 以分配新连接。共享同一源 IP 的客户端可能访问同一个 FE。 |
+| `max_fails` / `fail_timeout` | `2` / `60s` | 后端连接的被动失败检测，不会配置主动 SQL 检查。 |
+| `listen` | `6030` | 代理的 MySQL 协议端口，通过 Docker 的 `-p 6030:6030` 发布。 |
+| `proxy_connect_timeout` / `proxy_timeout` | `5s` / `300s` | 后端建连超时及代理空闲超时，应按查询和会话需求调整。 |
+
+#### 动态添加和删除 FE
+
+添加 FE 的请求：
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{"server":"192.168.1.104:9030","weight":2,"max_fails":1,"fail_timeout":"5s"}' \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/
+```
+
+API 返回 HTTP 201 和新成员信息，其中包含分配的 `id`。在初始三个成员的配置下，第一个新增成员的 ID 为 3。删除时应使用实际返回的 ID：
+
+```shell
+docker exec doris-njet curl --max-time 10 -i -X DELETE \
+  http://127.0.0.1:8081/api/v1/upstream_api/stream/upstreams/mysqld/servers/3
+```
+
+删除返回 HTTP 200，之后 GET 的列表中不再包含该成员。重新创建容器前，应使配置文件与预期成员列表保持一致。
+
+#### 配置 MySQL 主动健康检查
+
+主动 SQL 检查需要显式调用 API 配置，并准备可用的 Doris 账户和数据库。使用 Doris 管理员执行以下 SQL，并替换密码：
+
+```sql
+CREATE DATABASE IF NOT EXISTS health_check_db;
+CREATE USER IF NOT EXISTS 'njet_health'@'%' IDENTIFIED BY '<replace-with-password>';
+GRANT SELECT_PRIV ON health_check_db.* TO 'njet_health'@'%';
+```
+
+在下方请求中使用相同密码。对于未启用 TLS 的 FE 监听端口，`useSsl` 使用 `false`；只有 FE 监听端口已配置 TLS 时才设置为 `true`。
+
+```shell
+docker exec doris-njet curl --max-time 10 -i \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "interval":"5s",
+    "jitter":"1s",
+    "timeout":"5s",
+    "passes":1,
+    "fails":1,
+    "sql":{
+      "select":"select 1",
+      "useSsl":false,
+      "user":"njet_health",
+      "password":"<replace-with-password>",
+      "db":"health_check_db"
+    }
+  }' \
+  http://127.0.0.1:8081/api/v1/hc/smysql/mysqld
+```
+
+配置成功返回 HTTP 200 和 `{"code":0,"msg":"success"}`。后续健康检查会对每个 FE 完成认证、选择指定数据库并执行 `select 1`。
+
+| 字段 | 是否必填 / 默认值 | 说明 |
+| --- | --- | --- |
+| `interval`、`jitter`、`timeout` | 本例显式设置 | 检查间隔、定时器抖动和超时，使用时间长度格式。 |
+| `passes`、`fails` | 本例显式设置 | 改变健康状态前，需要连续成功或失败的次数。 |
+| `port` | 可选；默认使用上游端口 | 覆盖检查使用的端口。 |
+| `sql.select` | 本例显式设置 | 用于验证 FE 的 SQL。 |
+| `sql.useSsl` | 可选；NJet 默认 `true` | 必须与 FE 监听端口的 TLS 配置匹配。 |
+| `sql.user`、`sql.password` | 根据 Doris 账户设置 | 健康检查使用的凭据。 |
+| `sql.db` | 必填且非空 | 检查器要选择的已有数据库。 |
+
+API 超时时，请检查 Helper 路径以及数据面的 `http` 块。健康检查失败时，请检查数据库、凭据、网络和 TLS 配置；配置请求成功并不代表 FE 已健康。更多说明参见 [OpenNJet 源码和文档](https://github.com/OpenNJet/OpenNJet)及 [JSON 配置格式](https://njet.org.cn/cases/njet_support_json/)。
+
 ## 客户端 IP 透传（Proxy Protocol）
 
 <!-- 知识类型: 配置参数 / 操作步骤 -->
@@ -671,7 +856,7 @@ backend forward-fe
 
 ### 验证 IP 透传是否成功
 
-1. 通过代理连接 Doris：
+1. 通过代理连接 Doris，将 `doris_user` 替换为已有的 Doris 用户：
 
     ```sql
     mysql -uroot -P6030 -h192.168.1.100

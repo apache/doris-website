@@ -1,0 +1,139 @@
+---
+{
+    "title": "성능 및 튜닝",
+    "language": "ko",
+    "description": "Apache Doris 성능 및 튜닝 안내: 튜닝 방법론, 쿼리 및 데이터 적재 성능, 최적화 기술 원리, 벤치마크를 다룹니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris의 적응형 옵티마이저와 Pipeline 실행 엔진 덕분에 대부분의 워크로드는 별도 설정 없이도 원활하게 실행되지만, 운영 환경에서는 대개 체계적인 성능 튜닝이 필요합니다. 먼저 튜닝 방법론에 따라 병목 지점을 찾은 다음, 쿼리 또는 데이터 적재 측면에서 구체적인 시나리오에 맞춰 최적화하세요. 이해하기 어려운 실행 계획을 만나면 최적화 기술 원리를 참고하여 그 이면의 동작 방식을 파악하세요.
+
+## 튜닝 방법론 {#tuning-methodology}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="성능 튜닝 개요"
+    description="전체 튜닝 절차, Doris가 제공하는 진단 및 분석 도구, 성능 문제를 체계적으로 찾아내는 방법을 알아봅니다."
+    link="performance-tuning-overview/tuning-overview"
+/>
+</div>
+
+## 쿼리 성능 {#query-performance}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="스키마 및 인덱스 최적화"
+    description="테이블 모델, 파티셔닝 및 버킷팅, 키 컬럼 설계, 인덱스 선택(prefix index, BloomFilter, NGram, inverted)을 통해 쿼리 성능의 상한을 결정합니다."
+    link="tuning/tuning-plan/schema-and-index-optimization"
+/>
+
+<GettingStartedCard
+    title="구체화된 뷰"
+    description="동기식 또는 비동기식 구체화된 뷰로 결과를 미리 계산하고, 투명한 재작성을 통해 기존 SQL을 수정하지 않고도 실행 속도를 높입니다."
+    link="materialized-view/intro"
+/>
+
+<GettingStartedCard
+    title="Join 최적화"
+    description="Colocation Join으로 Shuffle을 제거하고, 옵티마이저의 판단이 최적이 아닐 때 Distribute 및 Leading Hint를 사용하여 Join 계획을 수동으로 조정합니다."
+    link="join-optimization-intro"
+/>
+
+<GettingStartedCard
+    title="캐시 가속"
+    description="SQL Cache, Condition Cache, 외부 테이블 파일 캐시를 함께 사용하여 반복되는 쿼리에서 결과, 필터 연산, 원격 데이터를 재사용합니다."
+    link="caching-intro"
+/>
+
+<GettingStartedCard
+    title="실행 튜닝"
+    description="Profile에 나타난 런타임 병목을 바탕으로 병렬도, RuntimeFilter 대기 시간, 데이터 편향, CBO 규칙을 조정합니다."
+    link="tuning/tuning-execution/intro"
+/>
+
+<GettingStartedCard
+    title="높은 동시성 및 포인트 쿼리"
+    description="row store와 short-circuit 실행을 사용하여 Unique Key 테이블에서 QPS가 높은 기본 키 쿼리를 지원하고, 차원 테이블 조인 대신 딕셔너리 테이블을 사용하여 KV 쿼리를 가속합니다."
+    link="high-concurrency-intro"
+/>
+
+<GettingStartedCard
+    title="고유 값 개수 집계"
+    description="BITMAP을 사용하여 정확하게 중복을 제거하거나, 1%-2%의 오차가 허용되는 경우 HLL을 사용하여 근사 UV를 계산함으로써 메모리 및 스토리지 오버헤드를 크게 줄입니다."
+    link="distinct-counts/intro"
+/>
+
+<GettingStartedCard
+    title="쿼리 Profile"
+    description="Profile을 통해 Scan, Exchange, Join, 집계 등의 연산자별 소요 시간 분포를 분석하여 쿼리에서 가장 느린 단계를 빠르게 찾아냅니다."
+    link="query-profile"
+/>
+</div>
+
+## 데이터 적재 성능 {#ingestion-performance}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DML 튜닝"
+    description="INSERT, UPDATE, DELETE의 실행 계획에서 쓰기 병렬도, 배치 크기, 실행 경로를 조정하여 안정적인 데이터 적재 성능을 확보합니다."
+    link="tuning/tuning-plan/dml-tuning-plan"
+/>
+</div>
+
+## 최적화 기술 원리 {#optimization-technology-principles}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="쿼리 옵티마이저"
+    description="규칙 기반 동등 변환과 비용 기반 Join Enumeration을 포함하여 Nereids 옵티마이저의 규칙 재작성 및 비용 모델을 소개합니다."
+    link="optimization-technology-principle/query-optimizer"
+/>
+
+<GettingStartedCard
+    title="Pipeline 실행 엔진"
+    description="Doris 실행 계층의 기반을 이루는 Pipeline 모델, 스케줄링 메커니즘, Morsel-Driven 병렬 실행을 소개합니다."
+    link="optimization-technology-principle/pipeline-execution-engine"
+/>
+
+<GettingStartedCard
+    title="Runtime Filter"
+    description="Join의 build 측에서 RuntimeFilter를 생성하고 probe 측으로 푸시다운하여 관련 없는 데이터를 건너뛰는 실행 메커니즘을 소개합니다."
+    link="optimization-technology-principle/runtime-filter"
+/>
+
+<GettingStartedCard
+    title="TopN 최적화"
+    description="ORDER BY ... LIMIT 시나리오에서 대부분의 데이터를 건너뛰어 TopN을 빠르게 반환하는 short-circuit 실행과 부분 정렬 최적화를 소개합니다."
+    link="optimization-technology-principle/topn-optimization"
+/>
+
+<GettingStartedCard
+    title="통계"
+    description="비용 기반 쿼리 옵티마이저가 실행 계획을 선택하는 데 기반이 되는 테이블 및 컬럼 통계, 히스토그램 등의 수집과 활용 방법을 소개합니다."
+    link="optimization-technology-principle/statistics"
+/>
+</div>
+
+## 벤치마크 {#benchmarks}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Star Schema Benchmark (SSB)"
+    description="재현 가능한 환경 설정과 주요 튜닝 사항을 포함하여 표준 하드웨어에서 수행한 Doris의 SSB 테스트 결과를 제공합니다."
+    link="../benchmark/ssb"
+/>
+
+<GettingStartedCard
+    title="TPC-H"
+    description="데이터 적재, 쿼리 지연 시간, 비교 지침을 다루는 Doris의 TPC-H 테스트 결과를 제공합니다."
+    link="../benchmark/tpch"
+/>
+
+<GettingStartedCard
+    title="TPC-DS"
+    description="더 복잡한 다중 테이블 분석 시나리오에서 수행한 Doris의 TPC-DS 테스트 결과를 제공합니다."
+    link="../benchmark/tpcds"
+/>
+</div>

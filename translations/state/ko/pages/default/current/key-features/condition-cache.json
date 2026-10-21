@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/condition-cache",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/condition-cache.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/condition-cache.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "97196341b35ad004d6a5f000363e4565de57d38600c832e58523e9fcbe24ff54",
+    "sourceTechnicalHash": "feb850e910d7eb7d0e8fb0b5e55598dda190d7f09c7a42dd6ee2d78e05479939",
+    "targetHash": "8e870a87295c9d34fa50c28756cc3288df2e5d70c6be83dfbe71761a79fa2c97",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:14:05.361Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "97196341b35ad004d6a5f000363e4565de57d38600c832e58523e9fcbe24ff54",
+      "targetHash": "8e870a87295c9d34fa50c28756cc3288df2e5d70c6be83dfbe71761a79fa2c97",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

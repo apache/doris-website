@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/check-rpc-channel",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+    "sourceTechnicalHash": "e180c7bc36ce7888c1bd11b767ce1f57f26fae20a0f059f0975b2c2bd415fa96",
+    "targetHash": "e88b73be8b6fdb6e1e9ef64a62fda0952220b74432a0c9dbf5f58c3dcd0980eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:23:57.055Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+      "targetHash": "e88b73be8b6fdb6e1e9ef64a62fda0952220b74432a0c9dbf5f58c3dcd0980eb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/be-http/check-rpc-channel",
+        "sourcePath": "docs/admin-manual/open-api/be-http/check-rpc-channel.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/check-rpc-channel.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+        "targetHash": "e88b73be8b6fdb6e1e9ef64a62fda0952220b74432a0c9dbf5f58c3dcd0980eb",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

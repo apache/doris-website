@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/DECIMAL",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/DECIMAL.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+    "sourceTechnicalHash": "00ab5c05612f3a61fea4233e35fdd0c564f7298061550ab7727ea820d6996292",
+    "targetHash": "81b5aca7af4a63deddf6b1d962b46eae0d6ea138a5fdf61c65d03195e5637a80",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:20:33.810Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88f74fd65db09ff5c2ec6a57340d20a16133b251ec534a3dcd21b435995ecb39",
+      "targetHash": "81b5aca7af4a63deddf6b1d962b46eae0d6ea138a5fdf61c65d03195e5637a80",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",null,null,\"DECIMAL(P[,S])\\nHigh-precision fixed-point number, where P represents the total count of significant digits (precision), and S is the count of decimal digits in the fractional part, to the right of the decimal point.\\nThe range of significant digits P is [1, MAX_P], where MAX_P=38 when enable_decimal256=false, and MAX_P=76 when enable_decimal256=true.\\nThe range of decimal places S is [0, P].\\n\\nBy default, precision is 38, and scale is 9(that is DECIMAL(38, 9)).\\n\\nThe default value of enable_decimal256 is false. Setting it to true can get more accurate results, but it will bring some performance loss.\\n\\nWhen outputting decimal types, the decimal point is always followed by S digits, even if the trailing digits are 0. For example, the number 123.456 of type decimal(18, 6) will be output as 123.456000.\"]; received [\"code\",null,null,\"DECIMAL(P[,S])\\n고정밀 고정 소수점 수입니다. P는 유효 숫자의 총 자릿수(정밀도)를 나타내고, S는 소수점 오른쪽 소수 부분의 자릿수입니다.\\n유효 숫자 자릿수 P의 범위는 [1, MAX_P]이며, enable_decimal256=false이면 MAX_P=38이고 enable_decimal256=true이면 MAX_P=76입니다.\\n소수 자릿수 S의 범위는 [0, P]입니다.\\n\\n기본 정밀도는 38이고 소수 자릿수는 9입니다(즉, DECIMAL(38, 9)).\\n\\nenable_decimal256의 기본값은 false입니다. true로 설정하면 더 정확한 결과를 얻을 수 있지만 성능이 다소 저하됩니다.\\n\\ndecimal 타입을 출력할 때는 끝자리가 0이더라도 소수점 뒤에 항상 S개의 숫자가 표시됩니다. 예를 들어, decimal(18, 6) 타입의 숫자 123.456은 123.456000으로 출력됩니다.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

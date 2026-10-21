@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authentication/ldap",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication/ldap.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/ldap.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a21febd795c9269f97523e47da3618890e3329a1c44c996685be8f5f0deb0b92",
+    "sourceTechnicalHash": "ef42811b044058a596eba61ea17834d94d756e43fb64ca04b9f4a1b34ac64bd6",
+    "targetHash": "6958cade0142ebc8d5e90a3f51736c0caf5aa7ff341b4adc4f1c37f14b6b7b62",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:07:10.029Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a21febd795c9269f97523e47da3618890e3329a1c44c996685be8f5f0deb0b92",
+      "targetHash": "6958cade0142ebc8d5e90a3f51736c0caf5aa7ff341b4adc4f1c37f14b6b7b62",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

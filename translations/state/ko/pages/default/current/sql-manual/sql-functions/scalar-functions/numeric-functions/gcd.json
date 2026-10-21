@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/gcd",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/gcd.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/gcd.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "b95bb5db92961783be1407e9e62a215543d3e8f4b4ed1d1d3592966591a5c7c9",
+    "sourceTechnicalHash": "6db1d18a012830c861fd4870e0b8dd470e215ade4ed1f5265dc7b476816ba273",
+    "targetHash": "b93288775871e5184a8e69dbcfdb9e34c748129526102662905795cc9a1ffd49",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:36:53.320Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b95bb5db92961783be1407e9e62a215543d3e8f4b4ed1d1d3592966591a5c7c9",
+      "targetHash": "b93288775871e5184a8e69dbcfdb9e34c748129526102662905795cc9a1ffd49",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,878 @@
+---
+{
+    "title": "Iceberg Catalog 기능 지원 매트릭스",
+    "language": "ko",
+    "description": "Apache Doris에서 지원하는 Iceberg Catalog 백엔드별 기능 지원 현황입니다."
+}
+---
+
+다음 표는 Doris에서 현재 사용할 수 있는 Iceberg Catalog 기능을 요약합니다. 행은 기능 영역별로 묶여 있으며, 백엔드 열은 Doris가 해당 메타데이터 서비스를 사용할 때 각 작업을 사용할 수 있는지 보여 줍니다. ✅는 Doris가 해당 작업을 지원함을, ❌는 현재 지원하지 않음을 나타냅니다.
+
+<table>
+  <thead>
+    <tr>
+      <th>기능 분류</th>
+      <th>작업</th>
+      <th>REST</th>
+      <th>HMS</th>
+      <th>Hadoop</th>
+      <th>Glue</th>
+      <th>DLF</th>
+      <th>S3 Tables</th>
+      <th>JDBC</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowSpan={8}>네임스페이스 / 데이터베이스</td>
+      <td><code>LIST_NAMESPACES</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>LOAD_NAMESPACE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>NAMESPACE_EXISTS</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>CREATE_NAMESPACE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>ALTER_NAMESPACE_PROPERTIES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>DROP_NAMESPACE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>DROP_NAMESPACE_CASCADE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>MULTILEVEL_NAMESPACE</code></td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={13}>테이블 수명 주기</td>
+      <td><code>LIST_TABLES</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>LOAD_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>TABLE_EXISTS</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>CREATE_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>CREATE_TABLE_WITH_LOCATION</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>CTAS</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>ATOMIC_CTAS</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>REGISTER_TABLE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>REPLACE_TABLE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>DROP_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>PURGE_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>RENAME_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>SET_TABLE_LOCATION</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={9}>스키마 및 레이아웃 변경</td>
+      <td><code>ADD_COLUMN</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>DROP_COLUMN</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>RENAME_COLUMN</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>ALTER_COLUMN_TYPE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>ALTER_COLUMN_NULLABILITY</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>SET_TABLE_PROPERTIES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>UNSET_TABLE_PROPERTIES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>EVOLVE_PARTITION_SPEC</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>EVOLVE_SORT_ORDER</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={8}>뷰</td>
+      <td><code>LIST_VIEWS</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>LOAD_VIEW</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>READ_VIEW</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>CREATE_VIEW</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>REPLACE_VIEW</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>ALTER_VIEW</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>RENAME_VIEW</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>DROP_VIEW</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td rowSpan={11}>데이터 쓰기</td>
+      <td><code>APPEND</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>OVERWRITE_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>OVERWRITE_PARTITION</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>DYNAMIC_PARTITION_OVERWRITE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>UPDATE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>DELETE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>MERGE_INTO</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>UPSERT</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>PARTIAL_UPDATE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>WRITE_TO_BRANCH</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>SCHEMA_EVOLUTION_ON_WRITE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={12}>트랜잭션 및 동시성</td>
+      <td><code>ATOMIC_SINGLE_TABLE_COMMIT</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>MULTI_TABLE_COMMIT</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>STAGED_CREATE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>OPTIMISTIC_CONCURRENCY</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>COMMIT_CONFLICT_DETECTION</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>COMMIT_RETRY</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>COMMIT_IDEMPOTENCY</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>COMMIT_STATUS_RECOVERY</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>LOCK_REQUIRED</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>LOCK_CONFIGURED</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>SERIALIZABLE_ISOLATION</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>FAILED_WRITE_CLEANUP</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={10}>브랜치 / 태그</td>
+      <td><code>BRANCH_CREATE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>BRANCH_DROP</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>READ_BY_BRANCH</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>BRANCH_WRITE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>BRANCH_FAST_FORWARD</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>TAG_CREATE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>TAG_DROP</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>READ_BY_TAG</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>TAG_WRITE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>TAG_FAST_FORWARD</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={4}>스냅샷</td>
+      <td><code>READ_BY_VERSION</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>READ_BY_TIME</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>ROLLBACK</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>EXPIRE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td>메타데이터 테이블</td>
+      <td><code>READ_METADATA_TABLE</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td rowSpan={5}>유지 관리</td>
+      <td><code>REMOVE_ORPHAN_FILES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>REWRITE_DATA_FILES / COMPACT</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>REWRITE_MANIFESTS</code></td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+      <td align="center">✅</td>
+    </tr>
+    <tr>
+      <td><code>REWRITE_DELETE_FILES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>EXPIRE_CHANGELOGS</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td rowSpan={3}>데이터 수집</td>
+      <td><code>ADD_FILES</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>MIGRATE_TABLE</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+    <tr>
+      <td><code>COMPUTE_TABLE_STATS</code></td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+      <td align="center">❌</td>
+    </tr>
+  </tbody>
+</table>

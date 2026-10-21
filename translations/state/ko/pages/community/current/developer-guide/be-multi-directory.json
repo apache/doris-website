@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/be-multi-directory",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/be-multi-directory.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/developer-guide/be-multi-directory.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2a43c2971e6012865e4c10d784c3477d5530d73a4f91aa2c89bf4f16a29a2676",
+    "sourceTechnicalHash": "a22834eb12df62f5007b4f714ce57ab1d664a8813f5c9db0a9d7fe5731b4e079",
+    "targetHash": "290a8b64e759ec240322623612a373252950ef5adb0e1509c92eb7893a1b0adf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:16:04.418Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a43c2971e6012865e4c10d784c3477d5530d73a4f91aa2c89bf4f16a29a2676",
+      "targetHash": "290a8b64e759ec240322623612a373252950ef5adb0e1509c92eb7893a1b0adf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

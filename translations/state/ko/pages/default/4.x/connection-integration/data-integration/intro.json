@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/intro",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/intro.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/intro.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a253e43f9be756bc13c3d5d94ced78f0224aa50adee9466596bbbe3db543d4c7",
+    "sourceTechnicalHash": "90aba615687425b1b86ecad8bc1b03531b2a4e0f4f4f31689ca68fa3c5ee7482",
+    "targetHash": "7528bc4872d5fcca34d8f2a18fa8c80e80fc036dc5d935e7efe4ee8e24746b73",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:56:32.648Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a253e43f9be756bc13c3d5d94ced78f0224aa50adee9466596bbbe3db543d4c7",
+      "targetHash": "7528bc4872d5fcca34d8f2a18fa8c80e80fc036dc5d935e7efe4ee8e24746b73",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/index-overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/index-overview.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/index-overview.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7e31322e1b7bda720eba44c4bd32143124ec70649d6b2fa0a4a25097fbb24c65",
+    "sourceTechnicalHash": "7516c125a870d522372cb89117698adb726728826e4fe737940caecf5ff92ba4",
+    "targetHash": "499d7eca4b45cf82bedaaade1beadbe25875de1aff3f13ad86756268d93432dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:02:18.483Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7e31322e1b7bda720eba44c4bd32143124ec70649d6b2fa0a4a25097fbb24c65",
+      "targetHash": "499d7eca4b45cf82bedaaade1beadbe25875de1aff3f13ad86756268d93432dc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

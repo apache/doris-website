@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/condition-cache",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/condition-cache.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/query-acceleration/condition-cache.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f1e69642757fcee2fdbdafe2869625bda7fab97a8e38850460129f9e5f5f8c39",
+    "sourceTechnicalHash": "bbd570ec8c378b8ef26ecbf063b460fb7b7d768b2df56fe2c436f3676ad8dea5",
+    "targetHash": "d499209cfcce15a17751a819b138ff4a644560d3a94f286bb4b2e607dd2c2268",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:22.441Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f1e69642757fcee2fdbdafe2869625bda7fab97a8e38850460129f9e5f5f8c39",
+      "targetHash": "d499209cfcce15a17751a819b138ff4a644560d3a94f286bb4b2e607dd2c2268",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "query-acceleration/condition-cache",
+        "sourcePath": "docs/query-acceleration/condition-cache.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/condition-cache.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "f1e69642757fcee2fdbdafe2869625bda7fab97a8e38850460129f9e5f5f8c39",
+        "targetHash": "d499209cfcce15a17751a819b138ff4a644560d3a94f286bb4b2e607dd2c2268",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

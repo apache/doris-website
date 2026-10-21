@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/lance-index-entries",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/lance-index-entries.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/lance-index-entries.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "cebebfabec22054db8b598fdb6c0add3ce416849ee495c3633182c60e81b0570",
+    "sourceTechnicalHash": "dbe89e8df457491fa8632061e97d5f061cbb900b50d43db28c0ccbd87b9b0dbd",
+    "targetHash": "c6a2b6543c56915cb1cbf85666fbaf1526099c32a90e867f02b40e00bf1c83d3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:31:45.114Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cebebfabec22054db8b598fdb6c0add3ce416849ee495c3633182c60e81b0570",
+      "targetHash": "c6a2b6543c56915cb1cbf85666fbaf1526099c32a90e867f02b40e00bf1c83d3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

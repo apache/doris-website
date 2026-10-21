@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/mysql",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/mysql.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/mysql.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a358a5bb5d452cd364d00d0a0fb330e98760fc0826a4431dbcb893516f08d4e9",
+    "sourceTechnicalHash": "b95209df4b6fec732a090e628489b5c80fd522d25b10fc140cd6b11b09208b6e",
+    "targetHash": "8a67f434ed976902ed0b6c4a159b5a35a979ddb9230cd796ce05d3a95d1219a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:50:21.789Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a358a5bb5d452cd364d00d0a0fb330e98760fc0826a4431dbcb893516f08d4e9",
+      "targetHash": "8a67f434ed976902ed0b6c4a159b5a35a979ddb9230cd796ce05d3a95d1219a6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

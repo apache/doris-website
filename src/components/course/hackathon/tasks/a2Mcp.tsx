@@ -113,7 +113,7 @@ export const A2_MCP: HackathonTaskContent = {
             title: 'Python 3.12 or later, with the server installed.',
             body: (
                 <>
-                    Check with <code>python3 --version</code>. Install the server before you arrive (milestone 2 has the
+                    Check with <code>python3 --version</code>. Install the server ahead of time (milestone 2 has the
                     commands): it pulls in about 80 packages.
                 </>
             ),

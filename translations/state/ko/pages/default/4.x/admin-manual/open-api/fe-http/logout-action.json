@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/logout-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/logout-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/logout-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "06f6a59cdd5e86fa9a856d1c91edf82a4922249f4dd1f98c64fa4ca0f1d88de9",
+    "sourceTechnicalHash": "dbecd91e3f2a550ba05434d5f4c0b31d6d2017f110813285e030055a43cb2c1e",
+    "targetHash": "e5415e578379a08446a4740721e4d6a59e00038255ce6f6b972d602ead45bbb2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:28:31.215Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "06f6a59cdd5e86fa9a856d1c91edf82a4922249f4dd1f98c64fa4ca0f1d88de9",
+      "targetHash": "e5415e578379a08446a4740721e4d6a59e00038255ce6f6b972d602ead45bbb2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/logout-action",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/logout-action.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/logout-action.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "06f6a59cdd5e86fa9a856d1c91edf82a4922249f4dd1f98c64fa4ca0f1d88de9",
+        "targetHash": "e5415e578379a08446a4740721e4d6a59e00038255ce6f6b972d602ead45bbb2",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authorization/ranger",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authorization/ranger.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+    "sourceTechnicalHash": "c1404ac49dd74b937abec990e0a43b325e4613d35e276b6d709255ec6bd3674a",
+    "targetHash": "7621705aeda8d4c2ebdfb261c8f444b10db0e4d98e3c57462d302210b34425de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:04:32.647Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+      "targetHash": "7621705aeda8d4c2ebdfb261c8f444b10db0e4d98e3c57462d302210b34425de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/auth/authorization/ranger",
+        "sourcePath": "docs/admin-manual/auth/authorization/ranger.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/ranger.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "edc920bd4a6a15e8575f2f3f40efd5e2771dd50caff194ec908ce13da35e210a",
+        "targetHash": "7621705aeda8d4c2ebdfb261c8f444b10db0e4d98e3c57462d302210b34425de",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

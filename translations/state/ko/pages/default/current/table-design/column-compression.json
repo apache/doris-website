@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/column-compression",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/column-compression.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/column-compression.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6049a098a9edde869604aedae7ca396c2b9447f002e273efbaaa31d5fc773715",
+    "sourceTechnicalHash": "5bff5d36241df75dc5cb2d266b3858811523cb6758e84376281a4c8139671e60",
+    "targetHash": "596f70951e481d95961b495f66507a6154ceaa157d653f564e16f567a7a9ada1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:59:42.602Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6049a098a9edde869604aedae7ca396c2b9447f002e273efbaaa31d5fc773715",
+      "targetHash": "596f70951e481d95961b495f66507a6154ceaa157d653f564e16f567a7a9ada1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

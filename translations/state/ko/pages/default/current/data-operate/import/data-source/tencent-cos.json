@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/tencent-cos",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/tencent-cos.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/tencent-cos.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+    "sourceTechnicalHash": "79b83b3f2db687dc203961665adc0e31419694d76f6cf9ef56d05567c1398335",
+    "targetHash": "032dc329b65bef7d82fec31e9836882494abfb821308d0d116435dd1a3ccb443",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:52:11.273Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ef59f346e2b29daf6c3e8fcd340bb972614102b50d0f6249f0576bcf2733c77d",
+      "targetHash": "032dc329b65bef7d82fec31e9836882494abfb821308d0d116435dd1a3ccb443",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"link\",\"#prerequisites\",null]\nprotected node 17: expected [\"link\",\"#prerequisites\",null]; received [\"inlineCode\",null,null,\"CREATE TABLE\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"CREATE TABLE\"]; received [\"link\",\"#prerequisites\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

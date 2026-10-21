@@ -28,6 +28,226 @@ Build Check installs dependencies and runs the i18n unit tests before the
 translation gate. The gate checks source metadata and state without a site
 build; the scoped website build and static-page verification run afterward.
 
+## Russian documentation launch
+
+Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
+or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
+workflows explicitly enable all three; default local builds still serve English
+and Chinese. Ordinary Russian pages link to English until individually registered.
+Russian generation has a manual-only workflow, described below. Product landing
+pages and a Russian generation schedule remain outside this launch.
+
+The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
+1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
+have independent state shards and machine review status. They have not received
+human Russian proofreading. The historical baseline has zero merged translations;
+use a fresh audit on merged master to report published coverage.
+
+```bash
+I18N_LOCALE=ru node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ru-coverage.json
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json
+node scripts/i18n/verify-search.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json --source-locales en,zh-CN --themes
+```
+
+Russian search uses the English and Russian Lunr analyzers together so ASCII
+identifiers survive trimming. Indexing and the UI worker boundary share
+length-preserving punctuation and `ё`/`е` normalization. Case and representative
+inflections are supported by the analyzers; this is not synonym expansion or
+transliteration, and arbitrary Russian word forms are not guaranteed to match.
+Displayed documents retain their original spelling and highlight positions.
+Japanese and Korean keep their existing analyzer choices. The browser check
+exercises actual workers and all three Russian contexts; local `--dev-only`
+results cannot establish full-version validation.
+
+Deployments retain `build:publish` and strict static verification of every enabled
+managed locale before replacing the public artifact. Search changes select all
+five locales and all active versions in Build Check. A successful PR check does
+not establish deployment or public URL acceptance. After merge, verify the
+production source/deploy SHAs, `/ru/docs/`, Dev/4.x samples and fallbacks,
+`/ru/community/`, search, language/version switches, query/hash, mobile themes,
+canonical/alternate links and noindex/sitemap behavior. To roll back public
+Russian routes, remove only `DORIS_ENABLE_RU` from both deployment workflows and
+rebuild through the existing process; retain source translations and state.
+
+## Russian manual translation
+
+`.github/workflows/russian-translation.yml` calls the existing
+`translation-run.yml` with `locale: ru` and the `russian-translation` workspace.
+It only accepts manual dispatch and defaults to `dry-run`, which discovers
+pending work without calling a model. Japanese, Korean and Russian runs share
+the whole-run `docs-translation` lock, including discovery and validation.
+Japanese and Korean schedules keep their existing behavior.
+
+The shared workflow runs only on Apache `master` and checks out `master` again
+before generation. Merge the Russian configuration and workflow before running
+these commands; dispatching an unmerged feature branch skips discovery.
+
+```bash
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master \
+  -f mode=validate -f path=community/how-to-contribute/how-to-share-blogs.md
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master \
+  -f mode=generate \
+  -f 'paths=["community/subscribe-mail-list.md","community/how-to-contribute/contribute-to-doris.mdx"]'
+```
+
+The latter two commands call the Codex provider when eligible pages and external
+configuration are available, and can create regular PRs carrying `translate-ru`.
+The paths above illustrate bounded selection; refresh the native plan and all
+open master PRs before choosing a live sample or batch. `validate` requires one
+exact source file. `generate` considers up to 20 planned targets and produces
+up to 10 target pages, counting eligible Dev/4.x copies separately.
+
+Russian uses its own scope, glossary, initial inventory and page state shards.
+Offline fixtures verify Cyrillic prose, inflected glossary terms, MDX labels,
+whole-document feedback, cross-version copies, open-PR exclusion and hash/human
+ownership protection. Preferred Russian terms permit grammatical inflection;
+technical identifiers still require preservation. Offline Codex process fixtures
+do not establish live provider access or merged coverage. Generated pages keep
+machine ownership and review status, with retry history and warnings available
+for review. The workflow does not merge PRs or enable automatic Russian runs.
+
+## Korean preview and inventory
+
+Korean is registered as an optional documentation locale. Enable it locally with
+`DORIS_ENABLE_KO=true`, or enable both managed languages with
+`DORIS_ENABLE_LOCALES=ja,ko`. Production deployment enables both Japanese and Korean.
+Korean ordinary pages use the existing English fallback.
+
+The initial Korean native inventory is pinned to the merged source commit in
+[inventory/ko/2026-10-18/summary.json](inventory/ko/2026-10-18/summary.json).
+It covers Dev, 4.x and community documentation. Its four current PoC pages have
+machine review status; the snapshot is a historical baseline rather than a
+live coverage count. Category and domain labels live in the three matching
+Korean plugin dictionaries; technical labels retained in English have explicit
+per-key reasons in `scope/ko.json`.
+
+Translation commands must select their locale explicitly now that both `ja`
+and `ko` are configured, for example `I18N_LOCALE=ko`. The site build flags
+select rendered languages; they do not select the translation pipeline locale.
+
+## Korean toolchain and script-driven execution
+
+Korean uses its own `scope/ko.json`, `glossary/ko.json`, inventory and page state.
+Select the pipeline explicitly with `I18N_LOCALE=ko`; rendering flags do not
+select a translation pipeline. A loop can recount and plan from the current
+committed checkout without fixed batch registration:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ko-coverage.json
+I18N_LOCALE=ko node scripts/i18n/plan-translations.cjs --source-ref HEAD --limit 10 \
+  --active-candidates /tmp/ko-active-candidates.json --output /tmp/ko-plan.json
+```
+
+The active-candidates file must come from the current open PR scan. A standalone
+plan without it does not establish cross-PR deduplication. Replan after source,
+target/state, HEAD or active PR changes; use the selected native task IDs rather
+than historical inventory batch IDs. Reports on a local feature-branch commit
+can include local candidates; merged coverage is recounted on merged master.
+The loop is implemented separately in its own worktree.
+
+The trusted-master Codex workflow translates whole documents or eligible changed
+blocks, with at most three attempts and cumulative feedback. A third-attempt
+candidate can retain content warnings: inspect `generation.acceptedWithWarnings`,
+`generation.warnings` and `generation.history` before publication. This is a
+review candidate, not a language/technical quality pass. Review status remains
+machine until actual human proofreading.
+
+The independent `translate-docs.cjs --provider openai` entry uses protected text
+units and its own validation; it is not the Codex workflow. It stages live bytes
+for explicit application. The locale selector also applies to that step:
+
+```bash
+I18N_LOCALE=ko node scripts/i18n/translate-docs.cjs \
+  --apply-staged .i18n-build/<reviewed-stage> --plan /tmp/ko-plan.json
+```
+
+Application binds current HEAD, source bytes, reviewed target bytes, state and
+ownership. Manual staging manifests use schema version 2 and freeze the original
+target, effective state file and shard-layout marker hashes before generation.
+Application refuses a newer matching target/state pair as well as inconsistent
+edits. Regenerate older version-1 stages before applying them; page state and
+Codex workflow artifact schemas remain version 1.
+
+Korean starts with the page-record marker and writes independent
+shards. Legacy records remain readable and existing shards retain precedence.
+Human-owned targets, edited target/state bytes, path drift and symlinks require
+review. Dev/4.x reuse requires the same doc ID, relative filename and full source
+hash; an existing partner is updated against its own baseline, not overwritten
+by a copy. Each reused target still receives its own link/state admission checks.
+
+Generation and admission retain visible front matter and keyword entries, and
+check any declared `language` against the target locale. These checks leave the
+existing source/technical hash algorithms unchanged. Offline Korean fixtures
+exercise these boundaries without real credentials or model calls; actual
+single-page generation is a separate validation step.
+
+The `Korean translation discovery` workflow runs at 04:43 and 16:43 UTC daily
+and on manual dispatch. Like the Japanese workflow, it calls the shared
+`.github/workflows/translation-run.yml`, here with the locale fixed to `ko` and
+its own `korean-translation-*` artifacts; both workflows hold the same
+`docs-translation` lock. The schedule starts twenty minutes after the Japanese
+one, so a Korean run waits while a Japanese run is still in progress. A scheduled run generates a
+batch when eligible Korean documents are pending, with the same limits as a
+manual `generate` run: the planner considers at most 20 targets and a batch has
+at most 10 pages. It opens a normal labeled PR that maintainers review and merge
+like any other; nothing is merged automatically. With nothing pending, a
+scheduled run only scans and makes no model call. Manual dispatch defaults to a
+read-only dry run. To run discovery on master:
+
+```bash
+gh workflow run korean-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
+```
+
+For a bounded real validation, select one eligible English file from the plan
+and provide its exact repository-relative `.md` or `.mdx` path with
+`-f mode=validate -f path=<exact-source-file>`. Validation sets the page limit
+to one and rechecks active PRs before calling Codex. Generation checks the
+`translate-ko` label before loading auth, then uses the existing verified
+runtime and auth pool. A write credential enables a normal labeled PR after
+shared admission checks; otherwise a successful one-page validation remains
+an artifact and does not establish the PR publication path. Inspect generation
+warnings and normal PR checks before merging.
+
+## Search, navigation and four-language validation
+
+`check-configuration.cjs --all` validates each managed locale's scope and glossary
+without loading Docusaurus, an inventory or a model. Build Check runs it even
+for scope/glossary-only changes. The Korean coverage workflow is read-only and
+reports pending translations without blocking an English source change merely
+because Korean content is missing.
+
+The navigation and browser search checks accept `--locale ja` or `--locale ko`.
+They read the current build's translation manifest; the inventory is a historical
+comparison, not a route allowlist. Generated inventory batch IDs are historical
+metadata, and execution batches are selected dynamically.
+
+```bash
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only
+node scripts/i18n/verify-search.cjs --site build --locale ko \
+  --manifest .i18n-build/manifests/ko.json --dev-only \
+  --source-locales en,zh-CN --themes --output /tmp/korean-search-check.json
+```
+
+These commands require a build made with Korean enabled. Local website builds
+use `DOCS_VERSIONS=current`; `--dev-only` records that 4.x was not built. Complete
+CI validation omits both flags and builds all four locales with `build:publish`,
+then verifies the shared resources, native routes, contexts and browser workers.
+Build and browser measurements are retained as the publish artifact measurements.
+Playwright/Chromium are installed in a separate tools directory in CI; local
+checks can use the same approach and set `NODE_PATH` to that directory's
+`node_modules`.
+
+SearchBar and SearchPage derive source-language index locations from the actual
+native version metadata. The native last version uses the locale root; other
+versions use their registered paths. This also works when a scoped build makes
+Dev the last version. Managed locales keep their own three context indexes at
+the locale root, including empty contexts; the empty root index is not a duplicate
+union. Korean verification covers Hangul, SQL, identifiers, IME composition,
+no-results/source links, mobile layout and every registered brand theme, including
+the embedded animation's theme-token bridge.
+
 ## State schema, version 1
 
 `state/ja/docs.json` is the legacy shared ledger. New Japanese records can live
@@ -154,7 +374,7 @@ commit. The 2026-10-12 inventory is only a comparison baseline. New registered
 pages enter the plan even when they have never appeared in that inventory.
 
 ```bash
-node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+I18N_LOCALE=ja node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --limit 20 --output /tmp/japanese-plan.json
 ```
 
@@ -226,8 +446,34 @@ reintroduced page returns to normal native enumeration.
 The translation pipeline works on one locale per run. `scripts/i18n/state.cjs`
 exposes `pipelineLocale(root)`: a configuration that declares a single locale
 needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
-soon as several are managed. The two discovery workflows take a `locale` input
-and pass it through as that variable.
+soon as several are managed. An absent or unconfigured selector then fails
+before discovery or generation. The Japanese coverage audit always
+selects `ja`. The language workflows accept no locale input: Japanese passes
+`ja`, Korean `ko`, and Russian `ru` to the shared run.
+
+Build Check runs PR admission for every configured translation locale, including
+locales disabled for the site build, when a shared input changes. Otherwise it
+runs only the locales whose own translation inputs changed, so a Korean-only PR
+does not pay for the Japanese inventory load and an English-only docs PR skips
+both admission gates. The selection lives in the `Translation gate for changed
+locales` step of `.github/workflows/build-check.yml`; shared inputs are
+`scripts/i18n/`, `translations/config.json`, `config/i18n.js`,
+`docusaurus.config.js`, `versions.json`, the site sidebars, and
+`versioned_sidebars/`.
+
+Without `--all`, `managed-locales.cjs` lists only enabled managed locales for
+publication checks. The publisher passes its selected locale to PR admission.
+Native inventory returns only that selected locale's pages and reports, plus
+repository-wide reports and all configured plugin/version metadata. SEO groups
+merge indexable translations by native plugin, version and doc ID, preserving
+actual source-language slugs and excluding stale or disabled translations.
+
+Run the offline native-metadata regression with
+`node --test scripts/i18n/__tests__/multi-locale.test.cjs`. For small real builds
+with both managed locales and with Korean disabled, run
+`node scripts/i18n/verify-multi-locale-fixture.cjs`; add `--browser` when
+Playwright and Chromium are installed. These fixtures use their own minimal
+locale registration and do not enable a production deployment.
 
 Each locale also declares, in `translations/config.json`:
 
@@ -264,7 +510,7 @@ node scripts/i18n/plan-translations.cjs --source-ref HEAD \
   --output /tmp/japanese-plan.json
 export OPENAI_API_KEY='<secret>'
 export I18N_MODEL='<explicit-model-id>'
-node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs --plan /tmp/japanese-plan.json \
   --task '<selected-task-id>' --stage-dir .i18n-build/translation-candidates
 ```
 
@@ -274,7 +520,7 @@ Review the candidate and manifest, then apply those **same bytes** without
 another model call:
 
 ```bash
-node scripts/i18n/translate-docs.cjs \
+I18N_LOCALE=ja node scripts/i18n/translate-docs.cjs \
   --apply-staged .i18n-build/translation-candidates \
   --plan /tmp/japanese-plan.json
 ```
@@ -305,10 +551,15 @@ be applied to managed translation files. The offline fixture does not establish
 live model quality, latency, cost or availability. A real limited call and
 review are recommended before running batch generation.
 
-## Asynchronous Japanese discovery and generation
+## Asynchronous discovery and generation
 
 `.github/workflows/japanese-translation.yml` runs at 04:23 and 16:23 UTC daily
-and on manual dispatch. It has no push trigger. Every run first recounts
+and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
+minutes later. Each sets only its triggers, manual defaults and the lock, then
+calls `.github/workflows/translation-run.yml` with its locale and artifact
+prefix. The manual-only Russian wrapper uses the same steps and lock. None has
+a push trigger. The description below uses Japanese; the other languages differ
+in locale, label, artifact names, triggers and manual default. Every run first recounts
 the current native Dev, 4.x and community documents, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
@@ -320,22 +571,28 @@ attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Manual dispatch defaults to `generate` and accepts optional plugin, version and
-source path filters. `validate` mode requires one exact English source path
+Japanese manual dispatch defaults to `generate` (Korean and Russian to `dry-run`) and
+accepts optional plugin, version and source path prefix filters, or an exact
+`paths` list. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
 page. It provides a single-page live check after OSS model access is available.
 With OSS access but no GitHub write credential, `validate` still writes the
 candidate to the generation artifact and makes no GitHub write.
 `dry-run` remains available for read-only discovery. Full scans recover
 pending work from new or changed source documents and earlier failed runs.
-One workflow-level concurrency group covers every trigger, mode and locale.
+One concurrency group, `docs-translation`, covers all three language workflows, every
+trigger and every mode. Rename it only while no translation run is queued or
+running; otherwise the run in flight and the next one hold different locks.
 Only one complete run can execute at a time; `cancel-in-progress: false`
 preserves it when another run is requested. `queue: max` lets up to 100
 pending runs wait instead of replacing the previous pending run; see
 [GitHub's concurrency documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
 Each queued run takes a fresh master checkout and recounts pending documents.
-Translation PR
-merges do not trigger this workflow. It does not participate in website
+The generation job checks out master again instead of the discovery commit,
+because it can wait for a runner long after discovery, then reconciles open PRs
+and replans. When master and the open-PR reservations are unchanged since
+discovery, it reuses the discovery plan instead of recounting every native
+document. Translation PR merges do not trigger this workflow. It does not participate in website
 builds or release deployment.
 
 The mode controls generation directly: manual `generate` runs and scheduled
@@ -345,8 +602,9 @@ uses the same verified Codex CLI package and numbered ChatGPT auth
 snapshots in OSS as the Apache Doris code-review runner. The repository's
 `OSS_AK` and `OSS_SK` secrets must be able to read those objects and update the
 selected auth snapshot if Codex refreshes it. `I18N_CODEX_MODEL` is optional
-and defaults to `gpt-6-sol`. A direct OpenAI API key is not used by this
-workflow; the separate T07 manual tool still supports the Responses API.
+and defaults to `gpt-6-sol`, with `xhigh` reasoning effort. A direct OpenAI API
+key is not used by this workflow; the separate T07 manual tool still supports
+the Responses API.
 To open a PR, configure one GitHub write identity. The preferred App path
 uses `I18N_GITHUB_APP_ID` and `I18N_GITHUB_APP_PRIVATE_KEY`; install the App on
 `apache/doris-website` with repository Contents and Pull requests write
@@ -365,8 +623,11 @@ missing OSS credentials leave discovery available without model calls.
 In `generate` mode, one run produces at most 10 target page candidates. The T08 planner
 and Codex adapter do not reject work based on an estimated or accumulated
 token allowance. The adapter still records actual usage for the run summary.
-Document length, chunk size, call timeout and the model's own context limits
-still apply. The adapter constrains the final answer with a JSON schema,
+Each model request translates one complete Markdown/MDX document. The automated
+workflow has no document-length or chunk-size limit and does not reuse individual
+text units. Each request has a ten-minute timeout; the generation job has a
+120-minute timeout. The model's own context and output limits still apply.
+The adapter constrains the final answer with a JSON schema,
 rejects tool calls and checks that Codex reports token usage.
 It runs in an isolated temporary directory with read-only sandboxing and no
 GitHub or OSS credentials in the model process. Refreshed auth is uploaded
@@ -375,7 +636,9 @@ The generator calls the model once for exact Dev/4.x pairs whose doc ID,
 relative source path and normalized source hash match. It writes two separate
 state records. Human-owned or changed targets, moves, deletions and other
 protected tasks stay in the manual queue. The robot opens a regular PR with
-machine review status and the `translate-ja` label, and never merges it.
+machine review status and the `translate-ja` label, and never merges it. The
+run checks that the label exists before loading Codex auth, because the
+publisher applies it only after the model calls and the branch push.
 Maintainers review and merge PRs when ready. Multiple batches can remain open:
 their documents are excluded, while unrelated pending documents can form the
 next batch. This exclusion includes stale candidates and manually edited
@@ -387,27 +650,106 @@ The PR body lists the source commit, source links, source hashes, model,
 glossary version, failures and validation. The normal PR checks remain the
 merge gate.
 
+Each document gets at most three total attempts. A retry receives the validation
+errors from all earlier attempts, including details of changed protected content
+and broken internal links. Checks match product names as complete Latin words,
+case-insensitively, and permit localized prose-number formatting. Code, links,
+component attributes, technical metadata and heading IDs remain checked.
+MDX compilation follows Docusaurus by removing front matter first.
+
+If the third response still has content issues, the generator keeps that response
+as a candidate with warnings. The state record binds its attempt history and
+warnings to the exact source and target hashes. The PR translation gate recognizes
+that recorded fallback, and the PR body lists its warnings for review. Three
+requests that return no usable document remain an operational failure.
+
+Master usually moves while a batch waits for a runner or for the model.
+Generation checks it before the first model call, before each page and after the
+last one, and the publisher checks it again before pushing
+(`scripts/i18n/master-drift.cjs`). A merge that touches none of the batch's files
+leaves the batch valid: the PR branch stays on the source commit, the PR body
+notes the newer master, and the normal PR checks run against current master. A
+merge that changes a batch page's English source, target or state shard drops
+that page, which stays pending for the next run; the publisher stops instead.
+A merge that changes translation configuration, routing identity or the
+pipeline itself discards the batch before any further model call: the
+locale's scope, glossary, protection exceptions, inventory or top-level state
+files, `translations/config.json`, `config/i18n.js`, `docusaurus.config.js`,
+`versions.json` or `scripts/i18n/`. So does a master that no longer contains
+the source commit.
+
+Before pushing, the publisher runs `scripts/i18n/pr-preflight.cjs`, the same entry
+point used by the PR build workflow. It checks translation state, Markdown/MDX
+syntax and internal links using the PR link checker's resolver. Invalid syntax
+or broken links block publication even when the generator retained the third
+response. The full production build and human proofreading remain required
+before merging.
+
 ### Local T08 simulation
 
-From a committed checkout with dependencies installed, run:
+From a checkout with dependencies installed, run:
 
 ```bash
 node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-workflow-sim
+
+# Retain all ten third-attempt candidates with warnings.
+I18N_SIM_PAGES=10 I18N_SIM_SCENARIO=fallback \
+  node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-ten-page-sim
+
+# Translate a real page exceeding the former 60,000-character limit in one request.
+I18N_SIM_SOURCE_PATH=docs/admin-manual/config/be-config.md I18N_SIM_SCENARIO=success \
+  node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-long-page-sim
+
+# A merge lands on master after discovery: unrelated, to the selected page,
+# or to the Japanese glossary.
+I18N_SIM_MASTER_DRIFT=unrelated node scripts/i18n/simulate-workflow.cjs /tmp/doris-ja-drift-sim
 ```
 
-The output directory must be empty. Set `I18N_SIM_SOURCE_PATH` to another
-pending Dev `.md` or `.mdx` file if the default example has already been
-translated. The simulator clones the current commit, runs real open-PR
-reconciliation and full planning against a GitHub CLI mock, then runs the
-translation engine with a schema-shaped Codex mock. It checks that an invalid
-model unit fails validation, that a 100,000-token usage report does not stop a
-valid candidate, and that publication pushes only managed Japanese files to a
-local bare Git repository and records a mock regular PR with its label. Each
-local step has a 20-minute timeout to accommodate the full native scan.
-`report.json` and step
-logs remain in the output directory. No real model call or GitHub write occurs.
+The output directory must be empty. The simulator copies the current scripts,
+including uncommitted edits, into a disposable clone. For a single page, it makes
+the selected Dev source pending only in that clone. Ten-page runs add isolated
+source fixtures there. Real open-PR reconciliation and full planning run against
+a GitHub CLI mock, followed by the production engine and a schema-shaped Codex
+mock. `I18N_SIM_SCENARIO` accepts `success` (one attempt), `retry` (two attempts,
+the default), or `fallback` (three attempts retained with warnings).
+`I18N_SIM_MASTER_DRIFT` pushes one more commit to the local remote after
+discovery: `unrelated` publishes normally and records the newer master in the PR
+body, `page` skips the selected page without a model request, and `config` stops
+the batch before any model request.
+
+The simulator also verifies three empty responses, token accounting, the shared
+PR admission checks, and publication of only managed Japanese targets/state to
+a local bare Git repository. Each local step has a 20-minute timeout for the
+full native scan. `report.json` and step logs remain in the output directory.
+No real model call or GitHub write occurs.
 
 ## Validation
+
+### Selecting an exact manual batch
+
+All three language workflows take an optional `paths` input on manual dispatch.
+It accepts a JSON array of 1–20 exact English source files, so a bounded
+batch can select documents from different folders without including every page
+under a shared prefix:
+
+```bash
+gh workflow run korean-translation.yml --repo apache/doris-website --ref master \
+  -f mode=dry-run \
+  -f 'paths=["community/subscribe-mail-list.md","community/how-to-contribute/contribute-to-doris.mdx"]'
+```
+
+Use `paths` or the existing `path` prefix, not both. The same list is used in the
+fresh scan immediately before generation. `validate` still requires one exact
+`path`; use `generate` for a regular batch. The planner considers at most 20
+targets and generation still produces at most 10. Exact selection preserves
+full coverage counts, current-page and active-PR exclusion, human ownership,
+scope/version checks, and protection against relevant master changes. Unknown, duplicate,
+malformed or out-of-scope source paths fail before model calls. Scheduled runs
+do not use this input; they plan from the full scope.
+
+The planner CLI exposes the same filter as `--paths '<JSON array>'`.
+
+### Validation commands
 
 ```bash
 node --test scripts/i18n/__tests__/*.test.cjs scripts/i18n/poc/*.test.cjs

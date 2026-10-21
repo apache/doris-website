@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/SHOW-WORKLOAD-GROUPS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "45101971735896edce99f0195ac7a24fd33a305048121148dbe9b6765a1a0490",
+    "sourceTechnicalHash": "811677881846d26980ef24fb2cb60d3111c826a22c52ac33e294cf5f60fdaca6",
+    "targetHash": "4dbaf651843677c846b86e89dc2da1486abcaefd2b525bcfaec72c21b3e557ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:16:20.351Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "45101971735896edce99f0195ac7a24fd33a305048121148dbe9b6765a1a0490",
+      "targetHash": "4dbaf651843677c846b86e89dc2da1486abcaefd2b525bcfaec72c21b3e557ab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

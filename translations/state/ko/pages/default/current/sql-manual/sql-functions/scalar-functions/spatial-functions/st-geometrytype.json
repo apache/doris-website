@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometrytype.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "784888a75f4894b867b1859f011d3f340d2f01d5c5df911b1464f8594847a2f9",
+    "sourceTechnicalHash": "e01e0f92dba475cac3cab108985dda044281cfea5e1185f325e05a242afee725",
+    "targetHash": "efb8365fe088529c0b0652ee4b3ab30dbec9742a82e09993a0e1071931b023af",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:42:01.140Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "784888a75f4894b867b1859f011d3f340d2f01d5c5df911b1464f8594847a2f9",
+      "targetHash": "efb8365fe088529c0b0652ee4b3ab30dbec9742a82e09993a0e1071931b023af",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

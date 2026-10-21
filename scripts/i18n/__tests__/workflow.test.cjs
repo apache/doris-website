@@ -8,9 +8,10 @@ const {hash, loadConfig, stateFileFor, loadRecords, identity} = require('../stat
 const {structure} = require('../structure.cjs');
 const {readState, applyCandidates} = require('../translate-docs.cjs');
 const {reconcileOpenPrs} = require('../workflow-prs.cjs');
-const {relevantPush} = require('../workflow-scan.cjs');
+const {relevantPush, planInputs} = require('../workflow-scan.cjs');
 const {pairFor, machineOwned, generate, allowGeneration} = require('../workflow-generate.cjs');
 const {expectedFiles, authorFor} = require('../workflow-publish.cjs');
+const {masterDrift, checkMaster, batchWide, pageFiles} = require('../master-drift.cjs');
 
 // The language facts come from the real configuration, so the tests describe
 // the same automation names the pipeline publishes under.
@@ -176,62 +177,89 @@ test('personal token writes commits under its authenticated owner', () => {
     assert.throws(() => authorFor('pat', {login: 'other name', id: 1}, language), /Invalid personal/);
 });
 
-test('one model result creates separate Dev and 4.x targets and state records', async () => {
+// One pending Dev page whose 4.x copy shares its English source.
+function pairFixture(t) {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ja-workflow-'));
+    t.after(() => fs.rmSync(dir, {recursive: true, force: true}));
     const git = (...args) => execFileSync('git', args, {cwd: dir, encoding: 'utf8'}).trim();
-    try {
-        const source = '# Hello\n\nA simple guide.\n';
-        const relative = 'guide.md';
-        const devSource = `docs/${relative}`;
-        const x4Source = `versioned_docs/version-4.x/${relative}`;
-        for (const file of [devSource, x4Source]) {
-            fs.mkdirSync(path.dirname(path.join(dir, file)), {recursive: true});
-            fs.writeFileSync(path.join(dir, file), source);
-        }
-        fs.mkdirSync(path.join(dir, 'translations/scope'), {recursive: true});
-        fs.mkdirSync(path.join(dir, 'translations/state/ja'), {recursive: true});
-        fs.writeFileSync(path.join(dir, 'translations/scope/ja.json'), JSON.stringify(scope));
-        fs.writeFileSync(path.join(dir, 'translations/state/ja/docs.json'), '{"schemaVersion":1,"pages":[]}\n');
-        git('init', '-q');
-        git('config', 'user.name', 'Test');
-        git('config', 'user.email', 'test@example.com');
-        git('add', '.');
-        git('commit', '-qm', 'source');
-        const sourceCommit = git('rev-parse', 'HEAD');
-        const task = (id, version, sourcePath, targetPath) => ({id, groupId: version === 'current' ? 'DEV' : '4X',
-            pluginId: 'default', version, docId: 'guide', locale: 'ja', kind: 'translate_backlog',
-            sourcePath, targetPath, sourceHash: hash(source), sourceCommit,
-            requiresHumanReview: false, activePr: null});
-        const dev = task('T06-DEV-000000000000001', 'current', devSource,
-            'i18n/ja/docusaurus-plugin-content-docs/current/guide.md');
-        const x4 = task('T06-4X-000000000000002', '4.x', x4Source,
-            'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md');
-        let calls = 0;
-        const adapter = {model: 'fixture', usedTokens: 0, translate: async ({units}) => {
-            calls++;
-            return {translations: units.map(unit => ({id: unit.id,
-                text: unit.text === 'Hello' ? 'こんにちは' : '簡単なガイドです。'}))};
-        }};
-        const manifest = await generate({rootDir: dir, target, output: path.join(dir, 'output'),
-            ensureFresh: commit => assert.equal(commit, sourceCommit),
-            plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: [dev.id], tasks: [dev, x4], exceptions: []},
-            reconciliation: {botPrs: [], botDetails: [], blockedTargets: []},
-            maxPages: 2, adapter, glossary: require('../../../translations/glossary/ja.json')});
-        assert.equal(calls, 1);
-        assert.equal(manifest.candidates.length, 2);
-        assert.equal(manifest.provider, 'codex');
-        assert.equal(manifest.candidates[1].reusedFrom, dev.id);
-        assert.equal(fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'),
-            fs.readFileSync(path.join(dir, x4.targetPath), 'utf8'));
-        assert.equal(fs.readFileSync(path.join(dir, 'output/candidates', dev.targetPath), 'utf8'),
-            fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'));
-        const state = JSON.parse(fs.readFileSync(path.join(dir, 'translations/state/ja/docs.json'), 'utf8'));
-        assert.deepEqual(state.pages.map(page => page.version), ['4.x', 'current']);
-        assert(state.pages.every(page => page.reviewStatus === 'machine' && page.sourceHash === hash(source)));
-    } finally {fs.rmSync(dir, {recursive: true, force: true});}
+    const source = '# Hello\n\nA simple guide.\n';
+    const relative = 'guide.md';
+    const devSource = `docs/${relative}`;
+    const x4Source = `versioned_docs/version-4.x/${relative}`;
+    for (const file of [devSource, x4Source]) {
+        fs.mkdirSync(path.dirname(path.join(dir, file)), {recursive: true});
+        fs.writeFileSync(path.join(dir, file), source);
+    }
+    fs.mkdirSync(path.join(dir, 'translations/scope'), {recursive: true});
+    fs.mkdirSync(path.join(dir, 'translations/state/ja'), {recursive: true});
+    fs.writeFileSync(path.join(dir, 'translations/scope/ja.json'), JSON.stringify(scope));
+    fs.writeFileSync(path.join(dir, 'translations/state/ja/docs.json'), '{"schemaVersion":1,"pages":[]}\n');
+    git('init', '-q');
+    git('config', 'user.name', 'Test');
+    git('config', 'user.email', 'test@example.com');
+    git('add', '.');
+    git('commit', '-qm', 'source');
+    const sourceCommit = git('rev-parse', 'HEAD');
+    const task = (id, version, sourcePath, targetPath) => ({id, groupId: version === 'current' ? 'DEV' : '4X',
+        pluginId: 'default', version, docId: 'guide', locale: 'ja', kind: 'translate_backlog',
+        sourcePath, targetPath, sourceHash: hash(source), sourceCommit,
+        requiresHumanReview: false, activePr: null});
+    const dev = task('T06-DEV-000000000000001', 'current', devSource,
+        'i18n/ja/docusaurus-plugin-content-docs/current/guide.md');
+    const x4 = task('T06-4X-000000000000002', '4.x', x4Source,
+        'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md');
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 0, translate: async ({units}) => {
+        calls++;
+        return {translations: units.map(unit => ({id: unit.id,
+            text: unit.text === 'Hello' ? 'こんにちは' : '簡単なガイドです。'}))};
+    }};
+    const run = ensureFresh => generate({rootDir: dir, target, output: path.join(dir, 'output'), ensureFresh,
+        plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: [dev.id], tasks: [dev, x4], exceptions: []},
+        reconciliation: {botPrs: [], botDetails: [], blockedTargets: []},
+        maxPages: 2, adapter, glossary: require('../../../translations/glossary/ja.json')});
+    return {dir, source, sourceCommit, dev, x4, run, calls: () => calls};
+}
+
+test('one model result creates separate Dev and 4.x targets and state records', async t => {
+    const {dir, source, sourceCommit, dev, x4, run, calls} = pairFixture(t);
+    const manifest = await run(commit => assert.equal(commit, sourceCommit));
+    assert.equal(calls(), 1);
+    assert.equal(manifest.candidates.length, 2);
+    assert.equal(manifest.provider, 'codex');
+    assert.equal(manifest.candidates[1].reusedFrom, dev.id);
+    assert.equal(fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'),
+        fs.readFileSync(path.join(dir, x4.targetPath), 'utf8'));
+    assert.equal(fs.readFileSync(path.join(dir, 'output/candidates', dev.targetPath), 'utf8'),
+        fs.readFileSync(path.join(dir, dev.targetPath), 'utf8'));
+    const state = JSON.parse(fs.readFileSync(path.join(dir, 'translations/state/ja/docs.json'), 'utf8'));
+    assert.deepEqual(state.pages.map(page => page.version), ['4.x', 'current']);
+    assert(state.pages.every(page => page.reviewStatus === 'machine' && page.sourceHash === hash(source)));
 });
 
-async function updateFixture(t, {sharded = true, human = false} = {}) {
+test('a page changed on master after its model call is dropped together with its Dev/4.x copy', async t => {
+    const {dir, dev, x4, run, calls} = pairFixture(t);
+    const seen = [];
+    // Before the batch, before the page, then after it: only the last check sees the change.
+    const manifest = await run((commit, pages) => {
+        seen.push(pages);
+        if (seen.length === 3) return {head: 'b'.repeat(40), moved: true, files: [dev.sourcePath],
+            batchWide: [], affected: [dev.id]};
+    });
+    assert.equal(calls(), 1);
+    assert.deepEqual([...seen[0].keys()].sort(), [dev.id, x4.id].sort());
+    assert.deepEqual(seen[0].get(x4.id), [x4.sourcePath, x4.targetPath, stateFileFor(x4)]);
+    assert.deepEqual(manifest.candidates, []);
+    assert.deepEqual(manifest.failures.map(item => item.id), [dev.id, x4.id]);
+    assert.match(manifest.failures[0].error, /master changed this page/);
+    assert.deepEqual(manifest.master, {head: 'b'.repeat(40), moved: true, changedFiles: 1});
+    for (const task of [dev, x4]) assert(!fs.existsSync(path.join(dir, task.targetPath)));
+    assert(!fs.existsSync(path.join(dir, 'output/pr-body.md')));
+});
+
+async function updateFixture(t, {sharded = true, human = false,
+    previousSource = '# Hello\n\nOld.\n', source = '# Hello\n\nNew.\n',
+    previousTarget = '# こんにちは {#hello}\n\n古い。\n'} = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-state-update-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -239,9 +267,7 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
         fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true});
         fs.writeFileSync(path.join(root, file), text);
     };
-    const previousSource = '# Hello\n\nOld.\n';
-    const source = '# Hello\n\nNew.\n';
-    const previousTarget = '# こんにちは {#hello}\n\n古い。\n';
+    put('scripts/check_md_links_single.py', fs.readFileSync(path.resolve(__dirname, '../../check_md_links_single.py'), 'utf8'));
     put('docs/guide.md', previousSource);
     put('translations/scope/ja.json', JSON.stringify(scope));
     git('init', '-q'); git('add', '.');
@@ -282,6 +308,82 @@ async function updateFixture(t, {sharded = true, human = false} = {}) {
     return {root, git, put, oldRecord, previousTarget, legacyPath, shardPath, plan, task, adapter, run,
         calls: () => calls};
 }
+
+test('workflow updates compare against the recorded translated source across multiple English commits', async t => {
+    const previousSource = '# Hello\n\n' + Array.from('ABCDEFGHI', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+    const previousTarget = '# こんにちは {#hello}\n\n' + Array.from('ABCDEFGHI', letter => `段落 ${letter}。`).join('\n\n') + '\n';
+    const firstUpdate = previousSource.replace('Paragraph A.', 'Updated A.');
+    const fixture = await updateFixture(t, {previousSource, previousTarget, source: firstUpdate});
+    const source = firstUpdate.replace('Paragraph I.', 'Updated I.');
+    fixture.put(fixture.task.sourcePath, source);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'second English update');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const task = {...fixture.task, sourceCommit, sourceHash: hash(source)};
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 100, translateDocument: async () => {
+        throw new Error('Unexpected full translation');
+    }, translateChanges: async input => {
+        calls++;
+        assert.equal(input.document, source);
+        assert.deepEqual(input.changes.map(item => item.previousText), ['Paragraph A.', 'Paragraph I.']);
+        assert.deepEqual(input.changes.map(item => item.text), ['Updated A.', 'Updated I.']);
+        return {translations: input.changes.map(item => ({id: item.id, text: item.text.replace('Updated', '更新した')}))};
+    }};
+    const manifest = await fixture.run({adapter, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, tasks: [task]}});
+    assert.deepEqual(manifest.failures, []);
+    assert.equal(calls, 1);
+    assert.equal(manifest.candidates[0].generation.mode, 'incremental');
+    assert.equal(manifest.candidates[0].generation.sourceChange.ratio, 0.2);
+    assert.equal(manifest.candidates[0].generation.acceptedWithWarnings, false);
+    const target = fs.readFileSync(path.join(fixture.root, task.targetPath), 'utf8');
+    assert.equal(target, previousTarget.replace('段落 A。', '更新した A.').replace('段落 I。', '更新した I.'));
+    const updated = loadRecords(fixture.root, 'ja').get(identity(task));
+    assert.equal(updated.sourceCommit, sourceCommit);
+    assert.equal(updated.sourceHash, hash(source));
+    assert.equal(updated.targetHash, hash(target));
+});
+
+test('existing Dev and 4.x translations are updated independently instead of copying over their wording', async t => {
+    const previousSource = '# Hello\n\n' + Array.from('ABCDEFGHI', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+    const previousTarget = '# こんにちは {#hello}\n\n' + Array.from('ABCDEFGHI', letter => `段落 ${letter}。`).join('\n\n') + '\n';
+    const source = previousSource.replace('Paragraph A.', 'Updated A.');
+    const fixture = await updateFixture(t, {sharded: false, previousSource, previousTarget, source});
+    const sourcePath = 'versioned_docs/version-4.x/guide.md';
+    const targetPath = 'i18n/ja/docusaurus-plugin-content-docs/version-4.x/guide.md';
+    const otherTarget = previousTarget.replace('段落 B。', '別の訳文 B。');
+    fixture.put(sourcePath, previousSource);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'old 4.x source');
+    const x4Record = {...fixture.oldRecord, version: '4.x', sourcePath, targetPath,
+        sourceCommit: fixture.git('rev-parse', 'HEAD'), targetHash: hash(otherTarget)};
+    fixture.put(targetPath, otherTarget);
+    fixture.put(fixture.legacyPath, JSON.stringify({schemaVersion: 1, pages: [fixture.oldRecord, x4Record]}));
+    fixture.put(sourcePath, source);
+    fixture.git('add', '.');
+    fixture.git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'update 4.x source');
+    const sourceCommit = fixture.git('rev-parse', 'HEAD');
+    const primary = {...fixture.task, sourceCommit};
+    const partner = {...primary, version: '4.x', groupId: '4X', id: 'T06-4X-000000000000002', sourcePath, targetPath};
+    let calls = 0;
+    const adapter = {model: 'fixture', usedTokens: 100, translateDocument: async () => {
+        throw new Error('Unexpected full translation');
+    }, translateChanges: async ({changes}) => {
+        calls++;
+        return {translations: changes.map(item => ({id: item.id, text: '更新した A。'}))};
+    }};
+    const manifest = await fixture.run({adapter, maxPages: 2, ensureFresh: () => {},
+        plan: {...fixture.plan, sourceCommit, selected: [primary.id, partner.id], tasks: [primary, partner]}});
+    assert.deepEqual(manifest.failures, []);
+    assert.equal(manifest.candidates.length, 2);
+    assert.equal(calls, 2);
+    assert(manifest.candidates.every(item => !item.reusedFrom && item.generation.mode === 'incremental'));
+    assert.equal(fs.readFileSync(path.join(fixture.root, primary.targetPath), 'utf8'),
+        previousTarget.replace('段落 A。', '更新した A。'));
+    assert.equal(fs.readFileSync(path.join(fixture.root, partner.targetPath), 'utf8'),
+        otherTarget.replace('段落 A。', '更新した A。'));
+});
 
 test('a paired target reserved by an open PR is not copied even when the supplied plan omits that reservation', async t => {
     const fixture = await updateFixture(t);
@@ -437,7 +539,9 @@ test('publication deduplicates shared state and rejects an unrelated page shard'
         [record.targetPath, second.targetPath, 'translations/state/ja/docs.json'].sort());
 });
 
-test('normal generation skips open PRs and blocked targets, then generates ten other pages', async t => {
+// Fourteen pending pages; the first is in an open PR, the second is reserved
+// by another PR's candidate and the third is blocked.
+function pendingPagesFixture(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-ten-page-batch-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     const put = (file, text) => {
@@ -467,15 +571,21 @@ test('normal generation skips open PRs and blocked targets, then generates ten o
         calls++;
         return {translations: units.map(unit => ({id: unit.id, text: '訳' + unit.text}))};
     }};
-    const manifest = await generate({rootDir: root, target, output: path.join(root, 'output'),
+    const run = ensureFresh => generate({rootDir: root, target, output: path.join(root, 'output'),
         plan: {schemaVersion: 1, locale: 'ja', sourceCommit, selected: tasks.map(task => task.id), tasks, exceptions: []},
         reconciliation: {botPrs: [21, 22], botDetails: [{number: 21, untouched: false}, {number: 22, untouched: true}],
             active: {candidates: [{...tasks[1], sourceHash: hash('older source'), pr: '#22'}]},
-            blockedTargets: [tasks[2].targetPath]}, ensureFresh: () => {},
+            blockedTargets: [tasks[2].targetPath]}, ensureFresh,
         adapter, glossary: require('../../../translations/glossary/ja.json')});
+    return {root, tasks, run, calls: () => calls};
+}
+
+test('normal generation skips open PRs and blocked targets, then generates ten other pages', async t => {
+    const {root, tasks, run, calls} = pendingPagesFixture(t);
+    const manifest = await run(() => {});
     assert.equal(manifest.candidates.length, 10);
     assert.equal(manifest.failures.length, 0);
-    assert.equal(calls, 10);
+    assert.equal(calls(), 10);
     assert.equal(loadRecords(root, 'ja').size, 10);
     assert.deepEqual(manifest.candidates.map(item => item.id), tasks.slice(3, 13).map(item => item.id));
     for (const task of [tasks[0], tasks[1], tasks[2], tasks[13]]) {
@@ -483,4 +593,155 @@ test('normal generation skips open PRs and blocked targets, then generates ten o
         assert(!fs.existsSync(path.join(root, stateFileFor(task))));
     }
     assert.equal(manifest.replacesPr, undefined);
+    assert.equal(manifest.master, undefined);
+});
+
+test('a page master changed before its turn is skipped without a model call and the batch continues', async t => {
+    const {root, tasks, run, calls} = pendingPagesFixture(t);
+    let checks = 0;
+    const drift = {head: 'a'.repeat(40), moved: true, files: [tasks[4].sourcePath, 'blog/post.md'],
+        batchWide: [], affected: [tasks[4].id]};
+    // One check before the batch, one before each page that reaches the model and
+    // one after the last; the check before page 4 is the first to see the change.
+    const manifest = await run(() => ++checks >= 3 ? drift : undefined);
+    assert.equal(calls(), 10);
+    assert.equal(checks, 13);
+    assert.deepEqual(manifest.candidates.map(item => item.id), [tasks[3], ...tasks.slice(5, 14)].map(item => item.id));
+    assert.deepEqual(manifest.failures.map(item => item.id), [tasks[4].id]);
+    assert(!fs.existsSync(path.join(root, tasks[4].targetPath)));
+    assert.deepEqual(manifest.master, {head: drift.head, moved: true, changedFiles: 2});
+    assert.match(fs.readFileSync(path.join(root, 'output/pr-body.md'), 'utf8'),
+        new RegExp(`Master moved to \`${drift.head}\` during generation; none of its 2 changed files affect this batch\\.`));
+});
+
+test('a batch-wide master change stops generation before any model call', async t => {
+    // Seen before the batch, or before the page: not a page failure either way.
+    for (const failingCheck of [1, 2]) {
+        const fixture = await updateFixture(t);
+        let checks = 0;
+        await assert.rejects(fixture.run({ensureFresh: () => {
+            if (++checks === failingCheck) throw new Error('master changed translations/glossary/ja.json after the source commit');
+        }}), /translations\/glossary\/ja\.json/);
+        assert.equal(checks, failingCheck);
+        assert.equal(fixture.calls(), 0);
+        assert(!fs.existsSync(path.join(fixture.root, 'output/generation.json')));
+        assert.equal(fs.readFileSync(path.join(fixture.root, record.targetPath), 'utf8'), fixture.previousTarget);
+    }
+});
+
+test('a batch-wide master change after the last page discards the batch and keeps its manifest', async t => {
+    const fixture = await updateFixture(t);
+    let checks = 0;
+    await assert.rejects(fixture.run({ensureFresh: () => {
+        if (++checks === 3) throw new Error('master changed scripts/i18n/translate-docs.cjs after the source commit');
+    }}), /scripts\/i18n\/translate-docs\.cjs/);
+    assert.equal(fixture.calls(), 1);
+    const manifest = JSON.parse(fs.readFileSync(path.join(fixture.root, 'output/generation.json'), 'utf8'));
+    assert.match(manifest.discarded, /scripts\/i18n\/translate-docs\.cjs/);
+    assert.equal(fs.readFileSync(path.join(fixture.root, record.targetPath), 'utf8'), fixture.previousTarget);
+    assert(!fs.existsSync(path.join(fixture.root, 'output/pr-body.md')));
+});
+
+// A source commit on a bare "origin" plus a second clone that advances master.
+function driftFixture(t) {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-master-drift-'));
+    t.after(() => fs.rmSync(dir, {recursive: true, force: true}));
+    const remote = path.join(dir, 'remote.git'), root = path.join(dir, 'root'), other = path.join(dir, 'other');
+    const git = (cwd, ...args) => execFileSync('git', ['-c', 'user.name=Test', '-c', 'user.email=test@example.com',
+        '-c', 'init.defaultBranch=master', ...args], {cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}).trim();
+    const write = (cwd, file, text) => {
+        fs.mkdirSync(path.dirname(path.join(cwd, file)), {recursive: true});
+        fs.writeFileSync(path.join(cwd, file), text);
+    };
+    git(dir, 'init', '-q', '--bare', remote);
+    git(dir, 'init', '-q', root);
+    for (const [file, text] of [['docs/guide.md', '# Source\n'], [record.targetPath, japanese],
+        [stateFileFor(record), '{}\n'], ['translations/glossary/ja.json', '{}\n'], ['blog/post.md', '# Post\n']])
+        write(root, file, text);
+    git(root, 'add', '.');
+    git(root, 'commit', '-qm', 'source');
+    git(root, 'push', '-q', remote, 'HEAD:refs/heads/master');
+    const sourceCommit = git(root, 'rev-parse', 'HEAD');
+    git(dir, 'clone', '-q', remote, other);
+    const advance = (file, text) => {
+        if (text === null) git(other, 'rm', '-q', file);
+        else write(other, file, text);
+        git(other, 'add', '-A');
+        git(other, 'commit', '-qm', `change ${file}`);
+        git(other, 'push', '-q', 'origin', 'HEAD:master');
+    };
+    const pages = new Map([['T1', pageFiles(record, 'ja')]]);
+    const options = {root, sourceCommit, locale: 'ja', pages, remote};
+    return {git, other, remote, advance, options};
+}
+
+test('master drift allows unrelated merges and reports a changed or moved batch page', t => {
+    const {git, other, advance, options} = driftFixture(t);
+    assert.deepEqual(masterDrift(options), {head: options.sourceCommit, moved: false, files: [], batchWide: [], affected: []});
+    advance('blog/post.md', '# Post 2\n');
+    let drift = checkMaster(options);
+    assert.equal(drift.moved, true);
+    assert.deepEqual([drift.files, drift.batchWide, drift.affected], [['blog/post.md'], [], []]);
+    git(other, 'mv', 'docs/guide.md', 'docs/moved.md');
+    advance('docs/moved.md', '# Source\n');
+    drift = masterDrift(options);
+    // A move reports its old path, so the page that lost its source is affected.
+    assert.deepEqual(drift.files, ['blog/post.md', 'docs/guide.md', 'docs/moved.md']);
+    assert.deepEqual(drift.affected, ['T1']);
+});
+
+test('master drift discards the batch for translation configuration or tooling changes', t => {
+    const {advance, options} = driftFixture(t);
+    advance('translations/glossary/ja.json', '{"version": "2"}\n');
+    assert.deepEqual(masterDrift(options).batchWide, ['translations/glossary/ja.json']);
+    assert.throws(() => checkMaster(options), /master changed translations\/glossary\/ja\.json after the source commit/);
+    const wide = batchWide('ja');
+    for (const file of ['translations/config.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+        'translations/scope/ja.json', 'translations/protection-exceptions/ja.json', 'translations/state/ja/docs.json',
+        'translations/state/ja/shards.schema.json', 'translations/inventory/ja/2026-10-12/summary.json',
+        'scripts/i18n/workflow-generate.cjs']) assert(wide(file), file);
+    for (const file of [stateFileFor(record), 'translations/glossary/ko.json', 'translations/state/ko/docs.json',
+        'i18n/ja/code.json', 'sidebars.ts', 'blog/post.md', 'scripts/check_move.js']) assert(!wide(file), file);
+});
+
+test('master drift stops when master no longer contains the source commit', t => {
+    const {git, other, options} = driftFixture(t);
+    git(other, 'checkout', '-q', '--orphan', 'rewritten');
+    git(other, 'commit', '-qm', 'rewritten history');
+    git(other, 'push', '-q', '--force', 'origin', 'HEAD:master');
+    assert.throws(() => masterDrift(options), /master no longer contains the source commit/);
+});
+
+test('a plan is reused only for the same checkout, reservations and filters', () => {
+    const head = 'a'.repeat(40), active = '{"schemaVersion":1,"candidates":[],"blockedTargets":[]}\n';
+    const base = planInputs(head, active, {});
+    assert.equal(base, planInputs(head, active, {I18N_LIMIT: '20', I18N_MODE: 'generate'}));
+    for (const changed of [planInputs('b'.repeat(40), active, {}),
+        planInputs(head, active.replace('[]}', '["i18n/ja/x.md"]}'), {}),
+        planInputs(head, active, {I18N_PATHS: '["docs/guide.md"]'}), planInputs(head, active, {I18N_PLUGIN: 'community'}),
+        planInputs(head, active, {I18N_LIMIT: '5'})]) assert.notEqual(changed, base);
+});
+
+test('the generation replan reuses an unchanged discovery plan without recounting', t => {
+    const output = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-plan-reuse-'));
+    t.after(() => fs.rmSync(output, {recursive: true, force: true}));
+    const head = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: repoRoot, encoding: 'utf8'}).trim();
+    const active = '{"schemaVersion":1,"candidates":[],"blockedTargets":[]}\n';
+    fs.writeFileSync(path.join(output, 'active-candidates.json'), active);
+    fs.writeFileSync(path.join(output, 'open-pr-reconciliation.json'), JSON.stringify({schemaVersion: 1,
+        blockedTargets: [], botPrs: [], openPrCount: 3, relevantPrs: [], exceptions: []}));
+    fs.writeFileSync(path.join(output, 'coverage.json'), '{}\n');
+    const env = {...process.env, I18N_LOCALE: 'ko', I18N_MODE: 'generate', GITHUB_EVENT_NAME: 'schedule',
+        GITHUB_OUTPUT: path.join(output, 'github-output'), GITHUB_STEP_SUMMARY: path.join(output, 'summary.md')};
+    for (const key of ['I18N_PLUGIN', 'I18N_VERSION', 'I18N_PATH', 'I18N_PATHS', 'I18N_LIMIT']) delete env[key];
+    // A plan the planner could not have produced proves that nothing recounted it.
+    fs.writeFileSync(path.join(output, 'plan.json'), JSON.stringify({schemaVersion: 1, locale: 'ko', sourceCommit: head,
+        counts: {required: 1, mergedCurrent: 0, pending: 1, activeCandidates: 0}, selected: ['T-REUSED'],
+        tasks: [{id: 'T-REUSED'}], exceptions: [], planInputs: planInputs(head, active, env)}));
+    const started = Date.now();
+    execFileSync(process.execPath, [path.join(repoRoot, 'scripts/i18n/workflow-scan.cjs'), output], {env});
+    assert(Date.now() - started < 30000);
+    assert.equal(fs.readFileSync(env.GITHUB_OUTPUT, 'utf8'), `can_generate=true\nsource_commit=${head}\n`);
+    assert.match(fs.readFileSync(env.GITHUB_STEP_SUMMARY, 'utf8'), /Plan: reused from discovery/);
+    assert.deepEqual(JSON.parse(fs.readFileSync(path.join(output, 'plan.json'), 'utf8')).selected, ['T-REUSED']);
 });

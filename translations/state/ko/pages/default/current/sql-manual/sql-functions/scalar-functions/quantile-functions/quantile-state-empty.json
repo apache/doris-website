@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/quantile-functions/quantile-state-empty.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ad68f80f3e8aad6aa3b2bc705456ba8815e883f69d5d672cc4dc96caac1c5f5a",
+    "sourceTechnicalHash": "a4d009e38f7044bce980741fa199f4b2fb8f4ce8129714dddc1b621cb3e3e4f6",
+    "targetHash": "bef9c3c09b1febb3c2d710defaa834ebb53ba014b5241bc7dc292c5214549e46",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:40:22.936Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ad68f80f3e8aad6aa3b2bc705456ba8815e883f69d5d672cc4dc96caac1c5f5a",
+      "targetHash": "bef9c3c09b1febb3c2d710defaa834ebb53ba014b5241bc7dc292c5214549e46",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

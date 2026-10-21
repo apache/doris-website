@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-postgresql",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "515c7a1fe9b5fd5877fca42918610bf16a892f812b592ee8dd73393939cb99ad",
+    "sourceTechnicalHash": "c2a2b2e07974dd150bcc69e5713171033199c5a508b69e2076194f41c5c05f77",
+    "targetHash": "a88a16d0fbcabaa8a056ba2866353d38d33dfbbb3e69152f322b888b01a19e63",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:57:05.543Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "515c7a1fe9b5fd5877fca42918610bf16a892f812b592ee8dd73393939cb99ad",
+      "targetHash": "a88a16d0fbcabaa8a056ba2866353d38d33dfbbb3e69152f322b888b01a19e63",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

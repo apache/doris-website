@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/tiered-storage/tiered-ssd-hdd",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/tiered-ssd-hdd.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+    "sourceTechnicalHash": "01f90aff160c57d037316f9b13ef2305a3dc62d1eea050c1b0d6fe542c66cda3",
+    "targetHash": "e8abcbbf857e6dfb21627aae7c52bb3a8ced1fdfbcfe2887ac3be4443626d595",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T15:13:45.356Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+      "targetHash": "e8abcbbf857e6dfb21627aae7c52bb3a8ced1fdfbcfe2887ac3be4443626d595",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/tiered-storage/tiered-ssd-hdd",
+        "sourcePath": "docs/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/tiered-storage/tiered-ssd-hdd.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "5573c48352a5f014208b6cd5d202a66076ca0a47df52ebf2f6bb3a601b7534ac",
+        "targetHash": "e8abcbbf857e6dfb21627aae7c52bb3a8ced1fdfbcfe2887ac3be4443626d595",
+        "commit": "c5b54b1cd03719e14c660f23a1ea79359c00d843",
+        "pr": "https://github.com/apache/doris-website/pull/4387"
+      }
+    }
+  }
+}

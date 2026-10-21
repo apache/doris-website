@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/statistics/ALTER-STATS",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/statistics/ALTER-STATS.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/statistics/ALTER-STATS.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1cbed2ffee04f9de2c7081cbc3f3571c81d7a4579bbbc70d5953912600cadb04",
+    "sourceTechnicalHash": "cf929040b07d066f55aa787052aa8f91aeb9f282aadd2fb542e1164e57ca8c33",
+    "targetHash": "528ff8678407bf1ca29be1018071fe9a973e4daad3560aa7a9c07afc4f53b050",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:40:57.140Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1cbed2ffee04f9de2c7081cbc3f3571c81d7a4579bbbc70d5953912600cadb04",
+      "targetHash": "528ff8678407bf1ca29be1018071fe9a973e4daad3560aa7a9c07afc4f53b050",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+---
+{
+    "title": "스토리지 레이아웃 최적화",
+    "language": "ko",
+    "description": "Apache Doris 스토리지 레이아웃 개요: 컬럼 기반 압축, 행-열 하이브리드 스토리지, 핫-콜드 데이터 계층화 등의 기능을 통해 스토리지 비용, 포인트 쿼리 지연 시간, 과거 데이터의 저장 비용을 최적화합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris는 사용자가 디스크의 스토리지 레이아웃을 조정할 수 있도록 매개변수를 제공합니다. 스토리지 레이아웃을 적절히 구성하면 테이블 모델이나 쿼리를 변경하지 않고도 스토리지 비용을 절감하고, 컬럼 수가 많은 테이블의 포인트 쿼리를 가속하며, 과거 데이터와 콜드 데이터의 저장 오버헤드를 줄일 수 있습니다.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="데이터 압축"
+    description="컬럼별로 압축 알고리즘(LZ4, ZSTD, Snappy, Zlib 등)을 선택하여 스토리지 비용과 쿼리 CPU 사용량, 압축 해제 속도 간의 균형을 유연하게 조정할 수 있습니다."
+    link="column-compression"
+/>
+
+<GettingStartedCard
+    title="행-열 하이브리드 스토리지"
+    description="컬럼 기반 스토리지에 행 기반 저장 복사본을 추가하여 여러 컬럼의 포인트 조회를 한 번의 IO로 처리합니다. 이를 통해 동시성이 높은 기본 키 포인트 쿼리와 컬럼 수가 많은 테이블의 SELECT * 쿼리 성능을 크게 향상할 수 있습니다."
+    link="row-store"
+/>
+
+<GettingStartedCard
+    title="핫-콜드 데이터 계층화"
+    description="핫 데이터는 고성능 스토리지에 유지하면서 콜드 데이터는 저비용 매체(HDD, 객체 스토리지, HDFS)로 이동합니다. 스토리지-컴퓨팅 분리, 로컬 계층화, 원격 계층화의 세 가지 방식을 지원합니다."
+    link="tiered-storage/overview"
+/>
+</div>

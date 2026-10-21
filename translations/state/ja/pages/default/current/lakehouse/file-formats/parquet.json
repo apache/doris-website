@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/parquet.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "dae7cf8a946832d7bf44a19fce30a3bdbf8995224b516aa3351f2121e32485da",
-    "sourceTechnicalHash": "6661e45265e56910a872a471a66f1794ec26998f43ceffb58f2fc33f97fdd82b",
-    "targetHash": "e07a6f2bc801e4b056dcccf5de95348681d3e619fc1d0190f3acd7d25154905f",
+    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
+    "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+    "sourceTechnicalHash": "3669e1053cb64e25230afd4b7410f85dacad0c07c5ec3ae6175312119fcdf8c7",
+    "targetHash": "1c39315142a700e47aaf69d24b8328b10460bbfdf2f5f62c14f1801177277382",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:46:10.867Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-20T05:27:32.754Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+      "targetHash": "1c39315142a700e47aaf69d24b8328b10460bbfdf2f5f62c14f1801177277382",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"DATETIMEV2\"]; received [\"inlineCode\",null,null,\"10:11:00\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\",\"96\"]; received [\"0\",\"1\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\",\"96\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -11,6 +11,17 @@ $uc-ease-out-quint: cubic-bezier(0.2, 0.8, 0.2, 1);
     white-space: nowrap;
 }
 
+// Korean wraps between words, not between syllables, and its glyphs fill the
+// em box that the tight leading of the uppercase display type leaves empty.
+.uc-page:lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+
+    :is(.uc-hero__title, .uc-title, .uc-kicker, .uc-cta__title) {
+        line-height: 1.12;
+    }
+}
+
 // cream-on-dark ink scale used everywhere on these pages
 @function cream($alpha) {
     @return rgba(245, 239, 228, $alpha);

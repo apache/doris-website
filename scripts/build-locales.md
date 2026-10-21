@@ -8,6 +8,11 @@ disabled unless `DORIS_ENABLE_LOCALES` lists them (CI) or their own
 no translation or deployment service is called. Both the locale list and each
 locale's label and `htmlLang` come from `config/i18n.js`.
 
+Publishing workflows use `yarn build:publish`, which shares binary resources
+and webpack assets and compacts legacy redirects after assembly. See
+[publication artifacts](publish/README.md) for hosting requirements, previews,
+bounded local checks and size reports. Ordinary builds retain their layout.
+
 ```bash
 # Local development: only the actual Dev docs version.
 DOCS_VERSIONS=current DORIS_ASSET_ORIGIN='' yarn build:locales

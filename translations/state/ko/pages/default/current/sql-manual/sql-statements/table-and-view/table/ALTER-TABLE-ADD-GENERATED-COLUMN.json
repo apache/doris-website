@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-ADD-GENERATED-COLUMN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3a1bd8a6ffbcacc96e8dc21ed1f4fc41e5519b5486d842baee9ad336cc020e7f",
+    "sourceTechnicalHash": "048f1dfbfc3c7a7e1c80984a786ef9b76e225926ad20072b3fea1bc0c370d51c",
+    "targetHash": "e25fb19595924b300ff3fd716fbc56e74adbd8b88bd51ff07bccbadc7f7b6335",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:46:41.550Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3a1bd8a6ffbcacc96e8dc21ed1f4fc41e5519b5486d842baee9ad336cc020e7f",
+      "targetHash": "e25fb19595924b300ff3fd716fbc56e74adbd8b88bd51ff07bccbadc7f7b6335",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

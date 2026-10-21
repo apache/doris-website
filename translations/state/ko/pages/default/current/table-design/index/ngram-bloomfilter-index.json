@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/ngram-bloomfilter-index",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/ngram-bloomfilter-index.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/ngram-bloomfilter-index.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+    "sourceTechnicalHash": "13b57a6d71e6fd5520ea8691f9f6261f4cd5127afc9dd167e61bcfafcfcc3078",
+    "targetHash": "28de3d13d3c4bd965de8f55b9e146aee32356593f177a13cde892fed45e4f026",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:02:43.817Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+      "targetHash": "28de3d13d3c4bd965de8f55b9e146aee32356593f177a13cde892fed45e4f026",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

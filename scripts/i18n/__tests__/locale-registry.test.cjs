@@ -28,27 +28,34 @@ function withEnv(values, run) {
 
 test('the locale registry keeps introduced locales opt-in behind one config', () => {
     const {locales, localeRegistry, enabledLocales, enabledLocaleRecords} = load();
-    assert.deepEqual(locales, ['en', 'zh-CN', 'ja']);
+    assert.deepEqual(locales, ['en', 'zh-CN', 'ja', 'ko', 'ru']);
+    const {translatedPages, ...korean} = localeRegistry.find(locale => locale.code === 'ko');
+    assert.deepEqual(korean, {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false});
+    // Translated product pages are registered one by one, as routes without a trailing slash.
+    assert(translatedPages.every(page => page.startsWith('/') && !page.endsWith('/')));
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').label, '日本語');
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').htmlLang, 'ja');
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN']);
     });
     // A developer switches one locale on; CI enables the locales in scope.
-    withEnv({DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
         assert.deepEqual(enabledLocaleRecords().map(locale => locale.htmlLang), ['en-US', 'zh-Hans-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ko'}, () => {
-        assert.deepEqual(enabledLocales(), ['en', 'zh-CN']);
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: 'true', DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+        assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ko']);
+    });
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja,ko'}, () => {
+        assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja', 'ko']);
     });
 });
 
 test('a locale is managed only when it is both configured and enabled', () => {
-    assert.deepEqual(managedLocales(root), ['ja']);
+    assert.deepEqual(managedLocales(root), ['ja', 'ko', 'ru']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN', 'ja']), ['ja']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN']), []);
 });
@@ -61,21 +68,23 @@ test('route groups span every managed locale while a manifest carries one', asyn
     const page = (locale, docId, indexable = true) => ({pluginId: 'default', version: 'current', docId, locale,
         status: 'current', useTarget: true, indexable,
         permalink: `/${locale}/docs/current/${docId}/`, englishPermalink: `/docs/current/${docId}/`,
-        alternates: {en: `/docs/current/${docId}/`, ...(indexable ? {[locale]: `/${locale}/docs/current/${docId}/`} : {})}});
+        alternates: {en: `/docs/current/${docId}/`, 'zh-CN': `/zh-CN/docs/current/${docId}/`, ...(indexable ? {[locale]: `/${locale}/docs/current/${docId}/`} : {})}});
     const allContent = {'docusaurus-plugin-content-docs': {
         default: {translationManifest: {pages: [page('ja', 'a'), page('ja', 'b', false)], reports: [
                 {kind: 'unsupported_source_route', sourcePath: 'i18n/zh-CN/x.md'},
                 {kind: 'source_deleted', locale: 'ja', docId: 'gone'}]}, loadedVersions: [{path: '/ja/docs/current'}]},
-    }};
+    }, 'docusaurus-plugin-content-pages': {default: [{permalink: '/ja/'}, {permalink: '/ja/download'}]}};
     for (const locale of ['en', 'ja']) {
         let globalData;
         const plugin = translationStatusPlugin({siteDir, i18n: {currentLocale: locale}});
         await plugin.allContentLoaded({allContent, actions: {setGlobalData: data => {globalData = data;}}});
         const manifest = JSON.parse(fs.readFileSync(path.join(siteDir, '.i18n-build/manifests', `${locale}.json`), 'utf8'));
         assert.equal(manifest.locale, locale);
+        assert.deepEqual(globalData.pageRoutes, ['/ja/', '/ja/download/']);
+        assert.deepEqual(manifest.pageRoutes, globalData.pageRoutes);
         // Both locales group the indexable page; the non-indexable one contributes none.
         assert.deepEqual(Object.keys(globalData.alternates).sort(),
-            ['/docs/current/a/', '/ja/docs/current/a/']);
+            ['/docs/current/a/', '/ja/docs/current/a/', '/zh-CN/docs/current/a/']);
         assert.deepEqual(manifest.pages.map(item => item.docId), locale === 'ja' ? ['a', 'b'] : []);
         // Repository-wide reports stay, another locale's records do not.
         assert.deepEqual(manifest.reports.filter(report => report.kind === 'unsupported_source_route').length, 1);
@@ -107,4 +116,34 @@ test('neither shipped locale translates the blog yet', () => {
     const {hasBlogTranslations} = load();
     assert.equal(hasBlogTranslations(root, 'zh-CN'), false);
     assert.equal(hasBlogTranslations(root, 'ja'), false);
+    assert.equal(hasBlogTranslations(root, 'ko'), false);
+    assert.equal(hasBlogTranslations(root, 'ru'), false);
+});
+
+test('Korean pipeline requires an explicit locale and its own inventory before planning', () => {
+    const {pipelineLocale, inventoryBaseline, loadConfig} = require('../state.cjs');
+    assert.throws(() => pipelineLocale(root, ''), /Set I18N_LOCALE/);
+    assert.equal(pipelineLocale(root, 'ja'), 'ja');
+    assert.equal(pipelineLocale(root, 'ko'), 'ko');
+    // A language declaration never substitutes for a native inventory baseline.
+    const empty = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-ko-inventory-'));
+    try {assert.throws(() => inventoryBaseline(empty, 'ko'), /Expected one ko inventory snapshot, found 0/);}
+    finally {fs.rmSync(empty, {recursive: true, force: true});}
+    const settings = loadConfig(root).locales.ko;
+    const script = new RegExp(settings.scriptPattern, 'u');
+    for (const text of ['한국어 데이터베이스', 'ᄒ', 'ㄱ']) assert(script.test(text));
+    for (const text of ['English SQL', '日本語 データベース']) assert(!script.test(text));
+});
+
+test('Russian stays docs-first and supports all eight optional-locale combinations', () => {
+    const {localeRegistry, enabledLocales} = load();
+    assert.deepEqual(localeRegistry.find(locale => locale.code === 'ru'),
+        {code:'ru', label:'Русский', htmlLang:'ru', optional:true, ordinaryPages:false});
+    for (let mask = 0; mask < 8; mask++) {
+        const selected = ['ja','ko','ru'].filter((_, i) => mask & (1 << i));
+        withEnv({DORIS_ENABLE_JA:undefined,DORIS_ENABLE_KO:undefined,DORIS_ENABLE_RU:undefined,
+            DORIS_ENABLE_LOCALES:selected.join(',')}, () => assert.deepEqual(enabledLocales(), ['en','zh-CN',...selected]));
+    }
+    withEnv({DORIS_ENABLE_RU:'true',DORIS_ENABLE_JA:undefined,DORIS_ENABLE_KO:undefined,DORIS_ENABLE_LOCALES:undefined},
+        () => assert.deepEqual(enabledLocales(), ['en','zh-CN','ru']));
 });

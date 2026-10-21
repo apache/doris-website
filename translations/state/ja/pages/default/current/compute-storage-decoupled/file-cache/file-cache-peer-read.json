@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "7ef9dd79f8350236e36b3d53467720fc956a28fd4d28bf99081b9fd0337cd2ba",
-    "sourceTechnicalHash": "1c92c153fddb551ba12616f54cdbc288c6d3803515eae1803146a77c742b1439",
-    "targetHash": "e2efc3aaee3465d8d21ce8c6bba1e71f65744f7b71a63d74afa7d95e37f63cfc",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+    "sourceTechnicalHash": "c49d5cc144417e510e50629c820cc289e9ca1dc45d7472d105fa083f6bac47cf",
+    "targetHash": "7f13706c04547be55b80ecb4b63d63306c64fcdef9155e6ae288b35e162f0bf0",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T12:26:49.464Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T16:53:55.740Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+      "targetHash": "7f13706c04547be55b80ecb4b63d63306c64fcdef9155e6ae288b35e162f0bf0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1000\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]; received [\"0\",\"1\",\"1\",\"1000\",\"2\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1000\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1000\",\"2\",\"20\",\"20\",\"3\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1000\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]; received [\"0\",\"1\",\"1000\",\"2\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1000\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]; received [\"0\",\"1\",\"1\",\"1000\",\"2\",\"20\",\"20\",\"3\",\"300\",\"32\",\"3600\",\"4.2.0\",\"4.2.0\",\"5\",\"6000\",\"64\",\"8040\",\"8060\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

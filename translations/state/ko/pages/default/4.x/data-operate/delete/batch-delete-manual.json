@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/batch-delete-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/batch-delete-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/batch-delete-manual.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c713aa523f5fe8bed0f6334a527fa7cee14cc8fc57f9dcb6c86ccdb5e36a24c2",
+    "sourceTechnicalHash": "24e4d6280643d23ca444f49b567bf59ffaacd41c4cd2a70a91875d78c13e2a9d",
+    "targetHash": "fa889f141bba5cfd31099ec1f021ddd11be5ab8a0607f6812fd724cb9b01f81f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:11:52.032Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c713aa523f5fe8bed0f6334a527fa7cee14cc8fc57f9dcb6c86ccdb5e36a24c2",
+      "targetHash": "fa889f141bba5cfd31099ec1f021ddd11be5ab8a0607f6812fd724cb9b01f81f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "data-operate/delete/batch-delete-manual",
+        "sourcePath": "docs/data-operate/delete/batch-delete-manual.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/delete/batch-delete-manual.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "c713aa523f5fe8bed0f6334a527fa7cee14cc8fc57f9dcb6c86ccdb5e36a24c2",
+        "targetHash": "fa889f141bba5cfd31099ec1f021ddd11be5ab8a0607f6812fd724cb9b01f81f",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

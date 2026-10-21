@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+    "sourceTechnicalHash": "0cd16bb8f5d2d8c4c1300299f019a2bb6b90ee5b54a8ee480500315b52eff913",
+    "targetHash": "923ed5cf3db3ee74a9127c440ac3776b73f473d8c91f2161bb71d37ea264619b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:56:20.975Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+      "targetHash": "923ed5cf3db3ee74a9127c440ac3776b73f473d8c91f2161bb71d37ea264619b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-u64-v2.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "f543edf6cb062daa751657652f3bdd5df06f671602e7f53919a7581a19b768d3",
+        "targetHash": "923ed5cf3db3ee74a9127c440ac3776b73f473d8c91f2161bb71d37ea264619b",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

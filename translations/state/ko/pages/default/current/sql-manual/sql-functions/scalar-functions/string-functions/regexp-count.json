@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-count",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-count.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-count.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "8e4aa2f78c654f2de0e8ceb33eb5d097510ba83beff26ba918045874adbbae0b",
+    "sourceTechnicalHash": "3a9b34affdf065e80b12a115985f31332731e9f684ead08aecbb2e363d9fbed8",
+    "targetHash": "79dde20ba3f928bed63c05b3122f81309f0e43f92ec9288bc654194a3002a957",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:52:02.440Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8e4aa2f78c654f2de0e8ceb33eb5d097510ba83beff26ba918045874adbbae0b",
+      "targetHash": "79dde20ba3f928bed63c05b3122f81309f0e43f92ec9288bc654194a3002a957",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

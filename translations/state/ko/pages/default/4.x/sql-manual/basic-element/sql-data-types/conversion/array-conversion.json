@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+    "sourceTechnicalHash": "32d451fb2c9d15b62ef2e9ea93f3fc14f4605bf7a2528b943fbde1fa686c23b7",
+    "targetHash": "4f2bea657734302c91acbe6853105de2956ca13ea75243bc5c9aca886e0a8086",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:51:20.320Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+      "targetHash": "4f2bea657734302c91acbe6853105de2956ca13ea75243bc5c9aca886e0a8086",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
+        "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+        "targetHash": "4f2bea657734302c91acbe6853105de2956ca13ea75243bc5c9aca886e0a8086",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

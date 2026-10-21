@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/tips",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/tips.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/data-model/tips.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+    "sourceTechnicalHash": "1374e1707298a899d391b8d2725f14390d83d5b9e201cc402b748797caa0af5a",
+    "targetHash": "ad2a302298fb87f81577ac8e33bd1e6d52d58cb75c8748741f7b046d61c45ad3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:01:10.763Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+      "targetHash": "ad2a302298fb87f81577ac8e33bd1e6d52d58cb75c8748741f7b046d61c45ad3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

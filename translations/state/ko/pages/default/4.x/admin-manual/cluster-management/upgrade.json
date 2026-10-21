@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/upgrade",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/upgrade.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/upgrade.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "3c1c5e36a21aa3b40a8a2dd93b067221d92954c039b1238e75f61be20bf79b3c",
+    "sourceTechnicalHash": "a1c27676f3fb46d3cfbde5f3120d7fc5cf33929cdec546826f735af0f2a2945a",
+    "targetHash": "dbceac15569032afb89fb0a897d2ca44224edd35a19e96fdc793cdd5888c5888",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:13:47.018Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3c1c5e36a21aa3b40a8a2dd93b067221d92954c039b1238e75f61be20bf79b3c",
+      "targetHash": "dbceac15569032afb89fb0a897d2ca44224edd35a19e96fdc793cdd5888c5888",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 108: expected [\"inlineCode\",null,null,\"enable_group_commit_streamload_be_forward=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 109: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_group_commit_streamload_be_forward=true\"]\nprotected node 219: expected [\"inlineCode\",null,null,\"enable_group_commit_streamload_be_forward=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

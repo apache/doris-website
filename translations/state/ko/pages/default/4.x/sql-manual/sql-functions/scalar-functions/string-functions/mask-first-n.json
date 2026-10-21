@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "e9a719d23326121b07f440411554d3f9da5f4e97c05d6f0a591cdfeb845f153b",
+    "sourceTechnicalHash": "13d31eac94e0631c99547c66aa66024735651e10ae18669f903aac3b87607bd1",
+    "targetHash": "de3945f23850bf9b5d63ab2caf2d45f10f14765740825203876116dede69544e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T14:18:16.835Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e9a719d23326121b07f440411554d3f9da5f4e97c05d6f0a591cdfeb845f153b",
+      "targetHash": "de3945f23850bf9b5d63ab2caf2d45f10f14765740825203876116dede69544e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/mask-first-n.md",
+        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+        "sourceHash": "e9a719d23326121b07f440411554d3f9da5f4e97c05d6f0a591cdfeb845f153b",
+        "targetHash": "de3945f23850bf9b5d63ab2caf2d45f10f14765740825203876116dede69544e",
+        "commit": "2ff42a50f6b4bfe6ce0d33a3731ce73e830c6e40",
+        "pr": "https://github.com/apache/doris-website/pull/4382"
+      }
+    }
+  }
+}

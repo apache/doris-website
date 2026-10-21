@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/combinators/foreach",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/combinators/foreach.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/combinators/foreach.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "53e484eb057c01e070182ac19c9f27cad6efb1603d6f540d71a3ed6c5c174753",
+    "sourceTechnicalHash": "c662fdc9a40d7162c34ccd31e6d1c8fa2c663c8be9fc743557c3092996fdf861",
+    "targetHash": "6ad9e6922bf0925e0a96db9e3fbc538541bf4bad6cd13a391f3144b32034f8da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:24:19.747Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "53e484eb057c01e070182ac19c9f27cad6efb1603d6f540d71a3ed6c5c174753",
+      "targetHash": "6ad9e6922bf0925e0a96db9e3fbc538541bf4bad6cd13a391f3144b32034f8da",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/combinators/foreach",
+        "sourcePath": "docs/sql-manual/sql-functions/combinators/foreach.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/combinators/foreach.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "53e484eb057c01e070182ac19c9f27cad6efb1603d6f540d71a3ed6c5c174753",
+        "targetHash": "6ad9e6922bf0925e0a96db9e3fbc538541bf4bad6cd13a391f3144b32034f8da",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

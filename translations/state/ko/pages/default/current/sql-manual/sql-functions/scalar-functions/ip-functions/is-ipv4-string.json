@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-string.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "dd734e96dfe3f6a5fa3561ecc5dd3587a8ab0b1a472bd10b3397b026df5c934e",
+    "sourceTechnicalHash": "a025ca0499823fe99cb4428a8a1c97d46d4ed83409d7c2275d46c8ac3f3a2554",
+    "targetHash": "bf01cb8fff538625ced8db46deae22148f7519807bcd163b9dc56fb8075a300b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:08:06.558Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dd734e96dfe3f6a5fa3561ecc5dd3587a8ab0b1a472bd10b3397b026df5c934e",
+      "targetHash": "bf01cb8fff538625ced8db46deae22148f7519807bcd163b9dc56fb8075a300b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

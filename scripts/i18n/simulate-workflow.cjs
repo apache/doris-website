@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
-const {loadRecords} = require('./state.cjs');
+const {hash, loadRecords, stateFileFor} = require('./state.cjs');
+const {structure} = require('./structure.cjs');
 
 const sourceRoot = path.resolve(__dirname, '../..');
 const sourcePath = process.env.I18N_SIM_SOURCE_PATH
@@ -14,6 +15,16 @@ assert(sourcePath.startsWith('docs/') && /\.mdx?$/.test(sourcePath)
     && !sourcePath.split('/').includes('..'), 'Simulation source must be a Dev document');
 const targetPath = `i18n/ja/docusaurus-plugin-content-docs/current/${sourcePath.slice(5)}`;
 const runId = '123456';
+const pages = Number(process.env.I18N_SIM_PAGES || '1');
+const scenario = process.env.I18N_SIM_SCENARIO || 'retry';
+assert([1, 10].includes(pages), 'Simulation supports one or ten pages');
+assert(['success', 'retry', 'fallback', 'incremental'].includes(scenario), 'Unknown simulation scenario');
+assert(scenario !== 'incremental' || pages === 1, 'Incremental simulation uses one page');
+// A merge that lands on master after discovery: unrelated, to the selected page,
+// or to the translation configuration.
+const drift = process.env.I18N_SIM_MASTER_DRIFT || '';
+assert(['', 'unrelated', 'page', 'config'].includes(drift), 'Unknown master drift');
+assert(!drift || pages === 1, 'Master drift simulation uses one page');
 
 function command(binary, args, options = {}) {
     return execFileSync(binary, args, {encoding: 'utf8', ...options}).trim();
@@ -23,7 +34,7 @@ function writeExecutable(file, contents) {
     fs.writeFileSync(file, contents, {mode: 0o755});
 }
 
-function codexMock(invalid) {
+function codexMock(mode, repo) {
     return `#!/usr/bin/env node
 const fs = require('node:fs');
 const args = process.argv.slice(2);
@@ -31,10 +42,28 @@ const answer = args[args.indexOf('--output-last-message') + 1];
 const prompt = fs.readFileSync(0, 'utf8');
 const marker = 'Translation input:\\n';
 const payload = JSON.parse(prompt.slice(prompt.indexOf(marker) + marker.length));
-const translations = payload.units.map((unit, index) => ({id: unit.id,
-    text: ${invalid ? 'index === 0 ? \'\' : \'訳\' + unit.text' : "'訳' + unit.text"}}));
-fs.writeFileSync(answer, JSON.stringify({translations}));
-process.stdout.write(JSON.stringify({type: 'turn.completed', usage: {total_tokens: 100000}}) + '\\n');
+const {extractUnits} = require(${JSON.stringify(path.join(repo, 'scripts/i18n/translation-engine.cjs'))});
+(async () => {
+    if (payload.changes) {
+        const translations = payload.changes.map(change => ({id: change.id,
+            text: ${JSON.stringify(mode)} === 'invalid' ? '' : '訳' + change.text}));
+        fs.writeFileSync(answer, JSON.stringify({translations}));
+        process.stdout.write(JSON.stringify({type: 'turn.completed', usage: {total_tokens: 100000}}) + '\\n');
+        return;
+    }
+    let translation = payload.document;
+    const units = await extractUnits(translation, ${JSON.stringify(path.extname(sourcePath))});
+    for (const unit of [...units].reverse()) translation = translation.slice(0, unit.start)
+        + '訳' + unit.text + translation.slice(unit.end);
+    // Like a real model, localize a declared front matter language.
+    translation = translation.replace(/("language":\\s*")en(")/, '$1ja$2');
+    if (${JSON.stringify(mode)} === 'invalid') translation = '';
+    if (${JSON.stringify(mode)} === 'retry' && payload.feedback.length === 0)
+        translation = translation.replace(/^#{1,6} .*$/gm, '');
+    if (${JSON.stringify(mode)} === 'fallback') translation += '\\n' + '\x60\x60\x60sql\\nSELECT 42;\\n\x60\x60\x60\\n';
+    fs.writeFileSync(answer, JSON.stringify({translation}));
+    process.stdout.write(JSON.stringify({type: 'turn.completed', usage: {total_tokens: 100000}}) + '\\n');
+})().catch(error => {console.error(error.message);process.exitCode = 1;});
 `;
 }
 
@@ -77,14 +106,12 @@ function runNode(root, script, args, env, logDir, expectedStatus = 0) {
     return result;
 }
 
-function main() {
+async function main() {
     const output = process.argv[2] ? path.resolve(process.argv[2])
         : fs.mkdtempSync(path.join(os.tmpdir(), 'doris-ja-workflow-sim-'));
     assert(process.argv.length <= 3, 'Usage: node scripts/i18n/simulate-workflow.cjs [empty-output-dir]');
     if (fs.existsSync(output)) assert.equal(fs.readdirSync(output).length, 0, 'Output directory must be empty');
     fs.mkdirSync(output, {recursive: true});
-    assert.equal(command('git', ['status', '--porcelain', '--untracked-files=no'], {cwd: sourceRoot}), '',
-        'Commit tracked workflow changes before simulating');
     const remote = path.join(output, 'remote.git');
     const repo = path.join(output, 'repo');
     const bin = path.join(output, 'bin');
@@ -92,65 +119,170 @@ function main() {
     const logs = path.join(output, 'logs');
     const auth = path.join(output, 'codex-home');
     for (const dir of [bin, scan, logs, auth]) fs.mkdirSync(dir, {recursive: true});
-    command('git', ['init', '--bare', '-q', remote]);
-    command('git', ['push', remote, 'HEAD:refs/heads/master'], {cwd: sourceRoot});
+    command('git', ['clone', '--bare', '--shared', '-q', sourceRoot, remote]);
+    command('git', ['update-ref', 'refs/heads/master', command('git', ['rev-parse', 'HEAD'], {cwd: sourceRoot})], {cwd: remote});
     command('git', ['symbolic-ref', 'HEAD', 'refs/heads/master'], {cwd: remote});
-    command('git', ['clone', '-q', remote, repo]);
+    command('git', ['clone', '--shared', '-q', remote, repo]);
     command('git', ['config', '--local', 'user.name', 'Local Simulator'], {cwd: repo});
     command('git', ['config', '--local', 'user.email', 'local@example.invalid'], {cwd: repo});
     command('git', ['config', '--local', `url.file://${remote}.insteadOf`,
         'https://github.com/apache/doris-website.git'], {cwd: repo});
     fs.symlinkSync(fs.realpathSync(path.join(sourceRoot, 'node_modules')), path.join(repo, 'node_modules'), 'dir');
+    // Include uncommitted implementation changes only in the disposable clone.
+    for (const file of ['scripts/i18n', 'scripts/check_md_links_single.py', '.github/workflows'])
+        fs.cpSync(path.join(sourceRoot, file), path.join(repo, file), {recursive: true});
+    let selectedPath = sourcePath, incrementalTarget;
+    if (scenario === 'incremental') {
+        selectedPath = 'docs/translation-simulation/incremental.md';
+        const targetPath = `i18n/ja/docusaurus-plugin-content-docs/current/${selectedPath.slice(5)}`;
+        const source = '# Guide\n\nDoris guide.\n\n'
+            + Array.from('ABCDEFGH', letter => `Paragraph ${letter}.`).join('\n\n') + '\n';
+        incrementalTarget = '# ガイド\n\nDoris のガイド。\n\n'
+            + Array.from('ABCDEFGH', letter => `訳Paragraph ${letter}.`).join('\n\n') + '\n';
+        for (const file of [selectedPath, targetPath]) fs.mkdirSync(path.dirname(path.join(repo, file)), {recursive: true});
+        fs.writeFileSync(path.join(repo, selectedPath), source);
+        command('git', ['add', '.'], {cwd: repo});
+        command('git', ['commit', '-qm', 'Incremental simulation baseline source'], {cwd: repo});
+        const record = {pluginId: 'default', version: 'current', docId: 'translation-simulation/incremental',
+            locale: 'ja', sourceLocale: 'en', sourcePath: selectedPath, targetPath,
+            sourceCommit: command('git', ['rev-parse', 'HEAD'], {cwd: repo}), sourceHash: hash(source),
+            sourceTechnicalHash: (await structure(source, '.md')).technicalHash, targetHash: hash(incrementalTarget),
+            ownership: 'machine', reviewStatus: 'machine', translatedAt: new Date().toISOString(),
+            glossaryVersion: JSON.parse(fs.readFileSync(path.join(repo, 'translations/glossary/ja.json'), 'utf8')).version};
+        const statePath = path.join(repo, stateFileFor(record));
+        fs.mkdirSync(path.dirname(statePath), {recursive: true});
+        fs.writeFileSync(statePath, JSON.stringify({schemaVersion: 1, page: record}, null, 2) + '\n');
+        fs.writeFileSync(path.join(repo, targetPath), incrementalTarget);
+        fs.writeFileSync(path.join(repo, selectedPath), source.replace('Paragraph A.', 'Updated paragraph A.'));
+    } else if (pages === 10) {
+        selectedPath = 'docs/translation-simulation/';
+        fs.mkdirSync(path.join(repo, selectedPath), {recursive: true});
+        for (let index = 0; index < pages; index++) fs.writeFileSync(path.join(repo, selectedPath, `page-${index}.md`),
+            `# Guide ${index}\n\nDoris guide.\n\n\x60\x60\x60sql\nSELECT ${index};\n\x60\x60\x60\n`);
+    } else {
+        // Force the selected real page into the pending queue in this clone.
+        const record = [...loadRecords(repo, 'ja').values()].find(page => page.targetPath === targetPath);
+        const stateFile = path.join(repo, 'translations/state/ja/docs.json');
+        const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+        state.pages = state.pages.filter(page => page.targetPath !== targetPath);
+        fs.writeFileSync(stateFile, JSON.stringify(state, null, 2) + '\n');
+        if (record) fs.rmSync(path.join(repo, stateFileFor(record)), {force: true});
+        fs.rmSync(path.join(repo, targetPath), {force: true});
+    }
+    command('git', ['add', '.'], {cwd: repo});
+    command('git', ['commit', '-qm', 'Local simulation implementation and source fixture'], {cwd: repo});
+    command('git', ['push', '-q', 'origin', 'HEAD:master'], {cwd: repo});
     fs.writeFileSync(path.join(auth, 'auth.json'), '{}\n');
     writeExecutable(path.join(bin, 'gh'), ghMock);
-    writeExecutable(path.join(bin, 'codex-valid'), codexMock(false));
-    writeExecutable(path.join(bin, 'codex-invalid'), codexMock(true));
+    writeExecutable(path.join(bin, 'codex-valid'), codexMock(scenario, repo));
+    writeExecutable(path.join(bin, 'codex-invalid'), codexMock('invalid', repo));
     const env = {...process.env, PATH: `${bin}:${process.env.PATH}`, GH_TOKEN: 'local-simulation',
         GITHUB_REPOSITORY: 'apache/doris-website', GITHUB_EVENT_NAME: 'workflow_dispatch',
-        GITHUB_RUN_ID: runId, I18N_PR_AUTH_KIND: 'pat', I18N_MODE: 'validate',
-        I18N_PATH: sourcePath, I18N_MAX_PAGES: '1',
+        GITHUB_RUN_ID: runId, I18N_LOCALE: 'ja', I18N_PR_AUTH_KIND: 'pat', I18N_MODE: pages === 1 ? 'validate' : 'generate',
+        I18N_PATH: selectedPath, I18N_MAX_PAGES: String(pages),
         I18N_LIMIT: '20', DORIS_ENABLE_JA: 'true', CODEX_HOME: auth,
         I18N_SIM_PR_RECORD: path.join(output, 'pull-request.json')};
     runNode(repo, 'scripts/i18n/workflow-prs.cjs', [scan], env, logs);
     runNode(repo, 'scripts/i18n/workflow-scan.cjs', [scan], env, logs);
     const plan = JSON.parse(fs.readFileSync(path.join(scan, 'plan.json'), 'utf8'));
-    assert.equal(plan.selected.length, 1);
-    assert.equal(plan.tasks.find(task => task.id === plan.selected[0]).sourcePath, sourcePath);
+    assert.equal(plan.selected.length, pages);
+    if (drift) {
+        const other = path.join(output, 'other');
+        command('git', ['clone', '--shared', '-q', remote, other]);
+        command('git', ['config', '--local', 'user.name', 'Local Simulator'], {cwd: other});
+        command('git', ['config', '--local', 'user.email', 'local@example.invalid'], {cwd: other});
+        const file = {unrelated: 'blog/translation-simulation-drift.md', config: 'translations/glossary/ja.json',
+            page: plan.tasks.find(task => task.id === plan.selected[0]).sourcePath}[drift];
+        fs.mkdirSync(path.dirname(path.join(other, file)), {recursive: true});
+        fs.appendFileSync(path.join(other, file), drift === 'config' ? '\n' : '\nMaster drift simulation.\n');
+        command('git', ['add', '.'], {cwd: other});
+        command('git', ['commit', '-qm', `Master drift simulation: ${drift}`], {cwd: other});
+        command('git', ['push', '-q', 'origin', 'HEAD:master'], {cwd: other});
+    }
+    if (drift === 'page' || drift === 'config') {
+        // Neither model sees a request: the page is skipped, or the batch stops first.
+        const results = ['invalid', 'valid'].map(kind => {
+            const result = runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan],
+                {...env, CODEX_BIN: path.join(bin, `codex-${kind}`), I18N_SIM_PHASE: `-${kind}`}, logs, 1);
+            const file = path.join(scan, 'generation.json');
+            if (drift === 'config') {
+                assert.match(result.stderr, /master changed translations\/glossary\/ja\.json after the source commit/);
+                assert(!fs.existsSync(file));
+                return {exitCode: result.status, error: result.stderr.trim()};
+            }
+            const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+            assert.equal(manifest.candidates.length, 0);
+            assert.equal(manifest.usedTokens, 0);
+            assert.match(manifest.failures[0].error, /master changed this page after the source commit/);
+            assert.equal(manifest.master.moved, true);
+            return {exitCode: result.status, error: manifest.failures[0].error, master: manifest.master};
+        });
+        const report = {kind: 'local simulation; no external model or GitHub writes', output, drift,
+            sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath: selectedPath, generation: results,
+            pullRequest: null};
+        fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
+        process.stdout.write(JSON.stringify(report, null, 2) + '\n');
+        return;
+    }
     const failed = {...env, CODEX_BIN: path.join(bin, 'codex-invalid'), I18N_SIM_PHASE: '-invalid'};
-    runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan], failed, logs, 1);
+    runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan], failed, logs, pages === 1 ? 1 : 0);
     const failure = JSON.parse(fs.readFileSync(path.join(scan, 'generation.json'), 'utf8'));
     assert.equal(failure.candidates.length, 0);
-    assert.equal(failure.failures[0].error, 'Invalid model translation unit');
+    assert.match(failure.failures[0].error, /No usable document after three attempts/);
     assert.equal(failure.liveCall, true);
-    assert.equal(failure.usedTokens, 100000);
+    assert.equal(failure.usedTokens, pages * 300000);
     const valid = {...env, CODEX_BIN: path.join(bin, 'codex-valid'), I18N_SIM_PHASE: '-valid'};
     runNode(repo, 'scripts/i18n/workflow-generate.cjs', [scan], valid, logs);
     const generation = JSON.parse(fs.readFileSync(path.join(scan, 'generation.json'), 'utf8'));
-    assert.equal(generation.candidates.length, 1);
+    assert.equal(generation.candidates.length, pages);
     assert.equal(generation.failures.length, 0);
     const requests = generation.candidates.reduce((sum, candidate) => sum + candidate.requests, 0);
     assert(Number.isInteger(requests) && requests > 0);
     assert.equal(generation.usedTokens, requests * 100000);
+    const attempts = {success: 1, retry: 2, fallback: 3, incremental: 1}[scenario];
+    assert.equal(requests, pages * attempts);
+    assert(generation.candidates.every(candidate => candidate.generation.attempts === attempts
+        && candidate.generation.acceptedWithWarnings === (scenario === 'fallback')));
     runNode(repo, 'scripts/i18n/workflow-publish.cjs', [scan], env, logs);
     const pr = JSON.parse(fs.readFileSync(env.I18N_SIM_PR_RECORD, 'utf8'));
+    assert.match(pr.body, /Shared PR admission checks: passed/);
+    if (drift === 'unrelated') {
+        // Published from the source commit; the PR checks run against current master.
+        assert.equal(generation.master.moved, true);
+        assert.match(pr.body, /Master moved to `[a-f0-9]{40}` during generation; none of its 1 changed files affect this batch/);
+        assert.match(pr.body, /Master was at `[a-f0-9]{40}` when publishing; none of its 1 changed files/);
+    } else assert.equal(generation.master.moved, false);
     assert.equal(pr.head, `i18n/ja-automated-${runId}`);
     const branch = command('git', ['rev-parse', `refs/heads/${pr.head}`], {cwd: remote});
-    const target = command('git', ['show', `${branch}:${targetPath}`], {cwd: remote});
-    assert.match(target, /[\u3040-\u30ff\u3400-\u9fff]/);
-    const state = [...loadRecords(repo, 'ja').values()];
     const candidate = generation.candidates[0];
-    assert(state.some(page => page.sourcePath === sourcePath && page.reviewStatus === 'machine'
+    const target = command('git', ['show', `${branch}:${candidate.targetPath}`], {cwd: remote});
+    assert.match(target, /[\u3040-\u30ff\u3400-\u9fff]/);
+    if (scenario === 'incremental') {
+        assert.equal(candidate.generation.mode, 'incremental');
+        assert.equal(candidate.generation.sourceChange.ratio, 0.1);
+        assert.equal(target, incrementalTarget.replace('訳Paragraph A.', '訳Updated paragraph A.').trim());
+    }
+    const state = [...loadRecords(repo, 'ja').values()];
+    assert(state.some(page => page.sourcePath === candidate.sourcePath && page.reviewStatus === 'machine'
         && page.sourceHash === candidate.sourceHash && page.targetHash === candidate.targetHash));
-    const expectedFiles = [targetPath, candidate.statePath].sort();
+    const expectedFiles = [...new Set(generation.candidates.flatMap(item => [item.targetPath, item.statePath]))].sort();
     const committedFiles = command('git', ['diff', '--name-only', plan.sourceCommit, branch], {cwd: repo}).split('\n').sort();
     assert.deepEqual(committedFiles, expectedFiles);
-    const report = {kind: 'local simulation; no external model or GitHub writes', output,
-        sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath,
-        invalidModel: {exitCode: 1, error: failure.failures[0].error, usedTokens: failure.usedTokens},
-        generation: {candidates: generation.candidates.length, usedTokens: generation.usedTokens},
+    const report = {kind: 'local simulation; no external model or GitHub writes', output, drift: drift || null,
+        master: generation.master,
+        sourceCommit: plan.sourceCommit, selected: plan.selected, sourcePath: selectedPath, scenario,
+        invalidModel: {exitCode: pages === 1 ? 1 : 0, error: failure.failures[0].error, usedTokens: failure.usedTokens},
+        generation: {candidates: generation.candidates.length, failures: generation.failures.length,
+            requests, attemptsPerDocument: attempts, retainedWithWarnings: scenario === 'fallback' ? pages : 0,
+            usedTokens: generation.usedTokens},
+        documents: generation.candidates.map(item => ({sourcePath: item.sourcePath,
+            sourceChars: fs.readFileSync(path.join(repo, item.sourcePath), 'utf8').length,
+            mode: item.generation.mode, sourceChange: item.generation.sourceChange,
+            attempts: item.generation.attempts, warnings: item.generation.warnings.length})),
+        admission: {status: 'passed', checks: ['translation state', 'syntax', 'internal links']},
         pullRequest: {url: pr.url, draft: pr.draft, branch: pr.head, commit: branch, files: committedFiles, labels: pr.labels}};
     fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 }
 
-try {main();} catch (error) {console.error(error); process.exitCode = 1;}
+main().catch(error => {console.error(error); process.exitCode = 1;});

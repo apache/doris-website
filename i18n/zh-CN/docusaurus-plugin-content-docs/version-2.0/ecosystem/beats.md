@@ -170,7 +170,7 @@ queue.mem:
   flush.timeout: 10s
 
 # 4. output 部分负责数据输出
-# doris output 将数据输出到 Doris，使用的是 Stream Load HTTP 接口。通过 headers 参数指定了 Stream Load 的数据格式为 JSON，通过 codec_format_string 参数用类似 printf 的方式格式化输出到 Doris 的数据。比如下面的例子基于 filebeat 内部的字段 format 出一个 JSON，这些字段可以是 filebeat 内置字段如 agent.hostname，也可以是 processor 比如 dissect 生产的字段如 day，通过 %{[a][b]} 的方式引用，，Stream Load 会自动将 JSON 字段写入对应的 Doris 表的字段。
+# doris output 将数据输出到 Doris，使用的是 Stream Load HTTP 接口。通过 headers 参数指定了 Stream Load 的数据格式为 JSON，通过 codec_format_string 参数用类似 printf 的方式格式化输出到 Doris 的数据。比如下面的例子基于 filebeat 内部的字段 format 出一个 JSON，这些字段可以是 filebeat 内置字段如 agent.hostname，也可以是 processor 比如 dissect 生产的字段如 day，通过 %{[a][b]} 的方式引用，Stream Load 会自动将 JSON 字段写入对应的 Doris 表的字段。
 output.doris:
   fenodes: [ "http://fehost1:http_port", "http://fehost2:http_port", "http://fehost3:http_port" ]
   user: "your_username"

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/fluentbit",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/fluentbit.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/fluentbit.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "d7fa148a018866009993c570b7d03e3e9f1c1df4e7ebc17fd7258e0747d4a345",
+    "sourceTechnicalHash": "8ee38c21c8c9bec06c78c6bf2c708f3cfa52041c04f4101eb40ca14e1a2b35cf",
+    "targetHash": "d5b9820e24bb8e7473a19c1a66f8aa3fcb697c4065d325b62279a09dafe89fa4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:47:55.036Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d7fa148a018866009993c570b7d03e3e9f1c1df4e7ebc17fd7258e0747d4a345",
+      "targetHash": "d5b9820e24bb8e7473a19c1a66f8aa3fcb697c4065d325b62279a09dafe89fa4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"dev\"]; received [\"link\",\"https://github.com/joker-star-l/fluent-bit\",null]\nprotected node 16: expected [\"link\",\"https://github.com/joker-star-l/fluent-bit\",null]; received [\"inlineCode\",null,null,\"dev\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "version.label": {
+    "message": "Сообщество",
+    "description": "The label for version current"
+  },
+  "sidebar.community.category.About the Community": {
+    "message": "О сообществе",
+    "description": "The label for category About the Community in sidebar community"
+  },
+  "sidebar.community.category.How to Contribute": {
+    "message": "Как внести вклад",
+    "description": "The label for category How to Contribute in sidebar community"
+  },
+  "sidebar.community.category.Documentation Contribution": {
+    "message": "Работа над документацией",
+    "description": "The label for category Documentation Contribution in sidebar community"
+  },
+  "sidebar.community.category.Development & Debugging": {
+    "message": "Разработка и отладка",
+    "description": "The label for category Development & Debugging in sidebar community"
+  },
+  "sidebar.community.category.Source Code Compilation": {
+    "message": "Сборка исходного кода",
+    "description": "The label for category Source Code Compilation in sidebar community"
+  },
+  "sidebar.community.category.IDE Setup": {
+    "message": "Настройка IDE",
+    "description": "The label for category IDE Setup in sidebar community"
+  },
+  "sidebar.community.category.Code Style": {
+    "message": "Стиль кода",
+    "description": "The label for category Code Style in sidebar community"
+  },
+  "sidebar.community.category.Debugging & Profiling": {
+    "message": "Отладка и профилирование",
+    "description": "The label for category Debugging & Profiling in sidebar community"
+  },
+  "sidebar.community.category.Testing": {
+    "message": "Тестирование",
+    "description": "The label for category Testing in sidebar community"
+  },
+  "sidebar.community.category.Data Source Extension": {
+    "message": "Расширение источников данных",
+    "description": "The label for category Data Source Extension in sidebar community"
+  },
+  "sidebar.community.category.Plugin Development": {
+    "message": "Разработка плагинов",
+    "description": "The label for category Plugin Development in sidebar community"
+  },
+  "sidebar.community.category.Data Format Reference": {
+    "message": "Справочник форматов данных",
+    "description": "The label for category Data Format Reference in sidebar community"
+  },
+  "sidebar.community.category.Release": {
+    "message": "Выпуск версий",
+    "description": "The label for category Release in sidebar community"
+  },
+  "sidebar.community.category.Design Documents": {
+    "message": "Проектные документы",
+    "description": "The label for category Design Documents in sidebar community"
+  },
+  "sidebar.community.link.Improvement Proposals": {
+    "message": "Предложения по улучшению",
+    "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
+  }
+}

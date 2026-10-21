@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/sqrt.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "9124026d3d2f6dd9e7ec6e5f7a4621489e5d96ef8da47b6bd4a358f597f584cf",
+    "sourceTechnicalHash": "3b359b32bf650a2e0366e144c49bec60d7b6b4421a47d2caa78a7aec3856dd8c",
+    "targetHash": "7e8d45347e673a9ab765f734d65e95d1396925000b940d0bc2493e201944ee29",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:39:16.859Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9124026d3d2f6dd9e7ec6e5f7a4621489e5d96ef8da47b6bd4a358f597f584cf",
+      "targetHash": "7e8d45347e673a9ab765f734d65e95d1396925000b940d0bc2493e201944ee29",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

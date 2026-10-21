@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/flink",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/flink.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/flink.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "be061e9bc8a5f47f409572e6c52a5cdfeaa5b204f490aab78a40e4e83b39be74",
+    "sourceTechnicalHash": "36326fdd045107abac98016480a6ade6081763f7de11c46e90977f79761c852d",
+    "targetHash": "b9b6278d41d8abac1850bdf94ce2d1dba4ee51b0ef4122349d01cbc22564beee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:14:54.440Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "be061e9bc8a5f47f409572e6c52a5cdfeaa5b204f490aab78a40e4e83b39be74",
+      "targetHash": "b9b6278d41d8abac1850bdf94ce2d1dba4ee51b0ef4122349d01cbc22564beee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

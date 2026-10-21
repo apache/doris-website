@@ -378,6 +378,24 @@ Is it possible to dynamically configure: true
 
 Is it a configuration item unique to the Master FE node: false
 
+### TSO (Timestamp Oracle)
+
+<version since="dev">
+
+</version>
+
+TSO is enabled by `enable_feature_binlog`, which defaults to false and cannot be changed dynamically. The following TSO parameters are currently supported; see [TSO](../cluster-management/tso.md) for usage and caveats.
+
+| Parameter | Type | Default | Mutable | Master only | Description |
+| --- | --- | --- | --- | --- | --- |
+| `tso_service_update_interval_ms` | int | `50 ms` | false | true | Interval between allocation-window update checks. |
+| `tso_max_update_retry_count` | int | `3` | true | true | Maximum attempts to update the TSO state. |
+| `tso_max_get_retry_count` | int | `10` | true | true | Maximum attempts to allocate a TSO before reporting failure. |
+| `tso_service_window_duration_ms` | int | `1000 ms` | true | true | Duration of the reserved allocation window; also bounds the periodic persistence interval. |
+| `tso_clock_backward_startup_threshold_ms` | long | `1800000 ms` | true | true | Maximum tolerated difference between the replayed window end and the system clock during startup calibration. |
+| `tso_time_offset_debug_mode` | int | `0 ms` | true | false | Clock offset for testing only; do not use for normal operation. |
+| `enable_tso_forward_when_counter_full` | boolean | `true` | true | true | Advance the physical component by 1 ms when the logical counter exceeds half its capacity and wall-clock progress is insufficient. |
+
 ### Service
 
 #### `arrow_flight_deferred_query_idle_timeout_second`

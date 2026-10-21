@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COMMENT.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "71ff7174f6e0210444c0fcbcdaa3ea1a882e54265f874918f65391c5f721dcb2",
+    "sourceTechnicalHash": "a28019c46421b2e7c1ec3e947b529b2c1753b4b3dc02845316b4882272bc84f3",
+    "targetHash": "167feff2aaff3bf8ecc925479e576f4f8d915ec0981ba437979f85ff44fc147b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:46:51.549Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "71ff7174f6e0210444c0fcbcdaa3ea1a882e54265f874918f65391c5f721dcb2",
+      "targetHash": "167feff2aaff3bf8ecc925479e576f4f8d915ec0981ba437979f85ff44fc147b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

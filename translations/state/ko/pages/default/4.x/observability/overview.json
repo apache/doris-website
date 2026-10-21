@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/overview",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/overview.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/observability/overview.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "eae83c80e522c63d73ef4a8159eb7388ee52b70c32503f237594fbb21d32dcab",
+    "sourceTechnicalHash": "9afb85b79e362c1d2e98ebd01b284718f6984358c1984df03fe235b0c92f344c",
+    "targetHash": "3cb1bb36f90ccb2bedb758d1dd8f330bd311f84687d30ba0b87e027a70b201b5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T10:26:08.403Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eae83c80e522c63d73ef4a8159eb7388ee52b70c32503f237594fbb21d32dcab",
+      "targetHash": "3cb1bb36f90ccb2bedb758d1dd8f330bd311f84687d30ba0b87e027a70b201b5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "observability/overview",
+        "sourcePath": "docs/observability/overview.mdx",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/observability/overview.mdx",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "eae83c80e522c63d73ef4a8159eb7388ee52b70c32503f237594fbb21d32dcab",
+        "targetHash": "3cb1bb36f90ccb2bedb758d1dd8f330bd311f84687d30ba0b87e027a70b201b5",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

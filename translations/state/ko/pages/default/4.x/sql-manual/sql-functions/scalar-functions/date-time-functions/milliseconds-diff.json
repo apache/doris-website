@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/milliseconds-diff.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "425189ba138ce10bc1a188298d3ac8a464126f8c7eebb3a00fe8954d50f3b6f2",
+    "sourceTechnicalHash": "0da42e05c10a48014af9c4cc9dfed142c792e785e19140b1cc1aeb4d7c42de4f",
+    "targetHash": "bce75179212fbeb1e0389ea5e7aaabd417e770d9ab812ecd40a1b36ad80da67c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:43:03.376Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "425189ba138ce10bc1a188298d3ac8a464126f8c7eebb3a00fe8954d50f3b6f2",
+      "targetHash": "bce75179212fbeb1e0389ea5e7aaabd417e770d9ab812ecd40a1b36ad80da67c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

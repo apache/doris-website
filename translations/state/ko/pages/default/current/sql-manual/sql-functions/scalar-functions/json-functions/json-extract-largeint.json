@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-largeint",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-largeint.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-largeint.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "f83fbb7e607ce893f0b13257cc2e5ba31093b66ab27b59278fc7102932a98ad1",
+    "sourceTechnicalHash": "01c2e6562a07c3a7ac46c30a29a4bfe1ddfa96be6845ba075c8edac857d0be2e",
+    "targetHash": "bb2c6454cf713212ea396dbeb2a4674b9c9a6f7a4670406c7e5ef30c1b97b55f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:10:01.012Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f83fbb7e607ce893f0b13257cc2e5ba31093b66ab27b59278fc7102932a98ad1",
+      "targetHash": "bb2c6454cf713212ea396dbeb2a4674b9c9a6f7a4670406c7e5ef30c1b97b55f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

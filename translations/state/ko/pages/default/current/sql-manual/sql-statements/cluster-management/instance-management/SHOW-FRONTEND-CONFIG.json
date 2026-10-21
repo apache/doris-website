@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+    "sourceTechnicalHash": "69cad0c18fd68f970c56d3e373ee50a0c4e411c33eef9ebac8c7188c697ce896",
+    "targetHash": "d41cc01d5cf30702ff4dbac72923419ea0f7049ad8ebd40337b0b6a8062c2eb1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:18:02.015Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+      "targetHash": "d41cc01d5cf30702ff4dbac72923419ea0f7049ad8ebd40337b0b6a8062c2eb1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

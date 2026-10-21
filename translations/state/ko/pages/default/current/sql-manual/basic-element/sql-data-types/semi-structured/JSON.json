@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/JSON",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/semi-structured/JSON.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "44e0590952d928738a596a3b6bab8578a6112ead90fda4d25533df62e6c9266b",
+    "sourceTechnicalHash": "5cac76b5297f60e16ed9f3af6d5cb028c0948dc4e125e9bd939b1748b87debf8",
+    "targetHash": "cda16f7970f46e095197f7ec1c18cc34939b1c7675f54aae18d26b2dd369e32b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:17:55.568Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "44e0590952d928738a596a3b6bab8578a6112ead90fda4d25533df62e6c9266b",
+      "targetHash": "cda16f7970f46e095197f7ec1c18cc34939b1c7675f54aae18d26b2dd369e32b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

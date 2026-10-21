@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-COLUMN.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "6715b7a0e5a912b22af46b1e1aebeb815ac25bbf49cd2006169234da67fa1b09",
+    "sourceTechnicalHash": "3725bf5a8df0b6ee92a4b4f3e05d12fede5380b2b61bf7d684272bf329c1d32a",
+    "targetHash": "dfc79de1e1e4b05ec689e55ba7cb84a57f2db00d61e1bea45cb9cf382d255311",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:47:47.460Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6715b7a0e5a912b22af46b1e1aebeb815ac25bbf49cd2006169234da67fa1b09",
+      "targetHash": "dfc79de1e1e4b05ec689e55ba7cb84a57f2db00d61e1bea45cb9cf382d255311",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

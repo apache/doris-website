@@ -188,11 +188,11 @@ The memory management and IO management of Workload Group are implemented intern
 ```sql
 CREATE WORKLOAD GROUP IF NOT EXISTS g1
 PROPERTIES (
-    "cpu_share" = "1024"
+    "min_cpu_percent" = "10%"
 );
 ```
 
-The CPU limit configured here is a soft limit. Starting from version 2.1, the system automatically creates a group named `normal`, which cannot be deleted.
+This example sets the minimum CPU resource percentage to 10%. Starting from version 2.1, the system automatically creates a group named `normal`, which cannot be deleted.
 
 :::caution Cloud mode requires an explicit compute group
 All CREATE / ALTER / DROP WORKLOAD GROUP examples in this document omit the `FOR <compute_group>` clause, and they only work as-is in **non-cloud (storage-compute coupled) mode**, where they apply to the default resource group.
@@ -256,27 +256,25 @@ Reference: [SHOW-WORKLOAD-GROUPS](../../sql-manual/sql-statements/cluster-manage
 **Method 2: System table query**
 
 ```sql
-SELECT * FROM information_schema.workload_groups WHERE name = 'g1';
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-| ID    | NAME | CPU_SHARE | MEMORY_LIMIT | ENABLE_MEMORY_OVERCOMMIT | MAX_CONCURRENCY | MAX_QUEUE_SIZE | QUEUE_TIMEOUT | CPU_HARD_LIMIT | SCAN_THREAD_NUM | MAX_REMOTE_SCAN_THREAD_NUM | MIN_REMOTE_SCAN_THREAD_NUM | MEMORY_LOW_WATERMARK | MEMORY_HIGH_WATERMARK | TAG  | READ_BYTES_PER_SECOND | REMOTE_READ_BYTES_PER_SECOND |
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-| 14009 | g1   |      1024 | -1           | true                     |      2147483647 |              0 |             0 | -1             |              -1 |                         -1 |                         -1 | 50%                  | 80%                   |      |                    -1 |                           -1 |
-+-------+------+-----------+--------------+--------------------------+-----------------+----------------+---------------+----------------+-----------------+----------------------------+----------------------------+----------------------+-----------------------+------+-----------------------+------------------------------+
-1 row in set (0.05 sec)
+SELECT name, min_cpu_percent FROM information_schema.workload_groups WHERE name = 'g1';
++------+-----------------+
+| name | min_cpu_percent |
++------+-----------------+
+| g1   | 10%             |
++------+-----------------+
 ```
 
 ### Modify Workload Group
 
 ```sql
-ALTER WORKLOAD GROUP g1 PROPERTIES('min_cpu_percent' = '2048');
+ALTER WORKLOAD GROUP g1 PROPERTIES('min_cpu_percent' = '20%');
 
-SELECT cpu_share FROM information_schema.workload_groups WHERE name = 'g1';
-+-----------+
-| cpu_share |
-+-----------+
-|      2048 |
-+-----------+
-1 row in set (0.02 sec)
+SELECT min_cpu_percent FROM information_schema.workload_groups WHERE name = 'g1';
++-----------------+
+| min_cpu_percent |
++-----------------+
+| 20%             |
++-----------------+
 ```
 
 Reference: [ALTER-WORKLOAD-GROUP](../../sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-GROUP)

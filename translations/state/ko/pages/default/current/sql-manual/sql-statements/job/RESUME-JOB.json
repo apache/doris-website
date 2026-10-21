@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/RESUME-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/RESUME-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/RESUME-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7d96aefe7fa972cbcab2f297e131e25a01f49ca852c581d7df8cc5ef84d892e9",
+    "sourceTechnicalHash": "d0dfdef97a5d3953fe31445a529b808add1a3d6dc4e4716a2e5a98c0614fbbba",
+    "targetHash": "cd62de269799344619a6c69fa461f217aeb1d2971fad83a7f2c02e449af7bc45",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:38:24.541Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7d96aefe7fa972cbcab2f297e131e25a01f49ca852c581d7df8cc5ef84d892e9",
+      "targetHash": "cd62de269799344619a6c69fa461f217aeb1d2971fad83a7f2c02e449af7bc45",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

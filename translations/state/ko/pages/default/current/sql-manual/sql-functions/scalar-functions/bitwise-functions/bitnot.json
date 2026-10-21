@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitwise-functions/bitnot.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "c7808b1d6f0318600a10a1bc4e2a6393e962d90f7e4fe1bdfe98797221e2d9b8",
+    "sourceTechnicalHash": "6245312226b23e182fe06eb310cf9acbb5968a5d97707e2317059b94836f3132",
+    "targetHash": "77cfa5f61d959d408597f293c97490a00501c03a65b866e71947d0df14835abc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:45:53.541Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c7808b1d6f0318600a10a1bc4e2a6393e962d90f7e4fe1bdfe98797221e2d9b8",
+      "targetHash": "77cfa5f61d959d408597f293c97490a00501c03a65b866e71947d0df14835abc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

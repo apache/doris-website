@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/data-admin/backup-restore/backup",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/data-admin/backup-restore/backup.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/data-admin/backup-restore/backup.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "fb1f0bdc5dab46fcc802e4cc62297de30c50ba14afcde89a3582f63f104cebf9",
+    "sourceTechnicalHash": "4c9d455a47405824e0a80d7ff042e1bbe6125bbcadccbeb3e152d942d1e2d9c9",
+    "targetHash": "c1753451d9f890d428bfc706dcf9fb3c7e1901c4304ca050ef912e376efabfd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:06:44.790Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fb1f0bdc5dab46fcc802e4cc62297de30c50ba14afcde89a3582f63f104cebf9",
+      "targetHash": "c1753451d9f890d428bfc706dcf9fb3c7e1901c4304ca050ef912e376efabfd5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/data-admin/backup-restore/backup",
+        "sourcePath": "docs/admin-manual/data-admin/backup-restore/backup.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/data-admin/backup-restore/backup.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "fb1f0bdc5dab46fcc802e4cc62297de30c50ba14afcde89a3582f63f104cebf9",
+        "targetHash": "c1753451d9f890d428bfc706dcf9fb3c7e1901c4304ca050ef912e376efabfd5",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-type",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-type.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-type.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "30a8a1df40d68ad1229351b9fe44668186fadd86802476d0869f690b2003bd72",
+    "sourceTechnicalHash": "d109718a64d73d46dfeb4f28820e3fc6b4e4ae8bd478a65160c28ae4f755cd7e",
+    "targetHash": "c525bc13764cf2d115a25aeac35cee341edebbfeecfb17f1b26522c3aa299d86",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T05:11:03.192Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "30a8a1df40d68ad1229351b9fe44668186fadd86802476d0869f690b2003bd72",
+      "targetHash": "c525bc13764cf2d115a25aeac35cee341edebbfeecfb17f1b26522c3aa299d86",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

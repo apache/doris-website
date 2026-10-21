@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/parquet",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/parquet.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+    "sourceTechnicalHash": "3669e1053cb64e25230afd4b7410f85dacad0c07c5ec3ae6175312119fcdf8c7",
+    "targetHash": "e827245f47e3052062ed8418bc3efe45d3345e084ec9f6eb0b085c2a11ec59d9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:24:55.874Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+      "targetHash": "e827245f47e3052062ed8418bc3efe45d3345e084ec9f6eb0b085c2a11ec59d9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

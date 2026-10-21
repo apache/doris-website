@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/DROP-WORKLOAD-GROUP.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5a517162f0aa143c850a248822f085e57ecb4834b890bb184498771c08659bab",
+    "sourceTechnicalHash": "132f0ed85feef0b8a24c90d078e5ce1f120da7e17a1c5302dc3fe232021177e2",
+    "targetHash": "701bb0a8fa97e1dd9c3f86c473cf4e82d8faf74f7997ad3309098b1b3ae5f527",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:15:53.653Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a517162f0aa143c850a248822f085e57ecb4834b890bb184498771c08659bab",
+      "targetHash": "701bb0a8fa97e1dd9c3f86c473cf4e82d8faf74f7997ad3309098b1b3ae5f527",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

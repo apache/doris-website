@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-governance/data-lineage",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-governance/data-lineage.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-governance/data-lineage.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "0498916655be833d827d325d0e152e4b1ab6ec3373948b962fd6dea05dc0e038",
+    "sourceTechnicalHash": "a0089cc217580a06fab762a1491971d2f2e60732a7a373426a457cfdd8bd1c1c",
+    "targetHash": "dcc6a9b718605ead781726d16afca679a4a665ca21e4d03c9be4ade0a6e27042",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:15:00.144Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0498916655be833d827d325d0e152e4b1ab6ec3373948b962fd6dea05dc0e038",
+      "targetHash": "dcc6a9b718605ead781726d16afca679a4a665ca21e4d03c9be4ade0a6e27042",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

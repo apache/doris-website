@@ -28,6 +28,17 @@
     }
 }
 
+// Korean wraps between words, not between syllables, and its glyphs fill the
+// em box that the tight leading of the uppercase display type leaves empty.
+.kf-next:lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+
+    .kf-next__hero-title {
+        line-height: 1.12;
+    }
+}
+
 .kf-next__container {
     max-width: var(--kf-container);
     margin: 0 auto;

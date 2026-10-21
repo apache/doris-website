@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/mysql-proto",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/mysql-proto.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/mysql-proto.mdx",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
+    "sourceTechnicalHash": "f9a831498dd822476c1ba275e2da8490763e65449fc4814249d36b530b1784db",
+    "targetHash": "f19c133630aeb800a45cdfc72a9f6cadc8432a91ee72c4c4b4649d7556879f12",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:47:26.165Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "975c5cfb3026f413dc6fb2e2060cdb583c6297c7c1d92a2f405963d73f2b8aac",
+      "targetHash": "f19c133630aeb800a45cdfc72a9f6cadc8432a91ee72c4c4b4649d7556879f12",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

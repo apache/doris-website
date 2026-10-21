@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/upgrade",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/upgrade.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/compute-storage-decoupled/upgrade.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "27aec86be3acfb3221a0d68fb2690a7fec2a7e6fca256e606a32c4d2d05e3714",
+    "sourceTechnicalHash": "490335181d3ad3edd8b2ac80de928a76e4415e5cb301dec7c812d511100ed3f7",
+    "targetHash": "6bdd97b01f684705d71e15d7411adcc54114b000c24dd1d3fc387c204f104d61",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:43:55.496Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "27aec86be3acfb3221a0d68fb2690a7fec2a7e6fca256e606a32c4d2d05e3714",
+      "targetHash": "6bdd97b01f684705d71e15d7411adcc54114b000c24dd1d3fc387c204f104d61",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -246,7 +246,7 @@ export function prTemplate(task: TrackBTask): CodeSnippet {
             '',
             '(Keep the Docs Checklist from the template and tick what applies.)',
             '',
-            `CoC 2026 Glasgow hackathon · Track B · ${task.code} ${task.title}`,
+            `Apache Doris Hackathon · Track B · ${task.code} ${task.title}`,
             '',
             'The key-features pages exist only in English; both copies get the same change:',
             ...docFiles(task).map(file => `- ${file}`),

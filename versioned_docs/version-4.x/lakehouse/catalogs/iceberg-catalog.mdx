@@ -242,33 +242,7 @@ Since version 4.1.4, the Iceberg identity partition metadata is delivered with e
 
 ## Column Type Mapping
 
-| Iceberg Type                           | Doris Type           | Comment                                 |
-| -------------------------------------- | -------------------- | --------------------------------------- |
-| boolean                                | boolean              |                                         |
-| integer                                | int                  |                                         |
-| long                                   | bigint               |                                         |
-| float                                  | float                |                                         |
-| double                                 | double               |                                         |
-| decimal(P, S)                          | decimal(P, S)        |                                         |
-| date                                   | date                 |                                         |
-| timestamp (Timestamp without timezone) | datetime(6)          | Mapped to datetime with precision 6     |
-| timestamptz (Timestamp with timezone) | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
-| fixed(N) | VARBINARY(N) | Since 4.1.5, the fixed binary width is preserved. |
-| string                                 | string               |                                         |
-| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
-| uuid | VARBINARY(16) | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
-| struct                                 | struct (supported from version 2.1.3) |                                         |
-| map                                    | map (supported from version 2.1.3)    |                                         |
-| list                                   | array                |                                         |
-| other                                  | UNSUPPORTED          |                                         |
-
-> Note:
->
-> Since 4.1.5, `timestamp` maps to `DATETIME(6)` and `timestamptz` always maps to `TIMESTAMPTZ(6)`. The latter represents an instant displayed in the session `time_zone`; `enable.mapping.timestamp_tz=false` cannot restore the old mapping.
->
-> You can check whether the source type has timezone information in the Extra column of the `DESCRIBE table_name` statement. If it shows `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (Supported since 3.1.0).
->
-> Supported since version 4.0.3, `timestamptz` (timestamp with time zone) can be mapped to the Doris `timestamptz` type.
+See [Iceberg to Doris Data Type Mapping](iceberg-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
 
 ### Column Name Case
 
@@ -1485,6 +1459,36 @@ This is an experimental feature, supported since version 4.1.0.
                 's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
                 's3.access_key' = '<ak>',
                 's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Alibaba Cloud OSS Tables
+
+<details>
+    <summary>4.1.4+ Version</summary>
+    <Tabs>
+        <TabItem value='OSS Tables REST Catalog' label='OSS Tables REST Catalog' default>
+            For complete configuration and usage instructions, see [Alibaba Cloud OSS Tables Integration](../best-practices/doris-aliyun-oss-tables).
+            ```sql
+            CREATE CATALOG oss_tables PROPERTIES (
+                'type' = 'iceberg',
+                'iceberg.catalog.type' = 'rest',
+                'iceberg.rest.uri' = 'https://<region>.oss-tables.aliyuncs.com/iceberg',
+                'warehouse' = 'acs:osstables:<region>:<account_id>:bucket/<table_bucket_name>',
+                'iceberg.rest.sigv4-enabled' = 'true',
+                'iceberg.rest.signing-name' = 'osstables',
+                'iceberg.rest.signing-region' = '<region>',
+                'iceberg.rest.view-enabled' = 'false',
+                'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO',
+                'oss.endpoint' = 'https://oss-<region>.aliyuncs.com',
+                'oss.region' = '<region>',
+                'oss.access_key' = '<access_key_id>',
+                'oss.secret_key' = '<access_key_secret>',
+                'oss.use_path_style' = 'false',
+                'test_connection' = 'true'
             );
             ```
         </TabItem>

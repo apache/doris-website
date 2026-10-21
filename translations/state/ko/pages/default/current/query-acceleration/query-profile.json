@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/query-profile",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/query-profile.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/query-profile.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "9d9c1122636f3a3c2238d23662dc3fc4a2f9fda0a17a654cbc045633d14fde13",
+    "sourceTechnicalHash": "4b6a9c2d1b5e0fae5e84ea67713a180394dda3ec8354564e9e5aaf310e56d7bf",
+    "targetHash": "e96c76454143ba1511f4118bb948bf8fd478f33a82b1607f8fc089f0fbf21e85",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T03:56:10.202Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d9c1122636f3a3c2238d23662dc3fc4a2f9fda0a17a654cbc045633d14fde13",
+      "targetHash": "e96c76454143ba1511f4118bb948bf8fd478f33a82b1607f8fc089f0fbf21e85",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 14: expected [\"inlineCode\",null,null,\"profile_async_collect_expire_time_secs\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"profile_async_collect_expire_time_secs\"]\nprotected node 73: expected [\"code\",\"sql\",null,\"mysql> show query profile;\\n--------------\\nshow query profile\\n--------------\\n\\n+-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+-----------------+------------+---------------+\\n| Profile ID                        | Task Type | Start Time          | End Time            | Total | Task State | User | Default Catalog | Default Db | Sql Statement |\\n+-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+-----------------+------------+---------------+\\n| c7f48291d62147f4-92b1a511f6fe3395 | QUERY     | 2025-02-26 19:35:15 | 2025-02-26 19:35:15 | 5ms   | EOF        | root | internal        | tpch       | select 20     |\\n| 9c6cd24d2f354c6f-9652c097cae00b05 | QUERY     | 2025-02-26 19:35:12 | 2025-02-26 19:35:12 | 4ms   | EOF        | root | internal        | tpch       | select 19     |\\n| b908f7b484084492-9c4dc48762c9cb89 | QUERY     | 2025-02-26 19:35:09 | 2025-02-26 19:35:09 | 5ms   | EOF        | root | internal        | tpch       | select 18     |\\n| ef411c0eb00541dc-ba5a39677be3e117 | QUERY     | 2025-02-26 19:35:06 | 2025-02-26 19:35:06 | 5ms   | EOF        | root | internal        | tpch       | select 17     |\\n| c89deefa85974da7-ad53cb3d6f4cad75 | QUERY     | 2025-02-26 19:35:03 | 2025-02-26 19:35:03 | 5ms   | EOF        | root | internal        | tpch       | select 16     |\\n| dd97a36d2a1f4cbc-b23f13b975cd2dde | ; received [\"code\",\"sql\",null,\"mysql> show query profile;\\n--------------\\nshow query profile\\n--------------\\n\\n+-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+-----------------+------------+---------------+\\n| Profile ID                        | Task Type | Start Time          | End Time            | Total | Task State | User | Default Catalog | Default Db | Sql Statement |\\n+-----------------------------------+-----------+---------------------+---------------------+-------+------------+------+-----------------+------------+---------------+\\n| c7f48291d62147f4-92b1a511f6fe3395 | QUERY     | 2025-02-26 19:35:15 | 2025-02-26 19:35:15 | 5ms   | EOF        | root | internal        | tpch       | select 20     |\\n| 9c6cd24d2f354c6f-9652c097cae00b05 | QUERY     | 2025-02-26 19:35:12 | 2025-02-26 19:35:12 | 4ms   | EOF        | root | internal        | tpch       | select 19     |\\n| b908f7b484084492-9c4dc48762c9cb89 | QUERY     | 2025-02-26 19:35:09 | 2025-02-26 19:35:09 | 5ms   | EOF        | root | internal        | tpch       | select 18     |\\n| ef411c0eb00541dc-ba5a39677be3e117 | QUERY     | 2025-02-26 19:35:06 | 2025-02-26 19:35:06 | 5ms   | EOF        | root | internal        | tpch       | select 17     |\\n| c89deefa85974da7-ad53cb3d6f4cad75 | QUERY     | 2025-02-26 19:35:03 | 2025-02-26 19:35:03 | 5ms   | EOF        | root | internal        | tpch       | select 16     |\\n| d d97a36d2a1f4cbc-b23f13b975cd2dde |"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

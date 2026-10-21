@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-first-index",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-first-index.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-first-index.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "374350538b5ebd4d6ec35402a7373475a0e7d3b78db63b161f19685da8b023aa",
+    "sourceTechnicalHash": "ce274a137266500d97e8dc0e7f071a79cd970a7a986776da0152d62385100fae",
+    "targetHash": "9da15c3bbf407e91cf8c77e86b58857975cbba6a6382e37e16b9e98a0136b867",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:26:46.126Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "374350538b5ebd4d6ec35402a7373475a0e7d3b78db63b161f19685da8b023aa",
+      "targetHash": "9da15c3bbf407e91cf8c77e86b58857975cbba6a6382e37e16b9e98a0136b867",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

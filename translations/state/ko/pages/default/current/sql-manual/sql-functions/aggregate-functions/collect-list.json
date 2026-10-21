@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/collect-list",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/collect-list.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/collect-list.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "0becbd565990bc4e8ee6a61ad01c2623cde4d63eaf84b99ae54b7de13157e6f1",
+    "sourceTechnicalHash": "e2bf1b6c7f55091ec48b214c2df8e901a38754f1685ff895b0cbf0f962a07634",
+    "targetHash": "33fbbd560ec07920b6afcffd7e22c6f8fa00c1987bf7f052f3a22bb5c268ae88",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:16:17.302Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0becbd565990bc4e8ee6a61ad01c2623cde4d63eaf84b99ae54b7de13157e6f1",
+      "targetHash": "33fbbd560ec07920b6afcffd7e22c6f8fa00c1987bf7f052f3a22bb5c268ae88",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/binlog-table-stream",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/binlog-table-stream.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/binlog-table-stream.mdx",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a6d0717e8ae7e4a214e441488241445cd294e63876f6058f87f35251fe3465a5",
+    "sourceTechnicalHash": "64952b16e6628bb8e06e393f48558278cfdebd9741cc341721f9e87ce47a1699",
+    "targetHash": "7270971892ff6532da6339fa3559ae12e706a202662a3eedc5dd83043c350695",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:45:03.301Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a6d0717e8ae7e4a214e441488241445cd294e63876f6058f87f35251fe3465a5",
+      "targetHash": "7270971892ff6532da6339fa3559ae12e706a202662a3eedc5dd83043c350695",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

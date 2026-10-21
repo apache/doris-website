@@ -1,0 +1,1595 @@
+[
+  {
+    "pluginId": "default",
+    "files": [
+      {
+        "path": "current",
+        "content": {
+          "version.label": {
+            "message": "Dev",
+            "description": "The label for version current"
+          },
+          "sidebar.docs.category.Get Started": {
+            "message": "Get Started",
+            "description": "The label for category Get Started in sidebar docs"
+          },
+          "sidebar.docs.category.Getting Started": {
+            "message": "Getting Started",
+            "description": "The label for category Getting Started in sidebar docs"
+          },
+          "sidebar.docs.category.Migration": {
+            "message": "Migration",
+            "description": "The label for category Migration in sidebar docs"
+          },
+          "sidebar.docs.category.Features & Architecture": {
+            "message": "Features & Architecture",
+            "description": "The label for category Features & Architecture in sidebar docs"
+          },
+          "sidebar.docs.category.Installation & Deployment": {
+            "message": "Installation & Deployment",
+            "description": "The label for category Installation & Deployment in sidebar docs"
+          },
+          "sidebar.docs.category.Installation Preparation": {
+            "message": "Installation Preparation",
+            "description": "The label for category Installation Preparation in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying Manually": {
+            "message": "Deploying Manually",
+            "description": "The label for category Deploying Manually in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying on Kubernetes": {
+            "message": "Deploying on Kubernetes",
+            "description": "The label for category Deploying on Kubernetes in sidebar docs"
+          },
+          "sidebar.docs.category.Doris Operator Concepts and Capabilities": {
+            "message": "Doris Operator Concepts and Capabilities",
+            "description": "The label for category Doris Operator Concepts and Capabilities in sidebar docs"
+          },
+          "sidebar.docs.category.Preparation": {
+            "message": "Preparation",
+            "description": "The label for category Preparation in sidebar docs"
+          },
+          "sidebar.docs.category.Integrated Storage Compute": {
+            "message": "Integrated Storage Compute",
+            "description": "The label for category Integrated Storage Compute in sidebar docs"
+          },
+          "sidebar.docs.category.Separating Storage Compute": {
+            "message": "Separating Storage Compute",
+            "description": "The label for category Separating Storage Compute in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying on Cloud": {
+            "message": "Deploying on Cloud",
+            "description": "The label for category Deploying on Cloud in sidebar docs"
+          },
+          "sidebar.docs.category.Compute-Storage Decoupled Guide": {
+            "message": "Compute-Storage Decoupled Guide",
+            "description": "The label for category Compute-Storage Decoupled Guide in sidebar docs"
+          },
+          "sidebar.docs.category.File Cache": {
+            "message": "File Cache",
+            "description": "The label for category File Cache in sidebar docs"
+          },
+          "sidebar.docs.category.Read/Write Separation": {
+            "message": "Read/Write Separation",
+            "description": "The label for category Read/Write Separation in sidebar docs"
+          },
+          "sidebar.docs.category.Connection & Integration": {
+            "message": "Connection & Integration",
+            "description": "The label for category Connection & Integration in sidebar docs"
+          },
+          "sidebar.docs.category.Data Integration": {
+            "message": "Data Integration",
+            "description": "The label for category Data Integration in sidebar docs"
+          },
+          "sidebar.docs.category.Flink Doris Connector": {
+            "message": "Flink Doris Connector",
+            "description": "The label for category Flink Doris Connector in sidebar docs"
+          },
+          "sidebar.docs.category.Guides": {
+            "message": "Guides",
+            "description": "The label for category Guides in sidebar docs"
+          },
+          "sidebar.docs.category.Table Design": {
+            "message": "Table Design",
+            "description": "The label for category Table Design in sidebar docs"
+          },
+          "sidebar.docs.category.Table Models": {
+            "message": "Table Models",
+            "description": "The label for category Table Models in sidebar docs"
+          },
+          "sidebar.docs.category.Unique Key Model": {
+            "message": "Unique Key Model",
+            "description": "The label for category Unique Key Model in sidebar docs"
+          },
+          "sidebar.docs.category.Partitioning & Bucketing": {
+            "message": "Partitioning & Bucketing",
+            "description": "The label for category Partitioning & Bucketing in sidebar docs"
+          },
+          "sidebar.docs.category.Indexes": {
+            "message": "Indexes",
+            "description": "The label for category Indexes in sidebar docs"
+          },
+          "sidebar.docs.category.Inverted Index (Fulltext)": {
+            "message": "Inverted Index (Fulltext)",
+            "description": "The label for category Inverted Index (Fulltext) in sidebar docs"
+          },
+          "sidebar.docs.category.Vector Index": {
+            "message": "Vector Index",
+            "description": "The label for category Vector Index in sidebar docs"
+          },
+          "sidebar.docs.category.Storage Layout": {
+            "message": "Storage Layout",
+            "description": "The label for category Storage Layout in sidebar docs"
+          },
+          "sidebar.docs.category.Tiered Storage": {
+            "message": "Tiered Storage",
+            "description": "The label for category Tiered Storage in sidebar docs"
+          },
+          "sidebar.docs.category.Data Loading": {
+            "message": "Data Loading",
+            "description": "The label for category Data Loading in sidebar docs"
+          },
+          "sidebar.docs.category.Data Source": {
+            "message": "Data Source",
+            "description": "The label for category Data Source in sidebar docs"
+          },
+          "sidebar.docs.category.Loading Methods": {
+            "message": "Loading Methods",
+            "description": "The label for category Loading Methods in sidebar docs"
+          },
+          "sidebar.docs.category.Continuous Load": {
+            "message": "Continuous Load",
+            "description": "The label for category Continuous Load in sidebar docs"
+          },
+          "sidebar.docs.category.MySQL (Experimental)": {
+            "message": "MySQL (Experimental)",
+            "description": "The label for category MySQL (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.Prerequisites": {
+            "message": "Prerequisites",
+            "description": "The label for category Prerequisites in sidebar docs"
+          },
+          "sidebar.docs.category.PostgreSQL (Experimental)": {
+            "message": "PostgreSQL (Experimental)",
+            "description": "The label for category PostgreSQL (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.OceanBase (Experimental)": {
+            "message": "OceanBase (Experimental)",
+            "description": "The label for category OceanBase (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.S3": {
+            "message": "S3",
+            "description": "The label for category S3 in sidebar docs"
+          },
+          "sidebar.docs.category.File Formats": {
+            "message": "File Formats",
+            "description": "The label for category File Formats in sidebar docs"
+          },
+          "sidebar.docs.category.Complex Data Types Import": {
+            "message": "Complex Data Types Import",
+            "description": "The label for category Complex Data Types Import in sidebar docs"
+          },
+          "sidebar.docs.category.Load Best Practices": {
+            "message": "Load Best Practices",
+            "description": "The label for category Load Best Practices in sidebar docs"
+          },
+          "sidebar.docs.category.Data Update & Delete": {
+            "message": "Data Update & Delete",
+            "description": "The label for category Data Update & Delete in sidebar docs"
+          },
+          "sidebar.docs.category.Updating Data": {
+            "message": "Updating Data",
+            "description": "The label for category Updating Data in sidebar docs"
+          },
+          "sidebar.docs.category.Deleting Data": {
+            "message": "Deleting Data",
+            "description": "The label for category Deleting Data in sidebar docs"
+          },
+          "sidebar.docs.category.Change Data & Table Stream": {
+            "message": "Change Data & Table Stream",
+            "description": "The label for category Change Data & Table Stream in sidebar docs"
+          },
+          "sidebar.docs.category.Data Export": {
+            "message": "Data Export",
+            "description": "The label for category Data Export in sidebar docs"
+          },
+          "sidebar.docs.category.Querying": {
+            "message": "Querying",
+            "description": "The label for category Querying in sidebar docs"
+          },
+          "sidebar.docs.category.User Defined Functions": {
+            "message": "User Defined Functions",
+            "description": "The label for category User Defined Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Materialized View": {
+            "message": "Materialized View",
+            "description": "The label for category Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Async Materialized View": {
+            "message": "Async Materialized View",
+            "description": "The label for category Async Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Performance & Tuning": {
+            "message": "Performance & Tuning",
+            "description": "The label for category Performance & Tuning in sidebar docs"
+          },
+          "sidebar.docs.category.Performance Tuning Overview": {
+            "message": "Performance Tuning Overview",
+            "description": "The label for category Performance Tuning Overview in sidebar docs"
+          },
+          "sidebar.docs.category.Query Performance": {
+            "message": "Query Performance",
+            "description": "The label for category Query Performance in sidebar docs"
+          },
+          "sidebar.docs.category.Schema & Index Optimization": {
+            "message": "Schema & Index Optimization",
+            "description": "The label for category Schema & Index Optimization in sidebar docs"
+          },
+          "sidebar.docs.category.Join Optimization": {
+            "message": "Join Optimization",
+            "description": "The label for category Join Optimization in sidebar docs"
+          },
+          "sidebar.docs.category.Caching": {
+            "message": "Caching",
+            "description": "The label for category Caching in sidebar docs"
+          },
+          "sidebar.docs.category.Execution Tuning": {
+            "message": "Execution Tuning",
+            "description": "The label for category Execution Tuning in sidebar docs"
+          },
+          "sidebar.docs.category.High Concurrency & Point Queries": {
+            "message": "High Concurrency & Point Queries",
+            "description": "The label for category High Concurrency & Point Queries in sidebar docs"
+          },
+          "sidebar.docs.category.Distinct Counts": {
+            "message": "Distinct Counts",
+            "description": "The label for category Distinct Counts in sidebar docs"
+          },
+          "sidebar.docs.category.Load Performance": {
+            "message": "Load Performance",
+            "description": "The label for category Load Performance in sidebar docs"
+          },
+          "sidebar.docs.category.Optimization Technology Principles": {
+            "message": "Optimization Technology Principles",
+            "description": "The label for category Optimization Technology Principles in sidebar docs"
+          },
+          "sidebar.docs.category.Lakehouse": {
+            "message": "Lakehouse",
+            "description": "The label for category Lakehouse in sidebar docs"
+          },
+          "sidebar.docs.category.Data Catalogs": {
+            "message": "Data Catalogs",
+            "description": "The label for category Data Catalogs in sidebar docs"
+          },
+          "sidebar.docs.category.Hive Catalog": {
+            "message": "Hive Catalog",
+            "description": "The label for category Hive Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Iceberg Catalog": {
+            "message": "Iceberg Catalog",
+            "description": "The label for category Iceberg Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Paimon Catalog": {
+            "message": "Paimon Catalog",
+            "description": "The label for category Paimon Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Lance Catalog": {
+            "message": "Lance Catalog",
+            "description": "The label for category Lance Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Hudi Catalog": {
+            "message": "Hudi Catalog",
+            "description": "The label for category Hudi Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.MaxCompute Catalog": {
+            "message": "MaxCompute Catalog",
+            "description": "The label for category MaxCompute Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Metastores": {
+            "message": "Metastores",
+            "description": "The label for category Metastores in sidebar docs"
+          },
+          "sidebar.docs.category.Storages": {
+            "message": "Storages",
+            "description": "The label for category Storages in sidebar docs"
+          },
+          "sidebar.docs.category.File Format": {
+            "message": "File Format",
+            "description": "The label for category File Format in sidebar docs"
+          },
+          "sidebar.docs.category.Lakehouse Best Practices": {
+            "message": "Lakehouse Best Practices",
+            "description": "The label for category Lakehouse Best Practices in sidebar docs"
+          },
+          "sidebar.docs.category.Data Governance": {
+            "message": "Data Governance",
+            "description": "The label for category Data Governance in sidebar docs"
+          },
+          "sidebar.docs.category.Solutions": {
+            "message": "Solutions",
+            "description": "The label for category Solutions in sidebar docs"
+          },
+          "sidebar.docs.category.Doris for AI": {
+            "message": "Doris for AI",
+            "description": "The label for category Doris for AI in sidebar docs"
+          },
+          "sidebar.docs.category.Observability with Doris": {
+            "message": "Observability with Doris",
+            "description": "The label for category Observability with Doris in sidebar docs"
+          },
+          "sidebar.docs.category.DOG Stack": {
+            "message": "DOG Stack",
+            "description": "The label for category DOG Stack in sidebar docs"
+          },
+          "sidebar.docs.category.Deployment": {
+            "message": "Deployment",
+            "description": "The label for category Deployment in sidebar docs"
+          },
+          "sidebar.docs.category.Custom Build": {
+            "message": "Custom Build",
+            "description": "The label for category Custom Build in sidebar docs"
+          },
+          "sidebar.docs.category.Operate & Maintain": {
+            "message": "Operate & Maintain",
+            "description": "The label for category Operate & Maintain in sidebar docs"
+          },
+          "sidebar.docs.category.Administration": {
+            "message": "Administration",
+            "description": "The label for category Administration in sidebar docs"
+          },
+          "sidebar.docs.category.Cluster Management": {
+            "message": "Cluster Management",
+            "description": "The label for category Cluster Management in sidebar docs"
+          },
+          "sidebar.docs.category.Configuration": {
+            "message": "Configuration",
+            "description": "The label for category Configuration in sidebar docs"
+          },
+          "sidebar.docs.category.Security & Authentication": {
+            "message": "Security & Authentication",
+            "description": "The label for category Security & Authentication in sidebar docs"
+          },
+          "sidebar.docs.category.Authentication": {
+            "message": "Authentication",
+            "description": "The label for category Authentication in sidebar docs"
+          },
+          "sidebar.docs.category.Authorization": {
+            "message": "Authorization",
+            "description": "The label for category Authorization in sidebar docs"
+          },
+          "sidebar.docs.category.Data Encryption": {
+            "message": "Data Encryption",
+            "description": "The label for category Data Encryption in sidebar docs"
+          },
+          "sidebar.docs.category.Encryption in Transit": {
+            "message": "Encryption in Transit",
+            "description": "The label for category Encryption in Transit in sidebar docs"
+          },
+          "sidebar.docs.category.Integrations": {
+            "message": "Integrations",
+            "description": "The label for category Integrations in sidebar docs"
+          },
+          "sidebar.docs.category.Workload Management": {
+            "message": "Workload Management",
+            "description": "The label for category Workload Management in sidebar docs"
+          },
+          "sidebar.docs.category.Resource Isolation": {
+            "message": "Resource Isolation",
+            "description": "The label for category Resource Isolation in sidebar docs"
+          },
+          "sidebar.docs.category.Disaster Recovery": {
+            "message": "Disaster Recovery",
+            "description": "The label for category Disaster Recovery in sidebar docs"
+          },
+          "sidebar.docs.category.Backup & Restore": {
+            "message": "Backup & Restore",
+            "description": "The label for category Backup & Restore in sidebar docs"
+          },
+          "sidebar.docs.category.Monitoring & Alerting": {
+            "message": "Monitoring & Alerting",
+            "description": "The label for category Monitoring & Alerting in sidebar docs"
+          },
+          "sidebar.docs.category.Log Management": {
+            "message": "Log Management",
+            "description": "The label for category Log Management in sidebar docs"
+          },
+          "sidebar.docs.category.System Tables": {
+            "message": "System Tables",
+            "description": "The label for category System Tables in sidebar docs"
+          },
+          "sidebar.docs.category.information_schema": {
+            "message": "information_schema",
+            "description": "The label for category information_schema in sidebar docs"
+          },
+          "sidebar.docs.category.mysql": {
+            "message": "mysql",
+            "description": "The label for category mysql in sidebar docs"
+          },
+          "sidebar.docs.category.__internal_schema": {
+            "message": "__internal_schema",
+            "description": "The label for category __internal_schema in sidebar docs"
+          },
+          "sidebar.docs.category.HTTP API": {
+            "message": "HTTP API",
+            "description": "The label for category HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.FE HTTP API": {
+            "message": "FE HTTP API",
+            "description": "The label for category FE HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.BE HTTP API": {
+            "message": "BE HTTP API",
+            "description": "The label for category BE HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.Troubleshooting & FAQ": {
+            "message": "Troubleshooting & FAQ",
+            "description": "The label for category Troubleshooting & FAQ in sidebar docs"
+          },
+          "sidebar.docs.category.Troubleshooting": {
+            "message": "Troubleshooting",
+            "description": "The label for category Troubleshooting in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Management": {
+            "message": "Memory Management",
+            "description": "The label for category Memory Management in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Analysis": {
+            "message": "Memory Analysis",
+            "description": "The label for category Memory Analysis in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Feature": {
+            "message": "Memory Feature",
+            "description": "The label for category Memory Feature in sidebar docs"
+          },
+          "sidebar.docs.category.FAQ": {
+            "message": "FAQ",
+            "description": "The label for category FAQ in sidebar docs"
+          },
+          "sidebar.docs.category.SQL References": {
+            "message": "SQL References",
+            "description": "The label for category SQL References in sidebar docs"
+          },
+          "sidebar.docs.category.Basic Elements": {
+            "message": "Basic Elements",
+            "description": "The label for category Basic Elements in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Data Types": {
+            "message": "SQL Data Types",
+            "description": "The label for category SQL Data Types in sidebar docs"
+          },
+          "sidebar.docs.category.Numeric Data Type": {
+            "message": "Numeric Data Type",
+            "description": "The label for category Numeric Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Datetime Data Type": {
+            "message": "Datetime Data Type",
+            "description": "The label for category Datetime Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.String Data Type": {
+            "message": "String Data Type",
+            "description": "The label for category String Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Binary Data Type": {
+            "message": "Binary Data Type",
+            "description": "The label for category Binary Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Semi-Structured Data Type": {
+            "message": "Semi-Structured Data Type",
+            "description": "The label for category Semi-Structured Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.VARIANT": {
+            "message": "VARIANT",
+            "description": "The label for category VARIANT in sidebar docs"
+          },
+          "sidebar.docs.category.Aggregation Data Type": {
+            "message": "Aggregation Data Type",
+            "description": "The label for category Aggregation Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.IP Data Type": {
+            "message": "IP Data Type",
+            "description": "The label for category IP Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Conversion": {
+            "message": "Conversion",
+            "description": "The label for category Conversion in sidebar docs"
+          },
+          "sidebar.docs.category.Literal": {
+            "message": "Literal",
+            "description": "The label for category Literal in sidebar docs"
+          },
+          "sidebar.docs.category.Operators": {
+            "message": "Operators",
+            "description": "The label for category Operators in sidebar docs"
+          },
+          "sidebar.docs.category.Conditional Operators": {
+            "message": "Conditional Operators",
+            "description": "The label for category Conditional Operators in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Functions": {
+            "message": "SQL Functions",
+            "description": "The label for category SQL Functions in sidebar docs"
+          },
+          "sidebar.docs.category.AI Functions": {
+            "message": "AI Functions",
+            "description": "The label for category AI Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Vector Distance Functions": {
+            "message": "Vector Distance Functions",
+            "description": "The label for category Vector Distance Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Scalar Functions": {
+            "message": "Scalar Functions",
+            "description": "The label for category Scalar Functions in sidebar docs"
+          },
+          "sidebar.docs.category.UUID Functions": {
+            "message": "UUID Functions",
+            "description": "The label for category UUID Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Numeric Functions": {
+            "message": "Numeric Functions",
+            "description": "The label for category Numeric Functions in sidebar docs"
+          },
+          "sidebar.docs.category.String Functions": {
+            "message": "String Functions",
+            "description": "The label for category String Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Date Functions": {
+            "message": "Date Functions",
+            "description": "The label for category Date Functions in sidebar docs"
+          },
+          "sidebar.docs.category.GIS Functions": {
+            "message": "GIS Functions",
+            "description": "The label for category GIS Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Encryption Functions": {
+            "message": "Encryption Functions",
+            "description": "The label for category Encryption Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Bitwise Functions": {
+            "message": "Bitwise Functions",
+            "description": "The label for category Bitwise Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Array Functions": {
+            "message": "Array Functions",
+            "description": "The label for category Array Functions in sidebar docs"
+          },
+          "sidebar.docs.category.MAP Functions": {
+            "message": "MAP Functions",
+            "description": "The label for category MAP Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Struct Functions": {
+            "message": "Struct Functions",
+            "description": "The label for category Struct Functions in sidebar docs"
+          },
+          "sidebar.docs.category.JSON Functions": {
+            "message": "JSON Functions",
+            "description": "The label for category JSON Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Variant Functions": {
+            "message": "Variant Functions",
+            "description": "The label for category Variant Functions in sidebar docs"
+          },
+          "sidebar.docs.category.IP Functions": {
+            "message": "IP Functions",
+            "description": "The label for category IP Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Bitmap Functions": {
+            "message": "Bitmap Functions",
+            "description": "The label for category Bitmap Functions in sidebar docs"
+          },
+          "sidebar.docs.category.HLL Functions": {
+            "message": "HLL Functions",
+            "description": "The label for category HLL Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Binary Functions": {
+            "message": "Binary Functions",
+            "description": "The label for category Binary Functions in sidebar docs"
+          },
+          "sidebar.docs.category.System Functions": {
+            "message": "System Functions",
+            "description": "The label for category System Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Other Functions": {
+            "message": "Other Functions",
+            "description": "The label for category Other Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Quantile Functions": {
+            "message": "Quantile Functions",
+            "description": "The label for category Quantile Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Conditional Functions": {
+            "message": "Conditional Functions",
+            "description": "The label for category Conditional Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Aggregate Functions": {
+            "message": "Aggregate Functions",
+            "description": "The label for category Aggregate Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Combinators": {
+            "message": "Combinators",
+            "description": "The label for category Combinators in sidebar docs"
+          },
+          "sidebar.docs.category.Analytic (Window) Functions": {
+            "message": "Analytic (Window) Functions",
+            "description": "The label for category Analytic (Window) Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Table Functions": {
+            "message": "Table Functions",
+            "description": "The label for category Table Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Table Valued Functions": {
+            "message": "Table Valued Functions",
+            "description": "The label for category Table Valued Functions in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Statements": {
+            "message": "SQL Statements",
+            "description": "The label for category SQL Statements in sidebar docs"
+          },
+          "sidebar.docs.category.Data Queries": {
+            "message": "Data Queries",
+            "description": "The label for category Data Queries in sidebar docs"
+          },
+          "sidebar.docs.category.Data Modification": {
+            "message": "Data Modification",
+            "description": "The label for category Data Modification in sidebar docs"
+          },
+          "sidebar.docs.category.DML": {
+            "message": "DML",
+            "description": "The label for category DML in sidebar docs"
+          },
+          "sidebar.docs.category.Load and Export": {
+            "message": "Load and Export",
+            "description": "The label for category Load and Export in sidebar docs"
+          },
+          "sidebar.docs.category.Backup and Restore": {
+            "message": "Backup and Restore",
+            "description": "The label for category Backup and Restore in sidebar docs"
+          },
+          "sidebar.docs.category.Account Management": {
+            "message": "Account Management",
+            "description": "The label for category Account Management in sidebar docs"
+          },
+          "sidebar.docs.category.Session": {
+            "message": "Session",
+            "description": "The label for category Session in sidebar docs"
+          },
+          "sidebar.docs.category.Context": {
+            "message": "Context",
+            "description": "The label for category Context in sidebar docs"
+          },
+          "sidebar.docs.category.Variable": {
+            "message": "Variable",
+            "description": "The label for category Variable in sidebar docs"
+          },
+          "sidebar.docs.category.Query": {
+            "message": "Query",
+            "description": "The label for category Query in sidebar docs"
+          },
+          "sidebar.docs.category.Connection": {
+            "message": "Connection",
+            "description": "The label for category Connection in sidebar docs"
+          },
+          "sidebar.docs.category.Transaction": {
+            "message": "Transaction",
+            "description": "The label for category Transaction in sidebar docs"
+          },
+          "sidebar.docs.category.Data Catalog": {
+            "message": "Data Catalog",
+            "description": "The label for category Data Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Database": {
+            "message": "Database",
+            "description": "The label for category Database in sidebar docs"
+          },
+          "sidebar.docs.category.Table and Views": {
+            "message": "Table and Views",
+            "description": "The label for category Table and Views in sidebar docs"
+          },
+          "sidebar.docs.category.Table": {
+            "message": "Table",
+            "description": "The label for category Table in sidebar docs"
+          },
+          "sidebar.docs.category.Index": {
+            "message": "Index",
+            "description": "The label for category Index in sidebar docs"
+          },
+          "sidebar.docs.category.View": {
+            "message": "View",
+            "description": "The label for category View in sidebar docs"
+          },
+          "sidebar.docs.category.Table Stream": {
+            "message": "Table Stream",
+            "description": "The label for category Table Stream in sidebar docs"
+          },
+          "sidebar.docs.category.Synchronous Materialized View": {
+            "message": "Synchronous Materialized View",
+            "description": "The label for category Synchronous Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Asynchronous Materialized View": {
+            "message": "Asynchronous Materialized View",
+            "description": "The label for category Asynchronous Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Data and Status Management": {
+            "message": "Data and Status Management",
+            "description": "The label for category Data and Status Management in sidebar docs"
+          },
+          "sidebar.docs.category.Recycle": {
+            "message": "Recycle",
+            "description": "The label for category Recycle in sidebar docs"
+          },
+          "sidebar.docs.category.Function": {
+            "message": "Function",
+            "description": "The label for category Function in sidebar docs"
+          },
+          "sidebar.docs.category.Statistics": {
+            "message": "Statistics",
+            "description": "The label for category Statistics in sidebar docs"
+          },
+          "sidebar.docs.category.Instance Management": {
+            "message": "Instance Management",
+            "description": "The label for category Instance Management in sidebar docs"
+          },
+          "sidebar.docs.category.Compute Management": {
+            "message": "Compute Management",
+            "description": "The label for category Compute Management in sidebar docs"
+          },
+          "sidebar.docs.category.Storage Management": {
+            "message": "Storage Management",
+            "description": "The label for category Storage Management in sidebar docs"
+          },
+          "sidebar.docs.category.Security": {
+            "message": "Security",
+            "description": "The label for category Security in sidebar docs"
+          },
+          "sidebar.docs.category.Job": {
+            "message": "Job",
+            "description": "The label for category Job in sidebar docs"
+          },
+          "sidebar.docs.category.Plugin": {
+            "message": "Plugin",
+            "description": "The label for category Plugin in sidebar docs"
+          },
+          "sidebar.docs.category.Character Set": {
+            "message": "Character Set",
+            "description": "The label for category Character Set in sidebar docs"
+          },
+          "sidebar.docs.category.Types": {
+            "message": "Types",
+            "description": "The label for category Types in sidebar docs"
+          },
+          "sidebar.docs.category.Info System and Help": {
+            "message": "Info System and Help",
+            "description": "The label for category Info System and Help in sidebar docs"
+          },
+          "sidebar.docs.doc.VARIANT Internal": {
+            "message": "VARIANT Internal",
+            "description": "The label for the doc item VARIANT Internal in sidebar docs, linking to the doc sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide"
+          }
+        }
+      },
+      {
+        "path": "version-4.x",
+        "content": {
+          "version.label": {
+            "message": "4.x",
+            "description": "The label for version 4.x"
+          },
+          "sidebar.docs.category.Get Started": {
+            "message": "Get Started",
+            "description": "The label for category Get Started in sidebar docs"
+          },
+          "sidebar.docs.category.Getting Started": {
+            "message": "Getting Started",
+            "description": "The label for category Getting Started in sidebar docs"
+          },
+          "sidebar.docs.category.Migration": {
+            "message": "Migration",
+            "description": "The label for category Migration in sidebar docs"
+          },
+          "sidebar.docs.category.Features & Architecture": {
+            "message": "Features & Architecture",
+            "description": "The label for category Features & Architecture in sidebar docs"
+          },
+          "sidebar.docs.category.Installation & Deployment": {
+            "message": "Installation & Deployment",
+            "description": "The label for category Installation & Deployment in sidebar docs"
+          },
+          "sidebar.docs.category.Installation Preparation": {
+            "message": "Installation Preparation",
+            "description": "The label for category Installation Preparation in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying Manually": {
+            "message": "Deploying Manually",
+            "description": "The label for category Deploying Manually in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying on Kubernetes": {
+            "message": "Deploying on Kubernetes",
+            "description": "The label for category Deploying on Kubernetes in sidebar docs"
+          },
+          "sidebar.docs.category.Doris Operator Concepts and Capabilities": {
+            "message": "Doris Operator Concepts and Capabilities",
+            "description": "The label for category Doris Operator Concepts and Capabilities in sidebar docs"
+          },
+          "sidebar.docs.category.Preparation": {
+            "message": "Preparation",
+            "description": "The label for category Preparation in sidebar docs"
+          },
+          "sidebar.docs.category.Integrated Storage Compute": {
+            "message": "Integrated Storage Compute",
+            "description": "The label for category Integrated Storage Compute in sidebar docs"
+          },
+          "sidebar.docs.category.Separating Storage Compute": {
+            "message": "Separating Storage Compute",
+            "description": "The label for category Separating Storage Compute in sidebar docs"
+          },
+          "sidebar.docs.category.Deploying on Cloud": {
+            "message": "Deploying on Cloud",
+            "description": "The label for category Deploying on Cloud in sidebar docs"
+          },
+          "sidebar.docs.category.Compute-Storage Decoupled Guide": {
+            "message": "Compute-Storage Decoupled Guide",
+            "description": "The label for category Compute-Storage Decoupled Guide in sidebar docs"
+          },
+          "sidebar.docs.category.File Cache": {
+            "message": "File Cache",
+            "description": "The label for category File Cache in sidebar docs"
+          },
+          "sidebar.docs.category.Read/Write Separation": {
+            "message": "Read/Write Separation",
+            "description": "The label for category Read/Write Separation in sidebar docs"
+          },
+          "sidebar.docs.category.Connection & Integration": {
+            "message": "Connection & Integration",
+            "description": "The label for category Connection & Integration in sidebar docs"
+          },
+          "sidebar.docs.category.Data Integration": {
+            "message": "Data Integration",
+            "description": "The label for category Data Integration in sidebar docs"
+          },
+          "sidebar.docs.category.Guides": {
+            "message": "Guides",
+            "description": "The label for category Guides in sidebar docs"
+          },
+          "sidebar.docs.category.Table Design": {
+            "message": "Table Design",
+            "description": "The label for category Table Design in sidebar docs"
+          },
+          "sidebar.docs.category.Table Models": {
+            "message": "Table Models",
+            "description": "The label for category Table Models in sidebar docs"
+          },
+          "sidebar.docs.category.Unique Key Model": {
+            "message": "Unique Key Model",
+            "description": "The label for category Unique Key Model in sidebar docs"
+          },
+          "sidebar.docs.category.Partitioning & Bucketing": {
+            "message": "Partitioning & Bucketing",
+            "description": "The label for category Partitioning & Bucketing in sidebar docs"
+          },
+          "sidebar.docs.category.Indexes": {
+            "message": "Indexes",
+            "description": "The label for category Indexes in sidebar docs"
+          },
+          "sidebar.docs.category.Inverted Index (Fulltext)": {
+            "message": "Inverted Index (Fulltext)",
+            "description": "The label for category Inverted Index (Fulltext) in sidebar docs"
+          },
+          "sidebar.docs.category.Vector Index": {
+            "message": "Vector Index",
+            "description": "The label for category Vector Index in sidebar docs"
+          },
+          "sidebar.docs.category.Storage Layout": {
+            "message": "Storage Layout",
+            "description": "The label for category Storage Layout in sidebar docs"
+          },
+          "sidebar.docs.category.Tiered Storage": {
+            "message": "Tiered Storage",
+            "description": "The label for category Tiered Storage in sidebar docs"
+          },
+          "sidebar.docs.category.Data Loading": {
+            "message": "Data Loading",
+            "description": "The label for category Data Loading in sidebar docs"
+          },
+          "sidebar.docs.category.Data Source": {
+            "message": "Data Source",
+            "description": "The label for category Data Source in sidebar docs"
+          },
+          "sidebar.docs.category.Loading Methods": {
+            "message": "Loading Methods",
+            "description": "The label for category Loading Methods in sidebar docs"
+          },
+          "sidebar.docs.category.Continuous Load": {
+            "message": "Continuous Load",
+            "description": "The label for category Continuous Load in sidebar docs"
+          },
+          "sidebar.docs.category.MySQL (Experimental)": {
+            "message": "MySQL (Experimental)",
+            "description": "The label for category MySQL (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.Prerequisites": {
+            "message": "Prerequisites",
+            "description": "The label for category Prerequisites in sidebar docs"
+          },
+          "sidebar.docs.category.PostgreSQL (Experimental)": {
+            "message": "PostgreSQL (Experimental)",
+            "description": "The label for category PostgreSQL (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.OceanBase (Experimental)": {
+            "message": "OceanBase (Experimental)",
+            "description": "The label for category OceanBase (Experimental) in sidebar docs"
+          },
+          "sidebar.docs.category.S3": {
+            "message": "S3",
+            "description": "The label for category S3 in sidebar docs"
+          },
+          "sidebar.docs.category.File Formats": {
+            "message": "File Formats",
+            "description": "The label for category File Formats in sidebar docs"
+          },
+          "sidebar.docs.category.Complex Data Types Import": {
+            "message": "Complex Data Types Import",
+            "description": "The label for category Complex Data Types Import in sidebar docs"
+          },
+          "sidebar.docs.category.Load Best Practices": {
+            "message": "Load Best Practices",
+            "description": "The label for category Load Best Practices in sidebar docs"
+          },
+          "sidebar.docs.category.Data Update & Delete": {
+            "message": "Data Update & Delete",
+            "description": "The label for category Data Update & Delete in sidebar docs"
+          },
+          "sidebar.docs.category.Updating Data": {
+            "message": "Updating Data",
+            "description": "The label for category Updating Data in sidebar docs"
+          },
+          "sidebar.docs.category.Deleting Data": {
+            "message": "Deleting Data",
+            "description": "The label for category Deleting Data in sidebar docs"
+          },
+          "sidebar.docs.category.Data Export": {
+            "message": "Data Export",
+            "description": "The label for category Data Export in sidebar docs"
+          },
+          "sidebar.docs.category.Querying": {
+            "message": "Querying",
+            "description": "The label for category Querying in sidebar docs"
+          },
+          "sidebar.docs.category.User Defined Functions": {
+            "message": "User Defined Functions",
+            "description": "The label for category User Defined Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Materialized View": {
+            "message": "Materialized View",
+            "description": "The label for category Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Async Materialized View": {
+            "message": "Async Materialized View",
+            "description": "The label for category Async Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Performance & Tuning": {
+            "message": "Performance & Tuning",
+            "description": "The label for category Performance & Tuning in sidebar docs"
+          },
+          "sidebar.docs.category.Performance Tuning Overview": {
+            "message": "Performance Tuning Overview",
+            "description": "The label for category Performance Tuning Overview in sidebar docs"
+          },
+          "sidebar.docs.category.Query Performance": {
+            "message": "Query Performance",
+            "description": "The label for category Query Performance in sidebar docs"
+          },
+          "sidebar.docs.category.Schema & Index Optimization": {
+            "message": "Schema & Index Optimization",
+            "description": "The label for category Schema & Index Optimization in sidebar docs"
+          },
+          "sidebar.docs.category.Join Optimization": {
+            "message": "Join Optimization",
+            "description": "The label for category Join Optimization in sidebar docs"
+          },
+          "sidebar.docs.category.Caching": {
+            "message": "Caching",
+            "description": "The label for category Caching in sidebar docs"
+          },
+          "sidebar.docs.category.Execution Tuning": {
+            "message": "Execution Tuning",
+            "description": "The label for category Execution Tuning in sidebar docs"
+          },
+          "sidebar.docs.category.High Concurrency & Point Queries": {
+            "message": "High Concurrency & Point Queries",
+            "description": "The label for category High Concurrency & Point Queries in sidebar docs"
+          },
+          "sidebar.docs.category.Distinct Counts": {
+            "message": "Distinct Counts",
+            "description": "The label for category Distinct Counts in sidebar docs"
+          },
+          "sidebar.docs.category.Load Performance": {
+            "message": "Load Performance",
+            "description": "The label for category Load Performance in sidebar docs"
+          },
+          "sidebar.docs.category.Optimization Technology Principles": {
+            "message": "Optimization Technology Principles",
+            "description": "The label for category Optimization Technology Principles in sidebar docs"
+          },
+          "sidebar.docs.category.Lakehouse": {
+            "message": "Lakehouse",
+            "description": "The label for category Lakehouse in sidebar docs"
+          },
+          "sidebar.docs.category.Data Catalogs": {
+            "message": "Data Catalogs",
+            "description": "The label for category Data Catalogs in sidebar docs"
+          },
+          "sidebar.docs.category.Hive Catalog": {
+            "message": "Hive Catalog",
+            "description": "The label for category Hive Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Iceberg Catalog": {
+            "message": "Iceberg Catalog",
+            "description": "The label for category Iceberg Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Lance Catalog": {
+            "message": "Lance Catalog",
+            "description": "The label for category Lance Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Paimon Catalog": {
+            "message": "Paimon Catalog",
+            "description": "The label for category Paimon Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Hudi Catalog": {
+            "message": "Hudi Catalog",
+            "description": "The label for category Hudi Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.MaxCompute Catalog": {
+            "message": "MaxCompute Catalog",
+            "description": "The label for category MaxCompute Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Metastores": {
+            "message": "Metastores",
+            "description": "The label for category Metastores in sidebar docs"
+          },
+          "sidebar.docs.category.Storages": {
+            "message": "Storages",
+            "description": "The label for category Storages in sidebar docs"
+          },
+          "sidebar.docs.category.File Format": {
+            "message": "File Format",
+            "description": "The label for category File Format in sidebar docs"
+          },
+          "sidebar.docs.category.Lakehouse Best Practices": {
+            "message": "Lakehouse Best Practices",
+            "description": "The label for category Lakehouse Best Practices in sidebar docs"
+          },
+          "sidebar.docs.category.Data Governance": {
+            "message": "Data Governance",
+            "description": "The label for category Data Governance in sidebar docs"
+          },
+          "sidebar.docs.category.Solutions": {
+            "message": "Solutions",
+            "description": "The label for category Solutions in sidebar docs"
+          },
+          "sidebar.docs.category.Doris for AI": {
+            "message": "Doris for AI",
+            "description": "The label for category Doris for AI in sidebar docs"
+          },
+          "sidebar.docs.category.Observability with Doris": {
+            "message": "Observability with Doris",
+            "description": "The label for category Observability with Doris in sidebar docs"
+          },
+          "sidebar.docs.category.DOG Stack": {
+            "message": "DOG Stack",
+            "description": "The label for category DOG Stack in sidebar docs"
+          },
+          "sidebar.docs.category.Deployment": {
+            "message": "Deployment",
+            "description": "The label for category Deployment in sidebar docs"
+          },
+          "sidebar.docs.category.Custom Build": {
+            "message": "Custom Build",
+            "description": "The label for category Custom Build in sidebar docs"
+          },
+          "sidebar.docs.category.Operate & Maintain": {
+            "message": "Operate & Maintain",
+            "description": "The label for category Operate & Maintain in sidebar docs"
+          },
+          "sidebar.docs.category.Administration": {
+            "message": "Administration",
+            "description": "The label for category Administration in sidebar docs"
+          },
+          "sidebar.docs.category.Cluster Management": {
+            "message": "Cluster Management",
+            "description": "The label for category Cluster Management in sidebar docs"
+          },
+          "sidebar.docs.category.Configuration": {
+            "message": "Configuration",
+            "description": "The label for category Configuration in sidebar docs"
+          },
+          "sidebar.docs.category.Security & Authentication": {
+            "message": "Security & Authentication",
+            "description": "The label for category Security & Authentication in sidebar docs"
+          },
+          "sidebar.docs.category.Authentication": {
+            "message": "Authentication",
+            "description": "The label for category Authentication in sidebar docs"
+          },
+          "sidebar.docs.category.Authorization": {
+            "message": "Authorization",
+            "description": "The label for category Authorization in sidebar docs"
+          },
+          "sidebar.docs.category.Data Encryption": {
+            "message": "Data Encryption",
+            "description": "The label for category Data Encryption in sidebar docs"
+          },
+          "sidebar.docs.category.Encryption in Transit": {
+            "message": "Encryption in Transit",
+            "description": "The label for category Encryption in Transit in sidebar docs"
+          },
+          "sidebar.docs.category.Integrations": {
+            "message": "Integrations",
+            "description": "The label for category Integrations in sidebar docs"
+          },
+          "sidebar.docs.category.Workload Management": {
+            "message": "Workload Management",
+            "description": "The label for category Workload Management in sidebar docs"
+          },
+          "sidebar.docs.category.Resource Isolation": {
+            "message": "Resource Isolation",
+            "description": "The label for category Resource Isolation in sidebar docs"
+          },
+          "sidebar.docs.category.Disaster Recovery": {
+            "message": "Disaster Recovery",
+            "description": "The label for category Disaster Recovery in sidebar docs"
+          },
+          "sidebar.docs.category.Backup & Restore": {
+            "message": "Backup & Restore",
+            "description": "The label for category Backup & Restore in sidebar docs"
+          },
+          "sidebar.docs.category.Monitoring & Alerting": {
+            "message": "Monitoring & Alerting",
+            "description": "The label for category Monitoring & Alerting in sidebar docs"
+          },
+          "sidebar.docs.category.Log Management": {
+            "message": "Log Management",
+            "description": "The label for category Log Management in sidebar docs"
+          },
+          "sidebar.docs.category.System Tables": {
+            "message": "System Tables",
+            "description": "The label for category System Tables in sidebar docs"
+          },
+          "sidebar.docs.category.information_schema": {
+            "message": "information_schema",
+            "description": "The label for category information_schema in sidebar docs"
+          },
+          "sidebar.docs.category.mysql": {
+            "message": "mysql",
+            "description": "The label for category mysql in sidebar docs"
+          },
+          "sidebar.docs.category.__internal_schema": {
+            "message": "__internal_schema",
+            "description": "The label for category __internal_schema in sidebar docs"
+          },
+          "sidebar.docs.category.HTTP API": {
+            "message": "HTTP API",
+            "description": "The label for category HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.FE HTTP API": {
+            "message": "FE HTTP API",
+            "description": "The label for category FE HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.BE HTTP API": {
+            "message": "BE HTTP API",
+            "description": "The label for category BE HTTP API in sidebar docs"
+          },
+          "sidebar.docs.category.Troubleshooting & FAQ": {
+            "message": "Troubleshooting & FAQ",
+            "description": "The label for category Troubleshooting & FAQ in sidebar docs"
+          },
+          "sidebar.docs.category.Troubleshooting": {
+            "message": "Troubleshooting",
+            "description": "The label for category Troubleshooting in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Management": {
+            "message": "Memory Management",
+            "description": "The label for category Memory Management in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Analysis": {
+            "message": "Memory Analysis",
+            "description": "The label for category Memory Analysis in sidebar docs"
+          },
+          "sidebar.docs.category.Memory Feature": {
+            "message": "Memory Feature",
+            "description": "The label for category Memory Feature in sidebar docs"
+          },
+          "sidebar.docs.category.FAQ": {
+            "message": "FAQ",
+            "description": "The label for category FAQ in sidebar docs"
+          },
+          "sidebar.docs.category.SQL References": {
+            "message": "SQL References",
+            "description": "The label for category SQL References in sidebar docs"
+          },
+          "sidebar.docs.category.Basic Elements": {
+            "message": "Basic Elements",
+            "description": "The label for category Basic Elements in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Data Types": {
+            "message": "SQL Data Types",
+            "description": "The label for category SQL Data Types in sidebar docs"
+          },
+          "sidebar.docs.category.Numeric Data Type": {
+            "message": "Numeric Data Type",
+            "description": "The label for category Numeric Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Datetime Data Type": {
+            "message": "Datetime Data Type",
+            "description": "The label for category Datetime Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.String Data Type": {
+            "message": "String Data Type",
+            "description": "The label for category String Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Binary Data Type": {
+            "message": "Binary Data Type",
+            "description": "The label for category Binary Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Semi-Structured Data Type": {
+            "message": "Semi-Structured Data Type",
+            "description": "The label for category Semi-Structured Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.VARIANT": {
+            "message": "VARIANT",
+            "description": "The label for category VARIANT in sidebar docs"
+          },
+          "sidebar.docs.category.Aggregation Data Type": {
+            "message": "Aggregation Data Type",
+            "description": "The label for category Aggregation Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.IP Data Type": {
+            "message": "IP Data Type",
+            "description": "The label for category IP Data Type in sidebar docs"
+          },
+          "sidebar.docs.category.Conversion": {
+            "message": "Conversion",
+            "description": "The label for category Conversion in sidebar docs"
+          },
+          "sidebar.docs.category.Literal": {
+            "message": "Literal",
+            "description": "The label for category Literal in sidebar docs"
+          },
+          "sidebar.docs.category.Operators": {
+            "message": "Operators",
+            "description": "The label for category Operators in sidebar docs"
+          },
+          "sidebar.docs.category.Conditional Operators": {
+            "message": "Conditional Operators",
+            "description": "The label for category Conditional Operators in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Functions": {
+            "message": "SQL Functions",
+            "description": "The label for category SQL Functions in sidebar docs"
+          },
+          "sidebar.docs.category.AI Functions": {
+            "message": "AI Functions",
+            "description": "The label for category AI Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Vector Distance Functions": {
+            "message": "Vector Distance Functions",
+            "description": "The label for category Vector Distance Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Scalar Functions": {
+            "message": "Scalar Functions",
+            "description": "The label for category Scalar Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Numeric Functions": {
+            "message": "Numeric Functions",
+            "description": "The label for category Numeric Functions in sidebar docs"
+          },
+          "sidebar.docs.category.String Functions": {
+            "message": "String Functions",
+            "description": "The label for category String Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Date Functions": {
+            "message": "Date Functions",
+            "description": "The label for category Date Functions in sidebar docs"
+          },
+          "sidebar.docs.category.GIS Functions": {
+            "message": "GIS Functions",
+            "description": "The label for category GIS Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Encryption Functions": {
+            "message": "Encryption Functions",
+            "description": "The label for category Encryption Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Bitwise Functions": {
+            "message": "Bitwise Functions",
+            "description": "The label for category Bitwise Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Array Functions": {
+            "message": "Array Functions",
+            "description": "The label for category Array Functions in sidebar docs"
+          },
+          "sidebar.docs.category.MAP Functions": {
+            "message": "MAP Functions",
+            "description": "The label for category MAP Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Struct Functions": {
+            "message": "Struct Functions",
+            "description": "The label for category Struct Functions in sidebar docs"
+          },
+          "sidebar.docs.category.JSON Functions": {
+            "message": "JSON Functions",
+            "description": "The label for category JSON Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Variant Functions": {
+            "message": "Variant Functions",
+            "description": "The label for category Variant Functions in sidebar docs"
+          },
+          "sidebar.docs.category.IP Functions": {
+            "message": "IP Functions",
+            "description": "The label for category IP Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Bitmap Functions": {
+            "message": "Bitmap Functions",
+            "description": "The label for category Bitmap Functions in sidebar docs"
+          },
+          "sidebar.docs.category.HLL Functions": {
+            "message": "HLL Functions",
+            "description": "The label for category HLL Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Binary Functions": {
+            "message": "Binary Functions",
+            "description": "The label for category Binary Functions in sidebar docs"
+          },
+          "sidebar.docs.category.System Functions": {
+            "message": "System Functions",
+            "description": "The label for category System Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Other Functions": {
+            "message": "Other Functions",
+            "description": "The label for category Other Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Quantile Functions": {
+            "message": "Quantile Functions",
+            "description": "The label for category Quantile Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Conditional Functions": {
+            "message": "Conditional Functions",
+            "description": "The label for category Conditional Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Aggregate Functions": {
+            "message": "Aggregate Functions",
+            "description": "The label for category Aggregate Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Combinators": {
+            "message": "Combinators",
+            "description": "The label for category Combinators in sidebar docs"
+          },
+          "sidebar.docs.category.Analytic (Window) Functions": {
+            "message": "Analytic (Window) Functions",
+            "description": "The label for category Analytic (Window) Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Table Functions": {
+            "message": "Table Functions",
+            "description": "The label for category Table Functions in sidebar docs"
+          },
+          "sidebar.docs.category.Table Valued Functions": {
+            "message": "Table Valued Functions",
+            "description": "The label for category Table Valued Functions in sidebar docs"
+          },
+          "sidebar.docs.category.SQL Statements": {
+            "message": "SQL Statements",
+            "description": "The label for category SQL Statements in sidebar docs"
+          },
+          "sidebar.docs.category.Data Queries": {
+            "message": "Data Queries",
+            "description": "The label for category Data Queries in sidebar docs"
+          },
+          "sidebar.docs.category.Data Modification": {
+            "message": "Data Modification",
+            "description": "The label for category Data Modification in sidebar docs"
+          },
+          "sidebar.docs.category.DML": {
+            "message": "DML",
+            "description": "The label for category DML in sidebar docs"
+          },
+          "sidebar.docs.category.Load and Export": {
+            "message": "Load and Export",
+            "description": "The label for category Load and Export in sidebar docs"
+          },
+          "sidebar.docs.category.Backup and Restore": {
+            "message": "Backup and Restore",
+            "description": "The label for category Backup and Restore in sidebar docs"
+          },
+          "sidebar.docs.category.Account Management": {
+            "message": "Account Management",
+            "description": "The label for category Account Management in sidebar docs"
+          },
+          "sidebar.docs.category.Session": {
+            "message": "Session",
+            "description": "The label for category Session in sidebar docs"
+          },
+          "sidebar.docs.category.Context": {
+            "message": "Context",
+            "description": "The label for category Context in sidebar docs"
+          },
+          "sidebar.docs.category.Variable": {
+            "message": "Variable",
+            "description": "The label for category Variable in sidebar docs"
+          },
+          "sidebar.docs.category.Query": {
+            "message": "Query",
+            "description": "The label for category Query in sidebar docs"
+          },
+          "sidebar.docs.category.Connection": {
+            "message": "Connection",
+            "description": "The label for category Connection in sidebar docs"
+          },
+          "sidebar.docs.category.Transaction": {
+            "message": "Transaction",
+            "description": "The label for category Transaction in sidebar docs"
+          },
+          "sidebar.docs.category.Data Catalog": {
+            "message": "Data Catalog",
+            "description": "The label for category Data Catalog in sidebar docs"
+          },
+          "sidebar.docs.category.Database": {
+            "message": "Database",
+            "description": "The label for category Database in sidebar docs"
+          },
+          "sidebar.docs.category.Table and Views": {
+            "message": "Table and Views",
+            "description": "The label for category Table and Views in sidebar docs"
+          },
+          "sidebar.docs.category.Table": {
+            "message": "Table",
+            "description": "The label for category Table in sidebar docs"
+          },
+          "sidebar.docs.category.Index": {
+            "message": "Index",
+            "description": "The label for category Index in sidebar docs"
+          },
+          "sidebar.docs.category.View": {
+            "message": "View",
+            "description": "The label for category View in sidebar docs"
+          },
+          "sidebar.docs.category.Synchronous Materialized View": {
+            "message": "Synchronous Materialized View",
+            "description": "The label for category Synchronous Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Asynchronous Materialized View": {
+            "message": "Asynchronous Materialized View",
+            "description": "The label for category Asynchronous Materialized View in sidebar docs"
+          },
+          "sidebar.docs.category.Data and Status Management": {
+            "message": "Data and Status Management",
+            "description": "The label for category Data and Status Management in sidebar docs"
+          },
+          "sidebar.docs.category.Recycle": {
+            "message": "Recycle",
+            "description": "The label for category Recycle in sidebar docs"
+          },
+          "sidebar.docs.category.Function": {
+            "message": "Function",
+            "description": "The label for category Function in sidebar docs"
+          },
+          "sidebar.docs.category.Statistics": {
+            "message": "Statistics",
+            "description": "The label for category Statistics in sidebar docs"
+          },
+          "sidebar.docs.category.Instance Management": {
+            "message": "Instance Management",
+            "description": "The label for category Instance Management in sidebar docs"
+          },
+          "sidebar.docs.category.Compute Management": {
+            "message": "Compute Management",
+            "description": "The label for category Compute Management in sidebar docs"
+          },
+          "sidebar.docs.category.Storage Management": {
+            "message": "Storage Management",
+            "description": "The label for category Storage Management in sidebar docs"
+          },
+          "sidebar.docs.category.Security": {
+            "message": "Security",
+            "description": "The label for category Security in sidebar docs"
+          },
+          "sidebar.docs.category.Job": {
+            "message": "Job",
+            "description": "The label for category Job in sidebar docs"
+          },
+          "sidebar.docs.category.Plugin": {
+            "message": "Plugin",
+            "description": "The label for category Plugin in sidebar docs"
+          },
+          "sidebar.docs.category.Character Set": {
+            "message": "Character Set",
+            "description": "The label for category Character Set in sidebar docs"
+          },
+          "sidebar.docs.category.Types": {
+            "message": "Types",
+            "description": "The label for category Types in sidebar docs"
+          },
+          "sidebar.docs.category.Info System and Help": {
+            "message": "Info System and Help",
+            "description": "The label for category Info System and Help in sidebar docs"
+          },
+          "sidebar.docs.doc.VARIANT Internal": {
+            "message": "VARIANT Internal",
+            "description": "The label for the doc item VARIANT Internal in sidebar docs, linking to the doc sql-manual/basic-element/sql-data-types/semi-structured/variant-workload-guide"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "pluginId": "community",
+    "files": [
+      {
+        "path": "current",
+        "content": {
+          "version.label": {
+            "message": "Next",
+            "description": "The label for version current"
+          },
+          "sidebar.community.category.About the Community": {
+            "message": "About the Community",
+            "description": "The label for category About the Community in sidebar community"
+          },
+          "sidebar.community.category.How to Contribute": {
+            "message": "How to Contribute",
+            "description": "The label for category How to Contribute in sidebar community"
+          },
+          "sidebar.community.category.Documentation Contribution": {
+            "message": "Documentation Contribution",
+            "description": "The label for category Documentation Contribution in sidebar community"
+          },
+          "sidebar.community.category.Development & Debugging": {
+            "message": "Development & Debugging",
+            "description": "The label for category Development & Debugging in sidebar community"
+          },
+          "sidebar.community.category.Source Code Compilation": {
+            "message": "Source Code Compilation",
+            "description": "The label for category Source Code Compilation in sidebar community"
+          },
+          "sidebar.community.category.IDE Setup": {
+            "message": "IDE Setup",
+            "description": "The label for category IDE Setup in sidebar community"
+          },
+          "sidebar.community.category.Code Style": {
+            "message": "Code Style",
+            "description": "The label for category Code Style in sidebar community"
+          },
+          "sidebar.community.category.Debugging & Profiling": {
+            "message": "Debugging & Profiling",
+            "description": "The label for category Debugging & Profiling in sidebar community"
+          },
+          "sidebar.community.category.Testing": {
+            "message": "Testing",
+            "description": "The label for category Testing in sidebar community"
+          },
+          "sidebar.community.category.Data Source Extension": {
+            "message": "Data Source Extension",
+            "description": "The label for category Data Source Extension in sidebar community"
+          },
+          "sidebar.community.category.Plugin Development": {
+            "message": "Plugin Development",
+            "description": "The label for category Plugin Development in sidebar community"
+          },
+          "sidebar.community.category.Data Format Reference": {
+            "message": "Data Format Reference",
+            "description": "The label for category Data Format Reference in sidebar community"
+          },
+          "sidebar.community.category.Release": {
+            "message": "Release",
+            "description": "The label for category Release in sidebar community"
+          },
+          "sidebar.community.category.Design Documents": {
+            "message": "Design Documents",
+            "description": "The label for category Design Documents in sidebar community"
+          },
+          "sidebar.community.link.Improvement Proposals": {
+            "message": "Improvement Proposals",
+            "description": "The label for link Improvement Proposals in sidebar community, linking to https://cwiki.apache.org/confluence/display/DORIS/Doris+Improvement+Proposals"
+          }
+        }
+      }
+    ]
+  }
+]

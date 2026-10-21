@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/contribute-doc",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/contribute-doc.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
+    "sourceCommit": "d45c715cc32da861e31939e1fcfab61834edf693",
+    "sourceHash": "65d2d46b954648611c80316916487b7879046b25e6a092ded691cb7e811fbf4c",
+    "sourceTechnicalHash": "89f650720d3566eec6ecd7ef612306f5f6c273b3119e6cf40c37ad77cf07f689",
+    "targetHash": "ec9e8a1bc75fc26f71358a9e777359a436690a11be7f2874f263e55b507dfc13",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T17:58:57.510Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "92adddc806e422b80b5be3a9f2c075d436e64edfe50b6241939addb25f2b77c0",
+      "targetHash": "4f686a98badc3d1fc7379242064d4ff4941539148ceebb68f50592c2345b936a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

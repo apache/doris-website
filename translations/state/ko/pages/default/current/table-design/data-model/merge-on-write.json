@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/merge-on-write",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/merge-on-write.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/data-model/merge-on-write.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "72da37504f19e0ff307b2458afef79e01e515cd7bd6ef54da86fa8aa7476a5fc",
+    "sourceTechnicalHash": "ce54b9965895cb1516f0ac4662cf637198f5b7fc6b5ab1075a9bb2932e137ec8",
+    "targetHash": "343079666952ccba0a783dc8e24af96b0d93331d8fc54ced577efecf6627f8ad",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:00:28.049Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "72da37504f19e0ff307b2458afef79e01e515cd7bd6ef54da86fa8aa7476a5fc",
+      "targetHash": "343079666952ccba0a783dc8e24af96b0d93331d8fc54ced577efecf6627f8ad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

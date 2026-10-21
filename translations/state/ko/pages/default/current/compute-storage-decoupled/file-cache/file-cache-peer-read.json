@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/file-cache/file-cache-peer-read",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/compute-storage-decoupled/file-cache/file-cache-peer-read.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+    "sourceTechnicalHash": "c49d5cc144417e510e50629c820cc289e9ca1dc45d7472d105fa083f6bac47cf",
+    "targetHash": "cc58533de074cd4da3b3ec6690f086c012851331ef358d21764f6aad1aa5d15e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:47:33.389Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb639699d2e5d7206fca053693f33330541a8dcc9b979713244086de540766c0",
+      "targetHash": "cc58533de074cd4da3b3ec6690f086c012851331ef358d21764f6aad1aa5d15e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 39: expected [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]; received [\"inlineCode\",null,null,\"be.conf\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"be.conf\"]; received [\"inlineCode\",null,null,\"enable_cache_read_from_peer=true\"]\nprotected node 153: expected [\"inlineCode\",null,null,\"/api/peer_cache\"]; received [\"inlineCode\",null,null,\"webserver_port\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

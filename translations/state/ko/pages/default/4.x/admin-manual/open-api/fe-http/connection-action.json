@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/connection-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/connection-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/connection-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c6a42cd93536ad377f6aa680a0c0f91dc7be14a32f4443f964300d7938b9d860",
+    "sourceTechnicalHash": "472210ef312f89fecb8caa9dc249c41b474fcb1642abb5757106b0af9bf343d2",
+    "targetHash": "81e2317165fe2a92cbf997e7ca4e66e0ba3243740a360cf6e5143c6d3e140b16",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:26:39.472Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c6a42cd93536ad377f6aa680a0c0f91dc7be14a32f4443f964300d7938b9d860",
+      "targetHash": "81e2317165fe2a92cbf997e7ca4e66e0ba3243740a360cf6e5143c6d3e140b16",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/connection-action",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/connection-action.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/connection-action.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "c6a42cd93536ad377f6aa680a0c0f91dc7be14a32f4443f964300d7938b9d860",
+        "targetHash": "81e2317165fe2a92cbf997e7ca4e66e0ba3243740a360cf6e5143c6d3e140b16",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

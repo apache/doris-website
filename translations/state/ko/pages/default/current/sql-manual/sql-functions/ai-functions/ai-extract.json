@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-extract",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-extract.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-extract.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "3c8c643ecea9165fd4df989c1385c3000ff37846f9df64c6843352eb0662c0ba",
+    "sourceTechnicalHash": "ec9f9a5d2635df4da5d4e35676e0f3f2f847ca9cd663f3b5520b3d5dba504df6",
+    "targetHash": "f31889aa6c53a6990d0701ab1ad2684b6f2d5fca5b2106065aab543ba43534a1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:34:09.976Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3c8c643ecea9165fd4df989c1385c3000ff37846f9df64c6843352eb0662c0ba",
+      "targetHash": "f31889aa6c53a6990d0701ab1ad2684b6f2d5fca5b2106065aab543ba43534a1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

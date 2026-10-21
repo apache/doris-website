@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-RESTORE.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "162ad7cb1c2b9e1607ee133224e4725912939f6dcdce9cca6587b37a07037fe0",
+    "sourceTechnicalHash": "0c73793ff82e2a626c5537603623c825546b4b5b5ded625cce7acf8a14c379e4",
+    "targetHash": "7e6612d533557691b905619bfd7dff2689ae882cdc36a56830fd3e126c46966a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:22:03.160Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "162ad7cb1c2b9e1607ee133224e4725912939f6dcdce9cca6587b37a07037fe0",
+      "targetHash": "7e6612d533557691b905619bfd7dff2689ae882cdc36a56830fd3e126c46966a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

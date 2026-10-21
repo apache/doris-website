@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "locale": "ko",
+  "maxBatchPages": 20,
+  "groups": [
+    {
+      "id": "DEV",
+      "pluginId": "default",
+      "version": "current",
+      "sourceRoot": "docs"
+    },
+    {
+      "id": "4X",
+      "pluginId": "default",
+      "version": "4.x",
+      "sourceRoot": "versioned_docs/version-4.x"
+    },
+    {
+      "id": "COMMUNITY",
+      "pluginId": "community",
+      "version": "current",
+      "sourceRoot": "community"
+    }
+  ],
+  "retainEnglish": [],
+  "retainSidebarLabels": [
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.S3",
+      "reason": "Storage service name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Hive Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Iceberg Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Paimon Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Lance Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Hudi Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.MaxCompute Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.information_schema",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.mysql",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.__internal_schema",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.HTTP API",
+      "reason": "Protocol and API acronyms."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.FE HTTP API",
+      "reason": "Doris frontend HTTP API name; preserve the process and protocol identifiers."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.BE HTTP API",
+      "reason": "Doris backend HTTP API name; preserve the process and protocol identifiers."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.VARIANT",
+      "reason": "SQL data type identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.DML",
+      "reason": "SQL statement category acronym."
+    },
+    {
+      "pluginId": "default",
+      "version": "current",
+      "key": "sidebar.docs.category.Table Stream",
+      "reason": "Doris Table Stream feature name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.S3",
+      "reason": "Storage service name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Hive Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Iceberg Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Lance Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Paimon Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.Hudi Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.MaxCompute Catalog",
+      "reason": "Named Doris Catalog connector; preserve its documented connector name."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.information_schema",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.mysql",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.__internal_schema",
+      "reason": "Literal SQL system schema identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.HTTP API",
+      "reason": "Protocol and API acronyms."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.FE HTTP API",
+      "reason": "Doris frontend HTTP API name; preserve the process and protocol identifiers."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.BE HTTP API",
+      "reason": "Doris backend HTTP API name; preserve the process and protocol identifiers."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.VARIANT",
+      "reason": "SQL data type identifier."
+    },
+    {
+      "pluginId": "default",
+      "version": "4.x",
+      "key": "sidebar.docs.category.DML",
+      "reason": "SQL statement category acronym."
+    }
+  ]
+}

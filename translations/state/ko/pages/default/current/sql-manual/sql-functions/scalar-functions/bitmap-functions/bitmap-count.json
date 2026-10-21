@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-count",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-count.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-count.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "a04cf43a655117f48105179589341ba8981e1b1bb3b249882fcdf9978ca79ca0",
+    "sourceTechnicalHash": "022a713ac80a5affa2b45bab432607f3499af891286c7b76bcbe208883135003",
+    "targetHash": "f87f14c61f3f1a34300413667198378128136a10a3a74fc7943a3048ae232b3c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:43:48.983Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a04cf43a655117f48105179589341ba8981e1b1bb3b249882fcdf9978ca79ca0",
+      "targetHash": "f87f14c61f3f1a34300413667198378128136a10a3a74fc7943a3048ae232b3c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

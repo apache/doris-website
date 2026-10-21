@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/month-floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/month-floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/month-floor.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "b87c99d1fbfb2fc8b95f19889aadddc274d24bbc0a5dd0f6c14d62f72885ac6c",
+    "sourceTechnicalHash": "e91446cf73bfe1a6f17377c70e0d467339d89c89617aed402297e3bd8dd43ff1",
+    "targetHash": "ac513f1d394c79941aaade3e7f54fb890ef8c5f489e243abe4c12b56059c8887",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:57:35.877Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b87c99d1fbfb2fc8b95f19889aadddc274d24bbc0a5dd0f6c14d62f72885ac6c",
+      "targetHash": "ac513f1d394c79941aaade3e7f54fb890ef8c5f489e243abe4c12b56059c8887",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -25,9 +25,20 @@ const localeRegistry = [
             '/use-cases/observability',
             '/use-cases/ai',
         ]},
+    {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false,
+        translatedPages: [
+            '/why-doris/compare',
+            '/why-doris/benchmarks',
+            '/why-doris/key-features',
+            '/use-cases/customer-facing-analytics',
+            '/use-cases/data-warehousing',
+            '/use-cases/observability',
+            '/use-cases/ai',
+        ]},
+    {code: 'ru', label: 'Русский', htmlLang: 'ru', optional: true, ordinaryPages: false},
 ];
 const locales = localeRegistry.map(locale => locale.code);
-// ja reads DORIS_ENABLE_JA, a future ko reads DORIS_ENABLE_KO. CI enables
+// ja reads DORIS_ENABLE_JA, ko reads DORIS_ENABLE_KO. CI enables
 // exactly the locales one change can reach through DORIS_ENABLE_LOCALES, so it
 // never has to name a language in the workflow.
 const flagFor = locale => `DORIS_ENABLE_${locale.code.split('-')[0].toUpperCase()}`;

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/DROP-REPOSITORY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "a6ca45f30583f6d5630e73a2b371cbbe5fee1e601402ce442e839d81c034f47a",
+    "sourceTechnicalHash": "99826deaf116fd5f74cb72879f4190ca6374e7f2a8ecf5046457df9b741cdcd7",
+    "targetHash": "cd93afe4664480b67670786335bb97c1546a59990c285f258e1f560e860cc11a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:21:35.430Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a6ca45f30583f6d5630e73a2b371cbbe5fee1e601402ce442e839d81c034f47a",
+      "targetHash": "cd93afe4664480b67670786335bb97c1546a59990c285f258e1f560e860cc11a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

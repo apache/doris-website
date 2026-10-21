@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/floor",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/floor.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/floor.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "c5d6d401cbf206b87f947e8adea54425de3db58974e8aa9d58c68447bf02d6b9",
+    "sourceTechnicalHash": "38569cfe1a27c8590f2ac9e6d7a28ea87cfe99ff4c77880b65576c5db0718ec9",
+    "targetHash": "b5db09e989d18b8d21a147f1c9b0e65e43a74cf0a72edb776da2bd8ce708b2de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T06:37:03.859Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c5d6d401cbf206b87f947e8adea54425de3db58974e8aa9d58c68447bf02d6b9",
+      "targetHash": "b5db09e989d18b8d21a147f1c9b0e65e43a74cf0a72edb776da2bd8ce708b2de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

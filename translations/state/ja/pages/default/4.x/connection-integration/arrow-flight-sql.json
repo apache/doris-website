@@ -8,13 +8,55 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/connection-integration/arrow-flight-sql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/arrow-flight-sql.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "f9bd173d613fc8d03491c7adb68f779737c056ea16dd3de1f3289f95ed177960",
-    "sourceTechnicalHash": "d49aba5ad0b41ce681dfcd6591cc2770e2ab7c34502e3cb3019cb3da42ebaf4a",
-    "targetHash": "3bb4cb244de9f3f08b56fa18e347cd8e0ddb9140423fb6f2c74e0ebf598341db",
+    "sourceCommit": "99877bc008e8e6d1fa600c2791144e041906c2ee",
+    "sourceHash": "cc25a771477eee57946c21768c915cf8fb3bb4e1e5a59d98822cbb77850e0e6a",
+    "sourceTechnicalHash": "c1655967cf638456dc62e24c58d31cd837b8ef367cad8b4aae5e2386f6be0edc",
+    "targetHash": "7fe6cebdc9227f429c256c35bb4fcdccb2226c7366b6e755d9cc2304b0d4c0f6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.629Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T17:04:45.042Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "cc25a771477eee57946c21768c915cf8fb3bb4e1e5a59d98822cbb77850e0e6a",
+      "targetHash": "7fe6cebdc9227f429c256c35bb4fcdccb2226c7366b6e755d9cc2304b0d4c0f6",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]; received [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]; received [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]; received [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]; received [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition + Operation steps + Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 機能の説明 + 操作手順 + トラブルシューティング -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: High-speed read of Doris data / Python/Java integration / BI tool integration / Troubleshooting -->\"]; received [\"html\",null,null,\"<!-- 対象となる場面: Doris データの高速読み取り / Python・Java との連携 / BI ツールとの連携 / トラブルシューティング -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]; received [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]; received [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]; received [\"inlineCode\",null,null,\"be/conf/be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]; received [\"0.10\",\"0.10\",\"0.10\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0.0\",\"1.8\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15.0\",\"17\",\"18.0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"2078\",\"24.0.0\",\"25514\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.0.4\",\"3.9\",\"4\",\"4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.19.279\",\"4.19.90\",\"48578\",\"5\",\"5\",\"5000\",\"6\",\"6\",\"6.2\",\"7\",\"8\",\"86\",\"9\",\"9\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]; received [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"fe/conf/fe.conf\"]; received [\"inlineCode\",null,null,\"arrow_flight_sql_port\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

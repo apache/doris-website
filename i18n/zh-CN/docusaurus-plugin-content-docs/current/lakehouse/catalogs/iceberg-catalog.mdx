@@ -264,37 +264,7 @@ ORDER BY engine_name, entry_name;
 
 ## 列类型映射
 
-| Iceberg Type                           | Doris Type           | Comment               |
-| -------------------------------------- | -------------------- | --------------------- |
-| boolean                                | boolean              |                       |
-| integer                                | int                  |                       |
-| long                                   | bigint               |                       |
-| float                                  | float                |                       |
-| double                                 | double               |                       |
-| decimal(P, S)                          | decimal(P, S)        |                       |
-| date                                   | date                 |                       |
-| timestamp (Timestamp without timezone) | datetime(6)          | 固定映射到精度为 6 的 datetime |
-| timestamptz (Timestamp with timezone)  | TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`，`enable.mapping.timestamp_tz` 仅作为兼容标记，设为 `false` 不再恢复 `DATETIME` 映射。精度最高为 6，超过的部分会丢失。4.1.5 之前可通过该属性选择旧映射。 |
-| fixed(N) | VARBINARY(N) | 自 4.1.5 版本起保留固定二进制宽度。 |
-| string                                 | string               |                       |
-| binary                                 | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，`enable.mapping.varbinary` 仅作为兼容标记，设为 `false` 不再恢复 `STRING` 映射。4.1.5 之前可通过该属性选择旧映射。 |
-| uuid | UUID | dev 版本直接映射到 Doris 原生 `UUID`，不受 `enable.mapping.varbinary` 影响；4.1.5 映射到 `VARBINARY(16)`。 |
-| struct                                 | struct（2.1.3 版本开始支持） |                       |
-| map                                    | map（2.1.3 版本开始支持）    |                       |
-| list                                   | array                |                       |
-| geometry | geometry | 开发版本支持，保留 CRS 和原始 WKB（XY、XYZ、XYM、XYZM），参见[空间类型](#iceberg-spatial-types)。 |
-| geography | geography | 开发版本支持，保留 CRS、边算法和原始 WKB（XY、XYZ、XYM、XYZM），参见[空间类型](#iceberg-spatial-types)。 |
-| other                                  | UNSUPPORTED          |                       |
-
-dev 版本的 Iceberg UUID 直接映射到 Doris 原生 `UUID`，4.1.5 则映射到 `VARBINARY(16)`。向 Iceberg UUID 字段写入 Parquet 时保留 UUID 逻辑标记，包括嵌套字段。详见 [UUID 类型](../../sql-manual/basic-element/sql-data-types/uuid.md)。
-
-> 注：
->
-> 自 4.1.5 版本起，`timestamp` 映射到 `DATETIME(6)`，`timestamptz` 固定映射到 `TIMESTAMPTZ(6)`。后者表示时间点，按会话 `time_zone` 展示；`enable.mapping.timestamp_tz=false` 不能恢复旧映射。
->
-> 可以在 `DESCRIBE table_name` 语句中的 Extra 列查看源类型是否带时区信息。如显示 `WITH_TIMEZONE`，则表示源类型是带时区的类型（该功能自 3.1.0 版本支持）。
->
-> 4.0.3 后开始支持，可以映射 `timestamptz (Timestamp with timezone)` 到 Doris 的 `timestamptz` 类型。
+请参阅[Iceberg 与 Doris 数据类型映射](iceberg-catalog/doris-type-mapping.md)，了解 Doris 4.2 的完整映射表、精度和不支持的类型。
 
 ### 空间类型（Iceberg V3） {#iceberg-spatial-types}
 
@@ -1544,7 +1514,7 @@ Rest Catalog requires signing-region and sigv4-enabled set to true when signing-
 ### 阿里云 OSS Tables
 
 <details>
-    <summary>5.0+ 版本</summary>
+    <summary>4.1.4+ 版本</summary>
     <Tabs>
         <TabItem value='OSS Tables REST Catalog' label='OSS Tables REST Catalog' default>
             完整配置和使用说明请参阅[集成阿里云 OSS Tables](../best-practices/doris-aliyun-oss-tables)。

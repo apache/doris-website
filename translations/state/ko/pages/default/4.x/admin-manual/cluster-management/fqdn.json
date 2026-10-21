@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/cluster-management/fqdn",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/cluster-management/fqdn.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+    "sourceTechnicalHash": "ec91cd72bfe2943b500e28472debd76bf09e641e7ceed828571ca47762bf410e",
+    "targetHash": "7cce0d6d24ce80a5bcdeaa059b4589c62f900d9bf40aa0bdfb80378da38a5756",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:05:36.106Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+      "targetHash": "7cce0d6d24ce80a5bcdeaa059b4589c62f900d9bf40aa0bdfb80378da38a5756",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/cluster-management/fqdn",
+        "sourcePath": "docs/admin-manual/cluster-management/fqdn.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/fqdn.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "7d4ab23543024ceac15b7899c1ef5c029560cd05e4c0c740fe9c56ae49e13c1b",
+        "targetHash": "7cce0d6d24ce80a5bcdeaa059b4589c62f900d9bf40aa0bdfb80378da38a5756",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

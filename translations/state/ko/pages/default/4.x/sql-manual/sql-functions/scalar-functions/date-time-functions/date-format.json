@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-format",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-format.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-format.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "2404cd609fbe408715481bd76ae48d2d910e8de78459023f9a6f852b0e4badab",
+    "sourceTechnicalHash": "8006574fcdf20d2473e186eda5055388ab457427954f07f1e1029580e465f909",
+    "targetHash": "5c0b7fdf95d181cf398f0fb8f5350dbe02948dc7fa64bf8bd0869b54aadbb324",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:40:47.153Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2404cd609fbe408715481bd76ae48d2d910e8de78459023f9a6f852b0e4badab",
+      "targetHash": "5c0b7fdf95d181cf398f0fb8f5350dbe02948dc7fa64bf8bd0869b54aadbb324",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

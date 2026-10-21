@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/smartbi",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/smartbi.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/smartbi.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7eaba64470f171a47e11b0d1b7ca02e566bd84b3e902eef039ae275cb8bdb0d9",
+    "sourceTechnicalHash": "66d92197af123c2c79391ac188e81cc1f9c65f0fa2d744b9a4ae8252564c1222",
+    "targetHash": "1a8d9c193a0bc26feebc1e47a89e847dccec1e5670893bf5d8cc91ae9c29368c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T09:11:16.896Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7eaba64470f171a47e11b0d1b7ca02e566bd84b3e902eef039ae275cb8bdb0d9",
+      "targetHash": "1a8d9c193a0bc26feebc1e47a89e847dccec1e5670893bf5d8cc91ae9c29368c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "connection-integration/data-integration/smartbi",
+        "sourcePath": "docs/connection-integration/data-integration/smartbi.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/connection-integration/data-integration/smartbi.md",
+        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+        "sourceHash": "7eaba64470f171a47e11b0d1b7ca02e566bd84b3e902eef039ae275cb8bdb0d9",
+        "targetHash": "1a8d9c193a0bc26feebc1e47a89e847dccec1e5670893bf5d8cc91ae9c29368c",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

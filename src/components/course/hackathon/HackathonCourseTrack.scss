@@ -1,4 +1,4 @@
-// Temporary hackathon track inside the /course "Your Doris path" card: a
+// Permanent hackathon track inside the /course "Your Doris path" card: a
 // two-position switch (Doris 101 | Hackathon) and the hackathon panel. Remove
 // the switch, the panel and this file and the card is exactly today's card.
 
@@ -66,16 +66,6 @@
         }
     }
 
-    // "Live" LED on the hackathon side.
-    .hk-switch__led {
-        width: 9px;
-        height: 9px;
-        flex: none;
-        border-radius: 50%;
-        background: var(--brand-primary);
-        box-shadow: 0 0 0 3px var(--brand-primary-soft);
-    }
-
     .hk-nw {
         white-space: nowrap;
     }
@@ -104,49 +94,6 @@
         font: 800 21px/1.2 var(--font-family-base);
         letter-spacing: -0.015em;
         text-wrap: balance;
-    }
-
-    a.hk-ticket {
-        display: grid;
-        grid-template-columns: auto auto minmax(0, 1fr);
-        margin-top: 14px;
-        border: 2px solid var(--brand-ink);
-        border-radius: 12px;
-        background: var(--brand-paper);
-        box-shadow: 0 3px 0 var(--brand-ink);
-        color: var(--brand-ink);
-        text-decoration: none;
-        transition:
-            transform 0.12s,
-            box-shadow 0.12s;
-
-        &:hover {
-            color: var(--brand-ink);
-            text-decoration: none;
-            transform: translateY(-1px);
-        }
-
-        &:active {
-            box-shadow: 0 0 0 var(--brand-ink);
-            transform: translateY(3px);
-        }
-
-        span {
-            padding: 10px 12px;
-            font: 800 12px/1.2 var(--font-mono);
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            white-space: nowrap;
-
-            + span {
-                border-left: 2px dashed var(--brand-border-soft);
-            }
-        }
-
-        i {
-            color: var(--brand-primary-deep);
-            font-style: normal;
-        }
     }
 
     .hk-track__sub {
@@ -346,19 +293,6 @@
             font-size: 19px;
         }
 
-        a.hk-ticket {
-            grid-template-columns: auto minmax(0, 1fr);
-
-            span:first-child {
-                grid-column: 1 / -1;
-                border-bottom: 2px dashed var(--brand-border-soft);
-            }
-
-            span:nth-child(2) {
-                border-left: 0;
-            }
-        }
-
         a.hk-pad {
             min-height: 100px;
             padding: 10px;
@@ -369,7 +303,6 @@
 @media (prefers-reduced-motion: reduce) {
     .course-landing {
         .hk-switch__tab,
-        a.hk-ticket,
         a.hk-pad,
         .hk-pad__code {
             transition: none;

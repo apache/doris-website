@@ -67,6 +67,8 @@ SEARCH('<search_expression>', '<options_json>')
 | `default_operator` | string | 多词项表达式的默认运算符（`and` 或 `or`） |
 | `mode` | string | `standard`（默认）或 `lucene` |
 | `minimum_should_match` | integer | SHOULD 子句最小匹配数（仅 Lucene 模式） |
+| `fields` | array of strings | 可选，为未显式指定字段的词项指定多个目标列；与非空 `default_field` 互斥 |
+| `type` | string | 可选，`best_fields`（默认）或 `cross_fields`，仅用于多字段展开；不改变排序或相关性评分 |
 
 **示例：**
 
@@ -204,7 +206,7 @@ WHERE SEARCH('apple AND banana OR cherry',
 | --- | --- | --- |
 | `a AND b` | a ∩ b | +a +b（都是 MUST） |
 | `a OR b` | a ∪ b | a b（都是 SHOULD，min=1） |
-| `NOT a` | ¬a | 空结果（无正向子句） |
+| `NOT a` | ¬a | 匹配所有文档再排除 a（`-a`） |
 | `a AND NOT b` | a ∩ ¬b | +a -b（MUST a，MUST_NOT b） |
 | `a AND b OR c` | (a ∩ b) ∪ c | +a b c（只有 a 是 MUST） |
 
@@ -430,4 +432,66 @@ SELECT * FROM docs WHERE SEARCH('title:key\\:value');
 ```sql
 -- 通过 SQL 进行范围过滤
 SELECT * FROM t WHERE created_at >= '2024-01-01';
+```
+
+
+## 多字段选项示例
+
+`fields` 和 `type` 在 Doris 4.1.0 中已支持。`standard` 模式下，`best_fields` 将完整查询分别应用到每个列后取 OR；`cross_fields` 将每个词项展开到多个列。只有使用 `AND` 或 `default_operator="and"` 时，才能用下例直观区分“同列匹配所有词”和“跨列匹配所有词”。`lucene` 模式采用按子句展开，不能直接套用此 AND 比较。
+
+在具有建表、写入和查询权限的数据库中准备数据：
+
+```sql
+CREATE TABLE search_multifield (
+    id INT,
+    title STRING,
+    content STRING,
+    INDEX title_idx(title) USING INVERTED PROPERTIES ("parser"="unicode", "lower_case"="true"),
+    INDEX content_idx(content) USING INVERTED PROPERTIES ("parser"="unicode", "lower_case"="true")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num"="1");
+INSERT INTO search_multifield VALUES
+(1, 'Alice', 'Smith'),
+(2, 'Alice Smith', 'other'),
+(3, 'Bob', 'Smith');
+```
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('Alice Smith',
+  '{"fields":["title","content"],"type":"best_fields","default_operator":"and"}')
+ORDER BY id;
+```
+
+```text
+id
+2
+```
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('Alice Smith',
+  '{"fields":["title","content"],"type":"cross_fields","default_operator":"and"}')
+ORDER BY id;
+```
+
+```text
+id
+1
+2
+```
+
+仅由否定子句组成的 Lucene 查询会补充全匹配条件，再排除否定词项：
+
+```sql
+SELECT id FROM search_multifield
+WHERE SEARCH('NOT title:Alice', '{"mode":"lucene"}')
+ORDER BY id;
+```
+
+```text
+id
+3
 ```

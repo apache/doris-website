@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/decimal-conversion",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/decimal-conversion.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/decimal-conversion.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "1d17dca8db6d50cbb6178d4f7e5959a82424012820f8ab135b1e6957923e19ed",
+    "sourceTechnicalHash": "1dcd417302ae848785c80da5d91470286b50cd0b81a7ae0e35453f317ab55526",
+    "targetHash": "b45042f6d310e6fa2ccd86334a1b0b68a9928770658c692cb93da45809b3860a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T12:53:52.999Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1d17dca8db6d50cbb6178d4f7e5959a82424012820f8ab135b1e6957923e19ed",
+      "targetHash": "b45042f6d310e6fa2ccd86334a1b0b68a9928770658c692cb93da45809b3860a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

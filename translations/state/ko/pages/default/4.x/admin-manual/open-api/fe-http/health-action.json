@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/health-action",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/health-action.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/health-action.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ab3b3cb61ac3043c4fcc33097022b0f7d002c78e1ff7fa4c234f14924ff788ee",
+    "sourceTechnicalHash": "c84a6e5fb302c1d724b980c75e3c979fe9f846483620d702a91641d6cf4b81b1",
+    "targetHash": "a87282d709f9f7408045f4282a6c9d86e5a00b3aa8e562f5e81ded6a75441d83",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T08:28:09.784Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ab3b3cb61ac3043c4fcc33097022b0f7d002c78e1ff7fa4c234f14924ff788ee",
+      "targetHash": "a87282d709f9f7408045f4282a6c9d86e5a00b3aa8e562f5e81ded6a75441d83",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "merged",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/health-action",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/health-action.md",
+        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/health-action.md",
+        "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+        "sourceHash": "ab3b3cb61ac3043c4fcc33097022b0f7d002c78e1ff7fa4c234f14924ff788ee",
+        "targetHash": "a87282d709f9f7408045f4282a6c9d86e5a00b3aa8e562f5e81ded6a75441d83",
+        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      }
+    }
+  }
+}

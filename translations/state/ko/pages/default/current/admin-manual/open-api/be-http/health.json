@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/health",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/health.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/health.md",
+    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
+    "sourceHash": "501e47f4b1d82635fccd8b4d7ae1acc64c328a96431ea18c89c49b2a837950d0",
+    "sourceTechnicalHash": "c7416a90d4ed745c7a51e7be1f7bc6726ab9f6c63f4ff29eec7c4fa78b83e7be",
+    "targetHash": "c23aba69bc606cb37afb6b2d787d7b3bdbbb9cbc58b58b4a891cdc6c68302ab0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-18T22:16:50.390Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "501e47f4b1d82635fccd8b4d7ae1acc64c328a96431ea18c89c49b2a837950d0",
+      "targetHash": "c23aba69bc606cb37afb6b2d787d7b3bdbbb9cbc58b58b4a891cdc6c68302ab0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/min-by",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/min-by.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/min-by.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "372df18d8ac03df7aff87d11e8de6850cbb83d620e0c93785f922ddde3b213b2",
+    "sourceTechnicalHash": "51cc0598c074689cfdec252363c8984e9e366b2a98c97f624cbb0c770a13aa2f",
+    "targetHash": "ea271f7950bdb0693523890f4747a76c2a16aaf5913b1eb2a576ec256e90c710",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:31:52.836Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "372df18d8ac03df7aff87d11e8de6850cbb83d620e0c93785f922ddde3b213b2",
+      "targetHash": "ea271f7950bdb0693523890f4747a76c2a16aaf5913b1eb2a576ec256e90c710",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,161 @@
+---
+title: MCP 서버
+description: Doris MCP Server 1.0은 여덟 가지 도구 도메인과 55개 기능을 통해 Claude Desktop, Cursor 및 기타 MCP 클라이언트에서 Apache Doris 클러스터에 읽기 전용으로 접근할 수 있게 합니다.
+keywords:
+  - MCP server
+  - Model Context Protocol
+  - doris-mcp-server
+  - Claude Desktop
+  - Cursor integration
+  - Apache Doris AI tools
+  - tool calling
+slug: /key-features/mcp-server
+image: /images/next/key-features/mcp-server.jpg
+last_update:
+  date: 2026-10-07
+  author: Apache Doris
+featureCard:
+  tags:
+    - ai
+    - integration
+---
+
+> **요약** Apache Doris MCP Server(`doris-mcp-server` 1.0)는 stdio 또는 Streamable HTTP를 통해 [Model Context Protocol](https://modelcontextprotocol.io/specification/2026-07-28)을 사용하는 Python 서비스입니다. Apache Doris를 AI 어시스턴트가 사용할 수 있도록 여덟 가지 읽기 전용 도구 도메인(catalog, query, cluster, pipeline, search, governance, lakehouse, semantic)과 그 안의 55개 기능을 제공하며, 어시스턴트는 필요한 기능을 그때그때 탐색합니다. `pip`로 설치하고 Claude Desktop, Cursor 또는 다른 MCP 클라이언트에서 이 서버를 사용하도록 설정하면, 별도의 통합 코드를 작성하지 않고도 모델이 스키마를 탐색하고 실제 클러스터에서 한도가 적용된 읽기 전용 SQL을 실행할 수 있습니다.
+
+![Apache Doris MCP Server: Doris MCP Server 1.0은 여덟 가지 도구 도메인과 55개 기능을 통해 Claude Desktop, Cursor 및 기타 MCP 클라이언트에서 Apache Doris 클러스터에 읽기 전용으로 접근할 수 있게 합니다.](/images/next/key-features/mcp-server.jpg)
+## Apache Doris MCP Server를 사용하는 이유는 무엇인가요? {#why}
+
+Apache Doris MCP Server는 회사마다 처음부터 직접 구현해야 했던 채팅 어시스턴트와 데이터베이스 간 통합을 대신 제공합니다. 이 서버가 없다면 소규모 Python 서비스를 구성하고, SQL 헬퍼 몇 개를 래핑하고, 인증 정보, 타임아웃, 결과 잘림, 읽기 전용 제약을 처리한 다음, Claude Desktop, Cursor와 다음 달에 새로 등장할 클라이언트를 위한 연결 코드를 각각 작성해야 합니다. 대부분 정형적인 작업이지만 버그가 발생할 여지는 큽니다. LLM이 무리하게 실행한 `DELETE` 하나가 실제 장애로 이어질 수 있습니다. 데이터베이스 내부의 AI 기능인 [LLM SQL 함수](./llm-sql-functions)와 [임베딩](./embedding)은 SQL 측면에서 이 기능 소개를 보완합니다.
+
+2024년 십일월에 [Anthropic은 MCP를 공개](https://www.anthropic.com/news/model-context-protocol)하여 이러한 작업의 표준화를 추진했습니다. 서버는 입력과 출력에 타입이 지정된 도구를 제공하고, 클라이언트(Claude Desktop, Cursor, Cline, Continue, Zed 등)는 동일한 프로토콜을 사용하며, 모델은 호출 시점을 결정합니다. 데이터베이스 공급업체도 뒤를 이었습니다. ClickHouse, Snowflake, MotherDuck, BigQuery, Supabase는 모두 공식 서버를 제공합니다.
+
+Apache Doris MCP Server는 Apache Doris용으로 같은 역할을 합니다. 별도 저장소([`apache/doris-mcp-server`](https://github.com/apache/doris-mcp-server))에서 관리되며, Apache 2.0 라이선스로 PyPI에 배포됩니다. MCP 클라이언트 설정에 몇 줄만 추가하면 실행할 수 있습니다.
+
+## Apache Doris MCP Server란 무엇인가요? {#what}
+
+Apache Doris MCP Server는 Python 3.12+ 기반 서비스로, MySQL 프로토콜을 통해 Apache Doris 2.0 이상에 연결합니다. 버전 1.0에서는 기존의 평면적인 도구 목록을 여덟 개의 안정적인 도메인으로 대체했습니다. 각 도메인이 하나의 MCP 도구이며 내부 작업은 필요할 때 탐색하므로, 모델은 55개 대신 여덟 개의 항목으로 시작합니다. 서버는 연결된 클러스터에서 실제로 지원하는 작업을 확인하고, 읽기 전용 작업만 실행하며, 스키마 검증을 거친 JSON을 반환합니다.
+
+**주요 용어**
+
+- **MCP (Model Context Protocol)**: LLM 클라이언트를 외부 도구 및 데이터에 연결하는 개방형 JSON-RPC 2.0 프로토콜입니다. 도구는 타입이 지정된 함수이고, 리소스는 읽기 전용 데이터이며, 프롬프트는 재사용 가능한 템플릿입니다.
+- **도메인**: 서버가 등록하는 여덟 개의 도구 중 하나입니다. `doris_catalog`, `doris_query`, `doris_cluster`, `doris_pipeline`, `doris_search`, `doris_governance`, `doris_lakehouse`, `doris_semantic`이 있습니다.
+- **하위 기능**: 도메인 안에 있는 작업입니다. 예를 들어 `list_tables`는 `doris_catalog`에, `execute_query`와 `explain_query`는 `doris_query`에, `search_data`는 `doris_search`에 속합니다. 총 55개이며, [도구 레지스트리](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md)에 전체 목록이 나와 있습니다.
+- **점진적 공개**: 기본 모드인 `hierarchical`을 뜻합니다. 어시스턴트는 도메인을 빈 객체로 호출해 하위 기능과 각 기능의 입력 스키마, 해당 클러스터에서의 사용 가능 여부를 확인한 다음, 같은 도메인을 `child_tool`과 `arguments`로 다시 호출합니다. 이러한 두 단계 호출을 지원하지 않는 클라이언트는 `MCP_TOOL_EXPOSURE_MODE=flat`을 설정해 하위 기능 55개를 모두 도구로 노출할 수 있습니다.
+- **전송 방식**: `stdio`는 서버를 로컬 클라이언트의 하위 프로세스로 실행합니다. Streamable HTTP는 서버를 장기 실행 서비스로 운영하며, `/mcp` 엔드포인트와 `/live` 및 `/ready` 상태 확인 경로를 제공합니다. 루프백 이외의 주소에서 수신하는 HTTP 리스너에는 인증(정적 토큰, JWT 또는 OAuth/OIDC)이 필요합니다.
+- **읽기 전용 런타임**: 내장 기능은 쓰기 작업을 수행하지 않습니다. 데이터를 변경하는 문은 거부되며, 모든 결과는 서버를 떠나기 전에 행 수, 바이트 수, 실행 시간에 상한이 적용됩니다. 연결된 계정에서 볼 수 있는 데이터의 범위는 여전히 Doris 권한에 따라 결정됩니다.
+
+## Apache Doris MCP Server는 어떻게 작동하나요? {#how}
+
+Apache Doris MCP Server는 다섯 단계로 이루어진 흐름을 반복합니다. 클라이언트가 서버에 연결하고, 서버가 클러스터에 연결하며, 모델이 도메인을 탐색하고 하위 기능을 호출하면, 한도가 적용된 결과가 JSON으로 반환됩니다.
+
+1. **클라이언트가 서버에 연결합니다.** `stdio` 모드에서는 MCP 클라이언트가 `doris-mcp-server --transport stdio`를 하위 프로세스로 실행하고 stdin/stdout을 통해 통신합니다. HTTP 모드에서는 `doris-mcp-server --transport http --host 127.0.0.1 --port 3000`을 실행하고 클라이언트가 `http://127.0.0.1:3000/mcp`로 요청을 보냅니다.
+2. **서버가 Apache Doris에 연결합니다.** 환경 변수에서 `DORIS_HOST`, `DORIS_PORT`, `DORIS_USER`, `DORIS_PASSWORD`, `DORIS_DATABASE`를 읽거나 이에 대응하는 `--doris-*` 플래그 값을 사용하고, 포트 9030의 FE에 MySQL 프로토콜로 연결한 다음, 클러스터의 버전과 설정이 어떤 기능을 지원하는지 확인합니다.
+3. **모델이 필요한 기능을 탐색합니다.** 클라이언트에는 여덟 개의 도메인 도구가 나열됩니다. "주문 데이터가 들어 있는 테이블은 무엇인가요?"라는 질문을 받으면, 모델은 `doris_catalog`에 `{}`를 전달해 호출하고 `list_tables`와 `get_table_context`를 포함한 다섯 개의 하위 기능과 이 클러스터에서의 각 기능 상태를 받습니다. MetricFlow를 사용하는 `doris_semantic`의 기능처럼 선택적 통합에 의존하는 기능은 설정을 마칠 때까지 `misconfigured` 상태를 보고합니다. 목록에는 계속 표시되지만, 호출하면 안전을 위해 실행을 거부합니다.
+4. **모델이 하위 기능을 호출합니다.** `doris_catalog`를 `child_tool: "list_tables"`로 다시 호출한 다음, `doris_query`를 `child_tool: "execute_query"`와 직접 작성한 SQL로 호출합니다. 서버는 인수가 하위 기능의 스키마에 맞는지 검증하고 읽기 전용이 아닌 모든 작업을 거부합니다. `DELETE`를 보내면 `SQL operation DELETE is not read-only.`라는 오류를 반환합니다.
+5. **한도가 적용된 결과가 JSON으로 반환됩니다.** 기본적으로 쿼리는 최대 100행, 1 MB를 반환하며 실행 시간은 최대 30초입니다. 호출 시 서버 한도 내에서 더 큰 값을 요청할 수 있습니다(`max_rows`는 최대 100,000, `timeout_ms`는 최대 300,000). 따라서 무심코 실행한 `SELECT *`가 모델의 컨텍스트 윈도우를 넘치게 하지 않습니다.
+
+## 빠른 시작 {#quick-start}
+
+서버를 설치한 다음(Python 3.12 이상 필요), 테스트용 데이터와 읽기 전용 계정을 만듭니다.
+
+```bash
+pip install doris-mcp-server==1.0.0
+which doris-mcp-server        # note the absolute path
+```
+
+```sql
+CREATE DATABASE demo;
+CREATE TABLE demo.orders (
+  order_id   INT NOT NULL,
+  region     VARCHAR(16) NOT NULL,
+  amount     DECIMAL(10, 2) NOT NULL,
+  created_at DATETIME NOT NULL
+) DUPLICATE KEY(order_id) DISTRIBUTED BY HASH(order_id) BUCKETS 1;
+
+INSERT INTO demo.orders VALUES
+  (1, 'emea', 120.00, '2026-10-01 09:00:00'),
+  (2, 'apac',  80.50, '2026-10-01 10:30:00'),
+  (3, 'emea',  42.25, '2026-10-02 14:10:00'),
+  (4, 'amer', 310.00, '2026-10-03 08:45:00');
+
+-- Never hand an LLM a write-capable account
+CREATE USER 'mcp_reader'@'%' IDENTIFIED BY 'replace-me';
+GRANT SELECT_PRIV ON internal.demo.* TO 'mcp_reader'@'%';
+```
+
+MCP 클라이언트 설정에 서버를 등록합니다(파일과 위치는 클라이언트에 따라 다릅니다). `which doris-mcp-server`에서 얻은 절대 경로를 사용하세요. GUI 클라이언트는 셸의 `PATH`나 가상 환경을 상속하지 않습니다.
+
+```json
+{
+  "mcpServers": {
+    "doris": {
+      "command": "/absolute/path/to/doris-mcp-server",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "DORIS_HOST": "127.0.0.1",
+        "DORIS_PORT": "9030",
+        "DORIS_USER": "mcp_reader",
+        "DORIS_PASSWORD": "replace-me",
+        "DORIS_DATABASE": "demo"
+      }
+    }
+  }
+}
+```
+
+**예상 결과**
+
+재시작하면 클라이언트에 `doris` 서버 하나와 여덟 개의 도구가 표시됩니다. `doris_catalog`, `doris_cluster`, `doris_governance`, `doris_lakehouse`, `doris_pipeline`, `doris_query`, `doris_search`, `doris_semantic`입니다. "demo.orders의 지역별 매출은 얼마인가요?"라고 질문하면 어시스턴트가 `doris_query`에 `{}`를 전달해 `execute_query`를 확인한 뒤 다음과 같이 호출합니다.
+
+```json
+{
+  "child_tool": "execute_query",
+  "arguments": {
+    "database": "demo",
+    "sql": "SELECT region, SUM(amount) AS revenue FROM orders GROUP BY region ORDER BY revenue DESC"
+  }
+}
+```
+
+결과 행은 적용된 한도와 함께 반환됩니다.
+
+```json
+"rows": [
+  {"region": "amer", "revenue": "310.00"},
+  {"region": "emea", "revenue": "162.25"},
+  {"region": "apac", "revenue": "80.50"}
+],
+"limits": {"max_bytes": 1048576, "max_rows": 100, "timeout_seconds": 30}
+```
+
+"apac 주문을 삭제해 줘"라고 요청하면 같은 호출이 `SQL operation DELETE is not read-only.` 오류를 반환합니다. `mcp_reader`에도 쓰기 권한이 없습니다.
+
+## Apache Doris MCP Server는 언제 사용하면 좋을까요? {#when}
+
+Apache Doris MCP Server는 읽기 작업이 대부분인 AI 어시스턴트 시나리오에 적합합니다. 특히 실제 클러스터에서 스키마 탐색, 애드혹 분석, 검색, 온콜 문제 조사를 수행할 때 유용합니다.
+
+**적합한 경우**
+
+- Cursor 또는 Claude Code에서 AI의 도움을 받아 SQL을 작성하는 경우: 어시스턴트가 실제 스키마(`doris_catalog` → `get_table_context`)를 읽고 컬럼 이름을 추측하는 대신 쿼리를 작성합니다.
+- Claude Desktop에서 데이터에 대해 자유롭게 질문하는 애드혹 세션: 특히 스키마를 채팅에 직접 붙여 넣어야 했던 엔지니어에게 유용합니다.
+- 온콜 어시스턴트: `doris_query`는 느린 쿼리 목록, 실행 계획 설명, 프로파일 조회를 제공하고, `doris_cluster`는 노드, compaction, 워크로드 그룹 상태를 알려 주므로 어시스턴트가 대시보드에 문제가 생긴 원인을 좁혀 나갈 수 있습니다.
+- 검색을 활용하는 어시스턴트: `doris_search`는 `search_data`를 통해 텍스트, 벡터, 하이브리드 검색을 실행하고 분석기와 인덱스를 점검하므로, 모델이 `MATCH_*`나 ANN SQL을 직접 작성할 필요가 없습니다.
+
+**적합하지 않은 경우**
+
+- 프로덕션 쓰기 경로. 1.0 서버는 읽기 전용으로 설계되었으며, LLM이 개입하는 흐름은 `INSERT`나 `UPDATE`를 실행하기에 적절하지 않습니다. 쓰기 작업에는 실제 애플리케이션을 사용하세요.
+- 신뢰할 수 없는 데이터. 공격자가 나중에 어시스턴트가 읽을 행에 텍스트를 넣을 수 있다면 프롬프트 인젝션을 시도할 수 있습니다. 커뮤니티에서는 Postgres MCP 서버에서 실제로 발생한 사례를 기록했습니다. 모델이 가져오는 모든 내용을 지시가 아닌 데이터로 취급하고, 실행하기 전에 도구 호출을 검토하세요. [MCP 보안 모범 사례](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)를 참고하세요.
+- 수백만 행 규모의 테이블 탐색. 도구 결과는 모델의 컨텍스트 윈도우에 들어가며, 토큰 단위로 청구되는 비용도 그에 따라 늘어납니다. 기본 행 수 제한을 유지하고, 모델에 집계 쿼리를 작성하도록 요청하며, 표본을 넘어서는 작업에는 노트북을 사용하세요.
+- 행 단위로 접근 범위를 제한하지 않은 멀티테넌트 클러스터. 서버는 설정된 Doris 계정으로 연결합니다. 해당 계정에서 볼 수 있는 데이터는 모델도 볼 수 있습니다. 전용 읽기 전용 사용자를 만들고, 해당 사용자에게 부여하는 데이터베이스 권한을 제한하며, 고권한 계정을 재사용하지 마세요.
+- 읽기 이외의 워크플로. 55개 기능은 스키마, 쿼리, 운영, 검색 영역을 다루지만, 사용자 정의 워크플로, 배치 작업 또는 자체 프롬프트를 사용하는 NL2SQL은 Apache Doris를 직접 호출하는 통합이나 [사용자 정의 도구 제공자](https://github.com/apache/doris-mcp-server/blob/master/docs/custom-tool-providers.md)로 구현하는 것이 적합합니다.
+
+## 추가 자료 {#further-reading}
+
+- [Doris의 AI](../ai/ai-overview): MCP 서버가 `AI_*` SQL 함수, 임베딩, 벡터 검색과 함께 어떤 역할을 하는지 설명합니다.
+- [LLM SQL 함수](./llm-sql-functions): 텍스트 컬럼의 배치 보강을 위한 데이터베이스 내부 AI 기능을 설명합니다.
+- [Doris MCP Server 저장소](https://github.com/apache/doris-mcp-server): 소스 코드, 문서, 1.0 릴리스 노트를 제공합니다.
+- [도구 레지스트리](https://github.com/apache/doris-mcp-server/blob/master/docs/tool-registry.md): 여덟 개 도메인과 55개 하위 기능 및 각 스키마를 제공합니다.
+- [1.0으로 마이그레이션](https://github.com/apache/doris-mcp-server/blob/master/docs/migration-1.0.0.md): 1.0 이전 도구와 설정을 1.0 도메인에 대응시키는 방법을 설명합니다.
+- [설정 참조](https://github.com/apache/doris-mcp-server/blob/master/docs/reference/configuration.md) 및 [보안 모델](https://github.com/apache/doris-mcp-server/blob/master/docs/security/security-model.md): HTTP 배포용 인증을 포함한 모든 설정을 설명합니다.
+- [Model Context Protocol 명세](https://modelcontextprotocol.io/specification/2026-07-28): 전송 방식의 세부 사항과 보안 지침을 포함하여 서버가 사용하는 프로토콜 버전을 설명합니다.
+- [Anthropic의 MCP 발표](https://www.anthropic.com/news/model-context-protocol): 처음 해결하고자 했던 문제와 도구, 리소스, 프롬프트의 설계 배경을 설명합니다.

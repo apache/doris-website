@@ -339,26 +339,7 @@ The currently dependent Paimon version is 1.4.2 (1.3.1 before 4.1.4).
 
 ## Column Type Mapping
 
-| Paimon Type                        | Doris Type    | Comment                                                                 |
-| ---------------------------------- | ------------- | ----------------------------------------------------------------------- |
-| boolean                            | boolean       |                                                                         |
-| tinyint                            | tinyint       |                                                                         |
-| smallint                           | smallint      |                                                                         |
-| integer                            | int           |                                                                         |
-| bigint                             | bigint        |                                                                         |
-| float                              | float         |                                                                         |
-| double                             | double        |                                                                         |
-| decimal(P, S)                      | decimal(P, S) |                                                                         |
-| varchar                            | string        |                                                                         |
-| char                               | string        |                                                                         |
-| binary, varbinary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. The `enable.mapping.varbinary` property is retained for compatibility; setting it to `false` no longer restores the `STRING` mapping. Earlier versions allow the property to select the legacy mapping. |
-| date                               | date          |                                                                         |
-| timestamp\_without\_time\_zone     | datetime(N)   | Mapped according to precision. If precision is greater than 6, it maps to a maximum of 6 (may cause precision loss). |
-| timestamp\_with\_local\_time\_zone | TIMESTAMPTZ(N) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(N)`. The `enable.mapping.timestamp_tz` property is retained for compatibility; setting it to `false` no longer restores the `DATETIME` mapping. Precision is capped at 6, so higher precision is lost. Earlier versions allow the property to select the legacy mapping. |
-| array                              | array         |                                                                         |
-| map                                | map           |                                                                         |
-| row                                | struct        |                                                                         |
-| other                              | UNSUPPORTED   |                                                                         |
+See [Paimon to Doris Data Type Mapping](paimon-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
 
 Doris preserves the exact spelling of quoted top-level columns and nested `STRUCT` fields on both Paimon JNI scanner
 paths. Names containing delimiters such as commas (`region,code`), hash signs (`nested#value`), colons (`colon:name`),
@@ -373,14 +354,6 @@ Versions before 4.0.8 located columns by exact match when reading, so Paimon and
 :::
 
 Since 4.1.5, explicit `REFRESH TABLE`, `REFRESH DATABASE`, and `REFRESH CATALOG` commands also invalidate the corresponding Paimon SDK caches. After external schema changes or dropping and recreating a table, use a refresh command to reload metadata. Queries that have already started retain their selected snapshot.
-
-:::info Note
-Since 4.1.5, `timestamp_without_time_zone` maps to `DATETIME(N)`, while `timestamp_with_local_time_zone` always maps to `TIMESTAMPTZ(N)`. The latter represents an instant displayed in the session `time_zone`; `enable.mapping.timestamp_tz=false` cannot restore the old mapping.
-
-You can check whether the source type contains timezone information in the Extra column of the `DESCRIBE table_name` statement. If it displays `WITH_TIMEZONE`, it indicates that the source type is a timezone-aware type. (This feature is supported since 3.0.8)
-
-Supported since version 4.0.3, `timestamp_with_local_time_zone` can be mapped to Doris `timestamptz` type.
-:::
 
 ## Examples
 

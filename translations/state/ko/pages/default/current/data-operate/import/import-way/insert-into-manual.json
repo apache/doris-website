@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/insert-into-manual",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/insert-into-manual.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/insert-into-manual.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
+    "sourceTechnicalHash": "aafbe862faafb879d27048e0ffbf1af4024d94f395bd9dbfc14dd913e9e1c2e6",
+    "targetHash": "062b509ebd0d528b1a458b49231c821016d10d562d4500a5789cce86af82a318",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T02:57:41.628Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "961c22142059b06ed9afed00c63ca7eeda1e8c9f746cb40ff64ba55438f55bba",
+      "targetHash": "062b509ebd0d528b1a458b49231c821016d10d562d4500a5789cce86af82a318",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

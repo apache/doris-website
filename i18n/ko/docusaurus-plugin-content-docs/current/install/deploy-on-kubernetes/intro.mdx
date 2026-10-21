@@ -1,0 +1,33 @@
+---
+{
+    "title": "Kubernetes에 배포하기",
+    "language": "ko",
+    "description": "Doris Operator를 사용하여 Kubernetes에 Apache Doris를 배포합니다."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Kubernetes에 배포하기 {#deploy-on-kubernetes}
+
+Kubernetes에서는 Doris Operator가 Apache Doris를 관리합니다. 배포하려는 아키텍처에 맞는 가이드를 선택하세요.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="배포 전 준비"
+    description="Doris Operator의 기능과 다양한 클라우드 제공업체의 Kubernetes 서비스에 설치하는 방법을 알아보세요"
+    link="doris-operator/intro"
+/>
+
+<GettingStartedCard
+    title="스토리지 및 컴퓨팅 통합 배포"
+    description="Kubernetes에 스토리지와 컴퓨팅이 통합된 모드로 Doris 클러스터를 배포합니다"
+    link="integrated-storage-compute/intro"
+/>
+
+<GettingStartedCard
+    title="스토리지 및 컴퓨팅 분리 배포"
+    description="Kubernetes에 스토리지와 컴퓨팅이 분리된 모드로 Doris 클러스터를 배포합니다"
+    link="separating-storage-compute/install-doris-cluster"
+/>
+</div>

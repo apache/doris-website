@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "9cbdf58b5e569f684dd432b8c29b1e87e063365b8f90da161bf2a7ac630125c8",
-    "sourceTechnicalHash": "2508d857e2cf0f0aef02d48f5ccea32d7518c906170b5e4e92012970ed6d176b",
-    "targetHash": "bffe97608b0e707e2037d1536da60931009242cceb602d5d3f8fb318db4ce93b",
+    "sourceCommit": "aaeed3f933f749cfa0ec725382e72ca23a4162e4",
+    "sourceHash": "7737d87bb7148eb1824454935d4fa9b8d208a6614156712cc1c6db0535b86b2d",
+    "sourceTechnicalHash": "beb3c16b2f0a2582b5ff477aef8fa2ed7195ee654fe03a4418184427095ef3b1",
+    "targetHash": "8b4d49fe4348a9ed04d9e94405a68d4e875bb422306240a0bd29cade9a6243e2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.605Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-17T04:51:55.086Z",
+    "glossaryVersion": "1"
   }
 }

@@ -7,6 +7,7 @@ const {languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 const {statePathFor} = require('./workflow-prs.cjs');
 const {botBranchFor, botBranchPattern} = require('./automation-naming.cjs');
+const {checkMaster} = require('./master-drift.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -47,7 +48,7 @@ function authorFor(kind, user = {}, language) {
     return {name: user.login, email: `${user.id}+${user.login}@users.noreply.github.com`};
 }
 
-function main() {
+async function main() {
     const output = process.argv[2];
     assert(output && process.argv.length === 3, 'Usage: workflow-publish.cjs <scan-directory>');
     assert(process.env.GH_TOKEN && process.env.GITHUB_RUN_ID, 'GitHub write token and run ID required');
@@ -73,12 +74,16 @@ function main() {
     const bodyFile = path.join(output, 'pr-body.md');
     const body = fs.readFileSync(bodyFile, 'utf8');
     assert(body.includes('bot-head=PENDING'), 'Missing PR ownership marker');
+    await require('./pr-preflight.cjs').preflight({root, base: manifest.sourceCommit, locale});
+    // The branch stays on the source commit; the PR checks run against current master.
+    const drift = checkMaster({root, sourceCommit: manifest.sourceCommit, locale,
+        pages: new Map(manifest.candidates.map(item => [item.id,
+            [item.sourcePath, item.targetPath, item.statePath ?? statePathFor(locale)]]))});
+    assert(!drift.affected.length, `master changed ${drift.affected.join(', ')} after the source commit; rescan required`);
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
-        + `\nLocal ${language} translation gate: passed.\n`);
-    execFileSync(process.execPath, [path.join(__dirname, 'check-translations.cjs'), '--base', manifest.sourceCommit],
-        {cwd: root, stdio: 'inherit'});
-    const remoteMaster = git('ls-remote', 'origin', 'refs/heads/master').split(/\s+/)[0];
-    assert.equal(remoteMaster, manifest.sourceCommit, 'master advanced before publish; rescan required');
+        + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`
+        + (drift.moved ? `Master was at \`${drift.head}\` when publishing; none of its ${drift.files.length} `
+            + 'changed files since the source commit affect this batch.\n' : ''));
     // gh configures Git's credential helper from GH_TOKEN. The token is never
     // placed in a remote URL, command argument, log or generated file.
     execFileSync('gh', ['auth', 'setup-git'], {cwd: root, stdio: 'inherit'});
@@ -93,6 +98,6 @@ function main() {
 }
 
 if (require.main === module) {
-    try {main();} catch (error) {console.error(error.message); process.exitCode = 1;}
+    main().catch(error => {console.error(error.message); process.exitCode = 1;});
 }
 module.exports = {expectedFiles, checkStaged, authorFor};

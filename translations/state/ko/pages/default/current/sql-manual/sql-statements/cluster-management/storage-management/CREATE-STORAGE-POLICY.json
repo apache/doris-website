@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CREATE-STORAGE-POLICY.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "7b8699a0bf715bfbdf068523aadc654bc7c1f580b74d050c72a4614601c311cb",
+    "sourceTechnicalHash": "e61eeeb4b0f7a44ed5fcc3147945f97f615c17312bc4174a05660d9b4532c314",
+    "targetHash": "954a03232dd7817a408ed1be2e8070c78757e9ce0c752119b98d72d94f68a9d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:18:29.196Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7b8699a0bf715bfbdf068523aadc654bc7c1f580b74d050c72a4614601c311cb",
+      "targetHash": "954a03232dd7817a408ed1be2e8070c78757e9ce0c752119b98d72d94f68a9d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  group: check-md-links-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   check-md-links:
     runs-on: ubuntu-latest
@@ -12,14 +16,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Verify Japanese source fallback resolver
-        run: python3 -m unittest scripts/__tests__/test_japanese_links.py
+          # The changed-file lists and link targets need trees and the working
+          # tree only; skip the historical blobs of this ~1.7GB repository.
+          filter: blob:none
 
       - name: Collect added/modified Markdown files
         id: changed
@@ -43,8 +42,25 @@ jobs:
                  'i18n/ja/**/*.md' 'i18n/ja/**/*.mdx'
             echo EOF
           } >> "$GITHUB_OUTPUT"
+          {
+            echo 'scripts<<EOF'
+            git diff --name-only "$BASE_SHA" HEAD \
+              -- 'scripts/check_md_links_single.py' 'scripts/__tests__/test_japanese_links.py'
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        if: steps.changed.outputs.files != '' || steps.changed.outputs.scripts != ''
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify Japanese source fallback resolver
+        if: steps.changed.outputs.scripts != ''
+        run: python3 -m unittest scripts/__tests__/test_japanese_links.py
 
       - name: Check links in changed Markdown files
+        if: steps.changed.outputs.files != ''
         run: |
           set -u
           FILES="${{ steps.changed.outputs.files }}"

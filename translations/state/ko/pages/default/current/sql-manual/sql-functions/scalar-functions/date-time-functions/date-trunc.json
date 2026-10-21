@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/date-trunc.md",
+    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
+    "sourceHash": "5a68816a2944880dd46935d052e67c0bf33530e48536b3a54d7d93b8ff371d88",
+    "sourceTechnicalHash": "234a2d88d913a3199f898b277ab7bb57344f63e3b55228b53e8704957fb923bc",
+    "targetHash": "2b0aa0cd20b25ae521b69871be35de9a224dd3ea547f8c5eb4a970549ac13a87",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T04:48:10.508Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a68816a2944880dd46935d052e67c0bf33530e48536b3a54d7d93b8ff371d88",
+      "targetHash": "2b0aa0cd20b25ae521b69871be35de9a224dd3ea547f8c5eb4a970549ac13a87",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

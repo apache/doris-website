@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/job/CREATE-JOB",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/job/CREATE-JOB.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/job/CREATE-JOB.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "dca80109fd31c0888b4353fada4dc7832a1fe20b331b5f5ce0df2f69a1c4b7e1",
+    "sourceTechnicalHash": "9dd674a835047f8bb3c4aebdc1e4aebfa6f27e8947d0c65b3fd43357a0aa0d3a",
+    "targetHash": "ac27e68934b65aac16776e42785b2bf4b5ab5bff85f7649f9c7e1944a1f455a9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:26:58.652Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dca80109fd31c0888b4353fada4dc7832a1fe20b331b5f5ce0df2f69a1c4b7e1",
+      "targetHash": "ac27e68934b65aac16776e42785b2bf4b5ab5bff85f7649f9c7e1944a1f455a9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-add.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "234b30bbbb134d276c7485921cc251598eb92cf16caaf020295120182e26194d",
+    "sourceTechnicalHash": "05a44a6ec2807a934fc104268df49f9d073f4fb5dc687b5ca540e365c0073f36",
+    "targetHash": "9ab0ad2645f825497fa02f9b695af5a405e0ba9d49abb73ea673c7f56d350a33",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:44:05.890Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "234b30bbbb134d276c7485921cc251598eb92cf16caaf020295120182e26194d",
+      "targetHash": "9ab0ad2645f825497fa02f9b695af5a405e0ba9d49abb73ea673c7f56d350a33",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

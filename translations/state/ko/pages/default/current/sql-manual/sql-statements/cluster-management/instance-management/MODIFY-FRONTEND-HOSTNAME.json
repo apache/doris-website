@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/MODIFY-FRONTEND-HOSTNAME.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "ccfad8fdb9fdd4d69047dde221d300e81bac8f990e521c904afb4bd169a6e42e",
+    "sourceTechnicalHash": "41a6b803514c867a9da38b79fbc90686cdda10228fe258513b5cc54a27f78a4b",
+    "targetHash": "332105762bfbedfe06eb6bf65c27458ff2a18d96aece1a13514cbeafa47489bd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T07:17:04.160Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ccfad8fdb9fdd4d69047dde221d300e81bac8f990e521c904afb4bd169a6e42e",
+      "targetHash": "332105762bfbedfe06eb6bf65c27458ff2a18d96aece1a13514cbeafa47489bd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/dayofweek.md",
+    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
+    "sourceHash": "5ad70581045fa7cbbc91fb6c08694bafbed66305c6b58ba91e9bb8418ee4c355",
+    "sourceTechnicalHash": "57808af146a8845673de4d48839bd505905b56b9646edf57e2d5aaa6c3740807",
+    "targetHash": "6ca91cc7164da0f73add5be6f5470945ab238fea31ddb8c394c0b7b65e2276da",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-19T13:41:09.906Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5ad70581045fa7cbbc91fb6c08694bafbed66305c6b58ba91e9bb8418ee4c355",
+      "targetHash": "6ca91cc7164da0f73add5be6f5470945ab238fea31ddb8c394c0b7b65e2276da",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
