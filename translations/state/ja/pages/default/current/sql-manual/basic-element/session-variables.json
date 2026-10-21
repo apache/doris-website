@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/session-variables.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/session-variables.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "4f37b27e1ed6475d83f6086c83b0c1b6ef019b9ecd9a87ec7db907bc9b57f730",
-    "sourceTechnicalHash": "f27c471980f76c78d37b93ac5523ffd81ec58988a08066782ab1be640b660d87",
-    "targetHash": "73f3d7b25f0c3fddaabddaf85cefb0b747e298c372ebe1d6e21024ca758f37ef",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "7bc46a923d749706d5297428e201a040fe8ba116754a6d8b5fd3035722dccfa9",
+    "sourceTechnicalHash": "d193248482caaff66b7b418f47353fe6733e059693c0053cd39a5fc5d58bcb84",
+    "targetHash": "49ac7da77d21f53ae48b0fa56acf07ad5d4664f1cfedaaae0ecb907eb7ffabbd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:46:26.255Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:47:52.354Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "7bc46a923d749706d5297428e201a040fe8ba116754a6d8b5fd3035722dccfa9",
+      "targetHash": "49ac7da77d21f53ae48b0fa56acf07ad5d4664f1cfedaaae0ecb907eb7ffabbd",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 40: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"1\"]\nprotected node 41: expected [\"inlineCode\",null,null,\"enable_file_cache\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"use_consistent_hash_for_external_scan\"]; received [\"inlineCode\",null,null,\"enable_file_cache\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"256\",\"3\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"256\",\"3\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"256\",\"3\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"256\",\"3\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 40: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"1\"]\nprotected node 41: expected [\"inlineCode\",null,null,\"enable_file_cache\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"use_consistent_hash_for_external_scan\"]; received [\"inlineCode\",null,null,\"enable_file_cache\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

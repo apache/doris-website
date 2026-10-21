@@ -1,34 +1,34 @@
 ---
 {
-    "title": "MAP | 半構造化型",
+    "title": "MAP | 半構造化",
     "language": "ja",
     "description": "```SQL SELECT MAP('Alice', 21, 'Bob', 23);",
     "sidebar_label": "MAP"
 }
 ---
 
-# MAP
+# MAP {#map}
 
-## 型の説明
+## 型の説明 {#type-description}
 
-- `MAP<key_type, value_type>` 型はキーと値のペアからなる複合型を表し、各キーには一つの値が対応します。
-  - `key_type` はキーの型を表します。`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMP_NS, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, UUID` などの型をサポートします。キーには NULL を格納できますが、NOT NULL は指定できません。
-  - `value_type` は値の型を表します。`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMP_NS, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, UUID, ARRAY, MAP, STRUCT` をサポートします。値には NULL を格納できますが、NOT NULL は指定できません。
+- `MAP<key_type, value_type>` 型は、各キーが値に対応するキーと値のペアからなる複合型を表します。
+  - `key_type` はキーの型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMP_NS, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, UUID` などの型をサポートします。キーには NULL を指定できますが、NOT NULL は指定できません。
+  - `value_type` は値の型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMP_NS, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, UUID, ARRAY, MAP, STRUCT` をサポートします。値には NULL を指定できますが、NOT NULL は指定できません。
 
-## 型の制約
+## 型の制約 {#type-constraints}
 
 - `MAP<key_type, value_type>` 型のネストの深さは最大 9 です。
-- `MAP<key_type, value_type>` では、キーに NULL を使用でき、同じキーを重複して使用できます（NULL と NULL は同じキーとみなされます）。
-- `MAP<key_type, value_type>` 型間の変換は、`key_type` と `value_type` を変換できるかどうかによって決まります。`MAP<key_type, value_type>` をほかの型に変換することはできません。
-  - 例：`MAP<INT, INT>` は `MAP<BIGINT, BIGINT>` に変換できます。これは `INT` と `BIGINT` を変換できるためです。
+- `MAP<key_type, value_type>` では、キーに NULL を指定でき、同じキーを複数含めることもできます（NULL と NULL は同じキーとみなされます）。
+- `MAP<key_type, value_type>` 型同士を変換できるかどうかは、`key_type` と `value_type` を変換できるかどうかによって決まります。`MAP<key_type, value_type>` をほかの型に変換することはできません。
+  - たとえば、`MAP<INT, INT>` は `MAP<BIGINT, BIGINT>` に変換できます。これは `INT` と `BIGINT` を変換できるためです。
   - 文字列型は、解析によって `MAP<key_type, value_type>` に変換できます。解析に失敗した場合は NULL を返します。
-- `AGGREGATE` テーブルモデルでは、`MAP<key_type, value_type>` は `REPLACE` と `REPLACE_IF_NOT_NULL` のみをサポートします。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列には使用できません**。
-- `MAP<key_type, value_type>` 型の列は比較演算や算術演算をサポートしません。**`ORDER BY` と `GROUP BY` に使用できず、`JOIN KEY` にも、`DELETE` 文にも使用できません**。
-- `MAP<key_type, value_type>` 型の列にはインデックスを作成できません。
+- `AGGREGATE` テーブルモデルでは、`MAP<key_type, value_type>` がサポートするのは `REPLACE` と `REPLACE_IF_NOT_NULL` のみです。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列として使用することはできません**。
+- `MAP<key_type, value_type>` 型の列では、`IN` と `NOT IN` を含む比較演算や算術演算をサポートしません。**`ORDER BY` と `GROUP BY` の操作もサポートせず、`JOIN KEY` としても、`DELETE` 文でも使用できません**。
+- `MAP<key_type, value_type>` 型の列には、いかなるインデックスも作成できません。
 
-## 型の構築
+## 型の構築 {#type-construction}
 
-- `MAP()` 関数は `MAP` 型の値を返します。
+- `MAP()` 関数は、`MAP` 型の値を返すことができます。
 
   ```SQL
   SELECT MAP('Alice', 21, 'Bob', 23);
@@ -40,7 +40,7 @@
   +-----------------------------+
   ```
 
-- `{}` を使用して `MAP` 型の値を構築できます。
+- `{}` を使用して、`MAP` 型の値を構築できます。
 
   ```SQL
   SELECT {'Alice': 20};
@@ -52,10 +52,10 @@
   +---------------+
   ```
 
-## 型の変更
+## 型の変更 {#modifying-type}
 
-- `key_type` または `value_type` が `MAP<key_type, value_type>` の構成要素として `VARCHAR` 型である場合にのみ、その型を変更できます。
-  - `VARCHAR` のパラメータは小さい値から大きい値への変更のみ可能で、逆方向には変更できません。
+- `MAP<key_type, value_type>` の `key_type` または `value_type` が `VARCHAR` の場合にのみ、変更できます。
+  - `VARCHAR` のパラメータは小さい値から大きい値への変更のみ許可され、逆方向には変更できません。
 
     ```SQL
     CREATE TABLE `map_table` (
@@ -77,9 +77,9 @@
     ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
     ```
 
-- `MAP<key_type, value_type>` 型の列に指定できるデフォルト値は NULL のみで、指定後は変更できません。
+- `MAP<key_type, value_type>` 型の列のデフォルト値には NULL しか指定できず、一度指定すると変更できません。
 
-## 要素へのアクセス
+## 要素へのアクセス {#element-access}
 
 - `[key]` を使用すると、`MAP` 内のキーに対応する値にアクセスできます。
 
@@ -105,7 +105,7 @@
   +------------------------------------+
   ```
 
-## 例
+## 例 {#examples}
 
 - ネストした MAP
 

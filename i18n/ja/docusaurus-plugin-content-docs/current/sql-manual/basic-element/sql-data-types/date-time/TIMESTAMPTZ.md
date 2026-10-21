@@ -2,46 +2,50 @@
 {
     "title": "TIMESTAMPTZ",
     "language": "ja",
-    "description": "TIMESTAMPTZ は、タイムゾーンを考慮して日時情報を保存するための Doris のデータ型です。"
+    "description": "TIMESTAMPTZ は、Doris でタイムゾーンを考慮した日付と時刻の情報を格納するためのデータ型です。",
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-TIMESTAMPTZ は、タイムゾーンを考慮して日時情報を保存するための Doris のデータ型で、標準 SQL の TIMESTAMP WITH TIME ZONE に相当します。
+TIMESTAMPTZ は、Doris でタイムゾーンを考慮した日付と時刻の情報を格納するためのデータ型で、標準 SQL の TIMESTAMP WITH TIME ZONE に相当します。
 
-データベースシステムによって、タイムゾーン対応のタイムスタンプ型にはさまざまな名前が使われています。
+データベースシステムによって、タイムゾーン付きタイムスタンプ型の名前は異なります。
 - PostgreSQL と Oracle では TIMESTAMP WITH TIME ZONE を使用します。
 - SQL Server では DATETIMEOFFSET を使用します。
 - その他の一部のデータベースでは TIMESTAMP WITH LOCAL TIME ZONE を使用します。
 
-SQL 標準では、単独の TIMESTAMP 型はタイムゾーン情報を持たないものとされています（TIMESTAMP WITHOUT TIME ZONE と同等です）。Doris では、ユーザーの慣習と使いやすさを考慮し、タイムゾーン付きのタイムスタンプ型を表す名前として、より簡潔な TIMESTAMPTZ を採用しました。Doris には単独の `TIMESTAMP` 型はありません。タイムゾーンを持たず、広い範囲の日時値には `DATETIME` を、タイムゾーンを持たず、ナノ秒の固定精度を持つ日時値には [`TIMESTAMP_NS`](./TIMESTAMP-NS.md) を使用してください。
+SQL 標準では、単独の TIMESTAMP 型はタイムゾーン情報を持たないものとされています（TIMESTAMP WITHOUT TIME ZONE に相当します）。Doris では、ユーザーの慣習と使いやすさを考慮し、タイムゾーン付きタイムスタンプ型を表す名前として、より簡潔な TIMESTAMPTZ を採用しました。Doris には単独の `TIMESTAMP` 型はありません。タイムゾーン情報を持たず、広い範囲の値を扱う場合は `DATETIME` を、タイムゾーン情報を持たず、固定のナノ秒精度を持つ値を扱う場合は [`TIMESTAMP_NS`](./TIMESTAMP-NS.md) を使用してください。
 
-TIMESTAMPTZ の値の範囲は DATETIME と同じで、`[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]` です。
-TIMESTAMPTZ は TIMESTAMPTZ(p) の形式で精度を指定できます。`p` は精度を表し、指定できる範囲は `[0, 6]`、デフォルト値は 0 です。つまり、TIMESTAMPTZ は TIMESTAMPTZ(0) と同等です。デフォルトの出力形式は `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'` で、`+XX:XX` はタイムゾーンのオフセットを表します（`SSSSSS` の桁数は精度 `p` によって決まります）。
+TIMESTAMPTZ の範囲は DATETIME と同じで、`[0000-01-01 00:00:00.000000, 9999-12-31 23:59:59.999999]` です。
+TIMESTAMPTZ では、TIMESTAMPTZ(p) という形式で精度を指定できます。`p` は精度を表し、範囲は `[0, 6]`、デフォルト値は 0 です。つまり、TIMESTAMPTZ は TIMESTAMPTZ(0) と同じです。デフォルトの出力形式は `'yyyy-MM-dd HH:mm:ss.SSSSSS +XX:XX'` で、`+XX:XX` はタイムゾーンオフセットを表します（`SSSSSS` の桁数は精度 `p` によって決まります）。
 
-TIMESTAMPTZ 型は、主キー、パーティション列、バケット列として使用できます。
+TIMESTAMPTZ 型は、主キー、パーティション列、バケット分割列として使用できます。
 
-### 動作原理
+### 動作原理 {#working-principle}
 
-TIMESTAMPTZ の実装では、各行のデータにタイムゾーン情報を保存せず、次の仕組みを使用します。
-1. 保存時：入力されたすべての日時値を UTC（協定世界時）に変換します。
-2. クエリ時：セッションのタイムゾーン設定（`time_zone` 変数で指定）に基づき、UTC の日時を対応するタイムゾーンに自動変換して表示します。
+TIMESTAMPTZ の実装では、各行のデータにタイムゾーン情報を保存せず、次の仕組みを採用しています。
+1. 保存時：入力された時刻の値をすべて UTC（協定世界時）に変換します。
+2. クエリ時：セッションのタイムゾーン設定（`time_zone` 変数で指定）に基づき、UTC の時刻を対応するタイムゾーンに自動変換して表示します。
 
 したがって、TIMESTAMPTZ はタイムゾーン変換機能を備えた DATETIME 型と考えることができます。タイムゾーン変換は Doris が内部で自動的に処理します。
 
-### タイムゾーンの取り扱いルール
+### タイムゾーンの取り扱い規則 {#time-zone-handling-rules}
 
-- 入力文字列にタイムゾーン情報が含まれる場合（例：`"2020-01-01 00:00:00 +03:00"`）、Doris はそのタイムゾーン情報を使用して変換します。
-- 入力文字列にタイムゾーン情報が含まれない場合（例：`"2020-01-01 00:00:00"`）、Doris は現在のセッションのタイムゾーン設定を使用して変換します。
+- 入力文字列にタイムゾーン情報が含まれる場合（例：`"2020-01-01 00:00:00 +03:00"`）、Doris はそのタイムゾーン情報を変換に使用します。
+- 入力文字列にタイムゾーン情報が含まれない場合（例：`"2020-01-01 00:00:00"`）、Doris は現在のセッションのタイムゾーン設定を変換に使用します。
 
-### 保存と利用
+4.1.5 以降、出力では、過去の IANA タイムゾーンオフセットが秒単位の精度で `+HH:MM:SS` として保持されます。入力タイムスタンプに含まれる数値オフセットには、セッションの固定オフセットとは異なる制約があります。入力値の時は `24` 未満、分と秒は `60` 未満である必要があります。セッションの固定オフセットは引き続き `-12:00` から `+14:00` に制限されます。セッションのタイムゾーンに変換した結果、現地時刻の年が `0` から `9999` の範囲外になる場合、変換は失敗します。
 
-Doris では、TIMESTAMPTZ 型のフィールドは 8 バイトの保存領域を使用します。
+4.1.5 以降、Catalogs は外部のタイムゾーン付きタイムスタンプ型を常に `TIMESTAMPTZ` にマッピングします。互換性プロパティ `enable.mapping.timestamp_tz=false` を設定しても、以前の `DATETIME` へのマッピングには戻せません。Arrow Flight SQL は、タイムゾーン注釈付きの Arrow Timestamp 値として時点を伝送します。クエリスキーマにはセッションのタイムゾーンが使用されます（`Z` は `UTC` に正規化されます）。`DATETIME` にはタイムゾーン注釈のない Timestamp が使用されます。
 
-TIMESTAMPTZ は DATETIME および TIMESTAMP_NS との相互変換に対応し、変換時には適切なタイムゾーン調整が行われます。また、TIMESTAMPTZ から DATETIME への暗黙的な変換に対応しているため、TIMESTAMPTZ を直接サポートしない関数でもこの型のデータを処理できます。TIMESTAMP_NS から TIMESTAMPTZ に変換する際は、ナノ秒単位の値が変換先の TIMESTAMPTZ の精度に丸められます。
+### 保存と使用 {#storage-and-usage}
 
-## 例
+Doris では、TIMESTAMPTZ 型のフィールドは 8 バイトのストレージ領域を使用します。
+
+TIMESTAMPTZ は DATETIME および TIMESTAMP_NS との相互変換をサポートし、変換時には適切なタイムゾーン調整が行われます。TIMESTAMPTZ から DATETIME への暗黙的な変換もサポートされているため、TIMESTAMPTZ を直接サポートしない関数でも、この型のデータを処理できます。TIMESTAMP_NS を TIMESTAMPTZ に変換する際は、ナノ秒単位の値が変換先の TIMESTAMPTZ の精度に丸められます。
+
+## 例 {#examples}
 
 ```sql
 -- Using the current time zone (assuming +08:00) to convert a time string without time zone information
