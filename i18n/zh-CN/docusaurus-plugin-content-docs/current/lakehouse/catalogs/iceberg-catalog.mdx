@@ -332,6 +332,8 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。ST_AsText 输出维度标记及全部坐标，ST_X/ST_Y 返回点的 X/Y。typed 测量和关系计算仅支持 XY，要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains` 支持 Point/Point、LineString/Point 和 Polygon/Point，`ST_Within` 支持反向组合。`ST_Touches` 要求至少一个参数为 Point；其他包含或接触组合明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
 
+`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 和窗口 `COUNT(DISTINCT ...)` 不支持标量空间参数；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。普通 `COUNT`、`GROUP BY` 和 `SELECT DISTINCT` 仍可使用。
+
 `INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。CREATE 和 ALTER 拒绝 V2、ORC 或嵌套空间写入。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
 
 所有参与 FE 和 BE 均需支持空间类型。本功能不提供 4.x 升级到 5.0 期间的混合版本执行兼容。
