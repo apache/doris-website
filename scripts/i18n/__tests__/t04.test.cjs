@@ -45,7 +45,10 @@ test('PR build scope separates content locales, shared inputs, and retired versi
 
 test('publication changes exercise the complete optimized artifact on CI', () => {
     for (const file of ['scripts/publish/optimize.cjs','scripts/build-locales.cjs',
-        'config/ssrTemplate.js','static/js/brand-theme-bootstrap.js']) {
+        'config/ssrTemplate.js','static/js/brand-theme-bootstrap.js',
+        'src/theme/NavbarItem/LocaleDropdownNavbarItem/index.tsx',
+        'src/theme/NavbarItem/DocsVersionDropdownNavbarItem.tsx',
+        'scripts/i18n/verify-doc-navigation.cjs','scripts/i18n/verify-search.cjs']) {
         const scope = buildScope([file],versions,['ja']);
         assert.equal(scope.optimize_publish,true,file);
         assert.equal(scope.docs_versions,'',file);

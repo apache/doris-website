@@ -66,7 +66,9 @@ function buildScope(files, versions, managed = []) {
     const searchChanged = files.some(file => /^scripts\/i18n\/search-plugin\.cjs$/.test(file)
         || /^src\/theme\/(SearchBar|SearchPage)\/.+\.[jt]sx?$/.test(file)
         || /^src\/utils\/(searchVersion|searchContexts|searchInput|searchNormalization|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
-    const optimizePublish = searchChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    const navigationChanged = files.some(file => /^src\/theme\/NavbarItem\/(LocaleDropdownNavbarItem\/index|DocsVersionDropdownNavbarItem)\.tsx$/.test(file)
+        || /^scripts\/i18n\/verify-(doc-navigation|search)\.cjs$/.test(file));
+    const optimizePublish = searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     // Publication changes need the same complete artifact as deployment, on
     // the CI runner. Keep local checks scoped to fixtures and Dev versions.
     if (optimizePublish) {tier = 'full'; shared();}
