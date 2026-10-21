@@ -80,7 +80,7 @@ WHERE SEARCH('apple banana',
 
 ### NULL and Two-Valued Matching {#null-and-three-valued-logic}
 
-The following behavior applies to builds containing [the SEARCH two-valued matching change](https://github.com/apache/doris/pull/69347). Earlier releases may differ in their handling of NULL and NOT.
+**Version:** The two-valued matching rules, NULL/NOT examples, and VARIANT index-error behavior below apply starting with Doris 4.2.
 
 `SEARCH` returns a non-nullable BOOLEAN: TRUE for a match and FALSE for a nonmatch. An ordinary term does not match a NULL value or a VARIANT path proven absent from storage. SEARCH does not propagate UNKNOWN.
 

@@ -80,7 +80,7 @@ WHERE SEARCH('apple banana',
 
 ### NULL 与二值匹配 {#null-与三值逻辑}
 
-以下行为适用于包含 [SEARCH 二值匹配改动](https://github.com/apache/doris/pull/69347)的版本。较早版本对 NULL 和 NOT 的处理可能不同。
+**版本说明：** 以下二值匹配规则、NULL/NOT 示例和 VARIANT 索引报错行为自 Doris 4.2 起适用。
 
 `SEARCH` 返回不可空的 BOOLEAN：匹配为 TRUE，不匹配为 FALSE。普通词项不匹配 NULL 值或经存储元数据确认缺失的 VARIANT 路径。SEARCH 不传播 UNKNOWN。
 
