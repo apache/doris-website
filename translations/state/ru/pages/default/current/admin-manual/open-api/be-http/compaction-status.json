@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/compaction-status",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/compaction-status.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/compaction-status.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ba1fde74912be259cefdf224f3c061902da6a4eb5b114afafc1a4ab1cce10855",
+    "sourceTechnicalHash": "f86070c34f9ddea319e32fd3f17ce06f1188e779f2928c4e1b8d5f63ef166531",
+    "targetHash": "11b318617d915cc602f5a0132bba0359da9dd7269792cdee538bf5fdbe3e4e19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:12:03.395Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ba1fde74912be259cefdf224f3c061902da6a4eb5b114afafc1a4ab1cce10855",
+      "targetHash": "11b318617d915cc602f5a0132bba0359da9dd7269792cdee538bf5fdbe3e4e19",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

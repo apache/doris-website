@@ -1,0 +1,61 @@
+---
+{
+    "title": "Управление кластером",
+    "language": "ru",
+    "description": "Руководства по управлению кластером Apache Doris: обновление, эластичное масштабирование, FQDN, балансировка нагрузки, автоматический запуск сервисов и управление репликами."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Управление кластером {#cluster-management}
+
+В этой главе описаны регулярные операции, необходимые для поддержания работоспособности кластера Apache Doris в промышленной среде, включая обновление версий, изменение ёмкости кластера, настройку сетевой топологии и обслуживание реплик.
+
+## Жизненный цикл кластера {#cluster-lifecycle}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Обновление кластера"
+    description="Руководство по поочерёдному обновлению узлов: правила совместимости версий, проверка совместимости метаданных и шаги обновления FE/BE"
+    link="upgrade"
+/>
+
+<GettingStartedCard
+    title="Эластичное масштабирование"
+    description="Добавление и удаление узлов FE/BE без прерывания работы приложений, с использованием DROP или DECOMMISSION для уменьшения кластера"
+    link="elastic-expansion"
+/>
+</div>
+
+## Топология и доступ {#topology-and-access}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="FQDN"
+    description="Включение режима FQDN (Fully Qualified Domain Name) для новых кластеров, миграции существующих кластеров и развёртывания в Kubernetes"
+    link="fqdn"
+/>
+
+<GettingStartedCard
+    title="Балансировка нагрузки FE"
+    description="Варианты балансировки нагрузки для конфигураций с несколькими FE: JDBC, Nginx, HAProxy, ProxySQL, а также передача IP-адреса клиента через Proxy Protocol"
+    link="load-balancing"
+/>
+</div>
+
+## Доступность сервисов и реплики {#service-availability-and-replicas}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Автоматический запуск сервисов"
+    description="Настройка запуска FE/BE/Broker при загрузке системы и автоматического перезапуска с помощью Systemd или Supervisor"
+    link="../maint-monitor/automatic-service-start"
+/>
+
+<GettingStartedCard
+    title="Управление репликами данных"
+    description="Стратегии планирования балансировки и восстановления реплик tablet, а также команды для проверки реплик и управления ими"
+    link="../maint-monitor/tablet-repair-and-balance"
+/>
+</div>

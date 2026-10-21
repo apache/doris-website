@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/config/user-property",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/config/user-property.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/config/user-property.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "caf59cf1e334c6b0a965a6f16f7a2eca4f4570441f14c32aec888f227b3bc0b4",
+    "sourceTechnicalHash": "46cda50f95b6f91c2231f2d5692ac0850d4b885b46be78410d614a66a987a053",
+    "targetHash": "5daa3d2f8409e3273d44c2852662a38646a3472769b573a580f620274cc3cd6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:10:02.632Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "caf59cf1e334c6b0a965a6f16f7a2eca4f4570441f14c32aec888f227b3bc0b4",
+      "targetHash": "5daa3d2f8409e3273d44c2852662a38646a3472769b573a580f620274cc3cd6b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"code\",null,null,\"The maximum number of user connections, the default value is 100 In general, this parameter does not need to be changed unless the number of concurrent queries exceeds the default value.\"]; received [\"code\",null,null,\"Максимальное количество подключений пользователя. Значение по умолчанию: 100. Обычно этот параметр не требуется изменять, если количество одновременных запросов не превышает значение по умолчанию.\"]\nprotected node 8: expected [\"code\",null,null,\"The maximum number of instances that the user can use at a certain point in time, The default value is -1, negative number means use default_max_query_instances config.\"]; received [\"code\",null,null,\"Максимальное количество экземпляров, которые пользователь может использовать в определённый момент времени. Значение по умолчанию: -1. Отрицательное значение означает использование параметра конфигурации default_max_query_instances.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

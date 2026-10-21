@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/check-rpc-channel",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/check-rpc-channel.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+    "sourceTechnicalHash": "e180c7bc36ce7888c1bd11b767ce1f57f26fae20a0f059f0975b2c2bd415fa96",
+    "targetHash": "5260060ba706d05cdbe321ae456df0c9e9bd6340d6d73d76544063f0a19369c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:10:59.109Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b2caea994bc3034a3fb456708417f29e3e4432fb748f303445a8d70762d6030c",
+      "targetHash": "5260060ba706d05cdbe321ae456df0c9e9bd6340d6d73d76544063f0a19369c6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

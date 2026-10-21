@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/get-log-file-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+    "sourceTechnicalHash": "27a0c54487d51b13184371a6c3cc6c29b93732d52ba2b7cf3d81c8b54415b6bf",
+    "targetHash": "17f32e1b150d016c967abf93f7f9b414f6f1fcb47b2f9ed87ac67f5c520b1878",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:15:42.138Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+      "targetHash": "17f32e1b150d016c967abf93f7f9b414f6f1fcb47b2f9ed87ac67f5c520b1878",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
