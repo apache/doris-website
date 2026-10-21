@@ -160,7 +160,7 @@ An ordinary VARIANT term such as `v.a:hit` follows the same rule:
 | `{}` (path `a` is missing) | FALSE | TRUE |
 | SQL NULL (the entire VARIANT column is NULL) | FALSE | TRUE |
 
-For stored objects outside arrays, JSON `null` members are removed, so reading that path returns SQL NULL, just like a missing member. This differs from a JSON `null` computed within an expression; see [VARIANT NULL semantics](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics).
+For stored objects outside arrays, JSON `null` members are removed, so reading that path returns SQL NULL, just like a missing member. This differs from a JSON `null` computed within an expression; see [the VARIANT guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md).
 
 Use `parse_to_variant` to insert JSON objects. The following table disables doc mode so the example uses materialized subpaths with executable indexes.
 

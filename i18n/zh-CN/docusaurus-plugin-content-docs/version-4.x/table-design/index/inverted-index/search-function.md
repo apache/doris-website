@@ -160,7 +160,7 @@ id
 | `{}`（缺少路径 `a`） | FALSE | TRUE |
 | SQL NULL（整个 VARIANT 列为空） | FALSE | TRUE |
 
-对于写入表中的数组外对象，值为 JSON `null` 的成员会被移除，读取该路径返回 SQL NULL，与成员缺失相同。这与查询表达式中计算出的 JSON `null` 值不同，参见 [VARIANT 的 NULL 语义](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics)。
+对于写入表中的数组外对象，值为 JSON `null` 的成员会被移除，读取该路径返回 SQL NULL，与成员缺失相同。这与查询表达式中计算出的 JSON `null` 值不同，参见 [VARIANT 文档](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md)。
 
 使用 `parse_to_variant` 写入 JSON 对象。以下建表关闭 doc 模式，使示例使用已物化且具有可执行索引的子路径。
 
