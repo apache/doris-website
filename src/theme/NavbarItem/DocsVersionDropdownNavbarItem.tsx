@@ -8,6 +8,7 @@ import {
 import { translate } from '@docusaurus/Translate';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import DefaultNavbarItem from '@theme/NavbarItem/DefaultNavbarItem';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { Props } from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
@@ -33,6 +34,7 @@ export default function DocsVersionDropdownNavbarItem({
     ...props
 }: Props): JSX.Element {
     const { search, hash } = useLocation();
+    const suffix = useIsBrowser() ? search + hash : '';
     const {
         i18n: { currentLocale },
     } = useDocusaurusContext();
@@ -46,7 +48,7 @@ export default function DocsVersionDropdownNavbarItem({
         return {
             label: version.label,
             // preserve ?search#hash suffix on version switches
-            to: `${versionDoc.path}${search}${hash}`,
+            to: `${versionDoc.path}${suffix}`,
             isActive: () => version === activeDocContext.activeVersion,
             onClick: () => savePreferredVersionName(version.name),
         };
@@ -57,7 +59,7 @@ export default function DocsVersionDropdownNavbarItem({
         return {
             label: version.label,
             // preserve ?search#hash suffix on version switches
-            to: `${targetDoc.path}${search}${hash}`,
+            to: `${targetDoc.path}${suffix}`,
             isActive: () => version === activeDocContext.activeVersion,
             onClick: () => savePreferredVersionName(version.name),
         };
@@ -76,7 +78,7 @@ export default function DocsVersionDropdownNavbarItem({
               })
             : dropdownVersion.label;
     const dropdownTo =
-        mobile && items.length > 1 ? undefined : getVersionTargetDoc(dropdownVersion, activeDocContext).path;
+        mobile && items.length > 1 ? undefined : `${getVersionTargetDoc(dropdownVersion, activeDocContext).path}${suffix}`;
 
     // We don't want to render a version dropdown with 0 or 1 item. If we build
     // the site with a single docs version (onlyIncludeVersions: ['1.0.0']),

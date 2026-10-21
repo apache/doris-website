@@ -38,7 +38,16 @@ test('navigation samples a native sidebar member when a current standalone doc s
         write(`site${doc.permalink}index.html`, `<article class="theme-doc-markdown" lang="ru">Документ</article>${navigation}`);
     }
     write('site/ru/docs/index.html', createRedirect({toUrl:pages[2].permalink}));
+    write('site/ru/community/index.html', createRedirect({toUrl:pages[3].permalink}));
+    write('site/.publish/redirects.json', JSON.stringify({redirects:[]}));
     const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json')});
     assert.equal(result.routes,4);
     assert.equal(result.checks.find(check=>check.group === 'DEV').sample,pages[1].permalink);
+    const options={site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),devOnly:true};
+    fs.unlinkSync(path.join(root,'site/ru/community/index.html'));
+    assert.throws(()=>verify(options), /Missing compacted entry: \/ru\/community\//);
+    write('site/.publish/redirects.json', JSON.stringify({redirects:[['/ru/community/',pages[3].permalink,true,301]]}));
+    assert(verify(options).checks.some(check=>check.entry === '/ru/community/' && check.target === pages[3].permalink));
+    write('site/.publish/redirects.json', JSON.stringify({redirects:[['/ru/community/',pages[1].permalink,true,301]]}));
+    assert.throws(()=>verify(options), /not a registered community\/current document/);
 });
