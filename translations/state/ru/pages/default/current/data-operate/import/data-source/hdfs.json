@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/hdfs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/hdfs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/hdfs.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cfd9711925f5f963a8cbe255a9c8c2d7e8190b46b36332aeed89f14b044ac021",
+    "sourceTechnicalHash": "9b104a1b5ec184e8e9c849e7a27e14c6c19c25ecb825be2147a56ccaf9235863",
+    "targetHash": "c1910ff7b50b83cb99f813d72446fd00db29a3d844a4c8be79fa8d5d3bff9ebd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:12:10.182Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cfd9711925f5f963a8cbe255a9c8c2d7e8190b46b36332aeed89f14b044ac021",
+      "targetHash": "c1910ff7b50b83cb99f813d72446fd00db29a3d844a4c8be79fa8d5d3bff9ebd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

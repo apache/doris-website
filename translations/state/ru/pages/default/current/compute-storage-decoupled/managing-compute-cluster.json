@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/managing-compute-cluster",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/managing-compute-cluster.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/managing-compute-cluster.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "910dadae3c18aa62978bd05054ff1f7c7ebf2e5b3adf5695106f7fb34dcb9f2c",
+    "sourceTechnicalHash": "5afce9de4d51c40e162a1abd0c0518e4bf8ace34bce6da030add31aebda580da",
+    "targetHash": "835b3763a3ae39b44519351b82bda40ea561d7b9f43c0f9874afee582cf37139",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:01:25.878Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "910dadae3c18aa62978bd05054ff1f7c7ebf2e5b3adf5695106f7fb34dcb9f2c",
+      "targetHash": "835b3763a3ae39b44519351b82bda40ea561d7b9f43c0f9874afee582cf37139",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

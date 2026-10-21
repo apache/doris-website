@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/delete/truncate-manual",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/delete/truncate-manual.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/delete/truncate-manual.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "0020dfdaf4a83a51ee65621905229ed64d32f1df7eeb3ffc7a0688156727325d",
+    "sourceTechnicalHash": "58ed03664e265ab2c9010717f74af2d83fcaac55b0132eff694c0aeb20ca5d2e",
+    "targetHash": "84632ac84474480929083f7c28fa9d13216276ef1753226e38637df9e6644527",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:08:33.443Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0020dfdaf4a83a51ee65621905229ed64d32f1df7eeb3ffc7a0688156727325d",
+      "targetHash": "84632ac84474480929083f7c28fa9d13216276ef1753226e38637df9e6644527",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
