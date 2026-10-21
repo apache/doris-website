@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-model",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-model.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/data-model.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2ff3b4cf58a821fded3a6272d359bd3d27af7ec29979c20289875fb15d4cad4c",
+    "sourceTechnicalHash": "6174b5563b7a63d289478c210d01ab1bda47f1edd4ac219439244c5168a00955",
+    "targetHash": "c37135f05d998c9e676beaa25b190c2cca9411c13fe37ddab1820801143ecdd6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:47:57.711Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2ff3b4cf58a821fded3a6272d359bd3d27af7ec29979c20289875fb15d4cad4c",
+      "targetHash": "c37135f05d998c9e676beaa25b190c2cca9411c13fe37ddab1820801143ecdd6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 47: expected [\"link\",\"./data-update-delete\",null]; received [\"inlineCode\",null,null,\"UPDATE\"]\nprotected node 48: expected [\"inlineCode\",null,null,\"UPDATE\"]; received [\"link\",\"./data-update-delete\",null]\nprotected node 50: expected [\"link\",\"./preaggregation-and-rollup\",null]; received [\"inlineCode\",null,null,\"ROLLUP\"]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

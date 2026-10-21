@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-lakekeeper",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-lakekeeper.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-lakekeeper.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1ef0478fe87619aa9e32194b1c9f9b6e922f4eb398edbacc1cdf61ac5d9c3a6d",
+    "sourceTechnicalHash": "8122f46fbdd8baab23588a0a6679b462d9640170e6a393606043980ba2c7915f",
+    "targetHash": "ddedac3e65addbe788807d6b0196ccd3aca074c8a6a3d0da694495f20bc6eaa2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:53:06.494Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1ef0478fe87619aa9e32194b1c9f9b6e922f4eb398edbacc1cdf61ac5d9c3a6d",
+      "targetHash": "ddedac3e65addbe788807d6b0196ccd3aca074c8a6a3d0da694495f20bc6eaa2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

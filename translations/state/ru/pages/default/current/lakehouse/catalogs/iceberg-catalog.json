@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/iceberg-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/iceberg-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/iceberg-catalog.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
+    "sourceTechnicalHash": "e9f8c84f129dd0fdca3d1ed9970af0fb66804333320cfd395d29e62ea0cb1a80",
+    "targetHash": "4d0a2d456071b30ee5e2d4761cccf44ef8eeee6bec0e8d96be6996a117d57556",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:31:55.387Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
+      "targetHash": "4d0a2d456071b30ee5e2d4761cccf44ef8eeee6bec0e8d96be6996a117d57556",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 414: expected [\"inlineCode\",null,null,\"_row_id\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 415: expected [\"inlineCode\",null,null,\"_last_updated_sequence_number\"]; received [\"inlineCode\",null,null,\"_row_id\"]\nprotected node 416: expected [\"inlineCode\",null,null,\"INSERT\"]; received [\"inlineCode\",null,null,\"_last_updated_sequence_number\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

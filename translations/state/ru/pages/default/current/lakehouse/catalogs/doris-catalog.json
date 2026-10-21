@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/doris-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/doris-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/doris-catalog.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fa8649cc26d1a79f193a79d02d1d107efd14c0dd2564f764833637cf8a3bc577",
+    "sourceTechnicalHash": "382f9202dd03c52c6250c1975d16e3a075a20315e0e6b2e1aa4d562d2878ee45",
+    "targetHash": "957b9e9dd86ad0b5fec43988ef14562759a090368bc9547db04ef391784aac36",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:55:47.017Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa8649cc26d1a79f193a79d02d1d107efd14c0dd2564f764833637cf8a3bc577",
+      "targetHash": "957b9e9dd86ad0b5fec43988ef14562759a090368bc9547db04ef391784aac36",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

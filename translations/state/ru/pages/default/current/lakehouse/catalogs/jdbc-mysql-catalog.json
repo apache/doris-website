@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-mysql-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-mysql-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-mysql-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+    "sourceTechnicalHash": "09a12719acea0d26a5ab73dfc597cb283c89b8fedbc13e499c69897e8ef2ee21",
+    "targetHash": "eca7d590aa2cc1e7a46401d37b976a359269d2f844e0adeaa74a2d0cc45f4856",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:02:41.337Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a8c7929d4965b2b80b7969b875fc26b08aa0f9ba8f06369da98c19b7b366b398",
+      "targetHash": "eca7d590aa2cc1e7a46401d37b976a359269d2f844e0adeaa74a2d0cc45f4856",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

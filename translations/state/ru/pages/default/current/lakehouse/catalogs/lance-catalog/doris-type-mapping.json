@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/lance-catalog/doris-type-mapping",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/lance-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/lance-catalog/doris-type-mapping.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "353814c70055c53fa9d1f469c0d4ddc66314f2ef1e7882cf13eac4df5ebfbb48",
+    "sourceTechnicalHash": "e3dc5a220b36eed7e8ebab8e0a08ecc3338c2b0ecb6c6027519af00113384f15",
+    "targetHash": "8541a70805dbdf27069743135e780a5b0213065afc1aa9027aee10aa976f6bc7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:59:02.977Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "353814c70055c53fa9d1f469c0d4ddc66314f2ef1e7882cf13eac4df5ebfbb48",
+      "targetHash": "8541a70805dbdf27069743135e780a5b0213065afc1aa9027aee10aa976f6bc7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 82: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ(6)\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTAMPTZ(6)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/parquet-reader-optimization",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/parquet-reader-optimization.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/parquet-reader-optimization.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+    "sourceTechnicalHash": "0025fc46eedf7f942534854251f275a61105923a43752b1356c75bf57a52dace",
+    "targetHash": "d132e235cb58c1030b9cc273370bbb6ee66355491e2f4fb2de5c5bc829e8c06e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:49:03.889Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0ed0057c0e1d007529971cbe9bf2023e0d9e10fbb1d759fc1c54b6ec013ca3af",
+      "targetHash": "d132e235cb58c1030b9cc273370bbb6ee66355491e2f4fb2de5c5bc829e8c06e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

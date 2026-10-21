@@ -1,0 +1,1282 @@
+---
+{
+    "title": "Hive Catalog",
+    "language": "ru",
+    "description": "Hive Catalog в Apache Doris подключается к Hive Metastore и совместимым сервисам для выполнения запросов к таблицам Hive, Iceberg и Hudi и записи в них данных в HDFS и объектных хранилищах. Он поддерживает гибкую настройку, сопоставление типов, операции запросов и записи."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Подключаясь к Hive Metastore или совместимым с ним сервисам метаданных, Doris может автоматически получать информацию о базах данных и таблицах Hive для выполнения запросов к данным.
+
+Помимо Hive, многие другие системы используют Hive Metastore для хранения метаданных. Поэтому через Hive Catalog можно обращаться не только к таблицам Hive, но и к другим форматам таблиц, использующим Hive Metastore для хранения метаданных, например Iceberg и Hudi.
+
+## Сценарии использования {#applicable-scenarios}
+
+| Сценарий     | Описание                                                  |
+|--------------|--------------------------------------------------------------|
+| Ускорение запросов | Использование распределённого вычислительного движка Doris для прямого доступа к данным Hive и ускорения запросов. |
+| Интеграция данных   | Чтение данных Hive и их запись во внутренние таблицы Doris или выполнение операций ZeroETL с помощью вычислительного движка Doris. |
+| Обратная запись данных   | Обработка данных из любого источника, поддерживаемого Doris, и их обратная запись в таблицы Hive. |
+
+## Настройка Catalog {#configuring-catalog}
+
+### Синтаксис {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type'='hms', -- required
+    'hive.metastore.type' = '<hive_metastore_type>', -- optional
+    'hive.version' = '<hive_version>', -- optional
+    'fs.defaultFS' = '<fs_defaultfs>', -- required for write, optional for read-only
+    {MetaStoreProperties},
+    {StorageProperties},
+    {HiveProperties},
+    {CommonProperties}
+);
+```
+
+* `<hive_metastore_type>`
+
+  Указывает тип Hive Metastore.
+
+  * `hms`: стандартный сервис Hive Metastore.
+  * `glue`: доступ к сервису метаданных AWS Glue через интерфейс, совместимый с Hive Metastore.
+  * `dlf`: доступ к сервису метаданных Alibaba Cloud DLF через интерфейс, совместимый с Hive Metastore.
+
+* `<fs_defaultfs>`
+
+  Этот параметр обязателен при записи данных из Doris в таблицы этого Hive Catalog. Пример:
+
+  `'fs.defaultFS' = 'hdfs://namenode:port'`
+
+* `{MetaStoreProperties}`
+
+  Раздел MetaStoreProperties предназначен для указания параметров подключения и аутентификации в сервисе метаданных Metastore. Подробности см. в разделе «Поддерживаемые сервисы метаданных».
+
+* `{StorageProperties}`
+
+  Раздел StorageProperties предназначен для указания параметров подключения и аутентификации в системе хранения. Подробности см. в разделе «Поддерживаемые системы хранения».
+
+* `{HiveProperties}`
+
+  Раздел HiveProperties предназначен для указания свойств Hive Catalog.
+
+  * `get_schema_from_table`: значение по умолчанию — false. По умолчанию Doris получает информацию о схеме таблицы из Hive Metastore. Однако в некоторых случаях могут возникать проблемы совместимости, например ошибка `Storage schema reading not supported`. В таком случае можно задать этому параметру значение true, и схема таблицы будет получена непосредственно из объекта Table. Обратите внимание: при таком способе информация о значениях столбцов по умолчанию игнорируется. Это свойство поддерживается начиная с версий 2.1.10 и 3.0.6.
+
+  * `hive.recursive_directories`: определяет, следует ли рекурсивно обходить подкаталоги при получении списка каталогов партиций. Этот параметр поддерживается начиная с версии 3.0.2. До версии 4.0 значение по умолчанию было `false`; в более поздних версиях оно равно `true`. Пути партиций некоторых таблиц Hive могут не соответствовать информации о партициях в схеме таблицы. Чтобы получать файлы данных из подкаталогов, необходимо задать этому параметру значение true.
+
+  * `hive.ignore_absent_partitions`: определяет, следует ли игнорировать несуществующие партиции. Значение по умолчанию — `true`. Если задано значение `false`, при обнаружении несуществующей партиции запрос завершится ошибкой. Этот параметр поддерживается начиная с версии 3.0.2.
+
+  * `hive.staging_dir`: задаёт корневой каталог для временного размещения данных при записи в Hive. В процессе записи данные сначала записываются в этот каталог, а после завершения перемещаются в конечный каталог таблицы Hive. Путь может быть относительным, отсчитываемым от корневого каталога таблицы Hive, или абсолютным. Значение по умолчанию — `/tmp/.doris_staging`. В некоторых случаях при записи в таблицы Hive каталог `/tmp` и каталог таблицы могут принадлежать разным пространствам имён, что приводит к ошибкам записи. Чтобы устранить эту проблему, можно задать в этом параметре относительный путь. Этот параметр поддерживается начиная с версии 4.0.3.
+
+  * `hive.parquet.time-zone`: часовой пояс совместимости, используемый для восстановления временных меток Parquet `INT96` старого формата при чтении таблиц Hive через FileScannerV2. По умолчанию значение пустое: поля локальной даты и времени, сохранённые в `INT96`, сохраняются без преобразования часового пояса. Задавайте это свойство, только если файлы `INT96` в Catalog были нормализованы при записи с использованием известного часового пояса. Таблицы Hudi намеренно игнорируют это свойство и сохраняют существующее поведение, зависящее от часового пояса сессии SQL. Подробности см. в разделе [Совместимость временных меток Parquet INT96](#timestamp-compatibility).
+
+* `{CommonProperties}`
+
+  Раздел CommonProperties предназначен для указания общих свойств. См. раздел «Общие свойства» в [Обзоре Catalog](../catalog-overview.md).
+
+## Кэш метаданных {#meta-cache}
+
+Чтобы повысить производительность доступа к внешним источникам данных, Apache Doris кэширует метаданные Hive. Метаданные включают объекты таблиц, имена партиций, объекты партиций, статистику столбцов, списки файлов и производные структуры для отсечения партиций.
+
+:::tip
+В версиях до Doris 4.1.x кэширование метаданных в основном управляется глобальными параметрами конфигурации FE. Подробности см. в разделе [Кэш метаданных](../meta-cache.md).
+Начиная с Doris 4.1.x внешний кэш метаданных Hive Catalog настраивается с помощью унифицированных ключей `meta.cache.*`. Ниже описаны параметры текущей версии; в Doris 4.1.x и 4.2.x используется другой набор параметров, описанный в версии 4.x этой страницы.
+:::
+
+### Настройка свойств кэша {#meta-cache-unified-model}
+
+Для каждого компонента кэша используется унифицированный формат ключей конфигурации: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`. Для Hive параметр `<engine>` имеет значение `hive`. Catalog на основе Hive Metastore, содержащий таблицы Iceberg, также использует компоненты `iceberg`, описанные в разделе [Iceberg Catalog](./iceberg-catalog.mdx#meta-cache).
+
+| Свойство | Пример | Значение |
+|---|---|---|
+| `enable` | `true/false` | Определяет, включён ли этот компонент кэша. |
+| `ttl-second` | `600`, `0`, `-1` | `0` отключает компонент (вступает в силу немедленно и позволяет видеть актуальные данные); `-1` означает отсутствие срока действия; другие положительные целые числа задают TTL в секундах с момента обращения. |
+| `capacity` | `10000` | Максимальное количество записей в кэше. `0` отключает компонент. |
+| `max-weight` | `1GB` | Поддерживается начиная с Doris 4.1.4. Необязательное ограничение оценочного объёма памяти, удерживаемой компонентом кэша. Должно быть положительным; `0` не допускается. Принимается только компонентами, отмеченными ниже. |
+
+**Условия работы:** компонент кэша работает, когда `enable=true`, `ttl-second != 0` и `capacity > 0`. Ограничение памяти на уровне всего FE, Catalog или отдельного компонента дополнительно определяет возможность добавления записей на основе оценочного объёма памяти; см. [Управление памятью внешнего кэша метаданных](../external-meta-cache-memory-management).
+
+### Модули кэша {#meta-cache-unified-modules}
+
+Hive Catalog включает следующие компоненты кэша. Все они поддерживают `max-weight`.
+
+| Компонент (`<entry>`) | Префикс ключа свойства | `ENTRY_NAME` | Кэшируемое содержимое и влияние | Значения по умолчанию: включение / TTL / ёмкость |
+|---|---|---|---|---|
+| `table` | `meta.cache.hive.table.` | `hive-table` | Объекты таблиц из Hive Metastore. Влияние: сокращает число обращений к Metastore при планировании. | `true` / 86400 с / 10000 |
+| `partition_names` | `meta.cache.hive.partition_names.` | `hive-partition-names` | Списки имён партиций. Влияние: получение списка партиций; при отключении новые партиции становятся видны сразу. | `true` / 86400 с / 10000 |
+| `partition` | `meta.cache.hive.partition.` | `hive-partition` | Объекты партиций, включая расположение и входной формат. | `true` / 86400 с / 100000 |
+| `column_stats` | `meta.cache.hive.column_stats.` | `hive-column-stats` | Статистика столбцов из Hive Metastore. | `true` / 86400 с / 10000 |
+| `file` | `meta.cache.hive.file.` | `hive-file` | Списки файлов. Влияние: сокращает число удалённых операций LIST; при отключении изменения файлов становятся видны сразу. | `true` / 86400 с / 10000 |
+| `partition_view` | `meta.cache.hive.partition_view.` | `hive-partition-view` | Структуры для отсечения партиций, построенные на основе имён партиций. | `true` / 86400 с / 1000 |
+
+Схема столбцов таблиц Hive кэшируется общим движком `default` (`meta.cache.default.schema.*`), который используется всеми внешними Catalog.
+
+### Сопоставление и преобразование устаревших параметров {#meta-cache-mapping}
+
+Рекомендуется использовать унифицированные ключи. Следующие устаревшие свойства Catalog по-прежнему принимаются и сопоставляются с новыми ключами:
+
+| Устаревший ключ свойства | Унифицированный ключ | Описание |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` и `meta.cache.hive.table.ttl-second` | Срок действия кэшей схем таблиц и объектов таблиц |
+| `partition.cache.ttl-second` | `meta.cache.hive.partition_names.ttl-second` | Срок действия списков имён партиций |
+| `file.meta.cache.ttl-second` | `meta.cache.hive.file.ttl-second` | Срок действия списков файлов |
+
+### Рекомендации {#meta-cache-best-practices}
+
+* **Доступ к актуальным данным в реальном времени**: чтобы каждый запрос видел последние изменения партиций или файлов во внешнем источнике данных, задайте соответствующему параметру `ttl-second` значение `0`.
+  ```sql
+  -- Disable the file listing cache to see file changes in real time
+  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.file.ttl-second" = "0");
+  -- Disable the partition name cache to see new partitions in real time
+  ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.partition_names.ttl-second" = "0");
+  ```
+* **Оптимизация производительности**: если метаданные меняются редко, увеличьте `capacity` и `ttl-second`, чтобы снизить нагрузку на Hive Metastore и файловые системы. Используйте `max-weight`, чтобы ограничить кэши списков файлов и структур отсечения партиций для очень больших таблиц.
+
+:::caution
+Успешное изменение свойств Catalog сбрасывает затронутые кэши метаданных и пересоздаёт их с новой конфигурацией при следующем обращении. Изменение `meta.cache.max-weight` или `schema.cache.ttl-second` сбрасывает все кэши Catalog; изменение `meta.cache.<engine>.<entry>.*` сбрасывает кэши соответствующего движка. Уже выполняющиеся запросы не затрагиваются.
+:::
+
+### Наблюдаемость {#meta-cache-unified-observability}
+
+Метрики кэша доступны в системной таблице `information_schema.catalog_meta_cache_statistics`. В `ENTRY_NAME` указаны имена из таблицы выше, а строка движка `default` соответствует общему кэшу схем таблиц:
+
+```sql
+SELECT engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, max_weight, estimated_weight
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'hive_ctl'
+ORDER BY engine_name, entry_name;
+```
+
+См. документацию этой системной таблицы: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
+### Поддерживаемые версии Hive {#supported-hive-versions}
+
+Поддерживаются Hive 1.x, 2.x, 3.x и 4.x.
+
+Транзакционные таблицы Hive поддерживаются начиная с версии 3.x. Подробности см. в разделе «Транзакционные таблицы Hive».
+
+### Поддерживаемые сервисы метаданных {#supported-metadata-services}
+
+* [Hive Metastore](../metastores/hive-metastore.md)
+* [AWS Glue](../metastores/aws-glue.md)
+* [Aliyun DLF](../metastores/aliyun-dlf.md)
+
+> Примечание: поддерживаемые типы сервисов и параметры немного различаются в разных версиях Doris. См. раздел [Примеры].
+
+### Матрица поддержки возможностей Hive Catalog {#hive-catalog-feature-support-matrix}
+
+| Сервис метаданных | Запросы к таблицам | Запросы к представлениям | Операции DDL | Обратная запись данных |
+|------------------|-------------|------------|----------------|----------------|
+| Hive             | ✅          | ✅         | ✅             | ✅             |
+| AWS Glue         | ✅          | ✅         | ❌             | ❌             |
+| DLF              | ✅          | ✅         | ✅             | ✅             |
+
+### Поддерживаемые системы хранения {#supported-storage-systems}
+
+* [HDFS](../storages/hdfs.md)
+* [AWS S3](../storages/s3.md)
+* [Google Cloud Storage](../storages/gcs.md)
+* [Azure Blob](../storages/azure-blob.md)
+* [Apache Ozone](../storages/ozone.md) (поддерживается начиная с 4.0.4)
+* [Alibaba Cloud OSS](../storages/aliyun-oss.md)
+* [Tencent Cloud COS](../storages/tencent-cos.md)
+* [Huawei Cloud OBS](../storages/huawei-obs.md)
+* [MINIO](../storages/minio.md)
+
+> Чтобы создавать таблицы Hive и записывать данные через Doris, необходимо явно добавить свойство `fs.defaultFS` в свойства Catalog. Если Catalog создаётся только для запросов, этот параметр можно опустить.
+>
+> Поддерживаемые типы сервисов и параметры немного различаются в разных версиях Doris. См. раздел [Примеры].
+
+### Поддерживаемые форматы данных {#supported-data-formats}
+
+* Hive
+
+  * [Parquet](../file-formats/parquet.md)
+
+  * [ORC](../file-formats/orc.md)
+
+  * [Text/CSV/JSON](../file-formats/text.md)
+
+* Hudi
+
+  * [Parquet](../file-formats/parquet.md)
+
+  * [ORC](../file-formats/orc.md)
+
+* Iceberg
+
+  * [Parquet](../file-formats/parquet.md)
+
+  * [ORC](../file-formats/orc.md)
+
+## Совместимость временных меток Parquet INT96 {#timestamp-compatibility}
+
+Таблицы Hive могут содержать файлы с временными метками, созданные разными движками. Необходимость преобразования часового пояса зависит от физического кодирования и поведения компонента записи. Doris не определяет часовой пояс компонента записи по значению Parquet `INT96`, поскольку `INT96` не содержит аннотации часового пояса.
+
+Начиная с 4.1.5, `hive.parquet.time-zone` принимает часовой пояс IANA или смещение относительно UTC от `-12:00` до `+14:00`. Значения `UTC` и `GMT` допускаются; короткие псевдонимы, такие как `CST` и `PRC`, отклоняются. См. [Parquet](../file-formats/parquet.md#timestamp-and-date-compatibility).
+
+### Временные метки Parquet INT96 {#parquet-int96-timestamps}
+
+FileScannerV2 обрабатывает временные метки Parquet следующим образом:
+
+| Физическое кодирование | Поведение по умолчанию | Влияние `hive.parquet.time-zone` |
+|---|---|---|
+| `INT96`, сопоставленный с `DATETIMEV2` | Сохраняются поля даты и времени, записанные в файле. Часовой пояс сессии SQL не сдвигает значение. | Исходное значение `INT96` интерпретируется как момент времени UTC и преобразуется в настроенный часовой пояс совместимости, восстанавливая временные метки, нормализованные устаревшим компонентом записи. |
+| `INT64` с логическим типом временной метки | Используется семантика логического типа Parquet. | Не влияет. |
+
+Например, предположим, что ожидаемая локальная временная метка — `2021-01-01 10:11:00` в часовом поясе `Asia/Shanghai`:
+
+* Если файл напрямую хранит поля локального времени как `10:11:00`, оставьте `hive.parquet.time-zone` незаданным. Doris вернёт `10:11:00`, даже если сессия SQL использует `Asia/Shanghai`.
+* Если устаревший компонент записи нормализует значение в UTC перед сохранением в `INT96`, файл может содержать `02:11:00`. Задайте для `hive.parquet.time-zone` значение `Asia/Shanghai`, чтобы Doris восстановил `10:11:00`.
+
+Задайте часовой пояс совместимости при создании Catalog:
+
+```sql
+CREATE CATALOG hive_legacy_int96 PROPERTIES (
+    'type' = 'hms',
+    'hive.metastore.uris' = 'thrift://127.0.0.1:9083',
+    'hive.parquet.time-zone' = 'Asia/Shanghai'
+);
+```
+
+Значением может быть имя часового пояса IANA, например `Asia/Shanghai`, или смещение относительно UTC от `-12:00` до `+14:00`. Недопустимое значение приводит к ошибке создания Catalog.
+
+:::caution
+`hive.parquet.time-zone` применяется ко всем столбцам временных меток `INT96`, сопоставленным с `DATETIMEV2`, в таблицах Hive этого Catalog. Оно не влияет на таблицы Iceberg в том же Hive Metastore, поскольку Iceberg определяет собственную семантику временных меток. Hudi также намеренно игнорирует это свойство: и нативное сканирование базовых файлов, и сканирование JNI merge-on-read сохраняют прежнее поведение, при котором временные метки интерпретируются с использованием часового пояса сессии SQL. Метаданные Parquet не позволяют Doris надёжно определить, какое соглашение использовал компонент записи `INT96`. Не задавайте это свойство только для того, чтобы оно совпадало с часовым поясом сессии SQL. Если один Hive Metastore содержит таблицы Hive с файлами `INT96`, записанными по разным соглашениям, по возможности предоставляйте доступ к ним через отдельные Catalog.
+:::
+
+Это же свойство принимают табличные функции, читающие файлы Parquet. Преобразование совместимости применяется только при декодировании Parquet `INT96` в FileScannerV2. Поведение FileScannerV1 намеренно оставлено прежним, поэтому он может возвращать другие результаты; переключение на FileScannerV1 не является механизмом совместимости для этого изменения. Логические временные метки Parquet `INT64` не затрагиваются. Если столбец `INT96` сопоставлен с `TIMESTAMPTZ`, Doris игнорирует это свойство и сохраняет момент времени UTC; отображение этого значения по-прежнему определяется семантикой `TIMESTAMPTZ` и часового пояса сессии.
+
+### Рекомендации по миграции {#migration-recommendations}
+
+* По умолчанию Doris записывает логические временные метки Parquet `INT64`. Задавайте `enable_int96_timestamps = true`, только если устаревший компонент чтения, например Hive 2 или Hive 3, требует `INT96`.
+* При обновлении до версии с таким поведением FileScannerV2 проверьте существующие таблицы Hive перед развёртыванием. Catalog, содержащий файлы `INT96`, нормализованные устаревшим компонентом записи, после обновления может возвращать другое значение локального времени. Сравните характерные значения и задайте для `hive.parquet.time-zone` часовой пояс компонента записи, если требуется преобразование. Для Hudi миграция в связи с этим изменением не требуется, поскольку сохраняется существующее поведение, зависящее от часового пояса сессии.
+* Перед настройкой `hive.parquet.time-zone` изучите характерные файлы и сравните известные значения временных меток. Ненужная настройка создаёт такое же смещение, которое она призвана исправлять.
+* Храните файлы, записанные по разным соглашениям `INT96`, в отдельных Catalog или перезапишите их с единым кодированием `INT64`.
+* Когда Doris явно экспортирует `INT96` с `enable_int96_timestamps = true`, он нормализует временные метки с использованием часового пояса сессии экспорта. Чтобы прочитать файл обратно через FileScannerV2, задайте для `hive.parquet.time-zone` часовой пояс этой сессии экспорта. См. [Обзор экспорта](../../data-operate/export/export-overview.md).
+
+## Сопоставление типов столбцов {#column-type-mapping}
+
+Полную таблицу сопоставления для Doris 4.2, правила точности и неподдерживаемые типы см. в разделе [Сопоставление типов данных Hive и Doris](hive-catalog/doris-type-mapping.md).
+
+## Примеры {#examples}
+### Hive Metastore {#hive-metastore}
+
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Доступ к сервисам HMS и HDFS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.username' = 'doris'
+            );
+            ```
+            Доступ к сервисам HMS и HDFS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_kerberos_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+        </TabItem>
+        <TabItem value='ViewFs' label='ViewFs'>
+            ```sql
+            CREATE CATALOG hive_viewfs PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://172.0.0.1:9083',
+                'fs.defaultFS' = 'viewfs://your-cluster',
+                'fs.viewfs.mounttable.your-cluster.link./ns1' = 'hdfs://your-nameservice/',
+                'fs.viewfs.mounttable.your-cluster.homedir' = '/ns1',
+                'dfs.nameservices' = 'your-nameservice',
+                'dfs.ha.namenodes.your-nameservice' = 'nn1,nn2',
+                'dfs.namenode.rpc-address.your-nameservice.nn1' = '172.21.0.2:8088',
+                'dfs.namenode.rpc-address.your-nameservice.nn2' = '172.21.0.3:8088',
+                'dfs.client.failover.proxy.provider.your-nameservice' = 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_s3_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            Получение учётных данных доступа к S3 с помощью IAM Assumed Role (3.1.2+)
+            ```sql
+            CREATE CATALOG hive_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region'   = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ``` 
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+            Доступ к HMS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_kerberos_old_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_cos_test_region_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+            Доступ к HMS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_on_cos_kerberos_new_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG test_hive_on_hms_obs_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+            Доступ к HMS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_on_obs_kerberos_new_catalog PROPERTIES (
+                'type' = 'hms',
+                'iceberg.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.service.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.client.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hive.metastore.client.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hive.metastore.authentication.type' = 'kerberos',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG `hive_hms_on_gcs_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'fs.gcs.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Azure Blob' label='Azure Blob'>
+            Поддерживается начиная с 3.1.3
+            ```sql
+            CREATE CATALOG `hive_hms_on_azure_blob_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'azure.account_name' = '<account_name>',
+                'azure.account_key' = '<account_key>',
+                'azure.endpoint' = 'https://<account_name>.blob.core.windows.net',
+                'fs.azure.support'='true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Поддерживается начиная с 4.0.4
+            ```sql
+            CREATE CATALOG `hive_hms_on_ozone_new_catalog` PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_minio_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.use_path_style' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = '<ak>',
+                'minio.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+
+            ```
+            Доступ к HMS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG test_two_hive_kerberos PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.sasl.enabled' = 'true',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.kerberos.min.seconds.before.relogin' = '5',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                DEFAULT'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG hms_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG hive_hms_on_oss_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG hive_hms_cos_test_region_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_obs_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG hive_hms_on_gcs_s3 PROPERTIES (
+                'type'='hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/gcs/paimon_warehouse',
+                'gs.access_key' = '<ak>',
+                'gs.secret_key' = '<sk>',
+                'gs.endpoint' = 'storage.googleapis.com'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_hive_on_hms_minio_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19000',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### AWS Glue {#aws-glue}
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            Сервисы AWS Glue и хранилище S3 используют общие данные аутентификации.
+            ```sql
+            CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'ap-east-1',
+                'glue.endpoint' = 'https://glue.ap-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+
+            Если данные аутентификации сервиса Glue отличаются от данных аутентификации S3, данные аутентификации S3 можно указать отдельно следующим образом.
+            ```sql
+            CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'ap-east-1',
+                'glue.endpoint' = 'https://glue.ap-east-1.amazonaws.com',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com/',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+
+            Получение учётных данных доступа к S3 с помощью IAM Assumed Role (начиная с 3.1.2+)
+            ```sql
+            CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( 
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.region' = 'us-east-1',
+                'glue.endpoint' = 'https://glue.us-east-1.amazonaws.com',
+                'glue.role_arn' = '<role_arn>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='S3' label='S3' default>
+            Сервисы AWS Glue и хранилище S3 используют общие учётные данные аутентификации.
+
+            В средах за пределами EC2 необходимо использовать [aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html), чтобы настроить учётные данные и создать файл credentials в каталоге ~/.aws.
+
+            Также при создании Catalog можно явно указать класс фабрики поставщика учётных данных:
+
+            <b>"aws.catalog.credentials.provider.factory.class" = "com.amazonaws.glue.catalog.credentials.ConfigurationAWSCredentialsProviderFactory"</b>
+            ```sql
+            create catalog hive_glue PROPERTIES(
+                'type' = 'hms',
+                'hive.metastore.type' = 'glue',
+                'glue.endpoint' = 'https://glue.ap-northeast-1.amazonaws.com',
+                'glue.region' = 'ap-northeast-1',
+                'glue.access_key' = '<ak>',
+                'glue.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Aliyun DLF {#aliyun-dlf}
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG hive_dlf_oss_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'dlf',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG hive_dlf_oss_test_catalog PROPERTIES (
+                'type' = 'hms',
+                'hive.metastore.type' = 'dlf',
+                'dlf.uid' = '203225413946383283',
+                'dlf.catalog.id' = 'p2_regression_case',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.region' = 'cn-beijing',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+## Операции запросов {#query-operations}
+
+### Базовый запрос {#basic-query}
+
+После настройки Catalog можно запрашивать данные его таблиц следующими способами:
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH hive_ctl;
+USE hive_db;
+SELECT * FROM hive_tbl LIMIT 10;
+
+-- 2. use hive database directly
+USE hive_ctl.hive_db;
+SELECT * FROM hive_tbl LIMIT 10;
+
+-- 3. use full qualified name to query
+SELECT * FROM hive_ctl.hive_db.hive_tbl LIMIT 10;
+```
+
+### Запрос информации о партициях Hive {#querying-hive-partitions}
+
+Информацию о партициях Hive можно запросить следующими двумя способами:
+
+* `SHOW PARTITIONS FROM [catalog.][db.]hive_table`
+
+  Эта инструкция выводит все партиции и их значения для указанной таблицы Hive.
+
+  ```sql
+  SHOW PARTITIONS FROM hive_table;
+
+  +--------------------------------+
+  | Partition                      |
+  +--------------------------------+
+  | pt1=2024-10-10/pt2=beijing     |
+  | pt1=2024-10-10/pt2=shanghai    |
+  | pt1=2024-10-11/pt2=beijing     |
+  | pt1=2024-10-11/pt2=shanghai    |
+  | pt1=2024-10-12/pt2=nanjing     |
+  +--------------------------------+
+  ```
+
+* Использование таблицы метаданных `table$partitions`
+
+  Начиная с версий 2.1.7 и 3.0.3 информацию о партициях Hive можно запрашивать через таблицу метаданных `table$partitions`. Эта таблица по своей сути реляционная: каждый столбец партиционирования представлен отдельным столбцом, что позволяет использовать её в любой инструкции SELECT.
+
+  ```sql
+  SELECT * FROM hive_table$partitions;
+
+  +------------+-------------+
+  | pt1        | pt2         |
+  +------------+-------------+
+  | 2024-10-10 | beijing     |
+  | 2024-10-10 | shanghai    |
+  | 2024-10-12 | nanjing     |
+  | 2024-10-11 | beijing     |
+  | 2024-10-11 | shanghai    |
+  +------------+-------------+
+  ```
+
+:::caution Изменение поведения (4.1.4)
+
+Начиная с версии 4.1.4 маркер партиции по умолчанию `__HIVE_DEFAULT_PARTITION__`, используемый при партиционировании Hive на основе каталогов, преобразуется в настоящее значение **NULL**, а не кодируется строкой `\N`. При этом буквальное значение `\N`, действительно сохранённое в пути партиции, сохраняется как данные.
+
+До 4.1.4 эти два случая были неразличимы и оба отображались как `\N` в результатах запросов. После обновления `WHERE <partition_col> IS NULL` корректно находит партицию Hive по умолчанию.
+
+:::
+
+### Запросы к транзакционным таблицам Hive {#querying-hive-transactional-tables}
+
+Транзакционные таблицы Hive поддерживают семантику ACID. Подробности см. в разделе [Транзакции Hive](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions).
+
+* Поддержка транзакционных таблиц Hive
+
+  | Тип таблицы                      | Поддерживаемые операции в Hive        | Свойства таблицы Hive                                                | Поддерживаемые версии Hive                                          |
+  | ------------------------------- | ----------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------- |
+  | Транзакционная таблица Full-ACID   | Поддерживает Insert, Update, Delete     | `'transactional'='true'`                                            | 4.x, 3.x, 2.x (для чтения в 2.x требуется Major Compaction в Hive)    |
+  | Транзакционная таблица Insert-Only | Поддерживает только Insert                | `'transactional'='true'`, `'transactional_properties'='insert_only'` | 4.x, 3.x, 2.x (укажите `hive.version` при создании Catalog) |
+
+* Текущие ограничения
+
+  Сценарии с Original Files не поддерживаются. Когда таблица преобразуется в транзакционную, новые файлы данных используют схему транзакционных таблиц Hive, но существующие файлы данных не преобразуются. Такие файлы называются Original Files.
+  
+### Запросы к представлениям Hive {#querying-hive-views}
+
+Можно выполнять запросы к представлениям Hive, но есть некоторые ограничения:
+
+* Определение представления Hive (HiveQL) должно быть совместимо с инструкциями SQL, поддерживаемыми Doris. В противном случае возникнет ошибка синтаксического анализа.
+
+* Некоторые функции HiveQL могут иметь такие же имена, как функции Doris, но отличаться поведением. Это может приводить к расхождениям между результатами Hive и Doris. Если вы столкнулись с такой проблемой, сообщите о ней сообществу.
+
+### Связанные параметры {#related-parameters}
+
+* Переменные сессии
+
+| Имя параметра | Значение по умолчанию | Описание | Начиная с версии |
+| ----------| ---- | ---- | --- |
+| `hive_parquet_use_column_names` | `true` | При чтении данных Parquet из таблицы Hive Doris по умолчанию ищет в файле Parquet столбец с тем же именем, что и столбец таблицы Hive, и читает данные из него. Если эта переменная равна `false`, Doris читает данные из файла Parquet по порядку столбцов в таблице Hive, независимо от их имён. Аналогично переменной `parquet.column.index.access` в Hive. Этот параметр применяется только к именам столбцов верхнего уровня и не действует внутри Struct. | 2.1.6+, 3.0.3+ |
+| `hive_orc_use_column_names` | `true` | Аналогичен `hive_parquet_use_column_names`, но применяется к данным ORC в таблицах Hive. Аналогично переменной `orc.force.positional.evolution` в Hive. | 2.1.6+, 3.0.3+ |
+
+## Операции записи {#write-operations}
+
+Данные можно записывать в таблицы Hive с помощью инструкции INSERT. Поддерживаются таблицы Hive, созданные Doris, и существующие таблицы Hive с совместимыми форматами.
+
+Для партиционированных таблиц данные автоматически записываются в соответствующую партицию, либо на основе данных создаётся новая партиция. Начиная с 4.1.5, `PARTITION (column = literal)` поддерживает статические партиции и сочетание статических и динамических столбцов партиционирования. Исключите статические столбцы партиционирования из списка целевых столбцов INSERT и из выходных данных SELECT или VALUES; остальные динамические столбцы партиционирования передавайте во входных данных.
+
+### INSERT INTO {#insert-into}
+
+Операция INSERT добавляет данные в целевую таблицу.
+
+```sql
+INSERT INTO hive_tbl VALUES (val1, val2, val3, val4);
+INSERT INTO hive_ctl.hive_db.hive_tbl SELECT col1, col2 FROM internal.db1.tbl1;
+
+INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
+INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
+```
+
+Начиная с 4.1.5 запись поддерживает статические партиции или сочетание статических и динамических партиций:
+
+```sql
+-- Full Static Partition
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
+```
+
+### INSERT OVERWRITE {#insert-overwrite}
+
+INSERT OVERWRITE полностью заменяет существующие данные таблицы новыми.
+
+```sql
+INSERT OVERWRITE TABLE hive_tbl VALUES (val1, val2, val3, val4);
+INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
+```
+
+Начиная с 4.1.5 запись поддерживает статические партиции или сочетание статических и динамических партиций:
+
+```sql
+-- Full Static Partition
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+VALUES (val1, val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30', partition_col2='beijing')
+SELECT col1, col2 FROM source_table;
+
+-- Hybrid Partition Mode: "partition_col1" is static, "partition_col2" comes from SELECT dynamically
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+VALUES (val1, val2, partition_val2);
+INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
+SELECT col1, col2, partition_col2 FROM source_table;
+```
+
+Семантика INSERT OVERWRITE согласуется с Hive и имеет следующие особенности:
+
+* Если целевая таблица партиционирована, а исходная таблица пуста, операция не оказывает эффекта. Целевая таблица остаётся без изменений.
+
+* Если целевая таблица не партиционирована, а исходная таблица пуста, целевая таблица очищается.
+
+* Начиная с 4.1.5 поддерживается указание статических партиций для записи, а также смешанный режим, сочетающий статические и динамические партиции. Однако даже при указании статических партиций они не будут очищены, если исходный запрос возвращает пустой результат.
+
+**Полный пример со статическими партициями (начиная с 4.1.5)**
+
+Настройте Hive Catalog, описанный на этой странице, подготовьте существующую базу данных `hive_ctl.hive_db` и предоставьте права на создание таблиц, запись и выполнение запросов. Для Catalog, используемого для записи, должен быть настроен `fs.defaultFS`. В этом примере статическая дата сочетается с динамическими регионами, после чего перезаписывается одна полностью заданная статическая партиция:
+
+```sql
+CREATE TABLE hive_ctl.hive_db.static_write_demo (
+    id INT,
+    dt STRING,
+    region STRING
+)
+ENGINE=HIVE
+PARTITION BY LIST (dt, region) ()
+PROPERTIES ("file_format" = "parquet");
+
+INSERT INTO hive_ctl.hive_db.static_write_demo PARTITION (dt='2026-10-01')
+VALUES (1, 'beijing'), (2, 'shanghai');
+
+INSERT OVERWRITE TABLE hive_ctl.hive_db.static_write_demo
+PARTITION (dt='2026-10-01', region='beijing') VALUES (3);
+
+SELECT id, dt, region FROM hive_ctl.hive_db.static_write_demo ORDER BY id;
+```
+
+```text
++----+------------+----------+
+| id | dt         | region   |
++----+------------+----------+
+|  2 | 2026-10-01 | shanghai |
+|  3 | 2026-10-01 | beijing  |
++----+------------+----------+
+```
+
+Значения статических партиций должны быть литералами. Не указывайте один ключ партиционирования несколько раз и не повторяйте статический столбец партиционирования в явном списке столбцов INSERT. Имена статических ключей сопоставляются без учёта регистра; указание несуществующего столбца партиционирования вызывает ошибку.
+
+### CTAS {#ctas}
+
+Можно создать таблицу Hive и вставить в неё данные с помощью инструкции `CTAS (CREATE TABLE AS SELECT)`:
+
+```sql
+CREATE TABLE hive_ctas ENGINE=hive AS SELECT * FROM other_table;
+```
+
+CTAS поддерживает указание форматов файлов, способов партиционирования и других параметров, как показано ниже:
+
+```sql
+CREATE TABLE hive_ctas ENGINE=hive
+PARTITION BY LIST (pt1, pt2) ()
+AS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;
+    
+CREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive
+PARTITION BY LIST (pt1) ()
+PROPERTIES (
+    "file_format"="parquet",
+    "compression"="zstd"
+)
+AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;
+```
+
+### Связанные параметры {#related-parameters-1}
+
+* Конфигурация BE
+
+  | Имя параметра                                                                | Значение по умолчанию                                                                                                     | Описание |
+  | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
+  | `hive_sink_max_file_size`                                                     | 1GB                                                                                                               | Максимальный размер файла данных. Когда объём данных превышает это ограничение, текущий файл закрывается и для дальнейшей записи создаётся новый. |
+  | `table_sink_partition_write_max_partition_nums_per_writer`                    | 128                                                                                                               | Максимальное количество партиций, в которые каждый экземпляр может записывать данные на узле BE. |
+  | `table_sink_non_partition_write_scaling_data_processed_threshold`             | 25MB                                                                                                              | Порог объёма данных для запуска масштабируемой записи (scaling-write) в непартиционированные таблицы. Новый компонент записи (экземпляр) используется при каждом увеличении объёма данных на `table_sink_non_partition_write_scaling_data_processed_threshold`. Этот механизм регулирует количество компонентов записи (экземпляров) в зависимости от объёма данных, повышая пропускную способность параллельной записи, экономя ресурсы и сокращая количество файлов при небольших объёмах данных. |
+  | `table_sink_partition_write_min_data_processed_rebalance_threshold`           | 25MB                                                                                                              | Минимальный порог объёма данных для запуска ребалансировки партиционированных таблиц. Ребалансировка запускается, если `current accumulated data volume` - `data volume since last rebalancing or initial accumulation` >= `table_sink_partition_write_min_data_processed_rebalance_threshold`. Если итоговые размеры файлов значительно различаются, уменьшите этот порог, чтобы улучшить баланс. Однако более низкий порог может увеличить затраты на ребалансировку и повлиять на производительность. |
+  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` | 15MB                                                                                                              | Минимальный порог объёма данных партиции для запуска ребалансировки. Ребалансировка выполняется, если `current partition data volume` >= `threshold` \* `number of tasks already allocated to the partition`. Если итоговые размеры файлов значительно различаются, уменьшите этот порог, чтобы улучшить баланс. Однако более низкий порог может увеличить затраты на ребалансировку и повлиять на производительность. |
+  
+
+## Управление базами данных и таблицами {#database-and-table-management}
+
+Пользователи могут создавать и удалять базы данных и таблицы в Hive Metastore через Doris. Обратите внимание: для этих операций Doris только вызывает API Hive Metastore и сам не хранит и не сохраняет метаданные Hive.
+
+### Создание и удаление баз данных {#creating-and-dropping-databases}
+
+Можно переключиться на нужный Catalog с помощью инструкции `SWITCH` и выполнить инструкцию `CREATE DATABASE`:
+
+```sql
+SWITCH hive_ctl;
+CREATE DATABASE [IF NOT EXISTS] hive_db;
+```
+
+Также можно создать базу данных, указав полное имя или расположение, например:
+
+```sql
+CREATE DATABASE [IF NOT EXISTS] hive_ctl.hive_db;
+
+CREATE DATABASE [IF NOT EXISTS] hive_ctl.hive_db
+PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
+```
+
+Посмотреть информацию о расположении базы данных можно с помощью команды `SHOW CREATE DATABASE`:
+
+```sql
+mysql> SHOW CREATE DATABASE hive_db;
++----------+---------------------------------------------------------------------------------------------+
+| Database | Create Database                                                                             |
++----------+---------------------------------------------------------------------------------------------+
+| hive_db  | CREATE DATABASE hive_db LOCATION 'hdfs://172.21.16.47:4007/usr/hive/warehouse/hive_db.db'   |
++----------+---------------------------------------------------------------------------------------------+
+```
+
+Чтобы удалить базу данных:
+
+```sql
+DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
+```
+
+:::caution
+Перед удалением базы данных Hive необходимо удалить все её таблицы; в противном случае возникнет ошибка. Эта операция также удаляет соответствующую базу данных в Hive.
+:::
+
+### Создание и удаление таблиц {#creating-and-dropping-tables}
+
+- **Создание таблиц**
+
+  Doris поддерживает создание как партиционированных, так и непартиционированных таблиц в Hive.
+
+  ```sql
+  -- Create unpartitioned hive table
+  CREATE TABLE unpartitioned_table (
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` CHAR(10) COMMENT 'col4',
+    `col5` FLOAT COMMENT 'col5',
+    `col6` DOUBLE COMMENT 'col6',
+    `col7` DECIMAL(9,4) COMMENT 'col7',
+    `col8` VARCHAR(11) COMMENT 'col8',
+    `col9` STRING COMMENT 'col9'
+  )  ENGINE=hive
+  PROPERTIES (
+    'file_format'='parquet'
+  );
+  
+  -- Create partitioned hive table
+  -- The partition columns must be in table's column definition list
+  CREATE TABLE partition_table (
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3',
+    `col4` DECIMAL(2,1) COMMENT 'col4',
+    `pt1` VARCHAR COMMENT 'pt1',
+    `pt2` VARCHAR COMMENT 'pt2'
+  )  ENGINE=hive
+  PARTITION BY LIST (pt1, pt2) ()
+  PROPERTIES (
+    'file_format'='orc',
+    'compression'='zlib'
+  );
+  
+  -- Create text format table(Since 2.1.7 & 3.0.3)
+  CREATE TABLE text_table (
+      `id` INT,
+      `name` STRING
+  ) PROPERTIES (
+      'file_format'='text',
+      'compression'='gzip',
+      'field.delim'='\t',
+      'line.delim'='\n',
+      'collection.delim'=';',
+      'mapkey.delim'=':',
+      'serialization.null.format'='\\N',
+      'escape.delim'='\\'
+  );
+  ```
+  
+  После создания таблицы можно просмотреть инструкцию создания таблицы Hive с помощью команды `SHOW CREATE TABLE`.
+
+  Обратите внимание: в отличие от синтаксиса создания таблиц Hive, при создании партиционированной таблицы в Doris столбцы партиционирования должны быть включены в схему таблицы. Кроме того, они должны находиться в конце схемы и сохранять тот же порядок.
+
+  :::tip
+  В кластерах Hive, где транзакционные возможности ACID включены по умолчанию, у таблиц, созданных Doris, свойство `transactional` будет установлено в `true`. Поскольку Doris поддерживает только часть возможностей транзакционных таблиц Hive, это может привести к тому, что Doris не сможет читать созданные им таблицы Hive. Чтобы избежать этого, явно задайте `"transactional" = "false"` в свойствах таблицы для создания нетранзакционных таблиц Hive:
+
+  ```sql
+  CREATE TABLE non_acid_table(
+    `col1` BOOLEAN COMMENT 'col1',
+    `col2` INT COMMENT 'col2',
+    `col3` BIGINT COMMENT 'col3'
+  ) ENGINE=hive
+  PROPERTIES (
+    'transactional'='false'
+  );
+  ```
+  :::
+
+- **Удаление таблиц**
+
+  Таблицу Hive можно удалить с помощью инструкции `DROP TABLE`. При удалении таблицы также удаляются все её данные, включая данные партиций.
+
+- **Сопоставление типов столбцов**
+
+  Подробности см. в разделе [Сопоставление типов столбцов]. Учитывайте следующие ограничения:
+
+  - Столбцы должны допускать NULL, как предусмотрено по умолчанию; `NOT NULL` не поддерживается.
+  - Hive 3.0 поддерживает задание значений по умолчанию. Для их задания явно добавьте `"hive.version" = "3.0.0"` в свойства Catalog.
+  - Если типы вставляемых данных несовместимы (например, при вставке `'abc'` в числовой тип), значение преобразуется в `null`.
+
+- **Партиционирование**
+
+  Партиции Hive соответствуют партициям List в Doris. Поэтому при создании партиционированной таблицы Hive в Doris используйте синтаксис партиционирования List, но явно перечислять каждую партицию не требуется. Во время вставки данных Doris автоматически создаёт соответствующие партиции Hive на основе значений данных. Поддерживается партиционирование по одному или нескольким столбцам.
+
+- **Форматы файлов**
+
+  - ORC (по умолчанию)
+  - Parquet
+
+    Обратите внимание: при записи типа DATETIME в файл Parquet используется физический тип INT96 вместо INT64. Это обеспечивает совместимость с логикой версий Hive до 4.0.
+
+  - Text (поддерживается начиная с версий 2.1.7 и 3.0.3)
+
+      Формат Text поддерживает следующие свойства таблиц:
+
+		  - `field.delim`: разделитель столбцов. Значение по умолчанию — `\1`.
+		  - `line.delim`: разделитель строк. Значение по умолчанию — `\n`.
+		  - `collection.delim`: разделитель элементов сложных типов. Значение по умолчанию — `\2`.
+		  - `mapkey.delim`: разделитель ключа и значения в парах map. Значение по умолчанию — `\3`.
+		  - `serialization.null.format`: формат хранения значений `NULL`. Значение по умолчанию — `\N`.
+		  - `escape.delim`: символ экранирования. Значение по умолчанию — `\`.
+
+- **Форматы сжатия**
+
+  - Parquet: snappy (по умолчанию), zstd, plain (без сжатия)
+  - ORC: snappy, zlib (по умолчанию), zstd, plain (без сжатия)
+  - Text: gzip, deflate, bzip2, zstd, lz4, lzo, snappy, plain (по умолчанию, без сжатия)
+
+- **Среда хранения**
+
+  - HDFS
+  - Объектное хранилище
+
+## Подписка на события Hive Metastore {#subscribing-to-hive-metastore-events}
+
+Узлы FE периодически считывают события уведомлений (Notification Events) из HMS, благодаря чему Doris может обнаруживать изменения метаданных таблиц Hive в реальном времени и поддерживать их актуальность. В настоящее время поддерживаются следующие события:
+
+| Событие            | Действие и соответствующее поведение                                         |
+| ---------------- | ------------------------------------------------------------------------- |
+| CREATE DATABASE  | Создаёт базу данных в соответствующем каталоге данных.                   |
+| DROP DATABASE    | Удаляет базу данных из соответствующего каталога данных.                   |
+| ALTER DATABASE   | В основном затрагивает изменения свойств базы данных, комментариев и расположения хранения по умолчанию. Эти изменения не влияют на возможность Doris запрашивать внешние каталоги данных, поэтому в настоящее время это событие игнорируется. |
+| CREATE TABLE     | Создаёт таблицу в соответствующей базе данных.                            |
+| DROP TABLE       | Удаляет таблицу из соответствующей базы данных и аннулирует кэш таблицы. |
+| ALTER TABLE      | При переименовании удаляет старую таблицу и создаёт новую с новым именем; в остальных случаях аннулирует кэш таблицы. |
+| ADD PARTITION    | Добавляет партицию в кэшированный список партиций соответствующей таблицы. |
+| DROP PARTITION   | Удаляет партицию из кэшированного списка партиций и аннулирует кэш партиции. |
+| ALTER PARTITION  | При переименовании удаляет старую партицию и создаёт новую с новым именем; в остальных случаях аннулирует кэш партиции. |
+
+:::tip
+1. Когда импорт данных приводит к изменению файлов, партиционированные таблицы вызывают событие `ALTER PARTITION`, а непартиционированные — событие `ALTER TABLE`.
+
+2. Если изменять файловую систему напрямую в обход HMS, HMS не создаст соответствующие события, и Doris не обнаружит изменения метаданных.
+:::
+
+С этой возможностью связаны следующие параметры в `fe.conf`:
+
+1. `enable_hms_events_incremental_sync`: включает автоматическую инкрементальную синхронизацию метаданных. По умолчанию отключена.
+
+2. `hms_events_polling_interval_ms`: интервал чтения событий, по умолчанию — 10000 миллисекунд.
+
+3. `hms_events_batch_size_per_rpc`: максимальное количество событий, считываемых за один RPC, по умолчанию — 500.
+
+Для использования этой возможности (за исключением Huawei Cloud MRS) необходимо изменить `hive-site.xml` сервиса HMS и перезапустить HMS и HiveServer2.
+
+```xml
+<property>
+    <name>hive.metastore.event.db.notification.api.auth</name>
+    <value>false</value>
+</property>
+<property>
+    <name>hive.metastore.dml.events</name>
+    <value>true</value>
+</property>
+<property>
+    <name>hive.metastore.transactional.event.listeners</name>
+    <value>org.apache.hive.hcatalog.listener.DbNotificationListener</value>
+</property>
+```
+
+Для Huawei Cloud MRS необходимо изменить `hivemetastore-site.xml` и перезапустить HMS и HiveServer2.
+
+```xml
+<property>
+    <name>metastore.transactional.event.listeners</name>
+    <value>org.apache.hive.hcatalog.listener.DbNotificationListener</value>
+</property>
+```
+
+## Приложение {#appendix}
+
+### Механизм транзакций {#transaction-mechanism}
+
+Операции записи в Hive выполняются в отдельной транзакции. До фиксации транзакции данные не видны извне. Только после её фиксации результаты соответствующих операций с таблицами становятся видны другим пользователям.
+
+Транзакции обеспечивают атомарность операций: все операции внутри транзакции либо завершаются успешно вместе, либо вместе завершаются неудачей.
+
+Транзакции не могут полностью гарантировать изоляцию операций, но позволяют свести несогласованность к минимуму за счёт разделения операций файловой системы и операций с метаданными Hive Metastore.
+
+Например, если в транзакции требуется изменить несколько партиций таблицы Hive и задача разделена на две группы, первая группа может стать видна извне до завершения второй. Это означает, что первую группу партиций уже можно прочитать, а вторую — ещё нельзя.
+
+Если в процессе фиксации транзакции возникают исключения, транзакция полностью откатывается, включая изменения файлов HDFS и метаданных Hive Metastore, без дополнительных действий со стороны пользователя.
+
+### Механизм параллельной записи {#concurrent-writing-mechanism}
+
+В настоящее время Apache Doris поддерживает параллельную запись с помощью нескольких инструкций insert. Однако пользователи должны следить за тем, чтобы параллельные операции записи не вызывали конфликтов.
+
+Поскольку обычные нетранзакционные таблицы Hive не имеют полноценного механизма транзакций, механизм транзакций Apache Doris стремится сократить периоды несогласованности, но не может гарантировать полноценные свойства ACID. Поэтому параллельная запись в таблицы Hive через Apache Doris может приводить к проблемам согласованности данных.
+
+1. **Параллельные операции `INSERT`**
+
+2. Операции `INSERT` добавляют данные и при параллельном выполнении не конфликтуют, обеспечивая ожидаемые результаты.
+
+3. **Параллельные операции `INSERT OVERWRITE`**
+
+4. Параллельные операции `INSERT OVERWRITE` над одной таблицей или партицией могут приводить к потере или повреждению данных и непредсказуемым результатам.
+
+5. Распространённые решения:
+
+   * Для партиционированных таблиц записывайте данные в разные партиции. Параллельные операции над разными партициями не конфликтуют.
+
+   * Для непартиционированных таблиц используйте `INSERT` вместо `INSERT OVERWRITE`, чтобы избежать конфликтов.
+
+   * Для потенциально конфликтующих операций обеспечьте на уровне бизнес-логики выполнение только одной операции записи в каждый момент времени.
+
+### Файловые операции HDFS {#hdfs-file-operations}
+
+Данные таблиц Hive в HDFS обычно сначала записываются во временный каталог, а затем размещаются окончательно с помощью операций файловой системы, таких как `rename`. Ниже подробно описаны файловые операции HDFS для разных операций с данными.
+
+Формат временного каталога данных: `/tmp/.doris_staging/<username>/<uuid>`
+
+Формат имён записываемых файлов данных: `<query-id>_<uuid>-<index>.<compress-type>.<file-type>`
+
+Ниже приведены примеры файловых операций для различных сценариев:
+
+1. **Непартиционированная таблица**
+
+   * **Добавление данных**
+
+     * Каталог целевой таблицы: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+
+     * Временный файл: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+
+     * На этапе фиксации все временные файлы перемещаются в каталог целевой таблицы.
+
+   * **Перезапись (замена данных)**
+
+     * Каталог целевой таблицы: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+
+     * Временный файл: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+
+     * Шаги этапа фиксации:
+
+       1. Переименовать каталог целевой таблицы во временный каталог: `hdfs://ns/usr/hive/warehouse/example.db/_temp_b35fdbcea3a4e39-86d1f36987ef1492_table1`
+
+       2. Переименовать временный каталог в каталог целевой таблицы.
+
+       3. Удалить временный каталог целевой таблицы.
+
+2. **Партиционированная таблица**
+
+   * **Добавление в новую партицию**
+
+     * Каталог целевой таблицы: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+
+     * Временный файл: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+     * На этапе фиксации временный каталог переименовывается в каталог целевой таблицы.
+
+   * **Добавление данных в существующую партицию**
+
+     * Каталог целевой таблицы: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+
+     * Временный файл: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+     * На этапе фиксации файлы из временного каталога перемещаются в каталог целевой таблицы.
+
+   * **Перезапись (замена существующей партиции)**
+
+     * Каталог целевой таблицы: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+
+     * Временный файл: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+
+     * Шаги этапа фиксации:
+
+       1. Переименовать каталог целевой партиции во временный каталог партиции: `hdfs://ns/usr/hive/warehouse/example.db/table2/_temp_d678a74d232345e0-b659e2fb58e86ffd_part_col=2024-01-01`
+
+       2. Переименовать временный каталог партиции в каталог целевой партиции.
+
+       3. Удалить временный каталог целевой партиции.
+
+### История изменений {#change-log}
+
+| Версия Doris | Поддержка возможностей                              |
+| ------------- | --------------------------------------------- |
+| 2.1.6         | Поддержка обратной записи в таблицы Hive       |
+| 3.0.4         | Поддержка таблиц Hive в формате JsonSerDe. Поддержка транзакционных таблиц в Hive4. |
