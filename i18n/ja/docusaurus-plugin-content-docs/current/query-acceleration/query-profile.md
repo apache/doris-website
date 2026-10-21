@@ -1,94 +1,98 @@
 ---
 {
-    "title": "Query Profile 分析ガイド：Doris の低速クエリにおける性能ボトルネックの特定",
+    "title": "Query Profile 分析ガイド：Doris の遅いクエリのパフォーマンスボトルネックを特定する",
     "sidebar_label": "Query Profile 分析",
     "language": "ja",
-    "description": "Apache Doris の Query Profile を使ってクエリ実行の詳細を収集、表示、解釈する方法を説明します。アーキテクチャ、パラメータ設定、取得方法、ボトルネックの特定方法を扱います。",
-    "keywords": ["Doris Query Profile", "クエリ性能分析", "低速クエリの原因特定", "プロファイルの解釈", "MergedProfile", "DetailProfile", "enable_profile", "profile_level"]
+    "description": "Apache Doris Query Profile を使用してクエリの実行詳細を収集、表示、解釈する方法を説明します。アーキテクチャ、パラメータ設定、取得方法、ボトルネックの特定方法を扱います。",
+    "keywords": ["Doris Query Profile", "クエリのパフォーマンス分析", "遅いクエリの特定", "Profile の解釈", "MergedProfile", "DetailProfile", "enable_profile", "profile_level"]
 }
 ---
 
 <!-- Knowledge type: Concept + Operation guide -->
 <!-- Applicable scenario: Apache Doris users troubleshooting slow queries, analyzing execution plans, and locating operator bottlenecks -->
 
-Query Profile は、Apache Doris がクエリ実行の詳細を表示するための診断ツールです。各オペレーターの実行時間、行数、メモリ使用量などの主要な指標を記録し、低速クエリのボトルネックをすばやく特定するのに役立ちます。
+Query Profile は、Apache Doris がクエリの実行詳細を表示するために使用する診断ツールです。各 Operator の実行時間、行数、メモリ使用量などの主要な指標を記録し、遅いクエリのボトルネックをすばやく特定するのに役立ちます。
 
-読み始める前に、次の点を確認してください。
+読み進める前に、次の点を確認してください。
 
-- Apache Doris クラスターがデプロイされ、FE 設定ファイル `fe.conf` を変更する権限があること。
+- Apache Doris クラスターがデプロイされており、FE の設定ファイル `fe.conf` を変更する権限があること。
 - MySQL クライアントから Doris に接続し、`show query profile` などのコマンドを実行できること。
 - クエリプランの基本概念（Fragment、PlanNode）を理解していること。
 
-この記事は主に次の三つの部分で構成されます。
+この記事は主に次の部分で構成されています。
 
 | セクション | 内容 |
 | --- | --- |
 | 全体アーキテクチャ | Profile が BE から収集され、FE に保存される仕組み |
-| パラメータ設定 | 不要な情報を除外し、重要なクエリの詳細に注目するための設定方法 |
-| 読み解き方 | クエリ性能に影響するオペレーターをすばやく特定する方法 |
+| パラメータ設定 | 不要な情報を除外し、クエリの重要な詳細に注目するための設定方法 |
+| 解釈方法 | クエリのパフォーマンスに影響する Operator をすばやく特定する方法 |
 
-## Query Profile の全体アーキテクチャ
+## Query Profile の全体アーキテクチャ {#overall-architecture-of-query-profile}
 
 <!-- Knowledge type: Architectural principles -->
 <!-- Applicable scenario: Understanding the Profile collection process and troubleshooting reporting failures -->
 
 ![Query Profile の全体アーキテクチャ](/images/next/query-acceleration/profile-arch.jpg)
 
-Query Profile の中核は、FE 上の `ProfileManager` と BE 上の `AsyncReportThreadPool` の二つです。
+Query Profile の中核は、FE 上の `ProfileManager` と BE 上の `AsyncReportThreadPool` の部分から構成されます。
 
-### 収集の流れ
+### 収集プロセス {#collection-process}
 
-| 手順 | 担当 | 動作 |
+| ステップ | 担当 | 動作 |
 | --- | --- | --- |
-| 1 | FE | ユーザーがクエリを発行すると、FE が Profile のデータ構造を `ProfileManager` に登録する |
-| 2 | BE | クエリ完了後、BE が自身の Profile を非同期報告タスクとして登録する |
+| 1 | FE | ユーザーがクエリを発行すると、FE は Profile のデータ構造を `ProfileManager` に登録する |
+| 2 | BE | クエリ完了後、BE は自身の Profile を非同期報告タスクとして登録する |
 | 3 | BE | `AsyncReportThreadPool` がクエリ単位で RPC を開始し、Profile を FE に送信する |
 | 4 | FE | バックグラウンドスレッドが Profile を処理し、ポリシーに従って保持または削除し、適切な Profile を圧縮してストレージに書き込む |
 | 5 | ユーザー | Web UI または curl による HTTP リクエストで Profile を表示する |
 | 6 | FE | `ProfileManager` がメモリまたは外部ストレージから Profile を探し、テキストとして返す |
 
-一連の処理では、**手順 2 の非同期報告**と**手順 4 の Profile の永続化**が、Profile 機能に最も大きく影響します。
+このプロセス全体では、**ステップ 2 の非同期報告**と**ステップ 4 の Profile の永続化**が、Profile 機能に最も大きく影響します。
 
-### 非同期報告のタイムアウト
+### 非同期報告のタイムアウト {#asynchronous-reporting-timeout}
 
-クラスターの負荷が高いと、非同期報告がタイムアウトすることがあります。FE のメモリ消費が過大になるのを防ぐため、`ProfileManager` は一定時間待機した後、タイムアウトした Profile を破棄します。
+クラスターに高い負荷がかかっていると、非同期報告がタイムアウトすることがあります。FE のメモリ消費が過大にならないよう、`ProfileManager` は一定時間待機した後、タイムアウトした Profile を破棄します。
 
-- 調整方法：`profile_async_collect_expire_time_secs` を `fe.conf` で変更して待機時間を制御します。
-- 推奨する対処：タイムアウトが頻繁に発生する場合は、まずマシンのリソース使用量を確認します。必要に応じて、リスクを減らすためにグローバルな Profile を無効にします。
+- 調整方法：`fe.conf` の `profile_async_collect_expire_time_secs` を変更して、待機時間を制御します。
+- 推奨する対応：タイムアウトが頻発する場合は、まずマシンのリソース使用状況を確認します。必要に応じて、リスクを減らすためにグローバルな Profile を無効にします。
 
-### Profile 永続化の利点
+### Profile の永続化の利点 {#benefits-of-profile-persistence}
 
-`ProfileManager` が Profile をディスクに永続化すると、次のようになります。
+`ProfileManager` が Profile をディスクに永続化すると、次のことが可能になります。
 
-1. Profile が FE メモリを大量に消費しなくなります。
+1. Profile が FE のメモリを大量に消費しなくなります。
 2. FE の再起動後も、以前に生成された Profile を照会できます。
 
-一つ目により、FE は数千件の完全な Profile を保持できます。二つ目により、アップグレード前後のクラスター性能を比較しやすくなり、バージョンアップによって Doris のクエリ性能が改善したかどうかを確認できます。
+前者により、FE は数千件の完全な Profile を保持できます。後者により、アップグレード前後のクラスターのパフォーマンスを比較し、バージョンアップによって Doris のクエリ性能が改善したかを検証しやすくなります。
 
-## Profile の設定
+## Profile の設定 {#configuring-profile}
 
 <!-- Knowledge type: Parameter configuration -->
 <!-- Applicable scenario: Enabling/disabling Profile, controlling collection granularity and storage -->
 
-### パラメータ早見表
+### パラメータ早見表 {#parameter-quick-reference}
 
 | パラメータ | 適用範囲 | デフォルト | 説明 |
 | --- | --- | --- | --- |
 | `enable_profile` | セッション／グローバル | `false` | Profile を生成するかどうか |
-| `profile_level` | セッション／グローバル | `1` | Profile の詳細レベル（1 ～ 3、4.0 以降で有効） |
-| `auto_profile_threshold_ms` | グローバル | `-1` | 実行時間がしきい値を超えたクエリにのみ Profile を生成する（3.0 以降で有効） |
-| `max_query_profile_num` | `fe.conf` | `500` | FE メモリに保持する Profile の最大件数 |
-| `max_spilled_profile_num` | `fe.conf` | `500` | ディスクに保持する Profile の最大件数 |
-| `spilled_profile_storage_path` | `fe.conf` | `log/profile` | Profile を保存するローカルディレクトリ |
+| `profile_level` | セッション／グローバル | `2` | Profile の詳細レベル（1～3、4.0 以降で有効） |
+| `auto_profile_threshold_ms` | グローバル | `-1` | 実行時間がしきい値を超えるクエリについてのみ Profile を生成する（3.0 以降で有効） |
+| `max_query_profile_num` | `fe.conf` | `500` | FE のメモリに保持する Profile の最大数 |
+| `max_spilled_profile_num` | `fe.conf` | `500` | ディスクに保持する Profile の最大数 |
+| `spilled_profile_storage_path` | `fe.conf` | `log/profile` | Profile のローカル保存ディレクトリ |
 | `spilled_profile_storage_limit_bytes` | `fe.conf` | `1 GB` | ディスク上の Profile の総保存容量の上限 |
 
-### Profile の有効化
+以下のアーカイブ済みの例と ChangedSessionVariables の例には、過去の Profile が含まれています。そこに示される `profile_level` のデフォルト値 `1` は収集時に使用したバージョンの値であり、現在のデフォルト値ではありません。
 
-#### enable_profile
+4.1.5 以降では、Master FE に転送されたクエリでも、セッションの `profile_level` が維持されます。値については[セッション変数のリファレンス](../sql-manual/basic-element/session-variables.md#profile_level)を参照してください。
+
+### Profile の有効化 {#enabling-profile}
+
+#### enable_profile {#enable_profile}
 
 - 目的：Profile を生成するかどうかを制御します。
 - コマンド：`set enable_profile=true;`
-- 説明：デフォルトは `false` です。無効の場合、`show query profile` を実行しても新たに生成されたレコードは返されません。
+- 説明：デフォルトは `false` です。無効にすると、`show query profile` を実行しても新たに生成されたレコードは返されません。
 
 ```sql
 mysql> select 1;
@@ -147,19 +151,19 @@ show query profile
 1 row in set (0.00 sec)
 ```
 
-#### profile_level
+#### profile_level {#profile_level}
 
 - 目的：Profile の詳細レベルを制御します。
 - コマンド：`set profile_level=2;`
-- 説明：デフォルト値は `1` です。**このパラメータはバージョン 4.0 と master ブランチで有効です。4.0 より前のバージョンでは意味が異なるため、使用しないでください。**
+- 説明：デフォルト値は `2` です。**このパラメータはバージョン 4.0 以降で有効です。4.0 より前のバージョンでは意味が異なるため、使用しないでください。**
 
-| レベル | 動作 | 性能への影響 |
+| レベル | 動作 | パフォーマンスへの影響 |
 | --- | --- | --- |
-| 1（デフォルト） | BE は簡略化した Profile のみを報告し、FE が MergedProfile に集約するには十分な情報を含む | 最小 |
-| 2 | より詳細な Counter を出力し、詳しい分析に適している | 小 |
-| 3 | 最大の粒度。一部の Counter の収集がクエリ性能に影響する場合がある | 大 |
+| 1 | BE は簡略化された Profile のみを報告し、FE が MergedProfile に集約するために必要な情報を提供する | 最小限 |
+| 2（デフォルト） | より詳細な Counter を出力し、詳細な分析に適する | 小さい |
+| 3 | 最大の粒度。一部の Counter の収集がクエリ性能に影響する場合がある | 大きい |
 
-例：デフォルトでは、`EXCHANGE_OPERATOR` の Counter は次のとおりです。
+例：`profile_level=1` の場合、`EXCHANGE_OPERATOR` の Counter は次のようになります。
 
 ```text
 EXCHANGE_OPERATOR(id=1):
@@ -168,7 +172,7 @@ EXCHANGE_OPERATOR(id=1):
      - CloseTime: 4.243us
      - ExecTime: 30.834us
      - InitTime: 20.902us
-     - MemoryUsage: 0.00 
+     - MemoryUsage: 0.00
      - MemoryUsagePeak: 36.00 KB
      - OpenTime: 1.93us
      - ProjectionTime: 0ns
@@ -177,7 +181,7 @@ EXCHANGE_OPERATOR(id=1):
        - WaitForData0: 635.324us
 ```
 
-`profile_level=2` の場合は、より詳細な Counter を確認できます。
+`profile_level=2` の場合は、さらに詳細な Counter を確認できます。
 
 ```text
 EXCHANGE_OPERATOR(id=1):
@@ -186,7 +190,7 @@ EXCHANGE_OPERATOR(id=1):
      - CloseTime: 3.523us
      - CreateMergerTime: 0ns
      - DataArrivalWaitTime: 0ns
-     - DecompressBytes: 0.00 
+     - DecompressBytes: 0.00
      - DecompressTime: 0ns
      - DeserializeRowBatchTimer: 0ns
      - ExecTime: 28.439us
@@ -198,26 +202,26 @@ EXCHANGE_OPERATOR(id=1):
      - MaxFindRecvrTime(NS): 0
      - MaxWaitForWorkerTime: 0
      - MaxWaitToProcessTime: 0
-     - MemoryUsage: 0.00 
+     - MemoryUsage: 0.00
      - MemoryUsagePeak: 36.00 KB
      - OpenTime: 1.44us
      - ProjectionTime: 0ns
-     - RemoteBytesReceived: 0.00 
+     - RemoteBytesReceived: 0.00
      - RowsProduced: 10
      - SendersBlockedTotalTimer(*): 0ns
      - WaitForDependencyTime: 0ns
        - WaitForData0: 596.708us
 ```
 
-#### auto_profile_threshold_ms
+#### auto_profile_threshold_ms {#auto_profile_threshold_ms}
 
-- 目的：実行時間がしきい値を超えたクエリにのみ Profile を生成し、短時間で終わるクエリの Profile に低速クエリの Profile が埋もれるのを防ぎます。
+- 目的：実行時間がしきい値を超えるクエリについてのみ Profile を生成し、短時間で終わるクエリの Profile に遅いクエリの Profile が埋もれるのを防ぎます。
 - コマンド：`set global auto_profile_threshold_ms=1000;`
-- 説明：デフォルトは `-1` で、すべてのクエリに Profile を生成します。このパラメータはバージョン 3.0 以降で有効です。
+- 説明：デフォルトは `-1` で、すべてのクエリに対して Profile を生成します。このパラメータはバージョン 3.0 以降で有効です。
 
-このパラメータが必要な理由は、Profile をグローバルに有効にすると大量のデータが生成され、FE の CPU、メモリ、ディスクを消費し、レイテンシーが重要な短いクエリにも影響するためです。その結果、FE は定期的に Profile を削除します。このパラメータを使うと、低速クエリの Profile が埋もれずに済みます。
+このパラメータが必要な理由は何でしょうか。Profile をグローバルに有効にすると大量のデータが生成され、FE の CPU、メモリ、ディスクを消費して、遅延に敏感な短時間のクエリにも影響します。そのため、FE は Profile を定期的に削除します。このパラメータを使用すると、遅いクエリの Profile がほかの Profile に埋もれるのを防げます。
 
-例：Profile がグローバルに有効で、すべてのクエリに Profile が生成されるとします。
+例：Profile がグローバルに有効で、すべてのクエリが Profile を生成しているとします。
 
 ```sql
 mysql> show query profile;
@@ -239,7 +243,7 @@ show query profile
 7 rows in set (0.00 sec)
 ```
 
-これらの短いクエリについて Profile の生成を止めるには、次の手順を実行します。
+これらの短時間のクエリについて Profile の生成を停止するには、次の手順を実行します。
 
 ```sql
 mysql> clean all profile;
@@ -288,44 +292,44 @@ show query profile
 Empty set (0.00 sec)
 ```
 
-### Profile ストレージの設定
+### Profile の保存設定 {#configuring-profile-storage}
 
 Doris は Profile を FE のローカルディスクに永続化し、より多くのレコードを保持できます。これは `fe.conf` の次のパラメータで制御できます。
 
 | パラメータ | デフォルト | 説明 |
 | --- | --- | --- |
-| `max_query_profile_num` | `500` | FE メモリに保持する Profile の最大件数。超過すると古いものから削除される |
-| `max_spilled_profile_num` | `500` | ディスクに保持する Profile の最大件数。超過すると古いものから削除される |
-| `spilled_profile_storage_path` | `log/profile` | Profile を保存するローカルディレクトリ |
-| `spilled_profile_storage_limit_bytes` | `1 GB` | ディスク上に保持する Profile の総保存容量の上限 |
+| `max_query_profile_num` | `500` | FE のメモリに保持する Profile の最大数。超過すると古いものから削除される |
+| `max_spilled_profile_num` | `500` | ディスクに保持する Profile の最大数。超過すると古いものから削除される |
+| `spilled_profile_storage_path` | `log/profile` | Profile のローカル保存ディレクトリ |
+| `spilled_profile_storage_limit_bytes` | `1 GB` | ディスクに保持する Profile の総保存容量の上限 |
 
-## Profile の取得
+## Profile の取得 {#retrieving-profiles}
 
 <!-- Knowledge type: Operation guide -->
 <!-- Applicable scenario: Viewing historical Profiles, downloading Profiles remotely -->
 
-| 方法 | 利用場面 | 入口 |
+| 方法 | 利用場面 | アクセス先 |
 | --- | --- | --- |
-| FE Web UI | 日常的な調査、視覚的な確認 | `ip:http_port` の QueryProfile ページ |
+| FE Web UI | 日常的なトラブルシューティング、画面での確認 | `ip:http_port` の QueryProfile ページ |
 | コマンドライン | セキュリティ上の制限がある場合、一括ダウンロード | `show query profile` と curl |
-| ディスク上のファイルを直接読む | 永続化された Profile にすばやくアクセスする場合 | `log/profile` ディレクトリ内の zip ファイル |
+| ディスク上のファイルを直接読む | 永続化された Profile をすばやく確認する | `log/profile` ディレクトリ内の zip ファイル |
 
-### FE Web UI から取得する
+### FE Web UI から取得する {#retrieving-via-the-fe-web-ui}
 
-- 目的：ブラウザーから FE 上の全クエリの Profile を表示します。
+- 目的：FE 上のすべてのクエリの Profile をブラウザーで表示します。
 - 操作：FE の `ip:http_port` にアクセスし、ユーザー名とパスワードを入力して QueryProfile ページを開き、Profile ID をクリックして詳細を表示します。
-- 説明：
+- 注意事項：
 
-    - Profile は SQL を実行した FE 上にのみ存在し、**複数の FE 間では同期されません**。Profile を取得するには、その SQL を実行した FE に接続する必要があります。
-    - すべてのロードタスクは最終的に FE Master によって実行されるため、その Profile は FE Master から取得する必要があります。
+    - Profile は SQL を実行した FE 上にのみ存在し、**複数の FE 間で同期されません**。Profile を取得するには、その SQL を実行した FE に接続する必要があります。
+    - すべてのデータロードタスクは最終的に FE Master によって実行されるため、その Profile は FE Master から取得する必要があります。
 
 ![FE Web UI の Query Profile ページ](/images/profile/profile-image-1.png)
 
-### コマンドラインから取得する
+### コマンドラインから取得する {#retrieving-via-the-command-line}
 
 セキュリティ上の制限などにより、FE Web UI にアクセスできない場合があります。その場合は、コマンドラインから Profile を取得できます。
 
-**手順 1：`show query profile` を使用して、直近 20 件の Profile のメタデータを取得します。**
+**ステップ 1：`show query profile` を使用して、直近 20 件の Profile のメタデータを取得します。**
 
 ```sql
 mysql> show query profile;
@@ -360,13 +364,13 @@ show query profile
 20 rows in set (0.00 sec)
 ```
 
-**手順 2：curl で HTTP API にアクセスし、特定の Profile を取得します。** たとえば、ID が `f7efdc4c092d4b14-95e0f7f7783974d3` の Profile を取得するには、次を実行します。
+**ステップ 2：curl で HTTP API にアクセスし、特定の Profile を取得します。** たとえば、ID が `f7efdc4c092d4b14-95e0f7f7783974d3` の Profile を取得するには、次のコマンドを実行します。
 
 ```bash
 curl -uroot: http://127.0.0.1:5937/api/profile/text?query_id=f7efdc4c092d4b14-95e0f7f7783974d3 > f7efdc4c092d4b14-95e0f7f7783974d3.profile
 ```
 
-結果は Web UI に表示されるものと同じです。
+結果は Web UI に表示される内容と同じです。
 
 ```bash
 > head f7efdc4c092d4b14-95e0f7f7783974d3.profile -n 10
@@ -382,14 +386,14 @@ Summary:
    - Default Db: tpch
 ```
 
-### ディスクから Profile ファイルを直接取得する
+### ディスクから Profile ファイルを直接取得する {#retrieving-profile-files-directly-from-disk}
 
-バージョン 3.0 以降では Profile の永続化がサポートされ、デフォルトの保存先は `log/profile` です。すばやく確認するには、`unzip` で対象ファイルを展開してテキスト形式の内容を取得できます。
+3.0 以降では Profile の永続化がサポートされ、デフォルトの保存先は `log/profile` です。すばやく確認するには、`unzip` を使って対象ファイルを直接展開し、テキスト形式の Profile を取得できます。
 
 注意事項：
 
-1. Doris FE には `log/profile` ディレクトリを保護する仕組みがあります。**展開したファイルをこのディレクトリ内に置いたままにしないでください**。削除されます。
-2. Profile のテキストは Web UI の表示と少し異なります。`Summary` は JSON メタデータとして保存されますが、それ以外は Web UI と同じです。
+1. Doris FE には `log/profile` ディレクトリを保護する仕組みがあります。**展開したファイルをそのディレクトリ内に置いたままにしないでください**。削除されます。
+2. Profile のテキストは Web UI の表示と少し異なります。`Summary` は JSON メタデータとして保存されますが、その他の部分は Web UI と同じです。
 
 ```bash
 [hezhiqiang@VM-10-2-centos log]$ unzip profile/1740745121714_33bf38e988ea4945-b585d2f74d1da3fd.zip
@@ -407,24 +411,24 @@ profile_level                 | 2            | 1
 auto_profile_threshold_ms     | 1            | -1
 ```
 
-## Profile の構造
+## Profile の構造 {#profile-structure}
 
 <!-- Knowledge type: Data structure description -->
 <!-- Applicable scenario: Understanding the meaning of each part of a Profile and choosing the right section to read -->
 
-Profile の内容は、次の五つの部分に分かれます。
+Profile の内容は、次の部分に分かれています。
 
-| 部分 | 目的 | 使用する場面 |
+| 部分 | 目的 | 使用場面 |
 | --- | --- | --- |
-| Summary | Profile のメタデータ。取得に使う主要なフィールドを記録する | Profile の検索、クエリの基本情報の確認 |
-| ExecutionSummary | 実行処理の概要。Planner の各段階にかかった時間を含む | SQL のコンパイル／プランニング段階にかかった時間の調査 |
-| ChangedSessionVariables | このクエリの実行中に変更されたセッション変数 | 異常な設定による性能問題の調査 |
-| MergedProfile | DetailProfile を集約した結果 | クエリ構造の把握、ボトルネックとなるオペレーターの特定、データの偏りの比較 |
-| DetailProfile | すべての BE 上での各 Fragment と、各 Pipeline の PipelineTask の実行詳細 | ボトルネック特定後の詳細分析 |
+| Summary | 取得に使用する主要なフィールドを記録した Profile のメタデータ | Profile の検索、クエリの基本情報の確認 |
+| ExecutionSummary | 各 Planner 段階の所要時間を含む、実行プロセスの概要 | SQL のコンパイル／プランニング段階の所要時間の調査 |
+| ChangedSessionVariables | このクエリの実行時に変更されていたセッション変数 | 異常な設定によるパフォーマンス問題の調査 |
+| MergedProfile | DetailProfile の集約結果 | クエリ構造の把握、ボトルネックとなる Operator の特定、データの偏りの比較 |
+| DetailProfile | すべての BE における、各 Fragment と各 Pipeline の PipelineTask の実行詳細 | ボトルネックを特定した後の詳細分析 |
 
-### 1. Summary
+### 1. Summary {#1-summary}
 
-`SummaryProfile` は Profile のメタデータであり、`Profile ID` や `Total` など、取得に使う主要なフィールドを記録します。
+`SummaryProfile` は Profile のメタデータで、取得に使用する `Profile ID` や `Total` などの主要なフィールドを記録します。
 
 ```text
 -  Profile  ID:  d4d281168bf7490a-a133623295744f85
@@ -435,53 +439,53 @@ Profile の内容は、次の五つの部分に分かれます。
 -  Task  State:  OK
 ```
 
-### 2. ExecutionSummary
+### 2. ExecutionSummary {#2-executionsummary}
 
-実行処理の概要です。Plan 関連のフィールドには、Planner にかかった時間が記録されます。
+実行プロセスの概要です。このうち Plan 関連のフィールドには、Planner の所要時間が記録されます。
 
-### 3. ChangedSessionVariables
+### 3. ChangedSessionVariables {#3-changedsessionvariables}
 
-このクエリの実行中に変更されたセッション変数を記録します。
+このクエリの実行時に変更されていたセッション変数を記録します。
 
 ```text
 ChangedSessionVariables:
 VarName                       | CurrentValue | DefaultValue
 ------------------------------|--------------|-------------
-insert_visible_timeout_ms     | 10000        | 60000       
-fetch_splits_max_wait_time_ms | 4000         | 1000        
+insert_visible_timeout_ms     | 10000        | 60000
+fetch_splits_max_wait_time_ms | 4000         | 1000
 exec_mem_limit                | 2147483648   | 100147483648
-profile_level                 | 2            | 1           
-auto_profile_threshold_ms     | 1            | -1          
+profile_level                 | 2            | 1
+auto_profile_threshold_ms     | 1            | -1
 ```
 
-上の表は、このクエリの実行前に 5 つのセッション変数が変更されたことを示しています。
+上の表は、このクエリの実行前に 5 個のセッション変数が変更されていたことを示しています。
 
-### 4. MergedProfile
+### 4. MergedProfile {#4-mergedprofile}
 
-`MergedProfile` は `DetailProfile` を集約した結果です。主に次の三つの目的で使います。
+`MergedProfile` は `DetailProfile` の集約結果です。主に次の目的で使用します。
 
 - **クエリプランと Pipeline の構造をすばやく把握する**
 
-    Doris のクエリプランは、Query、Fragment、PlanNode からなる階層構造です。実行層は Pipeline 単位でタスクをスケジュールし、各 Pipeline は複数の Operator で構成されます。MergedProfile には、この変換関係が明確に示されます。
+    Doris のクエリプランは、Query、Fragment、PlanNode の階層構造を持ちます。実行レイヤーは Pipeline 単位でタスクをスケジュールし、各 Pipeline は Operator のグループで構成されます。MergedProfile は、この変換関係を明確に示します。
 
-- **性能ボトルネックとなるオペレーターをすばやく特定する**
+- **パフォーマンスのボトルネックとなる Operator をすばやく特定する**
 
-    性能問題を調査するときは、通常、ボトルネックとなるオペレーターを特定する必要があります。まず MergedProfile の `DependencyWaitTime` を基に待機時間が最も長いオペレーターを見つけ、次に DetailProfile の詳細を確認してボトルネックを絞り込みます。
+    パフォーマンス問題を調べる際は、通常、ボトルネックとなる具体的な Operator を特定する必要があります。まず MergedProfile の `DependencyWaitTime` を基に所要時間が最も長い Operator を探し、次に DetailProfile でその詳細を確認して、ボトルネックをさらに絞り込みます。
 
 - **データの偏りを比較する**
 
-    MergedProfile には、オペレーター間のデータの流れが詳しく記録されます。`InputRows` と `RowsProduced` を比較すると、Backend 間でデータが不均等に分散しているかどうかを判断できます。分散の偏りは、クエリの低速化や失敗につながることがよくあります。
+    MergedProfile は Operator 間のデータの流れを詳しく記録します。`InputRows` と `RowsProduced` を比較すると、異なる Backend 上のデータが均等に分散しているかを判断できます。データ分布の偏りは、クエリの遅延や失敗の原因になることがよくあります。
 
-### 5. DetailProfile
+### 5. DetailProfile {#5-detailprofile}
 
-実行に関する詳細情報です。`DetailProfile` は、クエリ内のすべての Fragment と Pipeline について、全 Backend 上の各 `PipelineTask` の実行詳細を記録します。MergedProfile でボトルネックを確認した後、通常は DetailProfile と併せて詳しく分析します。
+詳細な実行情報です。`DetailProfile` は、クエリの各 Fragment と Pipeline について、すべての Backend 上の各 `PipelineTask` の実行詳細を記録します。MergedProfile でボトルネックを確認した後は、通常、DetailProfile と組み合わせて詳しく分析します。
 
-## Profile の読み解き例
+## Profile の解釈例 {#profile-interpretation-example}
 
 <!-- Knowledge type: Hands-on example -->
 <!-- Applicable scenario: First time interpreting a Profile, understanding the relationship between Pipelines and Operators -->
 
-次の例では、Aggregation、Join、Scan を含む典型的なクエリを使い、Profile の読み解き方を説明します。TPCH データセットの `customer` テーブルと `orders` テーブルを JOIN してから、結果を集約します。
+以下では、Aggregation、Join、Scan を含む典型的なクエリを使って、Profile の読み方を説明します。TPCH データセットの `customer` テーブルと `orders` テーブルを JOIN し、その結果を集約するクエリです。
 
 ```sql
 SELECT c.c_name,
@@ -491,16 +495,16 @@ FROM   customer c
        JOIN orders o
          ON c.c_custkey = o.o_custkey
 GROUP  BY c.c_name
-LIMIT  20 
+LIMIT  20
 ```
 
-Profile が長くなりすぎないように、クエリの並列度を制限します。
+Profile が長くなりすぎないよう、クエリの並列度を制限します。
 
 ```sql
 set parallel_pipeline_task_num=2;
 ```
 
-上記のクエリを実行して Web UI から Profile を取得したら、まず MergedProfile を確認します。全体の構造に注目できるよう、以下では主要なフィールドのみを残しています。その他のフィールドの意味については、関連ドキュメントを参照してください。
+上のクエリを実行し、Web UI から Profile を取得したら、まず MergedProfile に注目します。全体構造を把握しやすいよう、以下には主要なフィールドのみを残しています。その他のフィールドの意味は、関連ドキュメントを参照してください。
 
 ```text
 MergedProfile:
@@ -609,7 +613,7 @@ MergedProfile:
                 - InputRows: sum 15.0M (15000000), avg 7.5M (7500000), max 15.0M (15000000), min 0
                 - WaitForDependency[HASH_JOIN_SINK_OPERATOR_DEPENDENCY]Time: avg 482.355ms, max 964.711ms, min 0ns
              CustomCounters:
-                - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00 
+                - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00
            EXCHANGE_OPERATOR(id=1):
              CommonCounters:
                 - ExecTime: avg 10.131ms, max 20.243ms, min 19.26us
@@ -635,81 +639,81 @@ MergedProfile:
                 - WaitForDependency[OLAP_SCAN_OPERATOR_DEPENDENCY]Time: avg 49.690ms, max 50.522ms, min 48.858ms
 ```
 
-以上は簡略化した MergedProfile です。Doris のクエリプランは Query、Fragment、PlanNode の三層構造ですが、Backend の実行エンジンにはさらに Pipeline と Operator の二層が加わります。次の図は、まずクエリプランの観点から、上記のクエリが三層に分かれる様子を示しています。
+上記は簡略化した MergedProfile です。Doris のクエリプランは Query、Fragment、PlanNode の階層構造を持ちます。Backend の実行エンジンでは、さらに Pipeline と Operator の階層が加わります。以下の図ではまず、上記のクエリがクエリプランの観点からどのように分割されるかを示します。
 
-### Query、Fragment、PlanNode
+### Query、Fragment、PlanNode {#query-fragment-and-plannode}
 
-![クエリプランの三層構造の例](/images/next/query-acceleration/profile-fragment.jpg)
+![クエリプランの階層構造の例](/images/next/query-acceleration/profile-fragment.jpg)
 
-図の矢印はデータフローの方向を示します。クエリ全体のプランは、4 つの Fragment（図の左側にある四つのボックス）と複数の PlanNode に分かれます。Fragment とそれに含まれる PlanNode は同じ水平線上にあります。各 PlanNode の役割は次のとおりです。
+図の矢印はデータの流れる方向を示します。Query 全体のクエリプランは、4 個の Fragment（図の左側にある四角形）と複数の PlanNode に分割されます。Fragment とそれに含まれる PlanNode は、同じ水平線上に配置されています。各 PlanNode の役割は次のとおりです。
 
 | PlanNode | 役割 |
 | --- | --- |
-| `SCAN_NODE` x2 | `customer` テーブルと `orders` テーブルをそれぞれ読み込む |
+| `SCAN_NODE` x2 | `customer` テーブルと `orders` テーブルをそれぞれ読み取る |
 | `DATA_STREAM_SINK` / `EXCHANGE` | 異なる Fragment 間でデータを受け渡す |
-| `HASH_JOIN` | SCAN で読み込んだデータを結合する |
-| `AGGREGATION`（第一段階）/ `AGGREGATION(MERGE)`（第二段階） | 二段階の集約を行う |
-| `TOP-N` | 結果の行数を制限する |
+| `HASH_JOIN` | SCAN で読み取ったデータに対して結合を実行する |
+| `AGGREGATION`（第 1 段階）/ `AGGREGATION(MERGE)`（第 2 段階） | 段階的に集約する |
+| `TOP-N` | 結果行数を制限する |
 | `RESULT_SINK` | 最終結果を FE に返す |
 
-### Pipeline と Operator
+### Pipeline と Operator {#pipelines-and-operators}
 
 上記のクエリプランは、実行エンジン内でどのように Pipeline と Operator に変換されるのでしょうか。AGGREGATION と HASH_JOIN を含む Fragment 1 と Fragment 2 を例に説明します。
 
 ![PlanNode から Pipeline と Operator への変換](/images/next/query-acceleration/profile-fragment-2.jpg)
 
-実行時には、Doris の実行エンジンが一部の PlanNode を一つ以上の Operator に分割します。
+Doris の実行エンジンは、実行時に一部の PlanNode を複数の Operator に分割します。
 
 **例 1：DATA_STREAM_SINK**
 
-`DATA_STREAM_SINK` は `DATA_STREAM_SINK_OPERATOR` に変換されます。このノードは、Fragment が外部にデータを出力する際に通るオペレーターです。自身の OperatorId はなく、送信先の OperatorId だけを持ちます。たとえば `dest_id=5` は、このオペレーターが `EXCHANGE_OPERATOR`（`id=5`）にデータを送ることを示します。
+`DATA_STREAM_SINK` は `DATA_STREAM_SINK_OPERATOR` に変換されます。このノードは、Fragment が外部にデータを出力する際に通る Operator です。自身の OperatorId は持たず、宛先の OperatorId のみを持ちます。たとえば、`dest_id=5` は、この Operator が `id=5` の `EXCHANGE_OPERATOR` にデータを送ることを示します。
 
 **例 2：HASH_JOIN**
 
-PlanNodeId が 3 の HASH_JOIN は、`HASH_JOIN_SINK_OPERATOR` と `HASH_JOIN_OPERATOR` の二つの Operator に分割されます。どちらの Operator Id も PlanNodeId と同じ 3 です。第一段階の AGGREGATION と第二段階の AGGREGATION(MERGE) も、それぞれ SINK と SOURCE の Operator の組に分割されます。
+PlanNodeId が 3 の HASH_JOIN は、`HASH_JOIN_SINK_OPERATOR` と `HASH_JOIN_OPERATOR` の Operator に分割されます。どちらの Operator Id も PlanNodeId と同じ 3 です。第 1 段階の AGGREGATION と第 2 段階の AGGREGATION(MERGE) も、それぞれ SINK Operator と SOURCE Operator の組に分割されます。
 
-**Pipeline の接続とブロッキング関係**
+**Pipeline 間の接続とブロッキングの関係**
 
-PlanNode を Operator に分割した後、実行エンジンはそれらの一部を接続して Pipeline を形成します。Fragment 1 と Fragment 2 は、それぞれ内部に 3 つの Pipeline を持ちます。
+PlanNode を Operator に分割した後、実行エンジンは一部の Operator をつないで Pipeline を形成します。Fragment 1 と Fragment 2 は、それぞれ内部に 3 個の Pipeline を持ちます。
 
 | ブロッキングの種類 | 原因 | 例 |
 | --- | --- | --- |
-| 計算上の依存関係 | オペレーター間の計算順序 | HashJoin の Probe 側は、Build 側がハッシュテーブルを構築し終えるまで待つ必要がある |
-| 物理環境上の依存関係 | ネットワークやバッファリングなどのシステム要因 | EXCHANGE_OPERATOR は、DATA_STREAM_SINK_OPERATOR がネットワーク経由でデータを送信するのを待つ必要がある |
+| 計算ロジック上の依存関係 | Operator 間の計算順序 | HashJoin の Probe 側は、Build 側によるハッシュテーブルの構築完了を待つ必要がある |
+| 物理環境上の依存関係 | ネットワークやバッファリングなどのシステム要因 | EXCHANGE_OPERATOR は、DATA_STREAM_SINK_OPERATOR によるネットワーク経由のデータ送信を待つ必要がある |
 
-同じ Pipeline 内の Operator 間のデータフローは**ブロックしません**。異なる Pipeline の Operator 間の接続には**ブロッキング関係があります**。ブロックしない Operator を Pipeline にまとめてスケジュール・実行することで、リソース使用率とキャッシュヒット率を高められます。
+同じ Pipeline 内の Operator 間のデータの流れは**ブロックされません**。異なる Pipeline の Operator 間の接続には**ブロッキングの関係があります**。ブロックしない Operator を Pipeline としてつなげてスケジュール、実行することで、リソース使用効率とキャッシュヒット率を向上できます。
 
-### CommonCounters と CustomCounters
+### CommonCounters と CustomCounters {#commoncounters-and-customcounters}
 
-`CommonCounters` は、すべての Operator が持つ Counter です。現在、Doris には次のものがあります。
+`CommonCounters` は、すべての Operator が持つ Counter です。現在の Doris には、次のものがあります。
 
-| Counter | 対象オペレーター | 意味 |
+| Counter | 対象の Operator | 意味 |
 | --- | --- | --- |
-| `ExecTime` | すべて | 現在の Operator の実行に費やした時間。**上流のオペレーターは含まない** |
-| `RowsProduced` | Sink 以外の Operator | ソースオペレーターが出力した行数 |
-| `InputRows` | Sink Operator | 現在のオペレーターが受け取った入力行数 |
-| `MemoryUsage` & `MemoryUsagePeak` | すべて | オペレーターの現在のメモリ使用量とピーク使用量 |
-| `WaitForDependency` | すべて | 依存先の実行完了を待つ時間 |
+| `ExecTime` | すべて | 現在の Operator の実行に要した時間。**上流の Operator は含まない** |
+| `RowsProduced` | Sink 以外の Operator | Source Operator が出力した行数 |
+| `InputRows` | Sink Operator | 現在の Operator が受け取った入力行数 |
+| `MemoryUsage` & `MemoryUsagePeak` | すべて | Operator の現在のメモリ使用量とピーク時のメモリ使用量 |
+| `WaitForDependency` | すべて | 依存先の実行が完了するまで待機した時間 |
 
-`CustomCounters` は各 Operator 固有の Counter です。各オペレーターの CustomCounter の意味の詳細については、「Doris Operator Profile Overview」を参照してください。
+`CustomCounters` は各 Operator に固有の Counter です。各 Operator の CustomCounter の意味については、「Doris Operator Profile Overview」を参照してください。
 
-### HashJoin の読み解き方
+### HashJoin の解釈 {#interpreting-hashjoin}
 
-Doris の実行に関する基本概念を確認したところで、先ほどのクエリに戻り、MergedProfile から Join の実行詳細を読み解きます。
+Doris の実行に関する基本概念を確認したところで、前述のクエリに戻り、MergedProfile から Join の実行詳細を読み解きます。
 
 ![Pipeline 内での HashJoin の実行詳細](/images/next/query-acceleration/profile-join.jpg)
 
-SQL を実行する前に、クエリの Pipeline 並列度を 2 に設定しました。したがって、図には接続された Pipeline 1 と Pipeline 2 の組が一つだけ示されていますが、実際の実行では Pipeline Task は合計 4 つになります。各 Pipeline に二つの Pipeline Task があります。
+SQL の実行前に、クエリの Pipeline 並列度を 2 に設定しました。そのため、図には接続された Pipeline 1 と Pipeline 2 の組しか示されていませんが、実際の実行では各 Pipeline に PipelineTask が 2 個ずつあり、合計 4 個の Pipeline Task があります。
 
 ```text
 Pipeline 0(instance_num=2)
 ```
 
-各 Pipeline の後に括弧で示される `instance_num` は、すべての BE にまたがるその Pipeline の PipelineTask の総数です。ここで使用したクラスターの BE は 1 台だけなので、`instance_num = 1 * parallel_pipeline_task_num = 2` です。
+各 Pipeline の後に括弧で示される `instance_num` は、すべての BE にわたるその Pipeline の PipelineTask 総数です。ここで使用したクラスターには BE が 1 台しかないため、`instance_num = 1 * parallel_pipeline_task_num = 2` です。
 
 **Build 側：HashTable の構築**
 
-Pipeline 2 の二つの PipelineTask は、合計 15M 行のデータを処理して HashTable を構築しました。HashTable 構築の平均実行時間は 445.146 ms です。Pipeline 1 は、Pipeline 2 が HashTable の構築を終えてからでなければ実行できません。待機時間は `WaitForDependency` に示され、`avg` は 949.860 ms です。しかし、HashTable の平均構築時間は 445.146 ms しかありません。この差はどこから生じるのでしょうか。
+Pipeline 2 の PipelineTask は、合計 15M 行のデータを処理して HashTable を構築しました。HashTable 構築の平均実行時間は 445.146 ms です。Pipeline 1 は、Pipeline 2 による HashTable の構築が終わってからでないと実行できません。待機時間は `WaitForDependency` に示され、その `avg` は 949.860 ms です。しかし、HashTable の平均構築時間は 445.146 ms にすぎません。この差はどこから来るのでしょうか。
 
 ```text
 HASH_JOIN_SINK_OPERATOR(nereids_id=418)(id=3):
@@ -718,15 +722,15 @@ HASH_JOIN_SINK_OPERATOR(nereids_id=418)(id=3):
     - InputRows: sum 15.0M (15000000), avg 7.5M (7500000), max 15.0M (15000000), min 0
     - WaitForDependency[HASH_JOIN_SINK_OPERATOR_DEPENDENCY]Time: avg 482.355ms, max 964.711ms, min 0ns
  CustomCounters:
-    - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00 
+    - MemoryUsageHashTable: sum 185.22 MB, avg 92.61 MB, max 185.22 MB, min 0.00
 ```
 
-理由は、この例では FE が JOIN の種類を `BROADCAST_JOIN` としてプランニングしたためです。この種類では、JOIN の Build 操作を行う二つの PipelineTask のうち、実際にハッシュテーブルを構築するのは一つだけです。`HASH_JOIN_SINK_OPERATOR` の MergedProfile から次のことがわかります。
+理由は、この例では FE が JOIN の種類を `BROADCAST_JOIN` としてプランニングしたためです。この種類では、JOIN の Build 処理を担当する PipelineTask のうち、実際にハッシュテーブルを構築するのは片方だけです。`HASH_JOIN_SINK_OPERATOR` の MergedProfile から、次のことが分かります。
 
-- 平均実行時間は 445.146 ms ですが、最も遅い PipelineTask には 890.258 ms かかり、最も速いものはわずか 34.635 us です。
-- `min` の値が 0 になっている `InputRows` から、すべてのデータを一つの PipelineTask が処理し、もう一つは何も処理していないことがわかります。
+- 平均実行時間は 445.146 ms ですが、最も遅い PipelineTask は 890.258 ms、最も速いものは 34.635 us しかかかっていません。
+- `InputRows` の `min` は 0 です。つまり、すべてのデータを片方の PipelineTask が処理し、もう片方は何もしていません。
 
-これにより、次の行の待機時間を説明できます。
+これにより、次の行に示される待機時間を説明できます。
 
 ```text
 - WaitForDependency[HASH_JOIN_OPERATOR_DEPENDENCY]Time: avg 949.860ms, max 962.978ms, min 936.743ms
@@ -734,80 +738,80 @@ HASH_JOIN_SINK_OPERATOR(nereids_id=418)(id=3):
 
 **Probe 側：スキャンと結合**
 
-次に `HASH_JOIN_OPERATOR` を見ます。平均 949.860 ms 待機した後、JOIN の Probe 側の実行を開始します。二つの `OLAP_SCAN_OPERATOR` インスタンス（`id=2`）は、ストレージから 150M 行を読み込みます。この 150M 行が `HASH_JOIN_OPERATOR` で処理された後、残る行はありません。そのすべてが上流の `AGGREGATION_SINK_OPERATOR` に渡されます。このオペレーターは、これら 150M 行についてハッシュテーブルを構築し、集約計算を続けます。
+次に `HASH_JOIN_OPERATOR` を見ます。平均 949.860 ms 待機した後、JOIN の Probe 側の処理を開始します。`id=2` の `OLAP_SCAN_OPERATOR` のインスタンスがストレージから 150M 行を読み取ります。この 150M 行を `HASH_JOIN_OPERATOR` が処理すると、そこには行が残りません。すべての行が `AGGREGATION_SINK_OPERATOR` に渡されます。この Operator はそれらの 150M 行についてハッシュテーブルを構築し、集約計算を続けます。
 
-### Aggregation の読み解き方
+### Aggregation の解釈 {#interpreting-aggregation}
 
-このクエリに含まれる集約処理は、`Count(o.o_orderkey) AS total_orders, Sum(o.o_totalprice) AS total_spent` と `GROUP BY c.c_name` です。
+このクエリで行われる集約は、`Count(o.o_orderkey) AS total_orders, Sum(o.o_totalprice) AS total_spent` と `GROUP BY c.c_name` です。
 
-![二段階集約の実行詳細](/images/next/query-acceleration/profile-agg.jpg)
+![段階的な集約の実行詳細](/images/next/query-acceleration/profile-agg.jpg)
 
-このクエリでは、Doris は二段階の Aggregation を使用します。
+このクエリでは、Doris は段階的な Aggregation を使用します。
 
-**第一段階の集約**
+**第 1 段階の集約**
 
-- `id=4` の AGGREGATION オペレーターの組で実行されます。
-- `AGGREGATION_SINK_OPERATOR(id=4)` の入力は合計 150M 行です。`GROUP BY` 列に基づいてハッシュテーブルを構築し、各集約結果の `AggregationData` を更新します。
-- 第一段階が終わると、`AggregationData` は EXCHANGE を通じて第二段階に送られます。異なる PipelineTask が同じ GROUP BY 列を処理する可能性があるため、EXCHANGE 段階では `name` 列で HASH パーティショニングを行い、同じ名前の行を同じ第二段階のオペレーターに送ります。
-- `AGGREGATION_OPERATOR(id=4)` の出力は合計 40 行であり、第一段階で構築されたハッシュテーブルに 40 行あることを示します。
+- `id=4` の AGGREGATION Operator の組で完了します。
+- `AGGREGATION_SINK_OPERATOR(id=4)` の入力は合計 150M 行です。`GROUP BY` 列をキーとするハッシュテーブルを構築し、各集約結果の `AggregationData` を更新します。
+- 第 1 段階の完了後、`AggregationData` を EXCHANGE 経由で第 2 段階に送ります。異なる PipelineTask が同じ GROUP BY 列の値を処理する可能性があるため、EXCHANGE 段階では `name` 列で HASH パーティショニングを行い、同じ name の行を同じ第 2 段階の Operator に送ります。
+- `AGGREGATION_OPERATOR(id=4)` の出力は合計 40 行であり、第 1 段階で構築したハッシュテーブルに 40 行あることを示します。
 
-**第二段階の集約**
+**第 2 段階の集約**
 
-- `AGGREGATION_SINK_OPERATOR(id=6)` は第一段階の結果を `AggregationData` に逆シリアル化し、Merge 操作を行います。
-- 結果は `AGGREGATION_OPERATOR(id=6)` から下流の TOP-N に送られます。クエリには `LIMIT 20` があるため、TOP-N オペレーターは 20 行を収集した時点で早期に終了します。
+- `AGGREGATION_SINK_OPERATOR(id=6)` は、第 1 段階の結果を再び `AggregationData` にデシリアライズし、Merge 処理を行います。
+- `AGGREGATION_OPERATOR(id=6)` は結果を下流の TOP-N に送ります。クエリには `LIMIT 20` があるため、TOP-N Operator は 20 行を収集すると早期に処理を終了します。
 
 **全体のボトルネック**
 
-全体として、このクエリで最も時間がかかる処理は `HASH_JOIN_OPERATOR(id=3)` です。特定したら、DetailProfile で `HASH_JOIN_OPERATOR(id=3)` のより詳細な Counter を確認できます。各 Counter の意味については、オペレーターごとのドキュメントを参照してください。
+このクエリ全体で最も時間がかかっている処理は `HASH_JOIN_OPERATOR(id=3)` です。特定した後は、DetailProfile で `HASH_JOIN_OPERATOR(id=3)` のより詳細な Counter を確認できます。各 Counter の意味については、Operator ごとの専用ドキュメントを参照してください。
 
-## トラブルシューティングと FAQ
+## トラブルシューティングと FAQ {#troubleshooting-and-faq}
 
 <!-- Knowledge type: FAQ -->
 <!-- Applicable scenario: Common issues encountered when using Profile in daily work -->
 
-### `show query profile` の結果が空になる場合
+### `show query profile` の結果が空になる場合 {#show-query-profile-returns-empty}
 
-- `enable_profile` が `true` か確認します：`show variables like 'enable_profile';`。
-- `auto_profile_threshold_ms` を確認します。大きな値に設定されていると、短いクエリの Profile は生成されません。
-- 接続先の FE が、SQL を実行した FE と同じノードか確認します。ロードタスクの場合は FE Master に接続する必要があります。
+- `show variables like 'enable_profile';` を実行し、`enable_profile` が `true` か確認します。
+- `auto_profile_threshold_ms` を確認します。大きな値が設定されている場合、短時間のクエリでは Profile が生成されません。
+- 接続先の FE が、SQL を実行した FE と同じノードか確認します。データロードタスクの場合は FE Master に接続する必要があります。
 
-### Profile の報告が頻繁にタイムアウトする場合
+### Profile の報告が頻繁にタイムアウトする場合 {#profile-reporting-times-out-frequently}
 
-- 症状：FE ログに非同期 Profile 収集のタイムアウトが記録されます。
+- 症状：FE のログに、Profile の非同期収集のタイムアウトが記録されます。
 - 対処方法：
 
-    1. マシンの CPU、メモリ、ネットワークの使用量を確認します。
-    2. `profile_async_collect_expire_time_secs` の値を `fe.conf` で増やします。
-    3. 極端な場合はグローバルな Profile を無効にし、低速クエリの Profile のみを収集します（`auto_profile_threshold_ms` を設定）。
+    1. マシンの CPU、メモリ、ネットワークの使用状況を確認します。
+    2. `fe.conf` の `profile_async_collect_expire_time_secs` を増やします。
+    3. 極端な場合は、グローバルな Profile を無効にし、遅いクエリの Profile のみを収集します（`auto_profile_threshold_ms` を設定します）。
 
-### Profile が FE メモリを大量に消費する場合
+### Profile が FE のメモリを使いすぎる場合 {#profile-takes-up-too-much-fe-memory}
 
-- `max_query_profile_num` を減らし、メモリに保持する Profile の件数を制限します。
-- ディスク永続化（デフォルトで有効）を使い、過去の Profile をディスクに退避します。
-- `auto_profile_threshold_ms` を使い、短いクエリを除外します。
+- `max_query_profile_num` を減らし、メモリに保持する Profile の数を制限します。
+- ディスクへの永続化を有効にして（デフォルトで有効）、過去の Profile をディスクに退避します。
+- `auto_profile_threshold_ms` を使用し、短時間のクエリを除外します。
 
-### 展開した Profile ファイルが消えた場合
+### 展開した Profile ファイルが消えた場合 {#the-extracted-profile-file-is-gone}
 
 - 原因：FE には `log/profile` ディレクトリを保護するためのクリーンアップ機構があります。
-- 対処方法：展開したファイルは `log/profile` **以外の**ディレクトリに置いてください。
+- 対処方法：展開先を `log/profile` **以外のディレクトリ**にします。
 
-### データの偏りがあるか確認するには
+### データの偏りがあるか確認する方法 {#how-to-confirm-whether-data-skew-exists}
 
-- MergedProfile で、同じオペレーターについて `min`、`avg`、`max` を `InputRows`／`RowsProduced` の値で比較します。
-- `max` が `avg` を大きく上回る場合や、`min` が 0 で `max` が非常に大きい場合は、通常、データの偏りを示します。
+- MergedProfile で、同じ Operator の `InputRows`／`RowsProduced` について、`min`、`avg`、`max` を比較します。
+- `max` が `avg` より著しく大きい場合や、`min` が 0 で `max` が非常に大きい場合は、通常、データの偏りを示します。
 
-## 用語集
+## 用語集 {#glossary}
 
 <!-- Knowledge type: Glossary -->
 <!-- Applicable scenario: Term alignment -->
 
 | 用語 | 一文での定義 |
 | --- | --- |
-| Query Profile | 一つのクエリの実行詳細を記録する診断用のデータ構造 |
-| Fragment | BE に配布して実行できる、クエリプランの実行単位 |
-| PlanNode | クエリプラン内の論理オペレーターノード |
+| Query Profile | 単一のクエリの実行詳細を記録する診断用のデータ構造 |
+| Fragment | 実行のために BE に割り当てられる、クエリプランの実行単位 |
+| PlanNode | クエリプラン内の論理 Operator ノード |
 | Pipeline | ブロックしない複数の Operator で構成される実行パイプライン |
-| Operator | PlanNode から分割される、実行エンジン内の最小実行単位 |
-| MergedProfile | 複数の BE と PipelineTask にまたがって集約された Profile |
+| Operator | PlanNode から分割された、実行エンジン内の最小実行単位 |
+| MergedProfile | 複数の BE と PipelineTask にわたって集約された Profile |
 | DetailProfile | 各 BE 上の各 PipelineTask の詳細な Profile |
-| `WaitForDependency` | オペレーターが依存先の完了を待つ時間。ボトルネックの特定によく使う |
+| `WaitForDependency` | Operator が依存先の処理完了を待つ時間。ボトルネックの特定によく使用される |
