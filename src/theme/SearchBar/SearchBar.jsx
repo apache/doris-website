@@ -297,13 +297,15 @@ export default function SearchBar({ handleSearchBarToggle }) {
             const mark = new Mark(root);
             mark.unmark();
             if (keywords.length !== 0) {
-                mark.mark(keywords);
+                // Search tokens normalize ё to е; preserve both spellings
+                // when highlighting the original Russian document.
+                mark.mark(keywords, currentLocale === 'ru' ? {synonyms: {'е': 'ё'}} : {});
             }
             // Apply any keywords to the search input so that we can clear marks in case we loaded a page with a highlight in the url
             setInputValue(keywords.join(' '));
             search.current?.autocomplete.setVal(keywords.join(' '));
         });
-    }, [isBrowser, location.search, location.pathname]);
+    }, [isBrowser, location.search, location.pathname, currentLocale]);
     const [focused, setFocused] = useState(false);
     const onInputFocus = useCallback(() => {
         focusAfterIndexLoaded.current = true;

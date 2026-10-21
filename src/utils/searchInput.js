@@ -1,5 +1,6 @@
 import {usesSegmenterTokenizer} from './tokenize';
 import {language} from './proxiedGeneratedConstants';
+import {normalizeRussianSearch} from './searchNormalization';
 
 // The segmenter behind some languages emits standalone '_' and '-' tokens for
 // SQL identifiers, but lunr removes those punctuation tokens from its index.
@@ -8,7 +9,8 @@ import {language} from './proxiedGeneratedConstants';
 // stop word. The configured index language decides, so this needs no locale.
 export async function searchWithLocaleFallback(searchByWorker, versionUrl, context, input, limit) {
     const segmented = usesSegmenterTokenizer(language);
-    const normalized = segmented ? input.replace(/[_-]/g, ' ') : input;
+    const normalized = language.includes('ru') ? normalizeRussianSearch(input)
+        : segmented ? input.replace(/[_-]/g, ' ') : input;
     const results = await searchByWorker(versionUrl, context, normalized, limit);
     if (!segmented || results.length || !/[_-]/.test(input)) return results;
     const parts = [...new Set(input.split(/[_-]+/).filter(part => part.length > 1))]

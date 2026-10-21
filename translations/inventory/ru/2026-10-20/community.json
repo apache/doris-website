@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
+  "id": "COMMUNITY",
+  "pluginId": "community",
+  "version": "current",
+  "sourceRoot": "community",
+  "counts": {
+    "sourceFiles": 51,
+    "registered": 51,
+    "required": 51,
+    "mergedCurrent": 0,
+    "humanReviewed": 0,
+    "machineReviewed": 0,
+    "untranslated": 51,
+    "needsUpdate": 0,
+    "drafts": 0,
+    "retainEnglish": 0,
+    "unregistered": 0,
+    "pending": 51,
+    "batches": 3
+  },
+  "exceptions": [],
+  "batches": [
+    {
+      "id": "T09-COMMUNITY-001",
+      "status": "TODO",
+      "pr": null,
+      "review": "pending",
+      "docIds": [
+        "join-community",
+        "subscribe-mail-list",
+        "feedback",
+        "security",
+        "team",
+        "how-to-contribute/contribute-to-doris",
+        "how-to-contribute/community-badges",
+        "how-to-contribute/pull-request",
+        "how-to-contribute/review-and-ci",
+        "how-to-contribute/contribute-doc",
+        "how-to-contribute/docs-format-specification",
+        "how-to-contribute/how-to-share-blogs",
+        "source-install/compilation-with-docker",
+        "source-install/compilation-with-ldb-toolchain",
+        "source-install/compilation-linux",
+        "source-install/compilation-arm",
+        "source-install/compilation-mac",
+        "source-install/compilation-win",
+        "developer-guide/fe-idea-dev",
+        "developer-guide/fe-vscode-dev"
+      ],
+      "pages": 20,
+      "remainingAfterBatch": 31
+    },
+    {
+      "id": "T09-COMMUNITY-002",
+      "status": "TODO",
+      "pr": null,
+      "review": "pending",
+      "docIds": [
+        "developer-guide/be-clion-dev",
+        "developer-guide/be-vscode-dev",
+        "developer-guide/be-multi-directory",
+        "developer-guide/docker-dev",
+        "developer-guide/java-format-code",
+        "developer-guide/cpp-format-code",
+        "developer-guide/cpp-diagnostic-code",
+        "developer-guide/debug-tool",
+        "developer-guide/be-stack-trace",
+        "developer-guide/arthas",
+        "developer-guide/fe-profiler",
+        "developer-guide/pipeline-tracing",
+        "developer-guide/benchmark-tool",
+        "developer-guide/regression-testing",
+        "developer-guide/all-in-one-image",
+        "developer-guide/data-source-extension/jdbc-catalog-developer-guide",
+        "developer-guide/data-source-extension/trino-connector-developer-guide",
+        "developer-guide/data-lineage-plugin-development",
+        "developer-guide/bitmap-hll-file-format",
+        "release-and-verify/release-versioning"
+      ],
+      "pages": 20,
+      "remainingAfterBatch": 11
+    },
+    {
+      "id": "T09-COMMUNITY-003",
+      "status": "TODO",
+      "pr": null,
+      "review": "pending",
+      "docIds": [
+        "release-and-verify/release-prepare",
+        "release-and-verify/release-doris-core-with-ai-agent",
+        "release-and-verify/release-doris-core",
+        "release-and-verify/release-doris-connectors",
+        "release-and-verify/release-doris-shade",
+        "release-and-verify/release-doris-sdk",
+        "release-and-verify/release-doris-manager",
+        "release-and-verify/release-complete",
+        "release-and-verify/release-verify",
+        "design/grouping_sets_design",
+        "design/metadata-design"
+      ],
+      "pages": 11,
+      "remainingAfterBatch": 0
+    }
+  ],
+  "entryFiles": [
+    "community/001.json"
+  ]
+}

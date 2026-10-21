@@ -8,7 +8,7 @@ const {inventory} = require('./optimize.cjs');
 
 const root = path.resolve(__dirname,'../..');
 const fixture = path.join(root,'.i18n-build/publish-fixture');
-const locales = ['en','zh-CN','ja','ko'];
+const locales = ['en','zh-CN','ja','ko','ru'];
 const hash = content => createHash('sha256').update(content).digest('hex');
 
 async function main() {

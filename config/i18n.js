@@ -35,6 +35,7 @@ const localeRegistry = [
             '/use-cases/observability',
             '/use-cases/ai',
         ]},
+    {code: 'ru', label: 'Русский', htmlLang: 'ru', optional: true, ordinaryPages: false},
 ];
 const locales = localeRegistry.map(locale => locale.code);
 // ja reads DORIS_ENABLE_JA, ko reads DORIS_ENABLE_KO. CI enables
