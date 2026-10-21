@@ -25,16 +25,19 @@ concurrency:
     group: build-check-${{ github.event.pull_request.number || github.ref }}
     cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
     build-and-deploy:
         name: Build Check
         runs-on: ubuntu-latest
-        environment: Production
         steps:
             - name: Checkout ${{ github.ref }} ( ${{ github.event.pull_request.head.sha }} )
-              uses: actions/checkout@v4
+              uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
               with:
                 ref: ${{ github.event.pull_request.head.sha }}
+                persist-credentials: false
                 fetch-depth: 0
                 # Full history is needed for merge-base/check_move, but the
                 # object database is ~1.7GB. Trees and commits are enough;
@@ -42,12 +45,12 @@ jobs:
                 filter: blob:none
 
             - name: Set up Python
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
               with:
                 python-version: '3.9'
 
             - name: Use Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
               with:
                   node-version: 20
                   cache: yarn
@@ -61,20 +64,13 @@ jobs:
                 BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
     
                 # Run the Python script with the base commit range
-                python check_move.py $BASE_COMMIT
+                python check_move.py "$BASE_COMMIT"
                   
             
             - name: Run Node.js dead link checker
               run: |
-                node ./scripts/check_move.js `git rev-parse HEAD`
+                node ./scripts/check_move.js "$(git rev-parse HEAD)"
         
-            - name: Check exit code
-              run: |
-                if [ $? -ne 0 ]; then
-                    echo "Have detected not processed link changes, please fix them."
-                    exit 1
-                fi
-
             - name: Detect changed doc versions and locales
               id: detect
               run: |
@@ -125,6 +121,9 @@ jobs:
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
                   node --test scripts/i18n/__tests__/translate-document.test.cjs
                   node --test scripts/i18n/__tests__/incremental-document.test.cjs
+
+            - name: Workflow security boundary tests
+              run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
 
             - name: Translation gate for changed locales
               run: |
@@ -201,25 +200,25 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   # A locale subset cannot prove cross-locale reciprocity.
-                  VERIFY_PARTIAL=""
-                  if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL="--partial"; fi
+                  VERIFY_PARTIAL=()
+                  if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL=(--partial); fi
                   for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
-                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" $VERIFY_PARTIAL
+                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" "${VERIFY_PARTIAL[@]}"
                   done
                   if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
                       node scripts/publish/verify.cjs build
                       for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
-                          EXTRA_ARGS=""
-                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS="--source-locales en,zh-CN --themes"; fi
-                          /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" $EXTRA_ARGS
+                          EXTRA_ARGS=()
+                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS=(--source-locales "en,zh-CN" --themes); fi
+                          /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" "${EXTRA_ARGS[@]}"
                       done
                   fi
                   rm -rf build
 
             - name: Upload publish artifact measurements
               if: always() && steps.detect.outputs.optimize_publish == 'true'
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: publish-artifact-measurements
                   include-hidden-files: true

@@ -70,16 +70,16 @@ jobs:
       can_generate: ${{ steps.scan.outputs.can_generate }}
       source_commit: ${{ steps.scan.outputs.source_commit }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: master
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
           cache: yarn
-      - run: yarn --frozen-lockfile
+      - run: yarn --frozen-lockfile --ignore-scripts
       - name: Reconcile every open master PR with managed translation files
         env:
           GH_TOKEN: ${{ github.token }}
@@ -88,7 +88,7 @@ jobs:
       - name: Plan all current and historical pending documents
         id: scan
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/$TRANSLATION_WORKSPACE"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: ${{ inputs.workspace }}-plan-${{ github.run_id }}
@@ -104,40 +104,38 @@ jobs:
     steps:
       # Current master, not the discovery commit: this job can wait for a runner
       # long after discovery, and the replan below works from what it checks out.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: master
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20
           cache: yarn
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
         with:
           python-version: '3.9'
-      - run: yarn --frozen-lockfile
-      - uses: actions/download-artifact@v4
+      - run: yarn --frozen-lockfile --ignore-scripts
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: ${{ inputs.workspace }}-plan-${{ github.run_id }}
           path: ${{ runner.temp }}/${{ inputs.workspace }}
       - name: Check external configuration
         id: config
         env:
-          OSS_AK: ${{ secrets.OSS_AK }}
-          OSS_SK: ${{ secrets.OSS_SK }}
-          APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
-          APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
-          I18N_GITHUB_PAT: ${{ secrets.I18N_GITHUB_PAT }}
+          HAS_OSS: ${{ secrets.OSS_AK != '' && secrets.OSS_SK != '' }}
+          HAS_APP: ${{ secrets.I18N_GITHUB_APP_ID != '' && secrets.I18N_GITHUB_APP_PRIVATE_KEY != '' }}
+          HAS_PAT: ${{ secrets.I18N_GITHUB_PAT != '' }}
         run: |
-          if [[ -n "$APP_ID" && -n "$APP_PRIVATE_KEY" ]]; then
+          if [[ "$HAS_APP" == 'true' ]]; then
             echo 'auth_kind=app' >> "$GITHUB_OUTPUT"
-          elif [[ -n "$I18N_GITHUB_PAT" ]]; then
+          elif [[ "$HAS_PAT" == 'true' ]]; then
             echo 'auth_kind=pat' >> "$GITHUB_OUTPUT"
           else
             echo 'auth_kind=none' >> "$GITHUB_OUTPUT"
           fi
-          if [[ -n "$OSS_AK" && -n "$OSS_SK" && ( -n "$APP_ID" && -n "$APP_PRIVATE_KEY" || -n "$I18N_GITHUB_PAT" || "$I18N_MODE" == 'validate' ) ]]; then
+          if [[ "$HAS_OSS" == 'true' && ( "$HAS_APP" == 'true' || "$HAS_PAT" == 'true' || "$I18N_MODE" == 'validate' ) ]]; then
             echo 'ready=true' >> "$GITHUB_OUTPUT"
           else
             echo 'ready=false' >> "$GITHUB_OUTPUT"
@@ -170,6 +168,7 @@ jobs:
           temp_dir="$(mktemp -d)"
           trap 'rm -rf "$temp_dir"' EXIT
           curl -fsSL -o "$temp_dir/ossutil.zip" https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-linux-amd64.zip
+          echo "dcc512e4a893e16bbee63bc769339d8e56b21744fd83c8212a9d8baf28767343  $temp_dir/ossutil.zip" | sha256sum --check
           unzip -q "$temp_dir/ossutil.zip" -d "$temp_dir"
           sudo install -m 0755 "$temp_dir/ossutil-v1.7.19-linux-amd64/ossutil" /usr/local/bin/ossutil
       - name: Install the verified Codex runtime used by Doris review
@@ -206,7 +205,7 @@ jobs:
           I18N_CODEX_MODEL: ${{ vars.I18N_CODEX_MODEL || 'gpt-6-sol' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: node scripts/i18n/workflow-generate.cjs "$RUNNER_TEMP/$TRANSLATION_WORKSPACE"
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2
         if: steps.translation.outputs.created == 'true' && steps.config.outputs.auth_kind == 'app'
         id: app
         with:
@@ -231,7 +230,7 @@ jobs:
           OSS_AK: ${{ secrets.OSS_AK }}
           OSS_SK: ${{ secrets.OSS_SK }}
         run: node scripts/i18n/codex-auth.cjs sync
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: ${{ inputs.workspace }}-generation-${{ github.run_id }}
