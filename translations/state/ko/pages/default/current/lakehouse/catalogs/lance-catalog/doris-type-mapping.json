@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/lance-catalog/doris-type-mapping",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/lance-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/lance-catalog/doris-type-mapping.md",
+    "sourceCommit": "97a17b9719dd55b7810a5d24f7b7630a0a52e7e4",
+    "sourceHash": "353814c70055c53fa9d1f469c0d4ddc66314f2ef1e7882cf13eac4df5ebfbb48",
+    "sourceTechnicalHash": "e3dc5a220b36eed7e8ebab8e0a08ecc3338c2b0ecb6c6027519af00113384f15",
+    "targetHash": "ed624622151ed4126d8e17c58e9783726ec180467cfdbacee78d3011e39b983a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T04:35:03.437Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "353814c70055c53fa9d1f469c0d4ddc66314f2ef1e7882cf13eac4df5ebfbb48",
+      "targetHash": "ed624622151ed4126d8e17c58e9783726ec180467cfdbacee78d3011e39b983a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/paimon-catalog/doris-type-mapping",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "sourceCommit": "97a17b9719dd55b7810a5d24f7b7630a0a52e7e4",
+    "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+    "sourceTechnicalHash": "328a5855fbc029abcf25bbbf7ae6b29136b3d07a67c13f444313ca807133bbba",
+    "targetHash": "b2526a0cf55ae199bc5241b4a3475295628a66cce3b66e90b86a9115ae718435",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T04:35:56.363Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+      "targetHash": "b2526a0cf55ae199bc5241b4a3475295628a66cce3b66e90b86a9115ae718435",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"6\"]; received [\"4.1.5\",\"4.2\",\"4.2\",\"4.2\",\"6\",\"6\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"VARCHAR(N)\"]; received [\"inlineCode\",null,null,\"N <= 65533\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"N <= 65533\"]; received [\"inlineCode\",null,null,\"VARCHAR(N)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

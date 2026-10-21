@@ -8,27 +8,42 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/search-function.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-function.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
-    "sourceTechnicalHash": "a2e70293f9b783f927af715d56d640c92eefb2e59e15e6a31217ec413c4ae4dc",
-    "targetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+    "sourceCommit": "97a17b9719dd55b7810a5d24f7b7630a0a52e7e4",
+    "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
+    "sourceTechnicalHash": "97e160e9e7b4e13c408f9d4ad6f27113ca41fa443512a73609c20d209718bb1f",
+    "targetHash": "64e1a4fba5de89de42e41df2faebe2998e19cb0d24b9e46ceb302afac4516be6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T08:03:31.481Z",
+    "translatedAt": "2026-10-21T04:32:56.901Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "previousSourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
+      "previousTargetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 99,
+        "totalLines": 454,
+        "ratio": 0.21806167400881057
+      },
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
-      "targetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+      "sourceHash": "39e1d99e4b8260a70c58a9075d39baffc3ddefa3bcbfe1fcef32005b7ae1943d",
+      "targetHash": "64e1a4fba5de89de42e41df2faebe2998e19cb0d24b9e46ceb302afac4516be6",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
