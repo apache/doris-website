@@ -42,7 +42,7 @@ SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 **使用要点：**
 
 - **位置**：用于 `WHERE` 子句，作为谓词参与行过滤
-- **返回类型**：BOOLEAN（匹配为 TRUE）
+- **返回类型**：不可空的 BOOLEAN（匹配为 TRUE，否则为 FALSE；自 Doris 4.2 起）
 
 提供 `default_field` 后，Doris 会把裸词项或函数自动扩展到该字段。例如：
 
@@ -78,17 +78,134 @@ WHERE SEARCH('apple banana',
              '{"default_field":"title","default_operator":"and","mode":"lucene"}');
 ```
 
-### NULL 与三值逻辑
+### NULL 与二值匹配 {#null-与三值逻辑}
 
-`SEARCH()` 遵循 SQL 三值逻辑：
+**版本说明：** 以下二值匹配规则、NULL/NOT 示例和 VARIANT 索引报错行为自 Doris 4.2 起适用。
 
-- 当所有参与匹配的列值均为 NULL 时，结果为 UNKNOWN（在 `WHERE` 中被过滤）
-- 与其他子表达式组合时，按布尔短路原则返回结果，例如：
-    - `TRUE OR NULL = TRUE`
-    - `FALSE OR NULL = NULL`
-    - `NOT NULL = NULL`
+`SEARCH` 返回不可空的 BOOLEAN：匹配为 TRUE，不匹配为 FALSE。普通词项不匹配 NULL 值或经存储元数据确认缺失的 VARIANT 路径。SEARCH 不传播 UNKNOWN。
 
-该行为与文本检索算子保持一致。
+在 standard 模式下，`AND` 对匹配集合取交集，`OR` 取并集，`NOT` 相对于当前查询可见的行取补集。因此，`SEARCH('NOT a:hit')` 和 `NOT SEARCH('a:hit')` 都会保留 NULL 行。Lucene 模式也将 NULL 视为不匹配，但仍遵循下文所述的布尔解析规则。计算 `score()` 或使用查询缓存不会改变完整命中集合；排序和 LIMIT 可能改变最终返回的行。
+
+普通 SQL 比较和 `MATCH` 算子仍遵循 SQL 三值逻辑。输入为 NULL 时，`a != 'hit'` 和 `NOT (a MATCH_ANY 'hit')` 的结果为 UNKNOWN，会被 `WHERE` 过滤。外层 SQL 表达式中的其他可空操作数仍可能使整个表达式得到 UNKNOWN。
+
+#### 示例：NULL 与 NOT
+
+请在具有 CREATE、INSERT 和 SELECT 权限的数据库中执行。以下单桶、单副本配置用于小规模演示。
+
+```sql
+CREATE TABLE search_null_demo (
+    id INT,
+    a VARCHAR(16) NULL,
+    INDEX idx_a(a) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_null_demo VALUES (1, 'hit'), (2, 'miss'), (3, NULL);
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('NOT a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+如果还要排除 NULL 行，请显式添加 `IS NOT NULL`：
+
+```sql
+SELECT id FROM search_null_demo
+WHERE a IS NOT NULL AND NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+```
+
+对于这三行数据，SQL 条件 `a != 'hit'` 和文本检索条件 `NOT (a MATCH_ANY 'hit')` 也都只返回 id 2。
+
+#### VARIANT：NULL、路径缺失与索引不可用
+
+普通 VARIANT 词项（如 `v.a:hit`）遵循相同规则：
+
+| 写入 `v` 的值 | `v.a:hit` | `NOT v.a:hit` |
+| --- | --- | --- |
+| `{"a":"hit"}` | TRUE | FALSE |
+| `{"a":"miss"}` | FALSE | TRUE |
+| `{"a":null}` | FALSE | TRUE |
+| `{}`（缺少路径 `a`） | FALSE | TRUE |
+| SQL NULL（整个 VARIANT 列为空） | FALSE | TRUE |
+
+对于写入表中的数组外对象，值为 JSON `null` 的成员会被移除，读取该路径返回 SQL NULL，与成员缺失相同。这与查询表达式中计算出的 JSON `null` 值不同，参见 [VARIANT 文档](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md)。
+
+使用 `parse_to_variant` 写入 JSON 对象。以下建表关闭 doc 模式，使示例使用已物化且具有可执行索引的子路径。
+
+```sql
+CREATE TABLE search_variant_null_demo (
+    id INT,
+    v VARIANT<PROPERTIES("variant_enable_doc_mode"="false")>,
+    INDEX idx_v(v) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_variant_null_demo VALUES
+    (1, parse_to_variant('{"a":"hit"}')),
+    (2, parse_to_variant('{"a":"miss"}')),
+    (3, parse_to_variant('{"a":null}')),
+    (4, parse_to_variant('{}')),
+    (5, NULL);
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('v.a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('NOT v.a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+4
+5
+```
+
+`NOT SEARCH('v.a:hit')` 返回相同的 id。如果某条路径在所有行中都不存在，`SEARCH('v.absent:hit')` 不返回任何行，`SEARCH('NOT v.absent:hit')` 返回全部五行。如果只想保留目标路径有非 NULL 值的行，可在 SEARCH 外添加 `v['a'] IS NOT NULL`。
+
+**路径缺失与索引不可用是两种状态。** 如果路径有数据，但所需倒排索引无法执行，SEARCH 会报错 `SEARCH index unavailable for Variant field 'v.a'`，取反查询也一样。例如：CREATE INDEX 后历史 rowset 尚未构建索引，或路径仅保存在 doc 存储中且没有可执行的叶子索引。SEARCH 不会将这些情况当作零命中，也不会自动退回扫描。应确保所有待查询数据均具有所需路径的可执行索引，或改用普通 SQL 提取路径后查询。
 
 ## 按场景使用 SEARCH
 
@@ -184,7 +301,7 @@ Lucene 模式模拟 Elasticsearch/Lucene 的 query_string 行为，布尔操作�
 - AND/OR/NOT 是影响相邻词项的修饰符
 - 操作符优先级从左到右
 - 内部使用 MUST/SHOULD/MUST_NOT（类似 Lucene 的 Occur 枚举）
-- 纯 NOT 查询返回空结果（需要正向子句）
+- 纯 NOT 查询会补充全匹配条件，再排除匹配行
 
 **启用 Lucene 模式：**
 
