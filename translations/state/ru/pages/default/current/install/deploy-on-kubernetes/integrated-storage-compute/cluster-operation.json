@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/cluster-operation.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e90fea7fb163dd85ebd94d0a952cb455a41ed6b926645b10f8d80603b52de951",
+    "sourceTechnicalHash": "18a94c79c46018073f38620d96b9e6a99e425cfd6d3ab9cca2158d7b39258772",
+    "targetHash": "f54db08f6ee4e28411bcf6677766f3db2ea6303559daefc8fc8b8cb252689c53",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:36:29.564Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e90fea7fb163dd85ebd94d0a952cb455a41ed6b926645b10f8d80603b52de951",
+      "targetHash": "f54db08f6ee4e28411bcf6677766f3db2ea6303559daefc8fc8b8cb252689c53",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 70: expected [\"link\",\"install-config-cluster.md#access-configuration\",null]; received [\"inlineCode\",null,null,\"mysql-client\"]\nprotected node 71: expected [\"inlineCode\",null,null,\"mysql-client\"]; received [\"link\",\"install-config-cluster.md#access-configuration\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

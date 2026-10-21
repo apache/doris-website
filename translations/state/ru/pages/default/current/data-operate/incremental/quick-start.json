@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/quick-start",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/quick-start.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/incremental/quick-start.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "040a1d85e7ccfb5bf653013824cf5e3135baddeff93663f2db08c85aff8ddfda",
+    "sourceTechnicalHash": "73a44c69162124bb152cfa7ea029dc69bbd76d3ce1e0b92e5394f3b40a585ba0",
+    "targetHash": "e371fc7fd95ce111ed899b212c5d1245f9776ddd85749246feb71a50c6dc5556",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:16.842Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "040a1d85e7ccfb5bf653013824cf5e3135baddeff93663f2db08c85aff8ddfda",
+      "targetHash": "e371fc7fd95ce111ed899b212c5d1245f9776ddd85749246feb71a50c6dc5556",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

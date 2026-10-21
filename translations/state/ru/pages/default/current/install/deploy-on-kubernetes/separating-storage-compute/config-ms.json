@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/config-ms",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/config-ms.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a7b4343fc33c36c4f488f8a65088e166ad1acc2680d77227755adb440737d064",
+    "sourceTechnicalHash": "0d0f9a2daae576561183d59fe1bb417f8235613f4c82e094a46d7efd3592e7ce",
+    "targetHash": "69312326a3cac5d9ece026c08d5e81bae51e6fe677a44b88ae86b5bc295e76c2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:34:29.249Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a7b4343fc33c36c4f488f8a65088e166ad1acc2680d77227755adb440737d064",
+      "targetHash": "69312326a3cac5d9ece026c08d5e81bae51e6fe677a44b88ae86b5bc295e76c2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

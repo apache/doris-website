@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/update/multi-stream-update-for-unique-model",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/update/multi-stream-update-for-unique-model.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/update/multi-stream-update-for-unique-model.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "61e815e35704500b57de7ddb8cd66f28d31973180eeb558f8cd383f6d6bb8234",
+    "sourceTechnicalHash": "6aca83a686d425c021df07262ac1ea5aa0e4de341fb255368b4a138247718341",
+    "targetHash": "b23d186c23cbc567af8aa4ded6b6a7912fa3f902316d737f1471e215d4b5a06b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:35.391Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "61e815e35704500b57de7ddb8cd66f28d31973180eeb558f8cd383f6d6bb8234",
+      "targetHash": "b23d186c23cbc567af8aa4ded6b6a7912fa3f902316d737f1471e215d4b5a06b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

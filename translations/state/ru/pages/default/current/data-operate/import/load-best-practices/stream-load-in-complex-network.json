@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/load-best-practices/stream-load-in-complex-network",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/load-best-practices/stream-load-in-complex-network.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/load-best-practices/stream-load-in-complex-network.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "336c549ee94e144a890160a95ba77789a7c410697ba026a794254ba3c07fdd9f",
+    "sourceTechnicalHash": "e0328f20c03332ab16280e9c5052fbfe57d4cf06694ed2d89460eafe3dc46930",
+    "targetHash": "d72ee1e3a68675bc529783bca231a8c369acbf0aa5bef5480f522e2bcecb6703",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:25:19.854Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "336c549ee94e144a890160a95ba77789a7c410697ba026a794254ba3c07fdd9f",
+      "targetHash": "d72ee1e3a68675bc529783bca231a8c369acbf0aa5bef5480f522e2bcecb6703",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

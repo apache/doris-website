@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/preparation/os-checking",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/preparation/os-checking.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/preparation/os-checking.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9fca792023c144bedbfba0cf91d1c802c0ae34a02180657d9807f6336d0f8493",
+    "sourceTechnicalHash": "3e3622c892a15dbd2aad098b0f87cfcec9d902ad8554221c9de0f081f5b3cb1e",
+    "targetHash": "9b16aa06b7703afddc0b601b8067aa5bf459094c4371d91f3191916606a28bcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:35:03.551Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9fca792023c144bedbfba0cf91d1c802c0ae34a02180657d9807f6336d0f8493",
+      "targetHash": "9b16aa06b7703afddc0b601b8067aa5bf459094c4371d91f3191916606a28bcf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
