@@ -28,11 +28,11 @@ Lance 的类型映射请参阅 [Doris 数据类型映射](../catalogs/lance-cata
 | 谓词下推 | 支持兼容的标量谓词 |
 | 向量检索 | 支持通过 `vector_search()` 使用 Lance 向量索引或执行 Flat Search |
 | 写入 Lance | 暂不支持 |
-| Time Travel | 暂不支持 |
-| Full-Text Search / Hybrid Search | 暂不支持 |
+| Time Travel | Lance Catalog 支持；文件 TVF 仅读取当前版本 |
+| 全文检索 | 支持通过 `full_text_search()` 使用已有的 Lance FTS 索引 |
+| Hybrid Search | 暂不支持 |
 
-<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->
-Catalog 配置、谓词下推和向量检索的详细说明请参见 [Lance Catalog（4.x）](/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)。
+Catalog 配置、谓词下推、向量检索和全文检索的详细说明请参见 [Lance Catalog](../catalogs/lance-catalog.mdx)。
 
 ## 通过文件 TVF 查询 Lance 数据集
 
@@ -61,10 +61,10 @@ WHERE user_id > 100;
 - Lance 当前仅支持读取，不支持创建、写入、更新或删除 Lance 表。
 - Lance 格式仅支持 `s3()` 和 `local()`，暂不支持 HDFS、HTTP 等其他文件 TVF。
 - 一个 TVF 路径只能表示一个 Lance 数据集，且不支持 `path_partition_keys`。
-- 查询读取数据集的当前版本，不支持通过 SQL 指定 Version 或执行 Time Travel。
+- 文件 TVF 查询读取数据集的当前版本。如需指定历史版本或执行 Time Travel，请使用 [Lance Catalog](../catalogs/lance-catalog.mdx#time-travel)。
 - Local TVF 的 Schema 发现和执行会分别打开数据集的最新版本，应避免在查询分析和执行期间修改数据集。
 
 ## 参考资料
 
-- [Lance Catalog（4.x）](/zh-CN/docs/4.x/lakehouse/catalogs/lance-catalog)
+- [Lance Catalog](../catalogs/lance-catalog.mdx)
 - [Lance 格式官方文档](https://docs.lancedb.com/lance)
