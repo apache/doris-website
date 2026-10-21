@@ -38,14 +38,14 @@ FILE
 
 - FILE 可用于查询表达式，暂不能在内表或外部 Catalog 中声明为表列，包括容器中嵌套的 FILE。
 - 完整 FILE 及包含 FILE 的容器不能用于比较、排序、哈希、分组、DISTINCT 或 MAP key；这些操作应先提取普通标量字段。
-- FILE 支持与 STRUCT、JSON、VARIANT 显式双向转换，不支持与这些类型隐式转换，须使用 CAST。完整规则见 [FILE 类型转换](../conversion/file-conversion.md)。
+- FILE 支持与 STRUCT 显式双向转换，不支持与 STRUCT 隐式转换，须使用 CAST。完整规则见 [FILE 类型转换](../conversion/file-conversion.md)。
 - UDF 的参数、返回值及聚合中间类型不支持 FILE，包括嵌套 FILE。
 
 ## 获取 FILE
 
 ### 根据元数据构造
 
-通过显式 CAST，将六字段 STRUCT、JSON 或 VARIANT 值转换为 FILE。值为 NULL 的字段也须提供；转换本身不访问远端存储。
+通过显式 CAST，将六字段 STRUCT 值转换为 FILE。值为 NULL 的字段也须提供；转换本身不访问远端存储。
 
 ```sql
 SELECT CAST(NAMED_STRUCT(

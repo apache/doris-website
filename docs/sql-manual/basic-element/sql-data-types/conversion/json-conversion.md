@@ -10,25 +10,6 @@ The JSON type in Doris uses binary encoding for storage rather than text storage
 
 ## Cast to JSON
 
-### FROM FILE
-
-[FILE](../semi-structured/FILE.md) can be explicitly cast to JSON. The result is an object containing all six fields; inline bytes are represented as a Base64 string.
-
-```sql
-SELECT CAST(f AS JSON) AS j
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
-```
-```text
-+-----------------------------------------------------------------------------------------------------------+
-| j                                                                                                         |
-+-----------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+-----------------------------------------------------------------------------------------------------------+
-```
-
 ### FROM String
 
 When casting a string to JSON, the string content must conform to valid JSON syntax as defined in [RFC7159](https://datatracker.ietf.org/doc/html/rfc7159). The parser will validate the string and convert it to the corresponding JSON binary format.
@@ -136,7 +117,6 @@ The following Doris types can be directly cast to JSON without loss of precision
 | STRING | String |
 | ARRAY | Array |
 | STRUCT | Object |
-| FILE | Object |
 
 #### Examples
 
@@ -185,23 +165,6 @@ Before version 4.0, Doris had more relaxed requirements for JSON CAST behavior a
 
 Starting from version 4.0, overflow in JSON CAST will result in an error in strict mode or return null in non-strict mode.
 :::
-
-### TO FILE
-
-JSON objects can also be explicitly cast to [FILE](../semi-structured/FILE.md). The object must contain exactly the six required fields and satisfy their type and value constraints; inline is a Base64 string or null. See [FILE Type Conversion](file-conversion.md) for the complete rules and examples.
-
-```sql
-SELECT CAST(JSON_PARSE(
-    '{"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}'
-) AS FILE) AS f;
-```
-```text
-+-----------------------------------------------------------------------------------------------------------+
-| f                                                                                                         |
-+-----------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+-----------------------------------------------------------------------------------------------------------+
-```
 
 ### TO Boolean
 
@@ -413,7 +376,7 @@ mysql> SELECT CAST(CAST('null' AS JSON) AS INT);
 | Number | BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DOUBLE, FLOAT, DECIMAL, STRING |
 | String | BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, DOUBLE, FLOAT, DECIMAL, STRING, ARRAY, STRUCT |
 | Array | STRING, ARRAY |
-| Object | STRING, STRUCT, FILE (subject to field constraints) |
+| Object | STRING, STRUCT |
 
 ### keywords
 JSON, JSONB, CAST, conversion, to_json

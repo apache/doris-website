@@ -49,9 +49,12 @@ Additionally, the function supports converting the following types:
 - Date types: DATETIME, DATE, TIME
 - IP types: IPV4, IPV6
 - Complex types: MAP
+- File type: FILE (supported since 4.2.0)
 
 For DATETIME, DATE, TIME, IPV4, IPV6 types that don't have corresponding JSONB types, they will be converted to STRING type.
 For MAP type, it will be converted to JSONB Object type. The Map keys must be STRING type, as JSON standard requires Object keys to be strings.
+
+For FILE, the result is a JSONB object containing all six fields: `uri`, `offset`, `size`, `content_type`, `checksum`, and `inline`. The binary `inline` field becomes a Base64 string; empty bytes become an empty string, and NULL fields become JSON null. FILE values within ARRAY, STRUCT, and MAP values use the same representation.
 
 ## Return Value
 
@@ -60,6 +63,31 @@ Returns a value of JSONB type.
 When the input `value` is SQL NULL, the function returns SQL NULL (not a JSON null value). When NULL values appear within arrays or structs, they are converted to JSON null values.
 
 ## Examples
+
+### FILE values
+
+:::note
+Since 4.2.0
+:::
+
+```sql
+SELECT TO_JSON(CAST(NAMED_STRUCT(
+    'uri', 'urn:example', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE)) AS j;
+```
+
+```text
+{"uri":"urn:example","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}
+```
+
+```sql
+SELECT TO_JSON(CAST(NULL AS FILE)) AS j;
+```
+
+```text
+NULL
+```
 
 ### Basic scalar values
 

@@ -38,14 +38,14 @@ FILE
 
 - FILE is available in query expressions. FILE columns cannot be declared in internal tables or external catalogs, including FILE nested in containers.
 - Whole FILE values and containers containing FILE cannot be used for comparison, sorting, hashing, grouping, DISTINCT, or MAP keys. Extract an ordinary scalar field for these operations.
-- FILE supports explicit conversion to and from STRUCT, JSON, and VARIANT. There is no implicit conversion between FILE and these types; use CAST. See [FILE Type Conversion](../conversion/file-conversion.md).
+- FILE supports explicit conversion to and from STRUCT. There is no implicit conversion between FILE and STRUCT; use CAST. See [FILE Type Conversion](../conversion/file-conversion.md).
 - FILE arguments, return values, and aggregate intermediate types are unsupported in UDFs, including nested FILE.
 
 ## Obtaining FILE Values
 
 ### Construct from metadata
 
-Use an explicit CAST to construct FILE from a six-field STRUCT, JSON, or VARIANT value. Fields whose values are NULL must still be included. This conversion does not access remote storage.
+Use an explicit CAST to construct FILE from a six-field STRUCT value. Fields whose values are NULL must still be included. This conversion does not access remote storage.
 
 ```sql
 SELECT CAST(NAMED_STRUCT(
