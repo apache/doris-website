@@ -3,6 +3,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
 import { useLocation } from '@docusaurus/router';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { LinkLikeNavbarItemProps } from '@theme/NavbarItem';
 import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
@@ -22,6 +23,8 @@ export default function LocaleDropdownNavbarItem({
     const alternatePageUtils = useAlternatePageUtils();
     const {group, translatedLocales} = useTranslationRoutes();
     const { search, hash } = useLocation();
+    // Match SSR on the first client render, then update suffixes after hydration.
+    const suffix = useIsBrowser() ? search + hash : '';
 
     // Locales listed here render in the dropdown with a "Coming Soon" badge and
     // are not clickable yet. Empty while no locale is in that state.
@@ -37,7 +40,7 @@ export default function LocaleDropdownNavbarItem({
         const isTranslatedSwitch = translatedLocales.includes(locale) || translatedLocales.includes(currentLocale);
         const baseTo = `pathname://${isTranslatedSwitch && group?.[locale] ? group[locale] : nativeTo}`;
         // preserve ?search#hash suffix on locale switches
-        const to = `${baseTo}${search}${hash}${queryString}`;
+        const to = `${baseTo}${suffix}${queryString}`;
         const isComingSoon = COMING_SOON_LOCALES.has(locale);
         const baseLabel = localeConfigs[locale]!.label;
         const label = isComingSoon ? (

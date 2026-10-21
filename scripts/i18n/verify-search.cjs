@@ -146,6 +146,13 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             assert.equal(source.pathname, current.englishPermalink);
             assert.equal(source.search, '?i18nProbe=1');
             assert.equal(source.hash, '#core-highlights');
+            // Hydration must update language-switch attributes as well as the
+            // source link. SSR cannot know the request's query or fragment.
+            const englishSwitch = navigation.locator('a.dropdown__link[lang="en-US"]').first();
+            await navigation.waitForFunction(expected =>
+                document.querySelector('a.dropdown__link[lang="en-US"]')?.getAttribute('href') === expected,
+            current.englishPermalink + source.search + source.hash);
+            assert.equal(await englishSwitch.getAttribute('href'), current.englishPermalink + source.search + source.hash);
             const linked = await navigation.locator('a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
             const fallback = data.pages.find(page => page.pluginId === 'default' && page.version === 'current'
                 && !page.draft && !page.useTarget && linked.some(link => route(link) === route(page.permalink)));
