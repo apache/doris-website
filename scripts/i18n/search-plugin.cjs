@@ -13,6 +13,7 @@ const {processDocInfos} = require('@yang1666204/docusaurus-search-local/dist/ser
 const {scanDocuments} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/scanDocuments');
 const {buildIndex: buildNativeIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
 const {loadConfig, managedLocales} = require('./state.cjs');
+const {normalizeRussianSearch} = require('../../src/utils/searchNormalization.js');
 
 const contexts = ['docs/dev', 'docs/4.x', 'community'];
 const normalize = url => url.replace(/\/+$/, '');
@@ -23,7 +24,7 @@ function groupFor(page) {
     return null;
 }
 function localizedOptions(options, locale, labels) {
-    return {...options, language:[locale.split('-')[0]],
+    return {...options, language:locale === 'ru' ? ['en', 'ru'] : [locale.split('-')[0]],
         docsRouteBasePath:['docs','community',`${locale}/docs`,`${locale}/community`],
         // A locale without configured labels falls back to the context path.
         searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
@@ -44,6 +45,8 @@ function indexGroups(allDocuments, selected) {
 function targetFingerprint(root, locale) {
     const digester = createHash('sha256');
     digester.update(fs.readFileSync(__filename)); // Bust caches when indexing behavior changes.
+    // The shared normalizer also changes indexed tokens independently of this file.
+    digester.update(fs.readFileSync(require.resolve('../../src/utils/searchNormalization.js')));
     function scan(dir) {
         if (!fs.existsSync(dir)) return;
         for (const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b) => a.name.localeCompare(b.name))) {
@@ -86,7 +89,8 @@ function localizedPages(plugins, locale) {
 function buildLocalizedIndexes(documents, config) {
     const original = lunr.tokenizer;
     const tokenizer = Object.assign((value, metadata) => original(
-        typeof value === 'string' ? value.replace(/[()\[\]{},"';`]/g, ' ') : value, metadata), original);
+        typeof value === 'string' ? (config.language.includes('ru')
+            ? normalizeRussianSearch(value) : value.replace(/[()\[\]{},"';`]/g, ' ')) : value, metadata), original);
     try {
         lunr.tokenizer = tokenizer;
         return buildNativeIndex(documents, config);

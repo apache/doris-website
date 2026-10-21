@@ -26,25 +26,25 @@ async function withEnv(values, run) {
     }
 }
 
-test('two managed locales require a configured selector even when the site disables them', async t => {
+test('three managed locales require a configured selector even when the site disables them', async t => {
     const {root} = await createFixture(directory(t));
     assert.throws(() => pipelineLocale(root, ''), /Set I18N_LOCALE/);
     assert.throws(() => pipelineLocale(root, 'fr'), /Unconfigured translation locale/);
-    for (const locale of ['ja', 'ko']) assert.equal(pipelineLocale(root, locale), locale);
-    assert.deepEqual(managedLocales(root), ['ja', 'ko']);
+    for (const locale of ['ja', 'ko', 'ru']) assert.equal(pipelineLocale(root, locale), locale);
+    assert.deepEqual(managedLocales(root), ['ja', 'ko', 'ru']);
     const cli = all => execFileSync(process.execPath, [path.join(repoRoot, 'scripts/i18n/managed-locales.cjs'), ...all],
         {cwd: root, encoding: 'utf8', env: {...process.env, DORIS_ENABLE_JA: '', DORIS_ENABLE_LOCALES: ''}});
     assert.equal(cli([]), '');
-    assert.equal(cli(['--all']), 'ja ko');
+    assert.equal(cli(['--all']), 'ja ko ru');
 });
 
 test('native inventory isolates locales across repeated doc IDs, plugins, versions and reports', async t => {
     const {root} = await createFixture(directory(t));
-    for (const locale of ['ja', 'ko']) await withEnv({I18N_LOCALE: locale}, async () => {
+    for (const locale of ['ja', 'ko', 'ru']) await withEnv({I18N_LOCALE: locale}, async () => {
         const native = await collect(root);
-        assert.equal(native.pages.length, 8);
+        assert.equal(native.pages.length, 9);
         assert(native.pages.every(page => page.locale === locale));
-        assert.equal(new Set(native.pages.map(identity)).size, 8);
+        assert.equal(new Set(native.pages.map(identity)).size, 9);
         assert.equal(native.pages.filter(page => page.docId === 'shared').length, 3);
         assert.deepEqual(native.versions.map(({pluginId, version}) => [pluginId, version]),
             [['default', 'current'], ['default', '4.x'], ['community', 'current']]);
@@ -56,27 +56,27 @@ test('native inventory isolates locales across repeated doc IDs, plugins, versio
             files: native.pages.filter(page => page.pluginId === 'default' && page.version === 'current').map(page => page.englishPath),
             scope: {locale, groups: [group], retainEnglish: [], maxBatchPages: 10}, order: new Map(),
             committedHash: () => null, committedRecords: new Map()});
-        assert.equal(result.counts.registered, 6);
-        assert.equal(result.counts.required, 5);
+        assert.equal(result.counts.registered, 7);
+        assert.equal(result.counts.required, 6);
         assert.equal(result.counts.drafts, 1);
         const shared = native.pages.find(page => page.docId === 'shared' && page.version === 'current' && page.pluginId === 'default');
         assert.deepEqual(shared.alternates, {en: '/docs/dev/english-shared/', 'zh-CN': '/zh-CN/docs/dev/chinese-shared/',
-            ja: '/ja/docs/dev/english-shared/', ko: '/ko/docs/dev/english-shared/'});
+            ja: '/ja/docs/dev/english-shared/', ko: '/ko/docs/dev/english-shared/', ru: '/ru/docs/dev/english-shared/'});
         for (const [id, expected] of [['ja-only', ['en', 'zh-CN', 'ja']], ['ko-only', ['en', 'zh-CN', 'ko']],
-            ['missing', ['en', 'zh-CN']], ['hidden', ['en', 'zh-CN']], ['draft', ['en']]]) {
+            ['ru-only', ['en', 'zh-CN', 'ru']], ['missing', ['en', 'zh-CN']], ['hidden', ['en', 'zh-CN']], ['draft', ['en']]]) {
             assert.deepEqual(Object.keys(native.pages.find(page => page.docId === id).alternates), expected, id);
         }
     });
 });
 
-test('native doc metadata, browser groups and per-locale manifests agree, including disabled ko', async t => {
+test('native doc metadata, browser groups and per-locale manifests agree, across all eight optional-locale combinations', async t => {
     const {loadContext} = require('@docusaurus/core/lib/server/site.js');
     const {loadPluginConfigs} = require('@docusaurus/core/lib/server/plugins/configs.js');
     const {initPluginsConfigs} = require('@docusaurus/core/lib/server/plugins/init.js');
-    for (const disabled of [false, true]) {
+    for (let mask = 0; mask < 8; mask++) {
         const {root} = await createFixture(directory(t));
-        await withEnv({NODE_ENV: 'production', FIXTURE_DISABLE_KO: disabled ? 'true' : undefined}, async () => {
-            const locales = ['en', 'zh-CN', 'ja', ...(disabled ? [] : ['ko'])];
+        await withEnv({NODE_ENV: 'production', ...Object.fromEntries(['ja','ko','ru'].map((locale,i) => ['FIXTURE_DISABLE_'+locale.toUpperCase(), mask & (1 << i) ? undefined : 'true']))}, async () => {
+            const locales = ['en','zh-CN', ...['ja','ko','ru'].filter((_,i) => mask & (1 << i))];
             for (const locale of locales) {
                 const context = await loadContext({siteDir: root, locale});
                 const configs = (await loadPluginConfigs(context)).filter(config => config.plugin.isTranslationDocsPlugin);
@@ -85,7 +85,8 @@ test('native doc metadata, browser groups and per-locale manifests agree, includ
                 for (const plugin of plugins) allContent['docusaurus-plugin-content-docs'][plugin.options.id] = await plugin.loadContent();
                 let data;
                 await statusPlugin(context).allContentLoaded({allContent, actions: {setGlobalData: value => {data = value;}}});
-                const pages = Object.values(allContent['docusaurus-plugin-content-docs']).flatMap(content => content.translationManifest.pages);
+                const pages = Object.values(allContent['docusaurus-plugin-content-docs']).flatMap(content => content.translationManifest?.pages ?? []);
+                if (mask === 0) {assert.deepEqual(pages, []); assert.deepEqual(data.alternates, {}); continue;}
                 const shared = pages.find(page => page.docId === 'shared' && page.version === 'current' && page.pluginId === 'default');
                 assert.deepEqual(Object.keys(shared.alternates), locales);
                 for (const permalink of Object.values(shared.alternates)) assert.deepEqual(data.alternates[permalink], shared.alternates);
@@ -93,14 +94,14 @@ test('native doc metadata, browser groups and per-locale manifests agree, includ
                 const output = JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/manifests', `${locale}.json`)));
                 assert(output.pages.every(page => page.locale === locale));
                 assert(output.reports.every(report => !report.locale || report.locale === locale));
-                if (['ja', 'ko'].includes(locale)) {
+                if (['ja', 'ko', 'ru'].includes(locale)) {
                     const metadata = allContent['docusaurus-plugin-content-docs'].default.loadedVersions
                         .find(version => version.versionName === 'current').docs.find(doc => doc.id === 'shared').translation;
                     assert.deepEqual(metadata.alternates, shared.alternates);
                     assert.deepEqual(output.pages.find(page => page.docId === 'shared' && page.version === 'current' && page.pluginId === 'default').alternates,
                         shared.alternates);
                 }
-                if (disabled) assert(!JSON.stringify(data.alternates).includes('/ko/'));
+                for (const disabled of ['ja','ko','ru'].filter(lang => !locales.includes(lang))) assert(!JSON.stringify(data.alternates).includes('/'+disabled+'/'));
             }
         });
     }
@@ -130,16 +131,18 @@ test('scheduled Japanese jobs select ja and PR admission checks only changed loc
     };
     const jaTarget = 'i18n/ja/docusaurus-plugin-content-docs/current/01-shared.md';
     const koTarget = 'i18n/ko/docusaurus-plugin-content-docs/current/01-shared.md';
+    const ruTarget = 'i18n/ru/docusaurus-plugin-content-docs/current/01-shared.md';
     git('init', '-q');
     git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '--allow-empty', '-qm', 'base');
     git('update-ref', 'refs/remotes/origin/master', 'HEAD');
 
     write(jaTarget, '# ja\n');
     write(koTarget, '# ko\n');
-    commit([jaTarget, koTarget]);
+    write(ruTarget, '# ru\n');
+    commit([jaTarget, koTarget, ruTarget]);
     let result = run('');
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(result.calls, 'ja\nko\n');
+    assert.equal(result.calls, 'ja\nko\nru\n');
     result = run('ja');
     assert.equal(result.status, 1, result.stderr);
     assert.equal(result.calls, 'ja\n');
@@ -159,6 +162,13 @@ test('scheduled Japanese jobs select ja and PR admission checks only changed loc
     assert.equal(result.calls, 'ko\n');
 
     git('reset', '--hard', 'origin/master');
+    write(ruTarget, '# ru\n');
+    commit([ruTarget]);
+    result = run('ru');
+    assert.equal(result.status, 1, result.stderr);
+    assert.equal(result.calls, 'ru\n');
+
+    git('reset', '--hard', 'origin/master');
     result = run('');
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.calls, '');
@@ -167,7 +177,7 @@ test('scheduled Japanese jobs select ja and PR admission checks only changed loc
     commit(['scripts/i18n/state.cjs']);
     result = run('');
     assert.equal(result.status, 0, result.stderr);
-    assert.equal(result.calls, 'ja\nko\n');
+    assert.equal(result.calls, 'ja\nko\nru\n');
 });
 
 test('the publisher-selected locale is forwarded to the admission subprocess', async t => {
@@ -176,7 +186,7 @@ test('the publisher-selected locale is forwarded to the admission subprocess', a
     write('scripts/i18n/check-translations.cjs', "require('node:fs').writeFileSync('selected-locale', process.env.I18N_LOCALE);\n");
     execFileSync('git', ['init', '-q'], {cwd: root});
     execFileSync('git', ['-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '--allow-empty', '-qm', 'base'], {cwd: root});
-    for (const locale of ['ja', 'ko']) {
+    for (const locale of ['ja', 'ko', 'ru']) {
         await withEnv({I18N_LOCALE: 'unconfigured'}, () => preflight({root, base: 'HEAD', locale}));
         assert.equal(fs.readFileSync(path.join(root, 'selected-locale'), 'utf8'), locale);
     }

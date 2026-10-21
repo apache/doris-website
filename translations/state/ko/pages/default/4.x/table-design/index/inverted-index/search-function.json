@@ -8,43 +8,54 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/search-function.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/search-function.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
-    "sourceTechnicalHash": "a2e70293f9b783f927af715d56d640c92eefb2e59e15e6a31217ec413c4ae4dc",
-    "targetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+    "sourceCommit": "97a17b9719dd55b7810a5d24f7b7630a0a52e7e4",
+    "sourceHash": "655f64cd14d3cb8ca34a68521ebc81c8f4e6de5b3d1d13d81a3837e286a5cfac",
+    "sourceTechnicalHash": "e881c7730f7c5fa6fc3f784e955975f7c13f2e84b1aba154a0dfa36bcc2dc4ae",
+    "targetHash": "7393b1fc856fb8580c5c549af44f6fc1d0977b0db076a38990fdfab7d85cb747",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T15:13:42.055Z",
+    "translatedAt": "2026-10-21T04:34:08.457Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "previousSourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
+      "previousTargetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 99,
+        "totalLines": 454,
+        "ratio": 0.21806167400881057
+      },
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
-      "targetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
+      "sourceHash": "655f64cd14d3cb8ca34a68521ebc81c8f4e6de5b3d1d13d81a3837e286a5cfac",
+      "targetHash": "7393b1fc856fb8580c5c549af44f6fc1d0977b0db076a38990fdfab7d85cb747",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "table-design/index/inverted-index/search-function",
-        "sourcePath": "docs/table-design/index/inverted-index/search-function.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-function.md",
-        "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-        "sourceHash": "cca0a8ce074f648ce8180d9a98982b3f549fc21615655d1d54072e5c098f256c",
-        "targetHash": "6c60a4d7eecc3043c99019843d7dc25f96b94612efc15f1d44b05834657c4c7a",
-        "commit": "c5b54b1cd03719e14c660f23a1ea79359c00d843",
-        "pr": "https://github.com/apache/doris-website/pull/4387"
-      }
+      ]
     }
   }
 }

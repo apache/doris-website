@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "getting-started/what-is-apache-doris",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/getting-started/what-is-apache-doris.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/getting-started/what-is-apache-doris.md",
+    "sourceHash": "c1b950ba12598be8495190f93fd341dd646d98c837bf09c72ccc199c2ebb941e",
+    "targetHash": "f0be5aba60b8f872656c22dba0c7a16b42f52ee35b7bd5cd64b9de5510b2003e",
+    "sourceTechnicalHash": "2c3ee90a60bae82e00653c8a088e174bf2ecd6eb8ce1bdda96d08cc50a160318",
+    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-20T14:20:39.179Z",
+    "glossaryVersion": "1"
+  }
+}

@@ -8,26 +8,42 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/lance.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/file-formats/lance.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "01bcd9061851878058f0884db5a2d14b5c383d5f681b118887c33b3e0e07abbc",
-    "sourceTechnicalHash": "421d6de82ae495a8765e613d22be7cc6a6955d5ce1130ed1116e3f042b284e18",
-    "targetHash": "547ecb7ed0809f6acd471f9fc8bea63abacb46f60683300cc505965a6fda7191",
+    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
+    "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
+    "sourceTechnicalHash": "6edfbb409e9d1fd2daad98998a2d97cf9707972c7c82db0312d0d9dcf9be7e3f",
+    "targetHash": "24c5e6056e461b6a22a5a6a8405a1dc5e2b87b158c821f7ac9932158f8205db8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:23:10.070Z",
+    "translatedAt": "2026-10-20T20:42:47.304Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
+      "previousSourceHash": "01bcd9061851878058f0884db5a2d14b5c383d5f681b118887c33b3e0e07abbc",
+      "previousTargetHash": "547ecb7ed0809f6acd471f9fc8bea63abacb46f60683300cc505965a6fda7191",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 4,
+        "totalLines": 54,
+        "ratio": 0.07407407407407407
+      },
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "01bcd9061851878058f0884db5a2d14b5c383d5f681b118887c33b3e0e07abbc",
-      "targetHash": "547ecb7ed0809f6acd471f9fc8bea63abacb46f60683300cc505965a6fda7191",
+      "sourceHash": "296e29297ad1a69894c710d489a6d5bc4e881cb8fcce8e885ff4b85a7711e87f",
+      "targetHash": "24c5e6056e461b6a22a5a6a8405a1dc5e2b87b158c821f7ac9932158f8205db8",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"html\",null,null,\"<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->\"]; received [\"html\",null,null,\"<!-- 전체 Lance Catalog 가이드는 현재 4.x 문서에서만 제공됩니다. -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]

@@ -10,6 +10,26 @@ const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const shared = load('translation-run.yml');
 const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml')};
+const russian = load('russian-translation.yml');
+
+test('Russian discovery is manual only and uses the shared run, lock and explicit secrets', () => {
+    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch']);
+    const inputs = russian.on.workflow_dispatch.inputs;
+    const koreanInputs = callers.ko.on.workflow_dispatch.inputs;
+    assert.deepEqual(inputs, {...koreanInputs, mode: {...koreanInputs.mode, default: 'dry-run'}});
+    assert.deepEqual(russian.permissions, shared.permissions);
+    for (const workflow of Object.values(callers)) assert.deepEqual(russian.concurrency, workflow.concurrency);
+    assert.deepEqual(Object.keys(russian.jobs), ['translation']);
+    const job = russian.jobs.translation;
+    assert.equal(job.uses, './.github/workflows/translation-run.yml');
+    assert.deepEqual(job.with, {...callers.ko.jobs.translation.with, locale: 'ru', workspace: 'russian-translation',
+        mode: "${{ inputs.mode || 'dry-run' }}"});
+    assert.deepEqual(job.secrets, callers.ko.jobs.translation.secrets);
+    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), false);
+    assert.equal(allowGeneration({I18N_MODE: 'validate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '1',
+        I18N_PATH: 'community/how-to-contribute/how-to-share-blogs.md'}), true);
+    assert.equal(allowGeneration({I18N_MODE: 'generate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
+});
 
 test('one-page validation rejects an exact batch list before creating scan artifacts', t => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ko-validate-paths-'));
@@ -66,7 +86,7 @@ test('scheduled and default manual runs resolve to a mode that the generation ga
 
 test('the shared run names no language and sets mode and filters once', () => {
     const text = fs.readFileSync(path.join(workflows, 'translation-run.yml'), 'utf8');
-    assert.doesNotMatch(text, /japanese|korean|translate-(ja|ko)\b/i);
+    assert.doesNotMatch(text, /japanese|korean|russian|translate-(ja|ko|ru)\b/i);
     assert.deepEqual(Object.keys(shared.on), ['workflow_call']);
     assert.deepEqual(shared.permissions, {'contents': 'read', 'pull-requests': 'read'});
     assert.equal(shared.concurrency, undefined);
@@ -125,11 +145,12 @@ test('the label check runs before auth loading and fails for a missing locale la
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-label-'));
     t.after(() => fs.rmSync(bin, {recursive: true, force: true}));
     // The mock answers like the labels API: the name, or nothing when missing.
-    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; esac\n',
+    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; */labels/translate-ru) echo translate-ru;; esac\n',
         {mode: 0o755});
     const run = locale => spawnSync('bash', ['-e', '-c', steps[label].run],
         {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale}}).status;
     assert.equal(run('ja'), 0);
+    assert.equal(run('ru'), 0);
     assert.notEqual(run('ko'), 0);
 });
 

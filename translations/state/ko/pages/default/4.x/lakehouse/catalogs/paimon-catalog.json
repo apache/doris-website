@@ -8,45 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/paimon-catalog.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/paimon-catalog.mdx",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "1dc038ea9b609126939d581b79898e6461db393c61a9b074596028812ca27485",
-    "sourceTechnicalHash": "7775b27512436ffd9d4fbad0f6e7875154a100272850360073a4f0b2935c5ffb",
-    "targetHash": "4820910305439ec7249ad134bc119c2cb2d24ac385e6ac62a21ed43fbce6b402",
+    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
+    "sourceHash": "0c88064db683bea5b27f8a0338c898f171f5c784c20e06a9164bafdab3964471",
+    "sourceTechnicalHash": "2dbf62d1846b4548dcdfe6778bb1d691f6095c603740c5dcf1d8a63e5cc1d1a1",
+    "targetHash": "1c18026e8f4d7aaf855716f04aaa849c5dc2918fb90950e10fcc01af3a0fd700",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T10:39:17.936Z",
+    "translatedAt": "2026-10-20T20:43:21.595Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 3,
-      "modelCalls": 3,
+      "previousSourceHash": "1dc038ea9b609126939d581b79898e6461db393c61a9b074596028812ca27485",
+      "previousTargetHash": "4820910305439ec7249ad134bc119c2cb2d24ac385e6ac62a21ed43fbce6b402",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 25,
+        "totalLines": 1394,
+        "ratio": 0.017934002869440458
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "1dc038ea9b609126939d581b79898e6461db393c61a9b074596028812ca27485",
-      "targetHash": "4820910305439ec7249ad134bc119c2cb2d24ac385e6ac62a21ed43fbce6b402",
+      "sourceHash": "0c88064db683bea5b27f8a0338c898f171f5c784c20e06a9164bafdab3964471",
+      "targetHash": "1c18026e8f4d7aaf855716f04aaa849c5dc2918fb90950e10fcc01af3a0fd700",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 49: expected [\"inlineCode\",null,null,\"paimon.table-option.*\"]; received [\"inlineCode\",null,null,\"CREATE CATALOG\"]\nprotected node 50: expected [\"inlineCode\",null,null,\"CREATE CATALOG\"]; received [\"inlineCode\",null,null,\"ALTER CATALOG\"]\nprotected node 51: expected [\"inlineCode\",null,null,\"ALTER CATALOG\"]; received [\"inlineCode\",null,null,\"paimon.table-option.*\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 53: expected [\"inlineCode\",null,null,\"@options\"]; received [\"link\",\"#time-travel-with-options\",null]\nprotected node 54: expected [\"link\",\"#time-travel-with-options\",null]; received [\"inlineCode\",null,null,\"@options\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 3,
           "issues": []
         }
       ]

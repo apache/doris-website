@@ -28,6 +28,85 @@ Build Check installs dependencies and runs the i18n unit tests before the
 translation gate. The gate checks source metadata and state without a site
 build; the scoped website build and static-page verification run afterward.
 
+## Russian documentation launch
+
+Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
+or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
+workflows explicitly enable all three; default local builds still serve English
+and Chinese. Ordinary Russian pages link to English until individually registered.
+Russian generation has a manual-only workflow, described below. Product landing
+pages and a Russian generation schedule remain outside this launch.
+
+The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
+1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
+have independent state shards and machine review status. They have not received
+human Russian proofreading. The historical baseline has zero merged translations;
+use a fresh audit on merged master to report published coverage.
+
+```bash
+I18N_LOCALE=ru node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output /tmp/ru-coverage.json
+node scripts/i18n/verify-doc-navigation.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json
+node scripts/i18n/verify-search.cjs --site build --locale ru --manifest .i18n-build/manifests/ru.json --source-locales en,zh-CN --themes
+```
+
+Russian search uses the English and Russian Lunr analyzers together so ASCII
+identifiers survive trimming. Indexing and the UI worker boundary share
+length-preserving punctuation and `ё`/`е` normalization. Case and representative
+inflections are supported by the analyzers; this is not synonym expansion or
+transliteration, and arbitrary Russian word forms are not guaranteed to match.
+Displayed documents retain their original spelling and highlight positions.
+Japanese and Korean keep their existing analyzer choices. The browser check
+exercises actual workers and all three Russian contexts; local `--dev-only`
+results cannot establish full-version validation.
+
+Deployments retain `build:publish` and strict static verification of every enabled
+managed locale before replacing the public artifact. Search changes select all
+five locales and all active versions in Build Check. A successful PR check does
+not establish deployment or public URL acceptance. After merge, verify the
+production source/deploy SHAs, `/ru/docs/`, Dev/4.x samples and fallbacks,
+`/ru/community/`, search, language/version switches, query/hash, mobile themes,
+canonical/alternate links and noindex/sitemap behavior. To roll back public
+Russian routes, remove only `DORIS_ENABLE_RU` from both deployment workflows and
+rebuild through the existing process; retain source translations and state.
+
+## Russian manual translation
+
+`.github/workflows/russian-translation.yml` calls the existing
+`translation-run.yml` with `locale: ru` and the `russian-translation` workspace.
+It only accepts manual dispatch and defaults to `dry-run`, which discovers
+pending work without calling a model. Japanese, Korean and Russian runs share
+the whole-run `docs-translation` lock, including discovery and validation.
+Japanese and Korean schedules keep their existing behavior.
+
+The shared workflow runs only on Apache `master` and checks out `master` again
+before generation. Merge the Russian configuration and workflow before running
+these commands; dispatching an unmerged feature branch skips discovery.
+
+```bash
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master -f mode=dry-run
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master \
+  -f mode=validate -f path=community/how-to-contribute/how-to-share-blogs.md
+gh workflow run russian-translation.yml --repo apache/doris-website --ref master \
+  -f mode=generate \
+  -f 'paths=["community/subscribe-mail-list.md","community/how-to-contribute/contribute-to-doris.mdx"]'
+```
+
+The latter two commands call the Codex provider when eligible pages and external
+configuration are available, and can create regular PRs carrying `translate-ru`.
+The paths above illustrate bounded selection; refresh the native plan and all
+open master PRs before choosing a live sample or batch. `validate` requires one
+exact source file. `generate` considers up to 20 planned targets and produces
+up to 10 target pages, counting eligible Dev/4.x copies separately.
+
+Russian uses its own scope, glossary, initial inventory and page state shards.
+Offline fixtures verify Cyrillic prose, inflected glossary terms, MDX labels,
+whole-document feedback, cross-version copies, open-PR exclusion and hash/human
+ownership protection. Preferred Russian terms permit grammatical inflection;
+technical identifiers still require preservation. Offline Codex process fixtures
+do not establish live provider access or merged coverage. Generated pages keep
+machine ownership and review status, with retry history and warnings available
+for review. The workflow does not merge PRs or enable automatic Russian runs.
+
 ## Korean preview and inventory
 
 Korean is registered as an optional documentation locale. Enable it locally with
@@ -369,8 +448,8 @@ exposes `pipelineLocale(root)`: a configuration that declares a single locale
 needs no selector and behaves exactly as before, and `I18N_LOCALE` picks one as
 soon as several are managed. An absent or unconfigured selector then fails
 before discovery or generation. The Japanese coverage audit always
-selects `ja`. Neither translation workflow accepts a locale input: the Japanese
-workflow passes `ja` and the Korean workflow `ko` to the shared run.
+selects `ja`. The language workflows accept no locale input: Japanese passes
+`ja`, Korean `ko`, and Russian `ru` to the shared run.
 
 Build Check runs PR admission for every configured translation locale, including
 locales disabled for the site build, when a shared input changes. Otherwise it
@@ -478,9 +557,9 @@ review are recommended before running batch generation.
 and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
 minutes later. Each sets only its triggers, manual defaults and the lock, then
 calls `.github/workflows/translation-run.yml` with its locale and artifact
-prefix, so both languages run the same steps. Neither has a push trigger.
-The description below uses Japanese; Korean differs only in its locale, label,
-artifact names and manual default. Every run first recounts
+prefix. The manual-only Russian wrapper uses the same steps and lock. None has
+a push trigger. The description below uses Japanese; the other languages differ
+in locale, label, artifact names, triggers and manual default. Every run first recounts
 the current native Dev, 4.x and community documents, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
@@ -492,7 +571,8 @@ attention and neither closes nor overwrites the existing PR. A PR whose
 candidate cannot be verified blocks that target from robot generation and
 appears in the exception report.
 
-Manual dispatch defaults to `generate` in both workflows and
+Japanese and Korean manual dispatch default to `generate`; Russian defaults to
+`dry-run`. Each workflow
 accepts optional plugin, version and source path prefix filters, or an exact
 `paths` list. `validate` mode requires one exact English source path
 ending in `.md` or `.mdx`; it can call the model and create a regular PR for one
@@ -501,7 +581,7 @@ With OSS access but no GitHub write credential, `validate` still writes the
 candidate to the generation artifact and makes no GitHub write.
 `dry-run` remains available for read-only discovery. Full scans recover
 pending work from new or changed source documents and earlier failed runs.
-One concurrency group, `docs-translation`, covers both workflows, every
+One concurrency group, `docs-translation`, covers all three language workflows, every
 trigger and every mode. Rename it only while no translation run is queued or
 running; otherwise the run in flight and the next one hold different locks.
 Only one complete run can execute at a time; `cancel-in-progress: false`
@@ -648,7 +728,7 @@ No real model call or GitHub write occurs.
 
 ### Selecting an exact manual batch
 
-Both translation workflows take an optional `paths` input on manual dispatch.
+All three language workflows take an optional `paths` input on manual dispatch.
 It accepts a JSON array of 1–20 exact English source files, so a bounded
 batch can select documents from different folders without including every page
 under a shared prefix:
@@ -664,7 +744,7 @@ fresh scan immediately before generation. `validate` still requires one exact
 `path`; use `generate` for a regular batch. The planner considers at most 20
 targets and generation still produces at most 10. Exact selection preserves
 full coverage counts, current-page and active-PR exclusion, human ownership,
-scope/version checks, and exact-master protection. Unknown, duplicate,
+scope/version checks, and protection against relevant master changes. Unknown, duplicate,
 malformed or out-of-scope source paths fail before model calls. Scheduled runs
 do not use this input; they plan from the full scope.
 

@@ -215,27 +215,7 @@ Hive 트랜잭션 테이블은 버전 3.x부터 지원됩니다. 자세한 내�
 
 ## 열 유형 매핑 {#column-type-mapping}
 
-| Hive 유형     | Doris 유형    | 설명                                        |
-| ------------- | ------------- | ---------------------------------------------- |
-| boolean       | boolean       |                                                |
-| tinyint       | tinyint       |                                                |
-| smallint      | smallint      |                                                |
-| int           | int           |                                                |
-| bigint        | bigint        |                                                |
-| date          | date          |                                                |
-| timestamp     | datetime(6)   | 정밀도가 6인 datetime으로 매핑됩니다.            |
-| float         | float         |                                                |
-| double        | double        |                                                |
-| decimal(P, S) | decimal(P, S) | 정밀도를 지정하지 않으면 기본값은 decimal(9, 0)입니다. |
-| char(N)       | char(N)       |                                                |
-| varchar(N)    | varchar(N)    |                                                |
-| string        | string        |                                                |
-| binary | VARBINARY | 4.1.5부터 이 유형은 항상 `VARBINARY`로 매핑됩니다. `enable.mapping.varbinary` 속성은 호환성을 위해 유지되지만, `false`로 설정해도 더 이상 `STRING` 매핑으로 돌아가지 않습니다. 이전 버전에서는 이 속성으로 기존 매핑을 선택할 수 있습니다. |
-| timestamp with local time zone | TIMESTAMPTZ | 4.1.5부터 이 유형은 항상 `TIMESTAMPTZ`로 매핑됩니다. `enable.mapping.timestamp_tz` 속성은 호환성을 위해 유지되지만, `false`로 설정해도 더 이상 `DATETIME` 매핑으로 돌아가지 않습니다. 정밀도는 최대 6으로 제한되므로 이를 초과하는 정밀도는 손실됩니다. 이전 버전에서는 이 속성으로 기존 매핑을 선택할 수 있습니다. |
-| array         | array         |                                                |
-| map           | map           |                                                |
-| struct        | struct        |                                                |
-| other         | unsupported   |                                                |
+Doris 4.2의 전체 매핑 표, 정밀도 규칙 및 지원되지 않는 유형에 대해서는 [Hive에서 Doris로의 데이터 유형 매핑](hive-catalog/doris-type-mapping.md)을 참조하세요.
 
 
 ## 예제 {#examples}

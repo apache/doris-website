@@ -42,7 +42,7 @@ SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 **사용 시 참고 사항:**
 
 - **위치**: `WHERE` 절에서 행 필터링에 참여하는 술어로 사용
-- **반환 타입**: BOOLEAN(매칭되면 TRUE)
+- **반환 타입**: NULL을 허용하지 않는 BOOLEAN(매칭되면 TRUE, 그렇지 않으면 FALSE)
 
 `default_field`를 지정하면 Doris는 필드가 지정되지 않은 검색어나 함수를 해당 필드에 적용되도록 자동 확장합니다. 예를 들면 다음과 같습니다.
 
@@ -78,17 +78,134 @@ WHERE SEARCH('apple banana',
              '{"default_field":"title","default_operator":"and","mode":"lucene"}');
 ```
 
-### NULL과 삼치 논리 {#null-and-three-valued-logic}
+### NULL과 이값 매칭 {#null-and-three-valued-logic}
 
-`SEARCH()`는 SQL 삼치 논리를 따릅니다.
+**버전:** 아래의 이값 매칭 규칙, NULL/NOT 예제, VARIANT 인덱스 오류 동작은 Doris 4.2부터 적용됩니다.
 
-- 매칭에 참여하는 모든 컬럼 값이 NULL이면 결과는 UNKNOWN입니다(`WHERE`에서 제외됨)
-- 다른 하위 표현식과 결합하면 불리언 단락 평가 규칙을 따릅니다. 예를 들면 다음과 같습니다.
-    - `TRUE OR NULL = TRUE`
-    - `FALSE OR NULL = NULL`
-    - `NOT NULL = NULL`
+`SEARCH`는 NULL을 허용하지 않는 BOOLEAN을 반환합니다. 매칭되면 TRUE, 매칭되지 않으면 FALSE입니다. 일반 검색어는 NULL 값이나 스토리지에 존재하지 않는 것으로 확인된 VARIANT 경로와 매칭되지 않습니다. SEARCH는 UNKNOWN을 전파하지 않습니다.
 
-이 동작은 텍스트 검색 연산자와 일치합니다.
+standard 모드에서 `AND`는 매칭 집합의 교집합을, `OR`는 합집합을 구하며, `NOT`은 쿼리에서 볼 수 있는 행을 기준으로 여집합을 구합니다. 따라서 `SEARCH('NOT a:hit')`와 `NOT SEARCH('a:hit')` 모두 NULL인 행을 포함합니다. Lucene 모드도 동일한 NULL/비매칭 규칙을 사용하지만, 아래에 설명된 자체 불리언 파싱 규칙은 그대로 적용됩니다. `score()`를 계산하거나 쿼리 캐시를 사용해도 전체 매칭 집합은 달라지지 않습니다. 정렬과 LIMIT는 반환되는 행을 바꿀 수 있습니다.
+
+일반적인 SQL 비교와 `MATCH` 연산자에는 SQL의 삼값 논리가 그대로 적용됩니다. 입력이 NULL이면 `a != 'hit'`와 `NOT (a MATCH_ANY 'hit')`는 UNKNOWN이므로 `WHERE`에서 필터링됩니다. 바깥쪽 SQL 표현식은 다른 NULL 허용 피연산자로 인해 여전히 UNKNOWN을 반환할 수 있습니다.
+
+#### 예제: NULL과 NOT
+
+CREATE, INSERT, SELECT 권한이 있는 데이터베이스에서 다음 예제를 실행하세요. 아래의 단일 버킷과 복제본은 작은 예제 테이블을 위한 설정입니다.
+
+```sql
+CREATE TABLE search_null_demo (
+    id INT,
+    a VARCHAR(16) NULL,
+    INDEX idx_a(a) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_null_demo VALUES (1, 'hit'), (2, 'miss'), (3, NULL);
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('NOT a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+NULL인 행도 제외하려면 명시적인 `IS NOT NULL` 필터를 추가하세요:
+
+```sql
+SELECT id FROM search_null_demo
+WHERE a IS NOT NULL AND NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+```
+
+이 세 행에 대해 SQL 조건 `a != 'hit'`와 텍스트 검색 조건 `NOT (a MATCH_ANY 'hit')`도 id가 2인 행만 반환합니다.
+
+#### VARIANT: NULL, 존재하지 않는 경로, 사용할 수 없는 인덱스
+
+`v.a:hit`와 같은 일반 VARIANT 검색어에도 동일한 규칙이 적용됩니다:
+
+| `v`에 기록된 값 | `v.a:hit` | `NOT v.a:hit` |
+| --- | --- | --- |
+| `{"a":"hit"}` | TRUE | FALSE |
+| `{"a":"miss"}` | FALSE | TRUE |
+| `{"a":null}` | FALSE | TRUE |
+| `{}` (경로 `a`가 없음) | FALSE | TRUE |
+| SQL NULL (VARIANT 열 전체가 NULL) | FALSE | TRUE |
+
+배열 외부에 저장된 객체에서는 JSON `null` 멤버가 제거되므로 해당 경로를 읽으면 멤버가 없는 경우와 마찬가지로 SQL NULL이 반환됩니다. 이는 표현식 내에서 계산된 JSON `null`과 다릅니다. [VARIANT의 NULL 의미 체계](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#null-semantics)를 참조하세요.
+
+JSON 객체를 삽입할 때는 `parse_to_variant`를 사용하세요. 다음 테이블은 doc mode를 비활성화하여 예제에서 실행 가능한 인덱스가 있는 구체화된 하위 경로를 사용하도록 합니다.
+
+```sql
+CREATE TABLE search_variant_null_demo (
+    id INT,
+    v VARIANT<PROPERTIES("variant_enable_doc_mode"="false")>,
+    INDEX idx_v(v) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_variant_null_demo VALUES
+    (1, parse_to_variant('{"a":"hit"}')),
+    (2, parse_to_variant('{"a":"miss"}')),
+    (3, parse_to_variant('{"a":null}')),
+    (4, parse_to_variant('{}')),
+    (5, NULL);
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('v.a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('NOT v.a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+4
+5
+```
+
+`NOT SEARCH('v.a:hit')`도 동일한 id를 반환합니다. 모든 행에서 경로가 존재하지 않으면 `SEARCH('v.absent:hit')`는 행을 반환하지 않고 `SEARCH('NOT v.absent:hit')`는 다섯 행을 모두 반환합니다. 대상 경로의 값이 NULL이 아닌 행만 남기려면 SEARCH 바깥에 `v['a'] IS NOT NULL`을 추가하세요.
+
+**존재하지 않는 경로와 사용할 수 없는 인덱스는 서로 다른 상태입니다.** 경로에 데이터가 있지만 필요한 역인덱스를 실행할 수 없다면, 부정 쿼리에서도 SEARCH는 `SEARCH index unavailable for Variant field 'v.a'` 오류를 보고합니다. 예를 들어 CREATE INDEX 이후에도 인덱스가 구축되지 않은 과거 rowset이나, 실행 가능한 leaf 인덱스 없이 doc 스토리지에만 유지되는 경로가 이에 해당합니다. SEARCH는 이러한 상태를 빈 매칭 집합으로 취급하거나 자동으로 스캔으로 전환하지 않습니다. 조회 대상인 모든 데이터에 필요한 경로 인덱스가 있는지 확인하거나, 추출한 경로를 일반 SQL로 쿼리하세요.
 
 ## 시나리오별 SEARCH 사용법 {#using-search-by-scenario}
 
@@ -184,7 +301,7 @@ Lucene 모드는 Elasticsearch/Lucene의 query_string 동작을 에뮬레이션�
 - AND/OR/NOT은 인접한 검색어에 영향을 주는 수정자입니다
 - 연산자 우선순위는 왼쪽에서 오른쪽으로 적용됩니다
 - 내부적으로 MUST/SHOULD/MUST_NOT을 사용합니다(Lucene의 Occur 열거형과 유사)
-- NOT만으로 구성된 쿼리는 빈 결과를 반환합니다(긍정 절이 필요함)
+- NOT만으로 구성된 쿼리는 전체 매칭 조건을 추가하고 매칭되는 행을 제외합니다
 
 **Lucene 모드 활성화:**
 
