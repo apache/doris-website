@@ -75,6 +75,9 @@ function buildRedirectIndex() {
     for (const locale of ENABLED_LOCALES) {
         const prefix = locale === 'en' ? '' : `/${locale}`;
         add(`${prefix}/docs/4.x/getting-started/what-is-apache-doris`, `${prefix}/docs`);
+        // Community has no root document; use its first sidebar page as the
+        // entry instead of exposing the deployment server's directory listing.
+        add(`${prefix}/community/join-community`, `${prefix}/community`);
     }
 
     // Decommissioned standalone pages whose content moved into the
