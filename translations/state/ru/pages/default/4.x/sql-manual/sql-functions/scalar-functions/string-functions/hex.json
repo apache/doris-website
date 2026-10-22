@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/hex",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hex.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/hex.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3d3915c81ca5417ec64a8f76b93f3c9622880feae42819afc09599f007c3c571",
+    "sourceTechnicalHash": "3550ef0a0556a2eef6c2173b558b50897cde4a2ebe9e6f51d62ad61435a5badd",
+    "targetHash": "5852902ebb218f57aacc4d600c47ba5676b96d4bb65cffc98acc1a99887df92f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:50:46.824Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3d3915c81ca5417ec64a8f76b93f3c9622880feae42819afc09599f007c3c571",
+      "targetHash": "5852902ebb218f57aacc4d600c47ba5676b96d4bb65cffc98acc1a99887df92f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

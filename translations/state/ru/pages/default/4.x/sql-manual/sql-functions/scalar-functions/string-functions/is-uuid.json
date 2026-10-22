@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/is-uuid",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/is-uuid.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/is-uuid.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4a69dfc8fba2bc352c3d79fe8712fd6a8c5b0fa84723cea6c9f8ecfdfd319e06",
+    "sourceTechnicalHash": "a9b9578b34ac56754d9ea63c02d2e904ab5efae8ad061f25e03d53a2aec9c738",
+    "targetHash": "afd3ae6d6a5f9c1dfbb9b92b57837110e267a640c8177ee908e72fde94bfa02e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:50:35.867Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4a69dfc8fba2bc352c3d79fe8712fd6a8c5b0fa84723cea6c9f8ecfdfd319e06",
+      "targetHash": "afd3ae6d6a5f9c1dfbb9b92b57837110e267a640c8177ee908e72fde94bfa02e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
