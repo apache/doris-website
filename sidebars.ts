@@ -1490,6 +1490,7 @@ const sidebars: SidebarsConfig = {
                             label: 'Scalar Functions',
                             items: [
                                 'sql-manual/sql-functions/scalar-functions/to-file',
+                                'sql-manual/sql-functions/scalar-functions/fl-get-binary',
                                 {
                                     type: 'category',
                                     label: 'UUID Functions',

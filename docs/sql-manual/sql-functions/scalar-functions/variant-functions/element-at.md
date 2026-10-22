@@ -31,7 +31,7 @@ ELEMENT_AT(container, key_or_index)
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT` object access: A string key.
   - For a VARIANT array in Doris 5.0.0 and later: An integer index; positive indexes are 1-based and negative indexes count backward from the end.
-  - For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, `checksum`, or `inline`. Names are case-insensitive.
+  - For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, or `checksum`. Names are case-insensitive. The `inline` selector produces an error; use [FL_GET_BINARY](../fl-get-binary.md) to read binary contents.
 
 ## Return Value
 

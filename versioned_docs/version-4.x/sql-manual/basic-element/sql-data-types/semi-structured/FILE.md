@@ -10,7 +10,7 @@
 # FILE
 
 :::note
-Since 4.2.0
+Since 4.2
 :::
 
 ## Type Description
@@ -42,7 +42,7 @@ FILE
 
 - FILE is available in query expressions. FILE columns cannot be declared in internal tables or external catalogs, including FILE nested in containers.
 - Whole FILE values and containers containing FILE cannot be used for comparison, sorting, hashing, grouping, DISTINCT, or MAP keys. Extract an ordinary scalar field for these operations.
-- FILE supports explicit conversion to and from STRUCT. There is no implicit conversion between FILE and STRUCT; use CAST. See [FILE Type Conversion](../conversion/file-conversion.md).
+- FILE supports explicit conversion from STRUCT, including nested STRUCT values. Casting FILE to other types is unsupported. There is no implicit conversion between FILE and STRUCT; use CAST. See [FILE Type Conversion](../conversion/file-conversion.md).
 - FILE arguments, return values, and aggregate intermediate types are unsupported in UDFs, including nested FILE.
 
 ## Obtaining FILE Values
@@ -121,12 +121,14 @@ The resource setup and access requirements are described in the respective funct
 
 ## Element Access
 
-Read a field with `ELEMENT_AT(f, 'field_name')` or the equivalent bracket syntax `f['field_name']`. The field name must be a non-NULL constant string and is case-insensitive. Unknown field names, dynamic selectors, and numeric indexes produce errors. Accessing a NULL FILE or a NULL field returns NULL.
+Use [FL_GET_BINARY](../../../sql-functions/scalar-functions/fl-get-binary.md) to read the stored binary contents. A NULL FILE or NULL `inline` field returns NULL.
+
+Read `uri`, `offset`, `size`, `content_type`, or `checksum` with `ELEMENT_AT(f, 'field_name')` or the equivalent bracket syntax `f['field_name']`. The field name must be a non-NULL constant string and is case-insensitive. The `inline` selector, unknown field names, dynamic selectors, and numeric indexes produce errors. Accessing a NULL FILE or a NULL metadata field returns NULL.
 
 ```sql
 SELECT ELEMENT_AT(f, 'uri') AS uri,
        f['size'] AS size,
-       HEX(CAST(f['inline'] AS STRING)) AS inline_hex
+       FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
 FROM (SELECT CAST(NAMED_STRUCT(
     'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
     'content_type', NULL, 'checksum', NULL, 'inline', X'616263'

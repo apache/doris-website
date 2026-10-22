@@ -30,7 +30,7 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `MAP`：为 `MAP` 中的键类型（`K`），可为任意支持的基础类型。
   - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT`： 为字符串类型
-  - 对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type`、`checksum` 或 `inline`，不区分大小写。
+  - 对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type` 或 `checksum`，不区分大小写。访问 `inline` 会报错；读取二进制内容请使用 [FL_GET_BINARY](../fl-get-binary.md)。
 
 ## 返回值
 
@@ -47,7 +47,7 @@ ELEMENT_AT(container, key_or_index)
 1. **数组索引从 1 开始**，不是从 0 开始；
 2. 支持负数索引，`-1` 表示最后一个元素，`-2` 表示倒数第二个，以此类推；
 3. `ELEMENT_AT(container, key_or_index)` 函数的功能与 `container[key_or_index]` 作用一致（详细见示例）。
-4. FILE 字段访问（自 4.2.0 起支持）：未知字段名、动态字段名及数字下标会报错。
+4. FILE 字段访问（自 4.2 起支持）：未知字段名、动态字段名及数字下标会报错。
 
 ## 示例
 

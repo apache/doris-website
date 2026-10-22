@@ -38,7 +38,7 @@ FILE
 
 - FILE 可用于查询表达式，暂不能在内表或外部 Catalog 中声明为表列，包括容器中嵌套的 FILE。
 - 完整 FILE 及包含 FILE 的容器不能用于比较、排序、哈希、分组、DISTINCT 或 MAP key；这些操作应先提取普通标量字段。
-- FILE 支持与 STRUCT 显式双向转换，不支持与 STRUCT 隐式转换，须使用 CAST。完整规则见 [FILE 类型转换](../conversion/file-conversion.md)。
+- FILE 支持从 STRUCT 显式转换，包括嵌套的 STRUCT 值，不支持转换为其他类型。FILE 与 STRUCT 之间不支持隐式转换，须使用 CAST。完整规则见 [FILE 类型转换](../conversion/file-conversion.md)。
 - UDF 的参数、返回值及聚合中间类型不支持 FILE，包括嵌套 FILE。
 
 ## 获取 FILE
@@ -117,12 +117,14 @@ resource 的创建方式和访问要求见各函数文档。
 
 ## 字段访问
 
-使用 `ELEMENT_AT(f, 'field_name')` 或等价的下标写法 `f['field_name']` 访问字段。字段名须为非 NULL 常量字符串，不区分大小写；未知字段名、动态选择器及数字下标会报错。FILE 为 NULL 或字段为 NULL 时，访问结果为 NULL。
+使用 [FL_GET_BINARY](../../../sql-functions/scalar-functions/fl-get-binary.md) 读取已存储的二进制内容。FILE 为 NULL 或 `inline` 字段为 NULL 时，返回 NULL。
+
+使用 `ELEMENT_AT(f, 'field_name')` 或等价的下标写法 `f['field_name']` 读取 `uri`、`offset`、`size`、`content_type` 或 `checksum`。字段名须为非 NULL 常量字符串，不区分大小写。访问 `inline`、未知字段名、动态选择器及数字下标会报错。FILE 为 NULL 或元数据字段为 NULL 时，访问结果为 NULL。
 
 ```sql
 SELECT ELEMENT_AT(f, 'uri') AS uri,
        f['size'] AS size,
-       HEX(CAST(f['inline'] AS STRING)) AS inline_hex
+       FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
 FROM (SELECT CAST(NAMED_STRUCT(
     'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
     'content_type', NULL, 'checksum', NULL, 'inline', X'616263'

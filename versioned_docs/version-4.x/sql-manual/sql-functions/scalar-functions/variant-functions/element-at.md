@@ -30,7 +30,7 @@ ELEMENT_AT(container, key_or_index)
   - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
   - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
   - For `VARIANT`: A string type.
-  - For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, `checksum`, or `inline`. Names are case-insensitive.
+  - For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, or `checksum`. Names are case-insensitive. The `inline` selector produces an error; use [FL_GET_BINARY](../fl-get-binary.md) to read binary contents.
 
 ## Return Value
 
@@ -47,7 +47,7 @@ ELEMENT_AT(container, key_or_index)
 1. **Array indexes start from 1**, not 0.  
 2. Negative indexes are supported: `-1` represents the last element, `-2` the second-to-last, and so on.  
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
-4. FILE field access (Since 4.2.0): Unknown field names, dynamic selectors, and numeric indexes produce errors.
+4. FILE field access (Since 4.2): Unknown field names, dynamic selectors, and numeric indexes produce errors.
 
 ## Examples
 

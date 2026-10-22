@@ -1,14 +1,14 @@
 ---
 {
-    "title": "转换为/从 FILE",
+    "title": "转换为 FILE",
     "language": "zh-CN",
-    "description": "FILE 与 STRUCT 的显式双向转换及 NULL 处理规则。"
+    "description": "STRUCT 到 FILE 的显式转换，包括嵌套值转换与 NULL 处理规则。"
 }
 ---
 
-# 转换为/从 FILE
+# 转换为 FILE
 
-FILE 支持与 STRUCT 显式双向转换。**FILE 与 STRUCT 之间不支持隐式转换，须使用 CAST。** 转换本身不访问远端存储，字段定义及取值约束见 [FILE](../semi-structured/FILE.md)。
+FILE 支持从 STRUCT 显式转换。CAST 和 TRY_CAST 不支持将 FILE 转换为其他类型，包括 STRUCT。**FILE 与 STRUCT 之间不支持隐式转换，须使用 CAST。** 转换本身不访问远端存储，字段定义及取值约束见 [FILE](../semi-structured/FILE.md)。
 
 ## 转换为 FILE
 
@@ -45,31 +45,9 @@ SELECT CAST(NULL AS FILE) AS f;
 +------+
 ```
 
-## 从 FILE 转换
-
-### TO STRUCT
-
-目标 STRUCT 须包含完整六字段，按名称匹配，不区分大小写。各字段均须允许 NULL：uri、content_type、checksum 使用字符串类型，offset 和 size 使用 BIGINT，inline 使用 VARBINARY。转换保留 inline 原始二进制内容。
-
-```sql
-SELECT CAST(f AS STRUCT<uri:STRING, offset:BIGINT, size:BIGINT,
-    content_type:STRING, checksum:STRING, inline:VARBINARY>) AS s
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
-```
-```text
-+------------------------------------------------------------------------------------------------------------------+
-| s                                                                                                                |
-+------------------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg", "offset":null, "size":3, "content_type":null, "checksum":null, "inline":0x616263} |
-+------------------------------------------------------------------------------------------------------------------+
-```
-
 ## NULL 处理与 TRY_CAST
 
-NULL FILE 转换为 STRUCT 后仍为 NULL。非 NULL FILE 的 uri 或 inline 至少一项非 NULL，已提供的字段须满足 FILE 取值约束。非法 FILE 值会使 CAST 报错，即使 `enable_strict_cast=false` 也不例外。
+NULL STRUCT 转换后为 NULL FILE。非 NULL STRUCT 的 uri 或 inline 至少一项非 NULL，已提供的字段须满足 FILE 取值约束。非法 FILE 值会使 CAST 报错，即使 `enable_strict_cast=false` 也不例外。
 
 TRY_CAST 沿用既有转换规则。严格模式下，一行转换失败时，该行的整个目标值返回 NULL；类型及 STRUCT schema 检查仍在分析阶段进行。
 
@@ -90,7 +68,7 @@ SELECT TRY_CAST(NAMED_STRUCT(
 
 ## 嵌套转换
 
-相同的显式转换规则适用于 ARRAY 元素、STRUCT 字段和 MAP value。可以先转换单个值再构造容器，或在匹配的容器类型之间 CAST；父容器为 NULL 时，不校验其隐藏的 FILE 子值。
+STRUCT 到 FILE 的转换同样适用于 ARRAY 元素、STRUCT 字段和 MAP value。可以先转换单个值再构造容器，或在匹配的容器类型之间 CAST。不支持将嵌套的 FILE 值转换为其他类型。父容器为 NULL 时，不校验其隐藏的 FILE 子值。
 
 ```sql
 SELECT CAST(ARRAY(NAMED_STRUCT(

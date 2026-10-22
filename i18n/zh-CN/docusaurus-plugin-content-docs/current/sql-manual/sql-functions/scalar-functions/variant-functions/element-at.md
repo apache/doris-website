@@ -31,7 +31,7 @@ ELEMENT_AT(container, key_or_index)
   - 对于 `STRUCT`：为常量整数（字段位置，从 **1** 开始）或常量字符串（字段名，按**大小写不敏感**匹配）。
   - 对于 `VARIANT` 对象访问：为字符串类型的 key；
   - 对于 Doris 5.0.0 及后续版本中的 VARIANT 数组：为整数索引，正数索引从 1 开始，负数索引从数组末尾倒数。
-  - 对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type`、`checksum` 或 `inline`，不区分大小写。
+  - 对于 `FILE`：为非 NULL 常量字符串，字段名为 `uri`、`offset`、`size`、`content_type` 或 `checksum`，不区分大小写。访问 `inline` 会报错；读取二进制内容请使用 [FL_GET_BINARY](../fl-get-binary.md)。
 
 ## 返回值
 
