@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+    "sourceTechnicalHash": "46960c160bce347f907160c1e74fbfb7337d4c8ba7995cd3aaee589df6948c3e",
+    "targetHash": "a58443dfff66572aaf96ac71364cb2f4adf661d233c8a7932b3c1ea6979ac767",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:55:25.916Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+      "targetHash": "a58443dfff66572aaf96ac71364cb2f4adf661d233c8a7932b3c1ea6979ac767",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
+        "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/l1-distance.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "2fb7bad1c36cb06bc559d92eaa43f180a326a9b72679c61281fa24b79425376a",
+        "targetHash": "a58443dfff66572aaf96ac71364cb2f4adf661d233c8a7932b3c1ea6979ac767",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}
