@@ -60,6 +60,8 @@ PROPERTIES (
 
 ##### Parameter Description
 
+**Since 4.1.5**, an AI resource must contain at least one complete connection group: general `ai.*`, text embedding `ai.embed.*`, or multimodal embedding `ai.embed.mm.*`. Each configured group requires `endpoint`, `provider_type`, `model_name`, and an `api_key` unless its provider is `LOCAL`. The required connection fields below describe the general group, which scalar AI functions and `AI_AGG` use. Text `EMBED` prefers `ai.embed.*` over the general group; JSON multimodal `EMBED` prefers `ai.embed.mm.*`, then `ai.embed.*`, then the general group. Earlier versions require the general group. See [dedicated embedding properties](../../../ai/ai-function-overview.md#dedicated-embedding-properties) for all eight fields and an example.
+
 `type`: Required, must be `ai`, used as the type identifier for ai.
 
 `ai.provider_type`: Required for the general model group. Specifies the external AI provider. Supported providers include OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan, VoyageAI, and Jina. If another provider uses an API compatible with [OpenAI](https://platform.openai.com/docs/overview), [Anthropic](https://docs.anthropic.com/en/api/messages-examples), or [Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), specify the corresponding compatible provider type.
@@ -81,6 +83,8 @@ The default value is -1, which means this parameter is not set. The default valu
 `ai.max_retries`: Optional. The maximum number of retries for a single request. The default value is 3.
 
 `ai.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
+
+`ai.enable_structured_output` (**Since 4.2**): Optional Boolean, defaults to `true`. Doris batches input rows for scalar AI functions. Enabling this option adds provider-specific format fields to improve response-format reliability. Doris does not check the configured model's support; LOCAL and MiniMax omit these fields. Set it to `false` if the model or endpoint rejects them. Batching, system-prompt format instructions, and response validation remain enabled. This property does not apply to `AI_AGG` or `EMBED`.
 
 `ai.dimensions`: Optional, control the vector dimension of [EMBED](./distance-functions/embed.md) output. 
 **Make sure to confirm that the model filled in `ai.model_name` supports custom vector dimension before setting**, 
@@ -124,6 +128,8 @@ Since version 4.1.5, the optional string property `ai.effort` specifies reasonin
 | Property validation for other providers | `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max` |
 
 Passing property validation does not mean every model supports that effort level. Choose a value supported by your service and model. `ai.effort` does not replace `ai.max_token`.
+
+An empty string in `ALTER RESOURCE` removes the `ai.effort` setting.
 
 ### Create, Alter, and Drop Permissions (Since 4.1.5)
 
@@ -208,4 +214,3 @@ SELECT AI_SENTIMENT('Apache Doris is a great DBMS.');
 ```
 
 For detailed function and usage, please refer to the documentation of each specific function.
-
