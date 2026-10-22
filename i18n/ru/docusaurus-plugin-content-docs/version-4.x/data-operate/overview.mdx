@@ -1,0 +1,39 @@
+---
+{
+    "title": "Операции с данными",
+    "language": "ru",
+    "description": "Загрузка, обновление, удаление и экспорт данных в Apache Doris: способы загрузки, семантика записи и экспорт результатов запросов."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Apache Doris предоставляет полный набор операций с данными, охватывающий весь путь от загрузки до экспорта. Можно загружать данные из различных источников, обновлять и удалять их с транзакционными гарантиями, а также экспортировать результаты запросов или данные таблиц во внешние системы хранения.
+
+Кроме того, Apache Doris поддерживает непосредственное управление данными таблиц Apache Iceberg, включая ускорение запросов, запись, обновление и удаление. Подробнее см. раздел управления данными в документации Iceberg Catalog.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Загрузка данных"
+    description="Загружайте данные из файлов, очередей сообщений, транзакционных баз данных и других OLAP-систем с помощью Stream Load, Broker Load, Routine Load, INSERT и заданий потоковой синхронизации данных."
+    link="./import/load-manual"
+/>
+
+<GettingStartedCard
+    title="Обновление и удаление данных"
+    description="Обновляйте существующие данные, удаляйте их с помощью DELETE, TRUNCATE, атомарной перезаписи и других способов, а также объединяйте несколько операций записи в одну атомарную транзакцию."
+    link="./update-and-delete"
+/>
+
+<GettingStartedCard
+    title="Экспорт данных"
+    description="Экспортируйте результаты запросов или данные таблиц в HDFS, объектное хранилище или локальную файловую систему с помощью EXPORT, SELECT INTO OUTFILE или mysqldump."
+    link="./export/export-overview"
+/>
+
+<GettingStartedCard
+    title="Управление данными Iceberg"
+    description="Создайте Iceberg Catalog для подключения к данным таблиц Iceberg и выполнения операций с ними."
+    link="../lakehouse/catalogs/iceberg-catalog"
+/>
+</div>

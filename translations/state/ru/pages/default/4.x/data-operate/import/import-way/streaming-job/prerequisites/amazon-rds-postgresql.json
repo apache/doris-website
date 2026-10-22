@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ed5d4a089a78cf343356b37ee2042ca42ddc572f7e578870c5fdcdd44a2c3e37",
+    "sourceTechnicalHash": "6930a34f4cdcf64fb1e596556fc65394bbad68f27f237aa25c45e98c4adfd7e3",
+    "targetHash": "7bc833c78b37b360caa1e87a7babcff9c2bf044f132b2392fca9dafe5db86cb7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:32:49.089Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed5d4a089a78cf343356b37ee2042ca42ddc572f7e578870c5fdcdd44a2c3e37",
+      "targetHash": "7bc833c78b37b360caa1e87a7babcff9c2bf044f132b2392fca9dafe5db86cb7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

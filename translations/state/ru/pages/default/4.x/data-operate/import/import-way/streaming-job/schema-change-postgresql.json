@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/schema-change-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f6fc4c7247836367cfd29e7f77537494f837b530c841071cf07057138953ebc6",
+    "sourceTechnicalHash": "2dd18f0b441af5acf43a5a4cf1088e5b91a92e6b433e71cd337cf9d7077e4348",
+    "targetHash": "954979b3ca4034b0b2ac034a37162a38eb402ba1246c44fb379ac49a2cdb5853",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:32:48.525Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f6fc4c7247836367cfd29e7f77537494f837b530c841071cf07057138953ebc6",
+      "targetHash": "954979b3ca4034b0b2ac034a37162a38eb402ba1246c44fb379ac49a2cdb5853",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
