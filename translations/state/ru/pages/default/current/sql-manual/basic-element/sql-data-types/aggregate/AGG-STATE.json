@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/aggregate/AGG-STATE.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6c5832cc2b4eeb47dfaafefe4f5cc899798f3f8533f1c8de7a6fd09af98d9216",
+    "sourceTechnicalHash": "6d57217e59599f81f1a45f7b1c9d98500f44ea465ffaa6353b07e94b593db110",
+    "targetHash": "af79b367597e8b69dda4c4299def1d46d342ac023248fb5102f224ecf4cc4873",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:48:28.333Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c5832cc2b4eeb47dfaafefe4f5cc899798f3f8533f1c8de7a6fd09af98d9216",
+      "targetHash": "af79b367597e8b69dda4c4299def1d46d342ac023248fb5102f224ecf4cc4873",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",null,null,\"  AGG_STATE cannot be used as a key column, and the signature of the aggregation function must be declared at the same time when creating the table.\\n  User does not need to specify length and default value. The actual stored data size is related to the function implementation.\"]; received [\"code\",null,null,\"  AGG_STATE нельзя использовать в качестве ключевого столбца; при создании таблицы необходимо также указать сигнатуру агрегатной функции.\\n  Пользователю не нужно задавать длину и значение по умолчанию. Фактический объём хранимых данных зависит от реализации функции.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

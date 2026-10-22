@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/cast-expr",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a2dbac968863695555315fbb1b79eb72bb9098ebf0a460cbc9aa70170f6eb889",
+    "sourceTechnicalHash": "d02ef9c019eb8c5fa3d45eff88b88ef30635e06e789ed16eab51cce41f4c2c80",
+    "targetHash": "abb7524efdf3a9082f7dfc66c93be213c398ca8652cb04d4302c191254b25175",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:47:05.937Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2dbac968863695555315fbb1b79eb72bb9098ebf0a460cbc9aa70170f6eb889",
+      "targetHash": "abb7524efdf3a9082f7dfc66c93be213c398ca8652cb04d4302c191254b25175",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
