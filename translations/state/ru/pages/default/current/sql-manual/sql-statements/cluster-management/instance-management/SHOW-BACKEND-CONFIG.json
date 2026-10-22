@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SHOW-BACKEND-CONFIG.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "83818a9fc9884d3cdc108860973179aa47e8e112332bf095075e2bf11dcf9ff2",
+    "sourceTechnicalHash": "ce39dbd8decae392ad96ab72927cdb2ff6e587a454c2a942c6c5c2c2886a4431",
+    "targetHash": "297be88dc9d38281f66f65e32bd90d19815f47b5b41b35fee17a0a4cbc3eef7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:57:46.760Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "83818a9fc9884d3cdc108860973179aa47e8e112332bf095075e2bf11dcf9ff2",
+      "targetHash": "297be88dc9d38281f66f65e32bd90d19815f47b5b41b35fee17a0a4cbc3eef7b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-BROKER.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "13de315e41016fdf74b6e6d3b353c6460ef782a8ea04076fdf5fcae8710dd57a",
+    "sourceTechnicalHash": "55f608989356ab069abbe82876a1dc3514f0a5a6ea7ec36d133c5d516a9c5888",
+    "targetHash": "d4dca181bdb13ddf9ade946d9af94b155a623c8fd8044eed7f524d469859651f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:56:52.510Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "13de315e41016fdf74b6e6d3b353c6460ef782a8ea04076fdf5fcae8710dd57a",
+      "targetHash": "d4dca181bdb13ddf9ade946d9af94b155a623c8fd8044eed7f524d469859651f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
