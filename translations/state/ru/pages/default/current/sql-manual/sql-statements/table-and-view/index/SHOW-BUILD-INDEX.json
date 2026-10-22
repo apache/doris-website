@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/index/SHOW-BUILD-INDEX.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7f8e8d891ba87b4d9a66743429bcd891b02a23adf8311acd08cf26c6d3db6f12",
+    "sourceTechnicalHash": "6bc17daf343467adbc9a9f4d548ea2bdbf9dc4cb10f62d015b0973f730d136cd",
+    "targetHash": "e2a51d8326e0d87cf5c6f042d49b48c5dc9f23f1c6fb7fffdd4a11c16e032ee3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:41:19.643Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7f8e8d891ba87b4d9a66743429bcd891b02a23adf8311acd08cf26c6d3db6f12",
+      "targetHash": "e2a51d8326e0d87cf5c6f042d49b48c5dc9f23f1c6fb7fffdd4a11c16e032ee3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
