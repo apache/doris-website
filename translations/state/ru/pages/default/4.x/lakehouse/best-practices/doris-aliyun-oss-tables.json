@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-aliyun-oss-tables",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e369e5c02fe678b454625f36c2b5cf9a82a457f68d7ea1375b9504244acf60ab",
+    "sourceTechnicalHash": "3343bd6be2e9359e92ffddddb0d8cfa9b5e5e38191addad80aaa9919c75a77be",
+    "targetHash": "8c9c583f7cc9e618745d9356ed9bc367d550c8756e73e0fc438fdad8152de959",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:34.057Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e369e5c02fe678b454625f36c2b5cf9a82a457f68d7ea1375b9504244acf60ab",
+      "targetHash": "8c9c583f7cc9e618745d9356ed9bc367d550c8756e73e0fc438fdad8152de959",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-aliyun-oss-tables",
+        "sourcePath": "docs/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-aliyun-oss-tables.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "e369e5c02fe678b454625f36c2b5cf9a82a457f68d7ea1375b9504244acf60ab",
+        "targetHash": "8c9c583f7cc9e618745d9356ed9bc367d550c8756e73e0fc438fdad8152de959",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

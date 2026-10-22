@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/data-pruning",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/data-pruning.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/data-pruning.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c6bb00499fd6a1ff9a28cf3756f55f22f85d25aebdff2e6c8b19314d87c1ee74",
+    "sourceTechnicalHash": "a7d8d0090790aa260ab1fab226369cb38b005e51a3ad4cfcfeba87f8b25b5b48",
+    "targetHash": "c5a0c173a8ef8aa82da1a279c327895fe4f59ef977b2a737ea09944fdb803d67",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:31.377Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c6bb00499fd6a1ff9a28cf3756f55f22f85d25aebdff2e6c8b19314d87c1ee74",
+      "targetHash": "c5a0c173a8ef8aa82da1a279c327895fe4f59ef977b2a737ea09944fdb803d67",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/data-pruning",
+        "sourcePath": "docs/key-features/data-pruning.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/data-pruning.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "c6bb00499fd6a1ff9a28cf3756f55f22f85d25aebdff2e6c8b19314d87c1ee74",
+        "targetHash": "c5a0c173a8ef8aa82da1a279c327895fe4f59ef977b2a737ea09944fdb803d67",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}
