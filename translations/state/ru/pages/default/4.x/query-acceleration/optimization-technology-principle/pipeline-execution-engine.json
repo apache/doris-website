@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+    "sourceTechnicalHash": "6e6b786a46a01748f85f86ae8d22c395f1a149a4b7b83bb44b7bd93a088b87da",
+    "targetHash": "3a2383636cc0687334802e04f14aeb8e5822945a89e0cfbc8d8fc87a85457ab4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:31.417Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+      "targetHash": "3a2383636cc0687334802e04f14aeb8e5822945a89e0cfbc8d8fc87a85457ab4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/optimization-technology-principle/pipeline-execution-engine",
+        "sourcePath": "docs/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/pipeline-execution-engine.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "264eee7ae0c5d6b13dfe88d3d4ac54119ea226f4eaa13096623d184724b78d76",
+        "targetHash": "3a2383636cc0687334802e04f14aeb8e5822945a89e0cfbc8d8fc87a85457ab4",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}
