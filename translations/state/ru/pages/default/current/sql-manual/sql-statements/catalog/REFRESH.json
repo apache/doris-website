@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/catalog/REFRESH",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/catalog/REFRESH.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/catalog/REFRESH.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "761f6e073a66eaa08d718008edfc9962416dbc9b0db314de8dfe70d30cf014e1",
+    "sourceTechnicalHash": "5c7150793dd2e2a6b9cc8ebdab46a6e7e037b5c12509717e18df8babc117a3f0",
+    "targetHash": "eb6d3c0a0f3ec88596f793ec549adf6a87a6666096212ea5ff1605767121ee81",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:47.014Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "761f6e073a66eaa08d718008edfc9962416dbc9b0db314de8dfe70d30cf014e1",
+      "targetHash": "eb6d3c0a0f3ec88596f793ec549adf6a87a6666096212ea5ff1605767121ee81",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

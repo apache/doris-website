@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/jobs",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/jobs.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "29be1f7bc53a2eb48633b34f869bd14662201a4257ef7d606c1410d82f96fef2",
+    "sourceTechnicalHash": "31818dd799349c83a8feea314e7c4e97e88c8379700883e9bd55748137f36baa",
+    "targetHash": "b9d8d61d5f0f25a4a3072bc65391146512136efb5020745fd6a937bee55ff852",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:47.093Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "29be1f7bc53a2eb48633b34f869bd14662201a4257ef7d606c1410d82f96fef2",
+      "targetHash": "b9d8d61d5f0f25a4a3072bc65391146512136efb5020745fd6a937bee55ff852",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: ETIMEDOUT"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

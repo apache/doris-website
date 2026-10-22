@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-numbers",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-numbers.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-numbers.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "03d0e5525f06a8fcfa8415681befef46d8ec4291a6c80d3d82d31d3b6d05ada1",
+    "sourceTechnicalHash": "c04b496b0322a57f085961058d9cbcb34d1a6ba35acf88b5194dacab9b030731",
+    "targetHash": "3433597bbee17a45e3fc8f36a7148ffa66fda35c9ef1a85da0ad5017817694d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:01:48.334Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "03d0e5525f06a8fcfa8415681befef46d8ec4291a6c80d3d82d31d3b6d05ada1",
+      "targetHash": "3433597bbee17a45e3fc8f36a7148ffa66fda35c9ef1a85da0ad5017817694d0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

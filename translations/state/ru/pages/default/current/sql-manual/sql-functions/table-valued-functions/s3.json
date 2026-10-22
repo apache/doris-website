@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/s3",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/s3.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+    "sourceTechnicalHash": "4ff1cd22b5dc41ce85bed37aa19664f201902e13c9386e041bd87777eb79559a",
+    "targetHash": "2e3d2364d078887012ac8a53e1de28f18f5b28fce8fd935fafdfcfe1c74cd47e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:48.635Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+      "targetHash": "2e3d2364d078887012ac8a53e1de28f18f5b28fce8fd935fafdfcfe1c74cd47e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: ETIMEDOUT"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
