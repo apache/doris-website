@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/check-tablet-segment",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/check-tablet-segment.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cb334a73094db4d382cee390cf2fe061350dadc922afaa11369f173dc003be71",
+    "sourceTechnicalHash": "3605ad4cd9c51bd4db6ef46b5c0f1ad6fd3381383226b79f28213ed3449c1362",
+    "targetHash": "598eeedca937d2c16a6b4f7a733872d8040c7a555a124d29b4aed379cd5be4fb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:16:19.525Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb334a73094db4d382cee390cf2fe061350dadc922afaa11369f173dc003be71",
+      "targetHash": "598eeedca937d2c16a6b4f7a733872d8040c7a555a124d29b4aed379cd5be4fb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

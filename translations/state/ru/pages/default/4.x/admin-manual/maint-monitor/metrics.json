@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/metrics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/metrics.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+    "sourceTechnicalHash": "a4487a8d869dc8c9819c186219230c8329c7ebeddd9bfee93ec3f1893981097b",
+    "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:52.144Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+      "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/maint-monitor/metrics",
+        "sourcePath": "docs/admin-manual/maint-monitor/metrics.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/metrics.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "e1ce6534408184a1f5d4721865d746de1bc3b927dbc99d1bf0051d0382c87635",
+        "targetHash": "4831ccc446f3c3b7e6bd2c1a70ba332a96d2c8a69b6d2c0ed9ab94672b5081cf",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}
