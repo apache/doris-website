@@ -306,6 +306,8 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 `GROUP BY`、`SELECT DISTINCT`、`COUNT(DISTINCT ...)` 和 `MIN`/`MAX` 不接受原生空间参数，包括嵌套空间值和窗口聚合。原始 WKB 不做规范化：不同字节序可以表示同一几何对象，字节顺序也不代表空间顺序。普通 `COUNT`、`ANY_VALUE` 以及按普通键分组并携带空间值仍受支持。需要显式按字节分组或去重时，可使用 `hex(ST_AsBinary(shape))`；单独使用 `ST_AsBinary` 仍受现有 VARBINARY 限制。
 
+`UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
+
 `LEAST` 和 `GREATEST` 不接受空间参数。`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 不支持标量空间参数；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
 
 `INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。CREATE 和 ALTER 拒绝 V2、ORC 或嵌套空间写入。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。

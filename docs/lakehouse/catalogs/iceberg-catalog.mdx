@@ -290,6 +290,8 @@ For spherical polygon calculations, each ring selects the smaller region (at mos
 
 `GROUP BY`, `SELECT DISTINCT`, `COUNT(DISTINCT ...)` and `MIN`/`MAX` reject native spatial arguments, including nested spatial values and window aggregates. Raw WKB is preserved without canonicalization: different byte orders can encode the same geometry, and byte ordering does not define spatial ordering. Ordinary `COUNT` and `ANY_VALUE` remain supported, as does grouping by ordinary keys with spatial values. For explicit byte-level grouping or deduplication, use `hex(ST_AsBinary(shape))`; `ST_AsBinary` alone remains subject to existing VARBINARY restrictions.
 
+`UNION` (including `UNION DISTINCT`), `INTERSECT` and `EXCEPT` reject spatial keys. `ARRAY_AGG(DISTINCT ...)` and `COLLECT_LIST(DISTINCT ...)` reject spatial arguments. `UNION ALL` and nondistinct scalar `ARRAY_AGG`/`COLLECT_LIST` remain supported.
+
 `LEAST` and `GREATEST` reject spatial arguments. `MIN_BY` and `MAX_BY` reject scalar spatial arguments as either values or ordering keys. `TOPN_ARRAY` rejects spatial values, including nested ones. `MULTI_DISTINCT_COUNT` does not support scalar spatial arguments; `GROUP_ARRAY_UNION` and `GROUP_ARRAY_INTERSECT` reject arrays containing spatial values.
 
 `INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. CREATE and ALTER reject V2/ORC or nested spatial writes. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
