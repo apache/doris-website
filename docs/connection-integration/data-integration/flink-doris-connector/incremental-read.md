@@ -8,7 +8,7 @@
 
 # Incremental Reading with Doris Changelog
 
-For a Doris table with changelog enabled (`"changelog.enable" = "true"`), Flink Doris Connector can continuously read row-level changes. In `initial` mode, the Connector first reads the current table snapshot and then switches to incremental reading. Changes needed for this transition must remain within the source table's changelog retention window.
+For a Doris table with changelog enabled (`"changelog.enable" = "true"`), Flink Doris Connector can continuously read row-level changes. For a new consumer, `initial` mode first reads the current table snapshot and then switches to incremental reading. Changes needed for this transition must remain within the source table's changelog retention window.
 
 :::info Version requirements
 This feature requires Flink Doris Connector 26.4.0 or later and Doris 5.0.0 or later. Doris changelog is an experimental feature of Doris 5.0.0 and must be enabled with `enable_feature_changelog = true` in the FE configuration. For how to enable it on a table, the supported table models, and its limitations, see [Changelog](../../../data-operate/incremental/changelog.md).
@@ -62,7 +62,7 @@ SELECT * FROM student_changelog;
 
 ## Startup Modes {#scan-mode}
 
-After the job starts, changes to `test.student_changelog_source` are continuously emitted as Flink changelog records. Select the startup mode with `source.scan.mode`:
+After the job starts, changes to `test.student_changelog_source` are continuously emitted as Flink changelog records. Select the startup mode for a new consumer with `source.scan.mode`:
 
 | Mode | Behavior |
 | ---- | -------- |
@@ -71,7 +71,7 @@ After the job starts, changes to `test.student_changelog_source` are continuousl
 | `latest` | Skips the snapshot and reads changes generated after the job starts. |
 | `from-timestamp` | Skips the snapshot and reads changes starting at the inclusive time specified by `source.scan.timestamp` in `yyyy-MM-dd HH:mm:ss` format. |
 
-When restoring from a Flink Checkpoint or Savepoint, the Connector resumes the saved consumption state. Changing `source.scan.mode` or `source.scan.timestamp` does not reset that state. Both a restored offset and a `from-timestamp` start are subject to the source table's `changelog.ttl_seconds`; see the expiration behavior below.
+When resuming a job, saved consumption progress takes precedence over the startup mode. See [Publishing Consumption Progress to Doris](#offset-table) for the recovery rules. Both a restored offset and a `from-timestamp` start are subject to the source table's `changelog.ttl_seconds`; see the expiration behavior below.
 
 ## Change Types {#increment-type}
 
@@ -97,7 +97,7 @@ These rules apply during normal consumption, after the initial snapshot, and whe
 
 ### Recovery after changelog expiration {#changelog-expiration-recovery}
 
-If required changes have expired, the existing offset cannot provide complete incremental recovery. For a job that must keep downstream data consistent with the current source table, start a new bootstrap with `source.scan.mode = 'initial'`, without restoring the expired Checkpoint or Savepoint, and rebuild downstream data from the new snapshot. Restoring old state while setting `initial` still resumes the saved state instead of starting a new full snapshot.
+If required changes have expired, the existing offset cannot provide complete incremental recovery. For a job that must keep downstream data consistent with the current source table, start a new bootstrap with `source.scan.mode = 'initial'`, without restoring the expired Checkpoint or Savepoint, and rebuild downstream data from the new snapshot. If an offset table is configured, also use a new `source.changelog.consumer-id` with no saved record, or remove both `source.changelog.offset-table` and `source.changelog.consumer-id`. Otherwise, the old Flink state or external offset still takes precedence over `initial` and prevents a new full snapshot.
 
 A new snapshot rebuilds the current table state; it cannot reproduce expired historical events. Starting with `latest` or a newer `from-timestamp` also skips the missing interval. Use those modes only when skipping that interval is acceptable or the missing data has been recovered separately.
 
@@ -115,9 +115,9 @@ Checkpoints save consumption state, and CDC deduplication handles replayed event
 
 ## Publishing Consumption Progress to Doris (Optional) {#offset-table}
 
-Consumption progress is stored in Flink Checkpoint state. The optional offset table is only for observing progress covered by completed Checkpoints. The Connector does not read this table to automatically resume consumption when a job starts or restarts.
+The optional offset table saves consumption progress in Doris for observation and for automatically resuming a job that is not restored from a Checkpoint or Savepoint.
 
-To query consumption progress in Doris, create the following offset table:
+Create the following offset table before submitting the job. The Doris account configured with `username` and `password` needs `SELECT` and `INSERT` permissions on this table:
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ops;
@@ -134,20 +134,47 @@ PROPERTIES (
 );
 ```
 
+Keep Flink Checkpoint enabled and add these options to the Source table's `WITH` clause in the example above:
+
 ```sql
 'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
 'source.changelog.offset-table' = 'ops.flink_source_offsets',
 'source.changelog.consumer-id' = 'student-sync'
 ```
 
-`source.changelog.consumer-id` identifies the consumer job in the offset table. Keep it unchanged when the same job restarts to track its progress.
+Keep the same offset table and `source.changelog.consumer-id` when restarting a job. Use different IDs for different jobs or source tables to avoid overwriting consumption progress.
 
-If you cannot restore from a Flink Checkpoint or Savepoint and all changes needed from the saved `offset_timestamp` are still retained, copy it into `source.scan.timestamp` and set `source.scan.mode` to `from-timestamp` to manually resume from that offset. If it has expired, follow [Recovery after changelog expiration](#changelog-expiration-recovery); copying an expired timestamp does not restore the missing changes. For example, if the following timestamp is still within the retention window:
+`offset_timestamp` is the next inclusive starting point for incremental reading. After a Checkpoint succeeds, the Connector asynchronously saves the consumption progress covered by that Checkpoint and retries failed writes. Saved progress can lag behind, so resuming may replay some data.
+
+After progress has been published, query it in Doris:
 
 ```sql
-'source.scan.mode' = 'from-timestamp',
-'source.scan.timestamp' = '2026-10-09 10:00:00'
+SELECT consumer_id, offset_timestamp
+FROM ops.flink_source_offsets
+WHERE consumer_id = 'student-sync';
 ```
+
+Example result:
+
+```text
++--------------+---------------------+
+| consumer_id  | offset_timestamp    |
++--------------+---------------------+
+| student-sync | 2026-10-09 10:00:00 |
++--------------+---------------------+
+```
+
+The starting point is determined by the first matching rule in this order:
+
+| Condition | Behavior |
+| ---- | ---- |
+| The job is restored from a Checkpoint or Savepoint | Uses the saved consumption state. |
+| The offset table has a record for the current `consumer-id` | Resumes from `offset_timestamp`, overriding the startup mode's starting point. `initial` also skips the snapshot. |
+| No offset table is configured, or no record exists for the consumer | Starts according to `source.scan.mode`. |
+
+If the configured offset table is missing or unreadable, or the consumer has duplicate records or an invalid timestamp, startup fails instead of falling back to the startup mode.
+
+The offset table saves only the consumption starting point, not downstream Flink operator or sink state. Restore a Checkpoint or Savepoint to recover that state. For expired offsets, see [Recovery after changelog expiration](#changelog-expiration-recovery).
 
 ## Options {#options}
 
@@ -156,9 +183,9 @@ The following options control incremental reading. The other Source options are 
 | Key                         | Default Value | Required | Comment                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | source.scan.mode            | snapshot      | N        | Source startup mode. Supported values: `snapshot`, `initial`, `latest`, and `from-timestamp`.                                                           |
-| source.scan.timestamp       | --            | N        | Inclusive start time in `yyyy-MM-dd HH:mm:ss` format. Required only for `from-timestamp`. An expired start follows the behavior in [Change Types](#increment-type); it cannot recover expired changes. |
+| source.scan.timestamp       | --            | N        | Required for `from-timestamp`. Inclusive start time in `yyyy-MM-dd HH:mm:ss` format. Saved consumption progress takes precedence; see [Recovery rules](#offset-table). |
 | source.changelog.increment-type | detail    | N        | Change type: `detail`, `min_delta`, or `append_only`. On an expired start, `detail` / `append_only` skip expired changes and `min_delta` fails. |
 | source.changelog.poll-interval | 10s        | N        | Interval for polling new changes. The minimum value is 1 second.                                                                                        |
 | source.changelog.visible-wait-timeout | 5m         | N        | Maximum time for the Connector to retry the same read window after Doris returns a transaction visibility wait timeout error. Set to `0s` to disable retries; negative values are invalid. |
-| source.changelog.offset-table  | --         | N        | Doris table in `database.table` format used to publish offsets covered by completed Checkpoints for observation only, not for automatic recovery. Configure with `source.changelog.consumer-id` and `jdbc-url`. |
-| source.changelog.consumer-id   | --         | N        | Stable consumer identifier written to `source.changelog.offset-table`.                                                                                |
+| source.changelog.offset-table  | --         | N        | Doris table used to save consumption progress and resume reading. Create it in advance in `database.table` format. Configure with `source.changelog.consumer-id` and `jdbc-url`; supported only in incremental modes. |
+| source.changelog.consumer-id   | --         | N        | Unique consumer job identifier in the offset table. Keep it unchanged when restarting the same job. |
