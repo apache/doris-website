@@ -47,7 +47,7 @@ jobs:
             - name: Set up Python
               uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
               with:
-                python-version: '3.9'
+                python-version: '3.12'
 
             - name: Use Node.js
               uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
