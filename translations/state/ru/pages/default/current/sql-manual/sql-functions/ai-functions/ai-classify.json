@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-classify",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-classify.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-classify.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "02e55a6c5ac0765454280463c751930feba24aae5298e500f10df2d3a8186798",
+    "sourceTechnicalHash": "4afd998ecbb2deb8ab008f32d5e74a34891309c3bf3c973befd4101582a9fee7",
+    "targetHash": "da4c30d9bc370c91d0a6c68c64711906227be6aecdacfd7673c8ea754205ba1b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:27:11.368Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "02e55a6c5ac0765454280463c751930feba24aae5298e500f10df2d3a8186798",
+      "targetHash": "da4c30d9bc370c91d0a6c68c64711906227be6aecdacfd7673c8ea754205ba1b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

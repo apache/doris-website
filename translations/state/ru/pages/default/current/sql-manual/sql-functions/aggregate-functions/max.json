@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/max",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/max.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/max.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b4a0d65b62da80611dec2a6ef1b124aa474efacd45c55afd89960969c57c056a",
+    "sourceTechnicalHash": "5ae22240f83f3d43f8875e8248095061633b986ea78835e5f6279a6322d88f68",
+    "targetHash": "5bfece6c78ddd44c7b7718ce7eeb93093d4642c051f8844b33b7a36f15b6f364",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:23:02.939Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b4a0d65b62da80611dec2a6ef1b124aa474efacd45c55afd89960969c57c056a",
+      "targetHash": "5bfece6c78ddd44c7b7718ce7eeb93093d4642c051f8844b33b7a36f15b6f364",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

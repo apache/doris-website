@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-generate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-generate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-generate.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "935e5e2a6719ceda072c6d0cbac167d396f532b176610fe6aecc22327f6ed3d2",
+    "sourceTechnicalHash": "a8de13d111fead8636c9b54d8d24c4259720de542875ed3425e0c37f4cf6c8f5",
+    "targetHash": "397f9b4086457e2b9ad555e558449736f1b4cdf9ffcd10b207867973b8c4e767",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:27:59.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "935e5e2a6719ceda072c6d0cbac167d396f532b176610fe6aecc22327f6ed3d2",
+      "targetHash": "397f9b4086457e2b9ad555e558449736f1b4cdf9ffcd10b207867973b8c4e767",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

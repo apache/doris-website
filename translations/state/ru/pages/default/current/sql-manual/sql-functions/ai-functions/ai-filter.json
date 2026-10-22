@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-filter",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-filter.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-filter.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "eab4f92faff07c6336ae58cd589bbe3a308c03d0a1c81828dadb7ab98e156f98",
+    "sourceTechnicalHash": "42294a5ff6f26d0f8f8eb5cdfd60d8ffc60fbfc6ced0442f06b3a21654a0a8a8",
+    "targetHash": "a719ed5f919bb8a10f57efb53b7e75ab57686d72aa7a461344ad41a460eb0235",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:27:23.613Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eab4f92faff07c6336ae58cd589bbe3a308c03d0a1c81828dadb7ab98e156f98",
+      "targetHash": "a719ed5f919bb8a10f57efb53b7e75ab57686d72aa7a461344ad41a460eb0235",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
