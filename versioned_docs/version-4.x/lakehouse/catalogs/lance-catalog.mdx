@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "en",
-    "description": "Apache Doris Lance Catalog guide: access Lance datasets through Filesystem or REST Namespace catalogs, with parallel reads, predicate pushdown, S3/Local TVFs, index inspection, vector search, and full-text search."
+    "description": "Query Lance datasets with Apache Doris: configure catalogs, use native vector and BM25 search, and understand automatic SQL pushdown and type compatibility."
 }
 ---
 
@@ -729,6 +729,8 @@ Lance file TVFs have the following additional limitations:
 
 ## Vector Search
 
+In builds with Doris 4.2 automatic Lance search, eligible ordinary SQL can also use native vector Top-N and MATCH/BM25 retrieval. See [Automatic Search from Ordinary SQL](../best-practices/lance-hybrid-search.mdx#automatic-search) for the five approximate functions, metric conversion, input semantics, and JOIN/EXISTS boundaries. The TVFs below remain the interface for explicit search tuning and supported shapes outside automatic rewriting.
+
 `vector_search()` is a relational TVF that performs Top-K search on a vector column in a Lance table. It can use an existing Lance vector index or perform Flat Search.
 
 ### Syntax and Example
@@ -1116,7 +1118,7 @@ This reduces storage I/O, network transfer, and memory usage. The benefit is usu
 
 Doris uses two-phase reading only when all of the following conditions are met:
 
-1. The query reads Lance through `vector_search()` or `full_text_search()` and its plan contains a TopN eligible for lazy materialization. This switch does not currently apply to ordinary Lance table scans or Lance file TVFs.
+1. The query reads Lance through `vector_search()` or `full_text_search()` and its plan contains a TopN eligible for lazy materialization. An ordinary SQL query rewritten to these search TVFs can also qualify; unreplaced scalar table scans and Lance file TVFs do not.
 2. The Boolean session variable `enable_lance_lazy_materialization` is `true`, its default value.
 3. At least one top-level column can be deferred. A column used only by the final `SELECT` projection can be deferred. A column used by a Post-filter, `ORDER BY`, or another expression before TopN must be read in Phase 1. Nested subcolumns cannot currently be deferred.
 
