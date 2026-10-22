@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4e78ff7d74e5e964cbe131d0bcce134fb7bf24364a762076dd1c738afab14a0c",
+    "sourceTechnicalHash": "ca1de324a85ce539e577796f12e6a70e4327c5f99c2f45733fa72184712d3b14",
+    "targetHash": "7cb68dcca866acb08c0e12ecbe32cba6c7141e69d08ba5ba2b87285d55255e0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:13.404Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4e78ff7d74e5e964cbe131d0bcce134fb7bf24364a762076dd1c738afab14a0c",
+      "targetHash": "7cb68dcca866acb08c0e12ecbe32cba6c7141e69d08ba5ba2b87285d55255e0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/group-bitmap-xor",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bitmap-xor.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "4e78ff7d74e5e964cbe131d0bcce134fb7bf24364a762076dd1c738afab14a0c",
+        "targetHash": "7cb68dcca866acb08c0e12ecbe32cba6c7141e69d08ba5ba2b87285d55255e0d",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}
