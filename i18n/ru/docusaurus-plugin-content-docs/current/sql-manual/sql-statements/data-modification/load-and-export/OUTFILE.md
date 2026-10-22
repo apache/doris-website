@@ -84,7 +84,7 @@ INTO OUTFILE "<file_path>"
 - `hadoop.kerberos.principal`: задаёт principal Kerberos, используемый при подключении Doris к HDFS
 - `hadoop.kerberos.keytab`: задаёт локальный путь к файлу keytab
 
-Для протокола S3 непосредственно укажите его настройки:
+Для протокола S3 непосредственно укажите настройки протокола S3:
  - `s3.endpoint`
  - `s3.access_key`
  - `s3.secret_key`

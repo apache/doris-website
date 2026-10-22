@@ -11,7 +11,7 @@
     "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
     "sourceHash": "508986b4e6377667356cea3eb07fe4e32c184bd045b5e918af20e69962a6d3aa",
     "sourceTechnicalHash": "ffc0f37f24b0458f3ac066cef9cb28f663febcf118a7c653bc9151aead9b5c62",
-    "targetHash": "4aa1efd85399246f85cf6d6bee963d30b320f328eda892f776683af8d2e203c7",
+    "targetHash": "b1a0d5d20fdb83418b4fe1d89bfdf6b6b864b78cb2d980c4ed9c91dfede6ba8c",
     "reviewStatus": "machine",
     "ownership": "machine",
     "translatedAt": "2026-10-22T13:12:13.412Z",
@@ -24,7 +24,7 @@
       "modelCalls": 3,
       "acceptedWithWarnings": true,
       "sourceHash": "508986b4e6377667356cea3eb07fe4e32c184bd045b5e918af20e69962a6d3aa",
-      "targetHash": "4aa1efd85399246f85cf6d6bee963d30b320f328eda892f776683af8d2e203c7",
+      "targetHash": "b1a0d5d20fdb83418b4fe1d89bfdf6b6b864b78cb2d980c4ed9c91dfede6ba8c",
       "warnings": [
         {
           "check": "protected-content",
@@ -58,6 +58,17 @@
               "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]"
             }
           ]
+        }
+      ],
+      "localCorrections": [
+        {
+          "at": "2026-10-22T13:17:26.316Z",
+          "sourceAttempt": 3,
+          "before": "Для протокола S3 непосредственно укажите его настройки:",
+          "after": "Для протокола S3 непосредственно укажите настройки протокола S3:",
+          "beforeTargetHash": "4aa1efd85399246f85cf6d6bee963d30b320f328eda892f776683af8d2e203c7",
+          "afterTargetHash": "b1a0d5d20fdb83418b4fe1d89bfdf6b6b864b78cb2d980c4ed9c91dfede6ba8c",
+          "reason": "Restored the second S3 mention from the English sentence. The third output used a pronoun instead, causing one missing numeric token. Meaning is preserved; the exact third output and original warning are retained. No additional model call."
         }
       ]
     }
