@@ -81,6 +81,10 @@ SELECT
 
 ### 最大可視パーティションのクエリ {#query-the-maximum-visible-partition}
 
+:::note
+この構文は開発バージョン向けであり、対応する実装がマージされた後に使用できます。リリース済みの 4.x バージョンでは使用できません。
+:::
+
 `MAX_VISIBLE_PARTITION()` は、パーティションキーが最大の可視パーティションを自動的に選択します。用途は Hive エコシステムで一般的な `max_pt` と似ていますが、Doris のパーティションキーのセマンティクスと可視バージョンに基づいて選択します。
 
 ```sql
@@ -99,12 +103,30 @@ FROM <table_name> MAX_VISIBLE_PARTITION() [[AS] <table_alias>];
 
 複数列のパーティションキーは、パーティション列の定義順に比較されます。可視パーティションが存在しない場合、クエリは空の結果を返します。この構文は内部 OLAP テーブルと非同期マテリアライズドビューでのみ使用でき、`PARTITION(...)` または履歴スナップショットクエリと同時には使用できません。
 
+CTE 参照には直接適用できません。代わりに、CTE 定義内のベーステーブルに適用してください。
+
 :::note
 「可視」は「空ではない」という意味ではありません。`DELETE` ですべての行を削除した後も、そのパーティションが選択される場合があります。`TRUNCATE PARTITION` はパーティションバージョンをリセットします。
 :::
 
+次の例を実行するには、現在のデータベースに対する CREATE、INSERT、SELECT 権限が必要です。結果は、上限値が最大の可視パーティションから返されます。
+
 ```sql
-SELECT * FROM sales MAX_VISIBLE_PARTITION();
+CREATE TABLE max_partition_example (d DATE, amount INT)
+DUPLICATE KEY(d)
+PARTITION BY RANGE(d) (
+    PARTITION p202601 VALUES LESS THAN ('2026-02-01'),
+    PARTITION p202602 VALUES LESS THAN ('2026-03-01')
+)
+DISTRIBUTED BY HASH(d) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
+INSERT INTO max_partition_example VALUES ('2026-01-15', 10), ('2026-02-15', 20);
+SELECT * FROM max_partition_example MAX_VISIBLE_PARTITION();
+```
+
+```text
+d           amount
+2026-02-15  20
 ```
 
 **JOIN クエリ:**
