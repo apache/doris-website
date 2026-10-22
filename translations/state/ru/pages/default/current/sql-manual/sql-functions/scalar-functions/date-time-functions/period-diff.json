@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/period-diff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9ab8923c71cee0fb6799cba83c69d9e0438385df14f492da7bf74ee6e771e276",
+    "sourceTechnicalHash": "a469df2fc52eea137b076b06c0c45e4d8641b695538c331a7c6223187a416d32",
+    "targetHash": "06d4c9b6f2d58ca811d33e1109814c199930c48614083cde131f32ac6db80525",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:03:21.871Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ab8923c71cee0fb6799cba83c69d9e0438385df14f492da7bf74ee6e771e276",
+      "targetHash": "06d4c9b6f2d58ca811d33e1109814c199930c48614083cde131f32ac6db80525",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

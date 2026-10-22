@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-microsecond",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/from-microsecond.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/from-microsecond.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5dd4c03247f8bfe2a8ad0c695ca6c37762447d0dd9da7e7db8846c0d101ee884",
+    "sourceTechnicalHash": "5c3f1a229a407c9d8e0d858066ae3a53269ec81844d91394ac96faed1a3d7858",
+    "targetHash": "30979f63584c71bf4de18e3168733a0daf1345ec17e1019c7bf28baf79fc8d96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:59:39.629Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5dd4c03247f8bfe2a8ad0c695ca6c37762447d0dd9da7e7db8846c0d101ee884",
+      "targetHash": "30979f63584c71bf4de18e3168733a0daf1345ec17e1019c7bf28baf79fc8d96",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

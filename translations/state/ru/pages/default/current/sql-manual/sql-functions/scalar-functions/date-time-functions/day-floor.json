@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/day-floor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "170ef1a7489cf39902aab06cc130eb97d7e84a84c5bc87dc04c6d840aee4d46a",
+    "sourceTechnicalHash": "637fb268f5c522c347555d5a2ca939c8c51b287750cdb27a8346b9e0493dab50",
+    "targetHash": "222811f3c4b0f76dbdbedb156d09d6bab5fe281764c703a56aa5d22d8bbd4144",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:01:10.574Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "170ef1a7489cf39902aab06cc130eb97d7e84a84c5bc87dc04c6d840aee4d46a",
+      "targetHash": "222811f3c4b0f76dbdbedb156d09d6bab5fe281764c703a56aa5d22d8bbd4144",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

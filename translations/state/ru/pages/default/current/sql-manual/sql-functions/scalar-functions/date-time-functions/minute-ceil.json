@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/minute-ceil.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a2591c56808e1de9cac82fb19de329925098040ea08a6d884cc4f716ee88d567",
+    "sourceTechnicalHash": "f22912dc9e4620b5b89886d3d9f9bf98ca9516d0347800736bd6ba11857ce18c",
+    "targetHash": "f7785346188af6fb7136703552c7177d2faef53039bceefe69c45adee4f719cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:03:13.525Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2591c56808e1de9cac82fb19de329925098040ea08a6d884cc4f716ee88d567",
+      "targetHash": "f7785346188af6fb7136703552c7177d2faef53039bceefe69c45adee4f719cc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
