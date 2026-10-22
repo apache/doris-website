@@ -8,7 +8,7 @@
 
 # 增量读取 Doris Changelog
 
-对于开启了 Changelog（`"changelog.enable" = "true"`）的 Doris 表，Flink Doris Connector 可以持续读取行级数据变更。使用 `initial` 模式时，Connector 会先读取当前表快照，再切换到增量变更读取。切换所需的变更必须仍处于源表的 Changelog 保留窗口内。
+对于开启了 Changelog（`"changelog.enable" = "true"`）的 Doris 表，Flink Doris Connector 可以持续读取行级数据变更。首次消费时，`initial` 模式会先读取当前表快照，再切换到增量变更读取。切换所需的变更必须仍处于源表的 Changelog 保留窗口内。
 
 :::info 版本要求
 该功能需要 Flink Doris Connector 26.4.0 及以上、Doris 5.0.0 及以上版本。Doris Changelog 是 Doris 5.0.0 的实验性功能，需要在 FE 配置中开启 `enable_feature_changelog = true`；表上如何开启、支持的表模型和限制见 [Changelog](../../../data-operate/incremental/changelog.md)。
@@ -62,7 +62,7 @@ SELECT * FROM student_changelog;
 
 ## 启动模式 {#scan-mode}
 
-任务启动后，对 `test.student_changelog_source` 的修改会以 Flink Changelog 形式持续输出。通过 `source.scan.mode` 选择启动模式：
+任务启动后，对 `test.student_changelog_source` 的修改会以 Flink Changelog 形式持续输出。通过 `source.scan.mode` 选择首次消费的启动模式：
 
 | 模式 | 行为 |
 | ---- | ---- |
@@ -71,7 +71,7 @@ SELECT * FROM student_changelog;
 | `latest` | 跳过快照，只读取任务启动后产生的变更。 |
 | `from-timestamp` | 跳过快照，从 `source.scan.timestamp` 指定的时间点开始读取变更（包含该时间点），时间格式为 `yyyy-MM-dd HH:mm:ss`。 |
 
-从 Flink Checkpoint 或 Savepoint 恢复时，Connector 会继续使用保存的消费状态。修改 `source.scan.mode` 或 `source.scan.timestamp` 不会重置该状态。恢复的位点和 `from-timestamp` 起点均受源表 `changelog.ttl_seconds` 限制，过期后的行为见下文。
+恢复任务时，已保存的消费进度优先于启动模式，具体规则见 [将消费进度写入 Doris](#offset-table)。恢复的位点和 `from-timestamp` 起点均受源表 `changelog.ttl_seconds` 限制，过期后的行为见下文。
 
 ## 变更类型 {#increment-type}
 
@@ -97,7 +97,7 @@ Connector 通过 Doris `@incr` 查询读取变更。如果请求的起点已因 
 
 ### Changelog 过期后的恢复 {#changelog-expiration-recovery}
 
-如果所需变更已过期，原位点无法提供完整的增量恢复。对于需要保证下游数据与源表当前状态一致的任务，应以 `source.scan.mode = 'initial'` 重新执行初始化，不恢复已过期的 Checkpoint 或 Savepoint，并通过新快照重建下游数据。恢复旧状态时，即使设置了 `initial`，仍会继续使用保存的状态，而不会重新读取全量快照。
+如果所需变更已过期，原位点无法提供完整的增量恢复。对于需要保证下游数据与源表当前状态一致的任务，应以 `source.scan.mode = 'initial'` 重新执行初始化，不恢复已过期的 Checkpoint 或 Savepoint，并通过新快照重建下游数据。如果配置了 Offset 表，还需使用一个没有历史记录的新 `source.changelog.consumer-id`，或同时移除 `source.changelog.offset-table` 和 `source.changelog.consumer-id`。否则，旧 Flink 状态或外部位点仍会优先于 `initial`，不会重新读取全量快照。
 
 新快照可以重建表的当前状态，但无法重现已过期的历史事件。使用 `latest` 或较新的 `from-timestamp` 启动也会跳过缺失区间；仅在允许跳过该区间，或已通过其他方式补齐缺失数据时使用。
 
@@ -115,9 +115,9 @@ Checkpoint 保存消费状态，CDC 去重处理重放的事件；两者都不�
 
 ## 将消费进度写入 Doris（可选） {#offset-table}
 
-消费进度保存在 Flink Checkpoint 状态中。可选的 Offset 表仅用于观测已完成 Checkpoint 所覆盖的消费进度。Connector 不会在任务启动或重启时读取该表来自动恢复消费位点。
+可通过 Offset 表在 Doris 中保存、查询消费进度，并在未从 Checkpoint 或 Savepoint 恢复任务时自动续读。
 
-如果需要在 Doris 中查询消费进度，可以创建以下 Offset 表：
+提交任务前，先创建以下 Offset 表。通过 `username` 和 `password` 配置的 Doris 账号需要对该表具有 `SELECT` 和 `INSERT` 权限：
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ops;
@@ -134,20 +134,47 @@ PROPERTIES (
 );
 ```
 
+保持 Flink Checkpoint 开启，并在上方示例的 Source 表 `WITH` 子句中添加以下配置：
+
 ```sql
 'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
 'source.changelog.offset-table' = 'ops.flink_source_offsets',
 'source.changelog.consumer-id' = 'student-sync'
 ```
 
-`source.changelog.consumer-id` 用于在 Offset 表中标识当前消费任务，同一任务重启时应保持不变，便于观测消费进度。
+同一任务重启时保持 Offset 表和 `source.changelog.consumer-id` 不变；不同任务或源表使用不同 ID，避免覆盖消费进度。
 
-如果无法从 Flink Checkpoint 或 Savepoint 恢复，且从保存的 `offset_timestamp` 开始所需的变更仍完整保留，可以取出该值，填入 `source.scan.timestamp`，并将 `source.scan.mode` 设置为 `from-timestamp`，手动从该位点恢复消费。如果该时间戳已过期，请按 [Changelog 过期后的恢复](#changelog-expiration-recovery) 处理；填入已过期的时间戳无法恢复缺失变更。例如，以下时间戳仍处于保留窗口内时：
+`offset_timestamp` 是下次增量读取的起点（包含该时间点）。Connector 在 Checkpoint 成功后异步保存该 Checkpoint 所覆盖的消费进度，写入失败会重试。保存的进度可能滞后，恢复后可能重复读取部分数据。
+
+进度写入后，可以在 Doris 中查询：
 
 ```sql
-'source.scan.mode' = 'from-timestamp',
-'source.scan.timestamp' = '2026-10-09 10:00:00'
+SELECT consumer_id, offset_timestamp
+FROM ops.flink_source_offsets
+WHERE consumer_id = 'student-sync';
 ```
+
+示例结果：
+
+```text
++--------------+---------------------+
+| consumer_id  | offset_timestamp    |
++--------------+---------------------+
+| student-sync | 2026-10-09 10:00:00 |
++--------------+---------------------+
+```
+
+按以下顺序确定消费起点，使用首个满足条件的规则：
+
+| 条件 | 行为 |
+| ---- | ---- |
+| 从 Checkpoint 或 Savepoint 恢复任务 | 使用其中保存的消费状态。 |
+| Offset 表中有当前 `consumer-id` 的记录 | 从 `offset_timestamp` 续读，忽略启动模式指定的起点，`initial` 也会跳过快照。 |
+| 未配置 Offset 表，或没有当前消费者的记录 | 按 `source.scan.mode` 启动。 |
+
+已配置的 Offset 表不存在、无法读取，或消费者记录重复、时间戳非法时，任务启动失败，不会回退到启动模式。
+
+Offset 表只保存消费起点，不包含 Flink 下游算子或 Sink 的状态；如需恢复这些状态，应使用 Checkpoint 或 Savepoint。位点过期后的处理见 [Changelog 过期后的恢复](#changelog-expiration-recovery)。
 
 ## 配置项 {#options}
 
@@ -156,9 +183,9 @@ PROPERTIES (
 | Key                         | Default Value | Required | Comment                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | source.scan.mode            | snapshot      | N        | Source 启动模式，支持 `snapshot`、`initial`、`latest` 和 `from-timestamp`                                                                               |
-| source.scan.timestamp       | --            | N        | `from-timestamp` 模式的起始时间（含该时间点），格式为 `yyyy-MM-dd HH:mm:ss`。起点已过期时遵循 [变更类型](#increment-type) 中的行为，无法恢复过期变更。 |
+| source.scan.timestamp       | --            | N        | `from-timestamp` 模式必填，格式为 `yyyy-MM-dd HH:mm:ss`，包含该时间点。已有消费进度优先于该配置，见 [恢复规则](#offset-table)。 |
 | source.changelog.increment-type | detail    | N        | 变更类型，支持 `detail`、`min_delta` 和 `append_only`。起点过期时，`detail` / `append_only` 跳过过期变更，`min_delta` 报错。 |
 | source.changelog.poll-interval | 10s        | N        | 轮询新变更的时间间隔，最小值为 1 秒                                                                                                                   |
 | source.changelog.visible-wait-timeout | 5m         | N        | Doris 返回事务可见性等待超时错误后，Connector 重试同一读取区间的最长时间。设置为 `0s` 可关闭重试；不能为负值。 |
-| source.changelog.offset-table  | --         | N        | 用于发布已完成 Checkpoint 所覆盖 offset 的 Doris 表，仅供观测，不用于自动恢复。格式为 `database.table`，需要同时配置 `source.changelog.consumer-id` 和 `jdbc-url`。 |
-| source.changelog.consumer-id   | --         | N        | 写入 `source.changelog.offset-table` 的稳定消费者标识                                                                                                 |
+| source.changelog.offset-table  | --         | N        | 保存消费进度并用于续读的 Doris 表，需提前创建，格式为 `database.table`。需同时配置 `source.changelog.consumer-id` 和 `jdbc-url`，仅支持增量模式。 |
+| source.changelog.consumer-id   | --         | N        | Offset 表中消费任务的唯一标识，同一任务重启时保持不变。 |
