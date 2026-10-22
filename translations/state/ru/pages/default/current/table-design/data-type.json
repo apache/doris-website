@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-type",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-type.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-type.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "77e21d10815fbda447d869e6c94f0a6cfaa7a9e7d69936d6d8c83a1885c4d93d",
+    "sourceTechnicalHash": "7340914ade16d888dcdc1ff3d8b8e89e3f744332dfea74def59c203316b215bc",
+    "targetHash": "ccbbd861ead8b5957fc1e1ef4cbfeb7d68c0eac7558a3998294b9ac20f871af2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:56:41.518Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "77e21d10815fbda447d869e6c94f0a6cfaa7a9e7d69936d6d8c83a1885c4d93d",
+      "targetHash": "ccbbd861ead8b5957fc1e1ef4cbfeb7d68c0eac7558a3998294b9ac20f871af2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

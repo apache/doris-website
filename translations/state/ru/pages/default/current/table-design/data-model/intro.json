@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/data-model/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/data-model/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-model/intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4f8f54e0df79cc3467e00add7c3e7966e108516de78820d7258a79cac28dc98c",
+    "sourceTechnicalHash": "368f31316a14136e5e75136008024e9c13bdfdc88c14d398f2c8e5c5858d8b96",
+    "targetHash": "d6b3f76f6ebbbdbf4bcc95c0e2cc19b9a4649faa9292623e9c5cec6f2f63d252",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:56:16.012Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4f8f54e0df79cc3467e00add7c3e7966e108516de78820d7258a79cac28dc98c",
+      "targetHash": "d6b3f76f6ebbbdbf4bcc95c0e2cc19b9a4649faa9292623e9c5cec6f2f63d252",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

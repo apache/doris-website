@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/index/inverted-index/search-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/index/inverted-index/search-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/search-operators.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ed2911734ed12b19dda81a7ffab09b65762a003b711300bf5368426efb3b5f8a",
+    "sourceTechnicalHash": "ca95a54626d2ef3db27c4b43a828dc480a5571bef9fb5c7e156634c1fc0f598b",
+    "targetHash": "d418784c69e6cede074bf1f81553b38347836783ee35a50f8d01b00b07a7edb1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:57:49.373Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed2911734ed12b19dda81a7ffab09b65762a003b711300bf5368426efb3b5f8a",
+      "targetHash": "d418784c69e6cede074bf1f81553b38347836783ee35a50f8d01b00b07a7edb1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

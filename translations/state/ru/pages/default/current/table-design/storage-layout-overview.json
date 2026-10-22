@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/storage-layout-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/storage-layout-overview.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/storage-layout-overview.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a865e8eb896abae382c28b34244c0d212b5170ae6e6acd0a8f3a37be8715d803",
+    "sourceTechnicalHash": "590b4551b25917f0f7a67b8a01f4097b4474707ae5dd8f413035eb021c700b0c",
+    "targetHash": "38a3754949728c1c324cd9bcf655c1b75622cd174e5ebea3993ed3dcc59456fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:59:30.743Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a865e8eb896abae382c28b34244c0d212b5170ae6e6acd0a8f3a37be8715d803",
+      "targetHash": "38a3754949728c1c324cd9bcf655c1b75622cd174e5ebea3993ed3dcc59456fa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

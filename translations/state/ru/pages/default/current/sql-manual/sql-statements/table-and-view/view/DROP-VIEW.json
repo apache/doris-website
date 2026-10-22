@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/view/DROP-VIEW",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/view/DROP-VIEW.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/view/DROP-VIEW.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1ad1a5f2ace8c9f115421e50fa08685e649bb2f73a8ec9fa81ee160905b01c0e",
+    "sourceTechnicalHash": "5aac7b087e614cd83a182eb0979f7fe1851d6d246dbea3c66371752f313bda54",
+    "targetHash": "21c17f0c833ed93600adc9f6f0f64ccd0657fc0dd2a46a21d3725a88f53c4c50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:53:10.188Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1ad1a5f2ace8c9f115421e50fa08685e649bb2f73a8ec9fa81ee160905b01c0e",
+      "targetHash": "21c17f0c833ed93600adc9f6f0f64ccd0657fc0dd2a46a21d3725a88f53c4c50",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
