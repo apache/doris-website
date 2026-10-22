@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-distance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "aa464386a0dfefe6b3e613bdd92e3af92c7d2532789d68b30a7785ff4eacd535",
+    "sourceTechnicalHash": "32ef82e96471a5b5aaa5ad229a834ccc302ed11460784f473bf9f49499702862",
+    "targetHash": "f5b6bfdb486acca48ec59134ff1142968c011ae6dc48a35e48c73081dd5c98db",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:36:33.680Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "aa464386a0dfefe6b3e613bdd92e3af92c7d2532789d68b30a7785ff4eacd535",
+      "targetHash": "f5b6bfdb486acca48ec59134ff1142968c011ae6dc48a35e48c73081dd5c98db",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
