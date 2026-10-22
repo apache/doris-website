@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/managing-storage-vault",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/managing-storage-vault.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/managing-storage-vault.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3a8a92c5477c428c3adca52963bc51cc9ae564d2b7d17d833997a7dcae05444d",
+    "sourceTechnicalHash": "1ad06b172a97a8985dd4dbb61ab793cdbc46564a29d577c4df9fc01b9d44656d",
+    "targetHash": "661ab5950378cab28ef665f4ff5072dde8a1a36902914adb730790d224c9d395",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:59.534Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3a8a92c5477c428c3adca52963bc51cc9ae564d2b7d17d833997a7dcae05444d",
+      "targetHash": "661ab5950378cab28ef665f4ff5072dde8a1a36902914adb730790d224c9d395",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "compute-storage-decoupled/managing-storage-vault",
+        "sourcePath": "docs/compute-storage-decoupled/managing-storage-vault.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/managing-storage-vault.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "3a8a92c5477c428c3adca52963bc51cc9ae564d2b7d17d833997a7dcae05444d",
+        "targetHash": "661ab5950378cab28ef665f4ff5072dde8a1a36902914adb730790d224c9d395",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "34e0c7466a562720d2b03fa557b1fea0429a09da135a7d8ffb9450e02d4a4f3d",
+    "sourceTechnicalHash": "a447139559cf3a7340276c32096725868b6f5b1463fdf085d7b2730bd22b549a",
+    "targetHash": "0a60d4fcb29f3936c6e114d888a2405363ff52fc3445f88efcf2f979ae147d50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:56.649Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "34e0c7466a562720d2b03fa557b1fea0429a09da135a7d8ffb9450e02d4a4f3d",
+      "targetHash": "0a60d4fcb29f3936c6e114d888a2405363ff52fc3445f88efcf2f979ae147d50",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis",
+        "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/metadata-memory-analysis.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "34e0c7466a562720d2b03fa557b1fea0429a09da135a7d8ffb9450e02d4a4f3d",
+        "targetHash": "0a60d4fcb29f3936c6e114d888a2405363ff52fc3445f88efcf2f979ae147d50",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

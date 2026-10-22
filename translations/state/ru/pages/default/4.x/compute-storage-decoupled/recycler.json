@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "compute-storage-decoupled/recycler",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/compute-storage-decoupled/recycler.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/compute-storage-decoupled/recycler.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+    "sourceTechnicalHash": "9587c7ac742347a701c413f9c3bde0fe0e035e2d8f9a44340dd6ec6aa2597c03",
+    "targetHash": "1f5c179e0dbf669f5d566b98d54ce2aa348a4075a07464d51658707dcb1155a7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:59.657Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+      "targetHash": "1f5c179e0dbf669f5d566b98d54ce2aa348a4075a07464d51658707dcb1155a7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "compute-storage-decoupled/recycler",
+        "sourcePath": "docs/compute-storage-decoupled/recycler.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/recycler.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "c0d64589777c333a4051a55010a1f86287fbaff5a666c193fabc678271a5470e",
+        "targetHash": "1f5c179e0dbf669f5d566b98d54ce2aa348a4075a07464d51658707dcb1155a7",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}
