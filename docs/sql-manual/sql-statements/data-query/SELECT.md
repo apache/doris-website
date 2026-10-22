@@ -85,7 +85,7 @@ SELECT
 This syntax targets the development version and requires the corresponding implementation to be merged. It is not available in released 4.x versions.
 :::
 
-`MAX_VISIBLE_PARTITION()` queries the visible partition with the greatest partition key:
+`MAX_VISIBLE_PARTITION()` automatically selects the visible partition with the greatest partition key. Its use case is similar to `max_pt` commonly found in the Hive ecosystem, but selection is based on Doris partition key semantics and visible versions:
 
 ```sql
 SELECT *

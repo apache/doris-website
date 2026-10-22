@@ -81,7 +81,7 @@ SELECT
 
 ### 最大可視パーティションのクエリ {#query-the-maximum-visible-partition}
 
-`MAX_VISIBLE_PARTITION()` は、パーティションキーが最大の可視パーティションをクエリします。
+`MAX_VISIBLE_PARTITION()` は、パーティションキーが最大の可視パーティションを自動的に選択します。用途は Hive エコシステムで一般的な `max_pt` と似ていますが、Doris のパーティションキーのセマンティクスと可視バージョンに基づいて選択します。
 
 ```sql
 SELECT *

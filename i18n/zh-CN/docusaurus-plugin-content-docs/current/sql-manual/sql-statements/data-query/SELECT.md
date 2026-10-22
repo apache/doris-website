@@ -82,7 +82,7 @@ SELECT
 此语法面向开发版本，需在合入实现后使用，已发布的 4.x 版本暂不支持。
 :::
 
-`MAX_VISIBLE_PARTITION()` 用于查询分区键最大的可见分区：
+`MAX_VISIBLE_PARTITION()` 用于自动选择分区键最大的可见分区，使用场景类似 Hive 生态中的 `max_pt`，但选择依据是 Doris 的分区键语义和可见版本：
 
 ```sql
 SELECT *
