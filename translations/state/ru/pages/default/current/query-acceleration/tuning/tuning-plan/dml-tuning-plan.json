@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-plan/dml-tuning-plan",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-plan/dml-tuning-plan.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/dml-tuning-plan.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fc0179ae9a93f5f69c86b7c2f1aae2a80a6c91689a56a7dc83aad2d2cef8dc90",
+    "sourceTechnicalHash": "d06d74d12728bf08869f75687ae6bba805b5e0f8fee61527ab12e213eb0788af",
+    "targetHash": "56444180a8961da331562fbd1f0d0c2a88669a098b270d35d4f02142aed5719f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:35:28.295Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc0179ae9a93f5f69c86b7c2f1aae2a80a6c91689a56a7dc83aad2d2cef8dc90",
+      "targetHash": "56444180a8961da331562fbd1f0d0c2a88669a098b270d35d4f02142aed5719f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

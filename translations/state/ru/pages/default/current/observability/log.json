@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/log",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/log.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/log.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "141d516841ffcee3592075571422b13e41bee0ae6544ffeefd5fde67b734c738",
+    "sourceTechnicalHash": "f0a3db0c4b86e295086d418ee73ebf31257347cc9a7006972f48a629e149cd16",
+    "targetHash": "c949d8fb8c559fe28b92663eaabf2873451a7215274c9fd7ce74d279bb50d94f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:30:13.157Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "141d516841ffcee3592075571422b13e41bee0ae6544ffeefd5fde67b734c738",
+      "targetHash": "c949d8fb8c559fe28b92663eaabf2873451a7215274c9fd7ce74d279bb50d94f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
