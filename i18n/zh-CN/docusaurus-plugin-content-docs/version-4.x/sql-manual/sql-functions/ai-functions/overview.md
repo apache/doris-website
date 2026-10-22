@@ -56,6 +56,8 @@ PROPERTIES (
 
 ##### 参数说明
 
+**Since 4.1.5。** AI 资源至少需要一组完整的连接配置：通用 `ai.*`、文本 embedding 的 `ai.embed.*` 或多模态 embedding 的 `ai.embed.mm.*`。每组都需要 `endpoint`、`provider_type`、`model_name`，该组 provider 为 `LOCAL` 时可以省略 `api_key`，其他情况必须填写。下文连接字段的必填要求适用于标量 AI 函数和 `AI_AGG` 使用的通用配置组。文本 `EMBED` 优先选择 `ai.embed.*`，其次选择通用配置组；JSON 多模态 `EMBED` 依次选择 `ai.embed.mm.*`、`ai.embed.*`、通用配置组。更早版本需要完整的通用配置组。八个专用字段及示例见 [Embedding 专用配置](../../../ai/ai-function-overview.md#embedding-专用配置)。
+
 `type`: 必填，且必须为 `ai`，作为 ai 的类型标识。
 
 `ai.provider_type`: 必填，外部AI厂商类型。目前支持的厂商有：OpenAI、Anthropic、Gemini、DeepSeek、Local、MoonShot、MiniMax、Zhipu、QWen、Baichuan。若有不在上列的厂商，但其 API 格式与 [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1) 相同的，可直接填入三者中格式相同的厂商。
@@ -74,7 +76,11 @@ PROPERTIES (
 
 `ai.retry_delay_second`: 可选，重试的延迟时间（秒）。默认值为 0。
 
+`ai.enable_structured_output`（**Since 4.2**）：可选，Boolean 类型，默认 `true`。Doris 将标量 AI 函数的多行输入收集成批发送。开启该选项会附加 provider 对应的格式约束字段，以提高返回格式的稳定性。Doris 不检查所配置模型是否支持这些字段；LOCAL 和 MiniMax 省略这些字段。如果模型或 endpoint 拒绝这些字段，请设置为 `false`。关闭后仍然批量发送，通过系统提示词规定格式，并校验返回结果。该选项不适用于 `AI_AGG` 和 `EMBED`。
+
 `ai.dimensions`: 可选，控制[EMBED](./distance-functions/embed.md)输出的向量维度。**设置前务必确认`ai.model_name`所填模型支持自定义向量维度**，否则可能会导致模型调用失败。
+
+`ai.effort`（**Since 4.1.5**）：可选字符串，控制生成请求的推理强度，默认不设置。Doris 对 OpenAI 兼容 provider 接受 `none`、`minimal`、`low`、`medium`、`high`、`xhigh`、`max`；对 Anthropic 接受 `low`、`medium`、`high`、`xhigh`、`max`；对 Gemini 接受 `minimal`、`low`、`medium`、`high`。所配置模型需要支持所选值。通过 `ALTER RESOURCE` 设置为空字符串可以取消设置。
 
 ---
 

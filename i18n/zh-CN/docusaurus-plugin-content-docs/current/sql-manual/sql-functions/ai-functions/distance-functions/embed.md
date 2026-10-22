@@ -38,6 +38,8 @@ EMBED([<resource_name>], <text>)
 
 ## 参数
 
+文本输入的 `EMBED` 优先使用资源中完整的 `ai.embed.*` 连接配置组，未配置时使用通用 `ai.*`。JSON 多模态输入依次选择 `ai.embed.mm.*`、`ai.embed.*`、通用 `ai.*`。每组包含 `endpoint`、`provider_type`、`model_name` 和 `api_key`（`LOCAL` 可以省略）。选择以完整配置组为单位，选中的 provider 和模型需要支持输入类型。仅包含 embedding 配置的资源可以用于对应的 `EMBED` 调用。参见 [Embedding 专用配置](../../../../ai/ai-function-overview.md#embedding-专用配置)。
+
 |    参数    | 说明 |
 | ---------- | -------- |
 | `<resource_name>`| 指定的资源名称|

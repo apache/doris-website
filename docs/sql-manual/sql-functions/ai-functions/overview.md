@@ -60,6 +60,8 @@ PROPERTIES (
 
 ##### Parameter Description
 
+An AI resource must contain at least one complete connection group: general `ai.*`, text embedding `ai.embed.*`, or multimodal embedding `ai.embed.mm.*`. Each configured group requires `endpoint`, `provider_type`, `model_name`, and an `api_key` unless its provider is `LOCAL`. The required connection fields below describe the general group, which scalar AI functions and `AI_AGG` use. Text `EMBED` prefers `ai.embed.*` over the general group; JSON multimodal `EMBED` prefers `ai.embed.mm.*`, then `ai.embed.*`, then the general group. See [dedicated embedding properties](../../../ai/ai-function-overview.md#dedicated-embedding-properties) for all eight fields and an example.
+
 `type`: Required, must be `ai`, used as the type identifier for ai.
 
 `ai.provider_type`: Required, external AI provider type. Currently supported providers include: OpenAI, Anthropic, Gemini, DeepSeek, Local, MoonShot, MiniMax, Zhipu, QWen, Baichuan. If there are providers not listed above but their API format is the same as [OpenAI](https://platform.openai.com/docs/overview)/[Anthropic](https://docs.anthropic.com/en/api/messages-examples)/[Gemini](https://ai.google.dev/gemini-api/docs/quickstart#rest_1), you can directly fill in the corresponding provider.
@@ -80,9 +82,13 @@ The default value is -1, which means this parameter is not set. The default valu
 
 `ai.retry_delay_second`: Optional. The delay time (in seconds) before retrying. The default value is 0.
 
+`ai.enable_structured_output`: Optional Boolean, defaults to `true`. Doris batches input rows for scalar AI functions. Enabling this option adds provider-specific format fields to improve response-format reliability. Doris does not check the configured model's support; LOCAL and MiniMax omit these fields. Set it to `false` if the model or endpoint rejects them. Batching, system-prompt format instructions, and response validation remain enabled. This property does not apply to `AI_AGG` or `EMBED`.
+
 `ai.dimensions`: Optional, control the vector dimension of [EMBED](./distance-functions/embed.md) output. 
 **Make sure to confirm that the model filled in `ai.model_name` supports custom vector dimension before setting**, 
 otherwise it may cause model call failure.
+
+`ai.effort`: Optional string controlling reasoning effort for generation requests; unset by default. Doris validates `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, and `max` for OpenAI-compatible providers; Anthropic accepts `low`, `medium`, `high`, `xhigh`, and `max`; Gemini accepts `minimal`, `low`, `medium`, and `high`. Use a value supported by the configured model. An empty string in `ALTER RESOURCE` removes this setting.
 
 ---
 
@@ -161,4 +167,3 @@ SELECT AI_SENTIMENT('Apache Doris is a great DBMS.');
 ```
 
 For detailed function and usage, please refer to the documentation of each specific function.
-

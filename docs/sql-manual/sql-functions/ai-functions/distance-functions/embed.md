@@ -37,6 +37,8 @@ EMBED([<resource_name>], <text>)
 
 ## Parameters
 
+For text input, `EMBED` uses the resource's complete `ai.embed.*` connection group when configured, otherwise its general `ai.*` group. For JSON multimodal input, the selection order is `ai.embed.mm.*`, `ai.embed.*`, then general `ai.*`. Each group contains `endpoint`, `provider_type`, `model_name`, and `api_key` (optional for `LOCAL`). Selection uses complete groups; the selected provider and model must support the input type. A resource containing only embedding properties is valid for the corresponding `EMBED` calls. See [dedicated embedding properties](../../../../ai/ai-function-overview.md#dedicated-embedding-properties).
+
 | Parameter         | Description                |
 | ----------------- | ------------------------- |
 | `<resource_name>` | The specified resource name|
