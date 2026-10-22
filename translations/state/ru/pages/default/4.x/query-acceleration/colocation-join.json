@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/colocation-join",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/colocation-join.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/colocation-join.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+    "sourceTechnicalHash": "f902f87bc2bdf034bff8750dbd158a6d48d47c028f2e7fa0a2547d2543bf3156",
+    "targetHash": "a24aefae203e74e6f9ebea9b412eb5a4ea574b480f3b141dad39072d55136196",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:24.626Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+      "targetHash": "a24aefae203e74e6f9ebea9b412eb5a4ea574b480f3b141dad39072d55136196",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/colocation-join",
+        "sourcePath": "docs/query-acceleration/colocation-join.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/colocation-join.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "134c5f3373e0a1c44b862a5bbab7e3027449287b982f8ed663b2f06bc3527311",
+        "targetHash": "a24aefae203e74e6f9ebea9b412eb5a4ea574b480f3b141dad39072d55136196",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

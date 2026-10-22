@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/iceberg-rest",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/iceberg-rest.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/iceberg-rest.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3157eeb1d90e5511d8fed90b75354f54a1eeb674c008347052778117872fc6cb",
+    "sourceTechnicalHash": "108adeaf7687377151392b18d7c4b66689eb60e7342a6f2b1cfd4785841cb54b",
+    "targetHash": "835ff7ad45c71b6984dbd2bdace8eae91a1dad5121c1bc2cd8fe737c8e5e06c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.156Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3157eeb1d90e5511d8fed90b75354f54a1eeb674c008347052778117872fc6cb",
+      "targetHash": "835ff7ad45c71b6984dbd2bdace8eae91a1dad5121c1bc2cd8fe737c8e5e06c5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/metastores/iceberg-rest",
+        "sourcePath": "docs/lakehouse/metastores/iceberg-rest.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/metastores/iceberg-rest.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "3157eeb1d90e5511d8fed90b75354f54a1eeb674c008347052778117872fc6cb",
+        "targetHash": "835ff7ad45c71b6984dbd2bdace8eae91a1dad5121c1bc2cd8fe737c8e5e06c5",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}
