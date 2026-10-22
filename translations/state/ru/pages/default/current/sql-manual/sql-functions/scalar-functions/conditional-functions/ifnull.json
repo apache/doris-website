@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/conditional-functions/ifnull.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d0f609d1981091bbff0f7466f6f2b25eacfbef73178dd90febcd7e64e541694b",
+    "sourceTechnicalHash": "17964768f14060293132cdf2a28f1a4aa6bb563c9979aa6247082ce5cda48a2a",
+    "targetHash": "2c70e0d5763d3d75cb564e573785baae2716b68f2d15a6b61ee73b81984914bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:49:53.899Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d0f609d1981091bbff0f7466f6f2b25eacfbef73178dd90febcd7e64e541694b",
+      "targetHash": "2c70e0d5763d3d75cb564e573785baae2716b68f2d15a6b61ee73b81984914bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

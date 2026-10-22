@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/arrays-overlap.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6678385e7725bd84c3442d29b6349aa757a2ec9238a411ec00665f5ff1808af0",
+    "sourceTechnicalHash": "7157237961cea2804ccf640e30bbe4a427820192657b2511596603445228d73a",
+    "targetHash": "b82081ca36de72b46d20350e74dabf9e2970cb3f409f73c2261aaad2b7ab74eb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:47:28.831Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6678385e7725bd84c3442d29b6349aa757a2ec9238a411ec00665f5ff1808af0",
+      "targetHash": "b82081ca36de72b46d20350e74dabf9e2970cb3f409f73c2261aaad2b7ab74eb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

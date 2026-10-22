@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/curdate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/curdate.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+    "sourceTechnicalHash": "50544b07ca8326934c6e5ac4de492880f3a32f4826b70543fec9c03217204fdf",
+    "targetHash": "7b4fccaf6316b97c8a176de026b130540547799a61eba4d0cb9b797ba975b234",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:50:31.882Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6e1c4e79d07ba3f0c28b17e39b06d5a0ca3f7cfc70b5ef5dfbeb75ef8a584457",
+      "targetHash": "7b4fccaf6316b97c8a176de026b130540547799a61eba4d0cb9b797ba975b234",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
