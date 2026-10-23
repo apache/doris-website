@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/doris-kafka-connector",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/doris-kafka-connector.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/doris-kafka-connector.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9039f505f5effec24b8a9aa1f5fce99fba8d4ad692a33fe5793efa00233954a6",
+    "sourceTechnicalHash": "37c0df4c8524684c38b71871ebaece935581ae050efded91650d49807d9070cb",
+    "targetHash": "491b7b2c705e80ab53be0528529bc9839364c32c0619e77b3b7c680850e27cda",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:24:03.878Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9039f505f5effec24b8a9aa1f5fce99fba8d4ad692a33fe5793efa00233954a6",
+      "targetHash": "491b7b2c705e80ab53be0528529bc9839364c32c0619e77b3b7c680850e27cda",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

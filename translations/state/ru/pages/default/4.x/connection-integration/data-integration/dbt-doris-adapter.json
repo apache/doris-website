@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/dbt-doris-adapter",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/dbt-doris-adapter.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/dbt-doris-adapter.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+    "sourceTechnicalHash": "698f1cd7707c15efb95a0c79234f5bafe246c050b4ea82c58a672703444381b4",
+    "targetHash": "cc52d1152bce9c1ad9ee2bbb9c9c82cf1c0de3bbef1c641a8889c1ac4349b662",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:20:00.953Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+      "targetHash": "cc52d1152bce9c1ad9ee2bbb9c9c82cf1c0de3bbef1c641a8889c1ac4349b662",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "connection-integration/data-integration/dbt-doris-adapter",
+        "sourcePath": "docs/connection-integration/data-integration/dbt-doris-adapter.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/dbt-doris-adapter.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "ac6294e703bb2ba08540423fafff061d276fa2be0d626d45eb0b47e7b368c4b4",
+        "targetHash": "cc52d1152bce9c1ad9ee2bbb9c9c82cf1c0de3bbef1c641a8889c1ac4349b662",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

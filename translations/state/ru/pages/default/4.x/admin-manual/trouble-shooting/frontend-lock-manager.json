@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/trouble-shooting/frontend-lock-manager",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/frontend-lock-manager.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/frontend-lock-manager.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c9fb0ae9505bd65f8538f1f9fa82a73e203c26387fb1dadd8a530df59f89963f",
+    "sourceTechnicalHash": "05eaf7f590c26257eba1e53f019e83dd6461f87fa624305ae6254aba36b7e715",
+    "targetHash": "8ce99922c0e9c0bd38047c9685c8f26dcf76cd7ee5c228f99903a6b9da7c7a1f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:56.111Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c9fb0ae9505bd65f8538f1f9fa82a73e203c26387fb1dadd8a530df59f89963f",
+      "targetHash": "8ce99922c0e9c0bd38047c9685c8f26dcf76cd7ee5c228f99903a6b9da7c7a1f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/trouble-shooting/frontend-lock-manager",
+        "sourcePath": "docs/admin-manual/trouble-shooting/frontend-lock-manager.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/frontend-lock-manager.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "c9fb0ae9505bd65f8538f1f9fa82a73e203c26387fb1dadd8a530df59f89963f",
+        "targetHash": "8ce99922c0e9c0bd38047c9685c8f26dcf76cd7ee5c228f99903a6b9da7c7a1f",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}
