@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "zh-CN",
-    "description": "Apache Doris Lance Catalog 使用指南：通过 Filesystem 或 REST Namespace 访问 Lance 数据集，支持并行读取、谓词下推、S3/Local TVF、索引查看、向量检索以及全文检索。"
+    "description": "了解 Apache Doris Lance Catalog 的配置与查询方法，涵盖 Filesystem 和 REST Namespace、向量与 BM25 检索、普通 SQL 自动下推，以及数据类型和版本兼容性限制。"
 }
 ---
 
@@ -729,6 +729,8 @@ Lance 文件 TVF 还有以下限制：
 
 ## 向量检索
 
+包含 Doris 4.2 Lance 自动检索能力的构建也支持对符合条件的普通 SQL 下推原生向量 Top-N 和 MATCH/BM25 检索。五种近似函数、度量转换、输入语义及 JOIN/EXISTS 边界参见[普通 SQL 的自动检索下推](../best-practices/lance-hybrid-search.mdx#automatic-search)。下文 TVF 继续用于显式调参及自动改写范围之外的受支持查询形状。
+
 `vector_search()` 是一个关系型 TVF，用于对 Lance 表的向量列执行 Top-K 检索。它既可以使用 Lance 中已建立的向量索引，也可以执行 Flat Search。
 
 ### 语法和示例
@@ -1116,7 +1118,7 @@ BE 的 `/metrics` 还提供以 `doris_be_lance_session_index_cache_` 和 `doris_
 
 满足以下条件时，Doris 才会使用两阶段读取：
 
-1. 查询通过 `vector_search()` 或 `full_text_search()` 读取 Lance，且执行计划中存在可进行延迟物化的 TopN。普通 Lance 表扫描和 Lance 文件 TVF 当前不适用此开关。
+1. 查询通过 `vector_search()` 或 `full_text_search()` 读取 Lance，且执行计划中存在可进行延迟物化的 TopN。普通 SQL 被改写为上述检索 TVF 后也可能符合条件；未改写的标量表扫描和 Lance 文件 TVF 不适用。
 2. Boolean 类型的会话变量 `enable_lance_lazy_materialization` 为 `true`，默认开启。
 3. 查询至少包含一个可以延迟读取的顶层列。仅用于最终 `SELECT` 输出的列可以延迟；Post-filter、`ORDER BY` 或其他 TopN 前表达式使用的列必须在第一阶段读取。嵌套子列当前不能延迟读取。
 

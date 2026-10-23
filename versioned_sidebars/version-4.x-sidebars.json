@@ -1618,10 +1618,16 @@
                       "label": "Vector Distance Functions",
                       "items": [
                         "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance-approximate",
                         "sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/cosine-similarity-approximate",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance-approximate",
                         "sql-manual/sql-functions/ai-functions/distance-functions/inner-product",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/inner-product-approximate",
                         "sql-manual/sql-functions/ai-functions/distance-functions/l1-distance",
                         "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance",
+                        "sql-manual/sql-functions/ai-functions/distance-functions/l2-distance-approximate",
                         "sql-manual/sql-functions/ai-functions/distance-functions/embed"
                       ]
                     },
