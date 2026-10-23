@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-xor-count",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-xor-count.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-xor-count.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3abf72b932d3478ff37a17ba94309084b0d01fdb492b77185c688311bc63dfe3",
+    "sourceTechnicalHash": "ed32a9582809e1262f3c747cd636a55d41e6c8ea374d25b441e3c61333fbb566",
+    "targetHash": "5169095bacea0e2952b6b8f8fbd3dff81247d994c51b6c797d456b7534680991",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:48:13.326Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3abf72b932d3478ff37a17ba94309084b0d01fdb492b77185c688311bc63dfe3",
+      "targetHash": "5169095bacea0e2952b6b8f8fbd3dff81247d994c51b6c797d456b7534680991",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
