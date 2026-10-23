@@ -1,7 +1,7 @@
-import { translate } from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import { UseCasePage, UseCasePageContent } from './UseCasePage';
-import { Bolt } from './UseCaseIcons';
+import { AccentWithBolt } from './UseCaseIcons';
 import { ObservabilityFigure } from './figures/ObservabilityFigure';
 
 const KF = '/docs/dev/key-features';
@@ -16,12 +16,16 @@ const content: UseCasePageContent = {
     },
     hero: {
         title: (
-            <>
-                <span className="uc-accent">
-                    {translate({ id: "marketing.observability.004", message: "Real-Time" })}<Bolt />
-                </span>{' '}
-                {translate({ id: "marketing.observability.001", message: "Observability" })}<br />
-                {translate({ id: "marketing.observability.005", message: "for the AI Agent Era" })}</>
+            <Translate id="marketing.observability.hero" values={{
+                realTime: <AccentWithBolt>
+                    {translate({ id: "marketing.observability.004", message: "Real-Time" })}
+                </AccentWithBolt>,
+                observability: translate({ id: "marketing.observability.001", message: "Observability" }),
+                era: translate({ id: "marketing.observability.005", message: "for the AI Agent Era" }),
+                lineBreak: <br />,
+            }}>
+                {'{realTime} {observability}{lineBreak}{era}'}
+            </Translate>
         ),
         sub: translate({ id: "marketing.observability.006", message: "Apache Doris unifies logs, metrics, traces, and AI agent events on one high-performance analytical engine, so teams troubleshoot faster, control costs, and keep improving AI quality." }),
     },
