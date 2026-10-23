@@ -1,0 +1,141 @@
+---
+{
+    "title": "RECOVER",
+    "language": "ru",
+    "description": "Этот оператор используется для восстановления ранее удалённых баз данных, таблиц или разделов."
+}
+---
+
+## Описание {#description}
+
+Этот оператор используется для восстановления ранее удалённых баз данных, таблиц или разделов.
+
+Поддерживается восстановление указанных метаданных по имени или ID, а также их переименование при восстановлении.
+
+## Синтаксис: {#syntax}
+
+```sql
+RECOVER { DATABASE <db_name> [<db_id>] [AS <new_db_name>] 
+        | TABLE [<db_name>.]<table_name> [<table_id>] [AS <new_table_name>] 
+        | PARTITION <partition_name> [<partition_id>] FROM [<db_name>.]<table_name> [AS <new_partition_name>] }
+```
+
+## Обязательные параметры {#required-parameters}
+
+Восстановление базы данных
+
+**1. `<db_name>`**
+> Имя базы данных для восстановления.
+
+Восстановление таблицы
+
+**1. `<table_name>`**
+> Имя таблицы для восстановления.
+
+Восстановление раздела
+
+**1. `<partition_name>`**
+> Имя раздела для восстановления.
+
+**2. `<table_name>`**
+> Имя таблицы, в которой находится раздел.
+
+## Необязательные параметры {#optional-parameters}
+
+Восстановление базы данных
+
+**1. `<db_id>`**
+> ID базы данных для восстановления.
+
+**2. `<new_db_name>`**
+> Новое имя восстановленной базы данных.
+
+Восстановление таблицы
+
+**1. `<db_name>`**
+> Имя базы данных, в которой находится таблица.
+
+**2. `<table_id>`**
+> ID таблицы для восстановления.
+
+**3. `<new_table_name>`**
+> Новое имя восстановленной таблицы.
+
+Восстановление раздела
+
+**1. `<partition_id>`**
+> ID раздела для восстановления.
+
+**2. `<db_name>`**
+> Имя базы данных, в которой находится таблица.
+
+**3. `<new_partition_name>`**
+> Новое имя восстановленного раздела.
+
+## Требования к правам доступа {#access-control-requirements}
+
+| Привилегия   | Объект | Примечание |
+|-------------|--------|------|
+| ADMIN_PRIV  |        |      |
+
+## Примечания по использованию {#usage-notes}
+
+- Эта операция позволяет восстановить только метаданные, с момента удаления которых прошло не больше определённого времени. По умолчанию этот срок составляет 1 день (настраивается параметром `catalog_trash_expire_second` в файле `fe.conf`).
+- Если при восстановлении метаданных не указан ID, по умолчанию восстанавливаются последние удалённые метаданные с таким же именем.
+- Список метаданных, доступных для восстановления в данный момент, можно получить с помощью `SHOW CATALOG RECYCLE BIN`.
+
+## Примеры {#examples}
+
+1. Восстановить базу данных с именем `example_db`
+
+    ```sql
+    RECOVER DATABASE example_db;
+    ```
+
+2. Восстановить таблицу с именем `example_tbl`
+
+    ```sql
+    RECOVER TABLE example_db.example_tbl;
+    ```
+
+3. Восстановить раздел с именем `p1` из таблицы `example_tbl`
+
+    ```sql
+    RECOVER PARTITION p1 FROM example_tbl;
+    ```
+
+4. Восстановить базу данных с ID `example_db_id` и именем `example_db`
+
+    ```sql
+    RECOVER DATABASE example_db example_db_id;
+    ```
+
+5. Восстановить таблицу с ID `example_tbl_id` и именем `example_tbl`
+
+    ```sql
+    RECOVER TABLE example_db.example_tbl example_tbl_id;
+    ```
+
+6. Восстановить раздел с ID `p1_id` и именем `p1` из таблицы `example_tbl`
+
+    ```sql
+    RECOVER PARTITION p1 p1_id FROM example_tbl;
+    ```
+
+7. Восстановить базу данных с ID `example_db_id` и именем `example_db` и переименовать её в `new_example_db`
+
+    ```sql
+    RECOVER DATABASE example_db example_db_id AS new_example_db;
+    ```
+
+8. Восстановить таблицу с именем `example_tbl` и переименовать её в `new_example_tbl`
+
+    ```sql
+    RECOVER TABLE example_db.example_tbl AS new_example_tbl;
+    ```
+
+9. Восстановить раздел с ID `p1_id` и именем `p1` из таблицы `example_tbl` и переименовать его в `new_p1`
+
+    ```sql
+    RECOVER PARTITION p1 p1_id AS new_p1 FROM example_tbl;
+    ```
