@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/ai-agg",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+    "sourceTechnicalHash": "fe0ecc5d81114d8848c2a2c21b79c1c0cc4c8c6eb45f32dc8c3b9fe8997a32d1",
+    "targetHash": "118772783d5b8a8af7d9a61c73dd7317bca483e78dbc8ed6b0e75b114d8dd1a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T07:52:36.592Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+      "targetHash": "118772783d5b8a8af7d9a61c73dd7317bca483e78dbc8ed6b0e75b114d8dd1a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"2\",\"4.1.5\"]; received [\"1\",\"1\",\"128\",\"2\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

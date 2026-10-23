@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "6ba3b68ebb850a5d417b3d52945ac00e6984db2e88a807b465ac92d707585f8d",
-    "sourceTechnicalHash": "398d650d83375d141bae72e7e6cf21526f828c20eff7b0914620c5d6798394a4",
-    "targetHash": "59b967ca67363143a08c6ba3d67af8b628c8de5accf8365a2e508a7f0b54db7c",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+    "sourceTechnicalHash": "d0c6f5c49007d2406eb89cfb65776b50bb35820bd033a2920abe609d165eee21",
+    "targetHash": "a231acef30f4fdc25ff55f26e0f2a8255170603d8870f8765ab2fab2c9043551",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.222Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T07:33:42.153Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+      "targetHash": "a231acef30f4fdc25ff55f26e0f2a8255170603d8870f8765ab2fab2c9043551",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"REFRESH INCREMENTAL\"]; received [\"inlineCode\",null,null,\"CREATE MATERIALIZED VIEW\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"100\",\"101\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"120.00\",\"2\",\"2\",\"3\",\"4\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"100\",\"101\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"120.00\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"100\",\"101\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"120.00\",\"2\",\"2\",\"3\",\"4\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"100\",\"101\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"104\",\"120.00\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4\",\"5\",\"5\",\"5.0.0\",\"5.0.0\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"REFRESH INCREMENTAL\"]; received [\"inlineCode\",null,null,\"CREATE MATERIALIZED VIEW\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

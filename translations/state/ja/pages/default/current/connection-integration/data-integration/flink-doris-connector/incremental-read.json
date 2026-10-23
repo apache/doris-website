@@ -8,35 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/incremental-read.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/incremental-read.md",
-    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
-    "sourceHash": "3d725124b27cc053967591a48e15f80d890460648a15a1d73b36759f7609fe0d",
-    "sourceTechnicalHash": "a1d860314f9c24c1a26fe9a085d4c5d3da5a73c82881ca9aea9417e7a623fab9",
-    "targetHash": "f084de1e4aea9dd5bef84eb2067e0fbf95a183d91e2a1c12236832278d9cda17",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "c10a187e2d44f25aaafab73f456bb900ecee69e704cdd863d57d5e8cd4f77d31",
+    "sourceTechnicalHash": "7ce37fb51aaddf7c21c9a9b6754220d48e2f750433d2a1778725851a3415646c",
+    "targetHash": "4627637ef0114b2dcc3fcf558eb952ce56200e9f2e25574dc9e58fede80aa427",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T13:07:03.205Z",
+    "translatedAt": "2026-10-23T07:00:27.956Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "glossary-version-changed",
-      "attempts": 2,
+      "previousSourceHash": "3d725124b27cc053967591a48e15f80d890460648a15a1d73b36759f7609fe0d",
+      "previousTargetHash": "f084de1e4aea9dd5bef84eb2067e0fbf95a183d91e2a1c12236832278d9cda17",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 32,
+        "totalLines": 140,
+        "ratio": 0.22857142857142856
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "3d725124b27cc053967591a48e15f80d890460648a15a1d73b36759f7609fe0d",
-      "targetHash": "f084de1e4aea9dd5bef84eb2067e0fbf95a183d91e2a1c12236832278d9cda17",
+      "sourceHash": "c10a187e2d44f25aaafab73f456bb900ecee69e704cdd863d57d5e8cd4f77d31",
+      "targetHash": "4627637ef0114b2dcc3fcf558eb952ce56200e9f2e25574dc9e58fede80aa427",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"10\",\"26.4.0\",\"5\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"1\",\"10\",\"26.4.0\",\"5\",\"5.0.0\",\"5.0.0\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]
