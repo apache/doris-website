@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/exists-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/exists-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/exists-operators.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9643b03904c1731c7567f692b22c734ee6ea7dbb28a891cbedb6d7b7b567a043",
+    "sourceTechnicalHash": "5c7d377ba1eb5d75123eb4582dd3b06f11ac78a35336905b40a9902a8a68fad0",
+    "targetHash": "ebdf2e21c4f4215d5245770502dc76870286eb7865494a66a7cde211fc203a44",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:43:46.554Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9643b03904c1731c7567f692b22c734ee6ea7dbb28a891cbedb6d7b7b567a043",
+      "targetHash": "ebdf2e21c4f4215d5245770502dc76870286eb7865494a66a7cde211fc203a44",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

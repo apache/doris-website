@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/bitmap-union-int",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/bitmap-union-int.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/bitmap-union-int.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "de904c589a289f94c7f58ffb12980f2beb530802c18bc28f89edfa6b3615810f",
+    "sourceTechnicalHash": "026ec146b754671f89187f8d8eef756e066ea5480743f7d8c1a7380648dc6ac3",
+    "targetHash": "f8912aba5f106fe6102654b9f0d430d7eaa635086bf802df02cad0a08aba3f06",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:55:28.789Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de904c589a289f94c7f58ffb12980f2beb530802c18bc28f89edfa6b3615810f",
+      "targetHash": "f8912aba5f106fe6102654b9f0d430d7eaa635086bf802df02cad0a08aba3f06",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

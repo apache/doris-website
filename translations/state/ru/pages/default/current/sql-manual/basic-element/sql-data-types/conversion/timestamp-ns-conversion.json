@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6d99db16a6e285c7090ef0fba49612d6e07e7dd555cb8260ddc6cb5392210ba0",
+    "sourceTechnicalHash": "1b5c5b77a944dc6de1a77c49cae955c057a58d1216e534bc77d57e177c2a420e",
+    "targetHash": "de7964b2a595d4d610a8571c6293f82d7b7f2711d59babeb22302f10546de5c7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:52:47.837Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6d99db16a6e285c7090ef0fba49612d6e07e7dd555cb8260ddc6cb5392210ba0",
+      "targetHash": "de7964b2a595d4d610a8571c6293f82d7b7f2711d59babeb22302f10546de5c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

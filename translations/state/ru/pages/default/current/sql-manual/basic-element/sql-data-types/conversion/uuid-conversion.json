@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/uuid-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/uuid-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/uuid-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "838b4469fc773eb450f974718bf215495c4f634d9e748307ce524f6aa3bf959f",
+    "sourceTechnicalHash": "87d46cc7951e508c23869d1b69c5ada43d53d01e379a362a21eaa0ed629a2657",
+    "targetHash": "547d38728d1fcf0df71f3d5f524cd8c4824821f754d218962c51c7fe5dbf5dd5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:53:38.487Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "838b4469fc773eb450f974718bf215495c4f634d9e748307ce524f6aa3bf959f",
+      "targetHash": "547d38728d1fcf0df71f3d5f524cd8c4824821f754d218962c51c7fe5dbf5dd5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 27: expected [\"code\",\"sql\",null,\"SET enable_strict_cast = true;\\nSELECT CAST('550E8400E29B41D4A716446655440000' AS UUID) AS parsed,\\n       CAST(CAST('550E8400E29B41D4A716446655440000' AS UUID) AS STRING) AS text_value,\\n       CAST(NULL AS UUID) AS null_value;\"]; received [\"code\",\"sql\",null,\"SET enable_strict_cast = true;\\nSELECT CAST('550E8400E29B41D4A716446655440000' AS UUID) AS parsed,\\n       CAST(CAST('550E8400E29B41D4A716446655440000' AS UUID) AS UUID) AS text_value,\\n       CAST(NULL AS UUID) AS null_value;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

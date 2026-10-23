@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/literal/numeric-literal",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/literal/numeric-literal.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/literal/numeric-literal.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a21c13f9a55b92772f3064a313eb2d9a0a1fdb8579423f1d3933b43633123f84",
+    "sourceTechnicalHash": "7bbfa6c4f5469dc497b3ff133e5419dbc39c25775a9d4d00423fb8a188d11b40",
+    "targetHash": "09d987f164bf65fab77d8b5f8a1b3085c93a147d8eeb7c8a27ec3a26bef78d7b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:43:32.118Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a21c13f9a55b92772f3064a313eb2d9a0a1fdb8579423f1d3933b43633123f84",
+      "targetHash": "09d987f164bf65fab77d8b5f8a1b3085c93a147d8eeb7c8a27ec3a26bef78d7b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

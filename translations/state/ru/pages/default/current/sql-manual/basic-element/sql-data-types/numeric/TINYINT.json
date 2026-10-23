@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/numeric/TINYINT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/numeric/TINYINT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/numeric/TINYINT.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6c21a7fbcd49e43b1b35bb2582e74da29115a0587d93c8be6d968685dc101a16",
+    "sourceTechnicalHash": "0b1a69f142ce3065ce122a4ced2c5e29cfd764203df94ed376d96f6d910addf7",
+    "targetHash": "4acc707378b3e6d80d8ec0b08aa9727e01ebc34355ff73ed9512911fb2dcf956",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:51:50.415Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c21a7fbcd49e43b1b35bb2582e74da29115a0587d93c8be6d968685dc101a16",
+      "targetHash": "4acc707378b3e6d80d8ec0b08aa9727e01ebc34355ff73ed9512911fb2dcf956",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

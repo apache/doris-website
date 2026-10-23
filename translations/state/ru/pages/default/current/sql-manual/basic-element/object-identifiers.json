@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/object-identifiers",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/object-identifiers.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/object-identifiers.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "89737a3128c6cb2b5cec4c86eb51fbf1a2a360f3ad1d3d6a3a040ca5d82752d4",
+    "sourceTechnicalHash": "a11f20e0459505580315cbcc38128364dbb02f65927cf4c70e93a58a194a53de",
+    "targetHash": "7a978f097eacba137071038c408477cace4d566ecba4610bee4785e19ad76123",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:43:57.962Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89737a3128c6cb2b5cec4c86eb51fbf1a2a360f3ad1d3d6a3a040ca5d82752d4",
+      "targetHash": "7a978f097eacba137071038c408477cace4d566ecba4610bee4785e19ad76123",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
