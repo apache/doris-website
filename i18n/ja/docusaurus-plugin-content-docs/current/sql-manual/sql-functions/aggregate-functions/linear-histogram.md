@@ -2,32 +2,33 @@
 {
     "title": "LINEAR_HISTOGRAM",
     "language": "ja",
-    "description": "LINEARHISTOGRAM 関数はデータの分布を表します。"
+    "description": "LINEAR_HISTOGRAM 関数はデータの分布を表すために使用します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-LINEAR_HISTOGRAM 関数はデータの分布を表します。「等幅」のバケット分割方式を使用し、データの値の大きさに応じてバケットに分割します。
+LINEAR_HISTOGRAM 関数はデータの分布を表すために使用します。「等幅」のバケット分割方法を使用し、値の大きさに応じてデータをバケットに分割します。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
-LINEAR_HISTOGRAM(<expr>, DOUBLE <interval>[, DOUBLE <offset>])
+LINEAR_HISTOGRAM(<expr>, <interval> [, <offset>])
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
 | -- | -- |
-| `interval` | バケットの幅。サポートされる型は TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal です。 |
-| `offset`   | 省略可能。デフォルト値は 0 で、範囲は `[0, interval)` です。Double 型をサポートします。 |
+| `<expr>` | 集計対象の式。BOOLEAN、TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL をサポートします。BOOLEAN 型の入力は Doris 4.1 系列の 4.1.5 以降でサポートされ、FALSE と TRUE はそれぞれ 0 と 1 としてカウントされます。 |
+| `<interval>` | バケットの幅。型は DOUBLE で、0 より大きい値を指定する必要があります。 |
+| `<offset>` | 省略可能な DOUBLE 型のオフセット。デフォルトは 0 で、`[0, interval)` の範囲内である必要があります。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-計算結果を JSON 型の値として返します。
+バケットの境界、件数、累積件数を含む JSON テキストを VARCHAR として返します。NULL の入力は無視されます。すべての入力が NULL の場合、または入力行がない場合は、`{"num_buckets":0,"buckets":[]}` を返します。
 
-## 例
+## 例 {#example}
 
 ```sql
 -- setup
@@ -76,9 +77,20 @@ select linear_histogram(a, 2, 1) from histogram_test where a is null;
 
 フィールドの説明：
 
-- `num_buckets`: バケットの数。
-- `buckets`: ヒストグラム内のバケット。
-  - `lower`: 下限（この値を含みます）。
-  - `upper`: 上限（この値を含みません）。
-  - `count`: バケット内の要素数。
-  - `acc_count`: このバケットまでの累積要素数。
+- `num_buckets`：バケットの数。
+- `buckets`：ヒストグラム内のバケット。
+  - `lower`：下限（この値を含む）。
+  - `upper`：上限（この値を含まない）。
+  - `count`：バケット内の要素数。
+  - `acc_count`：このバケットまでの累積件数。
+
+BOOLEAN 型の入力では 0 と 1 のバケットを使用します。NULL は件数に含まれません：
+
+```sql
+SELECT LINEAR_HISTOGRAM(b, 1.0)
+FROM (SELECT TRUE AS b UNION ALL SELECT FALSE UNION ALL SELECT TRUE UNION ALL SELECT NULL) t;
+```
+
+```text
+{"num_buckets":2,"buckets":[{"lower":0.0,"upper":1.0,"count":1,"acc_count":1},{"lower":1.0,"upper":2.0,"count":2,"acc_count":3}]}
+```
