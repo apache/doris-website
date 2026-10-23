@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/beats",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/beats.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/beats.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f41d01f52d1af989fe576c94f14c3e8f0845c7fc453a24e3af5b4bbe12a6b650",
+    "sourceTechnicalHash": "d8017723135bb28dab718a98bcc731b34c57f5c6e4afebf58f44d946119c2ea5",
+    "targetHash": "be06a1d8eaca389adb9107c49fced3b81a0f12063f1b82812733b8379eeccf7d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:01:47.761Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f41d01f52d1af989fe576c94f14c3e8f0845c7fc453a24e3af5b4bbe12a6b650",
+      "targetHash": "be06a1d8eaca389adb9107c49fced3b81a0f12063f1b82812733b8379eeccf7d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

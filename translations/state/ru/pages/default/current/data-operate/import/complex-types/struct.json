@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/complex-types/struct",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/complex-types/struct.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/complex-types/struct.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+    "sourceTechnicalHash": "fc39112471a1ef3dc1f20f04c9d10bc17a3148851b79c01666db57a08621de21",
+    "targetHash": "0df243a2268feeea52b3142e5db0f26e74b4f59195c4aa9efbe1f65962e7ae17",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:10:04.445Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5fa7d4c3e7a547069bf94ee244062ff4500d27a36e68c77d7c519d2ebab50b8",
+      "targetHash": "0df243a2268feeea52b3142e5db0f26e74b4f59195c4aa9efbe1f65962e7ae17",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

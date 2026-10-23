@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/kettle",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/kettle.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/kettle.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "43e3bf09f826041e41e2594502df8d97ae6a947dc70ffa804cf21af66f3ce387",
+    "sourceTechnicalHash": "5da4b0e8925284b19a189e830c9d494d381547a94d2caa94dc070d52ffae5968",
+    "targetHash": "da4038284fe4721d45d97dc6252e6da00cbe531f8d649e858e0cedfa93ce22b9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:04:27.224Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "43e3bf09f826041e41e2594502df8d97ae6a947dc70ffa804cf21af66f3ce387",
+      "targetHash": "da4038284fe4721d45d97dc6252e6da00cbe531f8d649e858e0cedfa93ce22b9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

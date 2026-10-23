@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/datagrip",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/datagrip.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/datagrip.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "29365b8903f7ef2bee35f5a564ae1f3f76ed8369cac58cbc38f17490749e81f8",
+    "sourceTechnicalHash": "ca7b44491a812c444c2ab334f55ba4deacc17992879e3ccf420fa80a2880d828",
+    "targetHash": "57cf8c9b03eaa7cb51d70f4c52bcf7ed0a1e0d483b18b93b9d4d2ceb11b313f9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:01:10.828Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "29365b8903f7ef2bee35f5a564ae1f3f76ed8369cac58cbc38f17490749e81f8",
+      "targetHash": "57cf8c9b03eaa7cb51d70f4c52bcf7ed0a1e0d483b18b93b9d4d2ceb11b313f9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

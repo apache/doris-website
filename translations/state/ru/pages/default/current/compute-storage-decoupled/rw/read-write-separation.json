@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "compute-storage-decoupled/rw/read-write-separation",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/compute-storage-decoupled/rw/read-write-separation.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/compute-storage-decoupled/rw/read-write-separation.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6c1aa1c02d5c678b0766994591e116cf59fedc6197c8acb9b126d8fde770254f",
+    "sourceTechnicalHash": "8f9703fe0f9f5d339972a587b320353f55403a2d1eb7ad0764ed93a7229d47a8",
+    "targetHash": "a0d8fb6ee8c80a44fef15f5fa22579aabbf30191584badcd97668d1441b5bd31",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:02:28.215Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6c1aa1c02d5c678b0766994591e116cf59fedc6197c8acb9b126d8fde770254f",
+      "targetHash": "a0d8fb6ee8c80a44fef15f5fa22579aabbf30191584badcd97668d1441b5bd31",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

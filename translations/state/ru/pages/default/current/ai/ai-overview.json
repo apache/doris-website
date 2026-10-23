@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "ai/ai-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/ai/ai-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/ai/ai-overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4d23ee7a42bd450ef6c46f0a8f91f0905e513909c5a7145020ea8082d4d6f360",
+    "sourceTechnicalHash": "2a92aac7a55ef3d978f5966d2d6e817f49dfb86c93b87d8282680e412a8a951c",
+    "targetHash": "b5db80428c460fd437eb1b9e302b6e29c00840d77cae818450fe77d9f4c0b67c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:00:52.897Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4d23ee7a42bd450ef6c46f0a8f91f0905e513909c5a7145020ea8082d4d6f360",
+      "targetHash": "b5db80428c460fd437eb1b9e302b6e29c00840d77cae818450fe77d9f4c0b67c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

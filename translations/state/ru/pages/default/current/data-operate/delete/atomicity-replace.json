@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/delete/atomicity-replace",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/delete/atomicity-replace.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/delete/atomicity-replace.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "04ab7515a3f6076a106d99e3eb6f2c56f3d702e3117e251e16e4c08aa02e1c1d",
+    "sourceTechnicalHash": "4020e2d5779d257fefac3be55b03fcba6e62af8135c54fdcb7f768e5f916ee81",
+    "targetHash": "13d8bd599a33b4077e59a5e060d8415d3698a4b138144c0cceae7fcd1cc17c76",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:07:16.038Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "04ab7515a3f6076a106d99e3eb6f2c56f3d702e3117e251e16e4c08aa02e1c1d",
+      "targetHash": "13d8bd599a33b4077e59a5e060d8415d3698a4b138144c0cceae7fcd1cc17c76",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
