@@ -1,0 +1,33 @@
+---
+{
+    "title": "Развёртывание в Kubernetes",
+    "language": "ru",
+    "description": "Развёртывание Apache Doris в Kubernetes с помощью Doris Operator."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Развёртывание в Kubernetes {#deploy-on-kubernetes}
+
+В Kubernetes управление Apache Doris выполняет Doris Operator. Выберите руководство для архитектуры, которую вы хотите развернуть.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Подготовка к развёртыванию"
+    description="Узнайте о возможностях Doris Operator и его установке в сервисах Kubernetes различных облачных провайдеров"
+    link="doris-operator/intro"
+/>
+
+<GettingStartedCard
+    title="Развёртывание с совмещением хранения и вычислений"
+    description="Разверните кластер Doris в Kubernetes в режиме совмещения хранения и вычислений"
+    link="integrated-storage-compute/intro"
+/>
+
+<GettingStartedCard
+    title="Развёртывание с разделением хранения и вычислений"
+    description="Разверните кластер Doris в Kubernetes в режиме разделения хранения и вычислений"
+    link="separating-storage-compute/install-doris-cluster"
+/>
+</div>

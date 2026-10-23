@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/columnar-storage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/columnar-storage.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/columnar-storage.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+    "sourceTechnicalHash": "c42f941b4a19c25c106b1ac2b52ea3c5bf9e7311f54c8b29857304729528af41",
+    "targetHash": "b036485cd8cb68cffb95ccf5b18a3c996acb8ce6eab17a93cddf457df3ca3e1e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:30.699Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+      "targetHash": "b036485cd8cb68cffb95ccf5b18a3c996acb8ce6eab17a93cddf457df3ca3e1e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/columnar-storage",
+        "sourcePath": "docs/key-features/columnar-storage.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/columnar-storage.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "be9b301dc2106c6722d08b0b52cc0c55482f68d0330da4093cc2fad323fabb5b",
+        "targetHash": "b036485cd8cb68cffb95ccf5b18a3c996acb8ce6eab17a93cddf457df3ca3e1e",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}
