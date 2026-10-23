@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2ea7aa3e640337d59b0e932b5a926cc63140bb605bf1deaeeaadeadfe227b48a",
+    "sourceTechnicalHash": "02c965c44d52899a8f08797b42cbcbe064f1a32a45a1dd7d58a8e7751cbd240d",
+    "targetHash": "dcb2e113a5dc378fdad9333aa88c2910a634f6fd73a72e5eb7b42d8c59d59011",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:03.908Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2ea7aa3e640337d59b0e932b5a926cc63140bb605bf1deaeeaadeadfe227b48a",
+      "targetHash": "dcb2e113a5dc378fdad9333aa88c2910a634f6fd73a72e5eb7b42d8c59d59011",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS",
+        "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/SHOW-COMPUTE-GROUPS.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "2ea7aa3e640337d59b0e932b5a926cc63140bb605bf1deaeeaadeadfe227b48a",
+        "targetHash": "dcb2e113a5dc378fdad9333aa88c2910a634f6fd73a72e5eb7b42d8c59d59011",
+        "commit": "d5ac930e1a15d171738ddccbd717b10b31ba98d3",
+        "pr": "https://github.com/apache/doris-website/pull/4455"
+      }
+    }
+  }
+}
