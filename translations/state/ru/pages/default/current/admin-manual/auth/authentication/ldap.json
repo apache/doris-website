@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authentication/ldap",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authentication/ldap.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/ldap.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a21febd795c9269f97523e47da3618890e3329a1c44c996685be8f5f0deb0b92",
+    "sourceTechnicalHash": "ef42811b044058a596eba61ea17834d94d756e43fb64ca04b9f4a1b34ac64bd6",
+    "targetHash": "cb1e8fcc7c2d7ce5ad0ba306a0c29d0840f990ce8935f7805e51d265ad67d42d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:14:17.771Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a21febd795c9269f97523e47da3618890e3329a1c44c996685be8f5f0deb0b92",
+      "targetHash": "cb1e8fcc7c2d7ce5ad0ba306a0c29d0840f990ce8935f7805e51d265ad67d42d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 167: expected [\"inlineCode\",null,null,\"group\"]; received [\"inlineCode\",null,null,\"user\"]\nprotected node 168: expected [\"inlineCode\",null,null,\"user\"]; received [\"inlineCode\",null,null,\"group\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

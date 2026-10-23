@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/audit-plugin",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/audit-plugin.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/audit-plugin.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ed13281ef8811da52c5d7f4eec5e0ce97eb4dc7c2ca834686f328bf51581b246",
+    "sourceTechnicalHash": "114ba716cf7f0eb16126861cbab175126301b316421eb46e7121f7f6c524c2fe",
+    "targetHash": "7377f03097b0876297bec0185075cfad704807265462e73b0ac6e6425da72a0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:07:39.657Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed13281ef8811da52c5d7f4eec5e0ce97eb4dc7c2ca834686f328bf51581b246",
+      "targetHash": "7377f03097b0876297bec0185075cfad704807265462e73b0ac6e6425da72a0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

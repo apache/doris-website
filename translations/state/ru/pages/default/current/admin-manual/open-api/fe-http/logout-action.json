@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/logout-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/logout-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/logout-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "06f6a59cdd5e86fa9a856d1c91edf82a4922249f4dd1f98c64fa4ca0f1d88de9",
+    "sourceTechnicalHash": "dbecd91e3f2a550ba05434d5f4c0b31d6d2017f110813285e030055a43cb2c1e",
+    "targetHash": "2ac980dd540038fc901dac577adf85256f6685f905e57a61df54bded11e7012c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:16:40.297Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "06f6a59cdd5e86fa9a856d1c91edf82a4922249f4dd1f98c64fa4ca0f1d88de9",
+      "targetHash": "2ac980dd540038fc901dac577adf85256f6685f905e57a61df54bded11e7012c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

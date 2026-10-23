@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/be-http/metrics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/be-http/metrics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/metrics.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f5f12d116c70619a63c8023af05a66d9fffe7f419bf77fdfdb8dfcd6c4999e17",
+    "sourceTechnicalHash": "08fdccd7fdaa82a1cdb4fc4c18a537abdfa0fb91a9459f08c98454e8fdb6d58e",
+    "targetHash": "7c79ea5a39db3e1e913ca7700a69139556a642e416fbb949e403c5e8ce370b96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:12:23.827Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f5f12d116c70619a63c8023af05a66d9fffe7f419bf77fdfdb8dfcd6c4999e17",
+      "targetHash": "7c79ea5a39db3e1e913ca7700a69139556a642e416fbb949e403c5e8ce370b96",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

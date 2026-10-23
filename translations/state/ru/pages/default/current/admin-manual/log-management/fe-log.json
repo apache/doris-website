@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/fe-log",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/fe-log.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/log-management/fe-log.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+    "sourceTechnicalHash": "072ac97a8f3a636630306bcc98138111545611eb24a4456debd41df8e0ff27a5",
+    "targetHash": "5e95e8147034be3af3404f781358924185c6e55820a4cc40015b783ea72434ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:12:05.746Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+      "targetHash": "5e95e8147034be3af3404f781358924185c6e55820a4cc40015b783ea72434ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/tls-framework",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/tls-framework.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/tls-framework.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+    "sourceTechnicalHash": "67992242190d81f957842223e23c04ea92718900e2e5399c7961bdcffbca2472",
+    "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:08:29.711Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+      "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
