@@ -1,9 +1,12 @@
 # Automated translation content scope
 
 The Japanese, Korean and Russian pipelines use `translations/scope/<locale>.json`
-to discover source additions, edits and removals. Japanese and Korean discovery
-runs on the existing twice-daily schedules. Russian discovery uses the same
-pipeline through its manual workflow. This change does not alter those triggers.
+to discover source additions, edits and removals. All three languages run twice
+daily and support manual dispatch. Japanese runs at 04:23 and 16:23 UTC, Korean
+at 04:43 and 16:43 UTC, and Russian at 05:03 and 17:03 UTC. The shared
+`docs-translation` lock queues discovery and generation across all three languages.
+Scheduled runs and default manual runs use `generate`; select `dry-run` explicitly
+to inspect pending work without model calls.
 
 In addition to Dev, 4.x and community documentation, each scope includes:
 

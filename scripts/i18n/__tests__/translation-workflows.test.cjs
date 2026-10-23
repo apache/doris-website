@@ -9,23 +9,23 @@ const {allowGeneration} = require('../workflow-generate.cjs');
 const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const shared = load('translation-run.yml');
-const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml')};
-const russian = load('russian-translation.yml');
+const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml'), ru: load('russian-translation.yml')};
+const russian = callers.ru;
 
-test('Russian discovery is manual only and uses the shared run, lock and explicit secrets', () => {
-    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch']);
+test('Russian scheduled and manual generation use the shared run, lock and explicit secrets', () => {
+    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch', 'schedule']);
     const inputs = russian.on.workflow_dispatch.inputs;
     const koreanInputs = callers.ko.on.workflow_dispatch.inputs;
-    assert.deepEqual(inputs, {...koreanInputs, mode: {...koreanInputs.mode, default: 'dry-run'}});
+    assert.deepEqual(inputs, koreanInputs);
     assert.deepEqual(russian.permissions, shared.permissions);
     for (const workflow of Object.values(callers)) assert.deepEqual(russian.concurrency, workflow.concurrency);
     assert.deepEqual(Object.keys(russian.jobs), ['translation']);
     const job = russian.jobs.translation;
     assert.equal(job.uses, './.github/workflows/translation-run.yml');
     assert.deepEqual(job.with, {...callers.ko.jobs.translation.with, locale: 'ru', workspace: 'russian-translation',
-        mode: "${{ inputs.mode || 'dry-run' }}"});
+        mode: "${{ inputs.mode || 'generate' }}"});
     assert.deepEqual(job.secrets, callers.ko.jobs.translation.secrets);
-    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), false);
+    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), true);
     assert.equal(allowGeneration({I18N_MODE: 'validate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '1',
         I18N_PATH: 'community/how-to-contribute/how-to-share-blogs.md'}), true);
     assert.equal(allowGeneration({I18N_MODE: 'generate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
@@ -48,6 +48,8 @@ test('each language workflow passes one fixed locale to the shared run under one
         ja: {workspace: 'japanese-translation', cron: '23 4,16 * * *'},
         // Twenty minutes later; the shared lock queues it behind a Japanese run.
         ko: {workspace: 'korean-translation', cron: '43 4,16 * * *'},
+        // Another twenty minutes later, including the hour rollover.
+        ru: {workspace: 'russian-translation', cron: '3 5,17 * * *'},
     };
     for (const [locale, workflow] of Object.entries(callers)) {
         assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch', 'schedule']);
