@@ -69,3 +69,55 @@ disabled Japanese, failures, source changes and invalid output prefixes.
 `node scripts/i18n/verify-fixture.cjs --browser` exercises the actual native
 three-language build and browser routing. Full active-version and OOM evidence
 comes from GitHub CI; local website verification uses `DOCS_VERSIONS=current`.
+
+## Publishing job measurements
+
+The cron and manual publishing workflows retain separate
+`publish-build-measurements-<run>-<attempt>` and
+`publish-deploy-measurements-<run>-<attempt>` artifacts for 14 days. These reports
+stay outside `build/` and are uploaded after failures as well as successes.
+Hard job timeouts or runner loss can prevent this final upload; retain the
+Actions jobs JSON and logs when that happens.
+
+The build job has a temporary 180-minute limit, matching the existing deploy
+limit. This is a budget change, not a measured speedup. Both job summaries show
+elapsed time through reporting and a provisional `ceil(elapsed * 1.3 / 60)`
+budget in minutes. Accept a budget only after a successful complete run,
+including the final telemetry upload and cleanup steps. A failed or incomplete
+run cannot establish a successful publishing baseline.
+
+The reports contain the resolved source SHA separately from the trusted
+workflow/checkout SHA, runner image and hardware context, active versions,
+locale switches, cache policy, per-step timings, output file counts/bytes and
+site artifact archive size/digest. The build and strict verification commands
+also retain GNU `time -v` output, including maximum RSS. Ten-second samples
+capture system memory availability and workspace/`/mnt` disk use for each step.
+These are sampled extrema, not continuous disk peaks or process RSS. Artifact,
+OSS and asf-site process RSS and exact network bytes are not measured; use
+archive/output sizes and the transfer action logs without calling them billed
+network traffic. GNU time reports command RSS, not the sum of every concurrent
+process's memory.
+
+Compare runs only after checking their source SHA (including generated-input
+diff/build stamps), runner image, CPU/memory, versions, locales and cache
+conditions. The publishing workflows retain their uncached install behavior.
+The manual build reads measurement code from the trusted workflow SHA, so an
+older protected source branch does not need to contain the measurement script.
+The reporting token has only the job's existing contents permission plus
+`actions: read`; no publishing secrets enter the build job or reports.
+
+To preserve the final timing and queue evidence for an existing run:
+
+```bash
+gh api repos/apache/doris-website/actions/runs/RUN_ID > run.json
+gh api repos/apache/doris-website/actions/runs/RUN_ID/attempts/ATTEMPT/jobs > jobs.json
+gh run download RUN_ID --repo apache/doris-website --pattern 'publish-*-measurements-*'
+```
+
+Use `run.json` creation time, job start/end times and the report's resolved
+source SHA together. The workflow run's head SHA can differ from the source
+resolved by the protected-branch job. Separate queue/dependency waits from
+runner execution; preserve failed/cancelled attempts rather than merging them
+into successful timing samples. After matching the uploaded and downloaded
+artifact identities and successful OSS/asf-site steps, record the complete
+build/deploy durations and require about 30% budget margin for each job.
