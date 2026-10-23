@@ -8,13 +8,17 @@ concurrency:
   group: check-file-sizes-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   check-file-sizes:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout PR
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          persist-credentials: false
           fetch-depth: 1
 
       - name: Fetch base commit
@@ -31,9 +35,11 @@ jobs:
             echo 'files<<EOF'
             git diff --name-only ${{ github.event.pull_request.base.sha }} HEAD | head -100
             echo EOF
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
 
       - name: Check file sizes
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
         run: |
           MAX_SIZE=1024000  # 500KB in bytes
           OVER_LIMIT=()
@@ -51,7 +57,7 @@ jobs:
                 OVER_LIMIT+=("❌ $file (${size_kb}KB)")
               fi
             fi
-          done <<< "${{ steps.changed.outputs.files }}"
+          done <<< "$FILES"
 
           if [ ${#OVER_LIMIT[@]} -gt 0 ]; then
             echo "❌ The following files exceed 500KB:"
