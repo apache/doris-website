@@ -93,9 +93,14 @@ git checkout -b <your_branch_name>
 ### （5）提交代码到远程分支
 
 ```bash
-git commit -a -m "<your_commit_message>"
+git status
+git add <file_path>
+git diff --cached
+git commit -m "<your_commit_message>"
 git push origin <your_branch_name>
 ```
+
+将 `<file_path>` 替换为本次 PR 要提交的文件路径；提交多个文件时，在同一条 `git add` 命令中列出各路径。提交前检查暂存区差异。`git commit -a` 和 `git add -u` 只处理已跟踪文件，不会自动加入尚未跟踪的新文件。
 
 更多 git 使用方法请参考 GitHub 官方文档：[git 使用](https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories)。
 
@@ -270,7 +275,7 @@ $ git branch
 ### （6）代码修改完成后，暂存改动
 
 ```bash
-$ git add -u
+$ git add <file_path>
 ```
 
 ### （7）填写 message 并提交到本地分支
