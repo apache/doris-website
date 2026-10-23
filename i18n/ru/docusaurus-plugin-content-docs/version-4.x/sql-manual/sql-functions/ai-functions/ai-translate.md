@@ -1,0 +1,77 @@
+---
+{
+    "title": "AI_TRANSLATE",
+    "language": "ru",
+    "description": "Используется для перевода текста на указанный язык."
+}
+---
+
+<!-- 
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+## Описание {#description}
+
+Используется для перевода текста на указанный язык.
+
+## Синтаксис {#syntax}
+
+```sql
+AI_TRANSLATE([<resource_name>], <text>, <target_language>)
+```
+
+## Параметры {#parameters}
+
+|    Параметр      | Описание             |
+| ----------------- | ---------------------- |
+| `<resource_name>` | Имя указанного ресурса |
+| `<text>`          | Текст для перевода  |
+| `<target_language>` | Язык перевода   |
+
+## Возвращаемое значение {#return-value}
+
+Возвращает строку с переведённым текстом.
+
+Если какой-либо входной аргумент равен NULL, возвращает NULL.
+
+Результат генерируется большой языковой моделью, поэтому вывод может различаться.
+
+## Примеры {#examples}
+
+```sql
+SET default_ai_resource = 'resource_name';
+SELECT AI_TRANSLATE('In my mind, doris is the best databases management system.', 'zh-CN') AS Result;
+```
+```text
++----------------------------------------------------------------+
+| Result                                                         |
++----------------------------------------------------------------+
+| 在我心目中，Doris是最优秀的数据库管理系统。                    |
++----------------------------------------------------------------+
+```
+
+```sql
+SELECT AI_Translate('resource_name', 'This is an example', 'French') AS Result;
+```
+```text
++------------------+
+| Result           |
++------------------+
+| Voici un exemple |
++------------------+
+```
