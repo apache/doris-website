@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/global-memory-analysis.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b53b21a6923a19c4d1c743229eac715cf622a519acfad28e582d9338f641330e",
+    "sourceTechnicalHash": "74b7a73237dd7b04c9f13ea026345b21eae434e4e7f99699aae90d418e33ff6f",
+    "targetHash": "7edb1313307763c3a7edb2898f560a4f631fa1c203409524c5ed8766569f54ce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:46:29.796Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b53b21a6923a19c4d1c743229eac715cf622a519acfad28e582d9338f641330e",
+      "targetHash": "7edb1313307763c3a7edb2898f560a4f631fa1c203409524c5ed8766569f54ce",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

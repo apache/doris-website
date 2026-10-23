@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/compaction-principles",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/compaction-principles.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction-principles.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c832de5481302f4d7b1c7ffb3fcb44c311ab3b76eeee513fcd0cb7011ede302d",
+    "sourceTechnicalHash": "9fb472467f953baf340707515a7db98e2f042546005fb224c4e083688f094901",
+    "targetHash": "d241a6e7ddef53f6bf9085b8352c9123efe62e210a6088268731926fdc342838",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:46:10.295Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c832de5481302f4d7b1c7ffb3fcb44c311ab3b76eeee513fcd0cb7011ede302d",
+      "targetHash": "d241a6e7ddef53f6bf9085b8352c9123efe62e210a6088268731926fdc342838",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
