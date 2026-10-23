@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c6502b4dc6ba0f2593e576439eac30a9f137121bc598fe98d0226950ce3b69ee",
+    "sourceTechnicalHash": "0701f0418056eb764c82e80eb5fb0cc917b4f171ca0441ed11f1f33b64addcf4",
+    "targetHash": "06e0a801fa54b39dbd8ffbc8711bbcf5c2636e16f3d7394e09fea293a1d47740",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:49:33.977Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c6502b4dc6ba0f2593e576439eac30a9f137121bc598fe98d0226950ce3b69ee",
+      "targetHash": "06e0a801fa54b39dbd8ffbc8711bbcf5c2636e16f3d7394e09fea293a1d47740",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-intersects.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "c6502b4dc6ba0f2593e576439eac30a9f137121bc598fe98d0226950ce3b69ee",
+        "targetHash": "06e0a801fa54b39dbd8ffbc8711bbcf5c2636e16f3d7394e09fea293a1d47740",
+        "commit": "2ad35c2403c4c70e5b39ee7a7060a6a7606d77c8",
+        "pr": "https://github.com/apache/doris-website/pull/4451"
+      }
+    }
+  }
+}
