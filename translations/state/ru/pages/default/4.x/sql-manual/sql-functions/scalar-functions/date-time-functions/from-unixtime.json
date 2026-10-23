@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/from-unixtime.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7f957f03a9b19f64b5eb69ff7015a3f0d92f47d2fc882bd3798433e1e10567fc",
+    "sourceTechnicalHash": "ce943c599ba5f28a58998f785953fb96d9c61680924229ff3c2f9d4256d83dd0",
+    "targetHash": "53fd43ddff22fd10625d25001d8ab3c8c6f7632d1effa1a26122c8c800782924",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:26:01.496Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7f957f03a9b19f64b5eb69ff7015a3f0d92f47d2fc882bd3798433e1e10567fc",
+      "targetHash": "53fd43ddff22fd10625d25001d8ab3c8c6f7632d1effa1a26122c8c800782924",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
