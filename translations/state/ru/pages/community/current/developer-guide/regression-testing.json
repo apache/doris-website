@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/regression-testing",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/regression-testing.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/regression-testing.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0a4397b7166e070c2a65324325252ac02624f77c773d87cfab4d5be1cf07dfc7",
+    "sourceTechnicalHash": "8d1ffd81043a3c93fe4b18195eaf323d53a8b813f5d785e809f129455edf10a4",
+    "targetHash": "421533bc97f2d1fbc69cee10b4a921c838c6a6d36beb62bf30b391998487caac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:41:13.361Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0a4397b7166e070c2a65324325252ac02624f77c773d87cfab4d5be1cf07dfc7",
+      "targetHash": "421533bc97f2d1fbc69cee10b4a921c838c6a6d36beb62bf30b391998487caac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 240: expected [\"inlineCode\",null,null,\"adhoc-1\"]; received [\"inlineCode\",null,null,\"/etc/hosts\"]\nprotected node 241: expected [\"inlineCode\",null,null,\"adhoc-2\"]; received [\"inlineCode\",null,null,\"adhoc-1\"]\nprotected node 242: expected [\"inlineCode\",null,null,\"namenode\"]; received [\"inlineCode\",null,null,\"adhoc-2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

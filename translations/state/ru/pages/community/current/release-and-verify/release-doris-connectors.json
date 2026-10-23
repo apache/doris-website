@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "release-and-verify/release-doris-connectors",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/release-and-verify/release-doris-connectors.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/release-and-verify/release-doris-connectors.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7f4da269e3874f7069b25d7925092bb1f45f94d8a47c800ba361491f9062e51a",
+    "sourceTechnicalHash": "5ae43ac119eada78506b18a69f125393408ae693f4c6e77b623eb562ebe967a8",
+    "targetHash": "3352345d4c4be3c6951b0db911abe228b879b119a066eb4878f410db2152c049",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:32:33.601Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7f4da269e3874f7069b25d7925092bb1f45f94d8a47c800ba361491f9062e51a",
+      "targetHash": "3352345d4c4be3c6951b0db911abe228b879b119a066eb4878f410db2152c049",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

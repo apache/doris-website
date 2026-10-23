@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/pipeline-tracing",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/pipeline-tracing.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/pipeline-tracing.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bbbce7e3c2eb3401eff11531f06c1314048d731e9244b5da413c0b28c0ad87b6",
+    "sourceTechnicalHash": "795cdc5df67ffa1e9149370580798f78507d131054e5bec7a3e5050df5f1e30e",
+    "targetHash": "ac5116b938f37ca5b8f703fa5ad3839d85c4bc2699833532604009c59f41a7cc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:31:15.640Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bbbce7e3c2eb3401eff11531f06c1314048d731e9244b5da413c0b28c0ad87b6",
+      "targetHash": "ac5116b938f37ca5b8f703fa5ad3839d85c4bc2699833532604009c59f41a7cc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
