@@ -159,9 +159,11 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             current.englishPermalink + source.search + source.hash);
             assert.equal(await englishSwitch.getAttribute('href'), current.englishPermalink + source.search + source.hash);
             const linked = await navigation.locator('a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
-            const fallback = data.pages.find(page => page.pluginId === 'default' && page.version === 'current'
+            // A fully translated Dev links no fallback, but the version menu still
+            // reaches versions outside the scope. Dev-only builds omit them.
+            const fallback = data.pages.find(page => page.pluginId === 'default'
                 && !page.draft && !page.useTarget && linked.some(link => route(link) === route(page.permalink)));
-            if (locale === 'ru') assert(fallback, 'Russian SPA verification needs a linked English fallback');
+            if (locale === 'ru' && !devOnly) assert(fallback, 'Russian SPA verification needs a linked English fallback');
             if (fallback) {
                 // Use an actual native Link, including a collapsed sidebar entry.
                 await navigation.locator('a[href]').evaluateAll((nodes, target) => {
