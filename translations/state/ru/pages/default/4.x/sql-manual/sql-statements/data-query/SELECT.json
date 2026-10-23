@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/data-query/SELECT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-query/SELECT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "487935a7779ee25948d245adb231d3536ecd3c12d3dbabea375dc388f9cbaf19",
+    "sourceTechnicalHash": "e940903aa0b466e8d23ced42700ff72d77f7afa1f2239982c2d5993d25e8bbf3",
+    "targetHash": "96da3a700afd90967eba8ec3cf5b3b38c83db7bbf1245123f88354f24489b020",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:54:39.355Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "487935a7779ee25948d245adb231d3536ecd3c12d3dbabea375dc388f9cbaf19",
+      "targetHash": "96da3a700afd90967eba8ec3cf5b3b38c83db7bbf1245123f88354f24489b020",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
