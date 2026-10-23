@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/tiered-storage/remote-storage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/tiered-storage/remote-storage.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/tiered-storage/remote-storage.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1f31a324b0dbd6cfe2a95612a9425d762606e55f999e411e4cd700ad0f5c8f00",
+    "sourceTechnicalHash": "ba81c28e108b26d90e00686f6e2c7e8379be9a1ae4aceccb932223b47c0c9cef",
+    "targetHash": "fd5ecbc07fb825f84c07ff643c051bc27ddb43c40c1c0ed8843b366e638f5ee7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:01:01.579Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1f31a324b0dbd6cfe2a95612a9425d762606e55f999e411e4cd700ad0f5c8f00",
+      "targetHash": "fd5ecbc07fb825f84c07ff643c051bc27ddb43c40c1c0ed8843b366e638f5ee7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
