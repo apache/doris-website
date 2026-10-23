@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/ceil",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/ceil.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/ceil.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c2aff17d5b3468b6dc1396c0a638b14cccba3e0576019d80b9d2e9ce2ce1d9d9",
+    "sourceTechnicalHash": "585e57475222792a42ee5050a80fb427d46ea30eb70fc3c6c206c1d1475124ba",
+    "targetHash": "25720e9554b4c4bc633588381ffc49ff5d713ac260feb465a0e73bb7735bbba3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:29:26.475Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c2aff17d5b3468b6dc1396c0a638b14cccba3e0576019d80b9d2e9ce2ce1d9d9",
+      "targetHash": "25720e9554b4c4bc633588381ffc49ff5d713ac260feb465a0e73bb7735bbba3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

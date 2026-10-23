@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/signbit",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/signbit.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/signbit.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2b4fa504b1e3077a78aa6e3004ce2852e1d8b50fa585f777c89a834ce9216865",
+    "sourceTechnicalHash": "e6434e831eec6222a4930e69a1b289be8c0390d8ede4bc643f4b27fa50300988",
+    "targetHash": "1b4ed1241e708d013ded0f46d0fe9cf09c4bce6b9c15370ff04f55ff1ca59b79",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:33:00.766Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2b4fa504b1e3077a78aa6e3004ce2852e1d8b50fa585f777c89a834ce9216865",
+      "targetHash": "1b4ed1241e708d013ded0f46d0fe9cf09c4bce6b9c15370ff04f55ff1ca59b79",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
