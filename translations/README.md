@@ -34,8 +34,7 @@ Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
 or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
 workflows explicitly enable all three; default local builds still serve English
 and Chinese. Ordinary Russian pages link to English until individually registered.
-Russian generation has a manual-only workflow, described below. Product landing
-pages and a Russian generation schedule remain outside this launch.
+Russian translation runs twice daily and on manual dispatch, as described below.
 
 The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
 1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
@@ -73,10 +72,11 @@ rebuild through the existing process; retain source translations and state.
 
 `.github/workflows/russian-translation.yml` calls the existing
 `translation-run.yml` with `locale: ru` and the `russian-translation` workspace.
-It only accepts manual dispatch and defaults to `dry-run`, which discovers
-pending work without calling a model. Japanese, Korean and Russian runs share
-the whole-run `docs-translation` lock, including discovery and validation.
-Japanese and Korean schedules keep their existing behavior.
+It runs at 05:03 and 17:03 UTC daily, twenty minutes after Korean discovery, and
+also accepts manual dispatch. Scheduled runs and default manual runs use
+`generate`. Select `dry-run` explicitly to discover pending work without calling
+a model. Japanese, Korean and Russian runs share the whole-run
+`docs-translation` lock, including discovery and validation.
 
 The shared workflow runs only on Apache `master` and checks out `master` again
 before generation. Merge the Russian configuration and workflow before running
@@ -557,10 +557,13 @@ review are recommended before running batch generation.
 and on manual dispatch; `.github/workflows/korean-translation.yml` runs twenty
 minutes later. Each sets only its triggers, manual defaults and the lock, then
 calls `.github/workflows/translation-run.yml` with its locale and artifact
-prefix. The manual-only Russian wrapper uses the same steps and lock. None has
-a push trigger. The description below uses Japanese; the other languages differ
-in locale, label, artifact names, triggers and manual default. Every run first recounts
-the current native Dev, 4.x and community documents, reads every open master
+prefix. Russian runs another twenty minutes later, at 05:03 and 17:03 UTC, using
+the same steps and lock. All three support manual dispatch and default to
+`generate`; select `dry-run` explicitly for a read-only scan. None has a push
+trigger. The description below uses Japanese; the other languages differ in
+locale, label, artifact names and scheduled times. Every run first recounts
+the current configured translation scope, including Dev, 4.x, community,
+courses, release notes and reports, reads every open master
 PR's changed files, and checks Japanese target files against that PR's state
 records. Each run uploads `plan.json`, `coverage.json`,
 `active-candidates.json` and `open-pr-reconciliation.json` and writes a short

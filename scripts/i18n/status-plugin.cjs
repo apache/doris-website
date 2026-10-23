@@ -42,7 +42,7 @@ module.exports = function translationStatusPlugin(context) {
             const output = path.join(context.siteDir, '.i18n-build/manifests', `${locale}.json`);
             await fs.mkdir(path.dirname(output), {recursive: true});
             await fs.writeFile(output, JSON.stringify({schemaVersion: 1, locale,
-                pages, pageRoutes, reports}, null, 2) + '\n');
+                pages, pageRoutes, reports, translatedPagePaths: context.siteConfig?.customFields?.translatedPagePaths ?? {}}, null, 2) + '\n');
         },
     };
 };

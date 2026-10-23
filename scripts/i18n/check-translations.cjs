@@ -74,7 +74,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
         } catch (error) {errors.push({path:page.targetPath, message:error.message});}
     }
     const known = new Set(pages.map(page => page.targetPath));
-    const targetPattern = new RegExp(`^i18n/${locale}/docusaurus-plugin-content-docs[^/]*/(current|version-[^/]+)/.+\\.(md|mdx)$`);
+    const targetPattern = new RegExp(`^i18n/${locale}/docusaurus-plugin-content-docs[^/]*/(current|version-[^/]+)/.+\\.(mdx?|tsx?)$`);
     for (const file of files.filter(file => targetPattern.test(file))) {
         if (fs.existsSync(path.join(root,file)) && !known.has(file)) errors.push({path:file, message:'Target has no registered source in the same plugin/version'});
     }

@@ -90,9 +90,10 @@ function validateSourcePaths(paths, scope) {
     assert(Array.isArray(paths) && paths.length > 0 && paths.length <= 20, 'paths must contain 1 to 20 exact source files');
     assert.equal(new Set(paths).size, paths.length, 'Duplicate exact source path');
     for (const file of paths) {
-        assert(typeof file === 'string' && /\.mdx?$/.test(file) && !file.includes('\\') && !/[\x00-\x1f\x7f]/.test(file)
+        assert(typeof file === 'string' && /\.(mdx?|tsx?)$/.test(file) && !file.includes('\\') && !/[\x00-\x1f\x7f]/.test(file)
             && file.split('/').every(part => part && part !== '.' && part !== '..')
-            && scope.groups.some(group => file.startsWith(`${group.sourceRoot}/`)),
+            && scope.groups.some(group => file.startsWith(`${group.sourceRoot}/`)
+                && (group.kind ? require('./source-groups.cjs').matchesSource(group, file) : /\.mdx?$/.test(file))),
         `Exact source path is outside the managed scope: ${file}`);
     }
 }

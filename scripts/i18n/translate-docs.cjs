@@ -109,7 +109,10 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         'Existing target or identity changed; manual review required');
     }
     const baseline = stagedBaseline(state, task, previousTarget);
-    const wholeDocument = typeof adapter.translateDocument === 'function';
+    // Course props and report exports contain prose inside code. Translate
+    // extracted text values and assemble the original code locally.
+    const group = scope.groups.find(group => group.pluginId === task.pluginId && group.version === task.version);
+    const wholeDocument = typeof adapter.translateDocument === 'function' && !group.kind && task.pluginId !== 'course';
     let previousSource = null, baselineReason;
     if (existing) {
         try {previousSource = readCommitted(root, existing.sourceCommit, existing.sourcePath);}
@@ -131,7 +134,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         previousSource: canReuse ? previousSource : null,
         previousTarget: canReuse ? previousTarget : null,
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern,
-        maxDocumentChars, maxChunkChars});
+        maxDocumentChars: maxDocumentChars ?? (group.kind || task.pluginId === 'course' ? 300000 : 60000), maxChunkChars});
     if (!wholeDocument) checkFrontMatter(source, generated.target, target.locale);
     if (!wholeDocument && adapter.model !== 'fixture') {
         assert(generated.targetChanged,

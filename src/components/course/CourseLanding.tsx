@@ -1,4 +1,5 @@
 import React, { JSX, useRef } from 'react';
+import Link from '@docusaurus/Link';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
 import { COURSE_101_MODULES } from './courseModules';
 import { HACKATHON_COURSE_TRACK_ENABLED } from './hackathon/hackathonEvent';
@@ -20,14 +21,14 @@ function CoursePath(): JSX.Element {
         <ol className="course-landing__path-list">
             {COURSE_101_MODULES.map((module, index) => (
                 <li key={module.number}>
-                    <a
+                    <Link
                         className={`course-landing__path-step${index === 0 ? ' course-landing__path-step--current' : ''}`}
-                        href={module.href}
+                        to={module.href}
                     >
                         <span className="course-landing__path-number">{module.number}</span>
                         <span className="course-landing__path-name">{module.shortTitle}</span>
                         <span className="course-landing__path-arrow" aria-hidden="true">→</span>
-                    </a>
+                    </Link>
                 </li>
             ))}
             <li>
@@ -95,9 +96,9 @@ export function CourseLanding(): JSX.Element {
                                 The database knowledge you gain will also apply to other systems.
                             </p>
                             <div className="course-landing__actions">
-                                <a className="course-landing__button course-landing__button--primary" href={COURSE_101_MODULES[0].href}>
+                                <Link className="course-landing__button course-landing__button--primary" to={COURSE_101_MODULES[0].href}>
                                     Start with the overview →
-                                </a>
+                                </Link>
                             </div>
                         </div>
                         <CoursePath />

@@ -10,7 +10,7 @@ on:
         default: generate
         required: true
       plugin:
-        description: Optional plugin filter (default or community)
+        description: Optional plugin filter (default, community, course, releases, course-ui, community-report, community-report-ui)
         type: string
       version:
         description: Optional version filter (current or 4.x)
@@ -19,7 +19,7 @@ on:
         description: Optional repository-relative source path prefix
         type: string
       paths:
-        description: Optional JSON array of exact English .md/.mdx files (exclusive with path)
+        description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
   schedule:
     - cron: '23 4,16 * * *'

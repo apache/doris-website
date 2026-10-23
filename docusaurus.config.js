@@ -10,6 +10,8 @@ const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
+const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
+const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
 const {enabledLocales, enabledLocaleRecords, hasBlogTranslations} = require('./config/i18n');
 const {managedLocales} = require('./scripts/i18n/state.cjs');
@@ -370,14 +372,15 @@ const config = {
         defaultLocalePageLocales: enabledLocaleRecords()
             .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
         translatedPagePaths: Object.fromEntries(enabledLocaleRecords()
-            .filter(locale => locale.translatedPages?.length)
-            .map(locale => [locale.code, locale.translatedPages])),
+            .map(locale => [locale.code, [...(locale.translatedPages ?? []), ...translatedContentPages(__dirname, locale.code)]])
+            .filter(([, pages]) => pages.length)),
         defaultLocaleBlogLocales: DEFAULT_LOCALE_BLOG_LOCALES,
     },
     future: {
         experimental_faster: true,
     },
     plugins: [
+        contentTranslationPlugin,
         SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
         MANAGED_LOCALES.length ? translationStatusPlugin : null,
         'docusaurus-plugin-sass',

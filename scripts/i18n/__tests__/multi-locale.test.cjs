@@ -205,7 +205,7 @@ test('inventory CLI snapshots committed page records for the selected locale', a
             {id: 'COMMUNITY', pluginId: 'community', version: 'current', sourceRoot: 'community'},
         ], retainEnglish: []}));
     // Exercise the real CLI boundary without adding a production root override.
-    for (const file of ['inventory.cjs', 'state.cjs'])
+    for (const file of ['inventory.cjs', 'state.cjs', 'source-groups.cjs', 'code-prose.cjs'])
         write(`scripts/i18n/${file}`, fs.readFileSync(path.join(repoRoot, 'scripts/i18n', file), 'utf8'));
     const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']});
     git('init', '-q');

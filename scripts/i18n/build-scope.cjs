@@ -40,7 +40,7 @@ function buildScope(files, versions, managed = []) {
         else if (/^sidebars(Community|Releases|Course)\./.test(file)) shared();
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
-            || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
+            || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection)\.cjs$/.test(file)) shared();
         else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
             if (!locales.includes(match[2])) throw new Error(`Unconfigured locale: ${match[2]}`);
             json.add(file); // Offline configuration checks cover these without a site build.
