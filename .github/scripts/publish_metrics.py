@@ -70,7 +70,9 @@ def start(job):
         "schemaVersion": 1, "job": job, "startedAt": time.time(),
         "checkoutSha": git("rev-parse", "HEAD"), "context": context,
         "platform": platform.platform(), "cpuCount": os.cpu_count(),
-        "activeVersions": ["current", *json.loads(Path("versions.json").read_text())],
+        "activeVersions": (["current", *json.loads(Path("versions.json").read_text())]
+                           if job == "build" else None),
+        "checkoutActiveVersions": ["current", *json.loads(Path("versions.json").read_text())],
         "cachePolicy": ("fresh runner; no dependency cache; yarn cache clean before install"
                         if job == "build" else "fresh runner; site downloaded from this run's artifact"),
         "initialResources": snapshot(),
@@ -144,6 +146,10 @@ def finish(budget):
     report["elapsedThroughReportSeconds"] = report["finishedAt"] - report["startedAt"]
     report["finalResources"] = snapshot()
     report["site"] = site_inventory(Path("build"))
+    if report["job"] == "deploy" and Path("build/versions.json").is_file():
+        # Manual deploy code is checked out at the workflow commit, which
+        # may have different versions from the protected source branch.
+        report["activeVersions"] = ["current", *json.loads(Path("build/versions.json").read_text())]
     report["trackedDiffSha256"] = hashlib.sha256(
         subprocess.check_output(["git", "diff", "HEAD", "--binary"])).hexdigest()
     report["nodeVersion"] = tool_version("node")

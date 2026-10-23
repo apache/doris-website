@@ -71,6 +71,15 @@ class PublishMetricsTests(unittest.TestCase):
                 self.assertEqual(report["steps"][0]["sampledResources"]["sampleCount"], 1)
                 self.assertEqual(report["steps"][0]["conclusion"], "failure")
                 self.assertEqual(report["siteArtifact"]["size_in_bytes"], 123)
+                with patch.object(metrics, "git", return_value="b" * 40), patch.object(metrics, "launch_sampler"):
+                    metrics.start("deploy")
+                Path("build").mkdir()
+                Path("build/versions.json").write_text('["3.x"]')
+                with patch.object(metrics, "job_details", return_value=None), patch.object(metrics, "api", return_value={"artifacts": []}):
+                    metrics.finish(180)
+                report = json.loads((metrics.REPORTS / "report.json").read_text())
+                self.assertEqual(report["activeVersions"], ["current", "3.x"])
+                self.assertEqual(report["checkoutActiveVersions"], ["current", "4.x", "3.x", "2.1"])
             os.chdir(previous)
 
     def test_inventory_counts_hidden_control_files_and_all_locales(self):
