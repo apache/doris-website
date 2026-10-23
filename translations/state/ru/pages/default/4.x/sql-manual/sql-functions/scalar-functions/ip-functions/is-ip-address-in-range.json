@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+    "sourceTechnicalHash": "d9114cd33db5e17091d287d89db7cbb552ad16025f6ec3672a8ca967a5542b5a",
+    "targetHash": "61c59de16e4d97ab3a5d0f5904f1e00260c8af16253f4d1a6f128ff354e6c801",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:34:23.680Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+      "targetHash": "61c59de16e4d97ab3a5d0f5904f1e00260c8af16253f4d1a6f128ff354e6c801",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/is-ip-address-in-range.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0fe428a7fc5cf9af6fcc36df79369763a152b9d0319cf41f7f7f198d850f25e3",
+        "targetHash": "61c59de16e4d97ab3a5d0f5904f1e00260c8af16253f4d1a6f128ff354e6c801",
+        "commit": "0fe6c204567e14dcccd04b15a6522fe8311d1745",
+        "pr": "https://github.com/apache/doris-website/pull/4450"
+      }
+    }
+  }
+}
