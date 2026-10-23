@@ -22,6 +22,11 @@ function validateScope(scope, locale) {
         assert(/^[A-Z0-9]+$/.test(group.id) && !groups.has(group.id), 'Invalid/duplicate group');
         assert(!identities.has(key({...group, docId: ''})), 'Duplicate plugin/version group');
         assert(group.sourceRoot && !path.isAbsolute(group.sourceRoot) && !group.sourceRoot.split('/').includes('..'), 'Invalid source root');
+        if (group.kind) assert(['partial', 'code'].includes(group.kind) && group.version === 'current'
+            && /^\/[a-z0-9/-]+$/.test(group.routeBasePath), 'Invalid supplemental content group');
+        if (group.include) assert(group.kind && Array.isArray(group.include) && group.include.length > 0
+            && group.include.every(prefix => typeof prefix === 'string' && prefix && !path.isAbsolute(prefix)
+                && !prefix.split('/').includes('..')), 'Invalid supplemental source includes');
         groups.add(group.id);
         identities.add(key({...group, docId: ''}));
     }
@@ -163,6 +168,8 @@ async function collect(root) {
         }
         labels.push({pluginId: plugin.options.id, files: await plugin.getTranslationFiles({content})});
     }
+    const extra = await require('./source-groups.cjs').collectSources(root, locale);
+    pages.push(...extra.pages); reports.push(...extra.reports); versions.push(...extra.versions);
     return {pages, reports: [...new Map(reports.map(report => [JSON.stringify(report), report])).values()], versions, labels};
 }
 
@@ -240,9 +247,11 @@ async function main() {
         assert.equal(committedHash(page.englishPath), englishHash, `English source differs from pinned commit: ${page.englishPath}`);
     }
     const groups = scope.groups.map(group => {
-        const files = markdownFiles(root, group.sourceRoot);
+        const files = group.kind ? require('./source-groups.cjs').sourceFiles(root, group)
+            .filter(file => require('./source-groups.cjs').hasProse(root, group, file)) : markdownFiles(root, group.sourceRoot);
         const committedFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', sourceCommit, '--', group.sourceRoot], {cwd: root, encoding: 'utf8'})
-            .split('\n').filter(file => /\.(md|mdx)$/.test(file)).sort(compare);
+            .split('\n').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
+                && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file)).sort(compare);
         assert.deepEqual(files, committedFiles, `Source census differs from pinned commit: ${group.sourceRoot}`);
         return buildGroup({group, pages: native.pages, files, scope, committedHash, committedRecords,
             order: native.versions.find(version => version.pluginId === group.pluginId && version.version === group.version)?.order ?? new Map()});

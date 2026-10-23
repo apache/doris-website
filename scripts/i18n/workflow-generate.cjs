@@ -197,7 +197,7 @@ async function generate({plan, reconciliation, maxPages = 10, target, adapter, g
 function allowGeneration(env) {
     if (env.I18N_MODE === 'validate') {
         return env.GITHUB_EVENT_NAME === 'workflow_dispatch'
-            && /\.mdx?$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1';
+            && /\.(mdx?|tsx?)$/.test(env.I18N_PATH || '') && env.I18N_MAX_PAGES === '1';
     }
     return env.I18N_MODE === 'generate';
 }

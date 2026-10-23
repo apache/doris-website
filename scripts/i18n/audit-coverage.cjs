@@ -45,6 +45,7 @@ function baselineEntries(root) {
 function sidebarAudit(native,root,scope) {
     const result = [];
     for (const group of scope.groups) {
+        if (group.kind) continue; // Source modules/partials have no native sidebar.
         const plugin = native.labels.find(item => item.pluginId === group.pluginId);
         assert(plugin, `Missing native sidebar plugin ${group.pluginId}`);
         const versionFile = plugin.files.find(file => file.path === (group.version === 'current' ? 'current' : `version-${group.version}`));
@@ -85,7 +86,8 @@ async function audit({root,sourceRef,baseline,native}) {
     const old = new Map(baselineEntries(baseline).map(page => [key(page),page]));
     const current = new Set(), groups = [];
     const files = group => execFileSync('git',['ls-tree','-r','--name-only',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
-        .split('\n').filter(file => /\.(md|mdx)$/.test(file));
+        .split('\n').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
+            && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file));
     const scoped = scope.groups.map(group => ({group,
         pages:native.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version)}));
     const sourceHashes = refHashes(root, commit, scoped.flatMap(({pages}) => pages.map(page => page.englishPath)));
@@ -134,6 +136,8 @@ async function audit({root,sourceRef,baseline,native}) {
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
         'translations/config.json',`translations/scope/${locale}.json`];
+    if (scope.groups.some(group => group.pluginId === 'course')) routingInputs.push('sidebarsCourse.ts');
+    if (scope.groups.some(group => group.pluginId === 'releases')) routingInputs.push('sidebarsReleases.json');
     routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
     const schemaPath = `translations/state/${locale}/shards.schema.json`;
     if (refHashes(root, commit, [schemaPath]).get(schemaPath) !== null) routingInputs.push(schemaPath);

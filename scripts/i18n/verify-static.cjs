@@ -99,7 +99,8 @@ function verify({site, manifest, partial = false}) {
         assert(fs.existsSync(filename), `Missing ordinary page: ${permalink}`);
         const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
         const source = permalink.startsWith(`/${locale}/`) ? permalink.slice(locale.length + 1) : permalink;
-        const fallback = record?.ordinaryPages === false && !record.translatedPages?.includes(source.replace(/\/+$/, ''));
+        const translatedPages = data.translatedPagePaths?.[locale] ?? record?.translatedPages;
+        const fallback = record?.ordinaryPages === false && !translatedPages?.includes(source.replace(/\/+$/, ''));
         if (fallback) {
             assert.equal($('html').attr('lang'), htmlLangFor('en'), `Fallback page language: ${permalink}`);
             assert.equal($('link[rel="canonical"]').length, 1, `Duplicate ordinary canonical: ${permalink}`);

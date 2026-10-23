@@ -40,10 +40,11 @@ test('navigation samples a native sidebar member when a current standalone doc s
     write('site/ru/docs/index.html', createRedirect({toUrl:pages[2].permalink}));
     write('site/ru/community/index.html', createRedirect({toUrl:pages[3].permalink}));
     write('site/.publish/redirects.json', JSON.stringify({redirects:[]}));
-    const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json')});
+    const scope = {groups: require('../../../translations/scope/ru.json').groups.filter(group => ['DEV','4X','COMMUNITY'].includes(group.id))};
+    const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),scope});
     assert.equal(result.routes,4);
     assert.equal(result.checks.find(check=>check.group === 'DEV').sample,pages[1].permalink);
-    const options={site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),devOnly:true};
+    const options={site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),devOnly:true,scope};
     fs.unlinkSync(path.join(root,'site/ru/community/index.html'));
     assert.throws(()=>verify(options), /Missing compacted entry: \/ru\/community\//);
     write('site/.publish/redirects.json', JSON.stringify({redirects:[['/ru/community/',pages[3].permalink,true,301]]}));

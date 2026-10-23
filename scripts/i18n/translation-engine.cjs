@@ -6,6 +6,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, identity} = require('./state.cjs');
 const {structure, alignHeadings} = require('./structure.cjs');
 const {protectionSignature} = require('./protection.cjs');
+const {scriptUnits, serialize, textFields, containers, reportEsm} = require('./code-prose.cjs');
 
 const visibleAttributes = new Set(['alt', 'title', 'aria-label', 'description', 'label', 'caption']);
 const translatableFields = new Set(['title', 'description', 'sidebar_label']);
@@ -16,9 +17,10 @@ function managedPath(scope, task) {
     const group = scope.groups.find(item => item.pluginId === task.pluginId && item.version === task.version);
     assert(group && task.locale === scope.locale, 'Task is outside the managed locale/plugin/version');
     assert(typeof task.sourcePath === 'string' && task.sourcePath.startsWith(`${group.sourceRoot}/`), 'Source is outside its managed root');
+    if (group.kind) assert(require('./source-groups.cjs').matchesSource(group, task.sourcePath), 'Source is outside its managed include rules');
     const suffix = task.sourcePath.slice(group.sourceRoot.length + 1);
     assert(suffix && !suffix.split('/').some(part => !part || part === '.' || part === '..')
-        && /\.mdx?$/.test(suffix), 'Invalid managed source path');
+        && (group.kind === 'code' ? /\.tsx?$/.test(suffix) : /\.mdx?$/.test(suffix)), 'Invalid managed source path');
     const plugin = task.pluginId === 'default' ? '' : `-${task.pluginId}`;
     const version = task.version === 'current' ? 'current' : `version-${task.version}`;
     const expected = `i18n/${scope.locale}/docusaurus-plugin-content-docs${plugin}/${version}/${suffix}`;
@@ -39,6 +41,8 @@ function safeFile(root, relativePath) {
 }
 
 async function extractUnits(raw, extension) {
+    if (/^\.tsx?$/.test(extension)) return scriptUnits(raw).map((unit, index) =>
+        ({...unit, id: `u${String(index + 1).padStart(4, '0')}`, section: 0}));
     const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}] = await Promise.all([
         import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
     ]);
@@ -136,13 +140,27 @@ async function extractUnits(raw, extension) {
                     add(at, at + match[3].length, `html:${match[1]}`);
                 }
             }
+        } else if (node.type === 'mdxjsEsm' && reportEsm(node.value)) {
+            for (const unit of scriptUnits(node.value, {report: true})) units.push({...unit,
+                start: prefix + node.position.start.offset + unit.start, end: prefix + node.position.start.offset + unit.end});
         } else if (node.type.startsWith('mdxJsx') && node.position) {
             for (const attribute of node.attributes ?? []) {
-                if (attribute.type !== 'mdxJsxAttribute' || !visibleAttributes.has(attribute.name)
-                    || typeof attribute.value !== 'string' || !attribute.position) continue;
+                const visible = visibleAttributes.has(attribute.name) || node.name?.startsWith('Course')
+                    && (textFields.has(attribute.name) || containers.has(attribute.name));
+                if (attribute.type !== 'mdxJsxAttribute' || !visible || !attribute.position) continue;
                 const start = prefix + attribute.position.start.offset;
                 const end = prefix + attribute.position.end.offset;
                 const fragment = raw.slice(start, end);
+                if (attribute.value?.type === 'mdxJsxAttributeValueExpression') {
+                    const offset = fragment.indexOf('{') + 1;
+                    // remark-mdx strips container indentation from .value;
+                    // edit the actual source range, whose offsets Webpack sees.
+                    const code = fragment.slice(offset, -1);
+                    for (const unit of scriptUnits(code, {expression: true})) units.push({...unit,
+                        start: start + offset + unit.start, end: start + offset + unit.end});
+                    continue;
+                }
+                if (typeof attribute.value !== 'string') continue;
                 const match = /^[^=]+=[ \t]*(["'])([\s\S]*)\1$/.exec(fragment);
                 if (!match) throw new Error(`Unsupported visible MDX attribute: ${attribute.name}`);
                 add(start + fragment.indexOf(match[2]), start + fragment.indexOf(match[2]) + match[2].length,
@@ -162,7 +180,7 @@ async function extractUnits(raw, extension) {
 
 function protectText(value) {
     const tokens = [];
-    const masked = value.replace(/\\?\{#[^}]+\}|\$\{[^}]+\}|\{\{[^}]+\}\}|(?<![\w])[+-]?[vV]?\d+(?:\.\d+)*(?:\.x)?(?![\w])/g, match => {
+    const masked = value.replace(/`[^`]+`|https?:\/\/[^\s<>"')]+|\\?\{#[^}]+\}|\$\{[^}]+\}|\{\{[^}]+\}\}|(?<![\w])[+-]?[vV]?\d+(?:\.\d+)*(?:\.x)?(?![\w])/g, match => {
         const marker = `⟦DORIS_KEEP_${tokens.length}⟧`;
         tokens.push({marker, value: match});
         return marker;
@@ -346,7 +364,8 @@ async function translateDocument({source, extension, adapter, glossary, previous
     let target = source;
     for (const unit of [...units].reverse()) {
         let value = translated.get(unit.id);
-        if (unit.quote === 'json-"') value = JSON.stringify(value).slice(1, -1);
+        if (unit.kind === 'script:text') value = serialize(unit, value);
+        else if (unit.quote === 'json-"') value = JSON.stringify(value).slice(1, -1);
         else if (unit.quote === "json-'") value = value.replace(/\\/g, '\\\\');
         target = target.slice(0, unit.start) + value + target.slice(unit.end);
     }
