@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/hudi-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/hudi-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/hudi-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f4e364ac067539c80a723612c253b2f4c33268ca75ab5527d797708e93a5f483",
+    "sourceTechnicalHash": "49983b95e94654d34aad0dd996bff0ea908d192cbf2c3785024bb31e69592376",
+    "targetHash": "9ead2e38ab796643c4749270bb5bf17ac3b3cc6911a5f4bd5d11963a576a70a3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:00:56.210Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f4e364ac067539c80a723612c253b2f4c33268ca75ab5527d797708e93a5f483",
+      "targetHash": "9ead2e38ab796643c4749270bb5bf17ac3b3cc6911a5f4bd5d11963a576a70a3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

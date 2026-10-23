@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/iceberg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/iceberg.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/iceberg.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+    "sourceTechnicalHash": "8bc18d4f63d9051d6fe7b2679b0b78352e115672fccbee179192c5cd3914fd12",
+    "targetHash": "33137b40a9f414dd76c09477104209047847dc5457eb837dbe65d2cd5bac2bba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:47:05.550Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d95c7a10897df6ce6f2e51246eeedf21a5e54c0a923d5a4d9cb2624c7d9329c1",
+      "targetHash": "33137b40a9f414dd76c09477104209047847dc5457eb837dbe65d2cd5bac2bba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

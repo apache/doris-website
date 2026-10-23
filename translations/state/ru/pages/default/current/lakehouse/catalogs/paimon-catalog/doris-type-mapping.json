@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/paimon-catalog/doris-type-mapping",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/paimon-catalog/doris-type-mapping.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+    "sourceTechnicalHash": "328a5855fbc029abcf25bbbf7ae6b29136b3d07a67c13f444313ca807133bbba",
+    "targetHash": "74e9c98f51cf77082ade622862fd2bef5fd499fe6c0f14750e161baeab2af852",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:58:58.188Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "603230759e638480b6dc920c5d0c9771bae6bf89f4e81b67051a8153bbf7cb67",
+      "targetHash": "74e9c98f51cf77082ade622862fd2bef5fd499fe6c0f14750e161baeab2af852",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

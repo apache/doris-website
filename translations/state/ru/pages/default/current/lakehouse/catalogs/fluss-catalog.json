@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/fluss-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/fluss-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/fluss-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2141b755e5ac67a3f0734304a7a5171867883847940a3d30e64a3bc9145d9a39",
+    "sourceTechnicalHash": "1992902843cc809a99c72a43ccb2dc5c97e0f6474e81bd2e9773424e2a09b835",
+    "targetHash": "8c648890e464a79aed1c7bcf59ac9c210117295e6f9c2151d6891d271a9b724f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:12:08.552Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2141b755e5ac67a3f0734304a7a5171867883847940a3d30e64a3bc9145d9a39",
+      "targetHash": "8c648890e464a79aed1c7bcf59ac9c210117295e6f9c2151d6891d271a9b724f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 72: expected [\"inlineCode\",null,null,\"WITH_TIMEZONE\"]; received [\"inlineCode\",null,null,\"DESCRIBE\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"DESCRIBE\"]; received [\"inlineCode\",null,null,\"WITH_TIMEZONE\"]\nprotected node 154: expected [\"inlineCode\",null,null,\"EXPLAIN\"]; received [\"inlineCode\",null,null,\"degraded\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

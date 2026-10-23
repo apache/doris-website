@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-saphana-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-saphana-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-saphana-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "6b220ebb17d2cab83644d4937c3591457886cc10a3c854cdb034ff5e9d585a7f",
+    "sourceTechnicalHash": "a3e607958a9dd4cf945079b7429439585d727d7c8b29d405474abf9e5b424815",
+    "targetHash": "81910131f68da56fad2641d768de9b4a2f5d127b6ab1231683aca701d11146ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:57:03.683Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6b220ebb17d2cab83644d4937c3591457886cc10a3c854cdb034ff5e9d585a7f",
+      "targetHash": "81910131f68da56fad2641d768de9b4a2f5d127b6ab1231683aca701d11146ee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

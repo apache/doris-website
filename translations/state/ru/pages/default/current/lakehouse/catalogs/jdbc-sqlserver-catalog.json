@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-sqlserver-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+    "sourceTechnicalHash": "408f21865827e3c77b88e77938cafd65940e3dd6144d8ce82967d25472e763ae",
+    "targetHash": "1ae5e375c6e790a760ab12c04a3946abbe69f3f16045861c766b268d73d20170",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:59:19.622Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+      "targetHash": "1ae5e375c6e790a760ab12c04a3946abbe69f3f16045861c766b268d73d20170",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

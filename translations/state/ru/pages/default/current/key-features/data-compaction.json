@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-compaction",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-compaction.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/data-compaction.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "26b555a3006571847c66550e2677ddea60053a3a5555dc042856993dfeae95a6",
+    "sourceTechnicalHash": "11534b75ebe67a784b638483cb3178ee3dcdcfc6e4335efe12116a6229bc48cb",
+    "targetHash": "60eaf062249637141cd8a3d73c255c370e8c97d06b454bd001aef8113ef42b19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:46:00.015Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "26b555a3006571847c66550e2677ddea60053a3a5555dc042856993dfeae95a6",
+      "targetHash": "60eaf062249637141cd8a3d73c255c370e8c97d06b454bd001aef8113ef42b19",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
