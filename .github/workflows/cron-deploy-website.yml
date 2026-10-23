@@ -43,7 +43,12 @@ jobs:
   build:
     needs: source
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # Temporary ceiling: validate build + verification + artifact transfer
+    # with 30% margin using the publishing measurement reports.
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
     env:
         DORIS_ENABLE_JA: 'true'
         DORIS_ENABLE_KO: 'true'
@@ -60,6 +65,21 @@ jobs:
               ref: ${{ needs.source.outputs.source_sha }}
               fetch-depth: 0
               filter: blob:none
+
+        - name: Checkout trusted measurement code
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+              ref: ${{ github.sha }}
+              persist-credentials: false
+              path: .publish-tools
+              sparse-checkout: .github/scripts/publish_metrics.py
+              sparse-checkout-cone-mode: false
+
+        - name: Start publishing measurements
+          id: metrics-start
+          env:
+              DEPLOY_SOURCE_SHA: ${{ needs.source.outputs.source_sha }}
+          run: python3 .publish-tools/.github/scripts/publish_metrics.py start --job build
 
         - name: Add Chinese Fonts
           run: |
@@ -103,6 +123,7 @@ jobs:
           env:
               GITHUB_TOKEN: ${{ github.token }}
           run: |
+              /usr/bin/time -v -o .i18n-build/publish-metrics/build-time.txt bash -e -o pipefail <<'BUILD'
               npm install -g yarn
               yarn cache clean
               export NODE_OPTIONS=--max-old-space-size=8192
@@ -114,16 +135,19 @@ jobs:
               cp .asf-site.yaml ./build/.asf.yaml
               cp versions.json ./build/
               ls build
+              BUILD
 
         - name: Verify localized publishing artifacts
           # Publishing builds every enabled locale, so every managed locale
           # must be present and pass the strict cross-locale verification.
           run: |
+              /usr/bin/time -v -o .i18n-build/publish-metrics/verify-time.txt bash -e -o pipefail <<'VERIFY'
               for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
                   test -s "build/${LOCALE}/index.html"
                   node scripts/i18n/verify-static.cjs \
                     --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
               done
+              VERIFY
 
         - name: Check file sizes for asf-site
           # GitHub rejects a push holding any file over 100 MiB. Checking
@@ -143,6 +167,7 @@ jobs:
         #         cp *.pdf ./build/assets/files/
         #         ls ./build/assets/files/
         - name: Upload the site artifact for the isolated deployment job
+          id: site-artifact
           uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
           with:
             name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
@@ -152,6 +177,27 @@ jobs:
             if-no-files-found: error
             retention-days: 1
 
+        - name: Report publishing measurements
+          if: always() && steps.metrics-start.outcome == 'success'
+          env:
+              GH_TOKEN: ${{ github.token }}
+              SITE_ARTIFACT_ID: ${{ steps.site-artifact.outputs.artifact-id }}
+              SITE_ARTIFACT_DIGEST: ${{ steps.site-artifact.outputs.artifact-digest }}
+          run: python3 .publish-tools/.github/scripts/publish_metrics.py finish --budget 180
+
+        - name: Upload publishing measurements
+          if: always() && steps.metrics-start.outcome == 'success'
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+          with:
+              name: publish-build-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+              include-hidden-files: true
+              path: |
+                  .i18n-build/publish-metrics/
+                  .i18n-build/build-result.json
+                  .i18n-build/publish-result.json
+              if-no-files-found: error
+              retention-days: 14
+
   deploy:
     needs: [source, build]
     runs-on: ubuntu-latest
@@ -159,6 +205,7 @@ jobs:
     environment: Production
     permissions:
       contents: write
+      actions: read
     env:
       DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
     steps:
@@ -168,6 +215,11 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
           submodules: recursive
+      - name: Start publishing measurements
+        id: metrics-start
+        env:
+          DEPLOY_SOURCE_SHA: ${{ needs.source.outputs.source_sha }}
+        run: python3 .github/scripts/publish_metrics.py start --job deploy
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
@@ -226,3 +278,19 @@ jobs:
             user_name: 'github-actions[bot]'
             user_email: 'github-actions[bot]@users.noreply.github.com'
             commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'
+
+      - name: Report publishing measurements
+        if: always() && steps.metrics-start.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/publish_metrics.py finish --budget 180
+
+      - name: Upload publishing measurements
+        if: always() && steps.metrics-start.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: publish-deploy-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+          include-hidden-files: true
+          path: .i18n-build/publish-metrics/
+          if-no-files-found: error
+          retention-days: 14
