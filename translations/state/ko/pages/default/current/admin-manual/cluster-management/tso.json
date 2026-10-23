@@ -8,39 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/cluster-management/tso.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/tso.md",
-    "sourceCommit": "84f382d820669d8811a29dd2ae820d45c596e987",
-    "sourceHash": "126098c25f0ef9deaa098217854a24d02c12686959e10a5909ded352b1905dae",
-    "sourceTechnicalHash": "d479cc51c46e8d3003552ab5bebc8904f9e8e5901d480cc2590baf01b72da433",
-    "targetHash": "f49a023a166fba6349fe153bdb87e5c4da308a22a7ca33b1aaeba93a6ddef25d",
+    "sourceCommit": "f2ec14ebc782052323f56515f6b51b86e9280075",
+    "sourceHash": "de579414ef2f5a1fb036f9e51cccfd679438a1a6192e5a6f2aac5da60eafb338",
+    "sourceTechnicalHash": "10dec0b96a4066b735872cc4739beb9d7718a3f22c35d581f9e4481e26989cdf",
+    "targetHash": "03610773486f61eee17ed3293f4116b4bcfb7cfdfc6272c81e1d43eb0a5b42b4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-18T22:10:11.393Z",
+    "translatedAt": "2026-10-23T13:20:17.952Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
+      "previousSourceHash": "126098c25f0ef9deaa098217854a24d02c12686959e10a5909ded352b1905dae",
+      "previousTargetHash": "f49a023a166fba6349fe153bdb87e5c4da308a22a7ca33b1aaeba93a6ddef25d",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 4,
+        "totalLines": 45,
+        "ratio": 0.08888888888888889
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "126098c25f0ef9deaa098217854a24d02c12686959e10a5909ded352b1905dae",
-      "targetHash": "f49a023a166fba6349fe153bdb87e5c4da308a22a7ca33b1aaeba93a6ddef25d",
+      "sourceHash": "de579414ef2f5a1fb036f9e51cccfd679438a1a6192e5a6f2aac5da60eafb338",
+      "targetHash": "03610773486f61eee17ed3293f4116b4bcfb7cfdfc6272c81e1d43eb0a5b42b4",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"18\",\"64\"]; received [\"0\",\"1\",\"18\",\"64\"]\nprotected node 3: expected [\"inlineCode\",null,null,\"enable_feature_binlog\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"enable_feature_binlog\"]"
-            },
-            {
-              "check": "shared-pr-admission",
-              "message": "{\n  \"checked\": 1,\n  \"errors\": [\n    {\n      \"path\": \"i18n/ko/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/tso.md\",\n      \"message\": \"Protected code, links, numbers, MDX or metadata differ from the source\"\n    }\n  ],\n  \"warnings\": [],\n  \"freshness\": {\n    \"current\": 13,\n    \"untranslated\": 5939\n  },\n  \"reports\": [\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/compute-storage-decoupled/meta-service-api.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/observability/log-storage-analysis.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/auth/ldap.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/auth/ranger.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/admin-manual/config/fe-config-template.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/data-operate/update/unique-update.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/lakehouse/best-practices/doris-aws-emr.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/murmur-hash3-64-v2.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-functions/scalar-functions/numeric-functions/running-difference.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"3.x\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-CONFIG.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/admin-manual/security-overview.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/observability/log-storage-analysis.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/lakehouse/best-practices/doris-aws-emr.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/date-time-functions/localtime.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/ip-functions/cut-ipv6.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/ip-functions/ipv4-to-ipv6.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/numeric-functions/running-difference.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-functions/scalar-functions/string-functions/uuid-to-int.md\"\n    },\n    {\n      \"kind\": \"unsupported_source_route\",\n      \"pluginId\": \"default\",\n      \"version\": \"2.1\",\n      \"sourceLocale\": \"zh-CN\",\n      \"sourcePath\": \"i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1/sql-manual/sql-statements/table-and-view/sync-materialized-view/DROP-SYNC-MATERIALIZED-VIEW.md\"\n    }\n  ]\n}\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, 建表, 查询调优, 数据湖, 新用户] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, 建表, 查询调优, 数据湖, 新用户] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, 建表, 查询调优, 数据湖, 新用户] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, 建表, 查询调优, 数据湖, 新用户] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\n[WARNING] Tags [POC, Table Design, Query Tuning, Data Lake, New Users] used in getting-started/before-you-start-the-poc.md are not defined in tags.yml\nCommand failed: /opt/homebrew/Cellar/node/26.5.0/bin/node /Users/morningman/workspace/git/doris-website-ko-t09/.i18n-build/korean-t09/20261018T220234Z-003/workers/T06-DEV-237134585885218/scripts/i18n/check-translations.cjs --base 84f382d820669d8811a29dd2ae820d45c596e987\n"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]
