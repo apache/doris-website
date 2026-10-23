@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/DROP-ROLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9970456bbde187edf424c53c29a9856a0847cfd8138175633936713c667e9db4",
+    "sourceTechnicalHash": "216ccf4ade420679f7a44fd8f22f68726211d97f87a6a104d41b1bc1248c5c72",
+    "targetHash": "a2a21c977280a5890aa3be9de9b3ca931e8fce3273ac446e378273a598fdad04",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:08.499Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9970456bbde187edf424c53c29a9856a0847cfd8138175633936713c667e9db4",
+      "targetHash": "a2a21c977280a5890aa3be9de9b3ca931e8fce3273ac446e378273a598fdad04",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/DROP-ROLE",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/DROP-ROLE.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "9970456bbde187edf424c53c29a9856a0847cfd8138175633936713c667e9db4",
+        "targetHash": "a2a21c977280a5890aa3be9de9b3ca931e8fce3273ac446e378273a598fdad04",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}
