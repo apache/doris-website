@@ -200,6 +200,62 @@ class DataBoundaryTests(unittest.TestCase):
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_build_check_handles_an_older_pr_branch(self):
+        raw = subprocess.check_output(["node", "-e", """
+            const fs=require('fs'),yaml=require('js-yaml');
+            console.log(JSON.stringify(yaml.load(fs.readFileSync(
+                '.github/workflows/build-check.yml','utf8')).jobs['build-and-deploy'].steps));
+        """], cwd=ROOT)
+        steps = json.loads(raw)
+        checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+        security = next(step for step in steps if step.get("name") == "Workflow security boundary tests")
+        links = next(step for step in steps if step.get("name") == "Run Node.js dead link checker")
+        with tempfile.TemporaryDirectory(prefix="doris-build-check-test-") as directory:
+            root = Path(directory)
+
+            def git(*args):
+                return subprocess.check_output(["git", *args], cwd=root,
+                                               stderr=subprocess.DEVNULL).decode().strip()
+
+            git("init", "-q", "-b", "master")
+            git("config", "user.name", "Build check test")
+            git("config", "user.email", "build-check@example.invalid")
+            (root / "source.md").write_text("English source\n")
+            git("add", ".")
+            git("commit", "-qm", "shared source")
+            git("branch", "old-pr")
+            tests = root / ".github/scripts"
+            tests.mkdir(parents=True)
+            (tests / "test_base.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class BaseTests(unittest.TestCase):\n"
+                "    def test_pr_and_base_files_are_present(self):\n"
+                "        self.assertTrue(Path('source.md').is_file())\n"
+                "        self.assertTrue(Path('translation.md').is_file())\n")
+            git("add", ".")
+            git("commit", "-qm", "add base-branch security tests")
+            git("checkout", "-q", "old-pr")
+            (root / "translation.md").write_text("[Missing page](missing.md)\n")
+            git("add", ".")
+            git("commit", "-qm", "translate an older source snapshot")
+            head = git("rev-parse", "HEAD")
+            git("merge", "--no-ff", "-qm", "PR merge snapshot", "master")
+            merge = git("rev-parse", "HEAD")
+            refs = {"${{ github.sha }}": merge, "${{ github.event.pull_request.head.sha }}": head}
+            git("checkout", "--detach", refs[checkout["with"]["ref"]])
+            completed = subprocess.run(security["run"], cwd=root, shell=True,
+                                       executable="/bin/bash", capture_output=True, text=True)
+            self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+            self.assertIn("test_pr_and_base_files_are_present", completed.stderr)
+            # A clean merge has no combined diff; the link checker must still inspect PR files.
+            (root / "scripts").symlink_to(ROOT / "scripts", target_is_directory=True)
+            completed = subprocess.run(links["run"], cwd=root, shell=True, executable="/bin/bash",
+                                       env={**os.environ, **{key: refs[value]
+                                            for key, value in links.get("env", {}).items()}},
+                                       capture_output=True, text=True)
+            self.assertEqual(completed.returncode, 1, completed.stdout + completed.stderr)
+            self.assertIn("A broken link was detected", completed.stderr)
+
     def test_privilege_and_artifact_boundaries(self):
         raw = subprocess.check_output(["node", "-e", """
             const fs=require('fs'),yaml=require('js-yaml');
