@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/count",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/count.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "390ded406dd7f722ac35251da1fcb31d20c482054c3fb1cb849b3396e135bfcd",
+    "sourceTechnicalHash": "263a672cd7c1bdd1fb7e493a4a75475b713bd0c1ea68f2d7de6d2cde16991720",
+    "targetHash": "753496f1287711cd66815fa5928618c3a386a964f193750d7e490e8913e0c3e8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:12.879Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "390ded406dd7f722ac35251da1fcb31d20c482054c3fb1cb849b3396e135bfcd",
+      "targetHash": "753496f1287711cd66815fa5928618c3a386a964f193750d7e490e8913e0c3e8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/count",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/count.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/count.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "390ded406dd7f722ac35251da1fcb31d20c482054c3fb1cb849b3396e135bfcd",
+        "targetHash": "753496f1287711cd66815fa5928618c3a386a964f193750d7e490e8913e0c3e8",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}

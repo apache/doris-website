@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "96848feac2604375066c1ee011d08feeb597d04c682f26bb83465019076efaa3",
+    "sourceTechnicalHash": "33616adfea1e9e9c4e35ad8eb56e90ca13202572fff35a7846a071966db2f2f5",
+    "targetHash": "eeca8ebbad3d43db04e35584ff0af025a75cdfe750a6f89feb8a334779b88b74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:14.293Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "96848feac2604375066c1ee011d08feeb597d04c682f26bb83465019076efaa3",
+      "targetHash": "eeca8ebbad3d43db04e35584ff0af025a75cdfe750a6f89feb8a334779b88b74",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/percentile_reservoir",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile_reservoir.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "96848feac2604375066c1ee011d08feeb597d04c682f26bb83465019076efaa3",
+        "targetHash": "eeca8ebbad3d43db04e35584ff0af025a75cdfe750a6f89feb8a334779b88b74",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

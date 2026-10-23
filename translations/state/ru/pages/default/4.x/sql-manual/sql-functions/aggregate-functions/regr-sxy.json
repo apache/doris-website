@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/regr-sxy",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ed32cf82dca3dc27d7e31213ab33172308d572960457a2a27e88331e5ed12e7d",
+    "sourceTechnicalHash": "db54729e075ee7297f9006df015b1125e67601378d59eb7eb3f4174b26762bf7",
+    "targetHash": "f8545a8310dac572348004f26a41af4a1ae95ad025b575590fa8810b807324f4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:14.899Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ed32cf82dca3dc27d7e31213ab33172308d572960457a2a27e88331e5ed12e7d",
+      "targetHash": "f8545a8310dac572348004f26a41af4a1ae95ad025b575590fa8810b807324f4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/regr-sxy",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/regr-sxy.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "ed32cf82dca3dc27d7e31213ab33172308d572960457a2a27e88331e5ed12e7d",
+        "targetHash": "f8545a8310dac572348004f26a41af4a1ae95ad025b575590fa8810b807324f4",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}
