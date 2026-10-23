@@ -21,18 +21,18 @@ Lance の型マッピングについては、[Doris のデータ型マッピン�
 
 | 機能 | 対応状況 |
 |---|---|
-| Lance Catalog | Filesystem Catalog と REST Catalog をサポート |
-| ファイル TVF | `s3()` と `local()` をサポート |
-| スキーマ推論とカラムプルーニング | 対応 |
-| Fragment の並列スキャン | Catalog クエリと S3 TVF で対応 |
-| 述語プッシュダウン | 対応するスカラー述語をサポート |
-| ベクトル検索 | Lance のベクトルインデックスと、`vector_search()` を使用した Flat Search をサポート |
+| Lance Catalog | Filesystem Catalog と REST Catalog に対応 |
+| ファイル TVF | `s3()` と `local()` に対応 |
+| スキーマ推論と列プルーニング | 対応 |
+| 並列 Fragment スキャン | Catalog クエリと S3 TVF で対応 |
+| 述語プッシュダウン | 互換性のあるスカラー述語に対応 |
+| ベクトル検索 | `vector_search()` を通じて Lance のベクトルインデックスと Flat Search に対応 |
 | Lance への書き込み | 非対応 |
-| Time Travel | 非対応 |
-| Full-Text Search / Hybrid Search | 非対応 |
+| Time Travel | Lance Catalog で対応。ファイル TVF は現在のバージョンのみを読み取り |
+| 全文検索 | `full_text_search()` を通じて既存の Lance FTS インデックスに対応 |
+| ハイブリッド検索 | 非対応 |
 
-<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->
-Catalog の設定、述語プッシュダウン、ベクトル検索の詳細については、[Lance Catalog（4.x）](/docs/4.x/lakehouse/catalogs/lance-catalog)を参照してください。
+Catalog の設定、述語プッシュダウン、ベクトル検索、全文検索の詳細については、[Lance Catalog](../catalogs/lance-catalog.mdx) を参照してください。
 
 ## ファイル TVF を使用して Lance データセットをクエリする {#query-a-lance-dataset-with-a-file-tvf}
 
@@ -61,10 +61,10 @@ WHERE user_id > 100;
 - Lance へのアクセスは読み取り専用です。Lance テーブルの作成、書き込み、更新、削除には対応していません。
 - Lance 形式に対応しているのは `s3()` と `local()` のみです。HDFS や HTTP など、ほかのファイル TVF には対応していません。
 - 単一の TVF パスで指定できる Lance データセットは単一のものに限られ、`path_partition_keys` には対応していません。
-- クエリはデータセットの現在のバージョンを読み取ります。SQL で Version を選択したり、Time Travel を実行したりすることはできません。
+- ファイル TVF のクエリはデータセットの現在のバージョンを読み取ります。過去のバージョンを選択したり、Time Travel を実行したりするには、[Lance Catalog](../catalogs/lance-catalog.mdx#time-travel) を使用してください。
 - ローカル TVF のスキーマ検出と実行では、それぞれ独立してデータセットの最新バージョンを開きます。ローカル TVF のクエリの解析中や実行中は、データセットを変更しないでください。
 
 ## 参考資料 {#references}
 
-- [Lance Catalog（4.x）](/docs/4.x/lakehouse/catalogs/lance-catalog)
+- [Lance Catalog](../catalogs/lance-catalog.mdx)
 - [Lance 形式のドキュメント](https://docs.lancedb.com/lance)

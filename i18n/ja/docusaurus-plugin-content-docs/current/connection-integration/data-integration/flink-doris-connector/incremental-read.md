@@ -8,7 +8,7 @@
 
 # Doris Changelog による増分読み取り {#incremental-reading-with-doris-changelog}
 
-changelog を有効にした Doris テーブル（`"changelog.enable" = "true"`）では、Flink Doris Connector を使用して行単位の変更を継続的に読み取れます。`initial` モードでは、Connector はまず現在のテーブルのスナップショットを読み取り、その後、増分読み取りに切り替えます。この切り替えに必要な変更が、ソーステーブルの changelog 保持期間内に残っている必要があります。
+changelog を有効にした Doris テーブル（`"changelog.enable" = "true"`）では、Flink Doris Connector を使用して行単位の変更を継続的に読み取れます。新しいコンシューマーでは、`initial` モードでまず現在のテーブルのスナップショットを読み取り、その後、増分読み取りに切り替えます。この切り替えに必要な変更が、ソーステーブルの changelog 保持期間内に残っている必要があります。
 
 :::info バージョン要件
 この機能には Flink Doris Connector 26.4.0 以降と Doris 5.0.0 以降が必要です。Doris changelog は Doris 5.0.0 の実験的機能であり、FE の設定で `enable_feature_changelog = true` を指定して有効にする必要があります。テーブルでの有効化方法、対応するテーブルモデル、制限事項については、[Changelog](../../../data-operate/incremental/changelog.md) を参照してください。
@@ -62,7 +62,7 @@ SELECT * FROM student_changelog;
 
 ## 起動モード {#scan-mode}
 
-ジョブの開始後、`test.student_changelog_source` に対する変更は Flink の changelog レコードとして継続的に出力されます。起動モードは `source.scan.mode` で選択します。
+ジョブの開始後、`test.student_changelog_source` に対する変更は Flink の changelog レコードとして継続的に出力されます。新しいコンシューマーの起動モードは `source.scan.mode` で選択します。
 
 | モード | 動作 |
 | ---- | -------- |
@@ -71,7 +71,7 @@ SELECT * FROM student_changelog;
 | `latest` | スナップショットを読み飛ばし、ジョブ開始後に生成された変更を読み取ります。 |
 | `from-timestamp` | スナップショットを読み飛ばし、`source.scan.timestamp` で `yyyy-MM-dd HH:mm:ss` 形式で指定した時刻を含め、そこからの変更を読み取ります。 |
 
-Flink Checkpoint または Savepoint から復元すると、Connector は保存済みの消費状態から再開します。`source.scan.mode` や `source.scan.timestamp` を変更しても、その状態はリセットされません。復元したオフセットと `from-timestamp` の開始位置には、どちらもソーステーブルの `changelog.ttl_seconds` が適用されます。期限切れ時の動作については、以下を参照してください。
+ジョブを再開する際は、保存済みの消費進捗が起動モードより優先されます。復旧時のルールについては、[Doris への消費進捗の公開](#offset-table) を参照してください。復元したオフセットと `from-timestamp` の開始位置には、どちらもソーステーブルの `changelog.ttl_seconds` が適用されます。期限切れ時の動作については、以下を参照してください。
 
 ## 変更タイプ {#increment-type}
 
@@ -97,7 +97,7 @@ Connector は Doris の `@incr` クエリを使用して変更を読み取りま
 
 ### changelog の期限切れ後の復旧 {#changelog-expiration-recovery}
 
-必要な変更が期限切れになった場合、既存のオフセットから完全な増分復旧を行うことはできません。下流のデータを現在のソーステーブルと整合させる必要があるジョブでは、期限切れの Checkpoint または Savepoint を復元せずに、`source.scan.mode = 'initial'` で新たな初期読み込みを開始し、新しいスナップショットから下流のデータを再構築してください。古い状態を復元しながら `initial` を設定しても、新しい全体スナップショットは開始されず、保存済みの状態から再開します。
+必要な変更が期限切れになった場合、既存のオフセットから完全な増分復旧を行うことはできません。下流のデータを現在のソーステーブルと整合させる必要があるジョブでは、期限切れの Checkpoint または Savepoint を復元せずに、`source.scan.mode = 'initial'` で新たな初期読み込みを開始し、新しいスナップショットから下流のデータを再構築してください。オフセットテーブルを設定している場合は、保存済みのレコードがない新しい `source.changelog.consumer-id` を使用するか、`source.changelog.offset-table` と `source.changelog.consumer-id` の両方を削除してください。そうしないと、古い Flink の状態または外部オフセットが引き続き `initial` より優先され、新しい全体スナップショットが開始されません。
 
 新しいスナップショットで再構築できるのは現在のテーブルの状態であり、期限切れになった過去のイベントは再現できません。`latest` または新しい時刻を指定した `from-timestamp` で開始した場合も、欠落した期間はスキップされます。これらのモードは、その期間をスキップしても問題がない場合、または欠落したデータを別途復旧した場合にのみ使用してください。
 
@@ -115,9 +115,9 @@ Checkpoint は消費状態を保存し、CDC の重複排除は再生された�
 
 ## 消費進捗を Doris に公開する（任意） {#offset-table}
 
-消費進捗は Flink Checkpoint の状態に保存されます。任意のオフセットテーブルは、完了した Checkpoint に反映された進捗を確認するためだけに使用します。ジョブの開始時や再起動時に消費を自動的に再開するために、Connector がこのテーブルを読み取ることはありません。
+任意のオフセットテーブルは、消費進捗の確認と、Checkpoint または Savepoint から復元しないジョブの自動再開のために、消費進捗を Doris に保存します。
 
-Doris で消費進捗を照会するには、次のオフセットテーブルを作成します。
+ジョブを送信する前に、次のオフセットテーブルを作成します。`username` と `password` で設定した Doris アカウントには、このテーブルに対する `SELECT` 権限と `INSERT` 権限が必要です。
 
 ```sql
 CREATE DATABASE IF NOT EXISTS ops;
@@ -134,20 +134,47 @@ PROPERTIES (
 );
 ```
 
+Flink Checkpoint を有効にしたまま、上の例のソーステーブルの `WITH` 句に次のオプションを追加します。
+
 ```sql
 'jdbc-url' = 'jdbc:mysql://127.0.0.1:9030',
 'source.changelog.offset-table' = 'ops.flink_source_offsets',
 'source.changelog.consumer-id' = 'student-sync'
 ```
 
-`source.changelog.consumer-id` は、オフセットテーブル内で消費側のジョブを識別します。同じジョブの進捗を追跡するには、再起動後も値を変更しないでください。
+ジョブの再起動時は、同じオフセットテーブルと `source.changelog.consumer-id` を使用してください。消費進捗が上書きされないよう、異なるジョブやソーステーブルには異なる ID を使用してください。
 
-Flink Checkpoint または Savepoint から復元できず、保存された `offset_timestamp` 以降に必要な変更がすべて保持されている場合は、その値を `source.scan.timestamp` にコピーし、`source.scan.mode` を `from-timestamp` に設定すると、そのオフセットから手動で再開できます。期限切れになっている場合は、[changelog の期限切れ後の復旧](#changelog-expiration-recovery) に従ってください。期限切れのタイムスタンプをコピーしても、欠落した変更は復元されません。たとえば、次のタイムスタンプがまだ保持期間内にある場合は、以下のように設定します。
+`offset_timestamp` は、次の増分読み取りでその位置を含めて読み取りを開始する位置です。Checkpoint が成功すると、Connector はその Checkpoint に反映された消費進捗を非同期で保存し、書き込みに失敗した場合は再試行します。保存済みの進捗は実際の進捗より遅れる場合があるため、再開時に一部のデータが再度読み取られる可能性があります。
+
+進捗が公開されたら、Doris で照会します。
 
 ```sql
-'source.scan.mode' = 'from-timestamp',
-'source.scan.timestamp' = '2026-10-09 10:00:00'
+SELECT consumer_id, offset_timestamp
+FROM ops.flink_source_offsets
+WHERE consumer_id = 'student-sync';
 ```
+
+結果の例：
+
+```text
++--------------+---------------------+
+| consumer_id  | offset_timestamp    |
++--------------+---------------------+
+| student-sync | 2026-10-09 10:00:00 |
++--------------+---------------------+
+```
+
+開始位置は、次の順序で最初に一致したルールによって決まります。
+
+| 条件 | 動作 |
+| ---- | ---- |
+| ジョブを Checkpoint または Savepoint から復元する | 保存済みの消費状態を使用します。 |
+| オフセットテーブルに現在の `consumer-id` のレコードがある | 起動モードの開始位置より優先して、`offset_timestamp` から再開します。`initial` の場合もスナップショットをスキップします。 |
+| オフセットテーブルが設定されていない、またはそのコンシューマーのレコードがない | `source.scan.mode` に従って開始します。 |
+
+設定したオフセットテーブルが存在しないか読み取れない場合、またはそのコンシューマーのレコードが重複しているかタイムスタンプが無効な場合は、起動モードに切り替わることなく起動に失敗します。
+
+オフセットテーブルに保存されるのは消費の開始位置だけで、下流の Flink オペレーターやシンクの状態は保存されません。それらの状態を復旧するには、Checkpoint または Savepoint を復元してください。期限切れのオフセットについては、[changelog の期限切れ後の復旧](#changelog-expiration-recovery) を参照してください。
 
 ## オプション {#options}
 
@@ -156,9 +183,9 @@ Flink Checkpoint または Savepoint から復元できず、保存された `of
 | キー                         | デフォルト値 | 必須 | 説明                                                                                                                                                |
 | --------------------------- | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | source.scan.mode            | snapshot      | N        | ソースの起動モード。指定できる値は `snapshot`、`initial`、`latest`、`from-timestamp` です。                                                           |
-| source.scan.timestamp       | --            | N        | `yyyy-MM-dd HH:mm:ss` 形式の、指定時刻を含む開始時刻。`from-timestamp` の場合にのみ必須です。開始位置が期限切れの場合は、[変更タイプ](#increment-type) に記載された動作に従います。期限切れの変更は復旧できません。 |
+| source.scan.timestamp       | --            | N        | `from-timestamp` の場合に必須です。`yyyy-MM-dd HH:mm:ss` 形式で指定する、その時刻を含む開始時刻。保存済みの消費進捗が優先されます。詳しくは [復旧ルール](#offset-table) を参照してください。 |
 | source.changelog.increment-type | detail    | N        | 変更タイプ。`detail`、`min_delta`、`append_only` を指定できます。開始位置が期限切れの場合、`detail` / `append_only` は期限切れの変更をスキップし、`min_delta` は失敗します。 |
 | source.changelog.poll-interval | 10s        | N        | 新しい変更をポーリングする間隔。最小値は 1 秒です。                                                                                        |
 | source.changelog.visible-wait-timeout | 5m         | N        | Doris がトランザクションの可視化待機タイムアウトエラーを返した後、Connector が同じ読み取り範囲を再試行する最大時間。再試行を無効にするには `0s` を設定します。負の値は無効です。 |
-| source.changelog.offset-table  | --         | N        | 完了した Checkpoint に反映されたオフセットを確認用に公開する Doris テーブル。`database.table` 形式で指定します。自動復旧には使用しません。`source.changelog.consumer-id` および `jdbc-url` とともに設定します。 |
-| source.changelog.consumer-id   | --         | N        | `source.changelog.offset-table` に書き込む、変更しない消費者識別子。                                                                                |
+| source.changelog.offset-table  | --         | N        | 消費進捗を保存し、読み取りを再開するための Doris テーブル。事前に作成し、`database.table` 形式で指定します。`source.changelog.consumer-id` および `jdbc-url` とともに設定します。増分読み取りモードでのみサポートされます。 |
+| source.changelog.consumer-id   | --         | N        | オフセットテーブル内で一意のコンシューマージョブ識別子。同じジョブを再起動する際は変更しないでください。 |
