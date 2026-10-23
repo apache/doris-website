@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/query-data/asof-join.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/query-data/asof-join.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "9419e9adfa3b9ea03b54d9273e9d0b0b60fafabbe504bd691430963d125cf3e5",
-    "sourceTechnicalHash": "d65c6a72fcfeca7038d0d41000582c30a1b821a7022925e56483425906289b95",
-    "targetHash": "65061212740f0108cdfcec9f26701ce934f1cab61a4ea8e06bdb5ab155a68ccf",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "283f35c607fadcb5d47f902677e7361d2a5b5fbafa16d08ec2838fa1d937b232",
+    "sourceTechnicalHash": "91172ad69d4a8455bd5326fc840ef67ec5dd94ec6690021ec56242b0e6952e75",
+    "targetHash": "62cbbe0c1e6ab1396092845deabe9c028060dbfa87de7d710b408f1f194fb20b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:13:52.221Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T01:49:41.760Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "283f35c607fadcb5d47f902677e7361d2a5b5fbafa16d08ec2838fa1d937b232",
+      "targetHash": "62cbbe0c1e6ab1396092845deabe9c028060dbfa87de7d710b408f1f194fb20b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 102: expected [\"inlineCode\",null,null,\"right_id = 2\"]; received [\"inlineCode\",null,null,\"tag = snapshot_b\"]\nprotected node 103: expected [\"inlineCode\",null,null,\"tag = snapshot_b\"]; received [\"inlineCode\",null,null,\"right_id = 2\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]; received [\"00\",\"00\",\"00\",\"00\",\"05\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"2\",\"2\",\"2\",\"25\",\"3\",\"3\",\"4\",\"4.1.5\",\"5\",\"6\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"AND\"]\nprotected node 55: expected [\"inlineCode\",null,null,\"AND\"]; received [\"inlineCode\",null,null,\"=\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 34: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"SUBSTRING(l.code, 1, 3) = r.prefix\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"SUBSTRING(l.code, 1, 3) = r.prefix\"]; received [\"inlineCode\",null,null,\"=\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"=\"]; received [\"inlineCode\",null,null,\"AND\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 102: expected [\"inlineCode\",null,null,\"right_id = 2\"]; received [\"inlineCode\",null,null,\"tag = snapshot_b\"]\nprotected node 103: expected [\"inlineCode\",null,null,\"tag = snapshot_b\"]; received [\"inlineCode\",null,null,\"right_id = 2\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

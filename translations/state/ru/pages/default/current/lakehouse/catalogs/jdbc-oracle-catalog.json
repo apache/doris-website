@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-oracle-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-oracle-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+    "sourceTechnicalHash": "bc982b10df710e4b5b677ddee2b560717c5659afe86ef317a499d111adfa5553",
+    "targetHash": "dc6e57ad60ac3ba226725990fc77020c1295f63b442119bc908ddf589d696bfb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:58:15.425Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+      "targetHash": "dc6e57ad60ac3ba226725990fc77020c1295f63b442119bc908ddf589d696bfb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\", and perform the same mapping as \"]; received [\"inlineCode\",null,null,\"и выполняет такое же сопоставление, как для\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

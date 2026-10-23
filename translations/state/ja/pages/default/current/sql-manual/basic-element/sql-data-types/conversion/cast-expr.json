@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/cast-expr.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "b91f1337d6df3bf0e7232fa40676e1aa3d4748255b8db69b3e8c392ce5debca4",
-    "sourceTechnicalHash": "90c7e254f291faa7b3dc1f4fbb04526d51ed7f54c9999bcc4671f06373749095",
-    "targetHash": "3181591f76044ec848b665d85e6c807eb465f67d3cb3fbfddfcc07440061c0dd",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "a2dbac968863695555315fbb1b79eb72bb9098ebf0a460cbc9aa70170f6eb889",
+    "sourceTechnicalHash": "d02ef9c019eb8c5fa3d45eff88b88ef30635e06e789ed16eab51cce41f4c2c80",
+    "targetHash": "5dfec32a2c615bb6885174042e2f84be25c0c8ca355e67674029de5b129c1d6c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.345Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:49:35.780Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2dbac968863695555315fbb1b79eb72bb9098ebf0a460cbc9aa70170f6eb889",
+      "targetHash": "5dfec32a2c615bb6885174042e2f84be25c0c8ca355e67674029de5b129c1d6c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

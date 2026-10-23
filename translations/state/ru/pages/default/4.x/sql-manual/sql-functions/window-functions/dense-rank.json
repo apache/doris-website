@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/dense-rank",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "878fe68463e0483812bab00a56c7ec4e26b46c3c71532f4de4f88e8495526d04",
+    "sourceTechnicalHash": "25e0ed6ecd74ca9196245b2354e2bdd3dffcc4a96ede0a58e095c3fb691b5d37",
+    "targetHash": "36e3c90665e812a2133513832aa9d64a4539f1bf484c267aacc67cf5830bcfc8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:58:48.314Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "878fe68463e0483812bab00a56c7ec4e26b46c3c71532f4de4f88e8495526d04",
+      "targetHash": "36e3c90665e812a2133513832aa9d64a4539f1bf484c267aacc67cf5830bcfc8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

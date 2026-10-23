@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/to-ipv6-or-null.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c501a45b49e23b7dd5632d9f436ccf930f24ae1fe45bd480ad6f3fd0b927d6ee",
+    "sourceTechnicalHash": "bf224511407b1d22341bbc38abe3d861750c28563902183bebf05304d19f651c",
+    "targetHash": "8c4ee13606e05e4da1788060f04531d5358c73febea928749e2a796b9ac04ea1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:18:49.665Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c501a45b49e23b7dd5632d9f436ccf930f24ae1fe45bd480ad6f3fd0b927d6ee",
+      "targetHash": "8c4ee13606e05e4da1788060f04531d5358c73febea928749e2a796b9ac04ea1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

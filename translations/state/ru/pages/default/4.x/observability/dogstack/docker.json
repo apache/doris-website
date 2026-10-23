@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "observability/dogstack/docker",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/observability/dogstack/docker.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/observability/dogstack/docker.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "63bcc817370f4dc939cb327f46b514ca244afe0407091bd5a8bff52ff7ab9213",
+    "sourceTechnicalHash": "54d11f9d87592c068691e9406b9270ad02a6a5e7edb7f45f4510e61e7c227edd",
+    "targetHash": "c58a5c9eb809a11392f53d44c685a5dc8651aa45cb28be9146d5c3a2b1971c50",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:23.637Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "63bcc817370f4dc939cb327f46b514ca244afe0407091bd5a8bff52ff7ab9213",
+      "targetHash": "c58a5c9eb809a11392f53d44c685a5dc8651aa45cb28be9146d5c3a2b1971c50",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "observability/dogstack/docker",
+        "sourcePath": "docs/observability/dogstack/docker.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/dogstack/docker.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "63bcc817370f4dc939cb327f46b514ca244afe0407091bd5a8bff52ff7ab9213",
+        "targetHash": "c58a5c9eb809a11392f53d44c685a5dc8651aa45cb28be9146d5c3a2b1971c50",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

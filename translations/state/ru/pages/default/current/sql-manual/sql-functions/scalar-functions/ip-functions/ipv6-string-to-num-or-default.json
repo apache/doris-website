@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/ipv6-string-to-num-or-default.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+    "sourceTechnicalHash": "f6815f40f860236379d228e1eeb5d9763108c783c46ea1df30075a94dd2de405",
+    "targetHash": "ab8ee8359771f4b4acdb230652f8b296bc7c136cac8f5bc2bcc7fc6be5642b5d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:17:30.582Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a5c8f7f72ec301ee2cb34aa2d27a5822b8ab2b4967cafe3ff47a18562b1adde0",
+      "targetHash": "ab8ee8359771f4b4acdb230652f8b296bc7c136cac8f5bc2bcc7fc6be5642b5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

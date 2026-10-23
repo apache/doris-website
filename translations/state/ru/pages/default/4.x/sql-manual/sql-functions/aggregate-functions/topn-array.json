@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/topn-array",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-array.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/topn-array.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f47e5bf19fcf6c04210d6c275f3b39f4576cb4dec6d319c61b2c8d9239c88704",
+    "sourceTechnicalHash": "36ff484abf1ad39ba4cdb7fb216bdd39b5c938eca4be9b6b23f7828d9794a5e4",
+    "targetHash": "8a6e65eb65a65a15f1970a439891c2fc94c8359cfc656a44996a4e06bb56b24c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:48:03.678Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f47e5bf19fcf6c04210d6c275f3b39f4576cb4dec6d319c61b2c8d9239c88704",
+      "targetHash": "8a6e65eb65a65a15f1970a439891c2fc94c8359cfc656a44996a4e06bb56b24c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

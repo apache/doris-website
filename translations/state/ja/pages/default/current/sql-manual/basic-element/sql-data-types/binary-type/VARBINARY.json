@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "37686de7eed3e80c1ffe82ebe2189eece9f4e8fbfa3ac7af322af05e1af22a9b",
-    "sourceTechnicalHash": "e8037d1e88a7ffeac18c4754bcbb931a9d52ba67cbe198efad3bd0a4d7de0ccd",
-    "targetHash": "e0b2cabdabc1bb70548c0d5d95a4f7b0c847ff07be290bcdb7a728739763c0be",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "689cb9c2d15f710ad3bb37b8fa769af21e9ede33dc90d8229c0c79fb96b6cc36",
+    "sourceTechnicalHash": "7b6279ce51c6f3e93b3941e0c5834cf4ba5cb5ced5797ab9e25074593c3007b2",
+    "targetHash": "3930c5a66e98d0ce0b9c3ec510b024ebd09d56589d4a3b2c77b9fd0ffcc01b55",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.343Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:49:05.242Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "689cb9c2d15f710ad3bb37b8fa769af21e9ede33dc90d8229c0c79fb96b6cc36",
+      "targetHash": "3930c5a66e98d0ce0b9c3ec510b024ebd09d56589d4a3b2c77b9fd0ffcc01b55",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]; received [\"16\",\"16\",\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"UUID\"]; received [\"inlineCode\",null,null,\"VARBINARY(16)\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"VARBINARY(16)\"]; received [\"inlineCode\",null,null,\"UUID\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]; received [\"16\",\"16\",\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"UUID\"]; received [\"inlineCode\",null,null,\"VARBINARY(16)\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"VARBINARY(16)\"]; received [\"inlineCode\",null,null,\"UUID\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"UUID\"]; received [\"inlineCode\",null,null,\"VARBINARY(16)\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"VARBINARY(16)\"]; received [\"inlineCode\",null,null,\"UUID\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]; received [\"16\",\"16\",\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"UUID\"]; received [\"inlineCode\",null,null,\"VARBINARY(16)\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"VARBINARY(16)\"]; received [\"inlineCode\",null,null,\"UUID\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

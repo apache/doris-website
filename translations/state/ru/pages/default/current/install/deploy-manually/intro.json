@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-manually/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-manually/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-manually/intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "bc44fa25459baa31abb32da893fbdd3333827925746514c597c67485bf07d65b",
+    "sourceTechnicalHash": "e1f1202c9c96eb21a5d71626f34d8841827cf2da4b2bfb0ab633b9bd42bcf050",
+    "targetHash": "45ec5f025a6adbb89e9a417e1fabf75c4b7d76ac5306819f21c6ec811d5fa84f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:29:34.114Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bc44fa25459baa31abb32da893fbdd3333827925746514c597c67485bf07d65b",
+      "targetHash": "45ec5f025a6adbb89e9a417e1fabf75c4b7d76ac5306819f21c6ec811d5fa84f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

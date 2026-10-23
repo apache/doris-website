@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+    "sourceTechnicalHash": "da89dcb71da7021cf818c13a520443d7e6b229916c6fe67c371ed1aeb7b952be",
+    "targetHash": "62e3561d0ef7339f7fb5fb9f6a292de685b045d0fe762f48336a380a4d19b876",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:03.359Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+      "targetHash": "62e3561d0ef7339f7fb5fb9f6a292de685b045d0fe762f48336a380a4d19b876",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/ALTER-COLOCATE-GROUP.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "69fcf417df7b5229a1a246b69d93c3463def9d6d38e51c694eeeac286d8d163f",
+        "targetHash": "62e3561d0ef7339f7fb5fb9f6a292de685b045d0fe762f48336a380a4d19b876",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

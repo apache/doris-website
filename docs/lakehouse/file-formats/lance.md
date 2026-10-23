@@ -28,11 +28,11 @@ For Lance type mappings, see [Doris Data Type Mapping](../catalogs/lance-catalog
 | Predicate pushdown | Supports compatible scalar predicates |
 | Vector search | Supports Lance vector indexes and Flat Search through `vector_search()` |
 | Writing to Lance | Not supported |
-| Time Travel | Not supported |
-| Full-Text Search / Hybrid Search | Not supported |
+| Time Travel | Supported through Lance Catalog; file TVFs read the current version only |
+| Full-Text Search | Supports existing Lance FTS indexes through `full_text_search()` |
+| Hybrid Search | Not supported |
 
-<!-- The full Lance Catalog guide is currently available only in the 4.x documentation tree. -->
-For Catalog configuration, predicate pushdown, and vector search details, see [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog).
+For Catalog configuration, predicate pushdown, vector search, and full-text search details, see [Lance Catalog](../catalogs/lance-catalog.mdx).
 
 ## Query a Lance Dataset with a File TVF
 
@@ -61,10 +61,10 @@ To read a local dataset, use `local()` and specify the dataset root with `file_p
 - Lance access is read-only. Creating, writing, updating, or deleting Lance tables is not supported.
 - Only `s3()` and `local()` support the Lance format. Other file TVFs, such as HDFS and HTTP, are not supported.
 - One TVF path can represent only one Lance dataset, and `path_partition_keys` is not supported.
-- Queries read the current dataset version. SQL cannot select a Version or perform Time Travel.
+- File TVF queries read the current dataset version. To select a historical version or perform Time Travel, use [Lance Catalog](../catalogs/lance-catalog.mdx#time-travel).
 - Local TVF Schema discovery and execution open the latest dataset version independently. Avoid modifying the dataset while a Local TVF query is being analyzed and executed.
 
 ## References
 
-- [Lance Catalog (4.x)](/docs/4.x/lakehouse/catalogs/lance-catalog)
+- [Lance Catalog](../catalogs/lance-catalog.mdx)
 - [Lance Format Documentation](https://docs.lancedb.com/lance)

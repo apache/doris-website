@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-outer",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-outer.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-outer.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "660e734df286f6be2c82d1113c12e698d4964ef80ddf4e54dd0d261c9ffb70f2",
+    "sourceTechnicalHash": "17c622239f508ac361d39f733c4dac5454d484fdca1411fbf37b32c30546f1fa",
+    "targetHash": "0285e61a8761157dab866159f83c74ceeb5c2b30dce11b9316bf8e11b6d4928a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:02:13.194Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "660e734df286f6be2c82d1113c12e698d4964ef80ddf4e54dd0d261c9ffb70f2",
+      "targetHash": "0285e61a8761157dab866159f83c74ceeb5c2b30dce11b9316bf8e11b6d4928a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

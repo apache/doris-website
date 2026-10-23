@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/kerberos",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/kerberos.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/kerberos.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3cf272cc91a73588ffe34998c9de5c37d78637b5659e1e343faea38c78ff432b",
+    "sourceTechnicalHash": "a7892e17b9c7c0566d119910a35d794854b78e3834dd0f790c273edba29466ca",
+    "targetHash": "c5aabf922228093e0c709691676ed9bd2adf1d0231d69c742c06a196ddd45373",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:55:01.466Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3cf272cc91a73588ffe34998c9de5c37d78637b5659e1e343faea38c78ff432b",
+      "targetHash": "c5aabf922228093e0c709691676ed9bd2adf1d0231d69c742c06a196ddd45373",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

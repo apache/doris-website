@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/performance-tuning-intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/performance-tuning-intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+    "sourceTechnicalHash": "fe34c18d60fc54d3746809de5efe174821d755507753d8a36b3616e2f26edd80",
+    "targetHash": "c222e6672d15f37736ca52525340e8adda6dbe3b69f09486f2bd25a235a741ce",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:37:05.770Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "09bd7e1c963e30c0fa148b57dee95fbfbe92e53072175467c6bcfda7ecafaef6",
+      "targetHash": "c222e6672d15f37736ca52525340e8adda6dbe3b69f09486f2bd25a235a741ce",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

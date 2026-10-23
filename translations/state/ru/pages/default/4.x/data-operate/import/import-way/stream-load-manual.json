@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/stream-load-manual",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/stream-load-manual.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "02acf9e4e47c71f94a2d3554725f0db4bb09fe728130bf246b94d52c7a0f4e83",
+    "sourceTechnicalHash": "2e9f4c474a5b0d205921ba7b91220ad4d79157499bfbb6b653db0ae726ac3901",
+    "targetHash": "135da012d2bad4c5c121a7d900825df9b7f41206fdf2919d14e6805ed3edd8c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:36:31.810Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "02acf9e4e47c71f94a2d3554725f0db4bb09fe728130bf246b94d52c7a0f4e83",
+      "targetHash": "135da012d2bad4c5c121a7d900825df9b7f41206fdf2919d14e6805ed3edd8c5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

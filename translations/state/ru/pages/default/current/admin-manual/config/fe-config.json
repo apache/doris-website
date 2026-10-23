@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/config/fe-config",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/config/fe-config.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/config/fe-config.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9ed90b443652ad4418cf0e6846cc23f054ced3e8648a43343835179795a5a594",
+    "sourceTechnicalHash": "f3fbc0a58a0a8a50d9767b8d620404f603261b18c4de9a4a6c4f8567c6eb17d1",
+    "targetHash": "93df91323451df2c5d4da88edf3c0f4aaf32c57db1a409a95872d11f8372831f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:29:26.916Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ed90b443652ad4418cf0e6846cc23f054ced3e8648a43343835179795a5a594",
+      "targetHash": "93df91323451df2c5d4da88edf3c0f4aaf32c57db1a409a95872d11f8372831f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 399: expected [\"inlineCode\",null,null,\"encrypt\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 400: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"encrypt\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ],
+      "localCorrections": [
+        {
+          "at": "2026-10-21T15:34:19.049262+00:00",
+          "line": 2867,
+          "before": "Значение по умолчанию -1 означает, что вместо `max_running_txn_num_per_db`? Нет: используется `default_db_max_running_txn_num`? ",
+          "after": "Значение по умолчанию -1 означает использование `max_running_txn_num_per_db` вместо `default_db_max_running_txn_num`.",
+          "beforeTargetHash": "59ccefb8e432d6ea7bd60db7ef5db2d37a20d7cca27d7448d2fd9526315f7e82",
+          "afterTargetHash": "93df91323451df2c5d4da88edf3c0f4aaf32c57db1a409a95872d11f8372831f",
+          "reason": "Corrected the default -1 transaction quota sentence: max_running_txn_num_per_db is used instead of default_db_max_running_txn_num. Removed an incorrect question/self-correction."
+        }
+      ]
+    }
+  }
+}

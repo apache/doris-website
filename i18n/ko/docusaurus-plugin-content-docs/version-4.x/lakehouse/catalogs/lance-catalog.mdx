@@ -508,63 +508,7 @@ lance_catalog  default       vs_ivf_pq_f32  embedding_ivf_pq_f32  3f9c2a1e-7b4d-
 
 ## 타입 매핑 {#type-mapping}
 
-| Lance / Arrow 타입 | Doris 타입 | 설명 |
-|---|---|---|
-| `null`(nullable 필드) | `NULL` | 모든 값이 SQL NULL입니다. non-nullable Null 필드는 지원하지 않습니다 |
-| `duration(s/ms/us/ns)` | `BIGINT` | 선언된 단위의 부호 있는 값을 유지하며 초 단위로 정규화하지 않습니다 |
-| `bool` | `BOOLEAN` | |
-| `int8` | `TINYINT` | |
-| `uint8` | `SMALLINT` | 손실 없이 확장된 부호 없는 정수 |
-| `int16` | `SMALLINT` | |
-| `uint16` | `INT` | 손실 없이 확장된 부호 없는 정수 |
-| `int32` | `INT` | |
-| `uint32` | `BIGINT` | 손실 없이 확장된 부호 없는 정수 |
-| `int64` | `BIGINT` | |
-| `uint64` | `LARGEINT` | 손실 없이 확장된 부호 없는 정수 |
-| `float16` | `FLOAT` | 32비트 부동소수점 값으로 확장 |
-| `float32` | `FLOAT` | |
-| `float64` | `DOUBLE` | |
-| `decimal128(P,S)` | `DECIMAL(P,S)` | 최대 정밀도는 38 |
-| `decimal256(P,S)` | `DECIMAL(P,S)` | 최대 정밀도는 76 |
-| `utf8`, `large_utf8` | `TEXT` | |
-| `arrow.json` 확장 | `JSON` | `utf8` 또는 `large_utf8` 스토리지 필요 |
-| `lance.json` 확장 | `JSON` | `large_binary` 스토리지가 필요하며 논리적 JSON 타입으로 읽음 |
-| `lance.bfloat16` 확장 | `FLOAT` | `fixed_size_binary(2)` 스토리지가 필요하며 정밀도 손실 없이 Float32로 확장 |
-| `binary`, `large_binary` | `VARBINARY(2147483647)` | |
-| `fixed_size_binary(N)` | `VARBINARY(N)` | 고정 바이트 너비 유지 |
-| `date32(day)`, `date64(ms)` | `DATE` | `date64` 값은 온전한 달력상의 하루를 나타내야 함 |
-| `time32(s)` | `TIME(0)` | |
-| `time32(ms)` | `TIME(3)` | |
-| `time64(us)`, `time64(ns)` | `TIME(6)` | 나노초 정밀도를 마이크로초로 절삭 |
-| 시간대 정보가 없는 `timestamp(s)` | `DATETIME` | 세션 시간대에 따른 변환 없음 |
-| 시간대 정보가 없는 `timestamp(ms)` | `DATETIME(3)` | 세션 시간대에 따른 변환 없음 |
-| 시간대 정보가 없는 `timestamp(us)`, `timestamp(ns)` | `DATETIME(6)` | 나노초 정밀도를 마이크로초로 절삭 |
-| 시간대 정보가 있는 `timestamp` | `TIMESTAMPTZ(0-6)` | 시점을 유지하고 Doris 세션 시간대로 표시 |
-| `struct` | `STRUCT` | 하위 필드를 재귀적으로 매핑 |
-| `list`, `large_list`, `fixed_size_list` | `ARRAY` | 요소 타입을 재귀적으로 매핑 |
-| `map` | `MAP` | 키와 값 타입을 재귀적으로 매핑 |
-
-Doris는 `ARROW:extension:name` 메타데이터로 이러한 확장을 인식하고 스토리지 타입을 검증합니다. JSON 확장은 Doris `JSON`(내부적으로는 `JSONB`)에 매핑됩니다. JSON 텍스트가 들어 있는 일반 `utf8`/`large_utf8` 열은 여전히 `TEXT`에 매핑되며, 내용에 따라 타입이 자동으로 바뀌지 않습니다. JSON 읽기를 지원한다고 해서 임의의 JSON 경로 표현식 푸시다운까지 지원하는 것은 아닙니다. 지원 범위는 [조건자 푸시다운](#predicate-pushdown)을 참조하세요.
-
-JSON, Duration, Null 및 BFloat16을 읽으려면 쿼리를 처리하는 FE와 BE 모두에 해당 타입 지원이 있어야 합니다. 이전 빌드에서는 이러한 타입을 지원하지 않는다고 보고할 수 있습니다. 업그레이드할 때 스키마 탐색과 실제 읽기를 확인하세요.
-
-현재 다음 타입은 지원하지 않습니다.
-
-- non-nullable Arrow `null` 필드.
-- Lance Blob v2 등 지원 목록에 없는 Arrow/Lance 확장 타입. 알려진 확장이라도 스토리지 타입이 호환되지 않으면 지원하지 않습니다.
-- 하위 타입을 재귀적으로 매핑할 수 없는 복합 타입.
-- Dictionary 마커를 유지하는 Arrow Dictionary 타입.
-
-지원하지 않는 최상위 열의 경우 Catalog 테이블의 `DESC`와 Lance 파일 TVF의 `DESC FUNCTION`은 모두 해당 열을 유지하고 `unknown type: UNSUPPORTED_TYPE`을 표시합니다. 복합 타입의 하위 요소 중 하나라도 매핑할 수 없으면 최상위 복합 열 전체가 지원되지 않는 것으로 표시됩니다. 쿼리는 지원되는 열만 프로젝션할 수 있습니다. SQL이 지원하지 않는 열을 프로젝션하면 Doris가 분석 중 오류를 보고합니다. 예:
-
-```sql
-SELECT * EXCEPT(blob_col)
-FROM lance_catalog.default.all_types;
-```
-
-:::note
-일부 Lance Java SDK 버전은 Schema를 읽을 때 Dictionary 마커를 잃고 Dictionary 열을 물리적 인덱스 타입으로 노출할 수 있습니다. 이 동작이 Doris에서 논리적 Dictionary 값을 지원한다는 뜻은 아니므로, 이에 의존해서는 안 됩니다.
-:::
+Doris 4.2의 전체 매핑 표, 정밀도 규칙 및 지원되지 않는 타입은 [Lance에서 Doris로의 데이터 타입 매핑](lance-catalog/doris-type-mapping.md)을 참조하세요.
 
 ## 조건자 푸시다운 {#predicate-pushdown}
 

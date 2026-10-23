@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+    "sourceTechnicalHash": "d0c6f5c49007d2406eb89cfb65776b50bb35820bd033a2920abe609d165eee21",
+    "targetHash": "00622ecbeb2032487d9a761d3d139cdf3b43fbb9d8afa5db34db334cb3efde72",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:24:30.460Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+      "targetHash": "00622ecbeb2032487d9a761d3d139cdf3b43fbb9d8afa5db34db334cb3efde72",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"mdxFlowExpression\",null,null,\"/* Knowledge type: Feature description / How-to guide / Parameter reference / Troubleshooting */\"]; received [\"mdxFlowExpression\",null,null,\"/* Тип материала: Описание функции / Практическое руководство / Справочник параметров / Устранение неполадок */\"]\nprotected node 3: expected [\"mdxFlowExpression\",null,null,\"/* Use cases: Frequent base table inserts, updates and deletes / Small share of changed rows / Expensive full or partition recomputation */\"]; received [\"mdxFlowExpression\",null,null,\"/* Сценарии использования: Частые вставки, обновления и удаления в базовых таблицах / Небольшая доля изменённых строк / Затратный полный пересчёт или пересчёт партиций */\"]\nprotected node 5: expected [\"mdxFlowExpression\",null,null,\"/* Knowledge type: Scenario selection */\"]; received [\"mdxFlowExpression\",null,null,\"/* Тип материала: Выбор сценария */\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "operation": "request-cancelled-for-local-repair",
+          "issues": [
+            {
+              "check": "request-cancelled",
+              "message": "User requested direct local repair. The complete second response passed document gates after restoring all 31 MDX comments verbatim from the English source."
+            }
+          ],
+          "documentDerivedFromAttempt": 2
+        }
+      ],
+      "documentDerivedFromAttempt": 2,
+      "cancelledRequests": [
+        3
+      ],
+      "localCorrections": [
+        {
+          "reason": "Restore all 31 protected MDX comment blocks verbatim from the English source in the complete second response. Russian prose is unchanged. The pending third request was cancelled after this repair passed document admission checks.",
+          "beforeHash": "f03f0148edc0b83cc07a4bcebb1b64f3e3d1323411d9133ac1d225c84d62c9e7",
+          "afterHash": "00622ecbeb2032487d9a761d3d139cdf3b43fbb9d8afa5db34db334cb3efde72",
+          "at": "2026-10-23T03:46:48.415416+00:00"
+        }
+      ],
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 3,
+      "lifetimeModelCalls": 6,
+      "historicalBatch": "20261022T075545Z-008"
+    }
+  }
+}

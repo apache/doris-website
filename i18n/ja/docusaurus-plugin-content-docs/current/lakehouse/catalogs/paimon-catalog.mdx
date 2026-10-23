@@ -2,14 +2,14 @@
 {
     "title": "Paimon Catalog",
     "language": "ja",
-    "description": "Apache Doris Paimon Catalog を使用して、複数のメタデータサービスを通じて HDFS やクラウドオブジェクトストレージ上の Paimon テーブルをクエリし、データを書き込みます。"
+    "description": "Apache Doris Paimon Catalog を使用し、複数のメタデータサービスを介して HDFS やクラウドオブジェクトストレージ上の Paimon テーブルをクエリし、書き込みます。"
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris は、さまざまなメタデータサービスを通じた Paimon テーブルのメタデータへのアクセスと、Paimon データの読み書きをサポートします。
+Doris は、さまざまなメタデータサービスを介して Paimon テーブルのメタデータにアクセスし、Paimon データを読み書きできます。
 
 [Apache Doris と Apache Paimon のクイックスタート](../best-practices/doris-paimon.md)。
 
@@ -19,7 +19,7 @@ Doris は、さまざまなメタデータサービスを通じた Paimon テー
 | ------------ | ------------------------------------------------------------ |
 | クエリの高速化 | Doris の分散コンピューティングエンジンから Paimon データに直接アクセスし、クエリを高速化します。 |
 | データ統合 | Paimon データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンを使用して ZeroETL 操作を実行します。 |
-| データの書き戻し | Doris SQL を使用して Paimon テーブルの作成と変更、データの追加と上書き、主キーテーブルの行単位の変更を行います。 |
+| データの書き戻し | Doris SQL を使用して Paimon テーブルを作成・変更し、データの追記や上書き、主キーテーブルの行単位の変更を行います。 |
 
 ## Catalog の設定 {#configuring-catalog}
 
@@ -39,35 +39,35 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<paimon_catalog_type>`
 
-  Paimon Catalog の種類です。次の種類をサポートします。
+  Paimon Catalog のタイプです。以下をサポートします。
 
-  * `filesystem`: デフォルト。ファイルシステムに保存されたメタデータに直接アクセスします。
+  * `filesystem`：デフォルトです。ファイルシステムに保存されたメタデータに直接アクセスします。
 
-  * `hms`: Hive Metastore をメタデータサービスとして使用します。
+  * `hms`：Hive Metastore をメタデータサービスとして使用します。
 
-  * `dlf`: Alibaba Cloud DLF をメタデータサービスとして使用します。
+  * `dlf`：Alibaba Cloud DLF をメタデータサービスとして使用します。
 
-  * `jdbc`: JDBC インターフェースを使用して、メタデータサービスとなるリレーショナルデータベースに接続します（バージョン 4.1.0 以降でサポート）。
+  * `jdbc`：JDBC インターフェースを使用して、メタデータサービスとなるリレーショナルデータベースに接続します（バージョン 4.1.0 以降でサポート）。
 
 * `<paimon_warehouse>`
 
   Paimon のウェアハウスパスです。`<paimon_catalog_type>` が `filesystem` の場合、このパラメータは必須です。
 
-  `warehouse` パスは、`Database` パスの1つ上の階層を指す必要があります。たとえば、テーブルのパスが `s3://bucket/path/to/db1/table1` の場合、`warehouse` は `s3://bucket/path/to/` にします。
+  `warehouse` パスには、`Database` パスの一つ上の階層を指定する必要があります。たとえば、テーブルのパスが `s3://bucket/path/to/db1/table1` の場合、`warehouse` は `s3://bucket/path/to/` にします。
 
 * `{MetaStoreProperties}`
 
-  MetaStoreProperties セクションには、Metastore メタデータサービスへの接続情報と認証情報を指定します。詳しくは[サポートされるメタデータサービス]を参照してください。
+  MetaStoreProperties セクションには、Metastore メタデータサービスへの接続情報と認証情報を指定します。詳しくは[サポートされるメタデータサービス]のセクションを参照してください。
 
 * `{StorageProperties}`
 
-  StorageProperties セクションには、ストレージシステムへの接続情報と認証情報を指定します。詳しくは[サポートされるストレージシステム]を参照してください。
+  StorageProperties セクションには、ストレージシステムへの接続情報と認証情報を指定します。詳しくは[サポートされるストレージシステム]のセクションを参照してください。
 
 * `{PaimonProperties}`
 
   PaimonProperties セクションには、Paimon 関連のプロパティを指定します。
 
-  Doris は Paimon メタデータへのアクセスに Paimon Java SDK を一部使用するため、カスタムパラメータを Paimon Java SDK に渡す必要がある場合があります。次のプレフィックスを使用できます。
+  Doris が Paimon のメタデータにアクセスする際には Paimon Java SDK の一部を使用するため、カスタムパラメータを Paimon Java SDK に渡す必要がある場合があります。次のプレフィックスを使用できます。
 
   ```
   paimon.s3.xxx
@@ -75,7 +75,7 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   paimon.fs.xxx
   ```
 
-  これらのパラメータは自動的に変換されて渡されます。例を次に示します。
+  これらのパラメータは自動的に変換されて渡されます。以下に例を示します。
 
   | 入力パラメータ | Paimon Java SDK 向けに変換されたパラメータ |
   | --- | --- |
@@ -86,22 +86,23 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
   **Paimon の読み取りオプション**
 
-  Doris は、次の有界 Paimon バッチ読み取りオプションをサポートします。Catalog 全体のクエリのデフォルト値は
+  Doris は、以下の有界な Paimon バッチ読み取りオプションをサポートします。Catalog 全体のクエリのデフォルト値は
   `paimon.table-option.<option-key>` で設定し、個々のテーブル参照では
-  `table@options('<option-key>'='<value>')` で上書きできます。これらの設定は Doris による読み取りにのみ影響し、物理的な
+  `table@options('<option-key>'='<value>')` で上書きします。これらの設定は Doris の読み取りにのみ影響し、物理的な
   Paimon テーブルのメタデータは更新しません。
 
   | Paimon オプション | Paimon のデフォルト値 | Doris が受け付ける値 | 効果 |
   | --- | --- | --- | --- |
-  | `read.batch-size` | `1024` | `1` から `65536` までの整数 | Paimon JNI リーダーの各バッチで要求する行数。明示的に設定した値は、Doris がリーダーを開く際に保持されます。 |
-  | `file-reader-async-threshold` | `10 MB` | `1 MB` から `1 GB` までのメモリサイズ | Paimon JNI リーダーが非同期読み取りに切り替わるファイルサイズのしきい値。 |
-  | `file-index.read.enabled` | `true` | 真偽値 | 読み取り時に Paimon のファイルインデックスによる枝刈りを有効にします。 |
-  | `source.split.target-size` | `128 MB` | 正のメモリサイズ | Paimon がデータファイルを Doris のスキャンスプリットにまとめる際の目標サイズ。 |
-  | `source.split.open-file-cost` | `4 MB` | 負でないメモリサイズ | Paimon がファイルをスプリットにまとめる際に使用する、ファイルを開く推定コスト。 |
-  | `scan.manifest.parallelism` | 使用可能なプロセッサ数 | `1` から `256` までの整数 | 要求するマニフェスト読み取りの並列度。実行時に Doris は、各計画ブランチの値を、この値、`256`、およびその FE または BE で使用可能なプロセッサ数の最小値に個別に制限します。 |
-  | `scan.plan-sort-partition` | `false` | 真偽値 | Paimon のスキャン計画時にパーティションを並べ替えます。 |
+  | `read.batch-size` | `1024` | `1`～`65536` の整数 | Paimon JNI リーダーの各バッチで要求する行数です。明示的に設定した値は、Doris がリーダーを開く際にも維持されます。 |
+  | `file-reader-async-threshold` | `10 MB` | `1 MB`～`1 GB` のメモリサイズ | Paimon JNI リーダーが非同期読み取りに切り替えるファイルサイズのしきい値です。 |
+  | `file-index.read.enabled` | `true` | 真偽値 | 読み取り時に Paimon のファイルインデックスによるプルーニングを有効にします。 |
+  | `source.split.target-size` | `128 MB` | 正のメモリサイズ | Paimon がデータファイルを Doris のスキャン split にまとめる際の目標サイズです。 |
+  | `source.split.open-file-cost` | `4 MB` | 0 以上のメモリサイズ | Paimon がファイルを split にまとめる際に使用する、ファイルを開くコストの推定値です。 |
+  | `scan.manifest.parallelism` | 利用可能なプロセッサ数 | `1`～`256` の整数 | 要求する manifest 読み取りの並列度です。実行時、Doris は各計画ブランチの並列度を、この値、`256`、およびその FE または BE で利用可能なプロセッサ数のうち最小の値に個別に制限します。 |
+  | `scan.plan-sort-partition` | `false` | 真偽値 | Paimon のスキャン計画時にパーティションをソートします。 |
 
-  たとえば、次の Catalog 設定は物理的な Paimon テーブルに保存された値を上書きし、Doris のクエリのデフォルト値になります。
+  たとえば、次の Catalog 設定は物理的な Paimon テーブルに保存された値を上書きし、Doris のクエリの
+  デフォルト値になります。
 
   ```sql
   CREATE CATALOG paimon_hms PROPERTIES (
@@ -126,7 +127,8 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   );
   ```
 
-  各テーブル参照には独立したオプションセットがあります。たとえば、同じテーブルの2つのエイリアスに、1つのステートメント内で異なるバッチサイズを指定できます。
+  テーブル参照ごとに独立したオプションのセットを持ちます。たとえば、同じテーブルの二つのエイリアスに、単一のステートメント内で異なる
+  バッチサイズを指定できます。
 
   ```sql
   SELECT small.id
@@ -141,33 +143,54 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   relation @options > Doris Catalog property > physical Paimon table option > Paimon default
   ```
 
-  Doris は、この優先順位を適用した後の最終値を検証します。そのため、Catalog またはテーブル参照に有効な値を指定すれば、物理テーブルの無効な値を置き換えられます。最終値が無効な場合、Doris は対象となる計画またはリーダーの処理が始まる前にクエリを拒否します。マニフェストの上限は、パーティション、行数と統計情報、フォールバックブランチ、およびシステムテーブルのマニフェスト計画の前にも適用されます。
+  Doris は、この優先順位を適用した後の最終的な値を検証します。そのため、物理テーブルに無効な値があっても、Catalog またはテーブル参照に有効な値を設定すれば
+  置き換えられます。最終的な値も無効な場合、Doris は該当する計画段階またはリーダー段階が始まる前に
+  クエリを拒否します。manifest の上限は、パーティション、行数や統計情報、
+  フォールバックブランチ、システムテーブルの manifest 計画より前にも適用されます。
 
-  表の最初の5つのオプションはメタデータに影響しないため、キャッシュされた最新のパーティション投影を再利用できます。
-  `scan.manifest.parallelism` と `scan.plan-sort-partition` はメタデータの計画に影響するため、Doris はテーブル参照ごとの有効なテーブルハンドルを使用して計画します。クエリごとの値によって Paimon の JVM 全体で共有されるエグゼキュータのサイズが変わることはありません。
+  表の最初の五つのオプションはメタデータに影響せず、キャッシュされた最新のパーティション投影を再利用できます。
+  `scan.manifest.parallelism` と `scan.plan-sort-partition` はメタデータの計画に影響するため、Doris は
+  テーブル参照ごとの有効なテーブルハンドルを使って計画します。クエリごとの値によって Paimon の JVM 全体で共有される executor のサイズが変わることはありません。
 
-  Doris は、`CREATE CATALOG` および `ALTER CATALOG` の際に、不明または無効な `paimon.table-option.*` プロパティを拒否します。
-  `ALTER CATALOG` は変更を公開する前に候補となる設定全体を検証するため、変更に失敗しても以前の Catalog 設定が引き続き有効です。古いバージョンの Doris で永続化された Catalog は引き続き読み込めますが、サポートされない、または無効な従来のリーダープロパティは適用されずに無視されます。その保存値はイメージおよび編集ログとの互換性のために保持されます。
+  Doris は、未知または無効な `paimon.table-option.*` プロパティを `CREATE CATALOG` および `ALTER CATALOG` の実行時に拒否します。
+  `ALTER CATALOG` は変更を公開する前に候補となる設定全体を検証するため、変更に失敗しても
+  以前の Catalog 設定が引き続き有効です。古い Doris バージョンで保存された Catalog も読み込めますが、
+  サポートされていない、または無効な従来のリーダープロパティは適用されず、無視されます。その保存値は
+  イメージおよび編集ログとの互換性のために保持されます。
 
-  スナップショットと開始位置のオプションはテーブル参照のコンテキストを選択するため、[Time Travel](#time-travel-with-options) で説明するように `@options` を使用する必要があり、Catalog のデフォルト値にはできません。Doris は、Paimon の Flink ソース列挙子に属する `scan.max-splits-per-task`、`scan.fallback-branch`、ストリーミング、レイアウト、書き込み、コンパクションの各オプションも対象外とします。Bucket、Primary Key、Partition、Merge Engine、およびその他の物理的な動作は、Doris の `CREATE TABLE ... PROPERTIES` を使用する場合も含め、Paimon テーブルのプロパティとして設定してください。
+  スナップショットと開始位置のオプションはテーブル参照のコンテキストを選択するものであり、
+  [タイムトラベル](#time-travel-with-options)で説明するように `@options` で指定する必要があります。Catalog のデフォルト値にはできません。また、Doris は
+  Paimon の Flink ソース enumerator に属する `scan.max-splits-per-task`、`scan.fallback-branch`、およびストリーミング、
+  レイアウト、書き込み、compaction のオプションも対象外とします。Bucket、Primary Key、Partition、Merge Engine などの物理的な
+  動作は、Doris の `CREATE TABLE ... PROPERTIES` を使う場合も含め、Paimon テーブルのプロパティとして設定してください。
 
-  :::info ステートメントの一貫性
-  Doris は1つのステートメント内で、スキーマのバインド、パーティションのデータロード、行数と統計情報の収集、システムテーブルの計画、データのスキャンを、同じ Paimon スナップショットとテーブル世代に対して行います。`@options` で選択したスナップショットまたはタグには、ネストされた `STRUCT`、`MAP`、`ARRAY` フィールドも含め、その履歴バージョンに属するスキーマが使用されます。準備済みステートメントの各実行では新しいステートメント状態を取得するため、実行間のコミットは、新しい実行のセレクタとキャッシュ設定に従って参照できます。
+  :::info ステートメント内の一貫性
+  単一のステートメント内では、Doris はスキーマの関連付け、パーティションの読み込み、行数や統計情報の収集、システムテーブルの
+  計画、データスキャンを、同じ Paimon スナップショットとテーブル世代に対して行います。
+  `@options` で選択したスナップショットまたはタグには、その履歴バージョンに属するスキーマが使用されます。これには、ネストした `STRUCT`、`MAP`、`ARRAY`
+  フィールドも含まれます。プリペアドステートメントは実行ごとに新しいステートメント状態を取得するため、実行間のコミットは
+  新しい実行の選択条件とキャッシュ設定に従って反映されます。
   :::
 
-  運用上の安全のため、Paimon スキャナーの DEBUG 設定メッセージにはバッチサイズと投影フィールド数のみが出力されます。認証情報を含む可能性があるスキャナーの生のパラメータマップは、Doris から出力しません。`PaimonJniAsyncReaderThreadCount` プロファイルゲージはスキャナー全体で1秒に1回サンプリングされるため、値が最大1秒古い場合があります。このサンプリングはクエリの実行やスケジューリングには影響しません。リーダーと IOManager のクリーンアップは独立しており、クローズが部分的に失敗した後も安全に再試行できます。
+  運用上の安全性のため、Paimon スキャナーの DEBUG 設定メッセージはバッチサイズと投影フィールド数のみを報告します。
+  Doris は認証情報を含む可能性があるスキャナーパラメータマップの生データを出力しません。
+  `PaimonJniAsyncReaderThreadCount` プロファイルゲージはスキャナー全体で毎秒サンプリングされるため、値が最大一秒古い場合があります。
+  このサンプリングはクエリの実行やスケジューリングには影響しません。リーダーと IOManager のクリーンアップは
+  互いに独立しており、クローズが途中で失敗しても再試行できます。
 
   **Paimon JNI IOManager**
 
-  Paimon の主キーテーブルでは、JNI によるマージ読み取りで複数ファイルのデータを並べ替えてマージする必要が生じる場合があります。Paimon IOManager を有効にすると、この処理の中間データを BE のローカルディスクにスピルでき、大量のデータをマージ読み取りする際のメモリ負荷を軽減できます。
+  Paimon の主キーテーブルでは、JNI のマージ読み取りで複数のファイルからデータをソート、マージする必要がある場合があります。
+  Paimon IOManager を有効にすると、この処理の中間データを BE のローカルディスクに退避でき、
+  大量のデータをマージ読み取りする際のメモリ負荷を軽減できます。
 
   | プロパティ | 必須 | デフォルト値 | 説明 |
   | --- | --- | --- | --- |
-  | `paimon.jni.enable_jni_io_manager` | いいえ | `false` | JNI 読み取りで Paimon IOManager を有効にするかどうか。他の IOManager プロパティは、このプロパティが `true` の場合にのみ有効です。 |
-  | `paimon.jni.io_manager.tmp_dir` | いいえ | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager が一時スピルファイルに使用するローカルディレクトリ。複数のディレクトリはカンマまたはコロンで区切れます。このプロパティを省略すると、Doris は各 BE ストレージパスの下にディレクトリを1つ作成します。 |
-  | `paimon.jni.io_manager.impl_class` | いいえ | Paimon のデフォルト実装 | カスタム `org.apache.paimon.disk.IOManager` 実装の完全修飾クラス名。このクラスは、すべての BE の Paimon JNI Scanner クラスパスに存在する必要があります。 |
+  | `paimon.jni.enable_jni_io_manager` | いいえ | `false` | JNI 読み取りで Paimon IOManager を有効にするかどうかを指定します。他の IOManager プロパティは、これが `true` の場合にのみ有効です。 |
+  | `paimon.jni.io_manager.tmp_dir` | いいえ | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Paimon IOManager が一時退避ファイルに使用するローカルディレクトリです。複数のディレクトリはカンマまたはコロンで区切れます。省略すると、Doris は BE の各ストレージパスの下にディレクトリを作成します。 |
+  | `paimon.jni.io_manager.impl_class` | いいえ | Paimon のデフォルト実装 | カスタム `org.apache.paimon.disk.IOManager` 実装の完全修飾クラス名です。このクラスは、すべての BE の Paimon JNI Scanner クラスパスで利用できる必要があります。 |
 
-  次の例では IOManager を有効にし、BE のストレージパスから Doris に一時ディレクトリを選択させます。
+  次の例では IOManager を有効にし、一時ディレクトリを Doris が BE のストレージパスから選択するようにします。
 
   ```sql
   CREATE CATALOG paimon_hms PROPERTIES (
@@ -179,79 +202,86 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
   );
   ```
 
-  IOManager を有効にしても、すべてのマージ読み取りでスピルが発生するわけではありません。Paimon は、マージリーダー数が `sort-spill-threshold` を超えた場合にのみスピルします。これは Doris の動的なリーダーオプションではありません。異なるスピル動作が必要な場合は、物理的な Paimon テーブルで設定してください。
+  IOManager を有効にしても、すべてのマージ読み取りで退避が発生するわけではありません。Paimon が退避するのは、マージリーダーの数が
+  `sort-spill-threshold` を超えた場合だけです。これは Doris の動的なリーダーオプションではありません。退避動作を変更する必要がある場合は、物理的な Paimon
+  テーブルで設定してください。
 
-  スピル専用ディスクを使用するには、すべての BE に存在するか作成可能なローカルパスを設定します。
+  専用の退避ディスクを使用するには、すべての BE に存在するか作成可能なローカルパスを設定します。
 
   ```sql
   "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
   ```
 
-  Doris は JNI スキャナーごとに IOManager を作成し、スキャナーとともにクローズします。設定したディレクトリが書き込み可能で、同時実行クエリに十分な容量を持つことを確認してください。カスタム実装クラスを設定する場合は、`String[]` を受け取る public コンストラクタ、`String` を受け取る public コンストラクタ、または引数のない public コンストラクタが必要です。クラスのロードまたはインスタンス化に失敗すると、クエリは失敗します。
+  Doris は JNI スキャナーごとに IOManager を作成し、スキャナーとともにクローズします。設定するディレクトリは
+  書き込み可能で、同時実行クエリに十分な容量があることを確認してください。カスタム実装クラスを設定する場合は、
+  `String[]` を受け取る public コンストラクター、`String` を受け取る public コンストラクター、または引数のない public コンストラクターが必要です。
+  クラスの読み込みやインスタンス化に失敗すると、クエリは失敗します。
 
-  これらのプロパティは、JNI 経路を使用する Paimon データテーブルの読み取りにのみ影響します。ネイティブ読み取りには影響しません。`paimon.table-option.file-reader-async-threshold` オプションは独立しており、Paimon の非同期ファイル読み取りのしきい値を制御します。IOManager の有効化やスピルディレクトリの設定は行いません。
+  これらのプロパティが影響するのは、JNI 経路を使用する Paimon データテーブルの読み取りだけです。ネイティブ読み取りには影響しません。
+  `paimon.table-option.file-reader-async-threshold` オプションは独立しており、Paimon ファイルの非同期読み取りのしきい値を制御します。
+  IOManager の有効化や退避ディレクトリの設定は行いません。
 
 * `{CommonProperties}`
 
-  CommonProperties セクションには共通プロパティを指定します。[Catalog の概要](../catalog-overview.md)の[共通プロパティ]のセクションを参照してください。
+  CommonProperties セクションには共通プロパティを指定します。[Catalog の概要](../catalog-overview.md)の[共通プロパティ]セクションを参照してください。
 
 ## メタデータキャッシュ {#meta-cache}
 
-外部データソースへのアクセス性能を向上させるため、Apache Doris は Paimon メタデータをキャッシュします。メタデータには、特定のスナップショットにおけるテーブルスキーマ、最新のスナップショット ID、派生したパーティション投影が含まれます。
+外部データソースへのアクセス性能を高めるため、Apache Doris は Paimon のメタデータをキャッシュします。メタデータには、特定のスナップショット時点のテーブルスキーマ、最新のスナップショット ID、そこから導出されたパーティション投影が含まれます。
 
 :::tip
-Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目でグローバルに制御されます。詳しくは[メタデータキャッシュ](../meta-cache.md)を参照してください。
-Doris 4.1.x 以降、Paimon Catalog の外部メタデータキャッシュは統一された `meta.cache.*` キーで設定します。以下の項目は現在のバージョンを説明しています。Doris 4.1.x と 4.2.x では異なる項目セットを使用し、このページの 4.x バージョンで説明しています。
+Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目によって全体的に制御されます。詳しくは[メタデータキャッシュ](../meta-cache.md)を参照してください。
+Doris 4.1.x 以降では、Paimon Catalog の外部メタデータキャッシュを統一された `meta.cache.*` キーで設定します。以下の項目は現行バージョンのものです。Doris 4.1.x と 4.2.x では異なる項目を使用し、このページの 4.x 版で説明しています。
 :::
 
 ### キャッシュプロパティの設定 {#meta-cache-unified-model}
 
-各キャッシュエントリには、統一された設定キーフォーマット `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。Paimon の `<engine>` は `paimon` です。`meta.cache.paimon.table.ttl-second` は、最新スナップショットキャッシュとテーブルスキーマキャッシュの TTL を制御します。
+各キャッシュエントリには、統一された形式 `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` の設定キーを使用します。Paimon の `<engine>` は `paimon` です。`meta.cache.paimon.table.ttl-second` は、最新スナップショットキャッシュとテーブルスキーマキャッシュの TTL を制御します。
 
 | プロパティ | 例 | 意味 |
 |---|---|---|
 | `enable` | `true/false` | このキャッシュエントリを有効にするかどうか。 |
-| `ttl-second` | `600`, `0`, `-1` | `0` はエントリを無効にします（即座に反映され、最新データの確認に使用できます）。`-1` は無期限を意味します。その他の正の整数は、アクセス時刻を基準とする TTL（秒）を意味します。 |
-| `capacity` | `10000` | 件数で指定するキャッシュエントリの最大数。`0` はエントリを無効にします。 |
-| `max-weight` | `1GB` | Doris 4.1.4 以降でサポート。保持メモリの推定値に対する任意の上限です。正の値が必要で、`0` は拒否されます。以下で示す対象エントリのみで使用できます。 |
+| `ttl-second` | `600`, `0`, `-1` | `0` はエントリを無効にします（即座に反映され、最新データの確認に使用できます）。`-1` は期限切れにならないことを意味します。その他の正の整数は、アクセス時刻を基準とする秒単位の TTL を表します。 |
+| `capacity` | `10000` | キャッシュエントリの最大件数です。`0` はエントリを無効にします。 |
+| `max-weight` | `1GB` | Doris 4.1.4 以降でサポートされます。保持されるメモリの推定量に対する任意指定の上限です。正の値が必要で、`0` は拒否されます。以下に示す対象エントリだけが受け付けます。 |
 
-**有効化の条件:** `enable=true`、`ttl-second != 0`、`capacity > 0` の場合にエントリが有効になります。FE 全体、Catalog、またはエントリ単位のメモリ上限がある場合は、推定メモリ量による格納制限も適用されます。[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
+**有効になる条件：** `enable=true`、`ttl-second != 0`、`capacity > 0` の場合にエントリが有効になります。さらに、FE 全体、Catalog、またはエントリ単位のメモリ上限が、メモリ使用量の推定値に基づくキャッシュへの追加を制御します。[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
 
 ### キャッシュモジュール {#meta-cache-unified-modules}
 
-次のエントリには専用の設定キーがあり、`max-weight` を指定できます。
+次のエントリには独自の設定キーがあり、`max-weight` を受け付けます。
 
-| エントリ（`<entry>`） | プロパティキーのプレフィックス | `ENTRY_NAME` | キャッシュする内容と効果 | デフォルトの有効化 / TTL / 容量 |
+| エントリ（`<entry>`） | プロパティキーのプレフィックス | `ENTRY_NAME` | キャッシュされる内容と効果 | デフォルトの有効状態 / TTL / 容量 |
 |---|---|---|---|---|
-| `partition_view` | `meta.cache.paimon.partition_view.` | `paimon.partition-view` | テーブルのスナップショットから派生したパーティション投影。効果: 計画時にパーティションを繰り返しスキャンする回数を減らします。 | `true` / 86400 s / 1000 |
+| `partition_view` | `meta.cache.paimon.partition_view.` | `paimon.partition-view` | テーブルのスナップショットから導出されたパーティション投影。効果：計画時に繰り返し行うパーティションスキャンを減らします。 | `true` / 86400 秒 / 1000 |
 
 次のキャッシュには `<entry>` トークンがなく、Catalog と FE 全体のメモリ上限のみに従います。
 
-| `ENTRY_NAME` | キャッシュする内容 | TTL / 容量 |
+| `ENTRY_NAME` | キャッシュされる内容 | TTL / 容量 |
 |---|---|---|
-| `paimon-schema-at` | 特定のスナップショットにおけるテーブルスキーマ | 無期限 / 10000 |
-| `paimon-latest-snapshot` | テーブルの最新スナップショット ID | `meta.cache.paimon.table.ttl-second` (86400 s) / 1000 |
+| `paimon-schema-at` | 特定のスナップショット時点のテーブルスキーマ | 期限なし / 10000 |
+| `paimon-latest-snapshot` | テーブルの最新スナップショット ID | `meta.cache.paimon.table.ttl-second`（86400 秒）/ 1000 |
 
-Paimon テーブルのカラムスキーマは、共有の `default` エンジン（`meta.cache.default.schema.*`）でキャッシュされます。
+Paimon テーブルのカラムスキーマは、共有の `default` エンジン（`meta.cache.default.schema.*`）によってキャッシュされます。
 
-### 従来のパラメータの対応関係と変換 {#meta-cache-mapping}
+### 従来のパラメータの対応と変換 {#meta-cache-mapping}
 
-| 従来のプロパティキー | 統一キー | 説明 |
+| 従来のプロパティキー | 統一されたキー | 説明 |
 |---|---|---|
 | `schema.cache.ttl-second` | `meta.cache.default.schema.ttl-second` | テーブルスキーマキャッシュの有効期限 |
 
 ### ベストプラクティス {#meta-cache-best-practices}
 
-* **最新データへのリアルタイムアクセス**: 各クエリで Paimon テーブルの最新スナップショットを参照するには、`meta.cache.paimon.table.ttl-second` を `0` に設定します。
+* **最新データへのリアルタイムアクセス**：すべてのクエリで Paimon テーブルの最新スナップショットを参照するには、`meta.cache.paimon.table.ttl-second` を `0` に設定します。
   ```sql
   -- Disable the latest-snapshot cache to detect the latest snapshots of Paimon tables
   ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
   ```
-* **性能の最適化**: Catalog プロパティの変更が成功すると、影響を受けるメタデータキャッシュが破棄され、次回アクセス時に新しい設定で再構築されます。`meta.cache.max-weight` または `schema.cache.ttl-second` を変更すると、その Catalog のすべてのキャッシュが破棄されます。`meta.cache.<engine>.<entry>.*` を変更すると、そのエンジンのキャッシュが破棄されます。進行中のクエリには影響しません。FE 全体または Catalog のメモリ上限が適用される場合、計上されない2つ目のメタデータキャッシュを避けるため、Paimon SDK 自体の `CachingCatalog` はデフォルトで無効になります。明示的な `paimon.cache-enabled` プロパティがある場合は、そちらが優先されます。
+* **性能の最適化**：Catalog プロパティの変更に成功すると、影響を受けるメタデータキャッシュが削除され、次回のアクセス時に新しい設定で再構築されます。`meta.cache.max-weight` または `schema.cache.ttl-second` を変更すると Catalog のすべてのキャッシュが削除され、`meta.cache.<engine>.<entry>.*` を変更すると、そのエンジンのキャッシュが削除されます。進行中のクエリには影響しません。FE 全体または Catalog のメモリ上限が適用される場合、計上されない二重のメタデータキャッシュを避けるため、Paimon SDK 自体の `CachingCatalog` はデフォルトで無効になります。明示的に設定された `paimon.cache-enabled` プロパティが優先されます。
 
 ### 可観測性 {#meta-cache-unified-observability}
 
-キャッシュメトリクスは、`information_schema.catalog_meta_cache_statistics` システムテーブルで確認できます。`ENTRY_NAME` には上の表に記載した名前が表示され、`default` エンジンの行は共有テーブルスキーマキャッシュを表します。
+キャッシュのメトリクスは、`information_schema.catalog_meta_cache_statistics` システムテーブルで確認できます。`ENTRY_NAME` には上の表に示した名前が表示され、`default` エンジンの行は共有のテーブルスキーマキャッシュを表します。
 
 ```sql
 SELECT engine_name, entry_name,
@@ -262,15 +292,15 @@ WHERE catalog_name = 'paimon_ctl'
 ORDER BY engine_name, entry_name;
 ```
 
-このシステムテーブルのドキュメントは、[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)を参照してください。
+このシステムテーブルについては、[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)のドキュメントを参照してください。
 
-### サポートされる Paimon のバージョン {#supported-paimon-versions}
+### サポートされる Paimon バージョン {#supported-paimon-versions}
 
 現在依存している Paimon のバージョンは 1.4.2 です。
 
-### サポートされる Paimon のフォーマット {#supported-paimon-formats}
+### サポートされる Paimon 形式 {#supported-paimon-formats}
 
-* Paimon Deletion Vector の読み取りをサポートします。
+* Paimon Deletion Vector の読み取りをサポート
 
 ### サポートされるメタデータサービス {#supported-metadata-services}
 
@@ -282,7 +312,7 @@ ORDER BY engine_name, entry_name;
 
 * [FileSystem](../metastores/filesystem.md)
 
-> 注: Doris のバージョンによって、サポートされるサービスの種類とパラメータは若干異なります。[例]のセクションを参照してください。
+> 注：サポートされるサービスの種類とパラメータは、Doris のバージョンによって多少異なります。[例]セクションを参照してください。
 
 ### サポートされるストレージシステム {#supported-storage-systems}
 
@@ -302,61 +332,38 @@ ORDER BY engine_name, entry_name;
 
 * [MINIO](../storages/minio.md)
 
-> 注: Doris のバージョンによって、サポートされるサービスの種類とパラメータは若干異なります。[例]のセクションを参照してください。
+> 注：サポートされるサービスの種類とパラメータは、Doris のバージョンによって多少異なります。[例]セクションを参照してください。
 
-### サポートされるデータフォーマット {#supported-data-formats}
+### サポートされるデータ形式 {#supported-data-formats}
 
 * [Parquet](../file-formats/parquet.md)
 
 * [ORC](../file-formats/orc.md)
 
-## カラム型のマッピング {#column-type-mapping}
+## カラム型の対応 {#column-type-mapping}
 
-| Paimon の型 | Doris の型 | 備考 |
-| ---------------------------------- | ------------- | ----------------------------------------------------------------------- |
-| boolean                            | boolean       |                                                                         |
-| tinyint                            | tinyint       |                                                                         |
-| smallint                           | smallint      |                                                                         |
-| integer                            | int           |                                                                         |
-| bigint                             | bigint        |                                                                         |
-| float                              | float         |                                                                         |
-| double                             | double        |                                                                         |
-| decimal(P, S)                      | decimal(P, S) |                                                                         |
-| varchar                            | string        |                                                                         |
-| char                               | string        |                                                                         |
-| binary, varbinary | VARBINARY | 4.1.5 以降、この型は常に `VARBINARY` にマッピングされます。`enable.mapping.varbinary` プロパティは互換性のために残されていますが、`false` に設定しても `STRING` へのマッピングには戻りません。それ以前のバージョンでは、このプロパティで従来のマッピングを選択できます。 |
-| date                               | date          |                                                                         |
-| timestamp\_without\_time\_zone     | datetime(N)   | 精度に応じてマッピングされます。精度が 6 を超える場合は最大の 6 にマッピングされます（精度が失われる可能性があります）。 |
-| timestamp\_with\_local\_time\_zone | TIMESTAMPTZ(N) | 4.1.5 以降、この型は常に `TIMESTAMPTZ(N)` にマッピングされます。`enable.mapping.timestamp_tz` プロパティは互換性のために残されていますが、`false` に設定しても `DATETIME` へのマッピングには戻りません。精度は 6 が上限のため、それを超える精度は失われます。それ以前のバージョンでは、このプロパティで従来のマッピングを選択できます。 |
-| array                              | array         |                                                                         |
-| map                                | map           |                                                                         |
-| row                                | struct        |                                                                         |
-| other                              | UNSUPPORTED   |                                                                         |
+Doris 4.2 における型の対応表全体、精度のルール、サポートされない型については、[Paimon から Doris へのデータ型の対応](paimon-catalog/doris-type-mapping.md)を参照してください。
 
-Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲まれた最上位カラムとネストされた `STRUCT` フィールドの表記を正確に保持します。カンマ（`region,code`）、ハッシュ記号（`nested#value`）、コロン（`colon:name`）、空白、Unicode 文字を含む名前も、通常の SQL 識別子の引用以外にエスケープは必要ありません。読み取り時のカラム名の照合では大文字と小文字が区別されないため、大文字や混在した表記を含むカラム名（たとえば `UserId`）も通常どおりクエリできます。
+Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲まれた最上位カラムとネストした `STRUCT` フィールドの表記を正確に保持します。
+カンマ（`region,code`）、ハッシュ記号（`nested#value`）、コロン（`colon:name`）、
+空白、Unicode 文字を含む名前も、通常の SQL 識別子の引用符以外にエスケープする必要はありません。読み取り時のカラム名の照合は
+大文字と小文字を区別しないため、大文字や大文字と小文字が混在するカラム名（`UserId` など）も
+通常どおりクエリできます。
 
-:::info バージョンに関する注記
+:::info バージョンに関する注意
 
-4.0 系の 4.0.8 より前のバージョンでは、読み取り時にカラムを完全一致で特定していました。そのため、大文字と小文字が混在するカラム名を持つ Paimon テーブルや Iceberg テーブルでは、誤ったカラムを読み取ったり、クエリが失敗したりする可能性がありました。この問題は 4.0.8 で修正されました。
+4.0 系列の 4.0.8 より前のバージョンでは、読み取り時に完全一致でカラムを特定していました。そのため、大文字と小文字が混在するカラム名を持つ Paimon テーブルや Iceberg テーブルでは、別のカラムを読み取ったり、クエリが失敗したりする場合がありました。これは 4.0.8 で修正されました。
 
 :::
 
-4.1.5 以降、明示的な `REFRESH TABLE`、`REFRESH DATABASE`、`REFRESH CATALOG` コマンドでも、対応する Paimon メタデータキャッシュが無効化されます。外部でスキーマを変更した後や、テーブルを削除して再作成した後は、refresh コマンドでメタデータを再読み込みしてください。すでに開始したクエリは、選択済みのスナップショットを引き続き使用します。
-
-:::info 注
-4.1.5 以降、`timestamp_without_time_zone` は `DATETIME(N)` にマッピングされ、`timestamp_with_local_time_zone` は常に `TIMESTAMPTZ(N)` にマッピングされます。後者はセッションの `time_zone` で表示される時点を表し、`enable.mapping.timestamp_tz=false` で以前のマッピングに戻すことはできません。
-
-ソースの型にタイムゾーン情報が含まれるかどうかは、`DESCRIBE table_name` ステートメントの Extra カラムで確認できます。`WITH_TIMEZONE` と表示される場合、ソースの型がタイムゾーン対応の型であることを示します。（この機能は 3.0.8 以降でサポートされます）
-
-バージョン 4.0.3 以降、`timestamp_with_local_time_zone` を Doris の `timestamptz` 型にマッピングできます。
-:::
+4.1.5 以降では、明示的な `REFRESH TABLE`、`REFRESH DATABASE`、`REFRESH CATALOG` コマンドによって、対応する Paimon メタデータキャッシュも無効になります。外部でスキーマを変更した後やテーブルを削除して再作成した後は、refresh コマンドでメタデータを再読み込みしてください。すでに開始したクエリは、選択済みのスナップショットを引き続き使用します。
 
 ## 例 {#examples}
 
 ### Hive Metastore {#hive-metastore}
 
 <details>
-    <summary>バージョン 3.1+</summary>
+    <summary>バージョン 3.1 以降</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
             ```sql
@@ -383,7 +390,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
                 's3.secret_key' = '<sk>'
             );
             ```
-            IAM Assumed Role を使用した S3 アクセス認証情報の取得（3.1.221+）
+            IAM Assumed Role を使用して S3 アクセス認証情報を取得する（3.1.221 以降）
             ```sql
             CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'paimon',
@@ -487,10 +494,10 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 </details>
 
 <details>
-    <summary>バージョン 2.1 & 3.0</summary>
+    <summary>バージョン 2.1 および 3.0</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS にアクセスする場合
+            Kerberos 認証なしで HMS にアクセスする
             ```sql
             CREATE CATALOG paimon_hms_on_hdfs_catalog PROPERTIES (
                 'type' = 'paimon',
@@ -501,7 +508,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
                 'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
             );
             ```
-            Kerberos 認証を有効にして HMS にアクセスする場合
+            Kerberos 認証が有効な HMS にアクセスする
             ```sql
             CREATE CATALOG paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
                 'type' = 'paimon',
@@ -604,7 +611,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 ### Aliyun DLF Metastore {#aliyun-dlf-metastore}
 
 <details>
-    <summary>バージョン 3.1+</summary>
+    <summary>バージョン 3.1 以降</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
@@ -638,7 +645,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 </details>
 
 <details>
-    <summary>バージョン 2.1 & 3.0</summary>
+    <summary>バージョン 2.1 および 3.0</summary>
 
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
@@ -662,10 +669,10 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 ### FileSystem Metastore {#filesystem-metastore}
 
 <details>
-    <summary>バージョン 3.1+</summary>
+    <summary>バージョン 3.1 以降</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS と HDFS のサービスにアクセスする場合
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
                 'type' = 'paimon',
@@ -688,7 +695,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             );
             ```
 
-            IAM Assumed Role を使用した S3 アクセス認証情報の取得（3.1.2+）
+            IAM Assumed Role を使用して S3 アクセス認証情報を取得する（3.1.2 以降）
 
             ```sql
             CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
@@ -701,7 +708,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-            OSS を使用する場合
+            OSS を使用する
 
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
@@ -715,7 +722,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             );
             ```
 
-            OSS-HDFS を使用する場合
+            OSS-HDFS を使用する
 
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
@@ -785,10 +792,10 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 </details>
 
 <details>
-    <summary>バージョン 2.1 & 3.0</summary>
+    <summary>バージョン 2.1 および 3.0</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS と HDFS のサービスにアクセスする場合
+            Kerberos 認証なしで HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
                 'type' = 'paimon',
@@ -812,7 +819,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-            OSS を使用する場合
+            OSS を使用する
 
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
@@ -826,7 +833,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             );
             ```
 
-            OSS-HDFS を使用する場合
+            OSS-HDFS を使用する
 
             ```sql
             CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
@@ -886,14 +893,14 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 ### Paimon JDBC Catalog {#paimon-jdbc-catalog}
 
 :::tip 注
-これはバージョン 4.1.0 以降でサポートされる実験的な機能です。
+これはバージョン 4.1.0 以降でサポートされる試験的な機能です。
 :::
 
 <details>
-    <summary>バージョン 4.1+</summary>
+    <summary>バージョン 4.1 以降</summary>
     <Tabs>
         <TabItem value='PostgreSQL' label='PostgreSQL' default>
-            PostgreSQL をメタデータストレージ、S3 をデータストレージとして使用する場合
+            PostgreSQL をメタデータストレージ、S3 をデータストレージとして使用する
             ```sql
             CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
                 'type' = 'paimon',
@@ -912,7 +919,7 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
             ```
         </TabItem>
         <TabItem value='MySQL' label='MySQL'>
-            MySQL をメタデータストレージ、S3 をデータストレージとして使用する場合
+            MySQL をメタデータストレージ、S3 をデータストレージとして使用する
             ```sql
             CREATE CATALOG paimon_jdbc_mysql PROPERTIES (
                 'type' = 'paimon',
@@ -935,15 +942,19 @@ Doris は、Paimon JNI スキャナーの両方の経路で、引用符で囲ま
 
 ## 書き込み操作 {#write-operations}
 
-Doris は Paimon テーブルを作成、変更し、データを書き込めます。成功した書き込みはそれぞれ Paimon スナップショットとしてコミットされます。ステートメントが失敗した場合、Doris は部分的なスナップショットを公開しません。
+Doris は Paimon テーブルの作成と変更、およびデータの書き込みを行えます。書き込みに成功するたびに Paimon の
+スナップショットとしてコミットされます。ステートメントが失敗した場合、Doris は部分的なスナップショットを公開しません。
 
 ### はじめる前に {#before-you-begin}
 
 データを書き込む前に、次の項目を確認してください。
 
-* すべての FE ノードと BE ノードで、Paimon への書き込みをサポートする Doris ビルドを実行する必要があります。古い BE ノードがまだ動作しているローリングアップグレード中は、Paimon に書き込まないでください。
-* Catalog の認証情報には、Metastore を更新し、ウェアハウス内のファイルを作成、書き込み、名前変更、削除する権限が必要です。必要な権限の詳細は、Metastore とストレージシステムによって異なります。
-* 書き込みは通常の Paimon データテーブルにのみ適用されます。Paimon システムテーブル、およびブランチ、タグ、スナップショット、タイムスタンプを選択するテーブル参照は読み取り専用です。
+* すべての FE ノードと BE ノードで、Paimon の書き込みをサポートする Doris ビルドが動作している必要があります。古い BE ノードがまだ動作している
+  ローリングアップグレード中は、Paimon に書き込まないでください。
+* Catalog の認証情報には、Metastore の更新、およびウェアハウス内のファイルの作成、書き込み、名前変更、削除の権限が
+  必要です。具体的な権限は、Metastore とストレージシステムによって異なります。
+* 書き込みの対象は通常の Paimon データテーブルに限られます。Paimon システムテーブル、およびブランチ、
+  タグ、スナップショット、タイムスタンプを選択するテーブル参照は読み取り専用です。
 
 ### サポートされる SQL {#supported-sql}
 
@@ -952,13 +963,14 @@ Doris は Paimon テーブルを作成、変更し、データを書き込めま
 | データベース DDL | `CREATE DATABASE` と `DROP DATABASE` |
 | テーブル DDL | `CREATE TABLE`、`CREATE TABLE AS SELECT`、`DROP TABLE` |
 | スキーマ変更 | カラムの追加、削除、名前変更、並べ替え、変更 |
-| データの追加 | `INSERT INTO ... VALUES` と `INSERT INTO ... SELECT` |
-| データの上書き | テーブル全体、静的パーティション、動的パーティションの `INSERT OVERWRITE` |
-| 行単位の変更 | 主キーテーブルに対する `DELETE`、`UPDATE`、`MERGE INTO`。以下の制約が適用されます。 |
+| データの追記 | `INSERT INTO ... VALUES` と `INSERT INTO ... SELECT` |
+| データの上書き | テーブル全体、静的パーティション、動的パーティションに対する `INSERT OVERWRITE` |
+| 行単位の変更 | 以下の制約に従う、主キーテーブルでの `DELETE`、`UPDATE`、`MERGE INTO` |
 
 ### クイックスタート {#quick-start}
 
-次の例では、主キーテーブルを作成してデータを書き込みます。Paimon テーブルのオプションは `PROPERTIES` で指定します。Doris の `DISTRIBUTE BY` 句は追加しないでください。
+次の例では、主キーテーブルを作成してデータを書き込みます。Paimon テーブルのオプションは
+`PROPERTIES` で指定します。Doris の `DISTRIBUTE BY` 句は追加しないでください。
 
 ```sql
 SWITCH paimon_ctl;
@@ -991,7 +1003,7 @@ WHERE order_id = 2;
 SELECT * FROM orders ORDER BY order_id;
 ```
 
-結果:
+結果：
 
 ```text
 +----------+----------+--------+--------+
@@ -1001,7 +1013,7 @@ SELECT * FROM orders ORDER BY order_id;
 +----------+----------+--------+--------+
 ```
 
-Doris を通じてテーブルスキーマを変更し、新しいスキーマで書き込みを続けることができます。
+Doris からテーブルスキーマを変更し、新しいスキーマで書き込みを続けることもできます。
 
 ```sql
 ALTER TABLE orders ADD COLUMN note STRING NULL;
@@ -1010,7 +1022,8 @@ ALTER TABLE orders RENAME COLUMN note order_note;
 
 ### データの挿入と上書き {#insert-and-overwrite-data}
 
-`INSERT INTO` は、追加専用テーブルには行を追加し、主キーテーブルにはその Paimon オプションに従って行をマージします。ソースには `VALUES`、Doris の内部テーブル、または別の外部テーブルを使用できます。
+`INSERT INTO` は、追記専用テーブルには行を追記し、主キーテーブルでは Paimon のオプションに従って行をマージします。
+ソースには `VALUES`、Doris の内部テーブル、または別の外部テーブルを使用できます。
 
 ```sql
 INSERT INTO paimon_ctl.sales.orders
@@ -1018,7 +1031,8 @@ SELECT order_id, customer, amount, status
 FROM internal.sales.new_orders;
 ```
 
-パーティションのないテーブルでは、`INSERT OVERWRITE` によって既存のすべての行が置き換えられます。そのため、入力が空ならテーブルも空になります。
+パーティションのないテーブルでは、`INSERT OVERWRITE` は既存のすべての行を置き換えます。そのため、入力が空なら
+テーブルも空になります。
 
 ```sql
 INSERT OVERWRITE TABLE paimon_ctl.sales.orders
@@ -1041,11 +1055,13 @@ SELECT order_id, customer, amount, status, order_date
 FROM internal.sales.daily_orders_stage;
 ```
 
-主キーテーブルで非キー列を省略した挿入を受け付けるのは、`merge-engine` が `partial-update` の場合のみです。追加専用テーブルで省略したカラムには、デフォルト値、または許可されている場合は `NULL` が使用されます。
+主キーテーブルでキー以外のカラムを省略した挿入が許可されるのは、`merge-engine` が `partial-update` の場合だけです。
+追記専用テーブルで省略したカラムには、デフォルト値、または許可されている場合は `NULL` が使用されます。
 
 ### データの削除、更新、マージ {#delete-update-and-merge-data}
 
-行単位の変更には Paimon の主キーテーブルが必要です。デフォルトの `deduplicate` マージエンジンを使用するテーブルに対して、Doris は次の操作をサポートします。
+行単位の変更には Paimon の主キーテーブルが必要です。デフォルトの `deduplicate` マージエンジンを使用するテーブルでは、Doris は
+次の操作をサポートします。
 
 ```sql
 DELETE FROM paimon_ctl.sales.orders
@@ -1068,29 +1084,40 @@ WHEN NOT MATCHED THEN INSERT (order_id, customer, amount, status)
     VALUES (s.order_id, s.customer, s.amount, s.status);
 ```
 
-Paimon による行変更の適用方法により、次の制約があります。
+Paimon が行の変更を適用する方法により、次の制約があります。
 
-* `UPDATE` では、主キーのカラムや `sequence.field` で設定されたカラムを変更できません。
-* `MERGE` 内の更新アクションを含む `UPDATE` は、`deduplicate` マージエンジンのみをサポートし、`changelog-producer=input` はサポートしません。
+* `UPDATE` では、主キーカラムや `sequence.field` で設定されたカラムを変更できません。
+* `MERGE` 内の更新アクションを含む `UPDATE` は、`deduplicate` マージエンジンのみをサポートし、
+  `changelog-producer=input` はサポートしません。
 * パーティションカラムを更新するには、`ignore-delete=false` を設定した動的バケットテーブル（`bucket=-1`）が必要です。
-* `MERGE` 内の削除アクションを含む `DELETE` には、`ignore-delete=false` が必要です。デフォルトの `deduplicate` マージエンジンはこれを直接サポートします。`partial-update` テーブルには `partial-update.remove-record-on-delete=true`、`aggregation` テーブルには `aggregation.remove-record-on-delete=true` の設定が必要です。
-* `rowkind.field` を設定したテーブルでは、これらの行単位のステートメントはサポートされません。`cross-partition-upsert.index-ttl` を設定した動的バケットテーブルでもサポートされません。
-* `MERGE` ステートメントには、含まれるアクションに応じて、対応する `UPDATE` と `DELETE` の制約が適用されます。
+* `MERGE` 内の削除アクションを含む `DELETE` には、`ignore-delete=false` が必要です。デフォルトの `deduplicate` マージ
+  エンジンではそのままサポートされます。`partial-update` テーブルには `partial-update.remove-record-on-delete=true`、
+  `aggregation` テーブルには `aggregation.remove-record-on-delete=true` の設定が必要です。
+* `rowkind.field` を設定したテーブルでは、これらの行単位のステートメントはサポートされません。
+  `cross-partition-upsert.index-ttl` を設定した動的バケットテーブルでもサポートされません。
+* `MERGE` ステートメントには、含まれるアクションに対応する `UPDATE` と `DELETE` の制約が適用されます。
 
-結果を予測しやすくするため、`MERGE` のソース側では照合キーを一意にしてください。複数のソース行が同じターゲット行に一致する場合、Doris はステートメントを拒否します。
+予測可能な結果を得るため、`MERGE` のソース側では一致キーを一意にしてください。複数のソース行が
+同じターゲット行に一致する場合、Doris はステートメントを拒否します。
 
 ### 運用上の注意事項 {#operational-notes}
 
-* 主キー、パーティション、バケット、マージエンジン、ファイルフォーマット、コンパクション、その他の物理的な動作は、Paimon テーブルのプロパティとして設定します。Doris は Paimon SDK を通じてこれらのオプションを検証します。
-* Doris は現在、Paimon テーブルに対する汎用の `ALTER TABLE ... SET TBLPROPERTIES` 操作を提供していません。作成後にテーブルプロパティを変更するには、別の Paimon エンジンを使用し、その後 Doris で `REFRESH TABLE` または `REFRESH CATALOG` を実行してください。
-* 書き込みのスピルに十分なローカルディスク容量を各 BE に確保し、一時ファイルとコミット操作に必要なウェアハウスの権限を付与してください。BE 設定の `paimon_jni_writer_memory_pool_limit_bytes` は、各 Paimon JNI ライターが使用するメモリプールを制限します。デフォルト値は 512 MB です。
-* 書き込みまたはスキーマ変更が成功すると、新しい Doris ステートメントはコミットされた Paimon スナップショットをデータロードします。既存のステートメントは、開始時に選択したスナップショットを引き続き使用します。
+* 主キー、パーティション、バケット、マージエンジン、ファイル形式、compaction などの物理的な動作は、
+  Paimon テーブルのプロパティとして設定します。Doris は Paimon SDK を通してこれらのオプションを検証します。
+* 現在、Doris は Paimon テーブルに対する汎用的な `ALTER TABLE ... SET TBLPROPERTIES` 操作を提供していません。
+  作成後にテーブルプロパティを変更するには、別の Paimon エンジンを使用し、その後 Doris で `REFRESH TABLE` または `REFRESH CATALOG` を
+  実行してください。
+* 各 BE には書き込み時の退避に十分なローカルディスク容量を確保し、一時ファイルと
+  コミット操作に必要なウェアハウス権限を付与してください。BE の設定 `paimon_jni_writer_memory_pool_limit_bytes` は、各
+  Paimon JNI ライターが使用するメモリプールを制限します。デフォルトは 512 MB です。
+* 書き込みまたはスキーマ変更に成功した後、新しい Doris ステートメントはコミット済みの Paimon スナップショットを読み込みます。既存の
+  ステートメントは、開始時に選択したスナップショットを引き続き使用します。
 
 ## クエリ操作 {#query-operations}
 
 ### 基本的なクエリ {#basic-query}
 
-Catalog の設定後、次のように Catalog 内のテーブルデータをクエリできます。
+Catalog を設定した後、次のように Catalog 内のテーブルデータをクエリできます。
 
 ```sql
 -- 1. Switch to catalog, use database, and query
@@ -1110,14 +1137,14 @@ SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
 
 > バージョン 4.2.0 以降でサポートされます。
 
-Doris は Paimon データテーブルに対して、2つの非表示メタデータカラムを公開します。これらを使うと、各クエリ結果の元になった物理データファイルと行を特定できます。
+Doris は Paimon データテーブル向けに二つの隠しメタデータカラムを公開します。クエリ結果の各行を生成した物理データファイルと行の特定に使用できます。
 
 | カラム | 型 | 説明 |
 | --- | --- | --- |
-| `__paimon_file_path` | `STRING NOT NULL` | Paimon が返す、生のデータファイルの元のパス。 |
+| `__paimon_file_path` | `STRING NOT NULL` | 生データファイルについて Paimon が返す元のパス。 |
 | `__paimon_row_index` | `BIGINT NOT NULL` | データファイル全体における、ゼロから始まる物理的な行位置。 |
 
-前提条件: 前の例に従って Paimon Catalog を設定し、`id` カラムを持ち、Parquet または ORC ファイルを使用する Paimon データテーブルを作成します。次のクエリは、`paimon_tbl` に `id` の値が `1` と `2` の行がすでに存在すると仮定します。
+前提条件：前述の例に従って Paimon Catalog を設定し、`id` カラムを持ち、Parquet または ORC ファイルを使用する Paimon データテーブルを作成します。次のクエリでは、`paimon_tbl` に `id` の値が `1` と `2` の行がすでにあることを前提とします。
 
 ```sql
 SELECT id, `__paimon_file_path`, `__paimon_row_index`
@@ -1125,7 +1152,7 @@ FROM paimon_ctl.paimon_db.paimon_tbl
 ORDER BY `__paimon_file_path`, `__paimon_row_index`;
 ```
 
-結果の例（ファイルパスはテーブルの場所によって異なります）:
+結果の例（ファイルパスはテーブルの場所によって異なります）：
 
 ```text
 +----+------------------------------------------+--------------------+
@@ -1136,26 +1163,26 @@ ORDER BY `__paimon_file_path`, `__paimon_row_index`;
 +----+------------------------------------------+--------------------+
 ```
 
-デフォルトでは、これらのカラムは `SELECT *` や `DESC` には表示されません。
+デフォルトでは、これらのカラムは `SELECT *` や `DESC` に表示されません。
 
-非表示カラムを `SELECT *` と `DESC` に含めるには、セッションで `show_hidden_columns` を有効にします。
+`SELECT *` と `DESC` に隠しカラムを含めるには、セッションで `show_hidden_columns` を有効にします。
 
 ```sql
 SET show_hidden_columns = true;
 ```
 
-関連するセッション変数:
+関連するセッション変数：
 
 | 変数 | 型 | デフォルト値 | 必須 | 効果 |
 | --- | --- | --- | --- | --- |
-| `show_hidden_columns` | `BOOLEAN` | `false` | いいえ | `SELECT *` と `DESC` に非表示カラムを含めます。カラムを明示的に参照する場合は不要です。 |
+| `show_hidden_columns` | `BOOLEAN` | `false` | いいえ | `SELECT *` と `DESC` に隠しカラムを含めます。カラムを明示的に参照する場合は不要です。 |
 | `enable_file_scanner_v2` | `BOOLEAN` | `true` | いいえ | クエリがこれらのメタデータカラムを参照する場合、有効のままにする必要があります。 |
 | `force_jni_scanner` | `BOOLEAN` | `false` | いいえ | JNI リーダーはこれらのメタデータカラムを生成できないため、無効のままにする必要があります。 |
 
-行位置は、物理ファイル全体を基準とします。述語によるフィルタリング、Deletion Vector の処理、スキャンの分割によって、残った行の番号が振り直されることはありません。そのため、`__paimon_file_path` と `__paimon_row_index` の組み合わせで、現在のテーブルスナップショット内の物理レコードを特定できます。データファイルの再書き込みやコンパクションによって両方の値が変わる可能性があるため、安定した論理行 ID として使用しないでください。
+行位置は物理ファイル全体を基準とします。述語によるフィルタリング、Deletion Vector の処理、スキャンの分割によって、残った行の番号が振り直されることはありません。そのため、`__paimon_file_path` と `__paimon_row_index` の組み合わせで、現在のテーブルスナップショット内の物理レコードを特定できます。データファイルの再書き込みや compaction によって両方の値が変わる可能性があるため、安定した論理行 ID として使用しないでください。
 
 :::caution
-これらのカラムを使用できるのは、クエリに参加するすべての Paimon スプリットを、FileScannerV2 のネイティブ Parquet または ORC リーダーで生のデータファイルとして読み取れる場合だけです。JNI またはネイティブと JNI が混在するスキャン、`enable_file_scanner_v2` が無効な場合、`force_jni_scanner` が有効な場合、または選択したデータファイルをネイティブ Parquet/ORC リーダーで読み取れない場合は、これらのカラムを参照するクエリは失敗します。
+これらのカラムを使用できるのは、クエリに参加するすべての Paimon split を、FileScannerV2 のネイティブ Parquet または ORC リーダーで生データファイルとして読み取れる場合だけです。これらのカラムを参照するクエリは、JNI またはネイティブと JNI が混在するスキャン、`enable_file_scanner_v2` が無効な場合、`force_jni_scanner` が有効な場合、または選択されたデータファイルをネイティブ Parquet/ORC リーダーで読み取れない場合に失敗します。
 
 `__paimon_file_path` と `__paimon_row_index` は予約名であり、大文字と小文字を区別せずに比較されます。Paimon テーブルの物理カラム名として使用しないでください。
 :::
@@ -1166,7 +1193,7 @@ SET show_hidden_columns = true;
 
 Flink と同様に、Paimon の[バッチ増分](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental)クエリをサポートします。
 
-指定したスナップショットまたはタイムスタンプの区間内の増分データをクエリできます。区間は左端を含み、右端を含みません。
+指定したスナップショットまたはタイムスタンプの区間内にある増分データをクエリできます。区間は左閉右開です。
 
 ```sql
 -- between snapshots [0, 5)
@@ -1182,35 +1209,35 @@ SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
 SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
 ```
 
-パラメータ:
+パラメータ：
 
 | パラメータ | 説明 | 例 |
 | --- | --- | --- |
-| `startSnapshotId` | 開始スナップショット ID。0 より大きい必要があります。`endSnapshotId` とともに指定する必要があります。 | `'startSnapshotId'='3'` |
-| `endSnapshotId` | 終了スナップショット ID。`startSnapshotId` より大きい必要があります。`startSnapshotId` とともに指定する必要があります。 | `'endSnapshotId'='10'` |
-| `incrementalBetweenScanMode` | 増分読み取りモードを指定します。デフォルトは `auto` で、`delta`、`changelog`、`diff` をサポートします。 | `'incrementalBetweenScanMode'='delta'` |
-| `startTimestamp` | 開始スナップショットのタイムスタンプ。0 以上である必要があります。単位はミリ秒です。 | `'startTimestamp'='1750844949000'` |
-| `endTimestamp` | 終了スナップショットのタイムスタンプ。`startTimestamp` より大きい必要があります。省略可能です。省略した場合、`startTimestamp` から最新のスナップショットまでを読み取ります。単位はミリ秒です。 | `'endTimestamp'='1750944949000'` |
+| `startSnapshotId` | 開始スナップショット ID。0 より大きい値で、`endSnapshotId` と一緒に指定する必要があります。 | `'startSnapshotId'='3'` |
+| `endSnapshotId` | 終了スナップショット ID。`startSnapshotId` より大きい値で、`startSnapshotId` と一緒に指定する必要があります。 | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | 増分読み取りモードを指定します。デフォルトは `auto` で、`delta`、`changelog`、`diff` をサポートします。 |  `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | 開始スナップショットのタイムスタンプ。0 以上で、単位はミリ秒です。 | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | 終了スナップショットのタイムスタンプ。`startTimestamp` より大きい値です。省略可能で、省略すると `startTimestamp` から最新スナップショットまで読み取ります。単位はミリ秒です。 | `'endTimestamp'='1750944949000'` |
 
 :::tip 注意
 `startSnapshotId` と `endSnapshotId` は、Paimon パラメータ `'incremental-between'='3,10'` を構成します。
 
 `startTimestamp` と `endTimestamp` は、Paimon パラメータ `'incremental-between-timestamp'='1750844949000,1750944949000'` を構成します。
 
-`incrementalBetweenScanMode` は、Paimon パラメータ `incremental-between-scan-mode` に対応します。
+`incrementalBetweenScanMode` は Paimon パラメータ `incremental-between-scan-mode` に対応します。
 :::
 
-これらのパラメータの詳細は、[Paimon のドキュメント](https://paimon.apache.org/docs/master/maintenance/configurations/)を参照してください。
+これらのパラメータの詳細については、[Paimon のドキュメント](https://paimon.apache.org/docs/master/maintenance/configurations/)を参照してください。
 
-### Time Travel {#time-travel}
+### タイムトラベル {#time-travel}
 
 > バージョン 3.1.0 以降
 
-Paimon テーブルの指定したスナップショットの読み取りをサポートします。
+Paimon テーブルの指定したスナップショットを読み取れます。
 
-デフォルトでは、読み取りリクエストは最新バージョンのスナップショットのみを読み取ります。
+デフォルトでは、読み取りリクエストは最新バージョンのスナップショットだけを読み取ります。
 
-`$snapshots` テーブル関数を使用すると、指定した Paimon テーブルのスナップショットをクエリできます。
+`$snapshots` テーブル関数を使用して、指定した Paimon テーブルのスナップショットをクエリできます。
 
 ```sql
 Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
@@ -1224,7 +1251,7 @@ Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
 +-------------+-------------------------+
 ```
 
-`FOR TIME AS OF` ステートメントと `FOR VERSION AS OF` ステートメントを使用すると、スナップショット ID またはスナップショットの作成時刻に基づいて、履歴バージョンのデータを読み取れます。例:
+`FOR TIME AS OF` と `FOR VERSION AS OF` を使用すると、スナップショット ID またはスナップショットの作成時刻に基づいて履歴バージョンのデータを読み取れます。例：
 
 ```sql
 -- Notice: Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
@@ -1239,9 +1266,12 @@ SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
 SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
 ```
 
-#### `@options` を使用した Time Travel {#time-travel-with-options}
+#### `@options` を使用したタイムトラベル {#time-travel-with-options}
 
-Paimon 固有のセレクタには、クエリのテーブル参照で `@options` を使用します。Doris は `scan.snapshot-id`、`scan.tag-name`、`scan.version`、`scan.timestamp`、`scan.timestamp-millis`、`scan.watermark`、`scan.file-creation-time-millis`、`scan.creation-time-millis`、`scan.mode` を受け付けます。選択したスナップショットまたはタグによって履歴スキーマも選択されます。Doris が履歴データに最新のスキーマをバインドすることはありません。
+Paimon 固有の選択条件には、クエリのテーブル参照に `@options` を使用します。Doris は `scan.snapshot-id`、
+`scan.tag-name`、`scan.version`、`scan.timestamp`、`scan.timestamp-millis`、`scan.watermark`、
+`scan.file-creation-time-millis`、`scan.creation-time-millis`、`scan.mode` を受け付けます。選択したスナップショットまたはタグによって
+その履歴スキーマも選択されます。Doris が履歴データに最新スキーマを関連付けることはありません。
 
 ```sql
 -- Read snapshot 1 with the schema stored for snapshot 1.
@@ -1253,15 +1283,19 @@ SELECT id, old_name
 FROM paimon_tbl@options('scan.tag-name' = 'tag1');
 ```
 
-1つのテーブル参照に指定できる開始位置オプションは1つだけです。`scan.mode` と開始位置を組み合わせられるのは、Paimon がその組み合わせを互換と定義している場合だけです。たとえば、`scan.mode='from-creation-timestamp'` には `scan.creation-time-millis` が必要です。不明または期限切れのスナップショット、ブランチ、タグを指定すると、暗黙に最新のテーブルへフォールバックする代わりに、明示的に失敗します。`@options` 構文はクエリのテーブル参照でサポートされ、ビュー定義に保存できますが、CTE 参照や `SHOW` のようなクエリ以外のコマンドには適用できません。
+一つのテーブル参照には、開始位置のオプションを一つだけ指定できます。`scan.mode` と位置を組み合わせられるのは、
+Paimon がその組み合わせを互換と定義している場合だけです。たとえば、`scan.mode='from-creation-timestamp'` には
+`scan.creation-time-millis` が必要です。未知または期限切れのスナップショット、ブランチ、タグを指定すると、最新テーブルへ暗黙に
+フォールバックするのではなく、明示的に失敗します。`@options` 構文はクエリのテーブル参照でサポートされ、ビュー定義にも保存できますが、
+CTE 参照や `SHOW` などのクエリ以外のコマンドには適用できません。
 
 ### ブランチとタグ {#branch-and-tag}
 
 > バージョン 3.1.0 以降
 
-指定した Paimon テーブルのブランチとタグの読み取りをサポートします。
+指定した Paimon テーブルのブランチとタグを読み取れます。
 
-`$branches` と `$tags` システムテーブルを使用すると、Paimon テーブルのブランチとタグを確認できます。
+`$branches` と `$tags` のシステムテーブルを使用して、Paimon テーブルのブランチとタグを確認できます。
 
 ```
 Doris > SELECT * FROM paimon_tbl$branches;
@@ -1283,7 +1317,7 @@ Doris > SELECT * FROM paimon_tbl$tags;
 +----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
 ```
 
-Spark や Trino などのシステムと互換性を保つため、さまざまな構文形式をサポートします。
+Spark や Trino などのシステムとの互換性のため、さまざまな構文形式をサポートします。
 
 ```sql
 -- BRANCH
@@ -1302,22 +1336,26 @@ SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
 
 > バージョン 3.1.0 以降
 
-Doris は、テーブル関連のメタデータを取得するための Paimon システムテーブルのクエリをサポートします。システムテーブルを使用すると、スナップショットの履歴、マニフェストファイル、データファイル、パーティションなどの情報を確認できます。
+Doris は、Paimon システムテーブルをクエリしてテーブル関連のメタデータを取得できます。システムテーブルを使用すると、スナップショットの履歴、manifest ファイル、データファイル、パーティションなどの情報を確認できます。
 
-Paimon テーブルのメタデータにアクセスするには、テーブル名の後に `$` 記号とシステムテーブル名を追加します。
+Paimon テーブルのメタデータにアクセスするには、テーブル名の後に `$` 記号とシステムテーブル名を続けます。
 
 ```sql
 SELECT * FROM my_table$system_table_name;
 ```
 
-`audit_log`、`binlog`、`manifests`、`partitions`、`ro`、`row_tracking`、`table_indexes` のシステムテーブルは、テーブル参照の `@options` を受け付けます。選択したスナップショットまたはタグは、システムテーブルの行と、ソースカラムを公開するシステムテーブルでは対応する履歴ソーステーブルのスキーマに適用されます。
+`audit_log`、`binlog`、`manifests`、`partitions`、`ro`、`row_tracking`、`table_indexes` システムテーブルでは、
+テーブル参照に `@options` を指定できます。選択したスナップショットまたはタグはシステムテーブルの行に適用され、
+ソースカラムを公開するシステムテーブルでは、対応する履歴ソーステーブルのスキーマにも適用されます。
 
 ```sql
 SELECT rowkind, id, old_name
 FROM paimon_tbl$audit_log@options('scan.tag-name' = 'tag1');
 ```
 
-その他のシステムテーブルでは、行を生成するすべての処理段階で選択したスナップショットが参照されることを保証できないため、`@options` は拒否されます。また、Paimon システムテーブルでは `scan.file-creation-time-millis` も拒否されます。このファイルフィルタを暗黙に破棄すると、要求した範囲外の行が返される可能性があるためです。
+その他のシステムテーブルは、行を生成するすべての段階で選択したスナップショットが参照されることを保証できないため、`@options` を拒否します。
+Paimon システムテーブルは `scan.file-creation-time-millis` も拒否します。このファイルフィルターを暗黙に無視すると、
+要求された範囲外の行が返される可能性があるためです。
 
 :::info 注
 Doris は、Flink でのみサポートされる Paimon のグローバルシステムテーブルの読み取りをサポートしません。
@@ -1331,7 +1369,7 @@ Doris は、Flink でのみサポートされる Paimon のグローバルシス
 SELECT * FROM my_table$schemas;
 ```
 
-結果:
+結果：
 ```text
 +-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
 | schema_id | fields                                                                                                             | partition_keys | primary_keys | options | comment | update_time             |
@@ -1342,13 +1380,13 @@ SELECT * FROM my_table$schemas;
 
 ### snapshots {#snapshots}
 
-スナップショットの作成時刻、コミットしたユーザー、操作の種類などを含む、テーブルの有効なすべてのスナップショット情報を表示します。
+スナップショットの作成時刻、コミットしたユーザー、操作の種類など、テーブルの有効なすべてのスナップショット情報を表示します。
 
 ```sql
 SELECT * FROM my_table$snapshots;
 ```
 
-結果:
+結果：
 ```text
 +-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
 | snapshot_id | schema_id | commit_user                          | commit_identifier   | commit_kind | commit_time             | base_manifest_list                                   | delta_manifest_list                                  | changelog_manifest_list | total_record_count | delta_record_count | changelog_record_count | watermark            |
@@ -1364,13 +1402,13 @@ SELECT * FROM my_table$snapshots;
 
 ### options {#options}
 
-テーブルの現在の設定オプションを表示します。テーブルに含まれていないオプションには、そのデフォルト値が設定されます。
+テーブルの現在の設定オプションを表示します。テーブルに含まれていないオプションには、デフォルト値が設定されています。
 
 ```sql
 SELECT * FROM my_table$options;
 ```
 
-結果:
+結果：
 ```text
 +------------------------+--------------------+
 |         key            |        value       |
@@ -1381,13 +1419,13 @@ SELECT * FROM my_table$options;
 
 ### files {#files}
 
-ファイルフォーマット、レコード数、ファイルサイズなど、現在のスナップショットが指す全データファイルの情報を表示します。
+ファイル形式、レコード数、ファイルサイズなど、現在のスナップショットが指す全データファイルの情報を表示します。
 
 ```sql
 SELECT * FROM my_table$files;
 ```
 
-結果:
+結果：
 ```text
 mysql> SELECT * FROM my_table$files;
 +-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
@@ -1399,13 +1437,13 @@ mysql> SELECT * FROM my_table$files;
 
 ### tags {#tags}
 
-タグ名と関連するスナップショットを含む、テーブルのすべてのタグ情報を表示します。
+タグ名や関連するスナップショットなど、テーブルの全タグ情報を表示します。
 
 ```sql
 SELECT * FROM my_table$tags;
 ```
 
-結果:
+結果：
 ```text
 +----------+-------------+-----------+-------------------------+--------------+--------------+
 | tag_name | snapshot_id | schema_id |             commit_time | record_count |   branches   |
@@ -1417,13 +1455,13 @@ SELECT * FROM my_table$tags;
 
 ### branches {#branches}
 
-テーブルの既知のブランチ情報をすべて表示します。
+テーブルの既知の全ブランチ情報を表示します。
 
 ```sql
 SELECT * FROM my_table$branches;
 ```
 
-結果:
+結果：
 ```text
 +----------------------+-------------------------+
 |          branch_name |             create_time |
@@ -1441,7 +1479,7 @@ SELECT * FROM my_table$branches;
 SELECT * FROM my_table$consumers;
 ```
 
-結果:
+結果：
 ```text
 +-------------+------------------+
 | consumer_id | next_snapshot_id |
@@ -1453,13 +1491,13 @@ SELECT * FROM my_table$consumers;
 
 ### manifests {#manifests}
 
-テーブルの現在のスナップショットに含まれるマニフェストファイルの情報を表示します。
+テーブルの現在のスナップショットに含まれる manifest ファイルの情報を表示します。
 
 ```sql
 SELECT * FROM my_table$manifests;
 ```
 
-結果:
+結果：
 ```text
 +-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
 | file_name                                       | file_size | num_added_files | num_deleted_files | schema_id | min_partition_stats | max_partition_stats |
@@ -1481,7 +1519,7 @@ SELECT * FROM my_table$manifests;
 SELECT * FROM my_table$aggregation_fields;
 ```
 
-結果:
+結果：
 ```text
 +------------+--------------+----------+------------------+---------+
 | field_name | field_type   | function | function_options | comment |
@@ -1494,13 +1532,13 @@ SELECT * FROM my_table$aggregation_fields;
 
 ### partitions {#partitions}
 
-各パーティションの総レコード数と総ファイルサイズを含む、テーブルのパーティション情報を表示します。
+各パーティションの合計レコード数と合計ファイルサイズを含む、テーブルのパーティション情報を表示します。
 
 ```sql
 SELECT * FROM my_table$partitions;
 ```
 
-結果:
+結果：
 ```text
 +-----------+--------------+--------------------+------------+-------------------------+
 | partition | record_count | file_size_in_bytes | file_count | last_update_time        |
@@ -1517,7 +1555,7 @@ SELECT * FROM my_table$partitions;
 SELECT * FROM my_table$buckets;
 ```
 
-結果:
+結果：
 ```text
 +-----------+--------+--------------+--------------------+------------+-------------------------+
 | partition | bucket | record_count | file_size_in_bytes | file_count | last_update_time        |
@@ -1528,13 +1566,13 @@ SELECT * FROM my_table$buckets;
 
 ### statistics {#statistics}
 
-行数、データサイズなどの統計情報を表示します。
+行数、データサイズなど、テーブルの統計情報を表示します。
 
 ```sql
 SELECT * FROM my_table$statistics;
 ```
 
-結果:
+結果：
 ```text
 +--------------+------------+-----------------------+------------------+----------+
 |  snapshot_id |  schema_id |     mergedRecordCount | mergedRecordSize |  colstat |
@@ -1551,7 +1589,7 @@ SELECT * FROM my_table$statistics;
 SELECT * FROM my_table$table_indexes;
 ```
 
-結果:
+結果：
 ```text
 +--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
 |                      partition |      bucket |                     index_type |                      file_name |            file_size |            row_count |                      dv_ranges |
@@ -1561,16 +1599,16 @@ SELECT * FROM my_table$table_indexes;
 +--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
 ```
 
-### システムテーブルのユースケース {#system-table-use-cases}
+### システムテーブルの使用例 {#system-table-use-cases}
 
-システムテーブルを使用すると、次の操作や監視タスクを簡単に実行できます。
+システムテーブルを使用すると、次の操作や監視を簡単に行えます。
 
-#### テーブルの最新スナップショット情報を表示して現在の状態を把握する {#view-the-latest-snapshot-information-of-a-table-to-understand-its-current-state}
+#### テーブルの最新スナップショット情報を確認し、現在の状態を把握する {#view-the-latest-snapshot-information-of-a-table-to-understand-its-current-state}
 
 ```sql
 SELECT snapshot_id, commit_time, commit_kind, total_record_count FROM catalog_sales$snapshots ORDER BY snapshot_id DESC;
 ```
-結果:
+結果：
 
 ```text
 +-------------+-------------------------+-------------+--------------------+
@@ -1580,13 +1618,13 @@ SELECT snapshot_id, commit_time, commit_kind, total_record_count FROM catalog_sa
 +-------------+-------------------------+-------------+--------------------+
 ```
 
-#### スナップショットに対応するテーブル情報を表示する {#view-table-information-for-snapshots}
+#### スナップショットのテーブル情報を確認する {#view-table-information-for-snapshots}
 
 ```sql
 SELECT s.snapshot_id, t.schema_id, t.fields FROM store_sales$snapshots s JOIN store_sales$schemas t ON s.schema_id=t.schema_id;
 ```
 
-結果:
+結果：
 
 ```text
 +-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1597,7 +1635,7 @@ SELECT s.snapshot_id, t.schema_id, t.fields FROM store_sales$snapshots s JOIN st
 +-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
-#### バケットのデータ分布を表示する {#view-data-distribution-of-buckets}
+#### バケットのデータ分布を確認する {#view-data-distribution-of-buckets}
 
 ```sql
 SELECT `bucket`, COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb FROM paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket` ORDER BY total_size_mb;
@@ -1607,7 +1645,7 @@ SELECT `bucket`, COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as to
 Paimon システムテーブルの多くのフィールドは Doris のキーワードに該当するため、バッククォートで囲む必要があります。
 :::
 
-結果:
+結果：
 
 ```text
 +--------+------------+--------------------+
@@ -1632,7 +1670,7 @@ Paimon システムテーブルの多くのフィールドは Doris のキーワ
 
 **1. `Could not find a file io implementation for scheme 's3a' in the classpath`**
 
-3.1 より前のバージョンで、HMS をメタデータストレージとして使用し、ストレージ側で 's3a' または 's3' プロトコルを使用すると、次のエラーが発生します。
+3.1 より前のバージョンで、メタデータストレージに HMS を使用し、ストレージ側で 's3a' または 's3' プロトコルを使用すると、次のエラーが発生します。
 
 ```text
 java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
@@ -1640,13 +1678,13 @@ java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: C
 
 **3.1 より前のバージョン**
 
-3.1 より前のバージョンでは、`s3a` プロトコルをサポートしません。使用する必要がある場合は、回避策として `s3a` 関連のパラメータを一時的に追加できます。
+3.1 より前のバージョンでは `s3a` プロトコルはサポートされません。使用する必要がある場合は、回避策として `s3a` 関連のパラメータを一時的に追加できます。
 
 **バージョン 3.1 以降**
 
-バージョン 3.1 以降では、`s3a` パラメータを明示的に追加する必要はありません。Paimon のストレージパラメータを上書きする場合は、`paimon.fs.` プレフィックス付きのパラメータを追加できます。Paimon は内部で HDFS API を使用するため、すべての `fs.s3a.*` パラメータがサポートされます。
+バージョン 3.1 以降では、`s3a` パラメータを明示的に追加する必要はありません。Paimon のストレージパラメータを上書きする必要がある場合は、`paimon.fs.` プレフィックスを付けたパラメータを追加できます。Paimon は内部で HDFS API を使用するため、すべての `fs.s3a.*` パラメータをサポートします。
 
-例:
+例：
 
 ```sql
 CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
@@ -1667,7 +1705,7 @@ CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
 );
 ```
 
-`s3` プロトコルを使用する場合は、Paimon の S3 関連パラメータを明示的に追加する必要があります。つまり、`paimon.` プレフィックスを付けます。例:
+`s3` プロトコルを使用する場合は、Paimon の S3 関連パラメータを明示的に追加する必要があります。つまり、`paimon.` プレフィックスを付けます。例：
 
 ```sql
 CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (

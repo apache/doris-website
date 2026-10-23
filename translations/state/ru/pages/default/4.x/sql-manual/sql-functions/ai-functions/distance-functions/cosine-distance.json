@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f38259b050965c8f804c5035eb6b65b686e18374bbd8015f233024a209c095a2",
+    "sourceTechnicalHash": "9c223f76fed333a8b3c04f8886721c8b4dd3b3a3a961c1277662d5e4cb3d25e9",
+    "targetHash": "cc6c94ab31145011849dd19931d7a2c5c6383a6af4c9945af5558922ba155a74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:55:25.671Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f38259b050965c8f804c5035eb6b65b686e18374bbd8015f233024a209c095a2",
+      "targetHash": "cc6c94ab31145011849dd19931d7a2c5c6383a6af4c9945af5558922ba155a74",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance",
+        "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/cosine-distance.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "f38259b050965c8f804c5035eb6b65b686e18374bbd8015f233024a209c095a2",
+        "targetHash": "cc6c94ab31145011849dd19931d7a2c5c6383a6af4c9945af5558922ba155a74",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

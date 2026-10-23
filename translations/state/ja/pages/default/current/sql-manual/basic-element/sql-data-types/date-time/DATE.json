@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "e1efe0685e075e454811a66bb037325134480ca25e4cba05c156d4895ad987a1",
-    "sourceTechnicalHash": "fb2aeb78433ca67d1961de4d2084e98dc500009ba64aeb589d92e03bc842fa29",
-    "targetHash": "0433b3bb7dde01b6c246b57146c0d1b2fa3692d44e3cd62c3e4c16712a8cd6ba",
+    "sourceCommit": "48ab8eca35a73841773f7a8f585aeeddaf6ffe56",
+    "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+    "sourceTechnicalHash": "e06d8d43fcde346b6593d4a342f73cb56bb62b703a008485a48d71ef85214ddf",
+    "targetHash": "c47ff32ef5e79e0a1b0cc6a1c37bcec16c9b5f35c58267019455939ba0111010",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.343Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T02:53:52.071Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+      "targetHash": "c47ff32ef5e79e0a1b0cc6a1c37bcec16c9b5f35c58267019455939ba0111010",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"4\",\"4.1.5\"]; received [\"0\",\"1\",\"1\",\"2\",\"2\",\"4\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"[0000-01-01, 9999-12-31]\"]; received [\"inlineCode\",null,null,\"0000-02-29\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"0000-02-29\"]; received [\"inlineCode\",null,null,\"[0000-01-01, 9999-12-31]\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

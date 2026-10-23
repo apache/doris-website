@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/histogram",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/histogram.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/histogram.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "494f5431a7538279bf5d46a9975ab95978cab9cbf2d75b643ac393f0b8d14864",
+    "sourceTechnicalHash": "00b4bb01465dd2c9047d98757de9d72b95fecc4b3fc9f6b19453801760111429",
+    "targetHash": "5390ef3373250e12cb8086c9b0af77507ec0ec61dea00af15d1d354f073a825d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:47:21.665Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "494f5431a7538279bf5d46a9975ab95978cab9cbf2d75b643ac393f0b8d14864",
+      "targetHash": "5390ef3373250e12cb8086c9b0af77507ec0ec61dea00af15d1d354f073a825d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

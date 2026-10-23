@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/DROP-BACKEND.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "526c9244e2b3bc1a8d828b7776c69109f81690d7a0b289365bdfd1715342de82",
+    "sourceTechnicalHash": "2d2972caa067f56079f21e54d329be2dbd22cb05cc821640d739b9cf715c5c0e",
+    "targetHash": "b6abf6b5855c0e368e421f22a0a86bff1dfa7468b4baecbcfafb880c3a18a6f5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:57:03.758Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "526c9244e2b3bc1a8d828b7776c69109f81690d7a0b289365bdfd1715342de82",
+      "targetHash": "b6abf6b5855c0e368e421f22a0a86bff1dfa7468b4baecbcfafb880c3a18a6f5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

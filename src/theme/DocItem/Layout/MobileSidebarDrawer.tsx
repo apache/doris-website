@@ -2,6 +2,7 @@ import React, { type JSX, useEffect, useRef, useState, useCallback } from 'react
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { translate } from '@docusaurus/Translate';
+import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useLocation } from '@docusaurus/router';
 import { useActivePlugin, useActiveVersion, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
@@ -14,6 +15,7 @@ import { getDocsSidebarScope, supportsDocsDomainNavigation } from '@site/src/uti
 import styles from './MobileSidebarDrawer.module.css';
 
 export default function MobileSidebarDrawer(): JSX.Element | null {
+    const isBrowser = useIsBrowser();
     const sidebar = useDocsSidebar();
     const activePlugin = useActivePlugin();
     const activeVersion = useActiveVersion(activePlugin?.pluginId);
@@ -204,7 +206,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                 </button>
             </div>
 
-            {typeof document !== 'undefined' && createPortal(drawer, document.body)}
+            {isBrowser && createPortal(drawer, document.body)}
         </>
     );
 }

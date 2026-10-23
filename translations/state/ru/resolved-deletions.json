@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "deletions": [
+    {
+      "id": "T06-DEV-206368608339761",
+      "sourceHash": "fc51417da6ce259215fb5bea9dc5904a46221b738a0f3987ec783fb8d2631e3d",
+      "sourcePath": "docs/data-operate/incremental/row-binlog.md",
+      "reviewedBy": "Codex (machine review)",
+      "resolvedAt": "2026-10-23T09:06:12Z",
+      "evidence": "https://github.com/apache/doris-website/pull/4426 and https://github.com/apache/doris-website/pull/4431; verified at a0312e41f13f47ff7da7855759d0d6f7ed3b5fc1: replacement docs/data-operate/incremental/changelog.md has a current ru target/state; obsolete source, ru target and state are absent; inbound links and sidebars are clean; the configured ru redirect resolves the old route to its Changelog replacement."
+    },
+    {
+      "id": "T06-DEV-123440086815130",
+      "sourceHash": "356bc83db9d7493df3a685acc7e3abda565764fd25d27fb502355eea3b5b6adf",
+      "sourcePath": "docs/key-features/binlog-table-stream.mdx",
+      "reviewedBy": "Codex (machine review)",
+      "resolvedAt": "2026-10-23T09:06:12Z",
+      "evidence": "https://github.com/apache/doris-website/pull/4426 and https://github.com/apache/doris-website/pull/4431; verified at a0312e41f13f47ff7da7855759d0d6f7ed3b5fc1: replacement docs/key-features/changelog-table-stream.mdx has a current ru target/state; obsolete source, ru target and state are absent; inbound links and sidebars are clean; the configured ru redirect resolves the old route to its Changelog replacement."
+    },
+    {
+      "id": "T06-DEV-049922268019675",
+      "sourceHash": "9ce183c6ca41de947d30a6f055e6039e449cb78541e3b130d9f85820cef6dc90",
+      "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/binlog.md",
+      "reviewedBy": "Codex (machine review)",
+      "resolvedAt": "2026-10-23T09:06:12Z",
+      "evidence": "https://github.com/apache/doris-website/pull/4426 and https://github.com/apache/doris-website/pull/4431; verified at a0312e41f13f47ff7da7855759d0d6f7ed3b5fc1: replacement docs/sql-manual/sql-functions/table-valued-functions/changelog.md has a current ru target/state; obsolete source, ru target and state are absent; inbound links and sidebars are clean; the configured ru redirect resolves the old route to its Changelog replacement."
+    },
+    {
+      "id": "T06-4X-190926151522346",
+      "sourceHash": "a6d0717e8ae7e4a214e441488241445cd294e63876f6058f87f35251fe3465a5",
+      "sourcePath": "versioned_docs/version-4.x/key-features/binlog-table-stream.mdx",
+      "reviewedBy": "Codex (machine review)",
+      "resolvedAt": "2026-10-23T09:06:12Z",
+      "evidence": "https://github.com/apache/doris-website/pull/4426 and https://github.com/apache/doris-website/pull/4431; verified at a0312e41f13f47ff7da7855759d0d6f7ed3b5fc1: replacement versioned_docs/version-4.x/key-features/changelog-table-stream.mdx has a current ru target/state; obsolete source, ru target and state are absent; inbound links and sidebars are clean; the configured ru redirect resolves the old route to its Changelog replacement."
+    }
+  ]
+}

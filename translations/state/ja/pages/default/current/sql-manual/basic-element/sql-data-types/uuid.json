@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/basic-element/sql-data-types/uuid.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/uuid.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "38696c6457a8c52c7b2fcad3afa5b60456ad393a7d6753268d11d0eef75572d7",
-    "sourceTechnicalHash": "f4557912ea452bb9d312053802674c7dce2d5a1cee52d3eced19efbb6d99e1c7",
-    "targetHash": "c59037a05d4084b432a6a538ee1a6d669cf7edc4e0ec3b44c33f3a54b941fd71",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "263daef96b4027a01b530b82cd45403880bbc20c7c2a835809ec56a61422529c",
+    "sourceTechnicalHash": "be33243c1e8eef280f769a694dfafc80603612ece4239a0fd8d183cbee949aaa",
+    "targetHash": "41705ff1b359009cca172f303970e24ad8e29c93443860e7f526e3fc181b944f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.345Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T07:51:08.841Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "263daef96b4027a01b530b82cd45403880bbc20c7c2a835809ec56a61422529c",
+      "targetHash": "41705ff1b359009cca172f303970e24ad8e29c93443860e7f526e3fc181b944f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]; received [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]\nprotected node 61: expected [\"inlineCode\",null,null,\"arrow.uuid\"]; received [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]\nprotected node 62: expected [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]; received [\"inlineCode\",null,null,\"arrow.uuid\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]; received [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]\nprotected node 61: expected [\"inlineCode\",null,null,\"arrow.uuid\"]; received [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]\nprotected node 62: expected [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]; received [\"inlineCode\",null,null,\"arrow.uuid\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 61: expected [\"inlineCode\",null,null,\"arrow.uuid\"]; received [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]\nprotected node 62: expected [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]; received [\"inlineCode\",null,null,\"arrow.uuid\"]\nprotected node 64: expected [\"inlineCode\",null,null,\"arrow.uuid\"]; received [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]; received [\"0\",\"128\",\"128\",\"15\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"16\",\"32\",\"32\",\"36\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"7\",\"7\",\"7\",\"7\",\"7\",\"7\"]\nprotected node 61: expected [\"inlineCode\",null,null,\"arrow.uuid\"]; received [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]\nprotected node 62: expected [\"inlineCode\",null,null,\"fixed_size_binary(16)\"]; received [\"inlineCode\",null,null,\"arrow.uuid\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

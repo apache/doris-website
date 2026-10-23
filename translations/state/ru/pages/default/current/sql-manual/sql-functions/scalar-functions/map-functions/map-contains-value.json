@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/map-functions/map-contains-value.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "196bed602c9439a7a637883f9d9241e9622a53ee45b41b860f0c64037e53616b",
+    "sourceTechnicalHash": "c75c46c25b470ff7dc0f4f50e71321b6d6f465cfffe3128c74bfa4433e98993f",
+    "targetHash": "b0edc112d05ea44b87868978c7c25037697e94716d70a7a39cff2abfce55ca82",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:23:35.927Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "196bed602c9439a7a637883f9d9241e9622a53ee45b41b860f0c64037e53616b",
+      "targetHash": "b0edc112d05ea44b87868978c7c25037697e94716d70a7a39cff2abfce55ca82",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

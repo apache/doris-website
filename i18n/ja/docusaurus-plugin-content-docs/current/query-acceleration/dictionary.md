@@ -1,45 +1,45 @@
 ---
-title: ディクショナリによる JOIN クエリの高速化
-sidebar_label: ディクショナリによる高速化
+title: Dictionary を使用して JOIN クエリを高速化
+sidebar_label: Dictionary による高速化
 language: ja
-description: Doris のディクショナリを使ってディメンションテーブルとの JOIN をメモリ内のキーと値の検索に置き換え、クエリの性能を向上させます。
+description: Doris の Dictionary を使用して、ディメンションテーブルとの JOIN をメモリ内のキーと値の検索に変換し、クエリの性能を向上させます。
 keywords:
-    - Doris ディクショナリ
-    - ディクショナリ
-    - JOIN の高速化
-    - ディメンションテーブルのクエリ
+    - Doris Dictionary
+    - Dictionary
+    - JOIN acceleration
+    - dimension table query
     - dict_get
     - HASH_MAP
     - IP_TRIE
-    - キーと値の検索
+    - KV lookup
 ---
 
 <!-- Knowledge type: Feature definition / Operation steps / Configuration parameters -->
 <!-- Applicable scenarios: Query performance tuning / Dimension table join acceleration -->
 
-ディクショナリは、JOIN 操作を高速化するために Doris が提供する特殊なデータ構造です。通常のテーブルを基に作成され、ソーステーブルの対象列をキーと値の関係として扱います。これらの列のデータをすべてメモリに事前ロードすることで高速な検索を可能にし、クエリの性能を向上させます。
+Dictionary は、JOIN 操作を高速化するために Doris が提供する特別なデータ構造です。通常のテーブルを基に作成され、ソーステーブルの対応する列をキーと値の関係として扱います。これらの列の全データをあらかじめメモリに読み込むことで高速な検索を実現し、クエリの性能を向上させます。
 
-ディクショナリは、キーと値の検索を頻繁に行う場合に特に適しています。キーと値の検索に使うため、キーの重複は許可されません。
+Dictionary は、キーと値の検索を頻繁に行う場合に特に適しています。キーと値の検索に使用するため、キーの重複は許可されません。
 
 :::tip
-この機能は実験的な機能であり、バージョン 4.1.0 以降でサポートされています。
+この機能は実験的な機能で、バージョン 4.1.0 以降でサポートされています。
 :::
 
-## ユースケース
+## ユースケース {#use-cases}
 
 <!-- Knowledge type: Architecture selection decision -->
 
-ディクショナリは主に次の場合に適しています。
+Dictionary は主に次のような場合に適しています。
 
 1. キーと値の検索を頻繁に行う場合
-2. ディメンションテーブル全体がメモリに収まるほど小さい場合
+2. ディメンションテーブルが全体をメモリに収められるほど小さい場合
 3. データの更新頻度が比較的低い場合
 
-従来 LEFT OUTER JOIN で実現していたキーと値の検索は、ディクショナリを使うと通常の関数呼び出しに置き換わり、JOIN のオーバーヘッドをなくせます。
+従来は LEFT OUTER JOIN で実装していたキーと値の検索も、Dictionary を使用すれば JOIN のオーバーヘッドをなくし、通常の関数呼び出しに置き換えられます。
 
-### シナリオ例
+### シナリオの例 {#scenario-example}
 
-EC システムでは、注文テーブル（ファクトテーブルである `orders`）に大量の取引データが記録されています。商品の詳細情報を取得するために、商品テーブル（ディメンションテーブルである `products`）との JOIN が頻繁に必要になります。
+EC サイトでは、注文テーブル（`orders`、ファクトテーブル）に大量の取引データが記録されています。商品の詳細情報を取得するために、商品テーブル（`products`、ディメンションテーブル）との JOIN が頻繁に必要になります。
 
 **ステップ 1：ファクトテーブルとディメンションテーブルを作成し、サンプルデータを挿入する**
 
@@ -78,13 +78,13 @@ INSERT INTO orders VALUES
 (10003, 1003, 88001, 2, 1899.00, '2024-02-22 14:20:00');
 ```
 
-**ステップ 2：従来の JOIN を使う方法**
+**ステップ 2：従来の JOIN を使用する方法**
 
-カテゴリごとの注文数と売上合計を集計するには、従来は LEFT OUTER JOIN を使って商品テーブルから商品情報を取得する必要がありました。
+カテゴリごとの注文件数と売上総額を集計するには、従来は LEFT OUTER JOIN を使用して商品テーブルから商品情報を取得する必要がありました。
 
 ```sql
 -- Count the number of orders and total sales for each category
-SELECT 
+SELECT
     p.category_name,
     p.brand_name,
     COUNT(DISTINCT o.order_id) as order_count,
@@ -107,11 +107,11 @@ ORDER BY total_amount DESC;
 +---------------------+------------+-------------+----------------+--------------+
 ```
 
-このようなクエリでは、`product_id` を基にほかの商品情報を頻繁に検索します。これは実質的にキーと値の検索です。
+この種のクエリでは、`product_id` を使ってほかの商品情報を頻繁に検索します。これは本質的に KV 検索です。
 
-**ステップ 3：JOIN の代わりにディクショナリを使う**
+**ステップ 3：JOIN の代わりに Dictionary を使用する**
 
-キーと値の関係を定義したら、対応するディクショナリを事前に作成できます。これにより、従来の JOIN 操作をより軽量なキーと値の検索に置き換え、SQL の実行効率を高められます。
+キーと値の関係を定義したら、対応する Dictionary をあらかじめ作成できます。これにより、従来の JOIN 操作をより軽量なキーと値の検索に置き換え、SQL の実行効率を高められます。
 
 ```sql
 -- Create the product information dictionary
@@ -129,7 +129,7 @@ PROPERTIES(
 );
 ```
 
-ディクショナリを使うと、元のクエリの JOIN 操作は軽量なキーと値の検索である `dict_get` 関数の呼び出しに変わります。
+Dictionary を使用すると、元のクエリの JOIN 操作は、軽量な KV 検索である `dict_get` 関数による検索に変わります。
 
 ```sql
 SELECT
@@ -156,11 +156,13 @@ ORDER BY total_amount DESC;
 +---------------------+------------+-------------+----------------+--------------+
 ```
 
-## ディクショナリの定義
+## Dictionary の定義 {#dictionary-definition}
+
+4.1.5 以降、Dictionary の作成には対象の Dictionary オブジェクトに対する `CREATE` 権限と、ソーステーブルに対する `SELECT` 権限が必要です。削除には Dictionary オブジェクトに対する `DROP` 権限が必要です。ソースが外部 Catalog に属する場合は、ソーステーブルに対する権限も確認されます。
 
 <!-- Knowledge type: Configuration parameters / Operation steps -->
 
-### 基本構文
+### 基本構文 {#basic-syntax}
 
 ```sql
 CREATE DICTIONARY <dict_name> USING <source_table>
@@ -184,34 +186,34 @@ PROPERTIES(
 
 | パラメータ | 意味 |
 | --- | --- |
-| `<dict_name>` | ディクショナリ名 |
+| `<dict_name>` | Dictionary の名前 |
 | `<source_table>` | ソースデータテーブル |
-| `<key_column>` | ソーステーブルでキーとして使う列名 |
-| `<value_column>` | ソーステーブルで値として使う列名 |
-| `<layout_type>` | ディクショナリのストレージレイアウトの種類。詳細は以下を参照 |
-| `<priority_item_key>` | ディクショナリのプロパティ名 |
-| `<priority_item_value>` | ディクショナリのプロパティ値 |
+| `<key_column>` | キーとして使用するソーステーブルの列名 |
+| `<value_column>` | 値として使用するソーステーブルの列名 |
+| `<layout_type>` | Dictionary のストレージレイアウトの種類。詳細は後述 |
+| `<priority_item_key>` | Dictionary のプロパティ名 |
+| `<priority_item_value>` | Dictionary のプロパティ値 |
 
-`<key_column>` と `<value_column>` はそれぞれ少なくとも一つ必要です。`<key_column>` を `<value_column>` より前に置く必要はありません。
+`<key_column>` と `<value_column>` は、それぞれ少なくとも 1 つ必要です。`<key_column>` を `<value_column>` より前に記述する必要はありません。
 
-### レイアウトの種類
+### レイアウトの種類 {#layout-types}
 
-現在、次の二種類のレイアウトをサポートしています。
+現在、次の 2 種類のレイアウトがサポートされています。
 
 | レイアウトの種類 | 用途 | 説明 |
 | --- | --- | --- |
-| `HASH_MAP` | 一般的なキーと値の検索 | ハッシュテーブルを使った実装 |
-| `IP_TRIE` | IP アドレスの検索 | IP アドレス検索向けに最適化されたトライ木を使った実装。キー列には CIDR 表記の IP アドレスを指定し、クエリでは CIDR 表記に対して照合します |
+| `HASH_MAP` | 一般的なキーと値の検索 | ハッシュテーブルを使用した実装 |
+| `IP_TRIE` | IP アドレスの検索 | Trie を使用した実装で、IP アドレスの検索向けに最適化されています。キー列には CIDR 表記の IP アドレスを指定し、クエリでは CIDR 表記に基づいて照合します |
 
 ### プロパティ {#properties}
 
 | プロパティ | 値の型 | 意味 | 必須 |
 | --- | --- | --- | --- |
-| `data_lifetime` | 整数（秒） | データの有効期間。ディクショナリの最終更新からこの時間が経過し、かつベーステーブルのデータが変更されている場合、自動的に再インポートされます。インポートの仕組みについては[自動インポート](#auto-import)を参照してください | はい |
-| `skip_null_key` | 真偽値 | ディクショナリへのデータロード時にキー列に NULL 値がある場合、`true` ならその行をスキップし、それ以外ならエラーになります。デフォルトは `false` です | いいえ |
-| `memory_limit` | 整数（バイト） | 単一 BE でディクショナリが使用できるメモリの上限。デフォルトは `2147483648`（2GB）です | いいえ |
+| `data_lifetime` | 整数、単位は秒 | データの有効期間。Dictionary の最終更新からこの期間を超え、かつベーステーブルのデータに変更がある場合、再インポートが自動的に開始されます。インポートの仕組みについては[自動インポート](#auto-import)を参照してください | はい |
+| `skip_null_key` | 真偽値 | Dictionary へのデータロード時にキー列に null 値がある場合、`true` ならその行をスキップし、それ以外ならエラーを報告します。デフォルトは `false` です | いいえ |
+| `memory_limit` | 整数、単位はバイト | 単一の BE で Dictionary が使用できるメモリの上限。デフォルトは `2147483648`（2GB）です | いいえ |
 
-### 作成例
+### 作成例 {#creation-example}
 
 ```sql
 -- Create the source data table
@@ -232,68 +234,68 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-このテーブルを基に、`city_dict` ディクショナリと `dict_get` 関数を使い、対応する `id` を `city`（`source_table` の列）の値から検索できます。
+このテーブルを基に作成した `city_dict` Dictionary と `dict_get` 関数を使用すると、`source_table` の `city` の値から対応する `id` を検索できます。
 
-### 使用上の制約
+### 使用上の制約 {#usage-restrictions}
 
 **1. キー列の制約**
 
-- IP_TRIE ディクショナリのキー列は Varchar 型または String 型である必要があり、**キー列の値は CIDR 形式でなければなりません**。
-- IP_TRIE ディクショナリで指定できるキー列は一つだけです。
-- HASH_MAP ディクショナリのキー列では、すべての単純型をサポートします（Map や Array などのネストした型は対象外です）。
-- キー列として使う列には、**ソーステーブル内で重複する値を含められません**。重複があると、ディクショナリへのデータロード時にエラーになります。
+- IP_TRIE Dictionary のキー列は Varchar 型または String 型でなければならず、**キー列の値は CIDR 形式でなければなりません**。
+- IP_TRIE Dictionary で指定できるキー列は 1 つだけです。
+- HASH_MAP Dictionary のキー列は、すべての単純型をサポートします（Map や Array などのネスト型は対象外です）。
+- キー列として使用する列には、**ソーステーブル内で重複する値があってはなりません**。重複している場合、Dictionary のデータロード時にエラーが報告されます。
 
-**2. NULL 値の扱い**
+**2. null 値の扱い**
 
-- ディクショナリのすべての列には Nullable 列を使用できます。ただし、キー列に実際の NULL 値が含まれないようにしてください。含まれる場合の動作は、`skip_null_key` の設定によって決まります（[プロパティ](#properties)を参照）。
+- Dictionary のすべての列に Nullable 列を使用できますが、キー列に実際の null 値を含めないようにしてください。含まれる場合の動作は、[プロパティ](#properties)の `skip_null_key` によって決まります。
 
-## 使用方法と管理
+## 使用と管理 {#usage-and-management}
 
-### データのロード（更新）
+### データのロード（更新） {#loading-refreshing-data}
 
 <!-- Knowledge type: Operation steps -->
 
-ディクショナリは自動ロードと手動ロードの両方をサポートします。ディクショナリのロードは「更新（refresh）」とも呼びます。
+Dictionary は自動と手動の両方のデータロードをサポートします。Dictionary へのデータロードは「更新」とも呼ばれます。
 
 #### 自動インポート {#auto-import}
 
-自動ロードは次のタイミングで実行されます。
+自動データロードは、次のタイミングで行われます。
 
-1. ディクショナリの作成後
-2. ディクショナリのデータの有効期間が切れたとき（[プロパティ](#properties)を参照）
-3. BE の状態から、このディクショナリのデータが欠けていると判明したとき（新しい BE が稼働を開始した場合や、既存の BE が再起動した場合など）
+1. Dictionary の作成後
+2. Dictionary のデータが期限切れになったとき（[プロパティ](#properties)を参照）
+3. BE の状態から、その Dictionary のデータが欠けていることが判明したとき（新しい BE が稼働を開始した場合や、既存の BE が再起動した場合など）
 
-Doris は `dictionary_auto_refresh_interval_seconds` 秒ごとに、すべてのディクショナリのデータが有効期間切れかどうかを確認します。ディクショナリの最終更新から `data_lifetime` 秒を超え、**前回のロード以降にベーステーブルのデータが変更されている場合**、Doris はそのディクショナリのロードを自動的に投入します。
+Doris は `dictionary_auto_refresh_interval_seconds` 秒ごとに、すべての Dictionary データの期限切れを確認します。Dictionary が `data_lifetime` 秒を超えて更新されておらず、**前回のデータロード以降にベーステーブルのデータが変更されている場合**、Doris はその Dictionary のデータロードを自動的に実行します。
 
-一部の BE にデータがなく、前回のロード以降にベーステーブルのデータが変更されていない場合、Doris は影響を受けた BE に現行バージョンのデータだけを補充します。すべての BE を対象とする更新タスクは投入されず、ディクショナリのバージョンも変わりません。
+一部の BE にデータがなく、前回のデータロード以降にベーステーブルのデータが変更されていない場合、Doris は該当する BE に現行バージョンのデータだけを補充します。すべての BE を対象とする更新タスクは実行されず、Dictionary のバージョンも変わりません。
 
-#### 手動インポート
+#### 手動インポート {#manual-import}
 
-- **目的**：ディクショナリデータの更新を手動で開始します。
+- **目的**：Dictionary データの更新を手動で開始します。
 - **コマンド**：
 
     ```sql
     REFRESH DICTIONARY <dict_name>;
     ```
 
-- **説明**：`<dict_name>` は、データをロードするディクショナリの名前です。
+- **説明**：`<dict_name>` は、データをロードする Dictionary の名前です。
 
-#### ロード時の注意事項
+#### データロード時の注意事項 {#notes-for-loading}
 
-1. ディクショナリはデータのロードが完了してからクエリできます。
-2. ロード時にキー列に重複する値があると、ロードトランザクションは失敗します。
-3. ロードトランザクションがすでに進行中で、ディクショナリの Status が `LOADING` の場合、手動ロードは失敗します。進行中のロードが完了してから再試行してください。
-4. ロードしたディクショナリのサイズが設定済みの `memory_limit` を超えると、ロードトランザクションは失敗します。
+1. Dictionary にデータがロードされるまで、その Dictionary はクエリできません。
+2. データロード中にキー列に重複する値が見つかると、データロードのトランザクションは失敗します。
+3. データロードのトランザクションがすでに進行中（Dictionary の Status が `LOADING`）の場合、手動のデータロードは失敗します。進行中のデータロードが完了してから再試行してください。
+4. ロードした Dictionary のサイズが設定された `memory_limit` を超えると、データロードのトランザクションは失敗します。
 
-### ディクショナリのクエリ
+### Dictionary のクエリ {#querying-a-dictionary}
 
 <!-- Knowledge type: Operation steps -->
 
-キー列と値列がそれぞれ一つのディクショナリは `dict_get` 関数で、キー列または値列が複数あるディクショナリは `dict_get_many` 関数でクエリできます。
+`dict_get` 関数と `dict_get_many` 関数を使用すると、それぞれ単一のキー列と値列、または複数のキー列と値列を持つ Dictionary に対してクエリできます。
 
-最初にクエリする前に、ディクショナリのロードが完了するまで待ってください。
+最初のクエリを実行する前に、Dictionary のデータロードが完了するまで待ってください。
 
-#### 構文
+#### 構文 {#syntax}
 
 ```sql
 dict_get("<db_name>.<dict_name>", "<query_column>", <query_key_value>);
@@ -304,45 +306,45 @@ dict_get_many("<db_name>.<dict_name>", <query_columns>, <query_key_values>);
 
 | パラメータ | 説明 |
 | --- | --- |
-| `<db_name>` | ディクショナリが属するデータベース名 |
-| `<dict_name>` | ディクショナリ名 |
-| `<query_column>` | 検索する値列の名前。型は `VARCHAR` で、**定数でなければなりません** |
-| `<query_columns>` | 検索するすべての値列の名前。型は `ARRAY<VARCHAR>` で、**定数でなければなりません** |
+| `<db_name>` | Dictionary が属するデータベースの名前 |
+| `<dict_name>` | Dictionary の名前 |
+| `<query_column>` | クエリする値列の名前。型は `VARCHAR` で、**定数でなければなりません** |
+| `<query_columns>` | クエリするすべての値列の名前。型は `ARRAY<VARCHAR>` で、**定数でなければなりません** |
 | `<query_key_value>` | クエリに使用するキー列のデータ |
-| `<query_key_values>` | ディクショナリの**すべてのキー列**について、検索に使用するデータを格納した STRUCT |
+| `<query_key_values>` | Dictionary の**すべてのキー列**について、クエリに使用するデータを格納した STRUCT |
 
 戻り値の型：
 
-- `dict_get` の戻り値の型は、`<query_column>` に対応するディクショナリ列の型です。
-- `dict_get_many` の戻り値の型は [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) で、`<query_columns>` に対応するディクショナリ列の型で構成されます。
+- `dict_get` の戻り値の型は、`<query_column>` に対応する Dictionary の列の型です。
+- `dict_get_many` の戻り値の型は、`<query_columns>` に対応する Dictionary の列の型で構成される [STRUCT](../sql-manual/basic-element/sql-data-types/semi-structured/STRUCT) です。
 
-#### クエリ例
+#### クエリの例 {#query-examples}
 
-**例 1：単一キーと単一の値のクエリ**
+**例 1：単一キー、単一値のクエリ**
 
-`city_dict` ディクショナリ（`test_db` データベース内）をクエリし、キー列の値が「Beijing」のときの `id` の値を取得します。
+`test_db` データベースの `city_dict` Dictionary に対し、キー列の値が「Beijing」の場合の `id` の値を取得します。
 
 ```sql
 SELECT dict_get("test_db.city_dict", "id", "Beijing");
 ```
 
-**例 2：単一キーと複数の値のクエリ**
+**例 2：単一キー、複数値のクエリ**
 
-`single_key_dict` ディクショナリ（`test_db` データベース内）をクエリし、キー列の値が 1 のときの `k1` 列と `k3` 列の値を取得します。
+`test_db` データベースの `single_key_dict` Dictionary に対し、キー列の値が 1 の場合の `k1` 列と `k3` 列の値を取得します。
 
 ```sql
 SELECT dict_get_many("test_db.single_key_dict", ["k1", "k3"], struct(1));
 ```
 
-**例 3：複数のキーと複数の値のクエリ**
+**例 3：複数キー、複数値のクエリ**
 
-`multi_key_dict` ディクショナリ（`test_db` データベース内）をクエリし、二つのキー列の値がそれぞれ 2 と 'ABC' のときの `k2` 列と `k3` 列の値を取得します。
+`test_db` データベースの `multi_key_dict` Dictionary に対し、2 つのキー列の値がそれぞれ 2 と 'ABC' の場合の `k2` 列と `k3` 列の値を取得します。
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 ```
 
-たとえば、テーブルの作成文が次の場合：
+たとえば、テーブルの作成文が次のとおりだとします。
 
 ```sql
 create table if not exists multi_key_table(
@@ -364,7 +366,7 @@ LAYOUT(HASH_MAP)
 PROPERTIES('data_lifetime' = '600');
 ```
 
-前述のステートメント
+この場合、先ほどの文
 
 ```sql
 SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
@@ -372,53 +374,53 @@ SELECT dict_get_many("test_db.multi_key_dict", ["k2", "k3"], struct(2, 'ABC'));
 
 の戻り値の型は `STRUCT<float, varchar>` です。
 
-#### クエリ時の注意事項
+#### クエリ時の注意事項 {#notes-for-queries}
 
-1. 検索したキーのデータがディクショナリに存在しない場合、**またはキーのデータが NULL の場合**、NULL を返します。
-2. IP_TRIE ディクショナリをクエリする場合、**`<query_key_value>` の型は `IPV4` または `IPV6` でなければなりません**。
-3. IP_TRIE ディクショナリでは、キー列 `<key_column>` のデータとクエリに使用する `<query_key_value>` の両方で、`IPV4` 形式と `IPV6` 形式をサポートします。
-4. BE が新たに稼働を開始したか、停止後に再起動したために、その BE にディクショナリデータがない場合、当該 BE にスケジュールされたクエリは失敗します。クエリがどの BE にスケジュールされるかは複数の要因で決まります。FE Master の負荷が高くない場合は、[設定項目](#configuration-items) `dictionary_auto_refresh_interval_seconds` を小さくすると、ディクショナリを利用できない期間を短縮できます。
+1. クエリするキーのデータが Dictionary に存在しない場合、**またはキーのデータが null の場合**、null が返されます。
+2. IP_TRIE Dictionary をクエリする場合、**`<query_key_value>` の型は `IPV4` または `IPV6` でなければなりません**。
+3. IP_TRIE Dictionary を使用する場合、キー列 `<key_column>` のデータとクエリに使用する `<query_key_value>` は、どちらも `IPV4` と `IPV6` の両方の形式をサポートします。
+4. 新たに稼働を開始したか、停止後に再起動したために、特定の BE に Dictionary データがない場合、その BE に割り当てられたクエリは失敗します。クエリがその BE に割り当てられるかどうかは、複数の要因によって決まります。FE Master の負荷が高くない場合は、[設定項目](#configuration-items) `dictionary_auto_refresh_interval_seconds` の値を小さくすると、Dictionary を利用できない期間を短縮できます。
 
-### ディクショナリの管理
+### Dictionary の管理 {#dictionary-management}
 
 <!-- Knowledge type: Operation steps -->
 
-ディクショナリの管理と確認には、次のステートメントを使用できます。
+Dictionary の管理と確認には、次の文を使用できます。
 
-**1. 現在のデータベース内のすべてのディクショナリの状態を表示する**
+**1. 現在のデータベースにあるすべての Dictionary の状態を表示する**
 
 ```sql
 SHOW DICTIONARIES [LIKE <LIKE_NAME>];
 ```
 
-**2. 特定のディクショナリの定義を表示する**
+**2. 特定の Dictionary の定義を表示する**
 
 ```sql
 DESC DICTIONARY <dict_name>;
 ```
 
-**3. ディクショナリを削除する**
+**3. Dictionary を削除する**
 
 ```sql
 DROP DICTIONARY <dict_name>;
 ```
 
-ディクショナリを削除しても、BE からすぐには削除されない場合があります。
+Dictionary を削除しても、BE からはすぐに削除されない場合があります。
 
 #### 設定項目 {#configuration-items}
 
-ディクショナリでは以下の設定項目をサポートします。いずれも FE CONFIG です。
+Dictionary では次の設定項目がサポートされます。いずれも FE CONFIG です。
 
 | 設定項目 | デフォルト値 | 動的に変更可能 | 説明 |
 | --- | --- | --- | --- |
-| `dictionary_task_queue_size` | 1024 | いいえ | すべてのディクショナリタスクに使うスレッドプールのキュー長。通常は変更不要です |
-| `job_dictionary_task_consumer_thread_num` | 3 | いいえ | すべてのディクショナリタスクに使うスレッドプールのスレッド数 |
-| `dictionary_rpc_timeout_ms` | 5000 (5s) | はい | ディクショナリ関連のすべての RPC のタイムアウト。通常は変更不要です |
-| `dictionary_auto_refresh_interval_seconds` | 5 (秒) | はい | すべてのディクショナリのデータが有効期間切れかどうかを自動的に確認する間隔 |
+| `dictionary_task_queue_size` | 1024 | いいえ | すべての Dictionary タスクに使用するスレッドプールのキュー長。通常、変更する必要はありません |
+| `job_dictionary_task_consumer_thread_num` | 3 | いいえ | すべての Dictionary タスクに使用するスレッドプールのスレッド数 |
+| `dictionary_rpc_timeout_ms` | 5000 (5s) | はい | Dictionary 関連のすべての RPC のタイムアウト。通常、変更する必要はありません |
+| `dictionary_auto_refresh_interval_seconds` | 5 (seconds) | はい | すべての Dictionary データが期限切れかどうかを自動確認する間隔 |
 
-### 状態の表示
+### 状態の表示 {#status-display}
 
-`SHOW DICTIONARIES` ステートメントには、各ディクショナリに対応するベーステーブル、現在のデータバージョン番号、FE と BE の状態が表示されます。
+`SHOW DICTIONARIES` 文には、各 Dictionary に対応するベーステーブル、現在のデータバージョン番号、FE と BE での状態が表示されます。
 
 ```sql
 > SHOW DICTIONARIES;
@@ -436,23 +438,23 @@ DROP DICTIONARY <dict_name>;
 +--------------+----------------+----------------------------------------------+---------+--------+------------------------------------+------------------------------+
 ```
 
-フィールドの意味：
+各フィールドの意味：
 
-1. `Version`：データのバージョン番号。データをロードするたびに 1 ずつ増加します。
-2. `Status`：ディクショナリの状態。意味は以下のとおりです。
+1. `Version`：データのバージョン番号です。データロードのたびに 1 増加します。
+2. `Status`：Dictionary の状態です。各値の意味は次のとおりです。
 
     | 状態名 | 意味 |
     | --- | --- |
-    | NORMAL | ディクショナリは正常な状態です |
-    | LOADING | ディクショナリのデータをロード中です |
-    | OUT_OF_DATE | ディクショナリのデータは有効期間切れです |
+    | NORMAL | Dictionary は現在正常な状態です |
+    | LOADING | Dictionary は現在データをロードしています |
+    | OUT_OF_DATE | Dictionary のデータは期限切れです |
 
-    ロードの進行中に、同じディクショナリを再びロードすることはできません。
+    データロードが進行中の Dictionary に対して、再度データロードを開始することはできません。
 
-3. `DataDistribution`：各 BE の現在の状態。バージョン番号とメモリ使用量（KB）を含みます。
-4. `LastUpdateResult`：前回のロード（自動または手動）の結果。エラーが発生した場合は、ここに詳細が表示されます。
+3. `DataDistribution`：各 BE の現在の状態です。バージョン番号とメモリ使用量（KB）が含まれます。
+4. `LastUpdateResult`：前回のデータロード（自動または手動）の結果です。エラーが発生した場合は、ここに詳細情報が表示されます。
 
-ディクショナリの列定義を確認するには、`DESC DICTIONARY` を使用します。例：
+Dictionary の列定義を表示するには、`DESC DICTIONARY` を使用します。例：
 
 ```sql
 > DESC DICTIONARY city_code_dict;
@@ -464,22 +466,22 @@ DROP DICTIONARY <dict_name>;
 +-------------+-------------+------+-------+
 ```
 
-## 注意事項
+## 注意事項 {#notes}
 
 <!-- Knowledge type: Best practices -->
 
-### データの整合性
+### データの整合性 {#data-consistency}
 
-- ディクショナリを更新するたびに新しいバージョンが作成されます。クエリ時に BE が記録しているバージョンと FE のバージョンが異なると、クエリは失敗します。
-- Doris はディクショナリとベーステーブルの間に強いデータ整合性を維持しません。自動更新のためにディクショナリの `data_lifetime` を適切に設定し、必要に応じてビジネスロジックに基づく手動更新を併用してください。
-- ソーステーブルが何らかの方法で削除されると、対応するディクショナリも自動的に削除されます。
+- Dictionary を更新するたびに新しいバージョンが作成されます。クエリ中に BE が記録しているバージョンと FE 上のバージョンが異なる場合、そのクエリは失敗します。
+- Doris は Dictionary とベーステーブルの間で強いデータ整合性を維持しません。Dictionary の `data_lifetime` を適切に設定して自動更新を有効にし、必要に応じて業務ロジックに基づく手動更新を追加してください。
+- ソーステーブルが何らかの方法で削除されると、対応する Dictionary も自動的に削除されます。
 
-### 性能上の考慮事項
+### 性能に関する考慮事項 {#performance-considerations}
 
-- ディクショナリは、ディメンションテーブルのデータなど、比較的変更の少ないデータに適しています。
-- ディクショナリは完全にメモリ内に置かれるテーブルで、その全データがすべての BE のメモリに保存されます。そのため、多くのメモリを消費します。メモリ使用量とクエリ性能のバランスを考え、ディクショナリの基となるテーブルを選んでください。
+- Dictionary は、ディメンションテーブルのデータなど、比較的更新の少ないデータに適しています。
+- Dictionary は完全にメモリ上に保持されるテーブルであり、その全データがすべての BE のメモリに保存されるため、多くのメモリを消費します。メモリ使用量とクエリ性能のバランスを考慮し、Dictionary の作成元に適したテーブルを選んでください。
 
-### ベストプラクティス
+### ベストプラクティス {#best-practices}
 
 1. **キー列と値列を適切に選ぶ**：
 
@@ -487,20 +489,20 @@ DROP DICTIONARY <dict_name>;
 
 2. **レイアウトを選ぶ**：
 
-    - 一般的な用途では HASH_MAP レイアウトを使用します。
-    - IP アドレス範囲の照合には IP_TRIE レイアウトを使用します。
+    - 一般的な用途には HASH_MAP レイアウトを使用してください。
+    - IP アドレス範囲の照合には IP_TRIE レイアウトを使用してください。
 
 3. **状態を管理する**：
 
-    - ディクショナリのメモリ使用量を定期的に監視してください。
-    - 適切なデータ更新間隔を選び、データが古くなったと分かっている場合はアプリケーション側からディクショナリを手動で更新してください。
-    - ディクショナリを使う場合は、BE のメモリを監視してください。ディクショナリの数が多すぎたり、サイズが大きすぎたりすると、メモリを使いすぎて BE が異常な状態になる可能性があります。
+    - Dictionary のメモリ使用量を定期的に監視してください。
+    - 適切なデータ更新間隔を選び、データが古くなったと分かっている場合は、業務側で Dictionary を手動更新してください。
+    - Dictionary の使用時は BE のメモリを監視し、Dictionary の数が多すぎたり、サイズが大きすぎたりしてメモリを過度に消費し、BE の状態に異常が生じることを防いでください。
 
-## 完全な使用例
+## 完全な例 {#complete-examples}
 
 <!-- Knowledge type: Operation steps -->
 
-### 例 1：HASH_MAP、単一キーと単一の値
+### 例 1：HASH_MAP、単一キーと単一値 {#example-1-hash_map-single-key-and-single-value}
 
 ```sql
 -- Create the source data table
@@ -538,7 +540,7 @@ SELECT dict_get("test_refresh_dict.city_code_dict", "region_code", "Beijing");
 +------------------------------------------------------------------------+
 ```
 
-### 例 2：IP_TRIE、CIDR に基づく IP 検索
+### 例 2：IP_TRIE、CIDR に基づく IP 検索 {#example-2-ip_trie-cidr-based-ip-lookup}
 
 ```sql
 -- Create the source data table
@@ -582,7 +584,7 @@ SELECT
 +---------------+------------+-------------+
 ```
 
-### 例 3：HASH_MAP、複数のキーと複数の値
+### 例 3：HASH_MAP、複数キーと複数値 {#example-3-hash_map-multiple-keys-and-multiple-values}
 
 ```sql
 -- Product SKU dimension table: contains the basic attributes of products
@@ -646,11 +648,11 @@ PROPERTIES('data_lifetime'='300');
 
 -- Example of a query using dict_get_many: get order details and SKU information
 WITH order_sku_info AS (
-    SELECT 
+    SELECT
         o.order_id,
         o.quantity,
         o.order_time,
-        dict_get_many("test.sku_dict", 
+        dict_get_many("test.sku_dict",
             ["product_name", "color_name", "size_name", "price", "stock"],
             struct(o.product_id, o.color_code, o.size_code)
         ) as sku_info
@@ -658,7 +660,7 @@ WITH order_sku_info AS (
     WHERE o.order_time >= '2024-02-23 12:00:00'
         AND o.order_time < '2024-02-23 13:00:00'
 )
-SELECT 
+SELECT
     order_id,
     order_time,
     struct_element(sku_info, 'product_name') as product_name,
@@ -684,39 +686,39 @@ ORDER BY order_time;
 +----------+---------------------+---------------------+------------+-----------+----------+------------+--------------+---------------+
 ```
 
-## トラブルシューティング
+## トラブルシューティング {#troubleshooting}
 
 <!-- Knowledge type: Troubleshooting -->
 <!-- Applicable scenarios: Troubleshooting -->
 
 | エラーの症状 | 対処方法 |
 | --- | --- |
-| クエリで `can not find dict name` と報告される | まず `SHOW DICTIONARIES` を実行し、ディクショナリが存在するか確認します。存在する場合は、対応するディクショナリのデータを再度更新します |
-| クエリで `dict_get() only support IP type for IP_TRIE` と報告される | IP_TRIE ディクショナリのキー列が CIDR 形式に厳密に従っているか確認します |
-| ロードで `Version ID is not greater than the existing version ID for the dictionary.` と報告される | `DROP DICTIONARY` コマンドで対応するディクショナリを削除し、再作成してデータを再ロードします |
-| `SHOW DICTIONARIES` で特定の BE 上のディクショナリの Version が FE の Version より大きいと表示される | `DROP DICTIONARY` コマンドで対応するディクショナリを削除し、再作成してデータを再ロードします |
-| ロードで `Dictionary X commit version Y failed` と報告される | ディクショナリを再ロードします |
+| クエリで `can not find dict name` が報告される | まず `SHOW DICTIONARIES` を実行し、Dictionary が存在するか確認します。存在する場合は、対応する Dictionary のデータを再度更新します |
+| クエリで `dict_get() only support IP type for IP_TRIE` が報告される | IP_TRIE Dictionary のキー列が CIDR 形式に厳密に従っているか確認します |
+| データロード時に `Version ID is not greater than the existing version ID for the dictionary.` が報告される | `DROP DICTIONARY` コマンドで該当する Dictionary を削除し、再作成してデータをロードし直します |
+| `SHOW DICTIONARIES` で、特定の BE 上の Dictionary の Version が FE の Version より大きいと表示される | `DROP DICTIONARY` コマンドで該当する Dictionary を削除し、再作成してデータをロードし直します |
+| データロード時に `Dictionary X commit version Y failed` が報告される | Dictionary のデータをロードし直します |
 
-**復旧方法**：ほとんどのエラーでは、通常の操作で解決しない場合、ディクショナリを削除して再作成すると解決できます。
+**復旧方法**：ほとんどのエラーでは、通常の操作で解決できない場合でも、Dictionary を削除して再作成することで解決できます。
 
-## よくある質問
+## よくある質問 {#faq}
 
-**Q1：ディクショナリと通常のマテリアライズドビューの違いは何ですか？**
+**Q1：Dictionary と通常のマテリアライズドビューはどう違いますか？**
 
-ディクショナリは、キーと値の検索を高速化し、従来の JOIN 操作を `dict_get` 関数の呼び出しに置き換えるための、完全にメモリ内に置かれる KV 構造です。一方、マテリアライズドビューは、より一般的な事前計算を目的としています。
+Dictionary は、キーと値の検索を高速化するために設計された、完全にメモリ上に保持される KV 構造です。従来の JOIN 操作を `dict_get` 関数呼び出しに置き換えます。一方、マテリアライズドビューは、より一般的な事前計算を目的としています。
 
-**Q2：ディクショナリのデータはベーステーブルと強い整合性を保ちますか？**
+**Q2：Dictionary のデータとベーステーブルの間では、強い整合性が保たれますか？**
 
-いいえ。Doris はディクショナリとベーステーブルの間に強いデータ整合性を維持しません。`data_lifetime` による自動更新、または手動の `REFRESH DICTIONARY` でデータを同期する必要があります。
+いいえ。Doris は Dictionary とベーステーブルの間で強いデータ整合性を維持しません。`data_lifetime` に基づく自動更新、または手動の `REFRESH DICTIONARY` によってデータを同期する必要があります。
 
 **Q3：HASH_MAP ではなく IP_TRIE を選ぶべきなのはどのような場合ですか？**
 
-CIDR に基づく IP アドレス範囲の照合が必要な場合は IP_TRIE を使用します。それ以外のキーと値の照合には HASH_MAP を使用します。
+CIDR に基づく IP 範囲の照合クエリが必要な場合は、IP_TRIE を使用してください。それ以外のキーと値の照合には HASH_MAP を使用してください。
 
-**Q4：ディクショナリがメモリを使いすぎる場合はどうすればよいですか？**
+**Q4：Dictionary がメモリを使いすぎる場合はどうすればよいですか？**
 
-`memory_limit` プロパティを使うと、単一 BE で使用できるメモリの上限を設定できます。また、ディクショナリが大きくなりすぎないように、カーディナリティが適度な列を選ぶことを推奨します。
+`memory_limit` プロパティで、単一の BE におけるメモリ使用量の上限を設定できます。また、Dictionary が大きくなりすぎないように、作成元にはカーディナリティが適度な列を選ぶことを推奨します。
 
-**Q5：ディクショナリのクエリが NULL を返す原因は何ですか？**
+**Q5：Dictionary のクエリで null が返される原因には何がありますか？**
 
-検索したキーがディクショナリに存在しない場合、または検索したキーのデータが NULL の場合、NULL を返します。
+クエリするキーが Dictionary に存在しない場合、またはクエリするキーのデータが null の場合、null が返されます。

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-position",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-position.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-position.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "256c51d1815e76d40aa4a2bad62de1186f1acce9d0dceef077a8bb0e1591bf68",
+    "sourceTechnicalHash": "670ec5d57e8a98f151f0a170eee56a703415b4331a333dee04cc8e52618045a0",
+    "targetHash": "26d763e744a2f61da8ceefa8d56bebd1417a72209aa92e8f38a086f83518da10",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:39:43.369Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "256c51d1815e76d40aa4a2bad62de1186f1acce9d0dceef077a8bb0e1591bf68",
+      "targetHash": "26d763e744a2f61da8ceefa8d56bebd1417a72209aa92e8f38a086f83518da10",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

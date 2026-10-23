@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/lakehouse-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/lakehouse-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/lakehouse-overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7e4410bd769bf4a40ac694878a09f46e24717cfeed8e74ac30ead935d67dbb92",
+    "sourceTechnicalHash": "551d466c9a473c4c5651036e3c924f775f288736ffcd605bbcad30b748b85c1c",
+    "targetHash": "17722ac5b83cfb72f7c5dc10efc0582b5b72a98ff80ce3e182f9022028a1cd6c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:14:14.314Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7e4410bd769bf4a40ac694878a09f46e24717cfeed8e74ac30ead935d67dbb92",
+      "targetHash": "17722ac5b83cfb72f7c5dc10efc0582b5b72a98ff80ce3e182f9022028a1cd6c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

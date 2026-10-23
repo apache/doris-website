@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e7053926e5670512b52c47a631ebd821eb8912b50400fb3c9184f5857bb9b067",
+    "sourceTechnicalHash": "75ce0920556a5bb4313ab5b12a4310549bdff81b3a46545c0bce67ff3e17ca47",
+    "targetHash": "13766fe14c9ae1786c8867992057b8ac3701bebc9172748be37406f01dd89ae5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:55:26.601Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e7053926e5670512b52c47a631ebd821eb8912b50400fb3c9184f5857bb9b067",
+      "targetHash": "13766fe14c9ae1786c8867992057b8ac3701bebc9172748be37406f01dd89ae5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-cum-sum.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "e7053926e5670512b52c47a631ebd821eb8912b50400fb3c9184f5857bb9b067",
+        "targetHash": "13766fe14c9ae1786c8867992057b8ac3701bebc9172748be37406f01dd89ae5",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

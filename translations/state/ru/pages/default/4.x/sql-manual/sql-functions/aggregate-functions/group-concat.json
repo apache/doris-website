@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-concat",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b50ff8746fb9564b6cc6a46ff2958293f6dda92bf80e36bdf1d038fed4a0bab6",
+    "sourceTechnicalHash": "68b5bd59450450f5e63a9670e0beb315aaf14e82a956e53b87a7b97de445a817",
+    "targetHash": "db059be0b77aca515e38e6d339b10709162f3354142882896b1b91a58ac7b173",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:13.472Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b50ff8746fb9564b6cc6a46ff2958293f6dda92bf80e36bdf1d038fed4a0bab6",
+      "targetHash": "db059be0b77aca515e38e6d339b10709162f3354142882896b1b91a58ac7b173",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/group-concat",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-concat.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "b50ff8746fb9564b6cc6a46ff2958293f6dda92bf80e36bdf1d038fed4a0bab6",
+        "targetHash": "db059be0b77aca515e38e6d339b10709162f3354142882896b1b91a58ac7b173",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

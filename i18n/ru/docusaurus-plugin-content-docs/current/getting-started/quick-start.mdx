@@ -1,0 +1,269 @@
+---
+{
+    "title": "Быстрый старт за 5 минут",
+    "language": "ru",
+    "sidebar_label": "Быстрый старт с Apache Doris",
+    "description": "Быстро разверните Apache Doris локально с помощью Docker или бинарных файлов, настройте кластер и выполните свой первый SQL-запрос."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**После прохождения этого руководства вы сможете:**
+
+- Запустить полноценный кластер Doris за 5 минут с помощью Docker
+- Подключиться к кластеру с помощью клиента MySQL и проверить состояние узлов
+- Создать базу данных и таблицу, а затем выполнить свой первый запрос к данным
+
+:::tip Выберите способ развёртывания
+
+- **Хотите быстро попробовать Doris?** Используйте развёртывание с помощью Docker: всё будет готово за 5 минут.
+- **Хотите подробно разобраться в развёртывании для промышленной эксплуатации?** Используйте полное локальное развёртывание, включая настройку раздельного размещения FE/BE.
+
+:::
+
+## Быстрое развёртывание с помощью Docker {#quick-deployment-with-docker}
+
+Начиная с последней версии, для быстрого развёртывания можно использовать Docker.
+
+### Шаг 1 (1/2): Запуск кластера {#step-1-12-start-the-cluster}
+
+Выполните следующую команду, чтобы скачать скрипт запуска и сразу запустить кластер. Если версия не указана, по умолчанию загружается последний выпуск (`doris-latest`):
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
+```
+
+Чтобы указать версию, используйте параметр `-v`:
+
+```shell
+curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
+```
+
+### Шаг 2 (2/2): Проверка состояния кластера {#step-2-22-verify-cluster-status}
+
+Подключитесь к кластеру с помощью клиента MySQL и проверьте состояние FE и BE:
+
+```sql
+-- Purpose: verify that the FE node has joined the cluster
+-- Expected: both Join and Alive columns are true
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+```
+
+```sql
+-- Purpose: verify that the BE node is heartbeating normally
+-- Expected: the Alive column is 1
+mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+```
+
+**Пояснение к выводу:** `Alive=true` (FE) или `Alive=1` (BE) означает, что узел работает нормально.
+
+---
+
+## Полное локальное развёртывание {#local-full-deployment}
+
+:::info Требования к среде
+
+- **Операционная система:** распространённые среды Linux на AMD/ARM, например Ubuntu
+- **Среда Java:** JDK 17+
+- **Права пользователя:** создайте отдельного пользователя Doris; не используйте root
+
+:::
+
+### Шаг 1 (1/4): Скачивание бинарного пакета {#step-1-14-download-the-binary-package}
+
+Скачайте бинарный пакет для вашей системы со [страницы загрузки](https://doris.apache.org/download) Apache Doris и распакуйте его в выбранный каталог.
+
+### Шаг 2 (2/4): Настройка системной среды {#step-2-24-configure-the-system-environment}
+
+**Увеличьте максимальное число файловых дескрипторов** (чтобы избежать ошибок из-за слишком большого количества открытых файлов):
+
+```bash
+vi /etc/security/limits.conf
+* soft nofile 1000000
+* hard nofile 1000000
+```
+
+**Увеличьте предельное количество областей виртуальной памяти:**
+
+```bash
+cat >> /etc/sysctl.conf << EOF
+vm.max_map_count = 2000000
+EOF
+sysctl -p
+```
+
+### Шаг 3 (3/4): Развёртывание FE {#step-3-34-deploy-the-fe}
+
+1. **Настройте FE:** отредактируйте `apache-doris/fe/conf/fe.conf`
+
+   ```properties
+   # Specify the Java environment
+   JAVA_HOME=/home/doris/jdk
+
+   # Specify the FE listening IP (adjust based on the actual network segment)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **Запустите FE:**
+
+   ```bash
+   apache-doris/fe/bin/start_fe.sh --daemon
+   ```
+
+3. **Проверьте состояние FE:**
+
+   ```sql
+   -- Purpose: confirm that the FE has started and joined the cluster
+   -- Expected: Join=true, Alive=true, IsMaster=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   ```
+
+### Шаг 4 (4/4): Развёртывание BE {#step-4-44-deploy-the-be}
+
+1. **Настройте BE:** отредактируйте `apache-doris/be/conf/be.conf`
+
+   ```properties
+   # Specify the BE listening IP (must be in the same network segment as the FE's priority_networks)
+   priority_networks=127.0.0.1/32
+   ```
+
+2. **Запустите BE:**
+
+   ```bash
+   apache-doris/be/bin/start_be.sh --daemon
+   ```
+
+3. **Зарегистрируйте BE в кластере:**
+
+   ```sql
+   -- Purpose: add the BE node to the cluster
+   ALTER SYSTEM ADD BACKEND "127.0.0.1:9050";
+   ```
+
+4. **Проверьте состояние BE:**
+
+   ```sql
+   -- Purpose: confirm that the BE is registered and heartbeating normally
+   -- Expected: Alive=true
+   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   ```
+
+---
+
+## Выполнение первого запроса {#run-your-first-query}
+
+После запуска кластера, независимо от того, использовали ли вы Docker или локальное развёртывание, выполните следующие шаги, чтобы попробовать возможности SQL в Doris.
+
+### Подключение к кластеру {#connect-to-the-cluster}
+
+```sql
+mysql -uroot -P9030 -h127.0.0.1
+```
+
+### Создание базы данных и таблицы {#create-a-database-and-table}
+
+```sql
+-- Purpose: create a demo database and table
+create database demo;
+use demo;
+
+create table mytable
+(
+    k1 TINYINT,
+    k2 DECIMAL(10, 2) DEFAULT "10.05",
+    k3 CHAR(10) COMMENT "string column",
+    k4 INT NOT NULL DEFAULT "1" COMMENT "int column"
+)
+COMMENT "my first table"
+DISTRIBUTED BY HASH(k1) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+```
+
+### Загрузка тестовых данных {#load-test-data}
+
+```sql
+-- Purpose: insert a few rows of test data
+insert into mytable values
+(1, 0.14, 'a1', 20),
+(2, 1.04, 'b2', 21),
+(3, 3.14, 'c3', 22),
+(4, 4.35, 'd4', 23);
+```
+
+### Выполнение запроса {#run-a-query}
+
+```sql
+-- Purpose: verify that the data was loaded successfully
+-- Expected: 4 rows are returned
+select * from demo.mytable;
+```
+
+**Пример вывода:**
+
+```
++------+------+------+------+
+| k1   | k2   | k3   | k4   |
++------+------+------+------+
+|    1 | 0.14 | a1   |   20 |
+|    2 | 1.04 | b2   |   21 |
+|    3 | 3.14 | c3   |   22 |
+|    4 | 4.35 | d4   |   23 |
++------+------+------+------+
+```
+
+---
+
+## Часто задаваемые вопросы {#faq}
+
+### В: Подходит ли развёртывание с помощью Docker для промышленной эксплуатации? {#q-is-docker-deployment-suitable-for-production}
+
+Нет. Развёртывание с помощью Docker предназначено только для локальной разработки и тестирования; при удалении контейнера данные теряются. Для промышленной эксплуатации используйте полное локальное развёртывание или развёртывание на нескольких узлах.
+
+### В: Как установить Docker на Mac? {#q-how-do-i-install-docker-on-mac}
+
+Скачайте и установите [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+### В: После установки Docker Desktop на Mac появляется сообщение «Docker environment not detected». Что делать? {#q-after-installing-docker-desktop-on-mac-i-see-docker-environment-not-detected-what-should-i-do}
+
+Создайте символическую ссылку:
+
+```shell
+sudo ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+```
+
+### В: Docker на Mac сообщает об ошибке «error getting credentials». Что делать? {#q-docker-on-mac-reports-error-getting-credentials-what-should-i-do}
+
+В качестве временного решения удалите поле `credsStore` из `~/.docker/config.json`. Обратите внимание: при этом учётные данные хранятся в открытом виде, поэтому такой способ допустим только для локальной разработки.
+
+### В: После добавления узла BE его состояние по-прежнему отображается как «Dead». Что проверить? {#q-a-be-node-still-shows-dead-after-being-added-what-should-i-check}
+
+Проверьте, что параметр `priority_networks` узла BE задаёт тот же сетевой сегмент, в котором находится FE, и убедитесь, что порты BE (9050/9060/8040/8060) не заблокированы межсетевым экраном.
+
+### В: При локальном развёртывании в WSL2 узел BE не присоединяется к кластеру. В чём причина? {#q-running-the-local-deployment-under-wsl2--the-be-never-joins-the-cluster-whats-wrong}
+
+В WSL2 пространство имён loopback изолировано для каждого дистрибутива, поэтому FE и BE не могут связаться друг с другом через `127.0.0.1`. Из-за этого настройка по умолчанию `priority_networks=127.0.0.1/32` приводит к сбоям регистрации BE или передачи сигналов состояния в WSL2.
+
+Чтобы исправить это, выполните `ip addr show eth0` и определите фактический сетевой сегмент WSL (обычно `172.16.0.0/12` или `172.x.x.x/20`), затем укажите этот сегмент в параметре `priority_networks` в обоих файлах, `fe/conf/fe.conf` и `be/conf/be.conf`, перезапустите FE и BE и повторно выполните `ALTER SYSTEM ADD BACKEND`.
+
+### В: Как убедиться, что кластер в целом работает нормально? {#q-how-do-i-confirm-that-the-cluster-is-healthy-overall}
+
+Выполните `SHOW FRONTENDS;` и `SHOW BACKENDS;` и убедитесь, что столбец `Alive` имеет значение `true` для каждого узла.
+
+---
+
+## Следующие шаги {#next-steps}
+
+- [Руководство по моделированию данных]: узнайте о моделях данных Doris и стратегиях партиционирования (NEXT-TODO)
+- [Начало работы с операциями SQL]: изучите загрузку данных, выполнение запросов и обновление данных (NEXT-TODO)
+- [Управление кластером]: освойте эксплуатацию кластера в промышленной среде (NEXT-TODO)
+
+:::caution Предупреждение (только для локального развёртывания)
+
+Следующие рекомендации относятся **только к локальной разработке и тестированию**. **Не используйте описанные конфигурации в промышленной среде**:
+
+1. **Данные легко потерять:** при развёртывании с помощью Docker данные теряются после удаления контейнера; экземпляры с одной репликой не обеспечивают избыточного хранения данных.
+2. **Конфигурация с одной репликой:** все операторы создания таблиц в примерах используют одну реплику. В промышленной среде используйте хранение с несколькими репликами, чтобы обеспечить надёжность данных.
+
+:::

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/compaction",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/compaction.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
+    "sourceTechnicalHash": "41d944af131840b9d678afb8022e96503a768084f57e9cba0e5a8fa14f401d19",
+    "targetHash": "3f057c10d8434a908b21c23512f4dc9d59556ac8909c1fc5600e4ffacfcc4eb7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:46:08.590Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
+      "targetHash": "3f057c10d8434a908b21c23512f4dc9d59556ac8909c1fc5600e4ffacfcc4eb7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

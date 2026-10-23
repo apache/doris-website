@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/session/queries/PLAN-REPLAYER-DUMP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "356d7ccc63d73e1088af26637958476a87e6f60591db266ab7c5ccdef587501c",
+    "sourceTechnicalHash": "bc5f3db0588a1c0cc9f34240795bb415ae59233ba702eeca9b0188cd37d65589",
+    "targetHash": "a2873f6245f3427bba831de2c0e2939cba0d24c199aba7334cbb8f817970d89f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:52:59.180Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "356d7ccc63d73e1088af26637958476a87e6f60591db266ab7c5ccdef587501c",
+      "targetHash": "a2873f6245f3427bba831de2c0e2939cba0d24c199aba7334cbb8f817970d89f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

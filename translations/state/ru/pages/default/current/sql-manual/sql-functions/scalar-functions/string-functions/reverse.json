@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/reverse",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/reverse.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/reverse.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b7b313e23dd37caa5a41026f676b84cff2aaeed0b0a9c913b2115fb7936f3c95",
+    "sourceTechnicalHash": "01f4f32ad03dcf03494461686857debba3fab8e491c2d5a05ae181b0c005de3b",
+    "targetHash": "0d79978b5e63cd96804bcc0ca672b42664fd9ea9f2f688a7b371536071f67ce6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:49:25.110Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b7b313e23dd37caa5a41026f676b84cff2aaeed0b0a9c913b2115fb7936f3c95",
+      "targetHash": "0d79978b5e63cd96804bcc0ca672b42664fd9ea9f2f688a7b371536071f67ce6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

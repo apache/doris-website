@@ -36,10 +36,10 @@
 <!-- Knowledge type: Operations guide + Feature description -->
 <!-- Use cases: Incremental ETL / Downstream table sync / Change auditing / Exactly-once consumption of table changes -->
 
-A Table Stream (Stream below) is a change consumption object built on top of [Row Binlog](row-binlog). It remembers how far you have consumed: each read returns only the changes of the base table since the last consumption, and the consumption offset advances in the same transaction that writes the changes into the target table, so nothing is skipped or consumed twice.
+A Table Stream (Stream below) is a change consumption object built on top of the [changelog](changelog). It remembers how far you have consumed: each read returns only the changes of the base table since the last consumption, and the consumption offset advances in the same transaction that writes the changes into the target table, so nothing is skipped or consumed twice.
 
 :::caution Experimental feature
-This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_binlog = true` and `enable_table_stream = true` in the FE configuration.
+This feature is available since version 5.0.0 and is experimental. It requires `enable_feature_changelog = true` and `enable_table_stream = true` in the FE configuration.
 :::
 
 ## Basic concepts
@@ -48,7 +48,7 @@ This feature is available since version 5.0.0 and is experimental. It requires `
 
 | Concept | Description |
 |---|---|
-| Base table | The table a Stream tracks; it must have Row Binlog enabled. One base table can have multiple Streams, each consuming independently |
+| Base table | The table a Stream tracks; it must have changelog enabled. One base table can have multiple Streams, each consuming independently |
 | Consumption offset | For every partition of the base table, the Stream records the commit timestamp (TSO) consumed so far. Reading a Stream returns, for each partition, the changes between its offset and the latest commit at the time the statement starts |
 | Change type | `APPEND` (insert), `UPDATE_BEFORE` (value before an update), `UPDATE_AFTER` (value after an update), `DELETE` (delete, carrying the value before deletion) |
 | Consumption type | The `type` given when the Stream is created; it decides at what granularity changes are emitted, see [Consumption types](#consumption-types) |
@@ -62,8 +62,8 @@ This feature is available since version 5.0.0 and is experimental. It requires `
 
 <!-- Knowledge type: Environment requirements -->
 
-- Doris 5.0.0 or later, with `enable_feature_binlog = true` and `enable_table_stream = true` on the FE.
-- An internal base table with Row Binlog enabled; the `min_delta` / `detail` types additionally require a Unique Key MoW table with `binlog.need_historical_value` enabled, see [Row Binlog](row-binlog#supported-scope-and-limitations).
+- Doris 5.0.0 or later, with `enable_feature_changelog = true` and `enable_table_stream = true` on the FE.
+- An internal base table with changelog enabled; the `min_delta` / `detail` types additionally require a Unique Key MoW table with `changelog.need_historical_value` enabled, see [Changelog](changelog#supported-scope-and-limitations).
 - `CREATE_PRIV` on the database of the Stream and `SELECT_PRIV` on the base table.
 
 ## Creating and managing Streams
@@ -84,7 +84,7 @@ ON TABLE [<db_name>.]<table_name>
 
 | Property | Default | Description |
 |---|---|---|
-| `type` | `min_delta` | Consumption type. `min_delta` and `detail` require the base table to be a Unique Key MoW table with `binlog.need_historical_value` enabled; on Duplicate Key tables `min_delta` degrades to `append_only` |
+| `type` | `min_delta` | Consumption type. `min_delta` and `detail` require the base table to be a Unique Key MoW table with `changelog.need_historical_value` enabled; on Duplicate Key tables `min_delta` degrades to `append_only` |
 | `show_initial_rows` | `false` | Whether the data that already exists when the Stream is created is emitted as changes. See [Initial rows](#initial-rows) |
 
 Example:
@@ -102,8 +102,8 @@ Requirements for creating a Stream and the error when a requirement is not met:
 
 | Requirement | Error when not met |
 |---|---|
-| Row Binlog enabled on the base table | `Base Olap table ... need to enable row binlog for table stream` |
-| For `type = min_delta`, a MoW base table with `binlog.need_historical_value` enabled | `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` |
+| Changelog enabled on the base table | `Base Olap table ... need to enable changelog for table stream` |
+| For `type = min_delta`, a MoW base table with `changelog.need_historical_value` enabled | `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` |
 | `CREATE_PRIV` on the database of the Stream and `SELECT_PRIV` on the base table | - |
 
 The Stream and its base table can live in different databases. A Stream cannot share a name with a table or view. `CREATE OR REPLACE STREAM` is not supported yet. The full syntax is in [CREATE STREAM](../../sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM).
@@ -169,7 +169,7 @@ The consumption type and `show_initial_rows` cannot be changed after creation; d
 DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE];
 ```
 
-- Dropping a Stream does not affect the base table or its Row Binlog.
+- Dropping a Stream does not affect the base table or its changelog.
 - A Stream whose base table has been dropped stays in the catalog; drop it with `FORCE`.
 - In the compute-storage decoupled mode, `DROP STREAM ... FORCE` is mandatory.
 - Running `DROP TABLE` on a Stream fails with a hint to use `DROP STREAM`.
@@ -183,9 +183,9 @@ The statement is described in [DROP STREAM](../../sql-manual/sql-statements/tabl
 
 | Consumption type | Output | Best for | Base table requirements |
 |---|---|---|---|
-| `append_only` | Only inserted rows; updates and deletes are not emitted | Append-only logs and event tables; downstream only cares about new data | Row Binlog enabled |
-| `min_delta` (default) | All changes between two consumptions folded per key; only the net change is emitted | Keeping a downstream table in sync with the fewest rows | Unique Key MoW table with `binlog.need_historical_value` enabled |
-| `detail` | Every change row by row, nothing folded | Auditing, replay, any scenario that needs the complete modification trail | Unique Key MoW table with `binlog.need_historical_value` enabled |
+| `append_only` | Only inserted rows; updates and deletes are not emitted | Append-only logs and event tables; downstream only cares about new data | Changelog enabled |
+| `min_delta` (default) | All changes between two consumptions folded per key; only the net change is emitted | Keeping a downstream table in sync with the fewest rows | Unique Key MoW table with `changelog.need_historical_value` enabled |
+| `detail` | Every change row by row, nothing folded | Auditing, replay, any scenario that needs the complete modification trail | Unique Key MoW table with `changelog.need_historical_value` enabled |
 
 The three consumption types are compared below on the same data. The base table `orders` is a Unique Key MoW table with the before image enabled, and the following statements run after the Stream is created:
 
@@ -269,7 +269,7 @@ Every change is emitted row by row; an update is split into an `UPDATE_BEFORE` r
 
 ### Behavior on Duplicate Key tables
 
-Duplicate Key tables only record inserts, so the three types produce the same output: every written row is one `APPEND`, multiple writes of the same key are not merged, and rows removed by `DELETE` statements are not emitted (see [Row Binlog](row-binlog#duplicate-key-tables)). A `min_delta` Stream created on a Duplicate Key table is automatically handled as `append_only`.
+Duplicate Key tables only record inserts, so the three types produce the same output: every written row is one `APPEND`, multiple writes of the same key are not merged, and rows removed by `DELETE` statements are not emitted (see [Changelog](changelog#duplicate-key-tables)). A `min_delta` Stream created on a Duplicate Key table is automatically handled as `append_only`.
 
 ## Initial rows
 
@@ -372,11 +372,11 @@ The columns of a Stream are the current visible columns of the base table (synch
 
 <!-- Knowledge type: Usage limitations -->
 
-- The base table must be an internal table with Row Binlog enabled; supported table models and column type restrictions are listed in [Row Binlog](row-binlog#supported-scope-and-limitations).
+- The base table must be an internal table with changelog enabled; supported table models and column type restrictions are listed in [Changelog](changelog#supported-scope-and-limitations).
 - A Stream reads only the base index of the base table; rollups / materialized views cannot be specified, and the `TABLET (...)` clause is not supported.
 - A Stream cannot be the target of `INSERT`, `UPDATE`, or `DELETE`.
 - The consumption type and `show_initial_rows` cannot be changed after creation.
-- Row Binlog retention is controlled by `binlog.ttl_seconds` (one day by default), regardless of consumption progress. An expired offset makes `min_delta` reads fail; `detail` and `append_only` skip expired changes. `IS_STALE` / `STALE_REASON` do not report TTL expiration in the current implementation. Consume within the retention window; see [Retention and cleanup](row-binlog#retention-and-cleanup).
+- Changelog retention is controlled by `changelog.ttl_seconds` (one day by default), regardless of consumption progress. An expired offset makes `min_delta` reads fail; `detail` and `append_only` skip expired changes. `IS_STALE` / `STALE_REASON` do not report TTL expiration in the current implementation. Consume within the retention window; see [Retention and cleanup](changelog#retention-and-cleanup).
 - The effect of dropping the base table, dropping or replacing partitions, and similar operations on a Stream is described in [Table Stream Advanced](table-stream-advanced#effect-of-base-table-changes).
 
 ## FAQ

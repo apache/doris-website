@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/linear-histogram",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "273fd40d6143161e22ef13f9d4e4566eb52536db24db827d09a47253272cebb8",
+    "sourceTechnicalHash": "db5593b97326ab77a7dd094f6f2da8c3bc5d1fb86560689497be540cf203dc4a",
+    "targetHash": "1edd1735db0c530134996afdbfd4695d8b2132cd07fd53056ee186d2515a55a8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:13.741Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "273fd40d6143161e22ef13f9d4e4566eb52536db24db827d09a47253272cebb8",
+      "targetHash": "1edd1735db0c530134996afdbfd4695d8b2132cd07fd53056ee186d2515a55a8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/linear-histogram",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/linear-histogram.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "273fd40d6143161e22ef13f9d4e4566eb52536db24db827d09a47253272cebb8",
+        "targetHash": "1edd1735db0c530134996afdbfd4695d8b2132cd07fd53056ee186d2515a55a8",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

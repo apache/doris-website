@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/ucase",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/ucase.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/ucase.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4a32456626733fa70a7c92118e0b1db0752b4f0e84d70dba71eefee556d2fec1",
+    "sourceTechnicalHash": "503e92b058e5a44776342f2b2bb3009f5e31fc71806f4af59d42bc8040918581",
+    "targetHash": "8e301ff977c8083469438cb6ac5c6b5365f330cf1cf935c507878732ca7cf130",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:51:38.716Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4a32456626733fa70a7c92118e0b1db0752b4f0e84d70dba71eefee556d2fec1",
+      "targetHash": "8e301ff977c8083469438cb6ac5c6b5365f330cf1cf935c507878732ca7cf130",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

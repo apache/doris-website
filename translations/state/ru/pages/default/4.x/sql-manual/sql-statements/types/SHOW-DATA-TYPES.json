@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/types/SHOW-DATA-TYPES",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/types/SHOW-DATA-TYPES.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "111c0a6cac0a72804554cd2ca7519b3c4bda10f7270e11d0d00b415512ccc5e6",
+    "sourceTechnicalHash": "94a71a7fb3f5af0260f3e43a750f3980198f4f66278d335574982a17c6b30a5e",
+    "targetHash": "d8e6412379c8ab8273294c8558cc9109abf6f134e3665c24ca7251d8847c9af2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:05:44.909Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "111c0a6cac0a72804554cd2ca7519b3c4bda10f7270e11d0d00b415512ccc5e6",
+      "targetHash": "d8e6412379c8ab8273294c8558cc9109abf6f134e3665c24ca7251d8847c9af2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"code\",null,null,\"This statement is used to view all supported data types.\"]; received [\"code\",null,null,\"Эта инструкция позволяет просмотреть все поддерживаемые типы данных.\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

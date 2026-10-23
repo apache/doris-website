@@ -42,7 +42,7 @@ SEARCH('<search_expression>', '<default_field>', '<default_operator>')
 **Usage notes:**
 
 - **Position**: Used in a `WHERE` clause as a predicate participating in row filtering
-- **Return type**: BOOLEAN (TRUE on a match)
+- **Return type**: Non-nullable BOOLEAN (TRUE on a match, FALSE otherwise; since Doris 4.2)
 
 When `default_field` is provided, Doris automatically expands bare terms or functions to that field. For example:
 
@@ -78,17 +78,134 @@ WHERE SEARCH('apple banana',
              '{"default_field":"title","default_operator":"and","mode":"lucene"}');
 ```
 
-### NULL and Three-Valued Logic
+### NULL and Two-Valued Matching {#null-and-three-valued-logic}
 
-`SEARCH()` follows SQL three-valued logic:
+**Version:** The two-valued matching rules, NULL/NOT examples, and VARIANT index-error behavior below apply starting with Doris 4.2.
 
-- When all column values participating in the match are NULL, the result is UNKNOWN (filtered out in `WHERE`)
-- When combined with other subexpressions, the result follows boolean short-circuit rules. For example:
-    - `TRUE OR NULL = TRUE`
-    - `FALSE OR NULL = NULL`
-    - `NOT NULL = NULL`
+`SEARCH` returns a non-nullable BOOLEAN: TRUE for a match and FALSE for a nonmatch. An ordinary term does not match a NULL value or a VARIANT path proven absent from storage. SEARCH does not propagate UNKNOWN.
 
-This behavior is consistent with text search operators.
+In standard mode, `AND` intersects match sets, `OR` unions them, and `NOT` takes the complement relative to the rows visible to the query. Thus, both `SEARCH('NOT a:hit')` and `NOT SEARCH('a:hit')` include NULL rows. Lucene mode uses the same NULL/nonmatch rule, while retaining its own Boolean parsing rules described below. Computing `score()` or using the query cache does not change the complete match set; sorting and LIMIT can change which rows are returned.
+
+Ordinary SQL comparisons and `MATCH` operators retain SQL three-valued logic. For a NULL input, `a != 'hit'` and `NOT (a MATCH_ANY 'hit')` are UNKNOWN and are filtered out by `WHERE`. An outer SQL expression can still produce UNKNOWN from its other nullable operands.
+
+#### Example: NULL and NOT
+
+Run the examples in a database where you have CREATE, INSERT, and SELECT privileges. The single bucket and replica below are for a small demonstration table.
+
+```sql
+CREATE TABLE search_null_demo (
+    id INT,
+    a VARCHAR(16) NULL,
+    INDEX idx_a(a) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_null_demo VALUES (1, 'hit'), (2, 'miss'), (3, NULL);
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE SEARCH('NOT a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+```sql
+SELECT id FROM search_null_demo WHERE NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+```
+
+To exclude NULL rows as well, add an explicit `IS NOT NULL` filter:
+
+```sql
+SELECT id FROM search_null_demo
+WHERE a IS NOT NULL AND NOT SEARCH('a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+```
+
+For these three rows, the SQL condition `a != 'hit'` and the text search condition `NOT (a MATCH_ANY 'hit')` also return only id 2.
+
+#### VARIANT: NULL, Missing Paths, and Unavailable Indexes
+
+An ordinary VARIANT term such as `v.a:hit` follows the same rule:
+
+| Value written to `v` | `v.a:hit` | `NOT v.a:hit` |
+| --- | --- | --- |
+| `{"a":"hit"}` | TRUE | FALSE |
+| `{"a":"miss"}` | FALSE | TRUE |
+| `{"a":null}` | FALSE | TRUE |
+| `{}` (path `a` is missing) | FALSE | TRUE |
+| SQL NULL (the entire VARIANT column is NULL) | FALSE | TRUE |
+
+For stored objects outside arrays, JSON `null` members are removed, so reading that path returns SQL NULL, just like a missing member. This differs from a JSON `null` computed within an expression; see [the VARIANT guide](../../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md).
+
+Use `parse_to_variant` to insert JSON objects. The following table disables doc mode so the example uses materialized subpaths with executable indexes.
+
+```sql
+CREATE TABLE search_variant_null_demo (
+    id INT,
+    v VARIANT<PROPERTIES("variant_enable_doc_mode"="false")>,
+    INDEX idx_v(v) USING INVERTED PROPERTIES("parser"="unicode")
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES("replication_num"="1");
+
+INSERT INTO search_variant_null_demo VALUES
+    (1, parse_to_variant('{"a":"hit"}')),
+    (2, parse_to_variant('{"a":"miss"}')),
+    (3, parse_to_variant('{"a":null}')),
+    (4, parse_to_variant('{}')),
+    (5, NULL);
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('v.a:hit') ORDER BY id;
+```
+
+```text
+id
+1
+```
+
+```sql
+SELECT id FROM search_variant_null_demo WHERE SEARCH('NOT v.a:hit') ORDER BY id;
+```
+
+```text
+id
+2
+3
+4
+5
+```
+
+`NOT SEARCH('v.a:hit')` returns the same ids. If a path is absent from every row, `SEARCH('v.absent:hit')` returns no rows and `SEARCH('NOT v.absent:hit')` returns all five rows. To retain only rows with a non-NULL value at the target path, add `v['a'] IS NOT NULL` outside SEARCH.
+
+**A missing path and an unavailable index are different states.** If the path contains data but its required inverted index cannot be executed, SEARCH reports `SEARCH index unavailable for Variant field 'v.a'`, including for negated queries. Examples include historical rowsets whose index has not been built after CREATE INDEX, or a path retained only in doc storage without an executable leaf index. SEARCH does not treat these states as an empty match set or automatically fall back to a scan. Ensure the required path index is available for all data being queried, or query the extracted path with ordinary SQL instead.
 
 ## Using SEARCH by Scenario
 
@@ -184,7 +301,7 @@ Lucene mode emulates the query_string behavior of Elasticsearch/Lucene. Boolean 
 - AND/OR/NOT are modifiers that affect adjacent terms
 - Operator precedence is left to right
 - MUST/SHOULD/MUST_NOT are used internally (similar to Lucene's Occur enum)
-- A pure NOT query returns an empty result (a positive clause is required)
+- A pure NOT query adds a match-all condition and excludes the matching rows
 
 **Enable Lucene mode:**
 

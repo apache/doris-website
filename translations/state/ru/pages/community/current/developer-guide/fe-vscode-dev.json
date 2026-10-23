@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/fe-vscode-dev",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/fe-vscode-dev.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/fe-vscode-dev.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9a062b190b54b238911c0f7e00fc92de5f6bab12138e28f603037a7476e7639c",
+    "sourceTechnicalHash": "4dfd9846f1445e70efb9867c45b525a54b0d300ad179c92cdc4a5a13b2b8d4e4",
+    "targetHash": "86705e437647a701cbef9175ac6520e0c277ac062f4b0392f979f7b274e6b8d0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:32:28.826Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9a062b190b54b238911c0f7e00fc92de5f6bab12138e28f603037a7476e7639c",
+      "targetHash": "86705e437647a701cbef9175ac6520e0c277ac062f4b0392f979f7b274e6b8d0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 4, column 65:\n     ... работки Apache Doris FE в VSCode: конфигурация расширения Java,  ... \n                                         ^"
+            },
+            {
+              "check": "syntax",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 4, column 65:\n     ... работки Apache Doris FE в VSCode: конфигурация расширения Java,  ... \n                                         ^"
+            },
+            {
+              "check": "frontmatter",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 4, column 65:\n     ... работки Apache Doris FE в VSCode: конфигурация расширения Java,  ... \n                                         ^"
+            },
+            {
+              "check": "protected-content",
+              "message": "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 4, column 65:\n     ... работки Apache Doris FE в VSCode: конфигурация расширения Java,  ... \n                                         ^"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

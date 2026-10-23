@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/literal/date-literal",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/literal/date-literal.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/literal/date-literal.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "211ea31cf38bb1d10485e434e4845060fdf06fee79d5c73d0a8e9b4a9c27fe89",
+    "sourceTechnicalHash": "c63b0b8fb9904edf08df4f4a68bcba3c1a649feb94645fe86cc75ee06ea44109",
+    "targetHash": "d5e1e3edcc5d4bb8b42845a9781d4fed4c4dd5612cea44d03ec1a5e7126fdf24",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:33:11.131Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "211ea31cf38bb1d10485e434e4845060fdf06fee79d5c73d0a8e9b4a9c27fe89",
+      "targetHash": "d5e1e3edcc5d4bb8b42845a9781d4fed4c4dd5612cea44d03ec1a5e7126fdf24",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

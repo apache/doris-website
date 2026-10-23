@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/table-stream-advanced",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/table-stream-advanced.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream-advanced.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "d4d30e240c8f814dbc018285681e1487e92bd78d97445f99b4e77f7e47881981",
+    "sourceTechnicalHash": "48877b072a4f49f00f3128a337e04a0a7877714b88f31042cad03c38ba0f0ed5",
+    "targetHash": "552ff1292343312005411287e35bed5ed0039148ed3aeab04e2436cde3cba57f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:52.546Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d4d30e240c8f814dbc018285681e1487e92bd78d97445f99b4e77f7e47881981",
+      "targetHash": "552ff1292343312005411287e35bed5ed0039148ed3aeab04e2436cde3cba57f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

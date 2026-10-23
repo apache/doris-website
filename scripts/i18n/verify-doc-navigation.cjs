@@ -43,7 +43,10 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
             assert(fs.existsSync(filename(page.permalink)), `Missing native route: ${page.permalink}`);
             routes++;
         }
-        const representative = pages.find(page => page.status === 'current' && page.indexable) ?? pages[0];
+        // Native standalone docs can be current without belonging to a sidebar.
+        // Cover their routes above, and inspect navigation on a sidebar member.
+        const candidates = [...pages.filter(page => page.status === 'current' && page.indexable), ...pages];
+        const representative = candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
         const $ = read(representative.permalink);
         assert.equal($('.theme-doc-markdown').attr('lang'), representative.contentLocale, representative.permalink);
         const sidebar = $('.theme-doc-sidebar-container');
@@ -66,8 +69,11 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         checks.push({group: group.id, routes: pages.length, sample: representative.permalink,
             contentLocale: representative.contentLocale, sidebarLinks: links.length, domains: [...new Set(domains)]});
     }
-    if (!devOnly) {
-        const entry = `/${locale}/docs/`;
+    const entries = [];
+    if (!devOnly) entries.push({entry: `/${locale}/docs/`, pluginId: 'default', version: '4.x'});
+    if (scope.groups.some(group => group.pluginId === 'community'))
+        entries.push({entry: `/${locale}/community/`, pluginId: 'community', version: 'current'});
+    for (const {entry, pluginId, version} of entries) {
         const origin = 'https://doris.apache.org';
         let target;
         if (fs.existsSync(filename(entry))) {
@@ -77,13 +83,13 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         } else {
             const redirects = JSON.parse(fs.readFileSync(path.join(site, '.publish/redirects.json'), 'utf8')).redirects;
             const redirect = redirects.find(([from]) => from.replace(/\/$/, '') === entry.replace(/\/$/, ''));
-            assert(redirect, `Missing compacted stable entry: ${entry}`);
+            assert(redirect, `Missing compacted entry: ${entry}`);
             const url = new URL(redirect[1], origin);
-            assert.equal(url.origin, origin, 'Stable entry must remain on this site');
+            assert.equal(url.origin, origin, 'Document entry must remain on this site');
             target = url.pathname;
         }
-        assert(data.pages.some(page => page.pluginId === 'default' && page.version === '4.x' && page.permalink === target),
-            `Stable entry is not a registered 4.x document: ${target}`);
+        assert(data.pages.some(page => page.pluginId === pluginId && page.version === version && page.permalink === target),
+            `Entry ${entry} is not a registered ${pluginId}/${version} document: ${target}`);
         read(target);
         checks.push({entry, target});
     }

@@ -1,0 +1,288 @@
+---
+{
+    "title": "Doris Catalog",
+    "language": "ru",
+    "description": "Doris Catalog поддерживает федеративный анализ данных между несколькими кластерами Doris. Поддерживаются режимы Arrow Flight и Virtual Cluster, которые позволяют эффективно выполнять запросы к данным, записывать данные и проводить федеративный анализ в нескольких кластерах в сценариях с распределёнными хранилищами данных."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::note
+Эта возможность поддерживается начиная с версии 4.0.2.
+
+Это экспериментальная возможность.
+:::
+
+## Сценарии использования {#use-cases}
+
+Выполнение федеративного анализа данных между несколькими кластерами Doris.
+
+В отличие от подключения к другим кластерам Doris через JDBC Catalog, это решение позволяет эффективно выполнять федеративный анализ данных между несколькими кластерами Doris в режиме Arrow Flight или Virtual Cluster.
+
+## Настройка Catalog {#configure-catalog}
+
+### Синтаксис {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'doris', -- required
+    'fe_http_hosts' = 'http://<fe-host1>:<fe-http-port>,<fe-host2>:<fe-http-port>', -- required
+    'fe_arrow_hosts' = '<fe-host1>:<fe-arrow-flight-port>,<fe-host2>:<fe-arrow-flight-port>', -- required
+    'fe_thrift_hosts' = '<fe-host1>:<fe-thrift-port>,<fe-host2>:<fe-thrift-port>', -- required
+    'use_arrow_flight' = 'true/false', -- required
+    'user' = '', -- required
+    'password' = '', -- required
+    {QueryProperties},
+    {HttpClientProperties},
+    {CommonProperties}
+);
+```
+
+*   `fe_http_hosts`
+
+    Список адресов HTTP-сервиса FE удалённого кластера Doris.
+
+*   `fe_arrow_hosts`
+
+    Список адресов сервиса Arrow Flight на FE удалённого кластера Doris.
+
+*   `fe_thrift_hosts`
+
+    Список адресов сервиса Thrift на FE удалённого кластера Doris.
+
+    > В версии 4.0.2 укажите адрес Master FE. Эта проблема будет исправлена в последующих версиях.
+
+*   `use_arrow_flight`
+
+    Определяет, обращаться ли к удалённому кластеру Doris через Arrow Flight или отправлять в него план выполнения так, как если бы удалённая таблица была внутренней.
+
+*   `{QueryProperties}`
+
+    Необязательные свойства.
+
+    | Имя параметра                    | Описание                                                                                           | Значение по умолчанию |
+    |----------------------------------|-------------------------------------------------------------------------------------------------------|---------|
+    | `enable_parallel_result_sink`    | Если включено, локальные узлы BE Doris параллельно получают данные с различных узлов BE удалённого кластера Doris. (Для режима Arrow Flight) | true    |
+    | `query_retry_count`              | Максимальное число повторных попыток для неудачных запросов к удалённому кластеру Doris. (Не учитывает сбои, которые могут возникнуть при асинхронном выполнении после принятия запроса) | 3       |
+    | `query_timeout_sec`              | Тайм-аут отправки запросов в удалённый кластер Doris. (Не включает время асинхронного выполнения после принятия запроса) | 15      |
+    | `compatible`                     | Используется для попытки обеспечить совместимость с форматом метаданных при обращении к удалённому кластеру Doris, версия которого ниже версии локального кластера. При одинаковых версиях кластеров включать не требуется. | false   |
+
+*   `{HttpClientProperties}`
+
+    Раздел HttpClientProperties предназначен для настройки параметров HTTP-клиента. Этот клиент отправляет HTTP-запросы для синхронизации метаданных с удалённым кластером. Все эти параметры необязательны.
+
+    | Имя параметра                       | Описание                                                | Значение по умолчанию |
+    |-------------------------------------|-----------------------------------------------------------|---------|
+    | `metadata_http_ssl_enabled`         | Определяет, следует ли использовать шифрование SSL/TLS при синхронизации метаданных по HTTP. | false   |
+    | `metadata_sync_retry_count`         | Максимальное число повторных попыток для неудачных HTTP-запросов.        | 3       |
+    | `metadata_max_idle_connections`     | Максимальное число простаивающих соединений клиента синхронизации метаданных по HTTP. | 5       |
+    | `metadata_keep_alive_duration_sec`  | Время, в течение которого клиент синхронизации метаданных по HTTP поддерживает простаивающие соединения. | 300     |
+    | `metadata_connect_timeout_sec`      | Тайм-аут установления TCP-соединения для клиента синхронизации метаданных по HTTP. | 10      |
+    | `metadata_read_timeout_sec`         | Тайм-аут чтения из сокета для клиента синхронизации метаданных по HTTP. | 10      |
+    | `metadata_write_timeout_sec`        | Тайм-аут записи в сокет для клиента синхронизации метаданных по HTTP. | 10      |
+    | `metadata_call_timeout_sec`         | Общий тайм-аут HTTP-запроса для клиента синхронизации метаданных по HTTP. | 10      |
+
+*   `{CommonProperties}`
+
+    В разделе CommonProperties задаются общие свойства. См. раздел [Общие свойства] в обзоре Data Catalog.
+
+## Режимы доступа {#access-modes}
+
+### Режим Arrow Flight {#arrow-flight-mode}
+
+> Поддерживается начиная с версии 4.0.2.
+
+Если для свойства `use_arrow_flight` задано значение `true`, используется режим Arrow Flight.
+
+![Режим Arrow Flight](/images/Lakehouse/doris-catalog/arrow-flight-mode.png)
+
+Во время межкластерных запросов в этом режиме узлы FE синхронизируют метаданные, включая Schema, по протоколу HTTP, после чего узлы BE локального кластера обращаются к удалённому кластеру Doris через интерфейс Arrow Flight.
+
+**Преимущества**: Практически отсутствует дополнительная нагрузка на FE, поскольку план выполнения лишь формирует SQL-запрос для отправки в удалённый кластер.
+
+**Недостатки**: Возможности оптимизации внутренних таблиц Doris могут использоваться не полностью: например, проталкивание агрегаций может быть недоступно, а проталкивание предикатов может быть ограничено и т. д.
+
+### Режим Virtual Cluster {#virtual-cluster-mode}
+
+> Поддерживается начиная с версии 4.0.3.
+
+Если для свойства `use_arrow_flight` задано значение `false`, используется режим Virtual Cluster.
+
+> В настоящее время этот режим поддерживает только кластеры Doris, развёрнутые в режиме совместного размещения хранения и вычислений.
+
+![Режим Virtual Cluster](/images/Lakehouse/doris-catalog/virtual-cluster-mode.png)
+
+Во время межкластерных запросов в этом режиме узлы Backend удалённого кластера Doris рассматриваются как виртуальные узлы при планировании запросов.
+
+Узлы FE синхронизируют метаданные, включая Schema, по протоколу HTTP. Узлы BE передают данные напрямую по внутренним протоколам обмена.
+
+**Преимущества**: Позволяет использовать практически все возможности оптимизации запросов к внутренним таблицам Doris. Запросы выполняются так же, как внутренние запросы в одном кластере.
+
+**Недостатки**: Для крупных удалённых таблиц извлекается вся информация о таблице (информация о разделах и репликах). Расход памяти FE увеличивается, поэтому потребуется увеличить объём памяти FE. Если версии кластеров различаются, например при выполнении запросов из кластера более новой версии к кластеру более старой версии, возможны сбои запросов.
+
+> Начиная с версии 4.1 режим Virtual Cluster поддерживает загрузку данных с помощью insert.
+
+## Сопоставление типов столбцов {#column-type-mapping}
+
+### Режим Arrow Flight {#arrow-flight-mode-1}
+
+Поддержка типов столбцов и типов таблиц в этом режиме зависит от возможностей Arrow Flight SQL. В настоящее время доступны следующие возможности и действуют следующие ограничения:
+
+-   Поддерживаются все примитивные типы.
+-   Поддерживаются все вложенные типы (Array, Map, Struct).
+-   Не поддерживаются типы hll, bitmap, variant.
+-   Поддерживаются все модели таблиц (таблицы Duplicate, Aggregate и Unique).
+
+### Режим Virtual Cluster {#virtual-cluster-mode-1}
+
+В режиме Virtual Cluster поддерживаются все типы столбцов и все модели таблиц (таблицы Duplicate, Aggregate и Unique).
+
+## Выполнение запросов {#query-operations}
+
+После настройки Catalog данные его таблиц можно запрашивать следующими способами:
+
+```sql
+-- 1. switch to catalog, use database and query
+SWITCH doris_ctl;
+USE doris_db;
+SELECT * FROM doris_tbl LIMIT 10;
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+SELECT * FROM doris_tbl LIMIT 10;
+
+-- 3. use full qualified name to query
+SELECT * FROM doris_ctl.doris_db.doris_tbl LIMIT 10;
+```
+
+## Оптимизация запросов {#query-optimization}
+
+### Режим Arrow Flight {#arrow-flight-mode-2}
+
+В этом режиме Doris пытается протолкнуть предикаты или условия с функциями в удалённый кластер, включив их в формируемый SQL-запрос.
+
+Сформированный SQL-запрос можно просмотреть с помощью EXPLAIN SQL.
+
+```sql
+...
+|   0:VREMOTE_DORIS_SCAN_NODE(68)                                                                                                                   |
+|      TABLE: test.test_time                                                                                                                        |
+|      QUERY: SELECT /*+ SET_VAR(enable_parallel_result_sink=true) */ `timestamp` FROM test.test_time WHERE (timestamp > '2025-11-03 00:00:00.000') |
+|      PREDICATES: (timestamp[#0] > '2025-11-03 00:00:00.000')
+...
+```
+
+### Режим Virtual Cluster {#virtual-cluster-mode-2}
+
+В этом режиме в плане выполнения по-прежнему отображается `VOlapScanNode`.
+
+По-прежнему можно использовать различные оптимизации Doris для запросов к внутренним таблицам, например Join Runtime Filter.
+
+```sql
+MySQL [(none)]> explain select * from demo.inner_table a join edoris.external.example_tbl_duplicate b on (a.log_type = b.log_type) where error_code=2;
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| Explain String(Nereids Planner)                                                                                                           |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| PLAN FRAGMENT 0                                                                                                                           |
+|   OUTPUT EXPRS:                                                                                                                           |
+|     log_type[#16]                                                                                                                         |
+|     reason[#17]                                                                                                                           |
+|     log_time[#18]                                                                                                                         |
+|     log_type[#19]                                                                                                                         |
+|     error_code[#20]                                                                                                                       |
+|     error_msg[#21]                                                                                                                        |
+|     op_id[#22]                                                                                                                            |
+|     op_time[#23]                                                                                                                          |
+|   PARTITION: HASH_PARTITIONED: log_type[#6]                                                                                               |
+|                                                                                                                                           |
+|   HAS_COLO_PLAN_NODE: false                                                                                                               |
+|                                                                                                                                           |
+|   VRESULT SINK                                                                                                                            |
+|      MYSQL_PROTOCOL                                                                                                                       |
+|                                                                                                                                           |
+|   3:VHASH JOIN(200)                                                                                                                       |
+|   |  join op: INNER JOIN(BROADCAST)[]                                                                                                     |
+|   |  equal join conjunct: (log_type[#6] = log_type[#1])                                                                                   |
+|   |  cardinality=3                                                                                                                        |
+|   |  vec output tuple id: 3                                                                                                               |
+|   |  output tuple id: 3                                                                                                                   |
+|   |  vIntermediate tuple ids: 2                                                                                                           |
+|   |  hash output slot ids: 0 1 2 3 4 5 6 7                                                                                                |
+|   |  runtime filters: RF000[min_max] <- log_type[#1](1/1/1048576), RF001[in_or_bloom] <- log_type[#1](1/1/1048576)                        |
+|   |  final projections: log_type[#8], reason[#9], log_time[#10], log_type[#11], error_code[#12], error_msg[#13], op_id[#14], op_time[#15] |
+|   |  final project output tuple id: 3                                                                                                     |
+|   |  distribute expr lists: log_type[#6]                                                                                                  |
+|   |  distribute expr lists:                                                                                                               |
+|   |                                                                                                                                       |
+|   |----1:VEXCHANGE                                                                                                                        |
+|   |       offset: 0                                                                                                                       |
+|   |       distribute expr lists: log_type[#1]                                                                                             |
+|   |                                                                                                                                       |
+|   2:VOlapScanNode(187)                                                                                                                    |
+|      TABLE: demo.inner_table(inner_table), PREAGGREGATION: ON                                                                             |
+|      partitions=1/1 (inner_table)                                                                                                         |
+|      tablets=1/1, tabletList=1762832514491                                                                                                |
+|      cardinality=3, avgRowSize=901.6666, numNodes=1                                                                                       |
+|      pushAggOp=NONE                                                                                                                       |
+|      runtime filters: RF000[min_max] -> log_type[#6], RF001[in_or_bloom] -> log_type[#6]                                                  |
+|                                                                                                                                           |
+| PLAN FRAGMENT 1                                                                                                                           |
+|                                                                                                                                           |
+|   PARTITION: HASH_PARTITIONED: log_type[#1]                                                                                               |
+|                                                                                                                                           |
+|   HAS_COLO_PLAN_NODE: false                                                                                                               |
+|                                                                                                                                           |
+|   STREAM DATA SINK                                                                                                                        |
+|     EXCHANGE ID: 01                                                                                                                       |
+|     UNPARTITIONED                                                                                                                         |
+|                                                                                                                                           |
+|   0:VOlapScanNode(188)                                                                                                                    |
+|      TABLE: external.example_tbl_duplicate(example_tbl_duplicate), PREAGGREGATION: ON                                                     |
+|      PREDICATES: (error_code[#2] = 2)                                                                                                     |
+|      partitions=1/1 (example_tbl_duplicate)                                                                                               |
+|      tablets=1/1, tabletList=1762481736238                                                                                                |
+|      cardinality=1, avgRowSize=7425.0, numNodes=1                                                                                         |
+|      pushAggOp=NONE
+```
+
+## Операции записи {#write-operations}
+
+> Поддерживается начиная с версии 4.1.
+
+После настройки Catalog в режиме Virtual Cluster можно загружать данные в его таблицы следующими способами с использованием insert:
+
+```sql
+-- 1. switch to catalog, use database and insert
+SWITCH doris_ctl;
+USE doris_db;
+insert into doris_tbl values (1,2);
+
+-- 2. use doris database directly
+USE doris_ctl.doris_db;
+insert into doris_tbl values (1,2);
+
+-- 3. use full qualified name to insert
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+```
+
+### Поддерживаемые способы загрузки {#supported-import-forms}
+
+```sql
+-- 1. insert into values
+insert into doris_ctl.doris_db.doris_tbl values (1,2);
+
+-- 2. insert into select
+insert into doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+
+-- 3. insert overwrite
+insert overwrite table doris_ctl.doris_db.doris_tbl select * from doris_db.doris_tbl;
+```
+
+### Неподдерживаемые возможности загрузки {#unsupported-import-capabilities}
+
+После настройки Catalog следующие возможности загрузки пока недоступны:
+
+-   [Group Commit](../../data-operate/import/load-best-practices/group-commit-manual.md)
+-   [Транзакции](../../data-operate/transaction)

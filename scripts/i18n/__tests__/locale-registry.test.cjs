@@ -28,34 +28,34 @@ function withEnv(values, run) {
 
 test('the locale registry keeps introduced locales opt-in behind one config', () => {
     const {locales, localeRegistry, enabledLocales, enabledLocaleRecords} = load();
-    assert.deepEqual(locales, ['en', 'zh-CN', 'ja', 'ko']);
+    assert.deepEqual(locales, ['en', 'zh-CN', 'ja', 'ko', 'ru']);
     const {translatedPages, ...korean} = localeRegistry.find(locale => locale.code === 'ko');
     assert.deepEqual(korean, {code: 'ko', label: '한국어', htmlLang: 'ko', optional: true, ordinaryPages: false});
     // Translated product pages are registered one by one, as routes without a trailing slash.
     assert(translatedPages.every(page => page.startsWith('/') && !page.endsWith('/')));
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').label, '日本語');
     assert.equal(localeRegistry.find(locale => locale.code === 'ja').htmlLang, 'ja');
-    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN']);
     });
     // A developer switches one locale on; CI enables the locales in scope.
-    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: 'true', DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja'}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja']);
         assert.deepEqual(enabledLocaleRecords().map(locale => locale.htmlLang), ['en-US', 'zh-Hans-CN', 'ja']);
     });
-    withEnv({DORIS_ENABLE_KO: 'true', DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: 'true', DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: undefined}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ko']);
     });
-    withEnv({DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja,ko'}, () => {
+    withEnv({DORIS_ENABLE_RU: undefined, DORIS_ENABLE_KO: undefined, DORIS_ENABLE_JA: undefined, DORIS_ENABLE_LOCALES: 'ja,ko'}, () => {
         assert.deepEqual(enabledLocales(), ['en', 'zh-CN', 'ja', 'ko']);
     });
 });
 
 test('a locale is managed only when it is both configured and enabled', () => {
-    assert.deepEqual(managedLocales(root), ['ja', 'ko']);
+    assert.deepEqual(managedLocales(root), ['ja', 'ko', 'ru']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN', 'ja']), ['ja']);
     assert.deepEqual(managedLocales(root, ['en', 'zh-CN']), []);
 });
@@ -117,6 +117,7 @@ test('neither shipped locale translates the blog yet', () => {
     assert.equal(hasBlogTranslations(root, 'zh-CN'), false);
     assert.equal(hasBlogTranslations(root, 'ja'), false);
     assert.equal(hasBlogTranslations(root, 'ko'), false);
+    assert.equal(hasBlogTranslations(root, 'ru'), false);
 });
 
 test('Korean pipeline requires an explicit locale and its own inventory before planning', () => {
@@ -132,4 +133,20 @@ test('Korean pipeline requires an explicit locale and its own inventory before p
     const script = new RegExp(settings.scriptPattern, 'u');
     for (const text of ['한국어 데이터베이스', 'ᄒ', 'ㄱ']) assert(script.test(text));
     for (const text of ['English SQL', '日本語 データベース']) assert(!script.test(text));
+});
+
+test('Russian stays docs-first and supports all eight optional-locale combinations', () => {
+    const {localeRegistry, enabledLocales} = load();
+    const {translatedPages, ...russian} = localeRegistry.find(locale => locale.code === 'ru');
+    assert.deepEqual(russian,
+        {code:'ru', label:'Русский', htmlLang:'ru', optional:true, ordinaryPages:false});
+    assert.equal(translatedPages.length, 7);
+    assert(translatedPages.every(page => page.startsWith('/') && !page.endsWith('/')));
+    for (let mask = 0; mask < 8; mask++) {
+        const selected = ['ja','ko','ru'].filter((_, i) => mask & (1 << i));
+        withEnv({DORIS_ENABLE_JA:undefined,DORIS_ENABLE_KO:undefined,DORIS_ENABLE_RU:undefined,
+            DORIS_ENABLE_LOCALES:selected.join(',')}, () => assert.deepEqual(enabledLocales(), ['en','zh-CN',...selected]));
+    }
+    withEnv({DORIS_ENABLE_RU:'true',DORIS_ENABLE_JA:undefined,DORIS_ENABLE_KO:undefined,DORIS_ENABLE_LOCALES:undefined},
+        () => assert.deepEqual(enabledLocales(), ['en','zh-CN','ru']));
 });

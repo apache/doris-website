@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/to-seconds",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/to-seconds.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/to-seconds.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "80c893350df06d7cf36f18dfe5ab937aa9543fd18f668ec7688a542f8e76dd55",
+    "sourceTechnicalHash": "e2c380cc77d3d867baa02034fde8a6d3ac93e70f3dad259912ef7782f0728716",
+    "targetHash": "60c004c070a94cce9614cd09e22503a3127dba12fc7be150827efbbc4f67b161",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:06:23.078Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "80c893350df06d7cf36f18dfe5ab937aa9543fd18f668ec7688a542f8e76dd55",
+      "targetHash": "60c004c070a94cce9614cd09e22503a3127dba12fc7be150827efbbc4f67b161",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

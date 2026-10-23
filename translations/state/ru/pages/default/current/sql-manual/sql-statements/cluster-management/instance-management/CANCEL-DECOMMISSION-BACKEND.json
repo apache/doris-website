@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/instance-management/CANCEL-DECOMMISSION-BACKEND",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/CANCEL-DECOMMISSION-BACKEND.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/CANCEL-DECOMMISSION-BACKEND.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "58eb8bef85f5a557819f4510579e96163354f374895596f50a5a53a4b9a54954",
+    "sourceTechnicalHash": "87dc4ed01b6fdb21c77b3dcb1b0b15cb48cd46433895797cd19b2c9e307cc72f",
+    "targetHash": "c073940b524ef2e63b89e18128737e1b6ebfe6cc6d1658fb99725ab4eaa30495",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:56:49.466Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "58eb8bef85f5a557819f4510579e96163354f374895596f50a5a53a4b9a54954",
+      "targetHash": "c073940b524ef2e63b89e18128737e1b6ebfe6cc6d1658fb99725ab4eaa30495",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

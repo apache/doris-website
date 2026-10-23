@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/mysql/procs_priv",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/mysql/procs_priv.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/mysql/procs_priv.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4443bce311ed5ef1e3f45d86dd6b3d5228b7b2f787ec1b49c647b983ef70bd3a",
+    "sourceTechnicalHash": "1bde10cb6094c8e71fb1d4f97e3a936db82740fdba3523abc0941f5d80da6145",
+    "targetHash": "5b25e2fc3fd908419740eebba0a5b7327e54915cc22d68432384f7e8e1b3961c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:44:47.539Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4443bce311ed5ef1e3f45d86dd6b3d5228b7b2f787ec1b49c647b983ef70bd3a",
+      "targetHash": "5b25e2fc3fd908419740eebba0a5b7327e54915cc22d68432384f7e8e1b3961c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

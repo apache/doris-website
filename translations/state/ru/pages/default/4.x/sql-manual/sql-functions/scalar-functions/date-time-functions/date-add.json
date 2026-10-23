@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-add",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-add.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-add.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e5ff8f3be5c695aaf83a8fc08d380b73d0ca3b24e38b08177a5c06218b3bee25",
+    "sourceTechnicalHash": "66378d7ee51358c0ca127bac834f3abb89810635b3cf1bf55ebcc43597d3808a",
+    "targetHash": "c81007b268e376942afb85d2bf2d8b1533cd71af028b06d5a42d2bf688b80ff3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:25:25.522Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5ff8f3be5c695aaf83a8fc08d380b73d0ca3b24e38b08177a5c06218b3bee25",
+      "targetHash": "c81007b268e376942afb85d2bf2d8b1533cd71af028b06d5a42d2bf688b80ff3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

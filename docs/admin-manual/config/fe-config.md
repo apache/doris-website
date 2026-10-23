@@ -384,7 +384,7 @@ Is it a configuration item unique to the Master FE node: false
 
 </version>
 
-TSO is enabled by `enable_feature_binlog`, which defaults to false and cannot be changed dynamically. The following TSO parameters are currently supported; see [TSO](../cluster-management/tso.md) for usage and caveats.
+TSO is enabled by `enable_feature_changelog`, which defaults to false and cannot be changed dynamically. The following TSO parameters are currently supported; see [TSO](../cluster-management/tso.md) for usage and caveats.
 
 | Parameter | Type | Default | Mutable | Master only | Description |
 | --- | --- | --- | --- | --- | --- |

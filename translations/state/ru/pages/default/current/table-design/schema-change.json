@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "table-design/schema-change",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/table-design/schema-change.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/schema-change.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+    "sourceTechnicalHash": "37f9f63987b87c13241db21a42ad619c138839aac1b46106e270b92d0f52dd5e",
+    "targetHash": "0cfff5241b263f3d626e7ce1e09c1093b479d96212b2a95902a4b795ebbd6f05",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:01:39.841Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fc124c632c83b650f53ddb81211275542cebd192a61a796287cf65b9f958d716",
+      "targetHash": "0cfff5241b263f3d626e7ce1e09c1093b479d96212b2a95902a4b795ebbd6f05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

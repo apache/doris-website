@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/correctness-faq",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/correctness-faq.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/faq/correctness-faq.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "d540f6aec81dabcd807abb128f05ef74cd86cca0fc4334bd55a60d06cda28e12",
+    "sourceTechnicalHash": "2199efa0979ac81a6044feb6b56917a77b741f47e52dff2ec89fb3f0c4f7c68e",
+    "targetHash": "ca02491bb9c7af629c4025b5a3047cf4247247d2189ac7157e46edcecd5619ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:27:32.061Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d540f6aec81dabcd807abb128f05ef74cd86cca0fc4334bd55a60d06cda28e12",
+      "targetHash": "ca02491bb9c7af629c4025b5a3047cf4247247d2189ac7157e46edcecd5619ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

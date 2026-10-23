@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/data-admin/recyclebin",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/data-admin/recyclebin.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/data-admin/recyclebin.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+    "sourceTechnicalHash": "5a3ac57d61ff6dcaa1d0fdb12b797f7511def6f2a0a6f9bd2cb9091dd44f6893",
+    "targetHash": "7efb844f2c2098bf0017a13c578d03a379e6336b0dcfff1ae7aec35fef483f3d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:51.187Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+      "targetHash": "7efb844f2c2098bf0017a13c578d03a379e6336b0dcfff1ae7aec35fef483f3d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/data-admin/recyclebin",
+        "sourcePath": "docs/admin-manual/data-admin/recyclebin.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/data-admin/recyclebin.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "0912f1bf0757783bef17805c35315d4ac4358e1b75909229a4c5862e0f35a857",
+        "targetHash": "7efb844f2c2098bf0017a13c578d03a379e6336b0dcfff1ae7aec35fef483f3d",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/mcp-server",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/mcp-server.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/mcp-server.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+    "sourceTechnicalHash": "f07db36c8c1852980955f655e71c8e7b35cbb101a4667221fe8bc39e87401113",
+    "targetHash": "c75d995edd289bede49b2fa4bcd79cfbcc459d553a7793b0579cdb4177e64778",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:48:47.322Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "446ff073a98f3d7873226869bafdbb5bb54fc11294c014333fdd015f5e9cb91f",
+      "targetHash": "c75d995edd289bede49b2fa4bcd79cfbcc459d553a7793b0579cdb4177e64778",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

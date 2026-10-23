@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/maxcompute-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/maxcompute-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/maxcompute-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ac74cb94b9865efa28ebf597993af374364e320e44cb0ce63b05896b922477e8",
+    "sourceTechnicalHash": "59c9de2fd453f4ff84e68d0337fa34bd36871258346f130a78cae3395b496259",
+    "targetHash": "44243d307063d145f5b4cf55bfdf7f35d3190eb422fa62efe9aa29f33230c968",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:59:54.465Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac74cb94b9865efa28ebf597993af374364e320e44cb0ce63b05896b922477e8",
+      "targetHash": "44243d307063d145f5b4cf55bfdf7f35d3190eb422fa62efe9aa29f33230c968",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

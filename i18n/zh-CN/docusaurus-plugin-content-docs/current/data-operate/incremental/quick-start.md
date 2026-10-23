@@ -2,14 +2,13 @@
 {
     "title": "快速上手",
     "language": "zh-CN",
-    "description": "10 分钟走通 Doris Row Binlog 与 Table Stream：建表并开启 Row Binlog，创建 Stream，写入数据，查看 UPDATE_BEFORE/UPDATE_AFTER/DELETE 变更并消费到下游表。",
+    "description": "10 分钟走通 Doris Changelog 与 Table Stream：建表并开启 Changelog，创建 Stream，写入数据，查看 UPDATE_BEFORE/UPDATE_AFTER/DELETE 变更并消费到下游表。",
     "keywords": [
         "Doris Table Stream 快速上手",
-        "Row Binlog 示例",
+        "Changelog 示例",
         "CREATE STREAM",
-        "binlog.enable",
-        "binlog.format ROW",
-        "binlog.need_historical_value",
+        "changelog.enable",
+        "changelog.need_historical_value",
         "min_delta",
         "show_initial_rows",
         "__DORIS_STREAM_CHANGE_TYPE_COL__",
@@ -24,9 +23,9 @@
 ---
 
 <!-- 知识类型: 操作指南 -->
-<!-- 适用场景: 第一次使用 Row Binlog / Table Stream -->
+<!-- 适用场景: 第一次使用 Changelog / Table Stream -->
 
-本文用一张订单表演示 Row Binlog 与 Table Stream 的基本用法：把订单的新增、更新、删除记录下来，再不重不漏地消费到一张下游表。全程只需要一个 MySQL 客户端，大约 10 分钟。
+本文用一张订单表演示 Changelog 与 Table Stream 的基本用法：把订单的新增、更新、删除记录下来，再不重不漏地消费到一张下游表。全程只需要一个 MySQL 客户端，大约 10 分钟。
 
 ## 前置条件
 
@@ -36,7 +35,7 @@
 - 在所有 FE 的 `fe.conf` 中加入以下配置并重启 FE（两项均为非动态配置）：
 
     ```text
-    enable_feature_binlog = true
+    enable_feature_changelog = true
     enable_table_stream = true
     ```
 
@@ -44,18 +43,18 @@
 
 ## 流程总览
 
-1. 创建开启 Row Binlog 的 `orders` 表，写入第一批数据。
+1. 创建开启 Changelog 的 `orders` 表，写入第一批数据。
 2. 在 `orders` 上创建 `min_delta` 类型的 Table Stream。
 3. 写入第二批数据，包含更新、删除、新增。
 4. 通过 Stream 查看变更，理解每一行的变更类型。
 5. 用 `INSERT INTO ... SELECT` 把变更消费到下游表。
 6. 在 `information_schema.table_stream_consumption` 中查看消费进度。
 
-## 第 1 步：创建开启 Row Binlog 的表
+## 第 1 步：创建开启 Changelog 的表
 
 <!-- 知识类型: 操作步骤 -->
 
-Row Binlog 只能在建表时开启。这里创建一张 Unique Key Merge-on-Write 表，并打开 `binlog.need_historical_value`，这样更新和删除时会记录变更前的值：
+Changelog 只能在建表时开启。这里创建一张 Unique Key Merge-on-Write 表，并打开 `changelog.need_historical_value`，这样更新和删除时会记录变更前的值：
 
 ```sql
 CREATE DATABASE IF NOT EXISTS demo;
@@ -71,9 +70,8 @@ DISTRIBUTED BY HASH(order_id) BUCKETS 1
 PROPERTIES (
     "replication_num" = "1",
     "enable_unique_key_merge_on_write" = "true",
-    "binlog.enable" = "true",
-    "binlog.format" = "ROW",
-    "binlog.need_historical_value" = "true"
+    "changelog.enable" = "true",
+    "changelog.need_historical_value" = "true"
 );
 ```
 
@@ -271,12 +269,12 @@ DROP TABLE orders;
 | 刚创建 Stream 就查询，结果为空 | `show_initial_rows = false` 时，创建 Stream 之前已有的数据不作为变更输出。写入新的变更后再查询 |
 | `SELECT * FROM orders_stream` 看不到变更类型 | 虚拟列不包含在 `SELECT *` 中，需要显式写出 `__DORIS_STREAM_CHANGE_TYPE_COL__`、`__DORIS_STREAM_SEQUENCE_COL__` |
 | 多次查询 Stream，同样的变更一直在 | 普通 `SELECT` 只读取变更，不推进消费位点。用 `INSERT INTO ... SELECT ... FROM orders_stream` 消费后才不再返回 |
-| 想给已有的表开启 Row Binlog | Row Binlog 只能在建表时开启，需要新建开启 Row Binlog 的表并导入数据，见 [Row Binlog](row-binlog#开启方式) |
+| 想给已有的表开启 Changelog | Changelog 只能在建表时开启，需要新建开启 Changelog 的表并导入数据，见 [Changelog](changelog#开启方式) |
 | `LAST_CONSUMPTION_TIME` 显示 `-1` | 该分区尚未消费过 |
 
 ## 下一步
 
 - 三种消费类型的区别、`show_initial_rows` 的含义、查询与消费的事务语义：[Table Stream 基础](table-stream)
 - 按分区分批消费、快照读取、与维表关联、基表 DDL 对 Stream 的影响：[Table Stream 进阶](table-stream-advanced)
-- Row Binlog 的属性、支持范围和限制：[Row Binlog](row-binlog)
+- Changelog 的属性、支持范围和限制：[Changelog](changelog)
 - 不建 Stream，直接按时间窗口读变更：[增量查询](incremental-query)

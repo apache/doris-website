@@ -1,0 +1,2849 @@
+{
+  "docs.translation.status.label": {
+    "message": "Статус перевода"
+  },
+  "docs.translation.untranslated": {
+    "message": "Эта страница ещё не переведена на русский язык."
+  },
+  "docs.translation.showingSource": {
+    "message": "Показан актуальный английский оригинал для этой версии."
+  },
+  "docs.translation.openSource": {
+    "message": "Открыть английский оригинал"
+  },
+  "docs.translation.openChineseSource": {
+    "message": "Открыть китайский оригинал"
+  },
+  "docs.translation.staleProse": {
+    "message": "Русский перевод не отражает последние изменения формулировок в оригинале."
+  },
+  "docs.translation.sourceMissing": {
+    "message": "Оригинал недоступен для проверки, поэтому русский перевод не показан."
+  },
+  "docs.translation.unverified": {
+    "message": "Содержание или актуальность русского перевода не подтверждены."
+  },
+  "docs.translation.stale": {
+    "message": "Русский перевод не отражает последние изменения оригинала."
+  },
+  "docs.translation.reviewedHuman": {
+    "message": "Русский перевод проверен человеком."
+  },
+  "docs.translation.machine": {
+    "message": "Эта страница переведена с помощью языковой модели."
+  },
+  "docs.translation.translatedAt": {
+    "message": "Дата перевода: "
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Это документация для {unreleased} версии Apache Doris."
+  },
+  "theme.docs.versions.unreleasedText": {
+    "message": "разрабатываемой"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Обратитесь к официальной документации версий {v4xLink} / {v3xLink} / {v21Link}."
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Документация для {siteTitle} {versionLabel} больше не поддерживается."
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "Последняя версия"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Другие версии"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Другие языки"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "Ничего не найдено"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "Все результаты за пределами «{context}»"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "Все результаты в разделе «{context}»"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "Все результаты"
+  },
+  "theme.SearchBar.label": {
+    "message": "Поиск"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "Результаты поиска «{query}»"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "Поиск по документации"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "Везде"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "Найден {count} документ|Найдено {count} документа|Найдено {count} документов|Найдено {count} документа"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "Документы не найдены"
+  },
+  "theme.SearchPage.searchSource": {
+    "message": "Искать в английском оригинале"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Страницы документации"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Назад"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Далее"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Главная"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Путь к текущей странице"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Навигация по документации"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Закрыть навигацию"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Показать или скрыть навигацию"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Свернуть навигацию"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Свернуть навигацию"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Развернуть навигацию"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Развернуть навигацию"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Версия: {versionLabel}"
+  },
+  "theme.common.editThisPage": {
+    "message": "Редактировать страницу"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Прямая ссылка на {heading}"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Перейти к содержимому"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← В главное меню"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "На этой странице"
+  },
+  "theme.TOC.title": {
+    "message": "На этой странице"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Главное меню"
+  },
+  "docs.navigation.sections": {
+    "message": "Разделы документации"
+  },
+  "docs.navigation.menu": {
+    "message": "Меню"
+  },
+  "docs.navigation.sidebar": {
+    "message": "Содержание документации"
+  },
+  "docs.navigation.closeSidebar": {
+    "message": "Закрыть содержание"
+  },
+  "docs.navigation.sidebarNavigation": {
+    "message": "Навигация по содержанию"
+  },
+  "docs.navigation.switchLanguage": {
+    "message": "Сменить язык"
+  },
+  "docs.navigation.openSidebar": {
+    "message": "Открыть содержание"
+  },
+  "docs.navigation.browseSection": {
+    "message": "Перейти к разделу"
+  },
+  "theme.TOC.homepage": {
+    "message": "Главная Doris"
+  },
+  "theme.TOC.downloadPdf": {
+    "message": "Скачать PDF"
+  },
+  "theme.TOC.forum": {
+    "message": "Технический форум"
+  },
+  "theme.TOC.discussions": {
+    "message": "Задать вопрос в Discussions"
+  },
+  "theme.TOC.slack": {
+    "message": "Обсудить в Slack"
+  },
+  "theme.TOC.discord": {
+    "message": "Обсудить в Discord"
+  },
+  "marketing.features.hero": {
+    "message": "Всё, что нужно знать о {doris}{lineBreak}и его возможностях"
+  },
+  "marketing.features.003": {
+    "message": "Справочник по основным технологиям и возможностям Apache Doris"
+  },
+  "marketing.features.004": {
+    "message": "Поиск возможностей: «lakehouse», «MPP», «индекс»…"
+  },
+  "marketing.features.005": {
+    "message": "Очистить поиск"
+  },
+  "marketing.features.006": {
+    "message": "возможностей"
+  },
+  "marketing.features.007": {
+    "message": "Основная документация"
+  },
+  "marketing.features.008": {
+    "message": "Док."
+  },
+  "marketing.features.noResults": {
+    "message": "По запросу {query} ничего не найдено. Попробуйте более общий термин или {clear}."
+  },
+  "marketing.features.011": {
+    "message": "очистите поиск"
+  },
+  "marketing.features.012": {
+    "message": "Основные возможности"
+  },
+  "marketing.features.013": {
+    "message": "Справочник по основным технологиям и возможностям Apache Doris: аналитика в реальном времени, федеративные запросы к lakehouse и гибридный поиск."
+  },
+  "marketing.featureTags.ai": {
+    "message": "ИИ"
+  },
+  "marketing.featureTags.analytics": {
+    "message": "аналитика"
+  },
+  "marketing.featureTags.authentication": {
+    "message": "аутентификация"
+  },
+  "marketing.featureTags.authorization": {
+    "message": "авторизация"
+  },
+  "marketing.featureTags.bulk-ingestion": {
+    "message": "пакетная загрузка"
+  },
+  "marketing.featureTags.caching": {
+    "message": "кеширование"
+  },
+  "marketing.featureTags.catalog": {
+    "message": "каталог"
+  },
+  "marketing.featureTags.cdc": {
+    "message": "CDC"
+  },
+  "marketing.featureTags.coming-soon": {
+    "message": "скоро"
+  },
+  "marketing.featureTags.data-loading": {
+    "message": "загрузка данных"
+  },
+  "marketing.featureTags.data-management": {
+    "message": "управление данными"
+  },
+  "marketing.featureTags.data-streaming": {
+    "message": "потоковая передача данных"
+  },
+  "marketing.featureTags.data-types": {
+    "message": "типы данных"
+  },
+  "marketing.featureTags.delete": {
+    "message": "удаление"
+  },
+  "marketing.featureTags.external-catalog": {
+    "message": "внешний каталог"
+  },
+  "marketing.featureTags.federation": {
+    "message": "федеративные запросы"
+  },
+  "marketing.featureTags.governance": {
+    "message": "управление и контроль"
+  },
+  "marketing.featureTags.iceberg": {
+    "message": "Iceberg"
+  },
+  "marketing.featureTags.ingest": {
+    "message": "приём данных"
+  },
+  "marketing.featureTags.integration": {
+    "message": "интеграция"
+  },
+  "marketing.featureTags.lakehouse": {
+    "message": "lakehouse"
+  },
+  "marketing.featureTags.load": {
+    "message": "загрузка"
+  },
+  "marketing.featureTags.materialized-view": {
+    "message": "материализованное представление"
+  },
+  "marketing.featureTags.memory-management": {
+    "message": "управление памятью"
+  },
+  "marketing.featureTags.metadata": {
+    "message": "метаданные"
+  },
+  "marketing.featureTags.multi-tenancy": {
+    "message": "мультитенантность"
+  },
+  "marketing.featureTags.observability": {
+    "message": "наблюдаемость"
+  },
+  "marketing.featureTags.performance": {
+    "message": "производительность"
+  },
+  "marketing.featureTags.query-acceleration": {
+    "message": "ускорение запросов"
+  },
+  "marketing.featureTags.query-engine": {
+    "message": "движок запросов"
+  },
+  "marketing.featureTags.ranking": {
+    "message": "ранжирование"
+  },
+  "marketing.featureTags.real-time-ingest": {
+    "message": "приём данных в реальном времени"
+  },
+  "marketing.featureTags.reliability": {
+    "message": "надёжность"
+  },
+  "marketing.featureTags.resource-management": {
+    "message": "управление ресурсами"
+  },
+  "marketing.featureTags.search": {
+    "message": "поиск"
+  },
+  "marketing.featureTags.security": {
+    "message": "безопасность"
+  },
+  "marketing.featureTags.semi-structured": {
+    "message": "полуструктурированные данные"
+  },
+  "marketing.featureTags.sql": {
+    "message": "SQL"
+  },
+  "marketing.featureTags.storage": {
+    "message": "хранение"
+  },
+  "marketing.featureTags.storage-compute-decoupled": {
+    "message": "разделение хранения и вычислений"
+  },
+  "marketing.featureTags.streaming": {
+    "message": "потоковая обработка"
+  },
+  "marketing.featureTags.table-design": {
+    "message": "проектирование таблиц"
+  },
+  "marketing.featureTags.table-format": {
+    "message": "формат таблиц"
+  },
+  "marketing.featureTags.update": {
+    "message": "обновление"
+  },
+  "marketing.featureTags.upsert": {
+    "message": "upsert"
+  },
+  "marketing.useCases.001": {
+    "message": "Сценарий"
+  },
+  "marketing.useCases.002": {
+    "message": "Результат"
+  },
+  "marketing.useCases.003": {
+    "message": "Для каждой возможности есть ссылка на её документацию. Подробнее о технической реализации читайте в"
+  },
+  "marketing.useCases.004": {
+    "message": "блоге Apache Doris"
+  },
+  "marketing.useCases.005": {
+    "message": "Связанный сценарий"
+  },
+  "marketing.useCases.006": {
+    "message": "На базе"
+  },
+  "marketing.useCases.007": {
+    "message": "Начать работу"
+  },
+  "marketing.useCases.008": {
+    "message": "Попробовать демо (скоро)"
+  },
+  "marketing.benchmarkLabels.internal": {
+    "message": "Собственный формат таблиц"
+  },
+  "marketing.benchmarkLabels.iceberg": {
+    "message": "Формат таблиц Iceberg"
+  },
+  "marketing.benchmarkLabels.100m": {
+    "message": "100 млн строк"
+  },
+  "marketing.benchmarkLabels.10m": {
+    "message": "10 млн строк"
+  },
+  "marketing.benchmarkLabels.1m": {
+    "message": "1 млн строк"
+  },
+  "marketing.benchmarkLabels.retrieval": {
+    "message": "Поиск и извлечение"
+  },
+  "marketing.benchmarkLabels.analytics": {
+    "message": "Аналитические сводки"
+  },
+  "marketing.benchmarkLabels.semi": {
+    "message": "Полуструктурированные данные"
+  },
+  "marketing.benchmarkLabels.8queries": {
+    "message": "8 запросов"
+  },
+  "marketing.benchmarkLabels.6queries": {
+    "message": "6 запросов"
+  },
+  "marketing.benchmarks.001": {
+    "message": "Каждый движок читает и записывает данные в своём собственном формате."
+  },
+  "marketing.benchmarks.002": {
+    "message": "Все движки читают один и тот же набор данных Apache Iceberg: меняется только движок."
+  },
+  "marketing.benchmarks.003": {
+    "message": "Объём официального рейтинга. Около 100 млн строк."
+  },
+  "marketing.benchmarks.004": {
+    "message": "Полная проверка, для которой достаточно одной машины. Около 10 млн строк."
+  },
+  "marketing.benchmarks.005": {
+    "message": "Объём для быстрой проверки работоспособности. Около 1 млн строк."
+  },
+  "marketing.benchmarks.006": {
+    "message": "Тест на схеме «звезда»: 13 запросов с большим числом соединений широких таблиц и агрегаций."
+  },
+  "marketing.benchmarks.007": {
+    "message": "Классический тест для систем поддержки принятия решений: 22 нерегламентированных запроса к нормализованной схеме."
+  },
+  "marketing.benchmarks.008": {
+    "message": "Самый сложный тест для систем поддержки принятия решений: 99 запросов, охватывающих большинство задач аналитического движка."
+  },
+  "marketing.benchmarks.009": {
+    "message": "Поиск наблюдений, воспроизведение трассировок, развёртывание цепочек от генерации до вызова инструмента и поиск инцидентов по словам и фразам в больших текстах."
+  },
+  "marketing.benchmarks.010": {
+    "message": "Сводки по сбоям и затратам на уровне трассировок, агрегации по моделям и типам наблюдений, распределение вызовов инструментов и диагностика работы системы."
+  },
+  "marketing.benchmarks.011": {
+    "message": "Фильтрация и агрегация по меняющимся полям событий: этапам выпуска, уровням клиентов, стратегиям извлечения и вложенным диагностическим данным провайдеров и инструментов."
+  },
+  "marketing.benchmarks.012": {
+    "message": "Узнайте, насколько быстр"
+  },
+  "marketing.benchmarks.013": {
+    "message": "на практике."
+  },
+  "marketing.benchmarks.014": {
+    "message": "Две нагрузки, с которыми Apache Doris используют на практике: классическая SQL-аналитика и журналы наблюдаемости ИИ-агентов. Сравнение с движками, которые обычно рассматривают для этих задач. Скрипты и исходные замеры опубликованы."
+  },
+  "marketing.benchmarks.015": {
+    "message": "Общее время выполнения"
+  },
+  "marketing.benchmarks.016": {
+    "message": "Скрыть время отдельных запросов ↑"
+  },
+  "marketing.benchmarks.017": {
+    "message": "Показать время отдельных запросов ↓"
+  },
+  "marketing.benchmarks.018": {
+    "message": "время каждого запроса"
+  },
+  "marketing.benchmarks.019": {
+    "message": "масштаб"
+  },
+  "marketing.benchmarks.020": {
+    "message": "запросов"
+  },
+  "marketing.benchmarks.021": {
+    "message": "Сбой"
+  },
+  "marketing.benchmarks.022": {
+    "message": "с"
+  },
+  "marketing.benchmarks.failedTooltip": {
+    "message": "сбой"
+  },
+  "marketing.benchmarks.023": {
+    "message": "выполнено"
+  },
+  "marketing.benchmarks.024": {
+    "message": "Наведите курсор на столбец, чтобы увидеть точное время. Штриховка означает превышение времени ожидания."
+  },
+  "marketing.benchmarks.025": {
+    "message": "Столбцы с разрывом наверху выходят за видимую шкалу. Наведите курсор, чтобы увидеть фактическое значение."
+  },
+  "marketing.benchmarks.026": {
+    "message": "Открыть отчёт ↗"
+  },
+  "marketing.benchmarks.027": {
+    "message": "Открыть отчёт (скоро)"
+  },
+  "marketing.benchmarks.028": {
+    "message": "Что измеряем"
+  },
+  "marketing.benchmarks.029": {
+    "message": "Время выполнения отдельных запросов, суммированное по выбранным запросам каждого теста."
+  },
+  "marketing.benchmarks.030": {
+    "message": "Запусков на запрос"
+  },
+  "marketing.benchmarks.031": {
+    "message": "Каждый запрос выполняется не менее 3 раз. Холодный запуск: первый; прогретый: более быстрый из второго и третьего."
+  },
+  "marketing.benchmarks.032": {
+    "message": "Контроль кеша"
+  },
+  "marketing.benchmarks.033": {
+    "message": "Кеши результатов отключены во всех движках. Перед холодными запусками кеши Doris BE очищаются."
+  },
+  "marketing.benchmarks.034": {
+    "message": "Одинаковое оборудование"
+  },
+  "marketing.benchmarks.035": {
+    "message": "Все движки работают в одном регионе и VPC, кластеры используют одинаковый класс машин."
+  },
+  "marketing.benchmarks.036": {
+    "message": "Одинаковые данные"
+  },
+  "marketing.benchmarks.037": {
+    "message": "Перед запуском в каждый движок загружаются одни и те же исходные данные в его собственном формате."
+  },
+  "marketing.benchmarks.038": {
+    "message": "Прозрачность"
+  },
+  "marketing.benchmarks.039": {
+    "message": "Все скрипты, запросы, конфигурации и метаданные запусков опубликованы в репозитории."
+  },
+  "marketing.benchmarks.040": {
+    "message": "Клонируйте скрипты тестов"
+  },
+  "marketing.benchmarks.041": {
+    "message": "Склонируйте репозиторий тестов на машину, с которой будут запускаться тесты."
+  },
+  "marketing.benchmarks.042": {
+    "message": "Укажите адрес кластера Doris"
+  },
+  "marketing.benchmarks.043": {
+    "message": "Откройте файл конфигурации и укажите хост, порт, пользователя, пароль и базу данных вашего кластера Doris."
+  },
+  "marketing.benchmarks.044": {
+    "message": "Установите сторонние инструменты"
+  },
+  "marketing.benchmarks.045": {
+    "message": "Для запуска нужны несколько консольных клиентов: mysql, jq и hyperfine. Одна цель make устанавливает их все."
+  },
+  "marketing.benchmarks.046": {
+    "message": "Запустите тест и создайте отчёт"
+  },
+  "marketing.benchmarks.047": {
+    "message": "Запустите тестирование, затем соберите отчёт. По мере выполнения скрипт выводит сводку по каждому запросу."
+  },
+  "marketing.benchmarks.048": {
+    "message": "Запустите сами"
+  },
+  "marketing.benchmarks.049": {
+    "message": "за пять минут."
+  },
+  "marketing.benchmarks.050": {
+    "message": "Все приведённые числа можно воспроизвести с помощью открытых скриптов. Четыре шага, четыре команды. Нажмите на шаг, чтобы увидеть команду."
+  },
+  "marketing.benchmarks.051": {
+    "message": "Методика измерений"
+  },
+  "marketing.benchmarks.052": {
+    "message": "Полная методика ↗"
+  },
+  "marketing.benchmarks.053": {
+    "message": "· шаг 0"
+  },
+  "marketing.benchmarks.054": {
+    "message": "Попробуйте Apache"
+  },
+  "marketing.benchmarks.055": {
+    "message": "на"
+  },
+  "marketing.benchmarks.056": {
+    "message": "своих данных."
+  },
+  "marketing.benchmarks.057": {
+    "message": "Начать работу"
+  },
+  "marketing.benchmarks.058": {
+    "message": "Тесты производительности Apache Doris: SQL-аналитика и наблюдаемость агентов"
+  },
+  "marketing.benchmarks.059": {
+    "message": "Результаты сравнения Apache Doris с ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL и DuckDB на задачах структурированной аналитики (SSB, TPC-H, TPC-DS) и наблюдаемости ИИ-агентов."
+  },
+  "marketing.benchmarks.060": {
+    "message": "Структурированная аналитика: каждый запрос отдельно."
+  },
+  "marketing.benchmarks.061": {
+    "message": "Doris в сравнении с ClickHouse, Redshift, Snowflake и Trino в тестах"
+  },
+  "marketing.benchmarks.062": {
+    "message": "Star Schema Benchmark"
+  },
+  "marketing.benchmarks.063": {
+    "message": "TPC-H"
+  },
+  "marketing.benchmarks.064": {
+    "message": " и"
+  },
+  "marketing.benchmarks.065": {
+    "message": "TPC-DS"
+  },
+  "marketing.benchmarks.066": {
+    "message": ". Все три активно используют соединения и аналитический SQL, для которых и создан Doris. Нажмите на тест, чтобы увидеть время отдельных запросов."
+  },
+  "marketing.benchmarks.067": {
+    "message": "Наблюдаемость агентов: каждый запрос отдельно."
+  },
+  "marketing.benchmarks.068": {
+    "message": "Журналы наблюдаемости ИИ-агентов: воспроизведение трассировок, поиск инцидентов по фразам и агрегации по меняющимся полям событий. Doris в сравнении с ClickHouse, Elasticsearch, OpenSearch, PostgreSQL и DuckDB на одинаковых данных. Нажмите на нагрузку, чтобы увидеть время отдельных запросов."
+  },
+  "marketing.ai.001": {
+    "message": "Аналитика для ИИ"
+  },
+  "marketing.ai.002": {
+    "message": "Apache Doris: аналитика для эпохи ИИ-агентов"
+  },
+  "marketing.ai.003": {
+    "message": "Apache Doris служит высокопроизводительной аналитической основой для ИИ-приложений, RAG-систем и наблюдаемости ИИ: аналитика в реальном времени, гибридный поиск и SQL-функции для ИИ в одном движке."
+  },
+  "marketing.ai.004": {
+    "message": "в реальном времени"
+  },
+  "marketing.ai.005": {
+    "message": "с поддержкой ИИ"
+  },
+  "marketing.ai.006": {
+    "message": "Аналитика для эпохи агентов"
+  },
+  "marketing.ai.007": {
+    "message": "Apache Doris даёт ИИ-приложениям доступ в реальном времени к достоверным корпоративным данным, доступным для запросов. Создавайте агентов, учитывающих данные, повышайте качество RAG, отслеживайте поведение ИИ, выполняйте аналитику и гибридный поиск по структурированным, полуструктурированным и неструктурированным данным в любом масштабе."
+  },
+  "marketing.ai.008": {
+    "message": "Почему аналитика"
+  },
+  "marketing.ai.009": {
+    "message": "для ИИ важна"
+  },
+  "marketing.ai.010": {
+    "message": "в эпоху агентов."
+  },
+  "marketing.ai.011": {
+    "message": "Качество решений"
+  },
+  "marketing.ai.012": {
+    "message": "Контекст приложения"
+  },
+  "marketing.ai.013": {
+    "message": "Релевантность поиска"
+  },
+  "marketing.ai.014": {
+    "message": "Прозрачность работы агентов"
+  },
+  "marketing.ai.015": {
+    "message": "Стоимость всей системы"
+  },
+  "marketing.ai.016": {
+    "message": "Решения ИИ в реальном времени"
+  },
+  "marketing.ai.017": {
+    "message": "ИИ-агенты запрашивают актуальные операционные данные и действуют, пока взаимодействие с пользователем или бизнес-процесс ещё продолжается."
+  },
+  "marketing.ai.018": {
+    "message": "Приложения с доступом к данным"
+  },
+  "marketing.ai.019": {
+    "message": "Копилоты, агенты и RAG-системы используют свежие, достоверные корпоративные данные для контекста, памяти и надёжных действий."
+  },
+  "marketing.ai.020": {
+    "message": "RAG и поиск знаний"
+  },
+  "marketing.ai.021": {
+    "message": "SQL-фильтры, полнотекстовый поиск, BM25 и векторный поиск выполняются в одном запросе, чтобы LLM получали точный контекст и реже галлюцинировали."
+  },
+  "marketing.ai.022": {
+    "message": "Наблюдаемость ИИ"
+  },
+  "marketing.ai.023": {
+    "message": "Промпты, ответы, трассировки, вызовы инструментов, расход токенов и затраты хранятся вместе и доступны для запросов, отладки и постоянного контроля качества."
+  },
+  "marketing.ai.024": {
+    "message": "Простой стек данных для ИИ"
+  },
+  "marketing.ai.025": {
+    "message": "Один движок объединяет аналитику в реальном времени, полнотекстовый и векторный поиск, анализ журналов и SQL-функции для ИИ, сокращая число конвейеров, которые нужно обслуживать."
+  },
+  "marketing.ai.026": {
+    "message": "Что требуется от аналитики для ИИ"
+  },
+  "marketing.ai.027": {
+    "message": "и что предлагает Apache Doris."
+  },
+  "marketing.ai.028": {
+    "message": "Пять задач, с которыми платформа аналитики для ИИ должна справляться, и конкретные возможности Apache Doris для каждой из них."
+  },
+  "marketing.ai.029": {
+    "message": "Низкая сквозная задержка для ИИ-приложений"
+  },
+  "marketing.ai.030": {
+    "message": "ИИ-приложения и автономные агенты работают со свежими данными в реальном времени. Новые события, обновления CDC и потоковые данные должны становиться доступными для запросов за секунды, а аналитические запросы должны возвращать результат менее чем за секунду даже при большом числе одновременных обращений в рабочей среде."
+  },
+  "marketing.ai.031": {
+    "message": "Гибридный поиск по структурированным данным, тексту и векторам"
+  },
+  "marketing.ai.032": {
+    "message": "ИИ-приложения ищут по документам, журналам, промптам, ответам, отзывам, базам знаний, обращениям в поддержку и эмбеддингам. SQL, поиск по ключевым словам и векторный поиск решают отдельные части задачи. Аналитика для ИИ объединяет структурированные фильтры, полнотекстовый поиск, семантическое сходство и ранжирование по релевантности в одном процессе."
+  },
+  "marketing.ai.033": {
+    "message": "Гибкая схема для данных ИИ-приложений"
+  },
+  "marketing.ai.034": {
+    "message": "ИИ-приложения постоянно создают меняющиеся полуструктурированные события от моделей, агентов, инструментов, фреймворков и рабочих процессов. Платформа должна поддерживать динамический JSON, вложенные поля, эволюцию схемы, быструю фильтрацию и нерегламентированные SQL-запросы без сложного ETL, чтобы команды могли напрямую анализировать каждый шаг агента, вызов инструмента, событие извлечения и ответ модели."
+  },
+  "marketing.ai.035": {
+    "message": "Аналитика данных наблюдаемости ИИ"
+  },
+  "marketing.ai.036": {
+    "message": "Наблюдаемость ИИ выходит за рамки журналов, метрик и трассировок. Команды анализируют вызовы моделей, промпты, ответы, выполнение инструментов, события извлечения, расход токенов, задержку, стоимость, оценки качества и отзывы пользователей в одном месте. Слой обслуживания должен поддерживать гибкие схемы, быстрый поиск и интерактивную агрегацию больших объёмов данных ИИ-приложений."
+  },
+  "marketing.ai.037": {
+    "message": "Интеграция с экосистемой LLM"
+  },
+  "marketing.ai.038": {
+    "message": "ИИ-приложения опираются на быстро меняющуюся экосистему агентных фреймворков, платформ LLMOps, инструментов наблюдаемости, процессов MCP и собственных конвейеров. Платформа должна встраиваться в эту экосистему, чтобы агенты, копилоты, RAG-системы и инструменты LLMOps могли читать достоверные данные и записывать сигналы ИИ через SQL, API, коннекторы и MCP."
+  },
+  "marketing.ai.039": {
+    "message": "Приём данных в реальном времени и"
+  },
+  "marketing.ai.040": {
+    "message": "ответы с низкой задержкой"
+  },
+  "marketing.ai.041": {
+    "message": "Интеграция с Kafka и CDC"
+  },
+  "marketing.ai.042": {
+    "message": "Group Commit"
+  },
+  "marketing.ai.043": {
+    "message": "Архитектура MPP"
+  },
+  "marketing.ai.044": {
+    "message": "Точечные запросы с высокой конкурентностью"
+  },
+  "marketing.ai.045": {
+    "message": "Аналитика для клиентов"
+  },
+  "marketing.ai.046": {
+    "message": "Наблюдаемость ИИ: промпты,"
+  },
+  "marketing.ai.047": {
+    "message": "трассировки, затраты и качество"
+  },
+  "marketing.ai.048": {
+    "message": "Stream Load"
+  },
+  "marketing.ai.049": {
+    "message": "Инвертированный индекс"
+  },
+  "marketing.ai.050": {
+    "message": "Инкрементальное материализованное представление"
+  },
+  "marketing.ai.051": {
+    "message": "Наблюдаемость в эпоху ИИ-агентов"
+  },
+  "marketing.ai.052": {
+    "message": "Гибкая аналитика JSON"
+  },
+  "marketing.ai.053": {
+    "message": "с VARIANT"
+  },
+  "marketing.ai.054": {
+    "message": "Тип данных VARIANT"
+  },
+  "marketing.ai.055": {
+    "message": "Гибридный поиск по"
+  },
+  "marketing.ai.056": {
+    "message": "SQL, тексту и векторам"
+  },
+  "marketing.ai.057": {
+    "message": "Гибридный поиск"
+  },
+  "marketing.ai.058": {
+    "message": "Полнотекстовый поиск"
+  },
+  "marketing.ai.059": {
+    "message": "Оценка релевантности BM25"
+  },
+  "marketing.ai.060": {
+    "message": "Векторный индекс"
+  },
+  "marketing.ai.061": {
+    "message": "Эмбеддинги"
+  },
+  "marketing.ai.062": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "marketing.ai.063": {
+    "message": "SQL-функции для ИИ и"
+  },
+  "marketing.ai.064": {
+    "message": "интеграция инструментов"
+  },
+  "marketing.ai.065": {
+    "message": "SQL-функции LLM"
+  },
+  "marketing.ai.066": {
+    "message": "Сервер MCP"
+  },
+  "marketing.ai.067": {
+    "message": "Семантический слой (скоро)"
+  },
+  "marketing.ai.068": {
+    "message": "Создавайте аналитику для ИИ"
+  },
+  "marketing.ai.069": {
+    "message": "на базе"
+  },
+  "marketing.customer.001": {
+    "message": "Аналитика для клиентов"
+  },
+  "marketing.customer.002": {
+    "message": "Apache Doris: аналитика для клиентов на данных реального времени"
+  },
+  "marketing.customer.003": {
+    "message": "Предоставляйте клиентам интерактивную аналитику с откликом менее секунды с Apache Doris: данные в реальном времени, высокая конкурентность и изоляция арендаторов в одном движке."
+  },
+  "marketing.customer.004": {
+    "message": "Аналитика для клиентов"
+  },
+  "marketing.customer.005": {
+    "message": "на основе"
+  },
+  "marketing.customer.006": {
+    "message": "актуальных"
+  },
+  "marketing.customer.007": {
+    "message": "данных"
+  },
+  "marketing.customer.008": {
+    "message": "Предоставляйте клиентам интерактивную аналитику с откликом менее секунды, в любом масштабе."
+  },
+  "marketing.customer.009": {
+    "message": "Почему данные в реальном времени"
+  },
+  "marketing.customer.010": {
+    "message": "меняют продукт."
+  },
+  "marketing.customer.011": {
+    "message": "Удобство для пользователей"
+  },
+  "marketing.customer.012": {
+    "message": "Вовлечённость"
+  },
+  "marketing.customer.013": {
+    "message": "Выручка"
+  },
+  "marketing.customer.014": {
+    "message": "Скорость принятия решений"
+  },
+  "marketing.customer.015": {
+    "message": "Удобство для пользователей"
+  },
+  "marketing.customer.016": {
+    "message": "Дашборды загружаются сразу при открытии: аналитика становится естественной частью продукта, а не отчётом, которого приходится ждать."
+  },
+  "marketing.customer.017": {
+    "message": "Выше вовлечённость и удержание"
+  },
+  "marketing.customer.018": {
+    "message": "Быстрая аналитика по актуальным данным даёт пользователям повод возвращаться к продукту."
+  },
+  "marketing.customer.019": {
+    "message": "Монетизация"
+  },
+  "marketing.customer.020": {
+    "message": "Аналитика для клиентов становится платной функцией вашего продукта и приносит выручку."
+  },
+  "marketing.customer.021": {
+    "message": "Быстрые решения"
+  },
+  "marketing.customer.022": {
+    "message": "Сигналы в реальном времени позволяют действовать, пока возможность ещё есть, вместо реакции на вчерашние данные."
+  },
+  "marketing.customer.023": {
+    "message": "Уже работает в продуктах."
+  },
+  "marketing.customer.024": {
+    "message": "Три команды используют Apache Doris для клиентской аналитики с откликом менее секунды, при реальной конкурентной нагрузке и на актуальных данных."
+  },
+  "marketing.customer.025": {
+    "message": "OLAP в реальном времени для поисковой строки JD.com"
+  },
+  "marketing.customer.026": {
+    "message": "Замена оконных вычислений Flink на Doris позволяет ускорить разработку, адаптироваться к изменениям измерений и сократить вычислительные ресурсы."
+  },
+  "marketing.customer.027": {
+    "message": "Аналитика поисковой строки JD.com в реальном времени: общий поисковый трафик, мониторинг A/B-тестов и популярные запросы с детализацией до SKU для бизнес-аналитиков."
+  },
+  "marketing.customer.028": {
+    "message": "10 млрд строк обрабатываются в день"
+  },
+  "marketing.customer.029": {
+    "message": "10 000 QPS с задержкой запросов от 150 мс"
+  },
+  "marketing.customer.030": {
+    "message": "Приём данных в реальном времени: 1 млн строк в секунду"
+  },
+  "marketing.customer.031": {
+    "message": "Рекомендации в реальном времени для Xanh SM"
+  },
+  "marketing.customer.032": {
+    "message": "Apache Doris и режим разделения вычислений и хранения позволили нам выполнять обе нагрузки на одном слое хранения, снижая стоимость и сложность инфраструктуры без потери производительности."
+  },
+  "marketing.customer.033": {
+    "message": "Xanh SM, ведущая вьетнамская платформа вызова электромобилей, использует Apache Doris для аналитики и обслуживания запросов в реальном времени, предоставляя персональные рекомендации пунктов назначения."
+  },
+  "marketing.customer.034": {
+    "message": "175 000 записей в секунду с задержкой менее секунды"
+  },
+  "marketing.customer.035": {
+    "message": "Средняя задержка запросов около 76 мс в большинстве временных интервалов"
+  },
+  "marketing.customer.036": {
+    "message": "Задержка P9999 лишь изредка превышает 100 мс"
+  },
+  "marketing.customer.037": {
+    "message": "Аналитика в реальном времени для ZTO Express"
+  },
+  "marketing.customer.038": {
+    "message": "ZTO Express перестроила аналитику в реальном времени для 500 млн обновлений записей в день. Инвертированные индексы по часто фильтруемым полям обеспечивают мониторинг, многомерный анализ и точную фильтрацию."
+  },
+  "marketing.customer.039": {
+    "message": "Время запросов с многомерной фильтрацией сократилось с более минуты до менее секунды (60×); сложных агрегаций: с 5–10 минут до менее минуты"
+  },
+  "marketing.customer.040": {
+    "message": "Конкурентность критичных запросов выросла с менее 50 до 100+, доля тайм-аутов снизилась с 30% до менее 5%"
+  },
+  "marketing.customer.041": {
+    "message": "Треть прежнего оборудования, при этом 500 млн ежедневных обновлений доступны для запросов за секунды"
+  },
+  "marketing.customer.042": {
+    "message": "ZTO EXPRESS"
+  },
+  "marketing.customer.043": {
+    "message": "Что требуется от аналитики для клиентов"
+  },
+  "marketing.customer.044": {
+    "message": "и что предлагает Apache Doris."
+  },
+  "marketing.customer.045": {
+    "message": "Нагрузка клиентской аналитики отличается от внутреннего BI. Четыре задачи, с которыми движок обслуживания должен справляться, и конкретные возможности Apache Doris для каждой из них."
+  },
+  "marketing.customer.046": {
+    "message": "Низкая сквозная задержка"
+  },
+  "marketing.customer.047": {
+    "message": "Клиентским приложениям нужны и свежие данные, и быстрые ответы. Новые события должны становиться доступными для запросов за секунды, а аналитические запросы для дашбордов, встроенной аналитики и сценариев внутри продукта должны возвращать результат менее чем за секунду."
+  },
+  "marketing.customer.048": {
+    "message": "Высокая конкурентность"
+  },
+  "marketing.customer.049": {
+    "message": "Тысячи пользователей могут выполнять запросы одновременно. Аналитический движок должен сохранять низкую задержку при высокой конкурентной нагрузке, а не только в тестах одиночных запросов."
+  },
+  "marketing.customer.050": {
+    "message": "Мультитенантность и изоляция ресурсов"
+  },
+  "marketing.customer.051": {
+    "message": "Клиентская аналитика часто обслуживает множество арендаторов, пользователей или встроенных приложений на одной платформе. Движок должен изолировать данные, нагрузки и ресурсы, чтобы активность одного арендатора не влияла на производительность, безопасность и работу другого."
+  },
+  "marketing.customer.052": {
+    "message": "Lakehouse и открытый доступ к данным"
+  },
+  "marketing.customer.053": {
+    "message": "Данные уже хранятся в открытых форматах lakehouse, объектном хранилище и существующих озёрах данных. Аналитический движок должен запрашивать их на месте, объединять с данными обслуживания в реальном времени и предоставлять актуальные результаты без дополнительного копирования."
+  },
+  "marketing.customer.054": {
+    "message": "От загрузки до запроса"
+  },
+  "marketing.customer.055": {
+    "message": "за секунды"
+  },
+  "marketing.customer.056": {
+    "message": "Транзакции загрузки"
+  },
+  "marketing.customer.057": {
+    "message": "Компактация данных"
+  },
+  "marketing.customer.058": {
+    "message": "Обновление и удаление данных"
+  },
+  "marketing.customer.059": {
+    "message": "Предварительная агрегация и Rollup"
+  },
+  "marketing.customer.060": {
+    "message": "Group Commit"
+  },
+  "marketing.customer.061": {
+    "message": "Интеграция с Kafka и CDC"
+  },
+  "marketing.customer.062": {
+    "message": "Инкрементальное материализованное представление"
+  },
+  "marketing.customer.063": {
+    "message": "Unique Key"
+  },
+  "marketing.customer.064": {
+    "message": "Отклик менее секунды"
+  },
+  "marketing.customer.065": {
+    "message": "при высокой конкурентности"
+  },
+  "marketing.customer.066": {
+    "message": "Отсечение данных"
+  },
+  "marketing.customer.067": {
+    "message": "Точечные запросы с высокой конкурентностью"
+  },
+  "marketing.customer.068": {
+    "message": "Векторизованное выполнение"
+  },
+  "marketing.customer.069": {
+    "message": "Колоночное хранение"
+  },
+  "marketing.customer.070": {
+    "message": "Подготовленные запросы"
+  },
+  "marketing.customer.071": {
+    "message": "Кеш запросов"
+  },
+  "marketing.customer.072": {
+    "message": "Кеш условий"
+  },
+  "marketing.customer.073": {
+    "message": "Мультитенантность и"
+  },
+  "marketing.customer.074": {
+    "message": "изоляция ресурсов"
+  },
+  "marketing.customer.075": {
+    "message": "Группа рабочих нагрузок"
+  },
+  "marketing.customer.076": {
+    "message": "Группа ресурсов"
+  },
+  "marketing.customer.077": {
+    "message": "Вычислительная группа"
+  },
+  "marketing.customer.078": {
+    "message": "Конвейерный движок выполнения"
+  },
+  "marketing.customer.079": {
+    "message": "Интеграция"
+  },
+  "marketing.customer.080": {
+    "message": "с lakehouse"
+  },
+  "marketing.customer.081": {
+    "message": "Оптимизация чтения Parquet"
+  },
+  "marketing.customer.082": {
+    "message": "Кеш данных и кеш страниц"
+  },
+  "marketing.customer.083": {
+    "message": "Кеш метаданных"
+  },
+  "marketing.customer.084": {
+    "message": "Создавайте аналитику для клиентов"
+  },
+  "marketing.customer.085": {
+    "message": "на базе"
+  },
+  "marketing.warehouse.001": {
+    "message": "Хранилище данных"
+  },
+  "marketing.warehouse.002": {
+    "message": "Apache Doris: современное хранилище данных для аналитики в реальном времени"
+  },
+  "marketing.warehouse.003": {
+    "message": "Apache Doris служит слоем современного хранилища данных для дашбордов с низкой задержкой, BI с высокой конкурентностью и операционной отчётности на привычных SQL-моделях."
+  },
+  "marketing.warehouse.004": {
+    "message": "Современное хранилище данных"
+  },
+  "marketing.warehouse.005": {
+    "message": "для"
+  },
+  "marketing.warehouse.006": {
+    "message": "аналитики"
+  },
+  "marketing.warehouse.007": {
+    "message": "в реальном времени"
+  },
+  "marketing.warehouse.008": {
+    "message": "Объединяйте пакетные и потоковые данные, ускоряйте BI и предоставляйте достоверные бизнес-метрики в любом масштабе из одной аналитической базы данных реального времени."
+  },
+  "marketing.warehouse.009": {
+    "message": "Почему современное хранилище данных"
+  },
+  "marketing.warehouse.010": {
+    "message": "меняет бизнес."
+  },
+  "marketing.warehouse.011": {
+    "message": "Доверие к данным"
+  },
+  "marketing.warehouse.012": {
+    "message": "Скорость анализа"
+  },
+  "marketing.warehouse.013": {
+    "message": "Актуальность решений"
+  },
+  "marketing.warehouse.014": {
+    "message": "Стоимость всей системы"
+  },
+  "marketing.warehouse.015": {
+    "message": "Единое представление о бизнесе"
+  },
+  "marketing.warehouse.016": {
+    "message": "Заказы, клиенты, платежи, CRM, ERP, реклама и журналы объединяются в достоверный аналитический слой: все команды работают с одинаковыми метриками."
+  },
+  "marketing.warehouse.017": {
+    "message": "Быстрый BI и самостоятельный анализ"
+  },
+  "marketing.warehouse.018": {
+    "message": "SQL с откликом менее секунды делает детализацию и нерегламентированные запросы интерактивными в Tableau, Power BI, Superset и Looker."
+  },
+  "marketing.warehouse.019": {
+    "message": "Мониторинг в реальном времени"
+  },
+  "marketing.warehouse.020": {
+    "message": "Непрерывный приём данных из CDC, Kafka и Flink поддерживает актуальность дашбордов, оповещений и операционных отчётов."
+  },
+  "marketing.warehouse.021": {
+    "message": "Масштабирование с разумными затратами"
+  },
+  "marketing.warehouse.022": {
+    "message": "Объём аналитики растёт от терабайтов до петабайтов, вместе с ним растёт конкурентность BI, без добавления систем, конвейеров и слоёв обслуживания."
+  },
+  "marketing.warehouse.023": {
+    "message": "Уже работает в промышленной среде."
+  },
+  "marketing.warehouse.024": {
+    "message": "Три команды используют Apache Doris как аналитическое ядро хранилища данных: в большом масштабе, при реальной конкурентной нагрузке и на актуальных бизнес-данных."
+  },
+  "marketing.warehouse.025": {
+    "message": "SF Express: переход с Presto на Apache Doris для BI и нерегламентированной аналитики"
+  },
+  "marketing.warehouse.026": {
+    "message": "SF Technology перевела основную BI-платформу с более чем 1 млн запросов в день с Presto на Apache Doris, сократила задержку P95 почти на 70% и перенесла все BI-нагрузки и нерегламентированные запросы."
+  },
+  "marketing.warehouse.027": {
+    "message": "Задержка P95 снизилась почти на 70%; доля запросов быстрее 10 с выросла с 72% до 88%"
+  },
+  "marketing.warehouse.028": {
+    "message": "На 48% меньше оборудования, доля попаданий в кеш данных при запросах к lakehouse достигает 96%"
+  },
+  "marketing.warehouse.029": {
+    "message": "Перенесено 100% BI-нагрузок и нерегламентированных запросов при совместимости SQL 97%"
+  },
+  "marketing.warehouse.030": {
+    "message": "SF EXPRESS"
+  },
+  "marketing.warehouse.031": {
+    "message": "Xiaomi: единый lakehouse на Apache Doris и Apache Paimon"
+  },
+  "marketing.warehouse.032": {
+    "message": "Xiaomi объединила Presto, Druid и разрозненные форматы хранения в один lakehouse на Apache Doris и Apache Paimon, ускорив запросы в 6 раз."
+  },
+  "marketing.warehouse.033": {
+    "message": "Средняя задержка запросов снизилась с 60 до 10 с; агрегаций: с 40 до 8 с"
+  },
+  "marketing.warehouse.034": {
+    "message": "Конкурентная пропускная способность в 5 раз выше, чем у Presto, а задержка под нагрузкой ниже на 25–75%"
+  },
+  "marketing.warehouse.035": {
+    "message": "Единый стек: горячие данные в Doris и холодные в Paimon для аналитики поведения пользователей, устройств и операций"
+  },
+  "marketing.warehouse.036": {
+    "message": "XIAOMI"
+  },
+  "marketing.warehouse.037": {
+    "message": "Cainiao: lakehouse реального времени для глобальной логистики"
+  },
+  "marketing.warehouse.038": {
+    "message": "Обновления данных выполняются за секунды, а ответы на запросы приходят за сотни миллисекунд."
+  },
+  "marketing.warehouse.039": {
+    "message": "Затраты на платформу данных реального времени ниже на 90%, среднее время ответа меньше на 72%"
+  },
+  "marketing.warehouse.040": {
+    "message": "Точечные запросы: 1000–2000 QPS за 10–100 мс; соединения нескольких таблиц: 200–300 QPS с откликом менее секунды"
+  },
+  "marketing.warehouse.041": {
+    "message": "Более 25 кластеров и 10 000 процессоров в 3 регионах отслеживают запасы, посылки и заказы для 80 млн посылок в день"
+  },
+  "marketing.warehouse.042": {
+    "message": "CAINIAO"
+  },
+  "marketing.warehouse.043": {
+    "message": "Что требуется от хранилища данных"
+  },
+  "marketing.warehouse.044": {
+    "message": "и что предлагает Apache Doris."
+  },
+  "marketing.warehouse.045": {
+    "message": "Пять задач, с которыми современное хранилище данных должно справляться, и конкретные возможности Apache Doris для каждой из них."
+  },
+  "marketing.warehouse.046": {
+    "message": "Актуальные данные в реальном времени"
+  },
+  "marketing.warehouse.047": {
+    "message": "Бизнес-командам нужно видеть, что происходит сейчас. Для этого необходимы потоковый приём, CDC, инкрементальные обновления и доступность данных для запросов за секунды, без ожидания ночной пакетной обработки."
+  },
+  "marketing.warehouse.048": {
+    "message": "Моделирование для нагрузок хранилища"
+  },
+  "marketing.warehouse.049": {
+    "message": "Современное хранилище должно содержать детальные записи, таблицы фактов и измерений, широкие таблицы, агрегированные метрики и наборы данных для бизнеса. Продуманное моделирование сохраняет единые определения, ускоряет запросы и позволяет командам повторно использовать проверенные данные."
+  },
+  "marketing.warehouse.050": {
+    "message": "Инкрементальные обновления и надёжная пакетная обработка"
+  },
+  "marketing.warehouse.051": {
+    "message": "Нагрузкам хранилища нужны и инкрементальное обновление, и большие пакетные задания. Материализованные представления и инкрементальные вычисления поддерживают актуальность агрегаций, Rollup и отчётных таблиц без полного пересчёта, а надёжное пакетное выполнение обеспечивает задания конца дня, дозагрузку и обработку истории."
+  },
+  "marketing.warehouse.052": {
+    "message": "Lakehouse и открытая архитектура"
+  },
+  "marketing.warehouse.053": {
+    "message": "Операционные базы данных, потоки событий, SaaS-приложения и открытые таблицы lakehouse содержат важные бизнес-данные. Хранилище должно объединять эти источники и запрашивать данные на месте в Iceberg, Hudi, Delta Lake и Hive, без копирования всего в ещё одно изолированное хранилище."
+  },
+  "marketing.warehouse.054": {
+    "message": "Корпоративное управление и эксплуатация"
+  },
+  "marketing.warehouse.055": {
+    "message": "Общее аналитическое хранилище должно быть безопасным, надёжным, доступным для аудита и простым в эксплуатации. Для этого нужны детальный контроль доступа, изоляция нагрузок, высокая доступность, журналы аудита и простое администрирование, чтобы все команды могли полагаться на одну платформу."
+  },
+  "marketing.warehouse.056": {
+    "message": "Гибкое моделирование"
+  },
+  "marketing.warehouse.057": {
+    "message": "данных хранилища"
+  },
+  "marketing.warehouse.058": {
+    "message": "Модель данных"
+  },
+  "marketing.warehouse.059": {
+    "message": "Предварительная агрегация и Rollup"
+  },
+  "marketing.warehouse.060": {
+    "message": "Аналитические функции"
+  },
+  "marketing.warehouse.061": {
+    "message": "Партиционирование и бакетирование"
+  },
+  "marketing.warehouse.062": {
+    "message": "Unique Key"
+  },
+  "marketing.warehouse.063": {
+    "message": "Приём данных в реальном времени"
+  },
+  "marketing.warehouse.064": {
+    "message": "и обновления"
+  },
+  "marketing.warehouse.065": {
+    "message": "Транзакции загрузки"
+  },
+  "marketing.warehouse.066": {
+    "message": "Компактация данных"
+  },
+  "marketing.warehouse.067": {
+    "message": "Обновление и удаление данных"
+  },
+  "marketing.warehouse.068": {
+    "message": "Group Commit"
+  },
+  "marketing.warehouse.069": {
+    "message": "Интеграция с Kafka и CDC"
+  },
+  "marketing.warehouse.070": {
+    "message": "Инкрементальное обновление"
+  },
+  "marketing.warehouse.071": {
+    "message": "и пакетное выполнение"
+  },
+  "marketing.warehouse.072": {
+    "message": "Пакетная загрузка"
+  },
+  "marketing.warehouse.073": {
+    "message": "Инкрементальное материализованное представление"
+  },
+  "marketing.warehouse.074": {
+    "message": "Выгрузка на диск"
+  },
+  "marketing.warehouse.075": {
+    "message": "Changelog / Table Stream (скоро)"
+  },
+  "marketing.warehouse.076": {
+    "message": "Вычислительный движок"
+  },
+  "marketing.warehouse.077": {
+    "message": "для lakehouse"
+  },
+  "marketing.warehouse.078": {
+    "message": "Multi Catalog"
+  },
+  "marketing.warehouse.079": {
+    "message": "Управление таблицами озера данных"
+  },
+  "marketing.warehouse.080": {
+    "message": "Корпоративное"
+  },
+  "marketing.warehouse.081": {
+    "message": "управление"
+  },
+  "marketing.warehouse.082": {
+    "message": "Подключаемая аутентификация"
+  },
+  "marketing.warehouse.083": {
+    "message": "Интеграции каталогов"
+  },
+  "marketing.warehouse.084": {
+    "message": "Происхождение данных"
+  },
+  "marketing.warehouse.085": {
+    "message": "Создавайте современное хранилище данных"
+  },
+  "marketing.warehouse.086": {
+    "message": "на базе"
+  },
+  "marketing.observability.001": {
+    "message": "Наблюдаемость"
+  },
+  "marketing.observability.002": {
+    "message": "Apache Doris: наблюдаемость для эпохи ИИ-агентов"
+  },
+  "marketing.observability.003": {
+    "message": "Apache Doris служит высокопроизводительной аналитической основой для журналов, метрик, трассировок и событий ИИ-агентов: приём в реальном времени, полнотекстовый поиск, OLAP и гибридный векторный поиск в одном движке."
+  },
+  "marketing.observability.004": {
+    "message": "в реальном времени"
+  },
+  "marketing.observability.005": {
+    "message": "для эпохи ИИ-агентов"
+  },
+  "marketing.observability.006": {
+    "message": "Apache Doris объединяет журналы, метрики, трассировки и события ИИ-агентов в одном высокопроизводительном аналитическом движке, чтобы команды быстрее находили проблемы, контролировали затраты и постоянно улучшали качество ИИ."
+  },
+  "marketing.observability.007": {
+    "message": "Почему наблюдаемость"
+  },
+  "marketing.observability.008": {
+    "message": "важна"
+  },
+  "marketing.observability.009": {
+    "message": "в эпоху агентов."
+  },
+  "marketing.observability.010": {
+    "message": "Обнаружение инцидентов"
+  },
+  "marketing.observability.011": {
+    "message": "Удобство для пользователей"
+  },
+  "marketing.observability.012": {
+    "message": "Затраты при масштабировании"
+  },
+  "marketing.observability.013": {
+    "message": "Качество ИИ"
+  },
+  "marketing.observability.014": {
+    "message": "Связь поведения системы с бизнес-результатами"
+  },
+  "marketing.observability.015": {
+    "message": "Быстрое обнаружение инцидентов"
+  },
+  "marketing.observability.016": {
+    "message": "Журналы, трассировки и события агентов становятся данными выполнения, доступными для анализа, позволяя выявить аномалии и первопричины до распространения сбоев."
+  },
+  "marketing.observability.017": {
+    "message": "Пользовательский опыт и SLA"
+  },
+  "marketing.observability.018": {
+    "message": "Состояние системы связывается с реальным влиянием на пользователей: задержками, ошибками, точностью ответов, завершением задач и обоснованностью ответов."
+  },
+  "marketing.observability.019": {
+    "message": "Меньше затрат при масштабировании"
+  },
+  "marketing.observability.020": {
+    "message": "Горячие данные остаются быстрыми для диагностики, агрегации показывают тенденции, а история переносится в более дешёвое хранилище по мере роста телеметрии."
+  },
+  "marketing.observability.021": {
+    "message": "Постоянное улучшение ИИ"
+  },
+  "marketing.observability.022": {
+    "message": "Промпты, ответы, контекст RAG, вызовы инструментов, оценки и отзывы пользователей показывают, где можно улучшить извлечение данных, промпты и выполнение задач."
+  },
+  "marketing.observability.023": {
+    "message": "Эксплуатация с учётом бизнеса"
+  },
+  "marketing.observability.024": {
+    "message": "Каждый сигнал связан с затронутыми клиентами, арендаторами и процессами, а также с влиянием сбоев ИИ на конверсию, нагрузку поддержки и выручку."
+  },
+  "marketing.observability.025": {
+    "message": "Уже работает в промышленной среде."
+  },
+  "marketing.observability.026": {
+    "message": "Три команды используют Apache Doris как аналитическую основу наблюдаемости: в большом масштабе, на актуальных операционных данных, включая журналы, метрики и события."
+  },
+  "marketing.observability.027": {
+    "message": "MiniMax: журналы петабайтного масштаба на Apache Doris после Grafana Loki"
+  },
+  "marketing.observability.028": {
+    "message": "После отказа от Grafana Loki все бизнес-направления MiniMax записывают журналы в систему на Apache Doris. Она обслуживает петабайты данных с доступностью более 99,9% и отвечает на запросы по миллиардам строк журналов за секунды."
+  },
+  "marketing.observability.029": {
+    "message": "Петабайтное хранилище журналов с доступностью более 99,9% для всех бизнес-направлений"
+  },
+  "marketing.observability.030": {
+    "message": "Поиск по словам и агрегации по 1 млрд записей журнала выполняются за 2 секунды"
+  },
+  "marketing.observability.031": {
+    "message": "Пропускная способность записи 10 ГБ/с с задержкой приёма на уровне секунд"
+  },
+  "marketing.observability.032": {
+    "message": "Сжатие 5:1 и многоуровневое хранение сократили затраты на хранение на 70%"
+  },
+  "marketing.observability.033": {
+    "message": "NetEase: Apache Doris заменил Elasticsearch и InfluxDB"
+  },
+  "marketing.observability.034": {
+    "message": "NetEase перевела платформу мониторинга Eagle с Elasticsearch, а платформу временных рядов IM с InfluxDB на Apache Doris. Запросы ускорились, объём хранения сократился, а индексы можно менять без пересоздания таблиц."
+  },
+  "marketing.observability.035": {
+    "message": "Запросы по журналам мониторинга в 11 раз быстрее, затраты на хранение на 70% ниже, чем в Elasticsearch"
+  },
+  "marketing.observability.036": {
+    "message": "На нагрузках временных рядов объём хранения меньше на 67%, серверов вдвое меньше, чем с InfluxDB"
+  },
+  "marketing.observability.037": {
+    "message": "Пиковая пропускная способность записи 1 ГБ/с, до 1 млн TPS"
+  },
+  "marketing.observability.038": {
+    "message": "Инвертированные индексы добавляются и удаляются инкрементально, без перезаписи таблиц"
+  },
+  "marketing.observability.039": {
+    "message": "Tencent Music: замена Elasticsearch сократила затраты на 80%"
+  },
+  "marketing.observability.040": {
+    "message": "Tencent Music Entertainment перенесла поиск по тегам и аналитику с Elasticsearch на Apache Doris, где инвертированные индексы обеспечивают полнотекстовый поиск и агрегации в одном SQL-запросе."
+  },
+  "marketing.observability.041": {
+    "message": "Общие эксплуатационные затраты на 80% ниже, чем с Elasticsearch"
+  },
+  "marketing.observability.042": {
+    "message": "Объём хранения меньше на 72% (697,7 ГБ → 195,4 ГБ на одинаковом наборе данных)"
+  },
+  "marketing.observability.043": {
+    "message": "Запись в 4 раза быстрее, время загрузки сократилось с более 10 часов до менее 3 часов"
+  },
+  "marketing.observability.044": {
+    "message": "Число оповещений сократилось с более 20 в день до единичных за месяц"
+  },
+  "marketing.observability.045": {
+    "message": "Что требуется от современной наблюдаемости"
+  },
+  "marketing.observability.046": {
+    "message": "и что предлагает Apache Doris."
+  },
+  "marketing.observability.047": {
+    "message": "Пять задач, с которыми современная платформа наблюдаемости должна справляться, и конкретные возможности Apache Doris для каждой из них."
+  },
+  "marketing.observability.048": {
+    "message": "Приём всех сигналов в реальном времени"
+  },
+  "marketing.observability.049": {
+    "message": "Данные наблюдаемости поступают из приложений, Kubernetes, API, шлюзов, баз данных и ИИ-систем. Платформа должна принимать большие объёмы журналов, трассировок, метрик и событий ИИ-агентов с низкой задержкой, чтобы все сигналы, от запросов к LLM и вызовов инструментов до извлечений RAG, стоимости токенов, оценок и отзывов, были доступны для запросов почти в реальном времени."
+  },
+  "marketing.observability.050": {
+    "message": "Анализ динамического JSON без сложного ETL"
+  },
+  "marketing.observability.051": {
+    "message": "Журналы, трассировки, результаты инструментов, ответы моделей и события агентов часто приходят в виде вложенного JSON с постоянно меняющимися полями. Платформа должна поддерживать эволюцию схемы и сразу делать новые поля доступными для запросов, чтобы команды могли фильтровать, исследовать и анализировать новые сигналы без перестройки конвейеров."
+  },
+  "marketing.observability.052": {
+    "message": "Быстрый полнотекстовый поиск по журналам и сигналам агентов"
+  },
+  "marketing.observability.053": {
+    "message": "Данные наблюдаемости содержат много текста для поиска: сообщения об ошибках, стеки вызовов, строки журналов, а также промпты, ответы моделей, результаты инструментов и причины сбоев агентов. Командам нужен быстрый поиск по словам и полнотекстовый поиск для выявления сбоев, отслеживания запросов и исследования поведения агентов в большом масштабе."
+  },
+  "marketing.observability.054": {
+    "message": "Интерактивная аналитика метрик, затрат и качества"
+  },
+  "marketing.observability.055": {
+    "message": "Наблюдаемость включает не только поиск. Команды делают срезы, агрегации и детализацию больших наборов телеметрии, чтобы анализировать надёжность, затраты и качество ИИ: задержку P99, тенденции SLA, расход токенов, стоимость моделей, качество RAG и завершение задач агентами. Для этого нужен высокопроизводительный аналитический движок вместе с быстрым поиском."
+  },
+  "marketing.observability.056": {
+    "message": "Гибридный поиск для наблюдаемости ИИ-агентов"
+  },
+  "marketing.observability.057": {
+    "message": "Наблюдаемости ИИ-агентов недостаточно поиска по словам в журналах. Команды связывают структурированные метаданные с полнотекстовым и семантическим поиском по промптам, ответам, вызовам инструментов и трассировкам, чтобы одним запросом находить точные совпадения, похожие сбои, выдуманные ответы и повторяющееся поведение агентов."
+  },
+  "marketing.observability.058": {
+    "message": "Приём в реальном времени"
+  },
+  "marketing.observability.059": {
+    "message": "журналов и трассировок агентов"
+  },
+  "marketing.observability.060": {
+    "message": "Stream Load"
+  },
+  "marketing.observability.061": {
+    "message": "Интеграция с Kafka и CDC"
+  },
+  "marketing.observability.062": {
+    "message": "Group Commit"
+  },
+  "marketing.observability.063": {
+    "message": "Вертикальная компактация"
+  },
+  "marketing.observability.064": {
+    "message": "Аналитика полуструктурированных данных"
+  },
+  "marketing.observability.065": {
+    "message": "с VARIANT"
+  },
+  "marketing.observability.066": {
+    "message": "Тип данных VARIANT"
+  },
+  "marketing.observability.067": {
+    "message": "Быстрый полнотекстовый поиск"
+  },
+  "marketing.observability.068": {
+    "message": "с инвертированным индексом и BM25"
+  },
+  "marketing.observability.069": {
+    "message": "Инвертированный индекс"
+  },
+  "marketing.observability.070": {
+    "message": "Полнотекстовый поиск"
+  },
+  "marketing.observability.071": {
+    "message": "Оценка релевантности BM25"
+  },
+  "marketing.observability.072": {
+    "message": "Интерактивная аналитика"
+  },
+  "marketing.observability.073": {
+    "message": "для дашбордов наблюдаемости"
+  },
+  "marketing.observability.074": {
+    "message": "Инкрементальное материализованное представление"
+  },
+  "marketing.observability.075": {
+    "message": "Предварительная агрегация и Rollup"
+  },
+  "marketing.observability.076": {
+    "message": "Векторизованное выполнение"
+  },
+  "marketing.observability.077": {
+    "message": "Кеш запросов"
+  },
+  "marketing.observability.078": {
+    "message": "Подготовленные запросы"
+  },
+  "marketing.observability.079": {
+    "message": "Гибридный поиск по"
+  },
+  "marketing.observability.080": {
+    "message": "структурированным данным, тексту и векторам"
+  },
+  "marketing.observability.081": {
+    "message": "Гибридный поиск"
+  },
+  "marketing.observability.082": {
+    "message": "Векторный индекс"
+  },
+  "marketing.observability.083": {
+    "message": "Эмбеддинги"
+  },
+  "marketing.observability.084": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "marketing.observability.085": {
+    "message": "Создавайте наблюдаемость для эпохи ИИ-агентов"
+  },
+  "marketing.observability.086": {
+    "message": "на базе"
+  },
+  "marketing.figures.083": {
+    "message": "ДОКУМЕНТЫ И ЛОГИ"
+  },
+  "marketing.figures.084": {
+    "message": "текст · JSON · заявки"
+  },
+  "marketing.figures.085": {
+    "message": "ЭМБЕДДИНГИ"
+  },
+  "marketing.figures.086": {
+    "message": "из моделей эмбеддингов"
+  },
+  "marketing.figures.087": {
+    "message": "ПОТОКИ И CDC"
+  },
+  "marketing.figures.088": {
+    "message": "заказы · сессии"
+  },
+  "marketing.figures.089": {
+    "message": "SQL-ФИЛЬТРЫ"
+  },
+  "marketing.figures.090": {
+    "message": "время · ACL"
+  },
+  "marketing.figures.062": {
+    "message": "FTS"
+  },
+  "marketing.figures.091": {
+    "message": "ВЕКТОРЫ"
+  },
+  "marketing.figures.092": {
+    "message": "эмбеддинги"
+  },
+  "marketing.figures.093": {
+    "message": "Аналитика для ИИ на Apache Doris: документы, эмбеддинги и потоки поддерживают актуальность Doris; ИИ-приложение задаёт вопрос, Doris отвечает одним гибридным запросом, объединяющим SQL-фильтры, полнотекстовый и векторный поиск, LLM формирует ответ, а трассировки, токены, стоимость и отзывы записываются обратно в Doris для улучшения следующего цикла."
+  },
+  "marketing.figures.094": {
+    "message": "РИС. 04 · ЦИКЛ АГЕНТА: ВОПРОС → ПОИСК → ГЕНЕРАЦИЯ → ЗАПИСЬ → УЛУЧШЕНИЕ"
+  },
+  "marketing.figures.095": {
+    "message": "ВХОДНЫЕ ДАННЫЕ"
+  },
+  "marketing.figures.015": {
+    "message": "ЕДИНЫЙ СЛОЙ SQL"
+  },
+  "marketing.figures.096": {
+    "message": "ПРИЁМ И ОТВЕТЫ"
+  },
+  "marketing.figures.097": {
+    "message": "приём за секунды · ответ < 1 с"
+  },
+  "marketing.figures.098": {
+    "message": "ГИБРИДНЫЙ ЗАПРОС"
+  },
+  "marketing.figures.099": {
+    "message": "RRF → РАНЖИРОВАННЫЙ КОНТЕКСТ"
+  },
+  "marketing.figures.100": {
+    "message": "JSON · события · вызовы инструментов"
+  },
+  "marketing.figures.101": {
+    "message": "НАБЛЮДАЕМОСТЬ ИИ"
+  },
+  "marketing.figures.102": {
+    "message": "промпты · трассы · токены · затраты · оценки"
+  },
+  "marketing.figures.103": {
+    "message": "ЭКОСИСТЕМА"
+  },
+  "marketing.figures.104": {
+    "message": "LLM SQL · сервер MCP · API"
+  },
+  "marketing.figures.105": {
+    "message": "ЦИКЛ АГЕНТА"
+  },
+  "marketing.figures.106": {
+    "message": "ВОПРОС"
+  },
+  "marketing.figures.107": {
+    "message": "КОНТЕКСТ"
+  },
+  "marketing.figures.108": {
+    "message": "ИИ-ПРИЛОЖЕНИЕ"
+  },
+  "marketing.figures.109": {
+    "message": "агент · копилот · RAG"
+  },
+  "marketing.figures.110": {
+    "message": "ПРОМПТ + КОНТЕКСТ"
+  },
+  "marketing.figures.111": {
+    "message": "ответ с учётом контекста"
+  },
+  "marketing.figures.112": {
+    "message": "ТРАССЫ · ТОКЕНЫ · ЗАТРАТЫ"
+  },
+  "marketing.figures.113": {
+    "message": "ТРАССЫ И ОТЗЫВЫ"
+  },
+  "marketing.figures.114": {
+    "message": "токены · затраты · оценки"
+  },
+  "marketing.figures.115": {
+    "message": "ЗАПИСАНО"
+  },
+  "marketing.figures.116": {
+    "message": "УЛУЧШЕНИЕ ПРОМПТОВ И ПОИСКА"
+  },
+  "marketing.figures.001": {
+    "message": "СОБЫТИЯ ПРОДУКТА"
+  },
+  "marketing.figures.002": {
+    "message": "Kafka · клики"
+  },
+  "marketing.figures.003": {
+    "message": "OLTP · CDC"
+  },
+  "marketing.figures.004": {
+    "message": "MySQL · PostgreSQL"
+  },
+  "marketing.figures.005": {
+    "message": "ПАКЕТНЫЕ ЗАДАНИЯ"
+  },
+  "marketing.figures.006": {
+    "message": "Spark · Flink · файлы"
+  },
+  "marketing.figures.007": {
+    "message": "ОЗЕРО ДАННЫХ"
+  },
+  "marketing.figures.008": {
+    "message": "Iceberg · S3"
+  },
+  "marketing.figures.009": {
+    "message": "Аналитика для клиентов на Apache Doris: пользователи множества арендаторов обращаются к встроенным дашбордам, порталам и приложениям; каждый запрос проходит через Doris, изолируется по арендатору и обслуживается из кеша или точечным запросом менее чем за секунду. События продукта, CDC и пакетные данные поступают за секунды, а озеро данных запрашивается на месте."
+  },
+  "marketing.figures.010": {
+    "message": "РИС. 01 · МНОГО АРЕНДАТОРОВ, ЕДИНЫЙ ПУТЬ ЗАПРОСОВ, СВЕЖИЕ ДАННЫЕ"
+  },
+  "marketing.figures.011": {
+    "message": "ВАШ ПРОДУКТ"
+  },
+  "marketing.figures.012": {
+    "message": "APACHE DORIS"
+  },
+  "marketing.figures.013": {
+    "message": "СВЕЖИЕ ДАННЫЕ"
+  },
+  "marketing.figures.014": {
+    "message": "10 000+ QPS · ТЫСЯЧИ ОДНОВРЕМЕННЫХ ПОЛЬЗОВАТЕЛЕЙ"
+  },
+  "marketing.figures.016": {
+    "message": "< 1 СЕКУНДЫ"
+  },
+  "marketing.figures.017": {
+    "message": "ПРИЁМ ЗА СЕКУНДЫ · STREAM LOAD · CDC"
+  },
+  "marketing.figures.018": {
+    "message": "мат. представления · Rollup · точечные запросы · BI < 1 с"
+  },
+  "marketing.figures.019": {
+    "message": "агрегированные метрики · данные для бизнеса"
+  },
+  "marketing.figures.020": {
+    "message": "детальные данные · факты и измерения · широкие таблицы"
+  },
+  "marketing.figures.021": {
+    "message": "исходные записи · Stream Load · Routine Load · CDC · приём за секунды"
+  },
+  "marketing.figures.022": {
+    "message": "BI-ИНСТРУМЕНТЫ"
+  },
+  "marketing.figures.023": {
+    "message": "Tableau · Power BI"
+  },
+  "marketing.figures.024": {
+    "message": "ДАШБОРДЫ"
+  },
+  "marketing.figures.025": {
+    "message": "отчёты · операции"
+  },
+  "marketing.figures.026": {
+    "message": "AD HOC SQL"
+  },
+  "marketing.figures.027": {
+    "message": "аналитики · блокноты"
+  },
+  "marketing.figures.028": {
+    "message": "ПРИЛОЖЕНИЯ И API"
+  },
+  "marketing.figures.029": {
+    "message": "сервисы данных"
+  },
+  "marketing.figures.030": {
+    "message": "ПОТОКИ СОБЫТИЙ"
+  },
+  "marketing.figures.031": {
+    "message": "Kafka · Flink"
+  },
+  "marketing.figures.032": {
+    "message": "ПАКЕТЫ И SAAS"
+  },
+  "marketing.figures.033": {
+    "message": "Parquet · CSV · API"
+  },
+  "marketing.figures.034": {
+    "message": "Iceberg · Paimon · S3"
+  },
+  "marketing.figures.035": {
+    "message": "Современное хранилище данных на Apache Doris: данные из OLTP, потоковых и пакетных источников загружаются в слой ODS, моделируются в слоях DWD и DWS и через материализованные представления предоставляются BI-инструментам, дашбордам, нерегламентированным SQL-запросам и приложениям; озеро данных запрашивается на месте."
+  },
+  "marketing.figures.036": {
+    "message": "РИС. 02 · ИСТОЧНИКИ СНИЗУ, СЛОИ DORIS В ЦЕНТРЕ, ПОТРЕБИТЕЛИ СВЕРХУ"
+  },
+  "marketing.figures.037": {
+    "message": "ПОТРЕБИТЕЛИ"
+  },
+  "marketing.figures.038": {
+    "message": "ПАКЕТЫ + ПОТОКИ · ЕДИНЫЙ СЛОЙ SQL"
+  },
+  "marketing.figures.039": {
+    "message": "УПРАВЛЕНИЕ"
+  },
+  "marketing.figures.040": {
+    "message": "права доступа · изоляция нагрузок · аудит · высокая доступность"
+  },
+  "marketing.figures.041": {
+    "message": "LAKEHOUSE"
+  },
+  "marketing.figures.queriedInPlace": {
+    "message": "запросы на месте"
+  },
+  "marketing.figures.042": {
+    "message": "ИСТОЧНИКИ"
+  },
+  "marketing.figures.043": {
+    "message": "ПРИЛОЖЕНИЯ"
+  },
+  "marketing.figures.044": {
+    "message": "логи · трассы · OTel"
+  },
+  "marketing.figures.045": {
+    "message": "ХОСТЫ И K8S"
+  },
+  "marketing.figures.046": {
+    "message": "метрики · логи подов"
+  },
+  "marketing.figures.047": {
+    "message": "СБОРЩИКИ ЛОГОВ"
+  },
+  "marketing.figures.048": {
+    "message": "Vector · Fluent Bit"
+  },
+  "marketing.figures.049": {
+    "message": "ИИ-АГЕНТЫ"
+  },
+  "marketing.figures.050": {
+    "message": "промпты · вызовы"
+  },
+  "marketing.figures.051": {
+    "message": "дашборды"
+  },
+  "marketing.figures.052": {
+    "message": "АЛЕРТЫ И SLO"
+  },
+  "marketing.figures.053": {
+    "message": "P99 · доля ошибок"
+  },
+  "marketing.figures.054": {
+    "message": "расследования"
+  },
+  "marketing.figures.055": {
+    "message": "КАЧЕСТВО ИИ"
+  },
+  "marketing.figures.056": {
+    "message": "оценки · отзывы"
+  },
+  "marketing.figures.057": {
+    "message": "динамический JSON"
+  },
+  "marketing.figures.058": {
+    "message": "ИНВЕРТ. ИНДЕКС"
+  },
+  "marketing.figures.059": {
+    "message": "текст · BM25"
+  },
+  "marketing.figures.060": {
+    "message": "КОЛОНКИ"
+  },
+  "marketing.figures.061": {
+    "message": "сжатие 5:1"
+  },
+  "marketing.figures.063": {
+    "message": "BM25 · слова"
+  },
+  "marketing.figures.064": {
+    "message": "АГРЕГАЦИЯ"
+  },
+  "marketing.figures.065": {
+    "message": "P99 · SLA · цена"
+  },
+  "marketing.figures.066": {
+    "message": "ГИБРИДНЫЙ"
+  },
+  "marketing.figures.067": {
+    "message": "слова + векторы"
+  },
+  "marketing.figures.068": {
+    "message": "ГОРЯЧИЕ · SSD"
+  },
+  "marketing.figures.069": {
+    "message": "ТЁПЛЫЕ"
+  },
+  "marketing.figures.070": {
+    "message": "ХОЛ. · S3/HDFS"
+  },
+  "marketing.figures.071": {
+    "message": "сейчас"
+  },
+  "marketing.figures.072": {
+    "message": "7 дн."
+  },
+  "marketing.figures.073": {
+    "message": "30 дн."
+  },
+  "marketing.figures.074": {
+    "message": "1 год"
+  },
+  "marketing.figures.075": {
+    "message": "Наблюдаемость на Apache Doris: журналы, метрики, трассировки и события ИИ-агентов проходят через сборщик в Doris, где VARIANT, инвертированные индексы и колоночное хранение обеспечивают работу с данными по мере их переноса с горячих SSD в холодное объектное хранилище. Полнотекстовые, агрегатные и гибридные запросы обслуживают Grafana, оповещения, нерегламентированные SQL-запросы и оценку качества ИИ."
+  },
+  "marketing.figures.076": {
+    "message": "РИС. 03 · СИГНАЛЫ ПОСТУПАЮТ, ПЕРЕХОДЯТ В ХОЛОДНОЕ ХРАНЕНИЕ И ДОСТУПНЫ ДЛЯ ЗАПРОСОВ"
+  },
+  "marketing.figures.077": {
+    "message": "СИГНАЛЫ"
+  },
+  "marketing.figures.078": {
+    "message": "OTEL COLLECTOR · VECTOR · KAFKA"
+  },
+  "marketing.figures.079": {
+    "message": "ХРАНЕНИЕ"
+  },
+  "marketing.figures.080": {
+    "message": "ЖИЗНЕННЫЙ ЦИКЛ · УРОВНИ ХРАНЕНИЯ"
+  },
+  "marketing.figures.081": {
+    "message": "SSD: быстрый доступ · объектное: дешёвая история"
+  },
+  "marketing.figures.082": {
+    "message": "ЗАПРОСЫ"
+  },
+  "marketing.compare.001": {
+    "message": "Сравнить с"
+  },
+  "marketing.compare.002": {
+    "message": "против"
+  },
+  "marketing.compare.003": {
+    "message": "СКОРО"
+  },
+  "marketing.compare.004": {
+    "message": "Apache Doris и другие системы: руководство по выбору"
+  },
+  "marketing.compare.005": {
+    "message": "Выберите аналитическую базу данных реального времени для своей нагрузки. Сравните Apache Doris с ClickHouse, Elasticsearch и Trino/Presto по архитектуре, производительности и совокупной стоимости."
+  },
+  "marketing.compare.006": {
+    "message": "Doris и ClickHouse входят в число ведущих аналитических баз данных реального времени. Doris показывает преимущество на повседневных нагрузках современных команд по работе с данными."
+  },
+  "marketing.compare.007": {
+    "message": "Быстрые соединения"
+  },
+  "marketing.compare.008": {
+    "message": "Распределённые соединения нескольких таблиц без обходных решений с широкими таблицами."
+  },
+  "marketing.compare.009": {
+    "message": "Архитектура MPP с оптимизатором на основе стоимости автоматически выбирает соединения Broadcast, Shuffle или Colocate. Doris выполняет весь набор TPC-DS; в ClickHouse около 50% запросов завершаются с ошибкой."
+  },
+  "marketing.compare.010": {
+    "message": "Меньше затрат"
+  },
+  "marketing.compare.011": {
+    "message": "Разделение хранения и вычислений с открытым кодом."
+  },
+  "marketing.compare.012": {
+    "message": "Эластичные вычисления масштабируются без перебалансировки. Экономичная архитектура доступна в открытой версии 3.0+, без привязки к коммерческому облаку."
+  },
+  "marketing.compare.013": {
+    "message": "Одновременные запросы"
+  },
+  "marketing.compare.014": {
+    "message": "UPSERT в реальном времени без потери скорости запросов."
+  },
+  "marketing.compare.015": {
+    "message": "Merge-on-Write сохраняет стабильность чтения при частых обновлениях. Полный ACID, совместимость с MySQL, тысячи одновременных запросов вместо менее 100."
+  },
+  "marketing.compare.016": {
+    "message": "Реальные миграции в крупных интернет-компаниях: одинаковые SQL-нагрузки и совершенно разные результаты."
+  },
+  "marketing.compare.017": {
+    "message": "Короткие видео · 600 млн+ DAU"
+  },
+  "marketing.compare.018": {
+    "message": "Пример 01"
+  },
+  "marketing.compare.019": {
+    "message": "Заменив ClickHouse на Apache Doris, Kuaishou перешла к единой архитектуре lakehouse с общим хранилищем и более простым конвейером данных."
+  },
+  "marketing.compare.020": {
+    "message": "Прямые запросы к lakehouse"
+  },
+  "marketing.compare.021": {
+    "message": ": без загрузки, короче конвейер"
+  },
+  "marketing.compare.022": {
+    "message": "Переписывание запросов с материализованными представлениями"
+  },
+  "marketing.compare.023": {
+    "message": "ускоряет запросы в разных сценариях"
+  },
+  "marketing.compare.024": {
+    "message": "Гибкое"
+  },
+  "marketing.compare.025": {
+    "message": "управление данными"
+  },
+  "marketing.compare.026": {
+    "message": "за счёт автоматической материализации"
+  },
+  "marketing.compare.027": {
+    "message": "Музыкальный стриминг · 800 млн MAU"
+  },
+  "marketing.compare.028": {
+    "message": "Пример 02"
+  },
+  "marketing.compare.029": {
+    "message": "После переноса аналитического движка с ClickHouse на Apache Doris платформа повысила актуальность данных, снизила эксплуатационные затраты и устранила разрозненное управление данными."
+  },
+  "marketing.compare.030": {
+    "message": "Высокая"
+  },
+  "marketing.compare.031": {
+    "message": "скорость соединений таблиц"
+  },
+  "marketing.compare.032": {
+    "message": "и"
+  },
+  "marketing.compare.033": {
+    "message": "федеративных"
+  },
+  "marketing.compare.034": {
+    "message": "запросов"
+  },
+  "marketing.compare.035": {
+    "message": "Совместимость с протоколом MySQL"
+  },
+  "marketing.compare.036": {
+    "message": ": меньше эксплуатационных затрат"
+  },
+  "marketing.compare.037": {
+    "message": "Частичные обновления столбцов"
+  },
+  "marketing.compare.038": {
+    "message": "для разных сценариев изменения данных"
+  },
+  "marketing.compare.039": {
+    "message": "SaaS для электронной торговли · 5 млн+ продавцов"
+  },
+  "marketing.compare.040": {
+    "message": "Пример 03"
+  },
+  "marketing.compare.041": {
+    "message": "Apache Doris отвечает на запросы быстрее ClickHouse в подавляющем большинстве сценариев, особенно при сложных соединениях, где преимущество в производительности существенно."
+  },
+  "marketing.compare.042": {
+    "message": "Ключевые бизнес-запросы"
+  },
+  "marketing.compare.043": {
+    "message": "в 2–3 раза быстрее"
+  },
+  "marketing.compare.044": {
+    "message": "Сложные запросы с соединениями"
+  },
+  "marketing.compare.045": {
+    "message": "в 2–10 раз быстрее"
+  },
+  "marketing.compare.046": {
+    "message": "Успешно выполняет"
+  },
+  "marketing.compare.047": {
+    "message": "все запросы, вызывающие OOM в ClickHouse,"
+  },
+  "marketing.compare.048": {
+    "message": "без ошибок"
+  },
+  "marketing.compare.049": {
+    "message": "Сравнение по всем значимым критериям."
+  },
+  "marketing.compare.050": {
+    "message": "Архитектура системы"
+  },
+  "marketing.compare.051": {
+    "message": "Распределённая архитектура MPP"
+  },
+  "marketing.compare.052": {
+    "message": "Совместимость с протоколом MySQL, стандартный SQL"
+  },
+  "marketing.compare.053": {
+    "message": "Автоматическая оптимизация CBO"
+  },
+  "marketing.compare.054": {
+    "message": "Архитектура Scatter-Gather"
+  },
+  "marketing.compare.055": {
+    "message": "SQL-подобный нестандартный синтаксис"
+  },
+  "marketing.compare.056": {
+    "message": "Требуется ручная настройка"
+  },
+  "marketing.compare.057": {
+    "message": "Производительность соединений"
+  },
+  "marketing.compare.058": {
+    "message": "В 2–10 раз быстрее, распределённое выполнение между узлами"
+  },
+  "marketing.compare.059": {
+    "message": "CBO выбирает стратегию соединения"
+  },
+  "marketing.compare.060": {
+    "message": "Весь набор TPC-DS проходит"
+  },
+  "marketing.compare.061": {
+    "message": "Эффективная работа с памятью, без OOM"
+  },
+  "marketing.compare.062": {
+    "message": "Подзапросы и моделирование широких таблиц"
+  },
+  "marketing.compare.063": {
+    "message": "Без CBO, ручная настройка"
+  },
+  "marketing.compare.064": {
+    "message": "Около 50% запросов TPC-DS завершаются с ошибкой"
+  },
+  "marketing.compare.065": {
+    "message": "Частые OOM на больших запросах"
+  },
+  "marketing.compare.066": {
+    "message": "Обновления в реальном времени"
+  },
+  "marketing.compare.067": {
+    "message": "Движок Merge-on-Write"
+  },
+  "marketing.compare.068": {
+    "message": "Строгая согласованность, немедленная видимость"
+  },
+  "marketing.compare.069": {
+    "message": "Высокопроизводительный UPSERT без деградации"
+  },
+  "marketing.compare.070": {
+    "message": "ReplacingMergeTree, согласованность в конечном счёте"
+  },
+  "marketing.compare.071": {
+    "message": "FINAL замедляет запросы в 2–10 раз"
+  },
+  "marketing.compare.072": {
+    "message": "Частые обновления → дополнительные затраты на слияние"
+  },
+  "marketing.compare.073": {
+    "message": "Поддержка транзакций"
+  },
+  "marketing.compare.074": {
+    "message": "Полноценные транзакции ACID"
+  },
+  "marketing.compare.075": {
+    "message": "Атомарная пакетная загрузка"
+  },
+  "marketing.compare.076": {
+    "message": "Нет поддержки транзакций"
+  },
+  "marketing.compare.077": {
+    "message": "Часть данных может стать видимой раньше остальных"
+  },
+  "marketing.compare.078": {
+    "message": "Конкурентность запросов"
+  },
+  "marketing.compare.079": {
+    "message": "Тысячи одновременных запросов, преимущество в 10 раз и более"
+  },
+  "marketing.compare.080": {
+    "message": "Эффективное управление памятью"
+  },
+  "marketing.compare.081": {
+    "message": "Обычно менее 100 одновременных запросов"
+  },
+  "marketing.compare.082": {
+    "message": "Нагрузки с большим потреблением памяти дестабилизируют кластер"
+  },
+  "marketing.compare.083": {
+    "message": "API данных и lakehouse"
+  },
+  "marketing.compare.084": {
+    "message": "Высокопроизводительный протокол Arrow Flight"
+  },
+  "marketing.compare.085": {
+    "message": "Hive / Hudi / Iceberg / Parquet"
+  },
+  "marketing.compare.086": {
+    "message": "Автомасштабирование и балансировка реплик"
+  },
+  "marketing.compare.087": {
+    "message": "Только JDBC"
+  },
+  "marketing.compare.088": {
+    "message": "Ограниченная интеграция с lakehouse"
+  },
+  "marketing.compare.089": {
+    "message": "Масштабирование требует ручной перебалансировки"
+  },
+  "marketing.compare.090": {
+    "message": "Разделение хранения и вычислений"
+  },
+  "marketing.compare.091": {
+    "message": "Открытая версия 3.0+"
+  },
+  "marketing.compare.092": {
+    "message": "Эластичные вычисления, без перебалансировки при масштабировании"
+  },
+  "marketing.compare.093": {
+    "message": "Снижение затрат до 70%"
+  },
+  "marketing.compare.094": {
+    "message": "Только коммерческая облачная редакция"
+  },
+  "marketing.compare.095": {
+    "message": "Тесная связанность, масштабирование требует перебалансировки"
+  },
+  "marketing.compare.096": {
+    "message": "Избыточные ресурсы для пиков нагрузки"
+  },
+  "marketing.compare.097": {
+    "message": "Лицензия открытого ПО"
+  },
+  "marketing.compare.098": {
+    "message": "Apache Software Foundation, поддержка сообществом"
+  },
+  "marketing.compare.099": {
+    "message": "Контроль коммерческой компании"
+  },
+  "marketing.compare.100": {
+    "message": "Doris и Elasticsearch используют для наблюдаемости, безопасности и аналитики в реальном времени. Doris даёт преимущество по затратам на хранение, эффективности записи и глубине анализа, без специального DSL."
+  },
+  "marketing.compare.101": {
+    "message": "Степень сжатия"
+  },
+  "marketing.compare.102": {
+    "message": "Значительно меньше места на диске."
+  },
+  "marketing.compare.103": {
+    "message": "Doris сжимает журналы и метрики в соотношении от 1:5 до 1:10, Elasticsearch: 1:1,5. Те же данные занимают лишь часть прежнего дискового пространства."
+  },
+  "marketing.compare.104": {
+    "message": "Затраты на запись"
+  },
+  "marketing.compare.105": {
+    "message": "Высокая пропускная способность записи с низкими накладными расходами."
+  },
+  "marketing.compare.106": {
+    "message": "Doris индексирует данные один раз для нескольких реплик, сохраняя накладные расходы ниже 10%. Elasticsearch индексирует каждую реплику отдельно, а дедупликация увеличивает затраты на запись до 3 раз."
+  },
+  "marketing.compare.107": {
+    "message": "Быстрый поиск"
+  },
+  "marketing.compare.108": {
+    "message": "Полнотекстовый поиск и SQL без DSL."
+  },
+  "marketing.compare.109": {
+    "message": "По результатам промышленных миграций полнотекстовый поиск ускоряется в 2–3 раза. Дополнительно доступны соединения нескольких таблиц, материализованные представления и открытая экосистема MySQL."
+  },
+  "marketing.compare.110": {
+    "message": "Реальные миграции с Elasticsearch на Doris в наблюдаемости, финансовой безопасности и логистике. Прежняя нагрузка при существенно меньших затратах."
+  },
+  "marketing.compare.111": {
+    "message": "Наблюдаемость · GuanceDB"
+  },
+  "marketing.compare.112": {
+    "message": "Заменив Elasticsearch на Apache Doris, GuanceDB существенно ускорила обработку данных и сократила затраты."
+  },
+  "marketing.compare.113": {
+    "message": "Снижение затрат на 70%"
+  },
+  "marketing.compare.114": {
+    "message": "после замены Elasticsearch"
+  },
+  "marketing.compare.115": {
+    "message": "производительность полнотекстового поиска"
+  },
+  "marketing.compare.116": {
+    "message": "Тип данных VARIANT"
+  },
+  "marketing.compare.117": {
+    "message": "для трассировки полуструктурированных журналов"
+  },
+  "marketing.compare.118": {
+    "message": "Финтех · аналитика безопасности"
+  },
+  "marketing.compare.119": {
+    "message": "После объединения архитектуры на Apache Doris значительно улучшились пропускная способность записи, время ответа сложных запросов и эффективность хранения."
+  },
+  "marketing.compare.120": {
+    "message": "В 4 раза выше"
+  },
+  "marketing.compare.121": {
+    "message": "скорость записи"
+  },
+  "marketing.compare.122": {
+    "message": "В 3 раза выше"
+  },
+  "marketing.compare.123": {
+    "message": "производительность запросов"
+  },
+  "marketing.compare.124": {
+    "message": "На 50% меньше места"
+  },
+  "marketing.compare.125": {
+    "message": "для тех же данных"
+  },
+  "marketing.compare.126": {
+    "message": "Логистика · 23 млрд+ посылок в год"
+  },
+  "marketing.compare.127": {
+    "message": "После внедрения Doris запросы ускорились в 5–10 раз, конкурентная обработка улучшилась вдвое. В 90% аналитических задач время сократилось с 10 минут до менее минуты."
+  },
+  "marketing.compare.128": {
+    "message": "В 2 раза эффективнее"
+  },
+  "marketing.compare.129": {
+    "message": "анализ отчётов при высокой конкурентности"
+  },
+  "marketing.compare.130": {
+    "message": "На 65% меньше"
+  },
+  "marketing.compare.131": {
+    "message": "места для хранения"
+  },
+  "marketing.compare.132": {
+    "message": "Стандартный SQL"
+  },
+  "marketing.compare.133": {
+    "message": "упрощает эксплуатацию и использование"
+  },
+  "marketing.compare.134": {
+    "message": "Открытый код"
+  },
+  "marketing.compare.135": {
+    "message": "Apache License 2.0"
+  },
+  "marketing.compare.136": {
+    "message": "Apache Software Foundation, независимость от поставщика"
+  },
+  "marketing.compare.137": {
+    "message": "Смена лицензии: Apache 2.0 → Elastic License → AGPL"
+  },
+  "marketing.compare.138": {
+    "message": "Развивается коммерческой компанией Elastic"
+  },
+  "marketing.compare.139": {
+    "message": "Строгое разделение чтения и записи между подразделениями"
+  },
+  "marketing.compare.140": {
+    "message": "Совместное и раздельное размещение хранения и вычислений"
+  },
+  "marketing.compare.141": {
+    "message": "Изоляция нагрузок для разных типов запросов"
+  },
+  "marketing.compare.142": {
+    "message": "Изоляция групп потоков, лишь слабая изоляция вычислений"
+  },
+  "marketing.compare.143": {
+    "message": "Только совместное размещение хранения и вычислений"
+  },
+  "marketing.compare.144": {
+    "message": "Ограниченная эластичность нагрузок"
+  },
+  "marketing.compare.145": {
+    "message": "Приём данных в реальном времени"
+  },
+  "marketing.compare.146": {
+    "message": "Однократная индексация для всех реплик: высокая скорость, низкие накладные расходы"
+  },
+  "marketing.compare.147": {
+    "message": "Push и Pull из Kafka без внешних инструментов"
+  },
+  "marketing.compare.148": {
+    "message": "Совместимость с Logstash и Beats"
+  },
+  "marketing.compare.149": {
+    "message": "Индексация каждой реплики, затраты на запись до 3 раз выше"
+  },
+  "marketing.compare.150": {
+    "message": "Только Push; для Pull нужны внешние инструменты, например Logstash"
+  },
+  "marketing.compare.151": {
+    "message": "Более тяжёлый конвейер приёма данных"
+  },
+  "marketing.compare.152": {
+    "message": "Хранение в реальном времени"
+  },
+  "marketing.compare.153": {
+    "message": "Сжатие 1:5–1:10: лишь часть прежнего места на диске"
+  },
+  "marketing.compare.154": {
+    "message": "Первичный ключ поддерживает Merge-on-Write и Merge-on-Read"
+  },
+  "marketing.compare.155": {
+    "message": "Агрегации со строгой согласованностью сосуществуют с исходными данными"
+  },
+  "marketing.compare.156": {
+    "message": "Гибкое изменение схемы под меняющиеся потребности бизнеса"
+  },
+  "marketing.compare.157": {
+    "message": "Степень сжатия 1:1,5"
+  },
+  "marketing.compare.158": {
+    "message": "Для первичного ключа только Merge-on-Write, затраты на запись до 3 раз выше"
+  },
+  "marketing.compare.159": {
+    "message": "Агрегации согласованы лишь в конечном счёте, без сосуществования с исходными данными"
+  },
+  "marketing.compare.160": {
+    "message": "Ограниченное изменение схемы"
+  },
+  "marketing.compare.161": {
+    "message": "Запросы в реальном времени"
+  },
+  "marketing.compare.162": {
+    "message": "Быстрые точечные запросы, агрегации и аналитика"
+  },
+  "marketing.compare.163": {
+    "message": "Соединения таблиц, материализованные представления, UDF, lakehouse"
+  },
+  "marketing.compare.164": {
+    "message": "Стандартный SQL, простое использование"
+  },
+  "marketing.compare.165": {
+    "message": "Открытая экосистема MySQL"
+  },
+  "marketing.compare.166": {
+    "message": "Эффективные точечные запросы, слабая аналитика"
+  },
+  "marketing.compare.167": {
+    "message": "Без соединений нескольких таблиц, только простые нагрузки"
+  },
+  "marketing.compare.168": {
+    "message": "Специальный DSL со сложным освоением"
+  },
+  "marketing.compare.169": {
+    "message": "Закрытая экосистема Elasticsearch"
+  },
+  "marketing.compare.170": {
+    "message": "Совокупная стоимость владения"
+  },
+  "marketing.compare.171": {
+    "message": "Открытая архитектура с разделением хранения и вычислений"
+  },
+  "marketing.compare.172": {
+    "message": "Эластичные вычисления масштабируются без перебалансировки"
+  },
+  "marketing.compare.173": {
+    "message": "Снижение затрат до 70% при промышленных миграциях"
+  },
+  "marketing.compare.174": {
+    "message": "Тесно связанные хранение и вычисления"
+  },
+  "marketing.compare.175": {
+    "message": "Избыточные ресурсы для пиков нагрузки"
+  },
+  "marketing.compare.176": {
+    "message": "Doris и Trino/Presto входят в число основных движков запросов к lakehouse. Doris объединяет хранилище данных и движок запросов к lakehouse, выполняя тот же SQL значительно быстрее в обоих случаях."
+  },
+  "marketing.compare.177": {
+    "message": "Внутренние таблицы"
+  },
+  "marketing.compare.178": {
+    "message": "Полностью векторизованный движок на C++."
+  },
+  "marketing.compare.179": {
+    "message": "Doris выполняет запросы к внутренним таблицам до 10 раз быстрее Presto/Trino. Полностью векторизованный движок C++ справляется с нагрузками хранилища, которые Trino вынужден передавать внешней системе."
+  },
+  "marketing.compare.180": {
+    "message": "Быстрый lakehouse"
+  },
+  "marketing.compare.181": {
+    "message": "Лучшее ускорение внешних таблиц."
+  },
+  "marketing.compare.182": {
+    "message": "Doris выполняет запросы к lakehouse в 2–3 раза быстрее Presto/Trino по результатам TPC-DS 1 ТБ, где оба движка обращаются к одним внешним таблицам Hive."
+  },
+  "marketing.compare.183": {
+    "message": "QPS при конкурентной нагрузке"
+  },
+  "marketing.compare.184": {
+    "message": "Аналитика в реальном времени при большом числе обращений."
+  },
+  "marketing.compare.185": {
+    "message": "Doris создан для аналитики в реальном времени с тысячами одновременных запросов, что выходит за пределы интерактивных нагрузок, на которые ориентирован Trino."
+  },
+  "marketing.compare.186": {
+    "message": "Реальные миграции с Trino/Presto на Doris в сетевых технологиях, играх и логистике. Тот же SQL, более простая архитектура, более быстрые запросы."
+  },
+  "marketing.compare.187": {
+    "message": "Сетевые технологии · платформа больших данных"
+  },
+  "marketing.compare.188": {
+    "message": "Заменив несколько технологических стеков на Apache Doris, мы получили единый lakehouse, существенно повысили производительность запросов и стабильность системы, снизив затраты на ресурсы на 30%."
+  },
+  "marketing.compare.189": {
+    "message": "Единый lakehouse"
+  },
+  "marketing.compare.190": {
+    "message": "вместо Trino, Pinot, Iceberg, Kyuubi"
+  },
+  "marketing.compare.191": {
+    "message": "Значительно улучшились"
+  },
+  "marketing.compare.192": {
+    "message": "и стабильность системы"
+  },
+  "marketing.compare.193": {
+    "message": "Снижение на 30%"
+  },
+  "marketing.compare.194": {
+    "message": "затрат на ресурсы"
+  },
+  "marketing.compare.195": {
+    "message": "Игры · одна из трёх крупнейших студий Китая"
+  },
+  "marketing.compare.196": {
+    "message": "В Presto запросы многомерного анализа занимали 20–40 секунд, Doris сократил это время до 1–2 секунд."
+  },
+  "marketing.compare.197": {
+    "message": "Время запросов сократилось с"
+  },
+  "marketing.compare.198": {
+    "message": "20–40 с до 1–2 с"
+  },
+  "marketing.compare.199": {
+    "message": "Автоматический подбор материализованных представлений"
+  },
+  "marketing.compare.200": {
+    "message": "для сложной аналитики"
+  },
+  "marketing.compare.201": {
+    "message": "Значительный прирост в"
+  },
+  "marketing.compare.202": {
+    "message": "многомерном анализе"
+  },
+  "marketing.compare.203": {
+    "message": "После миграции на Apache Doris общая производительность запросов выросла более чем в 2 раза, а единая архитектура устранила изолированные данные и избыточные ресурсы."
+  },
+  "marketing.compare.204": {
+    "message": "Более чем в 2 раза выше"
+  },
+  "marketing.compare.205": {
+    "message": "общая производительность запросов"
+  },
+  "marketing.compare.206": {
+    "message": "Устранены"
+  },
+  "marketing.compare.207": {
+    "message": "изолированные хранилища данных"
+  },
+  "marketing.compare.208": {
+    "message": "и избыточные ресурсы"
+  },
+  "marketing.compare.209": {
+    "message": "Ускорены"
+  },
+  "marketing.compare.210": {
+    "message": "аналитика в реальном времени"
+  },
+  "marketing.compare.211": {
+    "message": "и нерегламентированные запросы"
+  },
+  "marketing.compare.212": {
+    "message": "Единая архитектура: хранилище данных и lakehouse"
+  },
+  "marketing.compare.213": {
+    "message": "Встроенный слой хранения"
+  },
+  "marketing.compare.214": {
+    "message": "Один движок для всего аналитического стека"
+  },
+  "marketing.compare.215": {
+    "message": "Федеративный движок запросов к разнородным источникам"
+  },
+  "marketing.compare.216": {
+    "message": "Без встроенного слоя хранения"
+  },
+  "marketing.compare.217": {
+    "message": "Для обслуживания запросов нужно отдельное хранилище"
+  },
+  "marketing.compare.218": {
+    "message": "Движок выполнения"
+  },
+  "marketing.compare.219": {
+    "message": "Полностью векторизованный движок C++"
+  },
+  "marketing.compare.220": {
+    "message": "Высокопроизводительная обработка данных из коробки"
+  },
+  "marketing.compare.221": {
+    "message": "Запросы к внутренним таблицам до 10 раз быстрее"
+  },
+  "marketing.compare.222": {
+    "message": "Выполнение преимущественно на Java"
+  },
+  "marketing.compare.223": {
+    "message": "Векторизованный движок в разработке (проект Hummingbird)"
+  },
+  "marketing.compare.224": {
+    "message": "Более медленные запросы к внутренним таблицам"
+  },
+  "marketing.compare.225": {
+    "message": "Оптимизация запросов"
+  },
+  "marketing.compare.226": {
+    "message": "Оптимизатор на основе стоимости (CBO) для соединений, агрегации и сортировки"
+  },
+  "marketing.compare.227": {
+    "message": "Автоматический сбор статистики"
+  },
+  "marketing.compare.228": {
+    "message": "Настройка сложных запросов без ручных подсказок"
+  },
+  "marketing.compare.229": {
+    "message": "Оптимизация на основе стоимости поддерживается"
+  },
+  "marketing.compare.230": {
+    "message": "Сбор статистики неполный"
+  },
+  "marketing.compare.231": {
+    "message": "Для эффективной работы требуется ручной полный сбор"
+  },
+  "marketing.compare.232": {
+    "message": "Кеширование"
+  },
+  "marketing.compare.233": {
+    "message": "Кеш метаданных с TTL, автообновлением и инкрементальной синхронизацией"
+  },
+  "marketing.compare.234": {
+    "message": "Локальный кеш горячих данных на SSD сокращает сетевой ввод-вывод"
+  },
+  "marketing.compare.235": {
+    "message": "Встроенные кеш SQL и кеш партиций"
+  },
+  "marketing.compare.236": {
+    "message": "Зависимость от внешних решений кеширования, например Alluxio"
+  },
+  "marketing.compare.237": {
+    "message": "Нет встроенного кеша метаданных или запросов"
+  },
+  "marketing.compare.238": {
+    "message": "Дополнительная система для эксплуатации и настройки"
+  },
+  "marketing.compare.239": {
+    "message": "Материализованные представления"
+  },
+  "marketing.compare.240": {
+    "message": "Инкрементальное обновление с несколькими стратегиями работы с данными"
+  },
+  "marketing.compare.241": {
+    "message": "Прозрачное ускорение запросов за счёт автоматического переписывания"
+  },
+  "marketing.compare.242": {
+    "message": "Оптимизатор автоматически подбирает лучшее представление"
+  },
+  "marketing.compare.243": {
+    "message": "Только полное обновление вручную"
+  },
+  "marketing.compare.244": {
+    "message": "Нет прозрачного переписывания запросов"
+  },
+  "marketing.compare.245": {
+    "message": "Представление для каждого запроса выбирает пользователь"
+  },
+  "marketing.compare.246": {
+    "message": "Сценарии использования"
+  },
+  "marketing.compare.247": {
+    "message": "Аналитика в реальном времени с высокой конкурентностью"
+  },
+  "marketing.compare.248": {
+    "message": "Интерактивная нерегламентированная аналитика"
+  },
+  "marketing.compare.249": {
+    "message": "Единый движок обслуживания и запросов к lakehouse"
+  },
+  "marketing.compare.250": {
+    "message": "Только интерактивная аналитика"
+  },
+  "marketing.compare.251": {
+    "message": "Эффективные федеративные запросы к разным источникам"
+  },
+  "marketing.compare.252": {
+    "message": "Для обслуживания запросов нужно отдельное хранилище"
+  },
+  "marketing.compare.256": {
+    "message": "КРИТЕРИЙ"
+  },
+  "marketing.compare.257": {
+    "message": "РЕКОМЕНДУЕМ"
+  },
+  "marketing.compare.showCase": {
+    "message": "Показать пример {name}"
+  },
+  "marketing.compare.253": {
+    "message": "★ ИЗБРАННОЕ"
+  },
+  "marketing.compare.254": {
+    "message": "Предыдущий пример"
+  },
+  "marketing.compare.goToCase": {
+    "message": "Перейти к примеру {number}"
+  },
+  "marketing.compare.255": {
+    "message": "Следующий пример"
+  },
+  "marketing.extra.001": {
+    "message": "Когда выбирать Apache Doris"
+  },
+  "marketing.extra.002": {
+    "message": "Примеры использования"
+  },
+  "marketing.extra.003": {
+    "message": "Ключевые различия"
+  },
+  "marketing.extra.019": {
+    "message": "Когда аналитическая основа обеспечивает актуальность, гибридный поиск, наблюдаемость и единую архитектуру, меняются пять аспектов:"
+  },
+  "marketing.extra.020": {
+    "message": "Возможности Apache Doris для ИИ"
+  },
+  "marketing.extra.004": {
+    "message": "Когда аналитика становится частью самого продукта, меняются четыре аспекта:"
+  },
+  "marketing.extra.005": {
+    "message": "Пример 01 · JD.com"
+  },
+  "marketing.extra.006": {
+    "message": "Пример 02 · Xanh SM"
+  },
+  "marketing.extra.007": {
+    "message": "Пример 03 · ZTO Express"
+  },
+  "marketing.extra.008": {
+    "message": "Возможности Apache Doris для аналитики клиентов"
+  },
+  "marketing.extra.009": {
+    "message": "Когда хранилище объединяет данные, работает быстро, в реальном времени и эластично масштабируется, меняются четыре аспекта:"
+  },
+  "marketing.extra.010": {
+    "message": "Пример 01 · SF Technology"
+  },
+  "marketing.extra.011": {
+    "message": "Пример 02 · Xiaomi"
+  },
+  "marketing.extra.012": {
+    "message": "Пример 03 · Cainiao"
+  },
+  "marketing.extra.013": {
+    "message": "Возможности Apache Doris для хранилища данных"
+  },
+  "marketing.extra.014": {
+    "message": "Когда команды объединяют наблюдаемость журналов, трассировок, метрик и событий ИИ-агентов, меняются пять аспектов:"
+  },
+  "marketing.extra.015": {
+    "message": "Пример 01 · журналы петабайтного масштаба"
+  },
+  "marketing.extra.016": {
+    "message": "Пример 02 · журналы и временные ряды"
+  },
+  "marketing.extra.017": {
+    "message": "Пример 03 · миграция с Elasticsearch"
+  },
+  "marketing.extra.018": {
+    "message": "Возможности Apache Doris для наблюдаемости"
+  },
+  "marketing.extra.021": {
+    "message": "АРЕНДАТОР A"
+  },
+  "marketing.extra.022": {
+    "message": "встроенные дашборды"
+  },
+  "marketing.extra.023": {
+    "message": "АРЕНДАТОР B"
+  },
+  "marketing.extra.024": {
+    "message": "клиентский портал"
+  },
+  "marketing.extra.025": {
+    "message": "АРЕНДАТОР C"
+  },
+  "marketing.extra.026": {
+    "message": "моб. и веб-приложение"
+  },
+  "marketing.extra.027": {
+    "message": "+ ДРУГИЕ АРЕНДАТОРЫ"
+  },
+  "marketing.extra.028": {
+    "message": "API · продукты данных"
+  },
+  "marketing.extra.029": {
+    "message": "ЗАПРОС"
+  },
+  "marketing.extra.030": {
+    "message": "Протокол MySQL · REST"
+  },
+  "marketing.extra.031": {
+    "message": "ИЗОЛЯЦИЯ"
+  },
+  "marketing.extra.032": {
+    "message": "группы нагрузок"
+  },
+  "marketing.extra.033": {
+    "message": "ОТВЕТ"
+  },
+  "marketing.extra.034": {
+    "message": "кеш · точечный запрос"
+  },
+  "marketing.extra.035": {
+    "message": "ПУНКТИР = ЗАПРОСЫ НА МЕСТЕ"
+  },
+  "marketing.extra.036": {
+    "message": "ВЫДАЧА"
+  },
+  "marketing.extra.037": {
+    "message": "ПУНКТИР = ЗАПРОСЫ НА МЕСТЕ"
+  },
+  "marketing.pageLanguage": {
+    "message": "Язык страницы"
+  },
+  "marketing.ai.hero": {
+    "message": "{analytics}{lineBreak}{realTime} {aiReady}"
+  },
+  "marketing.observability.hero": {
+    "message": "{observability} {realTime}{lineBreak}{era}"
+  }
+}

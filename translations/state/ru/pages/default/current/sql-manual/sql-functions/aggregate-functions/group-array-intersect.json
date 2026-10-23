@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-array-intersect",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-array-intersect.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-array-intersect.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "28869e8453d2fb3e00023e66502aa64578279a54ba26c4b0c315dac61026ef7f",
+    "sourceTechnicalHash": "c79a7172fd144276c61c1a62d78fb60dd1c716319b57287f89617104c1b8c579",
+    "targetHash": "4f7f85147fb1163b43f38384275c00b53f70613c7fe99245c48d446614defc74",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:21:33.969Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "28869e8453d2fb3e00023e66502aa64578279a54ba26c4b0c315dac61026ef7f",
+      "targetHash": "4f7f85147fb1163b43f38384275c00b53f70613c7fe99245c48d446614defc74",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

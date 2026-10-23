@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/date-floor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c1f0f82c7bada9d0fec040b588636d81f0a54ff9ad293521c38f184e15bfa175",
+    "sourceTechnicalHash": "4e59c1e148f248caef4ff481065b61b442e30fa4abdff2815ab3fdb4042f03e8",
+    "targetHash": "36b985ff02a70584aed2617e0b096d14c3258e75b2d097a7c265985d4c8c6309",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:25:13.481Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c1f0f82c7bada9d0fec040b588636d81f0a54ff9ad293521c38f184e15bfa175",
+      "targetHash": "36b985ff02a70584aed2617e0b096d14c3258e75b2d097a7c265985d4c8c6309",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

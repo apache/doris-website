@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "96d85592f0533bbd22d60cf88722f251b231283062c70c277908d30b8b1ff935",
+    "sourceTechnicalHash": "bd6742ed6257fac84ce6eace087fa40c39fad195049199f7157e6e1ab3b843f7",
+    "targetHash": "6c95399337fcec712381932c9ab313617ca729b9418f175f537b72f5f9c41592",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T01:51:54.278Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "96d85592f0533bbd22d60cf88722f251b231283062c70c277908d30b8b1ff935",
+      "targetHash": "6c95399337fcec712381932c9ab313617ca729b9418f175f537b72f5f9c41592",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-TABLET-STORAGE-FORMAT.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "96d85592f0533bbd22d60cf88722f251b231283062c70c277908d30b8b1ff935",
+        "targetHash": "6c95399337fcec712381932c9ab313617ca729b9418f175f537b72f5f9c41592",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

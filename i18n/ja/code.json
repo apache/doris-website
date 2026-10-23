@@ -1064,7 +1064,7 @@
     "message": "この日本語訳は人が校正しています。"
   },
   "docs.translation.machine": {
-    "message": "このページは機械翻訳されています。"
+    "message": "このページは大規模言語モデル（LLM）によって翻訳されています。"
   },
   "docs.translation.translatedAt": {
     "message": "翻訳日: "
@@ -3720,5 +3720,11 @@
   },
   "marketing.pageLanguage": {
     "message": "ページの言語"
+  },
+  "marketing.ai.hero": {
+    "message": "{realTime} {aiReady}{lineBreak}{analytics}"
+  },
+  "marketing.observability.hero": {
+    "message": "{realTime} {observability}{lineBreak}{era}"
   }
 }

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/approx-count-distinct",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/approx-count-distinct.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/approx-count-distinct.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "051013e94f7d052cad45ebe26acf94dad4c7ad9c4232a5fc16e3b79d77beca31",
+    "sourceTechnicalHash": "8d7f8cef317cb529814c4e95d354cd024fa1d1733003d7efcf37514a0135313d",
+    "targetHash": "447d6658cd217acb89cb1ff7cec695d220c0715ef7d154a4d7af9af9a067f757",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:46:47.097Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "051013e94f7d052cad45ebe26acf94dad4c7ad9c4232a5fc16e3b79d77beca31",
+      "targetHash": "447d6658cd217acb89cb1ff7cec695d220c0715ef7d154a4d7af9af9a067f757",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

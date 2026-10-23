@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/numeric-functions/uniform",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/numeric-functions/uniform.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/numeric-functions/uniform.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e068bfd5958bc64480fa1932409f06233d5577ad5193153c7fbecb2eefca04b7",
+    "sourceTechnicalHash": "9bdfe2e7363a421740e1db5ac255dbde2d5eb88aee4aa438fb9eaa41b3e80b77",
+    "targetHash": "080588ed890c293eb1e97df770b433187056e928317dd79c2b7210df0287e1be",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:34:08.707Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e068bfd5958bc64480fa1932409f06233d5577ad5193153c7fbecb2eefca04b7",
+      "targetHash": "080588ed890c293eb1e97df770b433187056e928317dd79c2b7210df0287e1be",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

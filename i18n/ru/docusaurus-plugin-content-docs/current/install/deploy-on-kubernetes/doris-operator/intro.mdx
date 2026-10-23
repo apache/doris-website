@@ -1,0 +1,43 @@
+---
+{
+    "title": "Концепции и возможности Doris Operator",
+    "language": "ru",
+    "description": "Концепции, архитектура, модель ресурсов, жизненный цикл и рекомендации по диагностике Doris Operator."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris Operator — это плоскость управления для развёртывания Apache Doris в Kubernetes и управления им. Сначала прочитайте эти документы, чтобы понять, чем управляет Doris Operator, как он работает и как выявлять проблемы по состоянию ресурсов.
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Обзор Doris Operator"
+    description="Узнайте, чем управляет Doris Operator, когда его использовать и каковы границы его возможностей"
+    link="doris-operator-overview"
+/>
+
+<GettingStartedCard
+    title="Архитектура"
+    description="Разберитесь в плоскости управления, плоскости данных и модели Reconcile"
+    link="architecture"
+/>
+
+<GettingStartedCard
+    title="Модель ресурсов"
+    description="Узнайте, как пользовательские ресурсы Doris соотносятся со StatefulSet, Service, PVC и другими ресурсами"
+    link="resource-model"
+/>
+
+<GettingStartedCard
+    title="Управление жизненным циклом"
+    description="Узнайте, как происходят создание, масштабирование, изменение конфигурации и удаление"
+    link="lifecycle"
+/>
+
+<GettingStartedCard
+    title="Состояние и диагностика"
+    description="Проверьте поля состояния и следуйте рекомендуемому порядку диагностики"
+    link="status-and-troubleshooting"
+/>
+</div>

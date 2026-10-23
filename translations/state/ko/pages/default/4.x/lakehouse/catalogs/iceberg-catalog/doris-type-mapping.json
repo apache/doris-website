@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/iceberg-catalog/doris-type-mapping",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/iceberg-catalog/doris-type-mapping.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/iceberg-catalog/doris-type-mapping.md",
+    "sourceCommit": "97a17b9719dd55b7810a5d24f7b7630a0a52e7e4",
+    "sourceHash": "822e48f9d0dfeccc17ccba8ed13e5160b7fa938bab886b22fedf1012bb425ce5",
+    "sourceTechnicalHash": "5dcc328ca46d280ec36e87e1b72a9019fa1a408b38c910eee470350ebcc6b245",
+    "targetHash": "da1e8a9b089011989687e9c726fa0a005df223d2c22621fbf99c42a884679fb8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T04:34:29.562Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "822e48f9d0dfeccc17ccba8ed13e5160b7fa938bab886b22fedf1012bb425ce5",
+      "targetHash": "da1e8a9b089011989687e9c726fa0a005df223d2c22621fbf99c42a884679fb8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

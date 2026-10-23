@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/percentile-approx-weighted.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+    "sourceTechnicalHash": "31269a18374f500b88490b410192a2fb2d4cdb72a422e2385a6d63b23c2872fb",
+    "targetHash": "ed2a3a7c46a2adb003caa1cd29f72e87b45e277aed3e09c285df7dd219123aab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:24:13.755Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "af112f4309eb7d19d705833a5e310a43cf01c85c96f2b55395c87f7016a11954",
+      "targetHash": "ed2a3a7c46a2adb003caa1cd29f72e87b45e277aed3e09c285df7dd219123aab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

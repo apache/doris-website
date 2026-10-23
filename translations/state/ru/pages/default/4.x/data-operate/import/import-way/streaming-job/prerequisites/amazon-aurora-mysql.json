@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a26ae88ea722583e332f686cbee7f436f3808fbb79bfff389a5cf092a88c10ba",
+    "sourceTechnicalHash": "cb4e42b5320102fac21dc52e7827ecda60dc50683c525968a4aa287a97c1df78",
+    "targetHash": "3ab342d044082d22f2c72fd74faac0af0f49d41ada21de19ee0f4115f00d3ac9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:42.879Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a26ae88ea722583e332f686cbee7f436f3808fbb79bfff389a5cf092a88c10ba",
+      "targetHash": "3ab342d044082d22f2c72fd74faac0af0f49d41ada21de19ee0f4115f00d3ac9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql",
+        "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "a26ae88ea722583e332f686cbee7f436f3808fbb79bfff389a5cf092a88c10ba",
+        "targetHash": "3ab342d044082d22f2c72fd74faac0af0f49d41ada21de19ee0f4115f00d3ac9",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

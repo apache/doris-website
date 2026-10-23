@@ -36,10 +36,10 @@
 <!-- 知识类型: 操作指南 + Feature 说明 -->
 <!-- 适用场景: 增量 ETL / 下游表同步 / 变更审计 / 不重不漏地消费表的变更 -->
 
-Table Stream（下文简称 Stream）是建立在 [Row Binlog](row-binlog) 之上的变更消费对象。它记住"消费到哪了"，每次读取只返回上次消费之后基表发生的变化，并在把变更写入目标表的同一个事务里推进消费位点，从而做到不重不漏。
+Table Stream（下文简称 Stream）是建立在 [Changelog](changelog) 之上的变更消费对象。它记住"消费到哪了"，每次读取只返回上次消费之后基表发生的变化，并在把变更写入目标表的同一个事务里推进消费位点，从而做到不重不漏。
 
 :::caution 实验性功能
-该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_binlog = true` 和 `enable_table_stream = true`。
+该功能自 5.0.0 版本起提供，目前处于实验阶段，需要在 FE 中开启 `enable_feature_changelog = true` 和 `enable_table_stream = true`。
 :::
 
 ## 基本概念
@@ -48,7 +48,7 @@ Table Stream（下文简称 Stream）是建立在 [Row Binlog](row-binlog) 之�
 
 | 概念 | 说明 |
 |---|---|
-| 基表 | Stream 所跟踪的表，必须开启 Row Binlog。一张基表可以创建多个 Stream，各自独立消费 |
+| 基表 | Stream 所跟踪的表，必须开启 Changelog。一张基表可以创建多个 Stream，各自独立消费 |
 | 消费位点（offset） | Stream 为基表的每个分区分别记录"已消费到的提交时间戳（TSO）"。读取 Stream 时，返回每个分区从消费位点到语句开始时最新提交之间的变更 |
 | 变更类型 | `APPEND`（新增）、`UPDATE_BEFORE`（更新前的值）、`UPDATE_AFTER`（更新后的值）、`DELETE`（删除，携带删除前的值） |
 | 消费类型 | Stream 创建时指定的 `type`，决定变更以什么粒度输出，见 [消费类型](#消费类型) |
@@ -62,8 +62,8 @@ Table Stream（下文简称 Stream）是建立在 [Row Binlog](row-binlog) 之�
 
 <!-- 知识类型: 环境要求 -->
 
-- Doris 5.0.0 及以上版本，FE 已开启 `enable_feature_binlog = true` 和 `enable_table_stream = true`。
-- 基表是开启 Row Binlog 的内表；`min_delta` / `detail` 类型还要求基表为 Unique Key MoW 表并开启 `binlog.need_historical_value`，见 [Row Binlog](row-binlog#支持范围与限制)。
+- Doris 5.0.0 及以上版本，FE 已开启 `enable_feature_changelog = true` 和 `enable_table_stream = true`。
+- 基表是开启 Changelog 的内表；`min_delta` / `detail` 类型还要求基表为 Unique Key MoW 表并开启 `changelog.need_historical_value`，见 [Changelog](changelog#支持范围与限制)。
 - 在 Stream 所在数据库有 `CREATE_PRIV`，对基表有 `SELECT_PRIV`。
 
 ## 创建与管理
@@ -84,7 +84,7 @@ ON TABLE [<db_name>.]<table_name>
 
 | 属性 | 默认值 | 说明 |
 |---|---|---|
-| `type` | `min_delta` | 消费类型。`min_delta` 和 `detail` 要求基表为 Unique Key MoW 表并开启 `binlog.need_historical_value`；对 Duplicate Key 表，`min_delta` 会退化为 `append_only` |
+| `type` | `min_delta` | 消费类型。`min_delta` 和 `detail` 要求基表为 Unique Key MoW 表并开启 `changelog.need_historical_value`；对 Duplicate Key 表，`min_delta` 会退化为 `append_only` |
 | `show_initial_rows` | `false` | 创建 Stream 时基表已有的数据是否作为变更输出。见 [初始数据](#初始数据) |
 
 示例：
@@ -102,8 +102,8 @@ PROPERTIES (
 
 | 要求 | 不满足时的报错 |
 |---|---|
-| 基表已开启 Row Binlog | `Base Olap table ... need to enable row binlog for table stream` |
-| `type = min_delta` 时基表必须是 MoW 表且开启 `binlog.need_historical_value` | `MIN_DELTA table stream requires base mow table to enable binlog.need_historical_value=true` |
+| 基表已开启 Changelog | `Base Olap table ... need to enable changelog for table stream` |
+| `type = min_delta` 时基表必须是 MoW 表且开启 `changelog.need_historical_value` | `MIN_DELTA table stream requires base mow table to enable changelog.need_historical_value=true` |
 | 在 Stream 所在数据库有 `CREATE_PRIV`，对基表有 `SELECT_PRIV` | - |
 
 Stream 与基表可以位于不同的数据库。同名的 Stream 不能与表、视图重名。`CREATE OR REPLACE STREAM` 目前不支持。完整语法见 [CREATE STREAM](../../sql-manual/sql-statements/table-and-view/stream/CREATE-STREAM)。
@@ -169,7 +169,7 @@ ALTER STREAM orders_stream SET COMMENT 'new comment';
 DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE];
 ```
 
-- 删除 Stream 不影响基表及其 Row Binlog。
+- 删除 Stream 不影响基表及其 Changelog。
 - 基表已被删除的 Stream 仍会保留在目录中，请使用 `FORCE` 删除。
 - 存算分离模式下必须使用 `DROP STREAM ... FORCE`。
 - 对 Stream 执行 `DROP TABLE` 会报错并提示使用 `DROP STREAM`。
@@ -183,9 +183,9 @@ DROP STREAM [IF EXISTS] [<db_name>.]<stream_name> [FORCE];
 
 | 消费类型 | 输出 | 适用场景 | 对基表的要求 |
 |---|---|---|---|
-| `append_only` | 只输出新增的行，更新和删除不输出 | 只追加的日志、事件表；下游只关心新增数据 | 开启 Row Binlog |
-| `min_delta`（默认） | 按 key 折叠两次消费之间的所有变更，只输出净变化 | 同步下游表，处理的行数最少 | Unique Key MoW 表并开启 `binlog.need_historical_value` |
-| `detail` | 逐条输出每一次变更，不做任何折叠 | 审计、回放、需要保留完整修改轨迹 | Unique Key MoW 表并开启 `binlog.need_historical_value` |
+| `append_only` | 只输出新增的行，更新和删除不输出 | 只追加的日志、事件表；下游只关心新增数据 | 开启 Changelog |
+| `min_delta`（默认） | 按 key 折叠两次消费之间的所有变更，只输出净变化 | 同步下游表，处理的行数最少 | Unique Key MoW 表并开启 `changelog.need_historical_value` |
+| `detail` | 逐条输出每一次变更，不做任何折叠 | 审计、回放、需要保留完整修改轨迹 | Unique Key MoW 表并开启 `changelog.need_historical_value` |
 
 下面用同一份数据对比三种消费类型。基表 `orders` 为 Unique Key MoW 表并开启 before 镜像，在创建 Stream 之后执行：
 
@@ -269,7 +269,7 @@ ORDER BY __DORIS_STREAM_SEQUENCE_COL__, __DORIS_STREAM_LSN_COL__;
 
 ### Duplicate Key 表上的行为
 
-Duplicate Key 表只记录新增，三种类型的输出相同：每一行写入都是一条 `APPEND`，同 key 的多次写入不会合并，`DELETE` 语句删除的数据也不会输出（见 [Row Binlog](row-binlog#duplicate-key-表)）。在 Duplicate Key 表上创建 `min_delta` 类型的 Stream 会自动按 `append_only` 处理。
+Duplicate Key 表只记录新增，三种类型的输出相同：每一行写入都是一条 `APPEND`，同 key 的多次写入不会合并，`DELETE` 语句删除的数据也不会输出（见 [Changelog](changelog#duplicate-key-表)）。在 Duplicate Key 表上创建 `min_delta` 类型的 Stream 会自动按 `append_only` 处理。
 
 ## 初始数据
 
@@ -372,11 +372,11 @@ Stream 的列与基表当前的可见列一致（基表 `ADD COLUMN` / `DROP COL
 
 <!-- 知识类型: 使用限制 -->
 
-- 基表必须是开启 Row Binlog 的内表，支持的表模型和列类型限制见 [Row Binlog](row-binlog#支持范围与限制)。
+- 基表必须是开启 Changelog 的内表，支持的表模型和列类型限制见 [Changelog](changelog#支持范围与限制)。
 - Stream 只能读取基表的基础索引，不支持指定 rollup / 物化视图，也不支持 `TABLET (...)` 子句。
 - Stream 不能作为 `INSERT`、`UPDATE`、`DELETE` 的目标。
 - 消费类型和 `show_initial_rows` 创建后不可修改。
-- Row Binlog 由 `binlog.ttl_seconds` 控制保留时长（默认一天），不受消费进度影响。位点过期后，`min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更。当前实现不会通过 `IS_STALE` / `STALE_REASON` 报告 TTL 过期。请在保留窗口内完成消费，见 [保留与清理](row-binlog#保留与清理)。
+- Changelog 由 `changelog.ttl_seconds` 控制保留时长（默认一天），不受消费进度影响。位点过期后，`min_delta` 读取报错，`detail` 和 `append_only` 跳过过期变更。当前实现不会通过 `IS_STALE` / `STALE_REASON` 报告 TTL 过期。请在保留窗口内完成消费，见 [保留与清理](changelog#保留与清理)。
 - 基表被删除、分区被删除或替换等操作对 Stream 的影响见 [Table Stream 进阶](table-stream-advanced#基表变更的影响)。
 
 ## 常见问题

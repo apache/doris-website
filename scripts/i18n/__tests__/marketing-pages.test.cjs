@@ -54,11 +54,11 @@ function pageMessages(page) {
 
 function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePaths}) {
     const cache = new Map();
-    const locales = enabled ? ['en', 'zh-CN', 'ja', 'ko'] : ['en', 'zh-CN'];
+    const locales = enabled ? ['en', 'zh-CN', 'ja', 'ko', 'ru'] : ['en', 'zh-CN'];
     const i18n = {currentLocale: locale, defaultLocale: 'en', locales,
         localeConfigs: Object.fromEntries(localeRegistry.filter(record => locales.includes(record.code)).map(record => [record.code, record]))};
     const config = {url: 'https://doris.apache.org', trailingSlash: true, baseUrl: locale === 'en' ? '/' : `/${locale}/`,
-        customFields: {defaultLocalePageLocales: enabled ? ['ja','ko'] : [], translatedPagePaths: enabled ? translatedPages : {}}};
+        customFields: {defaultLocalePageLocales: enabled ? ['ja','ko','ru'] : [], translatedPagePaths: enabled ? translatedPages : {}}};
     const prefix = locale === 'en' ? '' : `/${locale}`;
     const location = {pathname, search: '?from=test', hash: '#tech'};
     const imports = {
@@ -68,10 +68,11 @@ function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePa
         '@docusaurus/useDocusaurusContext': () => ({i18n, siteConfig: config}),
         '@docusaurus/useBaseUrl': source => source,
         '@docusaurus/useGlobalData': () => ({'doris-translation-status': {default: {
-            alternates: {}, locales: enabled ? ['ja','ko'] : [], prefixes: [`${prefix}/docs/dev`,`${prefix}/community`],
+            alternates: {}, locales: enabled ? ['ja','ko','ru'] : [], prefixes: [`${prefix}/docs/dev`,`${prefix}/community`],
             pageRoutes: ['/', '/download/', '/community-report/', ...pagePaths.map(page => `${page}/`)].map(page => prefix + page),
         }}}),
         '@docusaurus/router': {useLocation: () => location},
+        '@docusaurus/useIsBrowser': () => true,
         '@docusaurus/Head': ({children}) => React.createElement(React.Fragment, null, children),
         '@docusaurus/theme-common': {useThemeConfig: () => ({metadata: []})},
         '@docusaurus/theme-common/internal': {DEFAULT_SEARCH_TAG: 'default', keyboardFocusedClassName: 'keyboard',
@@ -120,7 +121,7 @@ function metadata(locale, pathname, enabled = true, translatedPages) {
 }
 
 test('ordinary English fallbacks declare English and stay out of translated SEO groups', () => {
-    for (const locale of ['ja','ko']) for (const page of ['/', '/download/', '/community-report/']) {
+    for (const locale of ['ja','ko','ru']) for (const page of ['/', '/download/', '/community-report/']) {
         const $ = metadata(locale, `/${locale}${page}`);
         assert.equal($('html').attr('lang'), 'en-US');
         assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${page}`);

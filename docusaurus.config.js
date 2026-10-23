@@ -75,6 +75,9 @@ function buildRedirectIndex() {
     for (const locale of ENABLED_LOCALES) {
         const prefix = locale === 'en' ? '' : `/${locale}`;
         add(`${prefix}/docs/4.x/getting-started/what-is-apache-doris`, `${prefix}/docs`);
+        // Community has no root document; use its first sidebar page as the
+        // entry instead of exposing the deployment server's directory listing.
+        add(`${prefix}/community/join-community`, `${prefix}/community`);
     }
 
     // Decommissioned standalone pages whose content moved into the
@@ -140,6 +143,22 @@ function buildRedirectIndex() {
                 `${locale}/docs/${version}/observability/dogstack/docker`,
                 `${locale}/docs/${version}/observability/dogstack/deployment`,
             );
+        }
+    }
+
+    // Row binlog was renamed to changelog before its first release
+    // (apache/doris#69311), and its pages moved with it. Every locale serves
+    // these pages, so the old URLs redirect in all of them.
+    for (const locale of ENABLED_LOCALES) {
+        const prefix = locale === 'en' ? '' : `/${locale}`;
+        for (const [from, to] of [
+            ['dev/data-operate/incremental/row-binlog', 'dev/data-operate/incremental/changelog'],
+            ['dev/sql-manual/sql-functions/table-valued-functions/binlog',
+                'dev/sql-manual/sql-functions/table-valued-functions/changelog'],
+            ['dev/key-features/binlog-table-stream', 'dev/key-features/changelog-table-stream'],
+            ['4.x/key-features/binlog-table-stream', '4.x/key-features/changelog-table-stream'],
+        ]) {
+            add(`${prefix}/docs/${to}`, `${prefix}/docs/${from}`);
         }
     }
 

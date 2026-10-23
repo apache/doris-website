@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+    "sourceTechnicalHash": "91cfae8692af2c259e4abb27eec32bc7203b9fcbbc4c8931a2cda3b85895d512",
+    "targetHash": "9d734d137d40ef992d48c91b20fcfb0ff680534bd8ad26d6721bbccb38506be0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:48:56.863Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+      "targetHash": "9d734d137d40ef992d48c91b20fcfb0ff680534bd8ad26d6721bbccb38506be0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

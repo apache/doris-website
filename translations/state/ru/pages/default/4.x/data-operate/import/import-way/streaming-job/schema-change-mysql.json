@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/import-way/streaming-job/schema-change-mysql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
+    "sourceTechnicalHash": "a73d820e86f140c9c40974f99b0970958c9523839f46e09123a5f033949a09c7",
+    "targetHash": "910ba0acba89da162d602f77fa98e27e0d4510379dd3e8da1d0d48256bb93291",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:32:08.919Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
+      "targetHash": "910ba0acba89da162d602f77fa98e27e0d4510379dd3e8da1d0d48256bb93291",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

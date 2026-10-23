@@ -526,7 +526,7 @@ const sidebars: SidebarsConfig = {
             link: {type: 'doc', id: 'data-operate/incremental/overview'},
             items: [
                 'data-operate/incremental/quick-start',
-                'data-operate/incremental/row-binlog',
+                'data-operate/incremental/changelog',
                 'data-operate/incremental/incremental-query',
                 'data-operate/incremental/table-stream',
                 'data-operate/incremental/table-stream-advanced',
@@ -747,6 +747,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'category',
                             label: 'Lance Catalog',
+                            link: {type: 'doc', id: 'lakehouse/catalogs/lance-catalog'},
                             items: ['lakehouse/catalogs/lance-catalog/doris-type-mapping'],
                         },
                         'lakehouse/catalogs/fluss-catalog',
@@ -834,6 +835,9 @@ const sidebars: SidebarsConfig = {
                     label: 'Lakehouse Best Practices',
                     items: [
                         'lakehouse/best-practices/optimization',
+                        'lakehouse/best-practices/doris-lance',
+                        'lakehouse/best-practices/lance-hybrid-search',
+                        'lakehouse/best-practices/lance-query-profile',
                         'lakehouse/best-practices/kerberos',
                         'lakehouse/best-practices/tpch',
                         'lakehouse/best-practices/tpcds',
@@ -2370,9 +2374,9 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Valued Functions',
                             items: [
                                 'sql-manual/sql-functions/table-valued-functions/backends',
-                                'sql-manual/sql-functions/table-valued-functions/binlog',
                                 'sql-manual/sql-functions/table-valued-functions/cdc-stream',
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
+                                'sql-manual/sql-functions/table-valued-functions/changelog',
                                 'sql-manual/sql-functions/table-valued-functions/file',
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
                                 'sql-manual/sql-functions/table-valued-functions/frontends_disks',
@@ -2381,6 +2385,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/hudi-meta',
                                 'sql-manual/sql-functions/table-valued-functions/iceberg-meta',
                                 'sql-manual/sql-functions/table-valued-functions/jobs',
+                                'sql-manual/sql-functions/table-valued-functions/lance-index-entries',
                                 'sql-manual/sql-functions/table-valued-functions/local',
                                 'sql-manual/sql-functions/table-valued-functions/mv_infos',
                                 'sql-manual/sql-functions/table-valued-functions/numbers',

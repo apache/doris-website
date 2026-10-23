@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2a62e36f582bdc4c4beb28b06dbb21e0946f773c949e931f95cda74bd8351313",
+    "sourceTechnicalHash": "050d8c08e08c740ce37876b76fecc58f16b0ffb4e5988170ef13ae8c24df9f94",
+    "targetHash": "6646256e48ab2d7ac7a867c00478f502d8041683261fe271c233750333cec6c0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:22:53.391Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2a62e36f582bdc4c4beb28b06dbb21e0946f773c949e931f95cda74bd8351313",
+      "targetHash": "6646256e48ab2d7ac7a867c00478f502d8041683261fe271c233750333cec6c0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

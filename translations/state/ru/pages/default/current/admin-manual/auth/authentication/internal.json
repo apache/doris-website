@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authentication/internal",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
+    "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:08:16.763Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+      "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

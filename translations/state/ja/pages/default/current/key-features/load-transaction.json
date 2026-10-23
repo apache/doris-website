@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/key-features/load-transaction.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/load-transaction.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
-    "sourceTechnicalHash": "71023aabc3388ec189105bbb98fae42a33dde9f03512efe2a2e80fb2531f8a26",
-    "targetHash": "fc3359f8039d96c10eb116ada45475e6df9b2258934653df441c9652a2cc014c",
+    "sourceCommit": "e3ba202a890e362eee5e4aafa507ffb4750c0078",
+    "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+    "sourceTechnicalHash": "46ad6af05e7e430f36a653b754db1c77778ef7e032896af0598c6d1c5f3ec2fb",
+    "targetHash": "6304cde1ef072096c1d10fb5b13e7c723c78fb40c86faf2f25cd6d1efc329641",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T00:50:40.614Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T07:08:01.362Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+      "targetHash": "6304cde1ef072096c1d10fb5b13e7c723c78fb40c86faf2f25cd6d1efc329641",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"Lifecycle states\"]; received [\"inlineCode\",null,null,\"PRECOMMITTED\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"PREPARE\"]; received [\"inlineCode\",null,null,\"Lifecycle states\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\"]; received [\"2\",\"2\",\"2\",\"2\",\"2\",\"2000\",\"3\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

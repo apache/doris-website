@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/context/USE-COMPUTE-GROUP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4178b9dc5413d63126451558cd665a3490693b52c38fb8441088fffbdb1045c0",
+    "sourceTechnicalHash": "f916760718cc5421215c3e65abbe8befd86aca790bd164160339bec980e44acd",
+    "targetHash": "152105cd0c44086a367eb0f506cb2dfdc5ab4a8c317133efd9bf666002247c38",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:35:21.486Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4178b9dc5413d63126451558cd665a3490693b52c38fb8441088fffbdb1045c0",
+      "targetHash": "152105cd0c44086a367eb0f506cb2dfdc5ab4a8c317133efd9bf666002247c38",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

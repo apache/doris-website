@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "migration/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/migration/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/migration/overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "376130da9296f56ab532cdf6b56d0eae03011eafd43aee6ab1ed03a31d8f8e51",
+    "sourceTechnicalHash": "871f5906c352bbf142fe41919d99eba394076667dbd9b1ad0e5dc459926a8b3c",
+    "targetHash": "7dca4743d60a93a80c84e951929279859763d511662c01e593dcf0988a48f3b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:03:11.520Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "376130da9296f56ab532cdf6b56d0eae03011eafd43aee6ab1ed03a31d8f8e51",
+      "targetHash": "7dca4743d60a93a80c84e951929279859763d511662c01e593dcf0988a48f3b0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

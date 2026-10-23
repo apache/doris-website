@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/semi-structured/MAP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5a0d0629420308742f7059d4957fa8731e4a176559662485149b0ddb63662e81",
+    "sourceTechnicalHash": "ab993e0167675305c4c05e2f7555a4eaf77830eb8752901433bb4482ca610be8",
+    "targetHash": "29f36d5dc7b94de519cf6550720a8b2e4062decf646c3dcde0c4402afdd4608d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:46:58.284Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5a0d0629420308742f7059d4957fa8731e4a176559662485149b0ddb63662e81",
+      "targetHash": "29f36d5dc7b94de519cf6550720a8b2e4062decf646c3dcde0c4402afdd4608d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

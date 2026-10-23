@@ -10,6 +10,26 @@ const workflows = path.resolve(__dirname, '../../../.github/workflows');
 const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8'));
 const shared = load('translation-run.yml');
 const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml')};
+const russian = load('russian-translation.yml');
+
+test('Russian discovery is manual only and uses the shared run, lock and explicit secrets', () => {
+    assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch']);
+    const inputs = russian.on.workflow_dispatch.inputs;
+    const koreanInputs = callers.ko.on.workflow_dispatch.inputs;
+    assert.deepEqual(inputs, {...koreanInputs, mode: {...koreanInputs.mode, default: 'dry-run'}});
+    assert.deepEqual(russian.permissions, shared.permissions);
+    for (const workflow of Object.values(callers)) assert.deepEqual(russian.concurrency, workflow.concurrency);
+    assert.deepEqual(Object.keys(russian.jobs), ['translation']);
+    const job = russian.jobs.translation;
+    assert.equal(job.uses, './.github/workflows/translation-run.yml');
+    assert.deepEqual(job.with, {...callers.ko.jobs.translation.with, locale: 'ru', workspace: 'russian-translation',
+        mode: "${{ inputs.mode || 'dry-run' }}"});
+    assert.deepEqual(job.secrets, callers.ko.jobs.translation.secrets);
+    assert.equal(allowGeneration({I18N_MODE: inputs.mode.default, GITHUB_EVENT_NAME: 'workflow_dispatch'}), false);
+    assert.equal(allowGeneration({I18N_MODE: 'validate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '1',
+        I18N_PATH: 'community/how-to-contribute/how-to-share-blogs.md'}), true);
+    assert.equal(allowGeneration({I18N_MODE: 'generate', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
+});
 
 test('one-page validation rejects an exact batch list before creating scan artifacts', t => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ko-validate-paths-'));
@@ -25,9 +45,9 @@ test('one-page validation rejects an exact batch list before creating scan artif
 
 test('each language workflow passes one fixed locale to the shared run under one lock', () => {
     const expected = {
-        ja: {workspace: 'japanese-translation', mode: 'generate', cron: '23 4,16 * * *'},
+        ja: {workspace: 'japanese-translation', cron: '23 4,16 * * *'},
         // Twenty minutes later; the shared lock queues it behind a Japanese run.
-        ko: {workspace: 'korean-translation', mode: 'dry-run', cron: '43 4,16 * * *'},
+        ko: {workspace: 'korean-translation', cron: '43 4,16 * * *'},
     };
     for (const [locale, workflow] of Object.entries(callers)) {
         assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch', 'schedule']);
@@ -35,7 +55,8 @@ test('each language workflow passes one fixed locale to the shared run under one
         const inputs = workflow.on.workflow_dispatch.inputs;
         // No locale input: each workflow runs only its own language.
         assert.deepEqual(Object.keys(inputs), ['mode', 'plugin', 'version', 'path', 'paths']);
-        assert.equal(inputs.mode.default, expected[locale].mode);
+        // Manual runs generate by default, like scheduled ones; dry-run stays selectable.
+        assert.equal(inputs.mode.default, 'generate');
         assert.deepEqual(inputs.mode.options, ['dry-run', 'validate', 'generate']);
         assert.deepEqual(workflow.permissions, {'contents': 'read', 'pull-requests': 'read'});
         assert.deepEqual(workflow.concurrency, {group: 'docs-translation', 'cancel-in-progress': false, queue: 'max'});
@@ -50,20 +71,22 @@ test('each language workflow passes one fixed locale to the shared run under one
     }
 });
 
-test('a scheduled run resolves to a mode that the generation gate accepts', () => {
+test('scheduled and default manual runs resolve to a mode that the generation gate accepts', () => {
     // Discovery marks every scheduled run eligible, so the input-less fallback
     // must be a mode that workflow-generate.cjs will run, not a dry run.
     for (const workflow of Object.values(callers)) {
         const fallback = /\|\| '([a-z-]+)' \}\}$/.exec(workflow.jobs.translation.with.mode)[1];
         assert.equal(allowGeneration({I18N_MODE: fallback, GITHUB_EVENT_NAME: 'schedule', I18N_MAX_PAGES: '10'}), true);
+        assert.equal(allowGeneration({I18N_MODE: workflow.on.workflow_dispatch.inputs.mode.default,
+            GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), true);
     }
-    assert.equal(allowGeneration({I18N_MODE: callers.ko.on.workflow_dispatch.inputs.mode.default,
-        GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), false);
+    // Choosing dry-run by hand still never reaches the generator.
+    assert.equal(allowGeneration({I18N_MODE: 'dry-run', GITHUB_EVENT_NAME: 'workflow_dispatch', I18N_MAX_PAGES: '10'}), false);
 });
 
 test('the shared run names no language and sets mode and filters once', () => {
     const text = fs.readFileSync(path.join(workflows, 'translation-run.yml'), 'utf8');
-    assert.doesNotMatch(text, /japanese|korean|translate-(ja|ko)\b/i);
+    assert.doesNotMatch(text, /japanese|korean|russian|translate-(ja|ko|ru)\b/i);
     assert.deepEqual(Object.keys(shared.on), ['workflow_call']);
     assert.deepEqual(shared.permissions, {'contents': 'read', 'pull-requests': 'read'});
     assert.equal(shared.concurrency, undefined);
@@ -122,11 +145,12 @@ test('the label check runs before auth loading and fails for a missing locale la
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-label-'));
     t.after(() => fs.rmSync(bin, {recursive: true, force: true}));
     // The mock answers like the labels API: the name, or nothing when missing.
-    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; esac\n',
+    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; */labels/translate-ru) echo translate-ru;; esac\n',
         {mode: 0o755});
     const run = locale => spawnSync('bash', ['-e', '-c', steps[label].run],
         {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale}}).status;
     assert.equal(run('ja'), 0);
+    assert.equal(run('ru'), 0);
     assert.notEqual(run('ko'), 0);
 });
 

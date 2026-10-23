@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/log-management/fe-log",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/log-management/fe-log.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/log-management/fe-log.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+    "sourceTechnicalHash": "072ac97a8f3a636630306bcc98138111545611eb24a4456debd41df8e0ff27a5",
+    "targetHash": "5e95e8147034be3af3404f781358924185c6e55820a4cc40015b783ea72434ba",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:51.422Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+      "targetHash": "5e95e8147034be3af3404f781358924185c6e55820a4cc40015b783ea72434ba",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/log-management/fe-log",
+        "sourcePath": "docs/admin-manual/log-management/fe-log.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/log-management/fe-log.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "644da2ff342ed74713935a54f2521fd99a96e77acedb586f5adf892eae84d7e8",
+        "targetHash": "5e95e8147034be3af3404f781358924185c6e55820a4cc40015b783ea72434ba",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

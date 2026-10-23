@@ -28,9 +28,9 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(stateOnly.locales,['ja']);
     assert.equal(stateOnly.docs_versions,'4.x');
     assert.deepEqual(stateOnly.json,[shard]);
-    assert.deepEqual(buildScope(['sidebars.ts'],versions).locales,['en','zh-CN','ja','ko']);
-    assert.deepEqual(buildScope(['.github/workflows/cron-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko']);
-    assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko']);
+    assert.deepEqual(buildScope(['sidebars.ts'],versions).locales,['en','zh-CN','ja','ko','ru']);
+    assert.deepEqual(buildScope(['.github/workflows/cron-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko','ru']);
+    assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko','ru']);
     assert.equal(buildScope(['versions.json'],versions).need_full_build,true);
     assert.deepEqual(buildScope(['versioned_docs/version-1.2/a.md'],versions).retired,['1.2']);
     // Only a managed locale renders dictionary changes, so only its dictionary
@@ -45,12 +45,15 @@ test('PR build scope separates content locales, shared inputs, and retired versi
 
 test('publication changes exercise the complete optimized artifact on CI', () => {
     for (const file of ['scripts/publish/optimize.cjs','scripts/build-locales.cjs',
-        'config/ssrTemplate.js','static/js/brand-theme-bootstrap.js']) {
+        'config/ssrTemplate.js','static/js/brand-theme-bootstrap.js',
+        'src/theme/NavbarItem/LocaleDropdownNavbarItem/index.tsx',
+        'src/theme/NavbarItem/DocsVersionDropdownNavbarItem.tsx',
+        'scripts/i18n/verify-doc-navigation.cjs','scripts/i18n/verify-search.cjs']) {
         const scope = buildScope([file],versions,['ja']);
         assert.equal(scope.optimize_publish,true,file);
         assert.equal(scope.docs_versions,'',file);
         assert.equal(scope.need_full_build,true,file);
-        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko']);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko','ru']);
     }
     assert.equal(buildScope(['docs/example.md'],versions).optimize_publish,false);
 });
@@ -177,7 +180,7 @@ test('source-only edits report stale Japanese content; edited stale targets are 
 
 test('required legacy link gate follows managed locale fallback in the same version', () => {
     const {existingLocalTarget} = require('../../check_move.js');
-    for (const locale of ['ja', 'ko']) for (const version of ['current','version-4.x']) {
+    for (const locale of ['ja', 'ko', 'ru']) for (const version of ['current','version-4.x']) {
         const file = `i18n/${locale}/docusaurus-plugin-content-docs/${version}/getting-started/what-is-apache-doris.md`;
         assert.equal(existingLocalTarget(file,'../ai/ai-overview.md'),true);
         assert.equal(existingLocalTarget(file,'../ai/not-a-page-t04.md'),false);
@@ -187,19 +190,19 @@ test('required legacy link gate follows managed locale fallback in the same vers
 
 test('Korean scope and glossary edits get offline JSON checks without forcing a website build', () => {
     for (const file of ['translations/scope/ko.json', 'translations/glossary/ko.json']) {
-        const scope = buildScope([file], versions, ['ja','ko']);
+        const scope = buildScope([file], versions, ['ja','ko','ru']);
         assert.deepEqual(scope.json, [file]);
         assert.equal(scope.skip_build, true);
     }
-    assert.throws(() => buildScope(['translations/scope/fr.json'],versions,['ja','ko']), /Unconfigured/);
+    assert.throws(() => buildScope(['translations/scope/fr.json'],versions,['ja','ko','ru']), /Unconfigured/);
 });
 
 
-test('search implementation changes exercise full four-language publication and browser verification', () => {
-    for (const file of ['scripts/i18n/search-plugin.cjs','src/utils/searchVersion.js','src/theme/SearchPage/SearchPage.jsx']) {
-        const scope = buildScope([file],versions,['ja','ko']);
+test('search implementation changes exercise full five-language publication and browser verification', () => {
+    for (const file of ['scripts/i18n/search-plugin.cjs','src/utils/searchVersion.js','src/utils/searchNormalization.js','src/theme/SearchPage/SearchPage.jsx']) {
+        const scope = buildScope([file],versions,['ja','ko','ru']);
         assert.equal(scope.optimize_publish,true,file);
         assert.equal(scope.docs_versions,'',file);
-        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko'],file);
+        assert.deepEqual(scope.locales,['en','zh-CN','ja','ko','ru'],file);
     }
 });

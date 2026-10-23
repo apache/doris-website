@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/vectorized-execution",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/vectorized-execution.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/vectorized-execution.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ca3716ec1d89b1f801a2d2ea49574b798512ff43c5ec25762e4d76be9c163de0",
+    "sourceTechnicalHash": "3f6c13b6d31b397a9c379dfc79fed49b1adf40969557a640d2ccc24e83933ddb",
+    "targetHash": "71c5f2a788d98e57b48cdb7fe5f52ae551a425eb3332326ff5974162a6aefd84",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:50:53.421Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ca3716ec1d89b1f801a2d2ea49574b798512ff43c5ec25762e4d76be9c163de0",
+      "targetHash": "71c5f2a788d98e57b48cdb7fe5f52ae551a425eb3332326ff5974162a6aefd84",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,51 @@
+name: Russian translation discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Read-only dry run, one-page live validation, or batch generation
+        type: choice
+        options: [dry-run, validate, generate]
+        default: dry-run
+        required: true
+      plugin:
+        description: Optional plugin filter (default or community)
+        type: string
+      version:
+        description: Optional version filter (current or 4.x)
+        type: string
+      path:
+        description: Optional repository-relative source path prefix
+        type: string
+      paths:
+        description: Optional JSON array of exact English .md/.mdx files (exclusive with path)
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  # Hold the same whole-run lock as Japanese and Korean, including dry runs.
+  group: docs-translation
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  translation:
+    uses: ./.github/workflows/translation-run.yml
+    with:
+      locale: ru
+      workspace: russian-translation
+      mode: ${{ inputs.mode || 'dry-run' }}
+      plugin: ${{ inputs.plugin }}
+      version: ${{ inputs.version }}
+      path: ${{ inputs.path }}
+      paths: ${{ inputs.paths }}
+    secrets:
+      OSS_AK: ${{ secrets.OSS_AK }}
+      OSS_SK: ${{ secrets.OSS_SK }}
+      I18N_GITHUB_APP_ID: ${{ secrets.I18N_GITHUB_APP_ID }}
+      I18N_GITHUB_APP_PRIVATE_KEY: ${{ secrets.I18N_GITHUB_APP_PRIVATE_KEY }}
+      I18N_GITHUB_PAT: ${{ secrets.I18N_GITHUB_PAT }}

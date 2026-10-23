@@ -7,7 +7,7 @@ on:
         description: Read-only dry run, one-page live validation, or batch generation
         type: choice
         options: [dry-run, validate, generate]
-        default: dry-run
+        default: generate
         required: true
       plugin:
         description: Optional plugin filter (default or community)
@@ -44,8 +44,7 @@ jobs:
     with:
       locale: ko
       workspace: korean-translation
-      # Scheduled runs have no inputs and generate; manual runs keep the
-      # dry-run default.
+      # Scheduled runs have no inputs and generate.
       mode: ${{ inputs.mode || 'generate' }}
       plugin: ${{ inputs.plugin }}
       version: ${{ inputs.version }}

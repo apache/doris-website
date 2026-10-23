@@ -1,0 +1,51 @@
+---
+{
+    "title": "Установка и развёртывание",
+    "language": "ru",
+    "description": "Выберите подходящий способ установки и развёртывания Apache Doris."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Установка и развёртывание {#installation-and-deployment}
+
+В этой главе приведены инструкции по установке и развёртыванию Apache Doris. Сначала выберите режим развёртывания, который соответствует вашим потребностям, затем обратитесь к соответствующему руководству по развёртыванию.
+
+## Подготовка к развёртыванию {#pre-deployment-preparation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Выбор режима развёртывания"
+    description="Сравните архитектуры с совмещёнными и раздельными подсистемами хранения и вычислений, ручное развёртывание и развёртывание в Kubernetes, а также развёртывание в облаке"
+    link="choosing-deployment-mode"
+/>
+
+<GettingStartedCard
+    title="Подготовка к установке"
+    description="Проверьте среду, спланируйте размер кластера и убедитесь, что операционная система соответствует требованиям"
+    link="preparation/env-checking"
+/>
+</div>
+
+## Способы развёртывания {#deployment-methods}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Ручное развёртывание"
+    description="Установите Apache Doris непосредственно на физических или виртуальных машинах"
+    link="deploy-manually/intro"
+/>
+
+<GettingStartedCard
+    title="Развёртывание в Kubernetes"
+    description="Разверните Apache Doris в Kubernetes с помощью Doris Operator"
+    link="deploy-on-kubernetes/intro"
+/>
+
+<GettingStartedCard
+    title="Развёртывание в облаке"
+    description="Разверните Apache Doris на платформах публичных облаков, таких как AWS"
+    link="deploy-on-cloud/doris-on-aws"
+/>
+</div>

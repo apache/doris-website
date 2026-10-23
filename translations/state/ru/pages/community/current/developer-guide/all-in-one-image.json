@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/all-in-one-image",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/all-in-one-image.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/all-in-one-image.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7c1ddcd70b0fff15ef2f855c8dd0cb5a4a02aeb7fffb776a3f8555421a0a4eb3",
+    "sourceTechnicalHash": "24e5089859bb7b56d1f2cc25c16513cf994ee212aca4a7af2c3b63701034bb88",
+    "targetHash": "5b0e3ef901a747933a8d1fd49280c7608272e05a347ca2cc50cd06b41953424a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:11:32.449Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7c1ddcd70b0fff15ef2f855c8dd0cb5a4a02aeb7fffb776a3f8555421a0a4eb3",
+      "targetHash": "5b0e3ef901a747933a8d1fd49280c7608272e05a347ca2cc50cd06b41953424a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

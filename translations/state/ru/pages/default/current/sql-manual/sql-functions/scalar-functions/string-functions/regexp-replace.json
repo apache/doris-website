@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-replace.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "fdf9759d1c3bdf9563699e42757bfd3a7c978f73d38414c15a7bcd4f38ef0af3",
+    "sourceTechnicalHash": "411373435bf47e545bf9fd2e433453f6e4d1c193eef7766ee32b336bafada5fc",
+    "targetHash": "86862955f3488560014216974982f8272eb237c169ecd58ad67f2caf78312bbf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:49:24.496Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdf9759d1c3bdf9563699e42757bfd3a7c978f73d38414c15a7bcd4f38ef0af3",
+      "targetHash": "86862955f3488560014216974982f8272eb237c169ecd58ad67f2caf78312bbf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

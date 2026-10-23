@@ -137,3 +137,14 @@ export function Bolt(): JSX.Element {
         </span>
     );
 }
+
+// Keep the bolt with the final word when a translated accent wraps.
+export function AccentWithBolt({ children }: { children: string }): JSX.Element {
+    const lastWord = children.lastIndexOf(' ') + 1;
+    return (
+        <span className="uc-accent">
+            {children.slice(0, lastWord)}
+            <span style={{ whiteSpace: 'nowrap' }}>{children.slice(lastWord)}<Bolt /></span>
+        </span>
+    );
+}

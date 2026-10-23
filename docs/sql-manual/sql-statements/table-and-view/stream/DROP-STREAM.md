@@ -8,7 +8,7 @@
 
 ## Description
 
-Drops a Table Stream. Dropping a Stream does not affect the base table or its Row Binlog.
+Drops a Table Stream. Dropping a Stream does not affect the base table or its changelog.
 
 ## Syntax
 

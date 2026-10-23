@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/docker-dev",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/docker-dev.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/docker-dev.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a2c59f18ff5236e120fb525640a7d1bb2fbf00d0d75dab36433617b404da3a95",
+    "sourceTechnicalHash": "89f7104f111a36ffcfbbe02f13aaee31e90474470d5c95f22e61dc54ef586ef6",
+    "targetHash": "9e3d4222660115c2eb0d3a5a610307ebba163e3b9e6312a2f97a25a3155d9e2e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:31:39.286Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a2c59f18ff5236e120fb525640a7d1bb2fbf00d0d75dab36433617b404da3a95",
+      "targetHash": "9e3d4222660115c2eb0d3a5a610307ebba163e3b9e6312a2f97a25a3155d9e2e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

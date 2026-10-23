@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/table_properties",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/table_properties.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/table_properties.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "3a1336aaf3e8b7223336621284b0f56ec73e718b0ea234d24ec1db911797dc96",
+    "sourceTechnicalHash": "19cdd7a07e3b11c0344ce3ec59e4b0aee53ec577d6a2a904952f84f2f987ff04",
+    "targetHash": "6956dadaf5905eaf324cb9ae43d8c7d741ca25fc57e8b7622b816435e5458ec9",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:43:06.179Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3a1336aaf3e8b7223336621284b0f56ec73e718b0ea234d24ec1db911797dc96",
+      "targetHash": "6956dadaf5905eaf324cb9ae43d8c7d741ca25fc57e8b7622b816435e5458ec9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

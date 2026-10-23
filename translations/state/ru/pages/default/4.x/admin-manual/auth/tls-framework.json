@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/tls-framework",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+    "sourceTechnicalHash": "67992242190d81f957842223e23c04ea92718900e2e5399c7961bdcffbca2472",
+    "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.429Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+      "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/tls-framework",
+        "sourcePath": "docs/admin-manual/auth/tls-framework.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/tls-framework.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+        "targetHash": "a442637a99130bc94102b05351ae1c8a53cacafadbd014db54d29ff308f8c679",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}
