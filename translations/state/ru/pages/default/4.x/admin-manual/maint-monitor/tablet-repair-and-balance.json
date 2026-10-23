@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/maint-monitor/tablet-repair-and-balance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+    "sourceTechnicalHash": "ed45bb56d82b7f7ae7f9c75e5a50218782d1dd73c352f3b72252718b81433a04",
+    "targetHash": "ed948dabacfe927087fd06dfc943e2880892f85a85131ec589755d182db516a6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:52.476Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+      "targetHash": "ed948dabacfe927087fd06dfc943e2880892f85a85131ec589755d182db516a6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/maint-monitor/tablet-repair-and-balance",
+        "sourcePath": "docs/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/maint-monitor/tablet-repair-and-balance.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "de3e9de84ba9a5fce923ab808e38a755ac32091da4ec9d0ff3d1d35eb25780e7",
+        "targetHash": "ed948dabacfe927087fd06dfc943e2880892f85a85131ec589755d182db516a6",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}
