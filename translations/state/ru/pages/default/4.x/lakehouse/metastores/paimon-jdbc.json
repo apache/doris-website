@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/metastores/paimon-jdbc",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/paimon-jdbc.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/paimon-jdbc.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5011d67db7861abedc9c79a70554b9a3656fba8d9821ea466bfad93aac79d506",
+    "sourceTechnicalHash": "2348bded7e99f230e68a16f311ec0934c1c0ea4d1aa0c7fabaa1302b38709935",
+    "targetHash": "a8d6d77166005055df13c0f58ca7b12273aae7787a919d0221639fee6317d80e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.227Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5011d67db7861abedc9c79a70554b9a3656fba8d9821ea466bfad93aac79d506",
+      "targetHash": "a8d6d77166005055df13c0f58ca7b12273aae7787a919d0221639fee6317d80e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/metastores/paimon-jdbc",
+        "sourcePath": "docs/lakehouse/metastores/paimon-jdbc.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/metastores/paimon-jdbc.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "5011d67db7861abedc9c79a70554b9a3656fba8d9821ea466bfad93aac79d506",
+        "targetHash": "a8d6d77166005055df13c0f58ca7b12273aae7787a919d0221639fee6317d80e",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

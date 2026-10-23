@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/baidu-bos",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/baidu-bos.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/baidu-bos.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "62b940936921555629f51521a168ab2a914abe30d8d89b6820e74657c0651fe7",
+    "sourceTechnicalHash": "82bf6717c7f9e166a164a29f4650fa8f7e532e64bd27a58d0d72da877992ecc1",
+    "targetHash": "04ecf2295479863defc81e140a4d14cdfe61e23e1ffeaadccf03e79a8e172ec5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.521Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "62b940936921555629f51521a168ab2a914abe30d8d89b6820e74657c0651fe7",
+      "targetHash": "04ecf2295479863defc81e140a4d14cdfe61e23e1ffeaadccf03e79a8e172ec5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/storages/baidu-bos",
+        "sourcePath": "docs/lakehouse/storages/baidu-bos.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/baidu-bos.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "62b940936921555629f51521a168ab2a914abe30d8d89b6820e74657c0651fe7",
+        "targetHash": "04ecf2295479863defc81e140a4d14cdfe61e23e1ffeaadccf03e79a8e172ec5",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

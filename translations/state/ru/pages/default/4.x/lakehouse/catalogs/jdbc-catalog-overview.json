@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/catalogs/jdbc-catalog-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+    "sourceTechnicalHash": "91cd6bc33e1681ff640dee3fd9a1e178a37a95520f91d10887fb70e28dea7416",
+    "targetHash": "7b4bc017e65ef1d9028f1af9f1a1c2d40ce960f00c9486e1a63f537248dc3ff8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:19.949Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+      "targetHash": "7b4bc017e65ef1d9028f1af9f1a1c2d40ce960f00c9486e1a63f537248dc3ff8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/catalogs/jdbc-catalog-overview",
+        "sourcePath": "docs/lakehouse/catalogs/jdbc-catalog-overview.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-catalog-overview.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+        "targetHash": "7b4bc017e65ef1d9028f1af9f1a1c2d40ce960f00c9486e1a63f537248dc3ff8",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}
