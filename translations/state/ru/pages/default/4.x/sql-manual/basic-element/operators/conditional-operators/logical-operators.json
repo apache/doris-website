@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/operators/conditional-operators/logical-operators",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ae6f6229b0226e4074c8478d01951b6fd0af75fc40123ac8ad77ccbf107b1609",
+    "sourceTechnicalHash": "54cd8afc249bf755ff2a9d48d29e7be2101c547f34b127f898b863f35f0fede5",
+    "targetHash": "aba31925d5dac5ec45acc9ed534d6740e65a9f39ac33db3706fef3cc73f37bcf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:35.486Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ae6f6229b0226e4074c8478d01951b6fd0af75fc40123ac8ad77ccbf107b1609",
+      "targetHash": "aba31925d5dac5ec45acc9ed534d6740e65a9f39ac33db3706fef3cc73f37bcf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/basic-element/operators/conditional-operators/logical-operators",
+        "sourcePath": "docs/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/operators/conditional-operators/logical-operators.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "ae6f6229b0226e4074c8478d01951b6fd0af75fc40123ac8ad77ccbf107b1609",
+        "targetHash": "aba31925d5dac5ec45acc9ed534d6740e65a9f39ac33db3706fef3cc73f37bcf",
+        "commit": "cf6077bde600a1327f193267052fa819ba95dc8e",
+        "pr": "https://github.com/apache/doris-website/pull/4445"
+      }
+    }
+  }
+}
