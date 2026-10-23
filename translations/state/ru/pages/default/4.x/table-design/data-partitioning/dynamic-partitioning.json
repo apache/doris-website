@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/dynamic-partitioning",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "13563bb606216d19253663f6a687fe81f3047815e5c02222a554be93e74ff8d6",
+    "sourceTechnicalHash": "2e73cb8a7a2d1ba5d5a0d20b7d05f2025cfd1a1cc51552603b06a19b83d39adc",
+    "targetHash": "ba55b5a4382c52f2cf299f0e3869c1e732fa4b52c1e72a9d794b16560065b38a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:07:07.189Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "13563bb606216d19253663f6a687fe81f3047815e5c02222a554be93e74ff8d6",
+      "targetHash": "ba55b5a4382c52f2cf299f0e3869c1e732fa4b52c1e72a9d794b16560065b38a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

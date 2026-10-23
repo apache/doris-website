@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-model/tips",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-model/tips.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/data-model/tips.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+    "sourceTechnicalHash": "1374e1707298a899d391b8d2725f14390d83d5b9e201cc402b748797caa0af5a",
+    "targetHash": "0ad228ede8891d880b1f1c3b01c44a7fe57148efd3481848ba261195b8d744d1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:06.616Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+      "targetHash": "0ad228ede8891d880b1f1c3b01c44a7fe57148efd3481848ba261195b8d744d1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/data-model/tips",
+        "sourcePath": "docs/table-design/data-model/tips.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-model/tips.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "e5657529db80fb24c64bbd9f142e535d5c714966cd05ae5b38980d171d263fbc",
+        "targetHash": "0ad228ede8891d880b1f1c3b01c44a7fe57148efd3481848ba261195b8d744d1",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}
