@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/file-formats/parquet",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/file-formats/parquet.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+    "sourceTechnicalHash": "3669e1053cb64e25230afd4b7410f85dacad0c07c5ec3ae6175312119fcdf8c7",
+    "targetHash": "d3e980d3196867006c01dadf5faa49664cde3851f31b90d625021823d0cc13d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:13:10.999Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
+      "targetHash": "d3e980d3196867006c01dadf5faa49664cde3851f31b90d625021823d0cc13d2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

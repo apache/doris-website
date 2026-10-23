@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/query-optimizer",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/query-optimizer.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c6debc8b4b29f3ae2f9847524a2a53328944edff58dd387654c03d7c14ae18b4",
+    "sourceTechnicalHash": "ea54ff4c5be275839294ed4a92c5679867b3693967709a6bf8ae78275ad767a7",
+    "targetHash": "dbe08e1cf235139d1ede7b7b11fd2741416274dd7d8989a00685f75322bdc7af",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:35:46.588Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-final-output-recovery",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c6debc8b4b29f3ae2f9847524a2a53328944edff58dd387654c03d7c14ae18b4",
+      "targetHash": "dbe08e1cf235139d1ede7b7b11fd2741416274dd7d8989a00685f75322bdc7af",
+      "warnings": [
+        {
+          "check": "request",
+          "message": "Codex reported a failed turn"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        }
+      ],
+      "recoveredOutput": {
+        "sourceAttempt": 3,
+        "finalAttempt": 3,
+        "path": "attempt-3-captured-cli.json",
+        "rawTargetHash": "06cc5a4f3de7f31bee7536a899795b5852901b1db146ee8024127d92bd429c8b",
+        "protocolFailure": true
+      },
+      "localCorrections": [
+        {
+          "at": "2026-10-22T08:35:46.588Z",
+          "sourceAttempt": 3,
+          "kind": "captured-final-output-recovery",
+          "beforeTargetHash": "06cc5a4f3de7f31bee7536a899795b5852901b1db146ee8024127d92bd429c8b",
+          "afterTargetHash": "dbe08e1cf235139d1ede7b7b11fd2741416274dd7d8989a00685f75322bdc7af",
+          "reason": "Recovered the complete translation emitted by the third CLI request after the adapter reported a failed turn. Preserved the exact third output and all three request diagnostics; applied the usual source heading alignment and passed content, Markdown, metadata, protection, glossary and link checks. No additional model call."
+        }
+      ]
+    }
+  }
+}

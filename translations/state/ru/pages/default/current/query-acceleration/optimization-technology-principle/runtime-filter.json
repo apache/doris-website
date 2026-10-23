@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/optimization-technology-principle/runtime-filter",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/optimization-technology-principle/runtime-filter.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/optimization-technology-principle/runtime-filter.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "22fdcd322fec302531c17e7e37b4184f8990b3110e542ae9162540fe84fd98da",
+    "sourceTechnicalHash": "5fd464efa58e45c42b5bb7475715e13fde706c3792b5831fed85178a888ada74",
+    "targetHash": "99a3daa4dc778f52002d495b719bac121ab5338886dfe1528319f7755ab5a305",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:27:25.448Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "22fdcd322fec302531c17e7e37b4184f8990b3110e542ae9162540fe84fd98da",
+      "targetHash": "99a3daa4dc778f52002d495b719bac121ab5338886dfe1528319f7755ab5a305",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

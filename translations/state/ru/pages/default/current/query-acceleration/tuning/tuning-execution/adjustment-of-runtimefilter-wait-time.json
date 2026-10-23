@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/adjustment-of-runtimefilter-wait-time.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5d6e5315724171c3d5e8f0156b9d48259d78adacc3435c987bfe86abf397dc66",
+    "sourceTechnicalHash": "25bdd062f8ebbc445152a31b8ec15e40d23f1da208ae082b020d7d3a3f4ee731",
+    "targetHash": "9dc2fd25759984049ca030a2d7e1bced485e7fed1ac1a50ec92810fc358bec0e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:33:27.161Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5d6e5315724171c3d5e8f0156b9d48259d78adacc3435c987bfe86abf397dc66",
+      "targetHash": "9dc2fd25759984049ca030a2d7e1bced485e7fed1ac1a50ec92810fc358bec0e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
