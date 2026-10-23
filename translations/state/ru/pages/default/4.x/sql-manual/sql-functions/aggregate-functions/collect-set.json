@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/collect-set",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/collect-set.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/collect-set.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8454ebd7fc4cff3c137567e86fe1bcd617d661d850e6ac3180f03bdb754321a2",
+    "sourceTechnicalHash": "9622a2f36ac402fddd0fe72207996f8f01162a0584f8c4ae7bcdcfd522e599a1",
+    "targetHash": "3d59e53c9460940b4cf8b24936d62726ef6260770a566e5b204676e8b3611efc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:46:49.230Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8454ebd7fc4cff3c137567e86fe1bcd617d661d850e6ac3180f03bdb754321a2",
+      "targetHash": "3d59e53c9460940b4cf8b24936d62726ef6260770a566e5b204676e8b3611efc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

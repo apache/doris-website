@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/ip-functions/is-ipv4-mapped.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f03c4f18f85fc9d337e22d3186bd57daad75ffc942345a1d14f30108d620dca7",
+    "sourceTechnicalHash": "348225ff3807c3c14b1b1512fdd83f9393cf881c1949687a4bcb934d5030a3e4",
+    "targetHash": "17d7dc0427ebdecc5d3070458e320679b9de8937bf11fc41467a82891ddb344c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:18:07.855Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f03c4f18f85fc9d337e22d3186bd57daad75ffc942345a1d14f30108d620dca7",
+      "targetHash": "17d7dc0427ebdecc5d3070458e320679b9de8937bf11fc41467a82891ddb344c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

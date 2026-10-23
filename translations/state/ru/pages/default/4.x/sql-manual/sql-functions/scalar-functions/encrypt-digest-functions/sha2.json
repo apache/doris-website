@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/encrypt-digest-functions/sha2.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6fe20bea7b06c499e55911d3f4114f4919cc36a40c7ba939bd18d52fb20bc38c",
+    "sourceTechnicalHash": "069f7fe51800430ab923f46f7c7dbffa91047ee7af42b5b852b5b99db99125aa",
+    "targetHash": "6ca49a5f1197d9583fb33aca3946cc1583e6987e63376836e69a3d8ccb7e8283",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:38:52.128Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6fe20bea7b06c499e55911d3f4114f4919cc36a40c7ba939bd18d52fb20bc38c",
+      "targetHash": "6ca49a5f1197d9583fb33aca3946cc1583e6987e63376836e69a3d8ccb7e8283",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

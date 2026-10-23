@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/SHOW-SNAPSHOT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d5131842f8cfbf9d46aa94f981e96d0fc2c7ceb29e5abd961cf3857eda6077eb",
+    "sourceTechnicalHash": "3f669ea9329549e711ed97d6eb353cf8017c2f9ea925b34fd989c3113f78eb21",
+    "targetHash": "c7efaba732e394577225cbdcdaa163becef11d52cf4a3a9ef761694f78218464",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:02:02.262Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d5131842f8cfbf9d46aa94f981e96d0fc2c7ceb29e5abd961cf3857eda6077eb",
+      "targetHash": "c7efaba732e394577225cbdcdaa163becef11d52cf4a3a9ef761694f78218464",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

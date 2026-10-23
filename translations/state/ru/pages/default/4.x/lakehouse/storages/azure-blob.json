@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/storages/azure-blob",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/storages/azure-blob.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/storages/azure-blob.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+    "sourceTechnicalHash": "ea63f52129ba68abaf2eebaaeaa863378a5525a522d46fe3b41dadc481ce4fb0",
+    "targetHash": "2c072b3b23f3b21a375706afbfbe6adde651a442cba9a6e25a3790a673969851",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:22.456Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+      "targetHash": "2c072b3b23f3b21a375706afbfbe6adde651a442cba9a6e25a3790a673969851",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/storages/azure-blob",
+        "sourcePath": "docs/lakehouse/storages/azure-blob.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/azure-blob.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+        "targetHash": "2c072b3b23f3b21a375706afbfbe6adde651a442cba9a6e25a3790a673969851",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/DATE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+    "sourceTechnicalHash": "e06d8d43fcde346b6593d4a342f73cb56bb62b703a008485a48d71ef85214ddf",
+    "targetHash": "971bd7d59d7680fccc043d7202ee821d7bdfad6c75749e2edc6a77187afe0098",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:49:42.482Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+      "targetHash": "971bd7d59d7680fccc043d7202ee821d7bdfad6c75749e2edc6a77187afe0098",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

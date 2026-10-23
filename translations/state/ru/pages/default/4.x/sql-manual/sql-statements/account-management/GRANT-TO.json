@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/account-management/GRANT-TO",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3ce7ab154f48179e47cc36a00602c86bc6b11252bd3af223a1994f49bf8fe885",
+    "sourceTechnicalHash": "bc1e8f32fc57bed65e8697ce9d9cc429c3aae49d36e49642ebb3f6f0e33a685b",
+    "targetHash": "bed5636846d5bb5ab384220496fae0befcecc77af3531817372e978ddfc80d96",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T00:06:01.657Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3ce7ab154f48179e47cc36a00602c86bc6b11252bd3af223a1994f49bf8fe885",
+      "targetHash": "bed5636846d5bb5ab384220496fae0befcecc77af3531817372e978ddfc80d96",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/account-management/GRANT-TO",
+        "sourcePath": "docs/sql-manual/sql-statements/account-management/GRANT-TO.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/GRANT-TO.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "3ce7ab154f48179e47cc36a00602c86bc6b11252bd3af223a1994f49bf8fe885",
+        "targetHash": "bed5636846d5bb5ab384220496fae0befcecc77af3531817372e978ddfc80d96",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}

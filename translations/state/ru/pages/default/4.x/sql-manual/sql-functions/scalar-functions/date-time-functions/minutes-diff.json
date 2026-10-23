@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/minutes-diff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9a740eb88b3fd23d8c63675620fa4546b8d82f78cb41da595d02e515a5c44620",
+    "sourceTechnicalHash": "bce18183031010d4a83c9e866f298d9b3e57a444171053b984768ec891ae3afa",
+    "targetHash": "e2f02d541b5e08549dd123d572ee5e102311b078195421794280470a4aec1f8f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:28:09.459Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9a740eb88b3fd23d8c63675620fa4546b8d82f78cb41da595d02e515a5c44620",
+      "targetHash": "e2f02d541b5e08549dd123d572ee5e102311b078195421794280470a4aec1f8f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

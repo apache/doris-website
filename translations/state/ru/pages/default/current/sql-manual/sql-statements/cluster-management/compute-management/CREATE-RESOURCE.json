@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/CREATE-RESOURCE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+    "sourceTechnicalHash": "5ea5069c80d4612c301c7aaa7edef3e1cc6e83c5d72cb9c71ad0fd28cd8cc6f3",
+    "targetHash": "97f004c69536a8746fde09e89c796461f070f4471206be7499238aeaf3f19100",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:59:53.863Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b033c4164bb1e14f14fca86c4ee72fbf27dcbe3c8fb26e1d1e6ad4bdb623312e",
+      "targetHash": "97f004c69536a8746fde09e89c796461f070f4471206be7499238aeaf3f19100",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"code\",null,null,\"Doris also supported `AWS Assume Role` for creating S3 Resource , please refer to [AWS integration](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).\"]; received [\"code\",null,null,\"Doris также поддерживает `AWS Assume Role` при создании ресурса S3, см. [интеграцию с AWS](../../../../admin-manual/auth/integrations/aws-authentication-and-authorization.md#assumed-role-authentication).\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

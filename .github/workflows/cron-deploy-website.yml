@@ -9,7 +9,8 @@ on:
         # a missed push deployment without rebuilding an unchanged site 12
         # times per day.
         - cron: '0 1 * * *' # Daily at 01:00 UTC.
-permissions: write-all
+permissions:
+  contents: read
 # One deploy at a time. A run whose OSS upload crawls (the 2026-09-21 12:05
 # run spent two hours on it) must not overlap a newer push or cron trigger: both
 # would push the same objects through the same slow pipe and race for the
@@ -20,160 +21,208 @@ concurrency:
     group: cron-deploy-website
     cancel-in-progress: false
 jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        environment: Production
+  source:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      source_sha: ${{ steps.source.outputs.source_sha }}
+      branch: ${{ steps.source.outputs.branch }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Resolve a protected branch to an immutable commit
+        id: source
         env:
-            DORIS_ENABLE_JA: 'true'
-            DORIS_ENABLE_KO: 'true'
-            DORIS_ENABLE_RU: 'true'
-        steps:
-            - name: Checkout
-              # v4 (the pinned @master commit predates the `filter` input) with
-              # the full history the last-update map is computed from. Blobless
-              # keeps that affordable: only commit/tree metadata is fetched
-              # (~15MB), not every historical file version (~1.7GB).
-              uses: actions/checkout@v4
-              with:
-                  persist-credentials: false
-                  submodules: recursive
-                  fetch-depth: 0
-                  filter: blob:none
+          GH_TOKEN: ${{ github.token }}
+          DEPLOY_BRANCH: master
+        run: python3 .github/scripts/review.py deploy-ref
 
-            - name: Add Chinese Fonts
-              run: |
-                  sudo apt-get install ttf-mscorefonts-installer
-                  sudo apt-get install fontconfig
-                  fc-list :lang=zh
-                  ls -lh /usr/share/fonts/
-                  cp -rf ./static/fonts/* /usr/share/fonts/
-                  mkfontscale
-                  mkfontdir
-                  fc-cache
-                  fc-list :lang=zh
-                  
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 20
+  build:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+        DORIS_ENABLE_JA: 'true'
+        DORIS_ENABLE_KO: 'true'
+        DORIS_ENABLE_RU: 'true'
+    steps:
+        - name: Checkout
+          # v4 (the pinned @master commit predates the `filter` input) with
+          # the full history the last-update map is computed from. Blobless
+          # keeps that affordable: only commit/tree metadata is fetched
+          # (~15MB), not every historical file version (~1.7GB).
+          uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+          with:
+              persist-credentials: false
+              ref: ${{ needs.source.outputs.source_sha }}
+              fetch-depth: 0
+              filter: blob:none
 
-            - name: Refresh docs last-update map
-              # Recompute scripts/last-update/data.json from the history fetched
-              # above, overwriting the committed copy so every deploy renders
-              # current "last updated" footers instead of waiting for the manual
-              # "Refresh Docs Last-Update Map" PR. Only the build below reads it;
-              # nothing is committed. Non-fatal on purpose - the generator writes
-              # the file only after it succeeds, so a failure leaves the committed
-              # map untouched and the site still ships.
-              run: |
-                  node scripts/last-update/generate.js \
-                    || echo "::warning::last-update refresh failed; deploying with the committed map"
+        - name: Add Chinese Fonts
+          run: |
+              sudo apt-get install ttf-mscorefonts-installer
+              sudo apt-get install fontconfig
+              fc-list :lang=zh
+              ls -lh /usr/share/fonts/
+              cp -rf ./static/fonts/* /usr/share/fonts/
+              mkfontscale
+              mkfontdir
+              fc-cache
+              fc-list :lang=zh
 
-            - name: Add Swap Space
-              run: |
-                  sudo fallocate -l 8G /mnt/swapfile2
-                  sudo chmod 600 /mnt/swapfile2
-                  sudo mkswap /mnt/swapfile2
-                  sudo swapon /mnt/swapfile2
-                  free -h
-                  swapon --show
+        - name: Use Node.js
+          uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
+          with:
+              node-version: 20
 
-            - name: Build
-              env:
-                  GITHUB_TOKEN: ${{ github.token }}
-              run: |
-                  npm install -g yarn
-                  yarn cache clean
-                  export NODE_OPTIONS=--max-old-space-size=8192
-                  yarn
-                  node ./scripts/update_github_info.js
-                  yarn key-features:generate
-                  PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
-                  touch build/.dummy
-                  cp .asf-site.yaml ./build/.asf.yaml
-                  cp versions.json ./build/
-                  ls build
-                  echo "DORIS_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+        - name: Refresh docs last-update map
+          # Recompute scripts/last-update/data.json from the history fetched
+          # above, overwriting the committed copy so every deploy renders
+          # current "last updated" footers instead of waiting for the manual
+          # "Refresh Docs Last-Update Map" PR. Only the build below reads it;
+          # nothing is committed. Non-fatal on purpose - the generator writes
+          # the file only after it succeeds, so a failure leaves the committed
+          # map untouched and the site still ships.
+          run: |
+              node scripts/last-update/generate.js \
+                || echo "::warning::last-update refresh failed; deploying with the committed map"
 
-            - name: Verify localized publishing artifacts
-              # Publishing builds every enabled locale, so every managed locale
-              # must be present and pass the strict cross-locale verification.
-              run: |
-                  for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
-                      test -s "build/${LOCALE}/index.html"
-                      node scripts/i18n/verify-static.cjs \
-                        --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
-                  done
+        - name: Add Swap Space
+          run: |
+              sudo fallocate -l 8G /mnt/swapfile2
+              sudo chmod 600 /mnt/swapfile2
+              sudo mkswap /mnt/swapfile2
+              sudo swapon /mnt/swapfile2
+              free -h
+              swapon --show
 
-            - name: Check file sizes for asf-site
-              # GitHub rejects a push holding any file over 100 MiB. Checking
-              # before the OSS upload stops such a build before anything is
-              # published. The PDFs under assets/files are removed before the push.
-              run: |
-                  if find build -type f -size +100M ! -path 'build/assets/files/*.pdf' -exec ls -l {} + | grep .; then
-                      echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
-                      exit 1
-                  fi
+        - name: Build
+          env:
+              GITHUB_TOKEN: ${{ github.token }}
+          run: |
+              npm install -g yarn
+              yarn cache clean
+              export NODE_OPTIONS=--max-old-space-size=8192
+              yarn
+              node ./scripts/update_github_info.js
+              yarn key-features:generate
+              PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
+              touch build/.dummy
+              cp .asf-site.yaml ./build/.asf.yaml
+              cp versions.json ./build/
+              ls build
 
-            #     - name: Generate PDF
-            #       run: |
-            #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
-            #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
-            #         mkdir -p ./build/assets/files/
-            #         cp *.pdf ./build/assets/files/
-            #         ls ./build/assets/files/
+        - name: Verify localized publishing artifacts
+          # Publishing builds every enabled locale, so every managed locale
+          # must be present and pass the strict cross-locale verification.
+          run: |
+              for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
+                  test -s "build/${LOCALE}/index.html"
+                  node scripts/i18n/verify-static.cjs \
+                    --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
+              done
 
-            - name: Upload files to OSS
-              id: oss-upload
-              # The action has no per-request retry (the OSS SDK it embeds never
-              # reads its RetryTimes), so a single PUT hitting the SDK's 60s
-              # timeout among tens of thousands fails the whole step - on
-              # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
-              # link. It does write its .actioninfo manifest before exiting
-              # non-zero, so the retry below only re-sends the objects that
-              # failed, plus the manifest. continue-on-error keeps the job alive
-              # for that retry; the retry step fails the job if it fails too.
-              continue-on-error: true
-              uses: ./.github/actions/aliyun-oss-website-action
-              with:
-                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  # Transfer-acceleration endpoint of the website bucket (enabled
-                  # on the bucket on 2026-09-21): the runner enters Alibaba's
-                  # backbone at the nearest PoP instead of crossing the public
-                  # internet to the bucket's region. Uploads only - the CDN keeps
-                  # its regional origin for downloads.
-                  endpoint: oss-accelerate.aliyuncs.com
-                  folder: build
-                  onlyUpload: true
-                  otherCacheControl: 0
-                  skipSetting: true
+        - name: Check file sizes for asf-site
+          # GitHub rejects a push holding any file over 100 MiB. Checking
+          # before the OSS upload stops such a build before anything is
+          # published. The PDFs under assets/files are removed before the push.
+          run: |
+              if find build -type f -size +100M ! -path 'build/assets/files/*.pdf' -exec ls -l {} + | grep .; then
+                  echo "::error::The files above exceed GitHub's 100 MiB file limit; the asf-site push would be rejected."
+                  exit 1
+              fi
 
-            - name: Upload files to OSS (retry)
-              if: steps.oss-upload.outcome == 'failure'
-              uses: ./.github/actions/aliyun-oss-website-action
-              with:
-                  accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
-                  accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
-                  bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
-                  endpoint: oss-accelerate.aliyuncs.com
-                  folder: build
-                  onlyUpload: true
-                  otherCacheControl: 0
-                  skipSetting: true
+        #     - name: Generate PDF
+        #       run: |
+        #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (English)" --outputPDFFilename="Apache Doris Docs (English).pdf" --tocOnlyH1=true
+        #         npx vitpress-generate-pdf --initialDocURLs="https://doris.apache.org/zh-CN/docs/dev/get-starting/" --paginationSelector=".pagination-nav__link--next" --contentSelector="article" --coverImage="https://cdn.selectdb.com/static/doris_logo_512_4903556647.png" --coverTitle="Apache Doris Docs (中文)" --outputPDFFilename="Apache Doris Docs (中文).pdf" --tocOnlyH1=true
+        #         mkdir -p ./build/assets/files/
+        #         cp *.pdf ./build/assets/files/
+        #         ls ./build/assets/files/
+        - name: Upload the site artifact for the isolated deployment job
+          uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+          with:
+            name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
+            path: build
+            include-hidden-files: true
+            compression-level: 0
+            if-no-files-found: error
+            retention-days: 1
 
-            - name: Remove pdf
-              run: rm -rf ./build/assets/files/*.pdf
+  deploy:
+    needs: [source, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    environment: Production
+    permissions:
+      contents: write
+    env:
+      DORIS_COMMIT: ${{ needs.source.outputs.source_sha }}
+    steps:
+      - name: Checkout trusted deployment code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          submodules: recursive
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build
+      - name: Upload files to OSS
+        id: oss-upload
+        # The action has no per-request retry (the OSS SDK it embeds never
+        # reads its RetryTimes), so a single PUT hitting the SDK's 60s
+        # timeout among tens of thousands fails the whole step - on
+        # 2026-09-21 that was 6 of 12,320 uploads after two hours on a slow
+        # link. It does write its .actioninfo manifest before exiting
+        # non-zero, so the retry below only re-sends the objects that
+        # failed, plus the manifest. continue-on-error keeps the job alive
+        # for that retry; the retry step fails the job if it fails too.
+        continue-on-error: true
+        uses: ./.github/actions/aliyun-oss-website-action
+        with:
+            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+            # Transfer-acceleration endpoint of the website bucket (enabled
+            # on the bucket on 2026-09-21): the runner enters Alibaba's
+            # backbone at the nearest PoP instead of crossing the public
+            # internet to the bucket's region. Uploads only - the CDN keeps
+            # its regional origin for downloads.
+            endpoint: oss-accelerate.aliyuncs.com
+            folder: build
+            onlyUpload: true
+            otherCacheControl: 0
+            skipSetting: true
 
-            - name: Deploy Website
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  github_token: ${{ github.token }}
-                  publish_branch: asf-site
-                  publish_dir: ./build
-                  force_orphan: true
-                  destination_dir: ./
-                  user_name: 'github-actions[bot]'
-                  user_email: 'github-actions[bot]@users.noreply.github.com'
-                  commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'
+      - name: Upload files to OSS (retry)
+        if: steps.oss-upload.outcome == 'failure'
+        uses: ./.github/actions/aliyun-oss-website-action
+        with:
+            accessKeyId: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+            accessKeySecret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+            bucket: ${{ secrets.ALIYUN_OSS_BUCKET }}
+            endpoint: oss-accelerate.aliyuncs.com
+            folder: build
+            onlyUpload: true
+            otherCacheControl: 0
+            skipSetting: true
+
+      - name: Remove pdf
+        run: rm -rf ./build/assets/files/*.pdf
+
+      - name: Deploy Website
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+        with:
+            github_token: ${{ github.token }}
+            publish_branch: asf-site
+            publish_dir: ./build
+            force_orphan: true
+            destination_dir: ./
+            user_name: 'github-actions[bot]'
+            user_email: 'github-actions[bot]@users.noreply.github.com'
+            commit_message: 'Automated deployment with doris master@${{ env.DORIS_COMMIT }}'

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/data-compaction",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/data-compaction.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/data-compaction.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "26b555a3006571847c66550e2677ddea60053a3a5555dc042856993dfeae95a6",
+    "sourceTechnicalHash": "11534b75ebe67a784b638483cb3178ee3dcdcfc6e4335efe12116a6229bc48cb",
+    "targetHash": "60eaf062249637141cd8a3d73c255c370e8c97d06b454bd001aef8113ef42b19",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:31.084Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "26b555a3006571847c66550e2677ddea60053a3a5555dc042856993dfeae95a6",
+      "targetHash": "60eaf062249637141cd8a3d73c255c370e8c97d06b454bd001aef8113ef42b19",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/data-compaction",
+        "sourcePath": "docs/key-features/data-compaction.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/data-compaction.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "26b555a3006571847c66550e2677ddea60053a3a5555dc042856993dfeae95a6",
+        "targetHash": "60eaf062249637141cd8a3d73c255c370e8c97d06b454bd001aef8113ef42b19",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

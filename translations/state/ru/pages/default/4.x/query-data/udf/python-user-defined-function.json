@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-data/udf/python-user-defined-function",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-data/udf/python-user-defined-function.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-data/udf/python-user-defined-function.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "77b7be0aae6c08d3f2182f73582a593ded616c31e00dffe76a5ddaff87500e32",
+    "sourceTechnicalHash": "ef58851edac9b78a0557b707869b6fb6d96e024c38b509fca519db4c83d5563f",
+    "targetHash": "3b198f26a3e13368284720b81114d73a1ebb37baea7bbe06fc163bf63e491ae1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:40:58.112Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "77b7be0aae6c08d3f2182f73582a593ded616c31e00dffe76a5ddaff87500e32",
+      "targetHash": "3b198f26a3e13368284720b81114d73a1ebb37baea7bbe06fc163bf63e491ae1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

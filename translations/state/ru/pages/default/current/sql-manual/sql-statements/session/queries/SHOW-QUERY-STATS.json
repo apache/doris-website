@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/session/queries/SHOW-QUERY-STATS.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "663413a48bddcd8929128109868d734c2451bb0117103d48d94d59b0635d6886",
+    "sourceTechnicalHash": "2441ffe2217c75e95a332ec9e8fe9f431a31b15d42e9d6428d203a473cb47640",
+    "targetHash": "3179a09840c2d38469e23ddfac170ba3e9552bf4332fdaaa8ab19708316dabeb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:36:48.984Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "663413a48bddcd8929128109868d734c2451bb0117103d48d94d59b0635d6886",
+      "targetHash": "3179a09840c2d38469e23ddfac170ba3e9552bf4332fdaaa8ab19708316dabeb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

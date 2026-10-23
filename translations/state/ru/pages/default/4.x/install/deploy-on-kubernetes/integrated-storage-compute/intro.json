@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "install/deploy-on-kubernetes/integrated-storage-compute/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+    "sourceTechnicalHash": "98038fec513aee6b8cf966e7bb2b1477e327e33d5dc696f4791f430de0dc7be3",
+    "targetHash": "9f917f4c87ad2581bf6d7b9c0927b6b51460f496c89b7a90d98b9ef6cbca48c4",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:29.122Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+      "targetHash": "9f917f4c87ad2581bf6d7b9c0927b6b51460f496c89b7a90d98b9ef6cbca48c4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "install/deploy-on-kubernetes/integrated-storage-compute/intro",
+        "sourcePath": "docs/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/integrated-storage-compute/intro.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "b1d5ba5805581c58b64404811d1b749b637e33214d3096b8bf5671c97a58619a",
+        "targetHash": "9f917f4c87ad2581bf6d7b9c0927b6b51460f496c89b7a90d98b9ef6cbca48c4",
+        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
+        "pr": "https://github.com/apache/doris-website/pull/4436"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/tpcds",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/tpcds.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/tpcds.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+    "sourceTechnicalHash": "0ef96fa0ad595eb3feeaa6612b7441c3e3cd9859077a6584ae35bfc01dbb4228",
+    "targetHash": "08d0ebbac430577b8e840dbe787385b618d41287886bcf7df2cb34947df90731",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:19.034Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+      "targetHash": "08d0ebbac430577b8e840dbe787385b618d41287886bcf7df2cb34947df90731",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/tpcds",
+        "sourcePath": "docs/lakehouse/best-practices/tpcds.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/tpcds.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "905fcfe2d3ddd755a336e3eb52a6f5827a954be0f5ce9956a29f6a6ba7adda0a",
+        "targetHash": "08d0ebbac430577b8e840dbe787385b618d41287886bcf7df2cb34947df90731",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

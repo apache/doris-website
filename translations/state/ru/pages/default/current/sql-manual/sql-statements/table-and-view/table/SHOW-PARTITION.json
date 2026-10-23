@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/SHOW-PARTITION.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7c10b4f4736a725fa47b7c54d3495843c57e4dd463e90b6b89b7515117d9e6de",
+    "sourceTechnicalHash": "de44745f7c379d5b88f64f85b8c5ee577abd81f6a9e128efaebd418a2213e0db",
+    "targetHash": "d7631584cea2f8dbfdd9ab5611aa658c46ff40897da3a00bd4c9815e9140e912",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:52:38.580Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7c10b4f4736a725fa47b7c54d3495843c57e4dd463e90b6b89b7515117d9e6de",
+      "targetHash": "d7631584cea2f8dbfdd9ab5611aa658c46ff40897da3a00bd4c9815e9140e912",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

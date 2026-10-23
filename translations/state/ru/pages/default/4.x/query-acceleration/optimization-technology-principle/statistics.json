@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/optimization-technology-principle/statistics",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/optimization-technology-principle/statistics.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/optimization-technology-principle/statistics.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f143c20019a97bb60c6fd8219f249b88885d94b4ac907bac72c33d5831a6cc14",
+    "sourceTechnicalHash": "735be91fea7c6028e9752db38883335b6aa44fc432a04d86fb339c5949ea9121",
+    "targetHash": "90aabf34aaf9e9303bd68d782bca881951632ade6f4b27d92c2e35e995a59f2a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:35:44.646Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f143c20019a97bb60c6fd8219f249b88885d94b4ac907bac72c33d5831a6cc14",
+      "targetHash": "90aabf34aaf9e9303bd68d782bca881951632ade6f4b27d92c2e35e995a59f2a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

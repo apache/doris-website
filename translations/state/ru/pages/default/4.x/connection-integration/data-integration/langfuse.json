@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "connection-integration/data-integration/langfuse",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/langfuse.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/langfuse.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+    "sourceTechnicalHash": "b6d69269d4b6578148f2351a7bc1a1ac202f111711ce2cfe229c06351927517b",
+    "targetHash": "11f77215a7d8cc77b85eb343f54a72c811614eda4c690a0fa0b82bfcaa048eaa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:20:01.508Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+      "targetHash": "11f77215a7d8cc77b85eb343f54a72c811614eda4c690a0fa0b82bfcaa048eaa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "connection-integration/data-integration/langfuse",
+        "sourcePath": "docs/connection-integration/data-integration/langfuse.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/langfuse.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "7925a7536000561de9559970b7d16d329ec1ba14bb0ad18a6583a627efc06c29",
+        "targetHash": "11f77215a7d8cc77b85eb343f54a72c811614eda4c690a0fa0b82bfcaa048eaa",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

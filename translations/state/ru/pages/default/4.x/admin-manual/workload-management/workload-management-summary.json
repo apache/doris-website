@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/workload-management-summary",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/workload-management-summary.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/workload-management-summary.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "953bef6c894202a558838e55f42dc8986482294f1579778c6e679afdea9091da",
+    "sourceTechnicalHash": "9c51015031ac32938556b3318200bdf16a83974903980222dfcb124797b8abf1",
+    "targetHash": "b0ee20c676029d5c5f6f40499f192c68ad3206864d75b957acda84c88b31ee0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:58.823Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "953bef6c894202a558838e55f42dc8986482294f1579778c6e679afdea9091da",
+      "targetHash": "b0ee20c676029d5c5f6f40499f192c68ad3206864d75b957acda84c88b31ee0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/workload-management/workload-management-summary",
+        "sourcePath": "docs/admin-manual/workload-management/workload-management-summary.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/workload-management-summary.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "953bef6c894202a558838e55f42dc8986482294f1579778c6e679afdea9091da",
+        "targetHash": "b0ee20c676029d5c5f6f40499f192c68ad3206864d75b957acda84c88b31ee0d",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

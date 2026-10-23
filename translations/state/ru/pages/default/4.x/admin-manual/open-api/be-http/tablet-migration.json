@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/tablet-migration",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/tablet-migration.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/tablet-migration.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2cadb867fa9b376b7882f98a0dac095c0a2ca7011f2396b3da7bc3264c895d12",
+    "sourceTechnicalHash": "6553ba4f58358d26115471e104275f5f912a50515aa173e30003004fc03ce41f",
+    "targetHash": "38c1f7556de2699629b02be1d0a1c4327b23744707065e3bfb96abb4aaf4b48a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:53.609Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2cadb867fa9b376b7882f98a0dac095c0a2ca7011f2396b3da7bc3264c895d12",
+      "targetHash": "38c1f7556de2699629b02be1d0a1c4327b23744707065e3bfb96abb4aaf4b48a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/open-api/be-http/tablet-migration",
+        "sourcePath": "docs/admin-manual/open-api/be-http/tablet-migration.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/be-http/tablet-migration.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "2cadb867fa9b376b7882f98a0dac095c0a2ca7011f2396b3da7bc3264c895d12",
+        "targetHash": "38c1f7556de2699629b02be1d0a1c4327b23744707065e3bfb96abb4aaf4b48a",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

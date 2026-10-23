@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-functions/explode-json-array-json",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-functions/explode-json-array-json.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-functions/explode-json-array-json.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9628bff83cc8794e023fe37484ea26790acc6a367242acfb7df5b6f35ac2e134",
+    "sourceTechnicalHash": "f62d7d6e47b1b6c4737729e92a2fdd199d577a6de53b21cf0214edb38ca117d5",
+    "targetHash": "d0ecc222962f900291383ea2c68b8f5e1a88a9f059312aa9a314107954ff3a4b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:01:26.801Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9628bff83cc8794e023fe37484ea26790acc6a367242acfb7df5b6f35ac2e134",
+      "targetHash": "d0ecc222962f900291383ea2c68b8f5e1a88a9f059312aa9a314107954ff3a4b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

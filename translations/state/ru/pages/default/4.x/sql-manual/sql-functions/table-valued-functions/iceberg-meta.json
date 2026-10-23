@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "97bf5c2d25ff8b4edc21c3f748601fe2c2c43b338303eed959587ab6c59b6ed3",
+    "sourceTechnicalHash": "4f4526be1c8ed672472ecd0d4417214aebb15efdd64c8ecd5c814547957bbd97",
+    "targetHash": "eb153f1e95b4fc3a15cf7cc4dea8b8e06ebd19163b5bdfb742cc5716cb370a93",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:57:07.662Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "97bf5c2d25ff8b4edc21c3f748601fe2c2c43b338303eed959587ab6c59b6ed3",
+      "targetHash": "eb153f1e95b4fc3a15cf7cc4dea8b8e06ebd19163b5bdfb742cc5716cb370a93",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/table-valued-functions/iceberg-meta",
+        "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/iceberg-meta.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "97bf5c2d25ff8b4edc21c3f748601fe2c2c43b338303eed959587ab6c59b6ed3",
+        "targetHash": "eb153f1e95b4fc3a15cf7cc4dea8b8e06ebd19163b5bdfb742cc5716cb370a93",
+        "commit": "069e0e3bb176c7bb849b0d1de5db70877753e1bc",
+        "pr": "https://github.com/apache/doris-website/pull/4454"
+      }
+    }
+  }
+}
