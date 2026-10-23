@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/map-functions/map-from-arrays.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "16e6523a39ac93a2ad60085d69a3507c276271ceac2a5c516d7dbf8e6806daa9",
+    "sourceTechnicalHash": "3166a312e1d789df07e3fa5d71ff55b1a78c18243cd71dff12701c87897dc45e",
+    "targetHash": "fac73c60eeadb123770ba19f82ccc11f8bf655ba1bf2ba2611dd6de841dd6ff5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:44:24.451Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "16e6523a39ac93a2ad60085d69a3507c276271ceac2a5c516d7dbf8e6806daa9",
+      "targetHash": "fac73c60eeadb123770ba19f82ccc11f8bf655ba1bf2ba2611dd6de841dd6ff5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
