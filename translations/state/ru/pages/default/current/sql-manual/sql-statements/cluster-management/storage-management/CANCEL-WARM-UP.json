@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/CANCEL-WARM-UP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+    "sourceTechnicalHash": "425f65a57d1f3a270c55a815acead26554ad248cf97939c1da4afab4a6bdec3e",
+    "targetHash": "eaa460939d363b0624d3a7765840eb68f1dbc37d8dde7715fe73ccd8a51a2a21",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:58:24.731Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "127048c3fcd2244a9cd1ae67b7d673f84516ea09a1bf8d4de3fe94d9b3c1cb13",
+      "targetHash": "eaa460939d363b0624d3a7765840eb68f1dbc37d8dde7715fe73ccd8a51a2a21",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

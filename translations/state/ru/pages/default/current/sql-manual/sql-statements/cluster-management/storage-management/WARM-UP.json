@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/WARM-UP",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/WARM-UP.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "62a6f1f322ac332e99cfa7824b2349830284bfd4161fbab610a2402fd0948c46",
+    "sourceTechnicalHash": "17b67eef11d79259c25cf93a8e21580d793553db0fc45b7863b5ae62142f2d85",
+    "targetHash": "12de289e133c6f0b09fef5ce1db69df04a8ab563b76e51db83ce51e269b30460",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:59:40.509Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "62a6f1f322ac332e99cfa7824b2349830284bfd4161fbab610a2402fd0948c46",
+      "targetHash": "12de289e133c6f0b09fef5ce1db69df04a8ab563b76e51db83ce51e269b30460",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

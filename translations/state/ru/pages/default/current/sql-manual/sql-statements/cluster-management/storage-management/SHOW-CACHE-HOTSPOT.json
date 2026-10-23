@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/storage-management/SHOW-CACHE-HOTSPOT.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "432130a2145bb0df3314fc4840082a4e7bac1928fa6d0ebca7752ff3c188cbb6",
+    "sourceTechnicalHash": "b2338ead349fd42e6e5d86d9e032135c13d7917bcf75e0393ab93dad221bcfa1",
+    "targetHash": "2f3ccf2d49b3b9c424a0337c59121dd8e44ffcce2f0d22ef2bb111be1d5da181",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:58:58.147Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "432130a2145bb0df3314fc4840082a4e7bac1928fa6d0ebca7752ff3c188cbb6",
+      "targetHash": "2f3ccf2d49b3b9c424a0337c59121dd8e44ffcce2f0d22ef2bb111be1d5da181",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

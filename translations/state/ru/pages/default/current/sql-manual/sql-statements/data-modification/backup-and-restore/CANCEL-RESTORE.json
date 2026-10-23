@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/CANCEL-RESTORE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cebf4f74470320060ee8be783e94f852ef7fee9ae1e2d51ad6f6b19bdef66e34",
+    "sourceTechnicalHash": "707717773c8f00e3a3ce69082b2b95dc1a616c5ea684ee882c0de0ac08a83cde",
+    "targetHash": "b259ffd435c1520b4ea090a32fdb91fcb46dfe4c59fef08d766ae3f962fefc95",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:01:07.460Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cebf4f74470320060ee8be783e94f852ef7fee9ae1e2d51ad6f6b19bdef66e34",
+      "targetHash": "b259ffd435c1520b4ea090a32fdb91fcb46dfe4c59fef08d766ae3f962fefc95",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
