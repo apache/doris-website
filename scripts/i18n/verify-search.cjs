@@ -116,7 +116,12 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             for (const label of Object.values(settings.searchContextLabels)) assert(labels.includes(label), `Missing context label: ${label}`);
             if (locale === 'ru' && probe.query === 'отчеты') {
                 const target = await newPage();
-                await open(target, links[0]);
+                // Search is stemmed: the first result may contain a different
+                // inflection. Use the exact-form fixture to test ё/е highlighting.
+                const highlightTarget = links.find(link => route(link)
+                    === `/${locale}/docs/dev/getting-started/what-is-apache-doris/`);
+                assert(highlightTarget, 'Russian exact-form highlight fixture missing from results');
+                await open(target, highlightTarget);
                 await target.locator('.theme-doc-markdown mark').first().waitFor();
                 assert((await target.locator('.theme-doc-markdown mark').allTextContents())
                     .some(text => /отчёты/i.test(text)), 'Russian target highlighting lost ё/е equivalence');

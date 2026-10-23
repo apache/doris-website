@@ -137,8 +137,11 @@ test('Korean pipeline requires an explicit locale and its own inventory before p
 
 test('Russian stays docs-first and supports all eight optional-locale combinations', () => {
     const {localeRegistry, enabledLocales} = load();
-    assert.deepEqual(localeRegistry.find(locale => locale.code === 'ru'),
+    const {translatedPages, ...russian} = localeRegistry.find(locale => locale.code === 'ru');
+    assert.deepEqual(russian,
         {code:'ru', label:'Русский', htmlLang:'ru', optional:true, ordinaryPages:false});
+    assert.equal(translatedPages.length, 7);
+    assert(translatedPages.every(page => page.startsWith('/') && !page.endsWith('/')));
     for (let mask = 0; mask < 8; mask++) {
         const selected = ['ja','ko','ru'].filter((_, i) => mask & (1 << i));
         withEnv({DORIS_ENABLE_JA:undefined,DORIS_ENABLE_KO:undefined,DORIS_ENABLE_RU:undefined,
