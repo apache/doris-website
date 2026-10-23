@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/tuning/tuning-execution/parallelism-tuning",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/tuning/tuning-execution/parallelism-tuning.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-execution/parallelism-tuning.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e4c18daa8db17510c98fb8c270e64410aa32a8e12cf2922546097d911f76aab9",
+    "sourceTechnicalHash": "9ecc35c0db771ca0bbfd3437c31c10f10db01fc68937026f5d8781c03b8bc569",
+    "targetHash": "118003bf494ec2c851c30bb8ef1b5f209e87584f9249cb66d0c1e3d8eb9232de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:35:17.320Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e4c18daa8db17510c98fb8c270e64410aa32a8e12cf2922546097d911f76aab9",
+      "targetHash": "118003bf494ec2c851c30bb8ef1b5f209e87584f9249cb66d0c1e3d8eb9232de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

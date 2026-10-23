@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/comments",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/comments.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/comments.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c4ff6782cc393008739db78ab50bd64c18a19f3988e3e6078316e4e92d0fc902",
+    "sourceTechnicalHash": "d83424395d5c4cfb75c0fe52e014da998c433a1548ec329159d6fb845fb91bd6",
+    "targetHash": "a0a997ada986e00e146dafafcf4ea1d4cd8d705df56d5a1d5cb121e6bb1f189c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:45:32.425Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c4ff6782cc393008739db78ab50bd64c18a19f3988e3e6078316e4e92d0fc902",
+      "targetHash": "a0a997ada986e00e146dafafcf4ea1d4cd8d705df56d5a1d5cb121e6bb1f189c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

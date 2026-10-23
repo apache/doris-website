@@ -183,16 +183,6 @@
 // `align-items: center` once content exceeds the viewport.
 (function centerKapaModal() {
     var STYLE_ID = 'doris-kapa-center-modal';
-    var BRAND_COLORS = [
-        'rgb(17, 166, 121)',
-        'rgb(123, 44, 191)',
-        'rgb(44, 44, 52)',
-        'rgb(18, 18, 18)',
-        'rgb(0, 102, 255)',
-        'rgb(114, 85, 165)',
-        'rgb(0, 0, 0)',
-        'rgb(55, 120, 176)',
-    ];
     // Top padding clears the sticky NavbarNext + 16px gap so the modal header
     // is never tucked under the navbar when content fills the screen.
     var CSS_TEXT =
@@ -221,37 +211,17 @@
         '@media(max-width:768px){' +
         '.mantine-Modal-inner{padding-top:176px !important;}' +
         '.mantine-Modal-content{max-height:calc(100vh - 176px - 2rem) !important;}' +
-        '}' +
-        // Mantine writes Kapa's configured project color into component-level
-        // custom properties. Point those back to the site tokens so an
-        // already-mounted widget also follows runtime theme changes.
-        '[style*="--ai-bg"]{' +
-        '--ai-bg:var(--brand-primary) !important;' +
-        '--ai-hover:var(--brand-primary-deep) !important;' +
         '}';
 
-    function syncBrandColors(shadowRoot) {
-        shadowRoot.querySelectorAll('*').forEach(function (element) {
-            var style = window.getComputedStyle(element);
-            if (
-                BRAND_COLORS.indexOf(style.color) !== -1 &&
-                element.style.getPropertyValue('color') !== 'var(--brand-primary)'
-            ) {
-                element.style.setProperty('color', 'var(--brand-primary)', 'important');
-            }
-            if (
-                BRAND_COLORS.indexOf(style.backgroundColor) !== -1 &&
-                element.style.getPropertyValue('background-color') !== 'var(--brand-primary)'
-            ) {
-                element.style.setProperty('background-color', 'var(--brand-primary)', 'important');
-            }
-            if (
-                BRAND_COLORS.indexOf(style.borderColor) !== -1 &&
-                element.style.getPropertyValue('border-color') !== 'var(--brand-primary)'
-            ) {
-                element.style.setProperty('border-color', 'var(--brand-primary)', 'important');
-            }
-        });
+    function syncProjectColor() {
+        if (!window.Kapa || typeof window.Kapa.updateConfig !== 'function') return;
+        var projectColor = window.getComputedStyle(document.documentElement)
+            .getPropertyValue('--brand-primary').trim();
+        if (!projectColor) return;
+        // Let Kapa recalculate its palette and contrasting text when the brand
+        // changes. Recoloring matching DOM colors also catches neutral black
+        // text/icons, and overriding every --ai-bg fills the attachment button.
+        window.Kapa.updateConfig({ 'data-project-color': projectColor });
     }
 
     function inject() {
@@ -263,13 +233,7 @@
             style.textContent = CSS_TEXT;
             host.shadowRoot.appendChild(style);
         }
-        if (!host.__dorisBrandObserver) {
-            host.__dorisBrandObserver = new MutationObserver(function () {
-                syncBrandColors(host.shadowRoot);
-            });
-            host.__dorisBrandObserver.observe(host.shadowRoot, { childList: true, subtree: true });
-        }
-        syncBrandColors(host.shadowRoot);
+        syncProjectColor();
         return true;
     }
 

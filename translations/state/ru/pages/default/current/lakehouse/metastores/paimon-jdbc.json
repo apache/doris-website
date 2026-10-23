@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/metastores/paimon-jdbc",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/metastores/paimon-jdbc.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/metastores/paimon-jdbc.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5011d67db7861abedc9c79a70554b9a3656fba8d9821ea466bfad93aac79d506",
+    "sourceTechnicalHash": "2348bded7e99f230e68a16f311ec0934c1c0ea4d1aa0c7fabaa1302b38709935",
+    "targetHash": "a8d6d77166005055df13c0f58ca7b12273aae7787a919d0221639fee6317d80e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:06:20.029Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5011d67db7861abedc9c79a70554b9a3656fba8d9821ea466bfad93aac79d506",
+      "targetHash": "a8d6d77166005055df13c0f58ca7b12273aae7787a919d0221639fee6317d80e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

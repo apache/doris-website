@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/full-text-search",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/full-text-search.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/full-text-search.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "faf92571eb8326bf27cba0354aea6fc5b624e137a015d3e95566e14f50d23076",
+    "sourceTechnicalHash": "1e008e0c9e9310b28c9c06cb9875cb5da70fa8cbf55688cdce54c82b280cc206",
+    "targetHash": "d77a74d95476f598dbbb8e8a93ff43b3a26927d966cd33f50f4884d492e85356",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:53:51.537Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "faf92571eb8326bf27cba0354aea6fc5b624e137a015d3e95566e14f50d23076",
+      "targetHash": "d77a74d95476f598dbbb8e8a93ff43b3a26927d966cd33f50f4884d492e85356",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 76: expected [\"link\",\"./hybrid-search\",null]; received [\"inlineCode\",null,null,\"MATCH_*\"]\nprotected node 77: expected [\"inlineCode\",null,null,\"MATCH_*\"]; received [\"link\",\"./hybrid-search\",null]"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

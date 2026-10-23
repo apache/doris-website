@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/pipeline-execution-engine",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/pipeline-execution-engine.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/pipeline-execution-engine.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f74dd5ded6b023c9afe48ef694bb2d56adb0e7733e651dd10472c40d291ab6ea",
+    "sourceTechnicalHash": "be5541dd10432449622bb818a497fa3e6f15a3b67cc71f570452a8e5f21253da",
+    "targetHash": "31d20f205ad4db140f7dbee390a647874ba94453b95dfde4de7d4cf5e24ad331",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:50:17.822Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f74dd5ded6b023c9afe48ef694bb2d56adb0e7733e651dd10472c40d291ab6ea",
+      "targetHash": "31d20f205ad4db140f7dbee390a647874ba94453b95dfde4de7d4cf5e24ad331",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

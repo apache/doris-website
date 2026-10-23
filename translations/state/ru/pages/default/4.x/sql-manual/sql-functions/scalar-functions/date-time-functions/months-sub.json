@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/date-time-functions/months-sub.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e86592e9e063465fc0204c24bf3ca20cbeebc7f400ed16d1999b87e52bee2078",
+    "sourceTechnicalHash": "74189ea5c27dd2599d50569d17f2159b20aff1e2de0e31bb3077ded96aa8a497",
+    "targetHash": "3751a69f28493d8d3553ae802f67ee6421d76e0a723a3959f53b7a23795f48f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:29:07.109Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e86592e9e063465fc0204c24bf3ca20cbeebc7f400ed16d1999b87e52bee2078",
+      "targetHash": "3751a69f28493d8d3553ae802f67ee6421d76e0a723a3959f53b7a23795f48f2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

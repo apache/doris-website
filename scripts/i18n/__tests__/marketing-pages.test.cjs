@@ -72,6 +72,7 @@ function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePa
             pageRoutes: ['/', '/download/', '/community-report/', ...pagePaths.map(page => `${page}/`)].map(page => prefix + page),
         }}}),
         '@docusaurus/router': {useLocation: () => location},
+        '@docusaurus/useIsBrowser': () => true,
         '@docusaurus/Head': ({children}) => React.createElement(React.Fragment, null, children),
         '@docusaurus/theme-common': {useThemeConfig: () => ({metadata: []})},
         '@docusaurus/theme-common/internal': {DEFAULT_SEARCH_TAG: 'default', keyboardFocusedClassName: 'keyboard',

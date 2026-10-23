@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/export/export-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/export/export-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/export/export-overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d43567d644b05c9434797141b4f4c72b8f0f41e46977a891faeb8dae6457d82b",
+    "sourceTechnicalHash": "3281aeb3f7cac85fa6b36afef91207e732edd6c75b1d9bc6d01ba603a69a854a",
+    "targetHash": "5b1887f0520406602d1798ddbccc4d3aa3fa99b656cb9d1a5e45d622d8bfa281",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:31:38.298Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d43567d644b05c9434797141b4f4c72b8f0f41e46977a891faeb8dae6457d82b",
+      "targetHash": "5b1887f0520406602d1798ddbccc4d3aa3fa99b656cb9d1a5e45d622d8bfa281",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

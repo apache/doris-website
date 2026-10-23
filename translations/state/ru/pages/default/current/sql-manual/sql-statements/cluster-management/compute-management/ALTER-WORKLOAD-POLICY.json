@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/ALTER-WORKLOAD-POLICY.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "1f437bd64af128c74a5ee9392ac43fade5270e94f4a302215b4f480a77191406",
+    "sourceTechnicalHash": "05a16cc6e14f760aec212f7a13ca57307d5106e5d32c684b70ee59d10acf40c2",
+    "targetHash": "bd1b05eec58264af0f85acd23735590d78ae86f630a2b21ea18d16fe7fc1b4c6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:55:54.944Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1f437bd64af128c74a5ee9392ac43fade5270e94f4a302215b4f480a77191406",
+      "targetHash": "bd1b05eec58264af0f85acd23735590d78ae86f630a2b21ea18d16fe7fc1b4c6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

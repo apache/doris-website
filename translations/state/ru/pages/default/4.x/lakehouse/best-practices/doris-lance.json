@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-lance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-lance.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+    "sourceTechnicalHash": "94e6357a4cfc2f835b0ab1e52aeeac4dffe042e0c42b39d31df9ea3bef5ccc47",
+    "targetHash": "f1f33dbb9544c6c2de45b12d4f50df72986f737bda5054017c4764268d7eea0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:00:17.950Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+      "targetHash": "f1f33dbb9544c6c2de45b12d4f50df72986f737bda5054017c4764268d7eea0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "lakehouse/best-practices/doris-lance",
+        "sourcePath": "docs/lakehouse/best-practices/doris-lance.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-lance.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "b223f447323da36e2d270b613e252c9694110e8be05634684f003b5450d569a8",
+        "targetHash": "f1f33dbb9544c6c2de45b12d4f50df72986f737bda5054017c4764268d7eea0d",
+        "commit": "58794d37182ee6f6efc9f2b27182f2d7066ff6f1",
+        "pr": "https://github.com/apache/doris-website/pull/4431"
+      }
+    }
+  }
+}

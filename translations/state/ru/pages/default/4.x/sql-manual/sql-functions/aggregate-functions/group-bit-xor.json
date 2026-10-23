@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "48be311748cee9ca2ad799f3ad06160b7db94caaf462d4f4b067289f11956fbf",
+    "sourceTechnicalHash": "9e5a8d84d1dd18a8ff63db7ae0ff41c4db4042fe9d53389dc27e8b509999eae5",
+    "targetHash": "5cc71cace720b6a8948736e012ef4feb6acd9cfbc0a7612b28565df838898f43",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:45:13.337Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "48be311748cee9ca2ad799f3ad06160b7db94caaf462d4f4b067289f11956fbf",
+      "targetHash": "5cc71cace720b6a8948736e012ef4feb6acd9cfbc0a7612b28565df838898f43",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/aggregate-functions/group-bit-xor",
+        "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/group-bit-xor.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "48be311748cee9ca2ad799f3ad06160b7db94caaf462d4f4b067289f11956fbf",
+        "targetHash": "5cc71cace720b6a8948736e012ef4feb6acd9cfbc0a7612b28565df838898f43",
+        "commit": "e64e88a449c48a7250ca10a7f4c77f0fdcd3998f",
+        "pr": "https://github.com/apache/doris-website/pull/4446"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/ai-agg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/ai-agg.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+    "sourceTechnicalHash": "fe0ecc5d81114d8848c2a2c21b79c1c0cc4c8c6eb45f32dc8c3b9fe8997a32d1",
+    "targetHash": "e50a0c94118acb6d7108ee77095980fdbaf5693cbe43a0886882fe83ae008088",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:54:04.484Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "88c0b72b8baf173a34d2d742bebd69bd5f417c6e53872ff099cac46a2d551d9b",
+      "targetHash": "e50a0c94118acb6d7108ee77095980fdbaf5693cbe43a0886882fe83ae008088",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

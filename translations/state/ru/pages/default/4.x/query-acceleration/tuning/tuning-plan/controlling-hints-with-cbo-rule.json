@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "223d57211fd9494299651b2060c08ba89d7b208a40c7437e864f8c3e858c3c5d",
+    "sourceTechnicalHash": "f8cd45f7310e4886d85148cdf51d6672c32d087df33d260b4cef1f1a06b1c9fe",
+    "targetHash": "5a9549b6fa016e85f96d115da8464ab82d7655b218b3ca7e9a4fa59a1026f039",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:32.952Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "223d57211fd9494299651b2060c08ba89d7b208a40c7437e864f8c3e858c3c5d",
+      "targetHash": "5a9549b6fa016e85f96d115da8464ab82d7655b218b3ca7e9a4fa59a1026f039",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule",
+        "sourcePath": "docs/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/tuning/tuning-plan/controlling-hints-with-cbo-rule.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "223d57211fd9494299651b2060c08ba89d7b208a40c7437e864f8c3e858c3c5d",
+        "targetHash": "5a9549b6fa016e85f96d115da8464ab82d7655b218b3ca7e9a4fa59a1026f039",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

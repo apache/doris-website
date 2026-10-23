@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/storages/azure-blob",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/storages/azure-blob.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/storages/azure-blob.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+    "sourceTechnicalHash": "ea63f52129ba68abaf2eebaaeaa863378a5525a522d46fe3b41dadc481ce4fb0",
+    "targetHash": "2c072b3b23f3b21a375706afbfbe6adde651a442cba9a6e25a3790a673969851",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:06:27.349Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2dda2db8a8809e66901a8793d3d7b02b43d7319b2f661cbe4e517b6085e36356",
+      "targetHash": "2c072b3b23f3b21a375706afbfbe6adde651a442cba9a6e25a3790a673969851",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

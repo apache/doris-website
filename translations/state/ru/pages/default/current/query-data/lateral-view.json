@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-data/lateral-view",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-data/lateral-view.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-data/lateral-view.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "d075331112ffc2bde21d685b94d295c96496a212a638daf01d1cf28e2dc362c6",
+    "sourceTechnicalHash": "2ca75491271c1841fa3392ecf3896b640b201532176474b750606ede3b910638",
+    "targetHash": "0e9b9252a5c336a4cb5feac82343d0593612a966639d0ef61fcfaa5d9e6de568",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:43:27.654Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d075331112ffc2bde21d685b94d295c96496a212a638daf01d1cf28e2dc362c6",
+      "targetHash": "0e9b9252a5c336a4cb5feac82343d0593612a966639d0ef61fcfaa5d9e6de568",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

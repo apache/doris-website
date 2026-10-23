@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-iceberg-capability-matrix",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-iceberg-capability-matrix.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-iceberg-capability-matrix.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "c8ba4835ddcdadb92b7c3ce9f6dcd8fa18fb8912f649e299cf7955de0aae216d",
+    "sourceTechnicalHash": "c2ec3e396b1c5b545380fe8bcd4525a2af9d745123cae92bb639ca0f2a5da88e",
+    "targetHash": "fd4715df888be27b0b8d1c7f849eceab4a602657b44b7bfedf903bced02ced0d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:53:50.965Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c8ba4835ddcdadb92b7c3ce9f6dcd8fa18fb8912f649e299cf7955de0aae216d",
+      "targetHash": "fd4715df888be27b0b8d1c7f849eceab4a602657b44b7bfedf903bced02ced0d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

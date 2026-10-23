@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7435826f3a44b3a94ef205e7eacc79211a5b5bf3b6520910e853d7326e8bebbb",
+    "sourceTechnicalHash": "d4c9508a8af7e5c61c1bb5725276750ea0ed215c62ad052aa82ec0fd37c474a8",
+    "targetHash": "b1e627992d01f5ed7157b2c404b947552356c24bf2e67cc0fc46f38251774ef0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:16:16.443Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7435826f3a44b3a94ef205e7eacc79211a5b5bf3b6520910e853d7326e8bebbb",
+      "targetHash": "b1e627992d01f5ed7157b2c404b947552356c24bf2e67cc0fc46f38251774ef0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

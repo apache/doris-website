@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-similarity",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-similarity.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-similarity.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3502c3fc5686f045b3d4e0d6946bfb7fec2f1612d683f95c6920124f439ecbd5",
+    "sourceTechnicalHash": "1f6943560b3761bfb95cdd2ce5e7092fb338a9ed8f5abcebf00f7cd58d7a6da1",
+    "targetHash": "4fa0eb4dd7aea196c409f40871ed2956e7fed4c3e8f2396516a890baf07f398c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:28:37.709Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3502c3fc5686f045b3d4e0d6946bfb7fec2f1612d683f95c6920124f439ecbd5",
+      "targetHash": "4fa0eb4dd7aea196c409f40871ed2956e7fed4c3e8f2396516a890baf07f398c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

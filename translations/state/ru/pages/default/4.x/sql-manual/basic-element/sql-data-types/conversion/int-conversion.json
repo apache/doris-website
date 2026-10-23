@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/int-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/int-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/conversion/int-conversion.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "99466c529ec883db2d4809c761570737bc4a96f0e61d02e6cdcf2064c9191587",
+    "sourceTechnicalHash": "7dc7a7340a02735ef18abec82e9437397be8e5796cfc4b792513efe87b675fe3",
+    "targetHash": "aad67075daafd092935bc5702f4d8fab0cae13e08f9bd40a53f11ea144e67c08",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:36:00.553Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "99466c529ec883db2d4809c761570737bc4a96f0e61d02e6cdcf2064c9191587",
+      "targetHash": "aad67075daafd092935bc5702f4d8fab0cae13e08f9bd40a53f11ea144e67c08",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

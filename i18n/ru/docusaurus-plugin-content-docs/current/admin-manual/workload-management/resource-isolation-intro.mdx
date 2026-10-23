@@ -1,0 +1,43 @@
+---
+{
+    "title": "Изоляция ресурсов",
+    "language": "ru",
+    "description": "Навигация по главе об изоляции ресурсов в Apache Doris: Resource Group и Compute Group для физической изоляции, Workload Group для логической изоляции внутри процесса."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Doris предоставляет два взаимодополняющих уровня изоляции ресурсов: физическую изоляцию на уровне узлов и логическую изоляцию внутри одного процесса. Выбирайте подходящий механизм в зависимости от архитектуры развёртывания и требований к изоляции.
+
+## Физическая изоляция {#physical-isolation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Resource Group"
+    description="В архитектуре с совмещёнными хранением и вычислениями разделяйте узлы BE на изолированные группы с помощью тегов, чтобы обеспечить разделение чтения и записи и поддержку сценариев с несколькими арендаторами."
+    link="resource-group"
+/>
+
+<GettingStartedCard
+    title="Compute Group"
+    description="В архитектуре с разделением хранения и вычислений создавайте именованные вычислительные группы и управляйте ими, чтобы обеспечить строгую изоляцию различных рабочих нагрузок на вычислительном уровне."
+    link="compute-group"
+/>
+</div>
+
+## Логическая изоляция {#logical-isolation}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Workload Group"
+    description="Ограничивайте ресурсы CPU, памяти и I/O для запросов или пользовательских сеансов внутри одного процесса BE без добавления новых узлов."
+    link="workload-group"
+/>
+
+<GettingStartedCard
+    title="Привязка Workload Group к Compute Group"
+    description="Привяжите Workload Group к указанной Compute Group, объединив физическое и логическое управление ресурсами для детальной настройки изоляции между арендаторами."
+    link="workload-group-bind-compute-group"
+/>
+</div>

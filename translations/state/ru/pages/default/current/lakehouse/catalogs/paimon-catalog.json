@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/paimon-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/paimon-catalog.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/paimon-catalog.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "09e66ae723ba8d6d8fd67bbdfd7a693dc38a071ae93ade685e70769d12b9f2c9",
+    "sourceTechnicalHash": "04feaa6546552ae91b90328754f3d7b30e000dfad6d142269fa1a0d66fd026d8",
+    "targetHash": "375ba2b054a722a621676667238fd41696818f0686d3354834006708df7cb2f0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:11:40.540Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "09e66ae723ba8d6d8fd67bbdfd7a693dc38a071ae93ade685e70769d12b9f2c9",
+      "targetHash": "375ba2b054a722a621676667238fd41696818f0686d3354834006708df7cb2f0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 234: expected [\"code\",\"sql\",null,\"CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (\\n    'type' = 'paimon',\\n    'paimon.catalog.type' = 'filesystem',\\n    'warehouse' = 'obs://bucket/regression/paimon1',\\n    'obs.region' = 'cn-north-4',\\n    'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',\\n    'obs.access_key' = '<ak>',\\n    'obs.secret_key' = '<sk>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (\\n    'type' = 'paimon',\\n    'paimon.catalog.type' = 'filesystem',\\n    'warehouse' = 'obs://bucket/regression/paimon1',\\n    'obs.region' = 'cn-north-4',\\n    'obs.endpoint' = 'obs.cn-north-4.myhuaicloud.com',\\n    'obs.access_key' = '<ak>',\\n    'obs.secret_key' = '<sk>'\\n);\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 234: expected [\"code\",\"sql\",null,\"CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (\\n    'type' = 'paimon',\\n    'paimon.catalog.type' = 'filesystem',\\n    'warehouse' = 'obs://bucket/regression/paimon1',\\n    'obs.region' = 'cn-north-4',\\n    'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',\\n    'obs.access_key' = '<ak>',\\n    'obs.secret_key' = '<sk>'\\n);\"]; received [\"code\",\"sql\",null,\"CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (\\n    'type' = 'paimon',\\n    'paimon.catalog.type' = 'filesystem',\\n    'warehouse' = 'obs://bucket/regression/paimon1',\\n    'obs.region' = 'cn-north-4',\\n    'obs.endpoint' = 'obs.cn-north-4.myhuaicloud.com',\\n    'obs.access_key' = '<ak>',\\n    'obs.secret_key' = '<sk>'\\n);\"]"
+            }
+          ]
+        }
+      ],
+      "localCorrections": [
+        {
+          "at": "2026-10-21T18:13:57.122377+00:00",
+          "sourceAttempt": 3,
+          "before": "obs.cn-north-4.myhuaicloud.com",
+          "after": "obs.cn-north-4.myhuaweicloud.com",
+          "beforeTargetHash": "47e91a9ee4b91a0077389d5c30ff44a8f547c705fa0fcb4c4c39dd561d0aae86",
+          "afterTargetHash": "375ba2b054a722a621676667238fd41696818f0686d3354834006708df7cb2f0",
+          "reason": "Restored the Huawei OBS endpoint verbatim from the English SQL example. Original third-attempt output and its protected-content warning are retained; the corrected document is revalidated without another model call."
+        }
+      ]
+    }
+  }
+}

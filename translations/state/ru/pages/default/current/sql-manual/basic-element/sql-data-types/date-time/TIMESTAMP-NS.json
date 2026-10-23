@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMP-NS.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "1152ee5f855787b43f5e5aafd6009db42f4e3ae88ee671db6b297083c5c22cd2",
+    "sourceTechnicalHash": "6d0ad064fbb4283a63228d248cdef953ad0c841439100968078ac94b7d86b5a1",
+    "targetHash": "19749369e2813378bf4da52691f2de4f8a9d06a9489360c78e134ae6dabb3229",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:50:25.679Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1152ee5f855787b43f5e5aafd6009db42f4e3ae88ee671db6b297083c5c22cd2",
+      "targetHash": "19749369e2813378bf4da52691f2de4f8a9d06a9489360c78e134ae6dabb3229",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

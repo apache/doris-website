@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/integrations/aws-iam-role",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/integrations/aws-iam-role.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+    "sourceTechnicalHash": "9acc14fff6705932f0ebd5caa1134b3abab35f1aa65a4fd9c4d104c6be74f720",
+    "targetHash": "ae27b25e6371cd7966953be67a400a369a00adc6fb367cae0b3bc65bf43a5eb1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:37.239Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+      "targetHash": "ae27b25e6371cd7966953be67a400a369a00adc6fb367cae0b3bc65bf43a5eb1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/integrations/aws-iam-role",
+        "sourcePath": "docs/admin-manual/auth/integrations/aws-iam-role.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/integrations/aws-iam-role.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "5fa2e37e21fc665b36e342c9eb1b7f4483f9d0b7e37df9af5d372e32cbea3bc8",
+        "targetHash": "ae27b25e6371cd7966953be67a400a369a00adc6fb367cae0b3bc65bf43a5eb1",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

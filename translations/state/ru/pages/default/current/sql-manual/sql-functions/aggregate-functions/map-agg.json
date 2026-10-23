@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/map-agg",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/map-agg.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/map-agg.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "cee73403d9be2d30012c88172ffa320890497b88cb58cca2740ea5423c56676f",
+    "sourceTechnicalHash": "b2c4a2f4e8b894a66f90bea802fceaab2c9b061cfab446771165937f68d9ee1d",
+    "targetHash": "de499a5dc940e6059162bcc80547464f3441606e8ea7dd2d7b798946b367b845",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:22:52.757Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cee73403d9be2d30012c88172ffa320890497b88cb58cca2740ea5423c56676f",
+      "targetHash": "de499a5dc940e6059162bcc80547464f3441606e8ea7dd2d7b798946b367b845",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

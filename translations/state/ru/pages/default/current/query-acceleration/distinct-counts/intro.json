@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/distinct-counts/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/distinct-counts/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/distinct-counts/intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "96893486f34c42d91a3509dc06b84dbd82eb646c2a2486f35209464bebd4b064",
+    "sourceTechnicalHash": "32acc341e3d424c901a10defa6030e1d1dac03277ed5da658489c8b1493c1989",
+    "targetHash": "da8728d9404d21b7a71bf9ebcd5916d9a9a9694913759f6dfff929daab4a51f2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:21:39.602Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "96893486f34c42d91a3509dc06b84dbd82eb646c2a2486f35209464bebd4b064",
+      "targetHash": "da8728d9404d21b7a71bf9ebcd5916d9a9a9694913759f6dfff929daab4a51f2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-last-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-last-index.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/array-functions/array-last-index.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a4c9cf1d038b4e2845b3a73c36ca94874b1e1ed2d19d3da7abd4a47e13d9e8b2",
+    "sourceTechnicalHash": "558f9550aa01ada70b0ddcb3bd5873edfff3df01c53450c31c4caf989ec29898",
+    "targetHash": "9d1a71f5600b8a6675eab024f6d4d1c7a43f3d843e877ac07680ec13e82dd6b3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:58:16.142Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a4c9cf1d038b4e2845b3a73c36ca94874b1e1ed2d19d3da7abd4a47e13d9e8b2",
+      "targetHash": "9d1a71f5600b8a6675eab024f6d4d1c7a43f3d843e877ac07680ec13e82dd6b3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/variance",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/variance.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/variance.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b2dd309e3396021cafd4e5609fe05804c87da4f95b07b6ce5b95cdef9d928d95",
+    "sourceTechnicalHash": "7da86d4ba895fd7140e3fa754cc7f8557fd4838d14178847ae3127e86df2341e",
+    "targetHash": "830debd3653dd7467d857adf983b13924019c129e37973db917540ca1fd75dd3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:26:47.500Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b2dd309e3396021cafd4e5609fe05804c87da4f95b07b6ce5b95cdef9d928d95",
+      "targetHash": "830debd3653dd7467d857adf983b13924019c129e37973db917540ca1fd75dd3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

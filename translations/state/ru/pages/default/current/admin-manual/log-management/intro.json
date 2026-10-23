@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/log-management/intro",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/log-management/intro.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/log-management/intro.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "9ea46af7a5ae4c57f302126815e88ac6d735d3cf013d5965b9bded6d6385f329",
+    "sourceTechnicalHash": "d06303522e3bf8bf6c87559e2d6d53766e46ae98859ae293747e9d61845d3ba2",
+    "targetHash": "19044e02175cf3ee19b7274b59c5028607f653b78e9c45b5938c99b18a1a32d2",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:10:08.733Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9ea46af7a5ae4c57f302126815e88ac6d735d3cf013d5965b9bded6d6385f329",
+      "targetHash": "19044e02175cf3ee19b7274b59c5028607f653b78e9c45b5938c99b18a1a32d2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

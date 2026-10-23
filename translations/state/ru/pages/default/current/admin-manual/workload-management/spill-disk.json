@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/workload-management/spill-disk",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/workload-management/spill-disk.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/spill-disk.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "0421aca6f76dd39a7c3fa6164bccd308c27a6d6d5c147b5f74dbddc443fba593",
+    "sourceTechnicalHash": "c9151dbb7dc766a16c5cd167ca86a02e26a1d0ead76e8ae1b543001d2d0cb579",
+    "targetHash": "b478e70ba8dc4b9ac4f905830a2ed382ee97066a323bd0e9e86c9c0296e2e76c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:51:43.911Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0421aca6f76dd39a7c3fa6164bccd308c27a6d6d5c147b5f74dbddc443fba593",
+      "targetHash": "b478e70ba8dc4b9ac4f905830a2ed382ee97066a323bd0e9e86c9c0296e2e76c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/data-source/google-cloud-storage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/data-source/google-cloud-storage.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/google-cloud-storage.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b9e69e4038bdab0b313343414b46fc777f26321137ad700689fbca132d9c9d19",
+    "sourceTechnicalHash": "85b76277bc835d3e05927b9510a6cdc900596d7ffd7e144021a9418a2702656d",
+    "targetHash": "154f621b7010053372b7bb5bf3e0fbed1ec005aeac38e6ccdf30b5f66a6b3dac",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:12:18.516Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b9e69e4038bdab0b313343414b46fc777f26321137ad700689fbca132d9c9d19",
+      "targetHash": "154f621b7010053372b7bb5bf3e0fbed1ec005aeac38e6ccdf30b5f66a6b3dac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

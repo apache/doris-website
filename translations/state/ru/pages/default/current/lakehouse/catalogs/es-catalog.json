@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/es-catalog",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/es-catalog.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/es-catalog.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "75b3ff0fc8ed8bfc79c972598022a4449beb323cd75336e74eff18951336e189",
+    "sourceTechnicalHash": "d40a9e016db97de704b47359f720e5367365f3aa5dea28a659eebbabd4a615fa",
+    "targetHash": "9ab1006e03f43949b376431bfcfb4d6f1c02ce2e928a97d2f8258c3de58edaee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:56:38.107Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "75b3ff0fc8ed8bfc79c972598022a4449beb323cd75336e74eff18951336e189",
+      "targetHash": "9ab1006e03f43949b376431bfcfb4d6f1c02ce2e928a97d2f8258c3de58edaee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

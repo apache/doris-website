@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/workload-management/job-scheduler",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/workload-management/job-scheduler.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/workload-management/job-scheduler.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3b700dc993a19acbdf63305103a049b2ee51f9279a42a192f39cc99273db44d9",
+    "sourceTechnicalHash": "bb072e7dfba9b3ed2b9d820f109de70a1d7e9115a860abbedba33aa93663c6b7",
+    "targetHash": "3d52274e505b765ec5eaa58b42c18ff203823cb19cd64abf55fac8178cce62d6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:19:58.016Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3b700dc993a19acbdf63305103a049b2ee51f9279a42a192f39cc99273db44d9",
+      "targetHash": "3d52274e505b765ec5eaa58b42c18ff203823cb19cd64abf55fac8178cce62d6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/workload-management/job-scheduler",
+        "sourcePath": "docs/admin-manual/workload-management/job-scheduler.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/workload-management/job-scheduler.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "3b700dc993a19acbdf63305103a049b2ee51f9279a42a192f39cc99273db44d9",
+        "targetHash": "3d52274e505b765ec5eaa58b42c18ff203823cb19cd64abf55fac8178cce62d6",
+        "commit": "8046b263706ddcdf890bf51f6efec7f3ea77bf66",
+        "pr": "https://github.com/apache/doris-website/pull/4433"
+      }
+    }
+  }
+}

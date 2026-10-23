@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/rowsets",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/rowsets.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/rowsets.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b5aa606c0c9ff215343aa66426e0353ac8d57ecb57647ec61e77b34d80bf21d1",
+    "sourceTechnicalHash": "96268f83e6545b2009a0737db05e6e95e4bb2614dd7ac5e51eda620426db1485",
+    "targetHash": "5d4fca08b004c2acd1dc2ad1dde2cbf22fc43a87bec3790e947ca0a55dc9082d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:42:36.333Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b5aa606c0c9ff215343aa66426e0353ac8d57ecb57647ec61e77b34d80bf21d1",
+      "targetHash": "5d4fca08b004c2acd1dc2ad1dde2cbf22fc43a87bec3790e947ca0a55dc9082d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

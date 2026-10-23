@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract-double.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f54d097449fd56c97edd70573fc6323ddaef9007aec29fe507ac26a658c896de",
+    "sourceTechnicalHash": "0abb068ada15d58078a8eb541ab694661f5bafae176db6e6b61aa4d06293abac",
+    "targetHash": "a3b089e96334ee7caa6dce0e7eaf7dffe3bce4f1fc5f622f221ae2aca1574cf7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:20:17.842Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f54d097449fd56c97edd70573fc6323ddaef9007aec29fe507ac26a658c896de",
+      "targetHash": "a3b089e96334ee7caa6dce0e7eaf7dffe3bce4f1fc5f622f221ae2aca1574cf7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

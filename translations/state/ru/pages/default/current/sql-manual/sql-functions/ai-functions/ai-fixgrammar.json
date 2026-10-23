@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/ai-functions/ai-fixgrammar",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/ai-functions/ai-fixgrammar.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/ai-fixgrammar.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "83a87b0780d08ca96d02800da4e411e339af0967318c8b402cdfafbbf9b27c6a",
+    "sourceTechnicalHash": "ff938447673753587175f41389ea798e1e80bce0c0d1507390e9c1a1aaac8840",
+    "targetHash": "d903566986907925418eeaec48923ffa3252594d81d4fdfcbdbffd8330714853",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:27:22.505Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "83a87b0780d08ca96d02800da4e411e339af0967318c8b402cdfafbbf9b27c6a",
+      "targetHash": "d903566986907925418eeaec48923ffa3252594d81d4fdfcbdbffd8330714853",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

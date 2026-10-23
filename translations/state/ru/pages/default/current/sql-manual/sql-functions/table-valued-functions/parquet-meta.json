@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/parquet-meta",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/parquet-meta.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+    "sourceTechnicalHash": "bd95cb35dd1207b90dc3e6a5d20c76e65b271955d6cc029d661dfc47758b6b3b",
+    "targetHash": "51033459c091208f0a740805cdf11052df131217ad15bd07183e3165c7778ae6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:33:48.582Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a19a40cabaee920613dce316160b12f14584b837de937ff4fc2bf37304190adb",
+      "targetHash": "51033459c091208f0a740805cdf11052df131217ad15bd07183e3165c7778ae6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: ETIMEDOUT"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

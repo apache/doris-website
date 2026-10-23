@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+    "sourceTechnicalHash": "985ad941350d45763c0b015252d6c47ce5603f16024f672394cc3f8ad8e8ce3e",
+    "targetHash": "27d4a7cde7826d12cf6489c372c7db5ef66a944a3a5b676923de457ca240210b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:47:37.321Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+      "targetHash": "27d4a7cde7826d12cf6489c372c7db5ef66a944a3a5b676923de457ca240210b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

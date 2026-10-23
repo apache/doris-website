@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/strcmp",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/strcmp.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/strcmp.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "b3514d33281a8946965b2344749c23304b8441e8c7730004f1d979c248859d06",
+    "sourceTechnicalHash": "72345bf61d589d6074888b02898e236a990a17cf836a1abc991e1633d9591f09",
+    "targetHash": "abe155f3f939d6aed0e36ffe3d5f4c939834f0f51c64e89af95c53fee596b03c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:49:58.809Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b3514d33281a8946965b2344749c23304b8441e8c7730004f1d979c248859d06",
+      "targetHash": "abe155f3f939d6aed0e36ffe3d5f4c939834f0f51c64e89af95c53fee596b03c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

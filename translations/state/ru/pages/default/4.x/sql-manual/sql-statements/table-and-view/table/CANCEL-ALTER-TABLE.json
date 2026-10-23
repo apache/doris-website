@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0d02229a6c3c5b9b81a09d30de0b72f9a481a5cee7393b36bd62998a616e1221",
+    "sourceTechnicalHash": "6e063eb9daa1a9ec7800481d37f123427541ae388333f30e1ab8f64829730f99",
+    "targetHash": "6825d245528ac4f79a149b161d970d9aef25562d0502a0706c5f4e4aca604341",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:04.181Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0d02229a6c3c5b9b81a09d30de0b72f9a481a5cee7393b36bd62998a616e1221",
+      "targetHash": "6825d245528ac4f79a149b161d970d9aef25562d0502a0706c5f4e4aca604341",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE",
+        "sourcePath": "docs/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/table/CANCEL-ALTER-TABLE.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "0d02229a6c3c5b9b81a09d30de0b72f9a481a5cee7393b36bd62998a616e1221",
+        "targetHash": "6825d245528ac4f79a149b161d970d9aef25562d0502a0706c5f4e4aca604341",
+        "commit": "ce24bd33dc04ac6b20bee9fd337ed9e8b6433ad0",
+        "pr": "https://github.com/apache/doris-website/pull/4456"
+      }
+    }
+  }
+}

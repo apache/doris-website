@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/performance-tuning-overview/tuning-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/performance-tuning-overview/tuning-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/performance-tuning-overview/tuning-overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "837f255823ff7f826c6e268c17a59039401bfbd7f5eb62e19e6af3eafbbde811",
+    "sourceTechnicalHash": "527c7889e9eab34dd71188a2650ff72c38ae44bdc4d7124a9c587239165208c1",
+    "targetHash": "4c54896aebd631f26cb2a74446c7c0566ea7f2962be051766bd15912c029b0fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:29:48.608Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "837f255823ff7f826c6e268c17a59039401bfbd7f5eb62e19e6af3eafbbde811",
+      "targetHash": "4c54896aebd631f26cb2a74446c7c0566ea7f2962be051766bd15912c029b0fa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/doris-aws-s3tables",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/doris-aws-s3tables.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/doris-aws-s3tables.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "ff9b6a19eeadf33f02b9a3f616e5d1b6f2117dbe50a726990c47cfd56895c7b7",
+    "sourceTechnicalHash": "2bb217d583e66168b133d654bed3be06e4ef08d54d58dda8912c6f019d0c4ec5",
+    "targetHash": "6604c3d09c30f8b21f33d1ceafa79ba72ebade3c7e431d9e745c0a48d2a7b448",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:52:10.243Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ff9b6a19eeadf33f02b9a3f616e5d1b6f2117dbe50a726990c47cfd56895c7b7",
+      "targetHash": "6604c3d09c30f8b21f33d1ceafa79ba72ebade3c7e431d9e745c0a48d2a7b448",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

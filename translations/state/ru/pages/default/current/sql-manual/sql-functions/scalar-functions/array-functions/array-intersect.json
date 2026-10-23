@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-intersect",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-intersect.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-intersect.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "bcfb999781182cfddf20b30ffb6997b65fd5e6bd6a2691bbadbed44ba7825c8b",
+    "sourceTechnicalHash": "c2de4928a947051e8fcbc2c1376717dbe2a0d0338c6c1a6e90dffb4407084897",
+    "targetHash": "d2d7865d5dc77a5014a2486ffd445662bba25e4f7792478bb6a315cc8352fcc1",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:42:37.080Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bcfb999781182cfddf20b30ffb6997b65fd5e6bd6a2691bbadbed44ba7825c8b",
+      "targetHash": "d2d7865d5dc77a5014a2486ffd445662bba25e4f7792478bb6a315cc8352fcc1",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

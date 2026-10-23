@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/embedding",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/embedding.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/embedding.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+    "sourceTechnicalHash": "dd2cbb6c5237830b2b9ca6c69ea20b8c2ea6d5dc6ba4254c90bdb8f3d1a10fcf",
+    "targetHash": "c21eb1d19432a5d14633167dbfcbe44a85688a137bb29b0fc702c04d40cf952e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:31.573Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+      "targetHash": "c21eb1d19432a5d14633167dbfcbe44a85688a137bb29b0fc702c04d40cf952e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/embedding",
+        "sourcePath": "docs/key-features/embedding.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/embedding.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "d8f115ca21c0970891cf97090614c9ad262326457583455f9767c2eae0405f1e",
+        "targetHash": "c21eb1d19432a5d14633167dbfcbe44a85688a137bb29b0fc702c04d40cf952e",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

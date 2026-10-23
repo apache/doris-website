@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/second-floor.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e903cebbd8a85fa4bbc5a4110baf06894e491df95f87f9cb2574d03280c8f044",
+    "sourceTechnicalHash": "b352c72bc59aebd39730442427b571ba478aa9c11e660593536947d8f4525a05",
+    "targetHash": "96cf1b7e2a85a45280969e6b06504d02ce1e4acdee3ca40108b96ed4ede1955c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:04:55.790Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e903cebbd8a85fa4bbc5a4110baf06894e491df95f87f9cb2574d03280c8f044",
+      "targetHash": "96cf1b7e2a85a45280969e6b06504d02ce1e4acdee3ca40108b96ed4ede1955c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

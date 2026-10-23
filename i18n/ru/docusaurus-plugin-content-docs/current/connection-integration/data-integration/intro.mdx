@@ -1,0 +1,261 @@
+---
+{
+    "title": "Интеграция данных",
+    "language": "ru",
+    "description": "Интеграция Apache Doris с инструментами BI, синхронизации данных, потоковой обработки, анализа журналов и обеспечения наблюдаемости, разработки и управления базами данных, а также моделирования данных."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+# Интеграция данных {#data-integration}
+
+Apache Doris поддерживает интеграцию с широким спектром инструментов экосистемы данных. Выберите подходящий инструмент для своих задач, чтобы использовать Doris для визуализации данных, миграции и синхронизации данных, загрузки в реальном времени, анализа журналов и данных наблюдаемости, разработки и управления базами данных, а также моделирования и преобразования данных.
+
+## BI и визуальная аналитика {#bi-and-visual-analytics}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Apache Superset"
+    icon="/images/next/connection-integration/data-integration/logos/apache-superset.png"
+    description="Настройте источник данных Doris в Superset для самостоятельного анализа данных, построения диаграмм и создания дашбордов"
+    link="./apache-superset"
+/>
+
+<GettingStartedCard
+    title="Metabase"
+    icon="/images/next/connection-integration/data-integration/logos/metabase.svg"
+    description="Выполняйте запросы к Doris через Metabase Doris Driver и создавайте интерактивные аналитические дашборды"
+    link="./metabase"
+/>
+
+<GettingStartedCard
+    title="FineBI"
+    icon="/images/next/connection-integration/data-integration/logos/finebi.svg"
+    description="Подключите FineBI к Doris для моделирования данных, многомерного анализа и создания дашбордов"
+    link="./finebi"
+/>
+
+<GettingStartedCard
+    title="Power BI"
+    icon="/images/next/connection-integration/data-integration/logos/powerbi.svg"
+    description="Выполняйте запросы к данным Doris или импортируйте их в Power BI Desktop через коннектор Doris"
+    link="./powerbi"
+/>
+
+<GettingStartedCard
+    title="Tableau"
+    icon="/images/next/connection-integration/data-integration/logos/tableau.svg"
+    description="Подключайтесь к Doris через официальный коннектор MySQL для Tableau и создавайте визуализации на основе данных Doris"
+    link="./tableau"
+/>
+
+<GettingStartedCard
+    title="QuickSight"
+    icon="/images/next/connection-integration/data-integration/logos/quicksight.svg"
+    description="Используйте источник данных MySQL в AWS QuickSight для подключения к Doris в режиме прямых запросов или импорта"
+    link="./quicksight"
+/>
+
+<GettingStartedCard
+    title="Quick BI"
+    icon="/images/next/connection-integration/data-integration/logos/quickbi.png"
+    description="Создавайте источники и наборы данных Doris в Alibaba Cloud Quick BI для построения визуальных аналитических отчётов"
+    link="./quickbi"
+/>
+
+<GettingStartedCard
+    title="Smartbi"
+    icon="/images/next/connection-integration/data-integration/logos/smartbi.jpeg"
+    description="Интегрируйте Smartbi с Doris для подключения к данным, моделирования и визуального анализа"
+    link="./smartbi"
+/>
+</div>
+
+## Разработка и управление базами данных {#database-development-and-management}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="DataGrip"
+    icon="/images/next/connection-integration/data-integration/logos/datagrip.svg"
+    description="Используйте источник данных MySQL в DataGrip для подключения к Doris, выполнения запросов к внутреннему и внешнему Catalog и управления ими"
+    link="./datagrip"
+/>
+
+<GettingStartedCard
+    title="DBeaver"
+    icon="/images/next/connection-integration/data-integration/logos/dbeaver.svg"
+    description="Подключайтесь к Doris через драйвер MySQL в DBeaver для выполнения SQL-запросов и визуального управления базой данных"
+    link="./dbeaver"
+/>
+
+<GettingStartedCard
+    title="CloudDM"
+    icon="/images/next/connection-integration/data-integration/logos/clouddm.svg"
+    description="Управляйте источниками данных Doris с помощью CloudDM, который поддерживает запросы, визуальное редактирование, управление доступом и CI/CD для баз данных"
+    link="./clouddm"
+/>
+
+<GettingStartedCard
+    title="LibreDB Studio"
+    icon="/images/next/connection-integration/data-integration/logos/libredb-studio.svg"
+    description="Подключайтесь к Doris, выбрав тип подключения MySQL в LibreDB Studio, чтобы просматривать внутренний Catalog и выполнять SQL-запросы в браузере"
+    link="./libredb-studio"
+/>
+</div>
+
+## Миграция, синхронизация и массовая загрузка данных {#data-migration-synchronization-and-bulk-loading}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="CloudCanal"
+    icon="/images/next/connection-integration/data-integration/logos/cloudcanal.svg"
+    description="Используйте CloudCanal для миграции или синхронизации данных из таких источников, как MySQL, Oracle, PostgreSQL и SQL Server, в Doris"
+    link="./cloudcanal"
+/>
+
+<GettingStartedCard
+    title="DataX Doriswriter"
+    icon="/images/next/connection-integration/data-integration/logos/datax.jpg"
+    description="Используйте DataX Doriswriter для синхронизации данных из различных источников с Doris через Stream Load"
+    link="./datax"
+/>
+
+<GettingStartedCard
+    title="Kettle Doris Plugin"
+    icon="/images/next/connection-integration/data-integration/logos/kettle.png"
+    description="Используйте плагин Doris в заданиях Kettle для записи обработанных данных в Doris через Stream Load"
+    link="./kettle"
+/>
+
+<GettingStartedCard
+    title="SeaTunnel Doris Sink"
+    icon="/images/next/connection-integration/data-integration/logos/seatunnel.png"
+    description="Используйте SeaTunnel Doris Sink для распределённой синхронизации данных с поддержкой синхронизации в реальном времени и записи с гарантией exactly-once"
+    link="./seatunnel"
+/>
+
+<GettingStartedCard
+    title="Doris Streamloader"
+    icon="/images/next/connection-integration/data-integration/logos/doris.png"
+    description="Используйте Doris Streamloader для параллельной загрузки нескольких файлов через Stream Load с возможностью возобновления передачи"
+    link="./doris-streamloader"
+/>
+
+<GettingStartedCard
+    title="Spark Load"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="Используйте внешние ресурсы Spark для предварительной обработки и загрузки больших объёмов исторических данных, снижая нагрузку на кластер Doris при импорте"
+    link="./spark-load"
+/>
+
+<GettingStartedCard
+    title="Hive UDF"
+    icon="/images/next/connection-integration/data-integration/logos/hive.svg"
+    description="Формируйте и вычисляйте Bitmap и HLL непосредственно в таблицах Hive и загружайте их в Doris через Hive Catalog или Spark Load."
+    link="./hive-udf"
+/>
+</div>
+
+## Потоковая загрузка и обработка больших данных {#streaming-ingestion-and-big-data-computing}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Flink Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/flink.png"
+    description="Читайте данные из Doris и записывайте их в Doris с помощью Flink с поддержкой потоковой и пакетной записи, Lookup Join и синхронизации базы данных целиком на основе Flink CDC"
+    link="./flink-doris-connector/overview"
+/>
+
+<GettingStartedCard
+    title="Spark Doris Connector"
+    icon="/images/next/connection-integration/data-integration/logos/spark.png"
+    description="Читайте данные из Doris и записывайте их в Doris с помощью Spark через RDD, DataFrame или Spark SQL с поддержкой пакетной и потоковой записи"
+    link="./spark-doris-connector"
+/>
+
+<GettingStartedCard
+    title="Doris Kafka Connector"
+    icon="/images/next/connection-integration/data-integration/logos/kafka.png"
+    description="Используйте Kafka Connect для непрерывной записи данных из топиков Kafka в Doris"
+    link="./doris-kafka-connector"
+/>
+
+<GettingStartedCard
+    title="AutoMQ Load"
+    icon="/images/next/connection-integration/data-integration/logos/automq.png"
+    description="Используйте Doris Routine Load для чтения данных из совместимых с Kafka топиков AutoMQ и их загрузки в реальном времени"
+    link="./automq"
+/>
+</div>
+
+## Журналирование и наблюдаемость {#logging-and-observability}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Filebeat"
+    icon="/images/next/connection-integration/data-integration/logos/filebeat.svg"
+    description="Используйте плагин вывода Doris для Beats, чтобы собирать журналы, метрики или данные аудита и записывать их в Doris в реальном времени"
+    link="./beats"
+/>
+
+<GettingStartedCard
+    title="Fluent Bit"
+    icon="/images/next/connection-integration/data-integration/logos/fluentbit.svg"
+    description="Используйте Fluent Bit Doris Output Plugin для сбора журналов и их записи в Doris через Stream Load"
+    link="./fluentbit"
+/>
+
+<GettingStartedCard
+    title="Logstash"
+    icon="/images/next/connection-integration/data-integration/logos/logstash.svg"
+    description="Используйте плагин вывода Doris для Logstash, чтобы собирать и предварительно обрабатывать журналы и записывать их в Doris в реальном времени"
+    link="./logstash"
+/>
+
+<GettingStartedCard
+    title="LoongCollector"
+    icon="/images/next/connection-integration/data-integration/logos/loongcollector.png"
+    description="Используйте LoongCollector Doris Flusher для сбора и обработки журналов и записи данных в Doris"
+    link="./loongcollector"
+/>
+
+<GettingStartedCard
+    title="OpenTelemetry"
+    icon="/images/next/connection-integration/data-integration/logos/opentelemetry.svg"
+    description="Экспортируйте журналы, трассировки и метрики OpenTelemetry в Doris для совместного анализа"
+    link="./opentelemetry"
+/>
+
+<GettingStartedCard
+    title="Vector"
+    icon="/images/next/connection-integration/data-integration/logos/vector.svg"
+    description="Используйте Vector Doris Sink для сбора, преобразования и направления журналов, метрик и данных трассировки в Doris"
+    link="./vector"
+/>
+
+<GettingStartedCard
+    title="Langfuse на Doris"
+    icon="/images/next/connection-integration/data-integration/logos/langfuse.svg"
+    description="Разверните Langfuse, используя Doris в качестве аналитического бэкенда для анализа данных наблюдаемости приложений на базе LLM"
+    link="./langfuse"
+/>
+</div>
+
+## Моделирование данных и доступ через SQL {#data-modeling-and-sql-access}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Адаптер dbt"
+    icon="/images/next/connection-integration/data-integration/logos/dbt.svg"
+    description="Используйте dbt-for-apache-doris для выполнения моделей dbt в Doris, чтобы преобразовывать данные в рамках ELT и моделировать их"
+    link="./dbt-doris-adapter"
+/>
+
+<GettingStartedCard
+    title="Kyuubi"
+    icon="/images/next/connection-integration/data-integration/logos/kyuubi.png"
+    description="Используйте JDBC Engine в Apache Kyuubi для интеграции Doris в качестве источника данных для SQL-запросов"
+    link="./kyuubi"
+/>
+</div>

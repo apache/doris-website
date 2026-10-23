@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "lakehouse/best-practices/doris-polaris",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/doris-polaris.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/doris-polaris.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "9d209d465a3f19b2a3bb7a547587533daec8edb1847202a3f0fafa8e17f207f4",
+    "sourceTechnicalHash": "8bf879bdee14ef909127a9a37c62a6ebb79d4e38c6d7aa1b9923fa43fb1d8bb7",
+    "targetHash": "9837b4664b72fd12fdd740cb4da46a5d4fff4809c3ad5ffcec0f6816d9a8f0cb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:07:03.113Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "9d209d465a3f19b2a3bb7a547587533daec8edb1847202a3f0fafa8e17f207f4",
+      "targetHash": "9837b4664b72fd12fdd740cb4da46a5d4fff4809c3ad5ffcec0f6816d9a8f0cb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1.0.1\",\"1.1\",\"1.2\",\"1.3\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.2\",\"2.3\",\"21\",\"27\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"4\"]; received [\"1\",\"1\",\"1.0.1\",\"1.1\",\"1.2\",\"1.3\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.2\",\"2.3\",\"21\",\"27\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"4\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

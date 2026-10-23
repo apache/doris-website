@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/timestampdiff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ac88a92419e8ab1fde58b14062e170c64859780fbfe6ed8c243472bd55d13995",
+    "sourceTechnicalHash": "c7717ccbb1c1479edd9969027ff531eb65b910f2133c1633cf7e1716acb30dc6",
+    "targetHash": "a458171131f78a9782157b90a6cfe8184a94d966ddfb13206fefa874af5eee2c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:05:55.497Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac88a92419e8ab1fde58b14062e170c64859780fbfe6ed8c243472bd55d13995",
+      "targetHash": "a458171131f78a9782157b90a6cfe8184a94d966ddfb13206fefa874af5eee2c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

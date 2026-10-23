@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/redshift",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/redshift.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/redshift.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+    "sourceTechnicalHash": "c2ac105a31955ed67c896b8c6096831e77bcba2c8c134c6b21cac16f173d1230",
+    "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:40.794Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+      "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/import/data-source/redshift",
+        "sourcePath": "docs/data-operate/import/data-source/redshift.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/redshift.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "afa37e93022c6340dbcc2493a247d16a003ddee3cd194ee2298ed04e1e6cc5f3",
+        "targetHash": "b7da755c5f79890f4c753f830183217e73060e18d8dc74f189251e4f1afd601e",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

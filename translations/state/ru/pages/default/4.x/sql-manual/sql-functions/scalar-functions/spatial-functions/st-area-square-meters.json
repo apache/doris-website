@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "8277650d50c01d9482ca8025e7d0d68c55c4266a7d957996c56be5d369f31546",
+    "sourceTechnicalHash": "e97ba473dc42ba771719d26ca0c0762c189129f5f169ec1e5a9e9b44d115e0c4",
+    "targetHash": "c151f9347d11edfee5f338c2f218c0d6bcbcdb7609b2e7f11e484df81a2e8bcb",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:49:33.073Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8277650d50c01d9482ca8025e7d0d68c55c4266a7d957996c56be5d369f31546",
+      "targetHash": "c151f9347d11edfee5f338c2f218c0d6bcbcdb7609b2e7f11e484df81a2e8bcb",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters",
+        "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-area-square-meters.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "8277650d50c01d9482ca8025e7d0d68c55c4266a7d957996c56be5d369f31546",
+        "targetHash": "c151f9347d11edfee5f338c2f218c0d6bcbcdb7609b2e7f11e484df81a2e8bcb",
+        "commit": "2ad35c2403c4c70e5b39ee7a7060a6a7606d77c8",
+        "pr": "https://github.com/apache/doris-website/pull/4451"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/other-functions/field",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/other-functions/field.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/other-functions/field.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "0e8320815aeb8d01d02cd3e2c4aa1077973917dceec95eb89b4bee3f5ee7e6ca",
+    "sourceTechnicalHash": "6bb9424fa3790c2f471b7ae53c1db7f6cd36b1261fba41188d7211e039dfee4e",
+    "targetHash": "ca82ab0b1eaccb89b80b77b6468135e41b7ff2427113ee9ec99dcc808cbb387f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:34:33.099Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "0e8320815aeb8d01d02cd3e2c4aa1077973917dceec95eb89b4bee3f5ee7e6ca",
+      "targetHash": "ca82ab0b1eaccb89b80b77b6468135e41b7ff2427113ee9ec99dcc808cbb387f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

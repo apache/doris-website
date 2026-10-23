@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/memory-management/memory-analysis/doris-cache-memory-analysis.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e207f15ade1ddbdab399ddb4c949d9592852bd89d92af2cdfc05d8a4a358b386",
+    "sourceTechnicalHash": "48b40df44f3897492a66fdeab2b9696b7345cd6393fe9bc56bbff1bccbf3a2bd",
+    "targetHash": "6362d23c619c27055e8843fa9622ace5ce77c44df77c38f1b24dfc770e05007b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:46:45.909Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e207f15ade1ddbdab399ddb4c949d9592852bd89d92af2cdfc05d8a4a358b386",
+      "targetHash": "6362d23c619c27055e8843fa9622ace5ce77c44df77c38f1b24dfc770e05007b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

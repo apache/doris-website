@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "query-acceleration/sql-cache-manual",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/query-acceleration/sql-cache-manual.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/query-acceleration/sql-cache-manual.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "59f514c081dc12477ef6a0bca9daa8a192dab71f0f4bb5cf45cfdf005cebe2a7",
+    "sourceTechnicalHash": "821bc55e32eee4eaaa01b14c34062360acd9c00d8ab2684fb76163ce40ecee0c",
+    "targetHash": "72469f341eb955103d12a4e60cf8cc32f34d94f7d4edfdd1d126113622814851",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:31:32.288Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "59f514c081dc12477ef6a0bca9daa8a192dab71f0f4bb5cf45cfdf005cebe2a7",
+      "targetHash": "72469f341eb955103d12a4e60cf8cc32f34d94f7d4edfdd1d126113622814851",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "query-acceleration/sql-cache-manual",
+        "sourcePath": "docs/query-acceleration/sql-cache-manual.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/sql-cache-manual.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "59f514c081dc12477ef6a0bca9daa8a192dab71f0f4bb5cf45cfdf005cebe2a7",
+        "targetHash": "72469f341eb955103d12a4e60cf8cc32f34d94f7d4edfdd1d126113622814851",
+        "commit": "f9ee4db3bb6fa2c8c59bf5ffcfd570cef5681143",
+        "pr": "https://github.com/apache/doris-website/pull/4444"
+      }
+    }
+  }
+}

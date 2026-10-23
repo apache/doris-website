@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/fe-http/get-log-file-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/fe-http/get-log-file-action.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+    "sourceTechnicalHash": "27a0c54487d51b13184371a6c3cc6c29b93732d52ba2b7cf3d81c8b54415b6bf",
+    "targetHash": "17f32e1b150d016c967abf93f7f9b414f6f1fcb47b2f9ed87ac67f5c520b1878",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:14:54.910Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+      "targetHash": "17f32e1b150d016c967abf93f7f9b414f6f1fcb47b2f9ed87ac67f5c520b1878",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/open-api/fe-http/get-log-file-action",
+        "sourcePath": "docs/admin-manual/open-api/fe-http/get-log-file-action.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/get-log-file-action.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "38599dde35e55b93b7dec102c78bd02c464ea11a286e22eb13325ca0cf82cada",
+        "targetHash": "17f32e1b150d016c967abf93f7f9b414f6f1fcb47b2f9ed87ac67f5c520b1878",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

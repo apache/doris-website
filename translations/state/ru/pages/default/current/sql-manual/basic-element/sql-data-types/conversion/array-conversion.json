@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/basic-element/sql-data-types/conversion/array-conversion",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/basic-element/sql-data-types/conversion/array-conversion.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+    "sourceTechnicalHash": "32d451fb2c9d15b62ef2e9ea93f3fc14f4605bf7a2528b943fbde1fa686c23b7",
+    "targetHash": "13bd7060779b2c2b79416ab41407b19b653b8f694dc52965b49a4a1d146de3b0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T09:47:38.095Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4acae3bd9f08c048ae91bb25b3fe0ac868e81734e04940854f2ca9f5d56e6be2",
+      "targetHash": "13bd7060779b2c2b79416ab41407b19b653b8f694dc52965b49a4a1d146de3b0",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

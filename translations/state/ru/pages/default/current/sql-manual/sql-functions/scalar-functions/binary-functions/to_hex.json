@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/binary-functions/to_hex",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/binary-functions/to_hex.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/binary-functions/to_hex.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "841cd079a456a0685dd247e1766ecf0d6ed86a0908d0e2d77bf0bb5e5b423f94",
+    "sourceTechnicalHash": "e11e76348f7572bb3ec4546f955b7afa043e1e56692825a634ded711227381a7",
+    "targetHash": "ccb8d1055c41fc965b20b05e66b090f58475a5794c377fe546ed7f8e8c5caf89",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:43:54.532Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "841cd079a456a0685dd247e1766ecf0d6ed86a0908d0e2d77bf0bb5e5b423f94",
+      "targetHash": "ccb8d1055c41fc965b20b05e66b090f58475a5794c377fe546ed7f8e8c5caf89",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/format-number",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/format-number.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/format-number.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "51920a6784cc1c2c60a4066f178327bc6ccad2fdd9fc72067126afaa0a154acc",
+    "sourceTechnicalHash": "21f2d10805eed4c054058921259d0baec9c61fd9fd6fbcdc16ae94943224cc86",
+    "targetHash": "c3f08d92b8bfce538c57733df70c003ac64676dbc10182bec0103839db9d141d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:44:15.092Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "51920a6784cc1c2c60a4066f178327bc6ccad2fdd9fc72067126afaa0a154acc",
+      "targetHash": "c3f08d92b8bfce538c57733df70c003ac64676dbc10182bec0103839db9d141d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

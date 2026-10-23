@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "migration/other-olap-to-doris",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/migration/other-olap-to-doris.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/migration/other-olap-to-doris.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e851bb0124dd4d85c1035413af22e1627f61162144036b4c5b4dbb9432a45152",
+    "sourceTechnicalHash": "c9dbb99d2c360cc75641c2a07265c29c3a33b3055119e08ce88905fc9514fed3",
+    "targetHash": "9b64365cb2deb61c2dd6f3e0a5618f49859130aa7f011849e2dcb8ec716fb536",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:21:13.567Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 3,
+      "modelCalls": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e851bb0124dd4d85c1035413af22e1627f61162144036b4c5b4dbb9432a45152",
+      "targetHash": "9b64365cb2deb61c2dd6f3e0a5618f49859130aa7f011849e2dcb8ec716fb536",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

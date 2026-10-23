@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/data-lineage",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/data-lineage.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/data-lineage.mdx",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "8fd437ac1c233f79c1affbd9b169809881f107264a7ec0ce8be37a3cd4cd0d2c",
+    "sourceTechnicalHash": "547698e5c581a92448f2adfb228a2be120bcded0ef503c2fe5c707f058353e64",
+    "targetHash": "ccea6a172c14642266b5bdb94a371fdd6f02dd275d83db1e7dadd6391f5ecbde",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:47:27.240Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "8fd437ac1c233f79c1affbd9b169809881f107264a7ec0ce8be37a3cd4cd0d2c",
+      "targetHash": "ccea6a172c14642266b5bdb94a371fdd6f02dd275d83db1e7dadd6391f5ecbde",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

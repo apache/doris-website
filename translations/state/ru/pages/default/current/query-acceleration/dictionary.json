@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/dictionary",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/dictionary.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/dictionary.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+    "sourceTechnicalHash": "bd8432953bc21831c33c7a3a91ab45ac99661d9a3624879d27bd78958033056b",
+    "targetHash": "01451a2ceee6f9ad6692a531f2e858e37bb800a85060d26091d731bd32327d6b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:21:11.776Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+      "targetHash": "01451a2ceee6f9ad6692a531f2e858e37bb800a85060d26091d731bd32327d6b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

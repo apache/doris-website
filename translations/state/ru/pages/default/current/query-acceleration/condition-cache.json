@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "query-acceleration/condition-cache",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/query-acceleration/condition-cache.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/query-acceleration/condition-cache.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "f1e69642757fcee2fdbdafe2869625bda7fab97a8e38850460129f9e5f5f8c39",
+    "sourceTechnicalHash": "bbd570ec8c378b8ef26ecbf063b460fb7b7d768b2df56fe2c436f3676ad8dea5",
+    "targetHash": "d53d0bcc3c19f6015c7c338fd4d38b7ebd6669bd171987398c08d4b11342b18e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:32:18.177Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f1e69642757fcee2fdbdafe2869625bda7fab97a8e38850460129f9e5f5f8c39",
+      "targetHash": "d53d0bcc3c19f6015c7c338fd4d38b7ebd6669bd171987398c08d4b11342b18e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

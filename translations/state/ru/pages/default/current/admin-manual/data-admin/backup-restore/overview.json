@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/data-admin/backup-restore/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/data-admin/backup-restore/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/data-admin/backup-restore/overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "049f27035b6899b9af38a16d3e29e83f24670e5c85b3f229453217d80efb136d",
+    "sourceTechnicalHash": "7f90507b9efc0e696a251e5979e929afaa7a8d23dbdda7c0f94b4c92a62f20ac",
+    "targetHash": "c8419a297a6e3668c6b0bd2e16656d7c9abdfad101b2e1278e0bbdad2dce31ea",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:09:57.326Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "049f27035b6899b9af38a16d3e29e83f24670e5c85b3f229453217d80efb136d",
+      "targetHash": "c8419a297a6e3668c6b0bd2e16656d7c9abdfad101b2e1278e0bbdad2dce31ea",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/cluster-management/tso",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/cluster-management/tso.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/cluster-management/tso.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "de579414ef2f5a1fb036f9e51cccfd679438a1a6192e5a6f2aac5da60eafb338",
+    "sourceTechnicalHash": "10dec0b96a4066b735872cc4739beb9d7718a3f22c35d581f9e4481e26989cdf",
+    "targetHash": "cf3fe95622b784549b5e57cffe0e4ce693b883a766ee4cb58b414d2f2a99ff4d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:09:51.919Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "de579414ef2f5a1fb036f9e51cccfd679438a1a6192e5a6f2aac5da60eafb338",
+      "targetHash": "cf3fe95622b784549b5e57cffe0e4ce693b883a766ee4cb58b414d2f2a99ff4d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

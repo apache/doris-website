@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/ntile",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/ntile.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/ntile.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f7eb4ed8169751db348837c456ec6fbf7e87283983e196b74d36b0a503528a60",
+    "sourceTechnicalHash": "e852376dd9ea90a19d8834b70f0355e181eb4d0c6b31bb9f9a7ca8834789a3ca",
+    "targetHash": "f5e50104cf0f0bb0eab378ea52d451b51de8150930a5a4ab0c11ab745539528e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:59:35.841Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f7eb4ed8169751db348837c456ec6fbf7e87283983e196b74d36b0a503528a60",
+      "targetHash": "f5e50104cf0f0bb0eab378ea52d451b51de8150930a5a4ab0c11ab745539528e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

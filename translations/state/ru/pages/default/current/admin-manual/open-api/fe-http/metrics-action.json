@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/metrics-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/metrics-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/metrics-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "22e0ce8401cb8db72b605dd849404e25a48367231e2f9597dc9cfc813883efaf",
+    "sourceTechnicalHash": "931e4989063bc9366e40ccc7bc99b5a14fc75ed8de64b169837b88d202546671",
+    "targetHash": "d7097679e350343ba0586cc72c67028af809aa350f5ca82e42e076de8f36709e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:17:17.109Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "22e0ce8401cb8db72b605dd849404e25a48367231e2f9597dc9cfc813883efaf",
+      "targetHash": "d7097679e350343ba0586cc72c67028af809aa350f5ca82e42e076de8f36709e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

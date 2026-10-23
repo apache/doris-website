@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/export/export-with-mysql-dump",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/export/export-with-mysql-dump.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/export/export-with-mysql-dump.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "41a6ac45c4790d26a50c12b875863554d34484dca2144ed04876250c21db16a2",
+    "sourceTechnicalHash": "dbe6422e6dba7de316a9c002bccfbcdd28e67f638c9cce5e2f85ec387fdf0295",
+    "targetHash": "70e298499aeac66245eed45bc1a69ea1ec65efe3ba507a8411b700368c73408c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:09:13.799Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "41a6ac45c4790d26a50c12b875863554d34484dca2144ed04876250c21db16a2",
+      "targetHash": "70e298499aeac66245eed45bc1a69ea1ec65efe3ba507a8411b700368c73408c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

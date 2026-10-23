@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/conditional-functions/least",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/conditional-functions/least.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/conditional-functions/least.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "411df88e676c8aaffd125ee793d1098971660e8bafa965660211b2f09c0c6e22",
+    "sourceTechnicalHash": "ac357f5fdc5b694b0118a990495e6ff7f6824dbc5ea18a50306fe13f087377e3",
+    "targetHash": "338110569c625df58c7811ffaf15b4d9a2eee21ad8d93dc999635dd9b8d98195",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:49:56.901Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "411df88e676c8aaffd125ee793d1098971660e8bafa965660211b2f09c0c6e22",
+      "targetHash": "338110569c625df58c7811ffaf15b4d9a2eee21ad8d93dc999635dd9b8d98195",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

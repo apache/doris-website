@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/system-tables/information_schema/processlist",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/system-tables/information_schema/processlist.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/system-tables/information_schema/processlist.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5e8fe61b2a336af9dc90facdecfe3fa4c4124243b57e859236a4a2b0d2615cee",
+    "sourceTechnicalHash": "113b05267ed3a92ac0c20f924782e5c98839449c6a18f5e5b2eeb674ada84c5a",
+    "targetHash": "77e85156a95f9f58afffba76cb9c851f68204611a9c9e019ca734cadc1988b77",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T16:41:41.900Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5e8fe61b2a336af9dc90facdecfe3fa4c4124243b57e859236a4a2b0d2615cee",
+      "targetHash": "77e85156a95f9f58afffba76cb9c851f68204611a9c9e019ca734cadc1988b77",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

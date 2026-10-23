@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/authentication/internal",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/authentication/internal.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/authentication/internal.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+    "sourceTechnicalHash": "d5738b96e3aa6a793cc4afd98e9085754b02242b8ca59f4af0cad9f8510e552d",
+    "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:51:36.268Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+      "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "admin-manual/auth/authentication/internal",
+        "sourcePath": "docs/admin-manual/auth/authentication/internal.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/auth/authentication/internal.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "3121dc26e0f59386c7bfacbfa7149e54def6ebc38047c72ff8972e68da5f4c40",
+        "targetHash": "82c21f27237ca207b97f9581d908299c6c04eb258648a6ec6f0995bd32f449bc",
+        "commit": "9805aef5831da9e846dc7985691bcad3cfd69ab2",
+        "pr": "https://github.com/apache/doris-website/pull/4432"
+      }
+    }
+  }
+}

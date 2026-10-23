@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "observability/dogstack/kubernetes",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/observability/dogstack/kubernetes.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/observability/dogstack/kubernetes.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+    "sourceTechnicalHash": "30b5b80e6440fc5378b89038584c40aeeed4d4c1dd3084e2f4131525022f9c53",
+    "targetHash": "5e4f63c339e745a24f8ac73f861ff40cdf10fbb525e1fbf6c6a1b8527eef6eae",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T08:26:31.917Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b0b2b3326593b6bee686e3d88d99cde5521dda7a1ec155f647fc47d05c6c0be3",
+      "targetHash": "5e4f63c339e745a24f8ac73f861ff40cdf10fbb525e1fbf6c6a1b8527eef6eae",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

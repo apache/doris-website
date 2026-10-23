@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/incremental/incremental-query",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/incremental/incremental-query.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/incremental/incremental-query.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+    "sourceTechnicalHash": "ca15ec9708ed302b64f86ab42c4d9232422d84cd0209a63ebe3b3eafae1d4cd2",
+    "targetHash": "1fa197601dcb903c17bdfc09a92a49665648d21ac41ba1c2d63e252ec9515431",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:26:21.785Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+      "targetHash": "1fa197601dcb903c17bdfc09a92a49665648d21ac41ba1c2d63e252ec9515431",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

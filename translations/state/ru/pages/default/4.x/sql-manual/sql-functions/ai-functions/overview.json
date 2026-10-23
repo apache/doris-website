@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "d8096a7c13abb606df5e90486d381473757bb3aecee490f6040fc92459b3b72d",
+    "sourceTechnicalHash": "8103a80085fd3af6b5cfa00f9728b2dc90816734da76d5f95dd13760c1b792ed",
+    "targetHash": "cdea6081b680cd7c23e5f6ec3b1c6dd48588e1ec09cfd6a89e266905a86a10cd",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T15:58:40.643Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d8096a7c13abb606df5e90486d381473757bb3aecee490f6040fc92459b3b72d",
+      "targetHash": "cdea6081b680cd7c23e5f6ec3b1c6dd48588e1ec09cfd6a89e266905a86a10cd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 23: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

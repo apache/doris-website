@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/catalogs/jdbc-catalog-overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/jdbc-catalog-overview.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+    "sourceTechnicalHash": "91cd6bc33e1681ff640dee3fd9a1e178a37a95520f91d10887fb70e28dea7416",
+    "targetHash": "7b4bc017e65ef1d9028f1af9f1a1c2d40ce960f00c9486e1a63f537248dc3ff8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T18:02:57.489Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+      "targetHash": "7b4bc017e65ef1d9028f1af9f1a1c2d40ce960f00c9486e1a63f537248dc3ff8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

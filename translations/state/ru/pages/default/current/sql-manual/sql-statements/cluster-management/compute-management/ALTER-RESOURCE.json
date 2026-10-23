@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+    "sourceTechnicalHash": "935500781e04a1d7192f1e855d36b13926a200a42d7682beb8acad644b0770d0",
+    "targetHash": "e02468701756c27827a513110656ffb7d388ffb7bce6444900e4bbd6087c0425",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T12:55:44.531Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+      "targetHash": "e02468701756c27827a513110656ffb7d388ffb7bce6444900e4bbd6087c0425",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-min.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "358336b8c36ad46e966fc99eab0e292cdeb7b12a117a85807fa54c175b3d0693",
+    "sourceTechnicalHash": "96c178837b557ad480d017fc2a08811ca7e2229d130dbab9f5c1c308464c3ae6",
+    "targetHash": "8fd1db0f8c28f0f52d0381a862debf892719c64e656643aec21d4bfefa55e6f7",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:47:12.728Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "358336b8c36ad46e966fc99eab0e292cdeb7b12a117a85807fa54c175b3d0693",
+      "targetHash": "8fd1db0f8c28f0f52d0381a862debf892719c64e656643aec21d4bfefa55e6f7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

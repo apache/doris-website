@@ -1,0 +1,1669 @@
+---
+{
+    "title": "Paimon Catalog",
+    "language": "ru",
+    "description": "Используйте Paimon Catalog в Apache Doris для запросов к таблицам Paimon и записи в них данных на HDFS и в облачных объектных хранилищах через различные службы метаданных."
+}
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Doris поддерживает доступ к метаданным таблиц Paimon через различные службы метаданных, а также чтение и запись данных Paimon.
+
+[Быстрый старт с Apache Doris и Apache Paimon](../best-practices/doris-paimon.md).
+
+## Сценарии применения {#applicable-scenarios}
+
+| Сценарий     | Описание                                                  |
+| ------------ | ------------------------------------------------------------ |
+| Ускорение запросов | Используйте распределённый вычислительный движок Doris для прямого доступа к данным Paimon и ускорения запросов. |
+| Интеграция данных   | Читайте данные Paimon и записывайте их во внутренние таблицы Doris или выполняйте операции ZeroETL с помощью вычислительного движка Doris. |
+| Обратная запись данных    | Используйте SQL в Doris для создания и изменения таблиц Paimon, добавления или перезаписи данных, а также изменения отдельных строк в таблицах с первичным ключом. |
+
+## Настройка Catalog {#configuring-catalog}
+
+### Синтаксис {#syntax}
+
+```sql
+CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = '<paimon_catalog_type>',
+    'warehouse' = '<paimon_warehouse>'
+    {MetaStoreProperties},
+    {StorageProperties},
+    {PaimonProperties},
+    {CommonProperties}
+);
+```
+
+* `<paimon_catalog_type>`
+
+  Тип Paimon Catalog. Поддерживаются следующие значения:
+
+  * `filesystem`: значение по умолчанию. Прямой доступ к метаданным, хранящимся в файловой системе.
+
+  * `hms`: использование Hive Metastore в качестве службы метаданных.
+
+  * `dlf`: использование Alibaba Cloud DLF в качестве службы метаданных.
+
+  * `jdbc`: подключение через интерфейс JDBC к реляционной базе данных, используемой в качестве службы метаданных (поддерживается с версии 4.1.0).
+
+* `<paimon_warehouse>`
+
+  Путь к хранилищу Paimon. Этот параметр обязателен, если `<paimon_catalog_type>` имеет значение `filesystem`.
+
+  Путь `warehouse` должен указывать на уровень выше пути `Database`. Например, если путь к таблице: `s3://bucket/path/to/db1/table1`, то `warehouse` должен иметь значение: `s3://bucket/path/to/`.
+
+* `{MetaStoreProperties}`
+
+  В разделе MetaStoreProperties указываются параметры подключения и аутентификации для службы метаданных Metastore. Подробнее см. в разделе [Поддерживаемые службы метаданных].
+
+* `{StorageProperties}`
+
+  В разделе StorageProperties указываются параметры подключения и аутентификации для системы хранения. Подробнее см. в разделе [Поддерживаемые системы хранения].
+
+* `{PaimonProperties}`
+
+  В разделе PaimonProperties указываются свойства, связанные с Paimon.
+
+  При доступе к метаданным Paimon Doris частично использует Paimon Java SDK, поэтому некоторые пользовательские параметры может потребоваться передать в Paimon Java SDK. Для этого можно использовать следующие префиксы:
+
+  ```
+  paimon.s3.xxx
+  paimon.s3a.xxx
+  paimon.fs.xxx
+  ```
+
+  Эти параметры автоматически преобразуются и передаются в SDK. Примеры:
+
+  | Входной параметр | Преобразованный параметр для Paimon Java SDK |
+  | --- | --- |
+  | "paimon.s3.list.version" = "1" | "fs.s3a.list.version" = "1" |
+  | "paimon.s3.paging.maximum" = "100" | "fs.s3a.paging.maximum" = "100" |
+  | "paimon.fs.s3.read.ahead.buffer.size" = "1" | "fs.s3a.read.ahead.buffer.size" = "1" |
+  | "paimon.s3a.replication.factor" = "3" | "fs.s3a.replication.factor" = "3" |
+
+  **Параметры чтения Paimon**
+
+  Doris поддерживает следующие параметры пакетного чтения ограниченного набора данных Paimon. Задайте значения по умолчанию для запросов на уровне Catalog с помощью
+  `paimon.table-option.<option-key>` или переопределите их для отдельного обращения к таблице с помощью
+  `table@options('<option-key>'='<value>')`. Эти настройки влияют только на чтение через Doris и не изменяют физические
+  метаданные таблицы Paimon.
+
+  | Параметр Paimon | Значение по умолчанию в Paimon | Значения, принимаемые Doris | Действие |
+  | --- | --- | --- | --- |
+  | `read.batch-size` | `1024` | Целое число от `1` до `65536` | Количество строк, запрашиваемых в каждом пакете чтения Paimon JNI. Явно заданное значение сохраняется при открытии модуля чтения в Doris. |
+  | `file-reader-async-threshold` | `10 MB` | Размер памяти от `1 MB` до `1 GB` | Порог размера файла, при котором модуль чтения Paimon JNI переключается на асинхронное чтение. |
+  | `file-index.read.enabled` | `true` | Логическое значение | Включает отсечение по файловому индексу Paimon при чтении. |
+  | `source.split.target-size` | `128 MB` | Положительный размер памяти | Целевой размер, используемый при объединении файлов данных Paimon во фрагменты сканирования Doris. |
+  | `source.split.open-file-cost` | `4 MB` | Неотрицательный размер памяти | Оценочная стоимость открытия файла при объединении файлов Paimon во фрагменты. |
+  | `scan.manifest.parallelism` | Количество доступных процессоров | Целое число от `1` до `256` | Запрашиваемая степень параллелизма чтения манифестов. Во время выполнения Doris независимо ограничивает её для каждой ветви планирования наименьшим из следующих значений: заданное значение, `256` и количество процессоров, доступных соответствующему FE или BE. |
+  | `scan.plan-sort-partition` | `false` | Логическое значение | Сортирует разделы при планировании сканирования Paimon. |
+
+  Например, следующие настройки Catalog переопределяют значения, хранящиеся в физической таблице Paimon, и становятся
+  значениями по умолчанию для запросов Doris:
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.table-option.read.batch-size" = "4096",
+      "paimon.table-option.file-reader-async-threshold" = "32 MB",
+      "paimon.table-option.source.split.target-size" = "64 MB",
+      "paimon.table-option.scan.manifest.parallelism" = "1"
+  );
+  ```
+
+  Запрос может переопределить эти значения по умолчанию, не изменяя Catalog или метаданные таблицы Paimon:
+
+  ```sql
+  SELECT *
+  FROM paimon_hms.db_name.table_name@options(
+      'read.batch-size' = '8192',
+      'source.split.target-size' = '32 MB'
+  );
+  ```
+
+  Каждое обращение к таблице имеет независимый набор параметров. Например, два псевдонима одной таблицы могут использовать разные
+  размеры пакетов в одном SQL-операторе:
+
+  ```sql
+  SELECT small.id
+  FROM paimon_hms.db_name.table_name@options('read.batch-size' = '1') small
+  JOIN paimon_hms.db_name.table_name@options('read.batch-size' = '8192') large
+    ON small.id = large.id;
+  ```
+
+  Приоритет от высшего к низшему:
+
+  ```text
+  relation @options > Doris Catalog property > physical Paimon table option > Paimon default
+  ```
+
+  Doris проверяет итоговое значение после применения этого порядка приоритетов. Поэтому допустимое значение на уровне Catalog или обращения к таблице может
+  заменить недопустимое значение физической таблицы. Если итоговое значение по-прежнему недопустимо, Doris отклоняет запрос до начала
+  соответствующего этапа планирования или чтения. Ограничения для манифестов также применяются до планирования манифестов для разделов, подсчёта строк и сбора статистики,
+  резервной ветви и системных таблиц.
+
+  Первые пять параметров в таблице не влияют на метаданные и позволяют повторно использовать кэшированную проекцию актуальных разделов.
+  `scan.manifest.parallelism` и `scan.plan-sort-partition` влияют на планирование метаданных, поэтому Doris планирует их на основе
+  действующего дескриптора таблицы для конкретного обращения. Значения, заданные для отдельного запроса, не изменяют размер глобального для JVM пула выполнения Paimon.
+
+  Doris отклоняет неизвестные или недопустимые свойства `paimon.table-option.*` при выполнении `CREATE CATALOG` и `ALTER CATALOG`.
+  `ALTER CATALOG` проверяет всю предлагаемую конфигурацию перед её публикацией, поэтому при неудачном изменении
+  предыдущая конфигурация Catalog остаётся действующей. Catalog, сохранённые более ранней версией Doris, по-прежнему можно загрузить, но
+  неподдерживаемые или недопустимые устаревшие свойства чтения игнорируются, а не применяются. Их сохранённые значения
+  сохраняются для совместимости с образом состояния и журналом изменений.
+
+  Параметры снимка и начальной позиции выбирают контекст обращения к таблице и должны задаваться через `@options`, как описано в разделе
+  [Time Travel](#time-travel-with-options); их нельзя задавать как значения по умолчанию для Catalog. Doris также исключает
+  `scan.max-splits-per-task`, относящийся к перечислителю источника Flink в Paimon, `scan.fallback-branch`, а также параметры потоковой обработки,
+  размещения данных, записи и компакции. Настраивайте Bucket, Primary Key, Partition, Merge Engine и другие физические
+  характеристики через свойства таблицы Paimon, в том числе с помощью `CREATE TABLE ... PROPERTIES` в Doris.
+
+  :::info Согласованность в рамках SQL-оператора
+  В рамках одного SQL-оператора Doris выполняет привязку схемы, загрузку разделов, подсчёт строк и сбор статистики, планирование системных таблиц
+  и сканирование данных на одном снимке Paimon и в рамках одного поколения таблицы. Для снимка или тега, выбранного через
+  `@options`, используется схема соответствующей исторической версии, включая вложенные поля `STRUCT`, `MAP` и `ARRAY`.
+  Каждое выполнение подготовленного SQL-оператора получает новое состояние, поэтому изменения, зафиксированные между выполнениями,
+  становятся видимыми в соответствии с селекторами и настройками кэша нового выполнения.
+  :::
+
+  Для безопасной эксплуатации сообщения уровня DEBUG о конфигурации сканера Paimon содержат только размер пакета и количество проецируемых
+  полей. Doris не выводит полную карту параметров сканера, которая может содержать учётные данные.
+  Значение показателя `PaimonJniAsyncReaderThreadCount` в профиле обновляется раз в секунду по всем сканерам, поэтому может отставать на одну
+  секунду. Такая частота сбора не влияет на выполнение или планирование запросов. Освобождение ресурсов модуля чтения и IOManager выполняется
+  независимо и может безопасно повторяться после частичного сбоя закрытия.
+
+  **Paimon JNI IOManager**
+
+  > Эта функция поддерживается начиная с версии 4.0.8.
+
+  Для таблиц Paimon с первичным ключом чтение со слиянием через JNI может требовать сортировки и слияния данных из нескольких файлов. Можно включить
+  Paimon IOManager, чтобы этот процесс мог выгружать промежуточные данные на локальный диск BE. Это снижает
+  нагрузку на память при чтении со слиянием больших объёмов данных.
+
+  | Свойство | Обязательное | Значение по умолчанию | Описание |
+  | --- | --- | --- | --- |
+  | `paimon.jni.enable_jni_io_manager` | Нет | `false` | Включает Paimon IOManager для чтения через JNI. Остальные свойства IOManager действуют только при значении `true` у этого свойства. |
+  | `paimon.jni.io_manager.tmp_dir` | Нет | `<storage_root_path>/paimon_jni_scanner_io_tmp` | Локальные каталоги, используемые Paimon IOManager для временных файлов выгрузки на диск. Несколько каталогов можно разделить запятыми или двоеточиями. Если свойство не задано, Doris создаёт по одному каталогу в каждом пути хранения BE. |
+  | `paimon.jni.io_manager.impl_class` | Нет | Стандартная реализация Paimon | Полное имя класса пользовательской реализации `org.apache.paimon.disk.IOManager`. Класс должен быть доступен в classpath Paimon JNI Scanner на каждом BE. |
+
+  В следующем примере включается IOManager, а временные каталоги Doris выбирает из путей хранения BE:
+
+  ```sql
+  CREATE CATALOG paimon_hms PROPERTIES (
+      "type" = "paimon",
+      "paimon.catalog.type" = "hms",
+      "hive.metastore.uris" = "thrift://127.0.0.1:9083",
+      "warehouse" = "s3://bucket/paimon-warehouse",
+      "paimon.jni.enable_jni_io_manager" = "true"
+  );
+  ```
+
+  Включение IOManager не приводит к выгрузке на диск при каждом чтении со слиянием. Paimon выгружает данные только тогда, когда количество модулей чтения со слиянием
+  превышает значение `sort-spill-threshold`. Этот параметр не является динамическим параметром чтения Doris. Если требуется другое поведение выгрузки,
+  настройте его в физической таблице Paimon.
+
+  Чтобы использовать отдельные диски для выгрузки, укажите локальные пути, которые существуют или могут быть созданы на каждом BE:
+
+  ```sql
+  "paimon.jni.io_manager.tmp_dir" = "/mnt/ssd1/paimon_io:/mnt/ssd2/paimon_io"
+  ```
+
+  Doris создаёт IOManager для каждого JNI-сканера и закрывает его вместе со сканером. Убедитесь, что в настроенные
+  каталоги разрешена запись и в них достаточно места для параллельных запросов. Если задан класс пользовательской реализации,
+  он должен предоставлять открытый конструктор, принимающий `String[]`, открытый конструктор, принимающий
+  `String`, или открытый конструктор без аргументов. Ошибка загрузки класса или создания его экземпляра приводит к сбою запроса.
+
+  Эти свойства влияют только на чтение таблиц данных Paimon через JNI. На нативное чтение они не влияют.
+  Параметр `paimon.table-option.file-reader-async-threshold` независим: он задаёт порог для асинхронного
+  чтения файлов Paimon и не включает IOManager и не настраивает каталоги выгрузки на диск.
+
+* `{CommonProperties}`
+
+  В разделе CommonProperties указываются общие свойства. См. раздел [Общие свойства] в [обзоре Catalog](../catalog-overview.md).
+  
+## Кэш метаданных {#meta-cache}
+
+Для ускорения доступа к внешним источникам данных Apache Doris кэширует метаданные Paimon. Они включают структуру таблиц (Schema), объекты таблиц, снимки и проекции разделов.
+
+:::tip
+В версиях до Doris 4.1.x кэширование метаданных в основном управляется глобально через параметры конфигурации FE. Подробнее см. в разделе [Кэш метаданных](../meta-cache.md).
+Начиная с Doris 4.1.x, внешний кэш метаданных Paimon Catalog настраивается с помощью унифицированных ключей `meta.cache.*`.
+:::
+
+### Настройка свойств кэша (4.1.x+) {#meta-cache-unified-model}
+
+Для каждого элемента кэша движка используется единый формат ключей конфигурации: `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}`. Ограничения памяти применяются к элементам `table` и `snapshot`, для которых поддерживается оценка использования памяти. См. [Управление памятью внешнего кэша метаданных](../external-meta-cache-memory-management).
+
+| Свойство | Пример | Значение |
+|---|---|---|
+| `enable` | `true/false` | Включает этот модуль кэша. |
+| `ttl-second` | `600`, `0`, `-1` | `0` отключает кэш (вступает в силу немедленно и позволяет видеть актуальные данные); `-1` означает неограниченный срок хранения; другие положительные целые числа задают TTL в секундах с момента доступа. |
+| `capacity` | `10000` | Максимальное количество записей кэша. Когда действует `max-weight`, этот параметр не ограничивает количество записей одновременно с ним, но `0` по-прежнему отключает кэш. |
+| `max-weight` | `1GB` | Поддерживается с Doris 4.1.4. Необязательное ограничение оценочного объёма удерживаемой памяти. Поддерживается для элементов Paimon `table` и `snapshot`; `0` отключает соответствующий элемент. |
+
+**Условия работы:** Кэш модуля действует, если `enable=true`, `ttl-second != 0`, `capacity > 0`, а `max-weight` отсутствует или не равен `0`.
+
+### Модули кэша {#meta-cache-unified-modules}
+
+Paimon Catalog включает следующие модули кэша:
+
+| Модуль (`<entry>`) | Префикс ключа свойства | Кэшируемое содержимое и влияние |
+|---|---|---|
+| `schema` | `meta.cache.paimon.schema.` | Кэширует структуру таблицы. Влияет на видимость информации о столбцах таблицы. При отключении для каждого запроса загружается актуальная Schema. |
+| `table` | `meta.cache.paimon.table.` | Кэширует объекты метаданных таблиц Paimon. Снижает накладные расходы на загрузку метаданных при планировании запросов. |
+| `snapshot` | `meta.cache.paimon.snapshot.` | Кэширует метаданные снимков, поколения схем и проекции разделов. Этот элемент поддерживает `max-weight`. |
+
+### Сопоставление и преобразование устаревших параметров {#meta-cache-mapping}
+
+В версии 4.1.x и более поздних рекомендуется использовать унифицированные ключи. Ниже приведено соответствие между устаревшими свойствами Catalog и унифицированными ключами 4.1.x+:
+
+| Устаревший ключ свойства | Унифицированный ключ 4.1.x+ | Описание |
+|---|---|---|
+| `schema.cache.ttl-second` | `meta.cache.paimon.schema.ttl-second` | Срок действия кэша структуры таблицы |
+
+### Рекомендации {#meta-cache-best-practices}
+
+* **Доступ к актуальным данным в реальном времени**: Если каждый запрос должен видеть последние изменения данных или схемы таблиц Paimon, можно установить `ttl-second` для `schema` или `table` в `0`.
+  ```sql
+  -- Disable table object cache to detect the latest snapshots of Paimon tables
+  ALTER CATALOG paimon_ctl SET PROPERTIES ("meta.cache.paimon.table.ttl-second" = "0");
+  ```
+* **Оптимизация производительности**: Начиная с Doris 4.1.4, успешное изменение свойства Catalog сбрасывает контекст выполнения Catalog и очищает инициализированные элементы всех движков кэша метаданных, к которым этот Catalog направляет обращения. При следующем доступе Doris создаёт их заново с новым контекстом и конфигурацией; выполняющиеся запросы не затрагиваются. Если в Doris включено управление памятью, `CachingCatalog` из SDK Paimon по умолчанию отключён; явно заданная настройка `paimon.cache-enabled` имеет приоритет.
+
+### Наблюдаемость {#meta-cache-unified-observability}
+
+Метрики кэша доступны в системной таблице `information_schema.catalog_meta_cache_statistics`:
+
+```sql
+SELECT catalog_name, engine_name, entry_name,
+       effective_enabled, ttl_second, capacity,
+       estimated_size, hit_rate, load_failure_count, last_error
+FROM information_schema.catalog_meta_cache_statistics
+WHERE catalog_name = 'paimon_ctl' AND engine_name = 'paimon'
+ORDER BY entry_name;
+```
+
+См. документацию этой системной таблицы: [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md).
+
+### Поддерживаемые версии Paimon {#supported-paimon-versions}
+
+Текущая используемая версия Paimon: 1.4.2 (1.3.1 до 4.1.4).
+
+### Поддерживаемые форматы Paimon {#supported-paimon-formats}
+
+* Поддерживается чтение Paimon Deletion Vector
+
+### Поддерживаемые службы метаданных {#supported-metadata-services}
+
+* [Hive Metastore](../metastores/hive-metastore.md)
+
+* [Aliyun DLF](../metastores/aliyun-dlf.md)
+
+* [Paimon JDBC Catalog](../metastores/paimon-jdbc.md) (поддерживается с версии 4.1.0)
+
+* [FileSystem](../metastores/filesystem.md)
+
+> Примечание: Поддерживаемые типы служб и параметры немного различаются в разных версиях Doris. См. раздел [Примеры].
+
+### Поддерживаемые системы хранения {#supported-storage-systems}
+
+* [HDFS](../storages/hdfs.md)
+
+* [AWS S3](../storages/s3.md)
+
+* [Google Cloud Storage](../storages/gcs.md)
+
+* [Apache Ozone](../storages/ozone.md) (поддерживается с версии 4.0.4)
+
+* [Alibaba Cloud OSS](../storages/aliyun-oss.md)
+
+* [Tencent Cloud COS](../storages/tencent-cos.md)
+
+* [Huawei Cloud OBS](../storages/huawei-obs.md)
+
+* [MINIO](../storages/minio.md)
+
+> Примечание: Поддерживаемые типы служб и параметры немного различаются в разных версиях Doris. См. раздел [Примеры].
+
+### Поддерживаемые форматы данных {#supported-data-formats}
+
+* [Parquet](../file-formats/parquet.md)
+
+* [ORC](../file-formats/orc.md)
+
+## Сопоставление типов столбцов {#column-type-mapping}
+
+Полная таблица сопоставления для Doris 4.2, правила точности и неподдерживаемые типы приведены в разделе [Сопоставление типов данных Paimon и Doris](paimon-catalog/doris-type-mapping.md).
+
+Doris сохраняет точное написание имён столбцов верхнего уровня и вложенных полей `STRUCT`, заключённых в кавычки, в обоих вариантах работы JNI-сканера Paimon.
+Имена, содержащие разделители, например запятые (`region,code`), знаки решётки (`nested#value`), двоеточия (`colon:name`),
+пробелы или символы Unicode, не требуют дополнительного экранирования помимо обычного заключения SQL-идентификаторов в кавычки. При чтении столбцы сопоставляются
+без учёта регистра, поэтому запросы к столбцам с именами, содержащими заглавные буквы или смешанный регистр (например, `UserId`),
+выполняются обычным образом.
+
+:::info Примечание о версиях
+
+В версиях до 4.0.8 столбцы при чтении определялись по точному совпадению имён, поэтому в таблицах Paimon и Iceberg с именами столбцов в смешанном регистре мог считываться неверный столбец или запрос мог завершаться ошибкой. Это исправлено в 4.0.8.
+
+:::
+
+Начиная с 4.1.5, явные команды `REFRESH TABLE`, `REFRESH DATABASE` и `REFRESH CATALOG` также сбрасывают соответствующие кэши Paimon SDK. После внешнего изменения схемы или удаления и повторного создания таблицы выполните команду обновления для повторной загрузки метаданных. Уже запущенные запросы сохраняют выбранный снимок.
+
+## Примеры {#examples}
+
+### Hive Metastore {#hive-metastore}
+
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/hive/warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320',
+                'hadoop.username' = 'doris'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+            Получение учётных данных доступа к S3 через IAM Assumed Role (3.1.221+)
+            ```sql
+            CREATE CATALOG paimon_hms_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket/warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'cosn://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG `paimon_on_gcs` PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'gs://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.gcs.support' = 'true',
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='Ozone' label='Ozone'>
+            Поддерживается с версии 4.0.4
+            ```sql
+            CREATE CATALOG paimon_hms_on_ozone_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3a://test-bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.ozone.support' = 'true',
+                'ozone.endpoint' = 'http://ozone-s3g:9878',
+                'ozone.access_key' = '<ak>',
+                'ozone.secret_key' = '<sk>',
+                'ozone.region' = 'us-east-1',
+                'ozone.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG paimon_hms_on_minio_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://test-bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'fs.minio.support' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19000',
+                'minio.access_key' = 'minioadmin',
+                'minio.secret_key' = 'minioadmin',
+                'minio.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Доступ к HMS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG paimon_hms_on_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'warehouse' = 'hdfs://127.0.0.1:8320/user/paimon/warehouse/paimon-hms-hdfs-warehouse',
+                'hadoop.username' = 'doris',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8320'
+            );
+            ```
+            Доступ к HMS с включённой аутентификацией Kerberos
+            ```sql
+            CREATE CATALOG paimon_hms_on_hdfs_kerberos_hdfs_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'hdfs://127.0.0.1:8520/paimon-hms-hdfs-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9583',
+                'hive.metastore.kerberos.principal' = 'hive/hadoop-master@LABS.TERADATA.COM',
+                'hive.metastore.sasl.enabled' = 'true',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8520',
+                'hadoop.security.auth_to_local' = 'RULE:[2:\$1@\$0](.*@LABS.TERADATA.COM)s/@.*//
+                    RULE:[2:\$1@\$0](.*@OTHERLABS.TERADATA.COM)s/@.*//
+                    RULE:[2:\$1@\$0](.*@OTHERREALM.COM)s/@.*//
+                    DEFAULT',
+                'hadoop.security.authentication' = 'kerberos',
+                'hadoop.kerberos.principal' = 'hive/presto-master.docker.cluster@LABS.TERADATA.COM',
+                'hadoop.kerberos.keytab' = '/keytabs/hive-presto-master.keytab'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket-hk/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.region' = 'ap-east-1',
+                'paimon.s3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                'paimon.s3.endpoint' = 'ap-east-1',
+                's3.access_key' = '<ak>',
+                'paimon.s3.access-key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_ali_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'oss://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'oss.region' = 'cn-beijing',
+                'oss.endpoint' = 'oss-cn-beijing.aliyuncs.com',
+                'oss.access_key' = '<ak>',
+                'oss.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_tx_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'cosn://bucket/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_hw_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 'obs://bucket/regression/paimon_warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_paimon_on_hms_minio_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'hms',
+                'warehouse' = 's3://bucket/paimon-warehouse',
+                'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+                's3.endpoint' = 'http://127.0.0.1:19000',
+                'paimon.s3.endpoint' = 'http://127.0.0.1:19000',
+                's3.access_key' = '<ak>',
+                'paimon.s3.access-key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                'paimon.s3.secret-key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Aliyun DLF Metastore {#aliyun-dlf-metastore}
+
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'dlf',
+                'warehouse' = 'oss://bucket/p2_regression_case',
+                'dlf.uid' = '772905',
+                'dlf.catalog_id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='DLF(2.5+)' label='DLF(2.5+)'>
+            ```sql
+            CREATE CATALOG paimon_dlf_test PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'rest',
+                'uri' = 'http://cn-beijing-vpc.dlf.aliyuncs.com',
+                'warehouse' = 'new_dfl_paimon_catalog',
+                'paimon.rest.token.provider' = 'dlf',
+                'paimon.rest.dlf.access-key-id' = '<ak>',
+                'paimon.rest.dlf.access-key-secret' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+
+    <Tabs>
+        <TabItem value='DLF 1.0' label='DLF 1.0' default>
+            ```sql
+            CREATE CATALOG paimon_dlf_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'dlf',
+                'warehouse' = 'oss://bucket/paimon-dlf-oss-warehouse',
+                'dlf.uid' = '7716890',
+                'dlf.catalog.id' = 'p2_regression_case',
+                'dlf.region' = 'cn-beijing',
+                'dlf.endpoint' = 'dlf.cn-beijing.aliyuncs.com',
+                'dlf.access_key' = '<ak>',
+                'dlf.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### FileSystem Metastore {#filesystem-metastore}
+
+<details>
+    <summary>Версия 3.1+</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Доступ к службам HMS и HDFS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+
+            Получение учётных данных доступа к S3 через IAM Assumed Role (3.1.2+)
+
+            ```sql
+            CREATE CATALOG paimon_fs_on_s3_iamrole PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.region' = 'us-east-1',
+                's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
+            );
+            ``` 
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            Использование OSS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.region'='cn-beijing',
+                'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
+            );
+            ```
+
+            Использование OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'fs.oss-hdfs.support' = 'true',
+                'oss.hdfs.access_key' = '<ak>',
+                'oss.hdfs.secret_key' = '<sk>',
+                'oss.hdfs.endpoint' = 'cn-beijing.oss-dls.aliyuncs.com',
+                'oss.hdfs.region' = 'cn-beijing'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'cosn://bucket/regression/paimon1',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'obs://bucket/regression/paimon1',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='GCS' label='GCS'>
+            ```sql
+            CREATE CATALOG paimon_on_gcs_s3_fs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                'fs.gcs.support' = 'true',
+                'gs.secret_key' = '<sk>',
+                'gs.access_key' = '<ak>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG test_paimon_minio_minio PROPERTIES (
+                'type' = 'paimon',
+                'warehouse' = 's3://warehouse/wh',
+                'fs.minio.support' = 'true',
+                'minio.endpoint' = 'http://127.0.0.1:19001',
+                'minio.access_key' = 'admin',
+                'minio.secret_key' = 'password',
+                'minio.use_path_style' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+<details>
+    <summary>Версии 2.1 & 3.0</summary>
+    <Tabs>
+        <TabItem value='HDFS' label='HDFS' default>
+            Доступ к службам HMS и HDFS без аутентификации Kerberos
+            ```sql
+            CREATE CATALOG ctl_test_paimon_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'hdfs://127.0.0.1:8020/user/doris/paimon1',
+                'fs.defaultFS' = 'hdfs://127.0.0.1:8020'
+            );
+            ```
+        </TabItem>
+        <TabItem value='S3' label='S3'>
+            ```sql
+            CREATE CATALOG test_paimon_on_fs_aws_catalog PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 's3://bucket/paimon_warehouse',
+                's3.region' = 'ap-east-1',
+                's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OSS' label='OSS'>
+            Использование OSS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.region'='cn-beijing',
+                'oss.endpoint'='oss-cn-beijing.aliyuncs.com',
+                'oss.access_key'='<ak>',
+                'oss.secret_key'='<sk>'
+            );
+            ```
+
+            Использование OSS-HDFS
+
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_oss_hdfs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'oss://bucket/regression/paimon1',
+                'oss.hdfs.enabled' = 'true',
+                'oss.access_key' = 'your-access-key',
+                'oss.secret_key' = 'your-secret-key',
+                'oss.endpoint' = 'cn-hangzhou.oss-dls.aliyuncs.com',
+                'oss.region' = 'cn-hangzhou'
+            );
+            ```
+        </TabItem>
+        <TabItem value='COS' label='COS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_cosn PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'cosn://bucket/regression/paimon1',
+                'cos.region' = 'ap-beijing',
+                'cos.endpoint' = 'cos.ap-beijing.myqcloud.com',
+                'cos.access_key' = '<ak>',
+                'cos.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='OBS' label='OBS'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_obs PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'filesystem',
+                'warehouse' = 'obs://bucket/regression/paimon1',
+                'obs.region' = 'cn-north-4',
+                'obs.endpoint' = 'obs.cn-north-4.myhuaweicloud.com',
+                'obs.access_key' = '<ak>',
+                'obs.secret_key' = '<sk>'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MinIO' label='MinIO'>
+            ```sql
+            CREATE CATALOG paimon_base_filesystem_paimon_minio PROPERTIES (
+                'type' = 'paimon',
+                'warehouse' = 's3://warehouse/wh',
+                'paimon.catalog.type' = 'filesystem',
+                's3.endpoint' = 'http://127.0.0.1:19001',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.path.style.access' = 'true'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+### Paimon JDBC Catalog {#paimon-jdbc-catalog}
+
+:::tip Примечание
+Это экспериментальная функция, поддерживаемая с версии 4.1.0.
+:::
+
+<details>
+    <summary>Версия 4.1+</summary>
+    <Tabs>
+        <TabItem value='PostgreSQL' label='PostgreSQL' default>
+            Использование PostgreSQL для хранения метаданных и S3 для хранения данных
+            ```sql
+            CREATE CATALOG paimon_jdbc_postgresql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:postgresql://127.0.0.1:5432/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'org.postgresql.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+        <TabItem value='MySQL' label='MySQL'>
+            Использование MySQL для хранения метаданных и S3 для хранения данных
+            ```sql
+            CREATE CATALOG paimon_jdbc_mysql PROPERTIES (
+                'type' = 'paimon',
+                'paimon.catalog.type' = 'jdbc',
+                'paimon.jdbc.uri' = 'jdbc:mysql://127.0.0.1:3306/paimon_db',
+                'paimon.jdbc.user' = 'paimon_user',
+                'paimon.jdbc.password' = 'password',
+                'paimon.jdbc.driver_class' = 'com.mysql.cj.jdbc.Driver',
+                'paimon.jdbc.driver_url' = '<jdbc_driver_jar>',
+                'warehouse' = 's3://bucket/warehouse',
+                's3.access_key' = '<ak>',
+                's3.secret_key' = '<sk>',
+                's3.endpoint' = 'https://s3.us-east-1.amazonaws.com',
+                's3.region' = 'us-east-1'
+            );
+            ```
+        </TabItem>
+    </Tabs>
+</details>
+
+## Операции записи {#write-operations}
+
+Doris может создавать и изменять таблицы Paimon, а также записывать в них данные. Каждая успешная запись фиксируется как снимок
+Paimon. Если SQL-оператор завершается ошибкой, Doris не публикует частичный снимок.
+
+### Перед началом работы {#before-you-begin}
+
+Перед записью данных проверьте следующее:
+
+* На всех узлах FE и BE должна работать сборка Doris с поддержкой записи в Paimon. Не выполняйте запись в Paimon во время
+  последовательного обновления кластера, пока в нём ещё работают узлы BE со старой версией.
+* Учётные данные Catalog должны предоставлять права на обновление metastore, а также на создание, запись, переименование и удаление файлов
+  в хранилище. Точный набор прав зависит от metastore и системы хранения.
+* Запись доступна только для обычных таблиц данных Paimon. Системные таблицы Paimon и обращения к таблицам с выбором ветви,
+  тега, снимка или временной метки доступны только для чтения.
+
+### Поддерживаемые SQL-операции {#supported-sql}
+
+| Операция | Поддержка и примечания |
+| --- | --- |
+| DDL для баз данных | `CREATE DATABASE` и `DROP DATABASE` |
+| DDL для таблиц | `CREATE TABLE`, `CREATE TABLE AS SELECT` и `DROP TABLE` |
+| Изменения схемы | Добавление, удаление, переименование, изменение порядка и модификация столбцов |
+| Добавление данных | `INSERT INTO ... VALUES` и `INSERT INTO ... SELECT` |
+| Перезапись данных | `INSERT OVERWRITE` для всей таблицы, статических и динамических разделов |
+| Изменения на уровне строк | `DELETE`, `UPDATE` и `MERGE INTO` для таблиц с первичным ключом с учётом приведённых ниже ограничений |
+
+### Быстрый старт {#quick-start}
+
+В следующем примере создаётся таблица с первичным ключом и в неё записываются данные. Параметры таблицы Paimon задаются в
+`PROPERTIES`; не добавляйте предложение Doris `DISTRIBUTE BY`.
+
+```sql
+SWITCH paimon_ctl;
+CREATE DATABASE IF NOT EXISTS sales;
+USE sales;
+
+CREATE TABLE orders (
+    order_id BIGINT NOT NULL,
+    customer STRING NULL,
+    amount DECIMAL(12, 2) NULL,
+    status STRING NULL
+) ENGINE=paimon
+PROPERTIES (
+    'primary-key' = 'order_id',
+    'bucket' = '2',
+    'bucket-key' = 'order_id'
+);
+
+INSERT INTO orders VALUES
+    (1, 'Alice', 99.90, 'NEW'),
+    (2, 'Bob', 35.00, 'NEW');
+
+UPDATE orders
+SET status = 'PAID'
+WHERE order_id = 1;
+
+DELETE FROM orders
+WHERE order_id = 2;
+
+SELECT * FROM orders ORDER BY order_id;
+```
+
+Результат:
+
+```text
++----------+----------+--------+--------+
+| order_id | customer | amount | status |
++----------+----------+--------+--------+
+|        1 | Alice    |  99.90 | PAID   |
++----------+----------+--------+--------+
+```
+
+Можно изменить схему таблицы через Doris, а затем продолжить запись с новой схемой:
+
+```sql
+ALTER TABLE orders ADD COLUMN note STRING NULL;
+ALTER TABLE orders RENAME COLUMN note order_note;
+```
+
+### Вставка и перезапись данных {#insert-and-overwrite-data}
+
+`INSERT INTO` добавляет строки в таблицу только для добавления или объединяет строки в соответствии с параметрами
+Paimon для таблицы с первичным ключом. Источником могут быть `VALUES`, внутренняя таблица Doris или другая внешняя таблица.
+
+```sql
+INSERT INTO paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.new_orders;
+```
+
+Для таблицы без разделов `INSERT OVERWRITE` заменяет все существующие строки. Поэтому пустые входные данные приводят к получению пустой
+таблицы.
+
+```sql
+INSERT OVERWRITE TABLE paimon_ctl.sales.orders
+SELECT order_id, customer, amount, status
+FROM internal.sales.orders_snapshot;
+```
+
+Для таблицы с разделами используйте одну из следующих форм:
+
+```sql
+-- Replace only the specified partition. The SELECT list omits the static partition column.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+PARTITION (order_date = '2026-10-08')
+SELECT order_id, customer, amount, status
+FROM internal.sales.daily_orders_stage;
+
+-- Dynamic overwrite replaces the partitions present in the input and keeps other partitions.
+INSERT OVERWRITE TABLE paimon_ctl.sales.daily_orders
+SELECT order_id, customer, amount, status, order_date
+FROM internal.sales.daily_orders_stage;
+```
+
+Таблица с первичным ключом допускает вставку без указания неключевых столбцов только в том случае, если её `merge-engine` имеет значение `partial-update`.
+Для таблицы только для добавления пропущенные столбцы получают значение по умолчанию или `NULL`, если это разрешено.
+
+### Удаление, обновление и слияние данных {#delete-update-and-merge-data}
+
+Изменения на уровне строк требуют таблицы Paimon с первичным ключом. Для таблицы со стандартным движком слияния `deduplicate` Doris
+поддерживает следующие операции:
+
+```sql
+DELETE FROM paimon_ctl.sales.orders
+WHERE order_id = 10;
+
+UPDATE paimon_ctl.sales.orders
+SET amount = amount * 0.9,
+    status = 'DISCOUNTED'
+WHERE order_id = 20;
+
+MERGE INTO paimon_ctl.sales.orders t
+USING internal.sales.order_changes s
+ON t.order_id = s.order_id
+WHEN MATCHED AND s.action = 'DELETE' THEN DELETE
+WHEN MATCHED THEN UPDATE SET
+    customer = s.customer,
+    amount = s.amount,
+    status = s.status
+WHEN NOT MATCHED THEN INSERT (order_id, customer, amount, status)
+    VALUES (s.order_id, s.customer, s.amount, s.status);
+```
+
+Следующие ограничения обусловлены способом применения изменений строк в Paimon:
+
+* `UPDATE` не может изменять столбец первичного ключа или столбец, заданный через `sequence.field`.
+* `UPDATE`, включая действие обновления в `MERGE`, поддерживает только движок слияния `deduplicate` и не поддерживает
+  `changelog-producer=input`.
+* Обновление столбца раздела требует таблицы с динамическими бакетами (`bucket=-1`) и настройкой `ignore-delete=false`.
+* `DELETE`, включая действие удаления в `MERGE`, требует `ignore-delete=false`. Стандартный движок слияния `deduplicate`
+  поддерживает эту операцию напрямую. Для таблицы `partial-update` необходимо задать `partial-update.remove-record-on-delete=true`, а для
+  таблицы `aggregation` необходимо задать `aggregation.remove-record-on-delete=true`.
+* Таблицы с настройкой `rowkind.field` не поддерживают эти SQL-операторы изменения строк. Таблица с динамическими бакетами и настройкой
+  `cross-partition-upsert.index-ttl` также их не поддерживает.
+* SQL-оператор `MERGE` подчиняется соответствующим ограничениям `UPDATE` и `DELETE` для содержащихся в нём действий.
+
+Для предсказуемых результатов обеспечьте уникальность строк источника `MERGE` по ключу сопоставления. Doris отклоняет SQL-оператор, если
+несколько строк источника соответствуют одной целевой строке.
+
+### Примечания по эксплуатации {#operational-notes}
+
+* Настраивайте первичные ключи, разделы, бакеты, движки слияния, форматы файлов, компакцию и другие физические характеристики через
+  свойства таблиц Paimon. Doris проверяет эти параметры с помощью Paimon SDK.
+* В настоящее время Doris не предоставляет общую операцию `ALTER TABLE ... SET TBLPROPERTIES` для таблиц Paimon. Чтобы
+  изменить свойства таблицы после создания, используйте другой движок Paimon, а затем выполните `REFRESH TABLE` или `REFRESH CATALOG`
+  в Doris.
+* Обеспечьте достаточно места на локальном диске каждого BE для выгрузки данных при записи, а также необходимые права в хранилище для временных файлов и
+  операций фиксации. Настройка BE `paimon_jni_writer_memory_pool_limit_bytes` ограничивает пул памяти, используемый каждым
+  модулем записи Paimon JNI; её значение по умолчанию составляет 512 MB.
+* После успешной записи или изменения схемы новые SQL-операторы Doris загружают зафиксированный снимок Paimon. Уже выполняющиеся
+  SQL-операторы продолжают использовать снимок, выбранный при их запуске.
+
+## Операции запросов {#query-operations}
+
+### Базовый запрос {#basic-query}
+
+После настройки Catalog можно выполнять запросы к данным его таблиц следующим образом:
+
+```sql
+-- 1. Switch to catalog, use database, and query
+SWITCH paimon_ctl;
+USE paimon_db;
+SELECT * FROM paimon_tbl LIMIT 10;
+
+-- 2. Use Paimon database directly
+USE paimon_ctl.paimon_db;
+SELECT * FROM paimon_tbl LIMIT 10;
+
+-- 3. Use fully qualified name to query
+SELECT * FROM paimon_ctl.paimon_db.paimon_tbl LIMIT 10;
+```
+
+### Пакетный инкрементальный запрос {#batch-incremental-query}
+
+> Начиная с версии 3.1.0
+
+Поддерживаются [пакетные инкрементальные](https://paimon.apache.org/docs/master/flink/sql-query/#batch-incremental) запросы к Paimon, аналогичные запросам во Flink.
+
+Можно запрашивать инкрементальные данные в заданных интервалах снимков или временных меток. Левая граница интервала включается, правая не включается.
+
+```sql
+-- between snapshots [0, 5)
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5');
+
+-- between snapshots [0, 5) with specified scan mode
+SELECT * FROM paimon_table@incr('startSnapshotId'='0', 'endSnapshotId'='5', 'incrementalBetweenScanMode'='diff');
+
+-- read from start timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000');
+
+-- read between timestamp
+SELECT * FROM paimon_table@incr('startTimestamp'='1750844949000', 'endTimestamp'='1750944949000');
+```
+
+Параметры:
+
+| Параметр | Описание | Пример |
+| --- | --- | --- |
+| `startSnapshotId` | ID начального снимка, должен быть больше 0. Необходимо указывать вместе с `endSnapshotId`. | `'startSnapshotId'='3'` |
+| `endSnapshotId` | ID конечного снимка, должен быть больше `startSnapshotId`. Необходимо указывать вместе с `startSnapshotId`. | `'endSnapshotId'='10'` |
+| `incrementalBetweenScanMode` | Задаёт режим инкрементального чтения. По умолчанию используется `auto`, поддерживаются `delta`, `changelog` и `diff` |  `'incrementalBetweenScanMode'='delta'` |
+| `startTimestamp` | Временная метка начального снимка, должна быть больше или равна 0. Единица измерения: миллисекунда. | `'startTimestamp'='1750844949000'` |
+| `endTimestamp` | Временная метка конечного снимка, должна быть больше `startTimestamp`. Необязательный параметр: если не задан, чтение выполняется от `startTimestamp` до последнего снимка. Единица измерения: миллисекунда. | `'endTimestamp'='1750944949000'` |
+
+:::tip Обратите внимание
+`startSnapshotId` и `endSnapshotId` образуют параметр Paimon `'incremental-between'='3,10'`
+
+`startTimestamp` и `endTimestamp` образуют параметр Paimon `'incremental-between-timestamp'='1750844949000,1750944949000'`
+
+`incrementalBetweenScanMode` соответствует параметру Paimon `incremental-between-scan-mode`.
+:::
+
+Подробнее об этих параметрах см. в [документации Paimon](https://paimon.apache.org/docs/master/maintenance/configurations/).
+
+### Time Travel {#time-travel}
+
+> Начиная с версии 3.1.0
+
+Поддерживается чтение указанных снимков таблиц Paimon.
+
+По умолчанию запросы на чтение используют только последнюю версию снимка.
+
+Получить снимки указанной таблицы Paimon можно через табличную функцию `$snapshots`:
+
+```sql
+Doris > SELECT snapshot_id,commit_time FROM paimon_tbl$snapshots;
++-------------+-------------------------+
+| snapshot_id | commit_time             |
++-------------+-------------------------+
+|           1 | 2025-08-17 06:05:52.740 |
+|           2 | 2025-08-17 06:05:52.979 |
+|           3 | 2025-08-17 06:05:53.240 |
+|           4 | 2025-08-17 06:05:53.561 |
++-------------+-------------------------+
+```
+
+Можно использовать предложения `FOR TIME AS OF` и `FOR VERSION AS OF` для чтения данных исторических версий по ID снимка или времени его создания. Примеры:
+
+```sql
+-- Notice: Before 3.1.1, only support format like YYYY-MM-DD HH:MM:SS.SSS
+-- After 3.1.2, support YYYY-MM-DD HH:MM:SS and YYYY-MM-DD
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52.740";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17 06:05:52";
+SELECT * FROM paimon_tbl FOR TIME AS OF "2025-08-17";
+
+-- Notice: The timestamp must be precise down to the millisecond.
+SELECT * FROM paimon_tbl FOR TIME AS OF 1755381952740;
+-- Use snapshot id
+SELECT * FROM paimon_tbl FOR VERSION AS OF 1;
+```
+
+#### Time Travel с `@options` {#time-travel-with-options}
+
+Для селекторов, специфичных для Paimon, используйте `@options` при обращении к таблице в запросе. Doris принимает `scan.snapshot-id`,
+`scan.tag-name`, `scan.version`, `scan.timestamp`, `scan.timestamp-millis`, `scan.watermark`,
+`scan.file-creation-time-millis`, `scan.creation-time-millis` и `scan.mode`. При выборе снимка или тега также
+выбирается его историческая схема; Doris не привязывает актуальную схему к историческим данным.
+
+```sql
+-- Read snapshot 1 with the schema stored for snapshot 1.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.snapshot-id' = '1');
+
+-- A retained tag remains readable even after its ordinary snapshot expires.
+SELECT id, old_name
+FROM paimon_tbl@options('scan.tag-name' = 'tag1');
+```
+
+В одном обращении к таблице можно указать только один параметр начальной позиции. `scan.mode` можно сочетать с позицией,
+только если Paimon определяет эту пару как совместимую. Например, `scan.mode='from-creation-timestamp'` требует
+`scan.creation-time-millis`. Неизвестный или просроченный снимок, ветвь или тег приводит к явной ошибке, а не к неявному
+переходу к актуальной таблице. Синтаксис `@options` поддерживается при обращении к таблицам в запросах и может сохраняться в определении
+представления, но его нельзя применять к ссылке на CTE или к командам, не являющимся запросами, например `SHOW`.
+
+### Ветви и теги {#branch-and-tag}
+
+> Начиная с версии 3.1.0
+
+Поддерживается чтение ветвей и тегов указанных таблиц Paimon.
+
+Для просмотра ветвей и тегов таблиц Paimon можно использовать системные таблицы `$branches` и `$tags`:
+
+```
+Doris > SELECT * FROM paimon_tbl$branches;
++-------------+-------------------------+
+| branch_name | create_time             |
++-------------+-------------------------+
+| b_1         | 2025-08-17 06:34:37.294 |
+| b_2         | 2025-08-17 06:34:37.297 |
++-------------+-------------------------+
+
+Doris > SELECT * FROM paimon_tbl$tags;
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| tag_name | snapshot_id | schema_id | commit_time             | record_count | create_time | time_retained |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+| t_1      |           1 |         0 | 2025-08-17 06:05:52.740 |            3 | NULL        | NULL          |
+| t_2      |           2 |         0 | 2025-08-17 06:05:52.979 |            6 | NULL        | NULL          |
+| t_3      |           3 |         0 | 2025-08-17 06:05:53.240 |            9 | NULL        | NULL          |
+| t_4      |           4 |         0 | 2025-08-17 06:05:53.561 |           12 | NULL        | NULL          |
++----------+-------------+-----------+-------------------------+--------------+-------------+---------------+
+```
+
+Для совместимости с такими системами, как Spark/Trino, поддерживаются различные формы синтаксиса:
+
+```sql
+-- BRANCH
+SELECT * FROM paimon_tbl@branch(branch1);
+SELECT * FROM paimon_tbl@branch("name" = "branch1");
+
+-- TAG
+SELECT * FROM paimon_tbl@tag(tag1);
+SELECT * FROM paimon_tbl@tag("name" = "tag1");
+SELECT * FROM paimon_tbl FOR VERSION AS OF 'tag1';
+```
+
+При использовании синтаксиса `FOR VERSION AS OF` Doris автоматически определяет, является ли параметр временной меткой
+
+## Системные таблицы {#system-tables}
+
+> Начиная с версии 3.1.0
+
+Doris поддерживает запросы к системным таблицам Paimon для получения метаданных таблиц. Системные таблицы позволяют просматривать историю снимков, файлы манифестов, файлы данных, разделы и другую информацию.
+
+Для доступа к метаданным таблицы Paimon добавьте после её имени символ `$`, а затем имя системной таблицы:
+
+```sql
+SELECT * FROM my_table$system_table_name;
+```
+
+Системные таблицы `audit_log`, `binlog`, `manifests`, `partitions`, `ro`, `row_tracking` и `table_indexes` принимают
+`@options` при обращении к ним. Выбранный снимок или тег применяется к строкам системной таблицы, а для системных таблиц, предоставляющих
+столбцы исходной таблицы, также используется соответствующая историческая схема исходной таблицы:
+
+```sql
+SELECT rowkind, id, old_name
+FROM paimon_tbl$audit_log@options('scan.tag-name' = 'tag1');
+```
+
+Остальные системные таблицы отклоняют `@options`, поскольку не могут гарантировать, что каждый этап формирования строк использует
+выбранный снимок. Системные таблицы Paimon также отклоняют `scan.file-creation-time-millis`: неявное игнорирование этого
+фильтра файлов могло бы привести к возврату строк за пределами запрошенного диапазона.
+
+:::info Примечание
+Doris не поддерживает чтение глобальных системных таблиц Paimon; они поддерживаются только во Flink.
+:::
+
+### schemas {#schemas}
+
+Показывает текущую и историческую информацию о схеме таблицы. При изменении схемы таблицы с помощью SQL-операторов `ALTER TABLE`, `CREATE TABLE AS` или `CREATE DATABASE AS` каждое изменение создаёт запись в таблице schemas:
+
+```sql
+SELECT * FROM my_table$schemas;
+```
+
+Результат:
+```text
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+| schema_id | fields                                                                                                             | partition_keys | primary_keys | options | comment | update_time             |
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+|         0 | [{"id":0,"name":"k","type":"INT NOT NULL"},{"id":1,"name":"f0","type":"INT"},{"id":2,"name":"f1","type":"STRING"}] | []             | ["k"]        | {}      |         | 2025-03-04 22:48:41.666 |
++-----------+--------------------------------------------------------------------------------------------------------------------+----------------+--------------+---------+---------+-------------------------+
+```
+
+### snapshots {#snapshots}
+
+Показывает информацию обо всех действительных снимках таблицы, включая время создания снимка, пользователя, выполнившего фиксацию, тип операции и т. д.:
+
+```sql
+SELECT * FROM my_table$snapshots;
+```
+
+Результат:
+```text
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+| snapshot_id | schema_id | commit_user                          | commit_identifier   | commit_kind | commit_time             | base_manifest_list                                   | delta_manifest_list                                  | changelog_manifest_list | total_record_count | delta_record_count | changelog_record_count | watermark            |
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+|           1 |         0 | d7ea4996-92c7-469f-b9ff-c76525954f1c | 9223372036854775807 | APPEND      | 2025-03-04 22:48:45.575 | manifest-list-dc5490ba-420c-445a-b6f7-6962d394935c-0 | manifest-list-dc5490ba-420c-445a-b6f7-6962d394935c-1 | NULL                    |                  1 |                  1 |                      0 | -9223372036854775808 |
+|           2 |         0 | 34de47f6-31d1-4f06-b378-c85ef4fbca41 | 9223372036854775807 | APPEND      | 2025-07-01 23:11:35.406 | manifest-list-dca6aa5b-6fc6-4b4f-ac22-acfa15bbf171-0 | manifest-list-dca6aa5b-6fc6-4b4f-ac22-acfa15bbf171-1 | NULL                    |                  2 |                  1 |                      0 | -9223372036854775808 |
+|           3 |         0 | 89f67183-a1f8-4ee9-b73c-3f7e992b79a7 | 9223372036854775807 | APPEND      | 2025-07-01 23:11:45.114 | manifest-list-6d624d1b-c774-4d95-905e-8258a7b89ecb-0 | manifest-list-6d624d1b-c774-4d95-905e-8258a7b89ecb-1 | NULL                    |                  3 |                  1 |                      0 | -9223372036854775808 |
+|           4 |         0 | 31924a7c-1389-490c-adf1-3bb805b33cd7 | 9223372036854775807 | APPEND      | 2025-07-01 23:12:42.042 | manifest-list-09097a51-afde-485e-929b-d2cc39eb6eb2-0 | manifest-list-09097a51-afde-485e-929b-d2cc39eb6eb2-1 | NULL                    |                  5 |                  2 |                      0 | -9223372036854775808 |
+|           5 |         0 | 1e90a80b-41cb-4242-b97c-889728f76810 | 9223372036854775807 | APPEND      | 2025-07-01 23:14:26.445 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-0 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-1 | NULL                    |                  6 |                  1 |                      0 | -9223372036854775808 |
+|           6 |         0 | 1e90a80b-41cb-4242-b97c-889728f76810 | 9223372036854775807 | COMPACT     | 2025-07-01 23:14:29.317 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-2 | manifest-list-b8471969-9c4d-41cd-b790-64f6efb2d142-3 | NULL                    |                  5 |                 -1 |                      0 | -9223372036854775808 |
++-------------+-----------+--------------------------------------+---------------------+-------------+-------------------------+------------------------------------------------------+------------------------------------------------------+-------------------------+--------------------+--------------------+------------------------+----------------------+
+```
+
+### options {#options}
+
+Показывает текущие параметры конфигурации таблицы. Если параметр отсутствует в этой таблице, для него используется значение по умолчанию:
+
+```sql
+SELECT * FROM my_table$options;
+```
+
+Результат:
+```text
++------------------------+--------------------+
+|         key            |        value       |
++------------------------+--------------------+
+| snapshot.time-retained |         5 h        |
++------------------------+--------------------+
+```
+
+### files {#files}
+
+Показывает информацию обо всех файлах данных, на которые ссылается текущий снимок, включая формат файла, количество записей, размер файла и т. д.:
+
+```sql
+SELECT * FROM my_table$files;
+```
+
+Результат:
+```text
+mysql> SELECT * FROM my_table$files;
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+| partition | bucket | file_path                                                                                                              | file_format | schema_id | level | record_count | file_size_in_bytes | min_key | max_key | null_value_counts | min_value_stats     | max_value_stats     | min_sequence_number | max_sequence_number | creation_time           | file_source |
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+| {}        |      0 | s3://paimon-warehouse-dev/test-flink/cookbook.db/my_table/bucket-0/data-b4a49c57-6ef6-4c04-8813-07a4960d987c-0.parquet | parquet     |         0 |     5 |            5 |               1321 | [1]     | [6]     | {f0=0, f1=0, k=0} | {f0=4, f1=111, k=1} | {f0=11, f1=k7, k=6} |                   0 |                   5 | 2025-07-01 23:14:23.967 | COMPACT     |
++-----------+--------+------------------------------------------------------------------------------------------------------------------------+-------------+-----------+-------+--------------+--------------------+---------+---------+-------------------+---------------------+---------------------+---------------------+---------------------+-------------------------+-------------+
+```
+
+### tags {#tags}
+
+Показывает информацию обо всех тегах таблицы, включая имена тегов и связанные снимки:
+
+```sql
+SELECT * FROM my_table$tags;
+```
+
+Результат:
+```text
++----------+-------------+-----------+-------------------------+--------------+--------------+
+| tag_name | snapshot_id | schema_id |             commit_time | record_count |   branches   |
++----------+-------------+-----------+-------------------------+--------------+--------------+
+|     tag1 |           1 |         0 | 2025-03-04 14:55:29.344 |            3 |      []      |
+|     tag3 |           3 |         0 | 2025-03-04 14:58:24.691 |            7 |  [branch-1]  |
++----------+-------------+-----------+-------------------------+--------------+--------------+
+```
+
+### branches {#branches}
+
+Показывает информацию обо всех известных ветвях таблицы:
+
+```sql
+SELECT * FROM my_table$branches;
+```
+
+Результат:
+```text
++----------------------+-------------------------+
+|          branch_name |             create_time |
++----------------------+-------------------------+
+|              branch1 | 2025-03-04 20:31:39.084 |
+|              branch2 | 2025-03-04 21:11:14.373 |
++----------------------+-------------------------+
+```
+
+### consumers {#consumers}
+
+Показывает информацию о потребителях таблицы, используемую для отслеживания потребления данных:
+
+```sql
+SELECT * FROM my_table$consumers;
+```
+
+Результат:
+```text
++-------------+------------------+
+| consumer_id | next_snapshot_id |
++-------------+------------------+
+|         id1 |                1 |
+|         id2 |                3 |
++-------------+------------------+
+```
+
+### manifests {#manifests}
+
+Показывает информацию о файлах манифестов текущего снимка таблицы:
+
+```sql
+SELECT * FROM my_table$manifests;
+```
+
+Результат:
+```text
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+| file_name                                       | file_size | num_added_files | num_deleted_files | schema_id | min_partition_stats | max_partition_stats |
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+| manifest-3df9bb64-5c11-4aef-994e-d8717fedfc70-0 |      1949 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-d7eb4ec4-7238-478a-9ae6-91a4ccebd561-0 |      1946 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-3b6f4079-c893-4413-aedc-1e8fbcea6db1-0 |      1948 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-abe5177f-82da-4e86-9864-40efffb391bd-0 |      1964 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-ee89dff3-a523-4655-a4b8-d7c9e471a1d6-0 |      1949 |               1 |                 0 |         0 | {}                  | {}                  |
+| manifest-ee89dff3-a523-4655-a4b8-d7c9e471a1d6-1 |      2232 |               1 |                 5 |         0 | {}                  | {}                  |
++-------------------------------------------------+-----------+-----------------+-------------------+-----------+---------------------+---------------------+
+```
+
+### aggregation_fields {#aggregation_fields}
+
+Показывает информацию о полях агрегации таблицы, используемую для настройки полей в агрегатных таблицах:
+
+```sql
+SELECT * FROM my_table$aggregation_fields;
+```
+
+Результат:
+```text
++------------+--------------+----------+------------------+---------+
+| field_name | field_type   | function | function_options | comment |
++------------+--------------+----------+------------------+---------+
+| k          | INT NOT NULL | []       | []               | NULL    |
+| f0         | INT          | []       | []               | NULL    |
+| f1         | STRING       | []       | []               | NULL    |
++------------+--------------+----------+------------------+---------+
+```
+
+### partitions {#partitions}
+
+Показывает информацию о разделах таблицы, включая общее количество записей и суммарный размер файлов каждого раздела:
+
+```sql
+SELECT * FROM my_table$partitions;
+```
+
+Результат:
+```text
++-----------+--------------+--------------------+------------+-------------------------+
+| partition | record_count | file_size_in_bytes | file_count | last_update_time        |
++-----------+--------------+--------------------+------------+-------------------------+
+| {}        |            5 |               1321 |          1 | 2025-07-01 23:14:23.967 |
++-----------+--------------+--------------------+------------+-------------------------+
+```
+
+### buckets {#buckets}
+
+Показывает информацию о бакетах таблицы, включая статистику каждого бакета:
+
+```sql
+SELECT * FROM my_table$buckets;
+```
+
+Результат:
+```text
++-----------+--------+--------------+--------------------+------------+-------------------------+
+| partition | bucket | record_count | file_size_in_bytes | file_count | last_update_time        |
++-----------+--------+--------------+--------------------+------------+-------------------------+
+| {}        |      0 |            5 |               1321 |          1 | 2025-07-01 23:14:23.967 |
++-----------+--------+--------------+--------------------+------------+-------------------------+
+```
+
+### statistics {#statistics}
+
+Показывает статистическую информацию о таблице, включая количество строк, объём данных и другие показатели:
+
+```sql
+SELECT * FROM my_table$statistics;
+```
+
+Результат:
+```text
++--------------+------------+-----------------------+------------------+----------+
+|  snapshot_id |  schema_id |     mergedRecordCount | mergedRecordSize |  colstat |
++--------------+------------+-----------------------+------------------+----------+
+|            2 |          0 |              2        |         2        |    {}    |
++--------------+------------+-----------------------+------------------+----------+
+```
+
+### table_indexes {#table_indexes}
+
+Показывает информацию об индексах таблицы:
+
+```sql
+SELECT * FROM my_table$table_indexes;
+```
+
+Результат:
+```text
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+|                      partition |      bucket |                     index_type |                      file_name |            file_size |            row_count |                      dv_ranges |
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+|                   {2025-03-01} |           0 |                           HASH | index-70abfebf-149e-4796-9f... |                   12 |                    3 |                         <NULL> |
+|                   {2025-04-01} |           0 |               DELETION_VECTORS | index-633857e7-cdce-47d2-87... |                   33 |                    1 | [(data-346cb9c8-4032-4d66-a... |
++--------------------------------+-------------+--------------------------------+--------------------------------+----------------------+----------------------+--------------------------------+
+```
+
+### Примеры использования системных таблиц {#system-table-use-cases}
+
+Системные таблицы позволяют легко выполнять следующие операции и задачи мониторинга.
+
+#### Просмотр информации о последнем снимке таблицы для определения её текущего состояния {#view-the-latest-snapshot-information-of-a-table-to-understand-its-current-state}
+
+```sql
+SELECT snapshot_id, commit_time, commit_kind, total_record_count FROM catalog_sales$snapshots ORDER BY snapshot_id DESC;
+```
+Результат:
+
+```text
++-------------+-------------------------+-------------+--------------------+
+| snapshot_id | commit_time             | commit_kind | total_record_count |
++-------------+-------------------------+-------------+--------------------+
+|           1 | 2025-07-01 21:21:54.179 | APPEND      |           14329288 |
++-------------+-------------------------+-------------+--------------------+
+```
+
+#### Просмотр информации о таблице для снимков {#view-table-information-for-snapshots}
+
+```sql
+SELECT s.snapshot_id, t.schema_id, t.fields FROM store_sales$snapshots s JOIN store_sales$schemas t ON s.schema_id=t.schema_id;
+```
+
+Результат:
+
+```text
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| snapshot_id | schema_id | fields                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|           1 |         0 | [{"id":0,"name":"ss_sold_date_sk","type":"INT"},{"id":1,"name":"ss_item_sk","type":"INT NOT NULL"},{"id":2,"name":"ss_ticket_number","type":"INT NOT NULL"},{"id":3,"name":"ss_sold_time_sk","type":"INT"},{"id":4,"name":"ss_customer_sk","type":"INT"},{"id":5,"name":"ss_cdemo_sk","type":"INT"},{"id":6,"name":"ss_hdemo_sk","type":"INT"},{"id":7,"name":"ss_addr_sk","type":"INT"},{"id":8,"name":"ss_store_sk","type":"INT"},{"id":9,"name":"ss_promo_sk","type":"INT"},{"id":10,"name":"ss_quantity","type":"INT"},{"id":11,"name":"ss_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":12,"name":"ss_list_price","type":"DECIMAL(7, 2)"},{"id":13,"name":"ss_sales_price","type":"DECIMAL(7, 2)"},{"id":14,"name":"ss_ext_discount_amt","type":"DECIMAL(7, 2)"},{"id":15,"name":"ss_ext_sales_price","type":"DECIMAL(7, 2)"},{"id":16,"name":"ss_ext_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":17,"name":"ss_ext_list_price","type":"DECIMAL(7, 2)"},{"id":18,"name":"ss_ext_tax","type":"DECIMAL(7, 2)"},{"id":19,"name":"ss_coupon_amt","type":"DECIMAL(7, 2)"},{"id":20,"name":"ss_net_paid","type":"DECIMAL(7, 2)"},{"id":21,"name":"ss_net_paid_inc_tax","type":"DECIMAL(7, 2)"},{"id":22,"name":"ss_net_profit","type":"DECIMAL(7, 2)"}] |
+|           2 |         0 | [{"id":0,"name":"ss_sold_date_sk","type":"INT"},{"id":1,"name":"ss_item_sk","type":"INT NOT NULL"},{"id":2,"name":"ss_ticket_number","type":"INT NOT NULL"},{"id":3,"name":"ss_sold_time_sk","type":"INT"},{"id":4,"name":"ss_customer_sk","type":"INT"},{"id":5,"name":"ss_cdemo_sk","type":"INT"},{"id":6,"name":"ss_hdemo_sk","type":"INT"},{"id":7,"name":"ss_addr_sk","type":"INT"},{"id":8,"name":"ss_store_sk","type":"INT"},{"id":9,"name":"ss_promo_sk","type":"INT"},{"id":10,"name":"ss_quantity","type":"INT"},{"id":11,"name":"ss_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":12,"name":"ss_list_price","type":"DECIMAL(7, 2)"},{"id":13,"name":"ss_sales_price","type":"DECIMAL(7, 2)"},{"id":14,"name":"ss_ext_discount_amt","type":"DECIMAL(7, 2)"},{"id":15,"name":"ss_ext_sales_price","type":"DECIMAL(7, 2)"},{"id":16,"name":"ss_ext_wholesale_cost","type":"DECIMAL(7, 2)"},{"id":17,"name":"ss_ext_list_price","type":"DECIMAL(7, 2)"},{"id":18,"name":"ss_ext_tax","type":"DECIMAL(7, 2)"},{"id":19,"name":"ss_coupon_amt","type":"DECIMAL(7, 2)"},{"id":20,"name":"ss_net_paid","type":"DECIMAL(7, 2)"},{"id":21,"name":"ss_net_paid_inc_tax","type":"DECIMAL(7, 2)"},{"id":22,"name":"ss_net_profit","type":"DECIMAL(7, 2)"}] |
++-------------+-----------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
+
+#### Просмотр распределения данных по бакетам {#view-data-distribution-of-buckets}
+
+```sql
+SELECT `bucket`, COUNT(*) as file_count, SUM(file_size_in_bytes)/1024/1024 as total_size_mb FROM paimon_s3.tpcds.catalog_sales$files GROUP BY `bucket` ORDER BY total_size_mb;
+```
+
+:::info Примечание
+Многие поля системных таблиц Paimon являются ключевыми словами в Doris, поэтому их необходимо заключать в обратные кавычки.
+:::
+
+Результат:
+
+```text
++--------+------------+--------------------+
+| bucket | file_count | total_size_mb      |
++--------+------------+--------------------+
+|     35 |          1 | 12.144722938537598 |
+|     81 |          1 | 12.143454551696777 |
+|     37 |          1 |  12.14071273803711 |
+|     36 |          1 | 12.139023780822754 |
+|     63 |          1 | 12.137332916259766 |
+|      7 |          1 | 12.122495651245117 |
+|     15 |          1 | 12.117934226989746 |
+|     11 |          1 | 12.116133689880371 |
+|     12 |          1 |  12.11155891418457 |
+|     46 |          1 | 12.111005783081055 |
++--------+------------+--------------------+
+```
+
+## Приложение {#appendix}
+
+### Часто задаваемые вопросы {#faq}
+
+**1. `Could not find a file io implementation for scheme 's3a' in the classpath`**
+
+В версиях до 3.1 при использовании HMS для хранения метаданных и протокола 's3a' или 's3' на стороне хранения данных возникает следующая ошибка:
+
+```text
+java.io.UncheckedIOException: org.apache.paimon.fs.UnsupportedSchemeException: Could not find a file io implementation for scheme 's3a' in the classpath. Hadoop FileSystem also cannot access this path 's3a://`.
+```
+
+**Версии до 3.1**
+
+Версии до 3.1 не поддерживают протокол `s3a`. Если его использование необходимо, в качестве временного обходного решения можно добавить параметры, связанные с `s3a`.
+
+**Версия 3.1 и выше**
+
+Начиная с версии 3.1, явно добавлять параметры `s3a` больше не требуется. Если нужно переопределить параметры хранения Paimon, можно добавить параметры с префиксом `paimon.fs.`. Поскольку Paimon внутренне использует HDFS API, поддерживаются все параметры `fs.s3a.*`.
+
+Например:
+
+```sql
+CREATE CATALOG `paimon_hms_on_s3a` PROPERTIES (
+    "type" = "paimon",
+    "paimon.catalog.type" = "hms",
+    "hive.metastore.uris" = "thrift://172.20.48.119:9383",
+    "warehouse" = "s3a://bucket/paimon_warehouse",
+    "s3.access_key" = "<ak>",
+    "s3.secret_key" = "<sk>",
+    "s3.region" = "ap-east-1",
+    "s3.endpoint" = "https://s3.ap-east-1.amazonaws.com",
+    -- Explicitly add s3a parameters
+    "fs.s3a.access.key" = "<ak>",
+    "fs.s3a.secret.key" = "<sk>",
+    "fs.s3a.endpoint.region" = "ap-east-1",
+    "fs.s3a.endpoint" = "https://s3.ap-east-1.amazonaws.com",
+    "fs.s3a.impl" = "org.apache.hadoop.fs.s3a.S3AFileSystem"
+);
+```
+
+При использовании протокола `s3` необходимо явно добавить параметры Paimon, связанные с S3, то есть добавить префикс `paimon.`. Например:
+
+```sql
+CREATE CATALOG test_paimon_on_hms_aws_catalog PROPERTIES (
+    'type' = 'paimon',
+    'paimon.catalog.type' = 'hms',
+    'warehouse' = 's3://bucket-hk/paimon_warehouse',
+    'hive.metastore.uris' = 'thrift://127.0.0.1:9383',
+    's3.region' = 'ap-east-1',
+    's3.endpoint' = 'https://s3.ap-east-1.amazonaws.com',
+    's3.access_key' = '<ak>',
+    's3.secret_key' = '<sk>',
+    -- Explicitly add Paimon S3 parameters
+    'paimon.s3.region' = 'ap-east-1',
+    'paimon.s3.endpoint' = 'ap-east-1',
+    'paimon.s3.access-key' = '<ak>',
+    'paimon.s3.secret-key' = '<sk>'
+);
+```

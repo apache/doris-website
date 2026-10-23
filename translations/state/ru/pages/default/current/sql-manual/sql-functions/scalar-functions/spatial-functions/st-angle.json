@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/spatial-functions/st-angle.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f14301cc3f0bd48dda8b8e75688c876b04b77036b95f869bf04abe720a1f97f6",
+    "sourceTechnicalHash": "b4d583f32f5d93b18ded4eb15f1f2dd2c506d80c32cd6d06e9ca87ba43a5462b",
+    "targetHash": "014553c73d6e19b869038b42fee08fa70cf6b1d84370a6837111d21efe7cac0a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:35:47.701Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f14301cc3f0bd48dda8b8e75688c876b04b77036b95f869bf04abe720a1f97f6",
+      "targetHash": "014553c73d6e19b869038b42fee08fa70cf6b1d84370a6837111d21efe7cac0a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

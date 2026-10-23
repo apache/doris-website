@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "how-to-contribute/contribute-to-doris",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/how-to-contribute/contribute-to-doris.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-to-doris.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6de310022dcecf60f26d4f9bf575fd961e4d2bdc3c6bc36cd8c2eb9bd831f75b",
+    "sourceTechnicalHash": "17c8e44a80a46dbba12d80f0886dd352023b1acb5d43c98d681c4bdfe941fe6e",
+    "targetHash": "e088c3405a69f21481b5449ba46573e56000a4f5473b1620b7278a1f9d884a22",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:14:55.846Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6de310022dcecf60f26d4f9bf575fd961e4d2bdc3c6bc36cd8c2eb9bd831f75b",
+      "targetHash": "e088c3405a69f21481b5449ba46573e56000a4f5473b1620b7278a1f9d884a22",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ],
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 0,
+      "lifetimeModelCalls": 1
+    }
+  }
+}

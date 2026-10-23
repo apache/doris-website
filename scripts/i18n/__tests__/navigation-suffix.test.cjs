@@ -9,8 +9,8 @@ const cheerio = require('cheerio');
 
 function fixture(kind, singleVersion = false) {
     const locales = ['en', 'zh-CN', 'ja', 'ko', 'ru'];
-    const route = locale => `${locale === 'en' ? '' : '/' + locale}/docs/dev/topic/`;
-    const i18n = {currentLocale: 'ru', locales,
+    const route = locale => `${locale === 'en' ? '' : '/' + locale}${kind === 'page' ? '/use-cases/ai/' : '/docs/dev/topic/'}`;
+    const i18n = {currentLocale: 'ru', defaultLocale: 'en', locales,
         localeConfigs: Object.fromEntries(locales.map(locale => [locale, {label: locale, htmlLang: locale}]))};
     const versions = (singleVersion ? ['current'] : ['current', '4.x']).map(name => ({name, label: name,
         mainDocId: 'topic', docs: [{id: 'topic', path: `/ru/docs/${name === 'current' ? 'dev' : name}/topic/`}]}));
@@ -20,6 +20,9 @@ function fixture(kind, singleVersion = false) {
     const anchor = ({to, label}) => React.createElement('a', {href: to.replace(/^pathname:\/\//, '')}, label);
     const imports = {
         react: React,
+        '@docusaurus/Link': ({to, children}) => React.createElement('a', {href: to.replace(/^pathname:\/\//, '')}, children),
+        '@site/src/utils/localization': {hasTranslatedPage: (_path, locale) => ['ja', 'ko', 'ru'].includes(locale)},
+        '@site/src/utils/locale': {normalizePathname: pathname => pathname.replace(/^\/(en|zh-CN|ja|ko|ru)(?=\/|$)/, '')},
         '@docusaurus/router': {useLocation: () => ({pathname: route('ru'),
             search: phase === 'server' ? '' : '?from=search', hash: phase === 'server' ? '' : '#usage'})},
         '@docusaurus/useIsBrowser': () => phase === 'hydrated',
@@ -34,8 +37,9 @@ function fixture(kind, singleVersion = false) {
             items.map((item, key) => React.createElement(anchor, {...item, key}))),
         '@theme/NavbarItem/DefaultNavbarItem': anchor,
     };
-    const file = kind === 'locale' ? 'LocaleDropdownNavbarItem/index.tsx' : 'DocsVersionDropdownNavbarItem.tsx';
-    const source = fs.readFileSync(path.resolve(__dirname, '../../../src/theme/NavbarItem', file), 'utf8');
+    const file = kind === 'page' ? 'components/home-next/PageLanguageSwitcher.tsx'
+        : `theme/NavbarItem/${kind === 'locale' ? 'LocaleDropdownNavbarItem/index.tsx' : 'DocsVersionDropdownNavbarItem.tsx'}`;
+    const source = fs.readFileSync(path.resolve(__dirname, '../../../src', file), 'utf8');
     const compiled = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.CommonJS,
         target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.React, esModuleInterop: true}}).outputText;
     const module = {exports: {}};
@@ -46,11 +50,11 @@ function fixture(kind, singleVersion = false) {
     }, module, module.exports);
     return next => {
         phase = next;
-        return renderToString(React.createElement(module.exports.default));
+        return renderToString(React.createElement(kind === 'page' ? module.exports.PageLanguageSwitcher : module.exports.default));
     };
 }
 
-for (const [kind, singleVersion] of [['locale', false], ['version', false], ['version', true]]) {
+for (const [kind, singleVersion] of [['locale', false], ['version', false], ['version', true], ['page', false]]) {
     test(`${kind} links match SSR before hydration and retain query/hash afterwards (single version: ${singleVersion})`, () => {
         const render = fixture(kind, singleVersion);
         const server = render('server');

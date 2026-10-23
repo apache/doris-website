@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "docs/connection-integration/data-integration/flink-doris-connector/read.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/connection-integration/data-integration/flink-doris-connector/read.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "c07228dabfe1df026978a47fcbc0bfa96219fb951bec8754d4b20099633c488c",
+    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
+    "sourceHash": "fa94af16939db761ebeaea765bae7384208430cd3ed27ca29f64888481796d8d",
     "sourceTechnicalHash": "4f6d4dd0e1467f1c58768b8d9482398fb089604813065bc9cfe96667c8640082",
-    "targetHash": "bc0ef9bae1c4b5bdd3e86334bd831cb83cd735dc054c0bce92ce4be080963165",
+    "targetHash": "25e7e8fdc52423679a0425f4f04d4845be2b026469aeb003ce61ad19290f914f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T13:19:43.742Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T13:09:52.240Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fa94af16939db761ebeaea765bae7384208430cd3ed27ca29f64888481796d8d",
+      "targetHash": "25e7e8fdc52423679a0425f4f04d4845be2b026469aeb003ce61ad19290f914f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"2.1\",\"2.1\",\"2.1\",\"21600\",\"24.0.0\",\"4064\",\"6\",\"8\",\"8192\"]; received [\"1\",\"1\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"21600\",\"24.0.0\",\"4064\",\"6\",\"8\",\"8192\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

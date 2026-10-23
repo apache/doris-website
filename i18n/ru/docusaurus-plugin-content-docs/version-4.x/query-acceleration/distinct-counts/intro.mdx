@@ -1,0 +1,31 @@
+---
+{
+    "title": "Эффективная дедупликация",
+    "language": "ru",
+    "description": "Навигация по разделу об эффективной дедупликации в Apache Doris: точная дедупликация на основе BITMAP и приближённая дедупликация на основе HLL."
+}
+---
+
+import GettingStartedCard from '@site/src/components/getting-started-card/getting-started-card';
+
+Дедупликация относится к наиболее ресурсоёмким операциям в аналитических нагрузках. Apache Doris предоставляет два специализированных типа данных в качестве альтернативы `COUNT DISTINCT`, позволяющих выполнять дедупликацию с меньшим потреблением памяти и меньшей задержкой: выбирайте **BITMAP**, когда нужны точные результаты, и **HLL**, если допустима погрешность 1%–2% в обмен на меньший объём хранимых данных.
+
+## Точная дедупликация {#exact-deduplication}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Точная дедупликация с BITMAP"
+    description="Используйте тип BITMAP вместо COUNT DISTINCT для точной дедупликации, чтобы ускорить запросы и сократить потребление памяти и дискового пространства."
+    link="bitmap-precise-deduplication"
+/>
+</div>
+
+## Приближённая дедупликация {#approximate-deduplication}
+
+<div className="cards-grid">
+<GettingStartedCard
+    title="Приближённая дедупликация с HLL"
+    description="Приближённая дедупликация на основе HyperLogLog с погрешностью в пределах 1%–2% и небольшим объёмом хранимых данных подходит для подсчёта UV и количества уникальных значений на больших объёмах данных."
+    link="hll-approximate-deduplication"
+/>
+</div>

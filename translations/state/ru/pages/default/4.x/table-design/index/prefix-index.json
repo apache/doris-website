@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/index/prefix-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/index/prefix-index.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/index/prefix-index.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "482d8e08df4eb40cdf75e5c57a532e1432c80fb498ba97b2952e0b3a62e9943e",
+    "sourceTechnicalHash": "39ce295474531204d0fb161c1e392d97e36600d2e5679cbc953efd17d1f8f40d",
+    "targetHash": "ec071fa082373892a48de025e4fca819d16a984f163ccac3afd6c8ea84cf7076",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:06:59.337Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "482d8e08df4eb40cdf75e5c57a532e1432c80fb498ba97b2952e0b3a62e9943e",
+      "targetHash": "ec071fa082373892a48de025e4fca819d16a984f163ccac3afd6c8ea84cf7076",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

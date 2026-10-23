@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/incremental/overview.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "df1f7e70c9f4d746cfec7229a129026bfc5cd4f93ce5280a4c7bf7a06870b4ba",
-    "sourceTechnicalHash": "71b79e2cd2eb2e597b3b05b341ce52e7aba562de3f11596e6bf486fcc0c7f19c",
-    "targetHash": "bd6e1142ae93b178eccfd661c491287ac9ef9a3d726c3f7be058472ab78c5f53",
+    "sourceCommit": "67589e0c2bf5c0bb50ed71c34b0760e1a293b478",
+    "sourceHash": "ce551452652a68cfe98b3813ec987b1f1995eacb92cc09529568c79827e03189",
+    "sourceTechnicalHash": "e73454f8c622a0d85dbe11a4813224124595f0b980b82d962fa272905babf8e0",
+    "targetHash": "2af43648c6c9b25b3093fa670bdf607db8fd863466464806c2f27852a6e6f826",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T16:06:57.644Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-21T13:17:32.582Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ce551452652a68cfe98b3813ec987b1f1995eacb92cc09529568c79827e03189",
+      "targetHash": "2af43648c6c9b25b3093fa670bdf607db8fd863466464806c2f27852a6e6f826",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"DETAIL\"]; received [\"inlineCode\",null,null,\"@incr\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"@incr\"]; received [\"inlineCode\",null,null,\"DETAIL\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"10\",\"5.0\",\"5.0.0\",\"5.0.0\"]; received [\"1\",\"10\",\"5.0\",\"5.0.0\",\"5.0.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"DETAIL\"]; received [\"inlineCode\",null,null,\"@incr\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"@incr\"]; received [\"inlineCode\",null,null,\"DETAIL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"DETAIL\"]; received [\"inlineCode\",null,null,\"@incr\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"@incr\"]; received [\"inlineCode\",null,null,\"DETAIL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"DETAIL\"]; received [\"inlineCode\",null,null,\"@incr\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"@incr\"]; received [\"inlineCode\",null,null,\"DETAIL\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

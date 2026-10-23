@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "key-features/bm25",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/key-features/bm25.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/key-features/bm25.mdx",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "c767dea43ef41ff4a582dc8a9a6a2b691812d54feee6b8854cc6731fabe08487",
+    "sourceTechnicalHash": "0f91427df92cfeffdc834a6763988e582eb637b4d094ba0af52cbd1c02d0101f",
+    "targetHash": "e74f755565bbc66713630c0466f26c98d53b3e21084ef243ddc4759ad3982df8",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:48:30.507Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "c767dea43ef41ff4a582dc8a9a6a2b691812d54feee6b8854cc6731fabe08487",
+      "targetHash": "e74f755565bbc66713630c0466f26c98d53b3e21084ef243ddc4759ad3982df8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "key-features/bm25",
+        "sourcePath": "docs/key-features/bm25.mdx",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/key-features/bm25.mdx",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "c767dea43ef41ff4a582dc8a9a6a2b691812d54feee6b8854cc6731fabe08487",
+        "targetHash": "e74f755565bbc66713630c0466f26c98d53b3e21084ef243ddc4759ad3982df8",
+        "commit": "a5843f63bf94f5e0e534d0671c9d6d8c5a44d4f6",
+        "pr": "https://github.com/apache/doris-website/pull/4437"
+      }
+    }
+  }
+}

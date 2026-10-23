@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/cluster-action",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/cluster-action.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/cluster-action.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "096b661d0712fa892aa9efe659a8fc6c1ea01d78283b7793cb0d4ca210ac61ca",
+    "sourceTechnicalHash": "96ece8f7597e787d2385b60826ca90f68deea589952a1d27b36ebaef94e7f036",
+    "targetHash": "5e7920df9e2bc26d6a27a10cd7a5b152b001f029b4bb0ba712cca3819d2ba92b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T15:14:17.572Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "096b661d0712fa892aa9efe659a8fc6c1ea01d78283b7793cb0d4ca210ac61ca",
+      "targetHash": "5e7920df9e2bc26d6a27a10cd7a5b152b001f029b4bb0ba712cca3819d2ba92b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
