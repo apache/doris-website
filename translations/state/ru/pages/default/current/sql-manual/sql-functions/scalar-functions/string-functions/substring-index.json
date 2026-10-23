@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/substring-index",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/substring-index.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/substring-index.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2d8049e4092d9513aa98cb12ddc02e137b839113ca98eef88d600407b55b0337",
+    "sourceTechnicalHash": "743e1eb5966108c8e60fe51f78e4a254f7194f52f4377484c0280f2cae37a002",
+    "targetHash": "8539d21c316d30763c4d274d0d097a23623c3b0c6bf56035a3893f6828a112fa",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:50:40.137Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2d8049e4092d9513aa98cb12ddc02e137b839113ca98eef88d600407b55b0337",
+      "targetHash": "8539d21c316d30763c4d274d0d097a23623c3b0c6bf56035a3893f6828a112fa",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/string-functions/lpad",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/lpad.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/lpad.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "77c8d4efa5d6cebf40e481613123315e4d1970f45da2b4ae836747dce7b14dda",
+    "sourceTechnicalHash": "6f7af7b6e408c3a68b37e6c154ded452d3edf97f895e606aa86afa461ed7003a",
+    "targetHash": "c9f6240962f8e25162f568147885142905712a2c43563d5840189cf67c06739e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:46:30.825Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "77c8d4efa5d6cebf40e481613123315e4d1970f45da2b4ae836747dce7b14dda",
+      "targetHash": "c9f6240962f8e25162f568147885142905712a2c43563d5840189cf67c06739e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
