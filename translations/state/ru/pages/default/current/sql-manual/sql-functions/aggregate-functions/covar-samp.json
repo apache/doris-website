@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/covar-samp",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/covar-samp.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/covar-samp.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "966d9b4a80f74ad3e6d101ab039742ec13163150a85ab0c22649b5230557027c",
+    "sourceTechnicalHash": "17cd806c473b1636ce02027b52da50023aae1e70e44b5fc30108b027262bff17",
+    "targetHash": "93fda7b8b6d29b6f935da7c0ed157e0bc859c65d83a2f203e84c54346fa4603f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:21:07.660Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "966d9b4a80f74ad3e6d101ab039742ec13163150a85ab0c22649b5230557027c",
+      "targetHash": "93fda7b8b6d29b6f935da7c0ed157e0bc859c65d83a2f203e84c54346fa4603f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

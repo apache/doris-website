@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/combinators/merge",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/combinators/merge.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/combinators/merge.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "abda7355363afb8cff418b0187a37abc11a979bf394908bad6fda9552b0306da",
+    "sourceTechnicalHash": "2c5b614532664d975f25c863602b04f0f4a65d789b1f8a64b08e94c92bfbe298",
+    "targetHash": "7fa3facf9c5b3512997e97badd053d119f45450ab9c6123f0d4f6f4e7f81e368",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:29:36.192Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "abda7355363afb8cff418b0187a37abc11a979bf394908bad6fda9552b0306da",
+      "targetHash": "7fa3facf9c5b3512997e97badd053d119f45450ab9c6123f0d4f6f4e7f81e368",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

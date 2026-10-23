@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-enumerate.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "2383336f5b9fffd5b459f2b47362351da307ff08be3444129b88c320b5ef57a3",
+    "sourceTechnicalHash": "0a752e166696f11ea3c360d15267c45bcc419c009b62431972ba2accc35097cf",
+    "targetHash": "7c1d409bf2c325f5b894e290641892ee4a1cde0f60889577bed48e73fba9da1c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:31:43.319Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "2383336f5b9fffd5b459f2b47362351da307ff08be3444129b88c320b5ef57a3",
+      "targetHash": "7c1d409bf2c325f5b894e290641892ee4a1cde0f60889577bed48e73fba9da1c",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

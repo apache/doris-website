@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/skew",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/skew.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/skew.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "54ebb8fe24500d58b6380c85281ddfb72095760c9ab4a9eb934894a5a709eaca",
+    "sourceTechnicalHash": "4d399030b5af970914203a5d640bbf05fdf73781a523892962f1928bfe22abb3",
+    "targetHash": "450e4aba0c380172c08b63b9f861e7b58de35ec0fa1eefdd1e465587fe5cd165",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:26:17.361Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "54ebb8fe24500d58b6380c85281ddfb72095760c9ab4a9eb934894a5a709eaca",
+      "targetHash": "450e4aba0c380172c08b63b9f861e7b58de35ec0fa1eefdd1e465587fe5cd165",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

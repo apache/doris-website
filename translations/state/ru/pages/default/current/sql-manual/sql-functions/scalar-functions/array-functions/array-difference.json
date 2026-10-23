@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/array-functions/array-difference",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/array-functions/array-difference.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/array-functions/array-difference.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "ac26d0e8d02db886bce4f82b8a3e529f2d0e6d467c8859b62b92b48913674c0e",
+    "sourceTechnicalHash": "2b37b99332cbe54faf5bba89bdc57a9a404abcb7f4913c22033db3c713a77316",
+    "targetHash": "c4a41378996fd2224a1de4a68307831e8883579ebe50a4b58ea2016d16b56c35",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:31:52.383Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ac26d0e8d02db886bce4f82b8a3e529f2d0e6d467c8859b62b92b48913674c0e",
+      "targetHash": "c4a41378996fd2224a1de4a68307831e8883579ebe50a4b58ea2016d16b56c35",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

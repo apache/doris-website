@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/combinators/state",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/combinators/state.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/combinators/state.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "dfddde7371e2f39f3d06ab6b262bbde7d648bd1cefde71dc746002b997bfdbdb",
+    "sourceTechnicalHash": "e8c2ca892ee7930aa866dfc3ada22440c3bdd2099f147f5d2281f7b4b3a46ec7",
+    "targetHash": "03fb7f7464945791c08ef5b69cb3f69b2eefd0c511dfd31490315872528e8320",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T10:29:44.057Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "dfddde7371e2f39f3d06ab6b262bbde7d648bd1cefde71dc746002b997bfdbdb",
+      "targetHash": "03fb7f7464945791c08ef5b69cb3f69b2eefd0c511dfd31490315872528e8320",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
