@@ -162,6 +162,7 @@ jobs:
           uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
           with:
               name: publish-build-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+              include-hidden-files: true
               path: |
                   .i18n-build/publish-metrics/
                   .i18n-build/build-result.json
@@ -270,6 +271,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: publish-deploy-measurements-${{ github.run_id }}-${{ github.run_attempt }}
+          include-hidden-files: true
           path: .i18n-build/publish-metrics/
           if-no-files-found: error
           retention-days: 14

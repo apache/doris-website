@@ -104,6 +104,7 @@ class PublishMetricsTests(unittest.TestCase):
                 self.assertIn("always()", report["if"])
                 upload = next(step for step in job["steps"] if step.get("name") == "Upload publishing measurements")
                 self.assertIn("always()", upload["if"])
+                self.assertTrue(upload["with"]["include-hidden-files"])
                 self.assertTrue(all(path.startswith(".i18n-build/") for path in upload["with"]["path"].splitlines()))
 
 
