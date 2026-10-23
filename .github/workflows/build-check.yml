@@ -33,10 +33,11 @@ jobs:
         name: Build Check
         runs-on: ubuntu-22.04
         steps:
-            - name: Checkout ${{ github.ref }} ( ${{ github.event.pull_request.head.sha }} )
+            - name: Checkout PR merge commit (${{ github.sha }})
               uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
               with:
-                ref: ${{ github.event.pull_request.head.sha }}
+                # Match the workflow's merge snapshot, including new base-branch tooling.
+                ref: ${{ github.sha }}
                 persist-credentials: false
                 fetch-depth: 0
                 # Full history is needed for merge-base/check_move, but the
@@ -68,8 +69,11 @@ jobs:
                   
             
             - name: Run Node.js dead link checker
+              env:
+                PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
               run: |
-                node ./scripts/check_move.js "$(git rev-parse HEAD)"
+                # git show on a clean merge omits the PR's changed files.
+                node ./scripts/check_move.js "$PR_HEAD_SHA"
         
             - name: Detect changed doc versions and locales
               id: detect
