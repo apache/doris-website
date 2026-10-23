@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "subscribe-mail-list",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/subscribe-mail-list.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/subscribe-mail-list.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "4ccda3a3258f033d15102695cddfc90df24acd5c0870940e51d5f64b5af3d0db",
+    "sourceTechnicalHash": "407337e516093740d76c39f04e1da017aab47e2d79b57ba1721d0b4a56f4f3ec",
+    "targetHash": "899889ddf9ff8e02bc4ad4821940fd20b31856e7061627ec28bc9c8eeee996dc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:13:46.741Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ccda3a3258f033d15102695cddfc90df24acd5c0870940e51d5f64b5af3d0db",
+      "targetHash": "899889ddf9ff8e02bc4ad4821940fd20b31856e7061627ec28bc9c8eeee996dc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ],
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 0,
+      "lifetimeModelCalls": 1
+    }
+  }
+}

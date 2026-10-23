@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/window-functions/dense-rank",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/window-functions/dense-rank.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "3901365d069fddfe816fe2bcc8de38a9ca8931debb8b2019961d5a75bfb23e6d",
+    "sourceTechnicalHash": "25e0ed6ecd74ca9196245b2354e2bdd3dffcc4a96ede0a58e095c3fb691b5d37",
+    "targetHash": "335576d9ee522a116c7b5038ec3249a79f7a895b82019fd398f1036bc1577476",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T03:13:03.644Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "3901365d069fddfe816fe2bcc8de38a9ca8931debb8b2019961d5a75bfb23e6d",
+      "targetHash": "335576d9ee522a116c7b5038ec3249a79f7a895b82019fd398f1036bc1577476",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ],
+      "localCorrections": [
+        {
+          "reason": "Correct the DENSE_RANK function spelling in translated description metadata to match the source title, syntax, and body; the source description used DENSERANK.",
+          "beforeHash": "51e70a1ff768b3d38b3f5237461bcf34aaa7daa03512d497ed2ea82868974bb9",
+          "afterHash": "335576d9ee522a116c7b5038ec3249a79f7a895b82019fd398f1036bc1577476",
+          "at": "2026-10-23T03:17:30.364866+00:00"
+        }
+      ],
+      "recoveryReason": "explicitly-requested-final14-recovery",
+      "historicalModelCalls": 3,
+      "lifetimeModelCalls": 4,
+      "historicalBatch": "20261022T115633Z-016"
+    }
+  }
+}
