@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/window-functions/rank",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/window-functions/rank.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/window-functions/rank.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "5032af683c45911d4ca5363cd93e63a3c54791df0e27ce002ebff0996b91a627",
+    "sourceTechnicalHash": "fba810f4760599782a231f6ad0e445a1be4c34632c05400baaa5d369769e2134",
+    "targetHash": "70fb0c1e6182931224fe7019f1ff118c61ff57252bff607da5d8e181c76c02de",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T23:59:38.963Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5032af683c45911d4ca5363cd93e63a3c54791df0e27ce002ebff0996b91a627",
+      "targetHash": "70fb0c1e6182931224fe7019f1ff118c61ff57252bff607da5d8e181c76c02de",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
