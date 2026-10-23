@@ -608,3 +608,6 @@ SET enable_profile = false;
 - 设置 ANN 索引常驻内存。
 - `parallel_pipeline_task_num = 1`。
 - 关闭 query profile。
+
+
+开发版本待实现的过滤后 PQ 距离计算模式见 [PQ On-Disk](./pq-on-disk.md)。该功能暂未发布。
