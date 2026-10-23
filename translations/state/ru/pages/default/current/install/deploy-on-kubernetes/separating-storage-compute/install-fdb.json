@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "install/deploy-on-kubernetes/separating-storage-compute/install-fdb",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/install/deploy-on-kubernetes/separating-storage-compute/install-fdb.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "5e1c2edefcbc11390a7aa9cb2f8c86c8c7e09ff026151069676421cfb8077b06",
+    "sourceTechnicalHash": "06d8f72da6b9057486d4727f59ff55cfa2f155859ffcb3302e86c32c7e5fa26a",
+    "targetHash": "63f1644e3a265e326f5bd707e674f71a47ead98e9c69b3d327e4e140d5c91a00",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:34:32.778Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "5e1c2edefcbc11390a7aa9cb2f8c86c8c7e09ff026151069676421cfb8077b06",
+      "targetHash": "63f1644e3a265e326f5bd707e674f71a47ead98e9c69b3d327e4e140d5c91a00",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

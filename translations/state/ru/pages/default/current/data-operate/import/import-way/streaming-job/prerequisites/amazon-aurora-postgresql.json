@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "92909cda0a07e03538cf90ed2e399bc8a96e75907dcf05245d5a22d1c67c089c",
+    "sourceTechnicalHash": "c05cf2381449c308ffaa7db9e422d04102dedfac200b8f824ed2df9911dd7559",
+    "targetHash": "48dec0e43d876bdb0a0da449b2de5018b315b3003a77c458051a3a5d2e98ab17",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:22:49.135Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "92909cda0a07e03538cf90ed2e399bc8a96e75907dcf05245d5a22d1c67c089c",
+      "targetHash": "48dec0e43d876bdb0a0da449b2de5018b315b3003a77c458051a3a5d2e98ab17",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

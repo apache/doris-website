@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "getting-started/before-you-start-the-poc",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/getting-started/before-you-start-the-poc.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/getting-started/before-you-start-the-poc.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e717192eda8e5ae3eee2bd55c779fe74a854223daed3821541e2dc94d8611d36",
+    "sourceTechnicalHash": "db7c5a3a849fe00a332a026b6437039ef6430d793ec120f884668da624911495",
+    "targetHash": "4293ed931a8b6cbc68933302411a083794cd9efa972f87e6963b4899d2bedd4b",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:33:48.910Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e717192eda8e5ae3eee2bd55c779fe74a854223daed3821541e2dc94d8611d36",
+      "targetHash": "4293ed931a8b6cbc68933302411a083794cd9efa972f87e6963b4899d2bedd4b",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\ntechnical front matter: expected {\"tags\":[\"POC\",\"Table Design\",\"Query Tuning\",\"Data Lake\",\"New Users\"]}; received {\"tags\":[\"POC\",\"Проектирование таблиц\",\"Оптимизация запросов\",\"Озеро данных\",\"Новые пользователи\"]}"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

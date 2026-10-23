@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "faq/data-faq",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/faq/data-faq.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/faq/data-faq.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "e59339132c10309a49f76642da45c9a362a404ab47f009292f3448c120c055da",
+    "sourceTechnicalHash": "30722099c7a037b5aef3e27a2d85e7bbdd51ce0455bec5efd94c57110261580b",
+    "targetHash": "59daaf05dd068d6048bb3be7d6b1b19b7d18d5ee137197dfb2adb8ec34ce37f6",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:30:08.512Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e59339132c10309a49f76642da45c9a362a404ab47f009292f3448c120c055da",
+      "targetHash": "59daaf05dd068d6048bb3be7d6b1b19b7d18d5ee137197dfb2adb8ec34ce37f6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+    "sourceHash": "7737d87bb7148eb1824454935d4fa9b8d208a6614156712cc1c6db0535b86b2d",
+    "sourceTechnicalHash": "beb3c16b2f0a2582b5ff477aef8fa2ed7195ee654fe03a4418184427095ef3b1",
+    "targetHash": "83e6de79ba97ee09062e809d9d845844c1b2e727d84c9d3f962b1910e833efc3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-21T17:21:39.145Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7737d87bb7148eb1824454935d4fa9b8d208a6614156712cc1c6db0535b86b2d",
+      "targetHash": "83e6de79ba97ee09062e809d9d845844c1b2e727d84c9d3f962b1910e833efc3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
