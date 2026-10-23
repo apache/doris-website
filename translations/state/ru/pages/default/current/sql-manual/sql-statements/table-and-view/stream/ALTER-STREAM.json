@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/ALTER-STREAM.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7ff6ca0af64c6bcbbea5b380f37f117b4420c54ce124077167e35df52fc08a05",
+    "sourceTechnicalHash": "4592f9e01743b36bb6485e74efbb417ecca359ae34008cfac50c29f144306e23",
+    "targetHash": "44c7f9edc0eee03dc3b9a1b5ce3395969b0cb6f01fd04ad4a5e78670d823313a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:41:16.554Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7ff6ca0af64c6bcbbea5b380f37f117b4420c54ce124077167e35df52fc08a05",
+      "targetHash": "44c7f9edc0eee03dc3b9a1b5ce3395969b0cb6f01fd04ad4a5e78670d823313a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

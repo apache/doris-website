@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-DISTRIBUTION",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-DISTRIBUTION.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/data-and-status-management/SHOW-REPLICA-DISTRIBUTION.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "51b1d5ce3dfb9043cfcd8e7b634ae8138bbf0c30d8a796daee02e77e3844e21f",
+    "sourceTechnicalHash": "4e7a259c577dedbf004c252002f2fa6e14dd4b57e70a622500ae503bc1143f1e",
+    "targetHash": "f94ef2b78ab0bb9923be1efe7ebf9bc3ac031decb852dc5d211f0ed472964e90",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T13:40:14.891Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "51b1d5ce3dfb9043cfcd8e7b634ae8138bbf0c30d8a796daee02e77e3844e21f",
+      "targetHash": "f94ef2b78ab0bb9923be1efe7ebf9bc3ac031decb852dc5d211f0ed472964e90",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
