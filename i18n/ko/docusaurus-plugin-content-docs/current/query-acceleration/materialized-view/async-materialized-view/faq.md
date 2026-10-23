@@ -304,7 +304,7 @@ IVM은 `INCREMENTAL`에 해당하며 두 번의 새로 고침 사이에 발생�
 
 ### Q17: IVM이 전체 새로 고침으로 폴백하는 이유는 무엇인가요? {#q17-why-does-an-ivm-fall-back-to-a-complete-refresh}
 
-`INCREMENTAL FALLBACK`과 `AUTO`는 증분 결과를 안전하게 계산할 수 없을 때 폴백합니다. 예를 들어 삭제된 값으로 인해 `MIN` 또는 `MAX`가 변경되거나, 삭제가 Bitmap 집계에 영향을 주거나, Row Binlog의 연속성이 깨지거나, 델타 계획의 구조가 변경된 경우입니다. 정형화된 폴백 사유는 `IvmFallbackReason`에서 확인할 수 있으며, 이는 `tasks("type"="mv")`의 필드입니다. [새로 고침 및 폴백](incremental-materialized-view#refresh-and-fallback)을 참조하세요.
+`INCREMENTAL FALLBACK`과 `AUTO`는 증분 결과를 안전하게 계산할 수 없을 때 폴백합니다. 예를 들어 삭제된 값으로 인해 `MIN` 또는 `MAX`가 변경되거나, 삭제가 Bitmap 집계에 영향을 주거나, 변경 로그의 연속성이 깨지거나, 델타 계획의 구조가 변경된 경우입니다. 정형화된 폴백 사유는 `IvmFallbackReason`에서 확인할 수 있으며, 이는 `tasks("type"="mv")`의 필드입니다. [새로 고침 및 폴백](incremental-materialized-view#refresh-and-fallback)을 참조하세요.
 
 ## 쿼리 및 투명한 재작성 {#query-and-transparent-rewrite}
 
