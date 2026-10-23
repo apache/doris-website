@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/import/data-source/kafka",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/kafka.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/kafka.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+    "sourceTechnicalHash": "b6d1ffd1567d4fa4078d5d986e7723a47db6cfd9f3b24538072805d3a42b5f8c",
+    "targetHash": "1f3ede88b4f340326aec46e5c02ad6325ff922a1297ae7c7cd226e4c21b995c3",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:29:40.454Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+      "targetHash": "1f3ede88b4f340326aec46e5c02ad6325ff922a1297ae7c7cd226e4c21b995c3",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "data-operate/import/data-source/kafka",
+        "sourcePath": "docs/data-operate/import/data-source/kafka.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/kafka.md",
+        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
+        "sourceHash": "27019d66b8780ecfe2b3922f4886a9cbd2bb89992c3ec77dc1859a09433d0c85",
+        "targetHash": "1f3ede88b4f340326aec46e5c02ad6325ff922a1297ae7c7cd226e4c21b995c3",
+        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
+        "pr": "https://github.com/apache/doris-website/pull/4435"
+      }
+    }
+  }
+}

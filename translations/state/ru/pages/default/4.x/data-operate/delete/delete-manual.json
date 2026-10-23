@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "data-operate/delete/delete-manual",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/data-operate/delete/delete-manual.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/delete/delete-manual.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "7a6feacad14ada402f7adb1162bd11380ef5ee1bd238a1ca8c0c9675c57f3c08",
+    "sourceTechnicalHash": "41da9fdba7965bce9c24f3560c148c7dc27a66e5738c2aaf7b99138a749074d6",
+    "targetHash": "21dd5b64301e71b4d88e31d2730bf69d61e7877c0cb3163d112aaa1ddc19a81a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T14:32:25.829Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "7a6feacad14ada402f7adb1162bd11380ef5ee1bd238a1ca8c0c9675c57f3c08",
+      "targetHash": "21dd5b64301e71b4d88e31d2730bf69d61e7877c0cb3163d112aaa1ddc19a81a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
