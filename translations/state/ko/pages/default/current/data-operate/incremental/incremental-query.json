@@ -8,35 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/incremental-query.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/incremental/incremental-query.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "7f1640381216d68ee6d387cd83a1d78b74180d1dc8fcc41fbeca29c52ac6905c",
-    "sourceTechnicalHash": "630b264e4086c04ef6c6d420ba8d90bc2c24b6ea623cd0cafd82d7305ab6ad82",
-    "targetHash": "9f72373f61a60ef9854989c956f49e86b60fe92f8df20a781fb6a3b4422fe8fd",
+    "sourceCommit": "f2ec14ebc782052323f56515f6b51b86e9280075",
+    "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+    "sourceTechnicalHash": "ca15ec9708ed302b64f86ab42c4d9232422d84cd0209a63ebe3b3eafae1d4cd2",
+    "targetHash": "c661ca55469b5eb9a72830d43b74b7be73e6ce3157fa61c62c31fa0c942974cf",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:01:25.050Z",
+    "translatedAt": "2026-10-23T13:42:19.917Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
+      "previousSourceHash": "7f1640381216d68ee6d387cd83a1d78b74180d1dc8fcc41fbeca29c52ac6905c",
+      "previousTargetHash": "9f72373f61a60ef9854989c956f49e86b60fe92f8df20a781fb6a3b4422fe8fd",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 24,
+        "totalLines": 195,
+        "ratio": 0.12307692307692308
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "7f1640381216d68ee6d387cd83a1d78b74180d1dc8fcc41fbeca29c52ac6905c",
-      "targetHash": "9f72373f61a60ef9854989c956f49e86b60fe92f8df20a781fb6a3b4422fe8fd",
+      "sourceHash": "b9e979bf9c71a2eb4e10cad6247d78e370b29f19a11f1599b5a2531c3b541c3c",
+      "targetHash": "c661ca55469b5eb9a72830d43b74b7be73e6ce3157fa61c62c31fa0c942974cf",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 47: expected [\"inlineCode\",null,null,\"orders\"]; received [\"link\",\"quick-start\",null]\nprotected node 48: expected [\"link\",\"quick-start\",null]; received [\"inlineCode\",null,null,\"orders\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]
