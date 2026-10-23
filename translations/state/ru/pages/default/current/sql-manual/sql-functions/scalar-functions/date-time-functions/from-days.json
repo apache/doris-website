@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/from-days",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/from-days.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/from-days.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "a8278ec16dda7c1ae0e49a080823f7fc658b0f9ef70a7cd9f2b2ac8600af64e6",
+    "sourceTechnicalHash": "198f9a25c550a81920362618bde4e42f4929f36ba30cb3606feb655130b148ad",
+    "targetHash": "bdcf10b344816ba6a7eafb3438614497b5a214d231fed1aeaedd586de34b67ab",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:00:02.177Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 2,
+      "modelCalls": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a8278ec16dda7c1ae0e49a080823f7fc658b0f9ef70a7cd9f2b2ac8600af64e6",
+      "targetHash": "bdcf10b344816ba6a7eafb3438614497b5a214d231fed1aeaedd586de34b67ab",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

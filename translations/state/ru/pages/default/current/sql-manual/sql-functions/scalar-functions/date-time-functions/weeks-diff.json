@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-diff.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "f2a1e3495ab7afa364427ec733eb428a5975a925eabf3a2b6d33cb7bb6815228",
+    "sourceTechnicalHash": "a1ad9121d413593987f9548a00582b7cd082555c550b1b5eb352fad5bb6601cc",
+    "targetHash": "b03fa01c056e8a50704dcf7487d0352af32934150f7ac086f08332bfe6700f3f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:07:42.587Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "f2a1e3495ab7afa364427ec733eb428a5975a925eabf3a2b6d33cb7bb6815228",
+      "targetHash": "b03fa01c056e8a50704dcf7487d0352af32934150f7ac086f08332bfe6700f3f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

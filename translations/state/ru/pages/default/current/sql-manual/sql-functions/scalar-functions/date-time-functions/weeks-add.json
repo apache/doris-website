@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-add",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-add.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/weeks-add.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "e39ea43fa58a433e83d035c51bb5d0b8f40804c87e581c21c72638dd501df8b5",
+    "sourceTechnicalHash": "ee933e1830ef3fceae35a5c0aa70ed89ef8e7830583e14c4fadf88efa9fe9d30",
+    "targetHash": "a962fa0c694571fde9f51377e10e84d1073b305f35da23ae9b4db8618719c466",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-22T11:07:41.512Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e39ea43fa58a433e83d035c51bb5d0b8f40804c87e581c21c72638dd501df8b5",
+      "targetHash": "a962fa0c694571fde9f51377e10e84d1073b305f35da23ae9b4db8618719c466",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
