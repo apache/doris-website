@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/be-vscode-dev",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/be-vscode-dev.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/be-vscode-dev.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "791a3e1aa9f7e97883fa484a03cb1210b9d71c12a152f62822b58e07053f38b1",
+    "sourceTechnicalHash": "74209b3ed8bf9d78cb4257e5ec651f9fe6197817c0ba81e672018cbf460f3556",
+    "targetHash": "e27e9932914002591ff7f269d6c66de474dfbf9abb37ed9dc18ecb6fc6363ecf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:08:23.396Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "791a3e1aa9f7e97883fa484a03cb1210b9d71c12a152f62822b58e07053f38b1",
+      "targetHash": "e27e9932914002591ff7f269d6c66de474dfbf9abb37ed9dc18ecb6fc6363ecf",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

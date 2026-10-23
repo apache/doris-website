@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/tiered-storage/overview",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/tiered-storage/overview.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/tiered-storage/overview.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "6ec25a936c0503f9b1d1e835460d87d7972bd6e5aa948bbb6c8fd5d303d3ff7c",
+    "sourceTechnicalHash": "9e06b7c8da5860856bfdaf6232b2dec16cb9da9297aea698559b563f33548e46",
+    "targetHash": "140a56c16841801439569d6a1acd660ee7ab726a06c384b2d72721647a35d098",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:09.486Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6ec25a936c0503f9b1d1e835460d87d7972bd6e5aa948bbb6c8fd5d303d3ff7c",
+      "targetHash": "140a56c16841801439569d6a1acd660ee7ab726a06c384b2d72721647a35d098",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/tiered-storage/overview",
+        "sourcePath": "docs/table-design/tiered-storage/overview.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/tiered-storage/overview.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "6ec25a936c0503f9b1d1e835460d87d7972bd6e5aa948bbb6c8fd5d303d3ff7c",
+        "targetHash": "140a56c16841801439569d6a1acd660ee7ab726a06c384b2d72721647a35d098",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}

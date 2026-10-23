@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "table-design/data-partitioning/data-bucketing",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/data-bucketing.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/data-bucketing.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+    "sourceTechnicalHash": "b5258fa3ea20b88e3418b0cb93a756ed8d254aeeef526a406b460a3f186fdff7",
+    "targetHash": "c8e9d16aa22d6108490b7759bee68cab582eecd8ab24279016891a090d61a578",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:04:07.013Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "copy",
+      "reason": "cross-version-copy",
+      "attempts": 1,
+      "modelCalls": 0,
+      "acceptedWithWarnings": false,
+      "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+      "targetHash": "c8e9d16aa22d6108490b7759bee68cab582eecd8ab24279016891a090d61a578",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "operation": "copy",
+          "issues": []
+        }
+      ],
+      "reusedFrom": {
+        "origin": "published",
+        "version": "current",
+        "docId": "table-design/data-partitioning/data-bucketing",
+        "sourcePath": "docs/table-design/data-partitioning/data-bucketing.md",
+        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
+        "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+        "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
+        "targetHash": "c8e9d16aa22d6108490b7759bee68cab582eecd8ab24279016891a090d61a578",
+        "commit": "aa2a9993a3f68b04675dba12f6054562b5817c76",
+        "pr": "https://github.com/apache/doris-website/pull/4457"
+      }
+    }
+  }
+}

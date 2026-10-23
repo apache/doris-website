@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "community",
+    "version": "current",
+    "docId": "developer-guide/cpp-diagnostic-code",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "community/developer-guide/cpp-diagnostic-code.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/developer-guide/cpp-diagnostic-code.md",
+    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
+    "sourceHash": "af05bde852f81f871fa010e47879dcca4562fa52350701f6ce2697719b4a3703",
+    "sourceTechnicalHash": "a7369c8b708e88b1e3d405f5086049ab45007c43d7642a3f9343e2437c78b873",
+    "targetHash": "df7a1ea806b11266421bb9627a4632f0ece2d49da2b9466496adb0e2f0e371ee",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T02:07:38.301Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "local-t09-batch",
+      "attempts": 1,
+      "modelCalls": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "af05bde852f81f871fa010e47879dcca4562fa52350701f6ce2697719b4a3703",
+      "targetHash": "df7a1ea806b11266421bb9627a4632f0ece2d49da2b9466496adb0e2f0e371ee",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
