@@ -29,7 +29,7 @@
 | minio.connection.maximum       | s3.connection.maximum    | S3 最大连接数，指定与 Minio 服务建立的最大连接数              | 50     | 否       |
 | minio.connection.request.timeout | s3.connection.request.timeout | S3 请求超时时间，单位为毫秒，指定连接 Minio 服务时的请求超时时间 | 3000   | 否       |
 | minio.connection.timeout       | s3.connection.timeout    | S3 连接超时时间，单位为毫秒，指定与 Minio 服务建立连接时的超时时间 | 1000   | 否       |
-| minio.use_path_style           | s3.use_path_style        | 是否使用 path-style（路径风格）访问。兼容 MinIO 等非 AWS S3 服务建议设置为 true | FALSE  | 否       |
+| minio.use_path_style           | use_path_style           | 是否使用 path-style（路径风格）访问。兼容 MinIO 等非 AWS S3 服务建议设置为 true | FALSE  | 否       |
 
 ### 使用 Path-style 访问
 
