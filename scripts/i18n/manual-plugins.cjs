@@ -1,27 +1,68 @@
-// Read routes from native plugins. Rendering, blog lifecycle and SEO remain
-// native until the page/blog consumers adopt the contract in T03/T14.
+// Keep native parsing, routes and lifecycle. Select declared bodies before
+// native rendering and expose compact route context to the shared consumers.
 const path = require('node:path');
 const {Globby, getPluginI18nPath} = require('@docusaurus/utils');
 const {applyTrailingSlash} = require('@docusaurus/utils-common');
 const {relative} = require('./state.cjs');
 const {readJson, loadManual, decideManual} = require('./manual-state.cjs');
 const {localizedContext} = require('./native-context.cjs');
+const fs = require('node:fs');
+const {withContentRoutes} = require('./route-context.cjs');
+const {validateMessages} = require('./page-body.cjs');
 
 function wrap(kind, native) {
     async function adapter(context, options) {
-        const plugin = await native.default(context, options);
-        return {...plugin,
+        let snapshots = new Map(), records = [], nativeReports = [];
+        function sourcePath(item, locale) {
+            const source = path.resolve(context.siteDir, item.source.replace(/^@site\//, ''));
+            const localized = getPluginI18nPath({localizationDir: path.join(context.siteDir, 'i18n', locale),
+                pluginName: `docusaurus-plugin-content-${kind}`, pluginId: options.id});
+            const base = source.startsWith(localized + path.sep) ? localized : path.resolve(context.siteDir, options.path);
+            return relative(base, source);
+        }
+        function nativeOptions(ctx) {
+            if (kind !== 'blog' || ctx.i18n.currentLocale === 'en') return options;
+            const locale = ctx.i18n.currentLocale;
+            return {...options, feedOptions: {...options.feedOptions, type: null}, async processBlogPosts(args) {
+                const processed = await options.processBlogPosts?.(args);
+                const posts = Array.isArray(processed) ? processed : args.blogPosts;
+                const english = new Map(snapshots.get('en').blogPosts.map(post => [sourcePath(post.metadata, 'en'), post]));
+                return posts.flatMap(post => {
+                    const file = sourcePath(post.metadata, locale), original = english.get(file);
+                    if (!original) {nativeReports.push({kind: 'orphan_target', locale, targetPath: file}); return [];}
+                    const contentId = `blog:${options.id === 'default' ? '' : options.id + ':'}${file}`;
+                    const record = records.find(record => record.contentId === contentId && record.locale === locale);
+                    const englishPath = relative(context.siteDir, path.resolve(context.siteDir, options.path, file));
+                    const decision = decideManual({root: context.siteDir, record, sourceFiles: [englishPath]});
+                    return [decision.fallback ? {...original, metadata: {...original.metadata, permalink: post.metadata.permalink,
+                        tags: post.metadata.tags, authors: post.metadata.authors, prevItem: undefined, nextItem: undefined}} : post];
+                });
+            }};
+        }
+        const plugin = await native.default(context, nativeOptions(context));
+        const englishI18n = path.join(context.siteDir, '.i18n-build/body-i18n-en.json');
+        if (kind === 'pages') {
+            fs.mkdirSync(path.dirname(englishI18n), {recursive: true});
+            fs.writeFileSync(englishI18n, JSON.stringify({...context.i18n, currentLocale: context.i18n.defaultLocale}));
+        }
+        return withContentRoutes({...plugin,
+            ...(kind === 'pages' && {async configureWebpack(...args) {
+                const result = await plugin.configureWebpack?.(...args) ?? {};
+                return {...result, module: {...result.module, rules: [...(result.module?.rules ?? []), {
+                    enforce: 'pre', test: /\.[jt]sx?$/, resourceQuery: /[?&]doris-body=/,
+                    use: [{loader: require.resolve('./page-body-loader.cjs'), options: {root: context.siteDir, englishI18n}}],
+                }]}};
+            }}),
             getPathsToWatch() {return [...plugin.getPathsToWatch(), path.join(context.siteDir, `translations/${kind}/**/*.json`),
                 ...loadManual(context.siteDir, kind).flatMap(record => [...record.sourceFiles, ...record.targetFiles])
                     .map(file => path.join(context.siteDir, file))];},
             async loadContent() {
-                const snapshots = new Map();
+                snapshots = new Map(); records = loadManual(context.siteDir, kind); nativeReports = [];
                 for (const locale of context.i18n.locales) {
                     const ctx = localizedContext(context, locale);
-                    const instance = locale === context.i18n.currentLocale ? plugin : await native.default(ctx, options);
+                    const instance = locale === context.i18n.currentLocale ? plugin : await native.default(ctx, nativeOptions(ctx));
                     snapshots.set(locale, await instance.loadContent());
                 }
-                const records = loadManual(context.siteDir, kind);
                 const registry = readJson(context.siteDir, 'translations/pages/registry.json', {schemaVersion: 1, pages: []});
                 if (registry.schemaVersion !== 1 || !Array.isArray(registry.pages)) throw new Error('Invalid page registry');
                 const registeredIds = new Set(), registeredPaths = new Set();
@@ -30,16 +71,9 @@ function wrap(kind, native) {
                         || registeredIds.has(page.id) || registeredPaths.has(page.sourcePath)) throw new Error('Invalid/duplicate page registry identity');
                     registeredIds.add(page.id); registeredPaths.add(page.sourcePath);
                 }
-                const report = [], entries = [];
+                const report = [...nativeReports], entries = [];
                 const list = value => kind === 'blog' ? value?.blogPosts.map(post => post.metadata) ?? [] : value ?? [];
                 const route = permalink => applyTrailingSlash(permalink, {trailingSlash: context.siteConfig.trailingSlash, baseUrl: context.baseUrl});
-                function sourcePath(item, locale) {
-                    const source = path.resolve(context.siteDir, item.source.replace(/^@site\//, ''));
-                    const localized = getPluginI18nPath({localizationDir: path.join(context.siteDir, 'i18n', locale),
-                        pluginName: `docusaurus-plugin-content-${kind}`, pluginId: options.id});
-                    const base = source.startsWith(localized + path.sep) ? localized : path.resolve(context.siteDir, options.path);
-                    return relative(base, source);
-                }
                 const english = new Map(list(snapshots.get('en')).map(item => [sourcePath(item, 'en'), item]));
                 const locales = new Map([...snapshots].map(([locale, value]) => [locale,
                     new Map(list(value).map(item => [sourcePath(item, locale), item]))]));
@@ -55,7 +89,11 @@ function wrap(kind, native) {
                         const item = locales.get(locale).get(file);
                         if (!item) {report.push({kind: 'missing_native_route', contentId, locale}); continue;}
                         const record = records.find(page => page.contentId === contentId && page.locale === locale);
-                        if (record && (!record.sourceFiles.includes(englishPath) || (kind === 'blog'
+                        if (kind === 'pages' && record && ['ready', 'needs-update'].includes(record.state)) {
+                            const dependencies = validateMessages(context.siteDir, registration ?? {id: contentId, sourcePath: englishPath}, locale);
+                            if (dependencies.some(file => !record.sourceFiles.includes(file))) throw new Error(`Untracked body dependency: ${contentId}/${locale}`);
+                        }
+                        if (record && (!record.sourceFiles.includes(englishPath) || (kind === 'blog' && ['ready', 'needs-update'].includes(record.state)
                             && !record.targetFiles.includes(`i18n/${locale}/docusaurus-plugin-content-blog${options.id === 'default' ? '' : '-' + options.id}/${file}`)))) {
                             throw new Error(`Manual state does not cover native source/target: ${contentId}/${locale}`);
                         }
@@ -65,7 +103,7 @@ function wrap(kind, native) {
                             sourceHash: decision.sourceHash, publishedSourceHash: record.sourceHash});
                         const utility = registration?.kind === 'utility';
                         entries.push({contentId, kind: utility ? 'utility' : kind === 'pages' ? 'page' : 'blog',
-                            pluginId: options.id, englishPath, renderIntegrated: locale === 'en', siteLocale: locale, englishRoute: route(source.permalink), route: route(item.permalink),
+                            pluginId: options.id, englishPath, renderIntegrated: true, siteLocale: locale, englishRoute: route(source.permalink), route: route(item.permalink),
                             ...decision, indexable: !utility && !item.unlisted && decision.indexable, updatePolicy: 'manual'});
                     }
                 }
@@ -84,7 +122,8 @@ function wrap(kind, native) {
                         kind: 'missing_english_identity', contentId: `${page.kind}:${page.id}`, englishPath: page.sourcePath});
                 }
                 for (const record of records) if (!known.has(record.contentId)) report.push({kind: 'source_deleted', ...record});
-                const content = snapshots.get(context.i18n.currentLocale);
+                let content = snapshots.get(context.i18n.currentLocale);
+                if (kind === 'pages' && content) content = content.filter(item => english.has(sourcePath(item, context.i18n.currentLocale)));
                 if (content) content.contentIdentity = {entries, reports: report};
                 return content;
             },
@@ -93,7 +132,7 @@ function wrap(kind, native) {
                 result.contentIdentity = args.content.contentIdentity;
                 return result;
             }}),
-        };
+        }, context, {body: kind === 'pages'});
     }
     adapter.validateOptions = native.validateOptions;
     return adapter;

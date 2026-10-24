@@ -80,7 +80,7 @@ function validateManifest(manifest) {
 
 // Consumers request one content identity; the full registry never enters globalData.
 function routeData(page) {
-    return {schemaVersion, sourceSha: page.sourceSha, contentId: page.contentId,
+    return {schemaVersion, sourceSha: page.sourceSha, contentId: page.contentId, kind: page.kind,
         siteLocale: page.siteLocale, contentLocale: page.contentLocale, fallback: page.fallback, renderIntegrated: page.renderIntegrated,
         indexable: page.indexable, navigationRoutes: page.navigationRoutes, availableTranslations: page.availableTranslations};
 }

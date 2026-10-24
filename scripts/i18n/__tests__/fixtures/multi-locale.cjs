@@ -54,7 +54,9 @@ async function createFixture(root) {
         write(`i18n/${locale}/docusaurus-plugin-content-docs/current/orphan.md`, '# Orphan\n');
     }
     write('src/pages/index.tsx', "import React from 'react'; export default function Home(){return <main>Fixture</main>;}\n");
-    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/utils/locale.ts', 'src/theme/SiteMetadata/index.tsx',
+    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/utils/locale.ts', 'src/utils/contentRoute.ts',
+        'src/utils/localizedRoute.ts', 'src/utils/englishTranslation.tsx', 'src/utils/englishLocalization.ts', 'src/utils/useEnglishContentContext.ts', 'src/theme/SiteMetadata/index.tsx',
+        'src/components/ContentRoute.tsx', 'src/components/ContentMetadata.tsx',
         'src/theme/DocItem/Metadata/index.tsx', 'src/theme/DocItem/Content/index.tsx',
         'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/LocalizedNotice.module.css']) {
         write(file, fs.readFileSync(path.join(repoRoot, file), 'utf8'));

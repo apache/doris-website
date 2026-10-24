@@ -29,7 +29,15 @@ function createServer(site) {
             const requested = path.resolve(site,'.'+decodeURIComponent(url.pathname));
             if (!requested.startsWith(site+path.sep) && requested !== site) throw new Error('Outside site');
             const target = fs.existsSync(requested) && fs.statSync(requested).isDirectory() ? path.join(requested,'index.html') : requested;
-            if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {response.writeHead(404);response.end('Not found');return;}
+            if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
+                const locale = url.pathname.split('/').filter(Boolean)[0];
+                const localized = locale && /^[a-z]{2}(?:-[A-Z]{2})?$/.test(locale) ? path.join(site, locale, '404.html') : '';
+                const errorPage = localized && fs.existsSync(localized) ? localized : path.join(site, '404.html');
+                response.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
+                if (fs.existsSync(errorPage)) fs.createReadStream(errorPage).pipe(response);
+                else response.end('Not found');
+                return;
+            }
             const types = {'.html':'text/html; charset=utf-8','.js':'application/javascript','.css':'text/css',
                 '.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg',
                 '.jpeg':'image/jpeg','.pdf':'application/pdf','.ttf':'font/ttf','.woff2':'font/woff2'};

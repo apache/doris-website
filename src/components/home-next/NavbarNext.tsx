@@ -2,13 +2,13 @@ import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useRef } from 'react';
 import Link from '@site/src/components/home-next/LocalizedLink';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { getLocalePrefix } from '@site/src/utils/locale';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
-import { localizedAiLabels, usesDefaultLocalePages } from '@site/src/utils/localization';
+import { localizedAiLabels } from '@site/src/utils/localization';
 import './NavbarNext.scss';
+import {LanguageMenu} from './LanguageMenu';
 
 const GITHUB_REPO = 'apache/doris';
 const STAR_DISPLAY = `${STAR_COUNT}k`;
@@ -42,8 +42,7 @@ function buildNavItems(
             label: translate({ id: "homepage.navbar.001", message: "Why Doris" }),
             items: [
                 { label: translate({ id: "homepage.navbar.002", message: "Doris vs. Others" }), href: '/why-doris/compare' },
-                // Enter through English from every locale; the page offers its own language controls.
-                { label: translate({ id: "homepage.navbar.003", message: "Benchmarks" }), href: 'pathname:///why-doris/benchmarks' },
+                { label: translate({ id: "homepage.navbar.003", message: "Benchmarks" }), href: '/why-doris/benchmarks' },
                 { label: translate({ id: "homepage.navbar.004", message: "Key Features" }), href: '/why-doris/key-features' },
                 { label: translate({ id: "homepage.navbar.005", message: "User Stories" }), href: '/why-doris/users' },
             ],
@@ -155,20 +154,17 @@ export function NavbarNext(): JSX.Element {
     } = useDocusaurusContext();
     const [mobileOpen, setMobileOpen] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
-    const localePrefix = getLocalePrefix(currentLocale, defaultLocale);
-    const devDocsHref = `${localePrefix}/docs/dev/getting-started/what-is-apache-doris`;
-    const stableDocsHref = `${localePrefix}/docs/4.x/getting-started/what-is-apache-doris`;
+    const devDocsHref = `/docs/dev/getting-started/what-is-apache-doris`;
+    const stableDocsHref = `/docs/4.x/getting-started/what-is-apache-doris`;
     // 3.x and 2.1 use the legacy slug structure (gettingStarted/ with camelCase).
-    const v3xDocsHref = `${localePrefix}/docs/3.x/gettingStarted/what-is-apache-doris`;
-    const v21DocsHref = `${localePrefix}/docs/2.1/gettingStarted/what-is-apache-doris`;
-    const releasesHref = `${localePrefix}/releases/all-release`;
-    const roadmapHref = `${localePrefix}/community/roadmap`;
-    const joinCommunityHref = `${localePrefix}/community/join-community`;
+    const v3xDocsHref = `/docs/3.x/gettingStarted/what-is-apache-doris`;
+    const v21DocsHref = `/docs/2.1/gettingStarted/what-is-apache-doris`;
+    const releasesHref = `/releases/all-release`;
+    const roadmapHref = `/community/roadmap`;
+    const joinCommunityHref = `/community/join-community`;
     // The community report is an ordinary page, so a locale that renders the
     // default locale's ordinary pages links to it without a prefix.
-    const communityReportHref = usesDefaultLocalePages()
-        ? '/community-report'
-        : `${localePrefix}/community-report`;
+    const communityReportHref = `/community-report`;
     const navItems = buildNavItems(
         devDocsHref,
         stableDocsHref,
@@ -180,7 +176,7 @@ export function NavbarNext(): JSX.Element {
         communityReportHref,
     );
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
-    const homeHref = `${getLocalePrefix(currentLocale, defaultLocale)}/`;
+    const homeHref = '/';
 
     useEffect(() => {
         if (!mobileOpen) return undefined;
@@ -219,7 +215,7 @@ export function NavbarNext(): JSX.Element {
     return (
         <nav
             ref={navbarRef}
-            lang={usesDefaultLocalePages() ? defaultLocale : undefined}
+            lang={currentLocale}
             className={`navbar navbar--fixed-top navbar-next${mobileOpen ? ' navbar-next--mobile-open' : ''}`}
         >
             <div className="navbar-next__inner">
@@ -251,6 +247,7 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
+                    <LanguageMenu />
                     <BrandThemeSwitcher />
                     <a
                         href={DORIS_SUMMIT_URL}
@@ -363,6 +360,7 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <BrandThemeSwitcher mobile />
+                <LanguageMenu mobile />
 
                 {/* Phones drop the Summit banner from the bar to keep it one row; it
                     stays reachable from the menu instead. */}

@@ -173,6 +173,10 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=4096
               run: node scripts/publish/verify-fixture.cjs --verify-existing --browser
 
+            - name: Verify global language fixture in Chromium
+              if: steps.detect.outputs.content_fixture == 'true'
+              run: node scripts/i18n/verify-global-language.cjs --fixture --site .i18n-build/content-fixture/build --manifests .i18n-build/content-fixture/.i18n-build/content-manifests --output .i18n-build/browser-global-language-fixture.json
+
             - name: Build
               env:
                   DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.validation_mode == 'full' }}
@@ -210,6 +214,7 @@ jobs:
                   done
                   if [ "${{ steps.detect.outputs.validation_mode }}" = "full" ]; then
                       node scripts/publish/verify.cjs build
+                      node scripts/i18n/verify-global-language.cjs --site build --output .i18n-build/browser-global-language.json
                       for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
                           EXTRA_ARGS=()

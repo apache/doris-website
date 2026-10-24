@@ -8,6 +8,7 @@ const {hash} = require('./state.cjs');
 const cheerio = require('cheerio');
 const {createContentFixture} = require('./__tests__/fixtures/content-manifest.cjs');
 const {validateManifest, sourceSha, routeData} = require('./content-manifest.cjs');
+const {verifyContent} = require('./verify-global-language.cjs');
 const root = path.resolve(__dirname, '../..');
 async function main() {
     const implementation = () => ({sha: sourceSha(root), trackedDiffHash: hash(execFileSync('git', ['diff', 'HEAD', '--binary'], {cwd: root, encoding: 'utf8'}))});
@@ -40,6 +41,11 @@ async function main() {
                     const i = page.contentId.match(/01-0(\d)/)[1] - 1;
                     assert($('article').text().includes(page.fallback || locale === 'en' ? `English article ${i}` : `${locale} translated article ${i}`));
                 }
+                if (page.contentId === 'page:blocked') {
+                    assert.equal(page.state, locale === 'en' ? 'source' : 'blocked');
+                    assert($('main').text().includes('English blocked body'));
+                    assert(!$('main').text().includes('blocked target'));
+                }
                 checked++;
             }
             const sizes = JSON.parse(await fs.readFile(path.join(fixture, '.i18n-build/content-manifests', locale + '.sizes.json'), 'utf8'));
@@ -54,8 +60,11 @@ async function main() {
             assert.equal(routeData(first).contentId, first.contentId);
         }
         if (disabled) await assert.rejects(fs.access(path.join(fixture, 'build/ru/index.html')));
+        await assert.rejects(fs.access(path.join(fixture, 'build/ja/orphan/index.html')));
+        await assert.rejects(fs.access(path.join(fixture, 'build/ja/blog/2026/01/10/orphan/index.html')));
+        const seo = verifyContent(path.join(fixture, 'build'), path.join(fixture, '.i18n-build/content-manifests'));
         assert.deepEqual(implementation(), initialImplementation, 'Implementation changed during fixture builds');
-        results.push({disabled, fixture, sourceSha: sourceSha(fixture), implementation: initialImplementation, manifests});
+        results.push({disabled, fixture, sourceSha: sourceSha(fixture), implementation: initialImplementation, manifests, seo});
     }
     await fs.writeFile(path.join(root, '.i18n-build/content-fixture-verification.json'), JSON.stringify(results, null, 2) + '\n');
     console.log(JSON.stringify(results, null, 2));

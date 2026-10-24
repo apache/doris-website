@@ -84,7 +84,7 @@ test('native doc metadata, browser groups and per-locale manifests agree, across
                 const allContent = {'docusaurus-plugin-content-docs': {}};
                 for (const plugin of plugins) allContent['docusaurus-plugin-content-docs'][plugin.options.id] = await plugin.loadContent();
                 let data;
-                await statusPlugin(context).allContentLoaded({allContent, actions: {setGlobalData: value => {data = value;}}});
+                await statusPlugin(context).allContentLoaded({allContent, actions: {createData: async name => name, setGlobalData: value => {data = value;}}});
                 const pages = Object.values(allContent['docusaurus-plugin-content-docs']).flatMap(content => content.translationManifest?.pages ?? []);
                 if (mask === 0) {assert.deepEqual(pages, []); assert.deepEqual(data.alternates, {}); continue;}
                 const shared = pages.find(page => page.docId === 'shared' && page.version === 'current' && page.pluginId === 'default');

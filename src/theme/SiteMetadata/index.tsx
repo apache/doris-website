@@ -1,185 +1,31 @@
-/**
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 import React, {type JSX} from 'react';
 import Head from '@docusaurus/Head';
-import {useTranslationRoutes} from '@site/src/utils/translation';
-import {defaultLocalePath, isDefaultLocaleBlogRoute} from '@site/src/utils/localization';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import {PageMetadata, useThemeConfig} from '@docusaurus/theme-common';
-import {
-  DEFAULT_SEARCH_TAG,
-  useAlternatePageUtils,
-  keyboardFocusedClassName,
-} from '@docusaurus/theme-common/internal';
+import {DEFAULT_SEARCH_TAG, keyboardFocusedClassName} from '@docusaurus/theme-common/internal';
 import {useLocation} from '@docusaurus/router';
 import {applyTrailingSlash} from '@docusaurus/utils-common';
 import SearchMetadata from '@theme/SearchMetadata';
 
-// TODO move to SiteMetadataDefaults or theme-common ?
-// Useful for i18n/SEO
-// See https://developers.google.com/search/docs/advanced/crawling/localized-versions
-// See https://github.com/facebook/docusaurus/issues/3317
-function AlternateLangHeaders(): JSX.Element {
-  const {
-    siteConfig: {url: siteUrl},
-    i18n: {currentLocale, defaultLocale, localeConfigs},
-  } = useDocusaurusContext();
-  const alternatePageUtils = useAlternatePageUtils();
-  const {group, managed, translatedLocales, pageFallback} = useTranslationRoutes();
-  const availableLocales = Object.entries(localeConfigs).filter(([locale]) =>
-    group ? !!group[locale] : !managed || !translatedLocales.includes(locale));
-
-  const currentHtmlLang = localeConfigs[pageFallback ? defaultLocale : currentLocale]!.htmlLang;
-
-  // HTML lang is a BCP 47 tag, but the Open Graph protocol requires
-  // using underscores instead of dashes.
-  // See https://ogp.me/#optional
-  // See https://en.wikipedia.org/wiki/IETF_language_tag)
-  const bcp47ToOpenGraphLocale = (code: string): string =>
-    code.replace('-', '_');
-
-  // Note: it is fine to use both "x-default" and "en" to target the same url
-  // See https://www.searchviu.com/en/multiple-hreflang-tags-one-url/
-  return (
-    <Head>
-      {availableLocales.map(([locale, {htmlLang}]) => (
-        <link
-          key={locale}
-          rel="alternate"
-          href={group ? siteUrl + group[locale] : alternatePageUtils.createUrl({
-            locale,
-            fullyQualified: true,
-          })}
-          hrefLang={htmlLang}
-        />
-      ))}
-      <link
-        rel="alternate"
-        href={group ? siteUrl + group[defaultLocale] : alternatePageUtils.createUrl({
-          locale: defaultLocale,
-          fullyQualified: true,
-        })}
-        hrefLang="x-default"
-      />
-
-      <meta
-        property="og:locale"
-        content={bcp47ToOpenGraphLocale(currentHtmlLang)}
-      />
-      {availableLocales.map(([, config]) => config)
-        .filter((config) => currentHtmlLang !== config.htmlLang)
-        .map((config) => (
-          <meta
-            key={`meta-og-${config.htmlLang}`}
-            property="og:locale:alternate"
-            content={bcp47ToOpenGraphLocale(config.htmlLang)}
-          />
-        ))}
-    </Head>
-  );
-}
-
-// Default canonical url inferred from current page location pathname
-function useDefaultCanonicalUrl() {
-  const {
-    siteConfig: {url: siteUrl, baseUrl, trailingSlash},
-  } = useDocusaurusContext();
-
-  // TODO using useLocation().pathname is not a super idea
-  // See https://github.com/facebook/docusaurus/issues/9170
-  const {pathname} = useLocation();
-
-  const canonicalPathname = applyTrailingSlash(useBaseUrl(pathname), {
-    trailingSlash,
-    baseUrl,
-  });
-
-  return siteUrl + canonicalPathname;
-}
-
-// TODO move to SiteMetadataDefaults or theme-common ?
-function CanonicalUrlHeaders({permalink}: {permalink?: string}) {
-  const {
-    siteConfig: {url: siteUrl},
-  } = useDocusaurusContext();
-  const defaultCanonicalUrl = useDefaultCanonicalUrl();
-
-  const canonicalUrl = permalink
-    ? `${siteUrl}${permalink}`
-    : defaultCanonicalUrl;
-  return (
-    <Head>
-      <meta property="og:url" content={canonicalUrl} />
-      <link rel="canonical" href={canonicalUrl} />
-    </Head>
-  );
-}
-
+// SiteMetadata is rendered above Docusaurus's per-route providers. Page data
+// belongs in ContentMetadata, attached to native routes by route-context.cjs.
 export default function SiteMetadata(): JSX.Element {
-  const {
-    i18n: {currentLocale, defaultLocale, localeConfigs},
-  } = useDocusaurusContext();
-  const {pathname} = useLocation();
-  const {pageFallback} = useTranslationRoutes();
-
-  // TODO maybe move these 2 themeConfig to siteConfig?
-  // These seems useful for other themes as well
-  const {metadata, image: defaultImage} = useThemeConfig();
-
-  return (
-    <>
-      <Head>
-        <html lang={localeConfigs[pageFallback ? defaultLocale : currentLocale]!.htmlLang} />
-        <meta name="twitter:card" content="summary_large_image" />
-        {/* The keyboard focus class name need to be applied when SSR so links
-        are outlined when JS is disabled */}
-        <body className={keyboardFocusedClassName} />
-      </Head>
-
-      {defaultImage && <PageMetadata image={defaultImage} />}
-
-      <CanonicalUrlHeaders permalink={pageFallback ? defaultLocalePath(pathname) : undefined} />
-
-      {pageFallback && (
+    const {siteConfig: {url, baseUrl, trailingSlash}, i18n: {currentLocale, localeConfigs}} = useDocusaurusContext();
+    const {pathname} = useLocation();
+    const {metadata, image: defaultImage} = useThemeConfig();
+    const canonical = url + applyTrailingSlash(pathname, {baseUrl, trailingSlash});
+    return <>
         <Head>
-          <meta name="robots" content="noindex, follow" />
+            <html lang={localeConfigs[currentLocale].htmlLang} />
+            <body className={keyboardFocusedClassName} />
+            <meta name="twitter:card" content="summary_large_image" />
+            <link rel="canonical" href={canonical} />
+            <meta property="og:url" content={canonical} />
+            <meta property="og:locale" content={localeConfigs[currentLocale].htmlLang.replace(/-/g, '_')} />
+            {/(?:^|\/)(?:404\.html|search\/?)$/.test(pathname) && <meta name="robots" content="noindex, follow" />}
         </Head>
-      )}
-
-      {/* A locale without a translated blog serves the default locale's
-          articles under its own /blog routes. The section stays browsable, but
-          it is a second copy of /blog, so it stays out of the index — and out
-          of that locale's sitemap, which skips noindex routes. The rule lives
-          here rather than in a blog component because the archive renders
-          through the plain layout. */}
-      {isDefaultLocaleBlogRoute(pathname) && (
-        <Head>
-          <meta name="robots" content="noindex, follow" />
-        </Head>
-      )}
-
-      <AlternateLangHeaders />
-
-      <SearchMetadata tag={DEFAULT_SEARCH_TAG} locale={currentLocale} />
-
-      {/*
-        It's important to have an additional <Head> element here, as it allows
-        react-helmet to override default metadata values set in previous <Head>
-        like "twitter:card". In same Head, the same meta would appear twice
-        instead of overriding.
-      */}
-      <Head>
-        {/* Yes, "metadatum" is the grammatically correct term */}
-        {metadata.map((metadatum, i) => (
-          <meta key={i} {...metadatum} />
-        ))}
-      </Head>
-    </>
-  );
+        {defaultImage && <PageMetadata image={defaultImage} />}
+        <SearchMetadata tag={DEFAULT_SEARCH_TAG} locale={currentLocale} />
+        <Head>{metadata.map((item, i) => <meta key={i} {...item} />)}</Head>
+    </>;
 }

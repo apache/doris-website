@@ -21,6 +21,9 @@ function fixture(kind, singleVersion = false) {
     const imports = {
         react: React,
         '@docusaurus/Link': ({to, children}) => React.createElement('a', {href: to.replace(/^pathname:\/\//, '')}, children),
+        '@site/src/utils/contentRoute': {useContentRouteData: () => ({kind: 'page', availableTranslations: locales})},
+        '@site/src/utils/useLanguageItems': {useLanguageItems: () => locales.map(locale => ({locale, label: locale, htmlLang: locale,
+            href: route(locale) + (phase === 'hydrated' ? '?from=search#usage' : ''), current: locale === 'ru', onClick() {}}))},
         '@site/src/utils/localization': {hasTranslatedPage: (_path, locale) => ['ja', 'ko', 'ru'].includes(locale)},
         '@site/src/utils/locale': {normalizePathname: pathname => pathname.replace(/^\/(en|zh-CN|ja|ko|ru)(?=\/|$)/, '')},
         '@docusaurus/router': {useLocation: () => ({pathname: route('ru'),

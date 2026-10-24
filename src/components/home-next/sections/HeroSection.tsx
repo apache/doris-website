@@ -1,4 +1,4 @@
-import { localizedDocLink, localizedAiLabels } from '@site/src/utils/localization';
+import { localizedAiLabels } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
@@ -881,7 +881,7 @@ export function HeroSection(): JSX.Element {
                             {translate({ id: "homepage.hero.055", message: "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage." })}</p>
 
                         <div className="hero-next__ctas">
-                            <a className="hero-next__btn hero-next__btn--yellow" href={localizedDocLink(GET_STARTED_HREF)}>
+                            <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>
                                 {translate({ id: "homepage.hero.056", message: "Get Started" })}</a>
                             <button
                                 type="button"

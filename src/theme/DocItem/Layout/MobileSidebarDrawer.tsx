@@ -1,3 +1,4 @@
+import {useLanguageItems} from '@site/src/utils/useLanguageItems';
 import React, { type JSX, useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
@@ -6,7 +7,6 @@ import useIsBrowser from '@docusaurus/useIsBrowser';
 import { useLocation } from '@docusaurus/router';
 import { useActivePlugin, useActiveVersion, useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { ThemeClassNames } from '@docusaurus/theme-common';
-import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import DocSidebarItems from '@theme/DocSidebarItems';
 import SearchBar from '@theme/SearchBar';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -23,7 +23,7 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
-    const alternatePageUtils = useAlternatePageUtils();
+    const languageItems = useLanguageItems();
     const usesDomainNavigation = supportsDocsDomainNavigation(activePlugin?.pluginId, activeVersion?.name);
     const [open, setOpen] = useState(false);
     const [localeOpen, setLocaleOpen] = useState(false);
@@ -161,18 +161,16 @@ export default function MobileSidebarDrawer(): JSX.Element | null {
                                     />
                                 </svg>
                             </button>
-                            <ul className={styles.localeMenu} role="menu">
-                                {locales.map(locale => {
-                                    const baseTo = alternatePageUtils.createUrl({
-                                        locale,
-                                        fullyQualified: false,
-                                    });
-                                    const to = `${baseTo}${search}${hash}`;
+                            <ul className={styles.localeMenu}>
+                                {languageItems.map(item => {
+                                    const locale = item.locale;
+                                    const to = item.href;
                                     return (
-                                        <li key={locale} role="none">
+                                        <li key={locale}>
                                             <a
-                                                role="menuitem"
                                                 href={to}
+                                                onClick={item.onClick}
+                                                aria-current={item.current ? 'page' : undefined}
                                                 lang={localeConfigs[locale]?.htmlLang}
                                                 className={clsx(
                                                     styles.localeMenuItem,

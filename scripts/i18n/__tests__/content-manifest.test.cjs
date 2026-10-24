@@ -27,7 +27,7 @@ async function collect(root, locale, options) {
     }
     let globalData;
     await require('../status-plugin.cjs')(context, options).allContentLoaded({allContent,
-        actions: {setGlobalData: value => {globalData = value;}}});
+        actions: {createData: async name => name, setGlobalData: value => {globalData = value;}}});
     return {manifest: JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/content-manifests', locale + '.json'))), globalData};
 }
 test('real native plugin output binds stable identities, routes and all four coverage levels to one source', async t => {

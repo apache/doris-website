@@ -13,6 +13,7 @@ async function exists(file) { try { await fs.access(file); return true; } catch 
 async function read(file) { return await exists(file) ? fs.readFile(file, 'utf8') : undefined; }
 const {localizedContext} = require('./native-context.cjs');
 const {adaptDoc, docsId} = require('./content-manifest.cjs');
+const {withContentRoutes} = require('./route-context.cjs');
 
 async function metadata(context, options, versionMetadata, source, filePath, content) {
     return processDocMetadata({context, options: {...options, showLastUpdateTime: false, showLastUpdateAuthor: false},
@@ -193,7 +194,7 @@ module.exports = async function translationDocsPlugin(context, options) {
     const sourceAliases = new Map();
     const adaptedLoaders = new WeakSet();
     let loaded = false;
-    return {...plugin,
+    return withContentRoutes({...plugin,
         getPathsToWatch() {
             return [...plugin.getPathsToWatch().filter(file => !managed.some(locale => file.startsWith(viewRoot(locale)))),
                 ...managed.map(locale => `${originalPluginDir(locale)}/**/*`),
@@ -280,7 +281,7 @@ module.exports = async function translationDocsPlugin(context, options) {
             }
             return result;
         },
-    };
+    }, context);
 };
 module.exports.validateOptions = native.validateOptions;
 // Allows offline inventory tools to select these configured plugin instances.

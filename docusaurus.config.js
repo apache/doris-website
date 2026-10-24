@@ -11,6 +11,7 @@ const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
 const manualPlugins = require('./scripts/i18n/manual-plugins.cjs');
+const {filterContentSitemap} = require('./scripts/i18n/sitemap.cjs');
 const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
 const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
@@ -534,7 +535,8 @@ const config = {
                     createSitemapItems: async params => {
                         const { defaultCreateSitemapItems, ...rest } = params;
                         const items = await defaultCreateSitemapItems(rest);
-                        const filteredItems = items.filter(item => {
+                        const locale = ENABLED_LOCALES.find(locale => locale !== 'en' && params.siteConfig.baseUrl.endsWith(`/${locale}/`)) ?? 'en';
+                        const filteredItems = filterContentSitemap(items, __dirname, locale, params.siteConfig.baseUrl).filter(item => {
                             const pathname = new URL(item.url).pathname.replace(/\/+$/, '');
                             return !UTILITY_PATHS.has(pathname);
                         });

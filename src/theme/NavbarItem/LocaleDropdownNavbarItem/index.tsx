@@ -1,13 +1,10 @@
 import React, { type JSX } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { useAlternatePageUtils } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
-import { useLocation } from '@docusaurus/router';
-import useIsBrowser from '@docusaurus/useIsBrowser';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { LinkLikeNavbarItemProps } from '@theme/NavbarItem';
 import type { Props } from '@theme/NavbarItem/LocaleDropdownNavbarItem';
-import {useTranslationRoutes} from '@site/src/utils/translation';
+import {useLanguageItems} from '@site/src/utils/useLanguageItems';
 
 import './styles.scss';
 export default function LocaleDropdownNavbarItem({
@@ -20,63 +17,16 @@ export default function LocaleDropdownNavbarItem({
     const {
         i18n: { currentLocale, locales, localeConfigs },
     } = useDocusaurusContext();
-    const alternatePageUtils = useAlternatePageUtils();
-    const {group, translatedLocales} = useTranslationRoutes();
-    const { search, hash } = useLocation();
-    // Match SSR on the first client render, then update suffixes after hydration.
-    const suffix = useIsBrowser() ? search + hash : '';
-
-    // Locales listed here render in the dropdown with a "Coming Soon" badge and
-    // are not clickable yet. Empty while no locale is in that state.
-    const COMING_SOON_LOCALES = new Set<string>([]);
-
-    const localeItems = locales.map((locale): LinkLikeNavbarItemProps => {
-        const nativeTo = alternatePageUtils.createUrl({
-            locale,
-            fullyQualified: false,
-        });
-        // Switching to or from a translated locale prefers the page's exact
-        // counterpart route over the locale's default route.
-        const isTranslatedSwitch = translatedLocales.includes(locale) || translatedLocales.includes(currentLocale);
-        const baseTo = `pathname://${isTranslatedSwitch && group?.[locale] ? group[locale] : nativeTo}`;
-        // preserve ?search#hash suffix on locale switches
-        const to = `${baseTo}${suffix}${queryString}`;
-        const isComingSoon = COMING_SOON_LOCALES.has(locale);
-        const baseLabel = localeConfigs[locale]!.label;
-        const label = isComingSoon ? (
-            <span className="locale-dropdown__label locale-dropdown__label--coming-soon">
-                <span className="locale-dropdown__label-text">{baseLabel}</span>
-                <span className="locale-dropdown__coming-soon-badge">Coming Soon</span>
-            </span>
-        ) : (
-            baseLabel
-        );
-        const activeClassName =
-            // eslint-disable-next-line no-nested-ternary
-            locale === currentLocale
-                ? // Similar idea as DefaultNavbarItem: select the right Infima active
-                  // class name. This cannot be substituted with isActive, because the
-                  // target URLs contain `pathname://` and therefore are not NavLinks!
-                  mobile
-                    ? 'menu__link--active'
-                    : 'dropdown__link--active'
-                : '';
-        const className = [activeClassName, isComingSoon ? 'locale-dropdown__link--disabled' : '']
-            .filter(Boolean)
-            .join(' ');
-        return {
-            label,
-            lang: localeConfigs[locale]!.htmlLang,
-            to: isComingSoon ? '#' : to,
-            target: '_self',
-            autoAddBaseUrl: false,
-            className,
-            ...(isComingSoon && {
-                'aria-disabled': true,
-                onClick: (e: React.MouseEvent) => e.preventDefault(),
-            }),
-        } as LinkLikeNavbarItemProps;
-    });
+    const languageItems = useLanguageItems(queryString);
+    const localeItems = languageItems.map((item): LinkLikeNavbarItemProps => ({
+        label: <span>{item.label}{item.fallbackLabel && <small lang={currentLocale} className="locale-dropdown__fallback"> · {item.fallbackLabel}</small>}</span>,
+        lang: item.htmlLang,
+        to: `pathname://${item.href}`,
+        target: '_self', autoAddBaseUrl: false,
+        onClick: item.onClick,
+        'aria-current': item.current ? 'page' : undefined,
+        className: item.current ? (mobile ? 'menu__link--active' : 'dropdown__link--active') : '',
+    } as LinkLikeNavbarItemProps));
     const items = [...dropdownItemsBefore, ...localeItems, ...dropdownItemsAfter];
 
     // Mobile is handled a bit differently

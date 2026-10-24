@@ -15,6 +15,9 @@ const htmlLangFor = locale => localeRegistry.find(item => item.code === locale)?
 function verify({site, manifest, partial = false}) {
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     const locale = data.locale;
+    const contentFile = path.join(path.dirname(path.dirname(manifest)), 'content-manifests', locale + '.json');
+    const contentPages = fs.existsSync(contentFile) ? JSON.parse(fs.readFileSync(contentFile)).pages : [];
+    const contentByRoute = new Map(contentPages.map(page => [page.route, page]));
     if (!locale) throw new Error(`Manifest has no locale: ${manifest}`);
     const htmlLang = htmlLangFor(locale);
     const sitemapFile = path.join(site, locale, 'sitemap.xml');
@@ -100,9 +103,10 @@ function verify({site, manifest, partial = false}) {
         const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
         const source = permalink.startsWith(`/${locale}/`) ? permalink.slice(locale.length + 1) : permalink;
         const translatedPages = data.translatedPagePaths?.[locale] ?? record?.translatedPages;
-        const fallback = record?.ordinaryPages === false && !translatedPages?.includes(source.replace(/\/+$/, ''));
+        const decision = contentByRoute.get(permalink);
+        const fallback = decision ? decision.fallback : record?.ordinaryPages === false && !translatedPages?.includes(source.replace(/\/+$/, ''));
         if (fallback) {
-            assert.equal($('html').attr('lang'), htmlLangFor('en'), `Fallback page language: ${permalink}`);
+            assert.equal($('html').attr('lang'), htmlLang, `Fallback navigation language: ${permalink}`);
             assert.equal($('link[rel="canonical"]').length, 1, `Duplicate ordinary canonical: ${permalink}`);
             assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${source}`);
             assert.equal($('meta[property="og:url"]').attr('content'), `https://doris.apache.org${source}`);
@@ -110,7 +114,7 @@ function verify({site, manifest, partial = false}) {
             assert(($('meta[name="robots"]').attr('content') ?? '').includes('noindex'), `Indexed English fallback: ${permalink}`);
             assert(!sitemapPaths.has(permalink), `Ordinary fallback in sitemap: ${permalink}`);
             assert.equal($(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0, `Ordinary fallback alternate: ${permalink}`);
-            for (const sourceRoute of [source, `/zh-CN${source}`]) {
+            for (const sourceRoute of (decision ? Object.values(decision.navigationRoutes) : [source, `/zh-CN${source}`])) {
                 const source$ = counterpart(sourceRoute, 'ordinary fallback alternates');
                 if (source$) assert.equal(source$(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0,
                     `Source advertises ordinary fallback: ${sourceRoute}`);
