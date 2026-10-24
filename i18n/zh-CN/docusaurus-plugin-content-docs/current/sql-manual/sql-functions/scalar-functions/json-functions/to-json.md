@@ -49,9 +49,12 @@ TO_JSON(value)
 - 日期类型：DATETIME、TIMESTAMP_NS、DATE、TIME
 - IP类型：IPV4、IPV6
 - 复杂类型：MAP
+- 文件类型：FILE
 
 DATETIME、TIMESTAMP_NS、DATE、TIME、IPV4 和 IPV6 在 JSONB 中没有对应的原生类型，因此会转换为 JSONB 字符串。
 对于 MAP 类型，会被转换成 JSONB 的 Object 类型。其中 Map 的键必须为STRING类型，这是因为JSON的标准规定，Object的Key只能为字符串。
+
+对于 FILE 类型，结果为包含 `uri`、`offset`、`size`、`content_type`、`checksum` 和 `inline` 六个字段的 JSONB 对象。二进制字段 `inline` 转换为 Base64 字符串，空字节序列转换为空字符串，NULL 字段转换为 JSON null。ARRAY、STRUCT 和 MAP value 中的 FILE 值使用相同表示。
 
 ## 返回值
 
@@ -60,6 +63,27 @@ DATETIME、TIMESTAMP_NS、DATE、TIME、IPV4 和 IPV6 在 JSONB 中没有对应�
 当输入的 `value` 为 SQL NULL 时，函数返回 SQL NULL（不是 JSON null 值）。当 NULL 值出现在数组或结构体内部时，它们会被转换为 JSON null 值。
 
 ## 示例
+
+### FILE 值
+
+```sql
+SELECT TO_JSON(CAST(NAMED_STRUCT(
+    'uri', 'urn:example', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE)) AS j;
+```
+
+```text
+{"uri":"urn:example","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}
+```
+
+```sql
+SELECT TO_JSON(CAST(NULL AS FILE)) AS j;
+```
+
+```text
+NULL
+```
 
 ### 基本标量值
 
@@ -264,5 +288,4 @@ SELECT to_json(cast(makedate(2025,5) as string));
 3. Doris 中的 JSONB 对象默认大小限制为 1,048,576 字节（1 MB），可通过 BE 配置 `string_type_length_soft_limit_bytes` 参数调整，最大可调整至 2,147,483,643 字节（约 2 GB）。
 
 4. Doris JSON 类型的对象中，键的长度不能超过 255 个字节。
-
 

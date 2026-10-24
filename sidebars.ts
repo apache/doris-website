@@ -1353,6 +1353,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'Semi-Structured Data Type',
                                     items: [
                                         'sql-manual/basic-element/sql-data-types/semi-structured/ARRAY',
+                                        'sql-manual/basic-element/sql-data-types/semi-structured/FILE',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/GEO',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/MAP',
                                         'sql-manual/basic-element/sql-data-types/semi-structured/STRUCT',
@@ -1408,6 +1409,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/basic-element/sql-data-types/conversion/timestamp-ns-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/timestamptz-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/decimal-conversion',
+                                        'sql-manual/basic-element/sql-data-types/conversion/file-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/float-double-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/int-conversion',
                                         'sql-manual/basic-element/sql-data-types/conversion/ip-conversion',
@@ -1504,6 +1506,8 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             label: 'Scalar Functions',
                             items: [
+                                'sql-manual/sql-functions/scalar-functions/to-file',
+                                'sql-manual/sql-functions/scalar-functions/fl-get-binary',
                                 {
                                     type: 'category',
                                     label: 'UUID Functions',
@@ -2341,6 +2345,8 @@ const sidebars: SidebarsConfig = {
                             label: 'Table Functions',
                             items: [
                                 'sql-manual/sql-functions/table-functions/explode',
+                                'sql-manual/sql-functions/table-functions/explode-file',
+                                'sql-manual/sql-functions/table-functions/explode-file-outer',
                                 'sql-manual/sql-functions/table-functions/explode-outer',
                                 'sql-manual/sql-functions/table-functions/explode-bitmap',
                                 'sql-manual/sql-functions/table-functions/explode-bitmap-outer',
@@ -2378,6 +2384,7 @@ const sidebars: SidebarsConfig = {
                                 'sql-manual/sql-functions/table-valued-functions/catalogs',
                                 'sql-manual/sql-functions/table-valued-functions/changelog',
                                 'sql-manual/sql-functions/table-valued-functions/file',
+                                'sql-manual/sql-functions/table-valued-functions/list-file',
                                 'sql-manual/sql-functions/table-valued-functions/frontends',
                                 'sql-manual/sql-functions/table-valued-functions/frontends_disks',
                                 'sql-manual/sql-functions/table-valued-functions/hdfs',

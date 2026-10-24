@@ -81,6 +81,8 @@ Doris supports different semi-structured data types for JSON data processing, ea
 
 - **[JSON](../sql-data-types/semi-structured/JSON.md)**: It supports nested data and flexible schema. It is optimized for high-concurrency point query use cases. The flexible schema allows for ingesting any legal JSON data, which will be stored in a binary format. Extracting fields from this binary JSON format is more than 2X faster than using regular JSON strings.
 
+- **[FILE](semi-structured/FILE.md)** (Since 4.2.0): Represents a file in a query. A FILE value can refer to a remote file by its location or hold its binary contents directly, together with information such as size and content type.
+
 ## Aggregation Types
 
 The aggregation data types store aggregation results or intermediate results during aggregation. They are used for accelerating aggregation-heavy queries.
