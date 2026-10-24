@@ -383,7 +383,7 @@ const config = {
     plugins: [
         contentTranslationPlugin,
         SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
-        translationStatusPlugin,
+        [translationStatusPlugin, {browserData: MANAGED_LOCALES.length > 0}],
         [manualPlugins.pages, {}],
         SKIP_BLOG ? null : [manualPlugins.blog, {
             blogTitle: 'Apache Doris - Blog | Latest news and events ',

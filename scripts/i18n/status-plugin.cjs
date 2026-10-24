@@ -4,7 +4,7 @@ const {managedLocales} = require('./state.cjs');
 const {mergeAlternates} = require('./alternates.cjs');
 const {sourceSha, buildManifest, routeData} = require('./content-manifest.cjs');
 
-module.exports = function translationStatusPlugin(context) {
+module.exports = function translationStatusPlugin(context, {browserData = true} = {}) {
     const locale = context.i18n.currentLocale;
     // The browser needs to know which locales carry translation state, so the
     // UI can decide from data instead of naming a language.
@@ -35,7 +35,7 @@ module.exports = function translationStatusPlugin(context) {
             // localized documentation, search, or other plugin-owned UI.
             const pageRoutes = [...new Set(Object.values(allContent['docusaurus-plugin-content-pages'] ?? {})
                 .flatMap(content => content ?? []).map(page => page.permalink.replace(/\/$/, '') + '/'))];
-            actions.setGlobalData({alternates, prefixes, locales, pageRoutes});
+            if (browserData) actions.setGlobalData({alternates, prefixes, locales, pageRoutes});
             const inputs = Object.values(allContent).flatMap(instances => Object.values(instances))
                 .map(content => content?.contentIdentity).filter(Boolean);
             if (inputs.length) {

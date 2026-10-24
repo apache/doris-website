@@ -117,7 +117,8 @@ Full manifests are build artifacts. Do not import them into React or put them in
 `ContentRouteData` and `contentRouteGroups()` in `src/utils/translation.ts` keep
 navigation and indexing consumers distinct. T02/T03 will attach only the current
 page or required family to its route. The current compatibility browser data is
-unchanged. The size report records full bytes, maximum per-page route bytes and
+unchanged; source-only builds use `browserData: false`, preserving the previous
+absence of status globals when optional locales are disabled. The size report records full bytes, maximum per-page route bytes and
 zero added global payload bytes. Existing global alternate data can be retired
 when T02 consumers migrate.
 

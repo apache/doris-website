@@ -12,7 +12,7 @@ function directory(t) {
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     return root;
 }
-async function collect(root, locale) {
+async function collect(root, locale, options) {
     const {loadContext} = require('@docusaurus/core/lib/server/site.js');
     const {loadPluginConfigs} = require('@docusaurus/core/lib/server/plugins/configs.js');
     const {initPluginsConfigs} = require('@docusaurus/core/lib/server/plugins/init.js');
@@ -26,7 +26,7 @@ async function collect(root, locale) {
         allContent[plugin.name][plugin.options.id] = content;
     }
     let globalData;
-    await require('../status-plugin.cjs')(context).allContentLoaded({allContent,
+    await require('../status-plugin.cjs')(context, options).allContentLoaded({allContent,
         actions: {setGlobalData: value => {globalData = value;}}});
     return {manifest: JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/content-manifests', locale + '.json'))), globalData};
 }
@@ -59,6 +59,9 @@ test('real native plugin output binds stable identities, routes and all four cov
         assert(!JSON.stringify(routeData(page)).includes('sourceHash'));
         assert(Buffer.byteLength(JSON.stringify(routeData(page))) < 2048);
     }
+    const buildOnly = await collect(root, 'en', {browserData: false});
+    assert.equal(buildOnly.globalData, undefined);
+    assert(buildOnly.manifest.pages.length > 0);
     const previous = process.env.FIXTURE_DISABLE_RU; process.env.FIXTURE_DISABLE_RU = 'true';
     try {
         const {manifest} = await collect(root, 'ja');
