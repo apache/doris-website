@@ -299,7 +299,7 @@ test('every marketing translation exists and retains interpolation placeholders'
     assert.match(dictionary['marketing.features.noResults'].message, /\{query\}.*\{clear\}/);
 });
 
-test('page translations leave global navigation in English', () => {
+test('global navigation has complete localized messages', () => {
     const source = ts.createSourceFile('NavbarNext.tsx', fs.readFileSync(path.join(root,
         'src/components/home-next/NavbarNext.tsx'), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
     for (const locale of Object.keys(registered)) {
@@ -310,7 +310,8 @@ test('page translations leave global navigation in English', () => {
                 if (options && ts.isObjectLiteralExpression(options)) {
                     const value = key => options.properties.find(property => property.name?.getText(source) === key)?.initializer?.text;
                     const id = value('id'), message = value('message');
-                    assert.equal(dictionary[id]?.message ?? message, message, `${locale} ${id}`);
+                    assert.equal(typeof dictionary[id]?.message, 'string', `${locale} ${id}`);
+                    assert.deepEqual(placeholders(dictionary[id].message), placeholders(message), `${locale} ${id}`);
                 }
             }
             ts.forEachChild(node, visit);
@@ -319,7 +320,7 @@ test('page translations leave global navigation in English', () => {
     }
 });
 
-test('the Slack community prompt stays English in every locale', () => {
+test('the Slack community prompt is localized in every target locale', () => {
     const file = 'src/components/home-next/SlackCommunityNudge.tsx';
     const source = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), 'utf8'),
         ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
@@ -337,7 +338,7 @@ test('the Slack community prompt stays English in every locale', () => {
         const dictionaryFile = path.join(root, 'i18n', code, 'code.json');
         if (!fs.existsSync(dictionaryFile)) continue;
         const dictionary = JSON.parse(fs.readFileSync(dictionaryFile, 'utf8'));
-        assert.deepEqual(ids.filter(id => dictionary[id]), [], code);
+        assert.deepEqual(ids.filter(id => !dictionary[id]?.message), [], code);
     }
 });
 

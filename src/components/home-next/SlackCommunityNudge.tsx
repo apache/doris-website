@@ -262,7 +262,7 @@ export function SlackCommunityNudge(): JSX.Element {
                 <p className="slack-community-nudge__copy">
                     {translate({ id: "homepage.slackcommunitynudge.010", message: "Join Slack for setup help, performance tips, and answers from Apache Doris users and maintainers." })}</p>
                 <ul className="slack-community-nudge__benefits">
-                    {(isTranslatedLocale(currentLocale) ? localizedBenefits : getSlackNudgeBenefits()).map(benefit => (
+                    {localizedBenefits.map(benefit => (
                         <li className="slack-community-nudge__benefit" key={benefit}>
                             {benefit}
                         </li>

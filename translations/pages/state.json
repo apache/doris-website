@@ -14,6 +14,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -28,6 +29,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -42,17 +46,22 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
       "targetFiles": [],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": null,
+      "targetHash": null,
       "reviewStatus": "unverified"
     },
     {
       "contentId": "page:P01",
       "locale": "ja",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -62,6 +71,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -76,6 +86,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -90,17 +103,24 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ja/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P01",
       "locale": "ko",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -110,6 +130,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -124,6 +145,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -138,17 +162,24 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ko/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P01",
       "locale": "ru",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -158,6 +189,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -172,6 +204,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -186,12 +221,19 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ru/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P02",
@@ -214,7 +256,9 @@
         "static/images/ecomsystem-log/trino-small.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P02",
@@ -240,7 +284,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -268,7 +312,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -296,7 +340,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -312,7 +356,9 @@
         "src/pages/why-doris/benchmarks/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P03",
@@ -329,7 +375,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -348,7 +394,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -367,7 +413,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -383,7 +429,9 @@
         "src/pages/why-doris/key-features/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P04",
@@ -400,7 +448,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -422,7 +470,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -444,7 +492,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -601,7 +649,9 @@
         "static/images/user-logo/Telecom & Manufacturing/ZTE.jpg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P05",
@@ -1076,7 +1126,9 @@
         "static/images/next/user-logos/zto-circle.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P06",
@@ -1098,7 +1150,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1122,7 +1174,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1146,7 +1198,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1167,7 +1219,9 @@
         "static/images/next/user-logos/xiaomi.svg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P07",
@@ -1189,7 +1243,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1213,7 +1267,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1237,7 +1291,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1258,7 +1312,9 @@
         "static/images/next/user-logos/tencent-music-color.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P08",
@@ -1280,7 +1336,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1304,7 +1360,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1328,7 +1384,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1346,7 +1402,9 @@
         "src/pages/use-cases/ai/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P09",
@@ -1365,7 +1423,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1386,7 +1444,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1407,7 +1465,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1431,7 +1489,9 @@
         "src/pages/download/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P10",
@@ -1508,7 +1568,9 @@
         "src/pages/brand-assets/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P11",
@@ -1591,7 +1653,9 @@
         "static/images/events/webniar-5.jpeg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P12",
@@ -1753,7 +1817,9 @@
         "src/pages/community/roadmap/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P13",
@@ -1802,7 +1868,9 @@
         "src/pages/community-report/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P14",
@@ -1859,7 +1927,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P15",
@@ -1934,7 +2004,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P16",
@@ -2018,7 +2090,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P17",
@@ -2102,7 +2176,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P18",
@@ -2186,7 +2262,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P19",
@@ -2271,7 +2349,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P20",
@@ -2369,7 +2449,9 @@
         "src/pages/profile-analysis/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P21",

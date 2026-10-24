@@ -58,5 +58,275 @@
     },
     "theme.TOC.forum": {
         "message": "技术论坛"
+    },
+    "homepage.ai.loading": {
+        "message": "正在加载 AI…"
+    },
+    "homepage.ai.slow": {
+        "message": "仍在加载…"
+    },
+    "homepage.ai.error": {
+        "message": "AI 暂不可用"
+    },
+    "homepage.theme.current": {
+        "message": "配色主题：{theme}"
+    },
+    "homepage.theme.change": {
+        "message": "切换配色主题"
+    },
+    "homepage.theme.label": {
+        "message": "配色主题"
+    },
+    "homepage.navbar.001": {
+        "message": "为什么选择 Doris"
+    },
+    "homepage.navbar.002": {
+        "message": "Doris 与其他方案对比"
+    },
+    "homepage.navbar.003": {
+        "message": "性能基准测试"
+    },
+    "homepage.navbar.004": {
+        "message": "核心特性"
+    },
+    "homepage.navbar.005": {
+        "message": "用户案例"
+    },
+    "homepage.navbar.006": {
+        "message": "应用场景"
+    },
+    "homepage.navbar.007": {
+        "message": "面向客户的分析"
+    },
+    "homepage.navbar.008": {
+        "message": "数据仓库"
+    },
+    "homepage.navbar.009": {
+        "message": "可观测性"
+    },
+    "homepage.navbar.010": {
+        "message": "Doris 与 AI"
+    },
+    "homepage.navbar.011": {
+        "message": "文档"
+    },
+    "homepage.navbar.015": {
+        "message": "资源"
+    },
+    "homepage.navbar.016": {
+        "message": "版本说明"
+    },
+    "homepage.navbar.017": {
+        "message": "博客"
+    },
+    "homepage.navbar.018": {
+        "message": "课程"
+    },
+    "homepage.navbar.019": {
+        "message": "Profile 分析"
+    },
+    "homepage.navbar.020": {
+        "message": "社区"
+    },
+    "homepage.navbar.021": {
+        "message": "社区周报"
+    },
+    "homepage.navbar.022": {
+        "message": "路线图"
+    },
+    "homepage.navbar.023": {
+        "message": "参与建设"
+    },
+    "homepage.navbar.024": {
+        "message": "参与 GitHub 讨论"
+    },
+    "homepage.navbar.027": {
+        "message": "访问 Doris Summit 2026（在新标签页打开）"
+    },
+    "homepage.navbar.029": {
+        "message": "问问 AI"
+    },
+    "homepage.navbar.030": {
+        "message": "不可用"
+    },
+    "homepage.navbar.031": {
+        "message": "提问"
+    },
+    "homepage.navbar.starLabel": {
+        "message": "在 GitHub 上为 Apache Doris 加星（{stars} 星）"
+    },
+    "homepage.navbar.032": {
+        "message": "加星"
+    },
+    "homepage.navbar.033": {
+        "message": "下载"
+    },
+    "homepage.navbar.034": {
+        "message": "关闭导航菜单"
+    },
+    "homepage.navbar.035": {
+        "message": "打开导航菜单"
+    },
+    "homepage.nudge.benefit1": {
+        "message": "与 Doris 用户和开发者交流。"
+    },
+    "homepage.nudge.benefit2": {
+        "message": "获取最新社区动态、学习资源与活动信息。"
+    },
+    "homepage.nudge.benefit3": {
+        "message": "参与社区建设、功能讨论与 PR 审查。"
+    },
+    "homepage.slackcommunitynudge.004": {
+        "message": "Apache Doris 社区、Summit 与文档资源"
+    },
+    "homepage.slackcommunitynudge.005": {
+        "message": "Apache Doris 社区与 Summit 资源"
+    },
+    "homepage.slackcommunitynudge.006": {
+        "message": "关闭社区、Summit 与文档提示"
+    },
+    "homepage.slackcommunitynudge.007": {
+        "message": "关闭社区与 Summit 提示"
+    },
+    "homepage.slackcommunitynudge.008": {
+        "message": "社区帮助"
+    },
+    "homepage.slackcommunitynudge.009": {
+        "message": "正在使用 Doris？"
+    },
+    "homepage.slackcommunitynudge.010": {
+        "message": "加入 Slack，获取安装帮助、性能建议，以及 Apache Doris 用户与维护者的解答。"
+    },
+    "homepage.slackcommunitynudge.011": {
+        "message": "加入 Slack"
+    },
+    "homepage.slackcommunitynudge.013": {
+        "message": "10 月 21–22 日 · 线上活动"
+    },
+    "homepage.slackcommunitynudge.014": {
+        "message": "查看 Summit"
+    },
+    "homepage.slackcommunitynudge.015": {
+        "message": "发现文档问题？"
+    },
+    "homepage.slackcommunitynudge.016": {
+        "message": "分享反馈，帮助我们改进 Apache Doris 文档质量。"
+    },
+    "homepage.slackcommunitynudge.017": {
+        "message": "反馈文档问题"
+    },
+    "homepage.nudge.toggleDocs": {
+        "message": "{action}社区、Summit 与文档资源"
+    },
+    "homepage.slackcommunitynudge.018": {
+        "message": "收起"
+    },
+    "homepage.slackcommunitynudge.019": {
+        "message": "打开"
+    },
+    "homepage.nudge.toggle": {
+        "message": "{action}社区与 Summit 资源"
+    },
+    "site.footer.1": {
+        "message": "基金会"
+    },
+    "site.footer.2": {
+        "message": "许可证"
+    },
+    "site.footer.3": {
+        "message": "活动"
+    },
+    "site.footer.4": {
+        "message": "赞助"
+    },
+    "site.footer.5": {
+        "message": "隐私"
+    },
+    "site.footer.6": {
+        "message": "安全"
+    },
+    "site.footer.7": {
+        "message": "致谢"
+    },
+    "site.footer.8": {
+        "message": "资源"
+    },
+    "site.footer.9": {
+        "message": "下载"
+    },
+    "site.footer.10": {
+        "message": "品牌资源"
+    },
+    "site.footer.11": {
+        "message": "博客"
+    },
+    "site.footer.12": {
+        "message": "社区"
+    },
+    "site.footer.13": {
+        "message": "如何贡献"
+    },
+    "site.footer.14": {
+        "message": "源代码"
+    },
+    "site.footer.15": {
+        "message": "Doris 团队"
+    },
+    "site.footer.16": {
+        "message": "路线图"
+    },
+    "site.footer.17": {
+        "message": "改进提案"
+    },
+    "site.footer.join": {
+        "message": "加入社区"
+    },
+    "site.notFound.home": {
+        "message": "返回首页"
+    },
+    "site.notFound.report": {
+        "message": "报告此问题"
+    },
+    "site.search.context": {
+        "message": "搜索范围"
+    },
+    "theme.NotFound.title": {
+        "message": "页面不存在"
+    },
+    "theme.NotFound.p1": {
+        "message": "找不到您要访问的页面。请尝试查找其他页面，或向我们反馈此问题。"
+    },
+    "theme.SearchBar.noResultsText": {
+        "message": "无结果"
+    },
+    "theme.SearchBar.label": {
+        "message": "搜索"
+    },
+    "theme.SearchBar.seeAllOutsideContext": {
+        "message": "查看“{context}”以外的所有结果"
+    },
+    "theme.SearchBar.searchInContext": {
+        "message": "查看“{context}”内的所有结果"
+    },
+    "theme.SearchBar.seeAll": {
+        "message": "查看所有结果"
+    },
+    "theme.SearchPage.existingResultsTitle": {
+        "message": "“{query}”的搜索结果"
+    },
+    "theme.SearchPage.emptyResultsTitle": {
+        "message": "搜索文档"
+    },
+    "theme.SearchPage.searchContext.everywhere": {
+        "message": "全部范围"
+    },
+    "theme.SearchPage.noResultsText": {
+        "message": "未找到文档"
+    },
+    "theme.SearchPage.searchSource": {
+        "message": "搜索英文原文"
+    },
+    "theme.SearchPage.documentsFound.plurals": {
+        "message": "找到 {count} 篇文档"
     }
 }

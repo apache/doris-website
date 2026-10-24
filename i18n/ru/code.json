@@ -2845,5 +2845,941 @@
   },
   "marketing.observability.hero": {
     "message": "{observability} {realTime}{lineBreak}{era}"
+  },
+  "homepage.hero.002": {
+    "message": "ВЫПОЛНЕНИЕ ЗАПРОСА…"
+  },
+  "homepage.hero.004": {
+    "message": "Сбросить"
+  },
+  "homepage.hero.005": {
+    "message": "СБРОС"
+  },
+  "homepage.hero.007": {
+    "message": "Выполнить запрос"
+  },
+  "homepage.hero.008": {
+    "message": "ЗАПУСК"
+  },
+  "homepage.hero.015": {
+    "message": "3 документа · просканировано 18,4 млн векторов"
+  },
+  "homepage.hero.016": {
+    "message": "Структурированный, полнотекстовый и векторный"
+  },
+  "homepage.hero.017": {
+    "message": " поиск в одном SQL-запросе."
+  },
+  "homepage.hero.020": {
+    "message": "РЕЗУЛЬТАТ · 5 ДОКУМЕНТОВ · ПО РЕЛЕВАНТНОСТИ"
+  },
+  "homepage.hero.021": {
+    "message": "Полнотекстовый"
+  },
+  "homepage.hero.022": {
+    "message": "Векторный"
+  },
+  "homepage.hero.023": {
+    "message": "Фильтр"
+  },
+  "homepage.hero.027": {
+    "message": "ГРАФ ЗНАНИЙ"
+  },
+  "homepage.hero.033": {
+    "message": "ЗАПРОСОВ В ДЕНЬ"
+  },
+  "homepage.hero.039": {
+    "message": "ошибок 0,00%"
+  },
+  "homepage.hero.040": {
+    "message": "Показать результаты поиска"
+  },
+  "homepage.hero.041": {
+    "message": "Показать граф знаний и диаграмму запросов"
+  },
+  "homepage.hero.044": {
+    "message": "Переключить анимацию отчёта"
+  },
+  "homepage.hero.049": {
+    "message": "Молниеносная"
+  },
+  "homepage.hero.050": {
+    "message": "скорость"
+  },
+  "homepage.hero.051": {
+    "message": "аналитики"
+  },
+  "homepage.hero.052": {
+    "message": " и"
+  },
+  "homepage.hero.053": {
+    "message": "поиска"
+  },
+  "homepage.hero.054": {
+    "message": " в одной СУБД"
+  },
+  "homepage.hero.055": {
+    "message": "Apache Doris — открытая СУБД реального времени для современной аналитики и ИИ. Развёртывайте её на физических серверах без общих ресурсов или с разделением вычислений и облачного объектного хранилища."
+  },
+  "homepage.hero.056": {
+    "message": "Начать"
+  },
+  "homepage.hero.057": {
+    "message": "Спросить ИИ"
+  },
+  "homepage.hero.058": {
+    "message": "Присоединиться к Slack"
+  },
+  "homepage.features.001": {
+    "message": "Аналитика реального времени"
+  },
+  "homepage.features.002": {
+    "message": "Быстрейший сквозной движок от загрузки данных до результата."
+  },
+  "homepage.features.003": {
+    "message": "Высокая конкурентность / низкая задержка"
+  },
+  "homepage.features.004": {
+    "message": "Подробнее об аналитике реального времени (скоро)"
+  },
+  "homepage.features.005": {
+    "message": "Потоковая загрузка"
+  },
+  "homepage.features.006": {
+    "message": "Загружайте данные из Kafka и CDC баз данных с актуальностью до секунд."
+  },
+  "homepage.features.007": {
+    "message": "Инкрементальные преобразования"
+  },
+  "homepage.features.008": {
+    "message": "Материализованные представления обновляют сложные преобразования за минуты вместо часов."
+  },
+  "homepage.features.009": {
+    "message": "Запросы быстрее секунды"
+  },
+  "homepage.features.010": {
+    "message": "Ответ быстрее секунды при высокой конкурентности даже на петабайтах данных."
+  },
+  "homepage.features.011": {
+    "message": "Аналитика Lakehouse"
+  },
+  "homepage.features.012": {
+    "message": "Аналитика реального времени прямо в открытом Lakehouse."
+  },
+  "homepage.features.014": {
+    "message": "Подробнее об аналитике Lakehouse (скоро)"
+  },
+  "homepage.features.015": {
+    "message": "Широкая поддержка каталогов"
+  },
+  "homepage.features.016": {
+    "message": "Запрашивайте таблицы Iceberg, Delta Lake и Hudi без копирования данных."
+  },
+  "homepage.features.017": {
+    "message": "Молниеносный движок запросов"
+  },
+  "homepage.features.018": {
+    "message": "Векторизованное выполнение и умный кеш метаданных ускоряют запросы к озеру данных."
+  },
+  "homepage.features.019": {
+    "message": "Инкрементальная двусторонняя синхронизация"
+  },
+  "homepage.features.020": {
+    "message": "Передавайте данные потоками в обе стороны между открытыми форматами озера и внутренним хранилищем Doris."
+  },
+  "homepage.features.021": {
+    "message": "Гибридный поиск"
+  },
+  "homepage.features.022": {
+    "message": "Полноценный поиск по структурированным данным, текстам и векторам."
+  },
+  "homepage.features.023": {
+    "message": "JSON / текст / векторы"
+  },
+  "homepage.features.024": {
+    "message": "Подробнее о гибридном поиске (скоро)"
+  },
+  "homepage.features.025": {
+    "message": "Аналитика JSON"
+  },
+  "homepage.features.026": {
+    "message": "Автоматическое колоночное хранение трассировок агентов и метаданных вызовов инструментов ускоряет анализ в 50 раз."
+  },
+  "homepage.features.027": {
+    "message": "Текстовый поиск"
+  },
+  "homepage.features.028": {
+    "message": "Быстрый поиск BM25 для RAG, памяти агентов и журналов наблюдаемости."
+  },
+  "homepage.features.029": {
+    "message": "Векторный поиск"
+  },
+  "homepage.features.030": {
+    "message": "Встроенные индексы HNSW и IVF для семантического поиска по эмбеддингам."
+  },
+  "homepage.features.037": {
+    "message": "Приложения"
+  },
+  "homepage.features.038": {
+    "message": "Анимация аналитики Lakehouse"
+  },
+  "homepage.features.039": {
+    "message": "Анимация гибридного поиска"
+  },
+  "homepage.features.040": {
+    "message": "Анимация аналитики реального времени"
+  },
+  "homepage.features.041": {
+    "message": "Ключевые возможности"
+  },
+  "homepage.features.042": {
+    "message": "Три направления. Один движок"
+  },
+  "homepage.usecases.001": {
+    "message": "Клиентская аналитика"
+  },
+  "homepage.usecases.002": {
+    "message": "Предоставляйте клиентам интерактивную аналитику с ответом быстрее секунды в любом масштабе."
+  },
+  "homepage.usecases.003": {
+    "message": "Хранилище данных"
+  },
+  "homepage.usecases.004": {
+    "message": "Единое хранилище реального времени для аналитики во всех сферах бизнеса."
+  },
+  "homepage.usecases.005": {
+    "message": "Наблюдаемость"
+  },
+  "homepage.usecases.006": {
+    "message": "Высокопроизводительная аналитика журналов и метрик для мониторинга и реагирования на инциденты."
+  },
+  "homepage.usecases.007": {
+    "message": "Doris для ИИ"
+  },
+  "homepage.usecases.008": {
+    "message": "Векторный, текстовый и JSON-поиск в SQL для ИИ-агентов и RAG."
+  },
+  "homepage.usecases.009": {
+    "message": "Сценарии использования"
+  },
+  "homepage.usecases.010": {
+    "message": "Где применяется Doris"
+  },
+  "homepage.usecases.011": {
+    "message": "Подробнее"
+  },
+  "homepage.community.mailingList": {
+    "message": "Рассылка разработчиков"
+  },
+  "homepage.community.001": {
+    "message": "Сообщество"
+  },
+  "homepage.community.002": {
+    "message": "Вместе с"
+  },
+  "homepage.community.003": {
+    "message": "5 000+ команд"
+  },
+  "homepage.community.004": {
+    "message": "создающими решения на Apache Doris"
+  },
+  "homepage.home.001": {
+    "message": "Apache Doris: открытая СУБД для аналитики и поиска в реальном времени в эпоху ИИ"
+  },
+  "homepage.home.002": {
+    "message": "Apache Doris — открытая аналитическая СУБД реального времени на архитектуре MPP. Выполняйте OLAP-запросы, аналитику Lakehouse и гибридный поиск на петабайтах данных в одном движке."
+  },
+  "homepage.newsticker.001": {
+    "message": "ПРОФИЛЬ"
+  },
+  "homepage.news.profileCopy": {
+    "message": "Находите причины медленных запросов в новом рабочем пространстве анализа профилей Apache Doris."
+  },
+  "homepage.news.open": {
+    "message": "Открыть"
+  },
+  "homepage.newsticker.002": {
+    "message": "КУРС"
+  },
+  "homepage.news.courseCopy": {
+    "message": "Изучите основы на новом бесплатном курсе Apache Doris 101."
+  },
+  "homepage.news.start": {
+    "message": "Начать"
+  },
+  "homepage.newsticker.003": {
+    "message": "ПЛАН РАЗВИТИЯ"
+  },
+  "homepage.news.roadmapCopy": {
+    "message": "Узнайте о дальнейших планах в дорожной карте сообщества Apache Doris."
+  },
+  "homepage.news.explore": {
+    "message": "Узнать больше"
+  },
+  "homepage.newsticker.005": {
+    "message": "Последние новости Apache Doris"
+  },
+  "homepage.newsticker.006": {
+    "message": "Новое"
+  },
+  "homepage.newsticker.010": {
+    "message": "Приостановлено"
+  },
+  "homepage.ecosystem.001": {
+    "message": "Базы данных"
+  },
+  "homepage.ecosystem.003": {
+    "message": "Потоки данных"
+  },
+  "homepage.ecosystem.005": {
+    "message": "Озёра данных"
+  },
+  "homepage.ecosystem.006": {
+    "message": "Открытые таблицы"
+  },
+  "homepage.ecosystem.007": {
+    "message": "BI и визуализация"
+  },
+  "homepage.ecosystem.008": {
+    "message": "Панели мониторинга"
+  },
+  "homepage.ecosystem.009": {
+    "message": "ИИ и аналитика"
+  },
+  "homepage.ecosystem.010": {
+    "message": "LLM / агенты"
+  },
+  "homepage.ecosystem.aiAgents": {
+    "message": "ИИ-агенты"
+  },
+  "homepage.ecosystem.011": {
+    "message": "Наблюдаемость"
+  },
+  "homepage.ecosystem.012": {
+    "message": "Мониторинг"
+  },
+  "homepage.ecosystem.013": {
+    "message": "Экосистема"
+  },
+  "homepage.ecosystem.014": {
+    "message": "В центре"
+  },
+  "homepage.ecosystem.015": {
+    "message": "современного стека данных."
+  },
+  "homepage.ecosystem.016": {
+    "message": "Обзор поддержки коннекторов"
+  },
+  "homepage.ecosystem.017": {
+    "message": "50+ коннекторов"
+  },
+  "homepage.ecosystem.018": {
+    "message": "Базы данных, потоки, Lakehouse, BI, ИИ и наблюдаемость."
+  },
+  "homepage.ecosystem.019": {
+    "message": "Открыть документацию по интеграции данных Apache Doris"
+  },
+  "homepage.ecosystem.020": {
+    "message": "Источники данных"
+  },
+  "homepage.ecosystem.022": {
+    "message": "Потребители данных"
+  },
+  "homepage.ecosystem.023": {
+    "message": "Источники данных"
+  },
+  "homepage.ecosystem.024": {
+    "message": "Движок"
+  },
+  "homepage.ecosystem.025": {
+    "message": "Потребители данных"
+  },
+  "homepage.deployment.001": {
+    "message": "Вычисления"
+  },
+  "homepage.deployment.002": {
+    "message": "Хранилище"
+  },
+  "homepage.deployment.003": {
+    "message": "СОВМЕЩЁННАЯ АРХИТЕКТУРА"
+  },
+  "homepage.deployment.004": {
+    "message": "Классическая MPP-архитектура: вычисления и хранение на каждом узле для максимальной скорости локального ввода-вывода и минимальной задержки запросов."
+  },
+  "homepage.deployment.005": {
+    "message": "Схема совмещённой архитектуры вычислений и хранения Apache Doris"
+  },
+  "homepage.deployment.006": {
+    "message": "Развернуть"
+  },
+  "homepage.deployment.007": {
+    "message": "РАЗДЕЛЁННАЯ АРХИТЕКТУРА"
+  },
+  "homepage.deployment.008": {
+    "message": "Облачная архитектура с вычислительными группами без состояния поверх общего объектного хранилища. Масштабируйте вычисления по требованию и изолируйте нагрузки."
+  },
+  "homepage.deployment.009": {
+    "message": "Схема разделённой архитектуры вычислений и хранения Apache Doris"
+  },
+  "homepage.deployment.010": {
+    "message": "Развёртывание"
+  },
+  "homepage.deployment.011": {
+    "message": "Выберите архитектуру"
+  },
+  "homepage.deployment.012": {
+    "message": "Один движок, два режима"
+  },
+  "homepage.stats.001": {
+    "message": "Xiaomi — один из трёх крупнейших производителей смартфонов и ведущий бренд электроники и умного дома, расширяющий присутствие на рынке электромобилей."
+  },
+  "homepage.stats.002": {
+    "message": "Технологии"
+  },
+  "homepage.stats.003": {
+    "message": "Интерактивная аналитика данных устройств, приложений и сервисов позволяет операционным командам следить за бизнесом в реальном времени."
+  },
+  "homepage.stats.004": {
+    "message": "Операционная аналитика"
+  },
+  "homepage.stats.005": {
+    "message": "Baidu — крупнейшая поисковая система Китая и ведущая ИИ-компания, развивающая продукты от языковых моделей ERNIE до автономного вождения Apollo."
+  },
+  "homepage.stats.006": {
+    "message": "Масштабная аналитика журналов и произвольные SQL-запросы для инженерных задач и наблюдаемости платформы."
+  },
+  "homepage.stats.007": {
+    "message": "Проанализированные события"
+  },
+  "homepage.stats.008": {
+    "message": "Samsung — крупнейший производитель электроники в мире, лидер в смартфонах, памяти, дисплеях и бытовой технике более чем в 70 странах."
+  },
+  "homepage.stats.009": {
+    "message": "Аналитика телеметрии устройств и сервисов линеек потребительской электроники на Apache Doris."
+  },
+  "homepage.stats.010": {
+    "message": "Аналитика устройств"
+  },
+  "homepage.stats.011": {
+    "message": "JD.com — крупнейший ретейлер Китая по выручке, входящий в топ-50 Fortune Global 500 и управляющий одной из крупнейших собственных логистических сетей в мире."
+  },
+  "homepage.stats.012": {
+    "message": "Электронная коммерция"
+  },
+  "homepage.stats.013": {
+    "message": "Быстрый SQL-доступ к заказам, запасам и маркетинговым данным для бизнес-аналитики розницы."
+  },
+  "homepage.stats.014": {
+    "message": "Аналитика розницы"
+  },
+  "homepage.stats.015": {
+    "message": "Meituan — крупнейшая платформа локальных услуг Китая, ежедневно объединяющая сотни миллионов пользователей доставки еды, путешествий и оперативной розницы."
+  },
+  "homepage.stats.016": {
+    "message": "Интернет-сервисы"
+  },
+  "homepage.stats.017": {
+    "message": "Аналитика заказов, продавцов, курьеров и действий пользователей в масштабе города для оперативных решений."
+  },
+  "homepage.stats.018": {
+    "message": "Бизнес-данные"
+  },
+  "homepage.stats.019": {
+    "message": "NetEase — вторая по величине игровая компания Китая и крупная интернет-группа в сфере игр, музыкального стриминга, образования и интеллектуальных корпоративных сервисов."
+  },
+  "homepage.stats.020": {
+    "message": "Аналитика игр и контента на Apache Doris позволяет командам изучать актуальные метрики без долгого ожидания пакетной обработки."
+  },
+  "homepage.stats.021": {
+    "message": "Метрики контента"
+  },
+  "homepage.stats.022": {
+    "message": "Tencent Music Entertainment — ведущая музыкальная и аудиоплатформа Китая с более чем 500 млн пользователей в месяц в QQ Music, Kugou и Kuwo."
+  },
+  "homepage.stats.023": {
+    "message": "Медиа"
+  },
+  "homepage.stats.024": {
+    "message": "Быстрая агрегация данных прослушивания, контента и вовлечённости в Doris для оперативной музыкальной аналитики."
+  },
+  "homepage.stats.025": {
+    "message": "Музыкальная аналитика"
+  },
+  "homepage.stats.026": {
+    "message": "Kuaishou — одна из крупнейших платформ коротких видео и трансляций с более чем 700 млн активных пользователей в месяц в Китае и международном приложении Kwai."
+  },
+  "homepage.stats.027": {
+    "message": "Аналитика коротких видео и авторов с ответом быстрее секунды по огромным потокам событий вовлечённости."
+  },
+  "homepage.stats.028": {
+    "message": "События вовлечённости"
+  },
+  "homepage.stats.029": {
+    "message": "miHoYo, известная в мире как HoYoverse, — ведущая игровая студия, создавшая Genshin Impact, Honkai Star Rail и Zenless Zone Zero."
+  },
+  "homepage.stats.030": {
+    "message": "Игры"
+  },
+  "homepage.stats.031": {
+    "message": "Анализ поведения игроков, игровой экономики и оперативных данных в Doris для быстрых итераций."
+  },
+  "homepage.stats.032": {
+    "message": "Игровая аналитика"
+  },
+  "homepage.stats.033": {
+    "message": "Luckin Coffee — крупнейшая сеть кофеен мира по числу точек: более 31 000 заведений обслуживают десятки миллионов клиентов ежедневно."
+  },
+  "homepage.stats.034": {
+    "message": "Розница"
+  },
+  "homepage.stats.035": {
+    "message": "Аналитика магазинов, заказов и участников программы лояльности в Doris для отслеживания кампаний в тысячах точек."
+  },
+  "homepage.stats.036": {
+    "message": "Розничная аналитика"
+  },
+  "homepage.stats.037": {
+    "message": "MINISO — быстрорастущий международный ретейлер товаров для жизни и лицензированных брендов: более 8 000 магазинов в более чем 110 странах и регионах."
+  },
+  "homepage.stats.038": {
+    "message": "Отчётность по продажам, запасам и цепочкам поставок на уровне SKU в международной розничной сети."
+  },
+  "homepage.stats.039": {
+    "message": "Отчётность по продажам"
+  },
+  "homepage.stats.040": {
+    "message": "SF Express — крупнейший комплексный логистический провайдер Китая и Азии, входящий в четвёрку мировых лидеров по выручке."
+  },
+  "homepage.stats.041": {
+    "message": "Логистика"
+  },
+  "homepage.stats.042": {
+    "message": "Отслеживание отправлений, маршрутов и операционных данных почти в реальном времени для экспресс-доставки по всей стране."
+  },
+  "homepage.stats.043": {
+    "message": "Отслеживание отправлений"
+  },
+  "homepage.stats.044": {
+    "message": "ZTO Express — крупнейшая курьерская компания Китая по числу посылок: более 34 млрд в год и лидерство на рынке девять лет подряд."
+  },
+  "homepage.stats.045": {
+    "message": "Аналитика потоков посылок, сортировочных центров и последней мили в Doris по всей сети доставки."
+  },
+  "homepage.stats.046": {
+    "message": "Аналитика посылок"
+  },
+  "homepage.stats.047": {
+    "message": "Cainiao — международное направление умной логистики Alibaba и ведущая сеть трансграничных посылок для клиентов электронной коммерции и цепочек поставок более чем в 200 странах."
+  },
+  "homepage.stats.048": {
+    "message": "Анализ складов, маршрутов и трансграничной логистики для оптимизации выполнения заказов."
+  },
+  "homepage.stats.049": {
+    "message": "Логистическая аналитика"
+  },
+  "homepage.stats.050": {
+    "message": "Ford Motor Company — один из крупнейших автопроизводителей мира, выпускающий F-Series, Mustang и растущую линейку электромобилей."
+  },
+  "homepage.stats.051": {
+    "message": "Автомобили"
+  },
+  "homepage.stats.052": {
+    "message": "Единая аналитика данных автомобилей, дилеров и сервисов для программ подключённого транспорта."
+  },
+  "homepage.stats.053": {
+    "message": "Данные автомобилей"
+  },
+  "homepage.stats.054": {
+    "message": "BYD — крупнейший производитель электромобилей и ведущий производитель литиевых батарей, опережающий Tesla по мировым продажам и ежегодно поставляющий миллионы электромобилей и гибридов."
+  },
+  "homepage.stats.055": {
+    "message": "Быстрый SQL-доступ к телеметрии электромобилей, цепочкам поставок и послепродажной аналитике для продуктовых команд."
+  },
+  "homepage.stats.056": {
+    "message": "Телеметрия"
+  },
+  "homepage.stats.057": {
+    "message": "Suzuki Motor — один из десяти крупнейших автопроизводителей и ведущий бренд Индии и Юго-Восточной Азии, также известный мотоциклами, квадроциклами и лодочными моторами."
+  },
+  "homepage.stats.058": {
+    "message": "Аналитика производства, дилеров и обслуживания в мировом автомобильном бизнесе на Apache Doris."
+  },
+  "homepage.stats.059": {
+    "message": "Обзор операций"
+  },
+  "homepage.stats.060": {
+    "message": "ANTA Sports — крупнейшая спортивная группа Китая и одна из трёх крупнейших в мире по выручке, владеющая ANTA, FILA, Descente и Arc'teryx."
+  },
+  "homepage.stats.061": {
+    "message": "Спортивная одежда"
+  },
+  "homepage.stats.062": {
+    "message": "Аналитика розницы, каналов и потребителей для продуктовых и маркетинговых решений спортивных брендов."
+  },
+  "homepage.stats.063": {
+    "message": "Li-Ning — ведущий китайский спортивный бренд, основанный олимпийским гимнастом и объединяющий спортивную экипировку с уличной культурой в тысячах магазинов страны."
+  },
+  "homepage.stats.064": {
+    "message": "Аналитика магазинов, электронной коммерции и цепочек поставок в Doris для повседневных и оперативных решений."
+  },
+  "homepage.stats.065": {
+    "message": "Аналитика продаж"
+  },
+  "homepage.stats.066": {
+    "message": "Xtep — один из пяти крупнейших спортивных брендов Китая и его ведущий беговой бренд, спонсирующий марафоны и экипирующий миллионы бегунов по миру."
+  },
+  "homepage.stats.067": {
+    "message": "Аналитика участников программ лояльности, продаж и кампаний в рознице и цифровых каналах на Doris."
+  },
+  "homepage.stats.068": {
+    "message": "Клиентская аналитика"
+  },
+  "homepage.stats.069": {
+    "message": "Zhipu AI — одна из ведущих лабораторий больших моделей Китая, основанная выходцами из Университета Цинхуа; её GLM и ChatGLM используются в чат-ботах и ИИ-агентах."
+  },
+  "homepage.stats.071": {
+    "message": "Масштабный анализ метрик обучения моделей, событий использования и телеметрии платформы на Apache Doris."
+  },
+  "homepage.stats.072": {
+    "message": "Аналитика моделей"
+  },
+  "homepage.stats.073": {
+    "message": "MiniMax — ведущая ИИ-компания Китая, создающая мультимодальные базовые модели для Talkie и Hailuo, которыми пользуются десятки миллионов людей по всему миру."
+  },
+  "homepage.stats.074": {
+    "message": "Аналитика использования продуктов, конвейеров обучения и наблюдаемости инференса базовых моделей."
+  },
+  "homepage.stats.075": {
+    "message": "Телеметрия моделей"
+  },
+  "homepage.stats.076": {
+    "message": "Ave AI — быстрорастущий стартап, преобразующий разрозненные корпоративные сигналы в аналитику на ИИ и интеллектуальные решения для команд данных."
+  },
+  "homepage.stats.077": {
+    "message": "ИИ-продукты на Doris с быстрым SQL-доступом для произвольного анализа и отчётности."
+  },
+  "homepage.stats.078": {
+    "message": "ИИ-аналитика"
+  },
+  "homepage.stats.079": {
+    "message": "Talkie — ведущее приложение ИИ-компаньонов и персонажей с более чем 11 млн активных пользователей в месяц, входящее в число самых скачиваемых ИИ-приложений США."
+  },
+  "homepage.stats.080": {
+    "message": "Масштабный анализ диалогов, вовлечённости и роста продукта для общения с ИИ-персонажами."
+  },
+  "homepage.stats.081": {
+    "message": "Данные вовлечённости"
+  },
+  "homepage.stats.082": {
+    "message": "Horizon Robotics — ведущий китайский производитель чипов автономного вождения с долей более 40% местного рынка ADAS и применением более чем в 100 моделях автомобилей."
+  },
+  "homepage.stats.083": {
+    "message": "Автономное вождение"
+  },
+  "homepage.stats.084": {
+    "message": "Обработка данных вождения, телеметрии датчиков и метрик производительности чипов автономных платформ в Doris."
+  },
+  "homepage.stats.085": {
+    "message": "Данные вождения"
+  },
+  "homepage.stats.086": {
+    "message": "Goldwind — крупнейший производитель ветротурбин в мире, поставляющий около 30 ГВт мощности за год для ветропарков на шести континентах."
+  },
+  "homepage.stats.087": {
+    "message": "Энергетика"
+  },
+  "homepage.stats.088": {
+    "message": "Аналитика телеметрии ветротурбин и эксплуатации возобновляемых источников энергии по всему миру."
+  },
+  "homepage.stats.089": {
+    "message": "Энергетическая телеметрия"
+  },
+  "homepage.stats.090": {
+    "message": "Advance Intelligence Group — ведущая финтех-группа Юго-Восточной Азии на базе ИИ, обслуживающая 40 млн потребителей и 235 000 продавцов через Atome и ADVANCE.AI."
+  },
+  "homepage.stats.091": {
+    "message": "Финтех"
+  },
+  "homepage.stats.092": {
+    "message": "Аналитика рисков, кредитования и транзакций ИИ-финтех-продуктов в Юго-Восточной Азии."
+  },
+  "homepage.stats.093": {
+    "message": "Аналитика рисков"
+  },
+  "homepage.stats.094": {
+    "message": "TrueWatch — облачная платформа наблюдаемости нового поколения, объединяющая метрики, журналы и трассировки мультиоблачных сред для DevOps- и SRE-команд по всему миру."
+  },
+  "homepage.stats.095": {
+    "message": "Наблюдаемость"
+  },
+  "homepage.stats.096": {
+    "message": "Единая платформа наблюдаемости на Doris для метрик, журналов и трассировок в масштабе инфраструктуры."
+  },
+  "homepage.stats.097": {
+    "message": "Данные наблюдаемости"
+  },
+  "homepage.stats.099": {
+    "message": "Сценарий использования"
+  },
+  "homepage.stats.100": {
+    "message": "Компании, использующие Apache Doris"
+  },
+  "homepage.stats.101": {
+    "message": "Нам доверяют 10 000+ пользователей"
+  },
+  "homepage.ai.loading": {
+    "message": "Загрузка ИИ…"
+  },
+  "homepage.ai.slow": {
+    "message": "Загрузка…"
+  },
+  "homepage.ai.error": {
+    "message": "ИИ недоступен"
+  },
+  "homepage.theme.current": {
+    "message": "Цветовая тема: {theme}"
+  },
+  "homepage.theme.change": {
+    "message": "Изменить цветовую тему"
+  },
+  "homepage.theme.label": {
+    "message": "Цветовая тема"
+  },
+  "homepage.navbar.001": {
+    "message": "Почему Doris"
+  },
+  "homepage.navbar.002": {
+    "message": "Сравнение с другими СУБД"
+  },
+  "homepage.navbar.003": {
+    "message": "Тесты производительности"
+  },
+  "homepage.navbar.004": {
+    "message": "Ключевые возможности"
+  },
+  "homepage.navbar.005": {
+    "message": "Истории пользователей"
+  },
+  "homepage.navbar.006": {
+    "message": "Сценарии использования"
+  },
+  "homepage.navbar.007": {
+    "message": "Клиентская аналитика"
+  },
+  "homepage.navbar.008": {
+    "message": "Хранилище данных"
+  },
+  "homepage.navbar.009": {
+    "message": "Наблюдаемость"
+  },
+  "homepage.navbar.010": {
+    "message": "Doris для ИИ"
+  },
+  "homepage.navbar.011": {
+    "message": "Документация"
+  },
+  "homepage.navbar.015": {
+    "message": "Ресурсы"
+  },
+  "homepage.navbar.016": {
+    "message": "Примечания к выпуску"
+  },
+  "homepage.navbar.017": {
+    "message": "Блог"
+  },
+  "homepage.navbar.018": {
+    "message": "Курс"
+  },
+  "homepage.navbar.019": {
+    "message": "Анализ профилей"
+  },
+  "homepage.navbar.020": {
+    "message": "Сообщество"
+  },
+  "homepage.navbar.021": {
+    "message": "Отчёты сообщества"
+  },
+  "homepage.navbar.022": {
+    "message": "План развития"
+  },
+  "homepage.navbar.023": {
+    "message": "Участвовать в разработке"
+  },
+  "homepage.navbar.024": {
+    "message": "Обсуждения на GitHub"
+  },
+  "homepage.navbar.027": {
+    "message": "Открыть Doris Summit 2026 (в новой вкладке)"
+  },
+  "homepage.navbar.029": {
+    "message": "Спросить ИИ"
+  },
+  "homepage.navbar.030": {
+    "message": "Нет"
+  },
+  "homepage.navbar.031": {
+    "message": "ИИ"
+  },
+  "homepage.navbar.starLabel": {
+    "message": "Поставить звезду Apache Doris на GitHub (звёзд: {stars})"
+  },
+  "homepage.navbar.032": {
+    "message": "Звезда"
+  },
+  "homepage.navbar.033": {
+    "message": "Скачать"
+  },
+  "homepage.navbar.034": {
+    "message": "Закрыть меню навигации"
+  },
+  "homepage.navbar.035": {
+    "message": "Открыть меню навигации"
+  },
+  "homepage.nudge.benefit1": {
+    "message": "Общайтесь с пользователями и разработчиками Doris."
+  },
+  "homepage.nudge.benefit2": {
+    "message": "Получайте новости сообщества, учебные материалы и информацию о мероприятиях."
+  },
+  "homepage.nudge.benefit3": {
+    "message": "Участвуйте в развитии сообщества, обсуждении функций и проверке PR."
+  },
+  "homepage.slackcommunitynudge.004": {
+    "message": "Ресурсы сообщества, Summit и документации Apache Doris"
+  },
+  "homepage.slackcommunitynudge.005": {
+    "message": "Ресурсы сообщества и Summit Apache Doris"
+  },
+  "homepage.slackcommunitynudge.006": {
+    "message": "Скрыть подсказку о сообществе, Summit и документации"
+  },
+  "homepage.slackcommunitynudge.007": {
+    "message": "Скрыть подсказку о сообществе и Summit"
+  },
+  "homepage.slackcommunitynudge.008": {
+    "message": "Помощь сообщества"
+  },
+  "homepage.slackcommunitynudge.009": {
+    "message": "Создаёте решение на Doris?"
+  },
+  "homepage.slackcommunitynudge.010": {
+    "message": "Присоединяйтесь к Slack за помощью с установкой, советами по производительности и ответами пользователей и разработчиков Apache Doris."
+  },
+  "homepage.slackcommunitynudge.011": {
+    "message": "Присоединиться к Slack"
+  },
+  "homepage.slackcommunitynudge.013": {
+    "message": "21–22 октября · онлайн"
+  },
+  "homepage.slackcommunitynudge.014": {
+    "message": "Подробнее о Summit"
+  },
+  "homepage.slackcommunitynudge.015": {
+    "message": "Нашли проблему в документации?"
+  },
+  "homepage.slackcommunitynudge.016": {
+    "message": "Поделитесь отзывом и помогите улучшить документацию Apache Doris."
+  },
+  "homepage.slackcommunitynudge.017": {
+    "message": "Сообщить о проблеме в документации"
+  },
+  "homepage.nudge.toggleDocs": {
+    "message": "{action} ресурсы сообщества, Summit и документации"
+  },
+  "homepage.slackcommunitynudge.018": {
+    "message": "Скрыть"
+  },
+  "homepage.slackcommunitynudge.019": {
+    "message": "Открыть"
+  },
+  "homepage.nudge.toggle": {
+    "message": "{action} ресурсы сообщества и Summit"
+  },
+  "site.footer.1": {
+    "message": "Фонд"
+  },
+  "site.footer.2": {
+    "message": "Лицензия"
+  },
+  "site.footer.3": {
+    "message": "Мероприятия"
+  },
+  "site.footer.4": {
+    "message": "Спонсорство"
+  },
+  "site.footer.5": {
+    "message": "Конфиденциальность"
+  },
+  "site.footer.6": {
+    "message": "Безопасность"
+  },
+  "site.footer.7": {
+    "message": "Благодарности"
+  },
+  "site.footer.8": {
+    "message": "Ресурсы"
+  },
+  "site.footer.9": {
+    "message": "Скачать"
+  },
+  "site.footer.10": {
+    "message": "Материалы бренда"
+  },
+  "site.footer.11": {
+    "message": "Блог"
+  },
+  "site.footer.12": {
+    "message": "Сообщество"
+  },
+  "site.footer.13": {
+    "message": "Как внести вклад"
+  },
+  "site.footer.14": {
+    "message": "Исходный код"
+  },
+  "site.footer.15": {
+    "message": "Команда Doris"
+  },
+  "site.footer.16": {
+    "message": "План развития"
+  },
+  "site.footer.17": {
+    "message": "Предложения по улучшению"
+  },
+  "site.footer.join": {
+    "message": "Присоединиться к сообществу"
+  },
+  "site.notFound.home": {
+    "message": "На главную"
+  },
+  "site.notFound.report": {
+    "message": "Сообщить о проблеме"
+  },
+  "site.search.context": {
+    "message": "Область поиска"
+  },
+  "theme.NotFound.title": {
+    "message": "Страница не найдена"
+  },
+  "theme.NotFound.p1": {
+    "message": "Не удалось найти нужную страницу. Попробуйте найти другую страницу или сообщите о проблеме."
+  },
+  "homepage.diagram.disk": {
+    "message": "Диск"
+  },
+  "homepage.diagram.cache": {
+    "message": "Кеш"
+  },
+  "homepage.diagram.data": {
+    "message": "Данные"
+  },
+  "homepage.diagram.metadata": {
+    "message": "Сервис метаданных"
+  },
+  "homepage.diagram.group": {
+    "message": "Вычислительная группа"
+  },
+  "homepage.diagram.storage": {
+    "message": "Общее хранилище"
   }
 }

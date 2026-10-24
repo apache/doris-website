@@ -115,3 +115,37 @@ The verifier needs Playwright/Chromium, installed like the workflow; use
 with `node scripts/i18n/verify-ci-sampling-fixture.cjs --browser`.
 The CI Build step enables `DOCUSAURUS_PERF_LOGGER=true` to separately log native
 plugin loading, bundler configuration/compilation, SSG, post-build hooks and links.
+
+## Manual content impact and drift
+
+`content-impact.cjs` compares both base and head registries/state. Independent English blog prose selects English and actual fallback consumers.
+Shared page TSX/CSS/data still renders in translated bodies and selects every
+dependent language. Existing
+translations enter the manual-sync report. A locale dictionary change renders
+that language, and changed manual-state identities render their affected locales
+plus English. New/deleted source identities widen to all languages; unknown
+dependencies keep the conservative existing policy. Documentation source changes
+continue to select all possible fallback consumers and the affected versions.
+
+The build-scope and CI plan share this proof. New shared language contracts/bootstrap inputs select representative real
+builds and their applicable native/publishing fixtures, retaining the layered
+policy introduced in #4497. The first-release T06–T09 PR uses `ci/full` for
+five-language/all-active-version publication validation. Content-only state
+edits with an exact proof keep scoped compilation. Partial compilation never claims full alternate reciprocity.
+Planning-only changes still skip compilation, while malformed configuration fails
+the required check. Fork PRs continue to receive read-only checkout permissions,
+without deployment or model credentials.
+
+`manual-report.cjs` runs before compilation and validates declared ready page
+messages/digests, declared assets, shared messages and interpolation. It also
+checks the actual embedded locale script against the three live frames; new
+visible labels must have translations or an explicit technical-name exception. Missing content is allowed;
+source drift produces manual work rather than model generation. After compilation,
+`manual-report.cjs --coverage` reports native identities by language, family,
+plugin and version. Counts separate routes, real translated bodies, English
+fallback, stale translations and blocked decisions, retaining exclusions and
+source/orphan reports. The JSON schema is version 1. Both reports are artifacts;
+production also retains the native content manifests for public acceptance.
+
+See `translations/SHARED_UI.md` for the shared-content inventory and
+`translations/FIRST_RELEASE.md` for the candidate/public evidence boundary.

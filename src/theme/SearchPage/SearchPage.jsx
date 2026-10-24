@@ -117,10 +117,10 @@ function SearchPageContent() {
             "col--9": Array.isArray(searchContextByPaths),
             "col--12": !Array.isArray(searchContextByPaths),
         })}>
-            <input type="search" name="q" className={styles.searchQueryInput} aria-label="Search" onChange={handleSearchInputChange} value={searchQuery} autoComplete="off" autoFocus/>
+            <input type="search" name="q" className={styles.searchQueryInput} aria-label={translate({id: 'theme.SearchBar.label', message: 'Search'})} onChange={handleSearchInputChange} value={searchQuery} autoComplete="off" autoFocus/>
           </div>
           {Array.isArray(searchContextByPaths) ? (<div className={clsx("col", "col--3", "padding-left--none", styles.searchContextColumn)}>
-              <select name="search-context" className={styles.searchContextInput} id="context-selector" value={searchContext} onChange={(e) => updateSearchContext(e.target.value)}>
+              <select name="search-context" className={styles.searchContextInput} aria-label={translate({id: 'site.search.context', message: 'Search context'})} id="context-selector" value={searchContext} onChange={(e) => updateSearchContext(e.target.value)}>
                 {useAllContextsWithNoSearchContext && (<option value="">
                     {translate({
                     id: "theme.SearchPage.searchContext.everywhere",
