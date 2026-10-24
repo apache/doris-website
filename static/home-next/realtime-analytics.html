@@ -553,7 +553,10 @@
     const latEl = document.getElementById('lat-value');
     const thrEl = document.getElementById('thr-value');
     const t0 = performance.now();
-    const fmt = new Intl.NumberFormat('en-US');
+    const requestedLocale = new URLSearchParams(location.search).get('locale');
+    const numericLocale = ['zh-CN', 'ja', 'ko', 'ru'].includes(requestedLocale) ? requestedLocale : 'en-US';
+    const fmt = new Intl.NumberFormat(numericLocale);
+    const latencyFormat = new Intl.NumberFormat(numericLocale, {minimumFractionDigits: 2, maximumFractionDigits: 2});
     const frameInterval = 80; // ~12.5fps is enough for text-only metrics.
     let timerId = 0;
     let running = false;
@@ -572,7 +575,7 @@
 
       // Latency: oscillates 0.28 - 0.65s
       const latBase = 0.46 + 0.16 * Math.sin(t * 1.2) + 0.05 * Math.sin(t * 4.4);
-      latEl.textContent = latBase.toFixed(2) + 's';
+      latEl.textContent = latencyFormat.format(latBase) + (numericLocale === 'ru' ? ' с' : numericLocale === 'zh-CN' ? ' 秒' : numericLocale === 'ja' ? ' 秒' : numericLocale === 'ko' ? '초' : 's');
 
       // Load throughput: fluctuates around 10,000 MB/s (range ~8.5k - 11.8k)
       const thr = 10000 + 1200 * Math.sin(t * 1.5) + 350 * Math.sin(t * 4.9) + 120 * Math.sin(t * 11.7);

@@ -81,14 +81,15 @@
     &__item {
         position: relative;
 
-        &:hover .navbar-next__dropdown {
+        & .navbar-next__dropdown--open {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        &:hover .navbar-next__trigger {
+        &:hover .navbar-next__trigger,
+        &:focus-within .navbar-next__trigger {
             color: var(--nb-cream-light);
         }
     }
@@ -133,6 +134,7 @@
         top: calc(100% + 8px);
         left: 0;
         min-width: 200px;
+        max-width: min(340px, calc(100vw - 32px));
         background: var(--nb-green-deep);
         border: 1px solid rgba(245, 239, 228, 0.12);
         border-radius: 8px;
@@ -177,7 +179,8 @@
 	        color: rgba(245, 239, 228, 0.82);
         text-decoration: none !important;
         transition: background 0.12s, color 0.12s;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
 
         &:hover {
             background: rgba(245, 239, 228, 0.08);
@@ -760,5 +763,13 @@
 
     .navbar-next__summit:hover {
         transform: none;
+    }
+}
+
+// Longer Russian navigation needs the Summit link in its community dropdown
+// at intermediate desktop widths, leaving download and AI controls reachable.
+@media (min-width: 1181px) and (max-width: 1679px) {
+    .navbar-next[lang="ru"] .navbar-next__actions > .navbar-next__summit {
+        display: none;
     }
 }

@@ -4,7 +4,7 @@
     {
       "contentId": "page:P01",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -14,6 +14,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -28,6 +29,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -42,17 +46,24 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "37e04fa1ec2632d61cd55e64ba69c26d06d8b6cbe2b59a8d4f9865aa7fe3c9ff",
+      "targetHash": "fc2547e1c80ca57cec8a5e137231af5265560dff24a71b69fc9b0046fe765a28",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P01",
       "locale": "ja",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -62,6 +73,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -76,6 +88,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -90,17 +105,24 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ja/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "37e04fa1ec2632d61cd55e64ba69c26d06d8b6cbe2b59a8d4f9865aa7fe3c9ff",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P01",
       "locale": "ko",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -110,6 +132,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -124,6 +147,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -138,17 +164,24 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ko/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "37e04fa1ec2632d61cd55e64ba69c26d06d8b6cbe2b59a8d4f9865aa7fe3c9ff",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P01",
       "locale": "ru",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -158,6 +191,7 @@
         "src/components/home-next/NewsTicker.tsx",
         "src/components/home-next/sections/CommunitySection.scss",
         "src/components/home-next/sections/CommunitySection.tsx",
+        "src/components/home-next/sections/DeploymentDiagram.tsx",
         "src/components/home-next/sections/DeploymentSection.scss",
         "src/components/home-next/sections/DeploymentSection.tsx",
         "src/components/home-next/sections/EcosystemSection.scss",
@@ -172,6 +206,9 @@
         "src/components/home-next/sections/UseCasesSection.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/index.tsx",
+        "static/home-next/hybrid-search.html",
+        "static/home-next/lake-analytics.html",
+        "static/home-next/realtime-analytics.html",
         "static/images/ecomsystem-log/ai-agent.svg",
         "static/images/ecomsystem-log/delta-lake.svg",
         "static/images/ecomsystem-log/grafana.png",
@@ -186,12 +223,19 @@
         "static/images/ecomsystem-log/pulsar.png",
         "static/images/ecomsystem-log/superset.webp",
         "static/images/logo-doris.svg",
-        "static/images/next/home-page/cs-coupled.jpg",
-        "static/images/next/home-page/cs-decoupled.jpg",
-        "static/images/next/home-page/doris-mascot.png"
+        "static/images/next/home-page/doris-mascot.png",
+        "static/js/embedded-brand-theme.js",
+        "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified"
+      "targetFiles": [
+        "i18n/ru/code.json"
+      ],
+      "messageNamespaces": [
+        "homepage"
+      ],
+      "sourceHash": "37e04fa1ec2632d61cd55e64ba69c26d06d8b6cbe2b59a8d4f9865aa7fe3c9ff",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "reviewStatus": "machine"
     },
     {
       "contentId": "page:P02",
@@ -240,7 +284,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -268,7 +312,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -296,7 +340,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -329,7 +373,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -348,7 +392,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -367,7 +411,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -400,7 +444,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -422,7 +466,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -444,7 +488,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -1098,7 +1142,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1122,7 +1166,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1146,7 +1190,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1189,7 +1233,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1213,7 +1257,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1237,7 +1281,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1280,7 +1324,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1304,7 +1348,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1328,7 +1372,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1365,7 +1409,7 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "371560d89b94ef24f3927593aa524269733e1e32f6d7edce5a06655572164366",
+      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1386,7 +1430,7 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "49174f74e21a77d176d99b174718c9b19e3d648ee3e3651af98a3cbbbd4bcf0d",
+      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1407,7 +1451,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "2571290f15700c04b345ca82150bba79cffc9f70a7a8322a26a198a5430bbba4",
+      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },

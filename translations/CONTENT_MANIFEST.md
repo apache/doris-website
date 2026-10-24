@@ -225,3 +225,8 @@ technical hashes, protected-content checks and the recorded source commit.
 Syntax/link checks run once for each selected target locale. Full freshness and
 manual drift reports continue to belong to build manifests/coverage audits;
 this optimization does not implement the remainder of T06's impact/report work.
+
+Shared UI and homepage maintenance are documented in [SHARED_UI.md](SHARED_UI.md).
+Run `node scripts/i18n/manual-report.cjs` for pre-build admission/manual drift and
+add `--coverage` after a native build for versioned coverage. The first-release
+procedure and its public source/artifact checks are in [FIRST_RELEASE.md](FIRST_RELEASE.md).

@@ -58,5 +58,974 @@
     },
     "theme.TOC.forum": {
         "message": "技术论坛"
+    },
+    "homepage.hero.002": {
+        "message": "正在执行查询…"
+    },
+    "homepage.hero.004": {
+        "message": "重置"
+    },
+    "homepage.hero.005": {
+        "message": "重置"
+    },
+    "homepage.hero.007": {
+        "message": "运行查询"
+    },
+    "homepage.hero.008": {
+        "message": "运行"
+    },
+    "homepage.hero.015": {
+        "message": "3 篇文档 · 已扫描 1840 万个向量"
+    },
+    "homepage.hero.016": {
+        "message": "结构化、全文与向量"
+    },
+    "homepage.hero.017": {
+        "message": "搜索，一条 SQL 即可完成。"
+    },
+    "homepage.hero.020": {
+        "message": "结果 · 5 篇文档 · 已排序"
+    },
+    "homepage.hero.021": {
+        "message": "全文"
+    },
+    "homepage.hero.022": {
+        "message": "向量"
+    },
+    "homepage.hero.023": {
+        "message": "过滤"
+    },
+    "homepage.hero.027": {
+        "message": "知识图谱"
+    },
+    "homepage.hero.033": {
+        "message": "每日查询量"
+    },
+    "homepage.hero.039": {
+        "message": "错误率 0.00%"
+    },
+    "homepage.hero.040": {
+        "message": "显示搜索结果"
+    },
+    "homepage.hero.041": {
+        "message": "显示知识图谱与查询图表"
+    },
+    "homepage.hero.044": {
+        "message": "切换报表动画"
+    },
+    "homepage.hero.049": {
+        "message": "闪电般"
+    },
+    "homepage.hero.050": {
+        "message": "迅捷"
+    },
+    "homepage.hero.051": {
+        "message": "分析"
+    },
+    "homepage.hero.052": {
+        "message": "与"
+    },
+    "homepage.hero.053": {
+        "message": "搜索"
+    },
+    "homepage.hero.054": {
+        "message": "数据库"
+    },
+    "homepage.hero.055": {
+        "message": "Apache Doris 是面向现代分析和 AI 的开源实时数据库。既可在物理服务器上采用无共享架构，也可在云对象存储上采用存算分离架构。"
+    },
+    "homepage.hero.056": {
+        "message": "快速开始"
+    },
+    "homepage.hero.057": {
+        "message": "问问 AI"
+    },
+    "homepage.hero.058": {
+        "message": "加入 Slack"
+    },
+    "homepage.features.001": {
+        "message": "实时分析"
+    },
+    "homepage.features.002": {
+        "message": "从数据摄取到洞察，提供极速的端到端分析。"
+    },
+    "homepage.features.003": {
+        "message": "高并发 / 低延迟"
+    },
+    "homepage.features.004": {
+        "message": "探索实时分析（即将推出）"
+    },
+    "homepage.features.005": {
+        "message": "流式摄取"
+    },
+    "homepage.features.006": {
+        "message": "从 Kafka 和数据库 CDC 摄取数据，保持秒级新鲜度。"
+    },
+    "homepage.features.007": {
+        "message": "增量转换"
+    },
+    "homepage.features.008": {
+        "message": "物化视图可在数分钟内刷新复杂转换，无需等待数小时。"
+    },
+    "homepage.features.009": {
+        "message": "亚秒级查询"
+    },
+    "homepage.features.010": {
+        "message": "即使面对 PB 级数据，高并发查询仍保持亚秒级响应。"
+    },
+    "homepage.features.011": {
+        "message": "湖仓分析"
+    },
+    "homepage.features.012": {
+        "message": "直接在开放湖仓上进行实时分析。"
+    },
+    "homepage.features.014": {
+        "message": "探索湖仓分析（即将推出）"
+    },
+    "homepage.features.015": {
+        "message": "丰富的 Catalog 支持"
+    },
+    "homepage.features.016": {
+        "message": "直接查询 Iceberg、Delta Lake 和 Hudi 表，无需复制数据。"
+    },
+    "homepage.features.017": {
+        "message": "极速查询引擎"
+    },
+    "homepage.features.018": {
+        "message": "向量化执行与智能元数据缓存加速数据湖查询。"
+    },
+    "homepage.features.019": {
+        "message": "增量双向同步"
+    },
+    "homepage.features.020": {
+        "message": "在开放数据湖格式与 Doris 内部存储之间双向流式传输数据。"
+    },
+    "homepage.features.021": {
+        "message": "混合搜索"
+    },
+    "homepage.features.022": {
+        "message": "原生支持结构化数据、文本和向量的统一搜索。"
+    },
+    "homepage.features.023": {
+        "message": "JSON / 文本 / 向量"
+    },
+    "homepage.features.024": {
+        "message": "探索混合搜索（即将推出）"
+    },
+    "homepage.features.025": {
+        "message": "JSON 分析"
+    },
+    "homepage.features.026": {
+        "message": "为 Agent 追踪和工具调用元数据提供自动列式存储，分析速度提升 50 倍。"
+    },
+    "homepage.features.027": {
+        "message": "文本搜索"
+    },
+    "homepage.features.028": {
+        "message": "为 RAG、Agent 记忆和可观测性日志提供快速 BM25 检索。"
+    },
+    "homepage.features.029": {
+        "message": "向量搜索"
+    },
+    "homepage.features.030": {
+        "message": "内置 HNSW 和 IVF 索引，支持基于嵌入向量的语义检索。"
+    },
+    "homepage.features.037": {
+        "message": "应用"
+    },
+    "homepage.features.038": {
+        "message": "湖仓分析动画"
+    },
+    "homepage.features.039": {
+        "message": "混合搜索动画"
+    },
+    "homepage.features.040": {
+        "message": "实时分析动画"
+    },
+    "homepage.features.041": {
+        "message": "核心能力"
+    },
+    "homepage.features.042": {
+        "message": "三大支柱，一个引擎"
+    },
+    "homepage.usecases.001": {
+        "message": "面向客户的分析"
+    },
+    "homepage.usecases.002": {
+        "message": "为海量客户直接提供亚秒级交互式分析。"
+    },
+    "homepage.usecases.003": {
+        "message": "数据仓库"
+    },
+    "homepage.usecases.004": {
+        "message": "一个实时数仓，覆盖各业务领域的分析需求。"
+    },
+    "homepage.usecases.005": {
+        "message": "可观测性"
+    },
+    "homepage.usecases.006": {
+        "message": "高吞吐日志与指标分析，支持监控和事件响应。"
+    },
+    "homepage.usecases.007": {
+        "message": "Doris 与 AI"
+    },
+    "homepage.usecases.008": {
+        "message": "在 SQL 中统一向量、文本和 JSON 搜索，面向 AI Agent 和 RAG 构建。"
+    },
+    "homepage.usecases.009": {
+        "message": "应用场景"
+    },
+    "homepage.usecases.010": {
+        "message": "Doris 的实践场景"
+    },
+    "homepage.usecases.011": {
+        "message": "了解更多"
+    },
+    "homepage.community.mailingList": {
+        "message": "开发者邮件列表"
+    },
+    "homepage.community.001": {
+        "message": "社区"
+    },
+    "homepage.community.002": {
+        "message": "携手"
+    },
+    "homepage.community.003": {
+        "message": "5,000+ 团队"
+    },
+    "homepage.community.004": {
+        "message": "共同使用 Apache Doris 构建应用"
+    },
+    "homepage.home.001": {
+        "message": "Apache Doris：面向 AI 时代的开源实时分析与搜索数据库"
+    },
+    "homepage.home.002": {
+        "message": "Apache Doris 是基于 MPP 架构的开源实时分析数据库。通过单一引擎，在 PB 级数据上执行 OLAP 查询、湖仓分析与混合搜索。"
+    },
+    "homepage.newsticker.001": {
+        "message": "性能分析"
+    },
+    "homepage.news.profileCopy": {
+        "message": "使用全新的 Apache Doris Profile 分析工作区诊断慢查询。"
+    },
+    "homepage.news.open": {
+        "message": "打开"
+    },
+    "homepage.newsticker.002": {
+        "message": "课程"
+    },
+    "homepage.news.courseCopy": {
+        "message": "通过全新免费的 Apache Doris 101 课程学习基础知识。"
+    },
+    "homepage.news.start": {
+        "message": "开始"
+    },
+    "homepage.newsticker.003": {
+        "message": "路线图"
+    },
+    "homepage.news.roadmapCopy": {
+        "message": "查看 Apache Doris 社区路线图，了解后续开发计划。"
+    },
+    "homepage.news.explore": {
+        "message": "查看"
+    },
+    "homepage.newsticker.005": {
+        "message": "Apache Doris 最新动态"
+    },
+    "homepage.newsticker.006": {
+        "message": "最新"
+    },
+    "homepage.newsticker.010": {
+        "message": "已暂停"
+    },
+    "homepage.ecosystem.001": {
+        "message": "数据库"
+    },
+    "homepage.ecosystem.003": {
+        "message": "数据流"
+    },
+    "homepage.ecosystem.005": {
+        "message": "数据湖"
+    },
+    "homepage.ecosystem.006": {
+        "message": "开放表格式"
+    },
+    "homepage.ecosystem.007": {
+        "message": "BI 与可视化"
+    },
+    "homepage.ecosystem.008": {
+        "message": "仪表盘"
+    },
+    "homepage.ecosystem.009": {
+        "message": "AI 与分析"
+    },
+    "homepage.ecosystem.010": {
+        "message": "大语言模型 / Agent"
+    },
+    "homepage.ecosystem.aiAgents": {
+        "message": "AI Agent"
+    },
+    "homepage.ecosystem.011": {
+        "message": "可观测性"
+    },
+    "homepage.ecosystem.012": {
+        "message": "监控"
+    },
+    "homepage.ecosystem.013": {
+        "message": "生态系统"
+    },
+    "homepage.ecosystem.014": {
+        "message": "现代数据栈的"
+    },
+    "homepage.ecosystem.015": {
+        "message": "核心引擎"
+    },
+    "homepage.ecosystem.016": {
+        "message": "连接器覆盖概览"
+    },
+    "homepage.ecosystem.017": {
+        "message": "50+ 连接器"
+    },
+    "homepage.ecosystem.018": {
+        "message": "覆盖数据库、流处理、湖仓、BI、AI 和可观测性。"
+    },
+    "homepage.ecosystem.019": {
+        "message": "查看 Apache Doris 数据集成文档"
+    },
+    "homepage.ecosystem.020": {
+        "message": "上游 — 数据源"
+    },
+    "homepage.ecosystem.022": {
+        "message": "下游 — 消费端"
+    },
+    "homepage.ecosystem.023": {
+        "message": "上游 - 数据源"
+    },
+    "homepage.ecosystem.024": {
+        "message": "引擎"
+    },
+    "homepage.ecosystem.025": {
+        "message": "下游 - 消费端"
+    },
+    "homepage.deployment.001": {
+        "message": "计算"
+    },
+    "homepage.deployment.002": {
+        "message": "存储"
+    },
+    "homepage.deployment.003": {
+        "message": "存算一体"
+    },
+    "homepage.deployment.004": {
+        "message": "经典 MPP 架构，每个节点同时承载计算与存储，充分利用本地 I/O，尽可能降低查询延迟。"
+    },
+    "homepage.deployment.005": {
+        "message": "Apache Doris 存算一体架构图"
+    },
+    "homepage.deployment.006": {
+        "message": "立即部署"
+    },
+    "homepage.deployment.007": {
+        "message": "存算分离"
+    },
+    "homepage.deployment.008": {
+        "message": "云原生架构，在共享对象存储之上运行无状态计算组。按需扩展计算资源，并隔离不同工作负载。"
+    },
+    "homepage.deployment.009": {
+        "message": "Apache Doris 存算分离架构图"
+    },
+    "homepage.deployment.010": {
+        "message": "部署方式"
+    },
+    "homepage.deployment.011": {
+        "message": "选择适合的架构"
+    },
+    "homepage.deployment.012": {
+        "message": "一个引擎，两种模式"
+    },
+    "homepage.stats.001": {
+        "message": "小米是全球前三的智能手机厂商，也是消费电子和智能家居领域的领先品牌，业务正拓展至电动汽车。"
+    },
+    "homepage.stats.002": {
+        "message": "科技"
+    },
+    "homepage.stats.003": {
+        "message": "对设备、应用与服务数据进行交互式分析，帮助运营团队实时监控业务状况。"
+    },
+    "homepage.stats.004": {
+        "message": "运营洞察"
+    },
+    "homepage.stats.005": {
+        "message": "百度是中国最大的搜索引擎和领先的 AI 企业，产品涵盖文心大语言模型和 Apollo 自动驾驶。"
+    },
+    "homepage.stats.006": {
+        "message": "支持大规模日志分析与即席 SQL 探索，服务于工程与平台可观测性工作流。"
+    },
+    "homepage.stats.007": {
+        "message": "已分析事件"
+    },
+    "homepage.stats.008": {
+        "message": "三星是全球最大的电子产品制造商，在智能手机、存储芯片、显示器和家电领域领先，业务遍及 70 多个国家。"
+    },
+    "homepage.stats.009": {
+        "message": "使用 Apache Doris 分析消费电子产品线的设备遥测与服务数据。"
+    },
+    "homepage.stats.010": {
+        "message": "设备分析"
+    },
+    "homepage.stats.011": {
+        "message": "京东是中国营收规模最大的零售商，位居《财富》世界 500 强前 50，拥有全球最广泛的自建物流网络之一。"
+    },
+    "homepage.stats.012": {
+        "message": "电商"
+    },
+    "homepage.stats.013": {
+        "message": "通过快速 SQL 访问，为业务用户提供订单、库存和营销数据的零售分析。"
+    },
+    "homepage.stats.014": {
+        "message": "零售分析"
+    },
+    "homepage.stats.015": {
+        "message": "美团是中国最大的本地生活服务平台，每天通过外卖、出行与即时零售连接数亿用户。"
+    },
+    "homepage.stats.016": {
+        "message": "互联网服务"
+    },
+    "homepage.stats.017": {
+        "message": "围绕订单、商家、骑手和用户活动开展城市级业务分析，支持实时决策。"
+    },
+    "homepage.stats.018": {
+        "message": "业务数据"
+    },
+    "homepage.stats.019": {
+        "message": "网易是中国第二大游戏公司，也是涵盖热门游戏、音乐流媒体、教育与企业智能服务的大型互联网集团。"
+    },
+    "homepage.stats.020": {
+        "message": "使用 Apache Doris 分析游戏与内容数据，帮助团队及时查看指标，无需漫长的批处理等待。"
+    },
+    "homepage.stats.021": {
+        "message": "内容指标"
+    },
+    "homepage.stats.022": {
+        "message": "腾讯音乐娱乐是中国领先的在线音乐与音频平台，QQ 音乐、酷狗和酷我合计月活用户超过 5 亿。"
+    },
+    "homepage.stats.023": {
+        "message": "媒体"
+    },
+    "homepage.stats.024": {
+        "message": "使用 Doris 快速聚合用户收听、内容与互动数据，支持实时音乐分析。"
+    },
+    "homepage.stats.025": {
+        "message": "音乐分析"
+    },
+    "homepage.stats.026": {
+        "message": "快手是全球最大的短视频与直播平台之一，中国与海外 Kwai 应用的月活用户超过 7 亿。"
+    },
+    "homepage.stats.027": {
+        "message": "在海量互动事件流上，以亚秒级响应支持短视频内容和创作者分析。"
+    },
+    "homepage.stats.028": {
+        "message": "互动事件"
+    },
+    "homepage.stats.029": {
+        "message": "米哈游以 HoYoverse 品牌闻名全球，旗下拥有《原神》《崩坏：星穹铁道》和《绝区零》等热门游戏。"
+    },
+    "homepage.stats.030": {
+        "message": "游戏"
+    },
+    "homepage.stats.031": {
+        "message": "使用 Doris 分析玩家行为、游戏经济与实时运营数据，支持快速迭代。"
+    },
+    "homepage.stats.032": {
+        "message": "游戏分析"
+    },
+    "homepage.stats.033": {
+        "message": "瑞幸咖啡是全球门店数量最多的咖啡连锁品牌，拥有超过 31,000 家门店，每天服务数千万顾客。"
+    },
+    "homepage.stats.034": {
+        "message": "零售"
+    },
+    "homepage.stats.035": {
+        "message": "使用 Doris 分析门店、订单与会员数据，跟踪数千家门店的活动效果。"
+    },
+    "homepage.stats.036": {
+        "message": "零售洞察"
+    },
+    "homepage.stats.037": {
+        "message": "名创优品是快速发展的全球生活方式与 IP 零售品牌，在全球 110 多个国家和地区拥有超过 8,000 家门店。"
+    },
+    "homepage.stats.038": {
+        "message": "支持全球零售业务中 SKU 级别的销售、库存与供应链报表。"
+    },
+    "homepage.stats.039": {
+        "message": "销售报表"
+    },
+    "homepage.stats.040": {
+        "message": "顺丰是中国和亚洲最大的综合物流服务商，营收规模位居全球前四。"
+    },
+    "homepage.stats.041": {
+        "message": "物流"
+    },
+    "homepage.stats.042": {
+        "message": "近实时跟踪运单、路线与运营数据，支持全国快递配送。"
+    },
+    "homepage.stats.043": {
+        "message": "运单跟踪"
+    },
+    "homepage.stats.044": {
+        "message": "中通是中国包裹量最大的快递公司，年处理包裹超过 340 亿件，连续九年保持市场领先。"
+    },
+    "homepage.stats.045": {
+        "message": "使用 Doris 分析快递网络中的包裹流转、分拣中心与末端配送。"
+    },
+    "homepage.stats.046": {
+        "message": "包裹分析"
+    },
+    "homepage.stats.047": {
+        "message": "菜鸟是阿里巴巴旗下的全球智慧物流业务和跨境包裹网络，服务覆盖 200 多个国家的电商与供应链客户。"
+    },
+    "homepage.stats.048": {
+        "message": "分析仓储、路线和跨境物流数据，优化履约运营。"
+    },
+    "homepage.stats.049": {
+        "message": "物流洞察"
+    },
+    "homepage.stats.050": {
+        "message": "福特是全球最大的汽车制造商之一，旗下拥有 F 系列皮卡、Mustang 等经典车型，以及日益丰富的电动车型。"
+    },
+    "homepage.stats.051": {
+        "message": "汽车"
+    },
+    "homepage.stats.052": {
+        "message": "统一分析车辆、经销商与服务数据，支持智能网联出行项目。"
+    },
+    "homepage.stats.053": {
+        "message": "车辆数据"
+    },
+    "homepage.stats.054": {
+        "message": "比亚迪是全球最大的电动汽车制造商和领先的锂电池厂商，全球销量超过特斯拉，每年交付数百万辆纯电与混合动力汽车。"
+    },
+    "homepage.stats.055": {
+        "message": "通过快速 SQL 访问，为产品团队提供电动车遥测、供应链与售后分析。"
+    },
+    "homepage.stats.056": {
+        "message": "遥测数据"
+    },
+    "homepage.stats.057": {
+        "message": "铃木是全球前十的汽车制造商，在印度与东南亚市场领先，也以摩托车、全地形车和舷外机闻名。"
+    },
+    "homepage.stats.058": {
+        "message": "使用 Apache Doris 分析全球汽车业务中的制造、经销商与服务数据。"
+    },
+    "homepage.stats.059": {
+        "message": "运营概览"
+    },
+    "homepage.stats.060": {
+        "message": "安踏体育是中国最大的运动服饰集团，营收规模位居全球前三，旗下品牌包括安踏、FILA、迪桑特和始祖鸟。"
+    },
+    "homepage.stats.061": {
+        "message": "运动服饰"
+    },
+    "homepage.stats.062": {
+        "message": "通过零售、渠道与消费者分析，为各运动服饰品牌的产品和营销决策提供依据。"
+    },
+    "homepage.stats.063": {
+        "message": "李宁是由奥运体操冠军创立的中国领先运动服饰品牌，将专业运动装备与街头文化融合，门店遍布全国。"
+    },
+    "homepage.stats.064": {
+        "message": "使用 Doris 分析门店、电商与供应链数据，支持日常和实时决策。"
+    },
+    "homepage.stats.065": {
+        "message": "销售分析"
+    },
+    "homepage.stats.066": {
+        "message": "特步是中国前五的运动服饰品牌和领先的跑步品牌，赞助马拉松赛事，为全球数百万跑者提供装备。"
+    },
+    "homepage.stats.067": {
+        "message": "使用 Doris 分析零售与数字渠道的会员、销售和活动数据。"
+    },
+    "homepage.stats.068": {
+        "message": "客户洞察"
+    },
+    "homepage.stats.069": {
+        "message": "智谱 AI 源自清华大学，是中国领先的大模型实验室之一，其 GLM 与 ChatGLM 基础模型支持大规模聊天机器人和 AI Agent 应用。"
+    },
+    "homepage.stats.071": {
+        "message": "使用 Apache Doris 大规模分析模型训练指标、使用事件与平台遥测数据。"
+    },
+    "homepage.stats.072": {
+        "message": "模型分析"
+    },
+    "homepage.stats.073": {
+        "message": "MiniMax 是中国领先的 AI 独角兽企业，开发多模态基础模型，支撑 Talkie、海螺等热门应用，服务全球数千万用户。"
+    },
+    "homepage.stats.074": {
+        "message": "为基础模型工作负载提供产品使用、训练流水线与推理可观测性分析。"
+    },
+    "homepage.stats.075": {
+        "message": "模型遥测"
+    },
+    "homepage.stats.076": {
+        "message": "Ave AI 是快速发展的数据创业公司，将复杂企业信号转化为 AI 分析与智能决策，服务现代数据团队。"
+    },
+    "homepage.stats.077": {
+        "message": "基于 Doris 构建 AI 数据产品，通过快速 SQL 访问支持即席探索与报表。"
+    },
+    "homepage.stats.078": {
+        "message": "AI 分析"
+    },
+    "homepage.stats.079": {
+        "message": "Talkie 是领先的 AI 陪伴与角色聊天应用，月活用户超过 1100 万，位居美国下载量最高的 AI 应用之列。"
+    },
+    "homepage.stats.080": {
+        "message": "大规模分析 AI 角色聊天产品中的对话、互动与增长信号。"
+    },
+    "homepage.stats.081": {
+        "message": "互动数据"
+    },
+    "homepage.stats.082": {
+        "message": "地平线是中国领先的自动驾驶芯片制造商，占据国内 ADAS 市场超过 40% 的份额，已搭载于 100 多款量产车型。"
+    },
+    "homepage.stats.083": {
+        "message": "自动驾驶"
+    },
+    "homepage.stats.084": {
+        "message": "使用 Doris 处理自动驾驶平台的行驶数据、传感器遥测与芯片性能指标。"
+    },
+    "homepage.stats.085": {
+        "message": "行驶数据"
+    },
+    "homepage.stats.086": {
+        "message": "金风科技是全球第一的风电整机制造商，单年交付容量接近 30 GW，产品服务六大洲的风电场。"
+    },
+    "homepage.stats.087": {
+        "message": "能源"
+    },
+    "homepage.stats.088": {
+        "message": "为全球可再生能源资产提供风机遥测与运营分析。"
+    },
+    "homepage.stats.089": {
+        "message": "能源遥测"
+    },
+    "homepage.stats.090": {
+        "message": "领创集团是东南亚领先的 AI 金融科技企业，通过 Atome 与 ADVANCE.AI 等品牌服务 4000 万消费者和 235,000 家商户。"
+    },
+    "homepage.stats.091": {
+        "message": "金融科技"
+    },
+    "homepage.stats.092": {
+        "message": "为东南亚 AI 金融科技产品提供风险、信贷与交易分析。"
+    },
+    "homepage.stats.093": {
+        "message": "风险分析"
+    },
+    "homepage.stats.094": {
+        "message": "TrueWatch 是新一代云可观测性平台，为全球 DevOps 与 SRE 团队统一多云环境中的指标、日志和追踪。"
+    },
+    "homepage.stats.095": {
+        "message": "可观测性"
+    },
+    "homepage.stats.096": {
+        "message": "基于 Doris 统一分析基础设施级别的指标、日志与追踪。"
+    },
+    "homepage.stats.097": {
+        "message": "可观测性数据"
+    },
+    "homepage.stats.099": {
+        "message": "应用场景"
+    },
+    "homepage.stats.100": {
+        "message": "使用 Apache Doris 的企业"
+    },
+    "homepage.stats.101": {
+        "message": "10,000+ 用户的信赖之选"
+    },
+    "homepage.ai.loading": {
+        "message": "正在加载 AI…"
+    },
+    "homepage.ai.slow": {
+        "message": "仍在加载…"
+    },
+    "homepage.ai.error": {
+        "message": "AI 暂不可用"
+    },
+    "homepage.theme.current": {
+        "message": "配色主题：{theme}"
+    },
+    "homepage.theme.change": {
+        "message": "切换配色主题"
+    },
+    "homepage.theme.label": {
+        "message": "配色主题"
+    },
+    "homepage.navbar.001": {
+        "message": "为什么选择 Doris"
+    },
+    "homepage.navbar.002": {
+        "message": "Doris 与其他方案对比"
+    },
+    "homepage.navbar.003": {
+        "message": "性能基准测试"
+    },
+    "homepage.navbar.004": {
+        "message": "核心特性"
+    },
+    "homepage.navbar.005": {
+        "message": "用户案例"
+    },
+    "homepage.navbar.006": {
+        "message": "应用场景"
+    },
+    "homepage.navbar.007": {
+        "message": "面向客户的分析"
+    },
+    "homepage.navbar.008": {
+        "message": "数据仓库"
+    },
+    "homepage.navbar.009": {
+        "message": "可观测性"
+    },
+    "homepage.navbar.010": {
+        "message": "Doris 与 AI"
+    },
+    "homepage.navbar.011": {
+        "message": "文档"
+    },
+    "homepage.navbar.015": {
+        "message": "资源"
+    },
+    "homepage.navbar.016": {
+        "message": "版本说明"
+    },
+    "homepage.navbar.017": {
+        "message": "博客"
+    },
+    "homepage.navbar.018": {
+        "message": "课程"
+    },
+    "homepage.navbar.019": {
+        "message": "Profile 分析"
+    },
+    "homepage.navbar.020": {
+        "message": "社区"
+    },
+    "homepage.navbar.021": {
+        "message": "社区周报"
+    },
+    "homepage.navbar.022": {
+        "message": "路线图"
+    },
+    "homepage.navbar.023": {
+        "message": "参与建设"
+    },
+    "homepage.navbar.024": {
+        "message": "参与 GitHub 讨论"
+    },
+    "homepage.navbar.027": {
+        "message": "访问 Doris Summit 2026（在新标签页打开）"
+    },
+    "homepage.navbar.029": {
+        "message": "问问 AI"
+    },
+    "homepage.navbar.030": {
+        "message": "不可用"
+    },
+    "homepage.navbar.031": {
+        "message": "提问"
+    },
+    "homepage.navbar.starLabel": {
+        "message": "在 GitHub 上为 Apache Doris 加星（{stars} 星）"
+    },
+    "homepage.navbar.032": {
+        "message": "加星"
+    },
+    "homepage.navbar.033": {
+        "message": "下载"
+    },
+    "homepage.navbar.034": {
+        "message": "关闭导航菜单"
+    },
+    "homepage.navbar.035": {
+        "message": "打开导航菜单"
+    },
+    "homepage.nudge.benefit1": {
+        "message": "与 Doris 用户和开发者交流。"
+    },
+    "homepage.nudge.benefit2": {
+        "message": "获取最新社区动态、学习资源与活动信息。"
+    },
+    "homepage.nudge.benefit3": {
+        "message": "参与社区建设、功能讨论与 PR 审查。"
+    },
+    "homepage.slackcommunitynudge.004": {
+        "message": "Apache Doris 社区、Summit 与文档资源"
+    },
+    "homepage.slackcommunitynudge.005": {
+        "message": "Apache Doris 社区与 Summit 资源"
+    },
+    "homepage.slackcommunitynudge.006": {
+        "message": "关闭社区、Summit 与文档提示"
+    },
+    "homepage.slackcommunitynudge.007": {
+        "message": "关闭社区与 Summit 提示"
+    },
+    "homepage.slackcommunitynudge.008": {
+        "message": "社区帮助"
+    },
+    "homepage.slackcommunitynudge.009": {
+        "message": "正在使用 Doris？"
+    },
+    "homepage.slackcommunitynudge.010": {
+        "message": "加入 Slack，获取安装帮助、性能建议，以及 Apache Doris 用户与维护者的解答。"
+    },
+    "homepage.slackcommunitynudge.011": {
+        "message": "加入 Slack"
+    },
+    "homepage.slackcommunitynudge.013": {
+        "message": "10 月 21–22 日 · 线上活动"
+    },
+    "homepage.slackcommunitynudge.014": {
+        "message": "查看 Summit"
+    },
+    "homepage.slackcommunitynudge.015": {
+        "message": "发现文档问题？"
+    },
+    "homepage.slackcommunitynudge.016": {
+        "message": "分享反馈，帮助我们改进 Apache Doris 文档质量。"
+    },
+    "homepage.slackcommunitynudge.017": {
+        "message": "反馈文档问题"
+    },
+    "homepage.nudge.toggleDocs": {
+        "message": "{action}社区、Summit 与文档资源"
+    },
+    "homepage.slackcommunitynudge.018": {
+        "message": "收起"
+    },
+    "homepage.slackcommunitynudge.019": {
+        "message": "打开"
+    },
+    "homepage.nudge.toggle": {
+        "message": "{action}社区与 Summit 资源"
+    },
+    "site.footer.1": {
+        "message": "基金会"
+    },
+    "site.footer.2": {
+        "message": "许可证"
+    },
+    "site.footer.3": {
+        "message": "活动"
+    },
+    "site.footer.4": {
+        "message": "赞助"
+    },
+    "site.footer.5": {
+        "message": "隐私"
+    },
+    "site.footer.6": {
+        "message": "安全"
+    },
+    "site.footer.7": {
+        "message": "致谢"
+    },
+    "site.footer.8": {
+        "message": "资源"
+    },
+    "site.footer.9": {
+        "message": "下载"
+    },
+    "site.footer.10": {
+        "message": "品牌资源"
+    },
+    "site.footer.11": {
+        "message": "博客"
+    },
+    "site.footer.12": {
+        "message": "社区"
+    },
+    "site.footer.13": {
+        "message": "如何贡献"
+    },
+    "site.footer.14": {
+        "message": "源代码"
+    },
+    "site.footer.15": {
+        "message": "Doris 团队"
+    },
+    "site.footer.16": {
+        "message": "路线图"
+    },
+    "site.footer.17": {
+        "message": "改进提案"
+    },
+    "site.footer.join": {
+        "message": "加入社区"
+    },
+    "site.notFound.home": {
+        "message": "返回首页"
+    },
+    "site.notFound.report": {
+        "message": "报告此问题"
+    },
+    "site.search.context": {
+        "message": "搜索范围"
+    },
+    "theme.NotFound.title": {
+        "message": "页面不存在"
+    },
+    "theme.NotFound.p1": {
+        "message": "找不到您要访问的页面。请尝试查找其他页面，或向我们反馈此问题。"
+    },
+    "theme.SearchBar.noResultsText": {
+        "message": "无结果"
+    },
+    "theme.SearchBar.label": {
+        "message": "搜索"
+    },
+    "theme.SearchBar.seeAllOutsideContext": {
+        "message": "查看“{context}”以外的所有结果"
+    },
+    "theme.SearchBar.searchInContext": {
+        "message": "查看“{context}”内的所有结果"
+    },
+    "theme.SearchBar.seeAll": {
+        "message": "查看所有结果"
+    },
+    "theme.SearchPage.existingResultsTitle": {
+        "message": "“{query}”的搜索结果"
+    },
+    "theme.SearchPage.emptyResultsTitle": {
+        "message": "搜索文档"
+    },
+    "theme.SearchPage.searchContext.everywhere": {
+        "message": "全部范围"
+    },
+    "theme.SearchPage.noResultsText": {
+        "message": "未找到文档"
+    },
+    "theme.SearchPage.searchSource": {
+        "message": "搜索英文原文"
+    },
+    "theme.SearchPage.documentsFound.plurals": {
+        "message": "找到 {count} 篇文档"
+    },
+    "homepage.diagram.disk": {
+        "message": "磁盘"
+    },
+    "homepage.diagram.cache": {
+        "message": "缓存"
+    },
+    "homepage.diagram.data": {
+        "message": "数据"
+    },
+    "homepage.diagram.metadata": {
+        "message": "元数据服务"
+    },
+    "homepage.diagram.group": {
+        "message": "计算组"
+    },
+    "homepage.diagram.storage": {
+        "message": "共享存储"
     }
 }

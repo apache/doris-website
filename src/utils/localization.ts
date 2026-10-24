@@ -79,7 +79,6 @@ export function localizedDocLink(href: string): string {
 }
 
 export function localizedFrameSource(src: string): string {
-    if (!usesDefaultLocalePages()) return src;
     const url = new URL(src, siteConfig.url);
     if (url.origin !== new URL(siteConfig.url).origin) return src;
     url.searchParams.set('locale', i18n.currentLocale);
@@ -87,7 +86,6 @@ export function localizedFrameSource(src: string): string {
 }
 
 export function localizedAiLabels(): Record<string, string> {
-    if (!usesDefaultLocalePages()) return {};
     return {
         'data-kapa-loading-label': translate({ id: 'homepage.ai.loading', message: 'Loading AI…' }),
         'data-kapa-slow-label': translate({ id: 'homepage.ai.slow', message: 'Still loading…' }),

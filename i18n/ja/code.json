@@ -3726,5 +3726,254 @@
   },
   "marketing.observability.hero": {
     "message": "{realTime} {observability}{lineBreak}{era}"
+  },
+  "homepage.ai.loading": {
+    "message": "AI を読み込み中…"
+  },
+  "homepage.ai.slow": {
+    "message": "引き続き読み込み中…"
+  },
+  "homepage.ai.error": {
+    "message": "AI を利用できません"
+  },
+  "homepage.theme.current": {
+    "message": "配色テーマ：{theme}"
+  },
+  "homepage.theme.change": {
+    "message": "配色テーマを変更"
+  },
+  "homepage.theme.label": {
+    "message": "配色テーマ"
+  },
+  "homepage.navbar.001": {
+    "message": "Doris を選ぶ理由"
+  },
+  "homepage.navbar.002": {
+    "message": "Doris と他の製品の比較"
+  },
+  "homepage.navbar.003": {
+    "message": "ベンチマーク"
+  },
+  "homepage.navbar.004": {
+    "message": "主な機能"
+  },
+  "homepage.navbar.005": {
+    "message": "導入事例"
+  },
+  "homepage.navbar.006": {
+    "message": "ユースケース"
+  },
+  "homepage.navbar.007": {
+    "message": "顧客向け分析"
+  },
+  "homepage.navbar.008": {
+    "message": "データウェアハウス"
+  },
+  "homepage.navbar.009": {
+    "message": "オブザーバビリティ"
+  },
+  "homepage.navbar.010": {
+    "message": "AI のための Doris"
+  },
+  "homepage.navbar.011": {
+    "message": "ドキュメント"
+  },
+  "homepage.navbar.015": {
+    "message": "リソース"
+  },
+  "homepage.navbar.016": {
+    "message": "リリースノート"
+  },
+  "homepage.navbar.017": {
+    "message": "ブログ"
+  },
+  "homepage.navbar.018": {
+    "message": "講座"
+  },
+  "homepage.navbar.019": {
+    "message": "プロファイル分析"
+  },
+  "homepage.navbar.020": {
+    "message": "コミュニティ"
+  },
+  "homepage.navbar.021": {
+    "message": "コミュニティレポート"
+  },
+  "homepage.navbar.022": {
+    "message": "ロードマップ"
+  },
+  "homepage.navbar.023": {
+    "message": "開発に参加"
+  },
+  "homepage.navbar.024": {
+    "message": "GitHub Discussions に参加"
+  },
+  "homepage.navbar.027": {
+    "message": "Doris Summit 2026 を開く（新しいタブ）"
+  },
+  "homepage.navbar.029": {
+    "message": "AI に質問"
+  },
+  "homepage.navbar.030": {
+    "message": "利用不可"
+  },
+  "homepage.navbar.031": {
+    "message": "質問"
+  },
+  "homepage.navbar.starLabel": {
+    "message": "GitHub で Apache Doris にスターを付ける（{stars} スター）"
+  },
+  "homepage.navbar.032": {
+    "message": "スター"
+  },
+  "homepage.navbar.033": {
+    "message": "ダウンロード"
+  },
+  "homepage.navbar.034": {
+    "message": "ナビゲーションを閉じる"
+  },
+  "homepage.navbar.035": {
+    "message": "ナビゲーションを開く"
+  },
+  "homepage.nudge.benefit1": {
+    "message": "Doris のユーザーや開発者と交流できます。"
+  },
+  "homepage.nudge.benefit2": {
+    "message": "最新のコミュニティ情報、学習資料、イベント情報を入手できます。"
+  },
+  "homepage.nudge.benefit3": {
+    "message": "コミュニティ活動、機能の議論、PR レビューに参加できます。"
+  },
+  "homepage.slackcommunitynudge.004": {
+    "message": "Apache Doris コミュニティ、Summit、ドキュメント"
+  },
+  "homepage.slackcommunitynudge.005": {
+    "message": "Apache Doris コミュニティと Summit"
+  },
+  "homepage.slackcommunitynudge.006": {
+    "message": "コミュニティ、Summit、ドキュメントの案内を閉じる"
+  },
+  "homepage.slackcommunitynudge.007": {
+    "message": "コミュニティと Summit の案内を閉じる"
+  },
+  "homepage.slackcommunitynudge.008": {
+    "message": "コミュニティのサポート"
+  },
+  "homepage.slackcommunitynudge.009": {
+    "message": "Doris をお使いですか？"
+  },
+  "homepage.slackcommunitynudge.010": {
+    "message": "Slack に参加して、導入の支援、性能改善のヒント、ユーザーやメンテナーからの回答を得られます。"
+  },
+  "homepage.slackcommunitynudge.011": {
+    "message": "Slack に参加"
+  },
+  "homepage.slackcommunitynudge.013": {
+    "message": "10 月 21～22 日 · オンライン開催"
+  },
+  "homepage.slackcommunitynudge.014": {
+    "message": "Summit を見る"
+  },
+  "homepage.slackcommunitynudge.015": {
+    "message": "ドキュメントに問題がありますか？"
+  },
+  "homepage.slackcommunitynudge.016": {
+    "message": "フィードバックで Apache Doris のドキュメント改善にご協力ください。"
+  },
+  "homepage.slackcommunitynudge.017": {
+    "message": "ドキュメントの問題を報告"
+  },
+  "homepage.nudge.toggleDocs": {
+    "message": "コミュニティ、Summit、ドキュメントの案内を{action}"
+  },
+  "homepage.slackcommunitynudge.018": {
+    "message": "閉じる"
+  },
+  "homepage.slackcommunitynudge.019": {
+    "message": "開く"
+  },
+  "homepage.nudge.toggle": {
+    "message": "コミュニティと Summit の案内を{action}"
+  },
+  "site.footer.1": {
+    "message": "財団"
+  },
+  "site.footer.2": {
+    "message": "ライセンス"
+  },
+  "site.footer.3": {
+    "message": "イベント"
+  },
+  "site.footer.4": {
+    "message": "スポンサーシップ"
+  },
+  "site.footer.5": {
+    "message": "プライバシー"
+  },
+  "site.footer.6": {
+    "message": "セキュリティ"
+  },
+  "site.footer.7": {
+    "message": "謝辞"
+  },
+  "site.footer.8": {
+    "message": "リソース"
+  },
+  "site.footer.9": {
+    "message": "ダウンロード"
+  },
+  "site.footer.10": {
+    "message": "ブランド素材"
+  },
+  "site.footer.11": {
+    "message": "ブログ"
+  },
+  "site.footer.12": {
+    "message": "コミュニティ"
+  },
+  "site.footer.13": {
+    "message": "貢献するには"
+  },
+  "site.footer.14": {
+    "message": "ソースコード"
+  },
+  "site.footer.15": {
+    "message": "Doris チーム"
+  },
+  "site.footer.16": {
+    "message": "ロードマップ"
+  },
+  "site.footer.17": {
+    "message": "改善提案"
+  },
+  "site.footer.join": {
+    "message": "コミュニティに参加"
+  },
+  "site.notFound.home": {
+    "message": "ホームに戻る"
+  },
+  "site.notFound.report": {
+    "message": "問題を報告"
+  },
+  "site.search.context": {
+    "message": "検索範囲"
+  },
+  "homepage.diagram.disk": {
+    "message": "ディスク"
+  },
+  "homepage.diagram.cache": {
+    "message": "キャッシュ"
+  },
+  "homepage.diagram.data": {
+    "message": "データ"
+  },
+  "homepage.diagram.metadata": {
+    "message": "メタデータサービス"
+  },
+  "homepage.diagram.group": {
+    "message": "コンピュートグループ"
+  },
+  "homepage.diagram.storage": {
+    "message": "共有ストレージ"
   }
 }

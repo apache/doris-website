@@ -11,7 +11,7 @@ function resolveLocal(root, file, name) {
 }
 function isBody(root, file) {return !shell.test(path.relative(root, file).split(path.sep).join('/'));}
 function references(source, file) {
-    const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, file.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, file.endsWith('x') ? ts.ScriptKind.TSX : file.endsWith('.js') ? ts.ScriptKind.JSX : ts.ScriptKind.TS);
     const refs = [];
     function visit(node) {
         if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) refs.push(node.moduleSpecifier);
@@ -22,10 +22,10 @@ function references(source, file) {
     visit(ast);
     return {ast, refs};
 }
-function bodyDependencies(root, entry) {
+function bodyDependencies(root, entry, {shared = false} = {}) {
     const files = new Set(), messages = new Map();
     function scan(file) {
-        if (files.has(file) || !isBody(root, file)) return;
+        if (files.has(file) || (!shared && !isBody(root, file))) return;
         files.add(file);
         if (!/\.(?:[jt]sx?|json|css|scss|html?)$/.test(file)) return;
         const source = fs.readFileSync(file, 'utf8');
@@ -91,7 +91,7 @@ function validateMessages(root, registration, locale) {
     const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));
     const placeholders = text => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort().join();
     for (const [id, source] of messages) {
-        if (typeof dictionary[id]?.message !== 'string' || (source && placeholders(source) !== placeholders(dictionary[id].message)))
+        if (typeof dictionary[id]?.message !== 'string' || !dictionary[id].message.trim() || (source && placeholders(source) !== placeholders(dictionary[id].message)))
             throw new Error(`Incomplete page messages: ${registration.id}/${locale}/${id}`);
     }
     return files;

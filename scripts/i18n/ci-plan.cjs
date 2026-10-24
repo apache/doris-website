@@ -7,13 +7,15 @@ const {createHash} = require('node:crypto');
 const {locales, localeRegistry} = require('../../config/i18n');
 const {buildScope, validationScope} = require('./build-scope.cjs');
 const {managedLocales} = require('./state.cjs');
+const {analyzeImpact} = require('./content-impact.cjs');
+const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/pages\/registry\.json$|config\/(i18n|ssrTemplate)\.js$)/;
 const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
 const content =
     /^(static\/|docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|blog\/|i18n\/|translations\/(pages|blog|state)\/)/;
 const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
 function policy(files, {forceFull = false, forceSample = false} = {}) {
-    const risk = files.filter(file => highRisk.test(file));
+    const risk = files.filter(file => highRisk.test(file) || mechanism.test(file));
     const changed = files.some(file => content.test(file));
     const shared = files.some(file => runtime.test(file));
     const checks = validationScope(files);
@@ -72,10 +74,12 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
             labels.some(label => label.name === 'ci/full'),
         forceSample: forceSample || event.inputs?.validation === 'sample',
     });
+    const dependencies = analyzeImpact(root, base, files);
     const impact = buildScope(
         files,
         JSON.parse(fs.readFileSync(path.join(root, 'versions.json'))),
         managedLocales(root),
+        dependencies,
     );
     let requested = impact.locales;
     if (selected.mode === 'full' || selected.selection === 'representative') requested = locales;
@@ -88,6 +92,7 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
             ? locales
             : [...new Set(['en', ...requested])];
     }
+    if (selected.mode === 'sample' && dependencies.complete && dependencies.locales.length) requested = dependencies.locales;
     if (selected.mode === 'sample' && !requested.length) requested = locales;
     const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], {
         cwd: root,
@@ -109,6 +114,7 @@ function plan({root, base, event = {}, forceFull = false, forceSample = false}) 
         files,
         ...selected,
         impact,
+        dependencies,
         locales: locales.filter(locale => requested.includes(locale)),
         enabledLocales: localeRegistry.filter(locale => locale.optional).map(locale => locale.code),
         activeVersions: [

@@ -113,6 +113,10 @@ jobs:
                   yarn --frozen-lockfile
                   yarn key-features:generate
 
+            - name: Validate manual content and shared messages
+              if: steps.detect.outputs.validation_mode != 'skip'
+              run: node scripts/i18n/manual-report.cjs
+
             - name: Translation unit tests
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
@@ -201,6 +205,10 @@ jobs:
                   fi
                   free -m > .i18n-build/ci-memory-after.txt
 
+            - name: Report native translation coverage
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample'
+              run: node scripts/i18n/manual-report.cjs --coverage
+
             - name: Verify sampled compilation
               if: steps.detect.outputs.validation_mode == 'sample'
               run: node scripts/i18n/verify-ci-sample.cjs
@@ -216,6 +224,7 @@ jobs:
                   if [ "${{ steps.detect.outputs.validation_mode }}" = "full" ]; then
                       node scripts/publish/verify.cjs build
                       node scripts/i18n/verify-global-language.cjs --site build --output .i18n-build/browser-global-language.json
+                      node scripts/i18n/verify-first-release.cjs --site build --output .i18n-build/first-release.json
                       for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
                           EXTRA_ARGS=()
@@ -236,6 +245,10 @@ jobs:
                   include-hidden-files: true
                   path: |
                       .i18n-build/ci-plan.json
+                      .i18n-build/manual-drift.json
+                      .i18n-build/coverage.json
+                      .i18n-build/first-release.json
+                      .i18n-build/home-*.png
                       .i18n-build/ci-sample/scopes/*.json
                       .i18n-build/ci-sample/verification.json
                       .i18n-build/ci-sampling-fixture-proof.json
