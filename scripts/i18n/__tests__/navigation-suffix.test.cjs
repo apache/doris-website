@@ -22,6 +22,7 @@ function fixture(kind, singleVersion = false) {
         react: React,
         '@docusaurus/Link': ({to, children}) => React.createElement('a', {href: to.replace(/^pathname:\/\//, '')}, children),
         '@site/src/utils/contentRoute': {useContentRouteData: () => ({kind: 'page', availableTranslations: locales})},
+        '@site/src/utils/languageMessages': {languageMessages: () => ({choose: 'Language'})},
         '@site/src/utils/useLanguageItems': {useLanguageItems: () => locales.map(locale => ({locale, label: locale, htmlLang: locale,
             href: route(locale) + (phase === 'hydrated' ? '?from=search#usage' : ''), current: locale === 'ru', onClick() {}}))},
         '@site/src/utils/localization': {hasTranslatedPage: (_path, locale) => ['ja', 'ko', 'ru'].includes(locale)},
