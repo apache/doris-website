@@ -46,8 +46,8 @@ function wrap(kind, native) {
             fs.writeFileSync(englishI18n, JSON.stringify({...context.i18n, currentLocale: context.i18n.defaultLocale}));
         }
         return withContentRoutes({...plugin,
-            ...(kind === 'pages' && {async configureWebpack(...args) {
-                const result = await plugin.configureWebpack?.(...args) ?? {};
+            ...(kind === 'pages' && {configureWebpack(...args) {
+                const result = plugin.configureWebpack?.(...args) ?? {};
                 return {...result, module: {...result.module, rules: [...(result.module?.rules ?? []), {
                     enforce: 'pre', test: /\.[jt]sx?$/, resourceQuery: /[?&]doris-body=/,
                     use: [{loader: require.resolve('./page-body-loader.cjs'), options: {root: context.siteDir, englishI18n}}],
