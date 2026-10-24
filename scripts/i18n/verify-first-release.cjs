@@ -73,7 +73,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         for (const locale of locales) {
             const prefix = locale === 'en' ? '/' : `/${locale}/`;
             const htmlLang = localeRegistry.find(item => item.code === locale).htmlLang;
-            for (const width of [1440, 390]) {
+            for (const width of [1440, 1280, 900, 390]) {
                 await page.setViewportSize({width, height: 900});
                 const response = await page.goto(origin + prefix);
                 assert.equal(response.status(), 200);
@@ -109,12 +109,14 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 });
                 for (const state of aiLabelStates) assert(state.scrollWidth <= state.viewport + 1,
                     `${locale}/${width}/${state.state}: AI label overflow`);
+                const paletteInPanel = !await page.locator('.brand-theme-switcher:not(.brand-theme-switcher--mobile)').isVisible();
+                const languageInPanel = !await page.locator('.language-menu:not(.language-menu--mobile)').isVisible();
                 for (const theme of themes) {
-                    if (width === 390) await page.locator('.navbar-next__menu-button').click();
-                    const palette = page.locator(width === 390 ? '.brand-theme-switcher--mobile' : '.brand-theme-switcher:not(.brand-theme-switcher--mobile)');
+                    if (paletteInPanel) await page.locator('.navbar-next__menu-button').click();
+                    const palette = page.locator(paletteInPanel ? '.brand-theme-switcher--mobile' : '.brand-theme-switcher:not(.brand-theme-switcher--mobile)');
                     await palette.locator('summary').click();
                     await palette.locator('button').nth(themes.indexOf(theme)).click();
-                    if (width === 390) await page.locator('.navbar-next__menu-button').click();
+                    if (paletteInPanel) await page.locator('.navbar-next__menu-button').click();
                     assert.equal(await page.locator('html').getAttribute('data-brand-theme'), theme);
                     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${locale}/${width}/${theme}: horizontal overflow`);
                     for (const frame of await page.locator('iframe.features-next__realtime-frame').all()) {
@@ -141,8 +143,8 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                     }
                     results.push({locale, width, theme, title, aiLabelStates});
                 }
-                if (width === 390) await page.locator('.navbar-next__menu-button').click();
-                const language = page.locator(width === 390 ? '.language-menu--mobile' : '.language-menu:not(.language-menu--mobile)');
+                if (languageInPanel) await page.locator('.navbar-next__menu-button').click();
+                const language = page.locator(languageInPanel ? '.language-menu--mobile' : '.language-menu:not(.language-menu--mobile)');
                 await language.locator('summary').focus(); await page.keyboard.press('Enter');
                 assert.equal(await language.getAttribute('open'), ''); await page.keyboard.press('Escape');
                 assert.equal(await language.getAttribute('open'), null);

@@ -12,7 +12,7 @@ policy; the label is specific to this initial acceptance.
 Its first-release verifier checks all active versions, English/Japanese/Korean/
 Russian homepage bodies and the intentional Chinese English-body fallback,
 SSR SEO/sitemap reciprocity, English fallback, 404, navigation and all eight
-brand themes at widths 1440 and 390. Candidate screenshots and JSON reports are
+brand themes at widths 1440, 1280, 900 and 390. Candidate screenshots and JSON reports are
 uploaded with the existing measurements artifact. Local `--landing-only` checks
 explicitly exclude docs/blog/community and cannot establish a release.
 
