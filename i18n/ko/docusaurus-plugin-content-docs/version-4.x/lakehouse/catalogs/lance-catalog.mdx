@@ -2,7 +2,7 @@
 {
     "title": "Lance Catalog",
     "language": "ko",
-    "description": "Apache Doris Lance Catalog 가이드: Filesystem 또는 REST Namespace Catalog를 통해 Lance 데이터세트에 접근하고 병렬 읽기, 조건자 푸시다운, S3/Local TVF, 인덱스 조회, 벡터 검색, 전문 검색을 활용합니다."
+    "description": "Apache Doris에서 Lance 데이터세트를 쿼리하는 방법: Catalog 구성, 네이티브 벡터 및 BM25 검색 활용, 자동 SQL 푸시다운과 타입 호환성 이해."
 }
 ---
 
@@ -729,6 +729,8 @@ Lance 파일 TVF에는 다음과 같은 추가 제한이 있습니다.
 
 ## 벡터 검색 {#vector-search}
 
+Doris 4.2의 Lance 자동 검색 기능이 포함된 빌드에서는 조건에 맞는 일반 SQL도 네이티브 벡터 Top-N 및 MATCH/BM25 검색을 사용할 수 있습니다. 다섯 가지 근사 함수, 메트릭 변환, 입력 의미 체계, JOIN/EXISTS 적용 범위는 [일반 SQL에서 자동 검색](../best-practices/lance-hybrid-search.mdx#automatic-search)을 참조하세요. 아래 TVF는 검색을 명시적으로 조정하거나 자동 재작성 범위 밖에서 지원되는 쿼리 형태를 사용할 때 계속 활용할 수 있는 인터페이스입니다.
+
 `vector_search()`는 Lance 테이블의 벡터 열에서 Top-K 검색을 수행하는 관계형 TVF입니다. 기존 Lance 벡터 인덱스를 사용하거나 Flat Search를 수행할 수 있습니다.
 
 ### 구문 및 예제 {#syntax-and-example}
@@ -1116,7 +1118,7 @@ BE `/metrics` 엔드포인트는 `doris_be_lance_session_index_cache_` 및 `dori
 
 Doris는 다음 조건이 모두 충족될 때만 두 단계 읽기를 사용합니다.
 
-1. 쿼리가 `vector_search()` 또는 `full_text_search()`로 Lance를 읽으며, 계획에 지연 구체화를 적용할 수 있는 TopN이 포함되어 있습니다. 이 스위치는 현재 일반 Lance 테이블 스캔이나 Lance 파일 TVF에는 적용되지 않습니다.
+1. 쿼리가 `vector_search()` 또는 `full_text_search()`로 Lance를 읽으며, 계획에 지연 구체화를 적용할 수 있는 TopN이 포함되어 있습니다. 이러한 검색 TVF로 재작성된 일반 SQL 쿼리도 적용 대상이 될 수 있습니다. 재작성되지 않은 스칼라 테이블 스캔과 Lance 파일 TVF에는 적용되지 않습니다.
 2. Boolean 세션 변수 `enable_lance_lazy_materialization`이 기본값인 `true`입니다.
 3. 읽기를 미룰 수 있는 최상위 열이 하나 이상 있습니다. 최종 `SELECT` 프로젝션에서만 사용하는 열은 읽기를 미룰 수 있습니다. Post-filter, `ORDER BY` 또는 TopN 이전의 다른 표현식에서 사용하는 열은 단계 1에서 읽어야 합니다. 중첩 하위 열은 현재 읽기를 미룰 수 없습니다.
 

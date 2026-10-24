@@ -8,42 +8,36 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/key-features/load-transaction.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/key-features/load-transaction.mdx",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
-    "sourceTechnicalHash": "71023aabc3388ec189105bbb98fae42a33dde9f03512efe2a2e80fb2531f8a26",
-    "targetHash": "56761eafdd31a6b72b9c50866132424c12795b186e9a8b4840dc8f097131710d",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+    "sourceTechnicalHash": "46ad6af05e7e430f36a653b754db1c77778ef7e032896af0598c6d1c5f3ec2fb",
+    "targetHash": "764253d9634ec9d61dafd30a95610e821bc2fb02a14ed15a7454cefb47dad8cc",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:45:44.438Z",
+    "translatedAt": "2026-10-24T05:10:19.103Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
+      "previousSourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
+      "previousTargetHash": "56761eafdd31a6b72b9c50866132424c12795b186e9a8b4840dc8f097131710d",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 1,
+        "totalLines": 85,
+        "ratio": 0.011764705882352941
+      },
       "attempts": 1,
-      "modelCalls": 0,
       "acceptedWithWarnings": false,
-      "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
-      "targetHash": "56761eafdd31a6b72b9c50866132424c12795b186e9a8b4840dc8f097131710d",
+      "sourceHash": "8c21786c3e63c05e675f946208bb336cddbaaa33af25423cd8e168828be424bf",
+      "targetHash": "764253d9634ec9d61dafd30a95610e821bc2fb02a14ed15a7454cefb47dad8cc",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "key-features/load-transaction",
-        "sourcePath": "docs/key-features/load-transaction.mdx",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/key-features/load-transaction.mdx",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "7b5601c86d1ce2a2bfc3c2290bc2854fc642599a92c4101c161a5d5628e41d26",
-        "targetHash": "56761eafdd31a6b72b9c50866132424c12795b186e9a8b4840dc8f097131710d",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
-      }
+      ]
     }
   }
 }
