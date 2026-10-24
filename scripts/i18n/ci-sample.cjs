@@ -142,7 +142,7 @@ function chooseRepresentatives(rows, root) {
 async function dependencies(root, file, cache = new Map(), seen = new Set()) {
     if (seen.has(file)) return {files: seen, uncertain: false};
     seen.add(file);
-    if (!/\.(mdx?|[jt]sx?)$/.test(file)) return {files: seen, uncertain: false};
+    if (!/\.(mdx?|[cm]?[jt]sx?)$/.test(file)) return {files: seen, uncertain: false};
     let imports,
         uncertain = false;
     if (cache.has(file)) ({imports, uncertain} = cache.get(file));
@@ -176,6 +176,7 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
                     true,
                     ts.ScriptKind.TSX,
                 );
+                if (ast.parseDiagnostics.length) uncertain = true;
                 const walk = node => {
                     if (
                         (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
@@ -210,12 +211,17 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
             '',
             '.js',
             '.jsx',
+            '.mjs',
+            '.cjs',
             '.ts',
             '.tsx',
+            '.mts',
+            '.cts',
             '.mdx',
             '.md',
             '.json',
             '/index.js',
+            '/index.jsx',
             '/index.ts',
             '/index.tsx',
         ]
@@ -224,7 +230,7 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
         if (child) {
             const result = await dependencies(root, child, cache, seen);
             uncertain ||= result.uncertain;
-        }
+        } else uncertain = true; // Deleted imports must still select their owners.
     }
     return {files: seen, uncertain};
 }
@@ -270,8 +276,9 @@ async function selectDocs(props, plan) {
     const dependenciesChanged = plan.files.filter(
         f =>
             !direct.has(f) &&
-            (/^(docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|i18n\/)/.test(f) ||
-                /^src\/.+\.[jt]sx?$/.test(f)),
+            /^(docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|i18n\/|src\/|static\/)/.test(
+                f,
+            ),
     );
     if (dependenciesChanged.length) {
         const cache = new Map();

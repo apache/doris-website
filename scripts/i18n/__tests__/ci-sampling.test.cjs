@@ -127,8 +127,12 @@ test('changed transitive imports and sharded translation state select their owni
         'import {value} from "@site/src/value.js";\n\n{value}',
     );
     fs.writeFileSync(path.join(root, 'docs/state-only.mdx'), 'State body');
-    fs.writeFileSync(path.join(root, 'src/value.js'), 'export {value} from "./nested.js";');
+    fs.writeFileSync(
+        path.join(root, 'src/value.js'),
+        'export {value} from "./nested.js"; export {default as data} from "./data.json";',
+    );
     fs.writeFileSync(path.join(root, 'src/nested.js'), 'export const value = 1;');
+    fs.writeFileSync(path.join(root, 'src/data.json'), '{}');
     fs.writeFileSync(
         path.join(root, 'generated/globalData.json'),
         JSON.stringify({
@@ -169,6 +173,19 @@ test('changed transitive imports and sharded translation state select their owni
         imported.selected
             .get(JSON.stringify(['default', 'current', 'owner']))
             .reasons.includes('changed import dependency'),
+    );
+    const data = await selectDocs(props, {files: ['src/data.json'], baseSha: 'HEAD'});
+    assert(
+        data.selected
+            .get(JSON.stringify(['default', 'current', 'owner']))
+            .reasons.includes('changed import dependency'),
+    );
+    fs.rmSync(path.join(root, 'src/nested.js'));
+    const deleted = await selectDocs(props, {files: ['src/nested.js'], baseSha: 'HEAD'});
+    assert(
+        deleted.selected
+            .get(JSON.stringify(['default', 'current', 'owner']))
+            .reasons.includes('conservative dynamic/unparsed import'),
     );
     const state = 'translations/state/ja/pages/topic.json';
     fs.mkdirSync(path.dirname(path.join(root, state)), {recursive: true});
