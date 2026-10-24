@@ -332,7 +332,7 @@ NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区�
 
 `UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`COUNT_MAP(DISTINCT ...)`、`MIN_MAP(DISTINCT ...)`、`MAX_MAP(DISTINCT ...)`、`SUM_MAP(DISTINCT ...)` 和 `AVG_MAP(DISTINCT ...)` 同样拒绝包含空间叶子的 MAP 参数，包括嵌套 value。非 DISTINCT 的 `COUNT_MAP`、`MIN_MAP` 和 `MAX_MAP` 仍支持普通 key＋空间 value。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
 
-`LEAST`、`GREATEST`、`COUNT_AT_MIN` 和 `COUNT_AT_MAX` 不接受空间参数。窗口 `PARTITION BY` 也拒绝空间 key，包括含空间叶子的嵌套类型；普通 partition key 上受支持的空间窗口 value 仍可使用。`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 不支持标量空间参数；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
+`LEAST`、`GREATEST`、`COUNT_AT_MIN` 和 `COUNT_AT_MAX` 不接受空间参数。窗口 `PARTITION BY` 也拒绝空间 key，包括含空间叶子的嵌套类型；普通 partition key 上受支持的空间窗口 value 仍可使用。`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 拒绝空间参数，包括嵌套空间叶子；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
 
 `INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。嵌套叶子同样递归检查这些身份。对于 V2 或使用非 Parquet 写入格式的表，CREATE 和 ALTER 拒绝空间列。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
 
