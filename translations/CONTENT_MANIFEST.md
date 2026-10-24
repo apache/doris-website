@@ -207,7 +207,9 @@ Publish unit tests run before native inventory and fixture builds. Apache probes
 use the platform's MIME file (`/etc/mime.types` on Linux,
 `/etc/apache2/mime.types` on macOS), and startup failures include ErrorLog output.
 The CI keeps actual Apache redirect/404 coverage rather than substituting a
-preview-server-only test. Browser probes retain each target language's own
+preview-server-only test. Status/header probes consume their GET response bodies
+before the next request, following [Undici's connection lifecycle guidance](https://github.com/nodejs/undici#garbage-collection).
+Browser probes retain each target language's own
 search, theme and responsive cases; shared English/Chinese probes run once.
 The combined docs governance report already includes link linting, so CI does
 not also run the same link scan separately.
