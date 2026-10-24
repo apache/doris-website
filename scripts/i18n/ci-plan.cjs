@@ -21,7 +21,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         file =>
             !runtime.test(file) &&
             !content.test(file) &&
-            !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
+            !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|translations\/CONTENT_MANIFEST\.md$|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
                 file,
             ),
     );

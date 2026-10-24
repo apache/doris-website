@@ -27,7 +27,7 @@ async function collect(root, locale, options) {
     }
     let globalData;
     await require('../status-plugin.cjs')(context, options).allContentLoaded({allContent,
-        actions: {setGlobalData: value => {globalData = value;}}});
+        actions: {createData: async name => name, setGlobalData: value => {globalData = value;}}});
     return {manifest: JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/content-manifests', locale + '.json'))), globalData};
 }
 test('real native plugin output binds stable identities, routes and all four coverage levels to one source', async t => {
@@ -54,7 +54,7 @@ test('real native plugin output binds stable identities, routes and all four cov
         const ids = manifest.pages.filter(page => page.docId === 'shared').map(page => page.contentId);
         assert.equal(new Set(ids).size, 3, 'docs identity includes plugin and version');
         const missing = manifest.pages.find(page => page.kind === 'docs' && page.docId === 'missing');
-        assert.equal(missing.navigationRoutes['zh-CN'], '/zh-CN/docs/dev/chinese-missing/');
+        assert.equal(missing.navigationRoutes['zh-CN'], '/zh-CN/docs/dev/english-missing/');
         assert(!JSON.stringify(globalData).includes('sourceHash'));
         assert(!JSON.stringify(routeData(page)).includes('sourceHash'));
         assert(Buffer.byteLength(JSON.stringify(routeData(page))) < 2048);
@@ -101,4 +101,28 @@ test('CI recognizes the new contract and manual state as shared inputs', () => {
         assert.equal(scope.optimize_publish, true);
         assert.equal(scope.docs_versions, '');
     }
+});
+
+test('manual body dependencies include iframe resources and hash binary bytes without lossy decoding', t => {
+    const root = directory(t);
+    const {bodyDependencies} = require('../page-body.cjs');
+    const {digestFiles} = require('../manual-state.cjs');
+    fs.mkdirSync(path.join(root, 'src/pages'), {recursive: true});
+    fs.mkdirSync(path.join(root, 'static/animations'), {recursive: true});
+    fs.writeFileSync(path.join(root, 'src/pages/embed.tsx'), 'export default function Page(){return <iframe src="/animations/embed.html"/>;}');
+    fs.writeFileSync(path.join(root, 'static/animations/embed.html'), '<script src="./embed.js"></script>');
+    fs.writeFileSync(path.join(root, 'static/animations/embed.js'), 'const label = "English";');
+    const {files} = bodyDependencies(root, 'src/pages/embed.tsx');
+    assert.deepEqual(files, ['src/pages/embed.tsx', 'static/animations/embed.html', 'static/animations/embed.js']);
+    const before = digestFiles(root, files);
+    fs.writeFileSync(path.join(root, 'static/animations/embed.js'), 'const label = "Updated English";');
+    assert.notEqual(digestFiles(root, files), before);
+    fs.writeFileSync(path.join(root, 'image.png'), Buffer.from([0xff]));
+    const binary = digestFiles(root, ['image.png']);
+    fs.writeFileSync(path.join(root, 'image.png'), Buffer.from([0xfe]));
+    assert.notEqual(digestFiles(root, ['image.png']), binary);
+    fs.writeFileSync(path.join(root, 'text.md'), 'English\r\n');
+    const text = digestFiles(root, ['text.md']);
+    fs.writeFileSync(path.join(root, 'text.md'), 'English\n');
+    assert.equal(digestFiles(root, ['text.md']), text);
 });

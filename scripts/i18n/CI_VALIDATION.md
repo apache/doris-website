@@ -3,6 +3,8 @@
 `Build Check` uses `ci-plan.cjs` to select validation from the merge-base diff.
 The required check keeps the same job name. The plan and measurements are
 uploaded even when a later check fails.
+Dependency installation uses `yarn --frozen-lockfile` so it cannot rewrite the
+committed lockfile after source planning. Source snapshot checks remain enabled.
 
 | Change | Validation |
 | --- | --- |

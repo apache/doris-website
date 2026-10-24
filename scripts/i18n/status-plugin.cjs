@@ -3,6 +3,22 @@ const path = require('node:path');
 const {managedLocales} = require('./state.cjs');
 const {mergeAlternates} = require('./alternates.cjs');
 const {sourceSha, buildManifest, routeData} = require('./content-manifest.cjs');
+const {bodyDependencies} = require('./page-body.cjs');
+
+async function navigationFamily(pages, root) {
+    const files = new Set(['src/components/home-next/NavbarNext.tsx', 'config/footer.js']);
+    for (const page of pages.filter(page => ['page', 'utility'].includes(page.kind))) {
+        for (const file of bodyDependencies(root, page.englishPath).files) files.add(file);
+    }
+    const referenced = new Set();
+    for (const file of files) {
+        let source; try {source = await fs.readFile(path.join(root, file), 'utf8');} catch {continue;}
+        for (const match of source.matchAll(/['"`]((?:\/[^'"`\s]+))['"`]/g)) referenced.add(match[1].split(/[?#]/)[0].replace(/\/+$/, ''));
+    }
+    return pages.filter(page => ['page', 'utility'].includes(page.kind)
+        || Object.values(page.navigationRoutes).some(route => referenced.has(route.replace(/\/+$/, ''))))
+        .map(({contentId, navigationRoutes}) => ({contentId, navigationRoutes}));
+}
 
 module.exports = function translationStatusPlugin(context, {browserData = true} = {}) {
     const locale = context.i18n.currentLocale;
@@ -46,6 +62,9 @@ module.exports = function translationStatusPlugin(context, {browserData = true} 
                 await fs.mkdir(directory, {recursive: true});
                 const serialized = JSON.stringify(manifest, null, 2) + '\n';
                 await fs.writeFile(path.join(directory, `${locale}.json`), serialized);
+                // A small shared navigation family, not all docs/blog identities.
+                const navigation = await navigationFamily(manifest.pages, context.siteDir);
+                await actions.createData('navigation.json', navigation);
                 // A separate per-page payload is available to T02/T03 consumers;
                 // no full content registry or source digests are put in globalData.
                 const sizes = manifest.pages.map(page => ({contentId: page.contentId,
