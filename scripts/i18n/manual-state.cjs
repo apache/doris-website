@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
+const {createHash} = require('node:crypto');
 const {hash} = require('./state.cjs');
 const safePath = value => typeof value === 'string' && value && !path.isAbsolute(value) && !value.split(/[\\/]/).includes('..');
 function readJson(root, file, fallback) {
@@ -28,7 +29,9 @@ function loadManual(root, kind) {
 function digestFiles(root, files) {
     return hash(JSON.stringify([...new Set(files)].sort().map(file => {
         assert(safePath(file), `Invalid dependency: ${file}`);
-        return [file, hash(fs.readFileSync(path.join(root, file), 'utf8'))];
+        const bytes = fs.readFileSync(path.join(root, file));
+        const text = /\.(?:mdx?|[cm]?[jt]sx?|json|css|scss|html?|svg|txt|ya?ml|csv|tsv|sql)$/i.test(file);
+        return [file, text ? hash(bytes.toString('utf8')) : createHash('sha256').update(bytes).digest('hex')];
     })));
 }
 function decideManual({root, record, sourceFiles, targetFiles = []}) {

@@ -77,8 +77,8 @@ Each manual record uses:
 
 This illustrates the shape; it is not a valid ready record until paths exist and
 both hashes are computed. Use `digestFiles(root, files)` from
-`scripts/i18n/manual-state.cjs`: it sorts unique relative paths, hashes each file
-with the existing CRLF normalization, then hashes the ordered path/hash pairs.
+`scripts/i18n/manual-state.cjs`: it sorts unique relative paths, hashes text files
+with the existing CRLF normalization and binary assets by exact bytes, then hashes the ordered path/hash pairs.
 Explicit dependencies must include the entry module, shared body components,
 English messages/data, target messages/data and resources that affect publication.
 The adapter requires the native English entry in `sourceFiles`; blog records must

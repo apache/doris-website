@@ -102,3 +102,27 @@ test('CI recognizes the new contract and manual state as shared inputs', () => {
         assert.equal(scope.docs_versions, '');
     }
 });
+
+test('manual body dependencies include iframe resources and hash binary bytes without lossy decoding', t => {
+    const root = directory(t);
+    const {bodyDependencies} = require('../page-body.cjs');
+    const {digestFiles} = require('../manual-state.cjs');
+    fs.mkdirSync(path.join(root, 'src/pages'), {recursive: true});
+    fs.mkdirSync(path.join(root, 'static/animations'), {recursive: true});
+    fs.writeFileSync(path.join(root, 'src/pages/embed.tsx'), 'export default function Page(){return <iframe src="/animations/embed.html"/>;}');
+    fs.writeFileSync(path.join(root, 'static/animations/embed.html'), '<script src="./embed.js"></script>');
+    fs.writeFileSync(path.join(root, 'static/animations/embed.js'), 'const label = "English";');
+    const {files} = bodyDependencies(root, 'src/pages/embed.tsx');
+    assert.deepEqual(files, ['src/pages/embed.tsx', 'static/animations/embed.html', 'static/animations/embed.js']);
+    const before = digestFiles(root, files);
+    fs.writeFileSync(path.join(root, 'static/animations/embed.js'), 'const label = "Updated English";');
+    assert.notEqual(digestFiles(root, files), before);
+    fs.writeFileSync(path.join(root, 'image.png'), Buffer.from([0xff]));
+    const binary = digestFiles(root, ['image.png']);
+    fs.writeFileSync(path.join(root, 'image.png'), Buffer.from([0xfe]));
+    assert.notEqual(digestFiles(root, ['image.png']), binary);
+    fs.writeFileSync(path.join(root, 'text.md'), 'English\r\n');
+    const text = digestFiles(root, ['text.md']);
+    fs.writeFileSync(path.join(root, 'text.md'), 'English\n');
+    assert.equal(digestFiles(root, ['text.md']), text);
+});

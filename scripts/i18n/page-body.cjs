@@ -27,8 +27,17 @@ function bodyDependencies(root, entry) {
     function scan(file) {
         if (files.has(file) || !isBody(root, file)) return;
         files.add(file);
-        if (!/\.[jt]sx?$/.test(file)) return;
+        if (!/\.(?:[jt]sx?|json|css|scss|html?)$/.test(file)) return;
         const source = fs.readFileSync(file, 'utf8');
+        // Iframe HTML, its scripts/styles, and local media are publication
+        // dependencies even when referenced as URLs rather than JS imports.
+        for (const match of source.matchAll(/(?:src|href)\s*=\s*["']([^"']+)["']|["'](\/(?:animations|images|files)\/[^"'?#]+)(?:[?#][^"']*)?["']|url\(["']?([^"'()]+)["']?\)/g)) {
+            const href = (match[1] ?? match[2] ?? match[3]).split(/[?#]/)[0];
+            if (/^(?:[a-z]+:|\/\/)/i.test(href)) continue;
+            const resource = href.startsWith('/') ? path.join(root, 'static', href) : path.resolve(path.dirname(file), href);
+            if (resource.startsWith(root + path.sep) && fs.existsSync(resource) && fs.statSync(resource).isFile()) scan(resource);
+        }
+        if (!/\.[jt]sx?$/.test(file)) return;
         const {ast, refs} = references(source, file);
         for (const ref of refs) {const next = resolveLocal(root, file, ref.text); if (next) scan(next);}
         function visit(node) {
