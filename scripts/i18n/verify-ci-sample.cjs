@@ -45,6 +45,7 @@ async function verify({root = process.cwd(), browser = true}) {
             compiledRoutes: scope.compiledRoutes.length,
             compiledMdxModules: new Set(Object.values(scope.compiledMdxModules).flat()).size,
             anchorChecksSkipped: scope.anchorChecksSkipped,
+            linkCheckMode: scope.linkCheckMode,
         });
     }
     if (browser) {

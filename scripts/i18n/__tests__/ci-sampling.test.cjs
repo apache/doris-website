@@ -4,7 +4,7 @@ const test = require('node:test'),
     path = require('node:path'),
     os = require('node:os');
 const {policy} = require('../ci-plan.cjs');
-const {prune, dependencies, stripUnbuiltAnchors, selectDocs} = require('../ci-sample.cjs');
+const {prune, dependencies, stripUnbuiltAnchors, selectDocs, chooseRepresentatives, indexedRouteMatcher} = require('../ci-sample.cjs');
 const {buildLocales} = require('../../build-locales.cjs');
 function directory(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ci-sampling-'));
@@ -65,6 +65,55 @@ test('unselected MDX modules leave the compiler graph while native layouts and n
     );
     assert.equal(output[1].component, 'Home');
     assert.equal(routes[0].routes[0].routes.length, 2);
+});
+test('one rich document covers several sample requirements without losing entry or fallback coverage', t => {
+    const root = directory(t);
+    const source = {entry: '# Entry', sql: '```sql\nSELECT 1;\n```', math: '$$x$$',
+        rich: 'import X from "x";\n\n```sql\nSELECT 1;\n```\n\n$$x$$\n\n![image](./image.png)'};
+    const rows = Object.entries(source).map(([docId, text]) => {
+        fs.writeFileSync(path.join(root, docId + '.mdx'), text);
+        return {pluginId: 'default', version: 'current', docId, englishPath: docId + '.mdx', main: docId === 'entry',
+            decisions: [{locale: 'en', fallback: false, indexable: true},
+                {locale: 'ja', fallback: docId !== 'rich', indexable: docId === 'rich'}]};
+    });
+    const {selected} = chooseRepresentatives(rows, root);
+    assert.deepEqual([...selected.values()].map(({row}) => row.docId), ['entry', 'rich']);
+    const reasons = [...selected.values()].flatMap(item => item.reasons);
+    for (const reason of ['version/plugin entry', 'MDX/import', 'SQL', 'math', 'media/link', 'en real body', 'ja real body', 'ja fallback'])
+        assert(reasons.includes(reason), reason);
+});
+test('fixture selection follows the changed subsystem and preserves sampler-specific verification', () => {
+    const css = policy(['src/scss/_variables.scss']);
+    assert.equal(css.mode, 'sample');
+    assert.equal(css.runContentFixture, false);
+    assert.equal(css.runPublishFixture, false);
+    assert.equal(css.checkRenderedLinks, false);
+    for (const file of ['docs/topic.mdx', 'src/utils/localizedRoute.ts', 'static/images/logo.svg', 'docusaurus.config.js'])
+        assert.equal(policy([file]).checkRenderedLinks, true, file);
+    assert.equal(policy(['src/utils/localizedRoute.ts']).runContentFixture, true);
+    assert.equal(policy(['static/.htaccess']).runPublishFixture, true);
+    assert.equal(policy(['scripts/i18n/ci-sample.cjs', 'src/utils/localizedRoute.ts']).runSamplingFixture, true);
+});
+test('indexed link checking retains native fixed/dynamic route matching, case and slash rules', () => {
+    const {matchRoutes} = require('react-router-config');
+    let scanned = 0;
+    const indexed = indexedRouteMatcher((routes, pathname) => {
+        scanned += routes.length;
+        return matchRoutes(routes, pathname);
+    });
+    const routes = [
+        ...Array.from({length: 2000}, (_, i) => ({path: '/docs/topic-' + i, exact: true})),
+        {path: '/Strict/', exact: true, strict: true, sensitive: true},
+        {path: '/blog/:post', exact: true}, {path: '/中文', exact: true},
+        {path: '/nested', routes: [{path: '/nested/child', exact: true}]},
+    ];
+    for (const pathname of ['/docs/topic-1', '/DOCS/TOPIC-1/', '/Strict/', '/strict/', '/Strict',
+        '/blog/post', '/blog/post/extra', '/中文', '/nested/child', '/absent'])
+        assert.equal(indexed(routes, pathname).length > 0, matchRoutes(routes, pathname).length > 0, pathname);
+    const before = scanned;
+    indexed(routes, '/absent');
+    assert.equal(scanned, before, 'repeated invalid targets reuse the negative result');
+    assert(scanned < 50, 'fixed routes are indexed instead of rescanned');
 });
 test('dependency discovery follows MDX imports and their transitive code imports, not fenced examples', async t => {
     const root = directory(t);

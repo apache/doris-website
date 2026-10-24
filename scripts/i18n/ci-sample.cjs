@@ -106,35 +106,38 @@ function chooseRepresentatives(rows, root) {
         groups.get(g).push(row);
     }
     for (const group of groups.values()) {
-        add(group.find(r => r.main) ?? group[0], 'version/plugin entry');
-        const texts = new Map();
-        const text = r => {
-            if (!texts.has(id(r)))
-                texts.set(id(r), fs.readFileSync(path.resolve(root, r.englishPath), 'utf8'));
-            return texts.get(id(r));
-        };
-        for (const [feature, pattern] of [
+        const patterns = [
             ['MDX/import', /\bimport\s|<[A-Z][A-Za-z]+/],
             ['SQL', /```sql\b/i],
             ['math', /\$\$|\\\[/],
             ['media/link', /!\[|\]\(\.\.?\//],
-        ])
-            add(
-                group.find(r => pattern.test(text(r))),
-                feature,
-            );
-        const languages = new Set(group.flatMap(r => r.decisions.map(d => d.locale)));
-        for (const locale of languages) {
-            add(
-                group.find(r =>
-                    r.decisions.some(d => d.locale === locale && !d.fallback && d.indexable),
-                ),
-                `${locale} real body`,
-            );
-            add(
-                group.find(r => r.decisions.some(d => d.locale === locale && d.fallback)),
-                `${locale} fallback`,
-            );
+        ];
+        const coverage = new Map(group.map(row => {
+            const text = fs.readFileSync(path.resolve(root, row.englishPath), 'utf8');
+            const features = patterns.filter(([, pattern]) => pattern.test(text)).map(([feature]) => feature);
+            for (const decision of row.decisions) {
+                if (decision.fallback) features.push(`${decision.locale} fallback`);
+                else if (decision.indexable) features.push(`${decision.locale} real body`);
+            }
+            return [row, new Set(features)];
+        }));
+        const uncovered = new Set([...coverage.values()].flatMap(features => [...features]));
+        const take = row => {
+            for (const feature of coverage.get(row)) if (uncovered.delete(feature)) add(row, feature);
+        };
+        const main = group.find(row => row.main) ?? group[0];
+        add(main, 'version/plugin entry');
+        take(main);
+        // One rich document can cover several requirements. Preserve every
+        // existing feature/locale requirement without adding a separate first
+        // match for each of them. Changed/import-dependent owners are added later.
+        while (uncovered.size) {
+            let best, score = 0;
+            for (const row of group) {
+                const count = [...coverage.get(row)].filter(feature => uncovered.has(feature)).length;
+                if (count > score) {best = row; score = count;}
+            }
+            take(best);
         }
     }
     return {selected, add};
@@ -390,6 +393,34 @@ function stripUnbuiltAnchors(collected, known, rendered, aliases) {
     return {collected: result, skipped, metadataValidated};
 }
 
+// Docusaurus repeatedly scans every logical route for unknown paths. Index
+// fixed ASCII exact routes, then let its original matcher decide candidates
+// with the original strict/sensitive flags. Patterns keep the native fallback.
+function indexedRouteMatcher(original) {
+    const indexes = new WeakMap();
+    const normalize = value => value.replace(/\/+$/, '').toLowerCase() || '/';
+    return (routes, pathname) => {
+        let index = indexes.get(routes);
+        if (!index) {
+            index = {literal: new Map(), other: [], results: new Map()};
+            for (const route of routes) {
+                if (route.exact && !route.routes && typeof route.path === 'string' && /^[\w/%.~-]+$/.test(route.path)) {
+                    const k = normalize(route.path);
+                    if (!index.literal.has(k)) index.literal.set(k, []);
+                    index.literal.get(k).push(route);
+                } else index.other.push(route);
+            }
+            indexes.set(routes, index);
+        }
+        if (!index.results.has(pathname)) {
+            const candidates = index.literal.get(normalize(pathname)) ?? [];
+            const result = original(candidates, pathname);
+            index.results.set(pathname, result.length ? result : original(index.other, pathname));
+        }
+        return index.results.get(pathname);
+    };
+}
+
 async function install({root, outDir, locale, planFile}) {
     assert.equal(
         require('@docusaurus/core/package.json').version,
@@ -410,6 +441,8 @@ async function install({root, outDir, locale, planFile}) {
         )
         .digest('hex');
     assert.equal(plan.trackedDiffHash, diff, 'Source changed after sample planning');
+    const blogSample = require('./ci-blog-sample.cjs');
+    const restoreBlogSample = blogSample.enable(plan);
     const siteModule = require('@docusaurus/core/lib/server/site.js');
     const linksModule = require('@docusaurus/core/lib/server/brokenLinks.js');
     const originalSite = siteModule.loadSite,
@@ -488,29 +521,29 @@ async function install({root, outDir, locale, planFile}) {
                         JSON.stringify(doc, null, 2),
                     );
                 }
+        const rowsByRoute = new Map(rows.map(row => [key(row.route), row]));
+        const docsByIdentity = new Map(props.plugins
+            .filter(p => p.name === 'docusaurus-plugin-content-docs')
+            .flatMap(p => p.content.loadedVersions.flatMap(v => v.docs
+                .map(doc => [JSON.stringify([p.options.id, v.versionName, doc.id]), doc]))));
         for (const route of flatten(fullRoutes)) {
-            const row = rows.find(r => key(r.route) === key(route.path));
+            const row = rowsByRoute.get(key(route.path));
             if (row && chosen.has(key(row.route))) {
-                const plugin = props.plugins.find(
-                    p =>
-                        p.name === 'docusaurus-plugin-content-docs' &&
-                        p.options.id === row.pluginId,
-                );
-                const doc = plugin.content.loadedVersions
-                    .find(v => v.versionName === row.version)
-                    .docs.find(d => d.id === row.docId);
+                const doc = docsByIdentity.get(id(row));
                 route.metadata = {...route.metadata, lastUpdatedAt: doc.lastUpdatedAt};
             }
         }
         const pruned = prune(fullRoutes, docPaths, chosen, versions);
         const {getRoutesPaths} = require('@docusaurus/core/lib/server/routes.js');
-        const allPaths = getRoutesPaths(fullRoutes, props.baseUrl);
+        const originalPaths = new Set(getRoutesPaths(fullRoutes, props.baseUrl).map(key));
+        const completeRoutes = [...fullRoutes, ...blogSample.fullRoutes().filter(route => !originalPaths.has(key(route.path)))];
+        const allPaths = getRoutesPaths(completeRoutes, props.baseUrl);
         known = new Set(allPaths.map(key));
         const metadata = props.plugins.flatMap(p => p.content?.contentIdentity?.entries ?? []);
         for (const entry of metadata) known.add(key(entry.route));
         const pathSet = new Set(allPaths.map(key));
         const logical = [
-            ...fullRoutes,
+            ...completeRoutes,
             ...metadata
                 .filter(e => !pathSet.has(key(e.route)))
                 .map(e => ({path: e.route, exact: true, component: 'metadata-only'})),
@@ -613,7 +646,12 @@ async function install({root, outDir, locale, planFile}) {
             selected: [...selected.values()].map(({row, reasons}) => ({...row, reasons})),
             knownRoutes: [...known],
             anchorChecksSkipped: 0,
+            structureCache: {...require('./build-cache.cjs').buildCache.stats},
+            blogSampling: blogSample.reports(),
+            linkCheckMode: plan.checkRenderedLinks === false ? 'skipped-style-only' : 'indexed',
         };
+        // Parser results stay on disk for the next locale, not in the bundler heap.
+        require('./build-cache.cjs').buildCache.clear();
         props.plugins.push({
             name: 'ci-sample-provenance',
             configureWebpack(_config, isServer) {
@@ -665,13 +703,30 @@ async function install({root, outDir, locale, planFile}) {
         return site;
     };
     linksModule.handleBrokenLinks = async params => {
+        if (plan.checkRenderedLinks === false) {
+            assert(plan.files.length && plan.files.every(file => /\.(css|scss|sass)$/.test(file)),
+                'Only styles-only changes may skip rendered link checks');
+            scope.linkCheckMs = 0;
+            save();
+            return;
+        }
+        const started = Date.now();
         const sanitized = stripUnbuiltAnchors(params.collectedLinks, known, rendered, aliases);
         scope.anchorChecksSkipped = sanitized.skipped;
         scope.linksValidatedFromMetadata = sanitized.metadataValidated;
         save();
-        return originalLinks({...params, collectedLinks: sanitized.collected, routes: fullRoutes});
+        const router = require('react-router-config'), matchRoutes = router.matchRoutes;
+        router.matchRoutes = indexedRouteMatcher(matchRoutes);
+        try {
+            return await originalLinks({...params, collectedLinks: sanitized.collected, routes: fullRoutes});
+        } finally {
+            router.matchRoutes = matchRoutes;
+            scope.linkCheckMs = Date.now() - started;
+            save();
+        }
     };
     return () => {
+        restoreBlogSample();
         siteModule.loadSite = originalSite;
         linksModule.handleBrokenLinks = originalLinks;
         updates.readLastUpdateData = readUpdate;
@@ -685,4 +740,5 @@ module.exports = {
     prune,
     dependencies,
     stripUnbuiltAnchors,
+    indexedRouteMatcher,
 };

@@ -2,14 +2,16 @@ const fs = require('node:fs'),
     path = require('node:path'),
     assert = require('node:assert/strict');
 const {execFileSync, spawnSync} = require('node:child_process');
-const {createFixture} = require('./__tests__/fixtures/multi-locale.cjs');
+const {createContentFixture} = require('./__tests__/fixtures/content-manifest.cjs');
 const {plan} = require('./ci-plan.cjs');
 const {verify} = require('./verify-ci-sample.cjs');
 const root = path.resolve(__dirname, '../..');
 async function main() {
     const site = path.join(root, '.i18n-build/ci-sampling-fixture');
     fs.rmSync(site, {recursive: true, force: true});
-    const {write} = await createFixture(site);
+    const {write} = await createContentFixture(site);
+    write('blog/2026-02-01-rich.mdx', '---\ntitle: Rich blog sample\n---\n\n<span>Rich blog body</span>\n\n```sql\nSELECT 1;\n```\n\n[Omitted blog](./2025-01-01-omitted.mdx#unverified)\n');
+    write('blog/2025-01-01-omitted.mdx', '---\ntitle: Omitted blog\n---\n\nimport Missing from "./missing-blog-component";\n\n<Missing/>\n');
     write(
         'docs/02-rich.mdx',
         '---\ntitle: Rich MDX\n---\n\nimport Widget from "@site/src/components/FixtureRich";\n\n<Widget />\n\n$$ x + 1 $$\n',
@@ -68,6 +70,10 @@ async function main() {
         assert(!scope.selected.some(r => r.docId === 'zz-unselected'));
         assert(scope.compiledMdxModules.client.length > 0);
         assert(!scope.compiledMdxModules.client.includes('docs/zz-unselected.mdx'));
+        assert(scope.blogSampling.some(report => report.renderedPosts < report.metadataPosts));
+        assert(scope.compiledMdxModules.client.includes('blog/2026-02-01-rich.mdx'));
+        assert(!scope.compiledMdxModules.client.includes('blog/2025-01-01-omitted.mdx'),
+            'Blog aggregates must not re-import omitted bodies');
     }
     await verify({root: site, browser: process.argv.includes('--browser')});
     assert(
@@ -85,9 +91,11 @@ async function main() {
             skippedAnchors: s.anchorChecksSkipped,
         })),
         excludedBrokenModuleWasNotCompiled: true,
+        excludedBrokenBlogWasNotCompiled: true,
     };
     // A real edit makes that same module mandatory. Its missing import must now
     // fail compilation instead of being silently dropped by the sampler.
+    const originalDocument = fs.readFileSync(path.join(site, 'docs/zz-unselected.mdx'), 'utf8');
     fs.appendFileSync(path.join(site, 'docs/zz-unselected.mdx'), '\nChanged.\n');
     commit();
     const changed = plan({root: site, base, forceSample: true});
@@ -104,6 +112,14 @@ async function main() {
         'The changed document must reach the compiler',
     );
     proof.changedBrokenModuleFailed = true;
+    fs.writeFileSync(path.join(site, 'docs/zz-unselected.mdx'), originalDocument);
+    fs.appendFileSync(path.join(site, 'blog/2025-01-01-omitted.mdx'), '\nChanged blog.\n');
+    commit();
+    fs.writeFileSync(file, JSON.stringify(plan({root: site, base, forceSample: true}), null, 2));
+    const blogFailure = run('pipe');
+    assert.notEqual(blogFailure.status, 0, 'Edited blog must receive native compilation');
+    assert.match(blogFailure.stdout + blogFailure.stderr, /missing-blog-component/);
+    proof.changedBrokenBlogFailed = true;
     fs.writeFileSync(
         path.join(root, '.i18n-build/ci-sampling-fixture-proof.json'),
         JSON.stringify(proof, null, 2) + '\n',

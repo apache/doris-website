@@ -45,7 +45,10 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
     fs.mkdirSync(reportDir, {recursive:true});
     const reportPath = path.join(reportDir, 'build-result.json');
     const execute = run ?? ((args) => new Promise((resolve, reject) => {
-        const child = spawn(process.execPath,[path.join(__dirname,'build-locale.cjs'), ...args],{cwd:siteDir,stdio:'inherit'});
+        const child = spawn(process.execPath,[path.join(__dirname,'build-locale.cjs'), ...args],{
+            cwd:siteDir,stdio:'inherit',env:{...process.env,
+                ...(samplePlan && {DORIS_I18N_STRUCTURE_CACHE:path.join(stage,'structure-cache')})},
+        });
         console.log(JSON.stringify({event:'locale_process_start', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid}));
         const stop = signal => child.kill(signal);
         const term = () => stop('SIGTERM');
