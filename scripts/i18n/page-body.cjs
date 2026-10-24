@@ -94,6 +94,6 @@ function validateMessages(root, registration, locale) {
         if (typeof dictionary[id]?.message !== 'string' || !dictionary[id].message.trim() || (source && placeholders(source) !== placeholders(dictionary[id].message)))
             throw new Error(`Incomplete page messages: ${registration.id}/${locale}/${id}`);
     }
-    return files;
+    return [...new Set([...files, ...(registration.sourceFiles ?? [])])].sort();
 }
 module.exports = {bodyDependencies, transformBody, validateMessages};

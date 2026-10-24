@@ -20,8 +20,8 @@ function manualReport(root) {
             if (intentionalFallback && record && ['ready', 'needs-update'].includes(record.state))
                 throw new Error(`Landing translation disabled by English fallback policy: ${contentId}/${locale}`);
             if (record && ['ready', 'needs-update'].includes(record.state)) {
-                validateMessages(root, registration, locale);
-                for (const file of dependencies.files) if (!record.sourceFiles.includes(file)) throw new Error(`Untracked body dependency: ${contentId}/${locale}/${file}`);
+                const required = validateMessages(root, registration, locale);
+                for (const file of required) if (!record.sourceFiles.includes(file)) throw new Error(`Untracked body dependency: ${contentId}/${locale}/${file}`);
             }
             pages.push({contentId, locale, kind: registration.kind,
                 ...decideManual({root, record, sourceFiles: dependencies.files}),

@@ -17,6 +17,11 @@ test('manual admission preserves stale translated bodies and blocks damaged read
     assert.throws(() => manualReport(root), /disabled by English fallback policy/);
     write('translations/pages/registry.json', {schemaVersion: 1, englishFallbackLocales: ['zh-CN'], pages: [{id: 'sample', kind: 'page', sourcePath: source}]});
     assert.equal(manualReport(root).pages.find(row => row.locale === 'zh-CN').intentionalEnglishFallback, true);
+    write('static/declared-frame.html', '<html lang="en">Declared frame</html>');
+    write('translations/pages/registry.json', {schemaVersion: 1, englishFallbackLocales: ['zh-CN'],
+        pages: [{id: 'sample', kind: 'page', sourcePath: source, sourceFiles: [source, 'static/declared-frame.html']}]});
+    assert.throws(() => manualReport(root), /Untracked body dependency/);
+    write('translations/pages/registry.json', {schemaVersion: 1, englishFallbackLocales: ['zh-CN'], pages: [{id: 'sample', kind: 'page', sourcePath: source}]});
     fs.appendFileSync(path.join(root, source), '\n// A source revision.\n');
     const report = manualReport(root);
     assert.equal(report.pending.length, 1); assert.equal(report.pending[0].contentLocale, 'ja');
