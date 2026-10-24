@@ -44,6 +44,8 @@ ST_ASBINARY( <geo>)
 | -- |----------|
 | `<geo>` | 需要转换为 WKB 格式的几何图形对象,包括：Point（点）、LineString（线）、Polygon（多边形） |
 
+开发版还接受 Iceberg `GEOMETRY` 和 `GEOGRAPHY` 类型值。此重载保留原始ISO WKB（XY、XYZ、XYM、XYZM），支持七种基础 WKB 类型及 EMPTY，返回 `VARBINARY`；历史 STRING 重载仍返回 `VARCHAR`，保留原有几何类型支持范围。输入为 NULL 时返回 NULL。空间类型的范围和参数限制参见 [Iceberg 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。
+
 ## 返回值
 
 返回该几何图形的 WKB 二进制表示，以十六进制字符串形式展示（例如：\x01010000...）。
