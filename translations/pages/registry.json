@@ -1743,5 +1743,8 @@
       "kind": "utility",
       "sourcePath": "src/pages/slack.tsx"
     }
+  ],
+  "englishFallbackLocales": [
+    "zh-CN"
   ]
 }

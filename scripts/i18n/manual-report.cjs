@@ -2,12 +2,13 @@
 // publication inputs and report drift without changing the publication decision.
 const fs = require('node:fs');
 const path = require('node:path');
-const {readJson, loadManual, decideManual, digestFiles} = require('./manual-state.cjs');
+const {readJson, loadManual, decideManual, digestFiles, englishFallbackLocales} = require('./manual-state.cjs');
 const {bodyDependencies, validateMessages} = require('./page-body.cjs');
 const {locales} = require('../../config/i18n');
 function manualReport(root) {
     const registry = readJson(root, 'translations/pages/registry.json', {schemaVersion: 1, pages: []});
     if (registry.schemaVersion !== 1 || !Array.isArray(registry.pages)) throw new Error('Invalid page registry');
+    const fallbackLocales = englishFallbackLocales(registry);
     const records = loadManual(root, 'pages'), blogs = loadManual(root, 'blog');
     const pages = [];
     for (const registration of registry.pages) {
@@ -15,13 +16,16 @@ function manualReport(root) {
         const dependencies = bodyDependencies(root, registration.sourcePath);
         for (const locale of locales.filter(locale => locale !== 'en')) {
             const record = records.find(row => row.contentId === contentId && row.locale === locale);
+            const intentionalFallback = registration.kind === 'page' && fallbackLocales.includes(locale);
+            if (intentionalFallback && record && ['ready', 'needs-update'].includes(record.state))
+                throw new Error(`Landing translation disabled by English fallback policy: ${contentId}/${locale}`);
             if (record && ['ready', 'needs-update'].includes(record.state)) {
                 validateMessages(root, registration, locale);
                 for (const file of dependencies.files) if (!record.sourceFiles.includes(file)) throw new Error(`Untracked body dependency: ${contentId}/${locale}/${file}`);
             }
             pages.push({contentId, locale, kind: registration.kind,
                 ...decideManual({root, record, sourceFiles: dependencies.files}),
-                action: 'manual', publishedSourceHash: record?.sourceHash ?? null});
+                action: 'manual', intentionalEnglishFallback: intentionalFallback, publishedSourceHash: record?.sourceHash ?? null});
         }
     }
     for (const record of records.filter(row => !registry.pages.some(page => `${page.kind}:${page.id}` === row.contentId)))

@@ -4,7 +4,7 @@
     {
       "contentId": "page:P01",
       "locale": "zh-CN",
-      "state": "ready",
+      "state": "missing",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -50,15 +50,13 @@
         "static/js/embedded-brand-theme.js",
         "static/js/embedded-locale.js"
       ],
-      "targetFiles": [
-        "i18n/zh-CN/code.json"
-      ],
+      "targetFiles": [],
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "37e04fa1ec2632d61cd55e64ba69c26d06d8b6cbe2b59a8d4f9865aa7fe3c9ff",
-      "targetHash": "fc2547e1c80ca57cec8a5e137231af5265560dff24a71b69fc9b0046fe765a28",
-      "reviewStatus": "machine"
+      "sourceHash": null,
+      "targetHash": null,
+      "reviewStatus": "unverified"
     },
     {
       "contentId": "page:P01",
@@ -258,7 +256,9 @@
         "static/images/ecomsystem-log/trino-small.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P02",
@@ -356,7 +356,9 @@
         "src/pages/why-doris/benchmarks/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P03",
@@ -427,7 +429,9 @@
         "src/pages/why-doris/key-features/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P04",
@@ -645,7 +649,9 @@
         "static/images/user-logo/Telecom & Manufacturing/ZTE.jpg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P05",
@@ -1120,7 +1126,9 @@
         "static/images/next/user-logos/zto-circle.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P06",
@@ -1211,7 +1219,9 @@
         "static/images/next/user-logos/xiaomi.svg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P07",
@@ -1302,7 +1312,9 @@
         "static/images/next/user-logos/tencent-music-color.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P08",
@@ -1390,7 +1402,9 @@
         "src/pages/use-cases/ai/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P09",
@@ -1475,7 +1489,9 @@
         "src/pages/download/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P10",
@@ -1552,7 +1568,9 @@
         "src/pages/brand-assets/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P11",
@@ -1635,7 +1653,9 @@
         "static/images/events/webniar-5.jpeg"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P12",
@@ -1797,7 +1817,9 @@
         "src/pages/community/roadmap/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P13",
@@ -1846,7 +1868,9 @@
         "src/pages/community-report/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P14",
@@ -1903,7 +1927,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P15",
@@ -1978,7 +2004,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P16",
@@ -2062,7 +2090,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P17",
@@ -2146,7 +2176,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P18",
@@ -2230,7 +2262,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P19",
@@ -2315,7 +2349,9 @@
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P20",
@@ -2413,7 +2449,9 @@
         "src/pages/profile-analysis/index.tsx"
       ],
       "targetFiles": [],
-      "reviewStatus": "unverified"
+      "reviewStatus": "unverified",
+      "sourceHash": null,
+      "targetHash": null
     },
     {
       "contentId": "page:P21",

@@ -13,6 +13,10 @@ test('manual admission preserves stale translated bodies and blocks damaged read
     write('translations/pages/state.json', {schemaVersion: 1, pages: [{contentId: 'page:sample', locale: 'ja', state: 'ready',
         sourceFiles: [source], targetFiles: [target], sourceHash: digestFiles(root, [source]), targetHash: digestFiles(root, [target]), reviewStatus: 'machine'}]});
     assert.equal(manualReport(root).pages.find(row => row.locale === 'ja').state, 'ready');
+    write('translations/pages/registry.json', {schemaVersion: 1, englishFallbackLocales: ['ja'], pages: [{id: 'sample', kind: 'page', sourcePath: source}]});
+    assert.throws(() => manualReport(root), /disabled by English fallback policy/);
+    write('translations/pages/registry.json', {schemaVersion: 1, englishFallbackLocales: ['zh-CN'], pages: [{id: 'sample', kind: 'page', sourcePath: source}]});
+    assert.equal(manualReport(root).pages.find(row => row.locale === 'zh-CN').intentionalEnglishFallback, true);
     fs.appendFileSync(path.join(root, source), '\n// A source revision.\n');
     const report = manualReport(root);
     assert.equal(report.pending.length, 1); assert.equal(report.pending[0].contentLocale, 'ja');

@@ -171,7 +171,7 @@
     "theme.SearchPage.noResultsText": "No documents were found",
     "theme.SearchPage.searchSource": "Search the source documents"
   },
-  "sourceHash": "df9e8f6e4baa6d806e71881fb9779ef4ecf11a422cb52aa0bee3154cc7f7df5d",
+  "sourceHash": "8c3502827cf2af7ffdbae4cbd939071cd79f8171b3614e0081a92b2742d50bbe",
   "entryFiles": [
     "src/components/home-next/NavbarNext.tsx",
     "src/components/home-next/SlackCommunityNudge.tsx",

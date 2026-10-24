@@ -29,8 +29,17 @@ proof of a production outage. Download/profile forms are page-body interfaces:
 while their pages are missing, they intentionally render the complete English
 body and are covered by their later content batches.
 
-The homepage has four explicit `ready` records (`page:P01`). Its 233 dictionary
-messages include metadata, sections, news, interactions, accessibility labels and
+The homepage has three explicit target `ready` records (`page:P01`: ja/ko/ru).
+Chinese landing bodies intentionally use English, including the homepage, while
+Chinese documentation and shared navigation retain their existing localization.
+`translations/pages/registry.json` declares `englishFallbackLocales: ["zh-CN"]`;
+manual admission and the native page adapter reject ready Chinese landing bodies.
+The Chinese routes remain available with an English body, localized fallback
+notice, English canonical and noindex. This is a deliberate scope choice, not
+translation debt or a missing route. Coverage keeps the actual denominator and
+records `intentional_english_fallback` exceptions.
+
+The homepage's 233 dictionary messages in each translated body include metadata, sections, news, interactions, accessibility labels and
 six deployment-diagram labels. Its source dependencies include all three live
 `static/home-next/*.html` frames, `embedded-locale.js` and the existing theme
 bridge. The diagrams request their body locale in the URL. The two deployment
@@ -39,7 +48,7 @@ with localizable text. `static/animations/what-is-apache-doris-intro.html` is no
 referenced by HomeNext and is outside this batch. Mobile retains the existing
 layout that hides decorative iframe illustrations.
 
-Existing Japanese homepage messages are reused. New content is machine reviewed,
+Existing Japanese homepage messages are reused. New Korean/Russian content is machine reviewed,
 not certified as a human/native-language review. Existing product translations
 retain their review identity. Since their state hashes cover the complete
 `code.json`, shared dictionary additions require updating those target hashes:

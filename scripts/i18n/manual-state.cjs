@@ -26,6 +26,13 @@ function loadManual(root, kind) {
     }
     return data.pages;
 }
+function englishFallbackLocales(registry) {
+    const values = registry.englishFallbackLocales ?? [];
+    const supported = require('../../config/i18n').localeRegistry.map(locale => locale.code);
+    assert(Array.isArray(values) && new Set(values).size === values.length
+        && values.every(locale => locale !== 'en' && supported.includes(locale)), 'Invalid English fallback locale policy');
+    return values;
+}
 function digestFiles(root, files) {
     return hash(JSON.stringify([...new Set(files)].sort().map(file => {
         assert(safePath(file), `Invalid dependency: ${file}`);
@@ -45,4 +52,4 @@ function decideManual({root, record, sourceFiles, targetFiles = []}) {
     return {state: record.sourceHash === sourceHash ? record.state : 'needs-update', sourceHash, targetHash,
         contentLocale: record.locale, fallback: false, indexable: true, reviewStatus: record.reviewStatus};
 }
-module.exports = {readJson, loadManual, digestFiles, decideManual};
+module.exports = {readJson, loadManual, digestFiles, decideManual, englishFallbackLocales};

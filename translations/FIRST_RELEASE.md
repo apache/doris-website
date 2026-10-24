@@ -9,7 +9,8 @@ Before review, run the translation unit tests, workflow security checks, manual
 report, native fixtures and homepage/browser checks. The T06–T09 PR uses the `ci/full` label to request a complete five-language
 publication build. Ordinary shared changes keep the existing layered sample
 policy; the label is specific to this initial acceptance.
-Its first-release verifier checks all active versions, real homepage bodies,
+Its first-release verifier checks all active versions, English/Japanese/Korean/
+Russian homepage bodies and the intentional Chinese English-body fallback,
 SSR SEO/sitemap reciprocity, English fallback, 404, navigation and all eight
 brand themes at widths 1440 and 390. Candidate screenshots and JSON reports are
 uploaded with the existing measurements artifact. Local `--landing-only` checks
@@ -53,7 +54,7 @@ the job still resolves the original artifact/source before publication. If the
 artifact has expired, revert this PR on master through the normal review flow
 and let the full production workflow rebuild that single source snapshot.
 Record the resulting source/asf-site identities and verify the restored release.
-A rollback to a release without five translated homepages withdraws M1; its
+A rollback to a release without the agreed homepage language policy withdraws M1; its
 first-release readiness check should fail rather than claim unchanged coverage. Do not roll back only one locale
 or edit state hashes to disguise a damaged translation. A content-only rollback
 may mark one homepage locale `missing`, while shared navigation remains localized.

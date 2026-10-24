@@ -235,7 +235,7 @@ export function NavbarNext(): JSX.Element {
                             onBlur={event => {if (!event.currentTarget.contains(event.relatedTarget as Node)) setActiveDropdown(null);}}
                             onKeyDown={event => {if (event.key === 'Escape') {setActiveDropdown(null); event.currentTarget.querySelector('button')?.focus();}}}>
                             <button className="navbar-next__trigger" type="button" aria-expanded={activeDropdown === item.id}
-                                aria-controls={`navbar-dropdown-${item.id}`} onClick={() => setActiveDropdown(current => current === item.id ? null : item.id)}>
+                                aria-controls={`navbar-dropdown-${item.id}`} onClick={event => setActiveDropdown(current => event.detail === 0 && current === item.id ? null : item.id)}>
                                 {item.label}
                                 <ChevronDown />
                             </button>

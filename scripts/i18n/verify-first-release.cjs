@@ -28,8 +28,10 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
     for (const locale of locales) {
         assert.equal(manifests[locale].sourceSha, sha, 'Mixed manifest sources');
         const home = manifests[locale].pages.find(row => row.contentId === 'page:P01');
-        assert(home && !home.fallback && home.contentLocale === locale && home.indexable, `Homepage not ready: ${locale}`);
-        assert.deepEqual([...home.availableTranslations].sort(), [...locales].sort());
+        const intentionalFallback = locale === 'zh-CN';
+        assert(home && home.fallback === intentionalFallback && home.contentLocale === (intentionalFallback ? 'en' : locale)
+            && home.indexable === !intentionalFallback, `Homepage policy mismatch: ${locale}`);
+        assert.deepEqual([...home.availableTranslations].sort(), locales.filter(code => code !== 'zh-CN').sort());
         if (!landingOnly) for (const version of ['current', '4.x', '3.x', '2.1'])
             assert(manifests[locale].pages.some(row => row.kind === 'docs' && row.pluginId === 'default' && row.version === version), `Missing version: ${locale}/${version}`);
     }
@@ -78,8 +80,9 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 if (publicOrigin) assert.equal(digest(await response.body()), digest(fs.readFileSync(path.join(site, prefix, 'index.html'))), `Public HTML differs from artifact: ${prefix}`);
                 await page.locator('html[data-has-hydrated="true"]').waitFor();
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
-                assert.equal(await page.locator('[data-content-id="page:P01"]').getAttribute('lang'), locale);
-                assert.equal(await page.locator('.page-fallback-notice').count(), 0);
+                const home = manifests[locale].pages.find(row => row.contentId === 'page:P01');
+                assert.equal(await page.locator('[data-content-id="page:P01"]').getAttribute('lang'), home.contentLocale);
+                assert.equal(await page.locator('.page-fallback-notice').count(), home.fallback ? 1 : 0);
                 const title = await page.locator('h1').first().textContent(); assert(title.trim());
                 for (const theme of themes) {
                     if (width === 390) await page.locator('.navbar-next__menu-button').click();
@@ -95,7 +98,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                         await frame.scrollIntoViewIfNeeded();
                         const body = await frame.contentFrame();
                         await body.locator('html').waitFor();
-                        assert.equal(await body.locator('html').getAttribute('lang'), locale === 'en' ? 'en' : locale);
+                        assert.equal(await body.locator('html').getAttribute('lang'), home.contentLocale);
                         await body.locator(`html[data-brand-theme="${theme}"]`).waitFor();
                         const clipped = await body.locator('svg text').evaluateAll(nodes => nodes.filter(node => {
                             const b = node.getBBox(), svg = node.ownerSVGElement, view = svg.viewBox.baseVal;
