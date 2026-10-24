@@ -17,7 +17,7 @@
 }
 ---
 
-The Cross Cluster Replication (CCR) feature in Apache Doris efficiently synchronizes data between multiple Doris clusters. It is commonly used for remote disaster recovery, read/write separation, and business continuity scenarios. This document lists the Doris operations supported by CCR, the corresponding sync methods, and the minimum version requirements, organized by **Database / Table / Data / Partition / View / Materialized View / Others**. Use it to quickly verify compatibility before setting up a CCR job.
+The Cross Cluster Replication (CCR) feature in Apache Doris efficiently synchronizes data among multiple Doris clusters. It is widely adopted for remote disaster recovery, read/write separation, and business continuity scenarios.
 
 <!-- Knowledge type: Compatibility matrix / Capability list -->
 <!-- Applicable scenarios: CCR job design / Upstream-downstream version verification / Troubleshooting -->
