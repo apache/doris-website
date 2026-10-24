@@ -31,7 +31,7 @@ async function createFixture(root) {
             const sourcePath = `${sourceRoot}/${filename}`;
             const source = `---\ntitle: English ${docId}\nlast_update:\n  date: 2026-01-01\nslug: /english-${docId}\n${docId === 'hidden' ? 'unlisted: true\n' : docId === 'draft' ? 'draft: true\n' : ''}---\n\n## Usage\n\nUse Doris.\n\n\`\`\`sql\nSELECT 1;\n\`\`\`\n${pluginId === 'default' && version === 'current' ? '\n[ja-only](./01-ja-only.md)\n\n[ko-only](./01-ko-only.md)\n' : ''}`;
             write(sourcePath, source);
-            if (docId !== 'missing') write(`i18n/zh-CN/${plugin}/${versionDir}/${filename}`, source.replace('English', '中文').replace('/english-', '/chinese-'));
+            if (!['missing', 'ja-only'].includes(docId)) write(`i18n/zh-CN/${plugin}/${versionDir}/${filename}`, source.replace('English', '中文').replace('/english-', '/chinese-'));
             for (const locale of ['ja', 'ko', 'ru']) {
                 if (docId === 'missing') continue;
                 const targetPath = `i18n/${locale}/${plugin}/${versionDir}/${filename}`;

@@ -9,6 +9,7 @@ const cheerio = require('cheerio');
 const {createContentFixture} = require('./__tests__/fixtures/content-manifest.cjs');
 const {validateManifest, sourceSha, routeData} = require('./content-manifest.cjs');
 const {verifyContent} = require('./verify-global-language.cjs');
+const {verify: verifyStatic} = require('./verify-static.cjs');
 const root = path.resolve(__dirname, '../..');
 async function main() {
     const implementation = () => ({sha: sourceSha(root), trackedDiffHash: hash(execFileSync('git', ['diff', 'HEAD', '--binary'], {cwd: root, encoding: 'utf8'}))});
@@ -58,6 +59,8 @@ async function main() {
                 reportKinds: [...new Set(manifest.reports.map(report => report.kind))]});
             // One page payload can be consumed independently of the full manifest.
             assert.equal(routeData(first).contentId, first.contentId);
+            if (['ja', 'ko', 'ru'].includes(locale)) verifyStatic({site: path.join(fixture, 'build'),
+                manifest: path.join(fixture, '.i18n-build/manifests', locale + '.json')});
         }
         if (disabled) await assert.rejects(fs.access(path.join(fixture, 'build/ru/index.html')));
         await assert.rejects(fs.access(path.join(fixture, 'build/ja/orphan/index.html')));

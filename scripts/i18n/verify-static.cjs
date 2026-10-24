@@ -48,6 +48,8 @@ function verify({site, manifest, partial = false}) {
         return null;
     }
     for (const page of data.pages) {
+        const decision = contentByRoute.get(page.permalink);
+        const alternateGroup = decision ? Object.fromEntries(decision.availableTranslations.map(locale => [locale, decision.navigationRoutes[locale]])) : page.alternates;
         const filename = path.join(site, decodeURIComponent(page.permalink), 'index.html');
         if (!fs.existsSync(filename)) {
             assert(page.draft, `Missing non-draft static page: ${page.permalink}`);
@@ -62,12 +64,12 @@ function verify({site, manifest, partial = false}) {
         assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${canonical}`);
         const alternates = $('link[rel="alternate"][hreflang]');
         const localized = alternates.filter(`[hreflang="${htmlLang}"]`);
-        assert.equal(localized.length, page.alternates[locale] ? 1 : 0, `Localized alternate: ${page.permalink}`);
+        assert.equal(localized.length, alternateGroup[locale] ? 1 : 0, `Localized alternate: ${page.permalink}`);
         if (!page.indexable) {
             assert($('meta[name="robots"]').attr('content').includes('noindex'), page.permalink);
             assert(!sitemapPaths.has(page.permalink), `Fallback/stale page in sitemap: ${page.permalink}`);
             assert(!indexedPaths.has(page.permalink), `Fallback/stale page in local search index: ${page.permalink}`);
-            for (const permalink of Object.values(page.alternates)) {
+            for (const permalink of Object.values(alternateGroup)) {
                 const file = path.join(site, permalink, 'index.html');
                 if (fs.existsSync(file)) {
                     const counterpart = cheerio.load(fs.readFileSync(file, 'utf8'));
@@ -81,11 +83,11 @@ function verify({site, manifest, partial = false}) {
             const ids = root => root('.theme-doc-markdown h1,.theme-doc-markdown h2,.theme-doc-markdown h3,.theme-doc-markdown h4,.theme-doc-markdown h5,.theme-doc-markdown h6').map((i, node) => root(node).attr('id') ?? '').get();
             const english = counterpart(page.englishPermalink, 'source heading IDs');
             if (english) assert.deepEqual(ids($), ids(english), `Source heading IDs: ${page.permalink}`);
-            for (const [lang, permalink] of Object.entries(page.alternates)) {
+            for (const [lang, permalink] of Object.entries(alternateGroup)) {
                 const counterpart$ = counterpart(permalink, 'reciprocal alternates');
                 if (!counterpart$) continue;
                 const links = counterpart$('link[rel="alternate"][hreflang]');
-                for (const [otherLang, otherPath] of Object.entries(page.alternates)) {
+                for (const [otherLang, otherPath] of Object.entries(alternateGroup)) {
                     const otherHtmlLang = htmlLangFor(otherLang);
                     assert.equal(links.filter(`[hreflang="${otherHtmlLang}"]`).attr('href'), `https://doris.apache.org${otherPath}`,
                         `Non-reciprocal alternates ${lang} -> ${otherLang}: ${permalink}`);
