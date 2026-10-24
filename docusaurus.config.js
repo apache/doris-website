@@ -10,6 +10,7 @@ const REDIRECTS_4X = require('./config/redirects-4.x.json');
 const path = require('path');
 const translationDocsPlugin = require('./scripts/i18n/docs-plugin.cjs');
 const translationStatusPlugin = require('./scripts/i18n/status-plugin.cjs');
+const manualPlugins = require('./scripts/i18n/manual-plugins.cjs');
 const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
 const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
@@ -382,7 +383,18 @@ const config = {
     plugins: [
         contentTranslationPlugin,
         SKIP_DOCS ? null : [translationDocsPlugin, MAIN_DOCS_OPTIONS],
-        MANAGED_LOCALES.length ? translationStatusPlugin : null,
+        [translationStatusPlugin, {browserData: MANAGED_LOCALES.length > 0}],
+        [manualPlugins.pages, {}],
+        SKIP_BLOG ? null : [manualPlugins.blog, {
+            blogTitle: 'Apache Doris - Blog | Latest news and events ',
+            blogDescription:
+                'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
+            postsPerPage: 'ALL',
+            blogSidebarCount: 0,
+            showReadingTime: false,
+            onUntruncatedBlogPosts: 'ignore',
+            onInlineAuthors: 'ignore',
+        }],
         'docusaurus-plugin-sass',
         'docusaurus-plugin-matomo',
         // Use custom blog plugin
@@ -505,16 +517,8 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: false, // The native docs plugin is wrapped below for translation state.
-                blog: SKIP_BLOG ? false : {
-                    blogTitle: 'Apache Doris - Blog | Latest news and events ',
-                    blogDescription:
-                        'Explore how Doris empower lakehouse, adhoc analysis, customer-facing analysis and various scenarios',
-                    postsPerPage: 'ALL',
-                    blogSidebarCount: 0,
-                    showReadingTime: false,
-                    onUntruncatedBlogPosts: 'ignore',
-                    onInlineAuthors: 'ignore',
-                },
+                blog: false, // Native blog metadata is wrapped for the content contract.
+                pages: false,
                 theme: {
                     customCss: require.resolve('./src/scss/custom.scss'),
                 },
