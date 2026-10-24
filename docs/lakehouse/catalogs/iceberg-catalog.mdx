@@ -252,9 +252,11 @@ See [Iceberg to Doris Data Type Mapping](iceberg-catalog/doris-type-mapping.md) 
 
 ### Spatial types (Iceberg V3) {#iceberg-spatial-types}
 
-The development version supports Iceberg V3 `geometry` and `geography` as Doris `GEOMETRY` and `GEOGRAPHY`. Spatial WKB values are read and written through Parquet. Spatial writes require top-level columns. Doris internal tables and spatial columns nested inside ARRAY, MAP or STRUCT cannot be written.
+The development version supports Iceberg V3 `geometry` and `geography` as Doris `GEOMETRY` and `GEOGRAPHY`. Spatial WKB values are read and written through Parquet. Both top-level spatial columns and spatial values nested in ARRAY, MAP values and STRUCT fields can be read and written, including combinations of these containers. Doris internal-table spatial storage is not supported.
 
 Spatial types are supported through an Iceberg catalog. Generic file TVFs such as S3 or LOCAL reject Parquet GEOMETRY/GEOGRAPHY annotations, including nested fields. Unannotated BYTE_ARRAY columns retain their ordinary binary mapping.
+
+Variant does not support native GEOMETRY/GEOGRAPHY values, including spatial values inside its objects or arrays. This matches the verified Spark 4.1 / Iceberg 1.12 behavior. Storing WKB as ordinary Binary or in an application-defined object does not make it a native spatial value and does not automatically restore its kind, CRS or algorithm. Ordinary Variant columns can coexist with separate spatial columns.
 
 | Declaration | Default | Effect |
 | --- | --- | --- |
@@ -280,6 +282,28 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 2  NULL         NULL
 ```
 
+The same catalog/database can store spatial leaves in nested columns. Ordinary map keys are supported with spatial values:
+
+```sql
+CREATE TABLE spatial_nested (
+    id INT, shapes ARRAY<GEOMETRY>, locations MAP<STRING, GEOGRAPHY>,
+    detail STRUCT<shape:GEOMETRY>)
+ENGINE=ICEBERG PROPERTIES ('format-version'='3', 'write.format.default'='parquet');
+INSERT INTO spatial_nested
+SELECT id, array(geom), map('home', geog), named_struct('shape', geom)
+FROM spatial_values;
+SELECT id, size(shapes), ST_AsText(shapes[1]), ST_AsText(locations['home']),
+       ST_AsText(struct_element(detail, 'shape'))
+FROM spatial_nested ORDER BY id;
+```
+
+```text
+1  1  POINT (1 2)  POINT (1 2)  POINT (1 2)
+2  1  NULL         NULL         NULL
+```
+
+NULL containers, empty containers, NULL elements/values/fields and spatial EMPTY values remain distinct. Spatial leaf metadata and original WKB are preserved recursively. This storage support does not enable spatial map-key comparison, grouping or ordering.
+
 The example requires permission to create the table, insert data and query it in that catalog/database. Configure the [Iceberg REST metastore](../metastores/iceberg-rest.md) first if no catalog exists.
 
 Values preserve raw WKB (XY, XYZ, XYM and XYZM) bytes and support all seven basic WKB kinds, mixed child byte orders and EMPTY. EMPTY differs from SQL NULL. Standard ISO WKB Z/M ordinates are retained; PostGIS EWKB dimension flags and embedded SRID are unsupported. Geography and recognized geographic Geometry CRS identifiers (`OGC:CRS84`, `EPSG:4326`) require defined X/Y coordinates in [-180,180]/[-90,90]; projected Geometry does not use that range. Other Geometry CRS strings are preserved without a CRS resolver or automatic conversion.
@@ -292,9 +316,9 @@ For spherical polygon calculations, each ring selects the smaller region (at mos
 
 `UNION` (including `UNION DISTINCT`), `INTERSECT` and `EXCEPT` reject spatial keys. `ARRAY_AGG(DISTINCT ...)` and `COLLECT_LIST(DISTINCT ...)` reject spatial arguments. `UNION ALL` and nondistinct scalar `ARRAY_AGG`/`COLLECT_LIST` remain supported.
 
-`LEAST` and `GREATEST` reject spatial arguments. `MIN_BY` and `MAX_BY` reject scalar spatial arguments as either values or ordering keys. `TOPN_ARRAY` rejects spatial values, including nested ones. `MULTI_DISTINCT_COUNT` does not support scalar spatial arguments; `GROUP_ARRAY_UNION` and `GROUP_ARRAY_INTERSECT` reject arrays containing spatial values.
+`LEAST`, `GREATEST`, `COUNT_AT_MIN` and `COUNT_AT_MAX` reject spatial arguments. Window `PARTITION BY` also rejects spatial keys, including nested spatial leaves; ordinary partition keys with supported spatial window values remain allowed. `MIN_BY` and `MAX_BY` reject scalar spatial arguments as either values or ordering keys. `TOPN_ARRAY` rejects spatial values, including nested ones. `MULTI_DISTINCT_COUNT` does not support scalar spatial arguments; `GROUP_ARRAY_UNION` and `GROUP_ARRAY_INTERSECT` reject arrays containing spatial values.
 
-`INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. CREATE and ALTER reject V2/ORC or nested spatial writes. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
+`INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. The same identity checks apply recursively to nested leaves. CREATE and ALTER reject spatial columns when the table is V2 or uses a non-Parquet write format. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
 
 All participating FEs and BEs must support spatial types. This feature does not provide mixed-version execution compatibility for upgrades from 4.x to 5.0.
 

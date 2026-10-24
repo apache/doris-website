@@ -268,9 +268,11 @@ ORDER BY engine_name, entry_name;
 
 ### 空间类型（Iceberg V3） {#iceberg-spatial-types}
 
-开发版本将 Iceberg V3 的 `geometry` 和 `geography` 映射为 Doris `GEOMETRY` 和 `GEOGRAPHY`。空间 WKB 值通过 Parquet 读取和写入。空间写入要求顶层空间列，不支持 Doris 内部表，也不支持 ARRAY、MAP 或 STRUCT 内的嵌套空间列写入。
+开发版本将 Iceberg V3 的 `geometry` 和 `geography` 映射为 Doris `GEOMETRY` 和 `GEOGRAPHY`。空间 WKB 值通过 Parquet 读取和写入。支持顶层空间列，以及 ARRAY 元素、MAP value、STRUCT 字段中空间值的读取和写入，包括这些容器的多层组合。不支持 Doris 内部表的空间类型存储。
 
 空间类型通过 Iceberg catalog 使用。S3、LOCAL 等通用文件 TVF 会拒绝 Parquet GEOMETRY/GEOGRAPHY 注解，包括嵌套字段；未注解的 BYTE_ARRAY 列保留普通二进制映射。
+
+Variant 不支持原生 GEOMETRY/GEOGRAPHY 值，包括其 object 或 array 内的空间值，与已验证的 Spark 4.1 / Iceberg 1.12 行为一致。将 WKB 保存为普通 Binary 或应用自定义对象，不等于原生空间值，也不会自动恢复 kind、CRS 或 algorithm。普通 Variant 列可以与独立空间列共存。
 
 | 声明 | 默认值 | 作用 |
 | --- | --- | --- |
@@ -296,6 +298,28 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 2  NULL         NULL
 ```
 
+同一 catalog/database 中也可以保存嵌套空间列，普通 MAP key 可以对应空间 value：
+
+```sql
+CREATE TABLE spatial_nested (
+    id INT, shapes ARRAY<GEOMETRY>, locations MAP<STRING, GEOGRAPHY>,
+    detail STRUCT<shape:GEOMETRY>)
+ENGINE=ICEBERG PROPERTIES ('format-version'='3', 'write.format.default'='parquet');
+INSERT INTO spatial_nested
+SELECT id, array(geom), map('home', geog), named_struct('shape', geom)
+FROM spatial_values;
+SELECT id, size(shapes), ST_AsText(shapes[1]), ST_AsText(locations['home']),
+       ST_AsText(struct_element(detail, 'shape'))
+FROM spatial_nested ORDER BY id;
+```
+
+```text
+1  1  POINT (1 2)  POINT (1 2)  POINT (1 2)
+2  1  NULL         NULL         NULL
+```
+
+NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区别。空间叶子参数及原始 WKB 递归保留；存储支持不代表开放空间 MAP key 的比较、分组或排序。
+
 示例要求在对应 catalog/database 中有建表、写入和查询权限；没有 catalog 时，请先配置 [Iceberg REST metastore](../metastores/iceberg-rest.md)。
 
 值保留原始 WKB（XY、XYZ、XYM、XYZM） 字节，支持七种基础 WKB 类型、子几何混合字节序及 EMPTY。EMPTY 与 SQL NULL 不同；支持标准 ISO WKB 的 Z/M 保留，不支持 PostGIS EWKB 维度标记和内嵌 SRID。Geography 及已识别地理 CRS 的 Geometry（`OGC:CRS84`、`EPSG:4326`）要求已定义的 X/Y 坐标位于 [-180,180]/[-90,90]，投影 Geometry 不使用这一范围。其他 Geometry CRS 字符串按原样保留，不提供 CRS 解析或自动转换。
@@ -308,9 +332,9 @@ SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
 
 `UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
 
-`LEAST` 和 `GREATEST` 不接受空间参数。`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 不支持标量空间参数；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
+`LEAST`、`GREATEST`、`COUNT_AT_MIN` 和 `COUNT_AT_MAX` 不接受空间参数。窗口 `PARTITION BY` 也拒绝空间 key，包括含空间叶子的嵌套类型；普通 partition key 上受支持的空间窗口 value 仍可使用。`MIN_BY` 和 `MAX_BY` 的值参数及排序键均不接受标量空间类型。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 不支持标量空间参数；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
 
-`INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。CREATE 和 ALTER 拒绝 V2、ORC 或嵌套空间写入。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
+`INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。嵌套叶子同样递归检查这些身份。对于 V2 或使用非 Parquet 写入格式的表，CREATE 和 ALTER 拒绝空间列。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
 
 所有参与 FE 和 BE 均需支持空间类型。本功能不提供 4.x 升级到 5.0 期间的混合版本执行兼容。
 
