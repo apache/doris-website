@@ -135,7 +135,10 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 await page.locator('button[aria-controls="navbar-dropdown-resources"]').click();
                 await page.locator(`#navbar-dropdown-resources a[href="${prefix}blog/"]`).click();
                 await waitPath(page, prefix + 'blog/');
-                const articleLinks = await page.locator('main a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname.replace(/\/+$/, '')));
+                await page.locator('main a[href*="/blog/"]').first().waitFor();
+                const articleLinks = await page.locator('main a[href]').evaluateAll((nodes, expectedOrigin) => nodes
+                    .filter(node => new URL(node.href).origin === expectedOrigin)
+                    .map(node => new URL(node.href).pathname.replace(/\/+$/, '')), origin);
                 const blog = manifests[locale].pages.find(row => row.kind === 'blog' && row.fallback && articleLinks.includes(normalized(row.route)))
                     ?? manifests[locale].pages.find(row => row.kind === 'blog' && articleLinks.includes(normalized(row.route)));
                 assert(blog, 'No native blog link on listing');
