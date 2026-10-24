@@ -15,9 +15,9 @@ const content =
     /^(static\/|docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|blog\/|i18n\/|translations\/(pages|blog|state)\/)/;
 const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
 function policy(files, {forceFull = false, forceSample = false} = {}) {
-    const risk = files.filter(file => highRisk.test(file) || mechanism.test(file));
+    const risk = files.filter(file => highRisk.test(file));
     const changed = files.some(file => content.test(file));
-    const shared = files.some(file => runtime.test(file));
+    const shared = files.some(file => runtime.test(file) || mechanism.test(file));
     const checks = validationScope(files);
     const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file));
     const unknown = files.filter(

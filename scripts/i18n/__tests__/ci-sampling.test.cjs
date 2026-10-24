@@ -28,7 +28,7 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
     assert.equal(policy(['translations/CONTENT_MANIFEST.md']).mode, 'skip');
     assert.equal(
         policy(['src/utils/localizedRoute.ts', 'translations/CONTENT_MANIFEST.md']).mode,
-        'full',
+        'sample',
     );
     assert.equal(policy(['README.md']).mode, 'skip');
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');

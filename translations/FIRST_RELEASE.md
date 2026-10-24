@@ -6,8 +6,9 @@ Keep T09 and milestone M1 pending until that evidence exists. Never combine
 locale outputs from different commits to construct a release.
 
 Before review, run the translation unit tests, workflow security checks, manual
-report, native fixtures and homepage/browser checks. `Build Check` runs a complete
-five-language publication build for changes to the shared language mechanism.
+report, native fixtures and homepage/browser checks. The T06–T09 PR uses the `ci/full` label to request a complete five-language
+publication build. Ordinary shared changes keep the existing layered sample
+policy; the label is specific to this initial acceptance.
 Its first-release verifier checks all active versions, real homepage bodies,
 SSR SEO/sitemap reciprocity, English fallback, 404, navigation and all eight
 brand themes at widths 1440 and 390. Candidate screenshots and JSON reports are

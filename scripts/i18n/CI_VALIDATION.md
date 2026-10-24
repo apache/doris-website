@@ -10,9 +10,9 @@ committed lockfile after source planning. Source snapshot checks remain enabled.
 | --- | --- |
 | README, planning or review notes only | Configuration, move/link and workflow security checks; no dependency installation or site build |
 | CI and tooling | Unit tests, five-language native compilation fixture and publishing/Apache/Chromium fixture |
-| Shared UI, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
+| Shared UI, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
 | Documentation or assets | Changed documents and import dependants, plus representative real documents; English source changes select all five languages, localized changes select English and the affected locales |
-| Shared route/SEO/body-selection contracts, locale bootstrap, dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
+| Dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
 | `ci/full` PR label or manual `validation=full` | Full five-language publication build and verification |
 
 Manual `validation=sample` requests representative samples, but cannot downgrade
@@ -126,9 +126,11 @@ plus English. New/deleted source identities widen to all languages; unknown
 dependencies keep the conservative existing policy. Documentation source changes
 continue to select all possible fallback consumers and the affected versions.
 
-The build-scope and CI plan share this proof. Full language contracts cannot be
-downgraded with `--sample`; content-only state edits with an exact proof keep
-scoped compilation. Partial compilation never claims full alternate reciprocity.
+The build-scope and CI plan share this proof. New shared language contracts/bootstrap inputs select representative real
+builds and their applicable native/publishing fixtures, retaining the layered
+policy introduced in #4497. The first-release T06–T09 PR uses `ci/full` for
+five-language/all-active-version publication validation. Content-only state
+edits with an exact proof keep scoped compilation. Partial compilation never claims full alternate reciprocity.
 Planning-only changes still skip compilation, while malformed configuration fails
 the required check. Fork PRs continue to receive read-only checkout permissions,
 without deployment or model credentials.
