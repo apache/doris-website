@@ -25,6 +25,8 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
     for (const file of ['package.json', 'yarn.lock', 'versions.json', 'unknown-input.bin'])
         assert.equal(policy([file]).mode, 'full');
     assert.equal(policy(['plan-doc/notes.md']).mode, 'skip');
+    assert.equal(policy(['translations/CONTENT_MANIFEST.md']).mode, 'skip');
+    assert.equal(policy(['src/utils/localizedRoute.ts', 'translations/CONTENT_MANIFEST.md']).mode, 'sample');
     assert.equal(policy(['README.md']).mode, 'skip');
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');
     assert.equal(policy([], {forceSample: true}).mode, 'sample');

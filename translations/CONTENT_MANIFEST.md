@@ -195,13 +195,15 @@ that a candidate has been deployed to ASF or that its CDN configuration changed.
 
 ## CI selection and admission
 
-`build-scope.cjs` writes `.i18n-build/ci-plan.json`, bound to the checked source
-and merge base. The plan distinguishes a real scoped site build from small
-implementation fixtures. Translation/state data changes use the existing
-language/version build scope; shared language routing, metadata and host rules
-retain the complete five-language/all-active-version optimized build. A content
-ledger edit does not rerun an unchanged synthetic fixture implementation.
-The required `Build Check` identity stays stable, including lightweight PRs.
+`ci-plan.cjs` writes `.i18n-build/ci-plan.json`, bound to the checked source and
+merge base, using `build-scope.cjs` for impact metadata. Translation/state edits
+compile affected documents and representative samples; shared language routing,
+metadata and host rules use five-language samples across all active versions.
+Dependencies, active versions, unclassified inputs or the `ci/full` label retain
+the complete publication build. Scheduled/manual deployments still build the
+complete site. This maintenance document does not itself require compilation.
+See [CI validation](../scripts/i18n/CI_VALIDATION.md) for coverage limits and
+publication guards. The required `Build Check` identity stays stable.
 
 Publish unit tests run before native inventory and fixture builds. Apache probes
 use the platform's MIME file (`/etc/mime.types` on Linux,
