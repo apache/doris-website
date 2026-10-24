@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/max-by.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/max-by.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "d729dd3518d1177935e251408c0f94990cb99cb6016d001dde3503cd61cdae2d",
-    "sourceTechnicalHash": "7cc91e22ecea156da06e669ae07b8df0350d8d343884f915665c5608ec3c66db",
-    "targetHash": "31b41061dd2fe7453a5424d9f7f909176e236091404ccfa61b1697daf9150455",
+    "sourceCommit": "fe9ae60e37c3fbfd2aa15819a6db04c140a96c02",
+    "sourceHash": "90e1b68dcfbe9f8a43b1b06b7caeaf3834dd8d845a5a16823929edbcdc4a6260",
+    "sourceTechnicalHash": "d7ff6ca9e34fdd6d2c7b341655503d1dda621606b248858b09473b70e0221c36",
+    "targetHash": "a347aef663a8715fb9d282df5e418ad53fc87a151d473250d79e588e88784c05",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:08:32.055Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T20:56:26.123Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "90e1b68dcfbe9f8a43b1b06b7caeaf3834dd8d845a5a16823929edbcdc4a6260",
+      "targetHash": "a347aef663a8715fb9d282df5e418ad53fc87a151d473250d79e588e88784c05",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]\nprotected node 6: expected [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"<expr1>\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"inlineCode\",null,null,\"<expr2>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

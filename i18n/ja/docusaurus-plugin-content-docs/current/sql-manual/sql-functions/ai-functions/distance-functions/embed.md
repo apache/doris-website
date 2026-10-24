@@ -6,7 +6,7 @@
 }
 ---
 
-<!-- 
+<!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -25,70 +25,72 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-## 説明
+## 説明 {#description}
 
-テキストまたはマルチモーダル入力の埋め込みベクトルを生成します。ベクトルは類似度計算や検索などに使用できます。
+テキストまたはマルチモーダル入力から埋め込みベクトルを生成します。このベクトルは、類似度の計算や検索などに使用できます。
 
 :::note
-マルチモーダル埋め込みは Apache Doris 4.1.4 以降でサポートします。
+マルチモーダル埋め込みは Apache Doris 4.1.4 以降でサポートされています。
 :::
 
-マルチモーダル埋め込みでは、画像、動画、音声ファイルを記述する JSON オブジェクトを渡します。メディアの種類を使用する前に、設定した AI プロバイダーとモデルが対応していることを確認してください。
+マルチモーダル埋め込みには、画像、動画、音声ファイルを記述した JSON オブジェクトを渡します。メディアタイプを使用する前に、設定した AI プロバイダーとモデルがそのタイプに対応していることを確認してください。
 
-### マルチモーダル埋め込み対応プロバイダー
+### マルチモーダル埋め込みに対応するプロバイダー {#providers-that-support-multimodal-embedding}
 
-| プロバイダー | 対応するメディアの種類 |
+| プロバイダー | 対応するメディアタイプ |
 | --- | --- |
-| `voyageai` | 画像 (`image/`), 動画 (`video/`) |
-| `qwen` | 画像 (`image/`), 動画 (`video/`) |
-| `jina` | 画像 (`image/`), 動画 (`video/`) |
-| `gemini` | 画像 (`image/`), 動画 (`video/`), 音声 (`audio/`) |
+| `voyageai` | 画像（`image/`）、動画（`video/`） |
+| `qwen` | 画像（`image/`）、動画（`video/`） |
+| `jina` | 画像（`image/`）、動画（`video/`） |
+| `gemini` | 画像（`image/`）、動画（`video/`）、音声（`audio/`） |
 
-上記以外のプロバイダーでマルチモーダル埋め込みを呼び出すと、`<provider> does not support multimodal Embed feature.` が返されます。プロバイダーが対応しないメディアの種類を渡すと、`<provider> only supports <types> multimodal embed, got <type>` が返されます。
+ほかのプロバイダーでマルチモーダル埋め込みを呼び出すと、`<provider> does not support multimodal Embed feature.` というエラーが報告されます。プロバイダーが対応していないメディアタイプを渡すと、`<provider> only supports <types> multimodal embed, got <type>` というエラーが報告されます。
 
-## 構文
+## 構文 {#syntax}
+
+バージョン 4.1.5 以降、AI Resource では、テキスト埋め込みとマルチモーダル埋め込みにそれぞれ `ai.embed.*` と `ai.embed.mm.*` のモデルグループを設定できます。テキスト入力では、テキスト埋め込みグループ、汎用グループの順に選択します。JSON のマルチモーダル入力では、マルチモーダル埋め込みグループ、テキスト埋め込みグループ、汎用グループの順に選択します。設定要件については、[AI リソースの設定](../overview.md#dedicated-embedding-model-configuration-since-415)を参照してください。
 
 ```sql
 EMBED([<resource_name>], <input>)
 ```
 
-## 引数
+## パラメーター {#parameters}
 
-| 引数         | 説明 |
+| パラメーター         | 説明 |
 | ----------------- | ----------- |
 | `<resource_name>` | 省略可能。埋め込みの生成に使用する AI リソース。省略すると、Doris はセッション変数 `default_ai_resource` を使用します。 |
-| `<input>`         | 埋め込む内容。テキスト埋め込みでは文字列、マルチモーダル埋め込みでは JSON オブジェクトを指定します。 |
+| `<input>`         | 埋め込む内容。テキスト埋め込みには文字列、マルチモーダル埋め込みには JSON オブジェクトを指定できます。 |
 
-マルチモーダル用 JSON オブジェクトには、次のフィールドがあります。
+マルチモーダル用の JSON オブジェクトには、次のフィールドを指定します。
 
 | フィールド | 必須 | 説明 |
 | ----- | -------- | ----------- |
-| `uri` | はい | `http://` または `https://` URL、または S3 互換 URI（`s3://<bucket>/<key>` 形式）。 |
-| `content_type` | はい | メディアの MIME タイプ。`image/`、`video/`、`audio/` で始まる値を認識します。AI プロバイダーとモデルがその種類に対応している必要があります。 |
+| `uri` | はい | `http://` または `https://` の URL、あるいは `s3://<bucket>/<key>` 形式の S3 互換 URI。 |
+| `content_type` | はい | メディアの MIME タイプ。`image/`、`video/`、`audio/` で始まる値が認識されます。AI プロバイダーとモデルがそのメディアタイプに対応している必要があります。 |
 | `endpoint` | S3 互換 URI の場合 | S3 互換ストレージのエンドポイント。 |
 | `region` | S3 互換 URI の場合 | ストレージのリージョン。 |
-| `ak` | いいえ | AK/SK 認証用のアクセスキー。 |
-| `sk` | いいえ | AK/SK 認証用のシークレットキー。 |
-| `role_arn` | いいえ | ロールベース認証用の IAM ロール ARN。 |
+| `ak` | いいえ | AK/SK 認証に使用するアクセスキー。 |
+| `sk` | いいえ | AK/SK 認証に使用するシークレットキー。 |
+| `role_arn` | いいえ | ロールベース認証に使用する IAM ロールの ARN。 |
 | `external_id` | いいえ | IAM ロールを引き受ける際に使用する外部 ID。 |
 
-HTTP または HTTPS URL の場合、必須なのは `uri` と `content_type` だけです。S3 互換 URI の場合、Doris はストレージの認証情報を使用して署名付き URL を生成します。AK/SK 認証と IAM ロール認証の両方に対応します。
+HTTP または HTTPS の URL では、`uri` と `content_type` のみが必須です。S3 互換 URI では、Doris はストレージの認証情報を使用して署名付き URL を生成します。AK/SK 認証と IAM ロール認証の両方に対応しています。
 
-署名付き URL の有効期間はセッション変数 `file_presigned_url_ttl_seconds` で秒単位に指定し、デフォルトは `3600`（1 時間）です。メディアファイルが大きく、プロバイダーによる取得に時間がかかる場合は、この値を増やしてください。
+署名付き URL の有効期間は、セッション変数 `file_presigned_url_ttl_seconds` で秒単位で制御します。デフォルトは `3600`（1 時間）です。メディアファイルが大きく、プロバイダーによる取得に時間がかかる場合は、この値を増やしてください。
 
 ```sql
 SET file_presigned_url_ttl_seconds = 7200;
 ```
 
-## 戻り値
+## 戻り値 {#return-value}
 
-戻り値は、生成されたベクトルを表す `ARRAY<FLOAT>` 型です。
+戻り値の型は `ARRAY<FLOAT>` で、生成されたベクトルを表します。
 
 入力値が NULL の場合は NULL を返します。
 
-ベクトルの次元と値は AI プロバイダーとモデルによって異なります。
+ベクトルの次元数と値は、AI プロバイダーとモデルによって異なります。
 
-## マルチモーダルの例
+## マルチモーダルの例 {#multimodal-examples}
 
 次の例では、HTTPS URL でアクセスできる画像の埋め込みを生成します。
 
@@ -112,7 +114,7 @@ SELECT ARRAY_SIZE(
 +---------------------------+
 ```
 
-次の例では、AK/SK 認証を使用して S3 互換ストレージから動画を読み込みます。
+次の例では、AK/SK 認証を使用して S3 互換ストレージから動画を読み取ります。
 
 ```sql
 SELECT ARRAY_SIZE(
@@ -164,11 +166,11 @@ SELECT ARRAY_SIZE(
 +---------------------------+
 ```
 
-上記の結果は例です。実際の埋め込み次元数は設定したプロバイダーとモデルによって異なります。
+上記の結果は例です。実際の埋め込みの次元数は、設定したプロバイダーとモデルによって異なります。
 
-## テキストの例
+## テキストの例 {#text-example}
 
-次のテーブルは企業の行動規範を模したものです。
+次のテーブルは、ある会社の行動規範を模したものです。
 
 ```sql
 CREATE TABLE knowledge_base (
@@ -204,11 +206,11 @@ INSERT INTO knowledge_base (id, title, content, embedding) VALUES
     EMBED("procurement request process finance"));
 ```
 
-テキストをベクトル化すると、次のような操作ができます。
+テキストをベクトル化すると、次のような操作を実行できます。
 
-1. 質問応答のための検索（`COSINE_DISTANCE` を使用）
+1. 質問応答の検索（`COSINE_DISTANCE` を使用）
 ```sql
-SELECT 
+SELECT
     id, title, content,
     COSINE_DISTANCE(embedding, EMBED("How to apply for travel reimbursement?")) AS score
 FROM knowledge_base
@@ -227,7 +229,7 @@ LIMIT 2;
 
 2. 問題分析のマッチング（`L2_DISTANCE` を使用）
 ```sql
-SELECT 
+SELECT
     id, title, content,
     L2_DISTANCE(embedding, EMBED("How to access the company intranet")) AS distance
 FROM knowledge_base
@@ -246,7 +248,7 @@ LIMIT 2;
 
 3. 記事の内容に基づくテキストの関連性マッチングと推薦（`INNER PRODUCT` を使用）
 ```sql
-SELECT 
+SELECT
     id, title, content,
     INNER_PRODUCT(embedding, EMBED("Leave system request leader approval")) AS score
 FROM knowledge_base
@@ -264,9 +266,9 @@ LIMIT 2;
 +------+-----------------------------+-----------------------------------------------------------------------------------------------------------------------------------------+---------------------+
 ```
 
-4. 差異が最も小さいコンテンツの検索（`L1_DISTANCE` を使用）
+4. 差異が最小のコンテンツを検索（`L1_DISTANCE` を使用）
 ```sql
-SELECT 
+SELECT
     id, title, content,
     L1_DISTANCE(embedding, EMBED("Procurement application process")) AS distance
 FROM knowledge_base
