@@ -250,16 +250,28 @@ module.exports = async function translationDocsPlugin(context, options) {
                         }
                     }
                 }
+            } else {
+                for (const version of args.content.loadedVersions) for (const doc of version.docs) {
+                    const entry = sourceEntries.find(page => page.siteLocale === context.i18n.currentLocale
+                        && page.version === version.versionName && page.docId === doc.id);
+                    if (!entry) continue;
+                    const englishVersion = versions.en.find(item => item.versionName === version.versionName);
+                    const localized = path.join(version.contentPathLocalized, path.relative(englishVersion.contentPath,
+                        path.join(context.siteDir, entry.englishPath)));
+                    for (const filename of [path.join(context.siteDir, entry.englishPath), path.join(context.siteDir, entry.sourcePath), localized])
+                        sourceAliases.set(aliasedSitePath(filename, context.siteDir), doc.permalink);
+                }
             }
         },
         configureWebpack(...args) {
             const result = plugin.configureWebpack(...args);
-            if (activeLocale) {
+            const resolveLocale = activeLocale ?? (context.i18n.currentLocale === 'zh-CN' ? 'zh-CN' : undefined);
+            if (resolveLocale) {
                 // Native MDX cache keys cannot see a changed counterpart route
                 // or state file read through fs. Bind the localized filesystem
                 // cache to this exact content/route decision snapshot.
                 if (args[0]?.cache?.type === 'filesystem') result.cache = {...args[0].cache,
-                    version: `${args[0].cache.version}:translations:${hash(JSON.stringify(pages))}`};
+                    version: `${args[0].cache.version}:translations:${hash(JSON.stringify([sourceEntries, pages]))}`};
                 for (const rule of result.module.rules) {
                     for (const item of rule.use) {
                         if (adaptedLoaders.has(item.options)) continue;
@@ -269,12 +281,12 @@ module.exports = async function translationDocsPlugin(context, options) {
                         // processors. Recreate them with the adapted resolver.
                         delete item.options.processors;
                         item.options.resolveMarkdownLink = params => {
-                            const version = versions[activeLocale].find(candidate => [candidate.contentPath, path.join(viewPluginDir(activeLocale),
-                                candidate.versionName === 'current' ? 'current' : `version-${candidate.versionName}`)]
+                            const localizedPath = candidate => activeLocale ? path.join(viewPluginDir(activeLocale),
+                                candidate.versionName === 'current' ? 'current' : `version-${candidate.versionName}`) : candidate.contentPathLocalized;
+                            const version = versions[resolveLocale].find(candidate => [candidate.contentPath, localizedPath(candidate)]
                                 .some(dir => params.sourceFilePath.startsWith(dir + path.sep)));
                             return version && resolveMarkdownLinkPathname(params.linkPathname, {...params, siteDir: context.siteDir,
-                                sourceToPermalink: sourceAliases, contentPaths: {...version, contentPathLocalized: path.join(viewPluginDir(activeLocale),
-                                    version.versionName === 'current' ? 'current' : `version-${version.versionName}`)}}) || nativeResolve(params);
+                                sourceToPermalink: sourceAliases, contentPaths: {...version, contentPathLocalized: localizedPath(version)}}) || nativeResolve(params);
                         };
                     }
                 }

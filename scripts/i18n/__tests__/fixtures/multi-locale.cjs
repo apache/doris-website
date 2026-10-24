@@ -69,9 +69,10 @@ import {useContentRouteData} from '@site/src/utils/contentRoute';
 import SourceFallback from './SourceFallback';
 import TranslationStatus from './TranslationStatus';
 export default function Layout(props) {
- const state = docTranslation(useDoc().metadata);
+ const {metadata} = useDoc();
+ const state = docTranslation(metadata);
  const page = useContentRouteData();
- return <>{state ? <TranslationStatus state={state}/> : page?.fallback ? <SourceFallback permalink={useDoc().metadata.permalink}/> : null}<Original {...props}/></>;
+ return <>{state ? <TranslationStatus state={state}/> : page?.fallback ? <SourceFallback permalink={metadata.permalink}/> : null}<Original {...props}/></>;
 }\n`);
     write('docusaurus.config.js', `module.exports = () => ({
  title: 'Multi-locale fixture', url: 'https://doris.apache.org', baseUrl: '/', trailingSlash: true,
