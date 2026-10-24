@@ -6,14 +6,17 @@ import {DEFAULT_SEARCH_TAG, keyboardFocusedClassName} from '@docusaurus/theme-co
 import {useLocation} from '@docusaurus/router';
 import {applyTrailingSlash} from '@docusaurus/utils-common';
 import SearchMetadata from '@theme/SearchMetadata';
+import {isSystemNoindexPath, rootBaseUrl} from '@site/src/utils/localizedRoute';
 
 // SiteMetadata is rendered above Docusaurus's per-route providers. Page data
 // belongs in ContentMetadata, attached to native routes by route-context.cjs.
 export default function SiteMetadata(): JSX.Element {
-    const {siteConfig: {url, baseUrl, trailingSlash}, i18n: {currentLocale, localeConfigs}} = useDocusaurusContext();
+    const {siteConfig: {url, baseUrl, trailingSlash}, i18n: {currentLocale, defaultLocale, locales, localeConfigs}} = useDocusaurusContext();
     const {pathname} = useLocation();
     const {metadata, image: defaultImage} = useThemeConfig();
     const canonical = url + applyTrailingSlash(pathname, {baseUrl, trailingSlash});
+    const systemNoindex = isSystemNoindexPath(pathname, {url,
+        baseUrl: rootBaseUrl(baseUrl, currentLocale, defaultLocale), defaultLocale, locales});
     return <>
         <Head>
             <html lang={localeConfigs[currentLocale].htmlLang} />
@@ -22,7 +25,7 @@ export default function SiteMetadata(): JSX.Element {
             <link rel="canonical" href={canonical} />
             <meta property="og:url" content={canonical} />
             <meta property="og:locale" content={localeConfigs[currentLocale].htmlLang.replace(/-/g, '_')} />
-            {/(?:^|\/)(?:404\.html|search\/?)$/.test(pathname) && <meta name="robots" content="noindex, follow" />}
+            {systemNoindex && <meta name="robots" content="noindex, follow" />}
         </Head>
         {defaultImage && <PageMetadata image={defaultImage} />}
         <SearchMetadata tag={DEFAULT_SEARCH_TAG} locale={currentLocale} />

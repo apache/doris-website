@@ -33,6 +33,9 @@ export function localePath(pathname: string, options: RouteOptions) {
     return {locale: explicit ? first : options.defaultLocale, explicit,
         path: explicit ? rest.slice(first.length + 1) || '/' : rest};
 }
+export function isSystemNoindexPath(pathname: string, options: RouteOptions): boolean {
+    return /^\/(?:404\.html|search\/?)$/.test(localePath(pathname, options)?.path ?? '');
+}
 export function routeForLocale(path: string, locale: string, options: RouteOptions): string {
     const base = options.baseUrl.replace(/\/$/, '');
     const result = base + (locale === options.defaultLocale ? '' : '/' + locale) + '/' + path.replace(/^\/+/, '');

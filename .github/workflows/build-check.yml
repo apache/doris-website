@@ -110,7 +110,7 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   npm install -g yarn
-                  yarn
+                  yarn --frozen-lockfile
                   yarn key-features:generate
 
             - name: Translation unit tests

@@ -10,12 +10,22 @@ function load(name) {
     new Function('module', 'exports', code)(mod, mod.exports);
     return mod.exports;
 }
-const {resolveLocalizedRoute, rootBaseUrl, appendRouteSuffix} = load('localizedRoute');
+const {resolveLocalizedRoute, rootBaseUrl, appendRouteSuffix, isSystemNoindexPath} = load('localizedRoute');
 const {saveLocalePreference, readLocalePreference, LOCALE_PREFERENCE_KEY} = load('localePreference');
 const locales = ['en', 'zh-CN', 'ja', 'ko', 'ru'];
 const options = {url: 'https://doris.apache.org', baseUrl: '/', defaultLocale: 'en', locales, trailingSlash: true};
 const group = {contentId: 'docs:default:4.x:topic', navigationRoutes: Object.fromEntries(locales.map(locale => [locale,
     `${locale === 'en' ? '' : '/' + locale}/docs/4.x/${locale === 'zh-CN' ? 'chinese' : 'english'}-topic/`]))};
+test('system noindex applies to localized root search/404 pages without affecting document suffixes', () => {
+    for (const baseUrl of ['/', '/preview/']) for (const locale of locales) {
+        const prefix = baseUrl + (locale === 'en' ? '' : locale + '/');
+        const opts = {...options, baseUrl};
+        for (const page of ['search', 'search/', '404.html'])
+            assert.equal(isSystemNoindexPath(prefix + page, opts), true, prefix + page);
+        for (const page of ['docs/dev/observability/dogstack/search/', 'docs/4.x/404.html', 'blog/search/', 'research/'])
+            assert.equal(isSystemNoindexPath(prefix + page, opts), false, prefix + page);
+    }
+});
 function resolve(href, extra = {}) {return resolveLocalizedRoute({href, locale: 'ja', currentUrl: '/ja/docs/4.x/english-topic/?a=1#usage', options, routes: [group], ...extra});}
 test('switches all languages using native identities and retains version, query and stable anchor', () => {
     for (const locale of locales) assert.equal(resolve('/ja/docs/4.x/english-topic/?a=1#usage', {locale, switchLocale: true}).href,

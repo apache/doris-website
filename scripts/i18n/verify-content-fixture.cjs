@@ -34,6 +34,11 @@ async function main() {
                 const html = await fs.readFile(path.join(fixture, 'build', decodeURIComponent(page.route), 'index.html'), 'utf8');
                 const $ = cheerio.load(html);
                 if (page.kind === 'docs') assert.equal($('.theme-doc-markdown').attr('lang'), page.contentLocale);
+                if (page.kind === 'docs' && page.route.endsWith('/observability/dogstack/search/')) {
+                    assert.equal(page.indexable, true, page.route);
+                    assert(!($('meta[name="robots"]').attr('content') ?? '').includes('noindex'),
+                        `An indexable search-topic document must not inherit system search metadata: ${page.route}`);
+                }
                 if (page.contentId.startsWith('page:sample-')) {
                     const i = page.contentId.slice(-1);
                     assert($('main').text().includes(page.fallback || locale === 'en' ? `English sample ${i}` : `${locale} translated sample ${i}`));

@@ -5,7 +5,7 @@ const {hash} = require('../../state.cjs');
 const {structure} = require('../../structure.cjs');
 const repoRoot = path.resolve(__dirname, '../../../..');
 
-async function createFixture(root) {
+async function createFixture(root, {searchDocument = false} = {}) {
     const write = (file, content) => {
         const target = path.join(root, file);
         fs.mkdirSync(path.dirname(target), {recursive: true});
@@ -20,7 +20,7 @@ async function createFixture(root) {
     write('versioned_sidebars/version-4.x-sidebars.json', '{}');
     const records = {ja: [], ko: [], ru: []};
     for (const [pluginId, version, docIds] of [
-        ['default', 'current', ['shared', 'ja-only', 'ko-only', 'ru-only', 'missing', 'hidden', 'draft']],
+        ['default', 'current', ['shared', 'ja-only', 'ko-only', 'ru-only', 'missing', 'hidden', 'draft', ...(searchDocument ? ['search'] : [])]],
         ['default', '4.x', ['shared']], ['community', 'current', ['shared']],
     ]) {
         const sourceRoot = pluginId === 'community' ? 'community' : version === 'current' ? 'docs' : `versioned_docs/version-${version}`;
@@ -29,7 +29,8 @@ async function createFixture(root) {
         for (const docId of docIds) {
             const filename = `01-${docId}.md`;
             const sourcePath = `${sourceRoot}/${filename}`;
-            const source = `---\ntitle: English ${docId}\nlast_update:\n  date: 2026-01-01\nslug: /english-${docId}\n${docId === 'hidden' ? 'unlisted: true\n' : docId === 'draft' ? 'draft: true\n' : ''}---\n\n## Usage\n\nUse Doris.\n\n\`\`\`sql\nSELECT 1;\n\`\`\`\n${pluginId === 'default' && version === 'current' ? '\n[ja-only](./01-ja-only.md)\n\n[ko-only](./01-ko-only.md)\n' : ''}`;
+            const slug = docId === 'search' ? '/observability/dogstack/search/' : `/english-${docId}`;
+            const source = `---\ntitle: English ${docId}\nlast_update:\n  date: 2026-01-01\nslug: ${slug}\n${docId === 'hidden' ? 'unlisted: true\n' : docId === 'draft' ? 'draft: true\n' : ''}---\n\n## Usage\n\nUse Doris.\n\n\`\`\`sql\nSELECT 1;\n\`\`\`\n${pluginId === 'default' && version === 'current' ? '\n[ja-only](./01-ja-only.md)\n\n[ko-only](./01-ko-only.md)\n' : ''}`;
             write(sourcePath, source);
             if (!['missing', 'ja-only'].includes(docId)) write(`i18n/zh-CN/${plugin}/${versionDir}/${filename}`, source.replace('English', '中文').replace('/english-', '/chinese-'));
             for (const locale of ['ja', 'ko', 'ru']) {

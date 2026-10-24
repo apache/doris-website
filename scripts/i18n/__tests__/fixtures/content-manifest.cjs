@@ -5,7 +5,7 @@ const {createFixture} = require('./multi-locale.cjs');
 const {digestFiles} = require('../../manual-state.cjs');
 const repo = path.resolve(__dirname, '../../../..');
 async function createContentFixture(root) {
-    const fixture = await createFixture(root);
+    const fixture = await createFixture(root, {searchDocument: true});
     const {write} = fixture;
     const registry = [{id: 'home', kind: 'page', sourcePath: 'src/pages/index.tsx'},
         {id: 'slack', kind: 'utility', sourcePath: 'src/pages/slack.tsx'}];

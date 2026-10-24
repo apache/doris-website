@@ -58,6 +58,7 @@ test('CI fails early on cheap checks, retains required job identity and deduplic
     assert(index('Publish artifact optimization tests') < index('Translation gate for changed locales'));
     assert(index('Publish artifact optimization tests') < index('Verify native content manifest fixture'));
     assert.match(steps[index('Translation unit tests')].run, /__tests__\/\*\.test\.cjs/);
+    assert.match(steps[index('Install dependencies')].run, /\byarn --frozen-lockfile\b/);
     assert.equal(steps.filter(step => /docs:links:changed/.test(step.run ?? '')).length, 0);
     assert.match(steps[index('Docs governance report')].run, /docs:lint:changed/);
     const verify = steps[index('Verify localized static pages')].run;
