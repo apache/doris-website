@@ -100,7 +100,12 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
         await deniedPage.waitForURL(origin + '/ko/' + ordinary);
         await denied.close();
         if (fixture) {
-            for (const target of ['/ja/', '/ja/sample-2/', '/ja/blog/native-0/', '/ja/docs/4.x/english-shared/', '/ja/']) {
+            await page.goto(origin + '/');
+            await page.locator('html[data-has-hydrated="true"]').waitFor();
+            const [download] = await Promise.all([page.waitForEvent('download'), page.locator('nav a[href="/files/manual.txt"]').click()]);
+            assert.equal(await fs.promises.readFile(await download.path(), 'utf8'), 'Fixture download');
+            await page.goto(origin + '/ja/');
+            for (const target of ['/ja/sample-2/', '/ja/blog/native-0/', '/ja/docs/4.x/english-shared/', '/ja/']) {
                 const link = page.locator(`nav a[href="${target}"]`).first();
                 if (await link.count()) {await link.click(); await page.waitForURL(origin + target);} else await page.goto(origin + target);
                 assert.equal(await page.locator('html').getAttribute('lang'), 'ja');
@@ -152,7 +157,7 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
         assert.equal(await noJsPage.locator('.language-menu a').first().getAttribute('href'), '/' + ordinary);
         await noJs.close();
         assert.deepEqual(errors, []);
-        const result = {site: path.resolve(site), fixture, themes, errors, checks: ['SSR suffix hydration', 'manual en preference', 'URL overrides stored ja', 'storage disabled', 'no JavaScript', ...(fixture ? ['navigation chain', 'localized unknown docs 404'] : ['keyboard', 'mobile', 'all brand themes'])]};
+        const result = {site: path.resolve(site), fixture, themes, errors, checks: ['SSR suffix hydration', 'manual en preference', 'URL overrides stored ja', 'storage disabled', 'no JavaScript', ...(fixture ? ['internal resource download', 'navigation chain', 'localized unknown docs 404'] : ['keyboard', 'mobile', 'all brand themes'])]};
         fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n');
         return result;
     } finally {await browser?.close(); await new Promise(resolve => server.close(resolve));}

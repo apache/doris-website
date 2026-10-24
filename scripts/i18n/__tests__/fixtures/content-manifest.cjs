@@ -56,7 +56,8 @@ export default function Page(){return <LayoutNext title={title}><h1>{title}</h1>
     write('src/components/home-next/NavbarNext.tsx', `import React from 'react'; import Translate from '@docusaurus/Translate';
 import {LanguageMenu} from './LanguageMenu'; import Link from './LocalizedLink';
 export function NavbarNext(){return <nav><Translate id="fixture.shell">English navigation</Translate><LanguageMenu/><LanguageMenu mobile/>
-<Link to="/">Home</Link><Link to="/sample-2/">Ordinary</Link><Link to="/blog/native-0/">Blog</Link><Link to="/docs/4.x/english-shared/">Docs</Link></nav>;}\n`);
+<Link to="/">Home</Link><Link to="/sample-2/">Ordinary</Link><Link to="/blog/native-0/">Blog</Link><Link to="/docs/4.x/english-shared/">Docs</Link><Link to="/files/manual.txt">Download fixture</Link></nav>;}\n`);
+    write('static/files/manual.txt', 'Fixture download');
     write('src/pages/index.tsx', `import React from 'react'; import {LayoutNext} from '@site/src/components/home-next/LayoutNext';
 export default function Home(){return <LayoutNext title="Home"><h1>English home body</h1></LayoutNext>;}\n`);
     write('src/theme/Navbar/index.tsx', `export {NavbarNext as default} from '@site/src/components/home-next/NavbarNext';\n`);

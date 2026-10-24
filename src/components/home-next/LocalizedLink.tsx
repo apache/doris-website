@@ -10,14 +10,16 @@ const LocalizedLink = React.forwardRef<HTMLAnchorElement, Props>(function Locali
 ) {
     const resolve = useLocalizedRoute();
     const {i18n, siteConfig} = useDocusaurusContext();
-    const destination = resolve(to ?? href ?? '', {preserveLocale}).href;
+    const resolved = resolve(to ?? href ?? '', {preserveLocale});
+    const destination = resolved.href;
     const plain = destination.replace(/^pathname:\/\//, '');
     const info = localePath(plain.split(/[?#]/)[0], {url: siteConfig.url,
         baseUrl: rootBaseUrl(siteConfig.baseUrl, i18n.currentLocale, i18n.defaultLocale),
         defaultLocale: i18n.defaultLocale, locales: i18n.locales});
     const crossLocale = plain.startsWith('/') && info && info.locale !== i18n.currentLocale;
-    return <Link {...props} {...(to !== undefined ? {to: crossLocale ? `pathname://${plain}` : destination}
-        : {href: crossLocale ? `pathname://${plain}` : destination})} ref={ref} autoAddBaseUrl={false}
-        {...(crossLocale && {target: props.target ?? '_self'})} />;
+    const fullNavigation = crossLocale || resolved.reason === 'resource';
+    return <Link {...props} {...(to !== undefined ? {to: fullNavigation ? `pathname://${plain}` : destination}
+        : {href: fullNavigation ? `pathname://${plain}` : destination})} ref={ref} autoAddBaseUrl={false}
+        {...(fullNavigation && {target: props.target ?? '_self'})} />;
 });
 export default LocalizedLink;
