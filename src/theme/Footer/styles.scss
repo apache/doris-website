@@ -14,7 +14,8 @@
             font-size: var(--global-font-size-medium);
             margin-bottom: 1.5rem;
             font-weight: 500;
-            white-space: nowrap;
+            white-space: normal;
+            overflow-wrap: anywhere;
         }
 
         .footer__items {
@@ -32,7 +33,8 @@
             color: var(--global-colors-white);
             font-size: var(--global-font-size-small);
             transition: all 0.3s;
-            white-space: nowrap;
+            white-space: normal;
+            overflow-wrap: anywhere;
 
             svg {
                 display: none;

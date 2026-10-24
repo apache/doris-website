@@ -122,6 +122,8 @@ jobs:
           # must be present and pass the strict cross-locale verification.
           run: |
               /usr/bin/time -v -o .i18n-build/publish-metrics/verify-time.txt bash -e -o pipefail <<'VERIFY'
+              node scripts/i18n/manual-report.cjs
+              node scripts/i18n/manual-report.cjs --coverage
               for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
                   test -s "build/${LOCALE}/index.html"
                   node scripts/i18n/verify-static.cjs \
@@ -167,6 +169,9 @@ jobs:
                   .i18n-build/publish-metrics/
                   .i18n-build/build-result.json
                   .i18n-build/publish-result.json
+                  .i18n-build/manual-drift.json
+                  .i18n-build/coverage.json
+                  .i18n-build/content-manifests/*.json
               if-no-files-found: error
               retention-days: 14
 

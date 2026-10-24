@@ -66,7 +66,7 @@ export default function Layout({children,...props}){return <Original {...props}>
     fs.appendFileSync(path.join(root, 'src/pages/sample-0.tsx'), '\n// Source changed after manual publication.\n');
     // Source drift preserves the published manual target; docs drift above falls back.
     fs.appendFileSync(path.join(root, 'blog/2026-01-01-sample.md'), '\nSource update.\n');
-    write('translations/pages/registry.json', JSON.stringify({schemaVersion: 1, pages: registry}));
+    write('translations/pages/registry.json', JSON.stringify({schemaVersion: 1, englishFallbackLocales: ['zh-CN'], pages: registry}));
     for (const kind of ['pages', 'blog']) write(`translations/${kind}/state.json`, JSON.stringify({schemaVersion: 1, pages: states[kind]}));
     write('i18n/ja/docusaurus-plugin-content-blog/2026-01-10-orphan.md', '---\ntitle: Orphan\n---\n\nOrphan.\n');
     write('i18n/ja/docusaurus-plugin-content-pages/orphan.tsx', "import React from 'react'; export default function Page(){return <main>Orphan target</main>;}\n");

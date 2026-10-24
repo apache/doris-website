@@ -4,7 +4,7 @@ const path = require('node:path');
 const {Globby, getPluginI18nPath} = require('@docusaurus/utils');
 const {applyTrailingSlash} = require('@docusaurus/utils-common');
 const {relative} = require('./state.cjs');
-const {readJson, loadManual, decideManual} = require('./manual-state.cjs');
+const {readJson, loadManual, decideManual, englishFallbackLocales} = require('./manual-state.cjs');
 const {localizedContext} = require('./native-context.cjs');
 const fs = require('node:fs');
 const {withContentRoutes} = require('./route-context.cjs');
@@ -80,6 +80,7 @@ function wrap(kind, native) {
                 }
                 const registry = readJson(context.siteDir, 'translations/pages/registry.json', {schemaVersion: 1, pages: []});
                 if (registry.schemaVersion !== 1 || !Array.isArray(registry.pages)) throw new Error('Invalid page registry');
+                const fallbackLocales = englishFallbackLocales(registry);
                 const registeredIds = new Set(), registeredPaths = new Set();
                 for (const page of registry.pages) {
                     if (!page.id || !page.sourcePath || !['page', 'utility'].includes(page.kind)
@@ -104,6 +105,10 @@ function wrap(kind, native) {
                         const item = locales.get(locale).get(file);
                         if (!item) {report.push({kind: 'missing_native_route', contentId, locale}); continue;}
                         const record = records.find(page => page.contentId === contentId && page.locale === locale);
+                        const intentionalFallback = kind === 'pages' && registration?.kind !== 'utility' && fallbackLocales.includes(locale);
+                        if (intentionalFallback && record && ['ready', 'needs-update'].includes(record.state))
+                            throw new Error(`Landing translation disabled by English fallback policy: ${contentId}/${locale}`);
+                        if (intentionalFallback) report.push({kind: 'intentional_english_fallback', contentId, locale});
                         if (kind === 'pages' && record && ['ready', 'needs-update'].includes(record.state)) {
                             const dependencies = validateMessages(context.siteDir, registration ?? {id: contentId, sourcePath: englishPath}, locale);
                             if (dependencies.some(file => !record.sourceFiles.includes(file))) throw new Error(`Untracked body dependency: ${contentId}/${locale}`);

@@ -11,7 +11,6 @@ import './NavbarNext.scss';
 import {LanguageMenu} from './LanguageMenu';
 
 const GITHUB_REPO = 'apache/doris';
-const STAR_DISPLAY = `${STAR_COUNT}k`;
 const DORIS_SUMMIT_URL = 'https://apache-doris-summit.org/';
 
 interface DropdownItem {
@@ -85,6 +84,7 @@ function buildNavItems(
                 { label: translate({ id: "homepage.navbar.022", message: "Roadmap" }), href: roadmapHref },
                 { label: translate({ id: "homepage.navbar.023", message: "Build with Us" }), href: joinCommunityHref },
                 { label: translate({ id: "homepage.navbar.024", message: "Join GitHub Discussions" }), href: 'https://github.com/apache/doris/discussions', external: true },
+                { label: 'Doris Summit 26', href: DORIS_SUMMIT_URL, external: true },
             ],
         },
     ];
@@ -152,6 +152,8 @@ export function NavbarNext(): JSX.Element {
     const {
         i18n: { currentLocale, defaultLocale },
     } = useDocusaurusContext();
+    const starDisplay = new Intl.NumberFormat(currentLocale, {notation: 'compact', maximumFractionDigits: 1}).format(STAR_COUNT * 1000);
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
     const devDocsHref = `/docs/dev/getting-started/what-is-apache-doris`;
@@ -182,7 +184,10 @@ export function NavbarNext(): JSX.Element {
         if (!mobileOpen) return undefined;
 
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') setMobileOpen(false);
+            if (event.key === 'Escape' && !(event.target instanceof Element && event.target.closest('details'))) {
+                setMobileOpen(false);
+                navbarRef.current?.querySelector<HTMLButtonElement>('.navbar-next__menu-button')?.focus();
+            }
         };
 
         window.addEventListener('keydown', onKeyDown);
@@ -225,12 +230,16 @@ export function NavbarNext(): JSX.Element {
 
                 <div className="navbar-next__nav">
                     {navItems.map(item => (
-                        <div key={item.id} className="navbar-next__item">
-                            <button className="navbar-next__trigger" type="button" aria-haspopup="true">
+                        <div key={item.id} className="navbar-next__item"
+                            onMouseEnter={() => setActiveDropdown(item.id)} onMouseLeave={() => setActiveDropdown(null)}
+                            onBlur={event => {if (!event.currentTarget.contains(event.relatedTarget as Node)) setActiveDropdown(null);}}
+                            onKeyDown={event => {if (event.key === 'Escape') {setActiveDropdown(null); event.currentTarget.querySelector('button')?.focus();}}}>
+                            <button className="navbar-next__trigger" type="button" aria-expanded={activeDropdown === item.id}
+                                aria-controls={`navbar-dropdown-${item.id}`} onClick={event => setActiveDropdown(current => event.detail === 0 && current === item.id ? null : item.id)}>
                                 {item.label}
                                 <ChevronDown />
                             </button>
-                            <div className="navbar-next__dropdown">
+                            <div id={`navbar-dropdown-${item.id}`} className={`navbar-next__dropdown${activeDropdown === item.id ? ' navbar-next__dropdown--open' : ''}`}>
                                 {item.items.map(sub => (
                                     <Link
                                         key={sub.label}
@@ -298,12 +307,12 @@ export function NavbarNext(): JSX.Element {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="navbar-next__star-link"
-                        aria-label={translate({ id: 'homepage.navbar.starLabel', message: 'Star Apache Doris on GitHub ({stars} stars)' }, { stars: STAR_DISPLAY })}
+                        aria-label={translate({ id: 'homepage.navbar.starLabel', message: 'Star Apache Doris on GitHub ({stars} stars)' }, { stars: starDisplay })}
                     >
                         <StarIcon />
                         <span className="navbar-next__star-text">{translate({ id: "homepage.navbar.032", message: "Star" })}</span>
                         <span className="navbar-next__star-divider" />
-                        <span className="navbar-next__star-count">{STAR_DISPLAY}</span>
+                        <span className="navbar-next__star-count">{starDisplay}</span>
                         <span className="navbar-next__star-divider" />
                         <GitHubIcon />
                     </a>
