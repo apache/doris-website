@@ -270,15 +270,17 @@ async function selectDocs(props, plan) {
     const changed = new Set(plan.files),
         changedStates = stateIdentities(props.siteDir, plan.files, plan.baseSha);
     for (const row of rows)
-        if (row.aliases.some(f => changed.has(f)) || changedStates.has(id(row)))
+        if (row.aliases.some(f => changed.has(f)) || changedStates.has(id(row))) {
             add(row, 'changed document/state');
-    const direct = new Set(rows.flatMap(r => r.aliases));
-    const dependenciesChanged = plan.files.filter(
-        f =>
-            !direct.has(f) &&
-            /^(docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|i18n\/|src\/|static\/)/.test(
-                f,
-            ),
+            // A state transition can replace the body in a generated locale
+            // view even when its source file was not edited. Importers of that
+            // document must be compiled too, including importers of doc routes.
+            changed.add(gitPath(props.siteDir, sourceFile(props.siteDir, row.source)));
+        }
+    const dependenciesChanged = [...changed].filter(f =>
+        /^(docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|i18n\/|src\/|static\/)/.test(
+            f,
+        ),
     );
     if (dependenciesChanged.length) {
         const cache = new Map();

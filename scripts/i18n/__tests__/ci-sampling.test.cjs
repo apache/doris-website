@@ -124,7 +124,7 @@ test('changed transitive imports and sharded translation state select their owni
     fs.writeFileSync(path.join(root, 'docs/entry.mdx'), 'Entry body');
     fs.writeFileSync(
         path.join(root, 'docs/owner.mdx'),
-        'import {value} from "@site/src/value.js";\n\n{value}',
+        'import {value} from "@site/src/value.js";\nimport Nested from "./state-only.mdx";\n\n{value}\n<Nested/>',
     );
     fs.writeFileSync(path.join(root, 'docs/state-only.mdx'), 'State body');
     fs.writeFileSync(
@@ -180,6 +180,12 @@ test('changed transitive imports and sharded translation state select their owni
             .get(JSON.stringify(['default', 'current', 'owner']))
             .reasons.includes('changed import dependency'),
     );
+    const document = await selectDocs(props, {files: ['docs/state-only.mdx'], baseSha: 'HEAD'});
+    assert(
+        document.selected
+            .get(JSON.stringify(['default', 'current', 'owner']))
+            .reasons.includes('changed import dependency'),
+    );
     fs.rmSync(path.join(root, 'src/nested.js'));
     const deleted = await selectDocs(props, {files: ['src/nested.js'], baseSha: 'HEAD'});
     assert(
@@ -187,6 +193,7 @@ test('changed transitive imports and sharded translation state select their owni
             .get(JSON.stringify(['default', 'current', 'owner']))
             .reasons.includes('conservative dynamic/unparsed import'),
     );
+    fs.writeFileSync(path.join(root, 'src/nested.js'), 'export const value = 1;');
     const state = 'translations/state/ja/pages/topic.json';
     fs.mkdirSync(path.dirname(path.join(root, state)), {recursive: true});
     fs.writeFileSync(
@@ -201,5 +208,10 @@ test('changed transitive imports and sharded translation state select their owni
         changed.selected
             .get(JSON.stringify(['default', 'current', 'state-only']))
             .reasons.includes('changed document/state'),
+    );
+    assert(
+        changed.selected
+            .get(JSON.stringify(['default', 'current', 'owner']))
+            .reasons.includes('changed import dependency'),
     );
 });
