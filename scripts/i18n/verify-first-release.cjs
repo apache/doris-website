@@ -84,6 +84,31 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 assert.equal(await page.locator('[data-content-id="page:P01"]').getAttribute('lang'), home.contentLocale);
                 assert.equal(await page.locator('.page-fallback-notice').count(), home.fallback ? 1 : 0);
                 const title = await page.locator('h1').first().textContent(); assert(title.trim());
+                // The external widget is blocked in local tests. Exercise its
+                // actual label overrides independently of network/error timing.
+                const aiLabelStates = await page.locator('#navbar-ask-ai-btn').evaluate(button => {
+                    const trigger = button.getAttribute('data-kapa-trigger');
+                    const busy = button.getAttribute('aria-busy'), disabled = button.getAttribute('aria-disabled');
+                    const labels = [...button.querySelectorAll('[data-kapa-label]')];
+                    const original = labels.map(label => label.textContent);
+                    const results = [];
+                    button.removeAttribute('data-kapa-trigger');
+                    for (const state of ['loading', 'slow', 'error']) {
+                        button.setAttribute('aria-busy', state === 'error' ? 'false' : 'true');
+                        button.setAttribute('aria-disabled', state === 'error' ? 'true' : 'false');
+                        labels.forEach(label => {label.textContent = label.getAttribute('data-kapa-' + state + '-label')
+                            || (state === 'slow' && label.getAttribute('data-kapa-loading-label'))
+                            || {loading: 'Loading AI…', slow: 'Still loading…', error: 'AI unavailable'}[state];});
+                        results.push({state, scrollWidth: document.documentElement.scrollWidth, viewport: innerWidth});
+                    }
+                    labels.forEach((label, index) => {label.textContent = original[index];});
+                    if (trigger !== null) button.setAttribute('data-kapa-trigger', trigger);
+                    if (busy !== null) button.setAttribute('aria-busy', busy);
+                    if (disabled !== null) button.setAttribute('aria-disabled', disabled);
+                    return results;
+                });
+                for (const state of aiLabelStates) assert(state.scrollWidth <= state.viewport + 1,
+                    `${locale}/${width}/${state.state}: AI label overflow`);
                 for (const theme of themes) {
                     if (width === 390) await page.locator('.navbar-next__menu-button').click();
                     const palette = page.locator(width === 390 ? '.brand-theme-switcher--mobile' : '.brand-theme-switcher:not(.brand-theme-switcher--mobile)');
@@ -114,7 +139,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                         await page.evaluate(() => scrollTo(0, 0));
                         await page.screenshot({path: path.join(path.dirname(output), `home-${locale}-${width}-${theme}.png`)});
                     }
-                    results.push({locale, width, theme, title});
+                    results.push({locale, width, theme, title, aiLabelStates});
                 }
                 if (width === 390) await page.locator('.navbar-next__menu-button').click();
                 const language = page.locator(width === 390 ? '.language-menu--mobile' : '.language-menu:not(.language-menu--mobile)');

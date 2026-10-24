@@ -3531,7 +3531,7 @@
     "message": "Загрузка ИИ…"
   },
   "homepage.ai.slow": {
-    "message": "Всё ещё загружается…"
+    "message": "Загрузка…"
   },
   "homepage.ai.error": {
     "message": "ИИ недоступен"

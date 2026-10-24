@@ -232,7 +232,7 @@
         "homepage"
       ],
       "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "machine"
     },
     {
@@ -340,7 +340,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -413,7 +413,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -492,7 +492,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -1198,7 +1198,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1291,7 +1291,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1384,7 +1384,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
@@ -1465,7 +1465,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "0996f40ec0203d28827fd89174c946a7278d3ad1788d0a691a5507a53920c7a9",
+      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "unverified",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
     },
