@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-operator",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-operator.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-operator.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "c5038d3c275542480cefa8dcb535afb6c61072071b255b09adef78266aaf7b90",
+    "sourceTechnicalHash": "675908c95c60292ee8bf5fd9e05c8bec393d029b1265498d8ef45ee627de35e2",
+    "targetHash": "05e79b6a31f8f303b09b77b4c8a392bd6578dca5c75ded43528ac87954168e39",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T18:13:55.207Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c5038d3c275542480cefa8dcb535afb6c61072071b255b09adef78266aaf7b90",
+      "targetHash": "05e79b6a31f8f303b09b77b4c8a392bd6578dca5c75ded43528ac87954168e39",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 33: expected [\"inlineCode\",null,null,\"admin\"]; received [\"inlineCode\",null,null,\"DorisCluster\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"DorisCluster\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"admin\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 33: expected [\"inlineCode\",null,null,\"admin\"]; received [\"inlineCode\",null,null,\"DorisCluster\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"DorisCluster\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"admin\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 33: expected [\"inlineCode\",null,null,\"admin\"]; received [\"inlineCode\",null,null,\"DorisCluster\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"DorisCluster\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"admin\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 33: expected [\"inlineCode\",null,null,\"admin\"]; received [\"inlineCode\",null,null,\"DorisCluster\"]\nprotected node 34: expected [\"inlineCode\",null,null,\"DorisCluster\"]; received [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"DorisDisaggregatedCluster\"]; received [\"inlineCode\",null,null,\"admin\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
