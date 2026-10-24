@@ -1,140 +1,162 @@
 ---
 {
-    "title": "LOCAL | テーブル値関数",
+    "title": "HDFS | テーブル値関数",
     "language": "ja",
-    "description": "LOCAL テーブル値関数（TVF）を使用すると、リレーショナルテーブルにアクセスするように、BE ノード上のローカルファイルの内容を読み取れます。",
-    "sidebar_label": "LOCAL"
+    "description": "HDFS テーブル値関数を使用して、HDFS 上のファイルをリレーショナルテーブルとして読み取ります。",
+    "sidebar_label": "HDFS"
 }
 ---
 
-# LOCAL
+<a id="local"></a>
 
-## 説明
+# HDFS {#hdfs}
 
-LOCAL テーブル値関数（TVF）を使用すると、リレーショナルテーブルにアクセスするように、BE ノード上のローカルファイルの内容を読み取れます。現在、`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` 形式をサポートしています。
+## 説明 {#description}
 
-## 構文
+HDFS テーブル値関数（TVF）は、HDFS 上のファイルをリレーショナルテーブルとして読み取ります。`csv`、`csv_with_names`、`csv_with_names_and_types`、`json`、`parquet`、`orc`、`avro` の形式をサポートします。
+
+## 構文 {#syntax}
 
 ```sql
-LOCAL(
-  "file_path" = "<file_path>", 
-  "backend_id" = "<backend_id>",
-  "format" = "<format>"
-  [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
-  );
+HDFS(
+    "uri" = "<uri>",
+    "fs.defaultFS" = "<fs_defaultFS>",
+    "hadoop.username" = "<hadoop_username>",
+    "format" = "<format>"
+    [, "<optional_property_key>" = "<optional_property_value>" [, ...] ]
+)
 ```
 
-## 必須パラメータ
+## パラメータ {#parameters}
+
+### 必須パラメータ {#required-parameters}
+
+| パラメータ | 説明 |
+| --- | --- |
+| `uri` | 読み取るファイルの HDFS URI。パスが存在しない場合やファイルが空の場合、TVF は空の結果を返します。 |
+| `fs.defaultFS` | デフォルトの HDFS ファイルシステム URI。 |
+| `hadoop.username` | HDFS ユーザー名。空でない文字列を指定します。 |
+| `format` | ファイル形式：`csv`、`csv_with_names`、`csv_with_names_and_types`、`json`、`parquet`、`orc`、`avro`。 |
+
+### オプションパラメータ {#optional-parameters}
+
+`<optional_property_key>` には以下のキーを、`<optional_property_value>` にはそれぞれに対応する値を指定します。
+
 | パラメータ | 説明 | 備考 |
-|-----------|------|------|
-| `file_path` | 読み取るファイルのパス。`user_files_secure_path` ディレクトリからの相対パスを指定します。`user_files_secure_path` は [BE の設定項目](../../../admin-manual/config/be-config.md)です。<br />パスに `..` は含められません。`logs/*.log` のような glob 構文によるパターンマッチを使用できます。 | |
-| `backend_id` | ファイルがある BE ノードの ID。`show backends` コマンドで確認できます。 | バージョン 2.1.1 より前では、Doris はローカルデータファイルの読み取り先として BE ノードを指定する方法のみをサポートします。 |
-| `format` | 必須のファイル形式。`csv/csv_with_names/csv_with_names_and_types/json/parquet/orc` をサポートします。 | |
+| --- | --- | --- |
+| `hadoop.security.authentication` | HDFS の認証方式。 | |
+| `hadoop.kerberos.principal` | Kerberos プリンシパル。 | |
+| `hadoop.kerberos.keytab` | Kerberos キータブファイル。 | |
+| `dfs.client.read.shortcircuit` | HDFS のショートサーキット読み取りを有効にします。 | |
+| `dfs.domain.socket.path` | ドメインソケットのパス。 | |
+| `dfs.nameservices` | HA モードで使用する nameservice。 | |
+| `dfs.ha.namenodes.<nameservice>` | HA モードで指定した nameservice の NameNode ID。 | |
+| `dfs.namenode.rpc-address.<nameservice>.<namenode>` | 指定した NameNode の RPC アドレス。 | |
+| `dfs.client.failover.proxy.provider.<nameservice>` | nameservice のフェイルオーバープロキシプロバイダークラス。 | |
+| `column_separator` | 列区切り文字。デフォルトは `\t`。 | |
+| `line_delimiter` | 行区切り文字。デフォルトは `\n`。 | |
+| `compress_type` | 圧縮形式：`UNKNOWN`、`PLAIN`、`GZ`、`LZO`、`BZ2`、`LZ4FRAME`、`DEFLATE`、`SNAPPYBLOCK`。デフォルトは `UNKNOWN` で、URI の拡張子から圧縮形式を推定します。 | |
+| `read_json_by_line` | JSON を行単位で読み取ります。デフォルトは `true`。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `strip_outer_array` | JSON の最外層の配列を取り除きます。デフォルトは `false`。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `json_root` | JSON のルートパス。デフォルトは空です。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `json_paths` | JSON フィールドのパス。デフォルトは空です。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `num_as_string` | JSON の数値を文字列として読み取ります。デフォルトは `false`。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `fuzzy_parse` | JSON のファジー解析を有効にします。デフォルトは `false`。 | [JSON データロード](../../../data-operate/import/file-format/json) |
+| `trim_double_quotes` | CSV 用の真偽値。デフォルトは `false`。有効にすると、各フィールドの外側の二重引用符を取り除きます。 | |
+| `skip_lines` | CSV 用の整数値。デフォルトは `0`。先頭の行をスキップします。`csv_with_names` と `csv_with_names_and_types` では無視されます。 | |
+| `path_partition_keys` | パスに含まれるパーティション列名をカンマで区切って指定します。`/path/to/city=beijing/date=2023-07-09` の場合、`city,date` を指定すると、それらの値を抽出できます。 | |
+| `resource` | HDFS へのアクセスに使用する既存の HDFS Resource。[CREATE RESOURCE](../../sql-statements/cluster-management/compute-management/CREATE-RESOURCE) を参照してください。 | 2.1.4 以降 |
+| `enable_mapping_varbinary` | 開発版では互換性のためだけに受け付けられ、値は無視されます。外部のバイナリデータは常に `VARBINARY` にマッピングされます。Doris 4.1.5 では、この TVF オプションは引き続き設定可能で、デフォルトは `false` です。 | 4.0.3 以降 |
+| `enable_mapping_timestamp_tz` | 4.1.5 以降、互換性のためだけに受け付けられ、値は無視されます。Parquet Timestamp の `isAdjustedToUTC=true` と ORC の `TIMESTAMP_INSTANT` は、このオプションが `false` でも常に `TIMESTAMPTZ` にマッピングされます。 | 4.0.3 以降 |
+| `hive.parquet.time-zone` | 省略可能な文字列で、デフォルトは空です。Parquet INT96 の書き込み元のタイムゾーンを指定します。IANA タイムゾーン、または `-12:00` から `+14:00` までの UTC オフセットを指定できます。`CST` や `PRC` などの短い別名は使用できません。[Parquet](../../../lakehouse/file-formats/parquet.md#timestamp-and-date-compatibility) を参照してください。 | 4.1.5 以降 |
 
-## オプションパラメータ
-| パラメータ | 説明 | 備考 |
-|-----------|------|------|
-| `shared_storage` | デフォルトは false です。true の場合、指定したファイルは共有ストレージ（NAS など）にあります。共有ストレージは POSIX ファイルインターフェイスをサポートし、すべての BE ノードにマウントされている必要があります。<br />`shared_storage` が true の場合、`backend_id` は省略できます。Doris はすべての BE ノードを使用してデータにアクセスできます。`backend_id` を指定した場合は、指定した BE ノードのみからデータにアクセスします。 | バージョン 2.1.2 以降でサポート |
-| `column_separator` | 列区切り文字。省略可能で、デフォルトは `\t` です。 | |
-| `line_delimiter` | 行区切り文字。省略可能で、デフォルトは `\n` です。 | |
-| `compress_type` | 圧縮形式。省略可能です。`UNKNOWN/PLAIN/GZ/LZO/BZ2/LZ4FRAME/DEFLATE/SNAPPYBLOCK` をサポートします。デフォルトは `UNKNOWN` で、`uri` の末尾から形式が自動的に推測されます。 | |
-| `read_json_by_line` | JSON 形式のインポートで使用します。省略可能で、デフォルトは `true` です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `strip_outer_array` | JSON 形式のインポートで使用します。省略可能で、デフォルトは `false` です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `json_root` | JSON 形式のインポートで使用します。省略可能で、デフォルトは空です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `json_paths` | JSON 形式のインポートで使用します。省略可能で、デフォルトは空です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `num_as_string` | JSON 形式のインポートで使用します。省略可能で、デフォルトは `false` です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `fuzzy_parse` | JSON 形式のインポートで使用します。省略可能で、デフォルトは `false` です。 | 参照: [JSON の読み込み](../../../data-operate/import/file-format/json) |
-| `trim_double_quotes` | CSV 形式のインポートで使用します。省略可能で、デフォルトは `false` です。true の場合、CSV ファイルの各フィールドを囲む最も外側の二重引用符を除去します。 | CSV 形式用 |
-| `skip_lines` | CSV 形式のインポートで使用します。省略可能で、デフォルトは `0` です。CSV ファイルの先頭から指定した行数をスキップします。形式が `csv_with_names` または `csv_with_names_and_types` の場合、このパラメータは無視されます。 | CSV 形式用 |
-| `path_partition_keys` | 省略可能です。ファイルパスに含まれるパーティション列名を指定します。たとえば、パスが `/path/to/city=beijing/date="2023-07-09"` の場合は `path_partition_keys="city,date"` を指定します。インポート時に、対応する列名と値がパスから自動的に読み取られます。 | |
-| `enable_mapping_varbinary` | デフォルトは false です。PARQUET/ORC の読み取り時、BYTE_ARRAY 型は STRING 型にマッピングされます。有効にすると VARBINARY 型にマッピングされます。 | 4.0.3 以降でサポート |
-| `enable_mapping_timestamp_tz` | デフォルトは `false` です。PARQUET（`TIMESTAMP` に `isAdjustedToUTC` が設定されている場合）または ORC（`TIMESTAMP_INSTANT`）の読み取り時、型は `DATETIME` にマッピングされます。有効にすると `TIMESTAMPTZ` 型にマッピングされます。 | バージョン 4.0.3 以降でサポート |
+### アクセス制御の要件 {#access-control-requirements}
 
-## アクセス制御要件
-| 権限 | 対象 | 備考 |
-| :--------- |:-------|:------|
-| ADMIN_PRIV | global |       |
+`resource` パラメータを使用する場合、クエリを実行するユーザーには、その Resource に対する `USAGE` 権限が必要です。また、Doris から HDFS にネットワーク経由でアクセスでき、対象ファイルに対する有効な HDFS または Kerberos の認証情報が必要です。
 
+## 戻り値 {#return-value}
 
-## 使用上の注意
+ファイルから列名と型を推定したテーブルを返します。NULL フィールドは SQL NULL として返されます。存在しないパスや空のファイルに対しては、空の結果を返します。パラメータが無効な場合、ストレージにアクセスできない場合、またはファイルの形式が不正な場合は、解析または実行に失敗することがあります。
 
-- LOCAL TVF の詳しい使い方については、[S3](./s3.md) TVF を参照してください。両者の違いは、ストレージシステムへのアクセス方法だけです。
+## 例 {#examples}
 
-- LOCAL TVF を使用して NAS 上のデータにアクセスする
+以下の例では、HDFS ファイル `student.csv` に次の内容が含まれているものとします。
 
-  NAS の共有ストレージは、複数のノードに同時にマウントできます。各ノードは共有ストレージ内のファイルにローカルファイルと同じようにアクセスできます。そのため、NAS をローカルファイルシステムとみなし、LOCAL TVF でアクセスできます。
-
-  `"shared_storage" = "true"` を設定すると、Doris は指定したファイルにどの BE ノードからでもアクセスできるものとして扱います。ワイルドカードで一連のファイルを指定した場合、Doris は複数の BE ノードにファイルアクセス要求を分散します。これにより、複数のノードでファイルを分散スキャンし、クエリの性能を向上できます。
-
-
-## 例
-
-指定した BE 上のログファイルを分析する:
-```sql
-select * from local(
-        "file_path" = "log/be.out",
-        "backend_id" = "10006",
-        "format" = "csv")
-       where c1 like "%start_time%" limit 10;
-```
 ```text
-+--------------------------------------------------------+
-| c1                                                     |
-+--------------------------------------------------------+
-| start time: 2023 年 08 月 07 日 星期一 23:20:32 CST       |
-| start time: 2023 年 08 月 07 日 星期一 23:32:10 CST       |
-| start time: 2023 年 08 月 08 日 星期二 00:20:50 CST       |
-| start time: 2023 年 08 月 08 日 星期二 00:29:15 CST       |
-+--------------------------------------------------------+
+1,alice,18
+2,bob,20
+3,jack,24
+4,jackson,19
+5,liming,18
 ```
 
-`${DORIS_HOME}/student.csv` にある CSV 形式のファイルを読み取る:
+### CSV ファイルを読み取る {#read-a-csv-file}
+
 ```sql
-select * from local(
-      "file_path" = "student.csv", 
-      "backend_id" = "10003", 
-      "format" = "csv");
+SELECT * FROM HDFS(
+    "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ","
+);
 ```
+
 ```text
-+------+---------+--------+
-| c1   | c2      | c3     |
-+------+---------+--------+
-| 1    | alice   | 18     |
-| 2    | bob     | 20     |
-| 3    | jack    | 24     |
-| 4    | jackson | 19     |
-| 5    | liming  | d18    |
-+------+---------+--------+
-```--+---------+--------+
++------+---------+------+
+| c1   | c2      | c3   |
++------+---------+------+
+| 1    | alice   | 18   |
+| 2    | bob     | 20   |
+| 3    | jack    | 24   |
+| 4    | jackson | 19   |
+| 5    | liming  | 18   |
++------+---------+------+
 ```
 
-NAS 上のファイルをクエリする:
+### HA 構成の HDFS から CSV ファイルを読み取る {#read-a-csv-file-from-ha-hdfs}
+
+HA クラスターの nameservice と両方の NameNode アドレスを設定します。URI と `fs.defaultFS` には論理 nameservice を使用します。
+
 ```sql
-select * from local(
-        "file_path" = "/mnt/doris/prefix_*.txt",
-        "format" = "csv",
-        "column_separator" =",",
-        "shared_storage" = "true");
+SELECT * FROM HDFS(
+    "uri" = "hdfs://my_hdfs/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://my_hdfs",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ",",
+    "dfs.nameservices" = "my_hdfs",
+    "dfs.ha.namenodes.my_hdfs" = "nn1,nn2",
+    "dfs.namenode.rpc-address.my_hdfs.nn1" = "namenode01:8020",
+    "dfs.namenode.rpc-address.my_hdfs.nn2" = "namenode02:8020",
+    "dfs.client.failover.proxy.provider.my_hdfs" = "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
+);
 ```
+
 ```text
-+------+------+------+
-| c1   | c2   | c3   |
-+------+------+------+
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-| 1    | 2    | 3    |
-+------+------+------+
++------+---------+------+
+| c1   | c2      | c3   |
++------+---------+------+
+| 1    | alice   | 18   |
+| 2    | bob     | 20   |
+| 3    | jack    | 24   |
+| 4    | jackson | 19   |
+| 5    | liming  | 18   |
++------+---------+------+
 ```
 
-`desc function` とともに使用できます:
+### 推定されたスキーマを確認する {#inspect-the-inferred-schema}
+
 ```sql
-desc function local(
-      "file_path" = "student.csv", 
-      "backend_id" = "10003", 
-      "format" = "csv");
+DESC FUNCTION HDFS(
+    "uri" = "hdfs://127.0.0.1:8424/user/doris/csv_format_test/student.csv",
+    "fs.defaultFS" = "hdfs://127.0.0.1:8424",
+    "hadoop.username" = "doris",
+    "format" = "csv",
+    "column_separator" = ","
+);
 ```
+
 ```text
 +-------+------+------+-------+---------+-------+
 | Field | Type | Null | Key   | Default | Extra |
@@ -144,3 +166,7 @@ desc function local(
 | c3    | TEXT | Yes  | false | NULL    | NONE  |
 +-------+------+------+-------+---------+-------+
 ```
+
+## 使用上の注意 {#usage-notes}
+
+その他の一般的なファイルオプションについては、[S3 TVF](./s3.md) を参照してください。HDFS 固有の認証と HA の設定については、[HDFS ストレージ](../../../lakehouse/storages/hdfs.md) を参照してください。
