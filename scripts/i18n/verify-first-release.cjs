@@ -126,10 +126,12 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
             if (!landingOnly) {
                 await page.setViewportSize({width: 1440, height: 900}); await page.goto(origin + prefix);
                 await page.locator('.navbar-next__cta').click(); await waitPath(page, prefix + 'download/');
-                assert.equal(await page.locator('[data-content-id]').getAttribute('lang'), 'en');
+                await page.locator('[data-content-id="page:P10"][lang="en"]').waitFor();
+                assert.equal(await page.locator('[data-content-id="page:P10"]').getAttribute('lang'), 'en');
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 await page.reload(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix + 'download/'));
                 await page.goBack(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix));
+                await page.locator('[data-content-id="page:P01"]').waitFor();
                 await page.locator('button[aria-controls="navbar-dropdown-resources"]').click();
                 await page.locator(`#navbar-dropdown-resources a[href="${prefix}blog/"]`).click();
                 await waitPath(page, prefix + 'blog/');
@@ -139,7 +141,8 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 assert(blog, 'No native blog link on listing');
                 const articleLink = page.locator(`main a[href="${blog.route}"], main a[href="${normalized(blog.route)}"]`).first();
                 await articleLink.click(); await waitPath(page, blog.route);
-                assert.equal(await page.locator('article[lang]').first().getAttribute('lang'), blog.contentLocale);
+                await page.locator(`article.blog-article-content[lang="${blog.contentLocale}"]`).waitFor();
+                assert.equal(await page.locator('article.blog-article-content').getAttribute('lang'), blog.contentLocale);
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 const newTab = await context.newPage();
                 await newTab.goto(origin + blog.route + '?from=m1#usage');
@@ -148,8 +151,13 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 await page.locator('button[aria-controls="navbar-dropdown-docs"]').click();
                 await page.locator('#navbar-dropdown-docs a').first().click();
                 await page.waitForURL(url => url.pathname.startsWith(prefix + 'docs/dev/'));
+                await page.locator('.theme-doc-markdown').waitFor();
+                const doc = manifests[locale].pages.find(row => row.kind === 'docs' && normalized(row.route) === normalized(new URL(page.url()).pathname));
+                assert(doc, 'Document route must retain its native identity');
+                assert.equal(await page.locator('.theme-doc-markdown').getAttribute('lang'), doc.contentLocale);
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 await page.locator('.navbar-next__logo').click(); await waitPath(page, prefix);
+                await page.locator('[data-content-id="page:P01"]').waitFor();
                 await page.locator('button[aria-controls="navbar-dropdown-community"]').click();
                 await page.locator(`#navbar-dropdown-community a[href="${prefix}community/join-community/"]`).click();
                 await waitPath(page, prefix + 'community/join-community/');

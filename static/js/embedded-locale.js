@@ -2,6 +2,7 @@
 // HTML outside the Docusaurus dictionaries, so they ask for their locale with
 // ?locale=<code> and pick the matching dictionary here; a locale without one
 // keeps the frame's own text. Adding a language means adding its dictionary.
+// Chinese landing bodies intentionally use the English illustrations.
 // The existing brand-theme bridge remains responsible for their colors.
 (function () {
     var dictionaries = {};
@@ -34,35 +35,6 @@
         '▲ peak 12,400+ · ingest rate': '▲ ピーク 12,400+ · 取り込み速度',
         'Real-time data. Real-time insight.': 'リアルタイムのデータから、リアルタイムのインサイトへ。',
     };
-    dictionaries["zh-CN"] = {
-    "Apache Doris Lakehouse Analytics": "Apache Doris 湖仓分析",
-    "OPEN DATA LAKE": "开放数据湖",
-    "LAKEHOUSE ANALYTICS ENGINE": "湖仓分析引擎",
-    "Apache Doris — Hybrid Search": "Apache Doris 混合搜索",
-    "RAG · Semantic Retrieval": "RAG · 语义检索",
-    "Vector · Full-text · BM25 fusion": "向量 · 全文 · BM25 融合",
-    "Agent Observability": "Agent 可观测性",
-    "Agent A": "Agent A",
-    "Agent B": "Agent B",
-    "trace · span · log": "追踪 · 跨度 · 日志",
-    "Distributed tracing": "分布式追踪",
-    "Multimodal Processing": "多模态处理",
-    "Text": "文本",
-    "Audio": "音频",
-    "Video": "视频",
-    "Embedding · Index · Query": "嵌入 · 索引 · 查询",
-    "Apache Doris — Real-Time Analytics": "Apache Doris 实时分析",
-    "Apps": "应用",
-    "Live Query Performance": "实时查询性能",
-    "LIVE": "实时",
-    "▲ peak 10,500+": "▲ 峰值 10,500+",
-    "LATENCY": "延迟",
-    "▼ well below 1s": "▼ 远低于 1 秒",
-    "1s threshold": "1 秒阈值",
-    "LOAD THROUGHPUT": "导入吞吐量",
-    "▲ peak 12,400+ · ingest rate": "▲ 峰值 12,400+ · 摄取速率",
-    "Real-time data. Real-time insight.": "实时数据，实时洞察。"
-};
     dictionaries["ko"] = {
     "Apache Doris Lakehouse Analytics": "Apache Doris 레이크하우스 분석",
     "OPEN DATA LAKE": "오픈 데이터 레이크",
