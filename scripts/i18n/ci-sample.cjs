@@ -139,7 +139,13 @@ function chooseRepresentatives(rows, root) {
     }
     return {selected, add};
 }
-async function dependencies(root, file, cache = new Map(), seen = new Set()) {
+async function dependencies(
+    root,
+    file,
+    cache = new Map(),
+    seen = new Set(),
+    markdownConfigFormat = 'mdx',
+) {
     if (seen.has(file)) return {files: seen, uncertain: false};
     seen.add(file);
     if (!/\.(mdx?|[cm]?[jt]sx?)$/.test(file)) return {files: seen, uncertain: false};
@@ -156,14 +162,23 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
             const blocks = [];
             if (/\.mdx?$/.test(file)) {
                 try {
-                    const {createProcessor} = await import('@mdx-js/mdx');
                     const matter = require('gray-matter');
-                    const tree = createProcessor({format: 'mdx'}).parse(matter(source).content);
-                    const walk = n => {
-                        if (n.type === 'mdxjsEsm') blocks.push(n.value);
-                        for (const child of n.children ?? []) walk(child);
-                    };
-                    walk(tree);
+                    const parsed = matter(source);
+                    const {getFormat} = require('@docusaurus/mdx-loader/lib/format.js');
+                    const format = getFormat({
+                        filePath: file,
+                        frontMatterFormat: parsed.data.format,
+                        markdownConfigFormat,
+                    });
+                    if (format === 'mdx') {
+                        const {createProcessor} = await import('@mdx-js/mdx');
+                        const tree = createProcessor({format}).parse(parsed.content);
+                        const walk = n => {
+                            if (n.type === 'mdxjsEsm') blocks.push(n.value);
+                            for (const child of n.children ?? []) walk(child);
+                        };
+                        walk(tree);
+                    }
                 } catch {
                     uncertain = true;
                 }
@@ -174,7 +189,7 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
                     block,
                     ts.ScriptTarget.Latest,
                     true,
-                    ts.ScriptKind.TSX,
+                    /\.[cm]?ts$/.test(file) ? ts.ScriptKind.TS : ts.ScriptKind.TSX,
                 );
                 if (ast.parseDiagnostics.length) uncertain = true;
                 const walk = node => {
@@ -228,7 +243,7 @@ async function dependencies(root, file, cache = new Map(), seen = new Set()) {
             .map(ext => base + ext)
             .find(p => fs.existsSync(p) && fs.statSync(p).isFile());
         if (child) {
-            const result = await dependencies(root, child, cache, seen);
+            const result = await dependencies(root, child, cache, seen, markdownConfigFormat);
             uncertain ||= result.uncertain;
         } else uncertain = true; // Deleted imports must still select their owners.
     }
@@ -289,6 +304,8 @@ async function selectDocs(props, plan) {
                 props.siteDir,
                 sourceFile(props.siteDir, row.source),
                 cache,
+                new Set(),
+                props.siteConfig?.markdown?.format ?? 'mdx',
             );
             if (
                 result.uncertain ||
@@ -302,10 +319,26 @@ async function selectDocs(props, plan) {
                 );
         }
     }
-    if (selected.size > 500)
+    if (selected.size > 500) {
+        const directory = path.join(props.siteDir, '.i18n-build/ci-sample/scopes');
+        fs.mkdirSync(directory, {recursive: true});
+        fs.writeFileSync(
+            path.join(directory, props.i18n.currentLocale + '.selection.json'),
+            JSON.stringify(
+                {
+                    status: 'selection-exceeded',
+                    sourceSha: plan.sourceSha,
+                    metadataDocs: rows.length,
+                    selected: [...selected.values()],
+                },
+                null,
+                2,
+            ) + '\n',
+        );
         throw new Error(
             `Sample expands to ${selected.size} documents; use the ci/full label or manual full validation instead of truncating affected documents`,
         );
+    }
     return {rows, selected};
 }
 function prune(routes, docPaths, chosen, versions, inDocs = false) {

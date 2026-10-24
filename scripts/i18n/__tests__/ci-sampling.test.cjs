@@ -26,7 +26,10 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
         assert.equal(policy([file]).mode, 'full');
     assert.equal(policy(['plan-doc/notes.md']).mode, 'skip');
     assert.equal(policy(['translations/CONTENT_MANIFEST.md']).mode, 'skip');
-    assert.equal(policy(['src/utils/localizedRoute.ts', 'translations/CONTENT_MANIFEST.md']).mode, 'sample');
+    assert.equal(
+        policy(['src/utils/localizedRoute.ts', 'translations/CONTENT_MANIFEST.md']).mode,
+        'sample',
+    );
     assert.equal(policy(['README.md']).mode, 'skip');
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');
     assert.equal(policy([], {forceSample: true}).mode, 'sample');
@@ -98,6 +101,33 @@ test('known unbuilt anchors are reported as unverified, while unknown paths and 
     );
     assert.equal(result.skipped, 1);
     assert.deepEqual(result.collected['/a/'].links, ['/a/#must-exist', '/unknown/']);
+});
+test('dependency parsing follows native Markdown detection and front matter overrides', async t => {
+    const root = directory(t);
+    fs.writeFileSync(
+        path.join(root, 'plain.md'),
+        'Use import with <placeholder>.\n\nimport Example from "./absent.js";\n',
+    );
+    fs.writeFileSync(path.join(root, 'typed.ts'), 'export const value = <number>1;');
+    fs.writeFileSync(
+        path.join(root, 'override.md'),
+        '---\nformat: mdx\n---\n\nimport {value} from "./typed.ts";\n\n{value}\n',
+    );
+    fs.writeFileSync(
+        path.join(root, 'markdown.mdx'),
+        '---\nformat: md\n---\n\nimport Example from "./absent.js";\n',
+    );
+    const scan = file => dependencies(root, path.join(root, file), new Map(), new Set(), 'detect');
+    const plain = await scan('plain.md');
+    assert.equal(plain.uncertain, false);
+    assert.deepEqual([...plain.files], [path.join(root, 'plain.md')]);
+    const mdx = await scan('override.md');
+    assert.equal(mdx.uncertain, false);
+    assert(mdx.files.has(path.join(root, 'typed.ts')));
+    assert.equal((await scan('markdown.mdx')).uncertain, false);
+    // Actual malformed MDX still selects its owner conservatively.
+    fs.writeFileSync(path.join(root, 'broken.mdx'), 'import X from "./typed.ts";\n\n<Unclosed>\n');
+    assert.equal((await scan('broken.mdx')).uncertain, true);
 });
 test('sample artifacts cannot become publication artifacts or overwrite the full build output', async t => {
     const root = directory(t);
