@@ -24,6 +24,7 @@ function inventory(root) {
 }
 
 function optimize({site, locales, reportFile}) {
+    assert(!fs.existsSync(path.join(site,'.ci-validation.json')), 'Sample validation artifacts must not be published');
     site = path.resolve(site);
     const before = inventory(site);
     const prefixes = locales.filter(locale => locale.directory !== '.').map(locale => locale.directory);

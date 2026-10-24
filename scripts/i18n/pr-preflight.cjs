@@ -11,7 +11,8 @@ async function preflight({root, base, locale = pipelineLocale(root)}) {
         {cwd: root, stdio: 'inherit', env: {...process.env, I18N_LOCALE: locale}});
     const files = execFileSync('git', ['diff', '--name-only', '--diff-filter=AM', '-z', base, 'HEAD'],
         {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean)
-        .filter(file => /^i18n\/[^/]+\/docusaurus-plugin-content-docs[^/]*\/.+\.(mdx?|tsx?)$/.test(file));
+        .filter(file => file.startsWith(`i18n/${locale}/`)
+            && /^i18n\/[^/]+\/docusaurus-plugin-content-docs[^/]*\/.+\.(mdx?|tsx?)$/.test(file));
     for (const targetPath of files) {
         const target = fs.readFileSync(path.join(root, targetPath), 'utf8');
         await checkSyntax(target, path.extname(targetPath));

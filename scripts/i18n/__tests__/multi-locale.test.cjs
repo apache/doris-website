@@ -126,7 +126,7 @@ test('scheduled Japanese jobs select ja and PR admission checks only changed loc
     const run = fail => {
         write('calls', '');
         const result = spawnSync('bash', ['-e', '-c', gate.run.replace('${{ github.base_ref }}', 'master')],
-            {cwd: root, encoding: 'utf8', env: {...process.env, FAIL_LOCALE: fail, DORIS_ENABLE_JA: '', DORIS_ENABLE_LOCALES: ''}});
+            {cwd: root, encoding: 'utf8', env: {...process.env, BASE_REF: 'master', FAIL_LOCALE: fail, DORIS_ENABLE_JA: '', DORIS_ENABLE_LOCALES: ''}});
         return {status: result.status, calls: fs.readFileSync(path.join(root, 'calls'), 'utf8'), stderr: result.stderr};
     };
     const jaTarget = 'i18n/ja/docusaurus-plugin-content-docs/current/01-shared.md';
