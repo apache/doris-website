@@ -36,6 +36,9 @@ test('single-language messages and manual state changes keep their actual langua
 });
 test('source additions/deletions widen consumers and unknown dependencies remain conservative', t => {
     const {root, base, write} = fixture(t);
+    write('blog/post.md', '---\nslug: /moved/\n---\n\nEnglish source');
+    assert.equal(analyzeImpact(root, base, ['blog/post.md']).structural, true);
+    assert.equal(analyzeImpact(root, base, ['blog/post.md']).locales.length, 5);
     fs.rmSync(path.join(root, 'src/pages/index.tsx'));
     const impact = analyzeImpact(root, base, ['src/pages/index.tsx']);
     assert.equal(impact.structural, true); assert.equal(impact.locales.length, 5);

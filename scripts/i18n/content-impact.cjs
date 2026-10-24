@@ -47,6 +47,13 @@ function analyzeImpact(root, base, files) {
         let existed = true;
         try {execFileSync('git', ['cat-file', '-e', `${base}:${file}`], {cwd: root, stdio: 'ignore'});} catch {existed = false;}
         if (!exists || !existed) structural = true;
+        else if (/\.mdx?$/.test(file)) {
+            // Slug/date/draft/title and other native metadata can change routes,
+            // lists and SEO even when the target article body is independent.
+            const header = text => (text.replace(/^\uFEFF/, '').match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/)?.[0] ?? '').replace(/\r\n/g, '\n');
+            const before = execFileSync('git', ['show', `${base}:${file}`], {cwd: root, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024});
+            if (header(before) !== header(fs.readFileSync(path.join(root, file), 'utf8'))) structural = true;
+        }
     }
     if (structural) locales.forEach(locale => wanted.add(locale));
     return {schemaVersion: 1, complete, structural, locales: locales.filter(locale => wanted.has(locale)), affected, manualPending};
