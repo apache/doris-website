@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "lakehouse/best-practices/lance-query-profile",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/lakehouse/best-practices/lance-query-profile.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-query-profile.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+    "sourceTechnicalHash": "82eab4a5109f26e49d07fe14dc271ce92f2dca13f427f7e1372a4f8532274d47",
+    "targetHash": "4dd7636f2bbdb5b5ef2cdebc066b2afa70e8498f5e56a86e06ec82f031a1ad27",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:30:31.226Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "c0d80a3593fe1ba0c2e2e87d3c23c68369561303cbcf0678af44e41de7f448a2",
+      "targetHash": "4dd7636f2bbdb5b5ef2cdebc066b2afa70e8498f5e56a86e06ec82f031a1ad27",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]; received [\"inlineCode\",null,null,\"Execution Summary\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"Execution Summary\"]; received [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]\nprotected node 138: expected [\"inlineCode\",null,null,\"K+n\"]; received [\"inlineCode\",null,null,\"0\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.2\"]; received [\"0\",\"0\",\"0\",\"2\",\"2\",\"2\",\"2\",\"2\",\"4.2\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]; received [\"inlineCode\",null,null,\"Execution Summary\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"Execution Summary\"]; received [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]; received [\"inlineCode\",null,null,\"Execution Summary\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"Execution Summary\"]; received [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"Calls\"]; received [\"inlineCode\",null,null,\"DatasetOpenCalls\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]; received [\"inlineCode\",null,null,\"Execution Summary\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"Execution Summary\"]; received [\"inlineCode\",null,null,\"Lance Metadata Metrics\"]\nprotected node 138: expected [\"inlineCode\",null,null,\"K+n\"]; received [\"inlineCode\",null,null,\"0\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
