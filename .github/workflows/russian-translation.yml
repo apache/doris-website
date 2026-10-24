@@ -7,10 +7,10 @@ on:
         description: Read-only dry run, one-page live validation, or batch generation
         type: choice
         options: [dry-run, validate, generate]
-        default: dry-run
+        default: generate
         required: true
       plugin:
-        description: Optional plugin filter (default or community)
+        description: Optional plugin filter (default, community, course, releases, course-ui, community-report, community-report-ui)
         type: string
       version:
         description: Optional version filter (current or 4.x)
@@ -19,8 +19,12 @@ on:
         description: Optional repository-relative source path prefix
         type: string
       paths:
-        description: Optional JSON array of exact English .md/.mdx files (exclusive with path)
+        description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
+  # Twenty minutes after the Korean schedule; the shared lock queues this
+  # run while another language's discovery or generation is still in progress.
+  schedule:
+    - cron: '3 5,17 * * *'
 
 permissions:
   contents: read
@@ -38,7 +42,8 @@ jobs:
     with:
       locale: ru
       workspace: russian-translation
-      mode: ${{ inputs.mode || 'dry-run' }}
+      # Scheduled runs have no inputs and generate.
+      mode: ${{ inputs.mode || 'generate' }}
       plugin: ${{ inputs.plugin }}
       version: ${{ inputs.version }}
       path: ${{ inputs.path }}

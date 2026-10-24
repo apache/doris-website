@@ -48,3 +48,26 @@ export function useTranslationRoutes() {
         managed: ordinaryPage || !!data?.prefixes.some(prefix => route === prefix || route.startsWith(prefix.replace(/\/$/, '') + '/')),
         pageFallback};
 }
+
+// T01 consumers accept one page's routing payload. The build-only registry
+// (source/target digests, state and reports) must not be imported by the browser.
+export type ContentRouteData = {
+    schemaVersion: 1;
+    renderIntegrated: boolean;
+    sourceSha: string;
+    contentId: string;
+    siteLocale: string;
+    contentLocale: string;
+    fallback: boolean;
+    indexable: boolean;
+    navigationRoutes: Record<string, string>;
+    availableTranslations: string[];
+};
+
+export function contentRouteGroups(page: ContentRouteData) {
+    return {
+        navigationRoutes: page.navigationRoutes,
+        indexableTranslations: Object.fromEntries(page.availableTranslations
+            .map(locale => [locale, page.navigationRoutes[locale]])),
+    };
+}

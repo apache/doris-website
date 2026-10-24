@@ -14,6 +14,13 @@ function withoutPositions(value) {
 }
 
 async function structure(raw, extension, anchorsMaintainCase = false) {
+    if (/^\.tsx?$/.test(extension)) {
+        const {parseScript} = require('./code-prose.cjs');
+        const file = parseScript(raw);
+        return {content: raw, headings: [], format: 'code', technicalMetadata: {}, proseNumbers: [],
+            protectedNodes: [['script', null, null, raw]], technicalHash: hash(raw), semanticHash: hash(raw),
+            blocks: file.statements.map(node => ({kind: 'script', start: node.getFullStart(), end: node.end}))};
+    }
     const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}, {default: directive}] = await Promise.all([
         import('unified'), import('remark-parse'), import('remark-gfm'), import('remark-mdx'), import('unist-util-visit'),
         import('remark-directive'),

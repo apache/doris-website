@@ -19,7 +19,7 @@ on:
         type: string
         required: true
       plugin:
-        description: Optional plugin filter (default or community)
+        description: Optional plugin filter (default, community, course, releases, course-ui, community-report, community-report-ui)
         type: string
         default: ''
       version:
@@ -31,7 +31,7 @@ on:
         type: string
         default: ''
       paths:
-        description: Optional JSON array of exact English .md/.mdx files (exclusive with path)
+        description: Optional JSON array of exact English .md/.mdx/.ts/.tsx files (exclusive with path)
         type: string
         default: ''
     secrets:

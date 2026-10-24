@@ -40,7 +40,8 @@ function buildScope(files, versions, managed = []) {
         else if (/^sidebars(Community|Releases|Course)\./.test(file)) shared();
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
-            || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure)\.cjs$/.test(file)) shared();
+            || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context)\.cjs$/.test(file)) shared();
+        else if (/^translations\/(pages|blog)\//.test(file)) {shared(); if (file.endsWith('.json')) json.add(file);}
         else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
             if (!locales.includes(match[2])) throw new Error(`Unconfigured locale: ${match[2]}`);
             json.add(file); // Offline configuration checks cover these without a site build.
@@ -68,7 +69,9 @@ function buildScope(files, versions, managed = []) {
         || /^src\/utils\/(searchVersion|searchContexts|searchInput|searchNormalization|tokenize|smartQueries|smartTerms)\.[jt]s$/.test(file));
     const navigationChanged = files.some(file => /^src\/theme\/NavbarItem\/(LocaleDropdownNavbarItem\/index|DocsVersionDropdownNavbarItem)\.tsx$/.test(file)
         || /^scripts\/i18n\/verify-(doc-navigation|search)\.cjs$/.test(file));
-    const optimizePublish = searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    const contractChanged = files.some(file => /^scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|docs-plugin|status-plugin)\.cjs$/.test(file)
+        || /^translations\/(pages|blog)\//.test(file));
+    const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|config\/(custom-docusaurus-plugin|ssrTemplate)\.js$|scripts\/build-locales\.cjs$|static\/js\/(brand-theme|course-rail)-bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     // Publication changes need the same complete artifact as deployment, on
     // the CI runner. Keep local checks scoped to fixtures and Dev versions.
     if (optimizePublish) {tier = 'full'; shared();}

@@ -120,6 +120,6 @@ Apache Doris의 데이터 업데이트 및 삭제는 Unique Key 테이블로의 
 - [삭제 개요: 조건자 삭제, 일괄 삭제, 원자적 교체](../data-operate/delete/delete-overview)
 - [데이터 모델](./data-model): Unique Key가 UPDATE/DELETE를 지원하는 테이블 모델인 이유와 Duplicate 및 Aggregate가 적합한 용도를 설명합니다.
 - [높은 동시성 포인트 쿼리](./high-concurrency-point-query): Unique Key Merge-on-Write 테이블에서 KV 방식의 읽기에 사용할 수 있는 단축 실행 경로를 설명합니다.
-- [Binlog 테이블 스트림](./binlog-table-stream): 커밋된 행 단위 변경 사항이 다운스트림 소비자에게 어떻게 제공되는지 설명합니다.
+- [변경 로그 / 테이블 스트림](./changelog-table-stream): 커밋된 행 단위 변경 사항이 다운스트림 소비자에게 어떻게 제공되는지 설명합니다.
 - [Apache Doris 2.1.0: Merge-on-Write가 Unique Key의 기본값으로 지정](https://doris.apache.org/blog/release-note-2.1.0/)
 - [Unique Key](./unique-key): SQL UPDATE/DELETE를 지원하는 테이블 모델입니다. Merge-on-Write는 쓰기 시점에 각 업서트를 처리합니다.

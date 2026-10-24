@@ -80,6 +80,12 @@ export default function Layout(props) {
  function fixtureCache(){return {name:'fixture-cache',configureWebpack:()=>({cache:false})}}],
  presets: [['classic',{docs:false,blog:false}]],
 });\n`);
+    write('.gitignore', 'node_modules\n.i18n-build/\n.docusaurus/\nbuild/\n');
+    const {execFileSync} = require('node:child_process');
+    const git = (...args) => execFileSync('git', args, {cwd: root, stdio: 'pipe'});
+    git('init', '-q');
+    git('add', '.');
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Native fixture source');
     return {root, write};
 }
 module.exports = {createFixture};

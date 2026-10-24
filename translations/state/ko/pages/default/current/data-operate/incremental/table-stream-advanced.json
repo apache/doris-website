@@ -8,35 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/incremental/table-stream-advanced.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/incremental/table-stream-advanced.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "3459fb316236b230ecf32175c8b9261af8c2b81ea679f13d52f2ee74434b062f",
-    "sourceTechnicalHash": "c880a020b16055a490e63b71754fb5efcf0c2ed0a6d7d3f5421603f6548b6445",
-    "targetHash": "7f432e0206f4eeba37f762c31528449401316cdf9cec5aac7290eb3d19333a85",
+    "sourceCommit": "f2ec14ebc782052323f56515f6b51b86e9280075",
+    "sourceHash": "d4d30e240c8f814dbc018285681e1487e92bd78d97445f99b4e77f7e47881981",
+    "sourceTechnicalHash": "48877b072a4f49f00f3128a337e04a0a7877714b88f31042cad03c38ba0f0ed5",
+    "targetHash": "dc09e3aeb124597dd01161e796b2ad76b8a8f0066d7c313fdd61c3c8166b7180",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:03:23.731Z",
+    "translatedAt": "2026-10-23T13:43:55.319Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
+      "previousSourceHash": "3459fb316236b230ecf32175c8b9261af8c2b81ea679f13d52f2ee74434b062f",
+      "previousTargetHash": "7f432e0206f4eeba37f762c31528449401316cdf9cec5aac7290eb3d19333a85",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 6,
+        "totalLines": 211,
+        "ratio": 0.02843601895734597
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "3459fb316236b230ecf32175c8b9261af8c2b81ea679f13d52f2ee74434b062f",
-      "targetHash": "7f432e0206f4eeba37f762c31528449401316cdf9cec5aac7290eb3d19333a85",
+      "sourceHash": "d4d30e240c8f814dbc018285681e1487e92bd78d97445f99b4e77f7e47881981",
+      "targetHash": "dc09e3aeb124597dd01161e796b2ad76b8a8f0066d7c313fdd61c3c8166b7180",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 100: expected [\"inlineCode\",null,null,\"LAG\"]; received [\"inlineCode\",null,null,\"information_schema.table_stream_consumption\"]\nprotected node 101: expected [\"inlineCode\",null,null,\"information_schema.table_stream_consumption\"]; received [\"inlineCode\",null,null,\"LAG\"]\nprotected node 102: expected [\"inlineCode\",null,null,\"ENABLED\"]; received [\"inlineCode\",null,null,\"information_schema.table_streams\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]

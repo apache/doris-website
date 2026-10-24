@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/topn.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/topn.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "36187f0edbaf21acc62e0b3e950e555137e7e53b9fc5a387a99c50b8bf9afa72",
-    "sourceTechnicalHash": "0a8491771f915666302734c6fa5f7cfd233e30e41260699ec960d7c05fe16bb1",
-    "targetHash": "4cd63ca9785136b50fad79a5f2b6aa8c4c1c2b75af836a8b45d7c71a8756a531",
+    "sourceCommit": "fe9ae60e37c3fbfd2aa15819a6db04c140a96c02",
+    "sourceHash": "16c3266e4d26f064a6ce2f65dd42a920807e3ec1db9b976f3ef4f5729acfe2d9",
+    "sourceTechnicalHash": "68102480954ac94c99dd0d028994e3a27b89a295a059c29eaa54d517ddf6b7b5",
+    "targetHash": "d4d0684bd47f89d4f41477f2b554bae5d0b2eb778748bcb78d5e102ec2ad1bb2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:18:33.703Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-23T20:59:31.969Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "16c3266e4d26f064a6ce2f65dd42a920807e3ec1db9b976f3ef4f5729acfe2d9",
+      "targetHash": "d4d0684bd47f89d4f41477f2b554bae5d0b2eb778748bcb78d5e102ec2ad1bb2",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

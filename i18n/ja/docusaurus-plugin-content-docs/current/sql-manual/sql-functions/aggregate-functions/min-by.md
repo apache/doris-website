@@ -2,33 +2,37 @@
 {
     "title": "MIN_BY",
     "language": "ja",
-    "description": "MINBY 関数は、指定した列の最小値に対応する値を返します。"
+    "description": "MIN_BY 関数は、指定した列の最小値に対応する値を返します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
 MIN_BY 関数は、指定した列の最小値に対応する値を返します。
 
-## 構文
+`<expr2>` が Array の場合、配列は要素ごとに辞書式順序で比較されます。NULL 要素は NULL 以外のどの要素よりも大きいとみなされます。配列自体が NULL の場合、その値は無視されます。
+
+バージョンによる違い: Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降では、配列内の `NULL` 要素は `NULL` 以外の要素よりも大きいとみなされます。Doris 4.0 および Doris 4.1 の 4.1.5 より前のバージョンでは、配列内の `NULL` 要素は小さいとみなされます。これらのすべてのバージョンで、配列自体が `NULL` の場合、その値は無視されます。
+
+## 構文 {#syntax}
 
 ```sql
 MIN_BY(<expr1>, <expr2>)
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
-| -- | -- |
-| `<expr1>` | 対応する値の式。Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array、Map、Struct 型をサポートします。 |
-| `<expr2>` | 最小値を求める式。Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array 型をサポートします。 |
+| --- | --- |
+| `<expr1>` | 対応する値を表す式。Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array、Map、Struct 型をサポートします。 |
+| `<expr2>` | 最小値を判定するための式。Bool、TinyInt、SmallInt、Int、BigInt、LargeInt、Float、Double、Decimal、String、Date、Datetime、TimestampNs、Array 型をサポートします。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-<expr1> と同じデータ型を返します。
+<expr1> と同じデータ型の値を返します。
 グループ内に有効なデータがない場合は NULL を返します。
 
-## 使用例
+## 例 {#example}
 
 ```sql
 -- setup
@@ -45,6 +49,10 @@ insert into tbl values
     (1, 4,   [5, 6],  {"x": 2, "y": 3}, NAMED_STRUCT("a", 2, "b", "y")),
     (4, 1,   [7],     {"x": 3, "y": 2}, NAMED_STRUCT("a", 3, "b", "z")),
     (3, 1,   [8],     {"x": 4, "y": 1}, NAMED_STRUCT("a", 4, "b", "r"));
+```
+
+```text
+Table created and data inserted successfully.
 ```
 
 ```sql
@@ -93,4 +101,27 @@ select min_by(k1, k2) from tbl where k1 is null;
 +----------------+
 |           NULL |
 +----------------+
+```
+
+次の配列比較の例は、Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降に適用されます。
+
+```sql
+SELECT min_by(label, sort_key) AS result
+FROM (
+    SELECT 'null element' AS label, [1, NULL] AS sort_key
+    UNION ALL SELECT 'non-null element', [1, 2]
+    UNION ALL SELECT 'null array', CAST(NULL AS ARRAY<INT>)
+) t;
+```
+
+```text
+non-null element
+```
+
+```sql
+SELECT min_by(1, CAST(NULL AS ARRAY<INT>)) AS result;
+```
+
+```text
+NULL
 ```

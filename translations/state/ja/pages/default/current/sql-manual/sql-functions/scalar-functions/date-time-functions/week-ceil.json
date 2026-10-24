@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/date-time-functions/week-ceil.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/date-time-functions/week-ceil.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "3b57e13de70dcb93f4c5ad5d8bfae5793854aa3052d7d5f37baf7726eab7015f",
-    "sourceTechnicalHash": "16285a23f172a8118a28f8b012b078d0326817406bb75fafcd145585704fb173",
-    "targetHash": "a21a6ab3ec0cfc11f8bbbd50db43faeec6415b40a552618892ab18595a28bf57",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "33cae71c2b71687a8f3c46c27c0c60066de75dac3fa2ae7f369b886a9d21e40d",
+    "sourceTechnicalHash": "7dc85e76a4f36f972b6d15a7119ce8955ebb99659d82b7cbd7b50501266db8a2",
+    "targetHash": "197577658f85d0a00f40e60117b06bea9d4b2193c237337a9cd0af40492398ac",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:36:49.814Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T04:47:34.590Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "33cae71c2b71687a8f3c46c27c0c60066de75dac3fa2ae7f369b886a9d21e40d",
+      "targetHash": "197577658f85d0a00f40e60117b06bea9d4b2193c237337a9cd0af40492398ac",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9999\"]; received [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9\",\"9999\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9999\"]; received [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9\",\"9999\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]\nprotected node 24: expected [\"inlineCode\",null,null,\"2025-12-31 23:59:59+05:00\"]; received [\"inlineCode\",null,null,\"+08:00\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9999\"]; received [\"0\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"00\",\"0001\",\"0001\",\"01\",\"01\",\"01\",\"01\",\"12\",\"23\",\"31\",\"4.1\",\"4.1\",\"4.1.5\",\"4.1.5\",\"59\",\"59\",\"9\",\"9999\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"<origin>\"]; received [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TIMESTAMP_NS\"]; received [\"inlineCode\",null,null,\"<origin>\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

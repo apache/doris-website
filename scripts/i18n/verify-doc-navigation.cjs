@@ -21,12 +21,12 @@ function verifyRedirect(html, target) {
 }
 
 function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale), devOnly = false,
-    manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`)}) {
+    manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`),
+    scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'))}) {
     const summary = JSON.parse(fs.readFileSync(path.join(snapshot, 'summary.json'), 'utf8'));
     assert.equal(summary.locale, locale, 'Inventory belongs to a different locale');
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     assert.equal(data.locale, locale, 'Translation manifest belongs to a different locale');
-    const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     const dictionary = JSON.parse(fs.readFileSync(path.join(root, `i18n/${locale}/code.json`), 'utf8'));
     const filename = route => path.join(site, decodeURIComponent(route), 'index.html');
     const read = route => {
@@ -35,7 +35,7 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
     };
     let routes = 0;
     const checks = [];
-    for (const group of scope.groups.filter(group => !devOnly || group.version !== '4.x')) {
+    for (const group of scope.groups.filter(group => !group.kind && (!devOnly || group.version !== '4.x'))) {
         // Use the current build manifest, not a historical snapshot allowlist.
         const pages = data.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && !page.draft);
         assert(pages.length, `Missing built native group: ${group.id}`);
@@ -46,10 +46,11 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         // Native standalone docs can be current without belonging to a sidebar.
         // Cover their routes above, and inspect navigation on a sidebar member.
         const candidates = [...pages.filter(page => page.status === 'current' && page.indexable), ...pages];
-        const representative = candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
+        const representative = group.pluginId === 'course' ? pages[0]
+            : candidates.find(page => read(page.permalink)('.theme-doc-sidebar-container').length) ?? pages[0];
         const $ = read(representative.permalink);
-        assert.equal($('.theme-doc-markdown').attr('lang'), representative.contentLocale, representative.permalink);
-        const sidebar = $('.theme-doc-sidebar-container');
+        assert.equal($('.theme-doc-markdown,.course-doc-content').attr('lang'), representative.contentLocale, representative.permalink);
+        const sidebar = $(group.pluginId === 'course' ? '.course-player__rail' : '.theme-doc-sidebar-container');
         assert(sidebar.length, `Missing document sidebar: ${representative.permalink}`);
         const links = sidebar.find('a[href]').map((_, node) => $(node).attr('href')).get();
         for (const link of links.filter(link => link.startsWith(`/${locale}/`))) read(new URL(link, 'https://doris.apache.org').pathname);

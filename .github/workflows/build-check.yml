@@ -116,6 +116,7 @@ jobs:
                   node --test scripts/i18n/__tests__/marketing-pages.test.cjs
                   node --test scripts/i18n/__tests__/locale-registry.test.cjs
                   node --test scripts/i18n/__tests__/multi-locale.test.cjs
+                  node --test scripts/i18n/__tests__/content-manifest.test.cjs
                   node --test scripts/i18n/__tests__/inventory.test.cjs
                   node --test scripts/i18n/__tests__/planner.test.cjs
                   node --test scripts/i18n/__tests__/translation-engine.test.cjs
@@ -125,6 +126,10 @@ jobs:
                   node --test scripts/i18n/__tests__/codex-adapter.test.cjs
                   node --test scripts/i18n/__tests__/translate-document.test.cjs
                   node --test scripts/i18n/__tests__/incremental-document.test.cjs
+
+            - name: Verify native content manifest fixture
+              if: steps.detect.outputs.optimize_publish == 'true'
+              run: node scripts/i18n/verify-content-fixture.cjs
 
             - name: Workflow security boundary tests
               run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
@@ -229,6 +234,8 @@ jobs:
                   path: |
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
+                      .i18n-build/content-fixture-verification.json
+                      .i18n-build/content-manifests/*.sizes.json
                       .i18n-build/ci-*.txt
                       .i18n-build/browser-*-time.txt
                       .i18n-build/browser-*.json

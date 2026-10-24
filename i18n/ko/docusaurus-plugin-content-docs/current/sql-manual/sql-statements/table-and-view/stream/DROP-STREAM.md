@@ -8,7 +8,7 @@
 
 ## 설명 {#description}
 
-Table Stream을 삭제합니다. Stream을 삭제해도 기본 테이블이나 해당 테이블의 Row Binlog에는 영향을 주지 않습니다.
+Table Stream을 삭제합니다. Stream을 삭제해도 기본 테이블이나 해당 테이블의 변경 로그에는 영향을 주지 않습니다.
 
 ## 구문 {#syntax}
 

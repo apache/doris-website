@@ -17,7 +17,7 @@ function managedTarget(scope, target) {
         const suffix = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
         const version = group.version === 'current' ? 'current' : `version-${group.version}`;
         return target.startsWith(`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
-            && /\.mdx?$/.test(target);
+            && (group.kind === 'code' ? /\.tsx?$/.test(target) : /\.mdx?$/.test(target));
     });
 }
 

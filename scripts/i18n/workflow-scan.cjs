@@ -8,6 +8,7 @@ const {hash, languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
+    'sidebarsCourse.ts', 'sidebarsReleases.json',
     'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json'];
 // A push to this locale's own scope or glossary changes what may be generated.
 const rulesFor = locale => new Set([...configInputs,
@@ -108,8 +109,8 @@ function main() {
     const locale = pipelineLocale(root);
     const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'));
     if (event === 'workflow_dispatch' && mode === 'validate') {
-        assert(/\.mdx?$/.test(process.env.I18N_PATH || ''),
-            'Validation mode needs an exact English .md or .mdx source path');
+        assert(/\.(mdx?|tsx?)$/.test(process.env.I18N_PATH || ''),
+            'Validation mode needs an exact English Markdown, MDX or TypeScript source path');
         assert(plan.selected.length === 1 && plan.tasks.find(task => task.id === plan.selected[0])?.sourcePath === process.env.I18N_PATH,
             'Validation mode must select exactly one eligible source file');
     }

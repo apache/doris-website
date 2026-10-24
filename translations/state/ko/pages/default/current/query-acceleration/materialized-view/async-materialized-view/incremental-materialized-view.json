@@ -8,35 +8,33 @@
     "sourceLocale": "en",
     "sourcePath": "docs/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/query-acceleration/materialized-view/async-materialized-view/incremental-materialized-view.mdx",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "6ba3b68ebb850a5d417b3d52945ac00e6984db2e88a807b465ac92d707585f8d",
-    "sourceTechnicalHash": "398d650d83375d141bae72e7e6cf21526f828c20eff7b0914620c5d6798394a4",
-    "targetHash": "79ff655a6d9010a1d19b6806f28c9dd2b34f91730b69f5bbc13b24b8e7eb145f",
+    "sourceCommit": "fe9ae60e37c3fbfd2aa15819a6db04c140a96c02",
+    "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+    "sourceTechnicalHash": "d0c6f5c49007d2406eb89cfb65776b50bb35820bd033a2920abe609d165eee21",
+    "targetHash": "d4e29615dc7236c2bffff81ad34f01f5dff783538f961da81cabd198557bfbc4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T03:56:32.458Z",
+    "translatedAt": "2026-10-23T22:30:37.985Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 2,
+      "previousSourceHash": "6ba3b68ebb850a5d417b3d52945ac00e6984db2e88a807b465ac92d707585f8d",
+      "previousTargetHash": "79ff655a6d9010a1d19b6806f28c9dd2b34f91730b69f5bbc13b24b8e7eb145f",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 40,
+        "totalLines": 1103,
+        "ratio": 0.03626473254759746
+      },
+      "attempts": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "6ba3b68ebb850a5d417b3d52945ac00e6984db2e88a807b465ac92d707585f8d",
-      "targetHash": "79ff655a6d9010a1d19b6806f28c9dd2b34f91730b69f5bbc13b24b8e7eb145f",
+      "sourceHash": "8471a4f77ea565cb9719de4485f79523b70c174c6668ae40ac425c4ec87958c0",
+      "targetHash": "d4e29615dc7236c2bffff81ad34f01f5dff783538f961da81cabd198557bfbc4",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 16: expected [\"inlineCode\",null,null,\"COMPLETE\"]; received [\"inlineCode\",null,null,\"FALLBACK\"]\nprotected node 17: expected [\"inlineCode\",null,null,\"FALLBACK\"]; received [\"inlineCode\",null,null,\"COMPLETE\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"ivm_demo\"]; received [\"link\",\"#quick-start\",null]"
-            }
-          ]
-        },
-        {
-          "attempt": 2,
           "issues": []
         }
       ]

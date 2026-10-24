@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/aggregate-functions/min",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/aggregate-functions/min.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/aggregate-functions/min.md",
+    "sourceCommit": "fe9ae60e37c3fbfd2aa15819a6db04c140a96c02",
+    "sourceHash": "67660eb18fa4fc7e20fa9bbbc93efa1e81226e299c10ba9de64947bf8dfcded5",
+    "sourceTechnicalHash": "9eff0b8687274665196bab79ca4756cd14991ae02f87a4072dd54ce3e2cbe838",
+    "targetHash": "d68e7cea359b3fccb246b807ee4e2c1f4f2bbe2fbf4a39306f210d44a4fc7208",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-23T20:58:35.346Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "67660eb18fa4fc7e20fa9bbbc93efa1e81226e299c10ba9de64947bf8dfcded5",
+      "targetHash": "d68e7cea359b3fccb246b807ee4e2c1f4f2bbe2fbf4a39306f210d44a4fc7208",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 5: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"6\"]; received [\"10\",\"4\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"6\"]\nprotected node 5: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
