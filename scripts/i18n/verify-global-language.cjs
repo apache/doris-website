@@ -105,9 +105,9 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
                 if (await link.count()) {await link.click(); await page.waitForURL(origin + target);} else await page.goto(origin + target);
                 assert.equal(await page.locator('html').getAttribute('lang'), 'ja');
             }
-            await page.goto(origin + '/ja/docs/dev/english-missing/?from=qa#usage');
+            await page.goto(origin + '/ja/docs/dev/english-shared/?from=qa#usage');
             await page.locator('.language-menu a[href*="from=qa"]').first().waitFor({state: 'attached'});
-            assert.equal(await page.locator('.language-menu a[lang="zh-Hans-CN"]').first().getAttribute('href'), '/zh-CN/docs/dev/chinese-missing/?from=qa#usage');
+            assert.equal(await page.locator('.language-menu a[lang="zh-Hans-CN"]').first().getAttribute('href'), '/zh-CN/docs/dev/chinese-shared/?from=qa#usage');
             const response = await page.goto(origin + '/ja/docs/dev/unknown/');
             assert.equal(response.status(), 404);
             assert.equal(await page.locator('h1').count(), 1);

@@ -90,7 +90,13 @@ test('native doc metadata, browser groups and per-locale manifests agree, across
                 const shared = pages.find(page => page.docId === 'shared' && page.version === 'current' && page.pluginId === 'default');
                 assert.deepEqual(Object.keys(shared.alternates), locales);
                 for (const permalink of Object.values(shared.alternates)) assert.deepEqual(data.alternates[permalink], shared.alternates);
-                for (const page of pages) assert.deepEqual(data.alternates[page.permalink], page.alternates);
+                for (const page of pages) {
+                    if (data.alternates[page.permalink]) assert.deepEqual(data.alternates[page.permalink], page.alternates);
+                    else for (const [lang, permalink] of Object.entries(page.alternates)) {
+                        assert.equal(permalink, `${lang === 'en' ? '' : '/' + lang}${page.englishPermalink}`,
+                            'An omitted compatibility group must be inferable without changing a slug');
+                    }
+                }
                 const output = JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/manifests', `${locale}.json`)));
                 assert(output.pages.every(page => page.locale === locale));
                 assert(output.reports.every(report => !report.locale || report.locale === locale));

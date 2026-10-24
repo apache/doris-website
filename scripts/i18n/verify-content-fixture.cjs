@@ -32,7 +32,7 @@ async function main() {
                 if (disabled) assert(!page.navigationRoutes.ru && !page.availableTranslations.includes('ru'));
                 const html = await fs.readFile(path.join(fixture, 'build', decodeURIComponent(page.route), 'index.html'), 'utf8');
                 const $ = cheerio.load(html);
-                if (page.kind === 'docs' && ['ja', 'ko', 'ru'].includes(locale)) assert.equal($('.theme-doc-markdown').attr('lang'), page.contentLocale);
+                if (page.kind === 'docs') assert.equal($('.theme-doc-markdown').attr('lang'), page.contentLocale);
                 if (page.contentId.startsWith('page:sample-')) {
                     const i = page.contentId.slice(-1);
                     assert($('main').text().includes(page.fallback || locale === 'en' ? `English sample ${i}` : `${locale} translated sample ${i}`));

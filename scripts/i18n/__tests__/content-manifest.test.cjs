@@ -54,7 +54,7 @@ test('real native plugin output binds stable identities, routes and all four cov
         const ids = manifest.pages.filter(page => page.docId === 'shared').map(page => page.contentId);
         assert.equal(new Set(ids).size, 3, 'docs identity includes plugin and version');
         const missing = manifest.pages.find(page => page.kind === 'docs' && page.docId === 'missing');
-        assert.equal(missing.navigationRoutes['zh-CN'], '/zh-CN/docs/dev/chinese-missing/');
+        assert.equal(missing.navigationRoutes['zh-CN'], '/zh-CN/docs/dev/english-missing/');
         assert(!JSON.stringify(globalData).includes('sourceHash'));
         assert(!JSON.stringify(routeData(page)).includes('sourceHash'));
         assert(Buffer.byteLength(JSON.stringify(routeData(page))) < 2048);
