@@ -20,7 +20,7 @@ function verifyPublicIdentity({publicOrigin, landingOnly, sourceSha, asfSha, run
         assert(report.optimization?.verification, 'A verified optimized publication artifact is required');
         assert(!fs.existsSync(path.join(site, '.ci-validation.json')), 'A sample cannot establish a release');
 }
-async function verify({site, directory, output, origin: publicOrigin, landingOnly = false, buildReport, sourceSha, asfSha, runUrl}) {
+async function verify({site, directory, output, origin: publicOrigin, landingOnly = false, sample = false, buildReport, sourceSha, asfSha, runUrl}) {
     const {chromium} = require('playwright');
     const locales = ['en', 'zh-CN', 'ja', 'ko', 'ru'];
     const manifests = Object.fromEntries(locales.map(locale => [locale, JSON.parse(fs.readFileSync(path.join(directory, locale + '.json')))]));
@@ -33,14 +33,17 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         if (!landingOnly) for (const version of ['current', '4.x', '3.x', '2.1'])
             assert(manifests[locale].pages.some(row => row.kind === 'docs' && row.pluginId === 'default' && row.version === version), `Missing version: ${locale}/${version}`);
     }
-    if (publicOrigin) verifyPublicIdentity({publicOrigin, landingOnly, sourceSha, asfSha, runUrl,
+    if (publicOrigin) verifyPublicIdentity({publicOrigin, landingOnly: landingOnly || sample, sourceSha, asfSha, runUrl,
         report: JSON.parse(fs.readFileSync(buildReport)), sha, site});
-    const content = verifyContent(site, directory);
+    if (sample) assert.equal(JSON.parse(fs.readFileSync(path.join(site, '.ci-validation.json'))).publicationAllowed, false);
+    const content = sample ? [{scope: 'sample navigation only', fullStaticReciprocity: false}] : verifyContent(site, directory);
     let server, browser;
     if (!publicOrigin) {
         server = createServer(site); await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     }
     const origin = publicOrigin?.replace(/\/$/, '') ?? `http://127.0.0.1:${server.address().port}`;
+    const normalized = pathname => pathname.replace(/\/+$/, '') || '/';
+    const waitPath = (page, pathname) => page.waitForURL(url => url.origin === origin && normalized(url.pathname) === normalized(pathname));
     const errors = [], results = [], assets = new Map();
     const themes = ['doris', 'golden', 'blue', 'read', 'yellow-blue', 'purple', 'yellow-black', 'sky'];
     fs.mkdirSync(path.dirname(output), {recursive: true});
@@ -119,19 +122,21 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
             }
             if (!landingOnly) {
                 await page.setViewportSize({width: 1440, height: 900}); await page.goto(origin + prefix);
-                await page.locator('.navbar-next__cta').click(); await page.waitForURL(origin + prefix + 'download/');
+                await page.locator('.navbar-next__cta').click(); await waitPath(page, prefix + 'download/');
                 assert.equal(await page.locator('[data-content-id]').getAttribute('lang'), 'en');
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
-                await page.reload(); assert.equal(new URL(page.url()).pathname, prefix + 'download/');
-                await page.goBack(); assert.equal(new URL(page.url()).pathname, prefix);
+                await page.reload(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix + 'download/'));
+                await page.goBack(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix));
                 await page.locator('button[aria-controls="navbar-dropdown-resources"]').click();
                 await page.locator(`#navbar-dropdown-resources a[href="${prefix}blog/"]`).click();
-                await page.waitForURL(origin + prefix + 'blog/');
-                const articleLinks = await page.locator('main a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
-                const blog = manifests[locale].pages.find(row => row.kind === 'blog' && row.fallback && articleLinks.includes(row.route))
-                    ?? manifests[locale].pages.find(row => row.kind === 'blog' && articleLinks.includes(row.route));
+                await waitPath(page, prefix + 'blog/');
+                const articleLinks = await page.locator('main a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname.replace(/\/+$/, '')));
+                const blog = manifests[locale].pages.find(row => row.kind === 'blog' && row.fallback && articleLinks.includes(normalized(row.route)))
+                    ?? manifests[locale].pages.find(row => row.kind === 'blog' && articleLinks.includes(normalized(row.route)));
                 assert(blog, 'No native blog link on listing');
-                await page.locator(`main a[href="${blog.route}"]`).first().click(); await page.waitForURL(origin + blog.route);
+                const articleLink = page.locator(`main a[href="${blog.route}"], main a[href="${normalized(blog.route)}"]`).first();
+                await articleLink.click(); await waitPath(page, blog.route);
+                assert.equal(await page.locator('article[lang]').first().getAttribute('lang'), blog.contentLocale);
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 const newTab = await context.newPage();
                 await newTab.goto(origin + blog.route + '?from=m1#usage');
@@ -141,10 +146,10 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 await page.locator('#navbar-dropdown-docs a').first().click();
                 await page.waitForURL(url => url.pathname.startsWith(prefix + 'docs/dev/'));
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
-                await page.locator('.navbar-next__logo').click(); await page.waitForURL(origin + prefix);
+                await page.locator('.navbar-next__logo').click(); await waitPath(page, prefix);
                 await page.locator('button[aria-controls="navbar-dropdown-community"]').click();
                 await page.locator(`#navbar-dropdown-community a[href="${prefix}community/join-community/"]`).click();
-                await page.waitForURL(origin + prefix + 'community/join-community/');
+                await waitPath(page, prefix + 'community/join-community/');
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 const unknown = await page.goto(origin + prefix + 'm1-unknown-route/'); assert.equal(unknown.status(), 404);
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
@@ -157,7 +162,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         }
         assert.deepEqual(errors, []);
         const report = {schemaVersion: 1, sourceSha: sha, public: !!publicOrigin, asfSha, runUrl, origin,
-            scope: landingOnly ? 'homepage only; docs/blog/community disabled' : 'complete artifact; five languages and all active versions',
+            scope: landingOnly ? 'homepage only; docs/blog/community disabled' : sample ? 'sample navigation; full native metadata, partial document compilation, no publication proof' : 'complete artifact; five languages and all active versions',
             content, results, verifiedPublicAssets: assets.size, errors};
         fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n'); return report;
     } finally {await browser?.close(); if (server) await new Promise(resolve => server.close(resolve));}
@@ -165,7 +170,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
 if (require.main === module) {
     const args = process.argv.slice(2), value = (name, fallback) => args.includes(name) ? args[args.indexOf(name) + 1] : fallback;
     verify({site: value('--site', 'build'), directory: value('--manifests', '.i18n-build/content-manifests'),
-        output: value('--output', '.i18n-build/first-release.json'), origin: value('--origin'), landingOnly: args.includes('--landing-only'),
+        output: value('--output', '.i18n-build/first-release.json'), origin: value('--origin'), landingOnly: args.includes('--landing-only'), sample: args.includes('--sample'),
         buildReport: value('--build-report'), sourceSha: value('--source-sha'), asfSha: value('--asf-sha'), runUrl: value('--run-url')})
         .then(report => console.log(JSON.stringify({sourceSha: report.sourceSha, public: report.public, cases: report.results.length})))
         .catch(error => {console.error(error); process.exitCode = 1;});
