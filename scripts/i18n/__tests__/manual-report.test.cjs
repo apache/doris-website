@@ -23,3 +23,10 @@ test('shared language mechanisms retain representative builds and explicit full 
     assert.equal(policy(['i18n/zh-CN/code.json']).mode, 'sample');
     assert.equal(policy(['plan-doc/global-lang/tasklist.md']).mode, 'skip');
 });
+
+test('repository-wide exceptions are counted once across locale manifests', () => {
+    const exception = {kind: 'intentional_english_fallback', locale: 'zh-CN', contentId: 'page:P01'};
+    const report = coverage(['en', 'zh-CN', 'ja'].map(locale => ({sourceSha: 'a', locale, pages: [], reports: [exception]})));
+    assert.equal(report.exceptions.length, 1);
+    assert.deepEqual(report.exceptions[0].reportedBy, ['en', 'zh-CN', 'ja']);
+});

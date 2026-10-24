@@ -89,9 +89,21 @@ function coverage(manifests, {partial = false} = {}) {
         const denominator = sourceGroups.get(JSON.stringify([row.family, row.pluginId, row.version]))?.size ?? row.denominator;
         row.denominator = denominator; row.missingRoutes = Math.max(0, denominator - row.routes);
     }
+    // Each locale manifest contains repository-wide reports too. Keep one
+    // exception per identity while retaining the manifests that observed it.
+    const uniqueExceptions = new Map();
+    const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
+        ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
+    for (const {manifestLocale, ...report} of exceptions) {
+        const key = JSON.stringify(canonical(report));
+        if (!uniqueExceptions.has(key)) uniqueExceptions.set(key, {...report, reportedBy: []});
+        const provenance = manifestLocale ?? report.locale;
+        const entry = uniqueExceptions.get(key);
+        if (provenance && !entry.reportedBy.includes(provenance)) entry.reportedBy.push(provenance);
+    }
     return {schemaVersion: 1, sourceSha: [...sources][0], partialCompilation: partial,
         coverageBasis: 'native manifest decisions, not compiled-page count or public deployment',
-        groups: [...groups.values()], exceptions,
+        groups: [...groups.values()], exceptions: [...uniqueExceptions.values()],
         pending: [...identities.values()].filter(page => ['needs-update', 'stale_prose', 'blocked'].includes(page.state))
             .map(({contentId, siteLocale, kind, version, route, state, updatePolicy}) => ({contentId, locale: siteLocale, kind, version, route, state, updatePolicy}))};
 }

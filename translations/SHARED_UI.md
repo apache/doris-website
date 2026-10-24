@@ -56,7 +56,8 @@ first compare every product message against the baseline and validate its full
 message set; do not acknowledge unrelated product edits by merely rehashing.
 
 Run the manual report before a build and `manual-report.cjs --coverage` after one.
-Coverage groups use native source identities and retain source-deletion,
+Coverage groups use native source identities, deduplicate shared exceptions
+with their reporting-manifest provenance, and retain source-deletion,
 orphan-target, utility and native-route exceptions. Real translations and English
 fallbacks are separate from route availability. `needsUpdate` overlaps real
 translations; it does not turn an existing stale translation into a missing body.
