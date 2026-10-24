@@ -1,0 +1,35 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Search-style AI crawlers may index public documentation for answer retrieval.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+# Training-style AI crawlers may access public documentation.
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: *
+Allow: /
+
+# Every locale has its own subdirectory and its own sitemap (see
+# scripts/build-locales.cjs). Search engines only discover a sitemap through
+# this file or Search Console, so all of them are declared here.
+Sitemap: https://doris.apache.org/sitemap.xml
+Sitemap: https://doris.apache.org/zh-CN/sitemap.xml
+Sitemap: https://doris.apache.org/ja/sitemap.xml

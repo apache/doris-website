@@ -1,0 +1,1 @@
+!function(){try{"true"===localStorage.getItem("doris-101-rail-collapsed")&&document.documentElement.setAttribute("data-course-rail","collapsed")}catch(t){}}();
