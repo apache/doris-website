@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {identity, hash, loadRecords, loadRecordsAt, pipelineLocale} = require('./state.cjs');
+const {identity, hash, loadRecords, loadRecordsAt, pipelineLocale, loadConfig} = require('./state.cjs');
 const {structure, alignHeadings} = require('./structure.cjs');
 const {collect} = require('./inventory.cjs');
 const {protectionSignature} = require('./protection.cjs');
@@ -86,18 +86,38 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
     return {checked: selected.length, errors, warnings, freshness: Object.fromEntries([...new Set(pages.map(page => page.status))]
         .map(status => [status, pages.filter(page => page.status === status).length])), reports};
 }
+function needsNativeInventory(files, locale) {
+    const prefix = `i18n/${locale}/`;
+    return files.some(file => (file.startsWith(prefix)
+        && /^docusaurus-plugin-content-docs[^/]*\/.+\.(mdx?|tsx?)$/.test(file.slice(prefix.length)))
+        || file === `translations/state/${locale}/docs.json` || file.startsWith(`translations/state/${locale}/pages/`));
+}
+
+async function checkChangedTranslations({root, base, locale = pipelineLocale(root), collectPages = collect}) {
+    if (!Object.hasOwn(loadConfig(root).locales, locale)) throw new Error(`Unconfigured translation locale: ${locale}`);
+    const files = execFileSync('git',['diff','--name-only','-z',base,'HEAD'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
+    const inventoryRequired = needsNativeInventory(files, locale);
+    const stateChanged = files.some(file => file === `translations/state/${locale}/docs.json`
+        || file.startsWith(`translations/state/${locale}/pages/`));
+    const records = inventoryRequired ? loadRecords(root, locale) : new Map();
+    const previousRecords = stateChanged ? loadRecordsAt(root, locale, base) : new Map();
+    const native = inventoryRequired ? await collectPages(root) : {pages: [], reports: []};
+    // Admission blocks only edited targets/state. Keep validating pinned
+    // protection exceptions even when there are no such edits. Full freshness
+    // belongs to build manifests/coverage audits, not an empty admission result.
+    const result = await checkTranslations({root, locale, ...native, files, records, previousRecords});
+    return {...result, inventorySkipped: !inventoryRequired,
+        freshness: inventoryRequired ? result.freshness : null,
+        ...(!inventoryRequired && {inventorySkipReason: 'No edited translation body or state for this locale; freshness was not scanned'})};
+}
+
 async function main() {
     const root = path.resolve(__dirname,'../..');
     const args = process.argv.slice(2), base = args[args.indexOf('--base')+1];
-    if (!args.includes('--base')) throw new Error('Usage: check-translations.cjs --base <PR merge base>');
-    const files = execFileSync('git',['diff','--name-only',base,'HEAD'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
-    const locale = pipelineLocale(root);
-    const records = loadRecords(root, locale);
-    const previousRecords = loadRecordsAt(root, locale, base);
-    const native = await collect(root);
-    const result = await checkTranslations({root, locale, ...native, files, records, previousRecords});
+    if (!args.includes('--base') || !base) throw new Error('Usage: check-translations.cjs --base <PR merge base>');
+    const result = await checkChangedTranslations({root, base});
     console.log(JSON.stringify(result,null,2));
     if (result.errors.length) process.exitCode = 1;
 }
 if (require.main === module) main().catch(error => {console.error(error);process.exitCode=1;});
-module.exports = {checkTranslations};
+module.exports = {checkTranslations, checkChangedTranslations, needsNativeInventory};

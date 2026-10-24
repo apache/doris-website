@@ -24,9 +24,13 @@ function selectLocales(plan, requested) {
     return plan.locales.filter(item => wanted.has(item.locale));
 }
 
-async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales: requestedLocales, run, stamp = sourceStamp}) {
+async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales: requestedLocales, samplePlan, run, stamp = sourceStamp}) {
     siteDir = path.resolve(siteDir);
     outDir = path.resolve(siteDir, outDir);
+    if (samplePlan) {
+        if (!outDir.startsWith(path.join(siteDir,'.i18n-build','ci-sample')+path.sep)) throw new Error('Sample output must stay under .i18n-build/ci-sample');
+        if (require('./publish/shared-assets.cjs').enabled()) throw new Error('Sample validation cannot produce optimized publication artifacts');
+    }
     if (outDir === siteDir || siteDir.startsWith(outDir + path.sep)) throw new Error('Build output must not contain the source checkout');
     fs.mkdirSync(path.dirname(outDir), {recursive:true});
     const stage = fs.mkdtempSync(path.join(path.dirname(outDir), '.doris-build-'));
@@ -36,12 +40,13 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
     };
     const report = {schemaVersion:1, source:initialStamp, mode:'separate-processes',
         requested:requestedLocales ?? null, locales:[]};
+    if(samplePlan)report.validation={mode:'sample',publicationAllowed:false};
     const reportDir = path.join(siteDir, '.i18n-build');
     fs.mkdirSync(reportDir, {recursive:true});
     const reportPath = path.join(reportDir, 'build-result.json');
     const execute = run ?? ((args) => new Promise((resolve, reject) => {
         const child = spawn(process.execPath,[path.join(__dirname,'build-locale.cjs'), ...args],{cwd:siteDir,stdio:'inherit'});
-        console.log(JSON.stringify({event:'locale_process_start', mode:args[0], locale:args[0] === 'build' ? args[3] : null, pid:child.pid}));
+        console.log(JSON.stringify({event:'locale_process_start', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid}));
         const stop = signal => child.kill(signal);
         const term = () => stop('SIGTERM');
         const interrupt = () => stop('SIGINT');
@@ -51,7 +56,7 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
         child.once('exit', (code, signal) => {
             process.removeListener('SIGTERM', term);
             process.removeListener('SIGINT', interrupt);
-            console.log(JSON.stringify({event:'locale_process_end', mode:args[0], locale:args[0] === 'build' ? args[3] : null, pid:child.pid, code, signal}));
+            console.log(JSON.stringify({event:'locale_process_end', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid, code, signal}));
             if (code !== 0) reject(new Error(`Locale ${args[3]} failed (${signal ?? code}); output was not published`));
             else resolve({pid:child.pid});
         });
@@ -68,7 +73,7 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
             verifyStamp();
             const localeOutput = path.join(stage, item.locale, 'site');
             const started = Date.now();
-            const processInfo = await execute(['build',siteDir,localeOutput,item.locale]);
+            const processInfo = await execute([samplePlan?'sample':'build',siteDir,localeOutput,item.locale,...(samplePlan?[path.resolve(samplePlan)]:[])]);
             const resultDir = path.join(localeOutput,item.directory);
             if (!fs.existsSync(path.join(resultDir,'index.html'))) throw new Error(`Missing locale homepage: ${item.locale}`);
             report.locales.push({...item, ...processInfo, elapsedMs:Date.now()-started, resultDir});
@@ -87,6 +92,7 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
             fs.rmSync(destination,{recursive:true,force:true});
             fs.renameSync(item.resultDir,destination);
         }
+        if(samplePlan)fs.writeFileSync(path.join(assembled,'.ci-validation.json'),JSON.stringify({schemaVersion:1,mode:'sample',publicationAllowed:false,source:initialStamp})+'\n');
         if (require('./publish/shared-assets.cjs').enabled()) {
             report.optimization = require('./publish/optimize.cjs').optimize({site:assembled, locales:report.locales});
             report.optimization.verification = require('./publish/verify.cjs').verify(assembled);
