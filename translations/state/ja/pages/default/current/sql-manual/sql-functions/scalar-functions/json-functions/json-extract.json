@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/scalar-functions/json-functions/json-extract",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/json-functions/json-extract.md",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "47eaf3b862a37987d386d092a9cb4695c6c5d7598723265b427351e38085211f",
+    "sourceTechnicalHash": "823c7f0c7e2d413e8950d5a5f0a3bcb4fe561ce25a733783e469a0ca2ef88b7d",
+    "targetHash": "4e060af8ae4b661328f212b9491f19e0548b9f60ae101c36bf7b771f1f63bdaf",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T04:52:00.845Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "47eaf3b862a37987d386d092a9cb4695c6c5d7598723265b427351e38085211f",
+      "targetHash": "4e060af8ae4b661328f212b9491f19e0548b9f60ae101c36bf7b771f1f63bdaf",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 48: expected [\"inlineCode\",null,null,\"\\\"v31\\\"\"]; received [\"inlineCode\",null,null,\"v31\"]\nprotected node 49: expected [\"inlineCode\",null,null,\"v31\"]; received [\"inlineCode\",null,null,\"\\\"v31\\\"\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.0\",\"4.0\",\"4.0\"]; received [\"1\",\"1\",\"2\",\"4.0\",\"4.0\",\"4.0\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"<path>\"]; received [\"inlineCode\",null,null,\"\\\"\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"\\\"\"]; received [\"link\",\"./json-unquote.md\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"inlineCode\",null,null,\"<path>\"]; received [\"inlineCode\",null,null,\"\\\"\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"\\\"\"]; received [\"link\",\"./json-unquote.md\",null]\nprotected node 21: expected [\"link\",\"./json-unquote.md\",null]; received [\"inlineCode\",null,null,\"JSON_UNQUOTE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 48: expected [\"inlineCode\",null,null,\"\\\"v31\\\"\"]; received [\"inlineCode\",null,null,\"v31\"]\nprotected node 49: expected [\"inlineCode\",null,null,\"v31\"]; received [\"inlineCode\",null,null,\"\\\"v31\\\"\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
