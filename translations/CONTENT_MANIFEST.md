@@ -192,3 +192,32 @@ also excludes noindex English fallbacks. Unknown routes receive a genuine 404
 from Apache and the publish preview, using an available localized error page.
 Known native/optimized redirects remain intact. These host checks do not claim
 that a candidate has been deployed to ASF or that its CDN configuration changed.
+
+## CI selection and admission
+
+`build-scope.cjs` writes `.i18n-build/ci-plan.json`, bound to the checked source
+and merge base. The plan distinguishes a real scoped site build from small
+implementation fixtures. Translation/state data changes use the existing
+language/version build scope; shared language routing, metadata and host rules
+retain the complete five-language/all-active-version optimized build. A content
+ledger edit does not rerun an unchanged synthetic fixture implementation.
+The required `Build Check` identity stays stable, including lightweight PRs.
+
+Publish unit tests run before native inventory and fixture builds. Apache probes
+use the platform's MIME file (`/etc/mime.types` on Linux,
+`/etc/apache2/mime.types` on macOS), and startup failures include ErrorLog output.
+The CI keeps actual Apache redirect/404 coverage rather than substituting a
+preview-server-only test. Browser probes retain each target language's own
+search, theme and responsive cases; shared English/Chinese probes run once.
+The combined docs governance report already includes link linting, so CI does
+not also run the same link scan separately.
+
+Translation admission blocks edited automatic targets/state. When none were
+edited for a locale, the checker validates pinned protection exceptions without
+loading a complete native inventory. Its result explicitly sets
+`inventorySkipped: true` and `freshness: null`; it does not claim a coverage scan.
+Edited targets/state still require native registration, the original source and
+technical hashes, protected-content checks and the recorded source commit.
+Syntax/link checks run once for each selected target locale. Full freshness and
+manual drift reports continue to belong to build manifests/coverage audits;
+this optimization does not implement the remainder of T06's impact/report work.

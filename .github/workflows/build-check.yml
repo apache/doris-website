@@ -218,7 +218,10 @@ jobs:
                       for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
                           EXTRA_ARGS=()
-                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS=(--source-locales "en,zh-CN" --themes); fi
+                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS=(--themes); fi
+                          # English/Chinese checks are identical across these runs;
+                          # keep each target locale's own theme/responsive coverage.
+                          if [ "$LOCALE" = "ru" ]; then EXTRA_ARGS+=(--source-locales "en,zh-CN"); fi
                           /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" "${EXTRA_ARGS[@]}"
                       done
                   fi
