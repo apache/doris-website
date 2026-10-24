@@ -9,6 +9,7 @@ const {localizedContext} = require('./native-context.cjs');
 const fs = require('node:fs');
 const {withContentRoutes} = require('./route-context.cjs');
 const {validateMessages} = require('./page-body.cjs');
+const blogSample = require('./ci-blog-sample.cjs');
 
 function wrap(kind, native) {
     async function adapter(context, options) {
@@ -21,7 +22,9 @@ function wrap(kind, native) {
             return relative(base, source);
         }
         function nativeOptions(ctx) {
-            if (kind !== 'blog' || ctx.i18n.currentLocale === 'en') return options;
+            const base = kind === 'blog' && blogSample.enabled()
+                ? {...options, feedOptions: {...options.feedOptions, type: null}} : options;
+            if (kind !== 'blog' || ctx.i18n.currentLocale === 'en') return base;
             const locale = ctx.i18n.currentLocale;
             return {...options, feedOptions: {...options.feedOptions, type: null}, async processBlogPosts(args) {
                 const processed = await options.processBlogPosts?.(args);
@@ -46,6 +49,18 @@ function wrap(kind, native) {
             fs.writeFileSync(englishI18n, JSON.stringify({...context.i18n, currentLocale: context.i18n.defaultLocale}));
         }
         return withContentRoutes({...plugin,
+            async contentLoaded(args) {
+                const selected = kind === 'blog' && await blogSample.sample(context, options, args.content);
+                if (!selected) return plugin.contentLoaded(args);
+                // Populate native metadata and Markdown-link/asset resolvers
+                // for every post, but register only sampled native routes.
+                await plugin.contentLoaded({...args, actions: {...args.actions, addRoute: blogSample.collect}});
+                Object.assign(args.content, selected);
+                const {createAllRoutes} = require('@docusaurus/plugin-content-blog/lib/routes.js');
+                const pluginDir = path.join(context.generatedFilesDir, 'docusaurus-plugin-content-blog');
+                return createAllRoutes({baseUrl: context.baseUrl, content: args.content, actions: args.actions, options,
+                    aliasedSource: source => '~blog/' + path.relative(pluginDir, source).split(path.sep).join('/')});
+            },
             ...(kind === 'pages' && {configureWebpack(...args) {
                 const result = plugin.configureWebpack?.(...args) ?? {};
                 return {...result, module: {...result.module, rules: [...(result.module?.rules ?? []), {

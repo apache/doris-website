@@ -187,6 +187,7 @@ jobs:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   MODE="${{ steps.detect.outputs.validation_mode }}"
+                  export DOCUSAURUS_PERF_LOGGER=true
                   if [ "$MODE" = "skip" ] || [ "$MODE" = "fixtures" ]; then
                       echo "No real-site build required: validation mode=$MODE"
                       exit 0

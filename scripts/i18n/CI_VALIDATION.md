@@ -10,7 +10,7 @@ committed lockfile after source planning. Source snapshot checks remain enabled.
 | --- | --- |
 | README, planning or review notes only | Configuration, move/link and workflow security checks; no dependency installation or site build |
 | CI and tooling | Unit tests, five-language native compilation fixture and publishing/Apache/Chromium fixture |
-| Shared UI, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version, plus native content and publishing fixtures |
+| Shared UI, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
 | Documentation or assets | Changed documents and import dependants, plus representative real documents; English source changes select all five languages, localized changes select English and the affected locales |
 | Dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
 | `ci/full` PR label or manual `validation=full` | Full five-language publication build and verification |
@@ -26,16 +26,33 @@ The CI adapter first loads native Docusaurus metadata for **all documents and
 all active versions**, including IDs, front matter, routes, sidebars, source and
 translation state. Optional locales remain enabled during metadata collection.
 It then removes unselected document modules from the generated route registry
-before Webpack compilation and static rendering. Non-document pages remain in
-the build. The production build does not load this adapter.
+before bundling and static rendering. Ordinary pages remain in the build.
+When no blog body or blog translation state changed, blog articles and their
+native lists/tags are sampled too. Blog metadata and logical link targets remain
+complete. The production build does not load this adapter.
 
 Every document plugin/version contributes its native main document and available
-examples of MDX/imports, SQL, math and media/relative links. Real translated bodies
+examples of MDX/imports, SQL, math and media/relative links. A greedy selection
+reuses rich documents across requirements while keeping each version's entry.
+Real translated bodies
 and English fallbacks are sampled where available. Changed document bodies and
 translation-state records are mandatory. Local MDX/JavaScript imports are followed
 transitively when an imported file changes; dynamic or unparseable imports select
 their owners conservatively. A selection above 500 documents fails with a request
 for `ci/full`, rather than silently dropping affected documents.
+
+The blog sample covers a recent article, lead/featured cards, MDX, code blocks and available real/fallback
+bodies. Explicit changed imports and uncertain dependencies add their owners.
+Lists, tags and neighboring-post links are rebuilt from selected articles before
+the native route generator runs, so an aggregate cannot import every omitted body.
+Edited blog bodies/state retain the complete native blog build.
+
+Locale processes still run sequentially on one runner. During a sample build,
+content-addressed Markdown structures and aligned headings are shared through a
+fresh temporary directory owned by that build. Keys include all parser inputs;
+translation decisions and route/verification results are always computed anew.
+Only a bounded memory cache is retained, and it is released before bundling.
+The cache is removed with the build stage, so cold builds need no external cache.
 
 Links from rendered pages use the complete native route graph, generated redirect
 aliases and existing static files. Anchors on rendered destinations receive the
@@ -43,6 +60,12 @@ normal Docusaurus check. Anchors on omitted destinations cannot be verified and
 are counted explicitly. Unselected document bodies are not compiled, rendered or
 checked for body syntax/anchors. Existing Docusaurus warning/error policies still
 apply; sample success is not full-site compilation success.
+
+Styles-only changes (`.css`, `.scss`, `.sass`) skip rendered link checking and
+report `linkCheckMode=skipped-style-only`. Content, code, routes, redirects and
+resource changes keep the normal path/anchor checks. The CI adapter indexes fixed
+routes and reuses native matching results, including invalid paths, rather than
+scanning tens of thousands of logical routes for every repeated bad link.
 
 Selected pages receive HTML/canonical checks, managed-translation SEO checks and a
 Chromium hydration smoke test per language. The separate publishing fixture tests
@@ -56,7 +79,7 @@ coverage remains in full validation and deployment.
   languages and active versions.
 - `.i18n-build/ci-sample/scopes/<locale>.json`: complete metadata count, selected
   document routes with reasons, actual client/server MDX modules compiled,
-  metadata loading time and unverified anchor count.
+  metadata loading time, parser-cache counts, blog selection and unverified anchor count.
 - `.i18n-build/ci-sample/verification.json`: explicitly reports `mode=sample`,
   `completeDocumentCompilation=false` and `publicationAllowed=false`.
 - `.i18n-build/ci-sampling-fixture-proof.json`: proves an omitted broken import
@@ -90,3 +113,5 @@ node scripts/i18n/verify-ci-sample.cjs
 The verifier needs Playwright/Chromium, installed like the workflow; use
 `--no-browser` only for a local static check. The fixture can be run independently
 with `node scripts/i18n/verify-ci-sampling-fixture.cjs --browser`.
+The CI Build step enables `DOCUSAURUS_PERF_LOGGER=true` to separately log native
+plugin loading, bundler configuration/compilation, SSG, post-build hooks and links.

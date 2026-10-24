@@ -5,7 +5,7 @@ const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {createHash} = require('node:crypto');
 const {locales, localeRegistry} = require('../../config/i18n');
-const {buildScope} = require('./build-scope.cjs');
+const {buildScope, validationScope} = require('./build-scope.cjs');
 const {managedLocales} = require('./state.cjs');
 const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
@@ -16,6 +16,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
     const risk = files.filter(file => highRisk.test(file));
     const changed = files.some(file => content.test(file));
     const shared = files.some(file => runtime.test(file));
+    const checks = validationScope(files);
     const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file));
     const unknown = files.filter(
         file =>
@@ -44,13 +45,15 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
                 ? unknown
                 : [mode],
         runContentFixture:
-            shared ||
+            (shared && checks.check_content_fixture) ||
             files.some(file =>
                 /verify-content-fixture|__tests__\/fixtures\/content-manifest/.test(file),
             ),
-        runSamplingFixture: mode === 'fixtures',
-        runPublishFixture: mode === 'fixtures' || shared || mode === 'full',
+        runSamplingFixture: mode === 'fixtures' || files.some(file =>
+            /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache)\.cjs$)/.test(file)),
+        runPublishFixture: mode === 'fixtures' || checks.check_publish_fixture || mode === 'full',
         publicationAllowed: mode === 'full',
+        checkRenderedLinks: !(files.length && files.every(file => /\.(css|scss|sass)$/.test(file))),
     };
 }
 function plan({root, base, event = {}, forceFull = false, forceSample = false}) {
