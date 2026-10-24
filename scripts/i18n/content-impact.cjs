@@ -31,12 +31,17 @@ function analyzeImpact(root, base, files) {
         const records = [...state, ...oldState].filter(row => row.sourceFiles.includes(file));
         if (!owners.length && !records.length) {complete = false; continue;}
         wanted.add('en');
+        // Translated pages reuse the source TSX/CSS/data implementation. Their
+        // text may be independent, but a layout/resource edit still renders
+        // in every language. Independent blog Markdown only affects fallbacks.
+        const sharedImplementation = owners.length > 0 || !/\.mdx?$/.test(file);
         const ids = new Set([...owners.map(page => `${page.kind}:${page.id}`), ...records.map(row => row.contentId)]);
         for (const contentId of ids) for (const locale of locales.filter(locale => locale !== 'en')) {
             const record = state.find(row => row.contentId === contentId && row.locale === locale);
             const fallback = !record || ['missing', 'blocked'].includes(record.state);
-            if (fallback) wanted.add(locale); else manualPending.push({contentId, locale, file, action: 'manual sync'});
-            affected.push({file, contentId, locale, fallback});
+            if (fallback || sharedImplementation) wanted.add(locale);
+            if (!fallback) manualPending.push({contentId, locale, file, action: 'manual sync'});
+            affected.push({file, contentId, locale, fallback, sharedImplementation});
         }
         const exists = fs.existsSync(path.join(root, file));
         let existed = true;

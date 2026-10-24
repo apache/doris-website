@@ -11,15 +11,19 @@ function fixture(t) {
     write('src/pages/index.tsx', 'export default function Home(){}');
     write('translations/pages/registry.json', {pages: [{id: 'P01', kind: 'page', sourcePath: 'src/pages/index.tsx', sourceFiles: ['src/pages/index.tsx']}]});
     write('translations/pages/state.json', {pages: [{contentId: 'page:P01', locale: 'ja', state: 'ready', sourceFiles: ['src/pages/index.tsx']}]});
+    write('blog/post.md', '# English source');
+    write('translations/blog/state.json', {pages: [{contentId: 'blog:post.md', locale: 'ja', state: 'ready', sourceFiles: ['blog/post.md']}]});
     write('i18n/ja/code.json', {label: {message: '例'}});
     git('init', '-q'); git('add', '.'); git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Base');
     return {root, write, base: git('rev-parse', 'HEAD')};
 }
 test('English source builds actual fallback consumers and reports existing translations for manual sync', t => {
     const {root, base} = fixture(t);
-    const impact = analyzeImpact(root, base, ['src/pages/index.tsx']);
+    const impact = analyzeImpact(root, base, ['blog/post.md']);
     assert.equal(impact.complete, true); assert.deepEqual(impact.locales, ['en', 'zh-CN', 'ko', 'ru']);
     assert.deepEqual(impact.manualPending.map(row => row.locale), ['ja']);
+    assert.deepEqual(analyzeImpact(root, base, ['src/pages/index.tsx']).locales, ['en', 'zh-CN', 'ja', 'ko', 'ru'],
+        'Shared page implementations still affect already-translated bodies');
 });
 test('single-language messages and manual state changes keep their actual language scope', t => {
     const {root, base, write} = fixture(t);

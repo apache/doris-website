@@ -14,7 +14,7 @@ test('coverage separates route availability, real bodies, drift and exclusions',
     assert.throws(() => coverage([{sourceSha: 'a', pages: []}, {sourceSha: 'b', pages: []}]), /Mixed source/);
 });
 test('shared language mechanisms retain representative builds and explicit full validation', () => {
-    for (const file of ['scripts/i18n/content-impact.cjs', 'scripts/i18n/page-body-loader.cjs', 'src/utils/localizedRoute.ts', 'static/js/locale-bootstrap.js'])
+    for (const file of ['scripts/i18n/content-impact.cjs', 'scripts/i18n/embedded-messages.cjs', 'scripts/i18n/page-body-loader.cjs', 'src/utils/localizedRoute.ts', 'static/js/locale-bootstrap.js'])
         {
         assert.equal(policy([file]).mode, 'sample', file);
         assert.equal(policy([file]).selection, 'representative', file);

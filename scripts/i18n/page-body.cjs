@@ -94,6 +94,8 @@ function validateMessages(root, registration, locale) {
         if (typeof dictionary[id]?.message !== 'string' || !dictionary[id].message.trim() || (source && placeholders(source) !== placeholders(dictionary[id].message)))
             throw new Error(`Incomplete page messages: ${registration.id}/${locale}/${id}`);
     }
-    return [...new Set([...files, ...(registration.sourceFiles ?? [])])].sort();
+    const required = [...new Set([...files, ...(registration.sourceFiles ?? [])])].sort();
+    require('./embedded-messages.cjs').validateEmbeddedMessages(root, required, locale);
+    return required;
 }
 module.exports = {bodyDependencies, transformBody, validateMessages};

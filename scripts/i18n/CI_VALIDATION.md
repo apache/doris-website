@@ -118,8 +118,9 @@ plugin loading, bundler configuration/compilation, SSG, post-build hooks and lin
 
 ## Manual content impact and drift
 
-`content-impact.cjs` compares both base and head registries/state. Declared English
-page/blog source changes select English and actual fallback consumers. Existing
+`content-impact.cjs` compares both base and head registries/state. Independent English blog prose selects English and actual fallback consumers.
+Shared page TSX/CSS/data still renders in translated bodies and selects every
+dependent language. Existing
 translations enter the manual-sync report. A locale dictionary change renders
 that language, and changed manual-state identities render their affected locales
 plus English. New/deleted source identities widen to all languages; unknown
@@ -136,7 +137,9 @@ the required check. Fork PRs continue to receive read-only checkout permissions,
 without deployment or model credentials.
 
 `manual-report.cjs` runs before compilation and validates declared ready page
-messages/digests, shared messages and interpolation. Missing content is allowed;
+messages/digests, declared assets, shared messages and interpolation. It also
+checks the actual embedded locale script against the three live frames; new
+visible labels must have translations or an explicit technical-name exception. Missing content is allowed;
 source drift produces manual work rather than model generation. After compilation,
 `manual-report.cjs --coverage` reports native identities by language, family,
 plugin and version. Counts separate routes, real translated bodies, English
