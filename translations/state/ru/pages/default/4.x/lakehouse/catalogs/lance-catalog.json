@@ -8,43 +8,36 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/lance-catalog.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/lance-catalog.mdx",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "ae97758590a3ebef7e47e0c7ef5b3f2cf30ff947202d2337bbf4ae8e98f05ede",
-    "sourceTechnicalHash": "f9913936969f7c920d99e841b1f2dcd823a0ad23297624641a89b3a8b2e18c3b",
-    "targetHash": "f826aa2606c1183f8e9e922d622392cd063ea7d0116d5cf0852bcec9743e1d2d",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "d9b0a7a5ad48c44647d7a354481c2c53a987a56c9dbdb7687c85b00db3afaac2",
+    "sourceTechnicalHash": "3e8a94281fc61d1a48124d117c1892dcc4224c4ab2bd9d72948fae871ab2f50b",
+    "targetHash": "47d7aabe1ce9457802a1e3846466521a61e59f3ac851cfb2707e11c930a9011f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T15:00:21.166Z",
+    "translatedAt": "2026-10-24T05:37:00.781Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
+      "previousSourceHash": "ae97758590a3ebef7e47e0c7ef5b3f2cf30ff947202d2337bbf4ae8e98f05ede",
+      "previousTargetHash": "f826aa2606c1183f8e9e922d622392cd063ea7d0116d5cf0852bcec9743e1d2d",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 3,
+        "totalLines": 1008,
+        "ratio": 0.002976190476190476
+      },
       "attempts": 1,
-      "modelCalls": 0,
       "acceptedWithWarnings": false,
-      "sourceHash": "ae97758590a3ebef7e47e0c7ef5b3f2cf30ff947202d2337bbf4ae8e98f05ede",
-      "targetHash": "f826aa2606c1183f8e9e922d622392cd063ea7d0116d5cf0852bcec9743e1d2d",
+      "sourceHash": "d9b0a7a5ad48c44647d7a354481c2c53a987a56c9dbdb7687c85b00db3afaac2",
+      "targetHash": "47d7aabe1ce9457802a1e3846466521a61e59f3ac851cfb2707e11c930a9011f",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "lakehouse/catalogs/lance-catalog",
-        "sourcePath": "docs/lakehouse/catalogs/lance-catalog.mdx",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/lance-catalog.mdx",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "ae97758590a3ebef7e47e0c7ef5b3f2cf30ff947202d2337bbf4ae8e98f05ede",
-        "targetHash": "f826aa2606c1183f8e9e922d622392cd063ea7d0116d5cf0852bcec9743e1d2d",
-        "commit": "58794d37182ee6f6efc9f2b27182f2d7066ff6f1",
-        "pr": "https://github.com/apache/doris-website/pull/4431"
-      }
+      ]
     }
   }
 }

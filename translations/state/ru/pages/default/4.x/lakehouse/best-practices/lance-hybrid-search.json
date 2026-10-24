@@ -8,43 +8,36 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/lakehouse/best-practices/lance-hybrid-search.mdx",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
-    "sourceTechnicalHash": "3f05cc51c538369f5d60fe1dfc25e6d30d7e027759d221c3bb25664d9257b9ac",
-    "targetHash": "5c918bf73c1439278b815d4c624b34e08c915184e1cd59646e4b4af9ee2eef8d",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "051522d5a18a979d89bb4b76192f2f12aaebe05f39f9a1f6101e274c03412a04",
+    "sourceTechnicalHash": "651cdfd11c3ec404925c24990eeb1227c0728bb66130a28120d7a7119d7bd88e",
+    "targetHash": "dec0d42fb57a427e84fcbdb51f0413120bd2ca61ffa5b116ca39e60bf495d625",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T15:00:18.850Z",
+    "translatedAt": "2026-10-24T05:36:45.002Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
+      "previousSourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
+      "previousTargetHash": "5c918bf73c1439278b815d4c624b34e08c915184e1cd59646e4b4af9ee2eef8d",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 65,
+        "totalLines": 218,
+        "ratio": 0.2981651376146789
+      },
       "attempts": 1,
-      "modelCalls": 0,
       "acceptedWithWarnings": false,
-      "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
-      "targetHash": "5c918bf73c1439278b815d4c624b34e08c915184e1cd59646e4b4af9ee2eef8d",
+      "sourceHash": "051522d5a18a979d89bb4b76192f2f12aaebe05f39f9a1f6101e274c03412a04",
+      "targetHash": "dec0d42fb57a427e84fcbdb51f0413120bd2ca61ffa5b116ca39e60bf495d625",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "lakehouse/best-practices/lance-hybrid-search",
-        "sourcePath": "docs/lakehouse/best-practices/lance-hybrid-search.mdx",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/best-practices/lance-hybrid-search.mdx",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "666e0b3238d9b2c2fb7979a45f1d5be200e3a493f3149b7412cd5361a7d92bf3",
-        "targetHash": "5c918bf73c1439278b815d4c624b34e08c915184e1cd59646e4b4af9ee2eef8d",
-        "commit": "58794d37182ee6f6efc9f2b27182f2d7066ff6f1",
-        "pr": "https://github.com/apache/doris-website/pull/4431"
-      }
+      ]
     }
   }
 }

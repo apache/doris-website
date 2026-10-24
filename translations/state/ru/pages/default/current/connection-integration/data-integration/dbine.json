@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "connection-integration/data-integration/dbine",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "docs/connection-integration/data-integration/dbine.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/connection-integration/data-integration/dbine.md",
+    "sourceCommit": "795aeb76a468b06fb12fd8f218fa33c31d76b63c",
+    "sourceHash": "1903e0d95cf99301ea0b47bb46bef4f6191f6db2d3f61578887b1143a2b6a74d",
+    "sourceTechnicalHash": "6303dc3d568ae9b47c6e057dda5f3491e90f1485e17872fe85c51292e170d4d2",
+    "targetHash": "0796c7f2f0f734e5aeb334b9960538a0f34ed26d014b2cd58ae7257f0631e06f",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T05:38:21.820Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "1903e0d95cf99301ea0b47bb46bef4f6191f6db2d3f61578887b1143a2b6a74d",
+      "targetHash": "0796c7f2f0f734e5aeb334b9960538a0f34ed26d014b2cd58ae7257f0631e06f",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Scenario description -->\"]; received [\"html\",null,null,\"<!-- Тип знания: описание сценария -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Use DBine to connect to and query Apache Doris -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: подключение к Apache Doris и выполнение запросов через DBine -->\"]\nprotected node 4: expected [\"html\",null,null,\"<!-- Knowledge type: Prerequisites -->\"]; received [\"html\",null,null,\"<!-- Тип знания: предварительные требования -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
