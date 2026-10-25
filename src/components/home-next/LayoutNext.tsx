@@ -3,7 +3,6 @@ import { PageMetadata } from '@docusaurus/theme-common';
 import LayoutProvider from '@theme/Layout/Provider';
 import Footer from '@theme/Footer';
 import { NavbarNext } from './NavbarNext';
-import { PageLanguageSwitcher } from './PageLanguageSwitcher';
 import {PageContent, PageFallbackNotice} from './PageContent';
 
 interface LayoutNextProps {
@@ -20,7 +19,6 @@ export function LayoutNext({ title, description, children }: LayoutNextProps): J
             <NavbarNext />
             <main className="home-next-main">
                 <PageFallbackNotice />
-                <PageLanguageSwitcher />
                 <PageContent>{children}</PageContent>
             </main>
             <Footer />

@@ -5,7 +5,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { STAR_COUNT } from '@site/src/constant/github.data';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
 import { DorisLogoHorizontal } from '@site/src/components/Icons/doris-logo-horizontal';
-import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
 import { localizedAiLabels } from '@site/src/utils/localization';
 import './NavbarNext.scss';
 import {LanguageMenu} from './LanguageMenu';
@@ -17,6 +16,8 @@ interface DropdownItem {
     label: string;
     href: string;
     external?: boolean;
+    detail?: string;
+    ariaLabel?: string;
 }
 
 interface NavItem {
@@ -34,6 +35,7 @@ function buildNavItems(
     roadmapHref: string,
     joinCommunityHref: string,
     communityReportHref: string,
+    starDisplay: string,
 ): NavItem[] {
     return [
         {
@@ -84,7 +86,8 @@ function buildNavItems(
                 { label: translate({ id: "homepage.navbar.022", message: "Roadmap" }), href: roadmapHref },
                 { label: translate({ id: "homepage.navbar.023", message: "Build with Us" }), href: joinCommunityHref },
                 { label: translate({ id: "homepage.navbar.024", message: "Join GitHub Discussions" }), href: 'https://github.com/apache/doris/discussions', external: true },
-                { label: 'Doris Summit 26', href: DORIS_SUMMIT_URL, external: true },
+                { label: 'Doris Summit 26', href: DORIS_SUMMIT_URL, external: true, ariaLabel: translate({ id: 'homepage.navbar.027', message: 'Visit Doris Summit 2026 (opens in a new tab)' }) },
+                { label: 'GitHub', href: `https://github.com/${GITHUB_REPO}`, external: true, detail: starDisplay, ariaLabel: translate({ id: 'homepage.navbar.starLabel', message: 'Star Apache Doris on GitHub ({stars} stars)' }, {stars: starDisplay}) },
             ],
         },
     ];
@@ -102,14 +105,6 @@ function StarIcon(): JSX.Element {
     return (
         <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <path d="M8 0l2.4 5.5L16 6.2l-4 3.9 1 5.9L8 13.2l-5 2.8 1-5.9-4-3.9 5.6-.7L8 0z" />
-        </svg>
-    );
-}
-
-function GitHubIcon(): JSX.Element {
-    return (
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
         </svg>
     );
 }
@@ -152,7 +147,7 @@ export function NavbarNext(): JSX.Element {
     const {
         i18n: { currentLocale, defaultLocale },
     } = useDocusaurusContext();
-    const starDisplay = new Intl.NumberFormat(currentLocale, {notation: 'compact', maximumFractionDigits: 1}).format(STAR_COUNT * 1000);
+    const starDisplay = new Intl.NumberFormat(currentLocale, {notation: 'compact', maximumFractionDigits: 1}).format(Number(STAR_COUNT) * 1000);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
@@ -176,9 +171,14 @@ export function NavbarNext(): JSX.Element {
         roadmapHref,
         joinCommunityHref,
         communityReportHref,
+        starDisplay,
     );
     const [expandedMobileItem, setExpandedMobileItem] = useState(navItems[0]?.label ?? '');
     const homeHref = '/';
+    const closePreferences = () => {
+        const details = navbarRef.current?.querySelector<HTMLDetailsElement>('.language-menu');
+        if (details) details.open = false;
+    };
 
     useEffect(() => {
         if (!mobileOpen) return undefined;
@@ -231,11 +231,11 @@ export function NavbarNext(): JSX.Element {
                 <div className="navbar-next__nav">
                     {navItems.map(item => (
                         <div key={item.id} className="navbar-next__item"
-                            onMouseEnter={() => setActiveDropdown(item.id)} onMouseLeave={() => setActiveDropdown(null)}
+                            onMouseEnter={() => {closePreferences(); setActiveDropdown(item.id);}} onMouseLeave={() => setActiveDropdown(null)}
                             onBlur={event => {if (!event.currentTarget.contains(event.relatedTarget as Node)) setActiveDropdown(null);}}
                             onKeyDown={event => {if (event.key === 'Escape') {setActiveDropdown(null); event.currentTarget.querySelector('button')?.focus();}}}>
                             <button className="navbar-next__trigger" type="button" aria-expanded={activeDropdown === item.id}
-                                aria-controls={`navbar-dropdown-${item.id}`} onClick={event => setActiveDropdown(current => event.detail === 0 && current === item.id ? null : item.id)}>
+                                aria-controls={`navbar-dropdown-${item.id}`} onClick={event => {closePreferences(); setActiveDropdown(current => event.detail === 0 && current === item.id ? null : item.id);}}>
                                 {item.label}
                                 <ChevronDown />
                             </button>
@@ -245,9 +245,10 @@ export function NavbarNext(): JSX.Element {
                                         key={sub.label}
                                         to={sub.href}
                                         className="navbar-next__dropdown-link"
+                                        aria-label={sub.ariaLabel}
                                         {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                     >
-                                        {sub.label}
+                                        <span>{sub.label}</span>{sub.detail && <span className="navbar-next__link-detail"><StarIcon />{sub.detail}</span>}
                                     </Link>
                                 ))}
                             </div>
@@ -256,17 +257,6 @@ export function NavbarNext(): JSX.Element {
                 </div>
 
                 <div className="navbar-next__actions">
-                    <LanguageMenu />
-                    <BrandThemeSwitcher />
-                    <a
-                        href={DORIS_SUMMIT_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar-next__summit"
-                        aria-label={translate({ id: "homepage.navbar.027", message: "Visit Doris Summit 2026 (opens in a new tab)" })}
-                    >
-                        <span>Doris Summit 26</span>
-                    </a>
                     <button
                         type="button"
                         id="navbar-ask-ai-btn"
@@ -302,20 +292,7 @@ export function NavbarNext(): JSX.Element {
                         >
                             {translate({ id: "homepage.navbar.031", message: "Ask" })}</span>
                     </button>
-                    <a
-                        href={`https://github.com/${GITHUB_REPO}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar-next__star-link"
-                        aria-label={translate({ id: 'homepage.navbar.starLabel', message: 'Star Apache Doris on GitHub ({stars} stars)' }, { stars: starDisplay })}
-                    >
-                        <StarIcon />
-                        <span className="navbar-next__star-text">{translate({ id: "homepage.navbar.032", message: "Star" })}</span>
-                        <span className="navbar-next__star-divider" />
-                        <span className="navbar-next__star-count">{starDisplay}</span>
-                        <span className="navbar-next__star-divider" />
-                        <GitHubIcon />
-                    </a>
+                    <LanguageMenu appearance onOpen={() => {setMobileOpen(false); setActiveDropdown(null);}} />
                     <Link to="/download" className="navbar-next__cta">
                         {translate({ id: "homepage.navbar.033", message: "DOWNLOAD" })}</Link>
                 </div>
@@ -326,7 +303,7 @@ export function NavbarNext(): JSX.Element {
                     aria-label={mobileOpen ? translate({ id: "homepage.navbar.034", message: "Close navigation menu" }) : translate({ id: "homepage.navbar.035", message: "Open navigation menu" })}
                     aria-expanded={mobileOpen}
                     aria-controls="navbar-next-mobile-panel"
-                    onClick={() => setMobileOpen(open => !open)}
+                    onClick={() => {closePreferences(); setMobileOpen(open => !open);}}
                 >
                     <MenuIcon open={mobileOpen} />
                 </button>
@@ -356,10 +333,11 @@ export function NavbarNext(): JSX.Element {
                                             key={sub.label}
                                             to={sub.href}
                                             className="navbar-next__mobile-link"
+                                            aria-label={sub.ariaLabel}
                                             onClick={() => setMobileOpen(false)}
                                             {...(sub.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                                         >
-                                            {sub.label}
+                                            <span>{sub.label}</span>{sub.detail && <span className="navbar-next__link-detail"><StarIcon />{sub.detail}</span>}
                                         </Link>
                                     ))}
                                 </div>
@@ -368,23 +346,7 @@ export function NavbarNext(): JSX.Element {
                     })}
                 </div>
 
-                <BrandThemeSwitcher mobile />
-                <LanguageMenu mobile />
 
-                {/* Phones drop the Summit banner from the bar to keep it one row; it
-                    stays reachable from the menu instead. */}
-                <div className="navbar-next__mobile-actions">
-                    <a
-                        href={DORIS_SUMMIT_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="navbar-next__summit"
-                        aria-label={translate({ id: "homepage.navbar.027", message: "Visit Doris Summit 2026 (opens in a new tab)" })}
-                        onClick={() => setMobileOpen(false)}
-                    >
-                        <span>Doris Summit 26</span>
-                    </a>
-                </div>
             </div>
         </nav>
     );

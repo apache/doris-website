@@ -1,27 +1,115 @@
 .language-menu {
     position: relative;
     color: var(--brand-ink);
-    font-size: 13px;
-    summary { display: flex; align-items: center; gap: 6px; padding: 8px; cursor: pointer; list-style: none; }
-    summary::-webkit-details-marker { display: none; }
-    summary:focus-visible, a:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 2px; }
-    &__links { position: absolute; top: 100%; right: 0; min-width: 210px; padding: 8px; z-index: 100;
-        background: var(--brand-paper); border: 1px solid var(--brand-border-soft); border-radius: 10px;
-        box-shadow: 0 8px 24px rgb(var(--brand-ink-rgb) / 12%); }
-    a { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; color: var(--brand-ink); border-radius: 6px; }
-    a:hover, a[aria-current] { background: var(--brand-surface-note); text-decoration: none; }
-    small { font-size: 11px; color: var(--brand-ink-soft); }
-    &--mobile { display: none; }
+    font: 600 13px/1.4 var(--font-mono);
+    flex-shrink: 0;
+    summary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 36px;
+        padding: 0 8px;
+        cursor: pointer;
+        list-style: none;
+        border-radius: 5px;
+    }
+    summary::-webkit-details-marker {
+        display: none;
+    }
+    summary:focus-visible,
+    a:focus-visible {
+        outline: 2px solid var(--brand-primary);
+        outline-offset: 2px;
+    }
+    &__globe {
+        font-size: 19px;
+        line-height: 1;
+    }
+    &__compact-label {
+        display: none;
+    }
+    &__panel {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        width: 280px;
+        max-width: calc(100vw - 24px);
+        max-height: min(620px, calc(100dvh - 100px));
+        overflow-y: auto;
+        padding: 12px;
+        z-index: 310;
+        background: var(--brand-paper);
+        color: var(--brand-ink);
+        border: 1px solid var(--brand-border-soft);
+        border-radius: 10px;
+        box-shadow: 0 16px 40px rgb(var(--brand-ink-rgb) / 20%);
+    }
+    &__heading {
+        padding: 4px 8px 8px;
+        color: var(--brand-ink-soft);
+        font-size: 11px;
+        font-weight: 700;
+    }
+    &__links {
+        display: grid;
+        gap: 2px;
+    }
+    a {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 12px;
+        color: var(--brand-ink);
+        border-radius: 5px;
+    }
+    a:hover,
+    a[aria-current] {
+        background: var(--brand-surface-note);
+        text-decoration: none;
+    }
+    small {
+        font-size: 11px;
+        color: var(--brand-ink-soft);
+    }
+    &__appearance {
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid var(--brand-border-soft);
+    }
+    &--mobile {
+        display: none;
+    }
 }
 .navbar-next .language-menu > summary {
     color: var(--brand-cream-light);
     background: transparent;
-    border: 1px solid color-mix(in srgb, var(--brand-cream-light) 25%, transparent);
-    border-radius: 4px;
 }
-.navbar-next .language-menu > summary:focus-visible { outline-color: var(--brand-accent); }
-@media (max-width: 996px) {
-    .navbar-next__actions > .language-menu { display: none; }
-    .language-menu--mobile { display: block; margin: 12px 20px; }
-    .language-menu--mobile .language-menu__links { position: static; box-shadow: none; }
+.navbar-next .language-menu > summary:hover {
+    background: color-mix(in srgb, var(--brand-cream-light) 9%, transparent);
+}
+.navbar-next .language-menu > summary:focus-visible {
+    outline-color: var(--brand-accent);
+}
+@media (max-width: 600px) {
+    .navbar-next .language-menu {
+        &__full-label {
+            display: none;
+        }
+        &__compact-label {
+            display: inline;
+            font-size: 11px;
+        }
+        summary {
+            padding-inline: 5px;
+            gap: 4px;
+        }
+        &__panel {
+            position: fixed;
+            top: calc(var(--home-next-banner-height, 0px) + var(--navbar-next-height, 56px) + 8px);
+            right: 12px;
+            width: 280px;
+            max-height: calc(100dvh - var(--home-next-banner-height, 0px) - var(--navbar-next-height, 56px) - 24px);
+        }
+    }
 }

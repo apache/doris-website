@@ -328,5 +328,4731 @@
     },
     "theme.SearchPage.documentsFound.plurals": {
         "message": "找到 {count} 篇文档"
+    },
+    "homepage.hero.002": {
+        "message": "正在执行查询…",
+        "description": "EXECUTING QUERY ..."
+    },
+    "homepage.hero.004": {
+        "message": "重置",
+        "description": "Reset"
+    },
+    "homepage.hero.005": {
+        "message": "重置",
+        "description": "RESET"
+    },
+    "homepage.hero.007": {
+        "message": "执行查询",
+        "description": "Run query"
+    },
+    "homepage.hero.008": {
+        "message": "执行",
+        "description": "RUN"
+    },
+    "homepage.hero.015": {
+        "message": "3 篇文档 · 扫描 18.4M 个向量",
+        "description": "3 docs · scanned 18.4M vectors"
+    },
+    "homepage.hero.016": {
+        "message": "结构化、全文和向量",
+        "description": "Structured, full-text, and vector"
+    },
+    "homepage.hero.017": {
+        "message": "检索，一条 SQL 即可完成。",
+        "description": " search, all in one SQL."
+    },
+    "homepage.hero.020": {
+        "message": "结果 · 5 篇文档 · 按相关性排序",
+        "description": "RESULT · 5 DOCS · RANKED"
+    },
+    "homepage.hero.021": {
+        "message": "全文",
+        "description": "Full-text"
+    },
+    "homepage.hero.022": {
+        "message": "向量",
+        "description": "Vector"
+    },
+    "homepage.hero.023": {
+        "message": "过滤",
+        "description": "Filter"
+    },
+    "homepage.hero.027": {
+        "message": "知识图谱",
+        "description": "KNOWLEDGE GRAPH"
+    },
+    "homepage.hero.033": {
+        "message": "每日查询量",
+        "description": "QUERIES / DAY"
+    },
+    "homepage.hero.039": {
+        "message": "错误率 0.00%",
+        "description": "error 0.00%"
+    },
+    "homepage.hero.040": {
+        "message": "显示检索结果",
+        "description": "Show search results"
+    },
+    "homepage.hero.041": {
+        "message": "显示知识图谱和查询图表",
+        "description": "Show knowledge graph and query chart"
+    },
+    "homepage.hero.044": {
+        "message": "切换演示动画",
+        "description": "Switch report animation"
+    },
+    "homepage.hero.055": {
+        "message": "Apache Doris 是面向现代分析与 AI 的开源实时数据库，既支持在物理服务器上采用存算一体架构，也支持基于云对象存储采用存算分离架构。",
+        "description": "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage."
+    },
+    "homepage.hero.056": {
+        "message": "快速开始",
+        "description": "Get Started"
+    },
+    "homepage.hero.057": {
+        "message": "问问 AI",
+        "description": "Ask Me"
+    },
+    "homepage.hero.058": {
+        "message": "加入 Slack",
+        "description": "Join Slack"
+    },
+    "homepage.features.001": {
+        "message": "实时分析",
+        "description": "Real-Time Analytics"
+    },
+    "homepage.features.002": {
+        "message": "从数据写入到分析洞察，提供极速的端到端处理能力。",
+        "description": "The fastest end-to-end engine from ingestion to insight."
+    },
+    "homepage.features.003": {
+        "message": "高并发 / 低延迟",
+        "description": "High Concurrency / Low Latency"
+    },
+    "homepage.features.004": {
+        "message": "了解实时分析（即将上线）",
+        "description": "Explore real-time analytics (Coming Soon)"
+    },
+    "homepage.features.005": {
+        "message": "流式写入",
+        "description": "Streaming Ingestion"
+    },
+    "homepage.features.006": {
+        "message": "从 Kafka 和数据库 CDC 接入数据，实现秒级数据新鲜度。",
+        "description": "Ingest from Kafka and database CDC with second-level freshness."
+    },
+    "homepage.features.007": {
+        "message": "增量转换",
+        "description": "Incremental Transform"
+    },
+    "homepage.features.008": {
+        "message": "物化视图以分钟级完成复杂转换的刷新，无需等待数小时。",
+        "description": "Materialized views refresh complex transforms in minutes, not hours."
+    },
+    "homepage.features.009": {
+        "message": "亚秒级查询",
+        "description": "Sub-Second Queries"
+    },
+    "homepage.features.010": {
+        "message": "即使面对 PB 级数据和高并发访问，也能保持亚秒级响应。",
+        "description": "Stay sub-second under high concurrency, even on petabyte-scale data."
+    },
+    "homepage.features.011": {
+        "message": "湖仓分析",
+        "description": "Lakehouse Analytics"
+    },
+    "homepage.features.012": {
+        "message": "直接在开放湖仓上开展实时分析。",
+        "description": "Real-time analytics, applied directly to your open lakehouse."
+    },
+    "homepage.features.014": {
+        "message": "了解湖仓分析（即将上线）",
+        "description": "Explore lakehouse analytics (Coming Soon)"
+    },
+    "homepage.features.015": {
+        "message": "丰富的 Catalog 支持",
+        "description": "Extensive Catalog Support"
+    },
+    "homepage.features.016": {
+        "message": "直接查询 Iceberg、Delta Lake 和 Hudi 表，无需复制数据。",
+        "description": "Query Iceberg, Delta Lake, and Hudi tables in place, with no data copy."
+    },
+    "homepage.features.017": {
+        "message": "极速查询引擎",
+        "description": "Lightning-Fast Query Engine"
+    },
+    "homepage.features.018": {
+        "message": "通过向量化执行和智能元数据缓存，加速数据湖查询。",
+        "description": "Vectorized execution and smart metadata caching make lake queries fast."
+    },
+    "homepage.features.019": {
+        "message": "增量双向同步",
+        "description": "Incremental Bi-directional Sync"
+    },
+    "homepage.features.020": {
+        "message": "在开放数据湖格式与 Doris 内部存储之间双向流式同步数据。",
+        "description": "Stream data both ways between open lake formats and Doris internal storage."
+    },
+    "homepage.features.021": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "homepage.features.022": {
+        "message": "原生支持结构化数据、文本和向量的一体化检索。",
+        "description": "First-class search across structured, text, and vector data."
+    },
+    "homepage.features.023": {
+        "message": "JSON / 文本 / 向量",
+        "description": "JSON / Text / Vector"
+    },
+    "homepage.features.024": {
+        "message": "了解混合检索（即将上线）",
+        "description": "Explore hybrid search (Coming Soon)"
+    },
+    "homepage.features.025": {
+        "message": "JSON 分析",
+        "description": "JSON Analytics"
+    },
+    "homepage.features.026": {
+        "message": "对 Agent 轨迹和工具调用元数据自动进行列式存储，分析速度提升至 50 倍。",
+        "description": "Auto-columnar storage for agent traces and tool-call metadata, with 50x faster analysis."
+    },
+    "homepage.features.027": {
+        "message": "文本检索",
+        "description": "Text Search"
+    },
+    "homepage.features.028": {
+        "message": "通过快速的 BM25 检索，支撑 RAG、Agent 记忆与可观测性日志分析。",
+        "description": "Fast BM25 retrieval for RAG, agent memory, and observability logs."
+    },
+    "homepage.features.029": {
+        "message": "向量检索",
+        "description": "Vector Search"
+    },
+    "homepage.features.030": {
+        "message": "内置 HNSW 和 IVF 索引，支持基于嵌入向量的语义检索。",
+        "description": "Built-in HNSW and IVF indexes for semantic retrieval over embeddings."
+    },
+    "homepage.features.037": {
+        "message": "应用",
+        "description": "Apps"
+    },
+    "homepage.features.038": {
+        "message": "湖仓分析动画",
+        "description": "Lakehouse Analytics animation"
+    },
+    "homepage.features.039": {
+        "message": "混合检索动画",
+        "description": "Hybrid Search animation"
+    },
+    "homepage.features.040": {
+        "message": "实时分析动画",
+        "description": "Real-Time Analytics animation"
+    },
+    "homepage.features.041": {
+        "message": "核心能力",
+        "description": "Core Capabilities"
+    },
+    "homepage.features.042": {
+        "message": "三大能力，一个引擎",
+        "description": "Three Pillars. One Engine"
+    },
+    "homepage.usecases.001": {
+        "message": "面向客户的分析",
+        "description": "Customer-Facing Analytics"
+    },
+    "homepage.usecases.002": {
+        "message": "面向大规模客户，直接提供亚秒级响应的交互式分析。",
+        "description": "Ship sub-second, interactive analytics straight to your customers at scale."
+    },
+    "homepage.usecases.003": {
+        "message": "数据仓库",
+        "description": "Data Warehousing"
+    },
+    "homepage.usecases.004": {
+        "message": "用一个实时数仓覆盖各业务领域的分析需求。",
+        "description": "One real-time warehouse for analytics across every business domain."
+    },
+    "homepage.usecases.005": {
+        "message": "可观测性",
+        "description": "Observability"
+    },
+    "homepage.usecases.006": {
+        "message": "通过高吞吐的日志与指标分析，支撑监控和故障排查。",
+        "description": "High-throughput log and metric analytics for monitoring and incident response."
+    },
+    "homepage.usecases.007": {
+        "message": "面向 AI 的 Doris",
+        "description": "Doris for AI"
+    },
+    "homepage.usecases.008": {
+        "message": "在 SQL 中统一向量、文本和 JSON 检索，服务 AI Agent 与 RAG。",
+        "description": "Vector, text, and JSON search unified in SQL, built for AI agents and RAG."
+    },
+    "homepage.usecases.009": {
+        "message": "应用场景",
+        "description": "Use Cases"
+    },
+    "homepage.usecases.010": {
+        "message": "Doris 的应用场景",
+        "description": "Where Doris Goes To Work"
+    },
+    "homepage.usecases.011": {
+        "message": "了解更多",
+        "description": "Learn more"
+    },
+    "homepage.ecosystem.001": {
+        "message": "数据库",
+        "description": "Database"
+    },
+    "homepage.ecosystem.003": {
+        "message": "数据流",
+        "description": "Datastream"
+    },
+    "homepage.ecosystem.005": {
+        "message": "数据湖",
+        "description": "Datalake"
+    },
+    "homepage.ecosystem.006": {
+        "message": "开放表格式",
+        "description": "Open Tables"
+    },
+    "homepage.ecosystem.007": {
+        "message": "BI 与可视化",
+        "description": "BI & Visualization"
+    },
+    "homepage.ecosystem.008": {
+        "message": "仪表盘",
+        "description": "Dashboards"
+    },
+    "homepage.ecosystem.009": {
+        "message": "AI 与分析",
+        "description": "AI & Analytics"
+    },
+    "homepage.ecosystem.010": {
+        "message": "大模型 / Agent",
+        "description": "LLM / Agents"
+    },
+    "homepage.ecosystem.aiAgents": {
+        "message": "AI Agent",
+        "description": "AI Agents"
+    },
+    "homepage.ecosystem.011": {
+        "message": "可观测性",
+        "description": "Observability"
+    },
+    "homepage.ecosystem.012": {
+        "message": "监控",
+        "description": "Monitoring"
+    },
+    "homepage.ecosystem.013": {
+        "message": "生态集成",
+        "description": "Ecosystem"
+    },
+    "homepage.ecosystem.014": {
+        "message": "连接现代数据栈的",
+        "description": "At the Heart of the"
+    },
+    "homepage.ecosystem.015": {
+        "message": "核心引擎",
+        "description": "Modern Data Stack."
+    },
+    "homepage.ecosystem.016": {
+        "message": "连接器覆盖概览",
+        "description": "Connector coverage summary"
+    },
+    "homepage.ecosystem.017": {
+        "message": "50+ 连接器",
+        "description": "50+ Connectors"
+    },
+    "homepage.ecosystem.018": {
+        "message": "覆盖数据库、流式数据、湖仓、BI、AI 与可观测性。",
+        "description": "Databases, streaming, lakehouse, BI, AI, and observability."
+    },
+    "homepage.ecosystem.019": {
+        "message": "查看 Apache Doris 数据集成文档",
+        "description": "View Apache Doris data integration documentation"
+    },
+    "homepage.ecosystem.020": {
+        "message": "上游 · 数据源",
+        "description": "Upstream — Sources"
+    },
+    "homepage.ecosystem.022": {
+        "message": "下游 · 数据消费",
+        "description": "Downstream — Consumers"
+    },
+    "homepage.ecosystem.023": {
+        "message": "上游 · 数据源",
+        "description": "Upstream - Sources"
+    },
+    "homepage.ecosystem.024": {
+        "message": "分析引擎",
+        "description": "The Engine"
+    },
+    "homepage.ecosystem.025": {
+        "message": "下游 · 数据消费",
+        "description": "Downstream - Consumers"
+    },
+    "homepage.diagram.disk": {
+        "message": "磁盘",
+        "description": "Disk"
+    },
+    "homepage.diagram.cache": {
+        "message": "缓存",
+        "description": "Cache"
+    },
+    "homepage.diagram.data": {
+        "message": "数据",
+        "description": "Data"
+    },
+    "homepage.diagram.metadata": {
+        "message": "元数据服务",
+        "description": "Metadata service"
+    },
+    "homepage.diagram.group": {
+        "message": "计算组",
+        "description": "Compute group"
+    },
+    "homepage.diagram.storage": {
+        "message": "共享存储",
+        "description": "Shared storage"
+    },
+    "homepage.deployment.001": {
+        "message": "计算",
+        "description": "Compute"
+    },
+    "homepage.deployment.002": {
+        "message": "存储",
+        "description": "Storage"
+    },
+    "homepage.deployment.003": {
+        "message": "存算一体",
+        "description": "COUPLED"
+    },
+    "homepage.deployment.004": {
+        "message": "经典 MPP 架构，每个节点同时承担计算与存储，充分利用本地 I/O，降低查询延迟。",
+        "description": "Classic MPP, with compute and storage co-located on each node for maximum local I/O and the lowest query latency."
+    },
+    "homepage.deployment.005": {
+        "message": "Apache Doris 存算一体模式架构图",
+        "description": "Apache Doris compute-storage coupled mode architecture diagram"
+    },
+    "homepage.deployment.006": {
+        "message": "立即部署",
+        "description": "Deploy Now!"
+    },
+    "homepage.deployment.007": {
+        "message": "存算分离",
+        "description": "DECOUPLED"
+    },
+    "homepage.deployment.008": {
+        "message": "云原生架构，基于共享对象存储运行无状态计算组。计算资源可按需扩缩容，不同工作负载相互隔离。",
+        "description": "Cloud-native architecture with stateless compute groups over shared object storage. Scale compute on demand and isolate workloads from one another."
+    },
+    "homepage.deployment.009": {
+        "message": "Apache Doris 存算分离模式架构图",
+        "description": "Apache Doris compute-storage decoupled mode architecture diagram"
+    },
+    "homepage.deployment.010": {
+        "message": "部署方式",
+        "description": "Deployment"
+    },
+    "homepage.deployment.011": {
+        "message": "选择适合的架构",
+        "description": "Choose Your Architecture"
+    },
+    "homepage.deployment.012": {
+        "message": "一个引擎，两种模式",
+        "description": "One Engine, Two Modes"
+    },
+    "homepage.community.mailingList": {
+        "message": "开发者邮件列表",
+        "description": "Dev Mailing List"
+    },
+    "homepage.community.001": {
+        "message": "社区",
+        "description": "Community"
+    },
+    "homepage.community.002": {
+        "message": "与 ",
+        "description": "Connect with "
+    },
+    "homepage.community.003": {
+        "message": "5,000+ 个团队",
+        "description": "5,000+ teams"
+    },
+    "homepage.community.004": {
+        "message": "一起使用 Apache Doris 构建数据应用",
+        "description": "building on Apache Doris"
+    },
+    "homepage.stats.001": {
+        "message": "小米是全球前三的智能手机厂商，也是消费电子与智能家居领域的领先品牌，并持续拓展电动汽车业务。",
+        "description": "Xiaomi is a global top-three smartphone maker and a leading consumer-electronics and smart-home brand, with growing reach into electric vehicles."
+    },
+    "homepage.stats.002": {
+        "message": "科技",
+        "description": "Technology"
+    },
+    "homepage.stats.003": {
+        "message": "对设备、应用和服务数据开展交互式分析，帮助运营团队实时掌握业务运行情况。",
+        "description": "Runs interactive analytics on device, app, and service data so operations teams can monitor business health live."
+    },
+    "homepage.stats.004": {
+        "message": "运营洞察",
+        "description": "Operations insight"
+    },
+    "homepage.stats.005": {
+        "message": "百度是中国最大的搜索引擎和领先的 AI 公司，其产品覆盖文心大模型与 Apollo 自动驾驶等领域。",
+        "description": "Baidu is China's largest search engine and a leading AI company, powering products from ERNIE large language models to Apollo autonomous driving."
+    },
+    "homepage.stats.006": {
+        "message": "为工程和平台可观测性提供大规模日志分析与即席 SQL 探索。",
+        "description": "Powers large-scale log analytics and ad-hoc SQL exploration for engineering and platform observability workflows."
+    },
+    "homepage.stats.007": {
+        "message": "事件分析",
+        "description": "Events analyzed"
+    },
+    "homepage.stats.008": {
+        "message": "三星是全球最大的电子制造商，业务覆盖 70 多个国家，在智能手机、存储芯片、显示器和家电领域居于领先地位。",
+        "description": "Samsung is the world's largest electronics manufacturer, leading in smartphones, memory chips, displays, and home appliances across more than 70 countries."
+    },
+    "homepage.stats.009": {
+        "message": "使用 Apache Doris 对消费电子各产品线的设备遥测和服务数据进行分析。",
+        "description": "Uses Apache Doris for device telemetry and service analytics across consumer electronics product lines."
+    },
+    "homepage.stats.010": {
+        "message": "设备分析",
+        "description": "Device analytics"
+    },
+    "homepage.stats.011": {
+        "message": "京东按营收计是中国最大的零售商，位列《财富》世界 500 强前 50 名，并运营着全球最广泛的自建物流网络之一。",
+        "description": "JD.com is China's largest retailer by revenue and a Fortune Global 500 top-50 company, operating one of the world's most extensive self-built logistics networks."
+    },
+    "homepage.stats.012": {
+        "message": "电商",
+        "description": "E-commerce"
+    },
+    "homepage.stats.013": {
+        "message": "为订单、库存和营销数据提供零售分析，业务人员可通过 SQL 快速获取数据。",
+        "description": "Serves retail analytics for order, inventory, and marketing data with fast SQL access for business users."
+    },
+    "homepage.stats.014": {
+        "message": "零售分析",
+        "description": "Retail analytics"
+    },
+    "homepage.stats.015": {
+        "message": "美团是中国最大的本地生活服务平台，每天通过外卖、出行和即时零售连接数亿用户。",
+        "description": "Meituan is China's largest local-services platform, connecting hundreds of millions of users with food delivery, travel, and on-demand retail every day."
+    },
+    "homepage.stats.016": {
+        "message": "互联网服务",
+        "description": "Internet Services"
+    },
+    "homepage.stats.017": {
+        "message": "对订单、商户、骑手和用户行为开展城市级业务分析，支撑实时决策。",
+        "description": "Runs city-scale business analytics over orders, merchants, riders, and user activity for live decision support."
+    },
+    "homepage.stats.018": {
+        "message": "业务数据",
+        "description": "Business data"
+    },
+    "homepage.stats.019": {
+        "message": "网易是中国第二大游戏公司，也是涵盖游戏、音乐流媒体、教育和智能企业服务的大型互联网集团。",
+        "description": "NetEase is China's second-largest gaming company and a major internet group spanning hit titles, music streaming, education, and intelligent enterprise services."
+    },
+    "homepage.stats.020": {
+        "message": "使用 Apache Doris 分析游戏和内容数据，让团队无需等待长时间的批处理即可查看实时指标。",
+        "description": "Uses Apache Doris for game and content analytics, helping teams inspect live metrics without long batch delays."
+    },
+    "homepage.stats.021": {
+        "message": "内容指标",
+        "description": "Content metrics"
+    },
+    "homepage.stats.022": {
+        "message": "腾讯音乐娱乐是中国领先的在线音乐与音频平台，旗下 QQ 音乐、酷狗和酷我覆盖超过 5 亿月活跃用户。",
+        "description": "Tencent Music Entertainment is China's leading online music and audio platform, reaching over 500 million monthly users across QQ Music, Kugou, and Kuwo."
+    },
+    "homepage.stats.023": {
+        "message": "媒体",
+        "description": "Media"
+    },
+    "homepage.stats.024": {
+        "message": "通过 Doris 快速聚合用户收听、内容和互动数据，支撑实时音乐业务分析。",
+        "description": "Uses Doris for fast aggregation over user listening, content, and engagement data to power live music analytics."
+    },
+    "homepage.stats.025": {
+        "message": "音乐分析",
+        "description": "Music analytics"
+    },
+    "homepage.stats.026": {
+        "message": "快手是全球最大的短视频和直播平台之一，其中国业务和国际应用 Kwai 合计拥有超过 7 亿月活跃用户。",
+        "description": "Kuaishou is one of the world's largest short-video and live-streaming platforms, with more than 700 million monthly active users across China and its international Kwai app."
+    },
+    "homepage.stats.027": {
+        "message": "基于海量互动事件流，以亚秒级响应支撑短视频内容和创作者分析。",
+        "description": "Powers short-video content and creator analytics with sub-second response over massive engagement event streams."
+    },
+    "homepage.stats.028": {
+        "message": "互动事件",
+        "description": "Engagement events"
+    },
+    "homepage.stats.029": {
+        "message": "米哈游以 HoYoverse 品牌面向全球，旗下拥有《原神》《崩坏：星穹铁道》和《绝区零》等热门游戏。",
+        "description": "miHoYo, known globally as HoYoverse, is a leading game studio behind blockbuster franchises Genshin Impact, Honkai Star Rail, and Zenless Zone Zero."
+    },
+    "homepage.stats.030": {
+        "message": "游戏",
+        "description": "Gaming"
+    },
+    "homepage.stats.031": {
+        "message": "通过 Doris 分析玩家行为、游戏经济和实时运营数据，帮助团队快速迭代。",
+        "description": "Analyzes player behavior, in-game economy, and live operations data with Doris for fast iteration."
+    },
+    "homepage.stats.032": {
+        "message": "游戏分析",
+        "description": "Game analytics"
+    },
+    "homepage.stats.033": {
+        "message": "瑞幸按门店数量计是全球最大的咖啡连锁品牌，拥有超过 31,000 家门店，每天服务数千万顾客。",
+        "description": "Luckin Coffee is the world's largest coffee chain by store count, with more than 31,000 outlets serving tens of millions of daily customers."
+    },
+    "homepage.stats.034": {
+        "message": "零售",
+        "description": "Retail"
+    },
+    "homepage.stats.035": {
+        "message": "使用 Doris 分析门店、订单和会员数据，跟踪数千家门店的营销活动表现。",
+        "description": "Uses Doris for store, order, and membership analytics to track campaign performance across thousands of outlets."
+    },
+    "homepage.stats.036": {
+        "message": "零售洞察",
+        "description": "Retail insights"
+    },
+    "homepage.stats.037": {
+        "message": "名创优品是一家快速发展的全球生活方式与 IP 零售商，在超过 110 个国家和地区运营 8,000 多家门店。",
+        "description": "MINISO is a fast-growing global lifestyle and IP retailer, operating over 8,000 stores across more than 110 countries and regions worldwide."
+    },
+    "homepage.stats.038": {
+        "message": "对全球零售业务的 SKU 销售、库存和供应链数据进行报表分析。",
+        "description": "Powers SKU-level sales, inventory, and supply-chain reporting across global retail operations."
+    },
+    "homepage.stats.039": {
+        "message": "销售报表",
+        "description": "Sales reporting"
+    },
+    "homepage.stats.040": {
+        "message": "顺丰是中国及亚洲最大的综合物流服务商，按营收计位列全球前四。",
+        "description": "SF Express is the largest integrated logistics provider in China and Asia, and ranks among the top four globally by revenue."
+    },
+    "homepage.stats.041": {
+        "message": "物流",
+        "description": "Logistics"
+    },
+    "homepage.stats.042": {
+        "message": "近实时跟踪运单、线路和运营数据，支撑全国快递配送。",
+        "description": "Tracks shipment, route, and operations data in near real-time to support nationwide express delivery."
+    },
+    "homepage.stats.043": {
+        "message": "运单跟踪",
+        "description": "Shipment tracking"
+    },
+    "homepage.stats.044": {
+        "message": "中通按包裹量计是中国最大的快递公司，年处理包裹超过 340 亿件，连续九年保持市场领先。",
+        "description": "ZTO Express is China's largest express delivery company by parcel volume, handling more than 34 billion parcels annually and leading the market for nine consecutive years."
+    },
+    "homepage.stats.045": {
+        "message": "通过 Doris 对快递网络中的包裹流转、分拨枢纽和末端配送进行分析。",
+        "description": "Uses Doris for parcel flow, sorting hub, and last-mile analytics across the express delivery network."
+    },
+    "homepage.stats.046": {
+        "message": "包裹分析",
+        "description": "Parcel analytics"
+    },
+    "homepage.stats.047": {
+        "message": "菜鸟是阿里巴巴旗下全球智慧物流业务，也是领先的跨境包裹网络，服务超过 200 个国家的电商和供应链客户。",
+        "description": "Cainiao is Alibaba's global smart-logistics arm and a top-tier cross-border parcel network, serving e-commerce and supply-chain customers in more than 200 countries."
+    },
+    "homepage.stats.048": {
+        "message": "分析仓储、线路和跨境物流数据，优化履约运营。",
+        "description": "Analyzes warehouse, route, and cross-border logistics data to optimize fulfillment operations."
+    },
+    "homepage.stats.049": {
+        "message": "物流洞察",
+        "description": "Logistics insight"
+    },
+    "homepage.stats.050": {
+        "message": "福特是全球最大的汽车制造商之一，旗下包括 F 系列皮卡、Mustang 等经典车型，以及不断扩大的电动车型阵容。",
+        "description": "Ford Motor Company is one of the world's largest automakers, building iconic vehicles like the F-Series pickup, Mustang, and a growing lineup of electric models."
+    },
+    "homepage.stats.051": {
+        "message": "汽车",
+        "description": "Automotive"
+    },
+    "homepage.stats.052": {
+        "message": "统一分析车辆、经销商和服务数据，支撑智能互联出行业务。",
+        "description": "Builds unified analytics over vehicle, dealer, and service data to support connected mobility programs."
+    },
+    "homepage.stats.053": {
+        "message": "车辆数据",
+        "description": "Vehicle data"
+    },
+    "homepage.stats.054": {
+        "message": "比亚迪是全球最大的电动汽车制造商，也是领先的锂电池制造商，全球销量超过特斯拉，每年交付数百万辆纯电和混合动力汽车。",
+        "description": "BYD is the world's largest electric-vehicle maker and a top-tier lithium-battery manufacturer, outselling Tesla globally and shipping millions of EVs and hybrids each year."
+    },
+    "homepage.stats.055": {
+        "message": "为电动车遥测、供应链和售后服务提供快速 SQL 分析，服务产品团队。",
+        "description": "Powers EV telemetry, supply chain, and after-sales analytics with fast SQL access for product teams."
+    },
+    "homepage.stats.056": {
+        "message": "遥测数据",
+        "description": "Telemetry data"
+    },
+    "homepage.stats.057": {
+        "message": "铃木位列全球十大汽车制造商，是印度和东南亚的主流汽车品牌，也以摩托车、全地形车和船外机闻名。",
+        "description": "Suzuki Motor is a top-10 global automaker and the dominant car brand in India and Southeast Asia, also famous for its motorcycles, ATVs, and outboard engines."
+    },
+    "homepage.stats.058": {
+        "message": "使用 Apache Doris 分析全球汽车业务中的制造、经销商和服务数据。",
+        "description": "Uses Apache Doris for manufacturing, dealer, and service analytics across global automotive operations."
+    },
+    "homepage.stats.059": {
+        "message": "运营概览",
+        "description": "Operations view"
+    },
+    "homepage.stats.060": {
+        "message": "安踏是中国最大的运动服饰集团，按营收计位列全球前三，旗下品牌包括安踏、FILA、迪桑特和始祖鸟。",
+        "description": "ANTA Sports is China's largest sportswear group and a global top-three player by revenue, with a brand portfolio spanning ANTA, FILA, Descente, and Arc'teryx."
+    },
+    "homepage.stats.061": {
+        "message": "运动服饰",
+        "description": "Sportswear"
+    },
+    "homepage.stats.062": {
+        "message": "对零售、渠道和消费者数据开展分析，为运动品牌的产品与营销决策提供支持。",
+        "description": "Runs retail, channel, and consumer analytics to inform product and marketing decisions across sportswear brands."
+    },
+    "homepage.stats.063": {
+        "message": "李宁由奥运冠军李宁创立，是中国领先的运动品牌，将专业运动装备与潮流文化相结合，门店遍布全国。",
+        "description": "Li-Ning is a leading Chinese sportswear powerhouse founded by the Olympic gymnast, fusing performance gear with streetwear culture across thousands of stores nationwide."
+    },
+    "homepage.stats.064": {
+        "message": "通过 Doris 分析门店、电商和供应链数据，支撑日常及实时决策。",
+        "description": "Powers store, e-commerce, and supply chain analytics with Doris for daily and real-time decision making."
+    },
+    "homepage.stats.065": {
+        "message": "销售分析",
+        "description": "Sales analytics"
+    },
+    "homepage.stats.066": {
+        "message": "特步是中国前五的运动品牌，也是中国领先的跑步品牌，赞助马拉松赛事，服务全球数百万跑者。",
+        "description": "Xtep is a top-five Chinese sportswear brand and the country's number-one running label, sponsoring marathons and dressing millions of runners worldwide."
+    },
+    "homepage.stats.067": {
+        "message": "使用 Doris 分析零售与线上渠道中的会员、销售和营销活动数据。",
+        "description": "Uses Doris for membership, sales, and campaign analytics across retail and digital channels."
+    },
+    "homepage.stats.068": {
+        "message": "客户洞察",
+        "description": "Customer insight"
+    },
+    "homepage.stats.069": {
+        "message": "智谱 AI 是清华孵化的中国领先大模型企业，打造 GLM 和 ChatGLM 基础模型，支撑大规模聊天机器人与 AI Agent 应用。",
+        "description": "Zhipu AI is one of China's leading large-model labs and a Tsinghua spinout, building the GLM and ChatGLM foundation models that power chatbots and AI agents at scale."
+    },
+    "homepage.stats.071": {
+        "message": "使用 Apache Doris 大规模分析模型训练指标、使用事件和平台遥测数据。",
+        "description": "Uses Apache Doris to analyze model training metrics, usage events, and platform telemetry at scale."
+    },
+    "homepage.stats.072": {
+        "message": "模型分析",
+        "description": "Model analytics"
+    },
+    "homepage.stats.073": {
+        "message": "MiniMax 是中国领先的 AI 独角兽企业，开发多模态基础模型，其 Talkie、海螺等热门消费应用服务全球数千万用户。",
+        "description": "MiniMax is a top Chinese AI unicorn building multimodal foundation models behind hit consumer apps like Talkie and Hailuo, serving tens of millions of users worldwide."
+    },
+    "homepage.stats.074": {
+        "message": "分析基础模型业务中的产品使用、训练流水线和推理可观测性数据。",
+        "description": "Powers product usage, training pipeline, and inference observability analytics for foundation model workloads."
+    },
+    "homepage.stats.075": {
+        "message": "模型遥测",
+        "description": "Model telemetry"
+    },
+    "homepage.stats.076": {
+        "message": "Ave AI 是一家快速发展的数据创业公司，帮助现代数据团队将复杂的企业信号转化为 AI 分析与智能决策。",
+        "description": "Ave AI is a fast-growing data startup turning messy enterprise signals into AI-driven analytics and intelligent decisioning for modern data teams."
+    },
+    "homepage.stats.077": {
+        "message": "基于 Doris 构建 AI 数据产品，通过快速 SQL 支撑即席探索和报表。",
+        "description": "Builds AI-driven data products on Doris with fast SQL access for ad-hoc exploration and reporting."
+    },
+    "homepage.stats.078": {
+        "message": "AI 分析",
+        "description": "AI analytics"
+    },
+    "homepage.stats.079": {
+        "message": "Talkie 是领先的 AI 陪伴与角色聊天应用，拥有超过 1,100 万月活跃用户，是美国下载量最高的 AI 应用之一。",
+        "description": "Talkie is a leading AI companion and character-chat app with over 11 million monthly active users, ranking among the most-downloaded AI apps in the United States."
+    },
+    "homepage.stats.080": {
+        "message": "大规模分析 AI 角色聊天产品中的对话、互动和增长信号。",
+        "description": "Analyzes conversation, engagement, and growth signals for an AI character chat product at scale."
+    },
+    "homepage.stats.081": {
+        "message": "互动数据",
+        "description": "Engagement data"
+    },
+    "homepage.stats.082": {
+        "message": "地平线是中国领先的自动驾驶芯片公司，占据中国 ADAS 市场超过 40% 的份额，已搭载于 100 多款在售车型。",
+        "description": "Horizon Robotics is China's leading autonomous-driving chipmaker, commanding over 40% of the domestic ADAS market and powering more than 100 vehicle models on the road."
+    },
+    "homepage.stats.083": {
+        "message": "自动驾驶",
+        "description": "Autonomous Driving"
+    },
+    "homepage.stats.084": {
+        "message": "使用 Doris 处理自动驾驶平台中的行驶数据、传感器遥测和芯片性能指标。",
+        "description": "Uses Doris to process driving data, sensor telemetry, and chip performance metrics for autonomous platforms."
+    },
+    "homepage.stats.085": {
+        "message": "行驶数据",
+        "description": "Driving data"
+    },
+    "homepage.stats.086": {
+        "message": "金风科技是全球第一大风力发电机组制造商，单年交付容量接近 30 GW，其设备服务六大洲的风电场。",
+        "description": "Goldwind is the world's number-one wind turbine manufacturer, shipping nearly 30 GW of capacity in a single year and powering wind farms across six continents."
+    },
+    "homepage.stats.087": {
+        "message": "能源",
+        "description": "Energy"
+    },
+    "homepage.stats.088": {
+        "message": "对全球可再生能源资产中的风机遥测与运营数据开展分析。",
+        "description": "Powers wind turbine telemetry and operations analytics across renewable energy assets worldwide."
+    },
+    "homepage.stats.089": {
+        "message": "能源遥测",
+        "description": "Energy telemetry"
+    },
+    "homepage.stats.090": {
+        "message": "领创集团是东南亚领先的 AI 金融科技企业，通过 Atome、ADVANCE.AI 等品牌服务 4,000 万消费者和 235,000 家商户。",
+        "description": "Advance Intelligence Group is Southeast Asia's leading AI-driven fintech, serving 40 million consumers and 235,000 merchants through brands like Atome and ADVANCE.AI."
+    },
+    "homepage.stats.091": {
+        "message": "金融科技",
+        "description": "Fintech"
+    },
+    "homepage.stats.092": {
+        "message": "为东南亚 AI 金融科技产品提供风险、信贷和交易分析。",
+        "description": "Runs risk, credit, and transaction analytics for AI-driven fintech products across Southeast Asia."
+    },
+    "homepage.stats.093": {
+        "message": "风险分析",
+        "description": "Risk analytics"
+    },
+    "homepage.stats.094": {
+        "message": "TrueWatch 是新一代云可观测性平台，为全球 DevOps 与 SRE 团队统一多云环境中的指标、日志和链路数据。",
+        "description": "TrueWatch is a next-generation cloud observability platform unifying metrics, logs, and traces across multi-cloud stacks for DevOps and SRE teams worldwide."
+    },
+    "homepage.stats.095": {
+        "message": "可观测性",
+        "description": "Observability"
+    },
+    "homepage.stats.096": {
+        "message": "使用 Doris 构建统一可观测性平台，大规模分析基础设施的指标、日志和链路。",
+        "description": "Powers a unified observability platform using Doris for metrics, logs, and traces at infrastructure scale."
+    },
+    "homepage.stats.097": {
+        "message": "可观测性数据",
+        "description": "Observability data"
+    },
+    "homepage.stats.099": {
+        "message": "应用场景",
+        "description": "Use case"
+    },
+    "homepage.stats.100": {
+        "message": "使用 Apache Doris 的企业",
+        "description": "Companies using Apache Doris"
+    },
+    "homepage.stats.101": {
+        "message": "10,000+ 用户的选择",
+        "description": "Trusted by 10,000+ users"
+    },
+    "homepage.newsticker.001": {
+        "message": "PROFILE",
+        "description": "PROFILE"
+    },
+    "homepage.news.profileCopy": {
+        "message": "使用全新的 Apache Doris Profile 分析工具诊断慢查询。",
+        "description": "Diagnose slow queries with the new Apache Doris Profile Analysis workspace."
+    },
+    "homepage.news.open": {
+        "message": "打开",
+        "description": "Open"
+    },
+    "homepage.newsticker.002": {
+        "message": "课程",
+        "description": "COURSE"
+    },
+    "homepage.news.courseCopy": {
+        "message": "通过全新、免费的 Apache Doris 101 课程学习基础知识。",
+        "description": "Learn the fundamentals with the new, free Apache Doris 101 course."
+    },
+    "homepage.news.start": {
+        "message": "开始学习",
+        "description": "Start"
+    },
+    "homepage.newsticker.003": {
+        "message": "路线图",
+        "description": "ROADMAP"
+    },
+    "homepage.news.roadmapCopy": {
+        "message": "查看 Apache Doris 社区接下来计划构建的功能。",
+        "description": "See what we’re building next on the Apache Doris community roadmap."
+    },
+    "homepage.news.explore": {
+        "message": "查看详情",
+        "description": "Explore"
+    },
+    "homepage.newsticker.005": {
+        "message": "Apache Doris 最新动态",
+        "description": "Latest Apache Doris updates"
+    },
+    "homepage.newsticker.006": {
+        "message": "最新动态",
+        "description": "Latest"
+    },
+    "homepage.newsticker.010": {
+        "message": "已暂停",
+        "description": "Paused"
+    },
+    "homepage.home.001": {
+        "message": "Apache Doris：面向 AI 时代的开源实时分析与检索数据库",
+        "description": "Apache Doris: Open Source, Real-Time Analytics and Search Database for the AI Era"
+    },
+    "homepage.home.002": {
+        "message": "Apache Doris 是基于 MPP 架构的开源实时分析数据库，使用一个引擎即可在 PB 级数据上执行 OLAP 查询、湖仓分析与混合检索。",
+        "description": "Apache Doris is an open-source, real-time analytics database built on MPP architecture. Run OLAP queries, lakehouse analytics, and hybrid search at petabyte scale on a single engine."
+    },
+    "marketing.compare.100": {
+        "message": "Doris 和 Elasticsearch 都服务于可观测性、安全和实时分析。Doris 在存储成本、写入效率与分析深度上更有优势，同时无需使用专有 DSL。",
+        "description": "Doris and Elasticsearch both serve observability, security, and real-time analytics. Doris pulls ahead on storage cost, write efficiency, and analytical depth, all without a custom DSL."
+    },
+    "marketing.compare.101": {
+        "message": "压缩比",
+        "description": "Compression Ratio"
+    },
+    "marketing.compare.102": {
+        "message": "大幅减少存储占用。",
+        "description": "Far smaller storage footprint."
+    },
+    "marketing.compare.103": {
+        "message": "Doris 对日志和指标数据的压缩比为 1:5 至 1:10，Elasticsearch 则为 1:1.5，相同数据所需的磁盘空间更少。",
+        "description": "Doris compresses logs and metrics at 1:5 to 1:10, versus Elasticsearch's 1:1.5. The same data fits on a fraction of the disk."
+    },
+    "marketing.compare.104": {
+        "message": "写入开销",
+        "description": "Write Overhead"
+    },
+    "marketing.compare.105": {
+        "message": "高写入吞吐，低资源开销。",
+        "description": "High write throughput, low overhead."
+    },
+    "marketing.compare.106": {
+        "message": "Doris 在多个副本间只构建一次索引，开销低于 10%。Elasticsearch 则为每个副本分别构建索引，在去重场景下写入开销最高达到 3 倍。",
+        "description": "Doris indexes once across multiple replicas, keeping overhead under 10%. Elasticsearch indexes each replica separately and pays up to 3× per write under deduplication."
+    },
+    "marketing.compare.107": {
+        "message": "更快的检索",
+        "description": "Faster Search"
+    },
+    "marketing.compare.108": {
+        "message": "全文检索结合 SQL，无需 DSL。",
+        "description": "Full-text search and SQL, no DSL."
+    },
+    "marketing.compare.109": {
+        "message": "生产迁移案例表明，全文检索速度达到原来的 2–3 倍，同时获得多表关联、物化视图和开放 MySQL 生态的能力。",
+        "description": "Production migrations report 2–3× faster full-text search, with multi-table joins, materialized views, and the open MySQL ecosystem on top."
+    },
+    "marketing.compare.110": {
+        "message": "来自可观测性、金融安全与物流行业的 Elasticsearch 到 Doris 真实迁移：相同工作负载，更低的成本。",
+        "description": "Real Elasticsearch-to-Doris migrations across observability, financial security, and logistics. Same workload, dramatically smaller bill."
+    },
+    "marketing.compare.111": {
+        "message": "可观测性 · 观测云",
+        "description": "Observability · GuanceDB"
+    },
+    "marketing.compare.112": {
+        "message": "观测云以 Apache Doris 替换 Elasticsearch 后，在数据处理速度和成本优化方面取得了明显进展。",
+        "description": "By replacing Elasticsearch with Apache Doris, GuanceDB took a big stride in improving data processing speed and reducing costs."
+    },
+    "marketing.compare.113": {
+        "message": "成本降低 70%",
+        "description": "70% cost reduction"
+    },
+    "marketing.compare.114": {
+        "message": "替换 Elasticsearch 后",
+        "description": "after replacing Elasticsearch"
+    },
+    "marketing.compare.115": {
+        "message": "全文检索性能",
+        "description": "full-text search performance"
+    },
+    "marketing.compare.116": {
+        "message": "Variant 数据类型",
+        "description": "Variant data type"
+    },
+    "marketing.compare.117": {
+        "message": "支持半结构化日志追踪",
+        "description": "for semi-structured log tracing"
+    },
+    "marketing.compare.118": {
+        "message": "金融科技 · 安全分析",
+        "description": "FinTech · Security Analytics"
+    },
+    "marketing.compare.119": {
+        "message": "使用 Apache Doris 统一架构后，写入吞吐、复杂查询响应和存储效率均显著提升。",
+        "description": "After unifying the architecture with Apache Doris, write throughput, complex query response, and storage efficiency all improved significantly."
+    },
+    "marketing.compare.120": {
+        "message": "速度达 4 倍",
+        "description": "4× faster"
+    },
+    "marketing.compare.121": {
+        "message": "写入速度",
+        "description": "write speed"
+    },
+    "marketing.compare.122": {
+        "message": "速度达 3 倍",
+        "description": "3× faster"
+    },
+    "marketing.compare.123": {
+        "message": "查询性能",
+        "description": "query performance"
+    },
+    "marketing.compare.124": {
+        "message": "存储减少 50%",
+        "description": "50% less storage"
+    },
+    "marketing.compare.125": {
+        "message": "相同数据量下",
+        "description": "for the same data"
+    },
+    "marketing.compare.126": {
+        "message": "物流 · 年包裹量超过 230 亿件",
+        "description": "Logistics · 23B+ Parcels/Yr"
+    },
+    "marketing.compare.127": {
+        "message": "引入 Doris 后，查询性能提升至原来的 5–10 倍，并发处理能力翻倍；90% 的分析从 10 分钟缩短至 1 分钟以内。",
+        "description": "After introducing Doris, query performance improved 5–10× and concurrent processing capability doubled — 90% of analytics fell from 10 min to under 1 min."
+    },
+    "marketing.compare.128": {
+        "message": "性能达 2 倍",
+        "description": "2× better"
+    },
+    "marketing.compare.129": {
+        "message": "高并发报表分析",
+        "description": "high-concurrency report analysis"
+    },
+    "marketing.compare.130": {
+        "message": "减少 65%",
+        "description": "65% less"
+    },
+    "marketing.compare.131": {
+        "message": "存储空间",
+        "description": "storage space"
+    },
+    "marketing.compare.132": {
+        "message": "标准 SQL",
+        "description": "Standard SQL"
+    },
+    "marketing.compare.133": {
+        "message": "简化运维与使用",
+        "description": "simplifies operations and usage"
+    },
+    "marketing.compare.134": {
+        "message": "开源",
+        "description": "Open Source"
+    },
+    "marketing.compare.135": {
+        "message": "Apache License 2.0",
+        "description": "Apache License 2.0"
+    },
+    "marketing.compare.136": {
+        "message": "Apache 软件基金会，厂商中立",
+        "description": "Apache Software Foundation, vendor-neutral"
+    },
+    "marketing.compare.137": {
+        "message": "许可证从 Apache 2.0 变更为 Elastic License，再变更为 AGPL",
+        "description": "License changed Apache 2.0 → Elastic License → AGPL"
+    },
+    "marketing.compare.138": {
+        "message": "由商业公司 Elastic 运营",
+        "description": "Operated by Elastic, a commercial company"
+    },
+    "marketing.compare.139": {
+        "message": "业务单元间严格隔离读写",
+        "description": "Strict read/write separation across business units"
+    },
+    "marketing.compare.140": {
+        "message": "同时支持存算一体与存算分离",
+        "description": "Both integrated and separated storage-compute"
+    },
+    "marketing.compare.141": {
+        "message": "隔离混合查询场景下的工作负载",
+        "description": "Workload isolation across mixed query patterns"
+    },
+    "marketing.compare.142": {
+        "message": "线程组隔离，仅提供较弱的计算隔离",
+        "description": "Thread-group isolation, only weak compute isolation"
+    },
+    "marketing.compare.143": {
+        "message": "仅支持存算一体",
+        "description": "Integrated storage-compute only"
+    },
+    "marketing.compare.144": {
+        "message": "工作负载弹性有限",
+        "description": "Limited workload elasticity"
+    },
+    "marketing.compare.145": {
+        "message": "实时导入",
+        "description": "Real-time Ingestion"
+    },
+    "marketing.compare.146": {
+        "message": "多副本间仅构建一次索引：高吞吐、低开销",
+        "description": "Index once across replicas: high throughput, low overhead"
+    },
+    "marketing.compare.147": {
+        "message": "原生支持推送和从 Kafka 拉取，无需外部工具",
+        "description": "Push and Pull (from Kafka) without external tools"
+    },
+    "marketing.compare.148": {
+        "message": "兼容 Logstash 与 Beats",
+        "description": "Logstash and Beats compatible"
+    },
+    "marketing.compare.149": {
+        "message": "每个副本分别构建索引，写入开销最高达 3 倍",
+        "description": "Index per replica, up to 3× write overhead"
+    },
+    "marketing.compare.150": {
+        "message": "仅支持推送；拉取依赖 Logstash 等外部工具",
+        "description": "Push only; Pull requires external tools like Logstash"
+    },
+    "marketing.compare.151": {
+        "message": "整体导入链路更重",
+        "description": "Heavier ingestion pipeline overall"
+    },
+    "marketing.compare.152": {
+        "message": "实时存储",
+        "description": "Real-time Storage"
+    },
+    "marketing.compare.153": {
+        "message": "1:5–1:10 的压缩比，显著减少磁盘占用",
+        "description": "1:5–1:10 compression ratio: a fraction of the disk footprint"
+    },
+    "marketing.compare.154": {
+        "message": "主键同时支持写时合并与读时合并",
+        "description": "Primary key supports both Merge-on-Write and Merge-on-Read"
+    },
+    "marketing.compare.155": {
+        "message": "聚合结果强一致，可与原始数据共存",
+        "description": "Strongly consistent aggregations, coexist with raw data"
+    },
+    "marketing.compare.156": {
+        "message": "灵活的 Schema Change，适应业务变化",
+        "description": "Flexible Schema Change for evolving business needs"
+    },
+    "marketing.compare.157": {
+        "message": "压缩比为 1:1.5",
+        "description": "1:1.5 compression ratio"
+    },
+    "marketing.compare.158": {
+        "message": "主键仅支持写时合并，写入开销最高达 3 倍",
+        "description": "Primary key Merge-on-Write only, up to 3× write overhead"
+    },
+    "marketing.compare.159": {
+        "message": "聚合仅保证最终一致性，不能与原始数据共存",
+        "description": "Aggregations only eventually consistent, no raw-data coexistence"
+    },
+    "marketing.compare.160": {
+        "message": "Schema Change 能力有限",
+        "description": "Limited Schema Change"
+    },
+    "marketing.compare.161": {
+        "message": "实时查询",
+        "description": "Real-time Query"
+    },
+    "marketing.compare.162": {
+        "message": "点查询、聚合和分析均具备较高性能",
+        "description": "Fast across point queries, aggregation, and analytics"
+    },
+    "marketing.compare.163": {
+        "message": "支持多表关联、物化视图、UDF 与湖仓",
+        "description": "Multi-table joins, materialized views, UDFs, lakehouse"
+    },
+    "marketing.compare.164": {
+        "message": "标准 SQL，易于使用",
+        "description": "Standard SQL, easy to use"
+    },
+    "marketing.compare.165": {
+        "message": "开放的 MySQL 生态",
+        "description": "Open MySQL ecosystem"
+    },
+    "marketing.compare.166": {
+        "message": "擅长点查询，分析能力较弱",
+        "description": "Strong on point queries, weak on analytics"
+    },
+    "marketing.compare.167": {
+        "message": "不支持多表关联，仅适合简单负载",
+        "description": "No multi-table joins, only simple workloads"
+    },
+    "marketing.compare.168": {
+        "message": "专有 DSL，学习成本较高",
+        "description": "Custom DSL with a steep learning curve"
+    },
+    "marketing.compare.169": {
+        "message": "专有的 Elasticsearch 生态",
+        "description": "Proprietary Elasticsearch ecosystem"
+    },
+    "marketing.compare.170": {
+        "message": "总体拥有成本",
+        "description": "Total Cost of Ownership"
+    },
+    "marketing.compare.171": {
+        "message": "开源的存算分离",
+        "description": "Open-source storage-compute separation"
+    },
+    "marketing.compare.172": {
+        "message": "弹性扩展计算资源，无需重均衡",
+        "description": "Elastic compute scales without rebalancing"
+    },
+    "marketing.compare.173": {
+        "message": "生产迁移中成本最高降低 70%",
+        "description": "Up to 70% cost reduction in production migrations"
+    },
+    "marketing.compare.174": {
+        "message": "存储与计算紧耦合",
+        "description": "Tightly coupled storage and compute"
+    },
+    "marketing.compare.175": {
+        "message": "需要为峰值负载预留冗余资源",
+        "description": "Over-provisioning required for peak workloads"
+    },
+    "marketing.compare.176": {
+        "message": "Doris 与 Trino/Presto 都是主流湖仓查询引擎。Doris 将数据仓库与湖仓查询统一到一个引擎，在两类场景下都能更快地执行相同 SQL。",
+        "description": "Doris and Trino/Presto are both mainstream lakehouse query engines. Doris unifies the data warehouse and the lakehouse query engine, running the same SQL dramatically faster across both."
+    },
+    "marketing.compare.177": {
+        "message": "内部表",
+        "description": "Internal Tables"
+    },
+    "marketing.compare.178": {
+        "message": "全向量化 C++ 引擎。",
+        "description": "Fully vectorized C++ engine."
+    },
+    "marketing.compare.179": {
+        "message": "Doris 的内部表查询速度最高为 Presto/Trino 的 10 倍。全向量化 C++ 引擎可直接处理数仓工作负载，而 Trino 需要将这类任务交给下游系统。",
+        "description": "Doris runs internal-table queries up to 10× faster than Presto/Trino. The fully vectorized C++ engine handles the warehouse workloads that Trino has to defer to a downstream system."
+    },
+    "marketing.compare.180": {
+        "message": "更快的湖仓分析",
+        "description": "Faster Lakehouse"
+    },
+    "marketing.compare.181": {
+        "message": "更好地加速外部表查询。",
+        "description": "Better acceleration on external tables."
+    },
+    "marketing.compare.182": {
+        "message": "在两个引擎查询相同外部 Hive 表的 TPC-DS 1 TB 基准中，Doris 的湖仓查询速度为 Presto/Trino 的 2–3 倍。",
+        "description": "Doris executes lakehouse queries 2–3× faster than Presto/Trino, measured on the TPC-DS 1TB benchmark with both engines querying the same external Hive tables."
+    },
+    "marketing.compare.183": {
+        "message": "并发 QPS",
+        "description": "Concurrent QPS"
+    },
+    "marketing.compare.184": {
+        "message": "面向实时分析，不止于交互查询。",
+        "description": "Real-time analytics, not just interactive."
+    },
+    "marketing.compare.185": {
+        "message": "专为高并发实时分析设计，可支持数千并发查询，超越 Trino 所针对的交互式工作负载。",
+        "description": "Built for high-concurrency real-time analytics with thousands of concurrent queries, well beyond the interactive-only workloads Trino targets."
+    },
+    "marketing.compare.186": {
+        "message": "网络、游戏和物流行业从 Trino/Presto 迁移至 Doris 的真实案例：相同 SQL，更简单的架构，更快的查询。",
+        "description": "Real Trino/Presto-to-Doris migrations across networking, gaming, and logistics. Same SQL, simpler architecture, faster queries."
+    },
+    "marketing.compare.187": {
+        "message": "网络 · 大数据平台",
+        "description": "Networking · Big Data Platform"
+    },
+    "marketing.compare.188": {
+        "message": "引入 Apache Doris 替换多套技术栈后，我们构建了统一湖仓，显著提升查询性能与系统稳定性，资源成本降低了 30%。",
+        "description": "By introducing Apache Doris to replace several technology stacks, we achieved a unified lakehouse, significantly improved query performance and system stability, and reduced resource costs by 30%."
+    },
+    "marketing.compare.189": {
+        "message": "统一湖仓",
+        "description": "Unified lakehouse"
+    },
+    "marketing.compare.190": {
+        "message": "替换 Trino、Pinot、Iceberg 与 Kyuubi",
+        "description": "replacing Trino, Pinot, Iceberg, Kyuubi"
+    },
+    "marketing.compare.191": {
+        "message": "显著提升查询性能",
+        "description": "Significantly improved"
+    },
+    "marketing.compare.192": {
+        "message": "与系统稳定性",
+        "description": "and system stability"
+    },
+    "marketing.compare.193": {
+        "message": "降低 30%",
+        "description": "30% reduction"
+    },
+    "marketing.compare.194": {
+        "message": "资源成本",
+        "description": "in resource costs"
+    },
+    "marketing.compare.195": {
+        "message": "游戏 · 中国前三游戏工作室",
+        "description": "Gaming · Top-3 China Studio"
+    },
+    "marketing.compare.196": {
+        "message": "使用 Presto 时，多维分析查询需要 20–40 秒；Doris 将其缩短至 1–2 秒。",
+        "description": "With Presto, multidimensional analysis queries previously took 20 to 40 seconds, while Doris reduced this to 1 to 2 seconds."
+    },
+    "marketing.compare.197": {
+        "message": "查询耗时从",
+        "description": "Query time cut from"
+    },
+    "marketing.compare.198": {
+        "message": "20–40 秒降至 1–2 秒",
+        "description": "20–40s to 1–2s"
+    },
+    "marketing.compare.199": {
+        "message": "自动匹配物化视图",
+        "description": "Automatic materialized view matching"
+    },
+    "marketing.compare.200": {
+        "message": "加速复杂分析",
+        "description": "for complex analytics"
+    },
+    "marketing.compare.201": {
+        "message": "显著提升",
+        "description": "Substantial gain on"
+    },
+    "marketing.compare.202": {
+        "message": "多维分析性能",
+        "description": "multidimensional analysis"
+    },
+    "marketing.compare.203": {
+        "message": "迁移至 Apache Doris 后，整体查询性能达到原来的 2 倍以上，统一架构消除了数据孤岛和资源冗余。",
+        "description": "After migrating to Apache Doris, overall query performance improved by more than 2×, and the unified architecture eliminated data silos and resource redundancy."
+    },
+    "marketing.compare.204": {
+        "message": "速度达 2 倍以上",
+        "description": "2×+ faster"
+    },
+    "marketing.compare.205": {
+        "message": "整体查询性能",
+        "description": "overall query performance"
+    },
+    "marketing.compare.206": {
+        "message": "消除",
+        "description": "Eliminated"
+    },
+    "marketing.compare.207": {
+        "message": "数据孤岛",
+        "description": "data silos"
+    },
+    "marketing.compare.208": {
+        "message": "与资源冗余",
+        "description": "and resource redundancy"
+    },
+    "marketing.compare.209": {
+        "message": "加速",
+        "description": "Accelerated"
+    },
+    "marketing.compare.210": {
+        "message": "实时分析",
+        "description": "real-time analytics"
+    },
+    "marketing.compare.211": {
+        "message": "与即席查询",
+        "description": "and ad-hoc queries"
+    },
+    "marketing.compare.212": {
+        "message": "统一数仓与湖仓架构",
+        "description": "Unified architecture: data warehouse and lakehouse"
+    },
+    "marketing.compare.213": {
+        "message": "内置存储层",
+        "description": "Built-in storage layer"
+    },
+    "marketing.compare.214": {
+        "message": "一个引擎覆盖完整分析链路",
+        "description": "Single engine for the full analytics stack"
+    },
+    "marketing.compare.215": {
+        "message": "面向异构数据源的联邦查询引擎",
+        "description": "Federated query engine across heterogeneous sources"
+    },
+    "marketing.compare.216": {
+        "message": "没有内置存储层",
+        "description": "No built-in storage layer"
+    },
+    "marketing.compare.217": {
+        "message": "需要独立数仓提供分析服务",
+        "description": "Requires a separate warehouse for serving"
+    },
+    "marketing.compare.218": {
+        "message": "执行引擎",
+        "description": "Execution Engine"
+    },
+    "marketing.compare.219": {
+        "message": "C++ 全向量化引擎",
+        "description": "Fully vectorized engine in C++"
+    },
+    "marketing.compare.220": {
+        "message": "开箱即用的高性能数据处理",
+        "description": "High-performance data processing out of the box"
+    },
+    "marketing.compare.221": {
+        "message": "内部表查询最高提速至 10 倍",
+        "description": "Up to 10× faster internal-table queries"
+    },
+    "marketing.compare.222": {
+        "message": "主要基于 Java 执行",
+        "description": "Primarily Java-based execution"
+    },
+    "marketing.compare.223": {
+        "message": "向量化引擎仍在开发中（Hummingbird 项目）",
+        "description": "Vectorized engine still in development (Hummingbird project)"
+    },
+    "marketing.compare.224": {
+        "message": "内部表查询性能较低",
+        "description": "Slower internal-table performance"
+    },
+    "marketing.compare.225": {
+        "message": "查询优化",
+        "description": "Query Optimization"
+    },
+    "marketing.compare.226": {
+        "message": "基于代价的优化器，覆盖关联、聚合和排序",
+        "description": "Cost-based optimizer (CBO) for joins, aggregation, sorting"
+    },
+    "marketing.compare.227": {
+        "message": "自动收集统计信息",
+        "description": "Automatic statistics collection"
+    },
+    "marketing.compare.228": {
+        "message": "复杂查询无需手工 Hint 即可优化",
+        "description": "Tunes complex queries without manual hints"
+    },
+    "marketing.compare.229": {
+        "message": "支持基于代价的优化",
+        "description": "Cost-based optimization supported"
+    },
+    "marketing.compare.230": {
+        "message": "统计信息收集不完整",
+        "description": "Statistics collection is incomplete"
+    },
+    "marketing.compare.231": {
+        "message": "需要手工完整收集才能发挥作用",
+        "description": "Requires manual full collection to be effective"
+    },
+    "marketing.compare.232": {
+        "message": "缓存",
+        "description": "Caching"
+    },
+    "marketing.compare.233": {
+        "message": "元数据缓存支持 TTL、自动刷新与增量同步",
+        "description": "Metadata cache with TTL, auto-refresh, incremental sync"
+    },
+    "marketing.compare.234": {
+        "message": "本地 SSD 热数据缓存降低网络 I/O",
+        "description": "Local SSD hot-data cache reduces network I/O"
+    },
+    "marketing.compare.235": {
+        "message": "内置 SQL 缓存与分区缓存",
+        "description": "SQL cache and partition cache built in"
+    },
+    "marketing.compare.236": {
+        "message": "依赖 Alluxio 等外部缓存方案",
+        "description": "Relies on external caching solutions like Alluxio"
+    },
+    "marketing.compare.237": {
+        "message": "未内置元数据或查询缓存",
+        "description": "No built-in metadata or query cache"
+    },
+    "marketing.compare.238": {
+        "message": "增加了一套需要运维和调优的系统",
+        "description": "Extra system to operate and tune"
+    },
+    "marketing.compare.239": {
+        "message": "物化视图",
+        "description": "Materialized Views"
+    },
+    "marketing.compare.240": {
+        "message": "支持多种数据策略的增量刷新",
+        "description": "Incremental refresh with multiple data strategies"
+    },
+    "marketing.compare.241": {
+        "message": "通过自动改写透明加速查询",
+        "description": "Transparent query acceleration via auto-rewriting"
+    },
+    "marketing.compare.242": {
+        "message": "优化器自动匹配最合适的物化视图",
+        "description": "Optimizer matches the optimal MV automatically"
+    },
+    "marketing.compare.243": {
+        "message": "仅支持手动全量刷新",
+        "description": "Manual full refresh only"
+    },
+    "marketing.compare.244": {
+        "message": "不支持透明查询改写",
+        "description": "No transparent query rewriting"
+    },
+    "marketing.compare.245": {
+        "message": "每次查询需用户手动选择物化视图",
+        "description": "Users must hand-pick the MV per query"
+    },
+    "marketing.compare.246": {
+        "message": "应用场景",
+        "description": "Use Cases"
+    },
+    "marketing.compare.247": {
+        "message": "高并发实时分析",
+        "description": "High-concurrency real-time analytics"
+    },
+    "marketing.compare.248": {
+        "message": "交互式即席分析",
+        "description": "Interactive ad-hoc analytics"
+    },
+    "marketing.compare.249": {
+        "message": "统一的实时分析与湖仓查询引擎",
+        "description": "Unified serving and lakehouse query engine"
+    },
+    "marketing.compare.250": {
+        "message": "仅面向交互式分析",
+        "description": "Interactive analytics only"
+    },
+    "marketing.compare.251": {
+        "message": "擅长跨数据源的联邦查询",
+        "description": "Strong at federated cross-source querying"
+    },
+    "marketing.compare.252": {
+        "message": "需要配合独立数仓提供分析服务",
+        "description": "Pairs with a separate warehouse for serving"
+    },
+    "marketing.compare.253": {
+        "message": "★ 精选案例",
+        "description": "★ FEATURED"
+    },
+    "marketing.compare.254": {
+        "message": "上一个案例",
+        "description": "Previous case"
+    },
+    "marketing.compare.255": {
+        "message": "下一个案例",
+        "description": "Next case"
+    },
+    "marketing.compare.256": {
+        "message": "对比维度",
+        "description": "DIMENSION"
+    },
+    "marketing.compare.257": {
+        "message": "推荐",
+        "description": "RECOMMENDED"
+    },
+    "marketing.compare.001": {
+        "message": "对比方案",
+        "description": "Compare against"
+    },
+    "marketing.compare.002": {
+        "message": "对比",
+        "description": "vs"
+    },
+    "marketing.compare.003": {
+        "message": "即将推出",
+        "description": "SOON"
+    },
+    "marketing.compare.004": {
+        "message": "Apache Doris 与其他方案：选型指南",
+        "description": "Apache Doris vs. the Others — Selection Guide"
+    },
+    "marketing.compare.005": {
+        "message": "为业务选择合适的实时分析数据库。从架构、性能和总体成本出发，对比 Apache Doris、ClickHouse、Elasticsearch 与 Trino/Presto。",
+        "description": "Pick the right real-time analytical database for your workload. See how Apache Doris compares with ClickHouse, Elasticsearch, and Trino/Presto on architecture, performance, and total cost."
+    },
+    "marketing.compare.006": {
+        "message": "Doris 和 ClickHouse 都是主流实时分析数据库。对于现代数据团队的日常工作负载，Doris 在多方面更有优势。",
+        "description": "Doris and ClickHouse are both leading real-time analytical databases. Doris pulls ahead on the workloads modern data teams run every day."
+    },
+    "marketing.compare.007": {
+        "message": "更快的关联查询",
+        "description": "Faster Joins"
+    },
+    "marketing.compare.008": {
+        "message": "分布式多表关联，无需通过宽表规避关联操作。",
+        "description": "Distributed multi-table joins, no wide-table workarounds."
+    },
+    "marketing.compare.009": {
+        "message": "MPP 架构结合基于代价的优化器，自动选择 Broadcast、Shuffle 或 Colocate Join。Doris 可完成全部 TPC-DS 查询，ClickHouse 则有约 50% 的查询无法完成。",
+        "description": "MPP architecture with a cost-based optimizer that automatically picks Broadcast, Shuffle, or Colocate joins. Doris completes the full TPC-DS suite; ClickHouse fails about 50% of the queries."
+    },
+    "marketing.compare.010": {
+        "message": "更低的成本",
+        "description": "Lower Cost"
+    },
+    "marketing.compare.011": {
+        "message": "开源的存算分离架构。",
+        "description": "Storage-compute separation, open-source."
+    },
+    "marketing.compare.012": {
+        "message": "计算资源弹性扩展，无需数据重均衡。开源 3.0 及以上版本即提供该成本模型，无需绑定商业云服务。",
+        "description": "Elastic compute scales without rebalancing. The cost model ships with open-source 3.0+, with no commercial-cloud lock-in."
+    },
+    "marketing.compare.013": {
+        "message": "高并发查询",
+        "description": "Concurrent Queries"
+    },
+    "marketing.compare.014": {
+        "message": "支持实时 UPSERT，同时保持查询速度。",
+        "description": "Real-time UPSERTs without sacrificing query speed."
+    },
+    "marketing.compare.015": {
+        "message": "写时合并在高频更新下保持稳定的读取性能。支持完整 ACID 和 MySQL 协议，并发查询可达数千，而非不足 100。",
+        "description": "Merge-on-Write keeps reads stable under high-frequency updates. Full ACID, MySQL-compatible, with thousands of concurrent queries instead of fewer than 100."
+    },
+    "marketing.compare.016": {
+        "message": "互联网规模企业的真实生产迁移：相同的 SQL 工作负载，不同的运行结果。",
+        "description": "Real production migrations at internet-scale companies running the same SQL workloads, with very different outcomes."
+    },
+    "marketing.compare.017": {
+        "message": "短视频 · DAU 超过 6 亿",
+        "description": "Short-Form Video · 600M+ DAU"
+    },
+    "marketing.compare.018": {
+        "message": "案例 01",
+        "description": "Case 01"
+    },
+    "marketing.compare.019": {
+        "message": "快手使用 Apache Doris 替换 ClickHouse 后，成功升级为统一湖仓架构，实现统一存储并简化数据链路。",
+        "description": "After replacing ClickHouse with Apache Doris, Kuaishou successfully upgraded to a unified lakehouse architecture, achieving unified storage and a simplified data pipeline."
+    },
+    "marketing.compare.020": {
+        "message": "直接查询湖仓",
+        "description": "Direct lakehouse queries"
+    },
+    "marketing.compare.021": {
+        "message": "：无需导入，缩短链路",
+        "description": ": no ingestion, shorter pipeline"
+    },
+    "marketing.compare.022": {
+        "message": "物化视图改写",
+        "description": "Materialized view rewriting"
+    },
+    "marketing.compare.023": {
+        "message": "加速多种场景下的查询",
+        "description": "for query acceleration across scenarios"
+    },
+    "marketing.compare.024": {
+        "message": "灵活的",
+        "description": "Flexible"
+    },
+    "marketing.compare.025": {
+        "message": "数据治理",
+        "description": "data governance"
+    },
+    "marketing.compare.026": {
+        "message": "通过自动物化实现",
+        "description": "via automatic materialization"
+    },
+    "marketing.compare.027": {
+        "message": "音乐流媒体 · MAU 8 亿",
+        "description": "Music Streaming · 800M MAU"
+    },
+    "marketing.compare.028": {
+        "message": "案例 02",
+        "description": "Case 02"
+    },
+    "marketing.compare.029": {
+        "message": "分析引擎从 ClickHouse 迁移到 Apache Doris 后，平台提升了数据时效性，降低了运营成本，并解决了数据管理分散的问题。",
+        "description": "After migrating the analytical engine from ClickHouse to Apache Doris, the platform effectively improved data timeliness, reduced operational costs, and resolved fragmented data management."
+    },
+    "marketing.compare.030": {
+        "message": "强大的",
+        "description": "Strong"
+    },
+    "marketing.compare.031": {
+        "message": "多表关联",
+        "description": "multi-table"
+    },
+    "marketing.compare.032": {
+        "message": "与",
+        "description": "and"
+    },
+    "marketing.compare.033": {
+        "message": "联邦查询",
+        "description": "federated query"
+    },
+    "marketing.compare.034": {
+        "message": "性能",
+        "description": "performance"
+    },
+    "marketing.compare.035": {
+        "message": "兼容 MySQL 协议",
+        "description": "MySQL-protocol compatible"
+    },
+    "marketing.compare.036": {
+        "message": "：降低运维开销",
+        "description": ": lower operational overhead"
+    },
+    "marketing.compare.037": {
+        "message": "部分列更新",
+        "description": "Partial-column updates"
+    },
+    "marketing.compare.038": {
+        "message": "满足多样化的数据更新需求",
+        "description": "for diverse data update patterns"
+    },
+    "marketing.compare.039": {
+        "message": "电商 SaaS · 超过 500 万商户",
+        "description": "E-Commerce SaaS · 5M+ Merchants"
+    },
+    "marketing.compare.040": {
+        "message": "案例 03",
+        "description": "Case 03"
+    },
+    "marketing.compare.041": {
+        "message": "在绝大多数场景下，Apache Doris 的查询响应比 ClickHouse 更快，尤其在复杂关联场景中，性能优势更为明显。",
+        "description": "Apache Doris has faster query response times than ClickHouse in the vast majority of scenarios, especially in complex join scenarios, where its performance is significantly superior."
+    },
+    "marketing.compare.042": {
+        "message": "核心业务查询",
+        "description": "Core business queries"
+    },
+    "marketing.compare.043": {
+        "message": "查询速度达 2–3 倍",
+        "description": "2–3× faster"
+    },
+    "marketing.compare.044": {
+        "message": "复杂关联查询",
+        "description": "Complex join queries"
+    },
+    "marketing.compare.045": {
+        "message": "查询速度达 2–10 倍",
+        "description": "2–10× faster"
+    },
+    "marketing.compare.046": {
+        "message": "成功完成",
+        "description": "Runs"
+    },
+    "marketing.compare.047": {
+        "message": "所有在 ClickHouse 中内存溢出的",
+        "description": "all ClickHouse OOM"
+    },
+    "marketing.compare.048": {
+        "message": "查询",
+        "description": "queries successfully"
+    },
+    "marketing.compare.049": {
+        "message": "逐项比较，覆盖选型中的关键维度。",
+        "description": "Side-by-side, every dimension that matters."
+    },
+    "marketing.compare.050": {
+        "message": "系统架构",
+        "description": "System Architecture"
+    },
+    "marketing.compare.051": {
+        "message": "MPP 分布式架构",
+        "description": "MPP distributed architecture"
+    },
+    "marketing.compare.052": {
+        "message": "兼容 MySQL 协议，支持标准 SQL",
+        "description": "MySQL-protocol compatible, standard SQL"
+    },
+    "marketing.compare.053": {
+        "message": "CBO 自动优化",
+        "description": "CBO automatic optimization"
+    },
+    "marketing.compare.054": {
+        "message": "Scatter-Gather 架构",
+        "description": "Scatter-Gather architecture"
+    },
+    "marketing.compare.055": {
+        "message": "类 SQL 的非标准语法",
+        "description": "SQL-like syntax, non-standard"
+    },
+    "marketing.compare.056": {
+        "message": "需要手动调优",
+        "description": "Requires manual tuning"
+    },
+    "marketing.compare.057": {
+        "message": "关联查询性能",
+        "description": "Join Query Performance"
+    },
+    "marketing.compare.058": {
+        "message": "跨节点分布式关联，速度达 2–10 倍",
+        "description": "2–10× faster, cross-node distributed"
+    },
+    "marketing.compare.059": {
+        "message": "CBO 自动选择 Join 策略",
+        "description": "CBO chooses Join strategy"
+    },
+    "marketing.compare.060": {
+        "message": "完整通过 TPC-DS 查询集",
+        "description": "Full TPC-DS suite passes"
+    },
+    "marketing.compare.061": {
+        "message": "高效管理内存，避免内存溢出",
+        "description": "Efficient memory, avoids OOM"
+    },
+    "marketing.compare.062": {
+        "message": "依赖子查询与宽表建模",
+        "description": "Subqueries + wide-table modeling"
+    },
+    "marketing.compare.063": {
+        "message": "无 CBO，需要手动调优",
+        "description": "No CBO, manual tuning"
+    },
+    "marketing.compare.064": {
+        "message": "约 50% 的 TPC-DS 查询失败",
+        "description": "~50% TPC-DS queries fail"
+    },
+    "marketing.compare.065": {
+        "message": "大查询容易发生内存溢出",
+        "description": "Frequent OOM on large queries"
+    },
+    "marketing.compare.066": {
+        "message": "实时更新",
+        "description": "Real-time Updates"
+    },
+    "marketing.compare.067": {
+        "message": "写时合并引擎",
+        "description": "Merge-on-Write engine"
+    },
+    "marketing.compare.068": {
+        "message": "强一致性，更新立即可见",
+        "description": "Strong consistency, immediate visibility"
+    },
+    "marketing.compare.069": {
+        "message": "高吞吐 UPSERT，性能不退化",
+        "description": "High-throughput UPSERT, no degradation"
+    },
+    "marketing.compare.070": {
+        "message": "ReplacingMergeTree，最终一致性",
+        "description": "ReplacingMergeTree, eventual consistency"
+    },
+    "marketing.compare.071": {
+        "message": "FINAL 导致 2–10 倍的性能下降",
+        "description": "FINAL causes 2–10× slowdown"
+    },
+    "marketing.compare.072": {
+        "message": "高频更新带来合并开销",
+        "description": "High-frequency updates → merge overhead"
+    },
+    "marketing.compare.073": {
+        "message": "事务支持",
+        "description": "Transaction Support"
+    },
+    "marketing.compare.074": {
+        "message": "完整的 ACID 事务",
+        "description": "Full ACID transactions"
+    },
+    "marketing.compare.075": {
+        "message": "批量导入具备原子性",
+        "description": "Atomic batch ingestion"
+    },
+    "marketing.compare.076": {
+        "message": "不支持事务",
+        "description": "No transaction support"
+    },
+    "marketing.compare.077": {
+        "message": "可能暴露部分写入的数据",
+        "description": "Partial data may become visible"
+    },
+    "marketing.compare.078": {
+        "message": "查询并发",
+        "description": "Query Concurrency"
+    },
+    "marketing.compare.079": {
+        "message": "数千并发查询，达到 10 倍以上",
+        "description": "Thousands of concurrent queries, 10×+"
+    },
+    "marketing.compare.080": {
+        "message": "高效的内存管理",
+        "description": "Efficient memory management"
+    },
+    "marketing.compare.081": {
+        "message": "通常低于 100 并发",
+        "description": "Usually below 100 concurrent"
+    },
+    "marketing.compare.082": {
+        "message": "内存密集型工作负载影响集群稳定性",
+        "description": "Memory-intensive workloads destabilize cluster"
+    },
+    "marketing.compare.083": {
+        "message": "数据 API 与湖仓",
+        "description": "Data API & Lakehouse"
+    },
+    "marketing.compare.084": {
+        "message": "Arrow Flight 高吞吐协议",
+        "description": "Arrow-Flight high-throughput protocol"
+    },
+    "marketing.compare.085": {
+        "message": "Hive / Hudi / Iceberg / Parquet",
+        "description": "Hive / Hudi / Iceberg / Parquet"
+    },
+    "marketing.compare.086": {
+        "message": "自动扩缩容与多副本均衡",
+        "description": "Auto-scaling + multi-replica balancing"
+    },
+    "marketing.compare.087": {
+        "message": "仅支持 JDBC",
+        "description": "JDBC only"
+    },
+    "marketing.compare.088": {
+        "message": "湖仓集成能力有限",
+        "description": "Limited lakehouse integration"
+    },
+    "marketing.compare.089": {
+        "message": "扩容需要手动重均衡",
+        "description": "Scaling requires manual rebalancing"
+    },
+    "marketing.compare.090": {
+        "message": "存算分离",
+        "description": "Storage-Compute Separation"
+    },
+    "marketing.compare.091": {
+        "message": "开源 3.0 及以上版本提供",
+        "description": "Open-source 3.0+"
+    },
+    "marketing.compare.092": {
+        "message": "弹性计算，扩容无需重均衡",
+        "description": "Elastic compute, no rebalance on scale"
+    },
+    "marketing.compare.093": {
+        "message": "成本最高降低 70%",
+        "description": "Up to 70% cost reduction"
+    },
+    "marketing.compare.094": {
+        "message": "仅商业云版本提供",
+        "description": "Commercial Cloud edition only"
+    },
+    "marketing.compare.095": {
+        "message": "计算与存储紧耦合，扩容需要重均衡",
+        "description": "Tightly coupled, scaling requires rebalance"
+    },
+    "marketing.compare.096": {
+        "message": "需要为峰值负载预留冗余资源",
+        "description": "Over-provisioning required for peaks"
+    },
+    "marketing.compare.097": {
+        "message": "开源许可证",
+        "description": "Open-Source License"
+    },
+    "marketing.compare.098": {
+        "message": "Apache 基金会，社区维护",
+        "description": "Apache Foundation, community-maintained"
+    },
+    "marketing.compare.099": {
+        "message": "由商业公司控制",
+        "description": "Controlled by a commercial company"
+    },
+    "marketing.compare.showCase": {
+        "message": "查看 {name} 案例",
+        "description": "Show {name} case"
+    },
+    "marketing.compare.goToCase": {
+        "message": "跳转到案例 {number}",
+        "description": "Go to case {number}"
+    },
+    "marketing.benchmarkLabels.internal": {
+        "message": "内部表格式",
+        "description": "Internal Table Format"
+    },
+    "marketing.benchmarkLabels.iceberg": {
+        "message": "Iceberg 表格式",
+        "description": "Iceberg Table Format"
+    },
+    "marketing.benchmarkLabels.100m": {
+        "message": "1 亿行",
+        "description": "100M rows"
+    },
+    "marketing.benchmarkLabels.10m": {
+        "message": "1,000 万行",
+        "description": "10M rows"
+    },
+    "marketing.benchmarkLabels.1m": {
+        "message": "100 万行",
+        "description": "1M rows"
+    },
+    "marketing.benchmarkLabels.retrieval": {
+        "message": "搜索与检索",
+        "description": "Search & Retrieval"
+    },
+    "marketing.benchmarkLabels.analytics": {
+        "message": "分析聚合",
+        "description": "Analytics Rollups"
+    },
+    "marketing.benchmarkLabels.semi": {
+        "message": "半结构化数据",
+        "description": "Semi-Structured Payload"
+    },
+    "marketing.benchmarkLabels.8queries": {
+        "message": "8 条查询",
+        "description": "8 queries"
+    },
+    "marketing.benchmarkLabels.6queries": {
+        "message": "6 条查询",
+        "description": "6 queries"
+    },
+    "marketing.benchmarks.001": {
+        "message": "各引擎使用自己的原生格式读写数据。",
+        "description": "Each engine reads and writes data in its own native format."
+    },
+    "marketing.benchmarks.002": {
+        "message": "所有引擎读取相同的 Apache Iceberg 数据集，仅更换查询引擎。",
+        "description": "Every engine reads the same Apache Iceberg dataset, so only the engine changes."
+    },
+    "marketing.benchmarks.003": {
+        "message": "官方排行榜的数据规模，约 1 亿行。",
+        "description": "Official leaderboard size. Around 100M rows."
+    },
+    "marketing.benchmarks.004": {
+        "message": "可在单机运行的完整验证规模，约 1,000 万行。",
+        "description": "Full validation pass that still fits on a single machine. Around 10M rows."
+    },
+    "marketing.benchmarks.005": {
+        "message": "用于快速冒烟测试的规模，约 100 万行。",
+        "description": "Quick smoke-test size. Around 1M rows."
+    },
+    "marketing.benchmarks.006": {
+        "message": "星型模型基准，包含 13 条以宽表关联与聚合为主的查询。",
+        "description": "A star-schema benchmark with 13 queries, heavy on wide joins and aggregations."
+    },
+    "marketing.benchmarks.007": {
+        "message": "经典决策支持基准，在规范化模型上运行 22 条即席查询。",
+        "description": "The classic decision-support benchmark: 22 ad-hoc queries against a normalized schema."
+    },
+    "marketing.benchmarks.008": {
+        "message": "高难度决策支持基准，包含 99 条查询，覆盖分析引擎的大部分能力。",
+        "description": "The hardest decision-support benchmark: 99 queries that cover most of what an analytical engine has to do."
+    },
+    "marketing.benchmarks.009": {
+        "message": "在大量文本中执行观测记录查找、轨迹回放、模型生成到工具调用链展开，以及故障关键词与短语检索。",
+        "description": "Observation lookup, trace replay, generation-to-tool chain expansion, and incident keyword / phrase retrieval over large text bodies."
+    },
+    "marketing.benchmarks.010": {
+        "message": "按轨迹汇总失败与成本，聚合模型及观测类型，统计工具使用分布并开展运维诊断。",
+        "description": "Trace-level failure and cost summaries, model and observation-type rollups, tool usage distributions, and operational diagnostics."
+    },
+    "marketing.benchmarks.011": {
+        "message": "对持续演变的载荷字段进行过滤和聚合，覆盖发布批次、客户分层、检索策略及嵌套的模型服务/工具诊断数据。",
+        "description": "Filtering and aggregation over evolving payload fields: release rings, customer tiers, retrieval strategies, and nested provider / tool diagnostics."
+    },
+    "marketing.benchmarks.012": {
+        "message": "看看",
+        "description": "See how fast"
+    },
+    "marketing.benchmarks.013": {
+        "message": "到底有多快。",
+        "description": "really is."
+    },
+    "marketing.benchmarks.014": {
+        "message": "两类真实的 Apache Doris 工作负载：经典 SQL 分析与 AI Agent 可观测性日志。对比实际选型中常见的引擎，公开脚本与原始耗时。",
+        "description": "Two workloads people actually run on Apache Doris: classic SQL analytics, and AI-agent observability logs. Both compared against the engines you’d realistically consider. Scripts and raw timings are public."
+    },
+    "marketing.benchmarks.015": {
+        "message": "总运行时间",
+        "description": "Total Run Time"
+    },
+    "marketing.benchmarks.016": {
+        "message": "收起逐条查询明细 ↑",
+        "description": "Hide per-query breakdown ↑"
+    },
+    "marketing.benchmarks.017": {
+        "message": "查看逐条查询明细 ↓",
+        "description": "See per-query breakdown ↓"
+    },
+    "marketing.benchmarks.018": {
+        "message": "单条查询耗时",
+        "description": "per-query runtime"
+    },
+    "marketing.benchmarks.019": {
+        "message": "数据规模",
+        "description": "scale"
+    },
+    "marketing.benchmarks.020": {
+        "message": "条查询",
+        "description": "queries"
+    },
+    "marketing.benchmarks.021": {
+        "message": "失败",
+        "description": "Failed"
+    },
+    "marketing.benchmarks.022": {
+        "message": "秒",
+        "description": "s"
+    },
+    "marketing.benchmarks.failedTooltip": {
+        "message": "失败",
+        "description": "failed"
+    },
+    "marketing.benchmarks.023": {
+        "message": "已完成",
+        "description": "completed"
+    },
+    "marketing.benchmarks.024": {
+        "message": "将鼠标移到柱形上查看准确耗时，斜线填充表示查询超时。",
+        "description": "Hover any bar for its exact runtime. Hatched bars timed out."
+    },
+    "marketing.benchmarks.025": {
+        "message": "顶部断开的柱形超出了可见刻度，悬停可查看实际数值。",
+        "description": "Bars with a broken top run past the visible scale; hover for the real number."
+    },
+    "marketing.benchmarks.026": {
+        "message": "查看报告 ↗",
+        "description": "See Report ↗"
+    },
+    "marketing.benchmarks.027": {
+        "message": "查看报告（即将上线）",
+        "description": "See Report (Coming Soon)"
+    },
+    "marketing.benchmarks.028": {
+        "message": "测量指标",
+        "description": "What we measure"
+    },
+    "marketing.benchmarks.029": {
+        "message": "测量每条查询的运行时间，并对各基准所选查询的耗时求和。",
+        "description": "Per-query runtime, summed across the selected queries for each benchmark."
+    },
+    "marketing.benchmarks.030": {
+        "message": "单条查询运行次数",
+        "description": "Runs per query"
+    },
+    "marketing.benchmarks.031": {
+        "message": "每条查询至少运行 3 次。冷查询取第一次运行结果，热查询取第二次和第三次中较快的结果。",
+        "description": "Each query runs at least 3×. Cold = first run; hot = faster of runs 2 and 3."
+    },
+    "marketing.benchmarks.032": {
+        "message": "缓存控制",
+        "description": "Cache control"
+    },
+    "marketing.benchmarks.033": {
+        "message": "所有引擎均关闭结果缓存；冷查询前清理 Doris BE 缓存。",
+        "description": "Result caches disabled on every engine. Doris BE caches cleared before cold runs."
+    },
+    "marketing.benchmarks.034": {
+        "message": "硬件一致性",
+        "description": "Hardware parity"
+    },
+    "marketing.benchmarks.035": {
+        "message": "各引擎位于同一地域和 VPC，各集群采用相同规格的机器。",
+        "description": "Same region and VPC across engines, with identical machine class for each cluster."
+    },
+    "marketing.benchmarks.036": {
+        "message": "数据一致性",
+        "description": "Data parity"
+    },
+    "marketing.benchmarks.037": {
+        "message": "测试前，将相同源数据以各引擎的原生格式导入。",
+        "description": "Same source data loaded into each engine before the run, in its native format."
+    },
+    "marketing.benchmarks.038": {
+        "message": "公开透明",
+        "description": "Transparency"
+    },
+    "marketing.benchmarks.039": {
+        "message": "脚本、查询、配置和每次运行的元数据均在代码仓库中公开。",
+        "description": "All scripts, queries, configs, and per-run metadata are published in the repo."
+    },
+    "marketing.benchmarks.040": {
+        "message": "克隆基准脚本",
+        "description": "Clone the benchmark scripts"
+    },
+    "marketing.benchmarks.041": {
+        "message": "将基准测试仓库拉取到发起测试的机器。",
+        "description": "Pull the benchmark repository onto the machine that will drive the run."
+    },
+    "marketing.benchmarks.042": {
+        "message": "配置 Doris 集群连接",
+        "description": "Configure your Doris cluster endpoint"
+    },
+    "marketing.benchmarks.043": {
+        "message": "打开配置文件，填写 Doris 集群的主机、端口、用户名、密码和数据库。",
+        "description": "Open the config file and fill in the host, port, user, password, and database for your Doris cluster."
+    },
+    "marketing.benchmarks.044": {
+        "message": "安装第三方工具",
+        "description": "Install third-party tooling"
+    },
+    "marketing.benchmarks.045": {
+        "message": "测试依赖 mysql、jq、hyperfine 等命令行客户端，一个 make 目标即可完成安装。",
+        "description": "The runner relies on a few CLI clients (mysql, jq, hyperfine). One make target installs them all."
+    },
+    "marketing.benchmarks.046": {
+        "message": "运行基准并生成报告",
+        "description": "Run the benchmark and generate the report"
+    },
+    "marketing.benchmarks.047": {
+        "message": "启动测试并收集报告，执行器会持续输出各条查询的汇总结果。",
+        "description": "Kick off the run, then collect the report. The runner prints a per-query summary as it goes."
+    },
+    "marketing.benchmarks.048": {
+        "message": "亲自运行，",
+        "description": "Run it yourself"
+    },
+    "marketing.benchmarks.049": {
+        "message": "五分钟即可开始。",
+        "description": "in five minutes."
+    },
+    "marketing.benchmarks.050": {
+        "message": "上方数值均可通过公开脚本复现。四个步骤、四条 Shell 命令，点击步骤可查看实际执行内容。",
+        "description": "Every number above is reproducible from open scripts. Four steps, four shell commands. Click a step to see what runs."
+    },
+    "marketing.benchmarks.051": {
+        "message": "测试方法",
+        "description": "How we measure"
+    },
+    "marketing.benchmarks.052": {
+        "message": "阅读完整测试方法 ↗",
+        "description": "Read the full methodology ↗"
+    },
+    "marketing.benchmarks.053": {
+        "message": "· 第 0 步",
+        "description": "— step 0"
+    },
+    "marketing.benchmarks.054": {
+        "message": "用您自己的数据，体验 Apache",
+        "description": "Try Apache"
+    },
+    "marketing.benchmarks.055": {
+        "message": "的",
+        "description": "on"
+    },
+    "marketing.benchmarks.056": {
+        "message": "分析能力。",
+        "description": "your own data."
+    },
+    "marketing.benchmarks.057": {
+        "message": "快速开始",
+        "description": "Get Started"
+    },
+    "marketing.benchmarks.058": {
+        "message": "Apache Doris 性能基准：SQL 分析与 Agent 可观测性",
+        "description": "Apache Doris Benchmarks: SQL Analytics and Agent Observability"
+    },
+    "marketing.benchmarks.059": {
+        "message": "Apache Doris 与 ClickHouse、Redshift、Snowflake、Trino、Elasticsearch、OpenSearch、PostgreSQL 和 DuckDB 的性能对比，覆盖结构化分析（SSB、TPC-H、TPC-DS）与 AI Agent 可观测性工作负载。",
+        "description": "Apache Doris benchmark results against ClickHouse, Redshift, Snowflake, Trino, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on structured analytics (SSB, TPC-H, TPC-DS) and AI-agent observability workloads."
+    },
+    "marketing.benchmarks.060": {
+        "message": "逐条比较结构化分析查询。",
+        "description": "Structured analytics, query by query."
+    },
+    "marketing.benchmarks.061": {
+        "message": "对比 Doris、ClickHouse、Redshift、Snowflake 和 Trino，覆盖",
+        "description": "Doris versus ClickHouse, Redshift, Snowflake, and Trino on"
+    },
+    "marketing.benchmarks.062": {
+        "message": "Star Schema Benchmark",
+        "description": "Star Schema Benchmark"
+    },
+    "marketing.benchmarks.063": {
+        "message": "TPC-H",
+        "description": "TPC-H"
+    },
+    "marketing.benchmarks.064": {
+        "message": "和",
+        "description": ", and"
+    },
+    "marketing.benchmarks.065": {
+        "message": "TPC-DS",
+        "description": "TPC-DS"
+    },
+    "marketing.benchmarks.066": {
+        "message": "。三类基准均大量使用关联与分析 SQL，这正是 Doris 的设计重点。点击基准可查看各条查询耗时。",
+        "description": ". All three lean heavily on joins and analytical SQL, which is what Doris was built for. Click any benchmark to see per-query times."
+    },
+    "marketing.benchmarks.067": {
+        "message": "逐条比较 Agent 可观测性查询。",
+        "description": "Agent observability, query by query."
+    },
+    "marketing.benchmarks.068": {
+        "message": "AI Agent 可观测性日志：轨迹回放、故障短语检索，以及对持续演变字段的聚合。在相同数据集上，对比 Doris、ClickHouse、Elasticsearch、OpenSearch、PostgreSQL 和 DuckDB。点击工作负载可查看各条查询耗时。",
+        "description": "AI-agent observability logs: trace replay, incident phrase retrieval, and rollups over evolving payload fields. Doris against ClickHouse, Elasticsearch, OpenSearch, PostgreSQL, and DuckDB on the same data. Click any workload to see per-query times."
+    },
+    "marketing.features.hero": {
+        "message": "全面了解{doris}{lineBreak}的核心能力",
+        "description": "Everything you need to know{lineBreak}about {doris}"
+    },
+    "marketing.features.003": {
+        "message": "Apache Doris 核心技术与关键特性的参考索引",
+        "description": "A reference index for the core technologies and key features of Apache Doris"
+    },
+    "marketing.features.004": {
+        "message": "搜索特性，试试“湖仓”“MPP”“索引”…",
+        "description": "Search features - try “lakehouse”, “MPP”, “index”…"
+    },
+    "marketing.features.005": {
+        "message": "清空搜索",
+        "description": "Clear search"
+    },
+    "marketing.features.006": {
+        "message": "项特性",
+        "description": "features"
+    },
+    "marketing.features.007": {
+        "message": "正式文档",
+        "description": "Formal documentation"
+    },
+    "marketing.features.008": {
+        "message": "文档",
+        "description": "Doc"
+    },
+    "marketing.features.noResults": {
+        "message": "没有与{query}匹配的特性。试试更宽泛的关键词，或{clear}。",
+        "description": "No features match {query}. Try a broader term, or {clear}."
+    },
+    "marketing.features.011": {
+        "message": "清空搜索",
+        "description": "clear the search"
+    },
+    "marketing.features.012": {
+        "message": "核心特性",
+        "description": "Key Features"
+    },
+    "marketing.features.013": {
+        "message": "Apache Doris 核心技术与关键特性的参考索引，覆盖实时分析、湖仓联邦查询与混合检索。",
+        "description": "A reference index for the core technologies and key features of Apache Doris, including real-time analytics, lakehouse federation, and hybrid search."
+    },
+    "marketing.featureTags.ai": {
+        "message": "AI",
+        "description": "ai"
+    },
+    "marketing.featureTags.analytics": {
+        "message": "分析",
+        "description": "analytics"
+    },
+    "marketing.featureTags.authentication": {
+        "message": "身份认证",
+        "description": "authentication"
+    },
+    "marketing.featureTags.authorization": {
+        "message": "权限管理",
+        "description": "authorization"
+    },
+    "marketing.featureTags.bulk-ingestion": {
+        "message": "批量导入",
+        "description": "bulk-ingestion"
+    },
+    "marketing.featureTags.caching": {
+        "message": "缓存",
+        "description": "caching"
+    },
+    "marketing.featureTags.catalog": {
+        "message": "Catalog",
+        "description": "catalog"
+    },
+    "marketing.featureTags.cdc": {
+        "message": "CDC",
+        "description": "cdc"
+    },
+    "marketing.featureTags.coming-soon": {
+        "message": "即将推出",
+        "description": "coming-soon"
+    },
+    "marketing.featureTags.data-loading": {
+        "message": "数据导入",
+        "description": "data-loading"
+    },
+    "marketing.featureTags.data-management": {
+        "message": "数据管理",
+        "description": "data-management"
+    },
+    "marketing.featureTags.data-streaming": {
+        "message": "流式数据",
+        "description": "data-streaming"
+    },
+    "marketing.featureTags.data-types": {
+        "message": "数据类型",
+        "description": "data-types"
+    },
+    "marketing.featureTags.delete": {
+        "message": "删除",
+        "description": "delete"
+    },
+    "marketing.featureTags.external-catalog": {
+        "message": "外部 Catalog",
+        "description": "external-catalog"
+    },
+    "marketing.featureTags.federation": {
+        "message": "联邦查询",
+        "description": "federation"
+    },
+    "marketing.featureTags.governance": {
+        "message": "数据治理",
+        "description": "governance"
+    },
+    "marketing.featureTags.iceberg": {
+        "message": "Iceberg",
+        "description": "iceberg"
+    },
+    "marketing.featureTags.ingest": {
+        "message": "写入",
+        "description": "ingest"
+    },
+    "marketing.featureTags.integration": {
+        "message": "集成",
+        "description": "integration"
+    },
+    "marketing.featureTags.lakehouse": {
+        "message": "湖仓",
+        "description": "lakehouse"
+    },
+    "marketing.featureTags.load": {
+        "message": "导入",
+        "description": "load"
+    },
+    "marketing.featureTags.materialized-view": {
+        "message": "物化视图",
+        "description": "materialized-view"
+    },
+    "marketing.featureTags.memory-management": {
+        "message": "内存管理",
+        "description": "memory-management"
+    },
+    "marketing.featureTags.metadata": {
+        "message": "元数据",
+        "description": "metadata"
+    },
+    "marketing.featureTags.multi-tenancy": {
+        "message": "多租户",
+        "description": "multi-tenancy"
+    },
+    "marketing.featureTags.observability": {
+        "message": "可观测性",
+        "description": "observability"
+    },
+    "marketing.featureTags.performance": {
+        "message": "性能",
+        "description": "performance"
+    },
+    "marketing.featureTags.query-acceleration": {
+        "message": "查询加速",
+        "description": "query-acceleration"
+    },
+    "marketing.featureTags.query-engine": {
+        "message": "查询引擎",
+        "description": "query-engine"
+    },
+    "marketing.featureTags.ranking": {
+        "message": "排序",
+        "description": "ranking"
+    },
+    "marketing.featureTags.real-time-ingest": {
+        "message": "实时写入",
+        "description": "real-time-ingest"
+    },
+    "marketing.featureTags.reliability": {
+        "message": "可靠性",
+        "description": "reliability"
+    },
+    "marketing.featureTags.resource-management": {
+        "message": "资源管理",
+        "description": "resource-management"
+    },
+    "marketing.featureTags.search": {
+        "message": "检索",
+        "description": "search"
+    },
+    "marketing.featureTags.security": {
+        "message": "安全",
+        "description": "security"
+    },
+    "marketing.featureTags.semi-structured": {
+        "message": "半结构化",
+        "description": "semi-structured"
+    },
+    "marketing.featureTags.sql": {
+        "message": "SQL",
+        "description": "sql"
+    },
+    "marketing.featureTags.storage": {
+        "message": "存储",
+        "description": "storage"
+    },
+    "marketing.featureTags.storage-compute-decoupled": {
+        "message": "存算分离",
+        "description": "storage-compute-decoupled"
+    },
+    "marketing.featureTags.streaming": {
+        "message": "流处理",
+        "description": "streaming"
+    },
+    "marketing.featureTags.table-design": {
+        "message": "表设计",
+        "description": "table-design"
+    },
+    "marketing.featureTags.table-format": {
+        "message": "表格式",
+        "description": "table-format"
+    },
+    "marketing.featureTags.update": {
+        "message": "更新",
+        "description": "update"
+    },
+    "marketing.featureTags.upsert": {
+        "message": "UPSERT",
+        "description": "upsert"
+    },
+    "marketing.customer.001": {
+        "message": "面向客户的分析",
+        "description": "Customer-Facing Analytics"
+    },
+    "marketing.customer.002": {
+        "message": "Apache Doris：基于实时数据的客户分析服务",
+        "description": "Apache Doris: Customer-Facing Analytics on Real-Time Data"
+    },
+    "marketing.customer.003": {
+        "message": "使用 Apache Doris 提供亚秒级、可交互的客户分析服务：一个引擎同时满足实时数据、高并发和租户隔离需求。",
+        "description": "Deliver sub-second, interactive customer-facing analytics with Apache Doris: real-time data, high concurrency, and tenant isolation on one engine."
+    },
+    "marketing.customer.004": {
+        "message": "面向客户的分析，",
+        "description": "Customer-Facing Analytics,"
+    },
+    "marketing.customer.005": {
+        "message": "由",
+        "description": "Powered by"
+    },
+    "marketing.customer.006": {
+        "message": "实时",
+        "description": "Real-Time"
+    },
+    "marketing.customer.007": {
+        "message": "数据驱动",
+        "description": "Data"
+    },
+    "marketing.customer.008": {
+        "message": "将亚秒级交互分析直接交付给大规模客户。",
+        "description": "Deliver sub-second, interactive analytics directly to your customers, at scale."
+    },
+    "marketing.customer.009": {
+        "message": "实时数据如何",
+        "description": "Why real-time"
+    },
+    "marketing.customer.010": {
+        "message": "改变产品体验。",
+        "description": "changes the product."
+    },
+    "marketing.customer.011": {
+        "message": "用户体验",
+        "description": "The user experience"
+    },
+    "marketing.customer.012": {
+        "message": "用户参与度",
+        "description": "Engagement"
+    },
+    "marketing.customer.013": {
+        "message": "业务收入",
+        "description": "Revenue"
+    },
+    "marketing.customer.014": {
+        "message": "决策速度",
+        "description": "The speed of decisions"
+    },
+    "marketing.customer.015": {
+        "message": "更好的用户体验",
+        "description": "Better User Experience"
+    },
+    "marketing.customer.016": {
+        "message": "用户进入页面，仪表盘即可加载，分析成为产品的原生能力，而不是需要等待的报表。",
+        "description": "Dashboards load the moment users arrive, so analytics feels like a native part of the product instead of a report to wait for."
+    },
+    "marketing.customer.017": {
+        "message": "更高的参与度与留存率",
+        "description": "Higher Engagement & Retention"
+    },
+    "marketing.customer.018": {
+        "message": "实时且响应迅速的分析，让产品数据成为吸引用户持续回访的理由。",
+        "description": "Live, responsive analytics turns product data into a reason for users to come back."
+    },
+    "marketing.customer.019": {
+        "message": "商业变现",
+        "description": "Monetization"
+    },
+    "marketing.customer.020": {
+        "message": "将客户分析服务作为产品内的增值功能，创造新的收入。",
+        "description": "Customer-facing analytics becomes a premium, revenue-generating feature inside your own product."
+    },
+    "marketing.customer.021": {
+        "message": "更快的决策",
+        "description": "Faster Decisions"
+    },
+    "marketing.customer.022": {
+        "message": "通过实时信号，在机会尚存时采取行动，而不是对昨天的数据做出反应。",
+        "description": "Real-time signals let teams act while an opportunity is still open, instead of reacting to yesterday’s data."
+    },
+    "marketing.customer.023": {
+        "message": "已在生产环境落地。",
+        "description": "Already shipping in production."
+    },
+    "marketing.customer.024": {
+        "message": "三个团队使用 Apache Doris，在真实并发和实时数据下，为客户提供亚秒级分析。",
+        "description": "Three teams use Apache Doris to serve sub-second analytics to their customers, under real concurrency, on live data."
+    },
+    "marketing.customer.025": {
+        "message": "京东搜索框的实时 OLAP 分析",
+        "description": "Real-Time OLAP for the JD.com Search Box"
+    },
+    "marketing.customer.026": {
+        "message": "使用 Doris 替代 Flink 窗口计算，不仅提升开发效率、适应维度变化，还能减少计算资源使用。",
+        "description": "Replacing Flink’s window computing with Doris can not only improve development efficiency, adapt to dimension changes, but also reduce computing resources."
+    },
+    "marketing.customer.027": {
+        "message": "面向京东搜索框开展实时分析，覆盖整体搜索流量、实时 A/B 测试监控和热搜词，为业务分析师提供 SKU 粒度的数据。",
+        "description": "Real-time analytics for the JD.com search box: overall search traffic, live A/B test monitoring, and trending search terms, all at SKU-level granularity for business analysts."
+    },
+    "marketing.customer.028": {
+        "message": "每天处理 100 亿行数据",
+        "description": "10 billion rows processed per day"
+    },
+    "marketing.customer.029": {
+        "message": "10,000 QPS，查询延迟低至 150 ms",
+        "description": "10,000 QPS with query latency as low as 150 ms"
+    },
+    "marketing.customer.030": {
+        "message": "每秒实时写入 100 万行",
+        "description": "Real-time ingestion at 1 million rows per second"
+    },
+    "marketing.customer.031": {
+        "message": "Xanh SM 的实时推荐服务",
+        "description": "Real-Time Recommendations for Xanh SM"
+    },
+    "marketing.customer.032": {
+        "message": "Apache Doris 的存算分离模式让我们能够基于同一存储层运行两类工作负载，在不牺牲性能的前提下降低基础设施成本和复杂度。",
+        "description": "Apache Doris and its Compute-Storage Decouple Mode allowed us to run both workloads from a single storage layer, cutting infrastructure cost and complexity without sacrificing performance."
+    },
+    "marketing.customer.033": {
+        "message": "越南领先的电动网约车平台 Xanh SM 使用 Apache Doris 同时开展分析和实时服务，支撑个性化目的地推荐。",
+        "description": "Xanh SM, Vietnam’s leading EV ride-hailing platform, runs analytics and real-time serving on Apache Doris to power personalized destination recommendations."
+    },
+    "marketing.customer.034": {
+        "message": "每秒写入 175,000 条记录，延迟低于 1 秒",
+        "description": "175,000 records written per second with sub-second latency"
+    },
+    "marketing.customer.035": {
+        "message": "大多数时间窗口内的平均查询延迟约为 76 ms",
+        "description": "Average query latency around 76 ms across most time windows"
+    },
+    "marketing.customer.036": {
+        "message": "P9999 延迟仅偶尔超过 100 ms",
+        "description": "P9999 latency only occasionally above 100 ms"
+    },
+    "marketing.customer.037": {
+        "message": "中通快递的实时分析",
+        "description": "Real-Time Analytics for ZTO Express"
+    },
+    "marketing.customer.038": {
+        "message": "中通快递围绕每日 5 亿条记录更新重建实时分析平台，在高频过滤字段上使用倒排索引，支撑监控、多维分析和精确过滤。",
+        "description": "ZTO Express rebuilt its real-time analytics over 500 million daily record updates, with inverted indexes on high-frequency filter fields serving monitoring, multi-dimensional analysis, and precise filtering."
+    },
+    "marketing.customer.039": {
+        "message": "多维过滤查询从超过 1 分钟降至 1 秒以内（60 倍）；复杂聚合从 5–10 分钟降至 1 分钟以内",
+        "description": "Multi-dimensional filter queries down from over 1 minute to under 1 second (60×); complex aggregations from 5 to 10 minutes to under 1 minute"
+    },
+    "marketing.customer.040": {
+        "message": "关键查询并发从不足 50 提升至 100 以上，超时率从 30% 降至 5% 以下",
+        "description": "Concurrency on critical queries up from under 50 to 100+, with timeouts down from 30% to under 5%"
+    },
+    "marketing.customer.041": {
+        "message": "仅需原来三分之一的硬件，每天 5 亿次更新可在数秒内被查询",
+        "description": "One-third of the original hardware, with 500 million daily updates visible in queries within seconds"
+    },
+    "marketing.customer.042": {
+        "message": "中通快递",
+        "description": "ZTO EXPRESS"
+    },
+    "marketing.customer.043": {
+        "message": "客户分析服务需要什么，",
+        "description": "What customer-facing analytics demands"
+    },
+    "marketing.customer.044": {
+        "message": "Apache Doris 如何应对。",
+        "description": "and how Apache Doris answers."
+    },
+    "marketing.customer.045": {
+        "message": "面向客户的分析不同于内部 BI。服务引擎需要满足四项关键要求，Apache Doris 提供对应的能力。",
+        "description": "Customer-facing analytics is a different workload from internal BI. Four things the serving engine has to get right, and the specific Apache Doris capabilities that meet each one."
+    },
+    "marketing.customer.046": {
+        "message": "端到端低延迟",
+        "description": "End-to-End Low Latency"
+    },
+    "marketing.customer.047": {
+        "message": "面向客户的应用既需要新鲜数据，也需要快速响应。新事件应在数秒内可查询，仪表盘、嵌入式分析和产品内工作流的分析查询应在 1 秒内返回。",
+        "description": "Customer-facing apps need both fresh data and fast responses. New events must become queryable within seconds, and analytical queries must return in sub-second time for dashboards, embedded analytics, and in-product workflows."
+    },
+    "marketing.customer.048": {
+        "message": "高并发",
+        "description": "High Concurrency"
+    },
+    "marketing.customer.049": {
+        "message": "数千用户可能同时发起查询。分析引擎必须在高并发负载下保持低延迟，而不只是在单条查询基准中表现出色。",
+        "description": "Thousands of users may query at the same time. The analytics engine must hold low latency under heavy concurrent load, not just in single-query benchmarks."
+    },
+    "marketing.customer.050": {
+        "message": "多租户与资源隔离",
+        "description": "Multi-Tenancy & Resource Isolation"
+    },
+    "marketing.customer.051": {
+        "message": "客户分析服务通常在同一平台上服务多个租户、用户或嵌入式应用。引擎需要隔离数据、工作负载和资源，避免一个租户的活动影响其他租户的性能、安全或使用体验。",
+        "description": "Customer-facing analytics often serves many tenants, users, or embedded applications from one platform. The engine must isolate data, workloads, and resources so one tenant’s activity never affects another tenant’s performance, security, or experience."
+    },
+    "marketing.customer.052": {
+        "message": "湖仓与开放数据访问",
+        "description": "Lakehouse & Open Data Access"
+    },
+    "marketing.customer.053": {
+        "message": "数据已经存在于开放湖仓格式、对象存储和现有数据湖中。分析引擎应直接查询这些数据，与实时服务数据关联，在无需额外复制的情况下提供最新洞察。",
+        "description": "Data already lives in open lakehouse formats, object storage, and existing data lake architectures. The analytics engine must query it in place, combine it with real-time serving data, and deliver fresh insights without another data copy."
+    },
+    "marketing.customer.054": {
+        "message": "从写入到查询",
+        "description": "Ingest to Query"
+    },
+    "marketing.customer.055": {
+        "message": "只需数秒",
+        "description": "in Seconds"
+    },
+    "marketing.customer.056": {
+        "message": "导入事务",
+        "description": "Load Transactions"
+    },
+    "marketing.customer.057": {
+        "message": "数据合并",
+        "description": "Data Compaction"
+    },
+    "marketing.customer.058": {
+        "message": "数据更新与删除",
+        "description": "Data Update and Delete"
+    },
+    "marketing.customer.059": {
+        "message": "预聚合与 Rollup",
+        "description": "Preaggregation and Rollup"
+    },
+    "marketing.customer.060": {
+        "message": "Group Commit",
+        "description": "Group Commit"
+    },
+    "marketing.customer.061": {
+        "message": "Kafka 与 CDC 集成",
+        "description": "Kafka and CDC Integration"
+    },
+    "marketing.customer.062": {
+        "message": "增量物化视图",
+        "description": "Incremental Materialized View"
+    },
+    "marketing.customer.063": {
+        "message": "Unique Key 模型",
+        "description": "Unique Key"
+    },
+    "marketing.customer.064": {
+        "message": "亚秒级响应，",
+        "description": "Sub-Second"
+    },
+    "marketing.customer.065": {
+        "message": "支持高并发",
+        "description": "at High Concurrency"
+    },
+    "marketing.customer.066": {
+        "message": "数据裁剪",
+        "description": "Data Pruning"
+    },
+    "marketing.customer.067": {
+        "message": "高并发点查询",
+        "description": "High-Concurrency Point Query"
+    },
+    "marketing.customer.068": {
+        "message": "向量化执行",
+        "description": "Vectorized Execution"
+    },
+    "marketing.customer.069": {
+        "message": "列式存储",
+        "description": "Columnar Storage"
+    },
+    "marketing.customer.070": {
+        "message": "预编译语句",
+        "description": "Prepared Statement"
+    },
+    "marketing.customer.071": {
+        "message": "查询缓存",
+        "description": "Query Cache"
+    },
+    "marketing.customer.072": {
+        "message": "条件缓存",
+        "description": "Condition Cache"
+    },
+    "marketing.customer.073": {
+        "message": "多租户与",
+        "description": "Multi-Tenant &"
+    },
+    "marketing.customer.074": {
+        "message": "资源隔离",
+        "description": "Resource Isolation"
+    },
+    "marketing.customer.075": {
+        "message": "工作负载组",
+        "description": "Workload Group"
+    },
+    "marketing.customer.076": {
+        "message": "资源组",
+        "description": "Resource Group"
+    },
+    "marketing.customer.077": {
+        "message": "计算组",
+        "description": "Compute Group"
+    },
+    "marketing.customer.078": {
+        "message": "Pipeline 执行引擎",
+        "description": "Pipeline Execution Engine"
+    },
+    "marketing.customer.079": {
+        "message": "湖仓",
+        "description": "Lakehouse"
+    },
+    "marketing.customer.080": {
+        "message": "集成",
+        "description": "Integration"
+    },
+    "marketing.customer.081": {
+        "message": "Parquet 读取优化",
+        "description": "Parquet Reader Optimization"
+    },
+    "marketing.customer.082": {
+        "message": "数据缓存与 Page Cache",
+        "description": "Data Cache & Page Cache"
+    },
+    "marketing.customer.083": {
+        "message": "元数据缓存",
+        "description": "Metadata Cache"
+    },
+    "marketing.customer.084": {
+        "message": "构建面向客户的分析服务",
+        "description": "Build Customer-Facing Analytics"
+    },
+    "marketing.customer.085": {
+        "message": "使用",
+        "description": "with"
+    },
+    "marketing.warehouse.001": {
+        "message": "数据仓库",
+        "description": "Data Warehousing"
+    },
+    "marketing.warehouse.002": {
+        "message": "Apache Doris：面向实时洞察的现代数据仓库",
+        "description": "Apache Doris: Modern Data Warehousing for Real-Time Insights"
+    },
+    "marketing.warehouse.003": {
+        "message": "Apache Doris 为现代数仓提供分析层，通过熟悉的 SQL 模型支持低延迟仪表盘、高并发 BI 和运营报表。",
+        "description": "Apache Doris is a modern data warehousing layer for low-latency dashboards, high-concurrency BI, and operational reporting on familiar SQL models."
+    },
+    "marketing.warehouse.004": {
+        "message": "现代数据仓库，",
+        "description": "Modern Data Warehousing,"
+    },
+    "marketing.warehouse.005": {
+        "message": "面向",
+        "description": "Built for"
+    },
+    "marketing.warehouse.006": {
+        "message": "实时",
+        "description": "Real-Time"
+    },
+    "marketing.warehouse.007": {
+        "message": "洞察",
+        "description": "Insights"
+    },
+    "marketing.warehouse.008": {
+        "message": "在一个实时分析数据库中统一批量与流式数据，加速 BI，并大规模提供可信的业务指标。",
+        "description": "Unify batch and streaming data, speed up BI, and serve trusted business metrics at scale from one real-time analytical database."
+    },
+    "marketing.warehouse.009": {
+        "message": "现代数据仓库如何",
+        "description": "Why modern data warehousing"
+    },
+    "marketing.warehouse.010": {
+        "message": "改变业务。",
+        "description": "changes the business."
+    },
+    "marketing.warehouse.011": {
+        "message": "数据可信度",
+        "description": "Trust in the data"
+    },
+    "marketing.warehouse.012": {
+        "message": "分析速度",
+        "description": "The speed of analysis"
+    },
+    "marketing.warehouse.013": {
+        "message": "决策时效性",
+        "description": "The freshness of decisions"
+    },
+    "marketing.warehouse.014": {
+        "message": "整体运行成本",
+        "description": "The cost of running it all"
+    },
+    "marketing.warehouse.015": {
+        "message": "统一业务视图",
+        "description": "Unified Business View"
+    },
+    "marketing.warehouse.016": {
+        "message": "将订单、客户、支付、CRM、ERP、广告和日志统一为可信的分析层，让各团队基于相同指标开展工作。",
+        "description": "Orders, customers, payments, CRM, ERP, ads, and logs become one trusted analytical layer, so every team works from the same metrics."
+    },
+    "marketing.warehouse.017": {
+        "message": "更快的 BI 与自助分析",
+        "description": "Faster BI & Self-Service"
+    },
+    "marketing.warehouse.018": {
+        "message": "亚秒级 SQL 让 Tableau、Power BI、Superset 和 Looker 中的下钻与即席分析保持流畅交互。",
+        "description": "Sub-second SQL keeps drill-downs and ad hoc questions interactive in Tableau, Power BI, Superset, and Looker."
+    },
+    "marketing.warehouse.019": {
+        "message": "实时监控",
+        "description": "Real-Time Monitoring"
+    },
+    "marketing.warehouse.020": {
+        "message": "持续接入 CDC、Kafka 和 Flink 数据，让仪表盘、告警和运营报表紧跟业务变化。",
+        "description": "Continuous ingestion from CDC, Kafka, and Flink keeps dashboards, alerts, and operational reports in step with what is happening now."
+    },
+    "marketing.warehouse.021": {
+        "message": "可扩展，成本更优",
+        "description": "Scalable & Cost-Efficient"
+    },
+    "marketing.warehouse.022": {
+        "message": "从 TB 扩展到 PB，BI 并发随业务增长，无需再增加多套系统、数据链路或服务层。",
+        "description": "Analytics grows from terabytes to petabytes, and BI concurrency grows with it, without adding systems, pipelines, or serving layers."
+    },
+    "marketing.warehouse.023": {
+        "message": "已在生产环境运行。",
+        "description": "Already running in production."
+    },
+    "marketing.warehouse.024": {
+        "message": "三个团队在大规模、真实并发和实时业务数据下，使用 Apache Doris 作为数仓的分析核心。",
+        "description": "Three teams run Apache Doris as the analytical core of their data warehouse: at scale, under real concurrency, on live business data."
+    },
+    "marketing.warehouse.025": {
+        "message": "顺丰：从 Presto 迁移至 Apache Doris，支撑 BI 与即席分析",
+        "description": "SF Express: From Presto to Apache Doris for BI and Ad Hoc Analytics"
+    },
+    "marketing.warehouse.026": {
+        "message": "顺丰科技将日查询量超过 100 万的主要 BI 平台从 Presto 迁移到 Apache Doris。迁移全部即席分析与 BI 负载的同时，P95 延迟降低近 70%。",
+        "description": "SF Technology moved its main BI platform, over 1 million queries a day, from Presto to Apache Doris, and cut P95 latency by nearly 70% while migrating every ad hoc and BI workload."
+    },
+    "marketing.warehouse.027": {
+        "message": "P95 查询延迟降低近 70%；10 秒内完成的查询占比从 72% 升至 88%",
+        "description": "P95 query latency down nearly 70%; queries under 10 s up from 72% to 88%"
+    },
+    "marketing.warehouse.028": {
+        "message": "硬件减少 48%，湖仓查询的数据缓存命中率达 96%",
+        "description": "48% less hardware, with a 96% data cache hit rate on lakehouse queries"
+    },
+    "marketing.warehouse.029": {
+        "message": "全部即席分析与 BI 工作负载迁移完成，SQL 兼容率为 97%",
+        "description": "100% of ad hoc and BI workloads migrated, at 97% SQL compatibility"
+    },
+    "marketing.warehouse.030": {
+        "message": "顺丰速运",
+        "description": "SF EXPRESS"
+    },
+    "marketing.warehouse.031": {
+        "message": "小米：使用 Apache Doris 与 Apache Paimon 构建统一湖仓",
+        "description": "Xiaomi: A Unified Lakehouse with Apache Doris and Apache Paimon"
+    },
+    "marketing.warehouse.032": {
+        "message": "小米将 Presto、Druid 和分散的存储格式统一到基于 Apache Doris 与 Apache Paimon 的湖仓，查询速度达到此前的 6 倍。",
+        "description": "Xiaomi consolidated Presto, Druid, and a spread of storage formats into one lakehouse on Apache Doris and Apache Paimon, with 6× faster queries than before."
+    },
+    "marketing.warehouse.033": {
+        "message": "平均查询延迟从 60 秒降至 10 秒；聚合查询从 40 秒降至 8 秒",
+        "description": "Average query latency cut from 60 s to 10 s; aggregations from 40 s to 8 s"
+    },
+    "marketing.warehouse.034": {
+        "message": "并发吞吐为 Presto 的 5 倍，负载下延迟降低 25%–75%",
+        "description": "5× higher concurrent throughput than Presto, with latency down 25% to 75% under load"
+    },
+    "marketing.warehouse.035": {
+        "message": "在同一技术栈中，以 Doris 承载热数据、Paimon 承载冷数据，覆盖用户行为、设备和运营分析",
+        "description": "One stack for hot data in Doris and cold data in Paimon across user behavior, device, and operations analytics"
+    },
+    "marketing.warehouse.036": {
+        "message": "小米",
+        "description": "XIAOMI"
+    },
+    "marketing.warehouse.037": {
+        "message": "菜鸟：面向全球物流的实时湖仓",
+        "description": "Cainiao: A Real-Time Lakehouse for Global Logistics"
+    },
+    "marketing.warehouse.038": {
+        "message": "数据可在数秒内完成更新，查询可在数百毫秒内返回。",
+        "description": "Data updates can be completed within seconds, and queries can be responded to within hundreds of milliseconds."
+    },
+    "marketing.warehouse.039": {
+        "message": "实时数据平台的成本降低 90%，平均响应加快 72%",
+        "description": "90% lower cost and 72% faster average response on the real-time data platform"
+    },
+    "marketing.warehouse.040": {
+        "message": "点查询达到 1,000–2,000 QPS、延迟 10–100 ms；多表关联达到 200–300 QPS、亚秒级响应",
+        "description": "1,000 to 2,000 QPS point queries in 10 to 100 ms, and 200 to 300 QPS sub-second multi-table joins"
+    },
+    "marketing.warehouse.041": {
+        "message": "在 3 个地域运行超过 25 个集群、10,000 余核 CPU，跟踪每日 8,000 万个包裹相关的库存、包裹和订单数据",
+        "description": "25+ clusters and 10,000+ CPUs across 3 regions, tracking inventory, packages, and orders for 80 million daily packages"
+    },
+    "marketing.warehouse.042": {
+        "message": "菜鸟",
+        "description": "CAINIAO"
+    },
+    "marketing.warehouse.043": {
+        "message": "数据仓库需要什么，",
+        "description": "What data warehousing demands"
+    },
+    "marketing.warehouse.044": {
+        "message": "Apache Doris 如何应对。",
+        "description": "and how Apache Doris answers."
+    },
+    "marketing.warehouse.045": {
+        "message": "现代数据仓库需要具备五项关键能力，Apache Doris 提供相应支持。",
+        "description": "Five things a modern data warehouse has to be good at, and the specific Apache Doris capabilities that meet each one."
+    },
+    "marketing.warehouse.046": {
+        "message": "实时数据新鲜度",
+        "description": "Real-Time Data Freshness"
+    },
+    "marketing.warehouse.047": {
+        "message": "业务团队需要掌握当前情况，这依赖流式导入、CDC 和增量更新，让数据在数秒内可查询，而不是等待夜间批处理。",
+        "description": "Business teams need to see what is happening now. That takes streaming ingestion, CDC, incremental updates, and data that becomes queryable within seconds rather than after the nightly batch."
+    },
+    "marketing.warehouse.048": {
+        "message": "面向数仓负载的数据建模",
+        "description": "Modeling for Warehouse Workloads"
+    },
+    "marketing.warehouse.049": {
+        "message": "现代数仓需要同时容纳明细记录、事实表和维度表、宽表、聚合指标及业务数据集。合理建模有助于统一定义、加速查询，并复用可信数据。",
+        "description": "A modern data warehouse has to hold detail records, fact and dimension tables, wide tables, aggregated metrics, and business-ready datasets. Solid modeling keeps definitions consistent, speeds up queries, and lets teams reuse trusted data."
+    },
+    "marketing.warehouse.050": {
+        "message": "增量更新与可靠批处理",
+        "description": "Incremental Updates & Reliable Batch"
+    },
+    "marketing.warehouse.051": {
+        "message": "数仓既需要增量刷新，也需要大规模批处理。物化视图和增量计算让聚合、Rollup 和报表表保持新鲜，避免全量重算；可靠的批执行则覆盖日终任务、回填和历史数据处理。",
+        "description": "Warehouse workloads need both incremental refresh and large batch runs. Materialized views and incremental computation keep aggregates, rollups, and reporting tables fresh without full recomputation, while dependable batch execution covers end-of-day jobs, backfills, and historical workloads."
+    },
+    "marketing.warehouse.052": {
+        "message": "湖仓与开放架构",
+        "description": "Lakehouse & Open Architecture"
+    },
+    "marketing.warehouse.053": {
+        "message": "业务数据库、事件流、SaaS 应用和开放湖仓表都承载着关键业务数据。数仓需要整合这些来源，直接跨 Iceberg、Hudi、Delta Lake 与 Hive 查询，避免将数据再次复制到孤立系统。",
+        "description": "Operational databases, event streams, SaaS applications, and open lakehouse tables all hold critical business data. The warehouse has to integrate these sources and query data in place across Iceberg, Hudi, Delta Lake, and Hive, without copying everything into another silo."
+    },
+    "marketing.warehouse.054": {
+        "message": "企业级治理与运维",
+        "description": "Enterprise Governance & Operations"
+    },
+    "marketing.warehouse.055": {
+        "message": "作为共享分析基础，数仓必须安全、可靠、可审计且易于运行，包括细粒度访问控制、工作负载隔离、高可用、审计日志和简便运维，让各团队共同依赖同一平台。",
+        "description": "Once the warehouse is the shared analytics foundation, it must be secure, reliable, auditable, and easy to run. That means fine-grained access control, workload isolation, high availability, audit logs, and simple operations, so every team can depend on the same platform."
+    },
+    "marketing.warehouse.056": {
+        "message": "灵活的数仓",
+        "description": "Flexible Warehouse"
+    },
+    "marketing.warehouse.057": {
+        "message": "数据建模",
+        "description": "Data Modeling"
+    },
+    "marketing.warehouse.058": {
+        "message": "数据模型",
+        "description": "Data Model"
+    },
+    "marketing.warehouse.059": {
+        "message": "预聚合与 Rollup",
+        "description": "Preaggregation and Rollup"
+    },
+    "marketing.warehouse.060": {
+        "message": "分析函数",
+        "description": "Analytic Functions"
+    },
+    "marketing.warehouse.061": {
+        "message": "分区与分桶",
+        "description": "Partitioning and Bucketing"
+    },
+    "marketing.warehouse.062": {
+        "message": "Unique Key 模型",
+        "description": "Unique Key"
+    },
+    "marketing.warehouse.063": {
+        "message": "实时导入",
+        "description": "Real-Time Ingestion"
+    },
+    "marketing.warehouse.064": {
+        "message": "与更新",
+        "description": "& Updates"
+    },
+    "marketing.warehouse.065": {
+        "message": "导入事务",
+        "description": "Load Transactions"
+    },
+    "marketing.warehouse.066": {
+        "message": "数据合并",
+        "description": "Data Compaction"
+    },
+    "marketing.warehouse.067": {
+        "message": "数据更新与删除",
+        "description": "Data Update and Delete"
+    },
+    "marketing.warehouse.068": {
+        "message": "Group Commit",
+        "description": "Group Commit"
+    },
+    "marketing.warehouse.069": {
+        "message": "Kafka 与 CDC 集成",
+        "description": "Kafka and CDC Integration"
+    },
+    "marketing.warehouse.070": {
+        "message": "增量刷新",
+        "description": "Incremental Refresh"
+    },
+    "marketing.warehouse.071": {
+        "message": "与批量执行",
+        "description": "& Batch Execution"
+    },
+    "marketing.warehouse.072": {
+        "message": "批量导入",
+        "description": "Batch Load"
+    },
+    "marketing.warehouse.073": {
+        "message": "增量物化视图",
+        "description": "Incremental Materialized View"
+    },
+    "marketing.warehouse.074": {
+        "message": "落盘执行",
+        "description": "Spill to Disk"
+    },
+    "marketing.warehouse.075": {
+        "message": "Changelog / Table Stream（即将推出）",
+        "description": "Changelog / Table Stream (coming soon)"
+    },
+    "marketing.warehouse.076": {
+        "message": "湖仓",
+        "description": "Lakehouse"
+    },
+    "marketing.warehouse.077": {
+        "message": "计算引擎",
+        "description": "Compute Engine"
+    },
+    "marketing.warehouse.078": {
+        "message": "多 Catalog",
+        "description": "Multi Catalog"
+    },
+    "marketing.warehouse.079": {
+        "message": "湖表管理",
+        "description": "Managing Lake Tables"
+    },
+    "marketing.warehouse.080": {
+        "message": "企业级",
+        "description": "Enterprise-Grade"
+    },
+    "marketing.warehouse.081": {
+        "message": "数据治理",
+        "description": "Governance"
+    },
+    "marketing.warehouse.082": {
+        "message": "可插拔身份认证",
+        "description": "Pluggable Authentication"
+    },
+    "marketing.warehouse.083": {
+        "message": "Catalog 集成",
+        "description": "Catalog Integrations"
+    },
+    "marketing.warehouse.084": {
+        "message": "数据血缘",
+        "description": "Data Lineage"
+    },
+    "marketing.warehouse.085": {
+        "message": "构建现代数据仓库",
+        "description": "Build a Modern Data Warehouse"
+    },
+    "marketing.warehouse.086": {
+        "message": "使用",
+        "description": "with"
+    },
+    "marketing.observability.001": {
+        "message": "可观测性",
+        "description": "Observability"
+    },
+    "marketing.observability.002": {
+        "message": "Apache Doris：面向 AI Agent 时代的可观测性",
+        "description": "Apache Doris: Observability for the AI Agent Era"
+    },
+    "marketing.observability.003": {
+        "message": "Apache Doris 为日志、指标、链路和 AI Agent 事件提供高性能分析基础，在一个引擎中统一实时导入、全文检索、OLAP 与混合向量检索。",
+        "description": "Apache Doris is a high-performance analytical foundation for logs, metrics, traces, and AI agent events: real-time ingestion, full-text search, OLAP, and hybrid vector search in one engine."
+    },
+    "marketing.observability.hero": {
+        "message": "{era}{lineBreak}{realTime}{observability}",
+        "description": "{realTime} {observability}{lineBreak}{era}"
+    },
+    "marketing.observability.004": {
+        "message": "实时",
+        "description": "Real-Time"
+    },
+    "marketing.observability.005": {
+        "message": "面向 AI Agent 时代的",
+        "description": "for the AI Agent Era"
+    },
+    "marketing.observability.006": {
+        "message": "Apache Doris 使用一个高性能分析引擎统一日志、指标、链路和 AI Agent 事件，帮助团队加快故障排查、控制成本并持续提升 AI 质量。",
+        "description": "Apache Doris unifies logs, metrics, traces, and AI agent events on one high-performance analytical engine, so teams troubleshoot faster, control costs, and keep improving AI quality."
+    },
+    "marketing.observability.007": {
+        "message": "可观测性",
+        "description": "Why observability"
+    },
+    "marketing.observability.008": {
+        "message": "为何对",
+        "description": "matters for"
+    },
+    "marketing.observability.009": {
+        "message": "Agent 时代至关重要。",
+        "description": "the agent era."
+    },
+    "marketing.observability.010": {
+        "message": "故障发现",
+        "description": "Incident detection"
+    },
+    "marketing.observability.011": {
+        "message": "用户体验",
+        "description": "User experience"
+    },
+    "marketing.observability.012": {
+        "message": "规模化成本",
+        "description": "Cost at scale"
+    },
+    "marketing.observability.013": {
+        "message": "AI 质量",
+        "description": "AI quality"
+    },
+    "marketing.observability.014": {
+        "message": "连接系统行为与业务结果",
+        "description": "The link between system behavior and business outcomes"
+    },
+    "marketing.observability.015": {
+        "message": "更快发现故障",
+        "description": "Faster Incident Detection"
+    },
+    "marketing.observability.016": {
+        "message": "将日志、链路和 Agent 事件转化为可分析的执行数据，在故障扩散前发现异常与根因。",
+        "description": "Logs, traces, and agent events become analyzable execution data, so anomalies and root causes surface before failures spread."
+    },
+    "marketing.observability.017": {
+        "message": "用户体验与 SLA",
+        "description": "User Experience & SLA"
+    },
+    "marketing.observability.018": {
+        "message": "将系统健康状况关联到实际用户影响：延迟、错误、答案准确性、任务完成情况，以及回答是否有可靠依据。",
+        "description": "System health maps to real user impact: latency, errors, answer accuracy, task completion, and whether responses are grounded."
+    },
+    "marketing.observability.019": {
+        "message": "降低规模化成本",
+        "description": "Lower Cost at Scale"
+    },
+    "marketing.observability.020": {
+        "message": "通过热数据快速排障、聚合数据分析趋势，并随遥测数据增长，将历史数据转移到成本更低的存储。",
+        "description": "Hot data stays fast for troubleshooting, aggregates cover trends, and historical data moves to lower-cost storage as telemetry grows."
+    },
+    "marketing.observability.021": {
+        "message": "持续改进 AI",
+        "description": "Continuous AI Improvement"
+    },
+    "marketing.observability.022": {
+        "message": "结合提示词、回答、RAG 上下文、工具调用、评分与用户反馈，发现检索、提示和任务完成过程中的改进空间。",
+        "description": "Prompts, responses, RAG context, tool calls, scores, and user feedback show where retrieval, prompting, and task completion can improve."
+    },
+    "marketing.observability.023": {
+        "message": "面向业务的运维",
+        "description": "Business-Aware Operations"
+    },
+    "marketing.observability.024": {
+        "message": "将每个信号关联到受影响的客户、租户和工作流，评估 AI 故障对转化、支持负担与收入的影响。",
+        "description": "Every signal ties back to the customers, tenants, and workflows it affects, and to what AI failures cost in conversion, support load, and revenue."
+    },
+    "marketing.observability.025": {
+        "message": "已在生产环境运行。",
+        "description": "Already running in production."
+    },
+    "marketing.observability.026": {
+        "message": "三个团队使用 Apache Doris 作为可观测性分析基础，大规模处理实时运维数据中的日志、指标和事件。",
+        "description": "Three teams run Apache Doris as the analytical foundation for observability: at scale, on live operational data, across logs, metrics, and events."
+    },
+    "marketing.observability.027": {
+        "message": "MiniMax：从 Grafana Loki 迁移至 Apache Doris，构建 PB 级日志系统",
+        "description": "MiniMax: PB-Scale Logging on Apache Doris, Off Grafana Loki"
+    },
+    "marketing.observability.028": {
+        "message": "离开 Grafana Loki 后，MiniMax 所有业务线的日志均接入 Apache Doris，在 PB 级规模下保持超过 99.9% 的可用性，并在数秒内完成数十亿行日志的查询。",
+        "description": "After moving off Grafana Loki, every MiniMax business line now logs to an Apache Doris system that serves petabytes with over 99.9% availability and answers queries over billions of log lines in seconds."
+    },
+    "marketing.observability.029": {
+        "message": "PB 级日志存储，所有业务线可用性超过 99.9%",
+        "description": "PB-scale log storage with 99.9%+ availability across all business lines"
+    },
+    "marketing.observability.030": {
+        "message": "在 10 亿行日志上的关键词查询与聚合可在 2 秒内返回",
+        "description": "Keyword and aggregation queries on 1 billion logs return within 2 seconds"
+    },
+    "marketing.observability.031": {
+        "message": "写入吞吐达 10 GB/s，导入延迟为秒级",
+        "description": "10 GB/s write throughput with second-level ingestion latency"
+    },
+    "marketing.observability.032": {
+        "message": "5:1 的压缩与分层存储，使存储成本降低 70%",
+        "description": "5:1 compression and tiered storage cut storage costs by 70%"
+    },
+    "marketing.observability.033": {
+        "message": "网易：使用 Apache Doris 替换 Elasticsearch 与 InfluxDB",
+        "description": "NetEase: Elasticsearch and InfluxDB Replaced by Apache Doris"
+    },
+    "marketing.observability.034": {
+        "message": "网易将 Eagle 监控平台从 Elasticsearch 迁出，将 IM 时序平台从 InfluxDB 迁出，统一使用 Apache Doris，实现更快查询、更低存储占用，并可在不重建表的情况下变更索引。",
+        "description": "NetEase moved its Eagle monitoring platform off Elasticsearch and its IM time series platform off InfluxDB, and now runs both on Apache Doris with faster queries, less storage, and indexes it can change without rebuilding tables."
+    },
+    "marketing.observability.035": {
+        "message": "监控日志查询速度为 Elasticsearch 的 11 倍，存储成本降低 70%",
+        "description": "11× faster queries and 70% lower storage cost than Elasticsearch on monitoring logs"
+    },
+    "marketing.observability.036": {
+        "message": "时序负载比 InfluxDB 减少 67% 的存储，服务器数量减半",
+        "description": "67% less storage and half the servers of InfluxDB on time series workloads"
+    },
+    "marketing.observability.037": {
+        "message": "最高 100 万 TPS，峰值写入吞吐为 1 GB/s",
+        "description": "1 GB/s peak write throughput at up to 1 million TPS"
+    },
+    "marketing.observability.038": {
+        "message": "可增量新增或删除倒排索引，无需重写数据表",
+        "description": "Inverted indexes added or dropped incrementally, without rewriting tables"
+    },
+    "marketing.observability.039": {
+        "message": "腾讯音乐：替换 Elasticsearch，成本降低 80%",
+        "description": "Tencent Music: Elasticsearch Replaced, Costs Cut by 80%"
+    },
+    "marketing.observability.040": {
+        "message": "腾讯音乐娱乐将基于标签的搜索和分析从 Elasticsearch 迁移到 Apache Doris，利用倒排索引在一条 SQL 中完成全文检索与聚合。",
+        "description": "Tencent Music Entertainment moved its tag-based search and analytics from Elasticsearch to Apache Doris, where inverted indexes serve full-text search and aggregations in a single SQL query."
+    },
+    "marketing.observability.041": {
+        "message": "整体运营成本比 Elasticsearch 降低 80%",
+        "description": "80% lower overall operational cost than Elasticsearch"
+    },
+    "marketing.observability.042": {
+        "message": "存储占用减少 72%（相同数据集从 697.7 GB 降至 195.4 GB）",
+        "description": "72% smaller storage footprint (697.7 GB → 195.4 GB on the same dataset)"
+    },
+    "marketing.observability.043": {
+        "message": "写入速度达 4 倍，导入时间从 10 多小时缩短至 3 小时以内",
+        "description": "4× faster writes, with ingestion time cut from 10+ hours to under 3 hours"
+    },
+    "marketing.observability.044": {
+        "message": "告警从每日 20 多次降至每月个位数",
+        "description": "Alerts down from 20+ per day to single digits per month"
+    },
+    "marketing.observability.045": {
+        "message": "现代可观测性需要什么，",
+        "description": "What modern observability demands"
+    },
+    "marketing.observability.046": {
+        "message": "Apache Doris 如何应对。",
+        "description": "and how Apache Doris answers."
+    },
+    "marketing.observability.047": {
+        "message": "现代可观测性平台需要具备五项关键能力，Apache Doris 提供相应支持。",
+        "description": "Five things a modern observability platform has to be good at, and the specific Apache Doris capabilities that meet each one."
+    },
+    "marketing.observability.048": {
+        "message": "实时接入每一种信号",
+        "description": "Ingest Every Signal in Real Time"
+    },
+    "marketing.observability.049": {
+        "message": "可观测性数据来自应用、Kubernetes、API、网关、数据库和 AI 系统。平台需要低延迟接入大量日志、链路、指标和 AI Agent 事件，让大模型请求、工具调用、RAG 检索、Token 成本、评估和用户反馈都能近实时查询。",
+        "description": "Observability data streams in from applications, Kubernetes, APIs, gateways, databases, and AI systems. The platform has to absorb high-volume logs, traces, metrics, and AI agent events with low latency, so every signal, from LLM requests and tool calls to RAG retrievals, token costs, evaluations, and user feedback, is ready to query in near real time."
+    },
+    "marketing.observability.050": {
+        "message": "无需复杂 ETL，即可分析动态 JSON",
+        "description": "Analyze Dynamic JSON Without Heavy ETL"
+    },
+    "marketing.observability.051": {
+        "message": "日志、链路、工具输出、模型回答和 Agent 事件常以嵌套 JSON 形式到达，字段持续变化。平台需要适应 Schema 演进，让新字段立即可查询，支持团队过滤、排查和分析新信号，无需重建数据链路。",
+        "description": "Logs, traces, tool outputs, model responses, and agent events often arrive as nested JSON whose fields keep changing. The platform must handle schema evolution and make any new field queryable at once, so teams can filter, investigate, and analyze new signals without rebuilding pipelines."
+    },
+    "marketing.observability.052": {
+        "message": "快速全文检索日志与 Agent 信号",
+        "description": "Fast Full-Text Search Across Logs & Agent Signals"
+    },
+    "marketing.observability.053": {
+        "message": "可观测性数据不仅包括错误消息、调用栈和日志行，也包括提示词、模型回答、工具输出与 Agent 失败原因。团队需要快速的关键词与全文检索能力，大规模定位故障、追踪请求并分析 Agent 行为。",
+        "description": "Observability data is full of searchable text: error messages, stack traces, and log lines, but also prompts, model responses, tool outputs, and agent failure reasons. Teams need fast keyword and full-text search to find failures, trace requests, and investigate agent behavior at scale."
+    },
+    "marketing.observability.054": {
+        "message": "交互分析指标、成本与质量",
+        "description": "Interactive Analytics on Metrics, Cost & Quality"
+    },
+    "marketing.observability.055": {
+        "message": "可观测性不止于检索。团队需要对大型遥测数据集切片、聚合和下钻，分析 P99 延迟与 SLA 趋势、Token 使用量、模型成本、RAG 质量及 Agent 任务完成情况。这需要兼具快速检索能力的高性能分析引擎。",
+        "description": "Observability is not only search. Teams slice, aggregate, and drill into large telemetry datasets to analyze reliability, cost, and AI quality: P99 latency and SLA trends, token usage, model cost, RAG quality, and agent task completion. That takes a high-performance analytical engine next to fast search."
+    },
+    "marketing.observability.056": {
+        "message": "面向 AI Agent 可观测性的混合检索",
+        "description": "Hybrid Search for AI Agent Observability"
+    },
+    "marketing.observability.057": {
+        "message": "AI Agent 可观测性不只需要日志关键词检索。团队将结构化元数据与提示词、回答、工具调用、链路的全文及语义检索关联，在一条查询中查找精确匹配、相似故障、幻觉输出和重复的 Agent 行为。",
+        "description": "AI agent observability needs more than keyword search over logs. Teams correlate structured metadata with full-text and semantic search across prompts, responses, tool calls, and traces, so one query can find exact matches, similar failures, hallucinated outputs, and recurring agent behavior."
+    },
+    "marketing.observability.058": {
+        "message": "实时导入",
+        "description": "Real-Time Ingestion"
+    },
+    "marketing.observability.059": {
+        "message": "日志与 Agent 轨迹",
+        "description": "for Logs & Agent Traces"
+    },
+    "marketing.observability.060": {
+        "message": "Stream Load",
+        "description": "Stream Load"
+    },
+    "marketing.observability.061": {
+        "message": "Kafka 与 CDC 集成",
+        "description": "Kafka and CDC Integration"
+    },
+    "marketing.observability.062": {
+        "message": "Group Commit",
+        "description": "Group Commit"
+    },
+    "marketing.observability.063": {
+        "message": "垂直合并",
+        "description": "Vertical Compaction"
+    },
+    "marketing.observability.064": {
+        "message": "半结构化分析",
+        "description": "Semi-Structured Analytics"
+    },
+    "marketing.observability.065": {
+        "message": "基于 VARIANT",
+        "description": "with VARIANT"
+    },
+    "marketing.observability.066": {
+        "message": "VARIANT 数据类型",
+        "description": "VARIANT Data Type"
+    },
+    "marketing.observability.067": {
+        "message": "快速全文检索",
+        "description": "Fast Full-Text Search"
+    },
+    "marketing.observability.068": {
+        "message": "基于倒排索引与 BM25",
+        "description": "with Inverted Index & BM25"
+    },
+    "marketing.observability.069": {
+        "message": "倒排索引",
+        "description": "Inverted Index"
+    },
+    "marketing.observability.070": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "marketing.observability.071": {
+        "message": "BM25 相关性评分",
+        "description": "BM25 Relevance Scoring"
+    },
+    "marketing.observability.072": {
+        "message": "交互式分析",
+        "description": "Interactive Analytics"
+    },
+    "marketing.observability.073": {
+        "message": "面向可观测性仪表盘",
+        "description": "for Observability Dashboards"
+    },
+    "marketing.observability.074": {
+        "message": "增量物化视图",
+        "description": "Incremental Materialized View"
+    },
+    "marketing.observability.075": {
+        "message": "预聚合与 Rollup",
+        "description": "Preaggregation and Rollup"
+    },
+    "marketing.observability.076": {
+        "message": "向量化执行",
+        "description": "Vectorized Execution"
+    },
+    "marketing.observability.077": {
+        "message": "查询缓存",
+        "description": "Query Cache"
+    },
+    "marketing.observability.078": {
+        "message": "预编译语句",
+        "description": "Prepared Statement"
+    },
+    "marketing.observability.079": {
+        "message": "混合检索，覆盖",
+        "description": "Hybrid Search Across"
+    },
+    "marketing.observability.080": {
+        "message": "结构化、文本和向量数据",
+        "description": "Structured, Text & Vector Data"
+    },
+    "marketing.observability.081": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "marketing.observability.082": {
+        "message": "向量索引",
+        "description": "Vector Index"
+    },
+    "marketing.observability.083": {
+        "message": "向量化嵌入",
+        "description": "Embedding"
+    },
+    "marketing.observability.084": {
+        "message": "倒数排名融合（RRF）",
+        "description": "Reciprocal Rank Fusion"
+    },
+    "marketing.observability.085": {
+        "message": "构建面向 AI Agent 时代的可观测性",
+        "description": "Build Observability for the AI Agent Era"
+    },
+    "marketing.observability.086": {
+        "message": "使用",
+        "description": "with"
+    },
+    "marketing.ai.001": {
+        "message": "AI 就绪分析",
+        "description": "AI-Ready Analytics"
+    },
+    "marketing.ai.002": {
+        "message": "Apache Doris：面向 Agent 时代的 AI 就绪分析",
+        "description": "Apache Doris: AI-Ready Analytics for the Agent Era"
+    },
+    "marketing.ai.003": {
+        "message": "Apache Doris 为 AI 应用、RAG 系统和 AI 可观测性提供高性能分析基础，在一个引擎中统一实时分析、混合检索和 AI 原生 SQL。",
+        "description": "Apache Doris is a high-performance analytical foundation for AI applications, RAG systems, and AI observability: real-time analytics, hybrid search, and AI-native SQL in one engine."
+    },
+    "marketing.ai.hero": {
+        "message": "{analytics}{lineBreak}{realTime} · {aiReady}",
+        "description": "{realTime} {aiReady}{lineBreak}{analytics}"
+    },
+    "marketing.ai.004": {
+        "message": "实时",
+        "description": "Real-Time"
+    },
+    "marketing.ai.005": {
+        "message": "AI 就绪",
+        "description": "AI-Ready"
+    },
+    "marketing.ai.006": {
+        "message": "面向 Agent 时代的分析",
+        "description": "Analytics for the Agent Era"
+    },
+    "marketing.ai.007": {
+        "message": "Apache Doris 让 AI 应用实时访问可信、可查询的企业数据。构建数据驱动的 Agent，提升 RAG 质量，监控 AI 行为，并对结构化、半结构化和非结构化数据开展大规模分析与混合检索。",
+        "description": "Apache Doris gives AI applications real-time access to trusted, queryable enterprise data. Build data-aware agents, improve RAG quality, monitor AI behavior, and run analytics and hybrid search across structured, semi-structured, and unstructured data at scale."
+    },
+    "marketing.ai.008": {
+        "message": "AI 就绪分析",
+        "description": "Why AI-ready"
+    },
+    "marketing.ai.009": {
+        "message": "为何对",
+        "description": "analytics matters for"
+    },
+    "marketing.ai.010": {
+        "message": "Agent 时代至关重要。",
+        "description": "the agent era."
+    },
+    "marketing.ai.011": {
+        "message": "决策质量",
+        "description": "Decision quality"
+    },
+    "marketing.ai.012": {
+        "message": "应用上下文",
+        "description": "Application context"
+    },
+    "marketing.ai.013": {
+        "message": "检索相关性",
+        "description": "Retrieval relevance"
+    },
+    "marketing.ai.014": {
+        "message": "Agent 可见性",
+        "description": "Agent visibility"
+    },
+    "marketing.ai.015": {
+        "message": "整体运行成本",
+        "description": "The cost of running it all"
+    },
+    "marketing.ai.016": {
+        "message": "实时 AI 决策",
+        "description": "Real-Time AI Decisions"
+    },
+    "marketing.ai.017": {
+        "message": "AI Agent 查询实时业务数据，在用户交互或业务流程进行中采取行动。",
+        "description": "AI agents query live operational data and act while the user interaction or business process is still in progress."
+    },
+    "marketing.ai.018": {
+        "message": "具备数据感知能力的应用",
+        "description": "Data-Aware Applications"
+    },
+    "marketing.ai.019": {
+        "message": "Copilot、Agent 和 RAG 系统利用新鲜、可信的企业数据，获得上下文、记忆和可靠的行动依据。",
+        "description": "Copilots, agents, and RAG systems draw on fresh, trusted enterprise data for context, memory, and reliable actions."
+    },
+    "marketing.ai.020": {
+        "message": "RAG 与知识检索",
+        "description": "RAG & Knowledge Retrieval"
+    },
+    "marketing.ai.021": {
+        "message": "在一条查询中结合 SQL 过滤、全文检索、BM25 与向量检索，为大模型提供准确上下文，减少幻觉。",
+        "description": "SQL filters, full-text search, BM25, and vector search run in one query, so LLMs get accurate context and hallucinate less."
+    },
+    "marketing.ai.022": {
+        "message": "AI 可观测性",
+        "description": "AI Observability"
+    },
+    "marketing.ai.023": {
+        "message": "将提示词、回答、链路、工具调用、Token 使用量和成本存入同一可查询存储，支持调试与持续质量控制。",
+        "description": "Prompts, responses, traces, tool calls, token usage, and cost sit in one queryable store for debugging and ongoing quality control."
+    },
+    "marketing.ai.024": {
+        "message": "简化 AI 数据栈",
+        "description": "Simplified AI Data Stack"
+    },
+    "marketing.ai.025": {
+        "message": "一个引擎覆盖实时分析、全文与向量检索、日志分析和 AI 原生 SQL，减少需要维护的数据链路。",
+        "description": "One engine covers real-time analytics, full-text and vector search, log analysis, and AI-native SQL, with fewer pipelines to run."
+    },
+    "marketing.ai.026": {
+        "message": "AI 就绪分析需要什么，",
+        "description": "What AI-ready analytics demands"
+    },
+    "marketing.ai.027": {
+        "message": "Apache Doris 如何应对。",
+        "description": "and how Apache Doris answers."
+    },
+    "marketing.ai.028": {
+        "message": "AI 就绪分析平台需要具备五项关键能力，Apache Doris 提供相应支持。",
+        "description": "Five things an AI-ready analytics platform has to do well, and the specific Apache Doris capabilities that meet each one."
+    },
+    "marketing.ai.029": {
+        "message": "AI 应用的端到端低延迟",
+        "description": "End-to-End Low Latency for AI Applications"
+    },
+    "marketing.ai.030": {
+        "message": "AI 应用和自主 Agent 基于新鲜数据实时行动。新事件、CDC 更新和流式数据需要在数秒内可查询，即使面对高并发生产流量，分析查询也需要在 1 秒内返回。",
+        "description": "AI applications and autonomous agents act on fresh data in real time. New events, CDC updates, and streaming data must become queryable within seconds, and analytical queries must return in sub-second time, even under high-concurrency production traffic."
+    },
+    "marketing.ai.031": {
+        "message": "结构化、文本与向量数据的混合检索",
+        "description": "Hybrid Search Across Structured, Text & Vector Data"
+    },
+    "marketing.ai.032": {
+        "message": "AI 应用需要检索文档、日志、提示词、回答、反馈、知识库、工单和嵌入向量。SQL、关键词检索与向量检索各有侧重；AI 就绪分析将结构化过滤、全文检索、语义相似性与相关性排序统一到一个工作流。",
+        "description": "AI applications search across documents, logs, prompts, responses, feedback, knowledge bases, support tickets, and embeddings. SQL, keyword search, and vector search each solve part of the problem. AI-ready analytics combines structured filters, full-text search, semantic similarity, and relevance-aware ranking in one workflow."
+    },
+    "marketing.ai.033": {
+        "message": "适应 AI 原生数据的灵活 Schema",
+        "description": "Flexible Schema for AI-Native Data"
+    },
+    "marketing.ai.034": {
+        "message": "AI 原生应用会持续产生来自模型、Agent、工具、框架和工作流的半结构化事件。平台需要处理动态 JSON、嵌套字段、Schema 演进、快速过滤与即席 SQL，减少复杂 ETL，让团队直接分析 Agent 每一步、工具调用、检索事件和模型回答。",
+        "description": "AI-native applications emit constantly changing, semi-structured events from models, agents, tools, frameworks, and workflows. The platform must handle dynamic JSON, nested fields, schema evolution, fast filtering, and ad hoc SQL without heavy ETL, so teams can analyze every agent step, tool call, retrieval event, and model response directly."
+    },
+    "marketing.ai.035": {
+        "message": "AI 可观测性数据分析",
+        "description": "Analytics for AI Observability Data"
+    },
+    "marketing.ai.036": {
+        "message": "AI 可观测性不止于日志、指标与链路。团队需要在同一位置分析模型调用、提示词、回答、工具执行、检索事件、Token 使用量、延迟、成本、评估分数和用户反馈。服务层需要灵活的 Schema、快速检索与交互式聚合，以处理大量 AI 原生数据。",
+        "description": "AI observability goes beyond logs, metrics, and traces. Teams analyze model calls, prompts, responses, tool executions, retrieval events, token usage, latency, cost, evaluation scores, and user feedback in one place. The serving layer must handle flexible schemas, fast search, and interactive aggregation over large volumes of AI-native data."
+    },
+    "marketing.ai.037": {
+        "message": "大模型生态集成",
+        "description": "LLM Ecosystem Integration"
+    },
+    "marketing.ai.038": {
+        "message": "AI 应用依赖快速演进的 Agent 框架、LLMOps 平台、可观测性工具、MCP 工作流与自定义数据链路。平台需要融入该生态，让 Agent、Copilot、RAG 系统和 LLMOps 工具通过 SQL、API、连接器及 MCP 读取可信数据、写入 AI 信号。",
+        "description": "AI applications rely on a fast-changing ecosystem of agent frameworks, LLMOps platforms, observability tools, MCP workflows, and custom pipelines. The platform must plug into that ecosystem so agents, copilots, RAG systems, and LLMOps tools can read trusted data and write AI signals through SQL, APIs, connectors, and MCP."
+    },
+    "marketing.ai.039": {
+        "message": "实时导入与",
+        "description": "Real-Time Ingestion &"
+    },
+    "marketing.ai.040": {
+        "message": "低延迟服务",
+        "description": "Low-Latency Serving"
+    },
+    "marketing.ai.041": {
+        "message": "Kafka 与 CDC 集成",
+        "description": "Kafka and CDC Integration"
+    },
+    "marketing.ai.042": {
+        "message": "Group Commit",
+        "description": "Group Commit"
+    },
+    "marketing.ai.043": {
+        "message": "MPP 架构",
+        "description": "MPP Architecture"
+    },
+    "marketing.ai.044": {
+        "message": "高并发点查询",
+        "description": "High-Concurrency Point Query"
+    },
+    "marketing.ai.045": {
+        "message": "面向客户的分析",
+        "description": "Customer-Facing Analytics"
+    },
+    "marketing.ai.046": {
+        "message": "AI 可观测性：提示词、",
+        "description": "AI Observability for Prompts,"
+    },
+    "marketing.ai.047": {
+        "message": "链路、成本与质量",
+        "description": "Traces, Cost & Quality"
+    },
+    "marketing.ai.048": {
+        "message": "Stream Load",
+        "description": "Stream Load"
+    },
+    "marketing.ai.049": {
+        "message": "倒排索引",
+        "description": "Inverted Index"
+    },
+    "marketing.ai.050": {
+        "message": "增量物化视图",
+        "description": "Incremental Materialized View"
+    },
+    "marketing.ai.051": {
+        "message": "面向 AI Agent 时代的可观测性",
+        "description": "Observability for the AI Agent Era"
+    },
+    "marketing.ai.052": {
+        "message": "灵活的 JSON 分析",
+        "description": "Flexible JSON Analytics"
+    },
+    "marketing.ai.053": {
+        "message": "基于 VARIANT",
+        "description": "with VARIANT"
+    },
+    "marketing.ai.054": {
+        "message": "VARIANT 数据类型",
+        "description": "VARIANT Data Type"
+    },
+    "marketing.ai.055": {
+        "message": "混合检索，覆盖",
+        "description": "Hybrid Search Across"
+    },
+    "marketing.ai.056": {
+        "message": "SQL、文本与向量",
+        "description": "SQL, Text & Vectors"
+    },
+    "marketing.ai.057": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "marketing.ai.058": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "marketing.ai.059": {
+        "message": "BM25 相关性评分",
+        "description": "BM25 Relevance Scoring"
+    },
+    "marketing.ai.060": {
+        "message": "向量索引",
+        "description": "Vector Index"
+    },
+    "marketing.ai.061": {
+        "message": "向量化嵌入",
+        "description": "Embedding"
+    },
+    "marketing.ai.062": {
+        "message": "倒数排名融合（RRF）",
+        "description": "Reciprocal Rank Fusion"
+    },
+    "marketing.ai.063": {
+        "message": "AI 原生 SQL 与",
+        "description": "AI-Native SQL &"
+    },
+    "marketing.ai.064": {
+        "message": "工具链集成",
+        "description": "Toolchain Integration"
+    },
+    "marketing.ai.065": {
+        "message": "大模型 SQL 函数",
+        "description": "LLM SQL Functions"
+    },
+    "marketing.ai.066": {
+        "message": "MCP Server",
+        "description": "MCP Server"
+    },
+    "marketing.ai.067": {
+        "message": "语义层（即将推出）",
+        "description": "Semantic Layer (coming soon)"
+    },
+    "marketing.ai.068": {
+        "message": "构建 AI 就绪分析平台",
+        "description": "Build AI-Ready Analytics"
+    },
+    "marketing.ai.069": {
+        "message": "使用",
+        "description": "with"
+    },
+    "marketing.useCases.001": {
+        "message": "应用场景",
+        "description": "Scenario"
+    },
+    "marketing.useCases.002": {
+        "message": "实际成效",
+        "description": "Outcome"
+    },
+    "marketing.useCases.003": {
+        "message": "每项能力均链接到对应的功能文档。如需了解背后的工程细节，请阅读",
+        "description": "Each capability links to its feature doc. For the engineering detail behind them, read the"
+    },
+    "marketing.useCases.004": {
+        "message": "Apache Doris 博客",
+        "description": "Apache Doris blog"
+    },
+    "marketing.useCases.005": {
+        "message": "相关应用场景",
+        "description": "Related use case"
+    },
+    "marketing.useCases.006": {
+        "message": "技术支持",
+        "description": "Powered by"
+    },
+    "marketing.useCases.007": {
+        "message": "快速开始",
+        "description": "Get Started"
+    },
+    "marketing.useCases.008": {
+        "message": "体验演示（即将推出）",
+        "description": "Try a Demo (coming soon)"
+    },
+    "marketing.extra.001": {
+        "message": "何时选择 Apache Doris",
+        "description": "When to Choose Apache Doris"
+    },
+    "marketing.extra.002": {
+        "message": "精选案例",
+        "description": "Featured Cases"
+    },
+    "marketing.extra.003": {
+        "message": "核心差异",
+        "description": "Core Differences"
+    },
+    "marketing.extra.021": {
+        "message": "租户 A",
+        "description": "TENANT A"
+    },
+    "marketing.extra.022": {
+        "message": "嵌入式看板",
+        "description": "embedded dashboards"
+    },
+    "marketing.extra.023": {
+        "message": "租户 B",
+        "description": "TENANT B"
+    },
+    "marketing.extra.024": {
+        "message": "客户门户",
+        "description": "customer portal"
+    },
+    "marketing.extra.025": {
+        "message": "租户 C",
+        "description": "TENANT C"
+    },
+    "marketing.extra.026": {
+        "message": "移动端与 Web 应用",
+        "description": "mobile & web app"
+    },
+    "marketing.extra.027": {
+        "message": "更多租户",
+        "description": "+ MORE TENANTS"
+    },
+    "marketing.extra.028": {
+        "message": "API · 数据产品",
+        "description": "APIs · data products"
+    },
+    "marketing.extra.029": {
+        "message": "请求",
+        "description": "REQUEST"
+    },
+    "marketing.extra.030": {
+        "message": "MySQL 协议 · REST",
+        "description": "MySQL protocol · REST"
+    },
+    "marketing.extra.031": {
+        "message": "租户隔离",
+        "description": "ISOLATE TENANTS"
+    },
+    "marketing.extra.032": {
+        "message": "Workload Group",
+        "description": "workload groups"
+    },
+    "marketing.extra.033": {
+        "message": "服务",
+        "description": "SERVE"
+    },
+    "marketing.extra.034": {
+        "message": "缓存 · 点查",
+        "description": "cache · point query"
+    },
+    "marketing.extra.035": {
+        "message": "虚线表示原位查询",
+        "description": "DASHED = QUERIED IN PLACE"
+    },
+    "marketing.extra.004": {
+        "message": "当分析从内部报表走向产品本身时，四个方面会同时发生变化：",
+        "description": "When analytics moves from an internal report into the product itself, four things change at once:"
+    },
+    "marketing.extra.005": {
+        "message": "案例 01 · 京东",
+        "description": "Case 01 · JD.com"
+    },
+    "marketing.extra.006": {
+        "message": "案例 02 · Xanh SM",
+        "description": "Case 02 · Xanh SM"
+    },
+    "marketing.extra.007": {
+        "message": "案例 03 · 中通快递",
+        "description": "Case 03 · ZTO Express"
+    },
+    "marketing.extra.008": {
+        "message": "Apache Doris 如何支持面向客户的分析",
+        "description": "Apache Doris capabilities for customer-facing analytics"
+    },
+    "marketing.extra.036": {
+        "message": "数据服务",
+        "description": "SERVING"
+    },
+    "marketing.extra.037": {
+        "message": "虚线表示原位查询",
+        "description": "DASHED = QUERIED IN PLACE"
+    },
+    "marketing.extra.009": {
+        "message": "当数仓实现统一、快速、实时和弹性扩展时，四个方面会同时发生变化：",
+        "description": "When the warehouse is unified, fast, real-time, and elastic, four things shift at once:"
+    },
+    "marketing.extra.010": {
+        "message": "案例 01 · 顺丰科技",
+        "description": "Case 01 · SF Technology"
+    },
+    "marketing.extra.011": {
+        "message": "案例 02 · 小米",
+        "description": "Case 02 · Xiaomi"
+    },
+    "marketing.extra.012": {
+        "message": "案例 03 · 菜鸟",
+        "description": "Case 03 · Cainiao"
+    },
+    "marketing.extra.013": {
+        "message": "Apache Doris 的数据仓库能力",
+        "description": "Apache Doris capabilities for data warehousing"
+    },
+    "marketing.extra.014": {
+        "message": "当团队统一管理日志、链路、指标和 AI Agent 事件时，五个方面会同时发生变化：",
+        "description": "When teams unify observability across logs, traces, metrics, and AI agent events, five things shift at once:"
+    },
+    "marketing.extra.015": {
+        "message": "案例 01 · PB 级日志",
+        "description": "Case 01 · PB-Scale Logging"
+    },
+    "marketing.extra.016": {
+        "message": "案例 02 · 日志与时序数据",
+        "description": "Case 02 · Logs & Time Series"
+    },
+    "marketing.extra.017": {
+        "message": "案例 03 · 从 Elasticsearch 迁移",
+        "description": "Case 03 · Elasticsearch Migration"
+    },
+    "marketing.extra.018": {
+        "message": "Apache Doris 的可观测性能力",
+        "description": "Apache Doris capabilities for observability"
+    },
+    "marketing.extra.019": {
+        "message": "当分析底座具备数据新鲜度、混合检索、可观测性和统一架构时，五个方面会同时发生变化：",
+        "description": "When the analytical foundation is fresh, hybrid, observable, and unified, five things shift at once:"
+    },
+    "marketing.extra.020": {
+        "message": "Apache Doris 的 AI 能力",
+        "description": "Apache Doris capabilities for AI"
+    },
+    "marketing.figures.012": {
+        "message": "APACHE DORIS",
+        "description": "APACHE DORIS"
+    },
+    "marketing.figures.001": {
+        "message": "产品事件",
+        "description": "PRODUCT EVENTS"
+    },
+    "marketing.figures.002": {
+        "message": "Kafka · 点击流",
+        "description": "Kafka · clickstream"
+    },
+    "marketing.figures.003": {
+        "message": "OLTP · CDC",
+        "description": "OLTP · CDC"
+    },
+    "marketing.figures.004": {
+        "message": "MySQL · PostgreSQL",
+        "description": "MySQL · PostgreSQL"
+    },
+    "marketing.figures.005": {
+        "message": "批处理任务",
+        "description": "BATCH JOBS"
+    },
+    "marketing.figures.006": {
+        "message": "Spark · Flink · 文件",
+        "description": "Spark · Flink · files"
+    },
+    "marketing.figures.007": {
+        "message": "数据湖",
+        "description": "DATA LAKE"
+    },
+    "marketing.figures.008": {
+        "message": "Iceberg · S3",
+        "description": "Iceberg · S3"
+    },
+    "marketing.figures.009": {
+        "message": "Apache Doris 支持面向客户的分析：多个租户的用户查询嵌入式看板、门户和应用；每个请求均经过 Doris，按租户隔离，并通过缓存或点查在亚秒级返回结果。产品事件、CDC 和批处理数据在数秒内到达，数据湖则支持原位查询。",
+        "description": "Customer-facing analytics on Apache Doris: users across many tenants query embedded dashboards, portals, and apps; every request passes through Doris, is isolated per tenant, and is served from cache or point queries in under a second, while product events, CDC, and batch data arrive within seconds and the data lake is queried in place."
+    },
+    "marketing.figures.010": {
+        "message": "图 01 · 多租户、统一服务路径、秒级新鲜数据",
+        "description": "FIG. 01 · MANY TENANTS, ONE SERVING PATH, DATA THAT IS SECONDS OLD"
+    },
+    "marketing.figures.011": {
+        "message": "您的产品",
+        "description": "YOUR PRODUCT"
+    },
+    "marketing.figures.013": {
+        "message": "新鲜数据",
+        "description": "FRESH DATA"
+    },
+    "marketing.figures.014": {
+        "message": "10,000+ QPS · 数千并发用户",
+        "description": "10,000+ QPS · THOUSANDS OF CONCURRENT USERS"
+    },
+    "marketing.figures.015": {
+        "message": "统一 SQL 层",
+        "description": "ONE SQL LAYER"
+    },
+    "marketing.figures.016": {
+        "message": "亚秒级",
+        "description": "SUB-SECOND"
+    },
+    "marketing.figures.017": {
+        "message": "秒级摄取 · Stream Load · CDC",
+        "description": "INGESTED IN SECONDS · STREAM LOAD · CDC"
+    },
+    "marketing.figures.018": {
+        "message": "物化视图 · Rollup · 点查 · 亚秒级 BI",
+        "description": "materialized views · rollups · point queries · sub-second BI"
+    },
+    "marketing.figures.019": {
+        "message": "聚合指标 · 面向业务的数据集",
+        "description": "aggregated metrics · business-ready datasets"
+    },
+    "marketing.figures.020": {
+        "message": "清洗后的明细 · 事实表与维度表 · 宽表",
+        "description": "cleaned detail · fact & dimension tables · wide tables"
+    },
+    "marketing.figures.021": {
+        "message": "原始记录 · Stream Load · Routine Load · CDC · 秒级新鲜度",
+        "description": "raw records · Stream Load · Routine Load · CDC · fresh in seconds"
+    },
+    "marketing.figures.022": {
+        "message": "BI 工具",
+        "description": "BI TOOLS"
+    },
+    "marketing.figures.023": {
+        "message": "Tableau · Power BI",
+        "description": "Tableau · Power BI"
+    },
+    "marketing.figures.024": {
+        "message": "看板",
+        "description": "DASHBOARDS"
+    },
+    "marketing.figures.025": {
+        "message": "报表 · 运营",
+        "description": "reports · operations"
+    },
+    "marketing.figures.026": {
+        "message": "即席 SQL",
+        "description": "AD HOC SQL"
+    },
+    "marketing.figures.027": {
+        "message": "分析师 · Notebook",
+        "description": "analysts · notebooks"
+    },
+    "marketing.figures.028": {
+        "message": "应用与 API",
+        "description": "APPS & APIS"
+    },
+    "marketing.figures.029": {
+        "message": "数据服务",
+        "description": "data services"
+    },
+    "marketing.figures.030": {
+        "message": "事件流",
+        "description": "EVENT STREAMS"
+    },
+    "marketing.figures.031": {
+        "message": "Kafka · Flink",
+        "description": "Kafka · Flink"
+    },
+    "marketing.figures.032": {
+        "message": "批处理与 SaaS",
+        "description": "BATCH & SAAS"
+    },
+    "marketing.figures.033": {
+        "message": "Parquet · CSV · API",
+        "description": "Parquet · CSV · APIs"
+    },
+    "marketing.figures.034": {
+        "message": "Iceberg · Paimon · S3",
+        "description": "Iceberg · Paimon · S3"
+    },
+    "marketing.figures.035": {
+        "message": "基于 Apache Doris 的现代数据仓库：OLTP、流式和批量数据源导入 ODS 层，建模为 DWD 和 DWS 层，再通过物化视图为 BI 工具、看板、即席 SQL 和应用提供服务；数据湖支持原位查询。",
+        "description": "Modern data warehouse on Apache Doris: OLTP, streams, and batch sources load into an ODS layer, are modeled into DWD and DWS layers and served through materialized views to BI tools, dashboards, ad hoc SQL, and applications; the data lake is queried in place."
+    },
+    "marketing.figures.036": {
+        "message": "图 02 · 底层数据源、中间 Doris 分层、上层消费端",
+        "description": "FIG. 02 · SOURCES BELOW, DORIS LAYERS IN THE MIDDLE, CONSUMERS ON TOP"
+    },
+    "marketing.figures.037": {
+        "message": "数据消费端",
+        "description": "CONSUMERS"
+    },
+    "marketing.figures.038": {
+        "message": "批流一体 · 统一 SQL 层",
+        "description": "BATCH + STREAMING · ONE SQL LAYER"
+    },
+    "marketing.figures.039": {
+        "message": "数据治理",
+        "description": "GOVERNANCE"
+    },
+    "marketing.figures.040": {
+        "message": "细粒度权限 · 工作负载隔离 · 审计日志 · 高可用",
+        "description": "fine-grained auth · workload isolation · audit logs · high availability"
+    },
+    "marketing.figures.041": {
+        "message": "湖仓一体",
+        "description": "LAKEHOUSE"
+    },
+    "marketing.figures.queriedInPlace": {
+        "message": "原位查询",
+        "description": "queried in place"
+    },
+    "marketing.figures.042": {
+        "message": "数据源",
+        "description": "SOURCES"
+    },
+    "marketing.figures.043": {
+        "message": "应用与服务",
+        "description": "APPS & SERVICES"
+    },
+    "marketing.figures.044": {
+        "message": "日志 · 链路 · OTel",
+        "description": "logs · traces · OTel"
+    },
+    "marketing.figures.045": {
+        "message": "主机与 K8S",
+        "description": "HOSTS & K8S"
+    },
+    "marketing.figures.046": {
+        "message": "指标 · Pod 日志",
+        "description": "metrics · pod logs"
+    },
+    "marketing.figures.047": {
+        "message": "日志采集器",
+        "description": "LOG SHIPPERS"
+    },
+    "marketing.figures.048": {
+        "message": "Vector · Fluent Bit",
+        "description": "Vector · Fluent Bit"
+    },
+    "marketing.figures.049": {
+        "message": "AI AGENT",
+        "description": "AI AGENTS"
+    },
+    "marketing.figures.050": {
+        "message": "提示词 · 工具调用",
+        "description": "prompts · tool calls"
+    },
+    "marketing.figures.051": {
+        "message": "看板",
+        "description": "dashboards"
+    },
+    "marketing.figures.052": {
+        "message": "告警与 SLO",
+        "description": "ALERTS & SLOS"
+    },
+    "marketing.figures.053": {
+        "message": "P99 · 错误率",
+        "description": "P99 · error rate"
+    },
+    "marketing.figures.054": {
+        "message": "问题排查",
+        "description": "investigations"
+    },
+    "marketing.figures.055": {
+        "message": "AI 质量",
+        "description": "AI QUALITY"
+    },
+    "marketing.figures.056": {
+        "message": "评估 · 反馈",
+        "description": "evals · feedback"
+    },
+    "marketing.figures.057": {
+        "message": "动态 JSON",
+        "description": "dynamic JSON"
+    },
+    "marketing.figures.058": {
+        "message": "倒排索引",
+        "description": "INVERTED INDEX"
+    },
+    "marketing.figures.059": {
+        "message": "全文检索 · BM25",
+        "description": "full-text · BM25"
+    },
+    "marketing.figures.060": {
+        "message": "列式存储",
+        "description": "COLUMNAR"
+    },
+    "marketing.figures.061": {
+        "message": "5:1 压缩比",
+        "description": "5:1 compression"
+    },
+    "marketing.figures.062": {
+        "message": "全文检索",
+        "description": "FULL-TEXT"
+    },
+    "marketing.figures.063": {
+        "message": "BM25 · 关键词",
+        "description": "BM25 · keyword"
+    },
+    "marketing.figures.064": {
+        "message": "聚合分析",
+        "description": "AGGREGATE"
+    },
+    "marketing.figures.065": {
+        "message": "P99 · SLA · 成本",
+        "description": "P99 · SLA · cost"
+    },
+    "marketing.figures.066": {
+        "message": "混合检索",
+        "description": "HYBRID"
+    },
+    "marketing.figures.067": {
+        "message": "关键词 + 向量",
+        "description": "keyword + vector"
+    },
+    "marketing.figures.068": {
+        "message": "热数据 · SSD",
+        "description": "HOT · SSD"
+    },
+    "marketing.figures.069": {
+        "message": "温数据",
+        "description": "WARM"
+    },
+    "marketing.figures.070": {
+        "message": "冷数据 · S3 / HDFS",
+        "description": "COLD · S3 / HDFS"
+    },
+    "marketing.figures.071": {
+        "message": "现在",
+        "description": "now"
+    },
+    "marketing.figures.072": {
+        "message": "7 天",
+        "description": "7 d"
+    },
+    "marketing.figures.073": {
+        "message": "30 天",
+        "description": "30 d"
+    },
+    "marketing.figures.074": {
+        "message": "1 年",
+        "description": "1 y"
+    },
+    "marketing.figures.075": {
+        "message": "Apache Doris 可观测性：日志、指标、链路和 AI Agent 事件经采集器进入 Doris，由 VARIANT、倒排索引和列式存储承载，随时间从热 SSD 迁移到冷对象存储；全文、聚合和混合查询为 Grafana、告警、即席 SQL 和 AI 质量评估提供支持。",
+        "description": "Observability on Apache Doris: logs, metrics, traces, and AI agent events pass through a collector into Doris, where VARIANT, inverted indexes, and columnar storage hold them as they age from hot SSD to cold object storage, and full-text, aggregate, and hybrid queries serve Grafana, alerts, ad hoc SQL, and AI quality reviews."
+    },
+    "marketing.figures.076": {
+        "message": "图 03 · 信号持续流入，数据从热到冷，全程保持可查询",
+        "description": "FIG. 03 · SIGNALS FLOW IN, AGE FROM HOT TO COLD, AND STAY QUERYABLE THE WHOLE TIME"
+    },
+    "marketing.figures.077": {
+        "message": "可观测信号",
+        "description": "SIGNALS"
+    },
+    "marketing.figures.078": {
+        "message": "OTEL COLLECTOR · VECTOR · KAFKA",
+        "description": "OTEL COLLECTOR · VECTOR · KAFKA"
+    },
+    "marketing.figures.079": {
+        "message": "存储",
+        "description": "STORE"
+    },
+    "marketing.figures.080": {
+        "message": "数据生命周期 · 分层存储",
+        "description": "DATA LIFECYCLE · TIERED STORAGE"
+    },
+    "marketing.figures.081": {
+        "message": "近期数据在 SSD 上快速查询 · 历史数据以对象存储降低成本",
+        "description": "recent data fast on SSD · history cheap on object storage"
+    },
+    "marketing.figures.082": {
+        "message": "查询",
+        "description": "QUERY"
+    },
+    "marketing.figures.083": {
+        "message": "文档与日志",
+        "description": "DOCUMENTS & LOGS"
+    },
+    "marketing.figures.084": {
+        "message": "文本 · JSON · 工单",
+        "description": "text · JSON · tickets"
+    },
+    "marketing.figures.085": {
+        "message": "向量嵌入",
+        "description": "EMBEDDINGS"
+    },
+    "marketing.figures.086": {
+        "message": "来自嵌入模型",
+        "description": "from embedding models"
+    },
+    "marketing.figures.087": {
+        "message": "数据流与 CDC",
+        "description": "STREAMS & CDC"
+    },
+    "marketing.figures.088": {
+        "message": "订单 · 会话",
+        "description": "orders · sessions"
+    },
+    "marketing.figures.089": {
+        "message": "SQL 过滤",
+        "description": "SQL FILTERS"
+    },
+    "marketing.figures.090": {
+        "message": "时间 · ACL",
+        "description": "time · ACL"
+    },
+    "marketing.figures.091": {
+        "message": "向量检索",
+        "description": "VECTOR"
+    },
+    "marketing.figures.092": {
+        "message": "向量嵌入",
+        "description": "embeddings"
+    },
+    "marketing.figures.093": {
+        "message": "Apache Doris 为 AI 提供分析底座：文档、向量嵌入和流式数据持续更新 Doris；AI 应用提出问题，Doris 用一次混合查询融合 SQL 过滤、全文检索和向量检索，LLM 生成回答，再将链路、Token、成本和反馈写回 Doris，改进下一轮交互。",
+        "description": "AI-ready analytics on Apache Doris: documents, embeddings, and streams keep Doris fresh; an AI application asks a question, Doris answers with one hybrid query that fuses SQL filters, full-text search, and vector search, the LLM generates a response, and its traces, tokens, cost, and feedback are logged back into Doris to improve the next round."
+    },
+    "marketing.figures.094": {
+        "message": "图 04 · AGENT 闭环：提问 → 检索 → 生成 → 记录 → 改进，统一引擎完成",
+        "description": "FIG. 04 · THE AGENT LOOP: ASK → RETRIEVE → GENERATE → LOG → IMPROVE, ALL ON ONE ENGINE"
+    },
+    "marketing.figures.095": {
+        "message": "输入",
+        "description": "INPUTS"
+    },
+    "marketing.figures.096": {
+        "message": "数据摄取与服务",
+        "description": "INGEST & SERVE"
+    },
+    "marketing.figures.097": {
+        "message": "秒级写入 · 亚秒级响应",
+        "description": "seconds in · sub-second out"
+    },
+    "marketing.figures.098": {
+        "message": "一次混合查询",
+        "description": "ONE HYBRID QUERY"
+    },
+    "marketing.figures.099": {
+        "message": "RRF 融合 → 排序后的上下文",
+        "description": "RRF FUSION → RANKED CONTEXT"
+    },
+    "marketing.figures.100": {
+        "message": "动态 JSON · Agent 事件 · 工具调用",
+        "description": "dynamic JSON · agent events · tool calls"
+    },
+    "marketing.figures.101": {
+        "message": "AI 可观测性",
+        "description": "AI OBSERVABILITY"
+    },
+    "marketing.figures.102": {
+        "message": "提示词 · 链路 · Token · 成本 · 评估",
+        "description": "prompts · traces · tokens · cost · evals"
+    },
+    "marketing.figures.103": {
+        "message": "生态系统",
+        "description": "ECOSYSTEM"
+    },
+    "marketing.figures.104": {
+        "message": "LLM SQL · MCP Server · API",
+        "description": "LLM SQL · MCP server · APIs"
+    },
+    "marketing.figures.105": {
+        "message": "AGENT 闭环",
+        "description": "AGENT LOOP"
+    },
+    "marketing.figures.106": {
+        "message": "问题",
+        "description": "QUESTION"
+    },
+    "marketing.figures.107": {
+        "message": "上下文",
+        "description": "CONTEXT"
+    },
+    "marketing.figures.108": {
+        "message": "AI 应用",
+        "description": "AI APPLICATION"
+    },
+    "marketing.figures.109": {
+        "message": "Agent · Copilot · RAG 应用",
+        "description": "agent · copilot · RAG app"
+    },
+    "marketing.figures.110": {
+        "message": "提示词 + 上下文",
+        "description": "PROMPT + CONTEXT"
+    },
+    "marketing.figures.111": {
+        "message": "结合上下文回答",
+        "description": "answers with the context"
+    },
+    "marketing.figures.112": {
+        "message": "链路 · TOKEN · 成本",
+        "description": "TRACES · TOKENS · COST"
+    },
+    "marketing.figures.113": {
+        "message": "链路与反馈",
+        "description": "TRACES & FEEDBACK"
+    },
+    "marketing.figures.114": {
+        "message": "Token · 成本 · 评估",
+        "description": "tokens · cost · evals"
+    },
+    "marketing.figures.115": {
+        "message": "已记录",
+        "description": "LOGGED"
+    },
+    "marketing.figures.116": {
+        "message": "改进提示词与检索",
+        "description": "IMPROVE PROMPTS & RETRIEVAL"
+    },
+    "marketing.features.cards.key-features-analytic-functions.title": {
+        "message": "分析函数"
+    },
+    "marketing.features.cards.key-features-analytic-functions.description": {
+        "message": "Doris 的 SQL 窗口函数支持跨行排名、累加、偏移和求平均；优化器可将 Top-N 过滤下推至窗口算子。"
+    },
+    "marketing.features.cards.key-features-batch-load.title": {
+        "message": "批量导入"
+    },
+    "marketing.features.cards.key-features-batch-load.description": {
+        "message": "通过 LOAD LABEL 或 INSERT INTO SELECT，从 S3、HDFS 和外部 Catalog 异步批量导入数据，并基于 Label 去重。"
+    },
+    "marketing.features.cards.key-features-bm25.title": {
+        "message": "BM25 相关性评分"
+    },
+    "marketing.features.cards.key-features-bm25.description": {
+        "message": "Apache Doris 通过 BM25 相关性对全文检索结果排序，使 SQL 查询能像搜索引擎一样排列匹配结果。"
+    },
+    "marketing.features.cards.key-features-catalog-integrations.title": {
+        "message": "Catalog 集成"
+    },
+    "marketing.features.cards.key-features-catalog-integrations.description": {
+        "message": "连接 Glue、Iceberg REST、HMS、S3 Tables、Polaris、Unity、DLF 等 Catalog，用一个引擎访问多种湖仓元数据服务。"
+    },
+    "marketing.features.cards.key-features-changelog-table-stream.title": {
+        "message": "Changelog / Table Stream"
+    },
+    "marketing.features.cards.key-features-changelog-table-stream.description": {
+        "message": "Doris 表将向下游消费者提供的行级变更数据流。"
+    },
+    "marketing.features.cards.key-features-columnar-storage.title": {
+        "message": "列式存储"
+    },
+    "marketing.features.cards.key-features-columnar-storage.description": {
+        "message": "Doris 的磁盘 Segment 格式通过按列编码、按 Page 压缩降低存储占用，并利用 Page 级索引跳过无需读取的数据页。"
+    },
+    "marketing.features.cards.key-features-compute-group.title": {
+        "message": "计算组"
+    },
+    "marketing.features.cards.key-features-compute-group.description": {
+        "message": "在存算分离架构下，将共享对象存储的无状态 BE 划分为独立资源池，新增查询组无需复制数据。"
+    },
+    "marketing.features.cards.key-features-condition-cache.title": {
+        "message": "条件缓存"
+    },
+    "marketing.features.cards.key-features-condition-cache.description": {
+        "message": "以位向量缓存 Segment 级过滤计算结果，让包含相同 WHERE 条件的查询复用谓词计算。"
+    },
+    "marketing.features.cards.key-features-data-cache-page-cache.title": {
+        "message": "数据缓存与 Page Cache"
+    },
+    "marketing.features.cards.key-features-data-cache-page-cache.description": {
+        "message": "湖仓读取的两级缓存：本地磁盘缓存远端文件字节，内存缓存解压后的列数据页。"
+    },
+    "marketing.features.cards.key-features-data-compaction.title": {
+        "message": "数据合并"
+    },
+    "marketing.features.cards.key-features-data-compaction.description": {
+        "message": "后台合并让 Doris 在高频导入下保持性能，并为通用 OLAP 和仅追加的时序工作负载提供对应策略。"
+    },
+    "marketing.features.cards.key-features-data-lineage.title": {
+        "message": "数据血缘"
+    },
+    "marketing.features.cards.key-features-data-lineage.description": {
+        "message": "从 Nereids 执行计划中提取列级血缘，通过可插拔 SPI 发送至治理工具，并在审计日志中提供表级访问记录。"
+    },
+    "marketing.features.cards.key-features-data-model.title": {
+        "message": "数据模型"
+    },
+    "marketing.features.cards.key-features-data-model.description": {
+        "message": "Duplicate、Unique、Aggregate 三种表模型决定数据行的存储、去重和排序方式，建表时确定。"
+    },
+    "marketing.features.cards.key-features-data-pruning.title": {
+        "message": "数据裁剪"
+    },
+    "marketing.features.cards.key-features-data-pruning.description": {
+        "message": "在分区、Tablet、Segment 和 Page 等层级跳过无关数据，尽量减少查询读取量。"
+    },
+    "marketing.features.cards.key-features-data-update-delete.title": {
+        "message": "数据更新与删除"
+    },
+    "marketing.features.cards.key-features-data-update-delete.description": {
+        "message": "支持 SQL UPDATE、条件 DELETE、部分列更新和原子分区替换，基于 Unique Key 表的写时合并机制实现。"
+    },
+    "marketing.features.cards.key-features-embedding.title": {
+        "message": "向量嵌入"
+    },
+    "marketing.features.cards.key-features-embedding.description": {
+        "message": "EMBED() SQL 函数调用外部模型，将文本和多媒体转换为 ARRAY<FLOAT> 向量，用于向量检索。"
+    },
+    "marketing.features.cards.key-features-full-text-search.title": {
+        "message": "全文检索"
+    },
+    "marketing.features.cards.key-features-full-text-search.description": {
+        "message": "直接在 SQL 中执行全文查询，支持分词感知的运算符，能力超越 LIKE 子串匹配。"
+    },
+    "marketing.features.cards.key-features-group-commit.title": {
+        "message": "Group Commit"
+    },
+    "marketing.features.cards.key-features-group-commit.description": {
+        "message": "在服务端将多个小批量 INSERT 和 Stream Load 合并为一个事务，通过同步和异步模式平衡延迟与吞吐量。"
+    },
+    "marketing.features.cards.key-features-high-concurrency-point-query.title": {
+        "message": "高并发点查"
+    },
+    "marketing.features.cards.key-features-high-concurrency-point-query.description": {
+        "message": "通过短路查询路径将 Unique Key 表用作低延迟 KV 存储，主键等值查询可支撑数万 QPS。"
+    },
+    "marketing.features.cards.key-features-hybrid-search.title": {
+        "message": "混合检索"
+    },
+    "marketing.features.cards.key-features-hybrid-search.description": {
+        "message": "在同一张表的一次 SQL 查询中融合全文匹配与向量相似度，无需维护独立搜索集群。"
+    },
+    "marketing.features.cards.key-features-iceberg.title": {
+        "message": "Iceberg"
+    },
+    "marketing.features.cards.key-features-iceberg.description": {
+        "message": "完整的 Apache Iceberg 引擎，通过七种 Catalog 后端读写 Iceberg 表，支持 V2/V3 删除、分支、标签和时间旅行。"
+    },
+    "marketing.features.cards.key-features-incremental-materialized-view.title": {
+        "message": "增量物化视图"
+    },
+    "marketing.features.cards.key-features-incremental-materialized-view.description": {
+        "message": "分区异步物化视图在 REFRESH AUTO 模式下只重建基表数据发生变化的分区，保持看板数据新鲜。"
+    },
+    "marketing.features.cards.key-features-inverted-index.title": {
+        "message": "倒排索引"
+    },
+    "marketing.features.cards.key-features-inverted-index.description": {
+        "message": "将各类列上的等值、范围、IN、IS NULL 和文本谓词从全表扫描转为倒排列表查找。"
+    },
+    "marketing.features.cards.key-features-kafka-cdc-integration.title": {
+        "message": "Kafka 与 CDC 集成"
+    },
+    "marketing.features.cards.key-features-kafka-cdc-integration.description": {
+        "message": "通过 Routine Load 直接拉取 Kafka Topic，或通过 Flink 传输 MySQL/PostgreSQL CDC，利用 Stream Load 2PC 实现精确一次写入。"
+    },
+    "marketing.features.cards.key-features-llm-sql-functions.title": {
+        "message": "LLM SQL 函数"
+    },
+    "marketing.features.cards.key-features-llm-sql-functions.description": {
+        "message": "AI_* SQL 函数将列值发送至 LLM 并直接返回结果，在 SQL 中完成分类、信息提取和摘要生成。"
+    },
+    "marketing.features.cards.key-features-load-transaction.title": {
+        "message": "导入事务"
+    },
+    "marketing.features.cards.key-features-load-transaction.description": {
+        "message": "将多条导入语句作为一个原子单元执行，支持基于 Label 去重，并通过 2PC 实现流式写入的精确一次语义。"
+    },
+    "marketing.features.cards.key-features-managing-lake-table.title": {
+        "message": "湖表管理"
+    },
+    "marketing.features.cards.key-features-managing-lake-table.description": {
+        "message": "通过 SQL 写入和管理 Iceberg、Hive 与 Paimon 表，涵盖 CREATE、INSERT、UPDATE、DELETE、Schema 与分区演进、分支和快照。"
+    },
+    "marketing.features.cards.key-features-mcp-server.title": {
+        "message": "MCP Server"
+    },
+    "marketing.features.cards.key-features-mcp-server.description": {
+        "message": "Doris MCP Server 1.0 通过八个工具领域、55 项能力，为 Claude Desktop、Cursor 等 MCP 客户端提供 Apache Doris 集群的只读访问。"
+    },
+    "marketing.features.cards.key-features-metadata-cache.title": {
+        "message": "元数据缓存"
+    },
+    "marketing.features.cards.key-features-metadata-cache.description": {
+        "message": "对外部 Catalog 的表列表、Schema、分区、文件列表和 Iceberg Manifest 进行多级缓存，使查询规划保持毫秒级。"
+    },
+    "marketing.features.cards.key-features-mpp.title": {
+        "message": "MPP 架构"
+    },
+    "marketing.features.cards.key-features-mpp.description": {
+        "message": "将一个 SQL 查询转换为 Fragment 实例的 DAG，在 Shared-Nothing 集群的多个 BE 上并行执行。"
+    },
+    "marketing.features.cards.key-features-multi-catalog.title": {
+        "message": "Multi Catalog"
+    },
+    "marketing.features.cards.key-features-multi-catalog.description": {
+        "message": "通过三段式名称，在同一个 Doris 集群中对内部数仓及 Hive、Iceberg、JDBC、ES 等外部系统进行联邦查询。"
+    },
+    "marketing.features.cards.key-features-parquet-reader-optimization.title": {
+        "message": "Parquet 读取优化"
+    },
+    "marketing.features.cards.key-features-parquet-reader-optimization.description": {
+        "message": "原生 C++ 向量化 Parquet 读取器支持 Row Group 和 Page 裁剪、直接字典解码，以及过滤后延迟读取数据。"
+    },
+    "marketing.features.cards.key-features-partitioning-and-bucketing.title": {
+        "message": "分区与分桶"
+    },
+    "marketing.features.cards.key-features-partitioning-and-bucketing.description": {
+        "message": "两级数据分片机制：分区按列拆分表以支持裁剪，分桶将各分区拆分为 Tablet 以支持并行读取。"
+    },
+    "marketing.features.cards.key-features-pipeline-execution-engine.title": {
+        "message": "Pipeline 执行引擎"
+    },
+    "marketing.features.cards.key-features-pipeline-execution-engine.description": {
+        "message": "基于推送模型和任务窃取的调度器，将查询拆解为算子流水线 DAG，在 BE 的固定线程池中执行。"
+    },
+    "marketing.features.cards.key-features-pluggable-auth.title": {
+        "message": "可插拔认证与授权"
+    },
+    "marketing.features.cards.key-features-pluggable-auth.description": {
+        "message": "无需修改 FE 代码，即可通过配置选择 LDAP、Kerberos、OIDC 或 Ranger，并组合认证链实现回退。"
+    },
+    "marketing.features.cards.key-features-preaggregation-and-rollup.title": {
+        "message": "预聚合与 Rollup"
+    },
+    "marketing.features.cards.key-features-preaggregation-and-rollup.description": {
+        "message": "Aggregate Key 表在导入时聚合数据行，ROLLUP 提供预计算的候选索引，由优化器透明选择。"
+    },
+    "marketing.features.cards.key-features-prepared-statement.title": {
+        "message": "预处理语句"
+    },
+    "marketing.features.cards.key-features-prepared-statement.description": {
+        "message": "通过 MySQL 协议支持服务端预处理语句，按会话缓存解析计划，降低重复查询的 FE CPU 开销。"
+    },
+    "marketing.features.cards.key-features-query-cache.title": {
+        "message": "查询缓存"
+    },
+    "marketing.features.cards.key-features-query-cache.description": {
+        "message": "在 Pipeline 层按 Tablet 粒度缓存中间聚合结果，让访问相同 Tablet 的查询复用计算。"
+    },
+    "marketing.features.cards.key-features-reciprocal-rank-fusion.title": {
+        "message": "倒数排名融合"
+    },
+    "marketing.features.cards.key-features-reciprocal-rank-fusion.description": {
+        "message": "使用 ROW_NUMBER 和标准 1/(k+rank) 公式，在 SQL 中融合 BM25 与向量排名，无需内置 RRF 函数。"
+    },
+    "marketing.features.cards.key-features-resource-group.title": {
+        "message": "资源组"
+    },
+    "marketing.features.cards.key-features-resource-group.description": {
+        "message": "按 BE 节点标签将集群划分为物理隔离的资源池，使离线 ETL 组与在线查询组互不影响。"
+    },
+    "marketing.features.cards.key-features-spill-to-disk.title": {
+        "message": "数据落盘"
+    },
+    "marketing.features.cards.key-features-spill-to-disk.description": {
+        "message": "内存密集型算子达到限制时将中间状态写入本地磁盘，使大型 Join、聚合和排序能继续执行，避免内存溢出。"
+    },
+    "marketing.features.cards.key-features-stream-load.title": {
+        "message": "Stream Load"
+    },
+    "marketing.features.cards.key-features-stream-load.description": {
+        "message": "通过同步 HTTP PUT 导入 CSV、JSON、Parquet 和 ORC，支持 Label 去重和批次级原子提交。"
+    },
+    "marketing.features.cards.key-features-unique-key.title": {
+        "message": "Unique Key"
+    },
+    "marketing.features.cards.key-features-unique-key.description": {
+        "message": "Doris 的主键表模型，每个主键保留一行，支持 SQL UPDATE/DELETE、部分列更新及处理乱序写入的 Sequence 列。"
+    },
+    "marketing.features.cards.key-features-variant-data-type.title": {
+        "message": "VARIANT 数据类型"
+    },
+    "marketing.features.cards.key-features-variant-data-type.description": {
+        "message": "无需固定 Schema 即可摄取 JSON，并将高频路径存为原生列式子列，提供列存级分析性能。"
+    },
+    "marketing.features.cards.key-features-vector-index.title": {
+        "message": "向量索引"
+    },
+    "marketing.features.cards.key-features-vector-index.description": {
+        "message": "在 ARRAY<FLOAT> 列上构建原生 ANN 索引，在 Doris 表内执行毫秒级 TopN 向量检索，与 SQL 分析协同使用。"
+    },
+    "marketing.features.cards.key-features-vectorized-execution.title": {
+        "message": "向量化执行"
+    },
+    "marketing.features.cards.key-features-vectorized-execution.description": {
+        "message": "以列批次和 SIMD 为基础的执行引擎；自 v2.0 移除最后的行式代码路径后，所有算子均在该引擎上运行。"
+    },
+    "marketing.features.cards.key-features-vertical-compaction.title": {
+        "message": "纵向合并"
+    },
+    "marketing.features.cards.key-features-vertical-compaction.description": {
+        "message": "按列组执行数据合并，控制 Doris 合并宽表 Rowset 时的内存占用。"
+    },
+    "marketing.features.cards.key-features-workload-group.title": {
+        "message": "Workload Group"
+    },
+    "marketing.features.cards.key-features-workload-group.description": {
+        "message": "在进程内按查询组分配 CPU、内存、IO 和并发资源，防止重型 ETL 挤占 BI 看板资源。"
     }
 }
