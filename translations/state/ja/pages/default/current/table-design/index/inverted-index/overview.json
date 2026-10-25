@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/index/inverted-index/overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/index/inverted-index/overview.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "c7e176281e3ad58909bc65d3e25bf12c5f776738891378cebf9de3dbf2124963",
-    "sourceTechnicalHash": "60ff1afed7e6775a0fa7d4838738b740df068b098d244bf8bff52d5c2387cfae",
-    "targetHash": "cb442520115811fd925b1904f0a20ae66626c5b58802c89a43a44467902b463f",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "51db53e6739aa7d0093f7aff3a8c5bccf78d62dd04ddcb2950d0f434d80b100d",
+    "sourceTechnicalHash": "4c4d7bc4cb0cb0f6a093db2fa4e253dd6aa4af45a673b253a92f7c41a80f5510",
+    "targetHash": "1aba6c8effa06f71de67019a56a3d7634d4a005e9f098b38a85719df6037055d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.127Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T17:01:29.806Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "51db53e6739aa7d0093f7aff3a8c5bccf78d62dd04ddcb2950d0f434d80b100d",
+      "targetHash": "1aba6c8effa06f71de67019a56a3d7634d4a005e9f098b38a85719df6037055d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Quick start -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 機能紹介 + クイックスタート -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: キーワード検索 / フレーズ一致 / RAGハイブリッド検索 / 関連度ランキング -->\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"2.0.0\",\"25\",\"25\",\"25\",\"25\",\"25\",\"25\",\"3\",\"3\",\"3\",\"3\",\"3.1\",\"3.1\",\"3.1\",\"4\",\"4.0\",\"4.0\",\"4.0\",\"4.0\",\"4.1.5\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Quick start -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 機能紹介 + クイックスタート -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Keyword search / Phrase matching / RAG hybrid retrieval / Relevance ranking -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: キーワード検索 / フレーズ一致 / RAGハイブリッド検索 / 関連度ランキング -->\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/table-and-view/stream/DROP-STREAM.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/table-and-view/stream/DROP-STREAM.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "cb52e0c6bcf25e0c486c81299b95aca9610fed36b5738602c6a9ea63ae650e3f",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "85187cc631f8d0735517ee11bf7a558f638e1316d84588afe4cf927a1fcd6a9f",
     "sourceTechnicalHash": "9314c6c7457db5c779b4afbfd2554b33ce25b64dd3c7b03f675fa4436a4ab23b",
-    "targetHash": "c425b3dd410912dd8dcd2369ab424f02c6cdc3495f74596f84e592ad2226c6ba",
+    "targetHash": "c7a2d967df7cfe934c3125f851773486d94cab629a22e5ccaf31ec805eee92a9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.009Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T16:43:24.673Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "85187cc631f8d0735517ee11bf7a558f638e1316d84588afe4cf927a1fcd6a9f",
+      "targetHash": "c7a2d967df7cfe934c3125f851773486d94cab629a22e5ccaf31ec805eee92a9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }
