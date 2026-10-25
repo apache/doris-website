@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/hamming-distance.md",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "86aef9cc29f1039324fdf126a3db175034e9029d9da14a2cd80db2fe019c95ea",
+    "sourceTechnicalHash": "cd850cbdf69b6cabc2397ca5739e357ec7622736a009f027b11a7d1d19bfeeff",
+    "targetHash": "542d0551205e2beb94d512a339cc5f8002987ac41de42787db5d57b419c85526",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:13:45.062Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "86aef9cc29f1039324fdf126a3db175034e9029d9da14a2cd80db2fe019c95ea",
+      "targetHash": "542d0551205e2beb94d512a339cc5f8002987ac41de42787db5d57b419c85526",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,237 @@
+---
+title: Apache Doris 데이터 작업 가이드
+description: 7개의 단계별 워크플로 단원을 통해 Apache Doris에서 데이터 적재, 업데이트, 삭제, 내보내기 방법을 선택하는 법을 알아봅니다.
+slug: /101/04-apache-doris-data-operations-guide
+sidebar_position: 4
+keywords:
+  - Apache Doris 101
+  - 데이터 적재
+  - 데이터 업데이트
+  - 데이터 삭제
+  - 데이터 내보내기
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={4}
+    title="Apache Doris 데이터 작업 가이드"
+    readingTime="12–18분"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/data-operate/import/load-manual"
+>
+    <CourseLessonUnit
+        id="data-lifecycle"
+        label="작업 개요"
+        title={<>작업을 선택할 때 고려할 것은 <em>데이터 수명 주기입니다</em>.</>}
+        summary="데이터 적재, 업데이트, 삭제, 내보내기에는 각각 정확성과 처리량에 관한 제약이 있습니다. 원하는 데이터 상태의 변화부터 파악하세요."
+        coachTitle="워크로드에 맞춰 방법을 선택하세요."
+        coach={<p>명령이나 API를 선택하기 전에 소스 위치, 배치 크기, 목표 지연 시간, 재시도 방식, 테이블의 동작 방식, 출력 대상을 파악하세요.</p>}
+        calloutTitle="원자성부터 확인하세요"
+        callout={<p>재시도할 때 데이터가 모르는 사이에 중복되거나 일부만 반영되지 않도록 각 데이터 적재 방법의 트랜잭션 경계와 레이블 동작을 이해하세요.</p>}
+        check={{
+            question: "데이터 적재 방법을 선택하기 전에 무엇을 정의해야 하나요?",
+            options: ["소스, 데이터 양, 지연 시간, 재시도 요구사항", "임의의 API 엔드포인트"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 워크로드의 제약에 따라 적절한 작업이 결정됩니다.",
+            incorrectFeedback: "엔드포인트는 구현 세부 사항이지 워크로드의 정의가 아닙니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 데이터 작업 수명 주기"
+            focusIndex={0}
+            items={[
+                { title: "적재", description: "데이터 가져오기" },
+                { title: "업데이트", description: "논리적 행 변경" },
+                { title: "삭제", description: "지정된 범위의 데이터 제거" },
+                { title: "내보내기", description: "결과 내보내기" },
+                { title: "관찰", description: "모든 작업 확인" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-load-method"
+        label="데이터 적재 방법 선택"
+        title={<>소스와 지연 시간에 맞는 <em>데이터 적재 경로를 선택하세요</em>.</>}
+        summary="Doris는 동기식 HTTP 적재, 지속적인 Kafka 수집, SQL 기반 수집, 비동기 배치 워크플로를 지원합니다."
+        coachTitle="요구사항을 충족하는 가장 구체적인 방법을 선택하세요."
+        coach={<p>파일이나 HTTP 스트림에는 Stream Load를, 관리형 Kafka 데이터 수집에는 Routine Load를, SQL 변환과 외부 소스에는 INSERT INTO SELECT를, 빈번한 소규모 쓰기에는 Group Commit을 사용하세요.</p>}
+        calloutTitle="기존 배치 방식"
+        callout={<p>객체 스토리지나 HDFS에는 적용 가능한 경우 현재의 Catalog 또는 테이블 값 함수 기반 워크플로를 우선 사용하세요. Broker Load는 기존 방식으로 취급하고 버전별 지침을 확인하세요.</p>}
+        check={{
+            question: "Kafka 데이터를 지속적으로 수집할 때 적합한 방법은 무엇인가요?",
+            options: ["Routine Load", "TRUNCATE TABLE"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Routine Load는 장시간 실행되는 Kafka 데이터 수집 작업을 관리합니다.",
+            incorrectFeedback: "TRUNCATE는 데이터를 제거하며 스트림을 수집하지 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 데이터 적재 방법 개요"
+            columns={3}
+            items={[
+                { tag: 'HTTP', title: "Stream Load", description: "작업 결과를 즉시 확인할 수 있는 동기식 파일 또는 스트림 적재." },
+                { tag: 'KFK', title: "Routine Load", description: "진행 상태가 관리되는 지속적인 Kafka 데이터 수집." },
+                { tag: 'SQL', title: "INSERT SELECT", description: "테이블, Catalog 또는 파일 TVF의 데이터를 변환하고 적재합니다." },
+                { tag: 'JDBC', title: "INSERT VALUES", description: "대량 처리량보다 간편함이 중요한 소규모 SQL 쓰기." },
+                { tag: 'GC', title: "Group Commit", description: "자주 발생하는 소규모 쓰기를 묶어 효율적으로 커밋합니다." },
+                { tag: 'ASYNC', title: "배치 작업", description: "규모가 큰 비동기 작업을 레이블과 상태로 추적합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="reliable-loading"
+        label="안정적인 데이터 적재"
+        title={<>모든 데이터 적재를 <em>관찰하고 재시도할 수 있게 설계하세요</em>.</>}
+        summary="레이블, 품질 임계값, 오류 샘플, 작업 상태, 소스 오프셋을 활용하면 데이터 수집을 단순한 요청에서 관리 가능한 워크플로로 바꿀 수 있습니다."
+        coachTitle="작업을 제출했다고 성공한 것은 아닙니다."
+        coach={<p>지원되는 경우 일관된 레이블을 지정하고, 수용되거나 필터링된 행 수를 확인하고, 소스 체크포인트를 보관하고, 일시 중지되거나 실패한 작업에 알림을 설정하세요. 형식, 열 매핑, 필터 설정을 명시하세요.</p>}
+        calloutTitle="데이터 품질"
+        callout={<p>필터 허용치를 목적에 맞게 설정하세요. 임계값이 너무 높으면 형식이 잘못된 입력을 놓칠 수 있고, 너무 낮으면 복구 가능한 배치도 중단될 수 있습니다.</p>}
+        check={{
+            question: "데이터 적재를 더 안전하게 재시도하려면 무엇이 필요한가요?",
+            options: ["일관된 작업 레이블과 기록된 소스 위치", "재시도할 때마다 스키마 변경"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 작업 식별 정보와 체크포인트는 중복 작업을 감지하거나 방지하는 데 도움이 됩니다.",
+            incorrectFeedback: "계획하지 않은 스키마 변경은 재시도 결과를 파악하기 어렵게 만듭니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="안정적인 Apache Doris 데이터 적재 워크플로"
+            focusIndex={2}
+            items={[
+                { title: "정의", description: "형식 + 매핑" },
+                { title: "식별", description: "레이블 + 소스 범위" },
+                { title: "제출", description: "원자적 트랜잭션" },
+                { title: "관찰", description: "행 + 오류 + 상태" },
+                { title: "재시도", description: "신중하게 재개" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="update-data"
+        label="업데이트"
+        title={<>테이블 모델에 따라 <em>업데이트 동작을 정의하세요</em>.</>}
+        summary="Unique Key 테이블은 UPSERT 동작과 SQL UPDATE를 지원하고, Aggregate Key 테이블은 선언된 집계 함수를 통해 업데이트됩니다."
+        coachTitle="전체 행 업데이트와 부분 업데이트는 비용이 다릅니다."
+        coach={<p>전체 행 UPSERT는 완전한 논리적 행을 제공합니다. 일부 열만 업데이트하면 열이 많은 레코드에서 제공할 필드가 줄어들지만, 지원되는 테이블 및 데이터 적재 설정이 필요하고 읽기나 병합 비용이 추가될 수 있습니다.</p>}
+        calloutTitle="스키마 계약"
+        callout={<p>전체 행 UPSERT에서 생략한 값은 기본값이나 NULL이 될 수 있습니다. 의도한 동작과 테이블 구현이 지원할 때만 일부 열 업데이트 모드를 사용하세요.</p>}
+        check={{
+            question: "최신 상태의 CDC 행을 자연스럽게 표현하는 모델은 무엇인가요?",
+            options: ["Unique Key", "Duplicate Key"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Unique Key는 키를 기준으로 UPSERT 동작을 적용합니다.",
+            incorrectFeedback: "Duplicate Key는 현재의 논리적 행 하나만 유지하는 대신 모든 버전을 보관합니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="전체 행 업데이트와 일부 열 업데이트"
+            leftTitle="전체 행 UPSERT"
+            leftLead="완전한 새 논리적 행을 씁니다."
+            leftItems={["더 단순한 동작", "기본 방식에서 가장 높은 처리량", "생략한 값에 주의 필요"]}
+            rightTitle="일부 열 업데이트"
+            rightLead="열이 많은 행에서 선택한 필드만 씁니다."
+            rightItems={["클라이언트가 보내는 데이터 양 감소", "지원되는 모드 필요", "추가 병합 비용"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="delete-data"
+        label="삭제"
+        title={<>가장 좁으면서 안전한 <em>삭제 범위를 선택하세요</em>.</>}
+        summary="Predicate DELETE는 지원되는 행 필터를 처리하고, 데이터 적재 시 삭제 표시는 배치를 처리하며, TRUNCATE는 테이블이나 파티션을 빠르게 비웁니다."
+        coachTitle="범위에 따라 속도와 위험이 모두 달라집니다."
+        coach={<p>조건식은 모델별 제약 범위 안에서만 사용하세요. 키 집합이 크다면 통제된 배치를 통해 삭제 표시를 수집하세요. 파티션이나 테이블의 전체 데이터를 제거하려는 경우에만 해당 범위를 비우세요.</p>}
+        calloutTitle="복구 가능성"
+        callout={<p>대상 버전에서 휴지통 복구가 가능한지 확인하고, 영구 삭제가 명시적으로 필요한 경우가 아니라면 FORCE 작업을 피하세요.</p>}
+        check={{
+            question: "오래된 시간 파티션 전체를 제거할 때 적합한 작업은 무엇인가요?",
+            options: ["TRUNCATE 또는 파티션 삭제", "관련 없는 값 열 업데이트"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 파티션 단위 삭제가 제거하려는 범위에 맞는 직접적인 방법입니다.",
+            incorrectFeedback: "값을 업데이트해도 파티션은 제거되지 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 삭제 방법"
+            columns={3}
+            items={[
+                { tag: 'WHERE', title: "조건부 DELETE", description: "범위가 정해진 조건에 일치하는 행을 지원 범위 내에서 삭제합니다." },
+                { tag: 'BATCH', title: "삭제 표시 데이터 적재", description: "데이터 적재를 통해 키로 지정한 대량의 삭제를 적용합니다." },
+                { tag: 'ALL', title: "TRUNCATE", description: "행을 필터링하지 않고 테이블이나 파티션 전체를 비웁니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="export-data"
+        label="데이터 내보내기"
+        title={<>출력 형태를 <em>데이터 사용 대상에 맞추세요.</em>.</>}
+        summary="SELECT INTO OUTFILE은 변환된 쿼리 결과를 내보내고, EXPORT는 규모가 큰 비동기 추출 작업을 실행하며, mysqldump는 스키마나 소규모 논리 데이터셋을 추출합니다."
+        coachTitle="형식과 저장 위치도 데이터 전달 규약의 일부입니다."
+        coach={<p>분석 시스템에는 Parquet 또는 ORC를, 폭넓은 호환성이 필요할 때는 CSV를 선택하고, 객체 스토리지나 HDFS에는 안전하게 관리되는 자격 증명을 사용하세요. 데이터를 읽을 후속 시스템에 맞춰 파일 수와 병렬 처리 수준을 계획하세요.</p>}
+        calloutTitle="동기식과 비동기식"
+        callout={<p>OUTFILE은 유연하며 쿼리와 연결됩니다. 규모가 큰 백그라운드 작업은 EXPORT로 추적하기가 더 쉽습니다. 어느 쪽도 검증된 백업 및 복구 전략을 대체하지는 못합니다.</p>}
+        check={{
+            question: "내보낼 결과에 SQL 변환을 적용할 수 있는 방법은 무엇인가요?",
+            options: ["SELECT INTO OUTFILE", "SHOW BACKENDS"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. OUTFILE이 기록하기 전에 SELECT로 데이터의 형태를 만들 수 있습니다.",
+            incorrectFeedback: "SHOW BACKENDS는 클러스터 구성 정보를 보여주며, 데이터 내보내기 방법이 아닙니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 데이터 내보내기 방법"
+            columns={3}
+            items={[
+                { tag: 'SQL', title: "SELECT OUTFILE", description: "변환 가능한 결과를 CSV, Parquet 또는 ORC 형식으로 동기식으로 내보냅니다." },
+                { tag: 'JOB', title: "EXPORT", description: "규모가 큰 테이블이나 파티션을 대상으로 비동기 추출을 수행합니다." },
+                { tag: 'DDL', title: "mysqldump", description: "MySQL 도구를 사용해 스키마를 내보내거나 소규모 논리 백업을 만듭니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operations-recap"
+        label="데이터 작업 요약"
+        title={<>데이터 이동을 <em>제어된 상태 전환으로 다루세요.</em>.</>}
+        summary="신뢰할 수 있는 작업에는 명확한 범위, 정합성 보장 경계, 관찰 가능한 결과, 재시도 전략, 후속 검증이 필요합니다."
+        coachTitle="정상 실행 경로는 설계의 절반에 불과합니다."
+        coach={<p>담당자, 자격 증명, 레이블, 소스 위치, 품질 정책, 알림, 정리 방식을 기록하세요. 부분 실패 상황에 대비해 연습하고, 완료 후 행 수나 비즈니스 수준의 불변 조건을 검증하세요.</p>}
+        calloutTitle="다음 강의에 앞서"
+        callout={<p>신뢰할 수 있는 데이터가 준비되었다면, 다음 모듈에서는 분석을 표현하고 Doris가 효율적으로 실행할 수 있는 쿼리 구조를 선택하는 방법을 다룹니다.</p>}
+        check={{
+            question: "작업이 성공한 후에는 무엇으로 절차를 마무리해야 하나요?",
+            options: ["예상한 데이터 상태 검증", "모든 작업 메타데이터 즉시 폐기"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 결과로 생성된 행, 파티션 또는 파일이 의도한 상태와 일치하는지 확인하세요.",
+            incorrectFeedback: "작업 메타데이터는 감사와 문제 진단에 유용한 근거입니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 작업 관리 절차"
+            focusIndex={4}
+            items={[
+                { title: "범위", description: "상태 변경 정의" },
+                { title: "실행", description: "적합한 방법 사용" },
+                { title: "모니터링", description: "상태 + 품질 추적" },
+                { title: "복구", description: "재시도 또는 보정" },
+                { title: "검증", description: "결과 입증" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

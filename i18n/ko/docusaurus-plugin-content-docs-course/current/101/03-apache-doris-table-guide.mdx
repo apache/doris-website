@@ -1,0 +1,232 @@
+---
+title: Apache Doris 테이블 가이드
+description: 모델, 키, 파티션, 버킷, 검증에 관한 단계별 학습을 통해 실무에 적용할 수 있는 Apache Doris 테이블 설계 과정을 익히세요.
+slug: /101/03-apache-doris-table-guide
+sidebar_position: 3
+keywords:
+  - Apache Doris 101
+  - Apache Doris 테이블 설계
+  - 테이블 모델
+  - 파티셔닝
+  - 버킷팅
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={3}
+    title="Apache Doris 테이블 가이드"
+    readingTime="12–18분"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/table-design/overview"
+>
+    <CourseLessonUnit
+        id="design-sequence"
+        label="설계 순서"
+        title={<>워크로드 정보를 바탕으로 <em>네 가지를 결정하세요</em>.</>}
+        summary="오래 사용할 수 있는 테이블을 설계하려면 먼저 행의 의미를 정하고, 정렬 키와 파티션 경계, 물리적 분산 방식을 차례로 선택해야 합니다."
+        coachTitle="의존 관계에 따라 순서대로 결정하세요."
+        coach={<p>테이블 모델은 같은 키가 반복될 때 어떤 의미인지 정의합니다. 키 컬럼은 정렬 순서를 정합니다. 파티션은 데이터 프루닝과 수명 주기를 관리할 논리적 경계를 정합니다. 버킷은 태블릿 분산과 병렬 처리 수준을 결정합니다.</p>}
+        calloutTitle="DDL을 작성하기 전에 확인할 질문"
+        callout={<p>데이터는 추가만 되나요, 아니면 변경되나요? 주로 어떤 필터를 사용하나요? 기간별로 데이터가 얼마나 들어오나요? 어떤 컬럼을 기준으로 행을 고르게 분산할 수 있나요?</p>}
+        check={{
+            question: "가장 먼저 결정해야 할 것은 무엇인가요?",
+            options: ["행의 의미와 테이블 모델", "임의의 버킷 수"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 물리적 배치를 정하기 전에 반복되는 키의 의미를 모델링해야 합니다.",
+            incorrectFeedback: "버킷 수는 테이블의 데이터 의미를 정한 뒤에 결정하는 물리적 설계 요소입니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 테이블 설계 순서"
+            focusIndex={0}
+            items={[
+                { title: "모델", description: "반복되는 키의 처리 방식" },
+                { title: "정렬 키", description: "읽기 지역성" },
+                { title: "파티션", description: "범위 + 수명 주기" },
+                { title: "버킷", description: "태블릿 분산" },
+                { title: "검증", description: "크기 + 데이터 편중 + 실행 계획" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-table-model"
+        label="테이블 모델"
+        title={<>반복되는 키는 무엇을 <em>의미해야 할까요</em>?</>}
+        summary="Duplicate는 모든 행을 유지하고, Unique는 키마다 논리적 행 하나를 유지하며, Aggregate는 지정된 함수로 값 컬럼을 결합합니다."
+        coachTitle="모델은 비즈니스 데이터의 의미에 따라 선택합니다."
+        coach={<p>변경되지 않는 사실 데이터와 로그에는 Duplicate를, CDC와 최신 상태 레코드에는 Unique를 사용하세요. 쓰기 시점의 집계가 반복적인 쿼리 작업을 크게 줄일 수 있다면 Aggregate를 사용하세요.</p>}
+        calloutTitle="되돌리기 어려운 결정"
+        callout={<p>테이블 모델은 생성 후 변경할 수 없습니다. 모델을 다시 설계하려면 새 테이블을 만들고 데이터를 이전해야 합니다.</p>}
+        check={{
+            question: "추가만 되는 클릭스트림에는 어떤 모델이 적합한가요?",
+            options: ["Duplicate Key", "Unique Key", "Aggregate Key"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Duplicate Key는 모든 이벤트를 보존합니다.",
+            incorrectFeedback: "추가만 되는 이벤트 스트림에서는 일반적으로 원본 행을 모두 보존해야 합니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 테이블 모델 선택"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: "Duplicate Key", description: "사실 데이터, 로그, 상세 이벤트를 추가하며 키를 기준으로 병합하지 않습니다." },
+                { tag: 'UNI', title: "Unique Key", description: "변경 가능한 엔터티를 UPSERT하고 최신 논리적 행을 유지합니다." },
+                { tag: 'AGG', title: "Aggregate Key", description: "SUM, MAX, MIN, REPLACE 또는 관련 함수로 측정값을 병합합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="design-sort-key"
+        label="정렬 키"
+        title={<>자주 쓰는 필터를 스토리지가 <em>활용할 수 있게 배치하세요</em>.</>}
+        summary="Doris는 키 컬럼 순서대로 데이터를 저장하므로, 키의 앞부분은 데이터 프루닝, 압축, 스캔 비용에 특히 큰 영향을 줍니다."
+        coachTitle="필터 사용 빈도, 선택도, 컬럼 너비를 모두 고려하세요."
+        coach={<p>자주 필터링하고 데이터 범위를 효과적으로 좁히는 컬럼을 앞에 배치하세요. 크기가 작은 고정 길이 타입을 선호하고 키의 너비를 적절히 제한하세요. 모든 키 컬럼은 값 컬럼보다 앞에 놓인다는 점도 기억하세요.</p>}
+        calloutTitle="보조 인덱스 활용"
+        callout={<p>정렬 키의 앞부분을 활용할 수 없는 중요한 필터에는 역인덱스나 다른 보조 인덱스를 사용하세요.</p>}
+        check={{
+            question: "일반적으로 어떤 컬럼이 맨 앞 정렬 키로 더 적합한가요?",
+            options: ["자주 필터링하는 날짜 또는 테넌트 키", "거의 필터링하지 않는 긴 설명 컬럼"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 자주 사용하는 선택도 높은 필터가 정렬 순서를 유용하게 만듭니다.",
+            incorrectFeedback: "너비가 크고 거의 필터링하지 않는 설명 컬럼은 유용한 프루닝 효과 없이 키 비용만 늘립니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="효과적인 정렬 키와 비효과적인 정렬 키"
+            leftTitle="효과적인 앞부분 키"
+            leftLead="자주 사용하는 조건식에 맞는 크기가 작은 컬럼입니다."
+            leftItems={["자주 필터링됨", "프루닝 효과가 큼", "값이 안정적이고 너비가 적당함"]}
+            rightTitle="효과가 낮은 앞부분 키"
+            rightLead="일반적인 데이터 접근 방식과 관련이 없는 너비가 큰 컬럼입니다."
+            rightItems={["거의 필터링되지 않음", "프루닝 효과가 낮음", "긴 문자열이 너무 앞에 배치됨"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-partitioning"
+        label="파티셔닝"
+        title={<>워크로드에 맞춰 불필요한 데이터를 <em>제외할 수 있는 논리적 경계를 만드세요</em>.</>}
+        summary="파티션은 데이터 범위나 값 그룹을 분리하고 수명 주기 관리를 지원하며, 쿼리가 관련 없는 데이터를 읽지 않도록 합니다."
+        coachTitle="파티션은 데이터 프루닝과 유지 관리를 위해 설계하세요."
+        coach={<p>경계를 엄격히 관리해야 한다면 수동 파티션을, 정해진 시간 범위를 관리하려면 동적 파티션을 사용하세요. 들어오는 값에 따라 범위나 목록을 자동으로 만들어야 한다면 자동 파티션을 사용하세요.</p>}
+        calloutTitle="쿼리에서 확인할 조건"
+        callout={<p>파티션 프루닝은 쿼리가 파티션 컬럼의 범위를 제한할 때만 도움이 됩니다. 대표적인 SQL과 EXPLAIN으로 이를 확인하세요.</p>}
+        check={{
+            question: "날짜 파티션이 쿼리에 도움이 되려면 무엇이 필요한가요?",
+            options: ["날짜 파티션 컬럼에 대한 조건식", "더 큰 VARCHAR 길이"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 조건식을 통해 Doris는 관련 없는 날짜 파티션을 제외할 수 있습니다.",
+            incorrectFeedback: "컬럼 너비를 바꿔도 파티션 프루닝이 활성화되지는 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 파티셔닝 방식"
+            columns={3}
+            items={[
+                { tag: 'MAN', title: "수동", description: "운영자가 RANGE 또는 LIST 경계를 명시하고 직접 관리합니다." },
+                { tag: 'DYN', title: "동적", description: "시간 기반 파티션을 일정에 따라 생성하고 만료시킵니다." },
+                { tag: 'AUTO', title: "자동", description: "데이터 적재 중 값에 따라 RANGE 또는 LIST 파티션을 생성합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-bucketing"
+        label="버킷팅"
+        title={<>각 파티션을 유용한 <em>태블릿으로 분산하세요</em>.</>}
+        summary="해시 버킷팅은 키에 따라 데이터 위치를 일정하게 정하고, 랜덤 버킷팅은 분산 키 없이 행을 분산합니다."
+        coachTitle="데이터 지역성, 편중, 병렬 처리 수준의 균형을 맞추세요."
+        coach={<p>같은 위치의 데이터에 접근하는 것이 중요하다면 고유값이 많고 값이 고르게 분포하는 해시 키를 선택하세요. 신뢰할 만한 키가 없고 쓰기를 고르게 분산하는 것이 우선이라면 랜덤 분산을 사용하세요.</p>}
+        calloutTitle="개수를 정하기 전에 크기부터 확인하세요"
+        callout={<p>파티션별 압축 데이터 크기를 추정하고 적정 태블릿 크기를 목표로 삼으세요. 태블릿 수는 클러스터 자원에 맞춰 정하세요. 버킷이 많다고 무조건 빨라지는 것은 아닙니다.</p>}
+        check={{
+            question: "고유값이 적은 해시 버킷 키의 주요 위험은 무엇인가요?",
+            options: ["데이터 편중", "자동 스키마 변경"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 고유값이 너무 적으면 일부 태블릿에 데이터가 집중될 수 있습니다.",
+            incorrectFeedback: "버킷팅은 데이터 분포에 영향을 주지만 자동 스키마 변경에는 영향을 주지 않습니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="해시 버킷팅과 랜덤 버킷팅 비교"
+            leftTitle="해시 버킷팅"
+            leftLead="같은 키 값은 항상 같은 위치에 매핑됩니다."
+            leftItems={["카디널리티가 높고 값이 고르게 분포하는 키를 선택하세요", "데이터 분포를 고려한 조인을 지원합니다", "키를 잘못 선택하면 데이터가 한쪽으로 쏠릴 수 있습니다"]}
+            rightTitle="랜덤 버킷팅"
+            rightLead="키를 선택하지 않아도 행이 분산됩니다."
+            rightItems={["간단하고 균등한 데이터 적재", "안정적인 키가 없을 때 유용합니다", "데이터 분포에 따른 지역성이 낮습니다"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="workload-templates"
+        label="워크로드 패턴"
+        title={<>설계 선택을 일관된 <em>테이블 패턴으로 조합하세요.</em>.</>}
+        summary="좋은 DDL은 내부적으로 일관성이 있습니다. 행의 의미, 프루닝, 데이터 분포, 데이터 적재 방식이 모두 워크로드에 맞아야 합니다."
+        coachTitle="템플릿은 설계를 시작할 때 세우는 가설입니다."
+        coach={<p>이벤트 테이블에는 주로 Duplicate Key, 시간 기준 파티션, 데이터를 고르게 분산하는 키를 사용합니다. CDC 엔터티에는 주로 비즈니스 키와 함께 Unique Key를 사용합니다. 롤업 테이블에는 집계 단위가 안정적일 때만 Aggregate Key를 사용합니다.</p>}
+        calloutTitle="실제 데이터 특성으로 검증하세요"
+        callout={<p>실제 워크로드를 대표하는 데이터 양, 키 카디널리티, 필터 패턴, 업데이트 빈도를 사용하세요. 소량의 인위적인 샘플로는 데이터 쏠림과 태블릿 크기 문제를 발견하기 어렵습니다.</p>}
+        check={{
+            question: "운영 환경의 테이블 템플릿은 무엇을 기준으로 정해야 할까요?",
+            options: ["실제 워크로드를 대표하는 근거", "최대한 짧은 CREATE TABLE 문"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 실제 데이터와 쿼리 패턴을 바탕으로 설계 선택을 검증하세요.",
+            incorrectFeedback: "DDL을 짧게 쓰는 것 자체가 성능이나 정확성을 높이는 목표는 아닙니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris의 일반적인 테이블 패턴"
+            columns={3}
+            items={[
+                { tag: 'LOG', title: "이벤트 분석", description: "중복 행, 시간 기준 프루닝, 고르게 분산된 병렬 스캔." },
+                { tag: 'CDC', title: "최신 상태", description: "UPSERT 방식의 데이터 적재에 사용하는 고유 비즈니스 키." },
+                { tag: 'KPI', title: "지표 롤업", description: "안정적인 차원과 명시된 값 집계 방식." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="validate-table-design"
+        label="검증하고 개선하기"
+        title={<>Doris가 <em>실제로 만든 테이블을 살펴보세요.</em>.</>}
+        summary="워크로드를 확장하기 전에 파티션 프루닝, 태블릿 크기, 행 분포, 쿼리 실행 계획, 데이터 적재 동작을 확인하세요."
+        coachTitle="DDL 작성은 테이블 설계의 시작입니다."
+        coach={<p>메타데이터 명령으로 파티션과 태블릿을 살펴보고, 태블릿별 행 수와 크기를 비교해 데이터 쏠림을 확인하세요. EXPLAIN과 프로파일을 사용해 의도한 프루닝과 조인이 실제로 수행되는지도 확인하세요.</p>}
+        calloutTitle="흔히 발생하는 문제"
+        callout={<p>작은 태블릿이 너무 많으면 스케줄링과 컴팩션 부담이 커집니다. 크거나 데이터가 쏠린 태블릿이 너무 적으면 병렬 처리가 제한되고 부하가 집중됩니다.</p>}
+        check={{
+            question: "BE 한 대가 훨씬 많은 작업을 처리한다면 무엇을 확인해야 할까요?",
+            options: ["태블릿 분포와 버킷 키의 데이터 쏠림", "제목의 대소문자 표기"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 태블릿 배치나 키 값이 고르지 않으면 작업 부하가 불균형해지는 경우가 많습니다.",
+            incorrectFeedback: "화면 표시 방식은 물리적 데이터 분포에 영향을 주지 않습니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 테이블 검증 과정"
+            focusIndex={3}
+            items={[
+                { title: "데이터 적재", description: "실제 워크로드를 대표하는 데이터 양" },
+                { title: "검사", description: "파티션 + 태블릿" },
+                { title: "EXPLAIN", description: "프루닝 + 실행 계획" },
+                { title: "프로파일 확인", description: "실행 시 관측된 데이터" },
+                { title: "개선", description: "필요하면 다시 생성" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>
