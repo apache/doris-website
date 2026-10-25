@@ -7,9 +7,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        width: 36px;
         min-height: 36px;
-        padding: 0 8px;
+        padding: 0;
         cursor: pointer;
         list-style: none;
         border-radius: 5px;
@@ -22,12 +22,9 @@
         outline: 2px solid var(--brand-primary);
         outline-offset: 2px;
     }
-    &__globe {
-        font-size: 19px;
-        line-height: 1;
-    }
-    &__compact-label {
-        display: none;
+    &__icon {
+        display: block;
+        flex-shrink: 0;
     }
     &__panel {
         position: absolute;
@@ -93,17 +90,6 @@
 }
 @media (max-width: 600px) {
     .navbar-next .language-menu {
-        &__full-label {
-            display: none;
-        }
-        &__compact-label {
-            display: inline;
-            font-size: 11px;
-        }
-        summary {
-            padding-inline: 5px;
-            gap: 4px;
-        }
         &__panel {
             position: fixed;
             top: calc(var(--home-next-banner-height, 0px) + var(--navbar-next-height, 56px) + 8px);

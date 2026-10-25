@@ -40,7 +40,6 @@ export function LanguageMenu({
     const summaryLabel = appearance
         ? `${label} / ${translate({ id: 'homepage.theme.label', message: 'Color theme' })}`
         : label;
-    const compactLabel = { en: 'EN', 'zh-CN': '中文', ja: 'JA', ko: 'KO', ru: 'RU' }[currentLocale] ?? currentLocale;
     const close = () => {
         if (details.current) {
             details.current.open = false;
@@ -60,13 +59,21 @@ export function LanguageMenu({
                 aria-label={`${summaryLabel}: ${localeConfigs[currentLocale].label}`}
                 title={`${summaryLabel}: ${localeConfigs[currentLocale].label}`}
             >
-                <span className="language-menu__globe" aria-hidden="true">
-                    ◎
-                </span>
-                <span className="language-menu__full-label">{mobile ? label : localeConfigs[currentLocale].label}</span>
-                <span className="language-menu__compact-label" aria-hidden="true">
-                    {compactLabel}
-                </span>
+                <svg
+                    className="language-menu__icon"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <path d="m5 8 6 6m-7 0 6-6 2-3M2 5h12M7 2h1m14 20-5-10-5 10m2-4h6" />
+                </svg>
             </summary>
             <div className="language-menu__panel">
                 {appearance && <div className="language-menu__heading">{label}</div>}
