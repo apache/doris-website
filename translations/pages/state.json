@@ -459,13 +459,15 @@
       "targetFiles": [
         "i18n/ja/code.json"
       ],
-      "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
+      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
+      "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
-      ]
+      ],
+      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
       "contentId": "page:P04",
@@ -481,13 +483,15 @@
       "targetFiles": [
         "i18n/ko/code.json"
       ],
-      "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
+      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
+      "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
-      ]
+      ],
+      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
       "contentId": "page:P04",
@@ -503,15 +507,15 @@
       "targetFiles": [
         "i18n/ru/code.json"
       ],
-      "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
+      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
-      "reviewedAt": "2026-10-25T02:17:50.928211+00:00"
+      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
       "contentId": "page:P05",

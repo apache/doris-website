@@ -301,13 +301,17 @@ also contain the legacy `marketing.pageLanguage` label, which the global
 language entry has replaced. Official names, technical terms, units and
 placeholder-only templates retain their intended spelling.
 
-Two document dependencies remain separate from the existing page translations:
-the renamed Changelog / Table Stream documents in Japanese and Korean. Korean
-current/4.x candidates already belong to
-[#4501](https://github.com/apache/doris-website/pull/4501); Japanese current/4.x
-generation is restricted to those exact source files in
-[run 40153250578](https://github.com/apache/doris-website/actions/runs/40153250578).
-Use the normal complete-document translation and review flow. Do not duplicate
-active candidates or create metadata stubs. After those changes merge, regenerate
-cards, review the resulting P04 source drift and repeat the default verifier and
-production acceptance before declaring all 21 translated page units complete.
+The renamed Japanese and Korean Changelog / Table Stream documents have been
+merged through [#4504](https://github.com/apache/doris-website/pull/4504) and
+[#4501](https://github.com/apache/doris-website/pull/4501). The generated card now
+uses their localized metadata. The post-merge review checks all 47 cards against
+141 current target documents, including the complete Changelog bodies.
+
+For subsequent document updates, regenerate the cards and inspect the actual
+metadata diff and native document decisions before refreshing P04's source
+digests and review source. The shared generated file can require a fresh review
+for several locales even when one locale's visible card text is unchanged.
+Preserve target digests unless the translated messages themselves changed and
+were reviewed. Use the normal complete-document workflow for missing bodies,
+then repeat the default verifier and production acceptance before declaring all
+21 translated page units complete.
