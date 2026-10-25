@@ -120,10 +120,17 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
     // /community-report#2026-06-22. Read on mount (client-only; window is
     // undefined during SSR) and fall back to the latest report.
     useEffect(() => {
-        const hash = window.location.hash.replace(/^#/, '');
-        if (hash && reports.some(r => r.id === hash)) {
-            setSelectedId(hash);
-        }
+        const selectFromHash = () => {
+            const hash = window.location.hash.replace(/^#/, '');
+            if (hash && reports.some(report => report.id === hash)) setSelectedId(hash);
+        };
+        selectFromHash();
+        window.addEventListener('hashchange', selectFromHash);
+        window.addEventListener('popstate', selectFromHash);
+        return () => {
+            window.removeEventListener('hashchange', selectFromHash);
+            window.removeEventListener('popstate', selectFromHash);
+        };
     }, [reports]);
 
     useEffect(() => {

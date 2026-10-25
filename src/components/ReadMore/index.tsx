@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
 import React from 'react';
 
@@ -12,7 +13,7 @@ export default function ReadMore(props: ReadMoreProps) {
             className={`flex group text-primary items-center cursor-pointer hover:no-underline ${props?.className}`}
             to={props.to}
         >
-            <span className="mr-2 font-medium">Read more</span>
+            <span className="mr-2 font-medium">{translate({id: "landing.index.001", message: "Read more"})}</span>
             <span className="transition-slide">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

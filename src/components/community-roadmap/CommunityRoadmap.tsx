@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import Link from '@docusaurus/Link';
 import { LayoutNext } from '../home-next/LayoutNext';
@@ -22,28 +23,28 @@ interface DevelopmentDestination {
 const DESTINATIONS: DevelopmentDestination[] = [
     {
         phase: 'Understand the direction',
-        title: 'Roadmap',
+        title: translate({id: "landing.CommunityRoadmap.001", message: "Roadmap"}),
         titleDetail: '2026',
-        description: 'Start with the high-level direction and priorities shaping Apache Doris.',
+        description: translate({id: "landing.CommunityRoadmap.002", message: "Start with the high-level direction and priorities shaping Apache Doris."}),
         meta: 'Issue #60036',
         href: ROADMAP_URL,
-        ariaLabel: 'Read the Apache Doris Roadmap 2026 on GitHub (opens in a new tab)',
+        ariaLabel: translate({id: "landing.CommunityRoadmap.003", message: "Read the Apache Doris Roadmap 2026 on GitHub (opens in a new tab)"}),
     },
     {
         phase: 'Follow active work',
-        title: 'Tracking Issues',
-        description: 'Explore topic-level coordination across features, improvements, and engineering work.',
+        title: translate({id: "landing.CommunityRoadmap.004", message: "Tracking Issues"}),
+        description: translate({id: "landing.CommunityRoadmap.005", message: "Explore topic-level coordination across features, improvements, and engineering work."}),
         meta: 'Live label search',
         href: TRACKING_ISSUES_URL,
-        ariaLabel: 'Browse open Apache Doris tracking issues on GitHub (opens in a new tab)',
+        ariaLabel: translate({id: "landing.CommunityRoadmap.006", message: "Browse open Apache Doris tracking issues on GitHub (opens in a new tab)"}),
     },
     {
         phase: 'Find a place to contribute',
-        title: 'Good First Issue',
-        description: 'Begin with a curated path toward approachable work for new contributors.',
+        title: translate({id: "landing.CommunityRoadmap.007", message: "Good First Issue"}),
+        description: translate({id: "landing.CommunityRoadmap.008", message: "Begin with a curated path toward approachable work for new contributors."}),
         meta: 'Issue #17176',
         href: GOOD_FIRST_ISSUE_URL,
-        ariaLabel: 'View Apache Doris Good First Issue opportunities on GitHub (opens in a new tab)',
+        ariaLabel: translate({id: "landing.CommunityRoadmap.009", message: "View Apache Doris Good First Issue opportunities on GitHub (opens in a new tab)"}),
     },
 ];
 
@@ -62,35 +63,35 @@ const RELEASE_PLAN: ReleasePlanEntry[] = [
         stage: 'shipping',
         status: 'Winding down',
         timing: 'Aug 2026',
-        description: 'The maintenance window is closing with a final 4.0.x patch release.',
+        description: translate({id: "landing.CommunityRoadmap.010", message: "The maintenance window is closing with a final 4.0.x patch release."}),
     },
     {
         version: '4.1',
         stage: 'shipping',
         status: 'In maintenance',
         timing: 'Monthly',
-        description: 'Under regular maintenance, with a 4.1.x patch release roughly every month.',
+        description: translate({id: "landing.CommunityRoadmap.011", message: "Under regular maintenance, with a 4.1.x patch release roughly every month."}),
     },
     {
         version: '4.2',
         stage: 'planned',
         status: 'Planned',
         timing: 'Sep 2026',
-        description: 'A feature release focused on the multimodal lakehouse and stronger search capabilities.',
+        description: translate({id: "landing.CommunityRoadmap.012", message: "A feature release focused on the multimodal lakehouse and stronger search capabilities."}),
     },
     {
         version: '5.0',
         stage: 'planned',
         status: 'Planned',
         timing: 'Nov 2026',
-        description: 'A feature release focused on real-time incremental computation.',
+        description: translate({id: "landing.CommunityRoadmap.013", message: "A feature release focused on real-time incremental computation."}),
     },
 ];
 
 function ExternalArrow(): JSX.Element {
     return (
         <span className="community-roadmap__card-arrow" aria-hidden="true">
-            ↗
+            {translate({id: "landing.CommunityRoadmap.014", message: "↗"})}
         </span>
     );
 }
@@ -98,8 +99,8 @@ function ExternalArrow(): JSX.Element {
 export default function CommunityRoadmap(): JSX.Element {
     return (
         <LayoutNext
-            title="Community Development"
-            description="Explore the Apache Doris roadmap, active tracking issues, and approachable contribution opportunities."
+            title={translate({id: "landing.CommunityRoadmap.015", message: "Community Development"})}
+            description={translate({id: "landing.CommunityRoadmap.016", message: "Explore the Apache Doris roadmap, active tracking issues, and approachable contribution opportunities."})}
         >
             <div className="community-roadmap">
                 <div className="community-roadmap__background" aria-hidden="true" />
@@ -108,16 +109,15 @@ export default function CommunityRoadmap(): JSX.Element {
                     <header className="community-roadmap__hero">
                         <div className="community-roadmap__hero-title">
                             <h1>
-                                See what we’re <span>building next.</span>
+                                {translate({id: "landing.CommunityRoadmap.017", message: "See what we’re"})} <span>{translate({id: "landing.CommunityRoadmap.018", message: "building next."})}</span>
                             </h1>
                         </div>
                         <p className="community-roadmap__intro">
-                            <strong>Apache Doris plans and builds in the open.</strong> Use this guide to understand the
-                            direction, follow active engineering work, and find a place to contribute.
+                            <strong>{translate({id: "landing.CommunityRoadmap.019", message: "Apache Doris plans and builds in the open."})}</strong> {translate({id: "landing.CommunityRoadmap.020", message: "Use this guide to understand the direction, follow active engineering work, and find a place to contribute."})}
                         </p>
                     </header>
 
-                    <section className="community-roadmap__destinations" aria-label="Community development links">
+                    <section className="community-roadmap__destinations" aria-label={translate({id: "landing.CommunityRoadmap.021", message: "Community development links"})}>
                         <div className="community-roadmap__grid">
                             {DESTINATIONS.map((destination, index) => (
                                 <a
@@ -140,7 +140,7 @@ export default function CommunityRoadmap(): JSX.Element {
                                         {destination.titleDetail && <span>{destination.titleDetail}</span>}
                                     </h3>
                                     <p className="community-roadmap__card-description">{destination.description}</p>
-                                    <p className="community-roadmap__card-meta">Opens on GitHub · {destination.meta}</p>
+                                    <p className="community-roadmap__card-meta">{translate({id: "landing.CommunityRoadmap.022", message: "Opens on GitHub ·"})} {destination.meta}</p>
                                 </a>
                             ))}
                         </div>
@@ -149,14 +149,13 @@ export default function CommunityRoadmap(): JSX.Element {
                     <section className="community-roadmap__releases" aria-labelledby="community-roadmap-releases-title">
                         <div className="community-roadmap__section-head">
                             <div>
-                                <h2 id="community-roadmap-releases-title">Release plan</h2>
+                                <h2 id="community-roadmap-releases-title">{translate({id: "landing.CommunityRoadmap.023", message: "Release plan"})}</h2>
                                 <p className="community-roadmap__section-note">
-                                    What the community expects to ship over the coming months. Dates are current
-                                    expectations and may shift.
+                                    {translate({id: "landing.CommunityRoadmap.024", message: "What the community expects to ship over the coming months. Dates are current expectations and may shift."})}
                                 </p>
                             </div>
                             <Link className="community-roadmap__section-link" to={ALL_RELEASES_PATH}>
-                                All release notes →
+                                {translate({id: "landing.CommunityRoadmap.025", message: "All release notes →"})}
                             </Link>
                         </div>
 
@@ -179,7 +178,7 @@ export default function CommunityRoadmap(): JSX.Element {
                     </section>
 
                     <div className="community-roadmap__footer-action">
-                        <Link to="/community/how-to-contribute/contribute-to-doris">Read the contribution guide →</Link>
+                        <Link to="/community/how-to-contribute/contribute-to-doris">{translate({id: "landing.CommunityRoadmap.026", message: "Read the contribution guide →"})}</Link>
                     </div>
                 </div>
             </div>

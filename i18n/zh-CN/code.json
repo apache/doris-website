@@ -10053,5 +10053,629 @@
     "landing.reportRefs.3496f634e491fcfa": {
         "message": "BE 在取消查询前，使暂停查询在进程内存压力下继续等待",
         "description": "[fix](be) Keep paused queries waiting under process memory pressure before cancelling"
+    },
+    "landing.index.001": {
+        "message": "了解更多",
+        "description": "Read more"
+    },
+    "landing.UsersNext.001": {
+        "message": "开启实时数据之旅",
+        "description": "Start real-time journey"
+    },
+    "landing.UsersNext.002": {
+        "message": "携手",
+        "description": "with"
+    },
+    "landing.UsersNext.003": {
+        "message": "创新者",
+        "description": "innovators"
+    },
+    "landing.UsersNext.004": {
+        "message": "全球超过 10,000 家领先企业与组织正在使用 Apache Doris。",
+        "description": "Over 10,000+ global leaders and enterprises are powered by Apache Doris."
+    },
+    "landing.UsersNext.005": {
+        "message": "分享您的故事",
+        "description": "Share your story"
+    },
+    "landing.UsersNext.006": {
+        "message": "查看更多",
+        "description": "View more"
+    },
+    "landing.UsersNext.007": {
+        "message": "Apache Doris 用户案例｜与创新者共启实时数据之旅",
+        "description": "Apache Doris - User Stories | Start real-time journey with innovators"
+    },
+    "landing.UsersNext.008": {
+        "message": "全球超过 10,000 家领先企业与组织使用 Apache Doris，以 OLAP 数据库支持湖仓分析、即席分析、用户行为分析等真实业务场景。",
+        "description": "Over 10,000 global leaders and enterprises are powered by Apache Doris, using OLAP DBMS to drive real-world applications, from lakehouse and ad-hoc analytics to user behavior analytics and more."
+    },
+    "landing.DownloadFormNext.001": {
+        "message": "如何选择版本",
+        "description": "Which version to choose"
+    },
+    "landing.DownloadFormNext.002": {
+        "message": "升级须知",
+        "description": "Upgrade notes"
+    },
+    "landing.DownloadFormNext.003": {
+        "message": "归档版本",
+        "description": "Archived releases"
+    },
+    "landing.DownloadFormNext.004": {
+        "message": "下载",
+        "description": "Download"
+    },
+    "landing.DownloadFormNext.005": {
+        "message": "下载 Apache Doris 当前维护分支的二进制包和源码包。每项下载均提供签名与校验和。",
+        "description": "Verified binaries and source tarballs for the release branches Apache Doris currently maintains. Every download is signed and checksummed."
+    },
+    "landing.DownloadFormNext.006": {
+        "message": "维护中的分支：",
+        "description": "Maintained branches —"
+    },
+    "landing.DownloadFormNext.007": {
+        "message": "暂无 ",
+        "description": "No "
+    },
+    "landing.DownloadFormNext.008": {
+        "message": " 架构的构建，版本：",
+        "description": " build for "
+    },
+    "landing.DownloadFormNext.009": {
+        "message": "如何校验",
+        "description": "How to verify"
+    },
+    "landing.DownloadFormNext.010": {
+        "message": "下载",
+        "description": "Download"
+    },
+    "landing.DownloadFormNext.011": {
+        "message": "已复制下载链接",
+        "description": "Download link copied"
+    },
+    "landing.DownloadFormNext.012": {
+        "message": "复制下载链接",
+        "description": "Copy download link"
+    },
+    "landing.DownloadFormNext.013": {
+        "message": "已复制",
+        "description": "Copied"
+    },
+    "landing.DownloadFormNext.014": {
+        "message": "复制下载链接",
+        "description": "Copy download link"
+    },
+    "landing.DownloadFormNext.015": {
+        "message": "已复制下载链接",
+        "description": "Download link copied"
+    },
+    "landing.DownloadFormNext.016": {
+        "message": "维护中",
+        "description": "Maintained"
+    },
+    "landing.DownloadFormNext.017": {
+        "message": "Doris 发行版本",
+        "description": "Doris Releases"
+    },
+    "landing.DownloadFormNext.018": {
+        "message": "Doris 以源码压缩包形式发布，同时提供便于使用的二进制包。部署前，请使用 ASC 签名或 SHA-512 校验和验证每项下载。",
+        "description": "Doris is released as source tarballs, with binary tarballs built for convenience. Verify every download against its ASC signature or SHA-512 checksum before you deploy it."
+    },
+    "landing.DownloadFormNext.019": {
+        "message": "这里列出维护分支的所有补丁版本。补丁版本支持双向兼容，因此升级到当前分支的最新补丁版本无需迁移数据。",
+        "description": "Every patch on a maintained branch is listed here. Patch releases are compatible in both directions, so moving to the newest patch on your branch needs no data migration."
+    },
+    "landing.DownloadFormNext.020": {
+        "message": "版本说明",
+        "description": "Release note"
+    },
+    "landing.DownloadFormNext.021": {
+        "message": "升级注意事项请参阅",
+        "description": "For upgrade precautions see the"
+    },
+    "landing.DownloadFormNext.022": {
+        "message": "部署",
+        "description": "deployment"
+    },
+    "landing.DownloadFormNext.023": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.DownloadFormNext.024": {
+        "message": "集群升级",
+        "description": "cluster upgrade"
+    },
+    "landing.DownloadFormNext.025": {
+        "message": "文档。",
+        "description": "manuals."
+    },
+    "landing.DownloadFormNext.026": {
+        "message": "维护中",
+        "description": "Maintained"
+    },
+    "landing.DownloadFormNext.027": {
+        "message": "Doris 生态",
+        "description": "Doris Ecosystem"
+    },
+    "landing.DownloadFormNext.028": {
+        "message": "用于向 Doris 导入数据或从 Doris 读取数据的连接器和工具。这里仅列出维护中的版本；旧版连接器请查看",
+        "description": "Connectors and tools for loading into and reading out of Doris. Only maintained versions are listed; older connector lines are in the"
+    },
+    "landing.DownloadFormNext.029": {
+        "message": "归档",
+        "description": "archive"
+    },
+    "landing.DownloadFormNext.030": {
+        "message": "版本说明",
+        "description": "Release Notes"
+    },
+    "landing.DownloadFormNext.031": {
+        "message": "更多工具",
+        "description": "More Tools"
+    },
+    "landing.DownloadFormNext.032": {
+        "message": "归档版本",
+        "description": "Archived Releases"
+    },
+    "landing.DownloadFormNext.033": {
+        "message": "这些版本不再获得任何更新，包括安全补丁。",
+        "description": "These versions receive no further releases of any kind, security patches included."
+    },
+    "landing.DownloadFormNext.034": {
+        "message": "在这些版本中发现的漏洞将不再修复。",
+        "description": "A vulnerability found in one of them stays unfixed there, permanently."
+    },
+    "landing.DownloadFormNext.035": {
+        "message": "升级指南",
+        "description": "Upgrade guide"
+    },
+    "landing.DownloadFormNext.036": {
+        "message": "向 ASF 安全团队报告漏洞",
+        "description": "Report a vulnerability to the ASF security team"
+    },
+    "landing.DownloadFormNext.037": {
+        "message": "灵活部署",
+        "description": "Run anywhere"
+    },
+    "landing.DownloadFormNext.038": {
+        "message": "在您选择的环境中部署 Doris，支持物理服务器、Kubernetes 和云环境。",
+        "description": "Deploy Doris in your environment of choice — from bare metal to Kubernetes to the cloud."
+    },
+    "landing.DownloadFormNext.039": {
+        "message": "查看部署方式",
+        "description": "Explore deployment options"
+    },
+    "landing.downloadformallrelease.001": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformallrelease.002": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformallrelease.003": {
+        "message": "架构",
+        "description": "Architecture"
+    },
+    "landing.downloadformallrelease.004": {
+        "message": "架构",
+        "description": "Architecture"
+    },
+    "landing.downloadformallrelease.005": {
+        "message": "压缩包",
+        "description": "Tarball"
+    },
+    "landing.downloadformallrelease.006": {
+        "message": "压缩包",
+        "description": "Tarball"
+    },
+    "landing.downloadformallrelease.007": {
+        "message": "下载",
+        "description": "Download"
+    },
+    "landing.downloadformallrelease.008": {
+        "message": "复制链接",
+        "description": "Copy link"
+    },
+    "landing.downloadformallrelease.009": {
+        "message": "下载项",
+        "description": "Downloads"
+    },
+    "landing.downloadformarchive.001": {
+        "message": "归档下载",
+        "description": "Archived download"
+    },
+    "landing.downloadformarchive.002": {
+        "message": "项目",
+        "description": "Project"
+    },
+    "landing.downloadformarchive.003": {
+        "message": "项目",
+        "description": "Project"
+    },
+    "landing.downloadformtools.001": {
+        "message": "工具",
+        "description": "Tools"
+    },
+    "landing.downloadformtools.002": {
+        "message": "工具",
+        "description": "Tools"
+    },
+    "landing.downloadformtools.003": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformtools.004": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformtools.005": {
+        "message": "架构",
+        "description": "Architecture"
+    },
+    "landing.downloadformtools.006": {
+        "message": "架构",
+        "description": "Architecture"
+    },
+    "landing.downloadformtools.007": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformtools.008": {
+        "message": "版本",
+        "description": "Version"
+    },
+    "landing.downloadformtools.009": {
+        "message": "压缩包",
+        "description": "Tarball"
+    },
+    "landing.downloadformtools.010": {
+        "message": "压缩包",
+        "description": "Tarball"
+    },
+    "landing.downloadformtools.011": {
+        "message": "Docker 命令",
+        "description": "Docker command"
+    },
+    "landing.downloadformtools.012": {
+        "message": "复制 Docker 拉取命令",
+        "description": "Copy Docker pull command"
+    },
+    "landing.downloadformtools.013": {
+        "message": "复制",
+        "description": "Copy"
+    },
+    "landing.downloadformtools.014": {
+        "message": "下载",
+        "description": "Download"
+    },
+    "landing.downloadformtools.015": {
+        "message": "复制链接",
+        "description": "Copy link"
+    },
+    "landing.downloadformtools.016": {
+        "message": "下载项",
+        "description": "Downloads"
+    },
+    "landing.brandassets.001": {
+        "message": "Doris 标志：横版",
+        "description": "Doris Logo - Horizontal"
+    },
+    "landing.brandassets.002": {
+        "message": "适用于浅色背景的主要 Doris 标志。",
+        "description": "Primary Doris logo for light backgrounds."
+    },
+    "landing.brandassets.003": {
+        "message": "Doris 标志：上下排版",
+        "description": "Doris Logo - Stacked"
+    },
+    "landing.brandassets.004": {
+        "message": "适用于浅色背景的居中 Doris 标志。",
+        "description": "Centered Doris logo for light backgrounds."
+    },
+    "landing.brandassets.005": {
+        "message": "Doris 标志：横版深色背景",
+        "description": "Doris Logo - Horizontal Dark"
+    },
+    "landing.brandassets.006": {
+        "message": "适用于深色背景、带白色文字的 Doris 标志。",
+        "description": "Doris logo with white wordmark for dark backgrounds."
+    },
+    "landing.brandassets.007": {
+        "message": "Doris 标志：上下排版深色背景",
+        "description": "Doris Logo - Stacked Dark"
+    },
+    "landing.brandassets.008": {
+        "message": "适用于深色背景、带白色文字的居中 Doris 标志。",
+        "description": "Centered Doris logo with white wordmark for dark backgrounds."
+    },
+    "landing.brandassets.009": {
+        "message": "Doris 标志：横版白色",
+        "description": "Doris Logo - Horizontal White"
+    },
+    "landing.brandassets.010": {
+        "message": "适用于深色背景的单色 Doris 标志。",
+        "description": "Single-color Doris logo for dark backgrounds."
+    },
+    "landing.brandassets.011": {
+        "message": "Doris 标志：上下排版白色",
+        "description": "Doris Logo - Stacked White"
+    },
+    "landing.brandassets.012": {
+        "message": "适用于深色背景的居中单色 Doris 标志。",
+        "description": "Centered single-color Doris logo for dark backgrounds."
+    },
+    "landing.brandassets.013": {
+        "message": "Apache Doris 标志：横版",
+        "description": "Apache Doris Logo - Horizontal"
+    },
+    "landing.brandassets.014": {
+        "message": "适用于浅色背景的主要 Apache Doris 标志。",
+        "description": "Primary Apache Doris logo for light backgrounds."
+    },
+    "landing.brandassets.015": {
+        "message": "Apache Doris 标志：上下排版",
+        "description": "Apache Doris Logo - Stacked"
+    },
+    "landing.brandassets.016": {
+        "message": "适用于浅色背景的居中 Apache Doris 标志。",
+        "description": "Centered Apache Doris logo for light backgrounds."
+    },
+    "landing.brandassets.017": {
+        "message": "Apache Doris 标志：横版深色背景",
+        "description": "Apache Doris Logo - Horizontal Dark"
+    },
+    "landing.brandassets.018": {
+        "message": "适用于深色背景、带白色文字的 Apache Doris 标志。",
+        "description": "Apache Doris logo with white wordmark for dark backgrounds."
+    },
+    "landing.brandassets.019": {
+        "message": "Apache Doris 标志：上下排版深色背景",
+        "description": "Apache Doris Logo - Stacked Dark"
+    },
+    "landing.brandassets.020": {
+        "message": "适用于深色背景、带白色文字的居中 Apache Doris 标志。",
+        "description": "Centered Apache Doris logo with white wordmark for dark backgrounds."
+    },
+    "landing.brandassets.021": {
+        "message": "Apache Doris 标志：横版白色",
+        "description": "Apache Doris Logo - Horizontal White"
+    },
+    "landing.brandassets.022": {
+        "message": "适用于深色背景的单色 Apache Doris 标志。",
+        "description": "Single-color Apache Doris logo for dark backgrounds."
+    },
+    "landing.brandassets.023": {
+        "message": "Apache Doris 标志：上下排版白色",
+        "description": "Apache Doris Logo - Stacked White"
+    },
+    "landing.brandassets.024": {
+        "message": "适用于深色背景的居中单色 Apache Doris 标志。",
+        "description": "Centered single-color Apache Doris logo for dark backgrounds."
+    },
+    "landing.brandassets.025": {
+        "message": "Apache Doris 品牌素材",
+        "description": "Brand Assets - Apache Doris"
+    },
+    "landing.brandassets.026": {
+        "message": "下载 Apache Doris 官方标志和品牌 SVG 素材。",
+        "description": "Download official Apache Doris logo and brand SVG assets."
+    },
+    "landing.brandassets.027": {
+        "message": "资源",
+        "description": "Resources"
+    },
+    "landing.brandassets.028": {
+        "message": "品牌素材",
+        "description": "Brand Assets"
+    },
+    "landing.brandassets.029": {
+        "message": "下载 Apache Doris 官方 SVG 素材，用于文章、演示文稿、社区活动、集成方案，以及其他介绍本项目的材料。",
+        "description": "Download official Apache Doris SVG assets for articles, presentations, community events, integrations, and other materials that reference the project."
+    },
+    "landing.brandassets.030": {
+        "message": "Apache Doris、Doris 和 Doris 标志是 Apache 软件基金会的商标。使用这些素材时，请清晰、准确地指代 Apache Doris。",
+        "description": "Apache Doris, Doris, and the Doris logo are trademarks of The Apache Software Foundation. Use these assets to refer to Apache Doris clearly and accurately."
+    },
+    "landing.brandassets.031": {
+        "message": "预览",
+        "description": " preview"
+    },
+    "landing.brandassets.032": {
+        "message": "下载",
+        "description": "Download"
+    },
+    "landing.events.001": {
+        "message": "社区活动",
+        "description": "Events"
+    },
+    "landing.events.002": {
+        "message": "还有遗漏的活动？点击这里补充",
+        "description": "Are we missing any ? Click here to contribute"
+    },
+    "landing.events.003": {
+        "message": "本次分享将深入介绍 Apache Doris 如何支持 Iceberg 表上的实时查询，以兼顾灵活性与高性能。这也是当前行业广泛关注的问题。",
+        "description": "In this talk, We will deep-dive into how Apache Doris supports real-time queries on Iceberg tables, achieving flexible yet high-performance real-time queries—a problem that is attracting growing industry attention."
+    },
+    "landing.events.004": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.005": {
+        "message": "本次活动由 NebulaGraph 和 Apache Doris 联合举办，汇集行业代表与技术专家，探讨现代图技术和分析技术如何改变金融风控、可观测性及合规实践。",
+        "description": "This joint event, co-hosted by NebulaGraph and Apache Doris, brings together industry leaders and technical experts to explore how modern graph and analytics technologies are reshaping financial risk control, observability, and compliance."
+    },
+    "landing.events.006": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.007": {
+        "message": "欢迎参加 EMQ 与 VeloDB 面向开发者的 Meetup，了解如何使用 MQTT 和 Apache Doris 构建可扩展的实时数据管线。",
+        "description": "Join EMQ and VeloDB for a developer-focused meetup exploring how to build scalable, real-time data pipelines using MQTT and Apache Doris."
+    },
+    "landing.events.008": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.009": {
+        "message": "如果您正在使用 Snowflake，并考虑转向开源方案以降低成本或获得更高灵活性，欢迎参加下一场 VeloDB 线上分享。",
+        "description": "If you are using Snowflake and considering a move to open source to cut costs or gain more flexibility, do not miss the next VeloDB webinar! "
+    },
+    "landing.events.010": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.011": {
+        "message": "Apache Doris PMC 主席、VeloDB 技术副总裁陈明雨将介绍 Doris 为何适用于 AI 时代，分享实时分析技术的演进方向。",
+        "description": "Join Rayner Chen, Apache Doris PMC Chair and Tech VP at VeloDB, as he breaks down why Doris is purpose-built for the AI era. Hear directly from the expert shaping the future of real-time analytics."
+    },
+    "landing.events.012": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.013": {
+        "message": "Apache Doris PMC 主席将深入介绍 Doris 的存算分离模式。",
+        "description": "Apache Doris PMC Chair will dive deep into the compute-storage decoupled mode of Doris"
+    },
+    "landing.events.014": {
+        "message": "活动封面",
+        "description": "cover img"
+    },
+    "landing.events.015": {
+        "message": "一起深入了解 Apache Doris 在 2025 年的重点发展方向！",
+        "description": "Join us as we dive into the key development directions of Apache Doris in 2025 !"
+    },
+    "landing.events.016": {
+        "message": "地点图标",
+        "description": "address icon"
+    },
+    "landing.events.017": {
+        "message": "CommunityOverCode Asia 2025",
+        "description": "CommunityOverCode Asia 2025"
+    },
+    "landing.events.018": {
+        "message": "日期图标",
+        "description": "date icon"
+    },
+    "landing.events.019": {
+        "message": "活动语言：",
+        "description": "Event Language Type:"
+    },
+    "landing.events.020": {
+        "message": "英文",
+        "description": "English"
+    },
+    "landing.events.021": {
+        "message": "中文",
+        "description": "Chinese"
+    },
+    "landing.events.022": {
+        "message": "查看更多",
+        "description": "See More"
+    },
+    "landing.CommunityRoadmap.001": {
+        "message": "路线图",
+        "description": "Roadmap"
+    },
+    "landing.CommunityRoadmap.002": {
+        "message": "了解 Apache Doris 的总体发展方向和重点规划。",
+        "description": "Start with the high-level direction and priorities shaping Apache Doris."
+    },
+    "landing.CommunityRoadmap.003": {
+        "message": "在 GitHub 查看 Apache Doris 2026 路线图（将在新标签页打开）",
+        "description": "Read the Apache Doris Roadmap 2026 on GitHub (opens in a new tab)"
+    },
+    "landing.CommunityRoadmap.004": {
+        "message": "跟踪 Issue",
+        "description": "Tracking Issues"
+    },
+    "landing.CommunityRoadmap.005": {
+        "message": "按主题了解各项功能、改进及工程工作的协作进展。",
+        "description": "Explore topic-level coordination across features, improvements, and engineering work."
+    },
+    "landing.CommunityRoadmap.006": {
+        "message": "在 GitHub 浏览 Apache Doris 进行中的跟踪 Issue（将在新标签页打开）",
+        "description": "Browse open Apache Doris tracking issues on GitHub (opens in a new tab)"
+    },
+    "landing.CommunityRoadmap.007": {
+        "message": "适合新贡献者的 Issue",
+        "description": "Good First Issue"
+    },
+    "landing.CommunityRoadmap.008": {
+        "message": "从为新贡献者整理的入门任务开始参与。",
+        "description": "Begin with a curated path toward approachable work for new contributors."
+    },
+    "landing.CommunityRoadmap.009": {
+        "message": "在 GitHub 查看 Apache Doris 的新贡献者入门任务（将在新标签页打开）",
+        "description": "View Apache Doris Good First Issue opportunities on GitHub (opens in a new tab)"
+    },
+    "landing.CommunityRoadmap.010": {
+        "message": "维护窗口即将结束，计划发布最后一个 4.0.x 补丁版本。",
+        "description": "The maintenance window is closing with a final 4.0.x patch release."
+    },
+    "landing.CommunityRoadmap.011": {
+        "message": "定期维护，约每月发布一个 4.1.x 补丁版本。",
+        "description": "Under regular maintenance, with a 4.1.x patch release roughly every month."
+    },
+    "landing.CommunityRoadmap.012": {
+        "message": "聚焦多模态湖仓和更强搜索能力的功能版本。",
+        "description": "A feature release focused on the multimodal lakehouse and stronger search capabilities."
+    },
+    "landing.CommunityRoadmap.013": {
+        "message": "聚焦实时增量计算的功能版本。",
+        "description": "A feature release focused on real-time incremental computation."
+    },
+    "landing.CommunityRoadmap.014": {
+        "message": "↗",
+        "description": "↗"
+    },
+    "landing.CommunityRoadmap.015": {
+        "message": "社区开发",
+        "description": "Community Development"
+    },
+    "landing.CommunityRoadmap.016": {
+        "message": "了解 Apache Doris 路线图、进行中的跟踪 Issue，以及适合参与的贡献任务。",
+        "description": "Explore the Apache Doris roadmap, active tracking issues, and approachable contribution opportunities."
+    },
+    "landing.CommunityRoadmap.017": {
+        "message": "看看我们接下来",
+        "description": "See what we’re"
+    },
+    "landing.CommunityRoadmap.018": {
+        "message": "正在构建什么。",
+        "description": "building next."
+    },
+    "landing.CommunityRoadmap.019": {
+        "message": "Apache Doris 公开规划，开放共建。",
+        "description": "Apache Doris plans and builds in the open."
+    },
+    "landing.CommunityRoadmap.020": {
+        "message": "通过本页了解发展方向、跟进工程工作，并找到适合参与的贡献任务。",
+        "description": "Use this guide to understand the direction, follow active engineering work, and find a place to contribute."
+    },
+    "landing.CommunityRoadmap.021": {
+        "message": "社区开发入口",
+        "description": "Community development links"
+    },
+    "landing.CommunityRoadmap.022": {
+        "message": "在 GitHub 打开 ·",
+        "description": "Opens on GitHub ·"
+    },
+    "landing.CommunityRoadmap.023": {
+        "message": "版本计划",
+        "description": "Release plan"
+    },
+    "landing.CommunityRoadmap.024": {
+        "message": "社区预计在未来几个月交付的版本。日期为当前预期，后续可能调整。",
+        "description": "What the community expects to ship over the coming months. Dates are current expectations and may shift."
+    },
+    "landing.CommunityRoadmap.025": {
+        "message": "所有版本说明 →",
+        "description": "All release notes →"
+    },
+    "landing.CommunityRoadmap.026": {
+        "message": "阅读贡献指南 →",
+        "description": "Read the contribution guide →"
     }
 }
