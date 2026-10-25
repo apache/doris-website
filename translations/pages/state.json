@@ -57,9 +57,9 @@
         "homepage"
       ],
       "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P01",
@@ -266,8 +266,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P02",
@@ -375,8 +375,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P03",
@@ -457,8 +457,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P04",
@@ -535,13 +535,14 @@
     {
       "contentId": "page:P05",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/ReadMore/index.tsx",
         "src/components/user-item/user-item.css",
         "src/components/user-item/user-item.tsx",
         "src/components/why-doris-next/UsersNext.scss",
         "src/components/why-doris-next/UsersNext.tsx",
+        "src/components/why-doris-next/user-story-localization.js",
         "src/constant/user.data.tsx",
         "src/constant/users.data.json",
         "src/pages/why-doris/users/index.tsx",
@@ -681,10 +682,13 @@
         "static/images/user-logo/Telecom & Manufacturing/Wuling Motors.jpg",
         "static/images/user-logo/Telecom & Manufacturing/ZTE.jpg"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "cc12416cf9494de15597003e40491c91a2197b819a99dc0d293cb0cf07660438",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P05",
@@ -1163,8 +1167,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P06",
@@ -1265,8 +1269,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P07",
@@ -1367,8 +1371,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P08",
@@ -1466,8 +1470,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P09",
@@ -1541,7 +1545,7 @@
     {
       "contentId": "page:P10",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/arrow-down-icon.tsx",
         "src/components/Icons/checked-icon.tsx",
@@ -1557,10 +1561,13 @@
         "src/constant/download.data.ts",
         "src/pages/download/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "2c6fbd30ffcd96d411635795f83d34e5c2a7d87a896260ec9e2d94795cdac74d",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P10",
@@ -1631,15 +1638,18 @@
     {
       "contentId": "page:P11",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
         "src/pages/brand-assets/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P11",
@@ -1677,7 +1687,7 @@
     {
       "contentId": "page:P12",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/arrow-down.tsx",
         "src/pages/events/index.tsx",
@@ -1721,10 +1731,13 @@
         "static/images/events/webniar-4.jpeg",
         "static/images/events/webniar-5.jpeg"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "200a8b63e6fe724f7e2b03b44642380ce5b34aeed12b7a40c3bc34d35378eb10",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P12",
@@ -1879,16 +1892,19 @@
     {
       "contentId": "page:P13",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/community-roadmap/CommunityRoadmap.scss",
         "src/components/community-roadmap/CommunityRoadmap.tsx",
         "src/pages/community/roadmap/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "04aea9fc522482abd7826e6bc880d753a67c298e71a743cb8b660ba599924aa3",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P13",
@@ -1957,9 +1973,9 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "b6014f32b4b3315fc2c5fea9f262398c7bfade8d1b8aeed8cbdbc08559b8d7a5",
-      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
-      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
+      "sourceHash": "d656a0b84c0682380e783564d73ea511222e5cf52f8edbfccdd48c7151033f3c",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P14",
@@ -2511,7 +2527,7 @@
     {
       "contentId": "page:P21",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/profile-analysis/AiAnalysisForm.tsx",
         "src/components/profile-analysis/AnalysisMarkdown.tsx",
@@ -2527,6 +2543,7 @@
         "src/components/profile-analysis/profile-analysis.api.ts",
         "src/components/profile-analysis/profile-analysis.dag.ts",
         "src/components/profile-analysis/profile-analysis.file.ts",
+        "src/components/profile-analysis/profile-analysis.messages.ts",
         "src/components/profile-analysis/profile-analysis.parser-client.ts",
         "src/components/profile-analysis/profile-analysis.parser-protocol.ts",
         "src/components/profile-analysis/profile-analysis.parser.ts",
@@ -2537,10 +2554,13 @@
         "src/components/profile-analysis/use-profile-analysis.ts",
         "src/pages/profile-analysis/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "da7de9d9a7cbda289ca2124dfb2abadd901b348c83c2b862e7b807bc0cda17b9",
+      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
     },
     {
       "contentId": "page:P21",
