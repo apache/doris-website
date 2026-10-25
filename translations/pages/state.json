@@ -56,10 +56,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
+      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P01",
@@ -116,10 +116,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
     },
     {
       "contentId": "page:P01",
@@ -176,10 +176,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
     },
     {
       "contentId": "page:P01",
@@ -236,10 +236,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
     },
     {
       "contentId": "page:P02",
@@ -266,8 +266,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P02",
@@ -293,10 +293,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928102+00:00"
     },
     {
@@ -323,10 +323,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928204+00:00"
     },
     {
@@ -353,10 +353,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928206+00:00"
     },
     {
@@ -375,8 +375,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P03",
@@ -393,10 +393,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928207+00:00"
     },
     {
@@ -414,10 +414,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928208+00:00"
     },
     {
@@ -435,10 +435,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928209+00:00"
     },
     {
@@ -457,8 +457,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P04",
@@ -475,13 +475,13 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -499,13 +499,13 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -523,13 +523,13 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -687,8 +687,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "cc12416cf9494de15597003e40491c91a2197b819a99dc0d293cb0cf07660438",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P05",
@@ -1167,8 +1167,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P06",
@@ -1190,10 +1190,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928212+00:00"
     },
     {
@@ -1216,10 +1216,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928213+00:00"
     },
     {
@@ -1242,10 +1242,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928215+00:00"
     },
     {
@@ -1269,8 +1269,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P07",
@@ -1292,10 +1292,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928216+00:00"
     },
     {
@@ -1318,10 +1318,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928217+00:00"
     },
     {
@@ -1344,10 +1344,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928218+00:00"
     },
     {
@@ -1371,8 +1371,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P08",
@@ -1394,10 +1394,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928219+00:00"
     },
     {
@@ -1420,10 +1420,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928220+00:00"
     },
     {
@@ -1446,10 +1446,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928221+00:00"
     },
     {
@@ -1470,8 +1470,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P09",
@@ -1490,10 +1490,10 @@
         "i18n/ja/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
+      "targetHash": "e9aab65db36b7abab8469eb6624d99eeb80536d7e1c101539fd05308a4ef22bd",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928221+00:00"
     },
     {
@@ -1513,10 +1513,10 @@
         "i18n/ko/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
+      "targetHash": "9cde09a22cfe4f14119d1790d698c1c6616d523a3c22f058b1cb85521373c414",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928222+00:00"
     },
     {
@@ -1536,10 +1536,10 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
+      "targetHash": "f19f175f455664a38f60e8e154f32862ea6b6cc44941bb4acc3560f6f400d582",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
-      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
       "reviewedAt": "2026-10-25T02:17:50.928223+00:00"
     },
     {
@@ -1566,8 +1566,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "2c6fbd30ffcd96d411635795f83d34e5c2a7d87a896260ec9e2d94795cdac74d",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P10",
@@ -1648,8 +1648,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P11",
@@ -1736,8 +1736,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "200a8b63e6fe724f7e2b03b44642380ce5b34aeed12b7a40c3bc34d35378eb10",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P12",
@@ -1903,8 +1903,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "04aea9fc522482abd7826e6bc880d753a67c298e71a743cb8b660ba599924aa3",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P13",
@@ -1974,8 +1974,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "d656a0b84c0682380e783564d73ea511222e5cf52f8edbfccdd48c7151033f3c",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P14",
@@ -2036,8 +2036,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P15",
@@ -2116,8 +2116,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "3d1c44d11b35385356c1254afadae40ed492110abfc9d5406d603585bfd23a63",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P16",
@@ -2205,8 +2205,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "ea46072e6b95eaea26b71cd718979c46ba20acbee027800a115ca3c7bae76ef9",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P17",
@@ -2294,8 +2294,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "d73b197f3be189748bc2cf90cf871bcfcc9ffce5ed5940961741be5722ea8036",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P18",
@@ -2383,8 +2383,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "009c25f0cea8f61ecd48644d2f53c3434503616f31334a79a33061983525ad6a",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P19",
@@ -2474,8 +2474,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "c042b831019f02534aa64a7d7d8009fc684f2460a9eee4237a6ee28600aecc26",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P20",
@@ -2578,8 +2578,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "da7de9d9a7cbda289ca2124dfb2abadd901b348c83c2b862e7b807bc0cda17b9",
-      "targetHash": "ff0219feab5e764b485f93bea95d9590a2893cf37e70fd3577d5be38b1ce2231",
-      "reviewedSourceCommit": "b0b099625f05f022f75f7f5354f10449338d07dc"
+      "targetHash": "8b22f59ef35a97142769da2fc16da3afe5485af9a61fb540ebad351736731395",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
     {
       "contentId": "page:P21",
