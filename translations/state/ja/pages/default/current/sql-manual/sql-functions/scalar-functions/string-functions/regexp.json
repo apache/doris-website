@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "c860cf45635c80f0cc324f001985ee7540b72104d71e0c27394d43afe0571a50",
-    "sourceTechnicalHash": "9332d60d9df19daa215e3dd847ef43bb5772bcf5a248cee53aab4fad80ab778a",
-    "targetHash": "ca8cd4f533a93e9321a77aa076795632c3b89cce82fdb1357bfe8894efdada44",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+    "sourceTechnicalHash": "7bc16e38638c962a7f6de0064a0e4da4d4487997df434d6d10f6b9738c88d6fa",
+    "targetHash": "20481cc6e3adc5043d4457bb71e6fbcfcb8e39cd583d1754125024f6ee6f95e4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:01:49.809Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:46:04.808Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "d04c3ede27f2f7f4a9c313c9008a457989e7eead493fcaa614ce1e85b7584934",
+      "targetHash": "20481cc6e3adc5043d4457bb71e6fbcfcb8e39cd583d1754125024f6ee6f95e4",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]; received [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]\nprotected node 20: expected [\"inlineCode\",null,null,\"enable_hyperscan_fallback\"]; received [\"link\",\"../../../basic-element/session-variables.md#enable_hyperscan_fallback\",null]\nprotected node 57: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

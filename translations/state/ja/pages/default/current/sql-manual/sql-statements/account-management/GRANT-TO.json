@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-statements/account-management/GRANT-TO",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/account-management/GRANT-TO.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "3ce7ab154f48179e47cc36a00602c86bc6b11252bd3af223a1994f49bf8fe885",
+    "sourceTechnicalHash": "bc1e8f32fc57bed65e8697ce9d9cc429c3aae49d36e49642ebb3f6f0e33a685b",
+    "targetHash": "b10700b19fa7baa0f562e672e5a15c3a8d35d42a70f413a95654b104a12aa676",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T16:59:26.785Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3ce7ab154f48179e47cc36a00602c86bc6b11252bd3af223a1994f49bf8fe885",
+      "targetHash": "b10700b19fa7baa0f562e672e5a15c3a8d35d42a70f413a95654b104a12aa676",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"GRANT <privilege_list> \\nON { <priv_level> \\n    | RESOURCE <resource_name> \\n    | WORKLOAD GROUP <workload_group_name> \\n    | COMPUTE GROUP <compute_group_name> \\n    | STORAGE VAULT <storage_vault_name>\\n   } \\nTO { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"GRANT <privilege_list>\\nON { <priv_level>\\n    | RESOURCE <resource_name>\\n    | WORKLOAD GROUP <workload_group_name>\\n    | COMPUTE GROUP <compute_group_name>\\n    | STORAGE VAULT <storage_vault_name>\\n   }\\nTO { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity> \"]; received [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"3\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"GRANT <privilege_list> \\nON { <priv_level> \\n    | RESOURCE <resource_name> \\n    | WORKLOAD GROUP <workload_group_name> \\n    | COMPUTE GROUP <compute_group_name> \\n    | STORAGE VAULT <storage_vault_name>\\n   } \\nTO { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"GRANT <privilege_list>\\nON { <priv_level>\\n    | RESOURCE <resource_name>\\n    | WORKLOAD GROUP <workload_group_name>\\n    | COMPUTE GROUP <compute_group_name>\\n    | STORAGE VAULT <storage_vault_name>\\n   }\\nTO { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity> \"]; received [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"GRANT <privilege_list> \\nON { <priv_level> \\n    | RESOURCE <resource_name> \\n    | WORKLOAD GROUP <workload_group_name> \\n    | COMPUTE GROUP <compute_group_name> \\n    | STORAGE VAULT <storage_vault_name>\\n   } \\nTO { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"GRANT <privilege_list>\\nON { <priv_level>\\n    | RESOURCE <resource_name>\\n    | WORKLOAD GROUP <workload_group_name>\\n    | COMPUTE GROUP <compute_group_name>\\n    | STORAGE VAULT <storage_vault_name>\\n   }\\nTO { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity> \"]; received [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity>\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"<workload_group_name>\"]; received [\"inlineCode\",null,null,\"res*\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"GRANT <privilege_list> \\nON { <priv_level> \\n    | RESOURCE <resource_name> \\n    | WORKLOAD GROUP <workload_group_name> \\n    | COMPUTE GROUP <compute_group_name> \\n    | STORAGE VAULT <storage_vault_name>\\n   } \\nTO { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"GRANT <privilege_list>\\nON { <priv_level>\\n    | RESOURCE <resource_name>\\n    | WORKLOAD GROUP <workload_group_name>\\n    | COMPUTE GROUP <compute_group_name>\\n    | STORAGE VAULT <storage_vault_name>\\n   }\\nTO { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity> \"]; received [\"code\",\"sql\",null,\"GRANT <role_list> TO <user_identity>\"]"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

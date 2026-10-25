@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/s3.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "1c2666fa6086626dce7206667f50b34d0c868a680776e0c30f0bb0150dea10e7",
-    "sourceTechnicalHash": "b0c9b25feb16cb1bc87d5bd293870f53dc948b1e4e73943dc33c5a3a926efc8d",
-    "targetHash": "f943e93ba6fa641acb8daac25e3b2977b0c351579f312c1d3725747504b2c5e7",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+    "sourceTechnicalHash": "4ff1cd22b5dc41ce85bed37aa19664f201902e13c9386e041bd87777eb79559a",
+    "targetHash": "51ec2ddcb37e92340c83fc8c1d9d86e2ac1c1b59ba58f2ced4ddf7b523377526",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:18:33.707Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:56:10.211Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "1e78374a84924448fc784372dee5e949eb10e15480e5108f3caf695d1cba73fd",
+      "targetHash": "51ec2ddcb37e92340c83fc8c1d9d86e2ac1c1b59ba58f2ced4ddf7b523377526",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"12\",\"14\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]; received [\"00\",\"00\",\"12\",\"14\",\"2\",\"2\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]\nprotected node 67: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"12\",\"14\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]; received [\"00\",\"00\",\"12\",\"14\",\"2\",\"2\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]\nprotected node 65: expected [\"inlineCode\",null,null,\"isAdjustedToUTC=true\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 66: expected [\"inlineCode\",null,null,\"TIMESTAMP_INSTANT\"]; received [\"inlineCode\",null,null,\"isAdjustedToUTC=true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 67: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]\nprotected node 83: expected [\"code\",\"sql\",null,\"-- Note URI Bucket notation, no need to set use_path_style parameter.\\n-- Virtual-hosted Style will be used to access S3.\\nselect * from s3(\\n    \\\"uri\\\" = \\\"s3://bucket/file/student.csv\\\",\\n    \\\"s3.endpoint\\\"= \\\"endpont\\\",\\n    \\\"s3.region\\\"= \\\"region\\\",\\n    \\\"s3.access_key\\\"= \\\"ak\\\",\\n    \\\"s3.secret_key\\\" = \\\"sk\\\",\\n    \\\"format\\\" = \\\"csv\\\");    \"]; received [\"code\",\"sql\",null,\"-- Note URI Bucket notation, no need to set use_path_style parameter.\\n-- Virtual-hosted Style will be used to access S3.\\nselect * from s3(\\n    \\\"uri\\\" = \\\"s3://bucket/file/student.csv\\\",\\n    \\\"s3.endpoint\\\"= \\\"endpont\\\",\\n    \\\"s3.region\\\"= \\\"region\\\",\\n    \\\"s3.access_key\\\"= \\\"ak\\\",\\n    \\\"s3.secret_key\\\" = \\\"sk\\\",\\n    \\\"format\\\" = \\\"csv\\\");\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"00\",\"00\",\"12\",\"14\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]; received [\"00\",\"00\",\"12\",\"14\",\"2\",\"2\",\"2.1.4\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.0.3\",\"4.0.3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"96\"]\nprotected node 67: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 68: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

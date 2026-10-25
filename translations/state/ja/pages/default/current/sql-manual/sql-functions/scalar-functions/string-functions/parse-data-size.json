@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "729ef324163d98e5416b3c878920243796ff942c45585ead7b1f4104114a5c0b",
-    "sourceTechnicalHash": "1945d5343842ea36b573296f22e0c832cb9f836e01dad825c3e4bbe3377716a4",
-    "targetHash": "bd5bb0759b0267ce0bad7394612420f0a1dbcb6b96e7879ad0b082da65905055",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+    "sourceTechnicalHash": "985ad941350d45763c0b015252d6c47ce5603f16024f672394cc3f8ad8e8ce3e",
+    "targetHash": "a5ff6b2ed73b6e8bc0c451638400b8bae88ceef627301ccd6c0d1f98be0310e9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:01:49.808Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:41:05.575Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+      "targetHash": "a5ff6b2ed73b6e8bc0c451638400b8bae88ceef627301ccd6c0d1f98be0310e9",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }
