@@ -3695,7 +3695,22 @@
         "landing.hackathonEvent.009",
         "landing.hackathonEvent.010",
         "landing.hackathonEvent.011",
-        "landing.hackathonEvent.012"
+        "landing.hackathonEvent.012",
+        "landing.sketch.column.distance",
+        "landing.sketch.column.level",
+        "landing.sketch.column.message",
+        "landing.sketch.column.page",
+        "landing.sketch.column.score",
+        "landing.sketch.column.scoreDistance",
+        "landing.sketch.column.section",
+        "landing.sketch.column.service",
+        "landing.sketch.column.time",
+        "landing.sketch.mode.hybrid",
+        "landing.sketch.mode.keyword",
+        "landing.sketch.mode.vector",
+        "landing.sketch.question.1",
+        "landing.sketch.question.2",
+        "landing.sketch.question.3"
       ]
     },
     {
@@ -4092,7 +4107,22 @@
         "landing.hackathonEvent.009",
         "landing.hackathonEvent.010",
         "landing.hackathonEvent.011",
-        "landing.hackathonEvent.012"
+        "landing.hackathonEvent.012",
+        "landing.sketch.column.distance",
+        "landing.sketch.column.level",
+        "landing.sketch.column.message",
+        "landing.sketch.column.page",
+        "landing.sketch.column.score",
+        "landing.sketch.column.scoreDistance",
+        "landing.sketch.column.section",
+        "landing.sketch.column.service",
+        "landing.sketch.column.time",
+        "landing.sketch.mode.hybrid",
+        "landing.sketch.mode.keyword",
+        "landing.sketch.mode.vector",
+        "landing.sketch.question.1",
+        "landing.sketch.question.2",
+        "landing.sketch.question.3"
       ]
     },
     {
@@ -4463,7 +4493,22 @@
         "landing.hackathonEvent.009",
         "landing.hackathonEvent.010",
         "landing.hackathonEvent.011",
-        "landing.hackathonEvent.012"
+        "landing.hackathonEvent.012",
+        "landing.sketch.column.distance",
+        "landing.sketch.column.level",
+        "landing.sketch.column.message",
+        "landing.sketch.column.page",
+        "landing.sketch.column.score",
+        "landing.sketch.column.scoreDistance",
+        "landing.sketch.column.section",
+        "landing.sketch.column.service",
+        "landing.sketch.column.time",
+        "landing.sketch.mode.hybrid",
+        "landing.sketch.mode.keyword",
+        "landing.sketch.mode.vector",
+        "landing.sketch.question.1",
+        "landing.sketch.question.2",
+        "landing.sketch.question.3"
       ]
     },
     {
@@ -4846,7 +4891,22 @@
         "landing.hackathonEvent.009",
         "landing.hackathonEvent.010",
         "landing.hackathonEvent.011",
-        "landing.hackathonEvent.012"
+        "landing.hackathonEvent.012",
+        "landing.sketch.column.distance",
+        "landing.sketch.column.level",
+        "landing.sketch.column.message",
+        "landing.sketch.column.page",
+        "landing.sketch.column.score",
+        "landing.sketch.column.scoreDistance",
+        "landing.sketch.column.section",
+        "landing.sketch.column.service",
+        "landing.sketch.column.time",
+        "landing.sketch.mode.hybrid",
+        "landing.sketch.mode.keyword",
+        "landing.sketch.mode.vector",
+        "landing.sketch.question.1",
+        "landing.sketch.question.2",
+        "landing.sketch.question.3"
       ]
     },
     {
@@ -5216,6 +5276,11 @@
         "landing.trackB.031",
         "landing.trackB.032",
         "landing.trackB.033",
+        "landing.trackB.chip.1",
+        "landing.trackB.chip.2",
+        "landing.trackB.chip.3",
+        "landing.trackB.chip.4",
+        "landing.trackB.databaseHint",
         "landing.trackB.task.B1.alsoSee.0",
         "landing.trackB.task.B1.doc",
         "landing.trackB.task.B1.proves.0",
