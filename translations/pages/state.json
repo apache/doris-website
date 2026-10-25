@@ -285,8 +285,10 @@
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928102+00:00"
     },
     {
       "contentId": "page:P02",
@@ -313,8 +315,10 @@
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928204+00:00"
     },
     {
       "contentId": "page:P02",
@@ -341,8 +345,10 @@
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928206+00:00"
     },
     {
       "contentId": "page:P03",
@@ -376,8 +382,10 @@
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928207+00:00"
     },
     {
       "contentId": "page:P03",
@@ -395,8 +403,10 @@
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928208+00:00"
     },
     {
       "contentId": "page:P03",
@@ -414,8 +424,10 @@
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928209+00:00"
     },
     {
       "contentId": "page:P04",
@@ -493,11 +505,13 @@
       ],
       "sourceHash": "f42c3ba8bac1e0226018673242f4ae3a696e2bc6b3ddc7ba49bbe3ccb2fa1ebe",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
+      "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
-      ]
+      ],
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928211+00:00"
     },
     {
       "contentId": "page:P05",
@@ -1151,8 +1165,10 @@
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928212+00:00"
     },
     {
       "contentId": "page:P06",
@@ -1175,8 +1191,10 @@
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928213+00:00"
     },
     {
       "contentId": "page:P06",
@@ -1199,8 +1217,10 @@
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928215+00:00"
     },
     {
       "contentId": "page:P07",
@@ -1244,8 +1264,10 @@
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928216+00:00"
     },
     {
       "contentId": "page:P07",
@@ -1268,8 +1290,10 @@
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928217+00:00"
     },
     {
       "contentId": "page:P07",
@@ -1292,8 +1316,10 @@
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928218+00:00"
     },
     {
       "contentId": "page:P08",
@@ -1337,8 +1363,10 @@
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928219+00:00"
     },
     {
       "contentId": "page:P08",
@@ -1361,8 +1389,10 @@
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928220+00:00"
     },
     {
       "contentId": "page:P08",
@@ -1385,8 +1415,10 @@
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928221+00:00"
     },
     {
       "contentId": "page:P09",
@@ -1424,8 +1456,10 @@
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928221+00:00"
     },
     {
       "contentId": "page:P09",
@@ -1445,8 +1479,10 @@
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928222+00:00"
     },
     {
       "contentId": "page:P09",
@@ -1466,8 +1502,10 @@
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "unverified",
-      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2"
+      "reviewStatus": "machine",
+      "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
+      "reviewedSourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+      "reviewedAt": "2026-10-25T02:17:50.928223+00:00"
     },
     {
       "contentId": "page:P10",
