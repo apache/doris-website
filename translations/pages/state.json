@@ -57,9 +57,9 @@
         "homepage"
       ],
       "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P01",
@@ -266,8 +266,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P02",
@@ -375,8 +375,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P03",
@@ -457,8 +457,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P04",
@@ -1163,8 +1163,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P06",
@@ -1265,8 +1265,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P07",
@@ -1367,8 +1367,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P08",
@@ -1466,8 +1466,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P09",
@@ -1957,9 +1957,9 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "712b666ed29402a4f301ea8099d57792b0110f589dfdb75069ec76fad65cb4ee",
-      "targetHash": "16817b8b8af1e6db066214487e6110625876485e95599e3876dd0ca484195ff5",
-      "reviewedSourceCommit": "0d3070e8c3c47bb4498fe2fd8a05a55682003aff"
+      "sourceHash": "b6014f32b4b3315fc2c5fea9f262398c7bfade8d1b8aeed8cbdbc08559b8d7a5",
+      "targetHash": "60527455adef325b5923ee44d6f10cb7d64a86da5a972b3adcdf8686c42d1ae3",
+      "reviewedSourceCommit": "a4ce7ef281a2371ae05e6f9455ced9d533485685"
     },
     {
       "contentId": "page:P14",
