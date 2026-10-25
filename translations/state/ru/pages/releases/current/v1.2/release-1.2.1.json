@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "v1.2/release-1.2.1",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/v1.2/release-1.2.1.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/v1.2/release-1.2.1.md",
+    "sourceCommit": "d058196f23d866a507f3d4c6b1186c98f0261669",
+    "sourceHash": "08376473f8c1a45ad07a8da04be70eb1874faede274b1dd074fbb482596ec749",
+    "sourceTechnicalHash": "a6fff51d1e225a41594175e11c7d8c296710ce11b7a2a1ab3108d24d556f45b6",
+    "targetHash": "13b1cef9400b1604da3c66a574b5e0b37c0b171ba13b09e0d579a20893da7bfc",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:45:52.795Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "08376473f8c1a45ad07a8da04be70eb1874faede274b1dd074fbb482596ec749",
+      "targetHash": "13b1cef9400b1604da3c66a574b5e0b37c0b171ba13b09e0d579a20893da7bfc",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 20: expected [\"inlineCode\",null,null,\"disable_enable_vectorized_engine\"]; received [\"inlineCode\",null,null,\"enable_vectorized_engine\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"enable_vectorized_engine\"]; received [\"inlineCode\",null,null,\"disable_enable_vectorized_engine\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

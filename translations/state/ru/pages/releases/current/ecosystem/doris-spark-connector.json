@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-spark-connector",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-spark-connector.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-spark-connector.md",
+    "sourceCommit": "d058196f23d866a507f3d4c6b1186c98f0261669",
+    "sourceHash": "89aeb845646272d599b9b9ca5f4fa469d06591a0e7227d10d8da48da0f62ff67",
+    "sourceTechnicalHash": "9fefcfedd8a3b6776bba8b00ff3986ca32fd2faf6cbb5e2817a2092f478b932c",
+    "targetHash": "4304b89e4808f212673f3146546656cc1569181e001cc7f5b53ede1e96315733",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:37:26.137Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "89aeb845646272d599b9b9ca5f4fa469d06591a0e7227d10d8da48da0f62ff67",
+      "targetHash": "4304b89e4808f212673f3146546656cc1569181e001cc7f5b53ede1e96315733",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "glossary",
+              "message": "Preserve product term: NULL"
+            },
+            {
+              "check": "glossary",
+              "message": "Preserve product term: Catalog"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
