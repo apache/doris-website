@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/backup-and-restore/CREATE-REPOSITORY.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "1c20144f257a2f9dfaa7d6f5fba8161dd78ee3c995408c6ebfcb407aa04d7130",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "d6133ae2c33495c76c72629360360d632b872a2d79cbaf214cb64be456196b99",
     "sourceTechnicalHash": "c4f52ff334fc3aacaf2c2c88e8fc5bc4b7a2dd8ea20ba82e6f39476f8137e291",
-    "targetHash": "b5e5b5b525039808c0965ab2046908dfdf1e7063ff9157d964bd7e0af56b3557",
+    "targetHash": "12357914c03ef1910552a68a14b8e43aaa4a087181b1f0a3288ae2207e72acbc",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:26:58.627Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:49:39.787Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "d6133ae2c33495c76c72629360360d632b872a2d79cbaf214cb64be456196b99",
+      "targetHash": "12357914c03ef1910552a68a14b8e43aaa4a087181b1f0a3288ae2207e72acbc",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 10: expected [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n( \\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n(\\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n( \\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n(\\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n( \\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n(\\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 10: expected [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n( \\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE REPOSITORY `minio_repo`\\nWITH S3\\nON LOCATION \\\"s3://minio_repo\\\"\\nPROPERTIES\\n(\\n    \\\"s3.endpoint\\\" = \\\"AWS_ENDPOINT\\\",\\n    \\\"s3.access_key\\\" = \\\"AWS_TEMP_ACCESS_KEY\\\",\\n    \\\"s3.secret_key\\\" = \\\"AWS_TEMP_SECRET_KEY\\\",\\n    \\\"s3.session_token\\\" = \\\"AWS_TEMP_TOKEN\\\",\\n    \\\"s3.region\\\" = \\\"AWS_REGION\\\"\\n)\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -8,13 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "2752e47d15491c720bc577e5a3f3f9acd9541692765bc9e26a198b051a86fcff",
-    "sourceTechnicalHash": "975062a219f01c10ef70f695a7a0054a181bbe2267b4682e2f85824cc2f09ed2",
-    "targetHash": "587dd0864db8aa8163dccdeb35fa40297c87d6498e0dc914272a7620710ecd2b",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+    "sourceTechnicalHash": "69cad0c18fd68f970c56d3e373ee50a0c4e411c33eef9ebac8c7188c697ce896",
+    "targetHash": "49f1eba75c2e4226f00b72ac147e303ca21ba35c365090d89dd06801c27623d8",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.013Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:47:45.390Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+      "targetHash": "49f1eba75c2e4226f00b72ac147e303ca21ba35c365090d89dd06801c27623d8",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"********\"]; received [\"inlineCode\",null,null,\"Value\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"Value\"]; received [\"inlineCode\",null,null,\"********\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"********\"]; received [\"inlineCode\",null,null,\"Value\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"Value\"]; received [\"inlineCode\",null,null,\"********\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
   }
 }

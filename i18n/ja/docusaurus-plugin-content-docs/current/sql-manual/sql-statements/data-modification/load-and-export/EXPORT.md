@@ -1,21 +1,21 @@
 ---
 {
-    "title": "EXPORT | ロードとエクスポート",
+    "title": "EXPORT | データロードとエクスポート",
     "language": "ja",
     "description": "EXPORT コマンドは、指定したテーブルのデータを指定した場所のファイルにエクスポートします。",
     "sidebar_label": "EXPORT"
 }
 ---
 
-# EXPORT
+# EXPORT {#export}
 
-## 説明
+## 説明 {#description}
 
-`EXPORT` コマンドは、指定したテーブルのデータを指定した場所のファイルにエクスポートします。現在、Broker プロセス、S3 プロトコル、または HDFS プロトコルを使用して、HDFS、S3、BOS、COS（Tencent Cloud）などのリモートストレージへのエクスポートをサポートしています。
+`EXPORT` コマンドは、指定したテーブルのデータを指定した場所のファイルにエクスポートします。現在、Broker プロセス、S3 プロトコル、または HDFS プロトコルを使用して、HDFS、S3、BOS、COS（Tencent Cloud）などのリモートストレージにエクスポートできます。
 
-`EXPORT` は非同期操作です。このコマンドは Doris に `EXPORT JOB` を送信し、送信に成功するとすぐに戻ります。実行後は [SHOW EXPORT](./SHOW-EXPORT) コマンドで進捗を確認できます。
+`EXPORT` は非同期処理です。このコマンドは `EXPORT JOB` を Doris に送信し、送信が成功すると直ちに結果を返します。実行後の進捗状況は、[SHOW EXPORT](./SHOW-EXPORT) コマンドで確認できます。
 
-## 構文:
+## 構文: {#syntax}
 
   ```sql
   EXPORT TABLE <table_name>
@@ -27,17 +27,17 @@
   [ <broker_properties> ];
   ```
 
-## 必須パラメータ  
+## 必須パラメータ {#required-parameters}
 
 **1. `<table_name>`**
 
-  エクスポートするテーブルの名前です。Doris のローカルテーブル、ビュー、カタログ内の外部テーブルからのデータのエクスポートをサポートします。
+  エクスポートするテーブルの名前です。Doris のローカルテーブル、ビュー、Catalog の外部テーブルからデータをエクスポートできます。
 
 **2. `<export_path>`**
 
-  エクスポート先のファイルパスです。ディレクトリ、または `hdfs://path/to/my_file_` のようにファイル名のプレフィックスを含むパスを指定できます。
+  エクスポート先のファイルパスです。ディレクトリ、または `hdfs://path/to/my_file_` のようにファイル名の接頭辞を含むパスを指定できます。
 
-## オプションパラメータ  
+## 任意のパラメータ {#optional-parameters}
 
 **1. `<where_clause>`**
 
@@ -45,184 +45,184 @@
 
 **2. `<partation_name>`**
 
-  指定したテーブルの特定のパーティションのみをエクスポートできます。Doris のローカルテーブルにのみ有効です。
+  指定したテーブルの特定のパーティションだけをエクスポートできます。Doris のローカルテーブルでのみ有効です。
 
 **3. `<properties>`**
 
-  エクスポートの各種パラメータを指定します。
+  エクスポートに関するパラメータを指定します。
 
   ```sql
   [ PROPERTIES ("<key>"="<value>" [, ... ]) ]
   ```
 
-  次のパラメータを指定できます。  
-  - `label`: このエクスポートジョブの Label を指定するオプションパラメータです。省略すると、システムがランダムに Label を生成します。
+  次のパラメータを指定できます。
+  - `label`: このエクスポートタスクのラベルを指定する任意のパラメータです。指定しない場合、システムがラベルをランダムに生成します。
 
-  - `column_separator`: エクスポート時の列区切り文字を指定します。デフォルトは `\t` で、複数バイトの文字列をサポートします。このパラメータは CSV 形式でのみ使用します。
+  - `column_separator`: エクスポート時の列区切り文字を指定します。デフォルトは `\t` で、マルチバイト文字に対応しています。このパラメータは CSV 形式でのみ使用します。
 
-  - `line_delimiter`: エクスポート時の行区切り文字を指定します。デフォルトは `\n` で、複数バイトの文字列をサポートします。このパラメータは CSV 形式でのみ使用します。
+  - `line_delimiter`: エクスポート時の行区切り文字を指定します。デフォルトは `\n` で、マルチバイト文字に対応しています。このパラメータは CSV 形式でのみ使用します。
 
-  - `columns`: エクスポートするテーブルの特定の列を指定します。
+  - `columns`: エクスポートするテーブルの列を指定します。
 
-  - `format`: エクスポートジョブのファイル形式を指定します。parquet、orc、csv、csv_with_names、csv_with_names_and_types をサポートします。デフォルトは CSV 形式です。
+  - `format`: エクスポートジョブのファイル形式を指定します。parquet、orc、csv、csv_with_names、csv_with_names_and_types に対応しています。デフォルトは CSV 形式です。
 
-  - `max_file_size`: エクスポートジョブの単一ファイルのサイズ上限です。結果がこの値を超える場合は複数のファイルに分割されます。`max_file_size` の指定可能な範囲は [5MB, 2GB]、デフォルトは 1GB です。（ORC 形式へのエクスポートでは、実際の分割サイズは 64MB の倍数になります。たとえば、max_file_size = 5MB を指定すると実際には 64MB で分割され、max_file_size = 65MB を指定すると 128MB で分割されます。）
+  - `enable_int96_timestamps`: Parquet のエクスポートで INT96 タイムスタンプを使用するかどうかを指定します。4.1.5 以降、EXPORT で明示的に設定できます。デフォルトは `false` で、論理型の INT64 タイムスタンプを使用します。INT96 が必要な読み取り側には `true` を設定してください。指定できる値は `true` と `false` のみです。
 
-  - `parallelism`: エクスポートジョブの並列度です。デフォルトは `1` です。エクスポートジョブは `parallelism` 個のスレッドを起動して `select into outfile` 文を実行します。（並列度がテーブル内の Tablet 数より大きい場合、システムは並列度を Tablet 数に自動調整します。つまり、各 `select into outfile` 文が一つの Tablet を担当します。）
+  - `max_file_size`: エクスポートジョブにおける単一ファイルのサイズ上限です。結果がこの値を超える場合、複数のファイルに分割されます。`max_file_size` の指定可能な範囲は [5MB, 2GB] で、デフォルトは 1GB です。（orc 形式でエクスポートする場合、実際の分割サイズは 64MB の倍数になります。たとえば、max_file_size = 5MB を指定すると実際には 64MB で、max_file_size = 65MB を指定すると実際には 128MB で分割されます）
 
-  - `delete_existing_files`: デフォルトは `false` です。`true` に設定すると、最初に `export_path` で指定したディレクトリ内のすべてのファイルを削除してから、そのディレクトリにデータをエクスポートします。たとえば、"export_path" = "/user/tmp" の場合は "/user/" 以下のすべてのファイルとディレクトリを削除し、"file_path" = "/user/tmp/" の場合は "/user/tmp/" 以下のすべてのファイルとディレクトリを削除します。
+  - `parallelism`: エクスポートジョブの並列実行数です。デフォルトは `1` です。エクスポートジョブは `parallelism` 個のスレッドを起動し、`select into outfile` 文を実行します。（Parallelism の値がテーブル内の Tablet 数より大きい場合、システムは Parallelism を Tablet 数に自動調整します。この場合、各 `select into outfile` 文がそれぞれの Tablet を担当します）
 
-  - `with_bom`: デフォルトは `false` です。`true` に設定すると、エクスポートするファイルは BOM 付き UTF8 でエンコードされます（CSV 関連のファイル形式でのみ有効です）。
+  - `delete_existing_files`: デフォルトは `false` です。`true` を指定すると、まず `export_path` で指定したパスに対応するディレクトリ内のすべてのファイルが削除され、その後データがエクスポートされます。たとえば、"export_path" = "/user/tmp" の場合は "/user/" 以下のすべてのファイルとディレクトリが削除され、"file_path" = "/user/tmp/" の場合は "/user/tmp/" 以下のすべてのファイルとディレクトリが削除されます。
 
-  - `data_consistency`: `none` / `partition` を設定できます。デフォルトは `partition` です。エクスポート対象のテーブルを分割する粒度を示し、`none` は Tablet レベル、`partition` は Partition レベルです。
+  - `with_bom`: デフォルトは `false` です。`true` を指定すると、エクスポートファイルは BOM 付き UTF8 でエンコードされます（csv 関連のファイル形式でのみ有効です）。
+
+  - `data_consistency`: `none` / `partition` を設定できます。デフォルトは `partition` です。エクスポートするテーブルを分割する単位を示し、`none` は Tablet 単位、`partition` は Partition 単位を表します。
 
   - `timeout`: エクスポートジョブのタイムアウトです。デフォルトは 2 時間で、単位は秒です。
 
-  - `compress_type`: （2.1.5 以降でサポート）エクスポート先のファイル形式を Parquet / ORC に指定した場合、使用する圧縮方式を指定できます。Parquet 形式では SNAPPY、GZIP、BROTLI、ZSTD、LZ4、PLAIN を指定でき、デフォルトは SNAPPY です。ORC 形式では PLAIN、SNAPPY、ZLIB、ZSTD を指定でき、デフォルトは ZLIB です。このパラメータはバージョン 2.1.5 以降でサポートされます（PLAIN は圧縮なしを意味します）。バージョン 3.1.1 以降は CSV 形式の圧縮アルゴリズムも指定でき、現在 "plain"、"gz"、"bz2"、"snappyblock"、"lz4block"、"zstd" をサポートしています。
+  - `compress_type`: （2.1.5 以降でサポート）エクスポートするファイル形式に Parquet / ORC を指定した場合、使用する圧縮方式を指定できます。Parquet 形式では SNAPPY、GZIP、BROTLI、ZSTD、LZ4、PLAIN を指定でき、デフォルトは SNAPPY です。ORC 形式では PLAIN、SNAPPY、ZLIB、ZSTD を指定でき、デフォルトは ZLIB です。このパラメータはバージョン 2.1.5 以降でサポートされています。（PLAIN は圧縮なしを意味します。）バージョン 3.1.1 以降は CSV 形式にも圧縮アルゴリズムを指定でき、現在は "plain"、"gz"、"bz2"、"snappyblock"、"lz4block"、"zstd" に対応しています。
 
-  :::caution 注意  
-  delete_existing_files パラメータを使用するには、fe.conf に `enable_delete_existing_files = true` を追加して FE を再起動する必要があります。これにより delete_existing_files が有効になります。delete_existing_files = true は危険な操作のため、テスト環境でのみ使用することを推奨します。  
-  :::  
+  :::caution 注意
+  delete_existing_files パラメータを使用するには、fe.conf に設定 `enable_delete_existing_files = true` を追加して FE を再起動する必要があります。再起動後に delete_existing_files が有効になります。delete_existing_files = true は危険な操作のため、テスト環境でのみ使用することを推奨します。
+  :::
 
-**4. `<target_storage>`**  
-    ストレージの種類です。BROKER、S3、HDFS から選択できます。  
+**4. `<target_storage>`**
+    ストレージの種類です。BROKER、S3、HDFS を指定できます。
 
-**5. `<broker_properties>`**  
-    `<target_storage>` のストレージの種類に応じて、異なるプロパティを指定する必要があります。  
+**5. `<broker_properties>`**
+    `<target_storage>` で指定したストレージの種類に応じたプロパティを指定する必要があります。
 
-- **BROKER**  
-  Broker プロセスを介してリモートストレージにデータを書き込めます。ここでは Broker が使用する接続情報を定義する必要があります。  
+- **BROKER**
+  Broker プロセスを介してリモートストレージにデータを書き込めます。ここでは、Broker が使用する接続情報を指定します。
 
   ```sql
   WITH BROKER "broker_name"
   ("<key>"="<value>" [,...])
-  ```  
+  ```
 
-  **Broker 関連のプロパティ:**  
+  **Broker 関連のプロパティ:**
   - `username`: ユーザー名
   - `password`: パスワード
   - `hadoop.security.authentication`: 認証方式に kerberos を指定します
-  - `kerberos_principal`: Kerberos プリンシパルを指定します
-  - `kerberos_keytab`: Kerberos keytab ファイルのパスを指定します。このファイルは Broker プロセスが動作するサーバー上の絶対パスにあり、Broker プロセスからアクセスできる必要があります  
+  - `kerberos_principal`: kerberos principal を指定します
+  - `kerberos_keytab`: kerberos keytab ファイルのパスを指定します。このファイルには、Broker プロセスが稼働するサーバー上にあり、そのプロセスからアクセスできるファイルの絶対パスを指定する必要があります
 
-- **HDFS**  
+- **HDFS**
 
-  リモート HDFS にデータを直接書き込めます。
+  リモート HDFS に直接データを書き込めます。
 
   ```sql
   WITH HDFS ("<key>"="<value>" [,...])
-  ```  
+  ```
 
-  **HDFS 関連のプロパティ:**  
-  - `fs.defaultFS`: NameNode のアドレスとポート
+  **HDFS 関連のプロパティ:**
+  - `fs.defaultFS`: namenode のアドレスとポート
   - `hadoop.username`: HDFS のユーザー名
-  - `dfs.nameservices`: ネームサービス名。hdfs-site.xml と一致させます
-  - `dfs.ha.namenodes.[nameservice ID]`: NameNode ID のリスト。hdfs-site.xml と一致させます
-  - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: NameNode の RPC アドレス。NameNode の数と同数を指定し、hdfs-site.xml と一致させます   
+  - `dfs.nameservices`: name service 名。hdfs-site.xml と一致させます
+  - `dfs.ha.namenodes.[nameservice ID]`: namenode ID の一覧。hdfs-site.xml と一致させます
+  - `dfs.namenode.rpc-address.[nameservice ID].[name node ID]`: Name node の rpc アドレス。namenode の数だけ指定し、hdfs-site.xml と一致させます
 
-  **Kerberos 認証を有効にした Hadoop クラスターでは、次の PROPERTIES 属性も設定する必要があります:**
-  - `dfs.namenode.kerberos.principal`: HDFS NameNode サービスのプリンシパル名
-  - `hadoop.security.authentication`: 認証方式に kerberos を設定します
-  - `hadoop.kerberos.principal`: Doris が HDFS に接続するときに使用する Kerberos プリンシパルを設定します
-  - `hadoop.kerberos.keytab`: keytab のローカルファイルパスを設定します  
+  **kerberos 認証が有効な Hadoop クラスターでは、次の PROPERTIES 属性も設定する必要があります:**
+  - `dfs.namenode.kerberos.principal`: HDFS namenode サービスの Principal 名
+  - `hadoop.security.authentication`: 認証方式を kerberos に設定します
+  - `hadoop.kerberos.principal`: Doris が HDFS に接続するときに使用する Kerberos principal を設定します
+  - `hadoop.kerberos.keytab`: keytab のローカルファイルパスを設定します
 
-- **S3**  
+- **S3**
 
-  リモート S3 オブジェクトストレージにデータを直接書き込めます。
+  リモートの S3 オブジェクトストレージに直接データを書き込めます。
 
   ```sql
   WITH S3 ("<key>"="<value>" [,...])
-  ```  
+  ```
 
   **S3 関連のプロパティ:**
   - `s3.endpoint`
   - `s3.region`
   - `s3.secret_key`
   - `s3.access_key`
-  - `use_path_style`: （オプション）デフォルトは `false` です。S3 SDK はデフォルトで Virtual-hosted Style を使用します。ただし、一部のオブジェクトストレージシステムでは Virtual-hosted Style によるアクセスが有効でない、またはサポートされない場合があります。その場合は `use_path_style` パラメータを追加して Path Style によるアクセスを強制できます。
+  - `use_path_style`: （任意）デフォルトは `false` です。S3 SDK はデフォルトで Virtual-hosted Style を使用します。ただし、オブジェクトストレージによっては Virtual-hosted Style によるアクセスが有効でないか、サポートされていない場合があります。その場合は `use_path_style` パラメータを追加し、Path Style によるアクセスを強制できます。
 
-## 戻り値
+## 戻り値 {#return-values}
 
 | 列名                | 型     | 説明                                                                 |
 |---------------------|--------|----------------------------------------------------------------------|
 | jobId               | long   | エクスポートジョブの一意の識別子。                                   |
-| label               | string | エクスポートジョブの Label。                                         |
+| label               | string | エクスポートジョブのラベル。                                         |
 | dbId                | long   | データベースの識別子。                                               |
 | tableId             | long   | テーブルの識別子。                                                   |
 | state               | string | ジョブの現在の状態。                                                 |
-| path                | string | エクスポートされたファイルのパス。                                   |
-| partitions          | string | エクスポートされたパーティション名の一覧。複数の場合はカンマで区切られます。 |
+| path                | string | エクスポートファイルのパス。                                         |
+| partitions          | string | エクスポートされたパーティション名の一覧。複数の名前はカンマで区切られます。 |
 | progress            | int    | エクスポートジョブの現在の進捗率（パーセント）。                     |
-| createTimeMs        | string | ジョブの作成時刻を日時形式で表したミリ秒値。                         |
-| exportStartTimeMs   | string | エクスポートジョブの開始時刻を日時形式で表したミリ秒値。             |
-| exportFinishTimeMs  | string | エクスポートジョブの終了時刻を日時形式で表したミリ秒値。             |
+| createTimeMs        | string | ジョブ作成時刻のミリ秒値。日時形式で表示されます。                   |
+| exportStartTimeMs   | string | エクスポートジョブ開始時刻のミリ秒値。日時形式で表示されます。       |
+| exportFinishTimeMs  | string | エクスポートジョブ終了時刻のミリ秒値。日時形式で表示されます。       |
 | failMsg             | string | エクスポートジョブが失敗したときのエラーメッセージ。                 |
 
 
-## アクセス制御
+## アクセス制御 {#access-control}
 
 この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です。
 
-| 権限        | オブジェクト | 説明                                      |
-|:------------|:-------------|:------------------------------------------|
-| SELECT_PRIV | データベース | データベースとテーブルの読み取り権限が必要です。 |
+| 権限        | オブジェクト | 説明                                  |
+|:------------|:-------------|:--------------------------------------|
+| SELECT_PRIV | データベース | データベースとテーブルに対する読み取り権限が必要です。 |
 
 
-## 注意事項
+## 注意事項 {#notes}
 
-### 並列実行
+### 並列実行 {#concurrent-execution}
 
-エクスポートジョブでは、`parallelism` パラメータを設定してデータを並列にエクスポートできます。`parallelism` パラメータは、実際には EXPORT ジョブを実行するスレッド数を指定します。`"data_consistency" = "none"` を設定すると、各スレッドがテーブル内の一部の Tablet のエクスポートを担当します。
+エクスポートジョブでは `parallelism` パラメータを設定して、データを並列にエクスポートできます。`parallelism` パラメータは、実際には EXPORT ジョブを実行するスレッド数を指定します。`"data_consistency" = "none"` を設定した場合、各スレッドがテーブル内の Tablet の一部をエクスポートします。
 
-エクスポートジョブの内部的な実行処理は、実際には `SELECT INTO OUTFILE` 文によって行われます。`parallelism` パラメータで設定された各スレッドは、それぞれ独立した `SELECT INTO OUTFILE` 文を実行します。
+エクスポートジョブの内部処理では、`SELECT INTO OUTFILE` 文が実行されます。`parallelism` パラメータで設定された各スレッドは、それぞれ独立した `SELECT INTO OUTFILE` 文を実行します。
 
-エクスポートジョブを複数の `SELECT INTO OUTFILE` 文に分割する具体的な方法は、テーブル内のすべての Tablet を並列スレッドに均等に割り当てることです。例:
+エクスポートジョブを複数の `SELECT INTO OUTFILE` 文に分割する際は、テーブル内のすべての Tablet を並列スレッドに均等に割り当てます。たとえば、次のようになります。
+- num(tablets) = 40、parallelism = 3 の場合、各スレッドがそれぞれ 14、13、13 個の Tablet を担当します。
+- num(tablets) = 2、parallelism = 3 の場合、Doris は parallelism を 2 に自動調整し、各スレッドがそれぞれの Tablet を担当します。
 
-- num(tablets) = 40、parallelism = 3 の場合、3 つのスレッドはそれぞれ 14、13、13 個の Tablet を担当します。
-- num(tablets) = 2、parallelism = 3 の場合、Doris は並列度を自動的に 2 に設定し、各スレッドがそれぞれ一つの Tablet を担当します。
+スレッドが担当する Tablet 数が `maximum_tablets_of_outfile_in_export` の値を超える場合（デフォルトは 10。fe.conf に `maximum_tablets_of_outfile_in_export` パラメータを追加して変更できます）、そのスレッドの処理は複数の `SELECT INTO OUTFILE` 文に分割されます。たとえば、次のようになります。
+- あるスレッドが 14 個の Tablet を担当し、`maximum_tablets_of_outfile_in_export = 10` の場合、そのスレッドは 2 つの `SELECT INTO OUTFILE` 文を実行します。最初の `SELECT INTO OUTFILE` 文が 10 個の Tablet をエクスポートし、次の `SELECT INTO OUTFILE` 文が 4 個の Tablet をエクスポートします。このスレッドは 2 つの `SELECT INTO OUTFILE` 文を順番に実行します。
 
-スレッドが担当する Tablet 数が `maximum_tablets_of_outfile_in_export` の値を超える場合（デフォルトは 10。`maximum_tablets_of_outfile_in_export` パラメータを fe.conf に追加して変更できます）、そのスレッドの処理は複数の `SELECT INTO OUTFILE` 文に分割されます。例:
+エクスポートするデータ量が非常に多い場合は、`parallelism` パラメータを適切に増やすことで、エクスポートの並列度を高められます。マシンのコア数に余裕がなく `parallelism` を増やせない一方で、エクスポートするテーブルに多くの Tablet がある場合は、`maximum_tablets_of_outfile_in_export` を増やすことも検討できます。これにより、`SELECT INTO OUTFILE` 文が担当する Tablet 数が増え、エクスポートが速くなる場合があります。
 
-- あるスレッドが 14 個の Tablet を担当し、`maximum_tablets_of_outfile_in_export = 10` の場合、このスレッドは二つの `SELECT INTO OUTFILE` 文を実行します。最初の `SELECT INTO OUTFILE` 文で 10 個、二番目の `SELECT INTO OUTFILE` 文で 4 個の Tablet をエクスポートします。この二つの `SELECT INTO OUTFILE` 文は、同じスレッドで順番に実行されます。
+テーブルを Partition 単位でエクスポートするには、Export のプロパティ `"data_consistency" = "partition"` を設定します。この場合、エクスポートタスクの並列スレッドは、Partition 単位で複数の Outfile 文を実行します。異なる Outfile 文は異なる Partition をエクスポートし、同じ Outfile 文がエクスポートするデータは同じ Partition に属します。`"data_consistency" = "partition"` を設定した場合の例は次のとおりです。
 
-エクスポートするデータ量が非常に多い場合は、`parallelism` パラメータを適切に増やして並列エクスポートを増やすことを検討できます。マシンの CPU コアに余裕がなく `parallelism` を増やせない場合でも、エクスポート対象のテーブルに多数の Tablet があれば、`maximum_tablets_of_outfile_in_export` を増やすことを検討できます。これにより、一つの `SELECT INTO OUTFILE` 文が担当する Tablet 数が増え、エクスポートが速くなる可能性があります。
-
-パーティション単位でテーブルをエクスポートするには、Export プロパティ `"data_consistency" = "partition"` を設定できます。この場合、エクスポートタスクの並列スレッドはパーティション単位で複数の Outfile 文に分割されます。異なる Outfile 文は異なるパーティションをエクスポートし、同じ Outfile 文がエクスポートするデータは必ず同じパーティションに属します。`"data_consistency" = "partition"` を設定した場合の例:
-
-- num(partition) = 40、parallelism = 3 の場合、3 つのスレッドはそれぞれ 14、13、13 個のパーティションを担当します。
-- num(partition) = 2、parallelism = 3 の場合、Doris は並列度を自動的に 2 に設定し、各スレッドがそれぞれ一つのパーティションを担当します。
+- num(partition) = 40、parallelism = 3 の場合、各スレッドがそれぞれ 14、13、13 個の Partition を担当します。
+- num(partition) = 2、parallelism = 3 の場合、Doris は Parallelism を 2 に自動調整し、各スレッドがそれぞれの Partition を担当します。
 
 
-### メモリ制限
+### メモリ制限 {#memory-limits}
 
-通常、エクスポートジョブのクエリプランは `scan-export` の二つの部分のみで構成され、大量のメモリを必要とする計算処理は含まれません。そのため、通常はデフォルトのメモリ制限である 2GB で要件を満たせます。
+通常、エクスポートジョブのクエリプランは `scan-export` の 2 つの部分だけで構成され、大量のメモリを必要とする計算処理を含みません。そのため、通常はデフォルトのメモリ制限である 2GB で十分です。
 
-ただし、クエリプランが同じ BE 上で非常に多くの Tablet をスキャンする必要がある場合や、Tablet データのバージョンが多すぎる場合など、メモリ不足が発生することがあります。セッション変数 `exec_mem_limit` を調整すると、メモリ使用量の上限を増やせます。
+ただし、クエリプランで同じ BE 上の非常に多くの Tablet をスキャンする場合や、Tablet データのバージョンが多すぎる場合などは、メモリが不足することがあります。セッション変数 `exec_mem_limit` を調整すると、メモリ使用量の上限を引き上げられます。
 
-### その他の注意事項
+### その他の注意事項 {#other-matters}
 
-- 一度に大量のデータをエクスポートすることは推奨しません。一つのエクスポートジョブで推奨される最大データ量は数十 GB です。データ量が多すぎると不要なファイルが増え、再試行のコストも高くなります。テーブルのデータ量が多すぎる場合は、パーティションごとにエクスポートすることを推奨します。
+- 一度に大量のデータをエクスポートすることは推奨しません。エクスポートジョブごとのデータ量は、最大でも数十 GB 程度を推奨します。データ量が大きすぎると、不要なファイルが増え、再試行のコストも高くなります。テーブルのデータ量が多い場合は、パーティションごとにエクスポートすることを推奨します。
 
 - エクスポートジョブが失敗しても、生成済みのファイルは削除されません。ユーザーが手動で削除する必要があります。
 
-- エクスポートジョブはデータをスキャンして I/O リソースを消費するため、システムのクエリレイテンシーに影響する場合があります。
+- エクスポートジョブはデータをスキャンして IO リソースを使用するため、システムのクエリ遅延に影響する場合があります。
 
-- 現在、エクスポート中の Tablet のバージョンの整合性については簡易チェックのみが行われます。エクスポートの実行中に対象テーブルへデータをインポートしないことを推奨します。
+- 現在、エクスポート中の Tablet のバージョン整合性については、簡単なチェックのみ行われます。エクスポートの実行中は、そのテーブルへのデータロードを行わないことを推奨します。
 
-- エクスポートジョブでエクスポートできるパーティション数の上限は 2000 です。`maximum_number_of_export_partitions` パラメータを `fe.conf` に追加して FE を再起動すると、この設定を変更できます。
+- エクスポートジョブでエクスポートできるパーティションは最大 2000 個です。この設定を変更するには、`fe.conf` に `maximum_number_of_export_partitions` パラメータを追加して FE を再起動します。
 
 
-## 例
+## 例 {#examples}
 
-### ローカルへのエクスポート
-> ローカルファイルシステムにデータをエクスポートするには、`enable_outfile_to_local=true` を `fe.conf` に追加し、FE を再起動する必要があります。
+### ローカルへのデータのエクスポート {#export-data-to-local}
+> ローカルファイルシステムにデータをエクスポートするには、`fe.conf` に `enable_outfile_to_local=true` を追加して FE を再起動する必要があります。
 
-- Test テーブルのすべてのデータをローカルストレージにエクスポートします。デフォルトで CSV 形式のファイルになります。
+- Test テーブルのすべてのデータをローカルストレージにエクスポートします。デフォルトの CSV 形式のファイルが出力されます。
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/";
 ```
 
-- Test テーブルの k1、k2 列をローカルストレージにエクスポートします。デフォルトで CSV 形式のファイルになり、Label も設定します。
+- Test テーブルの k1,k2 列をローカルストレージにエクスポートします。デフォルトの CSV 形式を使用し、ラベルを設定します。
 ```sql
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -231,7 +231,7 @@ PROPERTIES (
 );
 ```
 
-- Test テーブルのうち `k1 < 50` の行をローカルストレージにエクスポートします。デフォルトで CSV 形式のファイルになり、列区切り文字には `,` を使用します。
+- Test テーブルから `k1 < 50` を満たす行をローカルストレージにエクスポートします。デフォルトの CSV 形式を使用し、列区切り文字を `,` に設定します。
 ```sql
 EXPORT TABLE test WHERE k1 < 50 TO "file:///home/user/tmp/"
 PROPERTIES (
@@ -240,13 +240,13 @@ PROPERTIES (
 );
 ```
 
-- Test テーブルの p1、p2 パーティションをローカルストレージにエクスポートします。デフォルトで CSV 形式のファイルになります。
+- Test テーブルのパーティション p1,p2 をローカルストレージにエクスポートします。デフォルトの csv 形式のファイルが出力されます。
 ```sql
-EXPORT TABLE test PARTITION (p1,p2) TO "file:///home/user/tmp/" 
+EXPORT TABLE test PARTITION (p1,p2) TO "file:///home/user/tmp/"
 PROPERTIES ("columns" = "k1,k2");
 ```
 
-- Test テーブルのすべてのデータをローカルストレージにエクスポートし、ほかの形式のファイルを生成します。
+- Test テーブルのすべてのデータをローカルストレージに、ほかの形式のファイルとしてエクスポートします。
 ```sql
 -- parquet
 EXPORT TABLE test TO "file:///home/user/tmp/"
@@ -270,7 +270,7 @@ PROPERTIES (
   "line_delimiter" = "zz"
 );
 
--- csv(csv_with_names_and_types) 
+-- csv(csv_with_names_and_types)
 EXPORT TABLE test TO "file:///home/user/tmp/"
 PROPERTIES (
   "format" = "csv_with_names_and_types"
@@ -278,7 +278,7 @@ PROPERTIES (
 ```
 
 - `max_file_sizes` プロパティを設定します。
-   エクスポートしたファイルが 5MB を超えると、データは複数のファイルに分割され、各ファイルの最大サイズは 5MB になります。
+   エクスポートするファイルが 5MB を超えると、データは複数のファイルに分割され、各ファイルの最大サイズは 5MB になります。
 
 ```sql
 -- When the exported file is larger than 5MB, the data will be split into multiple files, with each file having a maximum size of 5MB.
@@ -300,7 +300,7 @@ PROPERTIES (
 ```
 
 - `delete_existing_files` プロパティを設定します。
-    Export でデータをエクスポートするとき、最初に `/home/user/` ディレクトリ以下のすべてのファイルとディレクトリを削除してから、このディレクトリにデータをエクスポートします。
+    エクスポート時に、まず `/home/user/` ディレクトリ以下のすべてのファイルとディレクトリを削除し、その後このディレクトリにデータをエクスポートします。
 
 ```sql
 -- When exporting data, all files and directories under the `/home/user/` directory will be deleted first, and then the data will be exported to this directory.
@@ -312,30 +312,30 @@ PROPERTIES (
 );
 ```
 
-### S3 へのエクスポート
+### S3 へのエクスポート {#export-to-s3}
 
-- s3_test テーブルのすべてのデータを S3 にエクスポートし、不可視文字 `\x07` を列または行の区切り文字として使用します。MinIO にデータをエクスポートする場合は、`use_path_style`=`true` も指定する必要があります。
+- s3_test テーブルのすべてのデータを S3 にエクスポートし、不可視文字 `\x07` を列または行の区切り文字として使用します。minio にデータをエクスポートする場合は、`use_path_style`=`true` も指定する必要があります。
 
 ```sql
-EXPORT TABLE s3_test TO "s3://bucket/a/b/c" 
+EXPORT TABLE s3_test TO "s3://bucket/a/b/c"
 PROPERTIES (
-  "column_separator"="\\x07", 
+  "column_separator"="\\x07",
   "line_delimiter" = "\\x07"
 ) WITH S3 (
   "s3.endpoint" = "xxxxx",
   "s3.region" = "xxxxx",
   "s3.access_key" = "xxxxx",
   "s3.secret_key"="xxxx"
-  
+
 )
 ```
 
-### HDFS へのエクスポート
+### HDFS へのエクスポート {#export-to-hdfs}
 
-- Test テーブルのすべてのデータを HDFS にエクスポートします。ファイル形式は Parquet、エクスポートジョブの単一ファイルのサイズ上限は 512MB とし、指定したディレクトリ内のすべてのファイルを保持します。
+- Test テーブルのすべてのデータを HDFS にエクスポートします。ファイル形式は Parquet、エクスポートジョブの単一ファイルのサイズ上限は 512MB とし、指定したディレクトリ内の既存ファイルは保持します。
 
 ```sql
-EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c/" 
+EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c/"
 PROPERTIES(
     "format" = "parquet",
     "max_file_size" = "512MB",
@@ -347,27 +347,27 @@ with HDFS (
 );
 ```
 
-### Broker ノードを介したエクスポート
+### Broker ノード経由のエクスポート {#export-through-broker-node}
 先に Broker プロセスを起動し、この Broker を FE に追加する必要があります。
 - Test テーブルのすべてのデータを HDFS にエクスポートします。
 ```sql
-EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c" 
-WITH BROKER "broker_name" 
+EXPORT TABLE test TO "hdfs://hdfs_host:port/a/b/c"
+WITH BROKER "broker_name"
 (
   "username"="xxx",
   "password"="yyy"
 );
 ```
 
-- testTbl テーブルの p1、p2 パーティションを HDFS にエクスポートし、列区切り文字に "," を使用して Label を指定します。
+- testTbl テーブルのパーティション p1,p2 を HDFS にエクスポートします。列区切り文字に "," を使用し、ラベルを指定します。
 
 ```sql
-EXPORT TABLE testTbl PARTITION (p1,p2) TO "hdfs://hdfs_host:port/a/b/c" 
+EXPORT TABLE testTbl PARTITION (p1,p2) TO "hdfs://hdfs_host:port/a/b/c"
 PROPERTIES (
   "label" = "mylabel",
   "column_separator"=","
-) 
-WITH BROKER "broker_name" 
+)
+WITH BROKER "broker_name"
 (
   "username"="xxx",
   "password"="yyy"
@@ -377,14 +377,14 @@ WITH BROKER "broker_name"
 - testTbl テーブルのすべてのデータを HDFS にエクスポートし、不可視文字 `\x07` を列または行の区切り文字として使用します。
 
 ```sql
-EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c" 
+EXPORT TABLE testTbl TO "hdfs://hdfs_host:port/a/b/c"
 PROPERTIES (
-  "column_separator"="\\x07", 
+  "column_separator"="\\x07",
   "line_delimiter" = "\\x07"
-) 
-WITH BROKER "broker_name" 
+)
+WITH BROKER "broker_name"
 (
-  "username"="xxx", 
+  "username"="xxx",
   "password"="yyy"
 )
 ```

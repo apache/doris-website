@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "38b59164e659e649fcb37518c3b40cbfbef9975801cb85eba818f7fea2ee34e6",
-    "sourceTechnicalHash": "65fbf8a28f60d1de4c634d718ec59b5487e2de4ec7db30c7ad4abb47b92b7ca4",
-    "targetHash": "27edd5cedad8f7158605e6cf69ce29cf8a2ef39b65569f737c5b161b8e419fcb",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "508986b4e6377667356cea3eb07fe4e32c184bd045b5e918af20e69962a6d3aa",
+    "sourceTechnicalHash": "ffc0f37f24b0458f3ac066cef9cb28f663febcf118a7c653bc9151aead9b5c62",
+    "targetHash": "53f1d48abebb6d4bda49709ad1f87b9ed317ab27a00b3ca3de857533acc5def6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:26:58.627Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:55:57.312Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "508986b4e6377667356cea3eb07fe4e32c184bd045b5e918af20e69962a6d3aa",
+      "targetHash": "53f1d48abebb6d4bda49709ad1f87b9ed317ab27a00b3ca3de857533acc5def6",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 53: expected [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]\nprotected node 55: expected [\"inlineCode\",null,null,\"_0\"]; received [\"inlineCode\",null,null,\"delete_existing_files\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 53: expected [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]\nprotected node 69: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 69: expected [\"inlineCode\",null,null,\"BINARY\"]; received [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]\nprotected node 70: expected [\"inlineCode\",null,null,\"doris.logical_type=uuid\"]; received [\"inlineCode\",null,null,\"BINARY\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 53: expected [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]\nprotected node 55: expected [\"inlineCode\",null,null,\"_0\"]; received [\"inlineCode\",null,null,\"delete_existing_files\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
