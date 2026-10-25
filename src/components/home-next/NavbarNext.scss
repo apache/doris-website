@@ -189,6 +189,9 @@
         color: var(--nb-cream-light);
         background: color-mix(in srgb, var(--nb-cream-light) 9%, transparent);
     }
+    &.navbar &__github svg {
+        display: block;
+    }
     &__github > svg {
         color: var(--nb-yellow);
         flex-shrink: 0;
