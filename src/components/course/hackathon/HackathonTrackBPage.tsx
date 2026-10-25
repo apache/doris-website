@@ -171,7 +171,7 @@ function TrackBPanel({ view, chosen }: { view: PanelView; chosen: TrackBTask }):
             <div className="hk-task__panel-body">
                 <div className={clsx('hk-task__view', view === 'start' && 'is-active')}>
                     <HackathonCodeBlock snippet={START_SNIPPET} />
-                    <ConnectionCard database={`your own, e.g. ${chosen.database}`} />
+                    <ConnectionCard database={`${translate({id: 'landing.trackB.databaseHint', message: 'Your own, e.g.'})} ${chosen.database}`} />
                     {docFiles(chosen).map(file => (
                         <p className="hk-task__kitline" key={file}>
                             <b>{translate({id: "landing.HackathonTrackBPage.031", message: "Edit"})}</b>
@@ -226,10 +226,10 @@ export function HackathonTrackBPage(): JSX.Element {
                             </p>
                             <ul className="hk-task__chips" aria-label={translate({id: "landing.HackathonTrackBPage.041", message: "At a glance"})}>
                                 {[
-                                    '30–60 min per task',
-                                    'Beginner-friendly',
-                                    'SQL and a browser',
-                                    'Ends in a docs PR',
+                                    translate({id: 'landing.trackB.chip.1', message: '30–60 min per task'}),
+                                    translate({id: 'landing.trackB.chip.2', message: 'Beginner-friendly'}),
+                                    translate({id: 'landing.trackB.chip.3', message: 'SQL and a browser'}),
+                                    translate({id: 'landing.trackB.chip.4', message: 'Ends in a docs PR'}),
                                 ].map(chip => (
                                     <li key={chip}>{chip}</li>
                                 ))}
@@ -307,7 +307,7 @@ export function HackathonTrackBPage(): JSX.Element {
                                 ))}
                             </ul>
                             <div className="hk-task__inline">
-                                <ConnectionCard inline database={`your own, e.g. ${chosen.database}`} />
+                                <ConnectionCard inline database={`${translate({id: 'landing.trackB.databaseHint', message: 'Your own, e.g.'})} ${chosen.database}`} />
                             </div>
                         </section>
 

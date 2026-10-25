@@ -15766,5 +15766,65 @@
     "landing.trackB.task.B6.proves.3": {
         "message": "验证重复运行安全：使用相同 Label 再次发送导入时，不会重复加载，返回 Label Already Exists",
         "description": "Safe to rerun: sending the same load again loads nothing (same label, Label Already Exists)"
+    },
+    "landing.trackB.chip.1": {
+        "message": "每个任务30–60分钟"
+    },
+    "landing.trackB.chip.2": {
+        "message": "新手友好"
+    },
+    "landing.trackB.chip.3": {
+        "message": "SQL 与浏览器"
+    },
+    "landing.trackB.chip.4": {
+        "message": "提交文档 PR"
+    },
+    "landing.trackB.databaseHint": {
+        "message": "自行创建，例如"
+    },
+    "landing.sketch.column.page": {
+        "message": "页面"
+    },
+    "landing.sketch.column.section": {
+        "message": "章节"
+    },
+    "landing.sketch.column.scoreDistance": {
+        "message": "评分/距离"
+    },
+    "landing.sketch.column.score": {
+        "message": "评分"
+    },
+    "landing.sketch.column.distance": {
+        "message": "距离"
+    },
+    "landing.sketch.column.time": {
+        "message": "时间"
+    },
+    "landing.sketch.column.service": {
+        "message": "服务"
+    },
+    "landing.sketch.column.level": {
+        "message": "级别"
+    },
+    "landing.sketch.column.message": {
+        "message": "消息"
+    },
+    "landing.sketch.mode.keyword": {
+        "message": "关键词"
+    },
+    "landing.sketch.mode.vector": {
+        "message": "向量"
+    },
+    "landing.sketch.mode.hybrid": {
+        "message": "混合"
+    },
+    "landing.sketch.question.1": {
+        "message": "hackathon 数据库中有哪些表，各自有什么用途？"
+    },
+    "landing.sketch.question.2": {
+        "message": "app_logs 中各服务、各级别分别有多少条日志？"
+    },
+    "landing.sketch.question.3": {
+        "message": "删除所有 INFO 日志以节省空间。"
     }
 }

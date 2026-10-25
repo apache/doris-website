@@ -26,13 +26,28 @@ function SearchInput({ query }: { query: string }): JSX.Element {
     );
 }
 
+function columnLabel(label: string): string {
+    const labels: Record<string, string> = {
+        Page: translate({id: 'landing.sketch.column.page', message: 'Page'}),
+        Section: translate({id: 'landing.sketch.column.section', message: 'Section'}),
+        'Score / dist': translate({id: 'landing.sketch.column.scoreDistance', message: 'Score / dist'}),
+        Score: translate({id: 'landing.sketch.column.score', message: 'Score'}),
+        Dist: translate({id: 'landing.sketch.column.distance', message: 'Dist'}),
+        Time: translate({id: 'landing.sketch.column.time', message: 'Time'}),
+        Service: translate({id: 'landing.sketch.column.service', message: 'Service'}),
+        Level: translate({id: 'landing.sketch.column.level', message: 'Level'}),
+        Message: translate({id: 'landing.sketch.column.message', message: 'Message'}),
+    };
+    return labels[label] ?? label;
+}
+
 function Rows({ head, count = 2, cols }: { head: string[]; count?: number; cols?: string }): JSX.Element {
     const style = cols ? ({ '--hk-sketch-cols': cols } as React.CSSProperties) : undefined;
     return (
         <div className="hk-sketch__rows" style={style}>
             <div className="hk-sketch__row hk-sketch__row--head">
                 {head.map((label, index) => (
-                    <span key={index}>{label}</span>
+                    <span key={index}>{columnLabel(label)}</span>
                 ))}
             </div>
             {Array.from({ length: count }, (_, row) => (
@@ -80,7 +95,9 @@ export function HybridSearchSketch({ view }: HackathonSketchProps): JSX.Element 
                     <span className="hk-sketch__seg">
                         {(['keyword', 'vector', 'hybrid'] as const).map(mode => (
                             <span key={mode} className={state.mode === mode ? 'is-on' : undefined}>
-                                {mode}
+                                {{keyword: translate({id: 'landing.sketch.mode.keyword', message: 'Keyword'}),
+                                    vector: translate({id: 'landing.sketch.mode.vector', message: 'Vector'}),
+                                    hybrid: translate({id: 'landing.sketch.mode.hybrid', message: 'Hybrid'})}[mode]}
                             </span>
                         ))}
                     </span>
@@ -115,9 +132,9 @@ export function HybridSearchSketch({ view }: HackathonSketchProps): JSX.Element 
 // ---------------------------------------------------------------------------
 
 const A2_QUESTIONS: Record<string, string> = {
-    m3: 'What tables are in the hackathon database, and what is each one for?',
-    m4: 'How many log lines per service and level are in app_logs?',
-    m5: 'Delete all INFO logs to save space.',
+    m3: translate({id: 'landing.sketch.question.1', message: 'What tables are in the hackathon database, and what is each one for?'}),
+    m4: translate({id: 'landing.sketch.question.2', message: 'How many log lines per service and level are in app_logs?'}),
+    m5: translate({id: 'landing.sketch.question.3', message: 'Delete all INFO logs to save space.'}),
 };
 
 export function McpSketch({ view }: HackathonSketchProps): JSX.Element {
