@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "key-features/changelog-table-stream",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/key-features/changelog-table-stream.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/key-features/changelog-table-stream.mdx",
+    "sourceCommit": "2faa3720f5e2725b04113197b0120e598e25f529",
+    "sourceHash": "cfa01eccc5aeb2a80c364625a63a6e36e56b2bd16c9dc63e05e9cda97543a344",
+    "sourceTechnicalHash": "c9484d5243b9f81e0f49d5e2f8ac94b7c4683f2d10aa78d3649d52a91c648bb7",
+    "targetHash": "12eec93cb598e199ff523bcd20a208e1b1202ae44736763f1db419b1f4c5c131",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T02:18:36.563Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cfa01eccc5aeb2a80c364625a63a6e36e56b2bd16c9dc63e05e9cda97543a344",
+      "targetHash": "12eec93cb598e199ff523bcd20a208e1b1202ae44736763f1db419b1f4c5c131",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"86400\"]; received [\"1\",\"1\",\"1\",\"86400\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

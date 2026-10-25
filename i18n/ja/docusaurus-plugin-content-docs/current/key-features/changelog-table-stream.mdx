@@ -1,0 +1,132 @@
+---
+title: Changelog / Table Stream
+description: Doris テーブルが下流のコンシューマーに公開する、行レベルの変更フィード。
+keywords:
+  - changelog
+  - table stream
+  - row-level CDC
+  - change data capture
+  - Apache Doris CDC
+  - STREAM object
+slug: /key-features/changelog-table-stream
+image: /images/next/key-features/binlog-table-stream.jpg
+last_update:
+  date: 2026-10-21
+  author: Apache Doris
+unlisted: true
+featureCard:
+  tags:
+    - cdc
+    - data-streaming
+    - coming-soon
+---
+
+> **要約** Apache Doris Table Stream は、MySQL の binlog を読むように、Doris テーブルから行レベルの変更（挿入、更新、削除）を読み取るための、今後公開予定の API です。基盤となる仕組みはすでにコードベースにあります。テーブルごとのチェンジログ、パーティションごとのオフセットを保持する `STREAM` オブジェクト、消費状況のメタデータです。この機能はまだ GA ではなく、`changelog.ttl_seconds` のデフォルト値は 86,400 秒（一日）です。Doris から変更データを取得する一般的な CDC には、[Flink Doris Connector](../connection-integration/data-integration/flink-doris-connector/incremental-read) を使用してください。**ステータス: 近日公開（プレビュー）。**
+
+![Apache Doris Changelog / Table Stream: Doris テーブルが下流のコンシューマーに公開する行レベルの変更フィード。](/images/next/key-features/binlog-table-stream.jpg)
+:::caution ステータス: 近日公開
+ここで説明する `STREAM` オブジェクト、`changelog.enable` テーブルプロパティ、消費状況のメタデータビューは Doris のソースツリーに存在しますが、安定したユーザー向け API としてはまだリリースされていません。GA までに構文や動作が変わる可能性があります。現在の本番環境の CDC パイプラインには、[Kafka と CDC の統合](./kafka-cdc-integration)を使用してください。
+:::
+
+## Apache Doris で Changelog と Table Stream を使う理由 {#why}
+
+Apache Doris の Changelog と Table Stream は、下流のコンシューマーに行レベルの変更フィードを提供します。これにより、Flink ジョブ、監査証跡、検索インデックスは、テーブルを読み直さずに、すべての挿入、更新、削除に対応できます。Apache Doris は[変更データの取り込み](./kafka-cdc-integration)に優れています。一方、変更データを Doris から取り出すのは容易ではありません。下流のシステム（Flink ジョブ、監査証跡、別の Doris クラスター、検索インデックス）がすべての挿入、[更新、削除](./data-update-delete)に対応する必要がある場合、現在の選択肢には難点があります。
+
+- 定期的にテーブルを読み直して差分を取る。実装は簡単ですが、実行コストが高く、リアルタイムにはなりません。
+- プロデューサーから Kafka と Doris の両方に書き込む。書き込み先が二つになり、障害が起こり得る箇所も二つになります。
+
+Changelog と Table Stream は、この問題を解消します。Changelog はコミットされたすべての変更を行レベルで記録します。Table Stream は、そのログ上に作成する名前付きカーソルです。コンシューマーはストリームに接続し、前回のオフセット以降の変更を読み取って確認応答を返します。MySQL の binlog、Snowflake Streams、Postgres の論理レプリケーションスロットと同じ考え方を、Doris の第一級オブジェクトとして表現したものです。
+
+## Apache Doris の Changelog と Table Stream とは {#what}
+
+Apache Doris の Changelog は、Doris がテーブルごとに維持する行レベルの変更ログです。Apache Doris の Table Stream は、それを行レベルの CDC として公開するコンシューマー向けオブジェクトです。Changelog は、コミットされたすべての行変更をコミット時刻とともに記録し、必要に応じて変更前の値も記録します。これはクラスター間レプリケーション（CCR）が使う binlog とは別のものです。Changelog には独自の `changelog.*` プロパティがあり、一つのテーブルで両方を有効にすることはできません。
+
+Table Stream は、Changelog の上に構築されるコンシューマー向けオブジェクトです。ストリームは `CREATE STREAM <name> ON TABLE <base_table>` で作成します。各ストリームはパーティションごとに独自のオフセットを保持し、`SHOW CREATE STREAM` と、消費状況を示す `information_schema` ビューを SQL から利用できます。
+
+**主な用語**
+
+- **`changelog.enable`**: テーブルごとのプロパティ。`true` にすると、そのテーブルの Changelog が有効になります。テーブル作成時にのみ設定できます。
+- **`changelog.need_historical_value`**: テーブルごとのプロパティ。`true` にすると、各更新・削除の前の値も記録します。Unique Key Merge-on-Write テーブルでのみ使用できます。
+- **`changelog.ttl_seconds`**: 保持期間を指定する設定です。デフォルトの TTL は一日で、テーブル作成後にも変更できます。
+- **`STREAM`**: ベーステーブルを対象とし、一つのコンシューマーのパーティションごとのオフセットを追跡する Doris カタログオブジェクトです。
+- **ストリームの消費タイプ**: `detail`、`append_only`、`min_delta`（デフォルト）のいずれかです。すべての行変更、挿入のみ、最小限の変更セットのどれをストリームが出力するかを制御します。
+- **ストリームのラグ**: パーティションの可視バージョンから、ストリームに記録されたオフセットを引いた値です。`LAG` 列で確認できます。
+
+## Apache Doris の Changelog と Table Stream の仕組み {#how}
+
+Apache Doris の Changelog は BE で行レベルの差分を記録します。Table Stream はそのログをパーティションごとのオフセットで管理し、下流のコンシューマーが変更を増分で読み取り、確認応答を返せるようにします。
+
+1. **テーブル作成時に Changelog を有効にします。** `CREATE TABLE t (...) PROPERTIES ("changelog.enable" = "true")`。既存のテーブルでは Changelog を有効にできません。BE は、`changelog.ttl_seconds` に従って、タブレットデータとともに行レベルの差分を保持します。
+2. **テーブル上にストリームを作成します。** `CREATE STREAM s ON TABLE t PROPERTIES ("type" = "min_delta")`。FE は `STREAM` オブジェクトを作成し、各パーティションの現在の可視バージョンを開始オフセットとして記録して、データベースに登録します。`show_initial_rows = true` にすると、最初の読み取りで過去の状態が返されます。
+3. **変更を消費します。** 下流のリーダー（現在は外部 CDC コネクター、今後はネイティブのコンシューマーエンドポイント）がストリームから読み取ります。バッチを読み取るたびに、パーティションごとのオフセットが進み、消費時刻が記録されます。
+4. **古い変更を削除します。** `changelog.ttl_seconds` より古い変更は、すべてのストリームが読み取ったかどうかに関係なく期限切れになります。その後、バックグラウンドのコンパクションでストレージが回収されます。オフセットが保持期間の範囲外になったストリームは、新しいスナップショットからリセットする必要があります。
+5. **消費状況を確認します。** `information_schema.table_streams` には、すべてのストリームとそのベーステーブルが一覧表示されます。`table_stream_consumption` は、パーティションごとの `UNIT`（パーティション）、`CONSUMPTION_STATUS`、`LAG`、`LAST_CONSUMPTION_TIME` を報告します。これらがラグを監視するための情報になります。
+
+## クイックスタート {#quick-start}
+
+```sql
+-- 1. Enable the changelog when the source table is created
+CREATE TABLE orders (
+  order_id   BIGINT,
+  order_date DATE,
+  status     VARCHAR(16),
+  amount     DECIMAL(10, 2)
+)
+UNIQUE KEY(order_id, order_date)
+PARTITION BY RANGE(order_date) (
+  PARTITION p_2026_05 VALUES [('2026-05-01'), ('2026-06-01'))
+)
+DISTRIBUTED BY HASH(order_id) BUCKETS 8
+PROPERTIES (
+  "enable_unique_key_merge_on_write" = "true",
+  "changelog.enable" = "true",
+  "changelog.need_historical_value" = "true",
+  "changelog.ttl_seconds" = "86400"
+);
+
+-- 2. Create a Table Stream over it (planned syntax, subject to change)
+CREATE STREAM orders_cdc ON TABLE orders
+PROPERTIES ("type" = "min_delta", "show_initial_rows" = "false");
+
+-- 3. Inspect the stream and its lag
+SHOW CREATE STREAM orders_cdc;
+SELECT * FROM information_schema.table_stream_consumption
+WHERE STREAM_NAME = 'orders_cdc';
+```
+
+**想定される結果**
+
+```
++---------+------------+-----------+--------------------+-----+----------------------+
+| DB_NAME | STREAM_NAME| STREAM_ID | UNIT (partition)   | LAG | LAST_CONSUMPTION_TIME|
++---------+------------+-----------+--------------------+-----+----------------------+
+| sales   | orders_cdc | 10042     | p_2026_05          | 0   | 2026-05-09 10:14:33  |
++---------+------------+-----------+--------------------+-----+----------------------+
+```
+
+`LAG = 0` は、コンシューマーがパーティションの可視バージョンまで追いついていることを意味します。上流で書き込みがコミットされると `LAG` は増え、コンシューマーが読み取ると減ります。遅延が `changelog.ttl_seconds` を超えたコンシューマーは、スナップショットを取り直す必要があります。`STALE_REASON` はこの状況を報告しないため、消費の遅延と保持期間を比較してください。
+
+## Apache Doris の Changelog と Table Stream を使う場面 {#when}
+
+GA 後は、テーブル全体を読み直さずに Doris テーブルの行レベルの変更イベントを下流のシステムへ渡す必要がある場合に、Apache Doris の Changelog と Table Stream を使用します。
+
+**適した用途（GA 後）**
+
+- テーブルを読み直さずに、Doris 側の変更イベントを使って下流の Flink または Spark ジョブを動かす。
+- すべての挿入と削除を反映する必要がある外部の検索インデックス、キャッシュ、監査証跡を維持する。
+- 明示的なコンシューマーオフセットが必要な Doris 間のレプリケーション。
+- パーティションの `LAG` が変化したときに、外部のマテリアライズドビューの再計算を開始する。
+
+**適さない用途（特に現時点）**
+
+- 現時点の本番環境の CDC パイプライン。`STREAM` オブジェクトはソースツリーにありますが、GA は発表されていません。代わりに[Kafka と CDC の統合](./kafka-cdc-integration)を使用してください。
+- Changelog の保持期間が短い状態で、長時間停止するコンシューマー。コンシューマーの遅延が `changelog.ttl_seconds` を超えると、必要な変更が期限切れになり、初期データを取り込み直す必要があります。
+- ストレージとコンピュートを分離したクラスター。そこでの Table Stream のサポート方針は、まだ検討中です。
+- 外部カタログのテーブル（Hive、Iceberg）の読み取り。Table Stream の対象は内部 OLAP テーブルだけです。
+
+## 関連資料 {#further-reading}
+
+- [Kafka と CDC の統合](./kafka-cdc-integration): 現在、変更データを Doris に取り込み、Doris の周辺で扱うためにサポートされている方法。
+- [データの更新と削除](./data-update-delete): Unique Key Merge-on-Write テーブルで、行ストリームに含まれる削除や順序が前後した更新をどのように表現するか。
+- [Iceberg](./iceberg): レプリケートしたテーブルの外部保存先。Doris を離れずに SQL を使って CDC データを Iceberg に書き込めます。
+- [Unique Key](./unique-key): 下流の Changelog コンシューマー向けに、キーごとに一行の状態を明確に保持する上流テーブルモデル。
