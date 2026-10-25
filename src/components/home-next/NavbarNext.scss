@@ -62,7 +62,8 @@
         right: 0;
         left: auto;
     }
-    &__trigger {
+    &__trigger,
+    &__summit {
         display: flex;
         align-items: center;
         gap: 5px;
@@ -71,12 +72,15 @@
         border-radius: 4px;
         background: transparent;
         color: var(--nb-cream-light);
+        text-decoration: none !important;
         cursor: pointer;
         white-space: nowrap;
         @include type.mono-text(13px, 600, 1.2, 0.01em);
     }
     &__trigger:hover,
+    &__summit:hover,
     &__trigger[aria-expanded='true'] {
+        color: var(--nb-cream-light);
         background: color-mix(in srgb, var(--nb-cream-light) 10%, transparent);
     }
     &__chevron {
@@ -293,7 +297,8 @@
         &__item {
             position: static;
         }
-        &__trigger {
+        &__trigger,
+        &__summit {
             gap: 3px;
             min-height: 32px;
             padding: 8px 6px;
@@ -349,7 +354,8 @@
         &__cta {
             padding-inline: 7px;
         }
-        &__trigger {
+        &__trigger,
+        &__summit {
             padding-inline: 5px;
             font-size: 10px;
         }

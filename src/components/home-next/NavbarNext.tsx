@@ -113,15 +113,6 @@ function buildNavItems(
                     href: 'https://github.com/apache/doris/discussions',
                     external: true,
                 },
-                {
-                    label: 'Doris Summit 26',
-                    href: DORIS_SUMMIT_URL,
-                    external: true,
-                    ariaLabel: translate({
-                        id: 'homepage.navbar.027',
-                        message: 'Visit Doris Summit 2026 (opens in a new tab)',
-                    }),
-                },
             ],
         },
     ];
@@ -293,6 +284,18 @@ export function NavbarNext(): JSX.Element {
                             </div>
                         </div>
                     ))}
+                    <a
+                        className="navbar-next__summit"
+                        href={DORIS_SUMMIT_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={translate({
+                            id: 'homepage.navbar.027',
+                            message: 'Visit Doris Summit 2026 (opens in a new tab)',
+                        })}
+                    >
+                        Doris Summit 26
+                    </a>
                 </div>
 
                 <div className="navbar-next__actions">
