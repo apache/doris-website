@@ -8,6 +8,14 @@ const { renderToStaticMarkup } = require('react-dom/server');
 const typescript = require('typescript');
 const hcaptchaSiteKey = '10000000-ffff-ffff-ffff-000000000001';
 
+const Module = require('node:module');
+const previousModuleLoad = Module._load;
+Module._load = function(name, ...args) {
+    if (name === '@docusaurus/Translate') return {translate: ({message, id}, values = {}) =>
+        (message ?? id ?? '').replace(/\{(\w+)\}/g, (token, key) => String(values[key] ?? token))};
+    return previousModuleLoad.call(this, name, ...args);
+};
+
 const previousTypeScriptLoader = require.extensions['.ts'];
 const previousTsxLoader = require.extensions['.tsx'];
 const compileTypeScript = (module, filename) => {
@@ -36,6 +44,7 @@ const { MAX_RAW_BYTES } = require('./profile-analysis.file.ts');
 
 require.extensions['.ts'] = previousTypeScriptLoader;
 require.extensions['.tsx'] = previousTsxLoader;
+Module._load = previousModuleLoad;
 
 test('accepts case-insensitive txt files and rejects other types or oversized files', () => {
     assert.equal(validateProfileFile(new File(['profile'], 'query.PROFILE.TXT')), null);
@@ -101,7 +110,8 @@ test('disables both tab actions without a file and keeps visualization available
     const analyzerSource = fs.readFileSync(path.join(__dirname, 'ProfileAnalyzer.tsx'), 'utf8');
 
     assert.match(analyzerSource, /disabled=\{!analysis\.file \|\| localDag\.isBusy\}/);
-    assert.match(analyzerSource, /localDag\.isBusy \? 'Visualizing…' : 'Visualize Execution'/);
+    assert.match(analyzerSource, /localDag\.isBusy \? translate\(/);
+    assert.match(analyzerSource, /message:\s*['"]Visualizing…['"]/);
     // The AI job never disables the local visualization button.
     assert.doesNotMatch(analyzerSource, /disabled=\{[^}]*isAiBusy[^}]*\}\s*\n\s*onClick=\{handleVisualize\}/);
 
@@ -247,8 +257,8 @@ test('adds English action tabs and configures the execution graph as read-only',
     const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
     const dagNodeSource = fs.readFileSync(path.join(__dirname, 'ProfileDagNode.tsx'), 'utf8');
 
-    assert.match(analyzerSource, />\s*Visualize Execution\s*</);
-    assert.match(analyzerSource, />\s*AI-assisted analysis\s*</);
+    assert.match(analyzerSource, /message:\s*['"]Visualize Execution['"]/);
+    assert.match(analyzerSource, /message:\s*['"]AI-assisted analysis['"]/);
     assert.match(analyzerSource, /role="tablist"/);
     assert.match(analyzerSource, /role="tabpanel"/);
     // Both panels stay mounted so switching tabs never discards a finished result.
@@ -270,7 +280,7 @@ test('overlays the slowest operators on the canvas and centers the one that is c
     const dagSource = fs.readFileSync(path.join(__dirname, 'ProfileDag.tsx'), 'utf8');
 
     assert.match(dagSource, /<Panel position="top-left" className="profile-dag-hotspots"/);
-    assert.match(dagSource, />Slowest operators</);
+    assert.match(dagSource, /message:\s*['"]Slowest operators['"]/);
     assert.match(dagSource, /hotspots\.length > 0 && <HotspotList hotspots=\{hotspots\} onFocus=\{focusNode\} \/>/);
     assert.match(dagSource, /onClick=\{\(\) => onFocus\(hotspot\.id\)\}/);
     // Each entry carries the node id, its name, its location, and the measured duration.
@@ -293,7 +303,9 @@ test('expands the execution graph to every pixel below the navbar in full screen
 
     assert.match(dagSource, /<Panel position="top-right" className="profile-dag-fullscreen"/);
     assert.match(dagSource, /<FullscreenToggle active=\{isFullscreen\} onToggle=\{changeFullscreen\} \/>/);
-    assert.match(dagSource, /\{active \? 'Exit full screen' : 'Full screen'\}/);
+    assert.match(dagSource, /active \? translate\(/);
+    assert.match(dagSource, /message:\s*['"]Exit full screen['"]/);
+    assert.match(dagSource, /message:\s*['"]Full screen['"]/);
     assert.match(dagSource, /aria-pressed=\{active\}/);
     // The navbar stays visible, so its measured height offsets the canvas.
     assert.match(dagSource, /const NAVBAR_SELECTOR = '\.navbar-next'/);

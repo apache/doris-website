@@ -4,10 +4,20 @@ import { LayoutNext } from '../home-next/LayoutNext';
 import { USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
 import USERS from '@site/src/constant/users.data.json';
 import UserItem from '../user-item/user-item';
+import {userStoryId} from './user-story-localization';
 import './UsersNext.scss';
 
 const ALL_TEXT = 'All';
 const PAGE_SIZE = 32;
+const CATEGORY_LABELS: Record<string, string> = {
+    All: translate({id: 'landing.users.category.all', message: 'All'}),
+    Finance: translate({id: 'landing.users.category.finance', message: 'Finance'}),
+    Technology: translate({id: 'landing.users.category.technology', message: 'Technology'}),
+    'Media & Entertainment': translate({id: 'landing.users.category.media', message: 'Media & Entertainment'}),
+    'Telecom & Manufacturing': translate({id: 'landing.users.category.telecom', message: 'Telecom & Manufacturing'}),
+    'FMCG & Logistics': translate({id: 'landing.users.category.logistics', message: 'FMCG & Logistics'}),
+    'Commercial Distribution': translate({id: 'landing.users.category.distribution', message: 'Commercial Distribution'}),
+};
 
 function useRevealObserver(): void {
     useEffect(() => {
@@ -122,7 +132,7 @@ function UsersGridSection(): JSX.Element {
                                 onClick={() => changeCategory(item)}
                                 className={`users-next__cat ${active === item ? 'is-active' : ''}`}
                             >
-                                {item}
+                                {CATEGORY_LABELS[item] ?? item}
                             </button>
                         </li>
                     ))}
@@ -130,7 +140,7 @@ function UsersGridSection(): JSX.Element {
 
                 <ul className="users-next__grid" data-reveal data-reveal-delay="1">
                     {users.slice(0, currentSize).map((user) => (
-                        <UserItem key={user.name} {...user} />
+                        <UserItem key={user.name} {...user} story={user.story ? translate({id: userStoryId(user.name), message: user.story}) : user.story} />
                     ))}
                 </ul>
 

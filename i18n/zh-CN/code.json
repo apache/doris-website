@@ -10677,5 +10677,1286 @@
     "landing.CommunityRoadmap.026": {
         "message": "阅读贡献指南 →",
         "description": "Read the contribution guide →"
+    },
+    "landing.events.data.001": {
+        "message": "关注社区声音，一起交流、学习，分享知识，共同推动协作与创新。",
+        "description": "Stay tuned to community voices. Together, we celebrate collaboration, innovation, and the power of shared knowledge. Let's connect, learn, and grow!"
+    },
+    "landing.events.data.002": {
+        "message": "连接数据湖与数据库：Iceberg 实时查询",
+        "description": "Bridging Lake and Database: Real-time Queries on Iceberg"
+    },
+    "landing.events.data.003": {
+        "message": "Apache Doris 线上分享",
+        "description": "Apache Doris Webinar"
+    },
+    "landing.events.data.004": {
+        "message": "2025 年 9 月 23 日 19:00（EST）",
+        "description": "September 23, 2025 7PM EST"
+    },
+    "landing.events.data.005": {
+        "message": "2025 年 9 月 23 日",
+        "description": "September 23, 2025"
+    },
+    "landing.events.data.006": {
+        "message": "线上活动",
+        "description": "Virtual"
+    },
+    "landing.events.data.007": {
+        "message": "NebulaGraph × Apache Doris Meetup：金融科技新范式",
+        "description": "NebulaGraph × Apache Doris Meetup: the New Fintech Paradigm"
+    },
+    "landing.events.data.008": {
+        "message": "Apache Doris 线下交流",
+        "description": "Apache Doris Meetup"
+    },
+    "landing.events.data.009": {
+        "message": "2025 年 8 月 22 日 13:30–17:00（GMT+8）",
+        "description": "August 22, 2025 1:30-5:00 PM (GMT+8)"
+    },
+    "landing.events.data.010": {
+        "message": "2025 年 8 月 22 日",
+        "description": "August 22, 2025"
+    },
+    "landing.events.data.011": {
+        "message": "香港中环 Cotton Tree Drive 8 号 Fairmont House 14 楼 4&5 室",
+        "description": "Room 4&5 14/F Fairmont House, 8 Cotton Tree Drive, Central, Hong Kong"
+    },
+    "landing.events.data.012": {
+        "message": "使用 Apache Doris 进行实时物联网分析",
+        "description": "Real-Time IoT Analytics with Apache Doris"
+    },
+    "landing.events.data.013": {
+        "message": "2025 年 8 月 20 日 17:00–19:00（PDT）",
+        "description": "August 20, 2025 5:00-7:00 PM PDT"
+    },
+    "landing.events.data.014": {
+        "message": "2025 年 8 月 20 日",
+        "description": "August 20, 2025"
+    },
+    "landing.events.data.015": {
+        "message": "美国加州 Sunnyvale，440 N Wolfe Rd，Plug and Play Tech Center（邮编 94085）",
+        "description": "Plug and Play Tech Center 440 N Wolfe Rd, Sunnyvale, CA 94085"
+    },
+    "landing.events.data.016": {
+        "message": "从 Snowflake 迁移到 Apache Doris",
+        "description": "Migrating from Snowflake to Apache Doris"
+    },
+    "landing.events.data.017": {
+        "message": "2025 年 7 月 22 日 11:00–12:00（IST）",
+        "description": "July 22, 2025 11:00 AM–12:00 PM IST"
+    },
+    "landing.events.data.018": {
+        "message": "2025 年 7 月 22 日",
+        "description": "July 22, 2025"
+    },
+    "landing.events.data.019": {
+        "message": "Apache Doris：AI 时代最快的分析与搜索数据库",
+        "description": "Apache Doris: Fastest Analytics & Search Database for AI Era"
+    },
+    "landing.events.data.020": {
+        "message": "2025 年 6 月 26 日 19:00–20:00（EDT）",
+        "description": "June 26, 2025 7-8pm EDT"
+    },
+    "landing.events.data.021": {
+        "message": "2025 年 6 月 26 日",
+        "description": "June 26, 2025"
+    },
+    "landing.events.data.022": {
+        "message": "探索 Apache Doris 存算分离模式",
+        "description": "Explore Apache Doris Compute-Storage Decoupled Mode"
+    },
+    "landing.events.data.023": {
+        "message": "2025 年 3 月 27 日 21:00–22:00（GMT+8）",
+        "description": "March 27, 2025 21:00-22:00 GMT+8"
+    },
+    "landing.events.data.024": {
+        "message": "2025 年 3 月 27 日",
+        "description": "March 27, 2025"
+    },
+    "landing.events.data.025": {
+        "message": "解读 2025 路线图",
+        "description": "Interpreting 2025 Roadmap"
+    },
+    "landing.events.data.026": {
+        "message": "解读 Apache Doris 2025 路线图",
+        "description": "Interpreting the Apache Doris 2025 Roadmap"
+    },
+    "landing.events.data.027": {
+        "message": "2025 年 3 月 20 日 21:00–22:00（GMT+8）",
+        "description": "March 20, 2025 21:00-22:00 GMT+8"
+    },
+    "landing.events.data.028": {
+        "message": "2025 年 3 月 20 日",
+        "description": "March 20, 2025"
+    },
+    "landing.events.data.029": {
+        "message": "Doris Summit 2025｜驱动 AI 时代的实时分析与搜索",
+        "description": "Doris Summit 2025 | Powering Real-Time Analytics & Search in the AI Era"
+    },
+    "landing.events.data.030": {
+        "message": "CommunityOverCode Asia 2025 大会",
+        "description": "CommunityOverCode Asia 2025"
+    },
+    "landing.roadmap.data.001": {
+        "message": "了解发展方向",
+        "description": "Understand the direction"
+    },
+    "landing.roadmap.data.002": {
+        "message": "Issue #60036",
+        "description": "Issue #60036"
+    },
+    "landing.roadmap.data.003": {
+        "message": "跟进当前工作",
+        "description": "Follow active work"
+    },
+    "landing.roadmap.data.004": {
+        "message": "实时标签检索",
+        "description": "Live label search"
+    },
+    "landing.roadmap.data.005": {
+        "message": "找到适合参与的任务",
+        "description": "Find a place to contribute"
+    },
+    "landing.roadmap.data.006": {
+        "message": "Issue #17176",
+        "description": "Issue #17176"
+    },
+    "landing.roadmap.data.007": {
+        "message": "维护即将结束",
+        "description": "Winding down"
+    },
+    "landing.roadmap.data.008": {
+        "message": "2026 年 8 月",
+        "description": "Aug 2026"
+    },
+    "landing.roadmap.data.009": {
+        "message": "维护中",
+        "description": "In maintenance"
+    },
+    "landing.roadmap.data.010": {
+        "message": "每月",
+        "description": "Monthly"
+    },
+    "landing.roadmap.data.011": {
+        "message": "规划中",
+        "description": "Planned"
+    },
+    "landing.roadmap.data.012": {
+        "message": "2026 年 9 月",
+        "description": "Sep 2026"
+    },
+    "landing.roadmap.data.013": {
+        "message": "2026 年 11 月",
+        "description": "Nov 2026"
+    },
+    "landing.events.status.upcoming": {
+        "message": "即将举行"
+    },
+    "landing.events.status.processing": {
+        "message": "进行中"
+    },
+    "landing.events.status.completed": {
+        "message": "已结束"
+    },
+    "landing.events.seo.title": {
+        "message": "Apache Doris 社区活动"
+    },
+    "landing.events.seo.description": {
+        "message": "了解 Apache Doris 社区活动、技术交流与线上分享。"
+    },
+    "download.title": {
+        "message": "Apache Doris 下载｜在各类环境中轻松部署"
+    },
+    "homepage.banner.subTitle": {
+        "message": "下载并体验不同版本的预编译二进制包。Apache Doris 支持在不同环境、不同规模下连接设备。"
+    },
+    "download.version": {
+        "message": "版本"
+    },
+    "download.cpu.model": {
+        "message": "架构"
+    },
+    "download.download.link": {
+        "message": "压缩包"
+    },
+    "landing.userStory.AWS": {
+        "message": "Amazon Web Services（AWS）是领先的云计算平台，提供多种可扩展、可靠的云服务。基于 Apache Doris 的商业产品 VeloDB Cloud 可在 AWS 上使用，提供可扩展、高效的数据分析能力。",
+        "description": "Amazon Web Services (AWS) is a leading cloud computing platform that offers a wide range of scalable and reliable cloud services. A commercial product based on Apache Doris, VeloDB Cloud is available on AWS, offering scalable and efficient data analytics capabilities."
+    },
+    "landing.userStory.VeloDB": {
+        "message": "VeloDB 是基于 Apache Doris 构建的现代数据仓库，面向大规模实时数据提供快速分析。VeloDB 公司围绕 Apache Doris 构建商业产品，为全球企业用户提供实时分析产品与解决方案。",
+        "description": "Powered by Apache Doris, VeloDB is a modern data warehouse designed for swift analytics on large-scale real-time data. VeloDB Inc, a commercial company with products based on Apache Doris, delivers real-time analytics products and solutions to enterprise users worldwide."
+    },
+    "landing.userStory.SelectDB": {
+        "message": "SelectDB 是面向大规模实时数据的现代数据仓库，提供快速分析能力，支持全托管云原生服务，以及在本地环境、虚拟机或 Kubernetes 上自行部署和管理。",
+        "description": "SelectDB is a modern data warehouse for lightning-fast analytics on real-time data at scale, offering fully managed cloud-native data warehouse services and self-managed software on premises, VMs, or Kubernetes."
+    },
+    "landing.userStory.Tencent%20Cloud": {
+        "message": "腾讯云 House-D 是基于 Apache Doris 的全托管云数据仓库服务。",
+        "description": "Tencent Cloud House-D is a fully-managed cloud data warehouse service built on Apache Doris."
+    },
+    "landing.userStory.Alibaba%20Cloud": {
+        "message": "阿里云是全球领先的云计算与人工智能服务提供商，提供基于 Apache Doris 的全托管服务，支持实时分析。",
+        "description": "Alibaba Cloud is a global leader in cloud computing and artificial intelligence, offering a fully managed service built on Apache Doris for real-time analytics."
+    },
+    "landing.userStory.Tencent": {
+        "message": "腾讯是全球领先的互联网与科技公司。腾讯多个业务使用 Apache Doris 实时分析用户行为数据，更好地支持业务分析与决策。",
+        "description": "Tencent is a leading global internet and technology company. Tencent has multiple businesses using Apache Doris to perform real-time analysis on user behavior data, better supporting business analysis and decision-making."
+    },
+    "landing.userStory.Alibaba.com": {
+        "message": "阿里巴巴是全球领先的互联网科技公司，业务涵盖电子商务、云计算、数字媒体和娱乐等领域。阿里巴巴多个业务使用 Apache Doris，通过实时数据分析支持业务战略与产品优化。",
+        "description": "Alibaba is a leading global Internet technology company with a wide range of business activities, including e-commerce, cloud computing, digital media and entertainment. Within Alibaba, multiple businesses are already using Apache Doris to support business strategies and product optimization through real-time data analysis."
+    },
+    "landing.userStory.JD.com": {
+        "message": "京东是领先的供应链技术与服务提供商，使用 Apache Doris 对实时和离线数据进行多维分析，提升客户服务能力。",
+        "description": "As a top-tier supply chain-based technology and service provider, JD.com uses Apache Doris for multi-dimensional analysis of real-time and offline data to empower their customer service."
+    },
+    "landing.userStory.Xiaomi": {
+        "message": "小米是全球最大的智能手机和消费电子制造商之一，将 Apache Doris 应用于看板、A/B 测试、用户行为分析和业务增长分析等多个场景。",
+        "description": "Xiaomi, one of the world's biggest smartphone and consumer electronics manufacturer has applied Apache Doris to multiple aspects of its business, from dashboarding, A/B testing, to user behavior and business growth analytics."
+    },
+    "landing.userStory.Baidu": {
+        "message": "百度是一家领先的科技企业，专注人工智能、云计算和搜索引擎技术，持续推动互联网相关服务创新。",
+        "description": "A leading tech giant renowned for its expertise in artificial intelligence, cloud computing, and search engine technologies and dedicated to innovations in internet-related services."
+    },
+    "landing.userStory.WeLab": {
+        "message": "WeLab 是泛亚洲增长最快的金融科技平台之一，个人用户超过 6000 万，企业客户超过 700 家。Apache Doris 在 WeLab 实时大数据平台中发挥重要作用，支持实时自助 BI 报表和用户行为分析等关键场景。",
+        "description": "WeLab is one of the fastest-growing pan-Asian fintech platforms, with over 60 million individual users and over 700 enterprise customers. Apache Doris plays a crucial role in WeLab's real-time big data platform, effectively supporting important scenarios such as real-time self-service BI reporting and user behavior analysis."
+    },
+    "landing.userStory.FUSE": {
+        "message": "FUSE 是印度尼西亚最大的保险科技公司，使用 Apache Doris 加速保险 BI 报表和实时数据分析。",
+        "description": "Fuse is the largest insurance technology company in Indonesia, using Apache Doris to accelerate insurance BI reporting and real-time data analytics capabilities."
+    },
+    "landing.userStory.Goldwind": {
+        "message": "金风科技是领先的风机制造商与可再生能源解决方案提供商，专注于设计、制造和安装。",
+        "description": "Glodwind is a leading wind turbine manufacturer and renewable energy solutions provider, specializing in design, manufacturing and installation."
+    },
+    "landing.userStory.Leetcode": {
+        "message": "LeetCode 是在线编程平台，帮助软件工程师和学生提升编程能力、准备技术面试。",
+        "description": "An online programming platform that help software engineers and students enhance their coding skills and prepare them for technical interviews."
+    },
+    "landing.userStory.miHoYo": {
+        "message": "米哈游是一家领先的互动娱乐公司，旗下知名游戏包括《原神》《崩坏3》和《未定事件簿》。",
+        "description": "miHoYo is a leading interactive entertainment company, known for their popular games like Genshin Impact, Honkai Impact 3rd, and Tears of Themis."
+    },
+    "landing.userStory.NetEase": {
+        "message": "网易在数据管理平台中引入 Apache Doris，提高了电商业务的性能，并简化标签管理。",
+        "description": "NetEase introduces Apache Doris into its data management platform and gains improved performance and simpler tag management for its e-commerce business."
+    },
+    "landing.userStory.Temu": {
+        "message": "Temu 提供价格实惠的一站式购物服务，商品涵盖家居装饰、电子产品、宠物用品、运动用品和玩具等品类。",
+        "description": "Temu provides one-stop destination for affordable items, perfect for home decor, electronic, pet supplies, sports and toy selections. "
+    },
+    "landing.userStory.Sina": {
+        "message": "新浪是一家网络媒体与科技公司，运营新浪微博和 Sina.com 等平台，为大量用户提供新闻、娱乐、社交和电子商务服务。",
+        "description": "Online media and technology company that operates platforms such as Sina Weibo and Sina.com, providing news, entertainment, social networking, and e-commerce services to a vast user base"
+    },
+    "landing.userStory.TME": {
+        "message": "腾讯音乐是一家拥有 8 亿月活跃用户的音乐流媒体服务提供商，从 ClickHouse 迁移至 Apache Doris 后，受益于便捷的部分列更新、更低的存储成本和更简单的运维。",
+        "description": "Tencent Music, a music streaming service provider with 800 million monthly active users, has transitioned from ClickHouse to Apache Doris and benefited from the convenience of partial column updates, lower storage costs, and easier maintenance."
+    },
+    "landing.userStory.Sohu.com": {
+        "message": "搜狐是一家广泛服务于数百万用户日常生活的互联网品牌，提供网站服务以及基于社区的 Web 2.0 产品。",
+        "description": "A premier online brand that is indispensable in the daily lives of millions of users, providing a network of web properties and community-based/web 2.0 products."
+    },
+    "landing.userStory.NewsBreak": {
+        "message": "NewsBreak 是美国知名的本地与突发新闻平台，拥有并持续吸引超过 4500 万用户，内容涵盖本地天气、提醒、优惠和活动等信息。",
+        "description": "Trusted by 45M users and growing , NewsBreak is  one of the best local & breaking news source in the US, featuring local weather, alerts, deals, events and more."
+    },
+    "landing.userStory.Tantan": {
+        "message": "探探是一款广受欢迎的交友应用，通过友好的界面和创新功能，帮助用户建立联系与关系。",
+        "description": "A popular dating app, known for its user-friendly interface and innovative features that facilitate meaningful connections and relationships."
+    },
+    "landing.userStory.Soul%20App": {
+        "message": "Soul 是一款基于兴趣连接用户的社交平台，用户通过虚拟形象开展交流与互动。",
+        "description": "An interest-based social networking platform where people use avatars to meet and interact."
+    },
+    "landing.userStory.Keep": {
+        "message": "Keep 是一款健身应用，提供丰富的运动课程、个性化训练计划和互助社区，帮助用户实现健身目标。",
+        "description": "A fitness app that offers a wide range of workout programs, personalized training plans, and a supportive community to help users achieve their fitness goals."
+    },
+    "landing.userStory.Kwai": {
+        "message": "快手是一家短视频社交平台，使用 Apache Doris 替代“Druid + ClickHouse”方案，提高大规模数据集的聚合分析效率。",
+        "description": "Kwai, a social network for short videos, uses Apache Doris in replacement of the \"Druid + ClickHouse\" solution and thus increases efficiency in aggregated analysis of large datasets."
+    },
+    "landing.userStory.37%20Interactive%20Entertainment": {
+        "message": "三七互娱是一家知名游戏公司，开发并发行高品质移动游戏，凭借多样的产品和庞大用户群，为全球玩家提供沉浸式游戏体验。",
+        "description": "a prominent gaming company known for developing and publishing high-quality mobile games. With a diverse portfolio and a large user base, offering immersive gaming experiences to players worldwide."
+    },
+    "landing.userStory.HUYA%20Inc": {
+        "message": "虎牙是一家知名直播平台，提供游戏、电竞和娱乐等多种内容。",
+        "description": "HUYA Inc. is a prominent live streaming platform, offering a diverse range of content including gaming, esports, and entertainment."
+    },
+    "landing.userStory.NIO": {
+        "message": "蔚来在评估多种 OLAP 系统后，综合考虑性能、语义、系统兼容性和维护成本，最终选择 Apache Doris。",
+        "description": "This electric vehicle manufacturer tried a fair share of OLAP systems and settled on Apache Doris after considering performance, semantics, system compatibility, and maintenance costs."
+    },
+    "landing.userStory.Suzuki": {
+        "message": "铃木是一家知名的日本汽车制造商，产品涵盖汽车、摩托车和舷外机，以可靠性和创新著称，车辆产品广受全球用户欢迎。",
+        "description": "A renowned Japanese automobile manufacturer known for its diverse range of cars, motorcycles, and outboard motors. With a reputation for reliability and innovation, Suzuki vehicles are popular worldwide.\n"
+    },
+    "landing.userStory.Ford": {
+        "message": "福特是一家知名汽车制造企业，以创新和品质著称，面向全球提供轿车、卡车和 SUV 等车型。",
+        "description": "A renowned automotive company that has been manufacturing and selling vehicles, known for its innovation and quality, Ford offers a wide range of cars, trucks, and SUVs globally."
+    },
+    "landing.userStory.Luckin%20Coffee": {
+        "message": "瑞幸咖啡是一家快速发展的咖啡企业与连锁品牌，以便捷的移动点单和配送服务，为中国消费者提供多种咖啡饮品与零食。",
+        "description": "A coffee company and coffeehouse chain that rapidly expanded in a short period. Known for its convenient mobile ordering and delivery services, Luckin Coffee offers a variety of coffee beverages and snacks to customers across China."
+    },
+    "landing.userStory.JD%20Logistics": {
+        "message": "京东物流隶属于京东，是一家拥有广泛网络与先进技术的领先物流企业，提供高效的仓储、运输和供应链解决方案，支持各行业电商业务顺畅运转。",
+        "description": "JD Logistics, a subsidiary of JD.com, is a leading logistics company with an extensive network and advanced technology. It offers efficient warehousing, transportation, and supply chain solutions, enabling seamless e-commerce operations across industries.\n"
+    },
+    "landing.userStory.Anta": {
+        "message": "安踏是一家以创新设计和高性能运动鞋服著称的运动品牌，兼顾品质与风格，服务全球运动员和健身爱好者。",
+        "description": "Anta as a sportswear company renowned for its innovative designs and high-performance athletic footwear and apparel. With a focus on quality and style, Anta caters to athletes and fitness enthusiasts worldwide."
+    },
+    "landing.userStory.Cabbeen": {
+        "message": "卡宾是一家时尚品牌，以现代、潮流的服装设计著称，注重传统元素与现代审美的融合。",
+        "description": "Cabbeen is a fashion brand known for its contemporary and trendy clothing designs, with a focus on blending traditional elements with modern aesthetics."
+    },
+    "landing.userStory.Semi": {
+        "message": "Semi 是一家面向成年人的现代生活方式品牌，致力于开发兼具创新设计与亲民价格的时尚产品。",
+        "description": "Semi is a modern lifestyle brand for adults committed to developing innovative, and affordable fashion."
+    },
+    "landing.userStory.Septwolves": {
+        "message": "七匹狼是一家时尚品牌，展现当代成功男性的生活方式，呼应不同领域成功人士的精神风貌。",
+        "description": "A fashion brand to present lifestyles of contemporary successful men and echo the spirit of successful men in various fields."
+    },
+    "landing.userStory.Yonghui%20Superstores": {
+        "message": "永辉超市是一家中国零售连锁企业，提供丰富的生鲜食品和家居用品，为消费者带来便捷、舒适的购物体验。",
+        "description": "Yonghui Superstores is a Chinese reatail chain known for its comprehensive selection of groceries and household products, providing a convenient and pleasant shopping experience for consumers."
+    },
+    "landing.userStory.YumChina": {
+        "message": "百胜中国是一家领先的餐饮企业，运营肯德基、必胜客和塔可钟等知名品牌，注重美味、便捷的用餐体验，成为中国消费者信赖的选择。",
+        "description": "A leading restaurant company in China, operatin popular barnds such as KFC, Pizza Hut, and Taco Bell. With a focus on delivering delicious and convenient dining experiences, Yum China has become a trusted choice for Chinese consumers."
+    },
+    "landing.userStory.Ausnutria": {
+        "message": "Ausnutria 是一家专注婴幼儿营养产品生产与销售的国际乳品企业，依托荷兰业务，为全球婴幼儿提供优质、安全的营养方案。",
+        "description": "An international dairy company based in the Netherlands, specializing in the production and distribution of infant and toddler nutrition products, Ausnutria ensures high-quality and safe nutritional solutions for babies and young children worldwide."
+    },
+    "landing.userStory.Aftership": {
+        "message": "AfterShip 是领先的物流跟踪平台，让企业和消费者能够实时跟踪不同快递服务商的包裹，为配送管理提供透明、便捷的体验。",
+        "description": "AfterShip is a leading shipment tracking platform that enables businesses and consumers to track and monitor their packages from various courier services in real-time. It provides transparency and convenience in package delivery management."
+    },
+    "landing.userStory.SF%20Express": {
+        "message": "顺丰是一家领先的物流与快递服务企业，为全球企业和个人提供高效、可靠的国内及国际运输解决方案。",
+        "description": "SF Express is a leading logistics and courier services company, providing efficient and reliable domestic and international shipping solutions while serving businesses and individuals worldwide."
+    },
+    "landing.userStory.Uda%20Express": {
+        "message": "Uda Express 致力于为全球电商平台、买卖双方、贸易商和最终消费者，提供安全、便捷、高效的一体化全球物流服务。",
+        "description": "Uda Express aims to provide safe, convenient, efficient and integrated global logistic services for worldwide e-commerce platforms, buyers or sellers, traders or dealers and final consumers.\n"
+    },
+    "landing.userStory.ZTO%20Express": {
+        "message": "中通快递是中国领先的物流企业，专注快递服务，为全国企业和消费者提供可靠、快速的配送方案。",
+        "description": "A leading Chinese logistics company specializing in express delivery services, provides reliable and fast delivery solutions for businesses and consumers across China."
+    },
+    "landing.userStory.YT%20Express": {
+        "message": "YT Express 重视生鲜和医药产品对专用冷链设备的需求，以及运输时效与效率。",
+        "description": "YT Express understands the high demand for fresh and medical products specific cold chain equipment and the timeliness and efficiency of transportation.\n\n\n"
+    },
+    "landing.userStory.Koolearn": {
+        "message": "Koolearn 是一家教育平台，为学生和成人学习者提供丰富的课程与学习资料，支持互动式、个性化学习。",
+        "description": "An education platform, Koolearn, offers a wide range of courses and study materials for students and adult learners, providing interactive and personalized learning experiences."
+    },
+    "landing.userStory.vipkid": {
+        "message": "VIPKid 平台连接付费学生与美国、加拿大教师。学生可通过在线课堂，接受英语流利的教师提供的 25 分钟英语课程。",
+        "description": "VIPKid platform connects paying students with teachers in the United States and Canada. Its online-classroom portal enables students to receive 25-minute English language lessons from fluent English-speaking teachers."
+    },
+    "landing.userStory.Meituan": {
+        "message": "美团是一家领先的本地生活服务平台，使用 Apache Doris 作为高性能 OLAP 引擎，解决实时与离线数据处理中的挑战。",
+        "description": "This leading local life service platform uses Apache Doris as a high-performance OLAP engine to address challenges in its real-time and offline data processing."
+    },
+    "landing.userStory.Lifewit": {
+        "message": "Lifewit 提供家居解决方案，专注于家居、旅行和收纳领域的创新产品，帮助用户获得舒适自在的日常生活体验。",
+        "description": "Homeware solutions helps you enjoy a genuine, comfortable life. Lifewit specializes in creating innovative products for the home, travel, and organization to enhance everyday living experiences."
+    },
+    "landing.userStory.Lenovo": {
+        "message": "联想是一家全球科技企业，设计、开发和制造笔记本电脑、平板、智能手机及服务器等创新产品，服务全球客户。",
+        "description": "Lenovo is a global technology leader that designs, develops, and manufactures innovative products, including laptops, tablets, smartphones, and servers. Lenovo serves customers across the global."
+    },
+    "landing.userStory.Volvo": {
+        "message": "沃尔沃是一家以安全和可靠性著称的汽车制造商，提供多样车型，兼顾豪华与实用，满足全球用户的需求。",
+        "description": "Volvo, as automobile manufacturer, known for its commitment to safety, reliability. With a  diverse lineup of cars, Volvo combines luxury with practicality to cater to discerning customers worldwide."
+    },
+    "landing.userStory.Midea": {
+        "message": "美的是一家来自中国的全球领先家电与暖通空调解决方案提供商，产品包括空调、冰箱和洗衣机等。",
+        "description": "A leading global home appliance and HVAC solutions provider based in China. With a wide range of products including air conditioners, refrigerators, washing machines, and more. "
+    },
+    "landing.userStory.Shuhai%20Supply%20Chain%20Solutions": {
+        "message": "蜀海曾是海底捞旗下企业，现作为第三方食材供应链综合服务商运营，使用 Doris 构建企业级数据仓库。",
+        "description": "Shuhai, formerly a subsidiary of Haidilao, operates as a third-party full-service provider for food ingredient supply chain management, using Doris to build an enterprise-level data warehouse."
+    },
+    "landing.userStory.Xtep": {
+        "message": "特步专注运动鞋、服装和配件的设计与制造，为运动爱好者和运动员提供兼具时尚与功能性的运动装备。",
+        "description": "Xtep caters to sports enthusiasts and athletes, offering stylish and functional sportswear options, specialized in designing and manufacturing athletic footwear, apparel, and accessories."
+    },
+    "landing.userStory.Taikang%20Insurance%20Group": {
+        "message": "泰康保险使用 Doris 建立保险业务分析平台，为数万名一线用户提供保险业务数据分析，查询仅需数秒。",
+        "description": "Taikang Insurance has established an insurance business analysis platform using Doris, providing tens of thousands of front-line users with insurance business data analysis, with query time taking only a few seconds."
+    },
+    "landing.userStory.Ping%20An%20Insurance%20Group": {
+        "message": "平安拥有超过 2.27 亿零售客户和 6.93 亿互联网用户，是全球最大的金融服务企业之一。平安集团的寿险、财险和金融科技等多个业务正在使用 Apache Doris。",
+        "description": "With over 227 million retail customers and 693 million Internet users, Ping An is one of the largest financial services companies in the world. Currently, multiple businesses within Ping An Group are using Apache Doris, including life insurance, property insurance, and financial technology."
+    },
+    "landing.userStory.Cigna%20%26%20CMB": {
+        "message": "招商信诺使用 Apache Doris 作为统一 OLAP 平台，承载面向客户、分析师和管理层的数据分析任务。",
+        "description": "CIGNA & CMB, an insurance company, uses Apache Doris as an all-in-one OLAP platform to undertake their customer-facing, analyst-facing, and management-facing data analytics workloads."
+    },
+    "landing.userStory.China%20Everbright%20Bank": {
+        "message": "中国光大银行是一家大型股份制商业银行，在数据平台引入 Apache Doris，加速数据湖查询并提高实时报表分析效率。",
+        "description": "China Everbright Bank is a large joint-stock commercial bank that has introduced Apache Doris into its data platform to accelerate queries on the data lake and enhance real-time report analysis efficiency."
+    },
+    "landing.userStory.Bosera%20Funds": {
+        "message": "博时基金使用 Apache Doris 升级数据仓库，替代 Teradata 和 Oracle，显著提高 ETL 与批量数据处理效率。",
+        "description": "Bosera Fund has upgraded its data warehouse system using Apache Doris, replacing both Teradata and Oracle, and achieved significant improvement in ETL/batch data processing efficiency."
+    },
+    "landing.userStory.Harvest%20Funds": {
+        "message": "嘉实基金将原有数仓升级为基于 Apache Doris 的方案，提高数据处理与分析效率，获得更好的性能、更低成本和更高可靠性。",
+        "description": "Harvest Fund upgraded its original data warehouse system to Apache Doris to achieve more efficient data processing and analysis, resulting in better performance, lower costs, and higher reliability."
+    },
+    "landing.userStory.OneConnect": {
+        "message": "金融壹账通借助 Apache Doris，在 1 万个看板中处理 1 万项活跃金融指标，ETL 工作量减少 30%，并将亿行表查询响应时间从 5 秒降至 63 毫秒。",
+        "description": "With Apache Doris, this fintech service provider is able to handle 10,000 active financial metrics in 10,000 dashboards with 30% less ETL efforts, and reduced the query response time on tables of 100 million rows from 5s to 63ms."
+    },
+    "landing.userStory.Qifu%20Technology": {
+        "message": "奇富科技是一家 AI 驱动的金融科技服务商，使用 Apache Doris 进行大数据处理与分析，获得更高性能、灵活的工作负载管理、高服务可用性和便捷运维。",
+        "description": "An AI-driven fintech service provider utilizes Apache Doris for big data processing and analytics and thus benefits from enhanced performance, flexible workload management, high service availability, and effortless maintenance."
+    },
+    "landing.userStory.Advance%20Intelligence%20Group": {
+        "message": "Advance Intelligence Group 是一家亚太地区的 AI 驱动科技企业，致力于为消费者、企业和商家提供金融科技产品与服务。",
+        "description": "An AI-driven technology company in Asia-Pacific committed to providing fintech products and services for consumers, enterprises and merchants."
+    },
+    "landing.userStory.QAX-Cyber%20Security%20Services": {
+        "message": "这家网络安全服务商构建日志存储与分析系统，实现 3 倍数据写入速度、7 倍查询执行速度，以及可视化管理。",
+        "description": "The cyber security service provider builds its log storage and analysis system and realizes 3X data writing speed, 7X query execution speed, and visualized management."
+    },
+    "landing.userStory.Tianyancha": {
+        "message": "天眼查使用 Apache Doris 替代 Apache Hive、Elasticsearch 和 PostgreSQL，提高即席分析与用户分群速度。",
+        "description": "The due diligence platform replaces Apache Hive, Elasticsearch, and PostgreSQL with Apache Doris and achieves higher speed in ad-hoc analysis and user segmentation. "
+    },
+    "landing.userStory.TMS": {
+        "message": "TMS 是基于云的运输管理系统，通过完整的运输规划、执行和监控方案，简化并优化物流运营，提高供应链各环节的效率与可见性。",
+        "description": "A cloud-based transportation management system designed to streamline and optimize logistics operations. It offers comprehensive solutions for planning, execution, and monitoring of shipments, enhancing efficiency and visibility throughout the supply chain."
+    },
+    "landing.userStory.Orange%20Connex": {
+        "message": "Orange Connex 为全球电商提供数字化供应链方案。将 Apache Doris 投入生产后，数据计算延迟从 2 小时降至 3 分钟。",
+        "description": "Orange Connex provides digital supply chain solutions for e-commerce worldwide. After putting Apache Doris into production, it reduces its data computation latency from 2 hours to 3 minutes."
+    },
+    "landing.userStory.Zhonglun%20Network": {
+        "message": "中仑网络为超市、生鲜店和服装店等零售商提供库存管理、会员营销和收银 SaaS 服务。",
+        "description": "A SaaS provider that offers inventory management, membership marketing, and cashier services for retailers including supermarkets, fresh produce stores, and clothing stores."
+    },
+    "landing.userStory.Duyan%20Soft": {
+        "message": "Duyan Soft 采用 Apache Doris 提高数据处理效率，重点解决多维数据表维护与高并发查询问题。",
+        "description": "The SaaS provider adopts Apache Doris as a solution to improve data processing efficiency, particularly addressing multi-dimensional table maintenance and high-concurrency queries. "
+    },
+    "landing.userStory.AISPEECH": {
+        "message": "思必驰提供对话式 AI 服务与自然语言交互方案，使用 Apache Doris 统一实时和离线分析，凭借灵活功能与高性能支持聊天机器人服务。",
+        "description": "The conversational AI services and natural language interaction solutions provider unifies their real-time and offline analytics workloads with Apache Doris, which empowers their chatbot services with its flexible functionalities and high performance."
+    },
+    "landing.userStory.Boton": {
+        "message": "Boton 是一家上市企业，借助互联网技术赋能物流与配送，提供智慧工业物流服务，同时布局包括游戏在内的互联网业务。",
+        "description": "A publicly listed company that empowers logistics and delivery with internet technologies. It provides intelligent industrial logistics services and also engages in online industries including gaming."
+    },
+    "landing.userStory.Sugon": {
+        "message": "Sugon 提供全栈云计算解决方案，专注安全可靠的云服务、高效资源管理，以及面向行业的云应用。",
+        "description": "A full-stack cloud computing solution provider dedicated to secure and reliable cloud services, efficient resource management, and industry-specific cloud applications."
+    },
+    "landing.userStory.Wasu": {
+        "message": "Wasu 是一家科技企业集团，面向人工智能、云计算、大数据分析和通信等行业提供先进技术解决方案。",
+        "description": "A prominent technology conglomerate dedicated to providing cutting-edge solutions in various industries, including artificial intelligence, cloud computing, big data analytics, and telecommunications."
+    },
+    "landing.userStory.Horizon%20Robotics": {
+        "message": "地平线是一家中国 AI 科技企业，专注 AI 芯片与软件，通过创新 AI 方案赋能各行业，推动智能系统发展。",
+        "description": "A leading AI technology company based in China, specializing in AI chips and software, aims to empower various industries with innovative AI solutions and drive the development of intelligent systems."
+    },
+    "landing.userStory.Youdao": {
+        "message": "有道专注语言相关产品与服务，提供语言学习平台、翻译工具和智能设备，帮助用户更好地沟通和获取知识。",
+        "description": "Youdao Inc. focuses on language-related products and services. It offers language learning platforms, translation tools, and smart devices, aiming to enhance communication and knowledge acquisition for users.\n"
+    },
+    "landing.userStory.LY%20Digit": {
+        "message": "LY Digital 为酒店服务行业提供金融科技解决方案，引入能力强、功能丰富的 Apache Doris，简化数据架构并加快数据访问与查询。",
+        "description": "LY Digital provides fintech solution for the hospitality industry. It streamlines its data architecture by introducing the powerful and feature-rich Apache Doris, and thus benefits from faster data access and queries."
+    },
+    "landing.userStory.TTChat": {
+        "message": "TTChat 是一款即时通讯应用，用户可实时交流、协调策略，并在活跃的语音房间中建立伙伴关系。",
+        "description": "A messaging and communication app that allows users to engage in real-time conversations, coordinate strategies, and build camaraderie in the vibrant voice chat rooms."
+    },
+    "landing.userStory.DouYu": {
+        "message": "斗鱼使用 Apache Doris 统一流处理与批处理管线，使数据架构更快、更简单，也更具成本效益。",
+        "description": "The live streaming platform uses Apache Doris to unify its stream processing and batch processing pipelines to make its data architecture faster, simpler, and more cost-effective."
+    },
+    "landing.userStory.Zhihu%20Inc": {
+        "message": "知乎通过 Apache Doris 支持其数据管理平台，实现快速数据导入和查询响应。",
+        "description": "This all-category Q&A website supports its data management platform with Apache Doris and benefits from fast data ingestion and fast query response."
+    },
+    "landing.userStory.Dingdong": {
+        "message": "叮咚是一家在线生鲜平台，便捷、快速地配送生鲜食品、杂货和日常用品，简化用户购物体验。",
+        "description": "An online grocery platform offers convenient and fast delivery of fresh produce, groceries, and daily essentials. It aims to simplify shopping experience for customers."
+    },
+    "landing.userStory.Linkedcare": {
+        "message": "Linkedcare 是一家医疗科技 SaaS 软件公司，分享了其数据服务架构从 ClickHouse 演进至 Apache Doris 的过程。",
+        "description": "This health technology SaaS software company details the evolution of its data service architecture from ClickHouse to Apache Doris."
+    },
+    "landing.userStory.LeTV": {
+        "message": "乐视专注互联网服务、智能设备与内容制作，产品包括智能手机、智能电视和流媒体服务。",
+        "description": "LeTV specializes in internet-based services, smart devices, and content production. It offers a range of products including smartphones, smart TVs, and streaming services."
+    },
+    "landing.userStory.Boss%20Zhipin": {
+        "message": "BOSS 直聘通过自研 AI 算法和大数据分析，为招聘方与求职者提供即时直聊和精准推荐。",
+        "description": "An online recruitment platform promotes instant direct chats between Bosses and job seekers, delivers accurate recommendation results, and is powered by proprietary AI algorithms and big data insights."
+    },
+    "landing.userStory.Soyoung": {
+        "message": "新氧是一家在纳斯达克上市的医美平台，其社交媒体式信用评价体系赢得了用户信任。",
+        "description": "An cosmetic surgery platform listed on Nasdaq. Its social media-style credit evaluation system gains a strong user trust. "
+    },
+    "landing.userStory.Jiyue%20Auto": {
+        "message": "极越是吉利控股旗下新一代汽车机器人品牌，定位高端智能，致力于打造领先的智能汽车机器人。",
+        "description": "Jiyue is Geely Holding;s next-generation automotive robocar brand, positioned as premium intelligent, committed to building leading intelligent automotive robots. "
+    },
+    "landing.userStory.Wuling%20Motors": {
+        "message": "五菱汽车专注价格实惠、实用的车型，以小型车和商用车著称，在国内外市场广受欢迎。",
+        "description": "Wuling Motors specializes in producing affordable and practical vehicles, known for its compact cars and commercial vehicles, it has gained popularity in both domestic and international markets."
+    },
+    "landing.userStory.Chang'an%20Automobile": {
+        "message": "长安汽车连接 400 万辆车，每天处理 1000 亿条 CAN 数据，Apache Doris 为其实时分析提供性能保障。",
+        "description": "This is a car manufacturer who connects 4 million cars together and has to process 100 billion pieces of CAN data every day. Apache Doris ensures real-time data analytics performance for it."
+    },
+    "landing.userStory.LOTUS": {
+        "message": "路特斯是一家知名的英国汽车制造商，生产高性能跑车和赛车。",
+        "description": "Lotus as a renowned British automotive manufacturer, producing high-performance sports cars and racing vehicles."
+    },
+    "landing.userStory.Great%20Wall": {
+        "message": "长城汽车是一家知名中国汽车制造商，专注 SUV、皮卡和电动汽车。",
+        "description": "Great Wall Motors is a prominent Chinese automobile manufacturer specializing in SUVs, pickup trucks, and electric vehicles."
+    },
+    "landing.userStory.Chery": {
+        "message": "奇瑞提供轿车、SUV 和电动汽车等多种车型，注重创新与品质，在全球汽车市场具有重要影响力。",
+        "description": "Chery is recognized for its wide range of vehicles, including sedans, SUVs, and electric cars. With a focus on innovation and quality, Chery has established itself as a prominent player in the global automotive market."
+    },
+    "landing.userStory.Envision%20Energy": {
+        "message": "远景能源致力于推动全球清洁与可持续能源发展，专长包括风机、能源管理软件和智能电网解决方案。",
+        "description": "Envision Energy is dedicated to advancing clean and sustainable energy worldwide, with expertise in wind turbines, energy management software, and smart grid solutions"
+    },
+    "landing.userStory.CTYun": {
+        "message": "天翼云提供云计算与基础设施服务，通过丰富的云解决方案，为企业提供安全、可扩展、可靠的云计算能力。",
+        "description": "CTYun is a cloud computing and infrastructure service provider. With a portfolio of cloud solutions, CTYun empowers businesses with secure, scalable, and reliable cloud computing capabilities"
+    },
+    "landing.userStory.ZTE": {
+        "message": "中兴通讯专注 5G 技术、网络与移动设备，通过创新方案推动通信行业的互联互通和数字化转型。",
+        "description": "ZTE expertise in 5G technology, networking and mobile devices, offering innovative solutions that drive connectivity and digital transformation in the telecommunications industry."
+    },
+    "landing.userStory.HuoLaLa": {
+        "message": "货拉拉是一家货运服务平台，在全球提供智能货运信息共享、个人物品运输和企业货运等服务。",
+        "description": "Huolala operates as cargo service platforms,  providing intelligent freight information sharing, personal goods transportation, enterprise freight, and other cargo services. Huolala offers its services worldwide.\n\n"
+    },
+    "landing.userStory.Deppon%20Express": {
+        "message": "德邦快递提供综合快递与供应链解决方案，为企业和个人提供可靠、高效的配送服务。",
+        "description": "Deppon Express, as a logistics company providing comprehensive express delivery and supply chain solutions, ensuring reliable and efficient delivery services for businesses and individuals."
+    },
+    "landing.userStory.Du%20Xiaoman%20Financial": {
+        "message": "度小满是一家金融科技企业，通过先进技术提供数字支付、小额贷款、投资与财富管理等金融服务。",
+        "description": "A fintech company that leverage leading technologies to provide financial service including digital payment, small-scale loans, investment and wealth managements."
+    },
+    "landing.userStory.Industrial%20Bank": {
+        "message": "兴业银行是一家大型股份制商业银行，在大数据平台引入 Apache Doris，提高实时数据分析效率，为业务运营和管理决策提供数据支持。",
+        "description": "Xingye Bank is a large joint-stock commercial bank that has introduced Apache Doris into its big data platform to accelerate real-time data analysis efficiency and provide data support for business operations and management decisions."
+    },
+    "landing.userStory.UMS": {
+        "message": "UMS 是领先的电子支付与金融科技解决方案提供商，专注建设全球支付生态，为商家和消费者提供安全、便捷的在线支付服务。",
+        "description": "A leading provider of electronic payment and financial technology solutions that focuses on building a global payment ecosystem and offering secure and convenient online payment services for both merchants and consumers."
+    },
+    "landing.userStory.Caitong%20Securities": {
+        "message": "财通证券使用 Apache Doris 汇总和分析实时数据，快速生成各类报表，为业务发展和决策提供支持。",
+        "description": "Caitong Securities has used Apache Doris to summarize and analyze real-time data, quickly generating various reports, providing strong support for business development and decision-making."
+    },
+    "landing.userStory.Lakala": {
+        "message": "拉卡拉是一家上市数字支付服务提供商，同时为零售商、银行和电商企业提供现金、业务与供应链管理解决方案。",
+        "description": "A listed digital payment services provider that also offers cash, business, and supply chain management solutions for retailers, banks, and e-commerce companies."
+    },
+    "landing.userStory.Easy%20Pay": {
+        "message": "Easy Pay 提供面向出行场景的综合电子支付方案，覆盖航空出行、住宿和零售购物等需求。",
+        "description": "An electronic payment services provider that focuses on comprehensive payment solutions that cater to the needs of travelers, encompassing air travel, accommodation, and retail purchases. "
+    },
+    "landing.userStory.Mucfc.com": {
+        "message": "Mucfc.com 是一家消费金融企业，关注传统银行服务覆盖之外的中小额融资需求，推动普惠金融。",
+        "description": "A consumer financing company that focuses on the small and medium financing services beyond the coverage of traditional bank services to achieve inclusive finance."
+    },
+    "landing.userStory.ZhongAn%20Insurance": {
+        "message": "众安保险提供面向不同人群的创新数字保险产品，并借助先进技术提高运营效率与风险控制效果。",
+        "description": "A digital insurance provider that offers innovative insurance products for all walks of life and enhances its own operation efficiency and risk control effectiveness by cutting-edge technologies."
+    },
+    "landing.userStory.InRice.com": {
+        "message": "InRice.com 提供综合、场景化的数字金融科技方案，涵盖融资、营销、活动及客户管理。",
+        "description": "A fintech service provider that focuses on comprehensive, scenario-based digital solutions from financing, marketing, to event and customer management."
+    },
+    "landing.userStory.Bairong%20Inc": {
+        "message": "百融是一家金融风控与营销服务提供商，通过人工智能支持各行业的决策。",
+        "description": "A financial risk control and marketing services provider that leverages the power of artificial intelligence to empower decision-making for various industries. "
+    },
+    "landing.userStory.Moka": {
+        "message": "Moka 使用 Apache Doris 加速关联查询，支持自助 BI，并提高带权限控制查询的效率。",
+        "description": "The SaaS provider utilizes Apache Doris to support self-service BI by enabling fast join queries. It also helps in improving efficiency of privileged queries."
+    },
+    "landing.userStory.360%20Security": {
+        "message": "在每秒数百万次操作的大规模实时数据场景中，Apache Doris 为 A/B 测试提供快速计算和高数据完整性。每次操作约涉及 20 个数据标签及超过 12 个维度。",
+        "description": "Apache Doris ensures quick computation and high data integrity for A/B testing on a big real-time data size with millions of operations per second. Each operation involves around 20 data tags and over a dozen dimensions."
+    },
+    "landing.userStory.HuiCe": {
+        "message": "慧策是一家技术驱动的智慧零售服务商，使用 Apache Doris 实现资源隔离与高并发查询，获得更快查询速度和更低存储成本。",
+        "description": "A tech-driven intelligent retail service provider uses Apache Doris for resource isolation and high-concurrency data queries and realizes faster query speed and lower storage costs."
+    },
+    "landing.userStory.JiaoLong%20Cloud": {
+        "message": "JiaoLong Cloud 提供生成式 AI 解决方案，专注开发具有自主知识产权、达到先进技术水平的一体化生成式 AI 产品套件。",
+        "description": "A generative AI solution provider that focuses on the development of SOTA, integrated generative AI product suites with independent intellectual property rights."
+    },
+    "landing.userStory.IGOTGAMES": {
+        "message": "IGG 早期在北美发行多款大型多人在线游戏，以此广为人知。其首款跨平台实时游戏《王国纪元》（Lords Mobile）在全球拥有约 3.2 亿注册用户。",
+        "description": "IGG is best known for formerly publishing various massively multiplayer online games in North America. \"Lords Mobile\" as IGG’s first cross-platform,  real-time game has approximately 320 million registered users worldwide. "
+    },
+    "landing.userStory.Electronic%20Soul": {
+        "message": "Electronic Soul 是一家位于亚洲的领先游戏开发商与发行商，提供覆盖移动端、PC 和主机的高品质数字内容。",
+        "description": "Electronic Soul is one of the top leading game developers and publishers based in Asia, providing high-quality digital contents crossing Mobile, PC, and consoles."
+    },
+    "landing.userStory.Haohan%20Data": {
+        "message": "Haohan Data通过先进技术与分析能力，为企业提供全面的数据解决方案，帮助用户作出有依据的决策。",
+        "description": "Leveraging advanced technologies and analytics, Haohan Data empowers businesses with comprehensive data solutions, enabling users to make informed decisions."
+    },
+    "landing.userStory.Aima%20Tech": {
+        "message": "爱玛是一家电动车制造商，致力于改善日常出行方式、减少碳排放。",
+        "description": "Aima Tech, an electric vehicle manufacturer, is committed to revolutionizing the way we commute and reducing carbon emissions.\n"
+    },
+    "landing.userStory.Peacebird": {
+        "message": "太平鸟以现代、潮流的服装设计著称，为消费者提供时尚、环保的服饰选择。",
+        "description": "Known for contemporary and trendy clothing designs, Peacebird offers stylish and eco-friendly fashion choices for customers."
+    },
+    "landing.userStory.Full%20Truck%20Alliance": {
+        "message": "满帮是一家领先的数字货运平台，连接货主与卡车司机，提供高效、透明的公路运输服务，优化物流运营，促进中国货物运输。",
+        "description": "Full Truck Alliance is a leading digital freight platform connecting shippers and truck drivers. It offers efficient and transparent trucking services, optimizing logistics operations and facilitating freight transportation across China."
+    },
+    "landing.userStory.CaiNiao": {
+        "message": "菜鸟是阿里巴巴集团旗下物流平台，专注端到端供应链管理与配送，连接商家、仓库和快递服务商，简化运营并高效、及时地履行订单。",
+        "description": "CaiNiao is a logistics platform owned by Alibaba Group, specializing in end-to-end supply chain management and delivery services. It connects merchants, warehouses, and couriers to streamline operations and ensure efficient and timely order fulfillment."
+    },
+    "landing.userStory.Umetrip": {
+        "message": "航旅纵横是中国航空与出行行业领先的信息技术解决方案提供商，为航空预订系统、旅客服务和航空数据管理提供综合服务。",
+        "description": "Umetrip is a leading provider of information technology solutions for the aviation and travel industry in China, offering comprehensive services for airline reservation systems, passenger services, and aviation data management."
+    },
+    "landing.userStory.Yurun%20Group": {
+        "message": "雨润集团是一家中国食品加工与流通企业，采用涵盖养殖、加工和零售的垂直一体化业务模式，为消费者提供优质肉类产品。",
+        "description": "Yurun Group is a renowned Chinese food processing and distribution company operating a vertically integrated business model, encompassing farming, processing, and retail, to deliver premium meats to consumers."
+    },
+    "landing.userStory.Bondex": {
+        "message": "海程邦达为各类进出口贸易客户提供定制供应链方案和标准化物流服务，专注跨境业务的规划、设计与实施。",
+        "description": "Bondex serves various import and export trade clients, offering tailored supply chain solutions and standardized logistics services specialized in cross-border operations, including planning, design, and implementation."
+    },
+    "landing.userStory.Zongteng%20Group": {
+        "message": "纵腾集团是一家来自中国的大型跨境仓储与物流服务商，服务电商卖家。",
+        "description": "Zongteng Group, a large China-based provider of cross-border warehousing and logistics services for e-commerce sellers"
+    },
+    "landing.userStory.Techsight": {
+        "message": "Techsight 在信用评估与风控解决方案中引入 Apache Doris，以较少的工程与维护投入，加快大规模数据集查询。",
+        "description": "The fintech company includes Apache Doris in their credit assessment and risk control solution to speed up queries on large datasets with little engineering and maintenance efforts."
+    },
+    "landing.userStory.Zuoyebang": {
+        "message": "作业帮是一家领先的在线教育平台，为各年龄段学生提供丰富的学习资源、直播课程、辅导服务和个性化学习体验。",
+        "description": "Zuoyebang is a leading online education platform, providing a wide range of educational resources, live classes, tutoring services, and personalized learning experiences for students of all ages.\n"
+    },
+    "landing.userStory.Atguigu": {
+        "message": "尚硅谷提供全面的技术培训课程与学习资源，帮助学习者建立技术能力、发展科技行业职业。",
+        "description": "Atguigu as a learning platform, offers comprehensive training programs and resources to help individuals build technical skills and advance their careers in the technology industry."
+    },
+    "landing.userStory.ITCast": {
+        "message": "传智播客是一家综合在线学习平台，提供丰富的 IT 与编程课程。",
+        "description": "ITCast is a comprehensive online learning platform that offers a diverse range of IT and programming courses."
+    },
+    "landing.userStory.Kaikeba": {
+        "message": "开课吧是一家在线教育平台，由行业专家提供多种课程与培训项目，帮助学习者掌握新技能、提升专业能力。",
+        "description": "An online education platform offers a wide array of courses and programs taught by industry experts to help individuals acquire new skills and excel in their chosen fields."
+    },
+    "landing.userStory.Lizhiweike": {
+        "message": "荔枝微课提供在线音频直播，用户可创建和分享播客、广播节目及互动讨论等内容，形成活跃的音频交流社区。",
+        "description": "Lizhiweike, a popular online platform for live audio broadcasting, allows users to create and share live audio content, including podcasts, radio shows, and interactive discussions, fostering a vibrant audio community."
+    },
+    "landing.userStory.Tenclass": {
+        "message": "TenClass是一家创新教育企业，通过数字技能、视频剪辑、数据分析等领域的教育服务，帮助个人提升能力。",
+        "description": "TenClass is an innovative education company that focuses on empowering individuals through digital skills, video editing, data analysis, and more."
+    },
+    "landing.userStory.Wuxi%20Xishang%20Bank": {
+        "message": "无锡锡商银行借助 Apache Doris，推动营销、风控与客户服务的数字化和精细化管理。",
+        "description": "A bank that uses Apache Doris to support digitalization and refined management of marketing, risk control, and customer services."
+    },
+    "landing.userStory.HYXJ": {
+        "message": "HYXJ 是一家消费金融企业，使用 Apache Doris 作为风控平台的统一查询入口，并通过 Multi Catalog 统一异构数据源。",
+        "description": "The consumer financing company uses Apache Doris as a unified query gateway for its risk management platform, leveraging the Multi Catalog feature of Doris to unify the heterogenous data sources."
+    },
+    "landing.userStory.HCFC": {
+        "message": "HCFC 是一家消费金融科技服务提供商，在内部业务和运营中广泛使用 Apache Doris，显著提高查询性能与数据质量。",
+        "description": "A consumer financing tech services provider that extensively utilizes Apache Doris for its internal business and operations and thus realizes much faster data query performance and improved data quality."
+    },
+    "landing.userStory.Autohome": {
+        "message": "汽车之家是一家领先的汽车在线平台，提供全面的汽车信息、评测和相关服务，面向汽车爱好者、购车者和车主提供一站式服务。",
+        "description": "Autohome is a leading automotive online platform, offering comprehensive information, reviews, and services related to cars. It serves as a one-stop destination for car enthusiasts, buyers, and owners.\n"
+    },
+    "landing.userStory.JJ%20World": {
+        "message": "竞技世界是一家领先的棋牌游戏开发商，提供 JJ-Dota 对战平台、3399 小游戏平台和移动应用等互联网服务。",
+        "description": "JJ World is a leading chess and card game developer, offering internet services such as the JJ-Dota battle platform, 3399 mini-game platform, and mobile applications."
+    },
+    "landing.userStory.Q1.com": {
+        "message": "Q1.com 专注在线游戏与娱乐，为用户提供优质体验。",
+        "description": "Q1.com is dedicated to providing a superior user experience in the field of online gaming and entertainment.\n"
+    },
+    "landing.userStory.Xiaoe%20Tech": {
+        "message": "小鹅通是一家服务 8 亿终端用户的直播服务商，采用 Apache Doris 简化分析系统的数据组件，获得更快的标签查询、快速容灾和便捷的数据可视化。",
+        "description": "This live streaming service provider with 800 million end users adopts Apache Doris for its analytic solution to simplify its data components. They ends up with faster tag queries, quick disaster recovery, and the convenience of data visualization."
+    },
+    "landing.userStory.Youzan": {
+        "message": "有赞是一家电商 SaaS 提供商，从 ClickHouse 迁移至 Apache Doris 后，SQL 查询性能提升 250%。在所有数据规模的关联查询测试中，Apache Doris 均优于 ClickHouse。",
+        "description": "An e-commerce SaaS provider migrates from ClickHouse to Apache Doris and increases its SQL query performance by 250%. Apache Doris outperforms ClickHouse in the join query tests of all data sizes. "
+    },
+    "landing.userStory.Midland%20Realty": {
+        "message": "美联物业使用 Apache Doris 便捷、快速地构建数据仓库，获得低查询延迟、简单运维和较低存储资源消耗。",
+        "description": "A real-estate giants builds its data warehouse solution easily and quickly with Apache Doris and thus benefits from low query latency, easy maintenance, and low storage resource consumption. "
+    },
+    "landing.userStory.Footprint%20Analytics": {
+        "message": "Footprint Analytics 提供区块链数据分析解决方案，用户可在 10 秒内定制数据看板，从数据中获取有价值的信息。",
+        "description": "A blockchain data analytics solutions provider that allows users to customize their data dashboards within 10 seconds and extract valuable insights from data."
+    },
+    "landing.users.category.all": {
+        "message": "全部"
+    },
+    "landing.users.category.finance": {
+        "message": "金融"
+    },
+    "landing.users.category.technology": {
+        "message": "科技"
+    },
+    "landing.users.category.media": {
+        "message": "媒体与娱乐"
+    },
+    "landing.users.category.telecom": {
+        "message": "通信与制造"
+    },
+    "landing.users.category.logistics": {
+        "message": "快消与物流"
+    },
+    "landing.users.category.distribution": {
+        "message": "商业发行版"
+    },
+    "landing.AiAnalysisForm.001": {
+        "message": "由 Doris Skills 提供支持（将在新标签页打开）",
+        "description": "Powered by Doris Skills (opens in a new tab)"
+    },
+    "landing.AiAnalysisForm.002": {
+        "message": "技术支持：",
+        "description": "Powered by"
+    },
+    "landing.AiAnalysisForm.003": {
+        "message": "Doris Skills",
+        "description": "Doris Skills"
+    },
+    "landing.AiAnalysisForm.004": {
+        "message": "结果语言",
+        "description": "Response language"
+    },
+    "landing.AiAnalysisForm.005": {
+        "message": "英文",
+        "description": "English"
+    },
+    "landing.AiAnalysisForm.006": {
+        "message": "简体中文",
+        "description": "Simplified Chinese"
+    },
+    "landing.AiAnalysisForm.007": {
+        "message": "隐私与 AI 处理说明",
+        "description": "Privacy and AI processing notice"
+    },
+    "landing.AiAnalysisForm.008": {
+        "message": "本功能由 VeloDB 及第三方大语言模型服务商提供，并非 Apache Doris 项目的官方功能，请自行评估后使用。",
+        "description": "This feature is provided by VeloDB and third-party large language model service providers. It is not an official Apache Doris project feature, so please use it at your discretion."
+    },
+    "landing.AiAnalysisForm.009": {
+        "message": "请勿上传密码、密钥、访问令牌、个人信息、客户机密数据，或其他未经授权披露的敏感内容。所有上传信息将在一小时内自动、永久删除。",
+        "description": "Do not upload passwords, keys, access tokens, personal information, customer-confidential data, or any other sensitive content that you are not authorized to disclose. All uploaded information will be automatically and permanently deleted within one hour."
+    },
+    "landing.AiAnalysisForm.010": {
+        "message": "我已阅读上述说明，有权上传该 Profile，并同意由第三方 AI 处理。",
+        "description": "I have read the notice, am authorized to upload this profile, and consent to third-party AI processing."
+    },
+    "landing.AiAnalysisForm.011": {
+        "message": "开始分析前，请完成人机验证。",
+        "description": "Complete the human verification before starting the analysis."
+    },
+    "landing.AiAnalysisForm.012": {
+        "message": "尚未配置人机验证，请联系网站管理员。",
+        "description": "Human verification is not configured. Contact the site administrator."
+    },
+    "landing.AiAnalysisForm.013": {
+        "message": "本站受 hCaptcha 保护，其",
+        "description": "This site is protected by hCaptcha and its"
+    },
+    "landing.AiAnalysisForm.014": {
+        "message": "隐私政策",
+        "description": "Privacy Policy"
+    },
+    "landing.AiAnalysisForm.015": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.AiAnalysisForm.016": {
+        "message": "服务条款",
+        "description": "Terms of Service"
+    },
+    "landing.AiAnalysisForm.017": {
+        "message": "适用。",
+        "description": "apply."
+    },
+    "landing.AiAnalysisForm.018": {
+        "message": "处理中… · 预计需要 1–2 分钟",
+        "description": "Processing… · Estimated 1–2 minutes"
+    },
+    "landing.AiAnalysisForm.019": {
+        "message": "使用 AI 分析",
+        "description": "Analyze with AI"
+    },
+    "landing.AnalysisResult.001": {
+        "message": "分析结果",
+        "description": "Analysis result"
+    },
+    "landing.AnalysisResult.002": {
+        "message": "AI 生成的结果：",
+        "description": "AI-generated result:"
+    },
+    "landing.AnalysisResult.003": {
+        "message": "请对照原始 Profile 核验证据，并在修改生产环境前，由具备相关经验的工程师审阅建议。请勿自动执行命令或配置变更。",
+        "description": "Verify the evidence against the original Profile and have a qualified engineer review recommendations before making production changes. Do not execute commands or configuration changes automatically."
+    },
+    "landing.ProfileAnalyzer.001": {
+        "message": "查询诊断",
+        "description": "Query diagnostics"
+    },
+    "landing.ProfileAnalyzer.002": {
+        "message": "Apache Doris Profile 分析",
+        "description": "Apache Doris Profile Analysis"
+    },
+    "landing.ProfileAnalyzer.003": {
+        "message": "Profile 分析操作与结果",
+        "description": "Profile analysis actions and results"
+    },
+    "landing.ProfileAnalyzer.004": {
+        "message": "Profile 分析操作",
+        "description": "Profile analysis actions"
+    },
+    "landing.ProfileAnalyzer.005": {
+        "message": "执行过程可视化",
+        "description": "Visualize Execution"
+    },
+    "landing.ProfileAnalyzer.006": {
+        "message": "AI 辅助分析",
+        "description": "AI-assisted analysis"
+    },
+    "landing.ProfileAnalyzer.007": {
+        "message": "选择“执行过程可视化”，在浏览器中解析 Profile，并将执行图展示为可交互的图表。此操作不会上传文件。",
+        "description": "Visualize the Profile. Select Visualize Execution to parse the file in your browser and render its execution graph as an interactive diagram. The file is not uploaded for this action."
+    },
+    "landing.ProfileAnalyzer.008": {
+        "message": "正在生成可视化…",
+        "description": "Visualizing…"
+    },
+    "landing.ProfileAnalyzer.009": {
+        "message": "执行过程可视化",
+        "description": "Visualize Execution"
+    },
+    "landing.ProfileAnalyzer.010": {
+        "message": "分析失败。",
+        "description": "Analysis failed."
+    },
+    "landing.ProfileDag.001": {
+        "message": "最大值",
+        "description": "Max"
+    },
+    "landing.ProfileDag.002": {
+        "message": "· 平均值",
+        "description": "· Avg"
+    },
+    "landing.ProfileDag.003": {
+        "message": "· 总和",
+        "description": "· Sum"
+    },
+    "landing.ProfileDag.004": {
+        "message": "算子详情",
+        "description": "Operator details"
+    },
+    "landing.ProfileDag.005": {
+        "message": "算子详情",
+        "description": "Operator details"
+    },
+    "landing.ProfileDag.006": {
+        "message": "关闭算子详情",
+        "description": "Close operator details"
+    },
+    "landing.ProfileDag.007": {
+        "message": "×",
+        "description": "×"
+    },
+    "landing.ProfileDag.008": {
+        "message": "类型",
+        "description": "Type"
+    },
+    "landing.ProfileDag.009": {
+        "message": "角色",
+        "description": "Role"
+    },
+    "landing.ProfileDag.010": {
+        "message": "计划节点 ID",
+        "description": "Plan node ID"
+    },
+    "landing.ProfileDag.011": {
+        "message": "耗时",
+        "description": "Timing"
+    },
+    "landing.ProfileDag.012": {
+        "message": "最长执行时间",
+        "description": "Execution max"
+    },
+    "landing.ProfileDag.013": {
+        "message": "平均执行时间",
+        "description": "Execution average"
+    },
+    "landing.ProfileDag.014": {
+        "message": "最短执行时间",
+        "description": "Execution minimum"
+    },
+    "landing.ProfileDag.015": {
+        "message": "最长等待时间",
+        "description": "Wait max"
+    },
+    "landing.ProfileDag.016": {
+        "message": "依赖等待",
+        "description": "Dependency wait"
+    },
+    "landing.ProfileDag.017": {
+        "message": "数据等待",
+        "description": "Data wait"
+    },
+    "landing.ProfileDag.018": {
+        "message": "RPC 缓冲等待",
+        "description": "RPC buffer wait"
+    },
+    "landing.ProfileDag.019": {
+        "message": "计划信息",
+        "description": "Plan information"
+    },
+    "landing.ProfileDag.020": {
+        "message": "指标",
+        "description": "Metrics"
+    },
+    "landing.ProfileDag.021": {
+        "message": "输入行数",
+        "description": "Input rows"
+    },
+    "landing.ProfileDag.022": {
+        "message": "输出行数",
+        "description": "Output rows"
+    },
+    "landing.ProfileDag.023": {
+        "message": "内存使用量",
+        "description": "Memory usage"
+    },
+    "landing.ProfileDag.024": {
+        "message": "峰值内存",
+        "description": "Peak memory"
+    },
+    "landing.ProfileDag.025": {
+        "message": "最慢算子",
+        "description": "Slowest operators"
+    },
+    "landing.ProfileDag.026": {
+        "message": "按最长执行时间排序",
+        "description": "Ranked by exec max"
+    },
+    "landing.ProfileDag.027": {
+        "message": "收起",
+        "description": "Hide"
+    },
+    "landing.ProfileDag.028": {
+        "message": "展开",
+        "description": "Show"
+    },
+    "landing.ProfileDag.029": {
+        "message": "ID=",
+        "description": "id="
+    },
+    "landing.ProfileDag.030": {
+        "message": " · ",
+        "description": " · "
+    },
+    "landing.ProfileDag.031": {
+        "message": "退出全屏（Esc）",
+        "description": "Exit full screen (Esc)"
+    },
+    "landing.ProfileDag.032": {
+        "message": "全屏显示执行图",
+        "description": "Expand the execution graph to full screen"
+    },
+    "landing.ProfileDag.033": {
+        "message": "退出全屏",
+        "description": "Exit full screen"
+    },
+    "landing.ProfileDag.034": {
+        "message": "全屏",
+        "description": "Full screen"
+    },
+    "landing.ProfileDag.035": {
+        "message": "正在布局执行图…",
+        "description": "Laying out the execution graph…"
+    },
+    "landing.ProfileDag.036": {
+        "message": "Profile 执行图",
+        "description": "Profile execution graph"
+    },
+    "landing.ProfileDag.037": {
+        "message": "执行图概览",
+        "description": "Execution graph overview"
+    },
+    "landing.ProfileDag.038": {
+        "message": "执行图",
+        "description": "Execution graph"
+    },
+    "landing.ProfileDag.039": {
+        "message": "个 Fragment",
+        "description": "fragments"
+    },
+    "landing.ProfileDag.040": {
+        "message": "条 Pipeline",
+        "description": "pipelines"
+    },
+    "landing.ProfileDag.041": {
+        "message": "个算子",
+        "description": "operators"
+    },
+    "landing.ProfileDag.042": {
+        "message": "条连接",
+        "description": "connections"
+    },
+    "landing.ProfileDag.043": {
+        "message": "非阻塞解析",
+        "description": "non-blocking parsing"
+    },
+    "landing.ProfileDag.044": {
+        "message": "条提示",
+        "description": "notice"
+    },
+    "landing.ProfileDag.045": {
+        "message": "条提示",
+        "description": "notices"
+    },
+    "landing.ProfileDag.046": {
+        "message": "执行图图例",
+        "description": "Execution graph legend"
+    },
+    "landing.ProfileDag.047": {
+        "message": "数据流",
+        "description": "Data flow"
+    },
+    "landing.ProfileDag.048": {
+        "message": "执行依赖（前置节点 → 依赖节点）",
+        "description": "Execution dependency (prerequisite → dependent)"
+    },
+    "landing.ProfileDag.049": {
+        "message": "执行耗时更长",
+        "description": "Longer execution"
+    },
+    "landing.ProfileDag.050": {
+        "message": "等待时间更长",
+        "description": "Longer wait"
+    },
+    "landing.ProfileDag.051": {
+        "message": "正在加载执行图…",
+        "description": "Loading the execution graph…"
+    },
+    "landing.ProfileDagNode.001": {
+        "message": " 算子",
+        "description": " operator"
+    },
+    "landing.ProfileDagNode.002": {
+        "message": "瓶颈",
+        "description": "Bottleneck"
+    },
+    "landing.ProfileDagNode.003": {
+        "message": "个实例",
+        "description": "instances"
+    },
+    "landing.ProfileDagNode.004": {
+        "message": "最长执行",
+        "description": "Exec max"
+    },
+    "landing.ProfileDagNode.005": {
+        "message": "平均执行",
+        "description": "Exec avg"
+    },
+    "landing.ProfileDagNode.006": {
+        "message": "最长等待",
+        "description": "Wait max"
+    },
+    "landing.ProfileUploader.001": {
+        "message": "选择 Query Profile",
+        "description": "Choose a Query Profile"
+    },
+    "landing.ProfileUploader.002": {
+        "message": "选择一个不超过 100 MiB 的 UTF-8 编码 .txt 文件。超过 10 MiB 的文件会先精简为聚合 Profile 段，再进行本地可视化或上传至 AI。",
+        "description": "Choose one UTF-8 .txt file up to 100 MiB. Files over 10 MiB are reduced to their aggregated Profile sections before local visualization or AI upload."
+    },
+    "landing.ProfileUploader.003": {
+        "message": "请使用 Apache Doris 4.1 或更新版本生成的 Profile。较早版本的 Profile 可能无法解析。",
+        "description": "Use a Profile produced by Apache Doris 4.1 or later. Profiles from earlier versions may fail to parse."
+    },
+    "landing.ProfileUploader.004": {
+        "message": "选择文件或拖拽到这里",
+        "description": "Choose a file or drag it here"
+    },
+    "landing.ProfileUploader.005": {
+        "message": ".txt 格式的 Apache Doris Query Profile",
+        "description": "Apache Doris Query Profile in .txt format"
+    },
+    "landing.ProfileUploader.006": {
+        "message": "选择 Apache Doris Query Profile 文件",
+        "description": "Choose an Apache Doris Query Profile file"
+    },
+    "landing.profileanalysis.001": {
+        "message": "Apache Doris Profile 分析",
+        "description": "Profile Analysis - Apache Doris"
+    },
+    "landing.profileanalysis.002": {
+        "message": "通过 AI 辅助诊断流程分析 Apache Doris Query Profile。",
+        "description": "Analyze an Apache Doris Query Profile with an AI-assisted diagnostic workflow."
+    },
+    "landing.profile.error.fileType": {
+        "message": "请选择 .txt 文件，不支持其他文件类型。"
+    },
+    "landing.profile.error.oneFile": {
+        "message": "每次只能选择一个 Profile 文件。"
+    },
+    "landing.profile.error.tooLarge": {
+        "message": "所选文件超过 100 MiB，请提供合并后的 Profile。"
+    },
+    "landing.profile.error.mergedTooLarge": {
+        "message": "移除逐实例执行 Profile 后，文件仍超过 10 MiB，请提供合并后的 Profile。"
+    },
+    "landing.profile.error.prepare": {
+        "message": "无法准备要上传的 Profile。"
+    },
+    "landing.profile.error.storage": {
+        "message": "当前浏览器无法在刷新页面后恢复本次分析。"
+    },
+    "landing.profile.error.captchaMissing": {
+        "message": "分析 Profile 前，请完成人机验证。"
+    },
+    "landing.profile.error.captchaInvalid": {
+        "message": "人机验证失败或已过期，请重新验证后重试。"
+    },
+    "landing.profile.error.captchaUnavailable": {
+        "message": "人机验证暂时不可用，请稍后重试。"
+    },
+    "landing.profile.error.captchaExpired": {
+        "message": "验证已过期，请重新完成验证。"
+    },
+    "landing.profile.error.captchaLoad": {
+        "message": "无法加载人机验证，请检查网络后重试。"
+    },
+    "landing.profile.error.network": {
+        "message": "无法连接 Profile 分析服务，请重试。"
+    },
+    "landing.profile.error.response": {
+        "message": "Profile 分析服务返回了无效响应。"
+    },
+    "landing.profile.error.recover": {
+        "message": "无法恢复上一次分析，请重新选择文件后重试。"
+    },
+    "landing.profile.error.failed": {
+        "message": "Profile 分析失败，请重试。"
+    },
+    "landing.profile.error.graphTooLarge": {
+        "message": "执行图过大，无法显示。"
+    },
+    "landing.profile.error.graphUnavailable": {
+        "message": "此 Profile 暂无可用的执行图。"
+    },
+    "landing.profile.error.graphFailed": {
+        "message": "无法生成执行图。"
+    },
+    "landing.profile.error.graphTimeout": {
+        "message": "执行图解析超时。"
+    },
+    "landing.profile.error.serviceCode": {
+        "message": "Profile 分析失败（{code}），请重试。"
+    },
+    "landing.profile.status.analyzing": {
+        "message": "分析中"
+    },
+    "landing.profile.status.restoring": {
+        "message": "正在恢复分析…"
+    },
+    "landing.profile.status.recovering": {
+        "message": "连接中断 · 正在恢复分析…"
+    },
+    "landing.profile.status.uploading": {
+        "message": "正在上传 Profile…"
+    },
+    "landing.profile.status.completed": {
+        "message": "已完成"
+    },
+    "landing.profile.status.queued": {
+        "message": "排队中"
+    },
+    "landing.profile.status.queueOne": {
+        "message": "排队中 · 前面还有 {count} 个任务"
+    },
+    "landing.profile.status.queueMany": {
+        "message": "排队中 · 前面还有 {count} 个任务"
+    },
+    "landing.profile.graph.idle": {
+        "message": "请选择 Profile，然后点击“执行过程可视化”。"
+    },
+    "landing.profile.graph.parsing": {
+        "message": "正在解析执行图…"
+    },
+    "landing.profile.graph.unavailable": {
+        "message": "此 Profile 暂无可用的执行图。"
+    },
+    "landing.profile.graph.failed": {
+        "message": "无法生成执行图。"
+    },
+    "landing.profile.graph.notAvailable": {
+        "message": "执行图不可用。"
+    },
+    "landing.profile.graph.readOnly": {
+        "message": "只读执行图，展示算子及其依赖关系。"
+    },
+    "landing.profile.graph.connection": {
+        "message": "执行图连线。"
+    },
+    "landing.profile.graph.controls": {
+        "message": "执行图控制"
+    },
+    "landing.profile.graph.zoomIn": {
+        "message": "放大"
+    },
+    "landing.profile.graph.zoomOut": {
+        "message": "缩小"
+    },
+    "landing.profile.graph.fit": {
+        "message": "适配视图"
+    },
+    "landing.profile.graph.interactive": {
+        "message": "切换交互模式"
+    },
+    "landing.profile.graph.handle": {
+        "message": "连接点"
+    },
+    "landing.profile.error.details": {
+        "message": "详细信息：{message}"
     }
 }

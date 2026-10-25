@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX, useCallback, useEffect, useId, useRef, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { AiAnalysisForm } from './AiAnalysisForm';
@@ -8,18 +9,19 @@ import { ProfileDag } from './ProfileDag';
 import { useProfileAnalysis } from './use-profile-analysis';
 import { useLocalProfileDag } from './use-local-profile-dag';
 import type { ProfileParserWorker } from './profile-analysis.parser-client';
+import {localizeProfileMessage} from './profile-analysis.messages';
 import './ProfileAnalysis.scss';
 
 type ProfileAnalysisTab = 'visualize' | 'ai';
 
 export function ProfileAnalyzer(): JSX.Element {
-    const { siteConfig } = useDocusaurusContext();
+    const { siteConfig, i18n: {currentLocale} } = useDocusaurusContext();
     const configuredApiBaseUrl = siteConfig.customFields?.profileAnalysisApiBaseUrl;
     const apiBaseUrl = typeof configuredApiBaseUrl === 'string' ? configuredApiBaseUrl : '';
     const configuredHCaptchaSiteKey = siteConfig.customFields?.profileAnalysisHCaptchaSiteKey;
     const hcaptchaSiteKey =
         typeof configuredHCaptchaSiteKey === 'string' ? configuredHCaptchaSiteKey : '';
-    const analysis = useProfileAnalysis(apiBaseUrl);
+    const analysis = useProfileAnalysis(apiBaseUrl, currentLocale === 'zh-CN' ? 'zh-CN' : 'en');
     const createParserWorker = useCallback(
         () =>
             new Worker(new URL('./profile-analysis.parser.worker.ts', import.meta.url), {
@@ -94,20 +96,20 @@ export function ProfileAnalyzer(): JSX.Element {
     return (
         <div className="profile-analysis">
             <header className="profile-analysis__header">
-                <p className="profile-analysis__eyebrow">Query diagnostics</p>
-                <h1>Apache Doris Profile Analysis</h1>
+                <p className="profile-analysis__eyebrow">{translate({id: "landing.ProfileAnalyzer.001", message: "Query diagnostics"})}</p>
+                <h1>{translate({id: "landing.ProfileAnalyzer.002", message: "Apache Doris Profile Analysis"})}</h1>
             </header>
 
             <ProfileUploader file={analysis.file} disabled={isAiBusy} onFileChange={handleFileChange} />
 
             {analysis.recoveryWarning && (
                 <div className="profile-analysis__warning" role="status">
-                    {analysis.recoveryWarning}
+                    {localizeProfileMessage(analysis.recoveryWarning)}
                 </div>
             )}
 
-            <section className="profile-analysis__workspace" aria-label="Profile analysis actions and results">
-                <div className="profile-analysis__tabs" role="tablist" aria-label="Profile analysis actions">
+            <section className="profile-analysis__workspace" aria-label={translate({id: "landing.ProfileAnalyzer.003", message: "Profile analysis actions and results"})}>
+                <div className="profile-analysis__tabs" role="tablist" aria-label={translate({id: "landing.ProfileAnalyzer.004", message: "Profile analysis actions"})}>
                     <button
                         type="button"
                         id={`${tabIdPrefix}-visualize-tab`}
@@ -118,7 +120,7 @@ export function ProfileAnalyzer(): JSX.Element {
                         onClick={() => selectTab('visualize')}
                         onKeyDown={handleTabKeyDown}
                     >
-                        Visualize Execution
+                        {translate({id: "landing.ProfileAnalyzer.005", message: "Visualize Execution"})}
                     </button>
                     <button
                         type="button"
@@ -130,7 +132,7 @@ export function ProfileAnalyzer(): JSX.Element {
                         onClick={() => selectTab('ai')}
                         onKeyDown={handleTabKeyDown}
                     >
-                        AI-assisted analysis
+                        {translate({id: "landing.ProfileAnalyzer.006", message: "AI-assisted analysis"})}
                     </button>
                 </div>
                 <div
@@ -142,9 +144,7 @@ export function ProfileAnalyzer(): JSX.Element {
                 >
                     <div className="profile-analysis__panel">
                         <p className="profile-analysis__panel-intro">
-                            Visualize the Profile. Select Visualize Execution to parse the file in your browser
-                            and render its execution graph as an interactive diagram. The file is not uploaded for
-                            this action.
+                            {translate({id: "landing.ProfileAnalyzer.007", message: "Visualize the Profile. Select Visualize Execution to parse the file in your browser and render its execution graph as an interactive diagram. The file is not uploaded for this action."})}
                         </p>
                         <button
                             className="button button--primary profile-analysis__action-button"
@@ -152,7 +152,7 @@ export function ProfileAnalyzer(): JSX.Element {
                             disabled={!analysis.file || localDag.isBusy}
                             onClick={handleVisualize}
                         >
-                            {localDag.isBusy ? 'Visualizing…' : 'Visualize Execution'}
+                            {localDag.isBusy ? translate({id: "landing.ProfileAnalyzer.008", message: "Visualizing…"}) : translate({id: "landing.ProfileAnalyzer.009", message: "Visualize Execution"})}
                         </button>
                     </div>
                     <ProfileDag state={localDag.state} dag={localDag.dag} error={localDag.error} />
@@ -176,8 +176,8 @@ export function ProfileAnalyzer(): JSX.Element {
                     {analysis.state === 'completed' && <AnalysisStatus state="completed" jobsAhead={null} />}
                     {analysis.error && (
                         <div className="profile-analysis__error" role="alert">
-                            <strong>Analysis failed.</strong>
-                            <span>{analysis.error}</span>
+                            <strong>{translate({id: "landing.ProfileAnalyzer.010", message: "Analysis failed."})}</strong>
+                            <span>{localizeProfileMessage(analysis.error)}</span>
                         </div>
                     )}
                     {analysis.result && <AnalysisResult result={analysis.result} />}

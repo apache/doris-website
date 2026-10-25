@@ -122,7 +122,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
     useEffect(() => {
         const selectFromHash = () => {
             const hash = window.location.hash.replace(/^#/, '');
-            if (hash && reports.some(report => report.id === hash)) setSelectedId(hash);
+            setSelectedId(reports.find(report => report.id === hash)?.id ?? reports[0]?.id ?? '');
         };
         selectFromHash();
         window.addEventListener('hashchange', selectFromHash);
