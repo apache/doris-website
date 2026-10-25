@@ -878,7 +878,7 @@ export function HeroSection(): JSX.Element {
                         </h1>
 
                         <p className="hero-next__sub">
-                            {translate({ id: "homepage.hero.055", message: "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage." })}</p>
+                            {translate({ id: "homepage.hero.055", message: "Give your applications and AI agents fresh data, fast insights, and relevant context. Apache Doris is your open-source data foundation for the AI era." })}</p>
 
                         <div className="hero-next__ctas">
                             <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>

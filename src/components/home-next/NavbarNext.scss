@@ -14,7 +14,7 @@
 
     &.navbar {
         display: block;
-        height: 64px;
+        height: auto;
         min-height: 64px;
         padding: 0;
         background: var(--nb-green-dark);
@@ -25,11 +25,12 @@
         width: 100%;
         max-width: 1600px;
         margin: 0 auto;
-        padding: 0 32px;
-        height: 64px;
+        padding: 10px 32px;
+        min-height: 64px;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 24px;
+        gap: 8px 24px;
     }
     &__logo {
         display: inline-flex;
@@ -46,13 +47,20 @@
     }
     &__nav {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         gap: 2px;
-        flex: 1;
+        flex: 1 0 auto;
+        width: max-content;
+        max-width: calc(100% - 114px);
         min-width: 0;
     }
     &__item {
         position: relative;
+    }
+    &__item:nth-last-child(-n + 2) &__dropdown {
+        right: 0;
+        left: auto;
     }
     &__trigger {
         display: flex;
@@ -224,50 +232,6 @@
     }
 }
 
-@media (max-width: 1399px) {
-    .navbar-next {
-        &.navbar {
-            height: auto;
-            min-height: 64px;
-        }
-        &__inner {
-            height: auto;
-            min-height: 64px;
-            flex-wrap: wrap;
-            gap: 8px 18px;
-            padding: 10px 24px 8px;
-        }
-        &__logo {
-            order: 0;
-        }
-        &__actions {
-            order: 1;
-        }
-        &__nav {
-            order: 2;
-            position: relative;
-            flex: 0 0 100%;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 0 2px;
-        }
-        &__item {
-            position: static;
-        }
-        &__dropdown {
-            top: 100%;
-            left: 50%;
-            width: 560px;
-            min-width: 0;
-            max-width: calc(100vw - 48px);
-            transform: translate(-50%, -4px);
-        }
-        &__dropdown--open {
-            transform: translate(-50%, 0);
-        }
-    }
-}
-
 @media (max-width: 768px) {
     .navbar-next {
         &__ask-ai {
@@ -309,6 +273,7 @@
 @media (max-width: 600px) {
     .navbar-next {
         &__inner {
+            position: relative;
             gap: 6px 8px;
             padding: 10px 10px 6px;
         }
@@ -323,6 +288,10 @@
         }
         &__nav {
             gap: 0;
+            max-width: calc(100% - 78px);
+        }
+        &__item {
+            position: static;
         }
         &__trigger {
             gap: 3px;
@@ -334,8 +303,18 @@
             width: 10px;
             height: 10px;
         }
-        &__dropdown {
-            max-width: calc(100vw - 20px);
+        &__dropdown,
+        &__item:nth-last-child(-n + 2) &__dropdown {
+            left: 50%;
+            right: auto;
+            width: 560px;
+            min-width: 0;
+            max-width: calc(100% - 20px);
+            transform: translate(-50%, -4px);
+        }
+        &__dropdown--open,
+        &__item:nth-last-child(-n + 2) &__dropdown--open {
+            transform: translate(-50%, 0);
         }
         &__github {
             padding-inline: 6px;
@@ -356,6 +335,9 @@
         }
         &__logo {
             width: 62px;
+        }
+        &__nav {
+            max-width: calc(100% - 68px);
         }
         &__actions {
             gap: 4px;

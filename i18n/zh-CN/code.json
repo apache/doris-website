@@ -402,8 +402,8 @@
         "description": "Switch report animation"
     },
     "homepage.hero.055": {
-        "message": "Apache Doris 是面向现代分析与 AI 的开源实时数据库，既支持在物理服务器上采用存算一体架构，也支持基于云对象存储采用存算分离架构。",
-        "description": "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage."
+        "message": "Apache Doris 是 AI 时代的开源数据底座，为应用与 AI Agent 提供实时数据、即时洞察和所需上下文。",
+        "description": "Give your applications and AI agents fresh data, fast insights, and relevant context. Apache Doris is your open-source data foundation for the AI era."
     },
     "homepage.hero.056": {
         "message": "快速开始",
