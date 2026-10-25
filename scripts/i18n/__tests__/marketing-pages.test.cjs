@@ -228,13 +228,13 @@ test('fallback Chinese benchmark pages still offer English and available transla
     assert.match(html, /aria-current="page"/);
 });
 
-test('desktop and mobile benchmark navigation retains the site language', () => {
+test('shared expanded benchmark navigation retains the site language', () => {
     for (const locale of ['en', 'zh-CN', 'ja']) {
         const {NavbarNext} = modules(locale, `/${locale}/docs/4.x/getting-started/what-is-apache-doris/`)
             ('src/components/home-next/NavbarNext.tsx');
         const html = renderToStaticMarkup(React.createElement(NavbarNext));
         const prefix = locale === 'en' ? '' : '/' + locale;
-        assert.equal((html.match(new RegExp('href="' + prefix + '/why-doris/benchmarks/"', 'g')) ?? []).length, 2, locale);
+        assert.equal((html.match(new RegExp('href="' + prefix + '/why-doris/benchmarks/"', 'g')) ?? []).length, 1, locale);
     }
 });
 
@@ -255,6 +255,10 @@ test('feature cards reuse Japanese document metadata and preserve English cards 
     }
     write('docs/key-features/search.mdx', '---\ntitle: Search\ndescription: Search data\nfeatureCard:\n  tags: [search]\n---\n');
     write('i18n/ja/docusaurus-plugin-content-docs/current/key-features/search.mdx', '---\ntitle: 検索\ndescription: データを検索\n---\n');
+    write('i18n/zh-CN/code.json', JSON.stringify({
+        'marketing.features.cards.key-features-search.title': {message: '全文检索'},
+        'marketing.features.cards.key-features-search.description': {message: '使用 SQL 搜索数据'},
+    }));
     generate({rootDir: fixture});
     const file = path.join(fixture, 'src/generated/key-features.ts');
     const {outputText} = ts.transpileModule(fs.readFileSync(file, 'utf8'), {compilerOptions: {module: ts.ModuleKind.CommonJS}});
@@ -262,9 +266,14 @@ test('feature cards reuse Japanese document metadata and preserve English cards 
     new Function('exports', outputText)(module.exports);
     const {keyFeatureCards, localizedKeyFeatureCards} = module.exports;
     assert.equal(keyFeatureCards[0].title, 'Search');
+    assert.equal(localizedKeyFeatureCards['zh-CN'][0].title, '全文检索');
+    assert.equal(localizedKeyFeatureCards['zh-CN'][0].description, '使用 SQL 搜索数据');
+    assert.equal(localizedKeyFeatureCards['zh-CN'][0].href, keyFeatureCards[0].href);
     assert.equal(localizedKeyFeatureCards.ja[0].title, '検索');
     assert.equal(localizedKeyFeatureCards.ja[0].description, 'データを検索');
     assert.equal(localizedKeyFeatureCards.ja[0].href, keyFeatureCards[0].href);
+    write('i18n/zh-CN/code.json', '{}');
+    assert.throws(() => generate({rootDir: fixture}), /Missing Chinese feature summary: key-features-search/);
 });
 
 test('every marketing translation exists and retains interpolation placeholders', () => {

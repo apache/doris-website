@@ -67,6 +67,25 @@ export default function Page(){ return <section className={'fixed'} aria-label="
     assert.equal(next.reusedUnits, 2);
 });
 
+test('translation-wrapped UI keeps default messages in scope and protects message IDs and other calls', async () => {
+    const source = `import {translate} from '@docusaurus/Translate';
+const response = {message: 'An API value'};
+send({message: 'An executable argument'});
+export default function Report(){return <h1>{translate({id: 'report.heading', message: 'Weekly report'})}</h1>;}
+`;
+    const units = await extractUnits(source, '.tsx');
+    assert.deepEqual(units.map(unit => unit.text), ['Weekly report']);
+    const result = await translate(source, '.tsx');
+    assert(result.target.includes('日本語 Weekly report'));
+    assert(result.target.includes("id: 'report.heading'"));
+    assert(result.target.includes("{message: 'An API value'}"));
+    assert(result.target.includes("send({message: 'An executable argument'})"));
+    assert.equal(protectionSignature(await structure(result.target, '.tsx')),
+        protectionSignature(await structure(source, '.tsx')));
+    assert.notEqual(protectionSignature(await structure(result.target.replace('report.heading', 'wrong.heading'), '.tsx')),
+        protectionSignature(await structure(source, '.tsx')));
+});
+
 function fixture(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'expanded-translation-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
@@ -141,6 +160,31 @@ test('native discovery, scheduling, planning and generation recognize all three 
     planned = await plan({...options, report, records: new Map([[identity(candidate.record), candidate.record]])});
     assert.equal(planned.tasks.find(item => item.sourcePath === task.sourcePath).kind, 'update');
     assert(relevantPush([task.sourcePath], report, scope));
+});
+
+test('translation-wrapped report UI remains in native coverage instead of disappearing as a missing group', async t => {
+    const {root, write, commit} = fixture(t);
+    const previousLocale = process.env.I18N_LOCALE;
+    process.env.I18N_LOCALE = 'ja';
+    t.after(() => {if (previousLocale === undefined) delete process.env.I18N_LOCALE; else process.env.I18N_LOCALE = previousLocale;});
+    const sourcePath = 'src/components/community-report-next/Report.tsx';
+    write(sourcePath, "import {translate} from '@docusaurus/Translate'; export default function Report(){return <h1>{translate({id: 'report.heading', message: 'Weekly report'})}</h1>;}\n");
+    const sourceCommit = commit();
+    write('baseline/summary.json', JSON.stringify({sourceCommit}));
+    for (const name of ['dev', '4x', 'community']) write(`baseline/${name}.json`, '{"entryFiles":[]}');
+    for (const locale of ['ja', 'ko', 'ru']) {
+        const native = await collectSources(root, locale);
+        const page = native.pages.find(page => page.sourcePath === sourcePath);
+        assert(page, locale);
+        assert.equal(page.status, 'untranslated');
+        assert.equal(native.reports.filter(report => report.kind === 'source_deleted').length, 0);
+    }
+    const report = await audit({root, sourceRef: sourceCommit, baseline: path.join(root, 'baseline'), native: await collect(root)});
+    const group = report.groups.find(group => group.id === 'REPORTUI');
+    assert.equal(group.counts.registered, 1);
+    assert.equal(group.counts.required, 1);
+    assert.equal(group.counts.pending, 1);
+    assert.equal(group.entries[0].sourcePath, sourcePath);
 });
 
 test('the render loader uses only current reviewed translations, watches missing targets and rejects executable changes', async t => {

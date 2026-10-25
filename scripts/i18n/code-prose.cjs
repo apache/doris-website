@@ -51,8 +51,15 @@ function scriptUnits(raw, {report = false, expression = false} = {}) {
         if (inCode(node)) return false;
         if (ts.isPropertyAssignment(node.parent) && node.parent.name === node) return false;
         for (let parent = node.parent; parent; parent = parent.parent) {
-            if (ts.isPropertyAssignment(parent)) return textFields.has(propertyName(parent)) || containers.has(propertyName(parent))
-                || propertyName(parent) === 'file' && /\s/.test(node.text ?? '');
+            if (ts.isPropertyAssignment(parent)) {
+                const object = parent.parent, call = object.parent;
+                // Default UI text stays prose after adopting Docusaurus i18n.
+                // Other `message` fields and translation IDs remain executable data.
+                const translationMessage = propertyName(parent) === 'message' && ts.isObjectLiteralExpression(object)
+                    && ts.isCallExpression(call) && call.arguments[0] === object && call.expression.getText(file) === 'translate';
+                return translationMessage || textFields.has(propertyName(parent)) || containers.has(propertyName(parent))
+                    || propertyName(parent) === 'file' && /\s/.test(node.text ?? '');
+            }
             if (ts.isJsxAttribute(parent)) return textFields.has(parent.name.getText(file)) || containers.has(parent.name.getText(file));
             if (ts.isJsxExpression(parent)) return !ts.isJsxAttribute(parent.parent)
                 || textFields.has(parent.parent.name.getText(file)) || containers.has(parent.parent.name.getText(file));

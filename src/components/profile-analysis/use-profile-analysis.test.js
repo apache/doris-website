@@ -18,6 +18,7 @@ require.extensions['.ts'] = (module, filename) => {
 const {
     getProfileAnalysisErrorMessage,
     initialProfileAnalysisSnapshot,
+    createInitialProfileAnalysisSnapshot,
     profileAnalysisReducer,
 } = require('./use-profile-analysis.ts');
 const { ProfileAnalysisApiError } = require('./profile-analysis.api.ts');
@@ -207,4 +208,14 @@ test('maps hCaptcha backend errors to actionable messages', () => {
         ),
         /temporarily unavailable/,
     );
+});
+
+
+test('initial response language follows the page while restored jobs and user choices keep their language', () => {
+    const chinese = createInitialProfileAnalysisSnapshot('zh-CN');
+    assert.equal(chinese.language, 'zh-CN');
+    assert.equal(initialProfileAnalysisSnapshot.language, 'en');
+    const idle = profileAnalysisReducer(chinese, {type: 'restore_empty'});
+    assert.equal(profileAnalysisReducer(idle, {type: 'set_language', language: 'en'}).language, 'en');
+    assert.equal(profileAnalysisReducer(chinese, {type: 'restore_record', jobId: 'restored-job', language: 'en'}).language, 'en');
 });

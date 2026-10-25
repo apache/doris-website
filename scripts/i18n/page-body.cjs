@@ -88,6 +88,15 @@ function transformBody({root, file, source, english, englishI18n}) {
 }
 function validateMessages(root, registration, locale) {
     const {files, messages} = bodyDependencies(root, registration.sourcePath);
+    if (registration.id === 'P20' && locale === 'zh-CN')
+        require('./track-b-messages.cjs').trackBMessages(root).forEach((source, id) => messages.set(id, source));
+    if (registration.id === 'P05' && locale === 'zh-CN')
+        require('./user-story-messages.cjs').userStoryMessages(root).forEach((source, id) => messages.set(id, source));
+    if (registration.id === 'P14' && locale === 'zh-CN') {
+        const reports = require('./report-messages.cjs');
+        reports.reportMessages(root).forEach((source, id) => messages.set(id, source));
+        files.push(...reports.reportSources(root));
+    }
     const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));
     const placeholders = text => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort().join();
     for (const [id, source] of messages) {

@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { useEffect, useState } from 'react';
 import { Form, message } from 'antd';
 import { DownloadTypeEnum, Option } from '@site/src/constant/download.data';
@@ -93,8 +94,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
         >
             <Form.Item name="version" rules={[{ required: true }]}>
                 <FormSelect
-                    placeholder="Version"
-                    label="Version"
+                    placeholder={translate({id: "landing.downloadformallrelease.001", message: "Version"})}
+                    label={translate({id: "landing.downloadformallrelease.002", message: "Version"})}
                     isCascader={true}
                     popupExtraClass={popupExtraClass}
                     displayRender={label => {
@@ -108,8 +109,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     {({ getFieldValue }) => (
                         <Form.Item name="architecture" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Architecture"
-                                label="Architecture"
+                                placeholder={translate({id: "landing.downloadformallrelease.003", message: "Architecture"})}
+                                label={translate({id: "landing.downloadformallrelease.004", message: "Architecture"})}
                                 isCascader={false}
                                 popupExtraClass={popupExtraClass}
                                 options={getOptions(getFieldValue('version'))}
@@ -123,8 +124,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     {({ getFieldValue }) => (
                         <Form.Item name="tarBall" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Tarball"
-                                label="Tarball"
+                                placeholder={translate({id: "landing.downloadformallrelease.005", message: "Tarball"})}
+                                label={translate({id: "landing.downloadformallrelease.006", message: "Tarball"})}
                                 isCascader={false}
                                 popupExtraClass={popupExtraClass}
                                 options={[
@@ -148,7 +149,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                     type="submit"
                     className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                 >
-                    Download
+                    {translate({id: "landing.downloadformallrelease.007", message: "Download"})}
                 </button>
             </Form.Item>
             {Array.isArray(version) && showArch(version[1]) && (
@@ -166,7 +167,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                             message.success('Copy Successfully!');
                         }}
                     >
-                        <span className="mr-2">Copy link</span>
+                        <span className="mr-2">{translate({id: "landing.downloadformallrelease.008", message: "Copy link"})}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                             <rect
                                 x="2.5"
@@ -224,7 +225,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     return (
         <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
+            <div className="mb-8 text-xl font-medium text-left">{translate({id: "landing.downloadformallrelease.009", message: "Downloads"})}</div>
             {formBody}
         </div>
     );

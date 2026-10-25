@@ -864,21 +864,21 @@ export function HeroSection(): JSX.Element {
                 {/* ── Left column ── */}
                 <div className="hero-next__left">
                     <div className="hero-next__intro">
-                        <h1 className="hero-next__title">
-                            <span className="hero-next__title-line">{translate({ id: "homepage.hero.049", message: "Lightning" })}</span>
+                        <h1 className="hero-next__title" lang="en" aria-label="Lightning Fast Analytics and Search Database">
+                            <span className="hero-next__title-line">Lightning</span>
                             <span className="hero-next__title-line hero-next__title-fast">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.050", message: "Fast" })}</span>
+                                <span className="hero-next__title-accent">Fast</span>
                                 <LightningSvg size={56} />
                             </span>
                             <span className="hero-next__title-line hero-next__title-line--mascot-host">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.051", message: "Analytics" })}</span> {translate({ id: "homepage.hero.052", message: " and" })}<MascotWithEyes />
+                                <span className="hero-next__title-accent">Analytics</span> and<MascotWithEyes />
                             </span>
                             <span className="hero-next__title-line">
-                                <span className="hero-next__title-accent">{translate({ id: "homepage.hero.053", message: "Search" })}</span> {translate({ id: "homepage.hero.054", message: " Database" })}</span>
+                                <span className="hero-next__title-accent">Search</span> Database</span>
                         </h1>
 
                         <p className="hero-next__sub">
-                            {translate({ id: "homepage.hero.055", message: "Apache Doris is an open-source, real-time database for modern analytics and AI. Run it shared-nothing on bare metal, or disaggregated on cloud object storage." })}</p>
+                            {translate({ id: "homepage.hero.055", message: "Give your applications and AI agents fresh data, fast insights, and relevant context. Apache Doris is your open-source data foundation for the AI era." })}</p>
 
                         <div className="hero-next__ctas">
                             <a className="hero-next__btn hero-next__btn--yellow" href={GET_STARTED_HREF}>

@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { useEffect, useMemo } from 'react';
 import { Form, message } from 'antd';
 import FormSelect from '../form-select/form-select';
@@ -151,8 +152,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
         >
             <Form.Item name="tool" rules={[{ required: true }]} hidden={!showToolSelect}>
                 <FormSelect
-                    placeholder="Tools"
-                    label="Tools"
+                    placeholder={translate({id: "landing.downloadformtools.001", message: "Tools"})}
+                    label={translate({id: "landing.downloadformtools.002", message: "Tools"})}
                     isCascader={false}
                     popupExtraClass={popupExtraClass}
                     options={data}
@@ -164,8 +165,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         <>
                             <Form.Item name="version" rules={[{ required: true }]}>
                                 <FormSelect
-                                    placeholder="Version"
-                                    label="Version"
+                                    placeholder={translate({id: "landing.downloadformtools.003", message: "Version"})}
+                                    label={translate({id: "landing.downloadformtools.004", message: "Version"})}
                                     isCascader={false}
                                     popupExtraClass={popupExtraClass}
                                     options={getOptions}
@@ -173,8 +174,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             </Form.Item>
                             <Form.Item name="architecture" rules={[{ required: true }]}>
                                 <FormSelect
-                                    placeholder="Architecture"
-                                    label="Architecture"
+                                    placeholder={translate({id: "landing.downloadformtools.005", message: "Architecture"})}
+                                    label={translate({id: "landing.downloadformtools.006", message: "Architecture"})}
                                     isCascader={false}
                                     popupExtraClass={popupExtraClass}
                                     options={getArchitectureOptions}
@@ -184,8 +185,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     ) : (
                         <Form.Item name="version" rules={[{ required: true }]}>
                             <FormSelect
-                                placeholder="Version"
-                                label="Version"
+                                placeholder={translate({id: "landing.downloadformtools.007", message: "Version"})}
+                                label={translate({id: "landing.downloadformtools.008", message: "Version"})}
                                 isCascader={tool !== ToolsEnum.Operator}
                                 popupExtraClass={popupExtraClass}
                                 options={getOptions}
@@ -205,8 +206,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
             </Form.Item>
             <Form.Item name="tarBall" rules={[{ required: true }]}>
                 <FormSelect
-                    placeholder="Tarball"
-                    label="Tarball"
+                    placeholder={translate({id: "landing.downloadformtools.009", message: "Tarball"})}
+                    label={translate({id: "landing.downloadformtools.010", message: "Tarball"})}
                     isCascader={false}
                     popupExtraClass={popupExtraClass}
                     options={[
@@ -229,10 +230,10 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     >
                         <div className="mb-3 flex items-center justify-between gap-4 border-b border-[var(--brand-terminal)]/30 pb-3">
                             <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--brand-terminal)]">
-                                Docker command
+                                {translate({id: "landing.downloadformtools.011", message: "Docker command"})}
                             </span>
                             <button
-                                aria-label="Copy Docker pull command"
+                                aria-label={translate({id: "landing.downloadformtools.012", message: "Copy Docker pull command"})}
                                 className="shrink-0 rounded-md border border-[var(--brand-terminal)] bg-black px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--brand-terminal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-terminal)] focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-50"
                                 disabled={!operatorBinaryCommand}
                                 style={{
@@ -246,7 +247,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                     message.success('Copy Successfully!');
                                 }}
                             >
-                                Copy
+                                {translate({id: "landing.downloadformtools.013", message: "Copy"})}
                             </button>
                         </div>
                         <div className="flex min-w-0 items-start">
@@ -272,7 +273,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         type="submit"
                         className={`w-full text-lg ${isArchive ? 'download-next__archive-button' : 'button-primary'}`}
                     >
-                        Download
+                        {translate({id: "landing.downloadformtools.014", message: "Download"})}
                     </button>
                 </Form.Item>
             )}
@@ -290,7 +291,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         message.success('Copy Successfully!');
                     }}
                 >
-                    <span className="mr-2">Copy link</span>
+                    <span className="mr-2">{translate({id: "landing.downloadformtools.015", message: "Copy link"})}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <rect
                             x="2.5"
@@ -370,7 +371,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     return (
         <div className="rounded-lg border border-b-[0.375rem] border-primary px-8 pt-[3.125rem] pb-[2.1875rem]">
-            <div className="mb-8 text-xl font-medium text-left">Downloads</div>
+            <div className="mb-8 text-xl font-medium text-left">{translate({id: "landing.downloadformtools.016", message: "Downloads"})}</div>
             {formBody}
         </div>
     );

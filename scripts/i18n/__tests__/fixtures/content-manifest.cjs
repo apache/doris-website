@@ -51,11 +51,13 @@ export default function Page(){return <LayoutNext title={title}><h1>{title}</h1>
     for (const file of ['src/utils/useLocalizedRoute.ts', 'src/utils/useLanguageItems.ts', 'src/utils/localePreference.ts', 'src/utils/languageMessages.ts',
         'src/components/home-next/LocalizedLink.tsx', 'src/components/home-next/PageContent.tsx', 'src/components/home-next/PageContent.scss',
         'src/components/home-next/PageLanguageSwitcher.tsx', 'src/components/home-next/PageLanguageSwitcher.scss',
+        'src/components/brand-theme/BrandThemeSwitcher.tsx', 'src/components/brand-theme/BrandThemeSwitcher.scss',
+        'src/components/brand-theme/BrandThemeProvider.tsx',
         'src/components/home-next/LanguageMenu.tsx', 'src/components/home-next/LanguageMenu.scss', 'src/components/home-next/LayoutNext.tsx'])
         write(file, fs.readFileSync(path.join(repo, file), 'utf8'));
     write('src/components/home-next/NavbarNext.tsx', `import React from 'react'; import Translate from '@docusaurus/Translate';
 import {LanguageMenu} from './LanguageMenu'; import Link from './LocalizedLink';
-export function NavbarNext(){return <nav><Translate id="fixture.shell">English navigation</Translate><LanguageMenu/><LanguageMenu mobile/>
+export function NavbarNext(){return <nav><Translate id="fixture.shell">English navigation</Translate><LanguageMenu/>
 <Link to="/">Home</Link><Link to="/sample-2/">Ordinary</Link><Link to="/blog/native-0/">Blog</Link><Link to="/docs/4.x/english-shared/">Docs</Link><Link to="/files/manual.txt">Download fixture</Link></nav>;}\n`);
     write('static/files/manual.txt', 'Fixture download');
     write('src/pages/index.tsx', `import React from 'react'; import {LayoutNext} from '@site/src/components/home-next/LayoutNext';

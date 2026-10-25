@@ -28,10 +28,10 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
     for (const locale of locales) {
         assert.equal(manifests[locale].sourceSha, sha, 'Mixed manifest sources');
         const home = manifests[locale].pages.find(row => row.contentId === 'page:P01');
-        const intentionalFallback = locale === 'zh-CN';
+        const intentionalFallback = false;
         assert(home && home.fallback === intentionalFallback && home.contentLocale === (intentionalFallback ? 'en' : locale)
             && home.indexable === !intentionalFallback, `Homepage policy mismatch: ${locale}`);
-        assert.deepEqual([...home.availableTranslations].sort(), locales.filter(code => code !== 'zh-CN').sort());
+        assert.deepEqual([...home.availableTranslations].sort(), locales.slice().sort());
         if (!landingOnly) for (const version of ['current', '4.x', '3.x', '2.1'])
             assert(manifests[locale].pages.some(row => row.kind === 'docs' && row.pluginId === 'default' && row.version === version), `Missing version: ${locale}/${version}`);
     }
@@ -83,7 +83,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 const home = manifests[locale].pages.find(row => row.contentId === 'page:P01');
                 assert.equal(await page.locator('[data-content-id="page:P01"]').getAttribute('lang'), home.contentLocale);
                 assert.equal(await page.locator('.page-fallback-notice').count(), home.fallback ? 1 : 0);
-                const title = await page.locator('h1').first().textContent(); assert(title.trim());
+                const title = await page.locator('h1').first().innerText(); assert(title.trim());
                 // The external widget is blocked in local tests. Exercise its
                 // actual label overrides independently of network/error timing.
                 const aiLabelStates = await page.locator('#navbar-ask-ai-btn').evaluate(button => {
@@ -109,14 +109,13 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                 });
                 for (const state of aiLabelStates) assert(state.scrollWidth <= state.viewport + 1,
                     `${locale}/${width}/${state.state}: AI label overflow`);
-                const paletteInPanel = !await page.locator('.brand-theme-switcher:not(.brand-theme-switcher--mobile)').isVisible();
-                const languageInPanel = !await page.locator('.language-menu:not(.language-menu--mobile)').isVisible();
+                assert.equal(await page.locator('.navbar-next .language-menu').count(), 1);
+                assert.equal(await page.locator('.page-language-switcher').count(), 0);
+                assert.equal(title.replace(/\s+/g, ' ').trim().toLowerCase(), 'lightning fast analytics and search database');
                 for (const theme of themes) {
-                    if (paletteInPanel) await page.locator('.navbar-next__menu-button').click();
-                    const palette = page.locator(paletteInPanel ? '.brand-theme-switcher--mobile' : '.brand-theme-switcher:not(.brand-theme-switcher--mobile)');
-                    await palette.locator('summary').click();
-                    await palette.locator('button').nth(themes.indexOf(theme)).click();
-                    if (paletteInPanel) await page.locator('.navbar-next__menu-button').click();
+                    const language = page.locator('.navbar-next .language-menu');
+                    await language.locator('summary').click();
+                    await language.locator(`[data-brand-theme-option="${theme}"]`).click();
                     assert.equal(await page.locator('html').getAttribute('data-brand-theme'), theme);
                     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${locale}/${width}/${theme}: horizontal overflow`);
                     for (const frame of await page.locator('iframe.features-next__realtime-frame').all()) {
@@ -143,8 +142,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
                     }
                     results.push({locale, width, theme, title, aiLabelStates});
                 }
-                if (languageInPanel) await page.locator('.navbar-next__menu-button').click();
-                const language = page.locator(languageInPanel ? '.language-menu--mobile' : '.language-menu:not(.language-menu--mobile)');
+                const language = page.locator('.navbar-next .language-menu');
                 await language.locator('summary').focus(); await page.keyboard.press('Enter');
                 assert.equal(await language.getAttribute('open'), ''); await page.keyboard.press('Escape');
                 assert.equal(await language.getAttribute('open'), null);
@@ -153,8 +151,9 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
             if (!landingOnly) {
                 await page.setViewportSize({width: 1440, height: 900}); await page.goto(origin + prefix);
                 await page.locator('.navbar-next__cta').click(); await waitPath(page, prefix + 'download/');
-                await page.locator('[data-content-id="page:P10"][lang="en"]').waitFor();
-                assert.equal(await page.locator('[data-content-id="page:P10"]').getAttribute('lang'), 'en');
+                const download = manifests[locale].pages.find(row => row.contentId === 'page:P10');
+                await page.locator(`[data-content-id="page:P10"][lang="${download.contentLocale}"]`).waitFor();
+                assert.equal(await page.locator('[data-content-id="page:P10"]').getAttribute('lang'), download.contentLocale);
                 assert.equal(await page.locator('html').getAttribute('lang'), htmlLang);
                 await page.reload(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix + 'download/'));
                 await page.goBack(); assert.equal(normalized(new URL(page.url()).pathname), normalized(prefix));

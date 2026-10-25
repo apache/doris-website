@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { useMemo, useState } from 'react';
 import { AllVersionOption, Option } from '@site/src/constant/download.data';
 import FormSelect from '../form-select/form-select';
@@ -37,11 +38,11 @@ export default function DownloadFormArchive({ coreVersions, toolVersions }: Down
 
     return (
         <div className="download-next__archive-card">
-            <div className="download-next__archive-card-title">Archived download</div>
+            <div className="download-next__archive-card-title">{translate({id: "landing.downloadformarchive.001", message: "Archived download"})}</div>
             <div className="download-next__archive-project">
                 <FormSelect
-                    placeholder="Project"
-                    label="Project"
+                    placeholder={translate({id: "landing.downloadformarchive.002", message: "Project"})}
+                    label={translate({id: "landing.downloadformarchive.003", message: "Project"})}
                     isCascader={false}
                     popupExtraClass={ARCHIVE_POPUP_CLASS}
                     options={projects}

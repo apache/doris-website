@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX, useRef } from 'react';
 import Link from '@docusaurus/Link';
 import { LayoutNext } from '@site/src/components/home-next/LayoutNext';
@@ -34,12 +35,12 @@ function CoursePath(): JSX.Element {
             <li>
                 <div
                     className="course-landing__path-coming"
-                    aria-label="More Doris 101 courses coming soon"
+                    aria-label={translate({id: "landing.CourseLanding.002", message: "More Doris 101 courses coming soon"})}
                 >
                     <span className="course-landing__path-number" aria-hidden="true">+</span>
                     <span className="course-landing__path-name">
-                        More courses
-                        <small>Coming soon</small>
+                        {translate({id: "landing.CourseLanding.003", message: "More courses"})}
+                        <small>{translate({id: "landing.CourseLanding.004", message: "Coming soon"})}</small>
                     </span>
                     <span className="course-landing__path-more-mark" aria-hidden="true">···</span>
                 </div>
@@ -55,8 +56,8 @@ function CoursePath(): JSX.Element {
             ref={cardRef}
         >
             <div className="course-landing__path-header">
-                <h2 id="course-path-title">Your Doris path</h2>
-                <span>{hackathonOn ? 'Self-paced · open to everyone' : '6 available · more to come'}</span>
+                <h2 id="course-path-title">{translate({id: "landing.CourseLanding.006", message: "Your Doris path"})}</h2>
+                <span>{hackathonOn ? translate({id: "landing.CourseLanding.007", message: "Self-paced · open to everyone"}) : translate({id: "landing.CourseLanding.008", message: "6 available · more to come"})}</span>
             </div>
             {HACKATHON_COURSE_TRACK_ENABLED ? (
                 <>
@@ -76,28 +77,25 @@ function CoursePath(): JSX.Element {
 export function CourseLanding(): JSX.Element {
     return (
         <LayoutNext
-            title="Apache Doris 101 Course"
-            description="Free Apache Doris 101 course covering architecture, deployment, table design, data operations, analytical queries, and lakehouse connectivity."
+            title={translate({id: "landing.CourseLanding.009", message: "Apache Doris 101 Course"})}
+            description={translate({id: "landing.CourseLanding.010", message: "Free Apache Doris 101 course covering architecture, deployment, table design, data operations, analytical queries, and lakehouse connectivity."})}
         >
             <div className="course-landing">
                 <section className="course-landing__hero" aria-labelledby="course-title">
                     <div className="course-landing__hero-ring" aria-hidden="true" />
                     <div className="course-landing__container course-landing__hero-grid">
                         <div className="course-landing__hero-copy">
-                            <p className="course-landing__eyebrow">Free course · Beginner friendly</p>
+                            <p className="course-landing__eyebrow">{translate({id: "landing.CourseLanding.011", message: "Free course · Beginner friendly"})}</p>
                             <h1 id="course-title">
-                                Learn Doris.
-                                <span>Build for real.</span>
+                                {translate({id: "landing.CourseLanding.012", message: "Learn Doris."})}
+                                <span>{translate({id: "landing.CourseLanding.013", message: "Build for real."})}</span>
                             </h1>
                             <p className="course-landing__lead">
-                                Start with the fundamentals of OLAP databases, then move on to advanced topics and
-                                practical use of Apache Doris. The course connects general database concepts with
-                                Doris&apos;s core capabilities, so you can understand and use Doris more effectively.
-                                The database knowledge you gain will also apply to other systems.
+                                {translate({id: "landing.CourseLanding.014", message: "Start with the fundamentals of OLAP databases, then move on to advanced topics and practical use of Apache Doris. The course connects general database concepts with Doris's core capabilities, so you can understand and use Doris more effectively. The database knowledge you gain will also apply to other systems."})}
                             </p>
                             <div className="course-landing__actions">
                                 <Link className="course-landing__button course-landing__button--primary" to={COURSE_101_MODULES[0].href}>
-                                    Start with the overview →
+                                    {translate({id: "landing.CourseLanding.015", message: "Start with the overview →"})}
                                 </Link>
                             </div>
                         </div>

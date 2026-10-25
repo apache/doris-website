@@ -57,9 +57,9 @@ function staticChecks(site, directory) {
         for (const id of productIds) {
             const native = manifests[locale].pages.find(row => row.contentId === 'page:' + id);
             assert(native, `Missing native product: ${id}/${locale}`);
-            const expectedLocale = locale === 'zh-CN' ? 'en' : locale;
+            const expectedLocale = locale;
             assert.equal(native.contentLocale, expectedLocale);
-            assert.equal(native.fallback, locale === 'zh-CN');
+            assert.equal(native.fallback, false);
             const html = fs.readFileSync(path.join(site, decodeURIComponent(native.route), 'index.html'));
             const $ = cheerio.load(html);
             assert.equal($('html').attr('lang'), localeRegistry.find(item => item.code === locale).htmlLang);
@@ -71,9 +71,9 @@ function staticChecks(site, directory) {
             assert.equal($('meta[property="og:url"]').attr('content'), canonical);
             assert.equal(/noindex/.test($('meta[name="robots"]').attr('content') ?? ''), !native.indexable);
             assert.equal(indexed.has(native.route), native.indexable);
-            assert.deepEqual([...native.availableTranslations].sort(), ['en', 'ja', 'ko', 'ru']);
-            assert.equal($('link[rel="alternate"][hreflang]').length, 5);
-            for (const other of ['en', 'ja', 'ko', 'ru']) {
+            assert.deepEqual([...native.availableTranslations].sort(), locales.slice().sort());
+            assert.equal($('link[rel="alternate"][hreflang]').length, 6);
+            for (const other of locales.slice().sort()) {
                 const language = localeRegistry.find(item => item.code === other).htmlLang;
                 assert.equal($(`link[rel="alternate"][hreflang="${language}"]`).attr('href'),
                     'https://doris.apache.org' + native.navigationRoutes[other]);
@@ -86,14 +86,17 @@ function staticChecks(site, directory) {
                     const doc = manifests[expectedLocale].pages.find(row => row.kind === 'docs'
                         && normalized(row.route) === normalized(route));
                     assert(doc, 'Missing feature document identity: ' + route);
-                    const target = doc.contentLocale === 'en' ? card.sourcePath
+                    const target = locale === 'zh-CN' || doc.contentLocale === 'en' ? card.sourcePath
                         : `i18n/${doc.contentLocale}/docusaurus-plugin-content-docs/current/${card.sourcePath.replace(/^docs\//, '')}`;
                     const {data, content} = matter(fs.readFileSync(path.join(root, target), 'utf8'));
                     assert(content.trim().length > 100, 'Feature metadata without a complete body: ' + target);
                     const tile = tiles.eq(index);
-                    assert.equal(tile.find('.kf-next__tile-name').text(), data.title);
+                    const summary = locale === 'zh-CN' ? require(path.join(root, 'i18n/zh-CN/code.json')) : null;
+                    const title = summary?.[`marketing.features.cards.${card.id}.title`]?.message ?? data.title;
+                    const description = summary?.[`marketing.features.cards.${card.id}.description`]?.message ?? data.description;
+                    assert.equal(tile.find('.kf-next__tile-name').text(), title);
                     if (tile.find('.kf-next__tile-desc').length)
-                        assert.equal(tile.find('.kf-next__tile-desc').text(), data.description);
+                        assert.equal(tile.find('.kf-next__tile-desc').text(), description);
                     assert.equal(normalized(tile.find('a').attr('href')), normalized(withLocale(locale, card.href)));
                     documents.push({locale, id: card.id, route: withLocale(locale, card.href), sourcePath: card.sourcePath,
                         metadataSource: target, contentLocale: doc.contentLocale, state: doc.state,
@@ -280,7 +283,8 @@ async function verify({site, directory, output, origin: publicOrigin, requireCom
             await open(product.route + '?from=t10#t10'); const routes = [];
             for (const locale of ['ko', 'ru', 'zh-CN', 'en', 'ja']) {
                 const htmlLang = localeRegistry.find(row => row.code === locale).htmlLang;
-                await page.locator(`.page-language-switcher a[lang="${htmlLang}"]`).click();
+                await page.locator('.navbar-next .language-menu summary').click();
+                await page.locator(`.navbar-next .language-menu a[lang="${htmlLang}"]`).click();
                 const expected = withLocale(locale, product.englishRoute);
                 await page.waitForURL(url => url.pathname === expected);
                 const url = new URL(page.url()); assert.equal(url.search, '?from=t10'); assert.equal(url.hash, '#t10');

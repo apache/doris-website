@@ -1,3 +1,5 @@
+import {translate} from '@docusaurus/Translate';
+import {localizeProfileMessage} from './profile-analysis.messages';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import React, { JSX, useCallback, useRef, useState } from 'react';
 import type { ResponseLanguage } from './profile-analysis.types';
@@ -37,9 +39,9 @@ export function AiAnalysisForm({
                     href="https://github.com/apache/doris-skills"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Powered by Doris Skills (opens in a new tab)"
+                    aria-label={translate({id: "landing.AiAnalysisForm.001", message: "Powered by Doris Skills (opens in a new tab)"})}
                 >
-                    Powered by <strong>Doris Skills</strong>
+                    {translate({id: "landing.AiAnalysisForm.002", message: "Powered by"})} <strong>{translate({id: "landing.AiAnalysisForm.003", message: "Doris Skills"})}</strong>
                     <svg viewBox="0 0 16 16" aria-hidden="true">
                         <path d="M6 3h7v7M13 3 5 11M11 9v4H3V5h4" />
                     </svg>
@@ -47,7 +49,7 @@ export function AiAnalysisForm({
             </p>
 
             <fieldset className="profile-analysis__language" disabled={disabled}>
-                <legend>Response language</legend>
+                <legend>{translate({id: "landing.AiAnalysisForm.004", message: "Response language"})}</legend>
                 <label>
                     <input
                         type="radio"
@@ -56,7 +58,7 @@ export function AiAnalysisForm({
                         checked={language === 'en'}
                         onChange={() => onLanguageChange('en')}
                     />
-                    English
+                    {translate({id: "landing.AiAnalysisForm.005", message: "English"})}
                 </label>
                 <label>
                     <input
@@ -66,7 +68,7 @@ export function AiAnalysisForm({
                         checked={language === 'zh-CN'}
                         onChange={() => onLanguageChange('zh-CN')}
                     />
-                    Simplified Chinese
+                    {translate({id: "landing.AiAnalysisForm.006", message: "Simplified Chinese"})}
                 </label>
             </fieldset>
 
@@ -75,16 +77,13 @@ export function AiAnalysisForm({
                     <span className="profile-analysis__privacy-notice-icon" aria-hidden="true">
                         !
                     </span>
-                    <h3>Privacy and AI processing notice</h3>
+                    <h3>{translate({id: "landing.AiAnalysisForm.007", message: "Privacy and AI processing notice"})}</h3>
                 </div>
                 <p>
-                    This feature is provided by VeloDB and third-party large language model service providers. It
-                    is not an official Apache Doris project feature, so please use it at your discretion.
+                    {translate({id: "landing.AiAnalysisForm.008", message: "This feature is provided by VeloDB and third-party large language model service providers. It is not an official Apache Doris project feature, so please use it at your discretion."})}
                 </p>
                 <p>
-                    Do not upload passwords, keys, access tokens, personal information, customer-confidential
-                    data, or any other sensitive content that you are not authorized to disclose. All uploaded
-                    information will be automatically and permanently deleted within one hour.
+                    {translate({id: "landing.AiAnalysisForm.009", message: "Do not upload passwords, keys, access tokens, personal information, customer-confidential data, or any other sensitive content that you are not authorized to disclose. All uploaded information will be automatically and permanently deleted within one hour."})}
                 </p>
                 <label className="profile-analysis__consent">
                     <input
@@ -98,15 +97,14 @@ export function AiAnalysisForm({
                             if (!accepted) resetCaptcha();
                         }}
                     />
-                    I have read the notice, am authorized to upload this profile, and consent to third-party AI
-                    processing.
+                    {translate({id: "landing.AiAnalysisForm.010", message: "I have read the notice, am authorized to upload this profile, and consent to third-party AI processing."})}
                 </label>
             </div>
 
             {consentAccepted && (
                 <div className="profile-analysis__captcha">
                     <p id="profile-analysis-captcha-help" className="profile-analysis__captcha-label">
-                        Complete the human verification before starting the analysis.
+                        {translate({id: "landing.AiAnalysisForm.011", message: "Complete the human verification before starting the analysis."})}
                     </p>
                     {hcaptchaSiteKey ? (
                         <HCaptcha
@@ -135,23 +133,23 @@ export function AiAnalysisForm({
                         />
                     ) : (
                         <div className="profile-analysis__validation-error" role="alert">
-                            Human verification is not configured. Contact the site administrator.
+                            {translate({id: "landing.AiAnalysisForm.012", message: "Human verification is not configured. Contact the site administrator."})}
                         </div>
                     )}
                     <small>
-                        This site is protected by hCaptcha and its{' '}
+                        {translate({id: "landing.AiAnalysisForm.013", message: "This site is protected by hCaptcha and its"})}{' '}
                         <a href="https://www.hcaptcha.com/privacy" target="_blank" rel="noopener noreferrer">
-                            Privacy Policy
+                            {translate({id: "landing.AiAnalysisForm.014", message: "Privacy Policy"})}
                         </a>{' '}
-                        and{' '}
+                        {translate({id: "landing.AiAnalysisForm.015", message: "and"})}{' '}
                         <a href="https://www.hcaptcha.com/terms" target="_blank" rel="noopener noreferrer">
-                            Terms of Service
+                            {translate({id: "landing.AiAnalysisForm.016", message: "Terms of Service"})}
                         </a>{' '}
-                        apply.
+                        {translate({id: "landing.AiAnalysisForm.017", message: "apply."})}
                     </small>
                     {hcaptchaError && (
                         <div className="profile-analysis__validation-error" role="alert">
-                            {hcaptchaError}
+                            {localizeProfileMessage(hcaptchaError)}
                         </div>
                     )}
                 </div>
@@ -164,7 +162,7 @@ export function AiAnalysisForm({
                     if (hcaptchaToken) onAnalyze(hcaptchaToken, resetCaptcha);
                 }}
             >
-                {disabled ? 'Processing… · Estimated 1–2 minutes' : 'Analyze with AI'}
+                {disabled ? translate({id: "landing.AiAnalysisForm.018", message: "Processing… · Estimated 1–2 minutes"}) : translate({id: "landing.AiAnalysisForm.019", message: "Analyze with AI"})}
             </button>
         </div>
     );
