@@ -58,7 +58,7 @@
     &__item {
         position: relative;
     }
-    &__item:nth-last-child(-n + 2) &__dropdown {
+    &__item:nth-last-child(-n + 4) &__dropdown {
         right: 0;
         left: auto;
     }
@@ -309,7 +309,7 @@
             height: 10px;
         }
         &__dropdown,
-        &__item:nth-last-child(-n + 2) &__dropdown {
+        &__item:nth-last-child(-n + 4) &__dropdown {
             left: 50%;
             right: auto;
             width: 560px;
@@ -318,7 +318,7 @@
             transform: translate(-50%, -4px);
         }
         &__dropdown--open,
-        &__item:nth-last-child(-n + 2) &__dropdown--open {
+        &__item:nth-last-child(-n + 4) &__dropdown--open {
             transform: translate(-50%, 0);
         }
         &__github {
