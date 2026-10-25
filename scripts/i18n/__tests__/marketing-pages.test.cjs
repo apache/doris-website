@@ -228,13 +228,13 @@ test('fallback Chinese benchmark pages still offer English and available transla
     assert.match(html, /aria-current="page"/);
 });
 
-test('desktop and mobile benchmark navigation retains the site language', () => {
+test('shared expanded benchmark navigation retains the site language', () => {
     for (const locale of ['en', 'zh-CN', 'ja']) {
         const {NavbarNext} = modules(locale, `/${locale}/docs/4.x/getting-started/what-is-apache-doris/`)
             ('src/components/home-next/NavbarNext.tsx');
         const html = renderToStaticMarkup(React.createElement(NavbarNext));
         const prefix = locale === 'en' ? '' : '/' + locale;
-        assert.equal((html.match(new RegExp('href="' + prefix + '/why-doris/benchmarks/"', 'g')) ?? []).length, 2, locale);
+        assert.equal((html.match(new RegExp('href="' + prefix + '/why-doris/benchmarks/"', 'g')) ?? []).length, 1, locale);
     }
 });
 
