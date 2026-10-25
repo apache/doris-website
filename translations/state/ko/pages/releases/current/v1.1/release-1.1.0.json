@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "v1.1/release-1.1.0",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/v1.1/release-1.1.0.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-releases/current/v1.1/release-1.1.0.md",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "258d418c0d7e93e2c7326e584c2cca370c873e37cae5bf993fc56778873df9bc",
+    "sourceTechnicalHash": "56a7705e97ff11cad37bbc8b437db4e70898a23f3fd3f97e52867dc386bd6338",
+    "targetHash": "a4ca1fba5dc0fecd1fbd732a942dbd8b895ca68648e17caf599d116f262d7767",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T17:37:47.633Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "258d418c0d7e93e2c7326e584c2cca370c873e37cae5bf993fc56778873df9bc",
+      "targetHash": "a4ca1fba5dc0fecd1fbd732a942dbd8b895ca68648e17caf599d116f262d7767",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.12\",\"0.13\",\"0.15\",\"0.15\",\"0.15\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"1.0\",\"1.0\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.2\",\"1.2\",\"1.2\",\"10\",\"10\",\"10\",\"110\",\"13\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"22\",\"235\",\"235\",\"25\",\"25\",\"3\",\"3\",\"3\",\"30\",\"4\",\"4\",\"4\",\"4\",\"4.5\",\"5\",\"5\",\"50\",\"5000\",\"53\"]; received [\"0.12\",\"0.13\",\"0.15\",\"0.15\",\"0.15\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.0\",\"1.0\",\"1.0\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.1\",\"1.2\",\"1.2\",\"1.2\",\"10\",\"10\",\"10\",\"10\",\"13\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"20\",\"22\",\"235\",\"235\",\"25\",\"25\",\"3\",\"3\",\"3\",\"30\",\"4\",\"4\",\"4\",\"4\",\"4.5\",\"5\",\"5\",\"50\",\"5000\",\"53\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
