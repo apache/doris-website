@@ -122,8 +122,7 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
             for (const width of [1440, 390]) {
                 await page.setViewportSize({width, height: 900});
                 await page.goto(origin + '/ru/download/');
-                if (width === 390) await page.locator('.navbar-next__menu-button').click();
-                const details = page.locator(width === 390 ? '.language-menu--mobile' : '.language-menu:not(.language-menu--mobile)');
+                const details = page.locator('.navbar-next .language-menu');
                 await details.locator('summary').scrollIntoViewIfNeeded();
                 await details.locator('summary').focus(); await page.keyboard.press('Enter');
                 assert.equal(await details.getAttribute('open'), '');
