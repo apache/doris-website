@@ -3,7 +3,8 @@ const test = require('node:test'),
     fs = require('node:fs'),
     path = require('node:path'),
     os = require('node:os');
-const {policy} = require('../ci-plan.cjs');
+const {execFileSync} = require('node:child_process');
+const {policy, plan} = require('../ci-plan.cjs');
 const {prune, dependencies, stripUnbuiltAnchors, selectDocs, chooseRepresentatives, indexedRouteMatcher} = require('../ci-sample.cjs');
 const {buildLocales} = require('../../build-locales.cjs');
 function directory(t) {
@@ -33,6 +34,41 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
     assert.equal(policy(['README.md']).mode, 'skip');
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');
     assert.equal(policy([], {forceSample: true}).mode, 'sample');
+});
+test('shared UI registry selects real samples and content fixtures while unknown inputs still require full validation', () => {
+    const registry = 'translations/shared/registry.json';
+    const selected = policy([registry]);
+    assert.equal(selected.mode, 'sample');
+    assert.equal(selected.selection, 'representative');
+    assert.equal(selected.runContentFixture, true);
+    assert.equal(selected.publicationAllowed, false);
+    for (const file of ['translations/shared/unknown.json', 'unknown-input.bin', 'package.json', 'versions.json'])
+        assert.equal(policy([registry, file]).mode, 'full', file);
+    assert.equal(policy([registry], {forceFull: true}).mode, 'full');
+    assert.equal(policy([registry, 'translations/shared/unknown.json'], {forceSample: true}).mode, 'full');
+});
+test('a registry-only commit samples all configured languages and active versions without claiming publication coverage', t => {
+    const root = directory(t), registry = 'translations/shared/registry.json';
+    fs.mkdirSync(path.join(root, 'translations/shared'), {recursive: true});
+    fs.writeFileSync(path.join(root, 'versions.json'), JSON.stringify(['4.x', '3.x', '2.1']));
+    fs.writeFileSync(path.join(root, registry), JSON.stringify({schemaVersion: 1, messages: {label: 'Before'}}));
+    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: 'pipe'}).trim();
+    const commit = () => {git('add', '.'); git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Fixture');};
+    git('init', '-q'); commit();
+    const base = git('rev-parse', 'HEAD');
+    fs.writeFileSync(path.join(root, registry), JSON.stringify({schemaVersion: 1, messages: {label: 'After'}}));
+    commit();
+    const selected = plan({root, base});
+    assert.deepEqual(selected.files, [registry]);
+    assert.equal(selected.mode, 'sample');
+    assert.equal(selected.selection, 'representative');
+    assert.deepEqual(selected.locales, require('../../../config/i18n').locales);
+    assert.deepEqual(selected.activeVersions, ['current', '4.x', '3.x', '2.1']);
+    assert.equal(selected.impact.skip_build, false);
+    assert.deepEqual(selected.impact.json, [registry]);
+    assert.equal(selected.runContentFixture, true);
+    assert.equal(selected.publicationAllowed, false);
+    assert.equal(plan({root, base, event: {pull_request: {labels: [{name: 'ci/full'}]}}}).mode, 'full');
 });
 test('unselected MDX modules leave the compiler graph while native layouts and non-doc pages remain', () => {
     const routes = [
