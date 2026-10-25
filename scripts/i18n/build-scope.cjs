@@ -17,6 +17,7 @@ function validationScope(files) {
     const workflow = files.includes('.github/workflows/build-check.yml');
     const publishing = files.some(file => /^(scripts\/publish\/|scripts\/build-locales\.cjs$|scripts\/build-locale\.cjs$|config\/(custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     const content = files.some(file => globalLanguageRuntime(file)
+        || file === 'translations/shared/registry.json'
         || /^scripts\/i18n\/(?!__tests__\/).*\.[cm]?js$/.test(file)
         || /^scripts\/i18n\/__tests__\/fixtures\//.test(file)
         || /^(docusaurus.config.js|config\/i18n.js)$/.test(file));
@@ -63,6 +64,7 @@ function buildScope(files, versions, managed = [], dependencies = null) {
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
             || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$/.test(file)) shared();
+        else if (file === 'translations/shared/registry.json') {shared(); json.add(file);}
         else if (/^translations\/(pages|blog)\//.test(file)) {shared(); if (file.endsWith('.json')) json.add(file);}
         else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
             if (!locales.includes(match[2])) throw new Error(`Unconfigured locale: ${match[2]}`);

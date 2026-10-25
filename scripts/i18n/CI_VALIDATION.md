@@ -10,7 +10,7 @@ committed lockfile after source planning. Source snapshot checks remain enabled.
 | --- | --- |
 | README, planning or review notes only | Configuration, move/link and workflow security checks; no dependency installation or site build |
 | CI and tooling | Unit tests, five-language native compilation fixture and publishing/Apache/Chromium fixture |
-| Shared UI, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
+| Shared UI, shared UI registry, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
 | Documentation or assets | Changed documents and import dependants, plus representative real documents; English source changes select all five languages, localized changes select English and the affected locales |
 | Dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
 | `ci/full` PR label or manual `validation=full` | Full five-language publication build and verification |
@@ -19,6 +19,12 @@ Manual `validation=sample` requests representative samples, but cannot downgrade
 dependency/version changes or unknown inputs from full validation. Removing a
 `ci/full` label runs the automatic policy again. Scheduled and manual deployment
 workflows still build complete publication artifacts; this PR check never deploys.
+
+`translations/shared/registry.json` is a known shared UI input. Changes to its
+messages or dependency inventory select representative real documents in every
+configured language and active version, along with the native content fixture.
+Ordinary pages remain in the real build. This classification applies only to
+that exact registry path; other unknown inputs still require full validation.
 
 ## What a sample proves
 

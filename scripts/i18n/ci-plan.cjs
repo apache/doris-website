@@ -8,7 +8,7 @@ const {locales, localeRegistry} = require('../../config/i18n');
 const {buildScope, validationScope} = require('./build-scope.cjs');
 const {managedLocales} = require('./state.cjs');
 const {analyzeImpact} = require('./content-impact.cjs');
-const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/pages\/registry\.json$|config\/(i18n|ssrTemplate)\.js$)/;
+const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/(pages|shared)\/registry\.json$|config\/(i18n|ssrTemplate)\.js$)/;
 const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
 const content =
@@ -23,6 +23,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
     const unknown = files.filter(
         file =>
             !runtime.test(file) &&
+            !mechanism.test(file) &&
             !content.test(file) &&
             !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|translations\/CONTENT_MANIFEST\.md$|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
                 file,
