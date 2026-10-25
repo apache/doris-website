@@ -150,12 +150,6 @@
         "homepage.hero.040",
         "homepage.hero.041",
         "homepage.hero.044",
-        "homepage.hero.049",
-        "homepage.hero.050",
-        "homepage.hero.051",
-        "homepage.hero.052",
-        "homepage.hero.053",
-        "homepage.hero.054",
         "homepage.hero.055",
         "homepage.hero.056",
         "homepage.hero.057",
@@ -1744,7 +1738,5 @@
       "sourcePath": "src/pages/slack.tsx"
     }
   ],
-  "englishFallbackLocales": [
-    "zh-CN"
-  ]
+  "englishFallbackLocales": []
 }

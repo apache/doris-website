@@ -4,7 +4,7 @@
     {
       "contentId": "page:P01",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
         "src/components/home-next/HomeNext.scss",
@@ -50,13 +50,16 @@
         "static/js/embedded-brand-theme.js",
         "static/js/embedded-locale.js"
       ],
-      "targetFiles": [],
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": null,
-      "targetHash": null,
-      "reviewStatus": "unverified"
+      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P01",
@@ -113,9 +116,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
-      "reviewStatus": "machine"
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P01",
@@ -172,9 +176,10 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
-      "reviewStatus": "machine"
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P01",
@@ -231,14 +236,15 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "9e490caf8dfe1b0bfe4122eb1ccf891e42d9d8738e3af4ee8d34b57fc9b0042a",
+      "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
-      "reviewStatus": "machine"
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P02",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/why-doris-next/CompareNext.scss",
         "src/components/why-doris-next/CompareNext.tsx",
@@ -255,10 +261,13 @@
         "static/images/ecomsystem-log/es-small.svg",
         "static/images/ecomsystem-log/trino-small.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P02",
@@ -353,7 +362,7 @@
     {
       "contentId": "page:P03",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/why-doris-next/BenchmarkNext.scss",
         "src/components/why-doris-next/BenchmarkNext.tsx",
@@ -361,10 +370,13 @@
         "src/constant/benchmark.data.json",
         "src/pages/why-doris/benchmarks/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P03",
@@ -432,7 +444,7 @@
     {
       "contentId": "page:P04",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/why-doris-next/KeyFeaturesNext.scss",
         "src/components/why-doris-next/KeyFeaturesNext.tsx",
@@ -440,10 +452,13 @@
         "src/generated/key-features.ts",
         "src/pages/why-doris/key-features/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P04",
@@ -459,14 +474,14 @@
       "targetFiles": [
         "i18n/ja/code.json"
       ],
-      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
+      "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
       "targetHash": "5cce8f76159f57206a2a25bff5f3967fa7f7a2335263008fda78f5d0c96f554b",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -483,14 +498,14 @@
       "targetFiles": [
         "i18n/ko/code.json"
       ],
-      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
+      "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
       "targetHash": "43d9c2daa3014f2f97505cdd414d9dad12b2c1bdd95896c2be17b03efd43ba26",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -507,14 +522,14 @@
       "targetFiles": [
         "i18n/ru/code.json"
       ],
-      "sourceHash": "64675288106692c79fb598a6c46af4b2981619f9a9d7454c25157bca27739cb3",
+      "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
       "targetHash": "a2d220c6d05da0525ede6d820fd835f8d5b5af2c233ce790f5ef75f3fa1a88e3",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
         "src/generated/key-features.ts"
       ],
-      "reviewedSourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778",
       "reviewedAt": "2026-10-25T03:53:21.271671+00:00"
     },
     {
@@ -1130,7 +1145,7 @@
     {
       "contentId": "page:P06",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/use-cases-next/CustomerFacingAnalyticsNext.tsx",
         "src/components/use-cases-next/UseCaseIcons.tsx",
@@ -1143,10 +1158,13 @@
         "static/images/next/user-logos/jd-color.png",
         "static/images/next/user-logos/zto-circle.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P06",
@@ -1229,7 +1247,7 @@
     {
       "contentId": "page:P07",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/use-cases-next/DataWarehousingNext.tsx",
         "src/components/use-cases-next/UseCaseIcons.tsx",
@@ -1242,10 +1260,13 @@
         "static/images/next/user-logos/sf-express-white.png",
         "static/images/next/user-logos/xiaomi.svg"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P07",
@@ -1328,7 +1349,7 @@
     {
       "contentId": "page:P08",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/use-cases-next/ObservabilityNext.tsx",
         "src/components/use-cases-next/UseCaseIcons.tsx",
@@ -1341,10 +1362,13 @@
         "static/images/next/user-logos/netease-on-dark.svg",
         "static/images/next/user-logos/tencent-music-color.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P08",
@@ -1427,7 +1451,7 @@
     {
       "contentId": "page:P09",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/use-cases-next/AIAnalyticsNext.tsx",
         "src/components/use-cases-next/UseCaseIcons.tsx",
@@ -1437,10 +1461,13 @@
         "src/components/use-cases-next/figures/primitives.tsx",
         "src/pages/use-cases/ai/index.tsx"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
+      "targetHash": "0c28e9ae35aaf871b15412d82f82227431b1596cb51ab2d4e54ca0f348e07d4c",
+      "reviewedSourceCommit": "ecf02d10089973a4ed43498b4f2f2b5e36ee8778"
     },
     {
       "contentId": "page:P09",
