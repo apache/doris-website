@@ -88,6 +88,8 @@ function transformBody({root, file, source, english, englishI18n}) {
 }
 function validateMessages(root, registration, locale) {
     const {files, messages} = bodyDependencies(root, registration.sourcePath);
+    if (registration.id === 'P20' && locale === 'zh-CN')
+        require('./track-b-messages.cjs').trackBMessages(root).forEach((source, id) => messages.set(id, source));
     if (registration.id === 'P05' && locale === 'zh-CN')
         require('./user-story-messages.cjs').userStoryMessages(root).forEach((source, id) => messages.set(id, source));
     if (registration.id === 'P14' && locale === 'zh-CN') {

@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { ReactNode } from 'react';
 import { CodeSnippet } from '../HackathonCodeBlock';
 
@@ -48,8 +49,7 @@ export const TRACK_B_TASKS: TrackBTask[] = [
         ],
         tip: (
             <>
-                The page&apos;s operator table lists every <code>MATCH_*</code> form. Select <code>score()</code> as is
-                and order by it: ordering by an expression around it, such as <code>ROUND(score())</code>, is rejected.
+                {translate({id: "landing.trackB.004", message: "The page's operator table lists every"})} <code>MATCH_*</code> {translate({id: "landing.trackB.005", message: "form. Select"})} <code>score()</code> {translate({id: "landing.trackB.006", message: "as is and order by it: ordering by an expression around it, such as"})} <code>ROUND(score())</code>{translate({id: "landing.trackB.007", message: ", is rejected."})}
             </>
         ),
         database: 'fts_demo',
@@ -69,8 +69,7 @@ export const TRACK_B_TASKS: TrackBTask[] = [
         ],
         tip: (
             <>
-                Every vector needs exactly <code>dim</code> numbers, the query vector included; otherwise the query
-                fails with a dimension error.
+                {translate({id: "landing.trackB.010", message: "Every vector needs exactly"})} <code>dim</code> {translate({id: "landing.trackB.011", message: "numbers, the query vector included; otherwise the query fails with a dimension error."})}
             </>
         ),
         database: 'vector_demo',
@@ -91,8 +90,8 @@ export const TRACK_B_TASKS: TrackBTask[] = [
         ],
         tip: (
             <>
-                <code>score()</code> can&apos;t be selected in a vector-ranked query, and it can&apos;t sit inside{' '}
-                <code>ROW_NUMBER()</code>: rank the plain <code>score()</code> in an outer query, as the RRF page does.
+                <code>score()</code> {translate({id: "landing.trackB.015", message: "can't be selected in a vector-ranked query, and it can't sit inside"})}{' '}
+                <code>ROW_NUMBER()</code>{translate({id: "landing.trackB.016", message: ": rank the plain"})} <code>score()</code> {translate({id: "landing.trackB.017", message: "in an outer query, as the RRF page does."})}
             </>
         ),
         database: 'hybrid_demo',
@@ -112,8 +111,7 @@ export const TRACK_B_TASKS: TrackBTask[] = [
         ],
         tip: (
             <>
-                <code>variant_type(payload)</code> shows the paths and types Doris inferred for one row; compare it with
-                the <code>DESC</code> output.
+                <code>variant_type(payload)</code> {translate({id: "landing.trackB.020", message: "shows the paths and types Doris inferred for one row; compare it with the"})} <code>DESC</code> {translate({id: "landing.trackB.021", message: "output."})}
             </>
         ),
         database: 'variant_demo',
@@ -130,7 +128,7 @@ export const TRACK_B_TASKS: TrackBTask[] = [
             'With a sequence column, a late (older) write does not overwrite the newest version',
             'Without one, the late write wins: the same writes into a second table without the sequence column',
         ],
-        tip: 'Run the three writes as one INSERT and as three separate INSERTs: the result must not change.',
+        tip: translate({id: "landing.trackB.024", message: "Run the three writes as one INSERT and as three separate INSERTs: the result must not change."}),
         database: 'unique_key_demo',
     },
     {
@@ -148,8 +146,7 @@ export const TRACK_B_TASKS: TrackBTask[] = [
         ],
         tip: (
             <>
-                Send the load to the FE at <code>127.0.0.1:8030</code> with <code>curl --location-trusted</code>: the FE
-                redirects it to the BE, and the all-in-one container answers on both ports.
+                {translate({id: "landing.trackB.027", message: "Send the load to the FE at"})} <code>127.0.0.1:8030</code> {translate({id: "landing.trackB.028", message: "with"})} <code>curl --location-trusted</code>{translate({id: "landing.trackB.029", message: ": the FE redirects it to the BE, and the all-in-one container answers on both ports."})}
             </>
         ),
         shell: true,
@@ -204,8 +201,8 @@ export function sectionTemplate(task: TrackBTask): CodeSnippet {
               ]
             : [`${FENCE}sql`, 'SELECT … ;', FENCE, '', ...RESULT];
     return {
-        label: `${task.code} · page section`,
-        file: `${task.page}.mdx · template`,
+        label: `${task.code}${translate({id: "landing.trackB.030", message: " · page section"})}`,
+        file: `${task.page}${translate({id: "landing.trackB.031", message: ".mdx · template"})}`,
         language: 'text',
         code: [
             '## Step-by-step demo {#demo}',
@@ -225,8 +222,8 @@ export function sectionTemplate(task: TrackBTask): CodeSnippet {
 /** Title and description for the pull request, following the repo's template. */
 export function prTemplate(task: TrackBTask): CodeSnippet {
     return {
-        label: `${task.code} · pull request`,
-        file: 'title + description · template',
+        label: `${task.code}${translate({id: "landing.trackB.032", message: " · pull request"})}`,
+        file: translate({id: "landing.trackB.033", message: "title + description · template"}),
         language: 'text',
         wrap: true,
         code: [
@@ -248,7 +245,7 @@ export function prTemplate(task: TrackBTask): CodeSnippet {
             '',
             `Apache Doris Hackathon · Track B · ${task.code} ${task.title}`,
             '',
-            'The key-features pages exist only in English; both copies get the same change:',
+            'This task updates the English source pages; both copies get the same change:',
             ...docFiles(task).map(file => `- ${file}`),
             '',
             '## What this PR changes',

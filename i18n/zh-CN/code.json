@@ -11685,14 +11685,6 @@
         "message": "展开",
         "description": "Show"
     },
-    "landing.ProfileDag.029": {
-        "message": "ID=",
-        "description": "id="
-    },
-    "landing.ProfileDag.030": {
-        "message": " · ",
-        "description": " · "
-    },
     "landing.ProfileDag.031": {
         "message": "退出全屏（Esc）",
         "description": "Exit full screen (Esc)"
@@ -11958,5 +11950,3821 @@
     },
     "landing.profile.error.details": {
         "message": "详细信息：{message}"
+    },
+    "landing.CourseLanding.002": {
+        "message": "更多 Doris 101 课程即将上线",
+        "description": "More Doris 101 courses coming soon"
+    },
+    "landing.CourseLanding.003": {
+        "message": "更多课程",
+        "description": "More courses"
+    },
+    "landing.CourseLanding.004": {
+        "message": "即将上线",
+        "description": "Coming soon"
+    },
+    "landing.CourseLanding.006": {
+        "message": "您的 Doris 学习路径",
+        "description": "Your Doris path"
+    },
+    "landing.CourseLanding.007": {
+        "message": "自主学习 · 面向所有人",
+        "description": "Self-paced · open to everyone"
+    },
+    "landing.CourseLanding.008": {
+        "message": "已开放 6 门课程 · 持续更新",
+        "description": "6 available · more to come"
+    },
+    "landing.CourseLanding.009": {
+        "message": "Apache Doris 101 入门课程",
+        "description": "Apache Doris 101 Course"
+    },
+    "landing.CourseLanding.010": {
+        "message": "免费的 Apache Doris 101 课程，涵盖架构、部署、表设计、数据操作、分析查询与湖仓连接。",
+        "description": "Free Apache Doris 101 course covering architecture, deployment, table design, data operations, analytical queries, and lakehouse connectivity."
+    },
+    "landing.CourseLanding.011": {
+        "message": "免费课程 · 新手友好",
+        "description": "Free course · Beginner friendly"
+    },
+    "landing.CourseLanding.012": {
+        "message": "学习 Doris。",
+        "description": "Learn Doris."
+    },
+    "landing.CourseLanding.013": {
+        "message": "构建真实项目。",
+        "description": "Build for real."
+    },
+    "landing.CourseLanding.014": {
+        "message": "从 OLAP 数据库基础入门，逐步学习进阶主题和 Apache Doris 实践。课程将通用数据库概念与 Doris 核心能力结合，帮助您更好地理解和使用 Doris，所学数据库知识也能应用于其他系统。",
+        "description": "Start with the fundamentals of OLAP databases, then move on to advanced topics and practical use of Apache Doris. The course connects general database concepts with Doris's core capabilities, so you can understand and use Doris more effectively. The database knowledge you gain will also apply to other systems."
+    },
+    "landing.CourseLanding.015": {
+        "message": "从概览开始 →",
+        "description": "Start with the overview →"
+    },
+    "landing.courseModules.001": {
+        "message": "Apache Doris 概览",
+        "description": "Apache Doris Overview"
+    },
+    "landing.courseModules.002": {
+        "message": "认识 Doris",
+        "description": "Meet the engine"
+    },
+    "landing.courseModules.003": {
+        "message": "了解架构、数据组织、存储模型、查询执行和优化。",
+        "description": "Architecture, data organization, storage models, query execution, and optimization."
+    },
+    "landing.courseModules.004": {
+        "message": "安装指南",
+        "description": "Installation Guide"
+    },
+    "landing.courseModules.005": {
+        "message": "部署 Doris",
+        "description": "Deploy Doris"
+    },
+    "landing.courseModules.006": {
+        "message": "选择适合您环境的架构与部署方式。",
+        "description": "Choose an architecture and follow the deployment path that fits your environment."
+    },
+    "landing.courseModules.007": {
+        "message": "建表指南",
+        "description": "Table Guide"
+    },
+    "landing.courseModules.008": {
+        "message": "设计数据表",
+        "description": "Design tables"
+    },
+    "landing.courseModules.009": {
+        "message": "选择数据模型、排序键、分区、分桶、索引和实用表结构。",
+        "description": "Select data models, sort keys, partitioning, bucketing, indexes, and practical schemas."
+    },
+    "landing.courseModules.010": {
+        "message": "数据操作指南",
+        "description": "Data Operations Guide"
+    },
+    "landing.courseModules.011": {
+        "message": "导入与管理数据",
+        "description": "Move and manage data"
+    },
+    "landing.courseModules.012": {
+        "message": "根据工作负载选择合适的导入、更新、删除和导出方式。",
+        "description": "Load, update, delete, and export data with methods matched to the workload."
+    },
+    "landing.courseModules.013": {
+        "message": "数据查询指南",
+        "description": "Query Data Guide"
+    },
+    "landing.courseModules.014": {
+        "message": "查询与优化",
+        "description": "Query and optimize"
+    },
+    "landing.courseModules.015": {
+        "message": "学习关联查询、分析函数、窗口函数、UDF、复杂类型和物化视图。",
+        "description": "Use joins, analytics, window functions, UDFs, complex types, and materialized views."
+    },
+    "landing.courseModules.016": {
+        "message": "湖仓指南",
+        "description": "Lakehouse Guide"
+    },
+    "landing.courseModules.017": {
+        "message": "连接湖仓",
+        "description": "Connect the lakehouse"
+    },
+    "landing.courseModules.018": {
+        "message": "接入 Catalog、执行联邦 SQL、加速开放格式表，并将数据写回数据湖。",
+        "description": "Connect catalogs, federate SQL queries, accelerate open tables, and write data back."
+    },
+    "landing.HackathonCourseTrack.001": {
+        "message": "选择学习方向",
+        "description": "Choose a track"
+    },
+    "landing.HackathonCourseTrack.002": {
+        "message": "Doris 101",
+        "description": "Doris 101"
+    },
+    "landing.HackathonCourseTrack.003": {
+        "message": "免费课程",
+        "description": "Free course"
+    },
+    "landing.HackathonCourseTrack.004": {
+        "message": "黑客松",
+        "description": "Hackathon"
+    },
+    "landing.HackathonCourseTrack.005": {
+        "message": "开放任务 ·",
+        "description": "Open tasks ·"
+    },
+    "landing.HackathonCourseTrack.006": {
+        "message": "随时开始",
+        "description": "start anytime"
+    },
+    "landing.HackathonCourseTrack.007": {
+        "message": "Apache Doris 黑客松",
+        "description": "Apache Doris Hackathon"
+    },
+    "landing.HackathonCourseTrack.008": {
+        "message": "按照自己的节奏，基于 Apache Doris 构建真实项目。",
+        "description": "Build something real on Apache Doris — at your own pace."
+    },
+    "landing.HackathonCourseTrack.009": {
+        "message": "随时开始，按照自己的节奏完成：集中投入一次，或分几个晚上进行。无需 Doris 使用经验。",
+        "description": "Start any time and work at your own pace: one sitting or a few evenings. No Doris experience needed."
+    },
+    "landing.HackathonCourseTrack.010": {
+        "message": "赛道 A · 基于 Doris 构建应用",
+        "description": "Track A · Build on Doris"
+    },
+    "landing.HackathonCourseTrack.011": {
+        "message": "个任务",
+        "description": "tasks"
+    },
+    "landing.HackathonCourseTrack.013": {
+        "message": "赛道 B ·",
+        "description": "Track B ·"
+    },
+    "landing.HackathonCourseTrack.014": {
+        "message": "：通过 Pull Request，为文档页面补充逐步演示。",
+        "description": ": add a step-by-step demo to a docs page, with a pull request."
+    },
+    "landing.HackathonCourseTrack.015": {
+        "message": "查看任务说明 →",
+        "description": "Open the brief →"
+    },
+    "landing.HackathonCourseTrack.016": {
+        "message": "Apache Doris 贡献者徽章",
+        "description": "Apache Doris Contributor badge"
+    },
+    "landing.HackathonCourseTrack.017": {
+        "message": "参与任务后，将成果分享到",
+        "description": "Take part in a task, share it in"
+    },
+    "landing.HackathonCourseTrack.018": {
+        "message": "的 Slack 频道，即可领取贡献者徽章。",
+        "description": "on Slack, collect your Contributor badge."
+    },
+    "landing.hackathonEvent.001": {
+        "message": "Apache Doris 黑客松",
+        "description": "Apache Doris Hackathon"
+    },
+    "landing.hackathonEvent.002": {
+        "message": "混合检索应用",
+        "description": "Hybrid Search App"
+    },
+    "landing.hackathonEvent.003": {
+        "message": "在一条 SQL 中融合关键词、语义和过滤条件，为 Apache Doris 文档构建搜索框。",
+        "description": "Keywords, meaning and filters in one SQL query. Build a search box over the Apache Doris docs."
+    },
+    "landing.hackathonEvent.004": {
+        "message": "通过 MCP 询问 Doris",
+        "description": "Ask Doris with MCP"
+    },
+    "landing.hackathonEvent.005": {
+        "message": "使用 Doris MCP Server 将 Doris 接入 AI 助手，让它执行真实 SQL，回答实际问题。",
+        "description": "Plug Doris into your AI assistant with the Doris MCP Server, and make it answer real questions with real SQL."
+    },
+    "landing.hackathonEvent.006": {
+        "message": "日志检索工具",
+        "description": "Log Search Explorer"
+    },
+    "landing.hackathonEvent.007": {
+        "message": "构建一个完全基于 SQL 的迷你 Kibana，在 200,000 条日志上实现 BM25 检索、过滤和实时计数。",
+        "description": "A mini Kibana where everything is SQL: BM25 search, filters and live counts over 200,000 log lines."
+    },
+    "landing.hackathonEvent.008": {
+        "message": "Agent 链路分析工具",
+        "description": "Agent Trace Explorer"
+    },
+    "landing.hackathonEvent.009": {
+        "message": "将结构复杂的 AI Agent JSON 存入 VARIANT 列，像查询普通列一样访问，无需迁移 Schema。",
+        "description": "Store messy AI-agent JSON in a VARIANT column and query it like real columns. No schema migrations."
+    },
+    "landing.hackathonEvent.010": {
+        "message": "从文档到演示",
+        "description": "Docs to Demo"
+    },
+    "landing.hackathonEvent.011": {
+        "message": "选择一篇功能文档，在本地 Doris 上运行，并通过 Pull Request 为其补充逐步演示。",
+        "description": "Pick a feature page of the docs, run it on your local Doris, and add a step-by-step demo to it with a pull request."
+    },
+    "landing.hackathonEvent.012": {
+        "message": "赛道 B · ",
+        "description": "Track B · "
+    },
+    "landing.HackathonCodeBlock.001": {
+        "message": "复制",
+        "description": "Copy"
+    },
+    "landing.HackathonCodeBlock.002": {
+        "message": "已复制",
+        "description": "Copied"
+    },
+    "landing.HackathonSketch.001": {
+        "message": "类别",
+        "description": "Category"
+    },
+    "landing.HackathonSketch.002": {
+        "message": "查看 SQL",
+        "description": "Show SQL"
+    },
+    "landing.HackathonSketch.003": {
+        "message": "查看 SQL：当前模式执行的完整查询",
+        "description": "Show SQL: the exact query for this mode"
+    },
+    "landing.HackathonSketch.004": {
+        "message": "您的 AI 客户端",
+        "description": "Your AI client"
+    },
+    "landing.HackathonSketch.006": {
+        "message": "Doris MCP Server",
+        "description": "Doris MCP Server"
+    },
+    "landing.HackathonSketch.010": {
+        "message": "已拒绝 · 服务端和用户均为只读",
+        "description": "Refused · the server and user are read-only"
+    },
+    "landing.HackathonSketch.011": {
+        "message": "实际执行的 SQL",
+        "description": "SQL it ran"
+    },
+    "landing.HackathonSketch.012": {
+        "message": "服务",
+        "description": "Service"
+    },
+    "landing.HackathonSketch.014": {
+        "message": "全部",
+        "description": "all"
+    },
+    "landing.HackathonSketch.015": {
+        "message": "级别",
+        "description": "Level"
+    },
+    "landing.HackathonSketch.017": {
+        "message": "全部",
+        "description": "all"
+    },
+    "landing.HackathonSketch.018": {
+        "message": "时间",
+        "description": "Time"
+    },
+    "landing.HackathonSketch.020": {
+        "message": "全天",
+        "description": "all day"
+    },
+    "landing.HackathonSketch.021": {
+        "message": "分面统计",
+        "description": "Facets"
+    },
+    "landing.HackathonSketch.022": {
+        "message": "每 5 分钟错误数",
+        "description": "Errors per 5 minutes"
+    },
+    "landing.HackathonSketch.023": {
+        "message": "payload · 自动推断的子列",
+        "description": "payload · inferred subcolumns"
+    },
+    "landing.HackathonSketch.024": {
+        "message": "工具调用 p95",
+        "description": "Tool p95"
+    },
+    "landing.HackathonSketch.025": {
+        "message": "错误率",
+        "description": "Error rate"
+    },
+    "landing.HackathonSketch.026": {
+        "message": "会话数",
+        "description": "Sessions"
+    },
+    "landing.HackathonSketch.027": {
+        "message": "会话时间线",
+        "description": "Session timeline"
+    },
+    "landing.HackathonTaskPage.001": {
+        "message": "启动 Doris",
+        "description": "Start Doris"
+    },
+    "landing.HackathonTaskPage.002": {
+        "message": "主机",
+        "description": "Host"
+    },
+    "landing.HackathonTaskPage.003": {
+        "message": "端口",
+        "description": "Port"
+    },
+    "landing.HackathonTaskPage.004": {
+        "message": "用户",
+        "description": "User"
+    },
+    "landing.HackathonTaskPage.005": {
+        "message": "无密码",
+        "description": "no password"
+    },
+    "landing.HackathonTaskPage.006": {
+        "message": "数据库",
+        "description": "Database"
+    },
+    "landing.HackathonTaskPage.007": {
+        "message": "· 待定",
+        "description": "· TBA"
+    },
+    "landing.HackathonTaskPage.008": {
+        "message": "启动",
+        "description": "Start"
+    },
+    "landing.HackathonTaskPage.009": {
+        "message": "建表",
+        "description": "Table"
+    },
+    "landing.HackathonTaskPage.010": {
+        "message": "提示词",
+        "description": "Prompt"
+    },
+    "landing.HackathonTaskPage.011": {
+        "message": "当前步骤",
+        "description": "You are here"
+    },
+    "landing.HackathonTaskPage.012": {
+        "message": "查看说明",
+        "description": "Open the brief"
+    },
+    "landing.HackathonTaskPage.013": {
+        "message": "当前步骤对应的代码",
+        "description": "Code for the step you are reading"
+    },
+    "landing.HackathonTaskPage.014": {
+        "message": "界面草图",
+        "description": "Sketch"
+    },
+    "landing.HackathonTaskPage.015": {
+        "message": "待构建的界面 · 线框图，非实际截图",
+        "description": "What you'll build · wireframe, not a screenshot"
+    },
+    "landing.HackathonTaskPage.016": {
+        "message": "收起",
+        "description": "Hide"
+    },
+    "landing.HackathonTaskPage.017": {
+        "message": "展开",
+        "description": "Show"
+    },
+    "landing.HackathonTaskPage.018": {
+        "message": "代码视图",
+        "description": "Code views"
+    },
+    "landing.HackathonTaskPage.019": {
+        "message": "入门包",
+        "description": "Starter kit"
+    },
+    "landing.HackathonTaskPage.020": {
+        "message": "下载",
+        "description": "download"
+    },
+    "landing.HackathonTaskPage.021": {
+        "message": "任务路线",
+        "description": "Route"
+    },
+    "landing.HackathonTaskPage.024": {
+        "message": "→ 完成",
+        "description": "→ done"
+    },
+    "landing.HackathonTaskPage.025": {
+        "message": "完成",
+        "description": "Done"
+    },
+    "landing.HackathonTaskPage.026": {
+        "message": "→ 提交",
+        "description": "→ submit"
+    },
+    "landing.HackathonTaskPage.027": {
+        "message": "课程",
+        "description": "Course"
+    },
+    "landing.HackathonTaskPage.028": {
+        "message": "自主安排进度 · 随时开始 · 无需报名",
+        "description": "Self-paced tasks · start anytime · no sign-up"
+    },
+    "landing.HackathonTaskPage.029": {
+        "message": "黑客松任务",
+        "description": "Hackathon tasks"
+    },
+    "landing.HackathonTaskPage.030": {
+        "message": "黑客松",
+        "description": "Hackathon"
+    },
+    "landing.HackathonTaskPage.031": {
+        "message": "任务",
+        "description": "tasks"
+    },
+    "landing.HackathonTaskPage.032": {
+        "message": "遇到问题？",
+        "description": "Stuck?"
+    },
+    "landing.HackathonTaskPage.033": {
+        "message": "可在",
+        "description": "Ask in"
+    },
+    "landing.HackathonTaskPage.034": {
+        "message": "提问，频道位于",
+        "description": "on the"
+    },
+    "landing.HackathonTaskPage.035": {
+        "message": "Apache Doris Slack",
+        "description": "Apache Doris Slack"
+    },
+    "landing.HackathonTaskPage.036": {
+        "message": "。维护者和其他参与者会提供帮助。",
+        "description": ". Maintainers and other participants are there to help."
+    },
+    "landing.HackathonTaskPage.037": {
+        "message": "请将成果放到以",
+        "description": "Put your work in a folder named after"
+    },
+    "landing.HackathonTaskPage.038": {
+        "message": "您的 GitHub ID",
+        "description": "your GitHub ID"
+    },
+    "landing.HackathonTaskPage.039": {
+        "message": "命名的目录中：包括代码和 README，说明项目功能、运行方式、使用的 Doris 能力，并附一张截图或 GIF。",
+        "description": ": the code, plus a README with what it does, how to run it, one screenshot or GIF, and the Doris features you used."
+    },
+    "landing.HackathonTaskPage.040": {
+        "message": "提交 Pull Request",
+        "description": "Open a pull request"
+    },
+    "landing.HackathonTaskPage.041": {
+        "message": "，将成果添加到",
+        "description": "that adds it to"
+    },
+    "landing.HackathonTaskPage.042": {
+        "message": "，目录为",
+        "description": "as"
+    },
+    "landing.HackathonTaskPage.043": {
+        "message": "。可以先 Fork 后推送，或使用 GitHub 的",
+        "description": ". Fork and push, or use GitHub's"
+    },
+    "landing.HackathonTaskPage.044": {
+        "message": "Add file → Upload files（添加文件 → 上传文件）",
+        "description": "Add file → Upload files"
+    },
+    "landing.HackathonTaskPage.045": {
+        "message": "。无需填写其他内容。",
+        "description": ". Nothing else to fill in."
+    },
+    "landing.HackathonTaskPage.046": {
+        "message": "README",
+        "description": "the README"
+    },
+    "landing.HackathonTaskPage.047": {
+        "message": "提交并领取徽章",
+        "description": "Submit & get your badge"
+    },
+    "landing.HackathonTaskPage.048": {
+        "message": "参与 → 提交 → 领取徽章。",
+        "description": "Take part → submit → get your badge."
+    },
+    "landing.HackathonTaskPage.049": {
+        "message": "分享成果",
+        "description": "Share it"
+    },
+    "landing.HackathonTaskPage.050": {
+        "message": "到",
+        "description": "in"
+    },
+    "landing.HackathonTaskPage.051": {
+        "message": "（",
+        "description": "on the"
+    },
+    "landing.HackathonTaskPage.052": {
+        "message": "Apache Doris Slack",
+        "description": "Apache Doris Slack"
+    },
+    "landing.HackathonTaskPage.053": {
+        "message": "）：附上 Pull Request 或仓库链接，以及截图或简短演示。问题交流、成果提交和徽章领取都在该频道处理。",
+        "description": ": a link to your pull request or repository, plus a screenshot or a short demo. Questions, submissions and badges are all handled there."
+    },
+    "landing.HackathonTaskPage.054": {
+        "message": "每位参与任务的开发者都可获得",
+        "description": "Everyone who takes part in a task gets the"
+    },
+    "landing.HackathonTaskPage.055": {
+        "message": "Apache Doris 贡献者徽章",
+        "description": "Apache Doris Contributor badge"
+    },
+    "landing.HackathonTaskPage.056": {
+        "message": "，无需先有 PR 合入 Doris。任务没有截止日期，可按自己的节奏完成。可以组队，也可独立参与；请将每位成员的 GitHub ID 写入",
+        "description": ": no merged pull request to Doris needed. There is no deadline, so take as long as you need. Teams are fine, but not needed: list every member's GitHub ID in"
+    },
+    "landing.HackathonTaskPage.057": {
+        "message": "Apache Doris 贡献者徽章",
+        "description": "Apache Doris Contributor badge"
+    },
+    "landing.HackathonTaskPage.058": {
+        "message": "关于贡献者徽章",
+        "description": "About the Contributor badge"
+    },
+    "landing.HackathonTaskPage.059": {
+        "message": "全部任务",
+        "description": "All tasks"
+    },
+    "landing.HackathonTaskPage.060": {
+        "message": "返回课程",
+        "description": "Back to the course"
+    },
+    "landing.HackathonTaskPage.061": {
+        "message": " · Doris 黑客松",
+        "description": " · Doris Hackathon"
+    },
+    "landing.HackathonTaskPage.062": {
+        "message": "；属于 ",
+        "description": " A Track A task in the "
+    },
+    "landing.HackathonTaskPage.063": {
+        "message": "的赛道 A 任务，可自主安排进度，提供入门包和可运行的本地 Doris。",
+        "description": ": self-paced, with a starter kit and a runnable local Doris."
+    },
+    "landing.HackathonTaskPage.064": {
+        "message": "赛道 A · 任务",
+        "description": "Track A · Task"
+    },
+    "landing.HackathonTaskPage.065": {
+        "message": "任务概览",
+        "description": "At a glance"
+    },
+    "landing.HackathonTaskPage.066": {
+        "message": "获取入门包",
+        "description": "Get the starter kit"
+    },
+    "landing.HackathonTaskPage.067": {
+        "message": "获取入门包",
+        "description": "Get the starter kit"
+    },
+    "landing.HackathonTaskPage.068": {
+        "message": "启动 Doris",
+        "description": "Start Doris"
+    },
+    "landing.HackathonTaskPage.069": {
+        "message": "准备环境",
+        "description": "Get set up"
+    },
+    "landing.HackathonTaskPage.070": {
+        "message": "了解构建目标、Doris 如何简化实现，并启动集群。",
+        "description": "What you are building, why Doris makes it simple, and a running cluster."
+    },
+    "landing.HackathonTaskPage.071": {
+        "message": "构建目标",
+        "description": "What you'll build"
+    },
+    "landing.HackathonTaskPage.072": {
+        "message": "界面草图",
+        "description": "Sketch"
+    },
+    "landing.HackathonTaskPage.073": {
+        "message": "待构建的界面 · 线框图，非实际截图",
+        "description": "What you'll build · wireframe, not a screenshot"
+    },
+    "landing.HackathonTaskPage.074": {
+        "message": "草图位于代码面板顶部",
+        "description": "The sketch sits at the top of the code panel"
+    },
+    "landing.HackathonTaskPage.075": {
+        "message": "Doris 为何适合这个项目",
+        "description": "Why it's interesting on Doris"
+    },
+    "landing.HackathonTaskPage.076": {
+        "message": "代码面板：表定义中的索引语句",
+        "description": "Panel: the index lines of the table definition"
+    },
+    "landing.HackathonTaskPage.077": {
+        "message": "开始之前",
+        "description": "Before you start"
+    },
+    "landing.HackathonTaskPage.078": {
+        "message": "复制命令",
+        "description": "Copy command"
+    },
+    "landing.HackathonTaskPage.079": {
+        "message": "数据",
+        "description": "The data"
+    },
+    "landing.HackathonTaskPage.080": {
+        "message": "代码面板 → 建表：完整表定义",
+        "description": "Panel → Table: the full table definition"
+    },
+    "landing.HackathonTaskPage.081": {
+        "message": "借助 AI 构建",
+        "description": "Build with AI"
+    },
+    "landing.HackathonTaskPage.082": {
+        "message": "复制 ",
+        "description": "Copy the "
+    },
+    "landing.HackathonTaskPage.083": {
+        "message": "AI 编程助手容易踩到的 Doris 问题",
+        "description": "Doris traps your agent will probably fall into"
+    },
+    "landing.HackathonTaskPage.084": {
+        "message": "开始构建",
+        "description": "Build it"
+    },
+    "landing.HackathonTaskPage.085": {
+        "message": "个里程碑，",
+        "description": "milestones,"
+    },
+    "landing.HackathonTaskPage.087": {
+        "message": "。代码面板会跟随您阅读的步骤。",
+        "description": ". The panel follows the step you are reading."
+    },
+    "landing.HackathonTaskPage.088": {
+        "message": "里程碑",
+        "description": "Milestone"
+    },
+    "landing.HackathonTaskPage.089": {
+        "message": "关键语句说明",
+        "description": "The clauses that matter"
+    },
+    "landing.HackathonTaskPage.090": {
+        "message": "L",
+        "description": "L"
+    },
+    "landing.HackathonTaskPage.091": {
+        "message": "检查点",
+        "description": "Checkpoint"
+    },
+    "landing.HackathonTaskPage.092": {
+        "message": "完成并提交",
+        "description": "Ship it"
+    },
+    "landing.HackathonTaskPage.093": {
+        "message": "完成清单，展示成果，领取徽章。",
+        "description": "Check it off, show it, collect your badge."
+    },
+    "landing.HackathonTaskPage.094": {
+        "message": "完成标准",
+        "description": "Definition of Done"
+    },
+    "landing.HackathonTaskPage.095": {
+        "message": "您的检查清单",
+        "description": "Your checklist"
+    },
+    "landing.HackathonTaskPage.096": {
+        "message": "进阶目标",
+        "description": "Stretch goals"
+    },
+    "landing.HackathonTaskPage.097": {
+        "message": "故障排查与参考资料",
+        "description": "Troubleshooting & references"
+    },
+    "landing.HackathonTaskPage.098": {
+        "message": "参考资料",
+        "description": "References"
+    },
+    "landing.hackathonCommon.001": {
+        "message": "Docker 已运行，并已拉取 Doris 镜像。",
+        "description": "Docker is running and the Doris image is pulled."
+    },
+    "landing.hackathonCommon.002": {
+        "message": "约需",
+        "description": "About"
+    },
+    "landing.hackathonCommon.003": {
+        "message": "，仅需下载一次。镜像较大，建议提前拉取；macOS 的 Docker Desktop 和 Linux 的 Docker Engine 均可使用。",
+        "description": ", once. Pull it ahead of time: it is a large download. Docker Desktop (macOS) and Docker Engine (Linux) both work."
+    },
+    "landing.hackathonCommon.004": {
+        "message": "Doris 已启动。",
+        "description": "Doris is running."
+    },
+    "landing.hackathonCommon.005": {
+        "message": "一个容器运行一个 FE 和一个 BE。当",
+        "description": "One container runs one FE and one BE. It is ready when"
+    },
+    "landing.hackathonCommon.006": {
+        "message": "显示",
+        "description": "shows"
+    },
+    "landing.hackathonCommon.007": {
+        "message": "时即已就绪，通常在启动约 30 秒后完成。",
+        "description": ", about 30 seconds after it starts."
+    },
+    "landing.hackathonCommon.008": {
+        "message": "关于此镜像",
+        "description": "About this image"
+    },
+    "landing.hackathonCommon.009": {
+        "message": "能够连接集群。",
+        "description": "You can connect."
+    },
+    "landing.hackathonCommon.010": {
+        "message": "容器已自带 MySQL 客户端，无需另外安装，也可使用任意 MySQL 客户端连接：",
+        "description": "The container ships a MySQL client, so you don't need one. Any MySQL client works too:"
+    },
+    "landing.hackathonCommon.011": {
+        "message": "，用户为",
+        "description": ", user"
+    },
+    "landing.hackathonCommon.012": {
+        "message": "，无密码。",
+        "description": ", no password."
+    },
+    "landing.hackathonCommon.013": {
+        "message": "已准备好入门包。",
+        "description": "You have the starter kit."
+    },
+    "landing.hackathonCommon.014": {
+        "message": "下载并解压",
+        "description": "Download and unzip"
+    },
+    "landing.hackathonCommon.015": {
+        "message": "，随后进入其中的",
+        "description": ", then run the commands on this page from inside its"
+    },
+    "landing.hackathonCommon.016": {
+        "message": "目录，执行本页命令。其中的",
+        "description": "folder. Its"
+    },
+    "landing.hackathonCommon.017": {
+        "message": "封装了这些操作：",
+        "description": "wraps them:"
+    },
+    "landing.hackathonCommon.018": {
+        "message": "开发工具已就绪。",
+        "description": "Your tools are ready."
+    },
+    "landing.hackathonCommon.019": {
+        "message": "可使用任何提供 MySQL 驱动的语言，例如 Python",
+        "description": "Any language with a MySQL driver (Python"
+    },
+    "landing.hackathonCommon.020": {
+        "message": "、Node",
+        "description": ", Node"
+    },
+    "landing.hackathonCommon.021": {
+        "message": "、Go",
+        "description": ", Go"
+    },
+    "landing.hackathonCommon.022": {
+        "message": "或 Java JDBC 等，也欢迎使用 AI 编程助手。",
+        "description": ", Java JDBC …). AI coding assistants are welcome."
+    },
+    "landing.hackathonCommon.023": {
+        "message": "推荐与 AI 编程助手协作完成任务。",
+        "description": "Pair with your AI coding agent — that's encouraged."
+    },
+    "landing.hackathonCommon.024": {
+        "message": "Doris 4.x 的搜索与 AI 能力较新，可能晚于多数模型的训练数据。在让助手编写 SQL 前，请先提供正确上下文：",
+        "description": "Doris 4.x search and AI features are newer than what most models were trained on, so give your agent the right context before it writes SQL:"
+    },
+    "landing.hackathonCommon.025": {
+        "message": "将下方",
+        "description": "Paste the"
+    },
+    "landing.hackathonCommon.026": {
+        "message": "上下文提示词",
+        "description": "context prompt"
+    },
+    "landing.hackathonCommon.027": {
+        "message": "粘贴给编程助手。",
+        "description": "below into your agent."
+    },
+    "landing.hackathonCommon.028": {
+        "message": "让助手阅读本页列出的",
+        "description": "Point it at the"
+    },
+    "landing.hackathonCommon.029": {
+        "message": "参考文档",
+        "description": "reference pages listed on this page"
+    },
+    "landing.hackathonCommon.030": {
+        "message": "以及入门包中的",
+        "description": "and at"
+    },
+    "landing.hackathonCommon.031": {
+        "message": "文件。许多编程助手会自动读取该文件。",
+        "description": "in the starter kit. Many coding agents read that file on their own."
+    },
+    "landing.hackathonCommon.032": {
+        "message": "将 SQL 接入代码前，要求助手先在您的实际集群中运行每条语句。",
+        "description": "Make it run every SQL statement against your live cluster before wiring it into code."
+    },
+    "landing.hackathonCommon.033": {
+        "message": "还可以连接",
+        "description": "Better still: connect the"
+    },
+    "landing.hackathonCommon.034": {
+        "message": "Doris MCP Server",
+        "description": "Doris MCP Server"
+    },
+    "landing.hackathonCommon.035": {
+        "message": "，参见",
+        "description": "(see"
+    },
+    "landing.hackathonCommon.036": {
+        "message": "任务 A2",
+        "description": "Task A2"
+    },
+    "landing.hackathonCommon.037": {
+        "message": "，让助手自行检查 Schema 和测试查询。",
+        "description": ") so your agent can inspect the schema and test queries itself."
+    },
+    "landing.hackathonCommon.038": {
+        "message": "使用",
+        "description": "Using"
+    },
+    "landing.hackathonCommon.039": {
+        "message": "进行文本检索",
+        "description": "for text search"
+    },
+    "landing.hackathonCommon.040": {
+        "message": "（OR）、",
+        "description": "(OR),"
+    },
+    "landing.hackathonCommon.041": {
+        "message": "（AND）、",
+        "description": "(AND),"
+    },
+    "landing.hackathonCommon.042": {
+        "message": "，这些运算符会使用倒排索引",
+        "description": "— they use the inverted index"
+    },
+    "landing.hackathonCommon.043": {
+        "message": "在任意查询中调用",
+        "description": "Calling"
+    },
+    "landing.hackathonCommon.044": {
+        "message": "函数",
+        "description": "in an arbitrary query"
+    },
+    "landing.hackathonCommon.045": {
+        "message": "要求在查询中使用",
+        "description": "needs a"
+    },
+    "landing.hackathonCommon.046": {
+        "message": "谓词，放在",
+        "description": "predicate in"
+    },
+    "landing.hackathonCommon.047": {
+        "message": "中，并提供",
+        "description": "and"
+    },
+    "landing.hackathonCommon.048": {
+        "message": "，否则 Doris 会拒绝查询",
+        "description": "; otherwise Doris rejects the query"
+    },
+    "landing.hackathonCommon.049": {
+        "message": "在同一查询中对",
+        "description": "Rounding, joining or ranking"
+    },
+    "landing.hackathonCommon.050": {
+        "message": "进行取整、关联或排名",
+        "description": "in the same query"
+    },
+    "landing.hackathonCommon.051": {
+        "message": "在单表查询中直接保留",
+        "description": "Keep"
+    },
+    "landing.hackathonCommon.052": {
+        "message": "。如需取整、关联或使用",
+        "description": "plain in a single-table query. Round it, join it or"
+    },
+    "landing.hackathonCommon.053": {
+        "message": "，请在外层查询中操作，并使用子查询，而非",
+        "description": "it in an outer query, and use a subquery, not a"
+    },
+    "landing.hackathonCommon.054": {
+        "message": "CTE",
+        "description": "CTE"
+    },
+    "landing.hackathonCommon.055": {
+        "message": "位于",
+        "description": "inside"
+    },
+    "landing.hackathonCommon.056": {
+        "message": "或聚合函数内",
+        "description": "/ aggregates"
+    },
+    "landing.hackathonCommon.057": {
+        "message": "不支持。统计分面计数时，请复用相同的",
+        "description": "Not allowed. For facet counts, reuse the same"
+    },
+    "landing.hackathonCommon.058": {
+        "message": "条件，但去掉",
+        "description": "without"
+    },
+    "landing.hackathonCommon.059": {
+        "message": "在同一",
+        "description": "Sorting by BM25 and vector distance in one"
+    },
+    "landing.hackathonCommon.060": {
+        "message": "中按 BM25 和向量距离排序，或在向量排序查询中选择",
+        "description": ", or selecting"
+    },
+    "landing.hackathonCommon.061": {
+        "message": "的结果",
+        "description": "in a vector-ranked query"
+    },
+    "landing.hackathonCommon.062": {
+        "message": "不支持。混合检索可采用",
+        "description": "Not supported. Hybrid = a"
+    },
+    "landing.hackathonCommon.063": {
+        "message": "预过滤，再按向量距离",
+        "description": "pre-filter + vector"
+    },
+    "landing.hackathonCommon.064": {
+        "message": "排序并展示距离；也可融合两个排名列表（RRF）",
+        "description": ", showing the distance; or fuse two ranked lists (RRF)"
+    },
+    "landing.hackathonCommon.065": {
+        "message": "将查询向量直接作为驱动参数传入",
+        "description": "Passing the query vector as a driver parameter"
+    },
+    "landing.hackathonCommon.066": {
+        "message": "在 pymysql 中，列表会变成",
+        "description": "A list becomes"
+    },
+    "landing.hackathonCommon.067": {
+        "message": "，在 mysql2 中则会变成 8 个独立参数。请传入字符串",
+        "description": "in pymysql and 8 separate arguments in mysql2. Pass the string"
+    },
+    "landing.hackathonCommon.068": {
+        "message": "并使用",
+        "description": "and write"
+    },
+    "landing.hackathonCommon.069": {
+        "message": "，或直接内联向量字面量",
+        "description": ", or inline the literal"
+    },
+    "landing.hackathonCommon.070": {
+        "message": "寻找余弦 ANN 度量",
+        "description": "Looking for a cosine ANN metric"
+    },
+    "landing.hackathonCommon.071": {
+        "message": "ANN 度量包括",
+        "description": "ANN metrics are"
+    },
+    "landing.hackathonCommon.072": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.hackathonCommon.073": {
+        "message": "。将向量归一化为单位长度后，L2 距离升序与余弦相似度降序的排名相同",
+        "description": ". Normalize vectors to unit length; ascending L2 distance has the same ranking as descending cosine similarity"
+    },
+    "landing.hackathonCommon.074": {
+        "message": "未做类型转换就比较 VARIANT 路径",
+        "description": "Comparing VARIANT paths without a cast"
+    },
+    "landing.hackathonCommon.075": {
+        "message": "；VARIANT 不能直接用作 Key 列或关联列",
+        "description": "; VARIANT can't be a key or join column"
+    },
+    "landing.hackathonCommon.076": {
+        "message": "期望通过",
+        "description": "Expecting"
+    },
+    "landing.hackathonCommon.077": {
+        "message": "列出 JSON 路径",
+        "description": "to list the JSON paths"
+    },
+    "landing.hackathonCommon.078": {
+        "message": "请先执行",
+        "description": "Run"
+    },
+    "landing.hackathonCommon.079": {
+        "message": "，随后",
+        "description": "first; then"
+    },
+    "landing.hackathonCommon.080": {
+        "message": "会显示每个自动推断的子列及其类型",
+        "description": "shows every inferred subcolumn and its type"
+    },
+    "landing.hackathonCommon.081": {
+        "message": "使用 ORM",
+        "description": "Using an ORM"
+    },
+    "landing.hackathonCommon.082": {
+        "message": "建议使用普通 MySQL 驱动和原生 SQL，ORM 可能生成 Doris 不支持的语句",
+        "description": "Prefer a plain MySQL driver and raw SQL; ORMs may emit statements Doris doesn't support"
+    },
+    "landing.hackathonCommon.083": {
+        "message": "出现在 macOS 上",
+        "description": "on macOS"
+    },
+    "landing.hackathonCommon.084": {
+        "message": "启动 Docker Desktop；若已运行，请为 CLI 创建链接：",
+        "description": "Start Docker Desktop. If it is running, link the CLI:"
+    },
+    "landing.hackathonCommon.085": {
+        "message": "出现在拉取镜像时",
+        "description": "when pulling images"
+    },
+    "landing.hackathonCommon.086": {
+        "message": "请移除",
+        "description": "Remove the"
+    },
+    "landing.hackathonCommon.087": {
+        "message": "字段，所在文件为",
+        "description": "field from"
+    },
+    "landing.hackathonCommon.088": {
+        "message": "（仅适用于本地开发）",
+        "description": "(local dev only)"
+    },
+    "landing.hackathonCommon.089": {
+        "message": "9030、8030 或 8040 已被其他程序占用，常见原因是另一个 Doris 实例。先查看运行中的容器（",
+        "description": "Something else uses 9030, 8030 or 8040, often another Doris. Inspect running containers ("
+    },
+    "landing.hackathonCommon.090": {
+        "message": "），再停止冲突的服务；也可映射其他主机端口，例如",
+        "description": "), or publish other host ports, e.g."
+    },
+    "landing.hackathonCommon.091": {
+        "message": "，然后连接 19030",
+        "description": ", and connect to 19030"
+    },
+    "landing.hackathonCommon.092": {
+        "message": "此前已启动过该容器，可执行：",
+        "description": "You started it before:"
+    },
+    "landing.hackathonCommon.093": {
+        "message": "。如需从头开始，请执行",
+        "description": ". To start over,"
+    },
+    "landing.hackathonCommon.094": {
+        "message": "，此操作会删除容器数据",
+        "description": "(this deletes its data)"
+    },
+    "landing.hackathonCommon.095": {
+        "message": "容器退出，或始终未变为",
+        "description": "The container exits, or never turns"
+    },
+    "landing.hackathonCommon.096": {
+        "message": "请查看",
+        "description": "Read"
+    },
+    "landing.hackathonCommon.097": {
+        "message": "。通常是内存不足，请在 Docker Desktop 的 Settings → Resources 中分配至少 6 GB。Apple Silicon 设备不要添加",
+        "description": ". Usually it is memory: give Docker Desktop 6 GB or more (Settings → Resources). On Apple Silicon, don't add"
+    },
+    "landing.hackathonCommon.098": {
+        "message": "请先执行",
+        "description": "Run"
+    },
+    "landing.hackathonCommon.099": {
+        "message": "，或在连接时使用",
+        "description": "first, or connect with"
+    },
+    "landing.hackathonCommon.100": {
+        "message": "请添加",
+        "description": "Add a"
+    },
+    "landing.hackathonCommon.101": {
+        "message": "谓词、",
+        "description": "predicate,"
+    },
+    "landing.hackathonCommon.102": {
+        "message": "以及",
+        "description": "and a"
+    },
+    "landing.hackathonCommon.103": {
+        "message": "，并保持",
+        "description": ", and keep"
+    },
+    "landing.hackathonCommon.104": {
+        "message": "不被其他表达式包裹，参见前文说明",
+        "description": "unwrapped (see the traps above)"
+    },
+    "landing.hackathonCommon.105": {
+        "message": "解压工具可能丢失了可执行权限，请执行：",
+        "description": "Your unzip tool dropped the executable bit:"
+    },
+    "landing.hackathonCommon.106": {
+        "message": "，或运行",
+        "description": ", or run"
+    },
+    "landing.hackathonCommon.107": {
+        "message": "超过 10 分钟仍未解决",
+        "description": "Stuck for more than 10 minutes"
+    },
+    "landing.hackathonCommon.108": {
+        "message": "可在",
+        "description": "Post in"
+    },
+    "landing.hackathonCommon.109": {
+        "message": "频道提问，位于",
+        "description": "on the"
+    },
+    "landing.hackathonCommon.110": {
+        "message": "Apache Doris Slack",
+        "description": "Apache Doris Slack"
+    },
+    "landing.a1HybridSearch.001": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "landing.a1HybridSearch.002": {
+        "message": "应用",
+        "description": "App"
+    },
+    "landing.a1HybridSearch.003": {
+        "message": "在一条 SQL 中融合关键词、语义与过滤条件，为 Apache Doris 文档构建搜索框。",
+        "description": "Keywords, meaning and filters — in one SQL query. Build a search box over the Apache Doris docs."
+    },
+    "landing.a1HybridSearch.004": {
+        "message": "构建同时理解关键词和语义的搜索框。",
+        "description": "Build a search box that understands both words and meaning."
+    },
+    "landing.a1HybridSearch.005": {
+        "message": "通过同一张 Doris 表和一条 SQL，实现按 BM25 排序的关键词匹配、基于向量索引的语义近邻，以及结构化过滤，无需 Elasticsearch 或独立向量数据库。",
+        "description": "Exact keyword matches ranked by BM25, semantic neighbours from a vector index, and structured filters — served by one Doris table and one SQL statement. No Elasticsearch, no separate vector database."
+    },
+    "landing.a1HybridSearch.006": {
+        "message": "构建一个小型搜索应用，形式可为 CLI、Notebook 或网页，数据来自",
+        "description": "A small search app (CLI, notebook, or web page — your call) over"
+    },
+    "landing.a1HybridSearch.007": {
+        "message": "Apache Doris 文档的 299 个章节",
+        "description": "299 sections of the Apache Doris documentation"
+    },
+    "landing.a1HybridSearch.008": {
+        "message": "。用户输入英文问题，例如",
+        "description": ". A user types a question such as"
+    },
+    "landing.a1HybridSearch.010": {
+        "message": "，选择类别，并在三种模式间切换：",
+        "description": ", picks a category, and switches between three modes:"
+    },
+    "landing.a1HybridSearch.011": {
+        "message": "关键词",
+        "description": "Keyword"
+    },
+    "landing.a1HybridSearch.012": {
+        "message": "按 BM25 相关性排序的全文匹配。",
+        "description": "BM25-ranked full-text matches."
+    },
+    "landing.a1HybridSearch.013": {
+        "message": "向量",
+        "description": "Vector"
+    },
+    "landing.a1HybridSearch.014": {
+        "message": "按 Embedding 相似度查找近邻。",
+        "description": "nearest neighbours by embedding similarity."
+    },
+    "landing.a1HybridSearch.015": {
+        "message": "混合",
+        "description": "Hybrid"
+    },
+    "landing.a1HybridSearch.016": {
+        "message": "先用关键词预过滤，再按向量排序；进阶目标可加入倒数排名融合（RRF）。",
+        "description": "keyword pre-filter, then vector ranking (and, as a stretch, Reciprocal Rank Fusion)."
+    },
+    "landing.a1HybridSearch.017": {
+        "message": "每条结果展示页面、章节、关键词模式的评分或向量/混合模式的距离，以及文档链接。“查看 SQL”开关展示 Doris 实际执行的查询。",
+        "description": "Every result shows the page, the section, its score (keyword) or distance (vector, hybrid), and a link to the doc. A \"Show SQL\" toggle reveals the exact query Doris ran."
+    },
+    "landing.a1HybridSearch.018": {
+        "message": "一张表，两种索引。",
+        "description": "One table, two indexes."
+    },
+    "landing.a1HybridSearch.019": {
+        "message": "文本的倒排索引与向量的 HNSW ANN 索引位于同一张表。优化器先通过倒排索引预过滤，再使用 ANN 索引对候选结果排序。",
+        "description": "An inverted index on the text and an HNSW ANN index on the vectors live in the same table. The planner pre-filters with the inverted index, then ranks the survivors with the ANN index."
+    },
+    "landing.a1HybridSearch.020": {
+        "message": "在 SQL 中实现搜索引擎式排序。",
+        "description": "Search-engine ranking in SQL."
+    },
+    "landing.a1HybridSearch.021": {
+        "message": "让普通 SQL 中也能使用 Lucene 同款 BM25 相关性计算，写在",
+        "description": "gives you BM25 — the same relevance function Lucene uses — inside a normal"
+    },
+    "landing.a1HybridSearch.022": {
+        "message": "过滤条件就是 SQL。",
+        "description": "Filters are just SQL."
+    },
+    "landing.a1HybridSearch.023": {
+        "message": "类别、页面、",
+        "description": "Category, page,"
+    },
+    "landing.a1HybridSearch.024": {
+        "message": "列表和范围等条件，可与",
+        "description": "lists, ranges — written next to"
+    },
+    "landing.a1HybridSearch.025": {
+        "message": "一起写入同一个",
+        "description": "in the same"
+    },
+    "landing.a1HybridSearch.026": {
+        "message": "子句。",
+        "description": "clause."
+    },
+    "landing.a1HybridSearch.027": {
+        "message": "：来自 Doris 4.x 文档的 47 篇关键特性说明，每个章节一行：",
+        "description": "— the 47 key-features pages of the Doris 4.x docs, one row per section:"
+    },
+    "landing.a1HybridSearch.028": {
+        "message": "数据表",
+        "description": "Table"
+    },
+    "landing.a1HybridSearch.030": {
+        "message": "取值",
+        "description": "values"
+    },
+    "landing.a1HybridSearch.031": {
+        "message": "，用于您的筛选下拉框：",
+        "description": "(for your filter dropdown):"
+    },
+    "landing.a1HybridSearch.032": {
+        "message": "关于向量。",
+        "description": "About the vectors."
+    },
+    "landing.a1HybridSearch.033": {
+        "message": "为保持离线运行，入门包提供了一个仅基于英文词表的简化",
+        "description": "To keep everything offline, the starter kit ships a tiny English-only"
+    },
+    "landing.a1HybridSearch.034": {
+        "message": "演示嵌入器",
+        "description": "toy embedder"
+    },
+    "landing.a1HybridSearch.035": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.a1HybridSearch.036": {
+        "message": "，两者输出逐位一致。它通过同义词表将文本映射到 8 个人工定义的概念维度：",
+        "description": "(same output, digit for digit). It maps text onto 8 hand-defined concept dimensions —"
+    },
+    "landing.a1HybridSearch.037": {
+        "message": "搜索、向量与 AI、JSON、湖仓、导入、性能、数据模型、运维",
+        "description": "search, vectors & AI, JSON, lakehouse, ingestion, performance, data model, operations"
+    },
+    "landing.a1HybridSearch.038": {
+        "message": "，再将结果归一化为单位长度。表中向量也由同一函数生成，因此查询向量处于相同空间。这个模型有意保持简单，但已能展示向量检索的作用。例如英文提问",
+        "description": "— using synonym lists, then normalizes the result to unit length. The same function produced the vectors in the table, so your query vectors live in the same space. It is crude on purpose, yet it already shows what vector search adds:"
+    },
+    "landing.a1HybridSearch.040": {
+        "message": "，即使没有出现 JSON 或 VARIANT，也能命中 VARIANT 页面。进阶目标会将其替换为真实模型。",
+        "description": "lands on the VARIANT pages without saying JSON or VARIANT. The stretch goals swap it for a real model."
+    },
+    "landing.a1HybridSearch.041": {
+        "message": "上下文提示词",
+        "description": "Context prompt"
+    },
+    "landing.a1HybridSearch.042": {
+        "message": "粘贴给编程助手",
+        "description": "paste into your agent"
+    },
+    "landing.a1HybridSearch.043": {
+        "message": "导入数据",
+        "description": "Load the data"
+    },
+    "landing.a1HybridSearch.044": {
+        "message": "在入门包目录中执行：",
+        "description": "From inside the starter-kit folder:"
+    },
+    "landing.a1HybridSearch.045": {
+        "message": "M0 · 导入数据",
+        "description": "M0 · Load the data"
+    },
+    "landing.a1HybridSearch.046": {
+        "message": "导入结束后会输出每个类别的数量：",
+        "description": "The load ends with a count per category:"
+    },
+    "landing.a1HybridSearch.047": {
+        "message": "7 个类别、299 个章节",
+        "description": "7 categories, 299 sections"
+    },
+    "landing.a1HybridSearch.048": {
+        "message": "。",
+        "description": "in total."
+    },
+    "landing.a1HybridSearch.049": {
+        "message": "使用 BM25 进行关键词检索",
+        "description": "Keyword search with BM25"
+    },
+    "landing.a1HybridSearch.050": {
+        "message": "关键词检索",
+        "description": "Keyword search"
+    },
+    "landing.a1HybridSearch.051": {
+        "message": "打开 SQL Shell（",
+        "description": "Open a SQL shell ("
+    },
+    "landing.a1HybridSearch.052": {
+        "message": "，或使用前文的",
+        "description": ", or the"
+    },
+    "landing.a1HybridSearch.053": {
+        "message": "命令），然后执行：",
+        "description": "command above) and run:"
+    },
+    "landing.a1HybridSearch.054": {
+        "message": "M1 · 使用 BM25 进行关键词检索",
+        "description": "M1 · Keyword search with BM25"
+    },
+    "landing.a1HybridSearch.055": {
+        "message": "再尝试",
+        "description": "Then try"
+    },
+    "landing.a1HybridSearch.056": {
+        "message": "，要求每个词都出现；以及",
+        "description": "(every term must appear) and"
+    },
+    "landing.a1HybridSearch.057": {
+        "message": "，要求词语相邻且顺序一致。随后连接输入框 → SQL → 结果列表。用户输入必须作为驱动参数传入（",
+        "description": "(adjacent, in order). Wire it up: input box → SQL → result list. Pass the user's text as a driver parameter ("
+    },
+    "landing.a1HybridSearch.058": {
+        "message": "），不要直接拼接到 SQL 中，否则第一个单引号就可能破坏查询。",
+        "description": "), never by pasting it into the SQL: the first apostrophe breaks the query."
+    },
+    "landing.a1HybridSearch.059": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.a1HybridSearch.060": {
+        "message": "已按这种方式实现。",
+        "description": "do exactly this."
+    },
+    "landing.a1HybridSearch.061": {
+        "message": "如果输入完整问题，English 分词器会保留停用词，因此",
+        "description": "Typed a whole question? The english parser keeps stopwords, so"
+    },
+    "landing.a1HybridSearch.062": {
+        "message": "可能匹配约三分之一的数据。请改用演示嵌入器中的",
+        "description": "matches a third of the table. Pass"
+    },
+    "landing.a1HybridSearch.063": {
+        "message": "，它会去掉停用词，以及几乎每节都会提到的",
+        "description": "from the toy embedder instead: it drops stopwords, plus"
+    },
+    "landing.a1HybridSearch.065": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.a1HybridSearch.067": {
+        "message": "。",
+        "description": ", which nearly every section mentions."
+    },
+    "landing.a1HybridSearch.068": {
+        "message": "对于",
+        "description": "The top hits for"
+    },
+    "landing.a1HybridSearch.069": {
+        "message": "，排名靠前的结果来自 Vector Index 和 Hybrid Search 页面，首条为",
+        "description": "come from the Vector Index and Hybrid Search pages; the first is"
+    },
+    "landing.a1HybridSearch.071": {
+        "message": "添加过滤条件",
+        "description": "Add filters"
+    },
+    "landing.a1HybridSearch.072": {
+        "message": "M2 · 添加过滤条件",
+        "description": "M2 · Add filters"
+    },
+    "landing.a1HybridSearch.073": {
+        "message": "将类别暴露为下拉框或 CLI 参数，7 个取值见“数据”部分。额外条件直接使用 SQL：",
+        "description": "Expose the category as a dropdown or a CLI flag (the 7 values are listed under The data). Extra conditions are plain SQL:"
+    },
+    "landing.a1HybridSearch.074": {
+        "message": "Vector Index 章节会消失，因为该页面的分类为",
+        "description": "The Vector Index sections disappear — that page is filed under"
+    },
+    "landing.a1HybridSearch.075": {
+        "message": "，Hybrid Search 则排到首位。",
+        "description": "— and Hybrid Search moves to the top."
+    },
+    "landing.a1HybridSearch.076": {
+        "message": "向量检索",
+        "description": "Vector search"
+    },
+    "landing.a1HybridSearch.077": {
+        "message": "通过代码或命令行调用演示嵌入器，将问题转换为向量：",
+        "description": "Embed the question with the toy embedder, from code or from the command line:"
+    },
+    "landing.a1HybridSearch.078": {
+        "message": "M3 · 为问题生成向量",
+        "description": "M3 · Embed the question"
+    },
+    "landing.a1HybridSearch.079": {
+        "message": "M3 · 向量检索",
+        "description": "M3 · Vector search"
+    },
+    "landing.a1HybridSearch.080": {
+        "message": "在代码中保持 SQL 不变，将向量字符串作为参数传入：",
+        "description": "From code, keep the SQL fixed and pass the vector string as a parameter:"
+    },
+    "landing.a1HybridSearch.081": {
+        "message": "。不能直接将 Python List 或 JavaScript Array 作为该参数。",
+        "description": ". A Python list or a JavaScript array as the parameter does not work."
+    },
+    "landing.a1HybridSearch.082": {
+        "message": "前六条结果均为 VARIANT 章节，尽管问题中没有 JSON 或 VARIANT；相同文本的关键词模式还会混入 Metadata Cache 和 Binlog 章节。",
+        "description": "The first six hits are all VARIANT sections, although the question says neither JSON nor VARIANT. Keyword mode on the same words mixes in Metadata Cache and Binlog sections."
+    },
+    "landing.a1HybridSearch.083": {
+        "message": "混合检索",
+        "description": "Hybrid"
+    },
+    "landing.a1HybridSearch.084": {
+        "message": "问题：",
+        "description": "Question:"
+    },
+    "landing.a1HybridSearch.086": {
+        "message": "。向量由演示嵌入器生成；关键词过滤要求包含",
+        "description": ". The vector is its toy embedding; the keyword filter keeps only sections that say"
+    },
+    "landing.a1HybridSearch.088": {
+        "message": "M4 · 混合检索",
+        "description": "M4 · Hybrid"
+    },
+    "landing.a1HybridSearch.089": {
+        "message": "关键词预过滤（倒排索引）",
+        "description": "keyword pre-filter (inverted index)"
+    },
+    "landing.a1HybridSearch.090": {
+        "message": "结构化过滤",
+        "description": "structured filter"
+    },
+    "landing.a1HybridSearch.091": {
+        "message": "向量排序（ANN）",
+        "description": "vector ranking (ANN)"
+    },
+    "landing.a1HybridSearch.092": {
+        "message": "在应用中，同一个输入同时用于两部分：",
+        "description": "In your app, one input feeds both halves:"
+    },
+    "landing.a1HybridSearch.093": {
+        "message": "用于",
+        "description": "for the"
+    },
+    "landing.a1HybridSearch.094": {
+        "message": "用于生成向量。",
+        "description": "for the vector."
+    },
+    "landing.a1HybridSearch.095": {
+        "message": "用于多个词时过滤较宽松；可提供“必须包含”输入框，或使用",
+        "description": "on several words is a loose filter; offer a \"must contain\" box or"
+    },
+    "landing.a1HybridSearch.096": {
+        "message": "来严格匹配。这里不要选择",
+        "description": "when users want it strict. Don't select"
+    },
+    "landing.a1HybridSearch.097": {
+        "message": "，应展示距离。",
+        "description": "here: show the distance."
+    },
+    "landing.a1HybridSearch.098": {
+        "message": "提供关键词/向量/混合模式切换，并添加",
+        "description": "Add a mode switch (keyword / vector / hybrid) and a"
+    },
+    "landing.a1HybridSearch.099": {
+        "message": "查看 SQL",
+        "description": "Show SQL"
+    },
+    "landing.a1HybridSearch.100": {
+        "message": "开关。比较同一个问题的三组结果，观察差异并解释原因。",
+        "description": "toggle. Compare the three lists for the same question — where do they disagree, and why?"
+    },
+    "landing.a1HybridSearch.101": {
+        "message": "每条结果都提到 Kafka，首条为",
+        "description": "Every hit mentions Kafka, led by"
+    },
+    "landing.a1HybridSearch.103": {
+        "message": "相同问题仅使用向量模式时，首条结果为",
+        "description": "Vector mode alone ranks"
+    },
+    "landing.a1HybridSearch.105": {
+        "message": "。",
+        "description": "first for the same question."
+    },
+    "landing.a1HybridSearch.106": {
+        "message": "三种模式均可运行：",
+        "description": "Three modes work:"
+    },
+    "landing.a1HybridSearch.107": {
+        "message": "关键词（keyword）",
+        "description": "keyword"
+    },
+    "landing.a1HybridSearch.108": {
+        "message": "，通过 BM25 与",
+        "description": "(BM25 via"
+    },
+    "landing.a1HybridSearch.109": {
+        "message": "向量（vector）",
+        "description": "vector"
+    },
+    "landing.a1HybridSearch.110": {
+        "message": "，使用 ANN；",
+        "description": "(ANN),"
+    },
+    "landing.a1HybridSearch.111": {
+        "message": "混合（hybrid）",
+        "description": "hybrid"
+    },
+    "landing.a1HybridSearch.112": {
+        "message": "，先关键词预过滤，再按向量排序。",
+        "description": "(keyword pre-filter + vector ranking)."
+    },
+    "landing.a1HybridSearch.113": {
+        "message": "倒数排名融合。",
+        "description": "Reciprocal Rank Fusion."
+    },
+    "landing.a1HybridSearch.114": {
+        "message": "将 BM25 列表与向量列表通过",
+        "description": "Fuse the BM25 list and the vector list with"
+    },
+    "landing.a1HybridSearch.115": {
+        "message": "在一条语句中融合：",
+        "description": "in one statement:"
+    },
+    "landing.a1HybridSearch.116": {
+        "message": "位于入门包中，使用",
+        "description": "in the starter kit ranks each list with"
+    },
+    "landing.a1HybridSearch.117": {
+        "message": "为每个列表排名；排名计算在普通",
+        "description": "one level above the plain"
+    },
+    "landing.a1HybridSearch.118": {
+        "message": "查询的外层进行，再使用",
+        "description": "query and merges them with a"
+    },
+    "landing.a1HybridSearch.119": {
+        "message": "合并。",
+        "description": ". The"
+    },
+    "landing.a1HybridSearch.120": {
+        "message": "RRF 文档",
+        "description": "RRF page"
+    },
+    "landing.a1HybridSearch.121": {
+        "message": "使用四行数据演示同一种模式。",
+        "description": "walks through the same pattern on a four-row example."
+    },
+    "landing.a1HybridSearch.122": {
+        "message": "通过",
+        "description": "Real embeddings with"
+    },
+    "landing.a1HybridSearch.123": {
+        "message": "生成真实 Embedding，需自备 API Key：创建 AI Resource，然后创建",
+        "description": "(bring your own API key): create an AI resource, create"
+    },
+    "landing.a1HybridSearch.124": {
+        "message": "，向量维度采用该模型的",
+        "description": "with the model's"
+    },
+    "landing.a1HybridSearch.125": {
+        "message": "，使用",
+        "description": ", fill it with"
+    },
+    "landing.a1HybridSearch.126": {
+        "message": "填充向量。该向量列是",
+        "description": "(the vector column is"
+    },
+    "landing.a1HybridSearch.127": {
+        "message": "，因此应插入新行而非更新，同时在 SQL 中为查询生成向量。参阅",
+        "description": ", so insert rather than update), and embed the query in SQL too. See"
+    },
+    "landing.a1HybridSearch.128": {
+        "message": "Embedding 文档",
+        "description": "Embedding"
+    },
+    "landing.a1HybridSearch.129": {
+        "message": "与",
+        "description": "with"
+    },
+    "landing.a1HybridSearch.130": {
+        "message": "高亮匹配词",
+        "description": "Highlight matched terms"
+    },
+    "landing.a1HybridSearch.131": {
+        "message": "。Doris 返回评分，不返回高亮片段，需要在应用中自行渲染。",
+        "description": "in the results (Doris returns scores, not highlights — render them in your app)."
+    },
+    "landing.a1HybridSearch.132": {
+        "message": "延迟标记",
+        "description": "Latency badge"
+    },
+    "landing.a1HybridSearch.133": {
+        "message": "：显示每种模式耗时多少毫秒。",
+        "description": ": show how many milliseconds each mode takes."
+    },
+    "landing.a1HybridSearch.134": {
+        "message": "向量字面量为空或仍是占位符，请使用以下命令的输出：",
+        "description": "The vector literal is empty or still a placeholder: paste the output of"
+    },
+    "landing.a1HybridSearch.135": {
+        "message": "驱动将 Array 参数展开成了 8 个值，请将向量作为字符串传入并使用",
+        "description": "Your driver expanded an array parameter into 8 values: pass the vector as a string with"
+    },
+    "landing.a1HybridSearch.136": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "landing.a1HybridSearch.137": {
+        "message": "BM25",
+        "description": "BM25"
+    },
+    "landing.a1HybridSearch.138": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "landing.a1HybridSearch.139": {
+        "message": "向量索引",
+        "description": "Vector Index"
+    },
+    "landing.a1HybridSearch.140": {
+        "message": "倒数排名融合",
+        "description": "Reciprocal Rank Fusion"
+    },
+    "landing.a1HybridSearch.141": {
+        "message": "向量嵌入",
+        "description": "Embedding"
+    },
+    "landing.a2Mcp.001": {
+        "message": "按服务和级别统计以下表中的日志条数：",
+        "description": "How many log lines per service and level are in"
+    },
+    "landing.a2Mcp.002": {
+        "message": "基础聚合",
+        "description": "Basic aggregation"
+    },
+    "landing.a2Mcp.003": {
+        "message": "统计 11:00 至 12:30 之间各服务的 ERROR 日志数，按 5 分钟分桶。哪个服务最先出现异常增长？",
+        "description": "Show ERROR counts per service in 5-minute buckets between 11:00 and 12:30. Which service spiked first?"
+    },
+    "landing.a2Mcp.004": {
+        "message": "时间分桶与推理",
+        "description": "Time bucketing, reasoning"
+    },
+    "landing.a2Mcp.005": {
+        "message": "找出与“payment gateway timeout”最相关的 10 条日志，按相关性排序。",
+        "description": "Find the 10 log lines most relevant to \"payment gateway timeout\", ranked by relevance."
+    },
+    "landing.a2Mcp.006": {
+        "message": "Doris 全文检索与 BM25，观察是否使用",
+        "description": "Doris full-text + BM25 (does it use"
+    },
+    "landing.a2Mcp.007": {
+        "message": "，还是退回",
+        "description": ", or fall back to"
+    },
+    "landing.a2Mcp.008": {
+        "message": "哪个 Agent 工具的 p95 延迟最高，失败频率是多少？",
+        "description": "Which agent tool has the worst p95 latency, and how often does it fail?"
+    },
+    "landing.a2Mcp.009": {
+        "message": "VARIANT 路径与类型转换",
+        "description": "VARIANT paths + casts"
+    },
+    "landing.a2Mcp.010": {
+        "message": "哪些 Doris 文档章节解释了向量检索的预过滤？",
+        "description": "Which Doris docs sections explain pre-filtering for vector search?"
+    },
+    "landing.a2Mcp.011": {
+        "message": "在",
+        "description": "Search over"
+    },
+    "landing.a2Mcp.012": {
+        "message": "询问 Doris",
+        "description": "Ask Doris"
+    },
+    "landing.a2Mcp.013": {
+        "message": "通过 MCP",
+        "description": "with MCP"
+    },
+    "landing.a2Mcp.014": {
+        "message": "将 Doris 接入您正在使用的 AI 助手，让它执行真实 SQL，回答实际问题。",
+        "description": "Plug Doris into the AI assistant you already use — and make it answer real questions with real SQL."
+    },
+    "landing.a2Mcp.015": {
+        "message": "让 AI 助手成为 Doris 数据分析助手。",
+        "description": "Turn your AI assistant into a Doris data analyst."
+    },
+    "landing.a2Mcp.016": {
+        "message": "Apache Doris MCP Server 可将集群接入支持 MCP 的助手。连接后，让助手探索黑客松数据、编写 SQL，并回答平时通过看板分析的问题。",
+        "description": "The Apache Doris MCP Server exposes your cluster to any MCP-capable assistant. Connect it, then make your assistant explore the hackathon data, write SQL, and answer questions you'd normally answer with a dashboard."
+    },
+    "landing.a2Mcp.017": {
+        "message": "完成一套可运行的配置，让您的 MCP 客户端通过官方",
+        "description": "A working setup — your own MCP client talking to your local Doris through the official"
+    },
+    "landing.a2Mcp.018": {
+        "message": "Doris MCP Server 1.0",
+        "description": "Doris MCP Server 1.0"
+    },
+    "landing.a2Mcp.019": {
+        "message": "连接本地 Doris，并用简短说明展示助手能够：",
+        "description": "— plus a short write-up showing your assistant:"
+    },
+    "landing.a2Mcp.020": {
+        "message": "自行发现",
+        "description": "discovering the"
+    },
+    "landing.a2Mcp.021": {
+        "message": "中的数据表，",
+        "description": "tables on its own,"
+    },
+    "landing.a2Mcp.022": {
+        "message": "编写并执行 SQL，回答至少三个数据问题，",
+        "description": "answering at least three data questions by writing and running SQL,"
+    },
+    "landing.a2Mcp.023": {
+        "message": "拒绝破坏性请求，因为服务端和用户均为只读。",
+        "description": "refusing a destructive request (because the server and the user are read-only)."
+    },
+    "landing.a2Mcp.024": {
+        "message": "默认按只读方式设计。",
+        "description": "Read-only by design."
+    },
+    "landing.a2Mcp.025": {
+        "message": "Doris MCP Server 1.0 仅提供只读能力，Doris RBAC 始终是最终权限约束。",
+        "description": "The Doris MCP Server 1.0 exposes read-only capabilities only; Doris RBAC stays the final authority."
+    },
+    "landing.a2Mcp.026": {
+        "message": "八个领域，渐进披露。",
+        "description": "Eight domains, not a flat tool dump."
+    },
+    "landing.a2Mcp.027": {
+        "message": "包括 catalog、query、cluster、pipeline、",
+        "description": "Catalog, query, cluster, pipeline,"
+    },
+    "landing.a2Mcp.028": {
+        "message": "search",
+        "description": "search"
+    },
+    "landing.a2Mcp.029": {
+        "message": "、governance、lakehouse 和 semantic，通过渐进披露让模型只看到所需能力。",
+        "description": ", governance, lakehouse and semantic domains, disclosed progressively so the model sees only what it needs."
+    },
+    "landing.a2Mcp.030": {
+        "message": "其中",
+        "description": "The"
+    },
+    "landing.a2Mcp.031": {
+        "message": "领域了解文本、向量与混合检索，让助手直接使用 Doris 搜索能力，而非猜测。",
+        "description": "domain knows about text, vector and hybrid search, so your assistant can use Doris's search features instead of guessing."
+    },
+    "landing.a2Mcp.032": {
+        "message": "已安装 Python 3.12 或更新版本，以及 MCP Server。",
+        "description": "Python 3.12 or later, with the server installed."
+    },
+    "landing.a2Mcp.033": {
+        "message": "可通过",
+        "description": "Check with"
+    },
+    "landing.a2Mcp.034": {
+        "message": "检查。请提前安装，第 2 个里程碑提供命令，安装过程涉及约 80 个包。",
+        "description": ". Install the server ahead of time (milestone 2 has the commands): it pulls in about 80 packages."
+    },
+    "landing.a2Mcp.035": {
+        "message": "准备好您常用、支持 MCP 的 AI 客户端",
+        "description": "An MCP-capable AI client you already use"
+    },
+    "landing.a2Mcp.036": {
+        "message": "及其账号。",
+        "description": "(and its account)."
+    },
+    "landing.a2Mcp.037": {
+        "message": "已加载全部黑客松数据表。",
+        "description": "All hackathon tables loaded."
+    },
+    "landing.a2Mcp.038": {
+        "message": "在入门包目录执行，完成后应显示每张表的行数。",
+        "description": "From the starter-kit folder. It ends with the row count of each table."
+    },
+    "landing.a2Mcp.039": {
+        "message": "本任务本身就是一次 AI 实践。",
+        "description": "This task is already an AI task."
+    },
+    "landing.a2Mcp.040": {
+        "message": "下方文本用于指导助手编写 Doris SQL，也是第一个进阶目标中指令文件的起点。",
+        "description": "The text below teaches your assistant to write Doris SQL. It is the starting point for the instruction file in the first stretch goal."
+    },
+    "landing.a2Mcp.041": {
+        "message": "指令文件",
+        "description": "Instruction file"
+    },
+    "landing.a2Mcp.042": {
+        "message": "粘贴到客户端",
+        "description": "paste into your client"
+    },
+    "landing.a2Mcp.043": {
+        "message": "创建只读用户",
+        "description": "Create a read-only user"
+    },
+    "landing.a2Mcp.044": {
+        "message": "只读用户",
+        "description": "Read-only user"
+    },
+    "landing.a2Mcp.045": {
+        "message": "M1 · 只读用户",
+        "description": "M1 · Read-only user"
+    },
+    "landing.a2Mcp.046": {
+        "message": "不要将 root 账号交给 LLM，即使只是本地电脑。可在 SQL Shell 中运行，或从入门包加载",
+        "description": "Never hand an LLM your root account — even on a laptop. Run it in a SQL shell, or load"
+    },
+    "landing.a2Mcp.047": {
+        "message": "。",
+        "description": "from the starter kit."
+    },
+    "landing.a2Mcp.048": {
+        "message": "应显示",
+        "description": "shows"
+    },
+    "landing.a2Mcp.049": {
+        "message": "作用于",
+        "description": "on"
+    },
+    "landing.a2Mcp.050": {
+        "message": "，且不包含任何写权限。",
+        "description": ", and nothing that writes."
+    },
+    "landing.a2Mcp.051": {
+        "message": "安装并注册服务",
+        "description": "Install and register the server"
+    },
+    "landing.a2Mcp.052": {
+        "message": "安装服务",
+        "description": "Install the server"
+    },
+    "landing.a2Mcp.053": {
+        "message": "M2 · 安装",
+        "description": "M2 · Install"
+    },
+    "landing.a2Mcp.054": {
+        "message": "将下面配置加入客户端 MCP 配置；文件名和位置因客户端而异。入门包中已提供同一配置：",
+        "description": "Add it to your client's MCP config (the file name and location depend on the client). The starter kit has this as"
+    },
+    "landing.a2Mcp.055": {
+        "message": "M2 · MCP 配置",
+        "description": "M2 · MCP config"
+    },
+    "landing.a2Mcp.056": {
+        "message": "客户端应列出 Doris 服务及其八个",
+        "description": "Your client lists the Doris server and its eight"
+    },
+    "landing.a2Mcp.057": {
+        "message": "领域入口：catalog、cluster、governance、lakehouse、pipeline、query、search、semantic。",
+        "description": "domains (catalog, cluster, governance, lakehouse, pipeline, query, search, semantic)."
+    },
+    "landing.a2Mcp.058": {
+        "message": "让助手探索",
+        "description": "Let it explore"
+    },
+    "landing.a2Mcp.059": {
+        "message": "提问：",
+        "description": "Ask:"
+    },
+    "landing.a2Mcp.060": {
+        "message": "“hackathon 数据库中有哪些表？每张表有什么用途？”",
+        "description": "\"What tables are in the hackathon database, and what is each one for?\""
+    },
+    "landing.a2Mcp.061": {
+        "message": "观察助手调用了哪些能力。",
+        "description": "Watch which capabilities it calls."
+    },
+    "landing.a2Mcp.062": {
+        "message": "M3 · 向助手提问",
+        "description": "M3 · Ask your assistant"
+    },
+    "landing.a2Mcp.063": {
+        "message": "粘贴到客户端",
+        "description": "paste into your client"
+    },
+    "landing.a2Mcp.064": {
+        "message": "回答实际问题",
+        "description": "Ask real questions"
+    },
+    "landing.a2Mcp.065": {
+        "message": "实际问题",
+        "description": "Real questions"
+    },
+    "landing.a2Mcp.066": {
+        "message": "至少选择三个：",
+        "description": "Pick at least three:"
+    },
+    "landing.a2Mcp.067": {
+        "message": "级别",
+        "description": "Level"
+    },
+    "landing.a2Mcp.068": {
+        "message": "问题",
+        "description": "Question"
+    },
+    "landing.a2Mcp.069": {
+        "message": "考察内容",
+        "description": "What it tests"
+    },
+    "landing.a2Mcp.070": {
+        "message": "级别",
+        "description": "Level"
+    },
+    "landing.a2Mcp.071": {
+        "message": "问题",
+        "description": "Question"
+    },
+    "landing.a2Mcp.072": {
+        "message": "考察内容",
+        "description": "What it tests"
+    },
+    "landing.a2Mcp.073": {
+        "message": "M4 · 问题",
+        "description": "M4 · Questions"
+    },
+    "landing.a2Mcp.074": {
+        "message": "粘贴到客户端",
+        "description": "paste into your client"
+    },
+    "landing.a2Mcp.075": {
+        "message": "保存每个答案实际执行的 SQL，并自行核对结果。",
+        "description": "For each answer, keep the SQL the assistant ran and check the result yourself."
+    },
+    "landing.a2Mcp.076": {
+        "message": "测试只读约束",
+        "description": "Try to break it"
+    },
+    "landing.a2Mcp.077": {
+        "message": "提问：",
+        "description": "Ask:"
+    },
+    "landing.a2Mcp.078": {
+        "message": "“删除所有 INFO 日志，以节省空间。”",
+        "description": "\"Delete all INFO logs to save space.\""
+    },
+    "landing.a2Mcp.079": {
+        "message": "记录实际结果。预期请求被拒绝，服务端返回",
+        "description": "Record what happens. (Expected: refused — the server answers"
+    },
+    "landing.a2Mcp.080": {
+        "message": "，同时用户",
+        "description": ", and"
+    },
+    "landing.a2Mcp.081": {
+        "message": "也没有写权限。",
+        "description": "has no write privilege either.)"
+    },
+    "landing.a2Mcp.082": {
+        "message": "M5 · 向助手提问",
+        "description": "M5 · Ask your assistant"
+    },
+    "landing.a2Mcp.083": {
+        "message": "粘贴到客户端",
+        "description": "paste into your client"
+    },
+    "landing.a2Mcp.084": {
+        "message": "至少回答",
+        "description": "At least"
+    },
+    "landing.a2Mcp.085": {
+        "message": "三个",
+        "description": "three"
+    },
+    "landing.a2Mcp.086": {
+        "message": "问题，每个答案都附上实际执行的 SQL 与结果。",
+        "description": "questions answered, each with the SQL that ran and the result."
+    },
+    "landing.a2Mcp.087": {
+        "message": "让助手理解 Doris。",
+        "description": "Teach your assistant Doris."
+    },
+    "landing.a2Mcp.088": {
+        "message": "编写可复用的指令文件，可使用客户端的 rules、skill 或 system prompt，内容涵盖",
+        "description": "Write a reusable instruction file (rules / skill / system prompt for your client) covering"
+    },
+    "landing.a2Mcp.089": {
+        "message": "、ANN 距离函数和 VARIANT 类型转换。重新提问第 3–4 级问题，比较前后准确性。",
+        "description": ", ANN distance functions and VARIANT casts. Re-ask the Level 3–4 questions and compare accuracy before and after."
+    },
+    "landing.a2Mcp.090": {
+        "message": "HTTP 传输。",
+        "description": "HTTP transport."
+    },
+    "landing.a2Mcp.091": {
+        "message": "运行",
+        "description": "Run"
+    },
+    "landing.a2Mcp.092": {
+        "message": "，再将第二个客户端连接到",
+        "description": "and connect a second client to"
+    },
+    "landing.a2Mcp.093": {
+        "message": "让助手解释查询为何缓慢。",
+        "description": "Ask it why a query is slow."
+    },
+    "landing.a2Mcp.094": {
+        "message": "探索",
+        "description": "Explore the"
+    },
+    "landing.a2Mcp.095": {
+        "message": "领域中的 EXPLAIN 与 Profile 能力。",
+        "description": "domain (explain, profile)."
+    },
+    "landing.a2Mcp.096": {
+        "message": "改进文档。",
+        "description": "Improve the docs."
+    },
+    "landing.a2Mcp.097": {
+        "message": "阅读",
+        "description": "Anything on the"
+    },
+    "landing.a2Mcp.098": {
+        "message": "MCP Server 文档",
+        "description": "MCP Server page"
+    },
+    "landing.a2Mcp.099": {
+        "message": "时，有哪些内容拖慢了您？可提交 PR 修正，这同样是文档贡献。",
+        "description": "that slowed you down? Open a PR that fixes it — that's a docs contribution too."
+    },
+    "landing.a2Mcp.100": {
+        "message": "客户端无法启动服务",
+        "description": "Client can't start the server"
+    },
+    "landing.a2Mcp.101": {
+        "message": "使用以下命令输出的绝对路径：",
+        "description": "Use the absolute path from"
+    },
+    "landing.a2Mcp.102": {
+        "message": "。GUI 应用通常不会继承 Shell 的",
+        "description": "; GUI apps often don't inherit your shell"
+    },
+    "landing.a2Mcp.103": {
+        "message": "或虚拟环境",
+        "description": "or virtualenv"
+    },
+    "landing.a2Mcp.104": {
+        "message": "拒绝运行：Python 版本过低",
+        "description": "refuses: Python too old"
+    },
+    "landing.a2Mcp.105": {
+        "message": "服务需要 Python 3.12+，可使用以下命令创建虚拟环境：",
+        "description": "The server needs Python 3.12+; create a venv with"
+    },
+    "landing.a2Mcp.106": {
+        "message": "，或使用",
+        "description": "(or use"
+    },
+    "landing.a2Mcp.107": {
+        "message": "客户端可看到领域，但无法调用子能力",
+        "description": "Client shows the domains but can't call child capabilities"
+    },
+    "landing.a2Mcp.108": {
+        "message": "客户端可能不支持渐进披露，请将",
+        "description": "Your client may not support progressive disclosure: add"
+    },
+    "landing.a2Mcp.109": {
+        "message": "加入",
+        "description": "to"
+    },
+    "landing.a2Mcp.110": {
+        "message": "访问被拒绝",
+        "description": "Access denied"
+    },
+    "landing.a2Mcp.111": {
+        "message": "请核对 M1 中的",
+        "description": "Check the"
+    },
+    "landing.a2Mcp.112": {
+        "message": "，以及",
+        "description": "in M1 and the"
+    },
+    "landing.a2Mcp.113": {
+        "message": "配置对",
+        "description": "pair"
+    },
+    "landing.a2Mcp.114": {
+        "message": "Doris MCP Server 仓库",
+        "description": "Doris MCP Server repository"
+    },
+    "landing.a2Mcp.115": {
+        "message": "1.0 版 README 与快速入门",
+        "description": "README and quick start for 1.0"
+    },
+    "landing.a2Mcp.116": {
+        "message": "MCP Server 功能文档",
+        "description": "MCP Server feature page"
+    },
+    "landing.a2Mcp.117": {
+        "message": "Model Context Protocol",
+        "description": "Model Context Protocol"
+    },
+    "landing.a3LogSearch.001": {
+        "message": "日志检索",
+        "description": "Log Search"
+    },
+    "landing.a3LogSearch.002": {
+        "message": "工具",
+        "description": "Explorer"
+    },
+    "landing.a3LogSearch.003": {
+        "message": "构建完全基于 SQL 的迷你 Kibana，再用它排查 11:40 开始出现的 checkout 故障。",
+        "description": "A mini Kibana where everything is SQL — then use it to find what broke checkout at 11:40."
+    },
+    "landing.a3LogSearch.004": {
+        "message": "构建日志检索工具，并用它解决一次故障。",
+        "description": "Build a log explorer. Then solve an outage with it."
+    },
+    "landing.a3LogSearch.005": {
+        "message": "200,000 条日志、六个服务和一个出现故障的上午。在同一张 Doris 表上，使用原生 SQL 实现 BM25 关键词检索，按服务、级别和时间过滤，并实时统计结果。",
+        "description": "200,000 log lines, six services, one bad morning. Search them by keyword with BM25 ranking, slice them by service, level and time, and count everything as you go — all in plain SQL on one Doris table."
+    },
+    "landing.a3LogSearch.006": {
+        "message": "构建一个小型日志检索工具，包含：",
+        "description": "A small log explorer with:"
+    },
+    "landing.a3LogSearch.007": {
+        "message": "一个",
+        "description": "a"
+    },
+    "landing.a3LogSearch.008": {
+        "message": "搜索框",
+        "description": "search box"
+    },
+    "landing.a3LogSearch.009": {
+        "message": "，支持关键词、短语和相关性排序；",
+        "description": "(keywords, phrases) with relevance ranking,"
+    },
+    "landing.a3LogSearch.010": {
+        "message": "过滤器",
+        "description": "filters"
+    },
+    "landing.a3LogSearch.011": {
+        "message": "，可选择服务、级别和时间范围；",
+        "description": "for service, level and time range,"
+    },
+    "landing.a3LogSearch.012": {
+        "message": "分面计数",
+        "description": "facet counts"
+    },
+    "landing.a3LogSearch.013": {
+        "message": "，在结果旁展示各服务、各级别的命中数量；",
+        "description": "next to the results (hits per service / level),"
+    },
+    "landing.a3LogSearch.014": {
+        "message": "还可提供",
+        "description": "optionally a"
+    },
+    "landing.a3LogSearch.015": {
+        "message": "时间线",
+        "description": "timeline"
+    },
+    "landing.a3LogSearch.016": {
+        "message": "，按 5 分钟统计错误数。",
+        "description": "of errors per 5 minutes."
+    },
+    "landing.a3LogSearch.017": {
+        "message": "随后完成真正的排查：",
+        "description": "Then the real test:"
+    },
+    "landing.a3LogSearch.018": {
+        "message": "11:40 开始出现 checkout 失败，哪个服务是根因，问题究竟从何时开始？",
+        "description": "at 11:40 checkout started failing. Which service caused it, and when did the trouble really start?"
+    },
+    "landing.a3LogSearch.019": {
+        "message": "工具应让答案清晰可见。",
+        "description": "Your explorer should make the answer obvious."
+    },
+    "landing.a3LogSearch.020": {
+        "message": "同一张表兼顾搜索与分析。",
+        "description": "Search and analytics on the same table."
+    },
+    "landing.a3LogSearch.021": {
+        "message": "倒排索引用于关键词查询，相同的",
+        "description": "The inverted index answers the keyword query; the same"
+    },
+    "landing.a3LogSearch.022": {
+        "message": "条件还可用于",
+        "description": "clause feeds a"
+    },
+    "landing.a3LogSearch.023": {
+        "message": "以统计分面，无需同步第二套系统。",
+        "description": "for facets. No second system to keep in sync."
+    },
+    "landing.a3LogSearch.024": {
+        "message": "真正的相关性排序。",
+        "description": "Real ranking."
+    },
+    "landing.a3LogSearch.025": {
+        "message": "通过 BM25 对结果排序，使最相关的日志优先，而非仅按时间新旧排列。",
+        "description": "sorts hits by BM25, so the most relevant lines come first, not just the newest."
+    },
+    "landing.a3LogSearch.026": {
+        "message": "低成本过滤。",
+        "description": "Filters are cheap."
+    },
+    "landing.a3LogSearch.027": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.a3LogSearch.028": {
+        "message": "分别有倒排索引；时间范围则通过排序键裁剪。",
+        "description": "have their own inverted indexes; time ranges prune by the sort key."
+    },
+    "landing.a3LogSearch.029": {
+        "message": "：六个服务共用一张表。",
+        "description": "— one table for all six services:"
+    },
+    "landing.a3LogSearch.030": {
+        "message": "数据表",
+        "description": "Table"
+    },
+    "landing.a3LogSearch.032": {
+        "message": "会生成",
+        "description": "generates"
+    },
+    "landing.a3LogSearch.033": {
+        "message": "2026 年 10 月 13 日的 200,000 条日志",
+        "description": "200,000 lines for 13 October 2026"
+    },
+    "landing.a3LogSearch.034": {
+        "message": "，仅需一条",
+        "description": "with a single"
+    },
+    "landing.a3LogSearch.035": {
+        "message": "，无需下载。其中包含待排查的故障。",
+        "description": "— no download needed. Somewhere in there is the outage."
+    },
+    "landing.a3LogSearch.036": {
+        "message": "上下文提示词",
+        "description": "Context prompt"
+    },
+    "landing.a3LogSearch.037": {
+        "message": "粘贴给编程助手",
+        "description": "paste into your agent"
+    },
+    "landing.a3LogSearch.038": {
+        "message": "生成日志",
+        "description": "Generate the logs"
+    },
+    "landing.a3LogSearch.039": {
+        "message": "在入门包目录中执行：",
+        "description": "From inside the starter-kit folder:"
+    },
+    "landing.a3LogSearch.040": {
+        "message": "M0 · 生成日志",
+        "description": "M0 · Generate the logs"
+    },
+    "landing.a3LogSearch.041": {
+        "message": "数秒后应得到：",
+        "description": "A few seconds later:"
+    },
+    "landing.a3LogSearch.042": {
+        "message": "条日志，时间从",
+        "description": "log lines, from"
+    },
+    "landing.a3LogSearch.043": {
+        "message": "到",
+        "description": "to"
+    },
+    "landing.a3LogSearch.044": {
+        "message": "，日期为 10 月 13 日。",
+        "description": "on 13 October."
+    },
+    "landing.a3LogSearch.045": {
+        "message": "使用 BM25 进行关键词检索",
+        "description": "Keyword search with BM25"
+    },
+    "landing.a3LogSearch.046": {
+        "message": "关键词检索",
+        "description": "Keyword search"
+    },
+    "landing.a3LogSearch.047": {
+        "message": "M1 · 使用 BM25 进行关键词检索",
+        "description": "M1 · Keyword search with BM25"
+    },
+    "landing.a3LogSearch.048": {
+        "message": "接入搜索框时，将用户文本作为驱动参数传入（",
+        "description": "Wire it to a search box. Pass the user's text as a driver parameter ("
+    },
+    "landing.a3LogSearch.049": {
+        "message": "入门包已提供对应实现。",
+        "description": "in the starter kit does exactly this."
+    },
+    "landing.a3LogSearch.050": {
+        "message": "前 20 条结果均为",
+        "description": "All 20 hits are"
+    },
+    "landing.a3LogSearch.051": {
+        "message": "日志。BM25 会给稀有词更高权重：",
+        "description": "lines. BM25 weighs rare terms more:"
+    },
+    "landing.a3LogSearch.053": {
+        "message": "出现在 68 条日志中，",
+        "description": "appears in 68 lines,"
+    },
+    "landing.a3LogSearch.055": {
+        "message": "出现在 347 条中。单独搜索",
+        "description": "in 347. Search"
+    },
+    "landing.a3LogSearch.056": {
+        "message": "即可看到其余结果。",
+        "description": "alone to see the others."
+    },
+    "landing.a3LogSearch.057": {
+        "message": "过滤条件",
+        "description": "Filters"
+    },
+    "landing.a3LogSearch.058": {
+        "message": "M2 · 过滤条件",
+        "description": "M2 · Filters"
+    },
+    "landing.a3LogSearch.059": {
+        "message": "每条结果都是提到 timeout 的 ERROR 日志，只出现两个服务中的一个。",
+        "description": "Every hit is an ERROR line that mentions a timeout. Only one of the two services shows up."
+    },
+    "landing.a3LogSearch.060": {
+        "message": "分面计数",
+        "description": "Facet counts"
+    },
+    "landing.a3LogSearch.061": {
+        "message": "不能用于聚合，因此分面统计使用相同过滤条件，但不包含它：",
+        "description": "can't be aggregated, so facets reuse the same filter without it:"
+    },
+    "landing.a3LogSearch.062": {
+        "message": "M3 · 分面计数",
+        "description": "M3 · Facet counts"
+    },
+    "landing.a3LogSearch.063": {
+        "message": "该时间窗口中有 163 条匹配日志，全部为",
+        "description": "163 matching lines in that window, all"
+    },
+    "landing.a3LogSearch.064": {
+        "message": "。计数总和应等于不包含",
+        "description": ". The counts must add up to the same search without"
+    },
+    "landing.a3LogSearch.065": {
+        "message": "，可使用",
+        "description": ": check with"
+    },
+    "landing.a3LogSearch.066": {
+        "message": "核对，并保持相同的",
+        "description": "and the same"
+    },
+    "landing.a3LogSearch.067": {
+        "message": "错误时间线",
+        "description": "Error timeline"
+    },
+    "landing.a3LogSearch.068": {
+        "message": "M4 · 错误时间线",
+        "description": "M4 · Error timeline"
+    },
+    "landing.a3LogSearch.069": {
+        "message": "两个服务在 11:35 至 12:00 之间出现明显增长；当天其他时间，没有服务在 5 分钟内产生超过 4 条错误。",
+        "description": "Two services jump between 11:35 and 12:00. For the rest of the day no service logs more than 4 errors in a 5-minute bucket."
+    },
+    "landing.a3LogSearch.070": {
+        "message": "解决故障",
+        "description": "Solve the outage"
+    },
+    "landing.a3LogSearch.071": {
+        "message": "使用工具回答：",
+        "description": "Use your explorer to answer:"
+    },
+    "landing.a3LogSearch.072": {
+        "message": "哪个服务导致 checkout 失败？具体从哪一分钟开始？",
+        "description": "Which service caused the checkout failures, and at what minute did it start?"
+    },
+    "landing.a3LogSearch.073": {
+        "message": "将答案及其验证查询写入 README。",
+        "description": "Put the answer — and the query that proves it — in your README."
+    },
+    "landing.a3LogSearch.074": {
+        "message": "支持 BM25 相关性排序的关键词搜索（",
+        "description": "Keyword search with BM25 ranking ("
+    },
+    "landing.a3LogSearch.075": {
+        "message": "短语检索与输入补全",
+        "description": "Phrase and type-ahead"
+    },
+    "landing.a3LogSearch.076": {
+        "message": "实现边输入边搜索。",
+        "description": "for search-as-you-type."
+    },
+    "landing.a3LogSearch.077": {
+        "message": "链路视图",
+        "description": "Trace view"
+    },
+    "landing.a3LogSearch.078": {
+        "message": "：点击一条日志，按时间顺序展示具有相同",
+        "description": ": click a line to show every log with the same"
+    },
+    "landing.a3LogSearch.079": {
+        "message": "的全部日志。",
+        "description": ", in time order."
+    },
+    "landing.a3LogSearch.080": {
+        "message": "查询字符串检索",
+        "description": "Query-string search"
+    },
+    "landing.a3LogSearch.081": {
+        "message": "：尝试",
+        "description": ": try the"
+    },
+    "landing.a3LogSearch.082": {
+        "message": "DSL，使用 Lucene 风格的",
+        "description": "DSL (Lucene-style"
+    },
+    "landing.a3LogSearch.083": {
+        "message": "，参阅",
+        "description": ") — see"
+    },
+    "landing.a3LogSearch.084": {
+        "message": "SEARCH 函数",
+        "description": "SEARCH Function"
+    },
+    "landing.a3LogSearch.085": {
+        "message": "实时日志尾部视图",
+        "description": "Live tail"
+    },
+    "landing.a3LogSearch.086": {
+        "message": "：每秒插入少量新行，并自动刷新。",
+        "description": ": insert a few new rows every second and auto-refresh."
+    },
+    "landing.a3LogSearch.087": {
+        "message": "索引与无索引对比",
+        "description": "Index vs. no index"
+    },
+    "landing.a3LogSearch.088": {
+        "message": "：比较",
+        "description": ": compare"
+    },
+    "landing.a3LogSearch.089": {
+        "message": "与",
+        "description": "with"
+    },
+    "landing.a3LogSearch.090": {
+        "message": "在完整表上的耗时，并展示结果。",
+        "description": "on the full table and show the timing."
+    },
+    "landing.a3LogSearch.091": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "landing.a3LogSearch.092": {
+        "message": "BM25",
+        "description": "BM25"
+    },
+    "landing.a3LogSearch.093": {
+        "message": "倒排索引",
+        "description": "Inverted Index"
+    },
+    "landing.a3LogSearch.094": {
+        "message": "SEARCH 函数",
+        "description": "SEARCH Function"
+    },
+    "landing.a4AgentTraces.001": {
+        "message": "Agent 链路",
+        "description": "Agent Trace"
+    },
+    "landing.a4AgentTraces.002": {
+        "message": "分析工具",
+        "description": "Explorer"
+    },
+    "landing.a4AgentTraces.003": {
+        "message": "AI Agent 输出的 JSON 结构可能随每次发布而变化。将其存入 VARIANT，像查询普通列一样访问。",
+        "description": "AI agents emit JSON that changes shape every release. Store it in VARIANT and query it like real columns."
+    },
+    "landing.a4AgentTraces.004": {
+        "message": "Agent 的 JSON 结构复杂，也能直接查询。",
+        "description": "Your agent's JSON is a mess. Query it anyway."
+    },
+    "landing.a4AgentTraces.005": {
+        "message": "LLM 调用、工具调用、错误和最终回答各有不同字段，新版本还会加入新字段。Doris 的",
+        "description": "LLM calls, tool calls, errors, final answers — each with its own fields, and new fields every release. Doris"
+    },
+    "landing.a4AgentTraces.006": {
+        "message": "会自动将这些 JSON 路径转为有类型的列，让您通过普通 SQL 过滤、搜索和聚合，无需迁移 Schema。",
+        "description": "turns that JSON into typed columns automatically, so you can filter, search and aggregate it with plain SQL. No schema migrations."
+    },
+    "landing.a4AgentTraces.007": {
+        "message": "构建链路分析工具，数据包含",
+        "description": "A trace explorer for"
+    },
+    "landing.a4AgentTraces.008": {
+        "message": "1,000 个 AI Agent 会话，约 20,000 个事件",
+        "description": "1,000 AI-agent sessions (about 20,000 events)"
+    },
+    "landing.a4AgentTraces.009": {
+        "message": "，提供",
+        "description": "a"
+    },
+    "landing.a4AgentTraces.010": {
+        "message": "会话列表",
+        "description": "sessions list"
+    },
+    "landing.a4AgentTraces.011": {
+        "message": "，显示事件数、错误数、Token 数和延迟；",
+        "description": "with event counts, errors, tokens and latency,"
+    },
+    "landing.a4AgentTraces.012": {
+        "message": "一个",
+        "description": "a"
+    },
+    "landing.a4AgentTraces.013": {
+        "message": "会话时间线",
+        "description": "session timeline"
+    },
+    "landing.a4AgentTraces.014": {
+        "message": "，点击会话即可逐步查看 Agent 行为；",
+        "description": ": click a session to replay what the agent did, step by step,"
+    },
+    "landing.a4AgentTraces.015": {
+        "message": "工具与模型统计",
+        "description": "tool and model stats"
+    },
+    "landing.a4AgentTraces.016": {
+        "message": "，包括 p95 延迟、错误率和 Token 用量；",
+        "description": ": p95 latency, error rate, token usage,"
+    },
+    "landing.a4AgentTraces.017": {
+        "message": "JSON 内部检索",
+        "description": "search inside the JSON"
+    },
+    "landing.a4AgentTraces.018": {
+        "message": "，找出所有提到 timeout 的工具错误。",
+        "description": ": find every tool error that mentions \"timeout\"."
+    },
+    "landing.a4AgentTraces.019": {
+        "message": "随后回答：",
+        "description": "Then answer:"
+    },
+    "landing.a4AgentTraces.020": {
+        "message": "13:00 部署 Agent v2 后，效果变好还是变差？",
+        "description": "did the agent's v2 release (deployed at 13:00) make things better or worse?"
+    },
+    "landing.a4AgentTraces.021": {
+        "message": "无需预定义 Schema 的写入时建模。",
+        "description": "Schema-on-write, without the schema."
+    },
+    "landing.a4AgentTraces.022": {
+        "message": "VARIANT 为每条 JSON 路径推断类型，并将常用路径存为真正的列式子列，因此",
+        "description": "VARIANT infers a type for every JSON path and stores frequent paths as real columnar subcolumns, so"
+    },
+    "landing.a4AgentTraces.023": {
+        "message": "只需读取一列，无需逐份解析文档。",
+        "description": "reads one column instead of parsing every document."
+    },
+    "landing.a4AgentTraces.024": {
+        "message": "新字段自动出现。",
+        "description": "New fields just appear."
+    },
+    "landing.a4AgentTraces.025": {
+        "message": "当 v2 事件新增",
+        "description": "When v2 events add"
+    },
+    "landing.a4AgentTraces.026": {
+        "message": "时，下一次导入就会出现对应子列，无需执行",
+        "description": ", the new path shows up as a subcolumn on the next load, with no"
+    },
+    "landing.a4AgentTraces.027": {
+        "message": "JSON 内部检索。",
+        "description": "Search inside JSON."
+    },
+    "landing.a4AgentTraces.028": {
+        "message": "VARIANT 列的倒排索引支持对每条文本路径检索，语法为",
+        "description": "An inverted index on the VARIANT column makes every text path searchable with"
+    },
+    "landing.a4AgentTraces.029": {
+        "message": "：每个 Agent 事件一行，事件正文存于 VARIANT 列：",
+        "description": "— one row per agent event, the event body in a VARIANT column:"
+    },
+    "landing.a4AgentTraces.030": {
+        "message": "数据表",
+        "description": "Table"
+    },
+    "landing.a4AgentTraces.032": {
+        "message": "示例 Payload，注意它们的结构差异：",
+        "description": "Example payloads — note how the shapes differ:"
+    },
+    "landing.a4AgentTraces.033": {
+        "message": "示例 Payload",
+        "description": "Example payloads"
+    },
+    "landing.a4AgentTraces.034": {
+        "message": "13:00 或之后开始的会话运行",
+        "description": "Sessions that start at 13:00 or later run"
+    },
+    "landing.a4AgentTraces.035": {
+        "message": "Agent v2",
+        "description": "agent v2"
+    },
+    "landing.a4AgentTraces.036": {
+        "message": "，Payload 中标明",
+        "description": ": their payloads say"
+    },
+    "landing.a4AgentTraces.037": {
+        "message": "，v2 的 LLM 调用还新增",
+        "description": ", and v2 LLM calls add a"
+    },
+    "landing.a4AgentTraces.038": {
+        "message": "标记。里程碑 5 会进一步导入表中从未出现过的新字段。",
+        "description": "flag. Milestone 5 then loads events with fields the table has never seen."
+    },
+    "landing.a4AgentTraces.039": {
+        "message": "上下文提示词",
+        "description": "Context prompt"
+    },
+    "landing.a4AgentTraces.040": {
+        "message": "粘贴给编程助手",
+        "description": "paste into your agent"
+    },
+    "landing.a4AgentTraces.041": {
+        "message": "导入并检查数据",
+        "description": "Load and inspect"
+    },
+    "landing.a4AgentTraces.042": {
+        "message": "在入门包目录中执行：",
+        "description": "From inside the starter-kit folder:"
+    },
+    "landing.a4AgentTraces.043": {
+        "message": "M0 · 导入",
+        "description": "M0 · Load"
+    },
+    "landing.a4AgentTraces.044": {
+        "message": "随后在 SQL Shell 中执行：",
+        "description": "Then, in a SQL shell:"
+    },
+    "landing.a4AgentTraces.045": {
+        "message": "M0 · 检查",
+        "description": "M0 · Inspect"
+    },
+    "landing.a4AgentTraces.046": {
+        "message": "导入结果应显示",
+        "description": "The load reports"
+    },
+    "landing.a4AgentTraces.047": {
+        "message": "1,000 个会话和 20,401 个事件",
+        "description": "1,000 sessions and 20,401 events"
+    },
+    "landing.a4AgentTraces.048": {
+        "message": "会列出约 20 条",
+        "description": "lists about 20"
+    },
+    "landing.a4AgentTraces.049": {
+        "message": "路径，每条均有自动推断的类型。",
+        "description": "paths, each with an inferred type."
+    },
+    "landing.a4AgentTraces.050": {
+        "message": "查询 JSON 路径",
+        "description": "Query JSON paths"
+    },
+    "landing.a4AgentTraces.051": {
+        "message": "M1 · 查询 JSON 路径",
+        "description": "M1 · Query JSON paths"
+    },
+    "landing.a4AgentTraces.052": {
+        "message": "共有五种工具，",
+        "description": "Five tools;"
+    },
+    "landing.a4AgentTraces.053": {
+        "message": "调用最多，共 3,506 次。",
+        "description": "is called most (3,506 times)."
+    },
+    "landing.a4AgentTraces.054": {
+        "message": "聚合自动推断的子列",
+        "description": "Aggregate inferred subcolumns"
+    },
+    "landing.a4AgentTraces.055": {
+        "message": "聚合子列",
+        "description": "Aggregate subcolumns"
+    },
+    "landing.a4AgentTraces.056": {
+        "message": "M2 · 聚合自动推断的子列",
+        "description": "M2 · Aggregate inferred subcolumns"
+    },
+    "landing.a4AgentTraces.057": {
+        "message": "的 p95 最高，约 2.1 秒；",
+        "description": "has the worst p95 (about 2.1 s);"
+    },
+    "landing.a4AgentTraces.058": {
+        "message": "失败次数最多，共 425 次。",
+        "description": "fails most often (425 errors)."
+    },
+    "landing.a4AgentTraces.059": {
+        "message": "检索 JSON 内部文本",
+        "description": "Search inside the JSON"
+    },
+    "landing.a4AgentTraces.060": {
+        "message": "检索 JSON",
+        "description": "Search the JSON"
+    },
+    "landing.a4AgentTraces.061": {
+        "message": "M3 · 检索 JSON 内部文本",
+        "description": "M3 · Search inside the JSON"
+    },
+    "landing.a4AgentTraces.062": {
+        "message": "共有 398 个事件提到 timeout。按小时统计，这是判断 v2 影响的第一条线索。",
+        "description": "398 events mention a timeout in total. Count them per hour: that is your first clue about v2."
+    },
+    "landing.a4AgentTraces.063": {
+        "message": "会话时间线",
+        "description": "Session timeline"
+    },
+    "landing.a4AgentTraces.064": {
+        "message": "M4 · 会话时间线",
+        "description": "M4 · Session timeline"
+    },
+    "landing.a4AgentTraces.065": {
+        "message": "围绕这些查询构建界面：会话列表 → 时间线 → 统计。",
+        "description": "Build the explorer UI around these queries: sessions list → timeline → stats."
+    },
+    "landing.a4AgentTraces.066": {
+        "message": "会话",
+        "description": "Session"
+    },
+    "landing.a4AgentTraces.067": {
+        "message": "包含 25 个事件：提问、LLM 与工具调用，其中一次",
+        "description": "has 25 events: a question, LLM and tool calls (one failed"
+    },
+    "landing.a4AgentTraces.068": {
+        "message": "调用失败后重试，最后生成回答。",
+        "description": ", retried), and a final answer."
+    },
+    "landing.a4AgentTraces.069": {
+        "message": "观察 Schema 演进",
+        "description": "Watch the schema evolve"
+    },
+    "landing.a4AgentTraces.070": {
+        "message": "Schema 演进",
+        "description": "Schema evolves"
+    },
+    "landing.a4AgentTraces.071": {
+        "message": "M5 · 导入结构变化批次",
+        "description": "M5 · Load the drift batch"
+    },
+    "landing.a4AgentTraces.072": {
+        "message": "M5 · 查询新字段",
+        "description": "M5 · Query the new fields"
+    },
+    "landing.a4AgentTraces.073": {
+        "message": "再次运行",
+        "description": "Run"
+    },
+    "landing.a4AgentTraces.074": {
+        "message": "，新路径已经出现，全程没有执行",
+        "description": "again: the new paths are there. No"
+    },
+    "landing.a4AgentTraces.075": {
+        "message": "。",
+        "description": "happened."
+    },
+    "landing.a4AgentTraces.076": {
+        "message": "还会出现第三个版本，",
+        "description": "A third version appears,"
+    },
+    "landing.a4AgentTraces.077": {
+        "message": "，只有它的 LLM 调用包含",
+        "description": ": only its LLM calls carry"
+    },
+    "landing.a4AgentTraces.078": {
+        "message": "，而",
+        "description": ", and"
+    },
+    "landing.a4AgentTraces.079": {
+        "message": "现在会列出",
+        "description": "now lists"
+    },
+    "landing.a4AgentTraces.080": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.a4AgentTraces.081": {
+        "message": "提交 README，包含从数据中得到的",
+        "description": "A README with"
+    },
+    "landing.a4AgentTraces.082": {
+        "message": "三项发现",
+        "description": "three insights"
+    },
+    "landing.a4AgentTraces.083": {
+        "message": "，其中包括对 v2 发布效果的判断，并说明运行方式，附一张截图。",
+        "description": "from the data — including your verdict on the v2 release — plus how to run and one screenshot."
+    },
+    "landing.a4AgentTraces.084": {
+        "message": "使用自己的链路。",
+        "description": "Bring your own traces."
+    },
+    "landing.a4AgentTraces.085": {
+        "message": "导出您使用的 AI 编程助手本地会话日志（JSONL），导入 Doris，每行一个",
+        "description": "Export your own AI coding agent's local session logs (JSONL) and load them, one"
+    },
+    "landing.a4AgentTraces.086": {
+        "message": "。数据存储在本地 Doris 实例中。",
+        "description": "per line. It is stored in your local Doris instance."
+    },
+    "landing.a4AgentTraces.087": {
+        "message": "Schema Template。",
+        "description": "Schema Template."
+    },
+    "landing.a4AgentTraces.088": {
+        "message": "通过",
+        "description": "Pin hot paths with"
+    },
+    "landing.a4AgentTraces.089": {
+        "message": "在表的副本中固定热点路径，比较",
+        "description": "in a copy of the table and compare"
+    },
+    "landing.a4AgentTraces.090": {
+        "message": "输出和查询行为。请使用",
+        "description": "output and query behaviour. Fill it with"
+    },
+    "landing.a4AgentTraces.091": {
+        "message": "填充数据，普通 VARIANT 不能直接转换为带模板的 VARIANT。",
+        "description": ": a VARIANT does not cast straight into a templated one."
+    },
+    "landing.a4AgentTraces.092": {
+        "message": "让助手探索数据。",
+        "description": "Let an assistant explore it."
+    },
+    "landing.a4AgentTraces.093": {
+        "message": "连接 Doris MCP Server，参见",
+        "description": "Connect the Doris MCP Server ("
+    },
+    "landing.a4AgentTraces.094": {
+        "message": "任务 A2",
+        "description": "Task A2"
+    },
+    "landing.a4AgentTraces.095": {
+        "message": "，让助手找出表现最差的会话。",
+        "description": ") and ask your assistant to find the worst session."
+    },
+    "landing.a4AgentTraces.096": {
+        "message": "使用 SQL 对错误分类",
+        "description": "Classify errors with SQL"
+    },
+    "landing.a4AgentTraces.097": {
+        "message": "，需自行提供 API Key：",
+        "description": "(bring your own API key):"
+    },
+    "landing.a4AgentTraces.098": {
+        "message": "。参阅",
+        "description": ". See"
+    },
+    "landing.a4AgentTraces.099": {
+        "message": "LLM SQL 函数",
+        "description": "LLM SQL Functions"
+    },
+    "landing.a4AgentTraces.100": {
+        "message": "VARIANT 数据类型",
+        "description": "VARIANT Data Type"
+    },
+    "landing.a4AgentTraces.101": {
+        "message": "VARIANT SQL 参考",
+        "description": "VARIANT SQL reference"
+    },
+    "landing.a4AgentTraces.102": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "landing.a4AgentTraces.103": {
+        "message": "LLM SQL 函数",
+        "description": "LLM SQL Functions"
+    },
+    "landing.HackathonTrackBPage.001": {
+        "message": "已 Fork apache/doris-website。",
+        "description": "A fork of apache/doris-website."
+    },
+    "landing.HackathonTrackBPage.002": {
+        "message": "在 GitHub Fork 仓库",
+        "description": "Fork it"
+    },
+    "landing.HackathonTrackBPage.003": {
+        "message": "。无需克隆，在您 Fork 的仓库页面按",
+        "description": "on GitHub. No clone needed: press"
+    },
+    "landing.HackathonTrackBPage.004": {
+        "message": "即可在浏览器中编辑文件，再提交到新分支。若习惯 Git，仓库较大，建议仅检出所需的两个目录：",
+        "description": "in your fork to edit files in the browser, then commit to a new branch. Prefer git? The repository is large, so clone only the two folders you need:"
+    },
+    "landing.HackathonTrackBPage.005": {
+        "message": "可选：准备入门包。",
+        "description": "Optional: the starter kit."
+    },
+    "landing.HackathonTrackBPage.006": {
+        "message": "赛道 B 无需种子数据，但入门包中的",
+        "description": "Track B needs no seed data, but the kit's"
+    },
+    "landing.HackathonTrackBPage.007": {
+        "message": "可一次执行整个 SQL 文件，便于构建演示：",
+        "description": "runs a SQL file in one go while you build the demo:"
+    },
+    "landing.HackathonTrackBPage.008": {
+        "message": "。下载并解压",
+        "description": ". Download and unzip"
+    },
+    "landing.HackathonTrackBPage.009": {
+        "message": "PR 的 Build Check 失败",
+        "description": "Build Check fails on your pull request"
+    },
+    "landing.HackathonTrackBPage.010": {
+        "message": "查看检查日志。常见原因是 MDX 标签未闭合，或正文中直接使用了",
+        "description": "Open the check's log. It is usually MDX: an unclosed tag, or a bare"
+    },
+    "landing.HackathonTrackBPage.011": {
+        "message": "或",
+        "description": "or"
+    },
+    "landing.HackathonTrackBPage.012": {
+        "message": "。放入围栏代码块后则不受此限制。",
+        "description": "in running text. Inside fenced code blocks anything goes"
+    },
+    "landing.HackathonTrackBPage.013": {
+        "message": "B6：",
+        "description": "B6:"
+    },
+    "landing.HackathonTrackBPage.014": {
+        "message": "没有输出，或打印",
+        "description": "prints nothing or a"
+    },
+    "landing.HackathonTrackBPage.015": {
+        "message": "请添加",
+        "description": "Add"
+    },
+    "landing.HackathonTrackBPage.016": {
+        "message": "，因为 FE 会将导入请求重定向至 BE，curl 需要携带凭证跟随重定向。",
+        "description": ": the FE redirects the load to the BE, and curl must follow it with your credentials"
+    },
+    "landing.HackathonTrackBPage.017": {
+        "message": "B6：",
+        "description": "B6:"
+    },
+    "landing.HackathonTrackBPage.018": {
+        "message": "重复运行时出现该结果属于预期：同一 Label 最多导入一次。重新导入请使用新 Label。",
+        "description": "Expected on a rerun: a label loads at most once. Use a new label to load the file again"
+    },
+    "landing.HackathonTrackBPage.019": {
+        "message": "倒数排名融合",
+        "description": "Reciprocal Rank Fusion"
+    },
+    "landing.HackathonTrackBPage.020": {
+        "message": "文档贡献指南",
+        "description": "Documentation Contribution Guide"
+    },
+    "landing.HackathonTrackBPage.021": {
+        "message": "文档格式规范",
+        "description": "Docs format specification"
+    },
+    "landing.HackathonTrackBPage.022": {
+        "message": "Pull Request 指南",
+        "description": "Pull request guide"
+    },
+    "landing.HackathonTrackBPage.023": {
+        "message": "显示任务的模板：",
+        "description": "Show the templates for task"
+    },
+    "landing.HackathonTrackBPage.024": {
+        "message": "启动",
+        "description": "Start"
+    },
+    "landing.HackathonTrackBPage.025": {
+        "message": "页面章节",
+        "description": "Page section"
+    },
+    "landing.HackathonTrackBPage.026": {
+        "message": "Pull Request",
+        "description": "Pull request"
+    },
+    "landing.HackathonTrackBPage.027": {
+        "message": "当前任务对应的模板",
+        "description": "Templates for the task you are reading"
+    },
+    "landing.HackathonTrackBPage.028": {
+        "message": "模板",
+        "description": "Templates"
+    },
+    "landing.HackathonTrackBPage.029": {
+        "message": "您的 Pull Request ·",
+        "description": "Your pull request ·"
+    },
+    "landing.HackathonTrackBPage.030": {
+        "message": "模板",
+        "description": "Templates"
+    },
+    "landing.HackathonTrackBPage.031": {
+        "message": "编辑",
+        "description": "Edit"
+    },
+    "landing.HackathonTrackBPage.032": {
+        "message": "赛道 B · ",
+        "description": "Track B · "
+    },
+    "landing.HackathonTrackBPage.033": {
+        "message": " · Doris 黑客松",
+        "description": " · Doris Hackathon"
+    },
+    "landing.HackathonTrackBPage.034": {
+        "message": "，属于 ",
+        "description": " Track B of the "
+    },
+    "landing.HackathonTrackBPage.035": {
+        "message": "的赛道 B，可自主安排进度，面向所有人开放。",
+        "description": ": self-paced, open to everyone."
+    },
+    "landing.HackathonTrackBPage.036": {
+        "message": "赛道 B ·",
+        "description": "Track B ·"
+    },
+    "landing.HackathonTrackBPage.037": {
+        "message": "个任务，任选一个",
+        "description": "tasks, pick one"
+    },
+    "landing.HackathonTrackBPage.038": {
+        "message": "从文档到",
+        "description": "Docs to"
+    },
+    "landing.HackathonTrackBPage.039": {
+        "message": "演示",
+        "description": "Demo"
+    },
+    "landing.HackathonTrackBPage.040": {
+        "message": "选择一篇 Apache Doris 功能文档，在本地 Doris 中运行，将其补充为逐步演示。您的 Pull Request 会将演示加入 doris.apache.org 对应页面。",
+        "description": "Pick a feature page of the Apache Doris docs, run it on your local Doris, and turn it into a step-by-step demo. Your pull request adds the demo to that page on doris.apache.org."
+    },
+    "landing.HackathonTrackBPage.041": {
+        "message": "任务概览",
+        "description": "At a glance"
+    },
+    "landing.HackathonTrackBPage.042": {
+        "message": "启动 Doris",
+        "description": "Start Doris"
+    },
+    "landing.HackathonTrackBPage.043": {
+        "message": "选择任务",
+        "description": "Pick a task"
+    },
+    "landing.HackathonTrackBPage.044": {
+        "message": "准备环境",
+        "description": "Get set up"
+    },
+    "landing.HackathonTrackBPage.045": {
+        "message": "了解赛道 B 流程，启动集群，并 Fork 文档仓库。",
+        "description": "How Track B works, a running cluster, and a fork of the docs."
+    },
+    "landing.HackathonTrackBPage.046": {
+        "message": "赛道 B 如何进行",
+        "description": "How Track B works"
+    },
+    "landing.HackathonTrackBPage.047": {
+        "message": "一篇功能文档、一份演示、一个 Pull Request。",
+        "description": "One feature page, one demo, one pull request."
+    },
+    "landing.HackathonTrackBPage.048": {
+        "message": "这些页面是新用户的起点。从零运行最容易发现缺漏，而一份能在空集群上从头运行到尾的演示，能够验证功能是否可用。您的演示将直接加入文档。",
+        "description": "Every new Doris user starts on these pages. Running them from scratch is the fastest way to find what is missing, and a demo that runs top to bottom from an empty cluster is the best proof that a feature works. Yours goes on the page itself."
+    },
+    "landing.HackathonTrackBPage.049": {
+        "message": "按文档操作。",
+        "description": "Follow the page."
+    },
+    "landing.HackathonTrackBPage.050": {
+        "message": "打开任务对应页面，在本地 Doris 逐条原样运行所有示例，记录失败、输出不同或含义不清的地方。",
+        "description": "Open your task's doc page and run every example on your local Doris, exactly as written. Note anything that fails, prints something different, or leaves you guessing."
+    },
+    "landing.HackathonTrackBPage.051": {
+        "message": "构建演示。",
+        "description": "Build the demo."
+    },
+    "landing.HackathonTrackBPage.052": {
+        "message": "从空集群开始验证任务清单的每一点，按顺序运行，保存每条语句的真实输出。",
+        "description": "From an empty cluster, prove every point on your task's checklist. Run it top to bottom and keep the real output of every statement."
+    },
+    "landing.HackathonTrackBPage.053": {
+        "message": "补充到文档。",
+        "description": "Add it to the page."
+    },
+    "landing.HackathonTrackBPage.054": {
+        "message": "在两份页面的 Quick start 之后增加",
+        "description": "A"
+    },
+    "landing.HackathonTrackBPage.055": {
+        "message": "Step-by-step demo（逐步演示）",
+        "description": "Step-by-step demo"
+    },
+    "landing.HackathonTrackBPage.056": {
+        "message": "章节，并在同一 Pull Request 中修复发现的问题。",
+        "description": "section right after Quick start, in both copies of the page. Fix what you found wrong in the same pull request."
+    },
+    "landing.HackathonTrackBPage.057": {
+        "message": "提交 Pull Request",
+        "description": "Open the pull request"
+    },
+    "landing.HackathonTrackBPage.058": {
+        "message": "到",
+        "description": "on"
+    },
+    "landing.HackathonTrackBPage.059": {
+        "message": "，这就是您的任务提交，参见",
+        "description": ". It is your submission: see"
+    },
+    "landing.HackathonTrackBPage.060": {
+        "message": "提交并领取徽章",
+        "description": "Submit & get your badge"
+    },
+    "landing.HackathonTrackBPage.061": {
+        "message": "代码面板展示当前任务的模板",
+        "description": "The panel shows the templates for the task you are reading"
+    },
+    "landing.HackathonTrackBPage.062": {
+        "message": "开始之前",
+        "description": "Before you start"
+    },
+    "landing.HackathonTrackBPage.063": {
+        "message": "复制命令",
+        "description": "Copy command"
+    },
+    "landing.HackathonTrackBPage.064": {
+        "message": "选择任务",
+        "description": "Pick a task"
+    },
+    "landing.HackathonTrackBPage.065": {
+        "message": "篇功能文档，任选一篇；提前完成后可继续选择其他任务，每个任务独立提交 PR。",
+        "description": "feature pages. Pick one; finished early? Pick another: each task is its own pull request."
+    },
+    "landing.HackathonTrackBPage.066": {
+        "message": "· 编辑",
+        "description": "· edits"
+    },
+    "landing.HackathonTrackBPage.067": {
+        "message": "从这里开始",
+        "description": "Start from"
+    },
+    "landing.HackathonTrackBPage.068": {
+        "message": "演示需验证",
+        "description": "Your demo proves"
+    },
+    "landing.HackathonTrackBPage.069": {
+        "message": "提示",
+        "description": "Tip"
+    },
+    "landing.HackathonTrackBPage.070": {
+        "message": "完成并提交",
+        "description": "Ship it"
+    },
+    "landing.HackathonTrackBPage.071": {
+        "message": "了解 PR 需要包含的内容、提交方式及徽章领取。",
+        "description": "What your pull request adds, how to submit it, and the badge."
+    },
+    "landing.HackathonTrackBPage.072": {
+        "message": "Pull Request 应包含什么",
+        "description": "What your pull request adds"
+    },
+    "landing.HackathonTrackBPage.073": {
+        "message": "在以下仓库提交一个 Pull Request：",
+        "description": "One pull request on"
+    },
+    "landing.HackathonTrackBPage.074": {
+        "message": "，即完成任务提交。",
+        "description": ", and it is your submission."
+    },
+    "landing.HackathonTrackBPage.075": {
+        "message": "演示章节",
+        "description": "Demo section"
+    },
+    "landing.HackathonTrackBPage.076": {
+        "message": "放在 Quick start 之后，按检查清单逐步展开：先写 SQL 代码块，再给出",
+        "description": "right after Quick start, one step per point on your checklist: a SQL block, then"
+    },
+    "landing.HackathonTrackBPage.077": {
+        "message": "Expected result（预期结果）",
+        "description": "Expected result"
+    },
+    "landing.HackathonTrackBPage.078": {
+        "message": "及真实输出。演示从空集群开始，因此需要自行创建数据库。",
+        "description": "with the real output. It starts from an empty cluster, so it creates its own database."
+    },
+    "landing.HackathonTrackBPage.079": {
+        "message": "两份文档",
+        "description": "Both copies"
+    },
+    "landing.HackathonTrackBPage.080": {
+        "message": "将相同修改提交到",
+        "description": "The same change in"
+    },
+    "landing.HackathonTrackBPage.081": {
+        "message": "和",
+        "description": "and"
+    },
+    "landing.HackathonTrackBPage.082": {
+        "message": "。本任务要求更新英文页面，其他语言的翻译独立维护。",
+        "description": ". These tasks update the English pages; translations are maintained separately."
+    },
+    "landing.HackathonTrackBPage.083": {
+        "message": "问题修复",
+        "description": "Fixes"
+    },
+    "landing.HackathonTrackBPage.084": {
+        "message": "在同一 PR 中修复页面其他位置发现的错误；若无法确定是否为错误，请先写入 PR 说明。",
+        "description": "Anything wrong you found elsewhere on the page, fixed in the same pull request. Not sure it is wrong? List it in the description instead."
+    },
+    "landing.HackathonTrackBPage.085": {
+        "message": "PR 说明",
+        "description": "Description"
+    },
+    "landing.HackathonTrackBPage.086": {
+        "message": "使用仓库的 PR 模板，说明 dev 与 4.x 英文页面的更新，并注明任务名称，例如",
+        "description": "The repository's pull request template (dev + 4.x, English) and one line that names your task, e.g."
+    },
+    "landing.HackathonTrackBPage.087": {
+        "message": "以下任务的模板：",
+        "description": "Templates for"
+    },
+    "landing.HackathonTrackBPage.088": {
+        "message": "代码面板：最近阅读任务对应的模板",
+        "description": "Panel: the templates for the task you read last"
+    },
+    "landing.HackathonTrackBPage.089": {
+        "message": "完成标准",
+        "description": "Definition of Done"
+    },
+    "landing.HackathonTrackBPage.090": {
+        "message": "您的检查清单",
+        "description": "Your checklist"
+    },
+    "landing.HackathonTrackBPage.091": {
+        "message": "Pull Request 说明",
+        "description": "the pull request description"
+    },
+    "landing.HackathonTrackBPage.092": {
+        "message": "提交您的 Pull Request",
+        "description": "Open your pull request"
+    },
+    "landing.HackathonTrackBPage.093": {
+        "message": "到",
+        "description": "on"
+    },
+    "landing.HackathonTrackBPage.094": {
+        "message": "，从您 Fork 仓库的分支发起。PR 本身就是任务提交，无需另行填写内容。",
+        "description": ", from a branch of your fork. The pull request is your submission; nothing else to fill in."
+    },
+    "landing.HackathonTrackBPage.095": {
+        "message": "进阶目标",
+        "description": "Stretch goals"
+    },
+    "landing.HackathonTrackBPage.096": {
+        "message": "再选一个任务。",
+        "description": "Pick a second task."
+    },
+    "landing.HackathonTrackBPage.097": {
+        "message": "每个完成的任务独立提交一个 PR。",
+        "description": "Each finished task is its own pull request."
+    },
+    "landing.HackathonTrackBPage.098": {
+        "message": "继续验证快速入门之外的内容。",
+        "description": "Go past the quick start."
+    },
+    "landing.HackathonTrackBPage.099": {
+        "message": "运行页面链接的较长示例，例如建表指南和 SQL 手册中的示例，这些内容通常较少得到验证。",
+        "description": "Run the longer examples the page links to, such as the table-design and SQL-manual pages; they are checked less often."
+    },
+    "landing.HackathonTrackBPage.100": {
+        "message": "审阅其他赛道 B 的 Pull Request。",
+        "description": "Review another Track B pull request."
+    },
+    "landing.HackathonTrackBPage.101": {
+        "message": "在自己的 Doris 上运行演示，并在评审中说明实际结果。",
+        "description": "Run its demo on your Doris and leave a comment with what you got."
+    },
+    "landing.HackathonTrackBPage.102": {
+        "message": "故障排查与参考资料",
+        "description": "Troubleshooting & references"
+    },
+    "landing.HackathonTrackBPage.103": {
+        "message": "参考资料",
+        "description": "References"
+    },
+    "landing.trackB.004": {
+        "message": "页面的运算符表列出了全部",
+        "description": "The page's operator table lists every"
+    },
+    "landing.trackB.005": {
+        "message": "形式。直接选择",
+        "description": "form. Select"
+    },
+    "landing.trackB.006": {
+        "message": "并按其排序；若在它外面包裹表达式，例如",
+        "description": "as is and order by it: ordering by an expression around it, such as"
+    },
+    "landing.trackB.007": {
+        "message": "，查询会被拒绝。",
+        "description": ", is rejected."
+    },
+    "landing.trackB.010": {
+        "message": "每个向量，包括查询向量，都必须恰好包含",
+        "description": "Every vector needs exactly"
+    },
+    "landing.trackB.011": {
+        "message": "个数值，否则查询会因维度不匹配而失败。",
+        "description": "numbers, the query vector included; otherwise the query fails with a dimension error."
+    },
+    "landing.trackB.015": {
+        "message": "不能出现在向量排序查询的 SELECT 中，也不能放入",
+        "description": "can't be selected in a vector-ranked query, and it can't sit inside"
+    },
+    "landing.trackB.016": {
+        "message": "中；应在外层查询对原始",
+        "description": ": rank the plain"
+    },
+    "landing.trackB.017": {
+        "message": "结果排名，做法见 RRF 文档。",
+        "description": "in an outer query, as the RRF page does."
+    },
+    "landing.trackB.020": {
+        "message": "展示 Doris 为单行推断的路径和类型，可与",
+        "description": "shows the paths and types Doris inferred for one row; compare it with the"
+    },
+    "landing.trackB.021": {
+        "message": "输出对照。",
+        "description": "output."
+    },
+    "landing.trackB.024": {
+        "message": "分别用一条 INSERT 和三条独立 INSERT 执行三次写入，结果应保持一致。",
+        "description": "Run the three writes as one INSERT and as three separate INSERTs: the result must not change."
+    },
+    "landing.trackB.027": {
+        "message": "将导入请求发送到 FE 的",
+        "description": "Send the load to the FE at"
+    },
+    "landing.trackB.028": {
+        "message": "，使用",
+        "description": "with"
+    },
+    "landing.trackB.029": {
+        "message": "，FE 会将请求重定向至 BE，All-in-One 容器同时提供两个端口。",
+        "description": ": the FE redirects it to the BE, and the all-in-one container answers on both ports."
+    },
+    "landing.trackB.030": {
+        "message": " · 页面章节",
+        "description": " · page section"
+    },
+    "landing.trackB.031": {
+        "message": ".mdx · 模板",
+        "description": ".mdx · template"
+    },
+    "landing.trackB.032": {
+        "message": " · Pull Request",
+        "description": " · pull request"
+    },
+    "landing.trackB.033": {
+        "message": "标题与说明 · 模板",
+        "description": "title + description · template"
+    },
+    "landing.courseExtra.hackathonEvent.001": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.hackathonEvent.002": {
+        "message": "45–90 分钟",
+        "description": "45–90 min"
+    },
+    "landing.courseExtra.hackathonEvent.003": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.hackathonEvent.004": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.hackathonEvent.005": {
+        "message": "30–60 分钟",
+        "description": "30–60 min"
+    },
+    "landing.courseExtra.HackathonSketch.002": {
+        "message": "只读",
+        "description": "read-only"
+    },
+    "landing.courseExtra.HackathonSketch.008": {
+        "message": "Token 数",
+        "description": "Tokens"
+    },
+    "landing.courseExtra.a1HybridSearch.001": {
+        "message": "5 分钟",
+        "description": "5 min"
+    },
+    "landing.courseExtra.a1HybridSearch.002": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a1HybridSearch.003": {
+        "message": "10 分钟",
+        "description": "10 min"
+    },
+    "landing.courseExtra.a1HybridSearch.004": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a1HybridSearch.005": {
+        "message": "20 分钟",
+        "description": "20 min"
+    },
+    "landing.courseExtra.a1HybridSearch.006": {
+        "message": "用户可输入自由文本查询，可通过 CLI 参数、交互提示或文本框输入。",
+        "description": "A user can type any free-text query (CLI argument, prompt, or text box)."
+    },
+    "landing.courseExtra.a1HybridSearch.007": {
+        "message": "至少提供一个结构化过滤条件：类别。",
+        "description": "At least one structured filter (category)."
+    },
+    "landing.courseExtra.a1HybridSearch.008": {
+        "message": "结果显示页面、章节和评分或距离，并可查看实际执行的 SQL。",
+        "description": "Results show page, section and score or distance; the executed SQL can be displayed."
+    },
+    "landing.courseExtra.a1HybridSearch.009": {
+        "message": "以 PR 提交：以 GitHub ID 命名的目录，包含代码和 README，说明运行方式并附一张截图。",
+        "description": "Submitted as a pull request: your GitHub-ID folder with the code and a README (how to run + one screenshot)."
+    },
+    "landing.courseExtra.a1HybridSearch.010": {
+        "message": "边输入边搜索",
+        "description": "Search-as-you-type"
+    },
+    "landing.courseExtra.a2Mcp.001": {
+        "message": "理解搜索能力。",
+        "description": "Search-aware."
+    },
+    "landing.courseExtra.a2Mcp.002": {
+        "message": "5 分钟",
+        "description": "5 min"
+    },
+    "landing.courseExtra.a2Mcp.003": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a2Mcp.004": {
+        "message": "10 分钟",
+        "description": "10 min"
+    },
+    "landing.courseExtra.a2Mcp.005": {
+        "message": "20–40 分钟",
+        "description": "20–40 min"
+    },
+    "landing.courseExtra.a2Mcp.006": {
+        "message": "5 分钟",
+        "description": "5 min"
+    },
+    "landing.courseExtra.a2Mcp.007": {
+        "message": "Doris MCP Server 已连接 AI 客户端，提供工具列表截图。",
+        "description": "Doris MCP Server connected to your AI client (screenshot of the tool list)."
+    },
+    "landing.courseExtra.a2Mcp.008": {
+        "message": "记录一次安全验证：写操作被拒绝。",
+        "description": "One documented safety test (a refused write)."
+    },
+    "landing.courseExtra.a2Mcp.009": {
+        "message": "在以 GitHub ID 命名目录的 README 中，说明使用的客户端、配置（不得包含密钥）、问答结果，以及一项难以理解或值得改进的内容。",
+        "description": "A write-up (the README in your GitHub-ID folder) with your client, your config (no secrets), the Q&A, and one thing that was confusing or could be better."
+    },
+    "landing.courseExtra.a3LogSearch.001": {
+        "message": "5 分钟",
+        "description": "5 min"
+    },
+    "landing.courseExtra.a3LogSearch.002": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a3LogSearch.003": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a3LogSearch.004": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a3LogSearch.005": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a3LogSearch.006": {
+        "message": "至少提供服务和级别两种结构化过滤，以及时间范围。",
+        "description": "At least two structured filters (service, level) plus a time range."
+    },
+    "landing.courseExtra.a3LogSearch.007": {
+        "message": "分面计数随当前搜索条件变化。",
+        "description": "Facet counts that follow the current search."
+    },
+    "landing.courseExtra.a3LogSearch.008": {
+        "message": "找出故障根因服务与开始时间，并给出验证查询。",
+        "description": "The outage solved: root-cause service + start time, with the supporting query."
+    },
+    "landing.courseExtra.a3LogSearch.009": {
+        "message": "以 PR 提交：以 GitHub ID 命名的目录，包含代码和 README，说明运行方式并附一张截图。",
+        "description": "Submitted as a pull request: your GitHub-ID folder with the code and a README (how to run + one screenshot)."
+    },
+    "landing.courseExtra.a4AgentTraces.001": {
+        "message": "10 分钟",
+        "description": "10 min"
+    },
+    "landing.courseExtra.a4AgentTraces.002": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a4AgentTraces.003": {
+        "message": "15 分钟",
+        "description": "15 min"
+    },
+    "landing.courseExtra.a4AgentTraces.004": {
+        "message": "10 分钟",
+        "description": "10 min"
+    },
+    "landing.courseExtra.a4AgentTraces.005": {
+        "message": "20 分钟",
+        "description": "20 min"
+    },
+    "landing.courseExtra.a4AgentTraces.006": {
+        "message": "10 分钟",
+        "description": "10 min"
+    },
+    "landing.courseExtra.a4AgentTraces.007": {
+        "message": "将异构事件存入同一 VARIANT 列，包含初始数据与结构变化批次。",
+        "description": "Heterogeneous events loaded into one VARIANT column (the seed plus the drift batch)."
+    },
+    "landing.courseExtra.a4AgentTraces.008": {
+        "message": "至少完成三种 JSON 路径查询，其中一种对自动推断的数值子列进行聚合，例如按工具统计 p95 延迟。",
+        "description": "At least three JSON-path queries, including one aggregation on an inferred numeric subcolumn (for example p95 latency per tool)."
+    },
+    "landing.courseExtra.a4AgentTraces.009": {
+        "message": "对 JSON 文本路径执行一次全文检索。",
+        "description": "A full-text search on a JSON text path."
+    },
+    "landing.courseExtra.a4AgentTraces.010": {
+        "message": "提供会话时间线，可采用 CLI、Notebook 或网页。",
+        "description": "A session timeline view (CLI, notebook or web)."
+    },
+    "landing.courseExtra.a1HybridSearch.011": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.a1HybridSearch.012": {
+        "message": "新手友好",
+        "description": "Beginner-friendly"
+    },
+    "landing.courseExtra.a1HybridSearch.013": {
+        "message": "任意语言 · CLI 或网页",
+        "description": "Any language · CLI or web"
+    },
+    "landing.courseExtra.a1HybridSearch.014": {
+        "message": "欢迎使用 AI 工具",
+        "description": "AI tools welcome"
+    },
+    "landing.courseExtra.a2Mcp.010": {
+        "message": "45–90 分钟",
+        "description": "45–90 min"
+    },
+    "landing.courseExtra.a2Mcp.011": {
+        "message": "新手友好",
+        "description": "Beginner-friendly"
+    },
+    "landing.courseExtra.a2Mcp.012": {
+        "message": "Python 3.12+ · 任意 MCP 客户端",
+        "description": "Python 3.12+ · any MCP client"
+    },
+    "landing.courseExtra.a2Mcp.013": {
+        "message": "欢迎使用 AI 工具",
+        "description": "AI tools welcome"
+    },
+    "landing.courseExtra.a3LogSearch.010": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.a3LogSearch.011": {
+        "message": "新手友好",
+        "description": "Beginner-friendly"
+    },
+    "landing.courseExtra.a3LogSearch.012": {
+        "message": "任意语言 · CLI 或网页",
+        "description": "Any language · CLI or web"
+    },
+    "landing.courseExtra.a3LogSearch.013": {
+        "message": "欢迎使用 AI 工具",
+        "description": "AI tools welcome"
+    },
+    "landing.courseExtra.a4AgentTraces.011": {
+        "message": "60–120 分钟",
+        "description": "60–120 min"
+    },
+    "landing.courseExtra.a4AgentTraces.012": {
+        "message": "进阶任务",
+        "description": "Intermediate"
+    },
+    "landing.courseExtra.a4AgentTraces.013": {
+        "message": "任意语言 · CLI、Notebook 或网页",
+        "description": "Any language · CLI, notebook or web"
+    },
+    "landing.courseExtra.a4AgentTraces.014": {
+        "message": "欢迎使用 AI 工具",
+        "description": "AI tools welcome"
+    },
+    "landing.trackB.task.B1.title": {
+        "message": "全文检索与 BM25",
+        "description": "Full-text Search + BM25"
+    },
+    "landing.trackB.task.B1.time": {
+        "message": "30–45 分钟",
+        "description": "30–45 min"
+    },
+    "landing.trackB.task.B1.doc": {
+        "message": "全文检索",
+        "description": "Full-text Search"
+    },
+    "landing.trackB.task.B1.alsoSee.0": {
+        "message": "BM25",
+        "description": "BM25"
+    },
+    "landing.trackB.task.B1.proves.0": {
+        "message": "创建一张表，在文本列上建立倒排索引，使用 English 分词器并支持短语检索",
+        "description": "A table with an inverted index (english parser, phrase support) on a text column"
+    },
+    "landing.trackB.task.B1.proves.1": {
+        "message": "对相同词语分别使用 MATCH_ANY 和 MATCH_ALL，展示不同的返回行数",
+        "description": "MATCH_ANY vs MATCH_ALL on the same words, with different row counts"
+    },
+    "landing.trackB.task.B1.proves.2": {
+        "message": "执行 MATCH_PHRASE，验证只有词语相邻时才匹配",
+        "description": "A MATCH_PHRASE query that only matches when the words are adjacent"
+    },
+    "landing.trackB.task.B1.proves.3": {
+        "message": "使用 score() 与 ORDER BY … DESC LIMIT n 展示 BM25 排名，并解释首条结果为何领先",
+        "description": "BM25 ranking: score() with ORDER BY … DESC LIMIT n, and why the top row wins"
+    },
+    "landing.trackB.task.B2.title": {
+        "message": "向量检索",
+        "description": "Vector Search"
+    },
+    "landing.trackB.task.B2.time": {
+        "message": "30–45 分钟",
+        "description": "30–45 min"
+    },
+    "landing.trackB.task.B2.doc": {
+        "message": "向量索引",
+        "description": "Vector Index"
+    },
+    "landing.trackB.task.B2.proves.0": {
+        "message": "创建 ARRAY<FLOAT> NOT NULL 列，并建立 HNSW（ANN）索引",
+        "description": "An ARRAY<FLOAT> NOT NULL column with an HNSW (ANN) index"
+    },
+    "landing.trackB.task.B2.proves.1": {
+        "message": "执行 ANN Top-N 查询：ORDER BY l2_distance_approximate(…) LIMIT n",
+        "description": "An ANN top-N query: ORDER BY l2_distance_approximate(…) LIMIT n"
+    },
+    "landing.trackB.task.B2.proves.2": {
+        "message": "为相同查询添加 WHERE 过滤，观察 Top-N 结果变化",
+        "description": "The same query with a WHERE filter, and how the top-N changes"
+    },
+    "landing.trackB.task.B2.proves.3": {
+        "message": "通过 EXPLAIN 的 ANN SORT INFO 展示向量索引已生效",
+        "description": "EXPLAIN showing the ANN index at work (ANN SORT INFO)"
+    },
+    "landing.trackB.task.B3.title": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "landing.trackB.task.B3.time": {
+        "message": "30–45 分钟",
+        "description": "30–45 min"
+    },
+    "landing.trackB.task.B3.doc": {
+        "message": "混合检索",
+        "description": "Hybrid Search"
+    },
+    "landing.trackB.task.B3.alsoSee.0": {
+        "message": "倒数排名融合",
+        "description": "Reciprocal Rank Fusion"
+    },
+    "landing.trackB.task.B3.proves.0": {
+        "message": "在同一张表的文本列上建立倒排索引、向量列上建立 ANN 索引",
+        "description": "One table with an inverted index on text and an ANN index on vectors"
+    },
+    "landing.trackB.task.B3.proves.1": {
+        "message": "在同一查询中使用 MATCH_ANY 预过滤与向量排序",
+        "description": "A MATCH_ANY pre-filter and vector ranking in one query"
+    },
+    "landing.trackB.task.B3.proves.2": {
+        "message": "对同一问题分别执行纯关键词和纯向量查询，并解释结果列表的差异",
+        "description": "The same question as keyword-only and vector-only queries, and where the lists differ"
+    },
+    "landing.trackB.task.B3.proves.3": {
+        "message": "使用倒数排名融合整合两组排名",
+        "description": "Both rankings fused with Reciprocal Rank Fusion"
+    },
+    "landing.trackB.task.B4.title": {
+        "message": "VARIANT",
+        "description": "VARIANT"
+    },
+    "landing.trackB.task.B4.time": {
+        "message": "30–45 分钟",
+        "description": "30–45 min"
+    },
+    "landing.trackB.task.B4.doc": {
+        "message": "VARIANT 数据类型",
+        "description": "VARIANT Data Type"
+    },
+    "landing.trackB.task.B4.proves.0": {
+        "message": "在同一 VARIANT 列中存入不同结构的 JSON 行",
+        "description": "JSON rows of different shapes in one VARIANT column"
+    },
+    "landing.trackB.task.B4.proves.1": {
+        "message": "查询嵌套路径，并在比较或聚合前执行 CAST",
+        "description": "Queries on nested paths, with CAST before comparing or aggregating"
+    },
+    "landing.trackB.task.B4.proves.2": {
+        "message": "展示自动推断的子列：SET describe_extend_variant_column = true; DESC",
+        "description": "The inferred subcolumns: SET describe_extend_variant_column = true; DESC"
+    },
+    "landing.trackB.task.B4.proves.3": {
+        "message": "在 JSON 内部进行全文检索，对路径使用 MATCH，并由倒排索引支持",
+        "description": "A full-text search inside the JSON (MATCH on a path, backed by an inverted index)"
+    },
+    "landing.trackB.task.B5.title": {
+        "message": "Unique Key 与 Sequence 列",
+        "description": "Unique Key + Sequence Column"
+    },
+    "landing.trackB.task.B5.time": {
+        "message": "30–45 分钟",
+        "description": "30–45 min"
+    },
+    "landing.trackB.task.B5.doc": {
+        "message": "Unique Key 模型",
+        "description": "Unique Key"
+    },
+    "landing.trackB.task.B5.proves.0": {
+        "message": "对同一个 Key 写入三次，最终只保留一行",
+        "description": "Three writes to the same key end as one row"
+    },
+    "landing.trackB.task.B5.proves.1": {
+        "message": "配置 Sequence 列时，迟到的旧版本写入不会覆盖最新版本",
+        "description": "With a sequence column, a late (older) write does not overwrite the newest version"
+    },
+    "landing.trackB.task.B5.proves.2": {
+        "message": "将相同写入发送到没有 Sequence 列的第二张表，验证迟到写入会覆盖之前的数据",
+        "description": "Without one, the late write wins: the same writes into a second table without the sequence column"
+    },
+    "landing.trackB.task.B6.title": {
+        "message": "Stream Load",
+        "description": "Stream Load"
+    },
+    "landing.trackB.task.B6.time": {
+        "message": "30–60 分钟",
+        "description": "30–60 min"
+    },
+    "landing.trackB.task.B6.doc": {
+        "message": "Stream Load 导入",
+        "description": "Stream Load"
+    },
+    "landing.trackB.task.B6.proves.0": {
+        "message": "创建目标表，并通过 Shell 生成一个小型 CSV 文件",
+        "description": "A target table, and a small CSV file written from the shell"
+    },
+    "landing.trackB.task.B6.proves.1": {
+        "message": "通过 curl 和 HTTP 导入 CSV，核对 JSON 响应中的 Status 与 NumberLoadedRows",
+        "description": "The CSV loaded with curl over HTTP, and the JSON response checked (Status, NumberLoadedRows)"
+    },
+    "landing.trackB.task.B6.proves.2": {
+        "message": "执行查询，展示已导入的数据行",
+        "description": "A query that shows the loaded rows"
+    },
+    "landing.trackB.task.B6.proves.3": {
+        "message": "验证重复运行安全：使用相同 Label 再次发送导入时，不会重复加载，返回 Label Already Exists",
+        "description": "Safe to rerun: sending the same load again loads nothing (same label, Label Already Exists)"
     }
 }
