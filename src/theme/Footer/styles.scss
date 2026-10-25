@@ -44,13 +44,17 @@
         }
 
         .footer__col {
+            flex: 1 0 max-content;
+            width: auto;
+
             & + .footer__col {
-                margin-left: 4rem;
+                margin-left: 0;
             }
         }
 
         .left {
             display: flex;
+            min-width: 0;
 
             @media screen and (max-width: 996px) {
                 flex-direction: column;
@@ -63,6 +67,8 @@
             }
 
             .footer__links {
+                flex: 1;
+                gap: 1.5rem 2rem;
                 margin-left: 3.125rem;
                 margin-bottom: 0;
 
@@ -81,7 +87,7 @@
                     margin-top: 2rem;
 
                     .footer__col {
-                        flex: 1;
+                        flex: 1 0 max-content;
 
                         & + .footer__col {
                             margin-left: 0;

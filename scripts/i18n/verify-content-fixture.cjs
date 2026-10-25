@@ -8,6 +8,8 @@ const {hash} = require('./state.cjs');
 const cheerio = require('cheerio');
 const {createContentFixture} = require('./__tests__/fixtures/content-manifest.cjs');
 const {validateManifest, sourceSha, routeData} = require('./content-manifest.cjs');
+const {verifyContent} = require('./verify-global-language.cjs');
+const {verify: verifyStatic} = require('./verify-static.cjs');
 const root = path.resolve(__dirname, '../..');
 async function main() {
     const implementation = () => ({sha: sourceSha(root), trackedDiffHash: hash(execFileSync('git', ['diff', 'HEAD', '--binary'], {cwd: root, encoding: 'utf8'}))});
@@ -31,7 +33,12 @@ async function main() {
                 if (disabled) assert(!page.navigationRoutes.ru && !page.availableTranslations.includes('ru'));
                 const html = await fs.readFile(path.join(fixture, 'build', decodeURIComponent(page.route), 'index.html'), 'utf8');
                 const $ = cheerio.load(html);
-                if (page.kind === 'docs' && ['ja', 'ko', 'ru'].includes(locale)) assert.equal($('.theme-doc-markdown').attr('lang'), page.contentLocale);
+                if (page.kind === 'docs') assert.equal($('.theme-doc-markdown').attr('lang'), page.contentLocale);
+                if (page.kind === 'docs' && page.route.endsWith('/observability/dogstack/search/')) {
+                    assert.equal(page.indexable, true, page.route);
+                    assert(!($('meta[name="robots"]').attr('content') ?? '').includes('noindex'),
+                        `An indexable search-topic document must not inherit system search metadata: ${page.route}`);
+                }
                 if (page.contentId.startsWith('page:sample-')) {
                     const i = page.contentId.slice(-1);
                     assert($('main').text().includes(page.fallback || locale === 'en' ? `English sample ${i}` : `${locale} translated sample ${i}`));
@@ -39,6 +46,11 @@ async function main() {
                 if (page.kind === 'blog') {
                     const i = page.contentId.match(/01-0(\d)/)[1] - 1;
                     assert($('article').text().includes(page.fallback || locale === 'en' ? `English article ${i}` : `${locale} translated article ${i}`));
+                }
+                if (page.contentId === 'page:blocked') {
+                    assert.equal(page.state, locale === 'en' ? 'source' : 'blocked');
+                    assert($('main').text().includes('English blocked body'));
+                    assert(!$('main').text().includes('blocked target'));
                 }
                 checked++;
             }
@@ -52,10 +64,15 @@ async function main() {
                 reportKinds: [...new Set(manifest.reports.map(report => report.kind))]});
             // One page payload can be consumed independently of the full manifest.
             assert.equal(routeData(first).contentId, first.contentId);
+            if (['ja', 'ko', 'ru'].includes(locale)) verifyStatic({site: path.join(fixture, 'build'),
+                manifest: path.join(fixture, '.i18n-build/manifests', locale + '.json')});
         }
         if (disabled) await assert.rejects(fs.access(path.join(fixture, 'build/ru/index.html')));
+        await assert.rejects(fs.access(path.join(fixture, 'build/ja/orphan/index.html')));
+        await assert.rejects(fs.access(path.join(fixture, 'build/ja/blog/2026/01/10/orphan/index.html')));
+        const seo = verifyContent(path.join(fixture, 'build'), path.join(fixture, '.i18n-build/content-manifests'));
         assert.deepEqual(implementation(), initialImplementation, 'Implementation changed during fixture builds');
-        results.push({disabled, fixture, sourceSha: sourceSha(fixture), implementation: initialImplementation, manifests});
+        results.push({disabled, fixture, sourceSha: sourceSha(fixture), implementation: initialImplementation, manifests, seo});
     }
     await fs.writeFile(path.join(root, '.i18n-build/content-fixture-verification.json'), JSON.stringify(results, null, 2) + '\n');
     console.log(JSON.stringify(results, null, 2));

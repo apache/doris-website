@@ -2,7 +2,7 @@ import React from 'react';
 import {PageMetadata} from '@docusaurus/theme-common';
 import {useBlogPost} from '@docusaurus/plugin-content-blog/client';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {defaultLocalePath} from '@site/src/utils/localization';
+import {useContentRouteData} from '@site/src/utils/contentRoute';
 
 export default function BlogPostPageMetadata(): JSX.Element {
   const {assets, metadata} = useBlogPost();
@@ -12,6 +12,7 @@ export default function BlogPostPageMetadata(): JSX.Element {
     siteConfig: {url},
   } = useDocusaurusContext();
 
+  const page = useContentRouteData();
   const {keywords} = frontMatter;
   const image = assets.image ?? frontMatter.image;
   // The blog plugin falls back per file: a post without a translated
@@ -25,7 +26,8 @@ export default function BlogPostPageMetadata(): JSX.Element {
       description={description}
       keywords={keywords}
       image={image}>
-      {isDefaultLocalePost && <link rel="canonical" href={url + defaultLocalePath(metadata.permalink)} />}
+      {isDefaultLocalePost && <link rel="canonical" href={url + (page?.navigationRoutes[defaultLocale] ?? metadata.permalink)} />}
+      {(page && !page.indexable) && <meta name="robots" content="noindex, follow" />}
       <meta property="og:type" content="article" />
       <meta property="article:published_time" content={date} />
       {/* TODO double check those article meta array syntaxes, see https://ogp.me/#array */}

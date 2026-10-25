@@ -1,12 +1,23 @@
+import {translate} from '@docusaurus/Translate';
 import React, { JSX, useEffect, useMemo, useState } from 'react';
 import { LayoutNext } from '../home-next/LayoutNext';
 import { USER_STORIES_CATEGORIES } from '@site/src/constant/user.data';
 import USERS from '@site/src/constant/users.data.json';
 import UserItem from '../user-item/user-item';
+import {userStoryId} from './user-story-localization';
 import './UsersNext.scss';
 
 const ALL_TEXT = 'All';
 const PAGE_SIZE = 32;
+const CATEGORY_LABELS: Record<string, string> = {
+    All: translate({id: 'landing.users.category.all', message: 'All'}),
+    Finance: translate({id: 'landing.users.category.finance', message: 'Finance'}),
+    Technology: translate({id: 'landing.users.category.technology', message: 'Technology'}),
+    'Media & Entertainment': translate({id: 'landing.users.category.media', message: 'Media & Entertainment'}),
+    'Telecom & Manufacturing': translate({id: 'landing.users.category.telecom', message: 'Telecom & Manufacturing'}),
+    'FMCG & Logistics': translate({id: 'landing.users.category.logistics', message: 'FMCG & Logistics'}),
+    'Commercial Distribution': translate({id: 'landing.users.category.distribution', message: 'Commercial Distribution'}),
+};
 
 function useRevealObserver(): void {
     useEffect(() => {
@@ -63,18 +74,18 @@ function UsersHero(): JSX.Element {
             <div className="users-next__container">
                 <div className="users-next__hero-stack">
                     <h1 className="users-next__hero-title" data-reveal data-reveal-delay="1">
-                        Start real-time journey
+                        {translate({id: "landing.UsersNext.001", message: "Start real-time journey"})}
                         <br />
-                        with{' '}
+                        {translate({id: "landing.UsersNext.002", message: "with"})}{' '}
                         <span className="users-next__accent">
-                            innovators
+                            {translate({id: "landing.UsersNext.003", message: "innovators"})}
                             <span className="users-next__bolt-inline">
                                 <BoltIcon size="0.85em" />
                             </span>
                         </span>
                     </h1>
                     <p className="users-next__hero-sub" data-reveal data-reveal-delay="2">
-                        Over 10,000+ global leaders and enterprises are powered by Apache Doris.
+                        {translate({id: "landing.UsersNext.004", message: "Over 10,000+ global leaders and enterprises are powered by Apache Doris."})}
                     </p>
                     <div className="users-next__hero-cta" data-reveal data-reveal-delay="3">
                         <a
@@ -83,7 +94,7 @@ function UsersHero(): JSX.Element {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            Share your story
+                            {translate({id: "landing.UsersNext.005", message: "Share your story"})}
                         </a>
                     </div>
                 </div>
@@ -121,7 +132,7 @@ function UsersGridSection(): JSX.Element {
                                 onClick={() => changeCategory(item)}
                                 className={`users-next__cat ${active === item ? 'is-active' : ''}`}
                             >
-                                {item}
+                                {CATEGORY_LABELS[item] ?? item}
                             </button>
                         </li>
                     ))}
@@ -129,7 +140,7 @@ function UsersGridSection(): JSX.Element {
 
                 <ul className="users-next__grid" data-reveal data-reveal-delay="1">
                     {users.slice(0, currentSize).map((user) => (
-                        <UserItem key={user.name} {...user} />
+                        <UserItem key={user.name} {...user} story={user.story ? translate({id: userStoryId(user.name), message: user.story}) : user.story} />
                     ))}
                 </ul>
 
@@ -142,7 +153,7 @@ function UsersGridSection(): JSX.Element {
                             }
                             className="users-next__more"
                         >
-                            <span>View more</span>
+                            <span>{translate({id: "landing.UsersNext.006", message: "View more"})}</span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="17"
@@ -188,8 +199,8 @@ function UsersContent(): JSX.Element {
 export default function UsersNext(): JSX.Element {
     return (
         <LayoutNext
-            title="Apache Doris - User Stories | Start real-time journey with innovators"
-            description="Over 4000 global leaders and enterprises are powered by Apache Doris, using OLAP DBMS to drive real-world applications, from lakehouse and ad-hoc analytics to user behavior analytics and more."
+            title={translate({id: "landing.UsersNext.007", message: "Apache Doris - User Stories | Start real-time journey with innovators"})}
+            description={translate({id: "landing.UsersNext.008", message: "Over 10,000 global leaders and enterprises are powered by Apache Doris, using OLAP DBMS to drive real-world applications, from lakehouse and ad-hoc analytics to user behavior analytics and more."})}
         >
             <UsersContent />
         </LayoutNext>

@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import React, { CSSProperties, JSX } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { ProfileFlowNode } from './profile-analysis.dag';
@@ -29,30 +30,30 @@ export function ProfileDagNode({ data }: NodeProps<ProfileFlowNode>): JSX.Elemen
         <article
             className={`profile-dag-node${node.analysis?.isBottleneck ? ' profile-dag-node--bottleneck' : ''}`}
             style={style}
-            aria-label={`${node.label} operator`}
+            aria-label={`${node.label}${translate({id: "landing.ProfileDagNode.001", message: " operator"})}`}
         >
             <Handle className="profile-dag-node__handle" type="source" position={Position.Top} isConnectable={false} />
             <Handle className="profile-dag-node__handle" type="target" position={Position.Bottom} isConnectable={false} />
             <div className="profile-dag-node__heading">
                 <strong title={node.operatorType}>{node.label}</strong>
-                {node.analysis?.isBottleneck && <span className="profile-dag-node__bottleneck">Bottleneck</span>}
+                {node.analysis?.isBottleneck && <span className="profile-dag-node__bottleneck">{translate({id: "landing.ProfileDagNode.002", message: "Bottleneck"})}</span>}
             </div>
             <div className="profile-dag-node__location">
                 <span>{node.fragmentId.replace('fragment:', 'Fragment ')}</span>
                 <span>{pipelineLabel}</span>
-                {instanceNum !== null && <span>{instanceNum} instances</span>}
+                {instanceNum !== null && <span>{instanceNum} {translate({id: "landing.ProfileDagNode.003", message: "instances"})}</span>}
             </div>
             <dl className="profile-dag-node__timing">
                 <div>
-                    <dt>Exec max</dt>
+                    <dt>{translate({id: "landing.ProfileDagNode.004", message: "Exec max"})}</dt>
                     <dd>{formatDurationNs(execTime?.maxNs ?? null)}</dd>
                 </div>
                 <div>
-                    <dt>Exec avg</dt>
+                    <dt>{translate({id: "landing.ProfileDagNode.005", message: "Exec avg"})}</dt>
                     <dd>{formatDurationNs(execTime?.avgNs ?? null)}</dd>
                 </div>
                 <div>
-                    <dt>Wait max</dt>
+                    <dt>{translate({id: "landing.ProfileDagNode.006", message: "Wait max"})}</dt>
                     <dd>{formatDurationNs(waitTime?.maxNs ?? null)}</dd>
                 </div>
             </dl>

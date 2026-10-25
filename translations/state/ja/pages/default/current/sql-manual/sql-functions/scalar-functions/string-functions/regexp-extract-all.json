@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "25efa1ee2c69d67c97d084ae7e125307c78c5b2e1aa9101d76ab48657bfa8fd4",
-    "sourceTechnicalHash": "8dccbaf372885b48e9ea7d8f3cd5daa7e0d13347b7af283ad18aca0676f27cfa",
-    "targetHash": "be205389190d91fa4acd843475b9d4d80d21116d5dd760606ed15b114373be17",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "5ac0f9ed26e57fd97c20b38a3e98125965f67221733cc3fb391add62b3808fcf",
+    "sourceTechnicalHash": "341eec29de037c94688f5dae274e579667de257af14e78e26f44393ef1f162ac",
+    "targetHash": "81b1d4f2fc07cd51c0c2ea87575371edd9fb3cdbbab700555438897f842db9ba",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T19:01:49.809Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:43:34.088Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5ac0f9ed26e57fd97c20b38a3e98125965f67221733cc3fb391add62b3808fcf",
+      "targetHash": "81b1d4f2fc07cd51c0c2ea87575371edd9fb3cdbbab700555438897f842db9ba",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 30: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"(?-s)\"]; received [\"inlineCode\",null,null,\"-\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"8\",\"8\",\"8\"]\nprotected node 5: expected [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"enable_extended_regex\"]; received [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"8\",\"8\",\"8\"]\nprotected node 5: expected [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"enable_extended_regex\"]; received [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 30: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]\nprotected node 31: expected [\"inlineCode\",null,null,\"(?-s)\"]; received [\"inlineCode\",null,null,\"-\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

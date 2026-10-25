@@ -1,193 +1,142 @@
-// NavbarNext — dark green theme, matches the hero section background.
-
 @use '../shared/typography' as type;
 
 .navbar-next {
     --nb-green-dark: var(--brand-primary-dark);
     --nb-green-deep: var(--brand-primary-darker);
-    --nb-green-glow: var(--brand-primary-glow);
     --nb-cream-light: var(--brand-cream-light);
     --nb-yellow: var(--brand-accent);
-    --nb-ink: var(--brand-ink);
-    --nb-summit-cyan: #00F0FF;
-
     position: sticky;
     top: var(--home-next-banner-height, 0px);
-    // Above .docs-search-section (z-index 200) so the navbar's hover
-    // dropdowns (which extend below the navbar bar) stay on top of the
-    // sticky docs search strip.
     z-index: 300;
     width: 100%;
     background: var(--nb-green-dark);
-    border-bottom: 1px solid rgba(245, 239, 228, 0.08);
+    border-bottom: 1px solid color-mix(in srgb, var(--nb-cream-light) 12%, transparent);
 
+    &.navbar {
+        display: block;
+        height: auto;
+        min-height: 64px;
+        padding: 0;
+        background: var(--nb-green-dark);
+        box-shadow: none;
+    }
     &__inner {
         box-sizing: border-box;
         width: 100%;
         max-width: 1600px;
         margin: 0 auto;
-        padding: 0 56px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        gap: 32px;
-    }
-
-    // Override the global Docusaurus navbar styles we inherit on Dev docs.
-    &.navbar {
-        display: block;
-        height: 64px;
+        padding: 10px 32px;
         min-height: 64px;
-        padding: 0;
-        border-bottom: 1px solid rgba(245, 239, 228, 0.08);
-        background-color: var(--nb-green-dark);
-        box-shadow: none;
-    }
-
-    // ── Logo ───────────────────────────────────────────────────────────────
-
-	    &__logo {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
-        // Same 100px slot the old <img> box occupied; the cropped inline mark
-        // (see DorisLogoHorizontal) is ~75px wide and centres inside it.
-        width: 100px;
-        text-decoration: none !important;
-        flex-shrink: 0;
-        color: var(--nb-cream-light) !important;
-
-	        span {
-	            @include type.mono-text(17px, 700, 1.2, 0.01em);
-	            color: var(--nb-cream-light);
-	        }
-
-        &:hover span {
-            color: var(--nb-cream-light);
-            text-decoration: none;
-        }
+        gap: 8px 24px;
     }
-
-    // ── Nav items ──────────────────────────────────────────────────────────
-
+    &__logo {
+        display: inline-flex;
+        width: 90px;
+        flex-shrink: 0;
+        align-items: center;
+        color: var(--nb-cream-light) !important;
+        text-decoration: none !important;
+    }
+    &__logo-mark {
+        display: block;
+        width: 100%;
+        height: 25px;
+    }
     &__nav {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 4px;
-        flex: 1;
+        gap: 2px;
+        flex: 1 0 auto;
+        width: max-content;
+        max-width: calc(100% - 114px);
+        min-width: 0;
     }
-
     &__item {
         position: relative;
-
-        &:hover .navbar-next__dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        &:hover .navbar-next__trigger {
-            color: var(--nb-cream-light);
-        }
     }
-
-	    &__trigger {
+    &__item:nth-last-child(-n + 4) &__dropdown {
+        right: 0;
+        left: auto;
+    }
+    &__trigger,
+    &__summit {
         display: flex;
         align-items: center;
-        gap: 0.3rem;
-        padding: 0.5rem 0.75rem;
-        border: none;
-        background: none;
-        cursor: pointer;
-	        @include type.mono-text(15px, 600, 1.2, 0.02em);
-	        color: rgba(245, 239, 228, 0.78);
+        gap: 5px;
+        padding: 10px 8px;
+        border: 0;
         border-radius: 4px;
-        transition: color 0.15s, background 0.15s;
-        white-space: nowrap;
-
-        &:hover {
-            background: rgba(245, 239, 228, 0.08);
-            color: var(--nb-cream-light);
-        }
-    }
-
-    &__chevron {
-        width: 14px;
-        height: 14px;
-        transition: transform 0.15s;
-        color: rgba(245, 239, 228, 0.5);
-        flex-shrink: 0;
-    }
-
-    &__item:hover &__chevron {
-        transform: rotate(180deg);
+        background: transparent;
         color: var(--nb-cream-light);
+        text-decoration: none !important;
+        cursor: pointer;
+        white-space: nowrap;
+        @include type.mono-text(13px, 600, 1.2, 0.01em);
     }
-
-    // ── Dropdown ───────────────────────────────────────────────────────────
-
+    &__trigger:hover,
+    &__summit:hover,
+    &__trigger[aria-expanded='true'] {
+        color: var(--nb-cream-light);
+        background: color-mix(in srgb, var(--nb-cream-light) 10%, transparent);
+    }
+    &__chevron {
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+        transition: transform 0.15s;
+    }
+    &__trigger[aria-expanded='true'] &__chevron {
+        transform: rotate(180deg);
+    }
     &__dropdown {
         position: absolute;
-        top: calc(100% + 8px);
+        top: 100%;
         left: 0;
-        min-width: 200px;
-        background: var(--nb-green-deep);
-        border: 1px solid rgba(245, 239, 228, 0.12);
-        border-radius: 8px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+        min-width: 220px;
+        max-height: calc(100dvh - var(--navbar-next-height, 64px) - var(--home-next-banner-height, 0px) - 16px);
+        overflow-y: auto;
+        max-width: min(340px, calc(100vw - 24px));
         padding: 6px;
+        border: 1px solid color-mix(in srgb, var(--nb-cream-light) 18%, transparent);
+        border-radius: 8px;
+        background: var(--nb-green-deep);
+        box-shadow: 0 16px 40px rgb(var(--brand-ink-rgb) / 24%);
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-6px);
-        transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+        transform: translateY(-4px);
         pointer-events: none;
-
-        // Invisible bridge over the 8px gap
-        &::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 0;
-            right: 0;
-            height: 8px;
-        }
-
-        // Arrow notch
-        &::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: 18px;
-            width: 9px;
-            height: 9px;
-            background: var(--nb-green-deep);
-            border-left: 1px solid rgba(245, 239, 228, 0.12);
-            border-top: 1px solid rgba(245, 239, 228, 0.12);
-            transform: rotate(45deg);
-        }
+        transition:
+            opacity 0.15s,
+            transform 0.15s,
+            visibility 0.15s;
     }
-
-	    &__dropdown-link {
-        display: block;
-        padding: 0.5rem 0.875rem;
+    &__dropdown--open {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: auto;
+    }
+    &__dropdown-link {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding: 10px 12px;
         border-radius: 4px;
-	        @include type.mono-text(type.$label, 500, 1.2, 0.02em);
-	        color: rgba(245, 239, 228, 0.82);
+        color: var(--nb-cream-light);
         text-decoration: none !important;
-        transition: background 0.12s, color 0.12s;
-        white-space: nowrap;
-
-        &:hover {
-            background: rgba(245, 239, 228, 0.08);
-            color: var(--nb-cream-light);
-            text-decoration: none !important;
-        }
+        overflow-wrap: anywhere;
+        @include type.mono-text(13px, 500, 1.4, 0.01em);
     }
-
-    // ── Right actions ──────────────────────────────────────────────────────
-
+    &__dropdown-link:hover,
+    &__mobile-link:hover {
+        color: var(--nb-cream-light);
+        background: color-mix(in srgb, var(--nb-cream-light) 10%, transparent);
+    }
     &__actions {
         display: flex;
         align-items: center;
@@ -195,570 +144,227 @@
         flex-shrink: 0;
         margin-left: auto;
     }
-
-    &__locale-dropdown {
-        &.navbar__link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.2rem;
-            box-sizing: border-box;
-            height: 32px;
-            margin-left: 0;
-            padding: 0 10px;
-            border: 1px solid rgba(245, 239, 228, 0.22);
-            border-radius: 4px;
-            background: rgba(245, 239, 228, 0.06);
-            color: var(--nb-cream-light) !important;
-            text-decoration: none !important;
-            @include type.mono-text(12px, 700, 1.2, 0.02em);
-            transition: border-color 0.15s, background 0.15s, transform 0.15s;
-            white-space: nowrap;
-
-            &:hover {
-                border-color: rgba(245, 239, 228, 0.45);
-                background: rgba(245, 239, 228, 0.1);
-                transform: translateY(-1px);
-                text-decoration: none !important;
-            }
-        }
-
-        .navbar-next__locale-icon {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
-            color: var(--nb-cream-light);
-        }
-    }
-
     &__ask-ai {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
-        box-sizing: border-box;
-        height: 32px;
-        padding: 0 12px;
-        border: 1px solid rgba(245, 239, 228, 0.22);
-        border-radius: 4px;
+        height: 36px;
+        padding: 0 10px;
+        border: 1px solid color-mix(in srgb, var(--nb-cream-light) 24%, transparent);
+        border-radius: 5px;
         background: transparent;
         color: var(--nb-cream-light);
         cursor: pointer;
-        @include type.mono-text(12px, 600, 1.2, 0.02em);
-        transition: border-color 0.15s, background 0.15s, transform 0.15s;
         white-space: nowrap;
-
-        svg {
-            flex-shrink: 0;
-            color: var(--nb-yellow);
-
-            path {
-                fill: currentColor;
-            }
-        }
-
-        // The robot glyph is stroke-based; keep its paths unfilled.
-        .navbar-next__ask-ai-icon--compact path {
-            fill: none;
-        }
-
-        &:hover {
-            border-color: rgba(245, 239, 228, 0.45);
-            background: rgba(245, 239, 228, 0.06);
-            transform: translateY(-1px);
-        }
-
-        &:focus-visible {
-            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
-            outline-offset: 2px;
-        }
+        @include type.mono-text(12px, 700, 1, 0.01em);
     }
-
-    &__ask-ai-icon--full {
+    &__ask-ai:hover {
+        background: color-mix(in srgb, var(--nb-cream-light) 9%, transparent);
+    }
+    &__ask-ai[aria-disabled='true'] {
+        opacity: 0.65;
+    }
+    &__ask-ai-icon {
         display: inline-flex;
         align-items: center;
     }
-
+    &__ask-ai-icon svg {
+        width: 18px;
+        height: 18px;
+    }
     &__ask-ai-icon--compact,
     &__ask-ai-label--compact {
         display: none;
     }
-
-    &__summit {
-        position: relative;
-        isolation: isolate;
+    &__github {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        box-sizing: border-box;
-        height: 32px;
-        overflow: hidden;
-        padding: 0 14px;
-        border: 1px solid var(--nb-yellow);
-        border-radius: 4px;
-        background: var(--nb-yellow);
-        color: var(--nb-ink) !important;
+        gap: 6px;
+        min-height: 36px;
+        padding: 0 10px;
+        border: 1px solid color-mix(in srgb, var(--nb-cream-light) 24%, transparent);
+        border-radius: 5px;
+        color: var(--nb-cream-light);
         text-decoration: none !important;
         white-space: nowrap;
-        @include type.mono-text(12px, 700, 1.2, 0.02em);
-        animation: navbar-next-summit-breathe 2.8s ease-in-out infinite;
-        transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s, color 0.2s, transform 0.2s;
-
-        span {
-            position: relative;
-            z-index: 1;
-        }
-
-        &::after {
-            content: '';
-            position: absolute;
-            z-index: 0;
-            top: -2px;
-            bottom: -2px;
-            left: -45%;
-            width: 32%;
-            transform: skewX(-18deg);
-            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.62), transparent);
-            animation: navbar-next-summit-sweep 3.6s ease-in-out infinite;
-            will-change: transform;
-            pointer-events: none;
-        }
-
-        &:hover {
-            border-color: var(--brand-accent-bright);
-            background: var(--brand-accent-bright);
-            color: var(--nb-ink) !important;
-            text-decoration: none !important;
-            transform: translateY(-1px);
-        }
-
-        &:focus-visible {
-            outline: 2px solid rgb(var(--brand-primary-rgb) / 85%);
-            outline-offset: 2px;
-        }
+        @include type.mono-text(12px, 700, 1, 0.01em);
     }
-
-    &__star-link {
+    &__github:hover {
+        color: var(--nb-cream-light);
+        background: color-mix(in srgb, var(--nb-cream-light) 9%, transparent);
+    }
+    &.navbar &__github svg {
+        display: block;
+    }
+    &__github > svg {
+        color: var(--nb-yellow);
+        flex-shrink: 0;
+    }
+    &__github-count {
+        font-variant-numeric: tabular-nums;
+    }
+    &__github-mark {
+        display: inline-flex;
+        color: var(--nb-yellow);
+    }
+    &__github-mark svg {
+        width: 16px;
+        height: 16px;
+    }
+    &__cta {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        box-sizing: border-box;
-        height: 32px;
-        padding: 0 12px 0 10px;
-        border: 1px solid rgba(245, 239, 228, 0.22);
-        border-radius: 4px;
-	        @include type.mono-text(12px, 500, 1.2, 0.02em);
-	        color: var(--nb-cream-light) !important;
-        text-decoration: none !important;
-        transition: border-color 0.15s, background 0.15s;
-
-        &:hover {
-            border-color: rgba(245, 239, 228, 0.45);
-            background: rgba(245, 239, 228, 0.06);
-            text-decoration: none !important;
-        }
-
-        svg {
-            color: var(--nb-yellow);
-            flex-shrink: 0;
-        }
-    }
-
-    // Both nested under .navbar-next on purpose: the legacy
-    // src/scss/components/navbar.scss ships `.navbar a svg { display: none }`,
-    // which these need to out-rank.
-    .navbar-next__star-link svg {
-        display: inline-block;
-    }
-
-    .navbar-next__logo-mark {
-        display: block;
-        width: auto;
-        height: 26px;
-    }
-
-    &__star-divider {
-        width: 1px;
-        height: 14px;
-        background: rgba(245, 239, 228, 0.22);
-    }
-
-    &__star-count {
-        font-weight: 700;
-    }
-
-	    &__cta {
-        padding: 0.45rem 1.1rem;
-        background: var(--nb-yellow);
-        color: var(--nb-ink) !important;
-        border: none;
-        border-radius: 4px;
-	        @include type.mono-text(type.$label, 700, 1.2, 0.02em);
-	        cursor: pointer;
-        text-decoration: none !important;
-        transition: background 0.15s, transform 0.15s;
-        white-space: nowrap;
-
-        &:hover {
-            background: var(--brand-accent-bright);
-            color: var(--nb-ink) !important;
-            text-decoration: none !important;
-            transform: translateY(-1px);
-        }
-    }
-
-    &__menu-button {
-        display: none;
-        align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
-        flex: 0 0 40px;
-        border: 1px solid rgba(245, 239, 228, 0.22);
-        border-radius: 4px;
-        background: rgba(245, 239, 228, 0.06);
-        color: var(--nb-cream-light);
-        cursor: pointer;
-        appearance: none;
-        transition: border-color 0.15s, background 0.15s;
-
-        &:hover {
-            border-color: rgba(245, 239, 228, 0.45);
-            background: rgba(245, 239, 228, 0.1);
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--nb-yellow);
-            outline-offset: 3px;
-        }
+        min-height: 36px;
+        padding: 0 16px;
+        border-radius: 5px;
+        background: var(--nb-yellow);
+        color: var(--brand-ink) !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        @include type.mono-text(12px, 800, 1.2, 0.025em);
     }
-
-    &__mobile-panel {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 99;
-        display: none;
-        max-height: calc(100vh - 64px);
-        overflow: auto;
-        padding: 12px 24px 20px;
-        border-top: 1px solid rgba(245, 239, 228, 0.1);
-        border-bottom: 1px solid rgba(245, 239, 228, 0.16);
-        background: var(--nb-green-dark);
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+    &__cta:hover {
+        filter: brightness(1.04);
     }
-
-    &__mobile-sections {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        max-width: 720px;
-        margin: 0 auto;
-    }
-
-    &__mobile-section {
-        border-bottom: 1px solid rgba(245, 239, 228, 0.1);
-    }
-
-	    &__mobile-trigger {
-        display: flex;
-        width: 100%;
-        min-height: 46px;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        border: 0;
-        background: transparent;
-        color: var(--nb-cream-light);
-        cursor: pointer;
-	        @include type.mono-text(type.$label, 700, 1.2, 0.08em, uppercase);
-	        text-align: left;
-	        appearance: none;
-
-        &[aria-expanded='true'] .navbar-next__chevron {
-            transform: rotate(180deg);
-            color: var(--nb-yellow);
-        }
-    }
-
-    &__mobile-links {
-        display: grid;
-        gap: 4px;
-        padding: 0 0 12px;
-
-        // `display: grid` would otherwise override the UA rule for the
-        // `hidden` attribute and keep every collapsed section expanded.
-        &[hidden] {
-            display: none;
-        }
-    }
-
-	    &__mobile-link {
-        display: block;
-        padding: 10px 12px;
-        border-radius: 4px;
-        color: rgba(245, 239, 228, 0.78);
-	        @include type.mono-text(type.$label, 500, 1.2, 0.02em);
-	        text-decoration: none !important;
-
-        &:hover {
-            background: rgba(245, 239, 228, 0.08);
-            color: var(--nb-cream-light);
-            text-decoration: none !important;
-        }
-    }
-
-    &__mobile-actions {
-        display: none;
-        max-width: 720px;
-        margin: 16px auto 0;
-        gap: 12px;
+    button:focus-visible,
+    a:focus-visible {
+        outline: 2px solid var(--nb-yellow);
+        outline-offset: 3px;
     }
 }
 
-// Keep every primary and utility action visible on one row across common
-// desktop widths. Type and spacing scale down only to a readable minimum.
-@media (min-width: 1181px) and (max-width: 1679px) {
-    .navbar-next {
-        &__inner {
-            max-width: none;
-            gap: clamp(12px, 1.5vw, 24px);
-            padding: 0 clamp(16px, 2vw, 28px);
-        }
-
-        &__logo img {
-            width: clamp(86px, 6.5vw, 100px);
-        }
-
-        &__nav {
-            gap: 2px;
-        }
-
-        &__actions {
-            gap: 4px;
-        }
-
-        &__trigger {
-            padding-inline: clamp(0.35rem, 0.55vw, 0.65rem);
-            font-size: clamp(12px, calc(0.7vw + 3px), 14px);
-        }
-
-        &__summit,
-        &__ask-ai,
-        &__star-link,
-        &__cta {
-            font-size: clamp(11px, calc(0.3vw + 7px), 12px);
-        }
-
-        &__summit,
-        &__ask-ai {
-            padding-inline: clamp(8px, 0.8vw, 12px);
-        }
-
-        &__star-link {
-            gap: clamp(5px, 0.5vw, 8px);
-            padding-inline: clamp(7px, 0.7vw, 10px);
-        }
-
-        &__cta {
-            padding-inline: clamp(0.7rem, 1vw, 1.1rem);
-        }
-    }
-}
-
-@media (max-width: 1180px) {
-    .navbar-next {
-        &__inner {
-            gap: 18px;
-            padding: 0 32px;
-        }
-
-        &__trigger {
-            padding: 0.5rem 0.55rem;
-            font-size: 12px;
-        }
-
-        // The extra Summit action needs more horizontal room than the old
-        // action group, so switch to the menu before controls can collide.
-        &__nav {
-            display: none;
-        }
-
-        &__menu-button {
-            display: inline-flex;
-        }
-
-        &--mobile-open &__mobile-panel {
-            display: block;
-        }
-    }
-}
-
-@media (max-width: 1020px) {
-    .navbar-next {
-        &__inner {
-            padding: 0 24px;
-            gap: 14px;
-        }
-
-    }
-}
-
-// Phones: one 56px row — [menu] [logo] … [★ 15.9k gh] [AI Ask] [DOWNLOAD].
-// The Summit banner leaves the bar (it lives in the menu panel instead), the
-// star pill drops the word "Star", and Ask Me becomes a robot icon + "Ask".
 @media (max-width: 768px) {
     .navbar-next {
-        &.navbar {
-            height: auto;
-            min-height: 56px;
-        }
-
-        &__inner {
-            // Wrap only as a safety net for unexpectedly wide content (custom
-            // fonts, huge star counts); the sizes below fit 360px in one row.
-            flex-wrap: wrap;
-            align-items: center;
-            height: auto;
-            min-height: 56px;
-            padding: 11px 12px;
-            column-gap: 6px;
-            row-gap: 8px;
-        }
-
-        // Expose the action children to the navbar row so they can be ordered
-        // individually.
-        &__actions {
-            display: contents;
-        }
-
-        &__menu-button {
-            order: 0;
-            width: 34px;
-            height: 34px;
-            flex: 0 0 34px;
-        }
-
-        &__logo {
-            order: 1;
-            width: auto;
-            height: 34px;
-        }
-
-        // Nested for specificity, see the desktop rule.
-        .navbar-next__logo-mark {
-            height: 22px;
-        }
-
-        &__star-link {
-            order: 2;
-            margin-left: auto;
-            gap: 6px;
-            padding: 0 7px 0 6px;
-            font-size: 11px;
-        }
-
-        &__star-text,
-        &__star-divider {
-            display: none;
-        }
-
         &__ask-ai {
-            order: 3;
-            gap: 4px;
-            padding: 0 8px;
-            font-size: 11px;
+            box-sizing: border-box;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            border-color: transparent;
         }
-
         &__ask-ai-icon--full,
         &__ask-ai-label--full {
             display: none;
         }
-
         &__ask-ai-icon--compact {
-            display: inline-block;
+            display: block;
+            width: 18px;
+            height: 18px;
         }
-
         &__ask-ai-label--compact {
-            display: inline;
+            display: block;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
         }
-
-        &__cta {
-            order: 4;
-            display: inline-flex;
-            align-items: center;
-            box-sizing: border-box;
-            height: 32px;
-            padding: 0 8px;
-            font-size: 11px;
-        }
-
-        &__actions > &__summit {
+        &__github-label,
+        &__github-mark {
             display: none;
         }
-
-        &__mobile-panel {
-            max-height: calc(100vh - var(--navbar-next-height, 56px));
-        }
-
-        &__mobile-actions {
-            display: grid;
-            grid-template-columns: 1fr;
-        }
-
-        &__mobile-actions &__summit {
-            width: 100%;
-            height: 40px;
+        &__github {
+            padding-inline: 8px;
+            gap: 5px;
         }
     }
 }
 
-// Small phones: tighten the side padding (≤400px) and, at 360px, drop the
-// GitHub mark from the star pill so the row keeps a few px of slack — the
-// star and count still read as "GitHub stars".
-@media (max-width: 400px) {
-    .navbar-next__inner {
-        padding-inline: 10px;
+@media (max-width: 600px) {
+    .navbar-next {
+        &__inner {
+            position: relative;
+            gap: 6px 8px;
+            padding: 10px 10px 6px;
+        }
+        &__logo {
+            width: 70px;
+        }
+        &__logo-mark {
+            height: 21px;
+        }
+        &__actions {
+            gap: 6px;
+        }
+        &__nav {
+            gap: 0;
+            max-width: calc(100% - 78px);
+        }
+        &__item {
+            position: static;
+        }
+        &__trigger,
+        &__summit {
+            gap: 3px;
+            min-height: 32px;
+            padding: 8px 6px;
+            font-size: 11px;
+        }
+        &__chevron {
+            width: 10px;
+            height: 10px;
+        }
+        &__dropdown,
+        &__item:nth-last-child(-n + 4) &__dropdown {
+            left: 50%;
+            right: auto;
+            width: 560px;
+            min-width: 0;
+            max-width: calc(100% - 20px);
+            transform: translate(-50%, -4px);
+        }
+        &__dropdown--open,
+        &__item:nth-last-child(-n + 4) &__dropdown--open {
+            transform: translate(-50%, 0);
+        }
+        &__github {
+            padding-inline: 6px;
+            font-size: 11px;
+        }
+        &__cta {
+            padding-inline: 9px;
+            font-size: 11px;
+        }
     }
 }
 
 @media (max-width: 360px) {
-    .navbar-next__star-link > svg:last-child {
-        display: none;
-    }
-}
-
-@keyframes navbar-next-summit-breathe {
-    0%,
-    100% {
-        scale: 1;
-    }
-
-    50% {
-        scale: 1.018;
-    }
-}
-
-@keyframes navbar-next-summit-sweep {
-    0%,
-    45% {
-        transform: translateX(0) skewX(-18deg);
-    }
-
-    75%,
-    100% {
-        transform: translateX(520%) skewX(-18deg);
+    .navbar-next {
+        &__inner {
+            column-gap: 6px;
+            padding-inline: 8px;
+        }
+        &__logo {
+            width: 62px;
+        }
+        &__nav {
+            max-width: calc(100% - 68px);
+        }
+        &__actions {
+            gap: 4px;
+        }
+        &__github {
+            gap: 4px;
+            padding-inline: 5px;
+        }
+        &__cta {
+            padding-inline: 7px;
+        }
+        &__trigger,
+        &__summit {
+            padding-inline: 5px;
+            font-size: 10px;
+        }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .navbar-next__summit,
-    .navbar-next__summit::after {
-        animation: none;
-    }
-
-    .navbar-next__summit:hover {
-        transform: none;
+    .navbar-next__dropdown,
+    .navbar-next__chevron {
+        transition: none;
     }
 }

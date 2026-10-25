@@ -33,11 +33,10 @@ test('PR build scope separates content locales, shared inputs, and retired versi
     assert.deepEqual(buildScope(['.github/workflows/manual-deploy-website.yml'],versions).locales,['en','zh-CN','ja','ko','ru']);
     assert.equal(buildScope(['versions.json'],versions).need_full_build,true);
     assert.deepEqual(buildScope(['versioned_docs/version-1.2/a.md'],versions).retired,['1.2']);
-    // Only a managed locale renders dictionary changes, so only its dictionary
-    // change needs a build.
+    // Shared UI renders code dictionaries in every configured locale.
     assert.equal(buildScope(['i18n/ja/code.json'],versions,managed).skip_build,false);
-    assert.equal(buildScope(['i18n/ja/code.json'],versions).skip_build,true);
-    assert.equal(buildScope(['i18n/zh-CN/code.json'],versions,managed).skip_build,true);
+    assert.equal(buildScope(['i18n/ja/code.json'],versions).skip_build,false);
+    assert.equal(buildScope(['i18n/zh-CN/code.json'],versions,managed).skip_build,false);
     assert.deepEqual(buildScope(['translations/config.json'],versions,managed).locales,['ja']);
     assert.throws(() => buildScope(['i18n/fr/docusaurus-plugin-content-docs/current/a.md'],versions),/Unconfigured/);
     assert.throws(() => buildScope(['translations/state/fr/docs.json'],versions,managed),/Unconfigured/);

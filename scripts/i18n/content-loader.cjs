@@ -26,6 +26,9 @@ async function localizedSource({root, locale, file, source, dependency = () => {
     return target;
 }
 module.exports = function contentLoader(source) {
+    // Manual page bodies have their own publication decision. Unqueried docs
+    // imports keep the existing automatic state and ownership rules.
+    if (new URLSearchParams((this.resourceQuery ?? '').slice(1)).has('doris-body')) return source;
     const {root, locale} = this.getOptions();
     return localizedSource({root, locale, file: this.resourcePath, source,
         dependency: file => fs.existsSync(file) ? this.addDependency(file) : this.addMissingDependency(file)});

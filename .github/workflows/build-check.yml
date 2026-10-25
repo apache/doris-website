@@ -20,6 +20,14 @@ name: Build Check
 
 on:
     pull_request:
+        types: [opened, synchronize, reopened, labeled, unlabeled]
+    workflow_dispatch:
+        inputs:
+            validation:
+                description: Validation scope
+                type: choice
+                options: [full, sample]
+                default: full
 
 concurrency:
     group: build-check-${{ github.event.pull_request.number || github.ref }}
@@ -32,6 +40,8 @@ jobs:
     build-and-deploy:
         name: Build Check
         runs-on: ubuntu-22.04
+        env:
+            BASE_REF: ${{ github.base_ref || github.event.repository.default_branch }}
         steps:
             - name: Checkout PR merge commit (${{ github.sha }})
               uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -62,7 +72,7 @@ jobs:
                 git config --global user.name "github-action-test"
           
                 # Get the base commit of the PR
-                BASE_COMMIT=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                BASE_COMMIT=$(git merge-base "origin/$BASE_REF" HEAD)
     
                 # Run the Python script with the base commit range
                 python check_move.py "$BASE_COMMIT"
@@ -71,72 +81,68 @@ jobs:
             - name: Run Node.js dead link checker
               env:
                 PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+                CI_SHA: ${{ github.sha }}
               run: |
                 # git show on a clean merge omits the PR's changed files.
-                node ./scripts/check_move.js "$PR_HEAD_SHA"
+                node ./scripts/check_move.js "${PR_HEAD_SHA:-$CI_SHA}"
         
             - name: Detect changed doc versions and locales
               id: detect
               run: |
-                BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                BASE_SHA=$(git merge-base "origin/$BASE_REF" HEAD)
                 node scripts/i18n/check-configuration.cjs --all
                 node scripts/i18n/build-scope.cjs "$BASE_SHA"
+                node scripts/i18n/ci-plan.cjs "$BASE_SHA"
 
             - name: Prepare swap for the localized build
-              if: steps.detect.outputs.enabled_locales != '' && steps.detect.outputs.skip_build != 'true'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample'
               run: |
                   sudo fallocate -l 8G /mnt/japanese-build-check-swap
                   sudo chmod 600 /mnt/japanese-build-check-swap
                   sudo mkswap /mnt/japanese-build-check-swap
                   sudo swapon /mnt/japanese-build-check-swap
 
-            # Dependencies are required even when the scoped site build is skipped.
+            # Fixture validation also needs dependencies; prose-only changes do not.
             - name: Install dependencies
+              id: install
+              if: steps.detect.outputs.validation_mode != 'skip'
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
                   npm install -g yarn
-                  yarn
+                  yarn --frozen-lockfile
                   yarn key-features:generate
+
+            - name: Validate manual content and shared messages
+              if: steps.detect.outputs.validation_mode != 'skip'
+              run: node scripts/i18n/manual-report.cjs
 
             - name: Translation unit tests
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
+              if: steps.detect.outputs.validation_mode != 'skip'
+              run: node --test scripts/i18n/__tests__/*.test.cjs
+
+            - name: Publish artifact optimization tests
+              if: steps.detect.outputs.publish_fixture == 'true'
+              env:
+                  NODE_OPTIONS: --max-old-space-size=2048
+                  DORIS_TEST_APACHE: "true"
               run: |
-                  node --test scripts/i18n/__tests__/t04.test.cjs
-                  node --test scripts/i18n/__tests__/heading-ids.test.cjs
-                  node --test scripts/i18n/__tests__/search-input.test.cjs
-                  node --test scripts/i18n/__tests__/search-contexts.test.cjs
-                  node --test scripts/i18n/__tests__/search-version.test.cjs
-                  node --test scripts/i18n/__tests__/configuration.test.cjs
-                  node --test scripts/i18n/__tests__/search-verification.test.cjs
-                  node --test scripts/i18n/__tests__/korean-tokenizer.test.cjs
-                  node --test scripts/i18n/__tests__/russian-search.test.cjs
-                  node --test scripts/i18n/__tests__/doc-navigation.test.cjs
-                  node --test scripts/i18n/__tests__/marketing-pages.test.cjs
-                  node --test scripts/i18n/__tests__/locale-registry.test.cjs
-                  node --test scripts/i18n/__tests__/multi-locale.test.cjs
-                  node --test scripts/i18n/__tests__/content-manifest.test.cjs
-                  node --test scripts/i18n/__tests__/inventory.test.cjs
-                  node --test scripts/i18n/__tests__/planner.test.cjs
-                  node --test scripts/i18n/__tests__/translation-engine.test.cjs
-                  node --test scripts/i18n/__tests__/korean-toolchain.test.cjs
-                  node --test scripts/i18n/__tests__/translation-workflows.test.cjs
-                  node --test scripts/i18n/__tests__/workflow.test.cjs
-                  node --test scripts/i18n/__tests__/codex-adapter.test.cjs
-                  node --test scripts/i18n/__tests__/translate-document.test.cjs
-                  node --test scripts/i18n/__tests__/incremental-document.test.cjs
+                  node --test scripts/publish/__tests__/*.test.cjs
+                  node scripts/publish/verify-fixture.cjs
 
             - name: Verify native content manifest fixture
-              if: steps.detect.outputs.optimize_publish == 'true'
+              if: steps.detect.outputs.content_fixture == 'true'
               run: node scripts/i18n/verify-content-fixture.cjs
 
             - name: Workflow security boundary tests
               run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
 
             - name: Translation gate for changed locales
+              if: steps.detect.outputs.validation_mode != 'skip'
               run: |
-                  BASE_SHA=$(git merge-base origin/${{ github.base_ref }} HEAD)
+                  BASE_SHA=$(git merge-base "origin/$BASE_REF" HEAD)
                   CHANGED=$(git diff --name-only "$BASE_SHA" HEAD)
                   # A shared input can change every locale's admission result;
                   # otherwise only locales whose own translation inputs changed
@@ -153,85 +159,99 @@ jobs:
                       fi
                   done
 
-            - name: Publish artifact optimization tests
-              env:
-                  NODE_OPTIONS: --max-old-space-size=2048
-              run: |
-                  node --test scripts/publish/__tests__/*.test.cjs
-                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
-                      node scripts/publish/verify-fixture.cjs
-                  fi
-
             - name: Install browser verification tools
-              if: steps.detect.outputs.optimize_publish == 'true'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true'
               run: |
                   DORIS_BROWSER_TOOLS="$RUNNER_TEMP/doris-browser-tools"
                   npm install --prefix "$DORIS_BROWSER_TOOLS" --no-save --no-package-lock playwright@1.64.1
                   "$DORIS_BROWSER_TOOLS/node_modules/.bin/playwright" install --with-deps chromium
                   echo "NODE_PATH=$DORIS_BROWSER_TOOLS/node_modules" >> "$GITHUB_ENV"
 
+            - name: Verify CI sampling adapter
+              if: steps.detect.outputs.sampling_fixture == 'true'
+              run: node scripts/i18n/verify-ci-sampling-fixture.cjs --browser
+
             - name: Verify five-language publishing fixture in Chromium
-              if: steps.detect.outputs.optimize_publish == 'true'
+              if: steps.detect.outputs.publish_fixture == 'true'
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
               run: node scripts/publish/verify-fixture.cjs --verify-existing --browser
 
+            - name: Verify global language fixture in Chromium
+              if: steps.detect.outputs.content_fixture == 'true'
+              run: node scripts/i18n/verify-global-language.cjs --fixture --site .i18n-build/content-fixture/build --manifests .i18n-build/content-fixture/.i18n-build/content-manifests --output .i18n-build/browser-global-language-fixture.json
+
             - name: Build
               env:
-                  DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.optimize_publish }}
+                  DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.validation_mode == 'full' }}
                   DORIS_ASSET_ORIGIN: ""
-                  DOCS_VERSIONS: ${{ steps.detect.outputs.docs_versions }}
-                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.enabled_locales }}
+                  DOCS_VERSIONS: ""
+                  DORIS_ENABLE_LOCALES: ${{ steps.detect.outputs.validation_enabled_locales }}
                   PWA_SERVICE_WORKER_URL: https://doris.apache.org/sw.js
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
-                  if [ "${{ steps.detect.outputs.skip_build }}" = "true" ]; then
-                      echo "No site-affecting changes detected — skipping the docusaurus build."
+                  MODE="${{ steps.detect.outputs.validation_mode }}"
+                  export DOCUSAURUS_PERF_LOGGER=true
+                  if [ "$MODE" = "skip" ] || [ "$MODE" = "fixtures" ]; then
+                      echo "No real-site build required: validation mode=$MODE"
                       exit 0
                   fi
-
-                  echo "Building with DOCS_VERSIONS=${DOCS_VERSIONS:-all} LOCALES=${{ steps.detect.outputs.locale_csv }}"
                   mkdir -p .i18n-build
                   free -m > .i18n-build/ci-memory-before.txt
-                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
-                      /usr/bin/time -v -o .i18n-build/ci-build-time.txt yarn build:publish --locales "${{ steps.detect.outputs.locale_csv }}"
-                  elif [ "${{ steps.detect.outputs.locale_count }}" = "1" ] && [ "${{ steps.detect.outputs.enabled_locales }}" = "" ]; then
-                      PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn docusaurus build ${{ steps.detect.outputs.locale_args }}
+                  if [ "$MODE" = "sample" ]; then
+                      /usr/bin/time -v -o .i18n-build/ci-build-time.txt node scripts/i18n/build-ci-sample.cjs
                   else
-                      # Every locale gets a separate Node process and its real prefix.
-                      yarn build:locales --locales "${{ steps.detect.outputs.locale_csv }}"
+                      /usr/bin/time -v -o .i18n-build/ci-build-time.txt yarn build:publish --locales "${{ steps.detect.outputs.validation_locales }}"
                   fi
                   free -m > .i18n-build/ci-memory-after.txt
 
+            - name: Report native translation coverage
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample'
+              run: node scripts/i18n/manual-report.cjs --coverage
+
+            - name: Verify sampled compilation
+              if: steps.detect.outputs.validation_mode == 'sample'
+              run: node scripts/i18n/verify-ci-sample.cjs
+
             - name: Verify localized static pages
-              if: steps.detect.outputs.skip_build != 'true'
+              if: steps.detect.outputs.validation_mode == 'full'
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
               run: |
-                  # A locale subset cannot prove cross-locale reciprocity.
-                  VERIFY_PARTIAL=()
-                  if [ "${{ steps.detect.outputs.partial_build }}" = "true" ]; then VERIFY_PARTIAL=(--partial); fi
-                  for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
-                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json" "${VERIFY_PARTIAL[@]}"
+                  for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
+                      node scripts/i18n/verify-static.cjs --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
                   done
-                  if [ "${{ steps.detect.outputs.optimize_publish }}" = "true" ]; then
+                  if [ "${{ steps.detect.outputs.validation_mode }}" = "full" ]; then
                       node scripts/publish/verify.cjs build
-                      for LOCALE in $(echo "${{ steps.detect.outputs.enabled_locales }}" | tr ',' ' '); do
+                      node scripts/i18n/verify-global-language.cjs --site build --output .i18n-build/browser-global-language.json
+                      node scripts/i18n/verify-first-release.cjs --site build --output .i18n-build/first-release.json
+                      for LOCALE in $(echo "${{ steps.detect.outputs.validation_enabled_locales }}" | tr ',' ' '); do
                           node scripts/i18n/verify-doc-navigation.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-navigation-${LOCALE}.json"
                           EXTRA_ARGS=()
-                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS=(--source-locales "en,zh-CN" --themes); fi
+                          if [ "$LOCALE" = "ko" ] || [ "$LOCALE" = "ru" ]; then EXTRA_ARGS=(--themes); fi
+                          # English/Chinese checks are identical across these runs;
+                          # keep each target locale's own theme/responsive coverage.
+                          if [ "$LOCALE" = "ru" ]; then EXTRA_ARGS+=(--source-locales "en,zh-CN"); fi
                           /usr/bin/time -v -o ".i18n-build/browser-search-${LOCALE}-time.txt" node scripts/i18n/verify-search.cjs --site build --locale "$LOCALE" --manifest ".i18n-build/manifests/${LOCALE}.json" --output ".i18n-build/browser-search-${LOCALE}.json" "${EXTRA_ARGS[@]}"
                       done
                   fi
                   rm -rf build
 
             - name: Upload publish artifact measurements
-              if: always() && steps.detect.outputs.optimize_publish == 'true'
+              if: always() && hashFiles('.i18n-build/ci-plan.json') != ''
               uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
               with:
                   name: publish-artifact-measurements
                   include-hidden-files: true
                   path: |
+                      .i18n-build/ci-plan.json
+                      .i18n-build/manual-drift.json
+                      .i18n-build/coverage.json
+                      .i18n-build/first-release.json
+                      .i18n-build/home-*.png
+                      .i18n-build/ci-sample/scopes/*.json
+                      .i18n-build/ci-sample/verification.json
+                      .i18n-build/ci-sampling-fixture-proof.json
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/content-fixture-verification.json
@@ -242,22 +262,8 @@ jobs:
                   if-no-files-found: error
                   retention-days: 14
 
-            - name: Docs changed link gate
-              continue-on-error: true
-              run: |
-                  # Report-only: the bulk-rename in the new-homepage launch PR
-                  # exposes ~30 latent anchor/link issues that pre-date this
-                  # change. They're being chipped away in follow-up PRs and
-                  # should not block the launch. The full findings still write
-                  # to the report file below for audit.
-                  yarn docs:links:changed --output website-quality-governance/generated/docs-links-report.json
-
             - name: Docs governance report
-              if: always()
+              if: always() && steps.install.outcome == 'success' && steps.detect.outputs.validation_mode != 'fixtures'
               continue-on-error: true
               run: |
-                  if [ ! -d node_modules ]; then
-                      npm install -g yarn
-                      yarn --frozen-lockfile || yarn
-                  fi
                   yarn docs:lint:changed --output website-quality-governance/generated/docs-governance-report.json

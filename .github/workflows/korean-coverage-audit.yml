@@ -1,37 +1,16 @@
 name: Korean coverage audit
 
+# Full coverage is a maintenance report; Build Check validates pull requests.
 on:
   workflow_dispatch:
   schedule:
     - cron: '29 5 * * 1'
-  pull_request:
-    branches: [master]
-    paths:
-      - 'docs/**'
-      - 'versioned_docs/version-4.x/**'
-      - 'community/**'
-      - 'i18n/ko/**'
-      - 'translations/config.json'
-      - 'translations/inventory/ko/**'
-      - 'translations/scope/ko.json'
-      - 'translations/glossary/ko.json'
-      - 'translations/state/ko/**'
-      - 'translations/protection-exceptions/ko.json'
-      - 'docusaurus.config.js'
-      - 'versions.json'
-      - 'config/i18n.js'
-      - 'config/versions-plugin.js'
-      - 'sidebars.ts'
-      - 'sidebarsCommunity.json'
-      - 'versioned_sidebars/version-4.x-sidebars.json'
-      - 'scripts/i18n/**'
-      - '.github/workflows/korean-coverage-audit.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: korean-coverage-audit-${{ github.event.pull_request.number || github.ref }}
+  group: korean-coverage-audit-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

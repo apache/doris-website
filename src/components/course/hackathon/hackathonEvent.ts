@@ -1,3 +1,4 @@
+import {translate} from '@docusaurus/Translate';
 import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
 
 // Permanent task pages for the Apache Doris Hackathon. The /course entry and
@@ -9,7 +10,7 @@ import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-at
 export const HACKATHON_COURSE_TRACK_ENABLED = true;
 
 export const HACKATHON_EVENT = {
-    name: 'Apache Doris Hackathon',
+    name: translate({id: "landing.hackathonEvent.001", message: "Apache Doris Hackathon"}),
     basePath: '/course/hackathon',
     // Set to null to render a dashed "TBA" placeholder instead. The file and
     // folder names are the published starter-kit artifact; they keep their
@@ -64,30 +65,30 @@ export const HACKATHON_TASKS: HackathonTaskMeta[] = [
     {
         code: 'A1',
         slug: 'a1-hybrid-search',
-        title: 'Hybrid Search App',
-        duration: '60–120 min',
-        pitch: 'Keywords, meaning and filters in one SQL query. Build a search box over the Apache Doris docs.',
+        title: translate({id: "landing.hackathonEvent.002", message: "Hybrid Search App"}),
+        duration: translate({id: "landing.courseExtra.hackathonEvent.001", message: "60–120 min"}),
+        pitch: translate({id: "landing.hackathonEvent.003", message: "Keywords, meaning and filters in one SQL query. Build a search box over the Apache Doris docs."}),
     },
     {
         code: 'A2',
         slug: 'a2-mcp',
-        title: 'Ask Doris with MCP',
-        duration: '45–90 min',
-        pitch: 'Plug Doris into your AI assistant with the Doris MCP Server, and make it answer real questions with real SQL.',
+        title: translate({id: "landing.hackathonEvent.004", message: "Ask Doris with MCP"}),
+        duration: translate({id: "landing.courseExtra.hackathonEvent.002", message: "45–90 min"}),
+        pitch: translate({id: "landing.hackathonEvent.005", message: "Plug Doris into your AI assistant with the Doris MCP Server, and make it answer real questions with real SQL."}),
     },
     {
         code: 'A3',
         slug: 'a3-log-search',
-        title: 'Log Search Explorer',
-        duration: '60–120 min',
-        pitch: 'A mini Kibana where everything is SQL: BM25 search, filters and live counts over 200,000 log lines.',
+        title: translate({id: "landing.hackathonEvent.006", message: "Log Search Explorer"}),
+        duration: translate({id: "landing.courseExtra.hackathonEvent.003", message: "60–120 min"}),
+        pitch: translate({id: "landing.hackathonEvent.007", message: "A mini Kibana where everything is SQL: BM25 search, filters and live counts over 200,000 log lines."}),
     },
     {
         code: 'A4',
         slug: 'a4-agent-traces',
-        title: 'Agent Trace Explorer',
-        duration: '60–120 min',
-        pitch: 'Store messy AI-agent JSON in a VARIANT column and query it like real columns. No schema migrations.',
+        title: translate({id: "landing.hackathonEvent.008", message: "Agent Trace Explorer"}),
+        duration: translate({id: "landing.courseExtra.hackathonEvent.004", message: "60–120 min"}),
+        pitch: translate({id: "landing.hackathonEvent.009", message: "Store messy AI-agent JSON in a VARIANT column and query it like real columns. No schema migrations."}),
     },
 ];
 
@@ -108,9 +109,9 @@ export function hackathonTaskPath(task: HackathonTaskMeta): string {
 export const HACKATHON_TRACK_B = {
     code: 'B',
     slug: 'track-b',
-    title: 'Docs to Demo',
-    duration: '30–60 min',
-    pitch: 'Pick a feature page of the docs, run it on your local Doris, and add a step-by-step demo to it with a pull request.',
+    title: translate({id: "landing.hackathonEvent.010", message: "Docs to Demo"}),
+    duration: translate({id: "landing.courseExtra.hackathonEvent.005", message: "30–60 min"}),
+    pitch: translate({id: "landing.hackathonEvent.011", message: "Pick a feature page of the docs, run it on your local Doris, and add a step-by-step demo to it with a pull request."}),
 } as const;
 
 export function hackathonTrackBPath(): string {
@@ -134,7 +135,7 @@ export const HACKATHON_PAGE_LINKS: HackathonPageLink[] = [
     })),
     {
         code: HACKATHON_TRACK_B.code,
-        title: `Track B · ${HACKATHON_TRACK_B.title}`,
+        title: `${translate({id: "landing.hackathonEvent.012", message: "Track B · "})}${HACKATHON_TRACK_B.title}`,
         duration: HACKATHON_TRACK_B.duration,
         path: hackathonTrackBPath(),
     },

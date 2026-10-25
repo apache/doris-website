@@ -4,6 +4,7 @@ const headingsPlugin = require('@docusaurus/mdx-loader/lib/remark/headings').def
 const {escapeMarkdownHeadingIds} = require('@docusaurus/utils');
 const {getFormat} = require('@docusaurus/mdx-loader/lib/format.js');
 const {normalizedNumbers} = require('./protection.cjs');
+const {buildCache} = require('./build-cache.cjs');
 
 function withoutPositions(value) {
     if (Array.isArray(value)) return value.map(withoutPositions);
@@ -14,6 +15,11 @@ function withoutPositions(value) {
 }
 
 async function structure(raw, extension, anchorsMaintainCase = false) {
+    return buildCache.get('structure', [raw, extension, anchorsMaintainCase],
+        () => parseStructure(raw, extension, anchorsMaintainCase));
+}
+
+async function parseStructure(raw, extension, anchorsMaintainCase) {
     if (/^\.tsx?$/.test(extension)) {
         const {parseScript} = require('./code-prose.cjs');
         const file = parseScript(raw);
@@ -102,6 +108,12 @@ async function structure(raw, extension, anchorsMaintainCase = false) {
 }
 
 async function alignHeadings(sourceStructure, target, extension, maintainCase = false) {
+    const headings = sourceStructure.headings.map(({depth, id}) => [depth, id]);
+    return buildCache.get('aligned-headings', [headings, target, extension, maintainCase],
+        () => alignTargetHeadings(sourceStructure, target, extension, maintainCase));
+}
+
+async function alignTargetHeadings(sourceStructure, target, extension, maintainCase) {
     const parsed = await structure(target, extension, maintainCase);
     if (parsed.headings.length !== sourceStructure.headings.length
         || parsed.headings.some((heading, i) => heading.depth !== sourceStructure.headings[i].depth)) {

@@ -54,7 +54,7 @@ const GUIDE_STROKE = {
 const GUIDES = [
     {
         to: VERSIONING_URL,
-        title: 'Which version to choose',
+        title: translate({id: "landing.DownloadFormNext.001", message: "Which version to choose"}),
         desc: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.',
         icon: (
             <svg {...GUIDE_ICON}>
@@ -67,7 +67,7 @@ const GUIDES = [
     },
     {
         to: UPGRADE_NOTES_URL,
-        title: 'Upgrade notes',
+        title: translate({id: "landing.DownloadFormNext.002", message: "Upgrade notes"}),
         desc: 'Per-version precautions to read before moving a cluster to a new release.',
         icon: (
             <svg {...GUIDE_ICON}>
@@ -78,7 +78,7 @@ const GUIDES = [
     },
     {
         to: '#archive',
-        title: 'Archived releases',
+        title: translate({id: "landing.DownloadFormNext.003", message: "Archived releases"}),
         desc: 'Older branches receive no further releases of any kind, security patches included.',
         archive: true,
         icon: (
@@ -173,18 +173,17 @@ export default function DownloadFormNext(): JSX.Element {
                     <div className="download-next__hero-bg-grid" aria-hidden="true" />
                     <div className="download-next__hero-inner">
                         <h1 className="download-next__title">
-                            <span className="download-next__title-line">Download</span>
+                            <span className="download-next__title-line">{translate({id: "landing.DownloadFormNext.004", message: "Download"})}</span>
                             <span className="download-next__title-line">
                                 Apache <span className="download-next__title-accent">Doris</span>
                             </span>
                         </h1>
                         <p className="download-next__sub">
-                            Verified binaries and source tarballs for the release branches Apache Doris currently
-                            maintains. Every download is signed and checksummed.
+                            {translate({id: "landing.DownloadFormNext.005", message: "Verified binaries and source tarballs for the release branches Apache Doris currently maintains. Every download is signed and checksummed."})}
                         </p>
                         <div className="download-next__maintained">
                             <span className="download-next__maintained-dot" aria-hidden="true" />
-                            Maintained branches — {maintainedBranches}
+                            {translate({id: "landing.DownloadFormNext.006", message: "Maintained branches —"})} {maintainedBranches}
                         </div>
                     </div>
                 </section>
@@ -238,7 +237,7 @@ export default function DownloadFormNext(): JSX.Element {
                                                 key={option}
                                                 disabled={isSource || !available}
                                                 aria-pressed={cpu === option}
-                                                title={available ? undefined : `No ${option} build for ${version}`}
+                                                title={available ? undefined : `${translate({id: "landing.DownloadFormNext.007", message: "No "})}${option}${translate({id: "landing.DownloadFormNext.008", message: " build for "})}${version}`}
                                                 className={clsx('download-next__seg-item', {
                                                     'is-checked': cpu === option,
                                                     'is-unavailable': !available,
@@ -285,19 +284,19 @@ export default function DownloadFormNext(): JSX.Element {
                                             <Link to={asset.sha512}>SHA-512</Link>
                                             <Link to={KEYS_URL}>KEYS</Link>
                                             <Link className="download-next__file-verify-guide" to={VERIFY_URL}>
-                                                How to verify
+                                                {translate({id: "landing.DownloadFormNext.009", message: "How to verify"})}
                                             </Link>
                                         </div>
                                     </div>
                                     <div className="download-next__actions">
                                         <Link className="download-next__download-btn" to={asset.gz}>
-                                            Download
+                                            {translate({id: "landing.DownloadFormNext.010", message: "Download"})}
                                         </Link>
                                         <button
                                             type="button"
                                             className={clsx('download-next__copy-btn', { 'is-copied': copied })}
-                                            aria-label={copied ? 'Download link copied' : 'Copy download link'}
-                                            title={copied ? 'Copied' : 'Copy download link'}
+                                            aria-label={copied ? translate({id: "landing.DownloadFormNext.011", message: "Download link copied"}) : translate({id: "landing.DownloadFormNext.012", message: "Copy download link"})}
+                                            title={copied ? translate({id: "landing.DownloadFormNext.013", message: "Copied"}) : translate({id: "landing.DownloadFormNext.014", message: "Copy download link"})}
                                             onClick={onCopyLink}
                                         >
                                             {copied ? (
@@ -344,7 +343,7 @@ export default function DownloadFormNext(): JSX.Element {
                                                 </svg>
                                             )}
                                             <span className="download-next__sr-only" aria-live="polite">
-                                                {copied ? 'Download link copied' : ''}
+                                                {copied ? translate({id: "landing.DownloadFormNext.015", message: "Download link copied"}) : ''}
                                             </span>
                                         </button>
                                     </div>
@@ -393,30 +392,26 @@ export default function DownloadFormNext(): JSX.Element {
                 {/* ── Maintained core releases ────────────────────────────────── */}
                 <section className="download-next__section">
                     <div className="download-next__section-inner">
-                        <span className="download-next__eyebrow">Maintained</span>
-                        <h2 className="download-next__section-title">Doris Releases</h2>
+                        <span className="download-next__eyebrow">{translate({id: "landing.DownloadFormNext.016", message: "Maintained"})}</span>
+                        <h2 className="download-next__section-title">{translate({id: "landing.DownloadFormNext.017", message: "Doris Releases"})}</h2>
                         <div className="download-next__split">
                             <div className="download-next__split-intro">
                                 <div className="download-next__split-text">
                                     <p>
-                                        Doris is released as source tarballs, with binary tarballs built for
-                                        convenience. Verify every download against its ASC signature or SHA-512 checksum
-                                        before you deploy it.
+                                        {translate({id: "landing.DownloadFormNext.018", message: "Doris is released as source tarballs, with binary tarballs built for convenience. Verify every download against its ASC signature or SHA-512 checksum before you deploy it."})}
                                     </p>
                                     <p>
-                                        Every patch on a maintained branch is listed here. Patch releases are compatible
-                                        in both directions, so moving to the newest patch on your branch needs no data
-                                        migration.
+                                        {translate({id: "landing.DownloadFormNext.019", message: "Every patch on a maintained branch is listed here. Patch releases are compatible in both directions, so moving to the newest patch on your branch needs no data migration."})}
                                     </p>
                                 </div>
                                 <div>
-                                    <LinkWithArrow to={releaseNote} text="Release note" />
+                                    <LinkWithArrow to={releaseNote} text={translate({id: "landing.DownloadFormNext.020", message: "Release note"})} />
                                 </div>
                                 <p className="download-next__split-note">
-                                    For upgrade precautions see the <Link to="/docs/dev/install/intro">deployment</Link>{' '}
-                                    and{' '}
-                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">cluster upgrade</Link>{' '}
-                                    manuals.
+                                    {translate({id: "landing.DownloadFormNext.021", message: "For upgrade precautions see the"})} <Link to="/docs/dev/install/intro">{translate({id: "landing.DownloadFormNext.022", message: "deployment"})}</Link>{' '}
+                                    {translate({id: "landing.DownloadFormNext.023", message: "and"})}{' '}
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">{translate({id: "landing.DownloadFormNext.024", message: "cluster upgrade"})}</Link>{' '}
+                                    {translate({id: "landing.DownloadFormNext.025", message: "manuals."})}
                                 </p>
                             </div>
                             <div className="download-next__split-card">
@@ -433,15 +428,14 @@ export default function DownloadFormNext(): JSX.Element {
                 <a id="doris-ecosystem" className="scroll-mt-20"></a>
                 <section className="download-next__section">
                     <div className="download-next__section-inner">
-                        <span className="download-next__eyebrow">Maintained</span>
-                        <h2 className="download-next__section-title">Doris Ecosystem</h2>
+                        <span className="download-next__eyebrow">{translate({id: "landing.DownloadFormNext.026", message: "Maintained"})}</span>
+                        <h2 className="download-next__section-title">{translate({id: "landing.DownloadFormNext.027", message: "Doris Ecosystem"})}</h2>
                         <div className="download-next__split">
                             <div className="download-next__split-intro">
                                 <div className="download-next__split-text">
                                     <p>
-                                        Connectors and tools for loading into and reading out of Doris. Only maintained
-                                        versions are listed; older connector lines are in the{' '}
-                                        <Link to="#archive">archive</Link>.
+                                        {translate({id: "landing.DownloadFormNext.028", message: "Connectors and tools for loading into and reading out of Doris. Only maintained versions are listed; older connector lines are in the"})}{' '}
+                                        <Link to="#archive">{translate({id: "landing.DownloadFormNext.029", message: "archive"})}</Link>.
                                     </p>
                                 </div>
                                 <ul className="download-next__tool-list">
@@ -456,10 +450,10 @@ export default function DownloadFormNext(): JSX.Element {
                                     ))}
                                 </ul>
                                 <div className="download-next__ecosystem-links">
-                                    <LinkWithArrow to={TOOL_RELEASE_NOTES[ecosystemTool]} text="Release Notes" />
+                                    <LinkWithArrow to={TOOL_RELEASE_NOTES[ecosystemTool]} text={translate({id: "landing.DownloadFormNext.030", message: "Release Notes"})} />
                                     <LinkWithArrow
                                         to="/docs/4.x/connection-integration/data-integration/intro"
-                                        text="More Tools"
+                                        text={translate({id: "landing.DownloadFormNext.031", message: "More Tools"})}
                                     />
                                 </div>
                             </div>
@@ -475,20 +469,19 @@ export default function DownloadFormNext(): JSX.Element {
                 <section className="download-next__archive">
                     <div className="download-next__section-inner">
                         <h2 className="download-next__section-title download-next__section-title--archive">
-                            Archived Releases
+                            {translate({id: "landing.DownloadFormNext.032", message: "Archived Releases"})}
                         </h2>
                         <div className="download-next__split">
                             <div className="download-next__split-intro">
                                 <p className="download-next__archive-lead">
                                     <strong>
-                                        These versions receive no further releases of any kind, security patches
-                                        included.
+                                        {translate({id: "landing.DownloadFormNext.033", message: "These versions receive no further releases of any kind, security patches included."})}
                                     </strong>{' '}
-                                    A vulnerability found in one of them stays unfixed there, permanently.
+                                    {translate({id: "landing.DownloadFormNext.034", message: "A vulnerability found in one of them stays unfixed there, permanently."})}
                                 </p>
                                 <div className="download-next__archive-links">
-                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">Upgrade guide</Link>
-                                    <Link to={SECURITY_URL}>Report a vulnerability to the ASF security team</Link>
+                                    <Link to="/docs/dev/admin-manual/cluster-management/upgrade">{translate({id: "landing.DownloadFormNext.035", message: "Upgrade guide"})}</Link>
+                                    <Link to={SECURITY_URL}>{translate({id: "landing.DownloadFormNext.036", message: "Report a vulnerability to the ASF security team"})}</Link>
                                     <Link to={ASF_ARCHIVE_URL}>archive.apache.org/dist/doris</Link>
                                 </div>
                             </div>
@@ -511,13 +504,12 @@ export default function DownloadFormNext(): JSX.Element {
                             className="download-next__run-card download-next__run-card--single"
                         >
                             <div className="download-next__run-card-body">
-                                <h2 className="download-next__run-card-title">Run anywhere</h2>
+                                <h2 className="download-next__run-card-title">{translate({id: "landing.DownloadFormNext.037", message: "Run anywhere"})}</h2>
                                 <p className="download-next__run-card-desc">
-                                    Deploy Doris in your environment of choice — from bare metal to Kubernetes to the
-                                    cloud.
+                                    {translate({id: "landing.DownloadFormNext.038", message: "Deploy Doris in your environment of choice — from bare metal to Kubernetes to the cloud."})}
                                 </p>
                                 <span className="download-next__run-card-cta">
-                                    Explore deployment options
+                                    {translate({id: "landing.DownloadFormNext.039", message: "Explore deployment options"})}
                                     <svg
                                         aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg"

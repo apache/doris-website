@@ -1,8 +1,10 @@
 import React, { type JSX } from 'react';
 import Link from '@docusaurus/Link';
+import useIsBrowser from '@docusaurus/useIsBrowser';
+import {useContentRouteData} from '@site/src/utils/contentRoute';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import { translate } from '@docusaurus/Translate';
+import {languageMessages} from '@site/src/utils/languageMessages';
 import styles from './LocalizedNotice.module.css';
 
 /**
@@ -12,20 +14,20 @@ import styles from './LocalizedNotice.module.css';
  */
 export default function SourceFallback({ permalink }: { permalink: string }): JSX.Element {
     const { search, hash } = useLocation();
+    const suffix = useIsBrowser() ? search + hash : '';
     const { i18n } = useDocusaurusContext();
     const { currentLocale, defaultLocale } = i18n;
-    const sourcePath = permalink.startsWith(`/${currentLocale}/`)
+    const page = useContentRouteData();
+    const messages = languageMessages(currentLocale);
+    const sourcePath = page?.navigationRoutes[defaultLocale] ?? (permalink.startsWith(`/${currentLocale}/`)
         ? permalink.slice(currentLocale.length + 1)
-        : permalink;
+        : permalink);
     return (
         <aside className={styles.notice} lang={currentLocale}
-            aria-label={translate({ id: 'docs.translation.status.label', message: 'Translation status' })}>
-            <strong>{translate({ id: 'docs.translation.untranslated',
-                message: 'This page is not translated yet.' })}</strong>{' '}
-            {translate({ id: 'docs.translation.showingSource',
-                message: 'Showing the source content for the current version.' })}{' '}
-            <Link to={`pathname://${sourcePath}${search}${hash}`} autoAddBaseUrl={false} hrefLang={defaultLocale}>
-                {translate({ id: 'docs.translation.openSource', message: 'Open the source page' })}
+            aria-label={messages.note}>
+            <strong>{messages.fallback}</strong>{' '}
+            <Link to={`pathname://${sourcePath}${suffix}`} autoAddBaseUrl={false} hrefLang={defaultLocale}>
+                {messages.english}
             </Link>
         </aside>
     );

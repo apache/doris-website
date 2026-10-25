@@ -30,3 +30,9 @@
 .swipe-top-button:hover:after {
     height: 100%;
 }
+
+li.user-story-card::after { background: var(--brand-primary-darker); }
+li.user-story-card:focus-visible { outline: 2px solid var(--brand-ink); outline-offset: 3px; }
+li.user-story-card:focus-within::after { height: 100%; transition: none; }
+li.user-story-card:is(:hover, :focus-within) .user-story-card__details,
+li.user-story-card:is(:hover, :focus-within) .user-story-card__details a { color: var(--brand-cream-light); }

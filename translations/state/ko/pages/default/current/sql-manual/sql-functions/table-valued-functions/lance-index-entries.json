@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "sql-manual/sql-functions/table-valued-functions/lance-index-entries",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/lance-index-entries.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/lance-index-entries.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "cebebfabec22054db8b598fdb6c0add3ce416849ee495c3633182c60e81b0570",
+    "sourceTechnicalHash": "dbe89e8df457491fa8632061e97d5f061cbb900b50d43db28c0ccbd87b9b0dbd",
+    "targetHash": "8fc38635802e1e4e9b3d7e684bcb9c681ec8fee6bd64fb1a42aa945307e6f119",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T17:46:47.228Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "cebebfabec22054db8b598fdb6c0add3ce416849ee495c3633182c60e81b0570",
+      "targetHash": "8fc38635802e1e4e9b3d7e684bcb9c681ec8fee6bd64fb1a42aa945307e6f119",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 29: expected [\"inlineCode\",null,null,\"vs_ivf_pq_f32\"]; received [\"inlineCode\",null,null,\"lance_catalog\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"lance_catalog\"]; received [\"inlineCode\",null,null,\"vs_ivf_pq_f32\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 29: expected [\"inlineCode\",null,null,\"vs_ivf_pq_f32\"]; received [\"inlineCode\",null,null,\"lance_catalog\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"lance_catalog\"]; received [\"inlineCode\",null,null,\"vs_ivf_pq_f32\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    }
+  }
+}

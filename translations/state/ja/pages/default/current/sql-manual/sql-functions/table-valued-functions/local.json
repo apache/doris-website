@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/table-valued-functions/local.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/table-valued-functions/local.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "c5c098a1287fffd6231e8dcc8585dd9b12e6ea8d93174c512a7236389207f816",
-    "sourceTechnicalHash": "bb44d3601cc90d4669e412ea22bf63cf54ed0f60036caf2045e149bd2c003692",
-    "targetHash": "fbe6efd7b77e2a9ca3aa9f64c030144d080cde7422aa289fe1d5d52681124c64",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "ce2d1683a40e9c0c54b9af7595117e128df9434dc877355f57a4b8c61b7de134",
+    "sourceTechnicalHash": "0e96bdc1e6a58822d9c54451032c9a176516877f80ad2eafcb2d6b70cbd7a3b8",
+    "targetHash": "fa6fe8ce1f17b8bcfbc85870c44d2eed0d7484981f0b531ee810c42f3e3c499f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:18:33.707Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-24T16:52:07.665Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ce2d1683a40e9c0c54b9af7595117e128df9434dc877355f57a4b8c61b7de134",
+      "targetHash": "fa6fe8ce1f17b8bcfbc85870c44d2eed0d7484981f0b531ee810c42f3e3c499f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 59: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 59: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 15: expected [\"html\",\"<br>\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"shared_storage\"]; received [\"inlineCode\",null,null,\"true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 59: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

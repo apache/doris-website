@@ -5,6 +5,7 @@ const {inventory} = require('./optimize.cjs');
 
 function verify(site) {
     site = path.resolve(site);
+    assert(!fs.existsSync(path.join(site,'.ci-validation.json')), 'Sample validation artifacts must not be published');
     const manifest = JSON.parse(fs.readFileSync(path.join(site,'.publish/redirects.json'),'utf8'));
     const redirects = new Map(manifest.redirects.map(([from,to]) => [decodeURIComponent(from),to]));
     const files = inventory(site);

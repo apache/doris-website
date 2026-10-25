@@ -1,7 +1,7 @@
-import { localizedDocLink } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
 import React, { JSX } from 'react';
 import './DeploymentSection.scss';
+import {DeploymentDiagram} from './DeploymentDiagram';
 
 type DeploymentTone = 'green' | 'ink';
 
@@ -14,10 +14,7 @@ interface DeploymentCardItem {
     };
     subtitle: string;
     image: {
-        src: string;
         alt: string;
-        width: number;
-        height: number;
     };
     cta: {
         label: string;
@@ -35,10 +32,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         subtitle: translate({ id: "homepage.deployment.004", message: "Classic MPP, with compute and storage co-located on each node for maximum local I/O and the lowest query latency." }),
         image: {
-            src: '/images/next/home-page/cs-coupled.jpg',
             alt: translate({ id: "homepage.deployment.005", message: "Apache Doris compute-storage coupled mode architecture diagram" }),
-            width: 1774,
-            height: 887,
         },
         cta: {
             label: translate({ id: "homepage.deployment.006", message: "Deploy Now!" }),
@@ -54,10 +48,7 @@ const DEPLOYMENT_CARDS: DeploymentCardItem[] = [
         },
         subtitle: translate({ id: "homepage.deployment.008", message: "Cloud-native architecture with stateless compute groups over shared object storage. Scale compute on demand and isolate workloads from one another." }),
         image: {
-            src: '/images/next/home-page/cs-decoupled.jpg',
             alt: translate({ id: "homepage.deployment.009", message: "Apache Doris compute-storage decoupled mode architecture diagram" }),
-            width: 1672,
-            height: 941,
         },
         cta: {
             label: translate({ id: "homepage.deployment.006", message: "Deploy Now!" }),
@@ -78,20 +69,12 @@ function DeploymentCard({ card }: { card: DeploymentCardItem }): JSX.Element {
                     </span>
                 </h3>
                 <p className="deployment-next__card-subtitle">{card.subtitle}</p>
-                <a className="deployment-next__card-cta" href={localizedDocLink(card.cta.href)}>
+                <a className="deployment-next__card-cta" href={card.cta.href}>
                     {card.cta.label}
                 </a>
             </div>
             <div className="deployment-next__visual">
-                <img
-                    className="deployment-next__visual-image"
-                    src={card.image.src}
-                    alt={card.image.alt}
-                    width={card.image.width}
-                    height={card.image.height}
-                    loading="lazy"
-                    decoding="async"
-                />
+                <DeploymentDiagram decoupled={card.tone === 'ink'} title={card.image.alt} />
             </div>
         </article>
     );

@@ -5,7 +5,7 @@ const {hash} = require('../../state.cjs');
 const {structure} = require('../../structure.cjs');
 const repoRoot = path.resolve(__dirname, '../../../..');
 
-async function createFixture(root) {
+async function createFixture(root, {searchDocument = false} = {}) {
     const write = (file, content) => {
         const target = path.join(root, file);
         fs.mkdirSync(path.dirname(target), {recursive: true});
@@ -20,7 +20,7 @@ async function createFixture(root) {
     write('versioned_sidebars/version-4.x-sidebars.json', '{}');
     const records = {ja: [], ko: [], ru: []};
     for (const [pluginId, version, docIds] of [
-        ['default', 'current', ['shared', 'ja-only', 'ko-only', 'ru-only', 'missing', 'hidden', 'draft']],
+        ['default', 'current', ['shared', 'ja-only', 'ko-only', 'ru-only', 'missing', 'hidden', 'draft', ...(searchDocument ? ['search'] : [])]],
         ['default', '4.x', ['shared']], ['community', 'current', ['shared']],
     ]) {
         const sourceRoot = pluginId === 'community' ? 'community' : version === 'current' ? 'docs' : `versioned_docs/version-${version}`;
@@ -29,9 +29,10 @@ async function createFixture(root) {
         for (const docId of docIds) {
             const filename = `01-${docId}.md`;
             const sourcePath = `${sourceRoot}/${filename}`;
-            const source = `---\ntitle: English ${docId}\nlast_update:\n  date: 2026-01-01\nslug: /english-${docId}\n${docId === 'hidden' ? 'unlisted: true\n' : docId === 'draft' ? 'draft: true\n' : ''}---\n\n## Usage\n\nUse Doris.\n\n\`\`\`sql\nSELECT 1;\n\`\`\`\n${pluginId === 'default' && version === 'current' ? '\n[ja-only](./01-ja-only.md)\n\n[ko-only](./01-ko-only.md)\n' : ''}`;
+            const slug = docId === 'search' ? '/observability/dogstack/search/' : `/english-${docId}`;
+            const source = `---\ntitle: English ${docId}\nlast_update:\n  date: 2026-01-01\nslug: ${slug}\n${docId === 'hidden' ? 'unlisted: true\n' : docId === 'draft' ? 'draft: true\n' : ''}---\n\n## Usage\n\nUse Doris.\n\n\`\`\`sql\nSELECT 1;\n\`\`\`\n${pluginId === 'default' && version === 'current' ? '\n[ja-only](./01-ja-only.md)\n\n[ko-only](./01-ko-only.md)\n' : ''}`;
             write(sourcePath, source);
-            write(`i18n/zh-CN/${plugin}/${versionDir}/${filename}`, source.replace('English', '中文').replace('/english-', '/chinese-'));
+            if (!['missing', 'ja-only'].includes(docId)) write(`i18n/zh-CN/${plugin}/${versionDir}/${filename}`, source.replace('English', '中文').replace('/english-', '/chinese-'));
             for (const locale of ['ja', 'ko', 'ru']) {
                 if (docId === 'missing') continue;
                 const targetPath = `i18n/${locale}/${plugin}/${versionDir}/${filename}`;
@@ -54,19 +55,25 @@ async function createFixture(root) {
         write(`i18n/${locale}/docusaurus-plugin-content-docs/current/orphan.md`, '# Orphan\n');
     }
     write('src/pages/index.tsx', "import React from 'react'; export default function Home(){return <main>Fixture</main>;}\n");
-    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/utils/locale.ts', 'src/theme/SiteMetadata/index.tsx',
+    for (const file of ['src/utils/translation.ts', 'src/utils/localization.ts', 'src/utils/locale.ts', 'src/utils/contentRoute.ts',
+        'src/utils/localizedRoute.ts', 'src/utils/englishTranslation.tsx', 'src/utils/englishLocalization.ts', 'src/utils/useEnglishContentContext.ts', 'src/utils/languageMessages.ts', 'src/theme/SiteMetadata/index.tsx',
+        'src/components/ContentRoute.tsx', 'src/components/ContentMetadata.tsx',
         'src/theme/DocItem/Metadata/index.tsx', 'src/theme/DocItem/Content/index.tsx',
-        'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/LocalizedNotice.module.css']) {
+        'src/theme/DocItem/Layout/TranslationStatus.tsx', 'src/theme/DocItem/Layout/SourceFallback.tsx', 'src/theme/DocItem/Layout/LocalizedNotice.module.css']) {
         write(file, fs.readFileSync(path.join(repoRoot, file), 'utf8'));
     }
     write('src/theme/DocItem/Layout/index.tsx', `import React from 'react';
 import Original from '@theme-original/DocItem/Layout';
 import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import {docTranslation} from '@site/src/utils/translation';
+import {useContentRouteData} from '@site/src/utils/contentRoute';
+import SourceFallback from './SourceFallback';
 import TranslationStatus from './TranslationStatus';
 export default function Layout(props) {
- const state = docTranslation(useDoc().metadata);
- return <>{state && <TranslationStatus state={state}/>}<Original {...props}/></>;
+ const {metadata} = useDoc();
+ const state = docTranslation(metadata);
+ const page = useContentRouteData();
+ return <>{state ? <TranslationStatus state={state}/> : page?.fallback ? <SourceFallback permalink={metadata.permalink}/> : null}<Original {...props}/></>;
 }\n`);
     write('docusaurus.config.js', `module.exports = () => ({
  title: 'Multi-locale fixture', url: 'https://doris.apache.org', baseUrl: '/', trailingSlash: true,

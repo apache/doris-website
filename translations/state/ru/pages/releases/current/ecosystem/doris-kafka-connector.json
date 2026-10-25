@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "releases",
+    "version": "current",
+    "docId": "ecosystem/doris-kafka-connector",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "releasenotes/ecosystem/doris-kafka-connector.md",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-releases/current/ecosystem/doris-kafka-connector.md",
+    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceHash": "4ef58f5761af434718b93275b8785320eeaf20e86fa79e2785b590ff65ec894f",
+    "sourceTechnicalHash": "391b0fee26d9081868ea4c33ed5266dfebee7648373984bf0177a2be205549d3",
+    "targetHash": "8592b143345e0a6fba0142482f03de7f3e0389db02ec57706c89704026b43cc5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-24T18:09:56.175Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ef58f5761af434718b93275b8785320eeaf20e86fa79e2785b590ff65ec894f",
+      "targetHash": "8592b143345e0a6fba0142482f03de7f3e0389db02ec57706c89704026b43cc5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
+  }
+}
