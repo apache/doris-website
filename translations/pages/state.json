@@ -57,9 +57,9 @@
         "homepage"
       ],
       "sourceHash": "4861d6b5f232c6e83c8caace5a3559cd3f3e3cf56eed5f979599c635f6b98c2c",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
       "reviewStatus": "machine",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P01",
@@ -266,8 +266,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P02",
@@ -375,8 +375,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P03",
@@ -457,8 +457,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P04",
@@ -687,8 +687,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "cc12416cf9494de15597003e40491c91a2197b819a99dc0d293cb0cf07660438",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P05",
@@ -1167,8 +1167,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P06",
@@ -1269,8 +1269,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P07",
@@ -1371,8 +1371,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P08",
@@ -1470,8 +1470,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P09",
@@ -1566,8 +1566,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "2c6fbd30ffcd96d411635795f83d34e5c2a7d87a896260ec9e2d94795cdac74d",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P10",
@@ -1648,8 +1648,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P11",
@@ -1736,8 +1736,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "200a8b63e6fe724f7e2b03b44642380ce5b34aeed12b7a40c3bc34d35378eb10",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P12",
@@ -1903,8 +1903,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "04aea9fc522482abd7826e6bc880d753a67c298e71a743cb8b660ba599924aa3",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P13",
@@ -1974,8 +1974,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "d656a0b84c0682380e783564d73ea511222e5cf52f8edbfccdd48c7151033f3c",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P14",
@@ -2019,7 +2019,7 @@
     {
       "contentId": "page:P15",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/CourseLanding.scss",
         "src/components/course/CourseLanding.tsx",
@@ -2031,10 +2031,13 @@
         "src/pages/course/index.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P15",
@@ -2093,7 +2096,7 @@
     {
       "contentId": "page:P16",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/hackathon/HackathonCodeBlock.tsx",
         "src/components/course/hackathon/HackathonIcons.tsx",
@@ -2108,10 +2111,13 @@
         "src/pages/course/hackathon/a1-hybrid-search.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "21045dda898eea735d4dd2b000289b4e11ec24d3479abadfe0812837902c729e",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P16",
@@ -2179,7 +2185,7 @@
     {
       "contentId": "page:P17",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/hackathon/HackathonCodeBlock.tsx",
         "src/components/course/hackathon/HackathonIcons.tsx",
@@ -2194,10 +2200,13 @@
         "src/pages/course/hackathon/a2-mcp.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "1688b80f865e44540a7d84376bff92cdd54596d59837edf9bfa8268adec00ddd",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P17",
@@ -2265,7 +2274,7 @@
     {
       "contentId": "page:P18",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/hackathon/HackathonCodeBlock.tsx",
         "src/components/course/hackathon/HackathonIcons.tsx",
@@ -2280,10 +2289,13 @@
         "src/pages/course/hackathon/a3-log-search.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "6e8a8c853f138dbfed0530614972a77b0cfb85214dfa9a069f1922afc5446997",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P18",
@@ -2351,7 +2363,7 @@
     {
       "contentId": "page:P19",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/hackathon/HackathonCodeBlock.tsx",
         "src/components/course/hackathon/HackathonIcons.tsx",
@@ -2366,10 +2378,13 @@
         "src/pages/course/hackathon/a4-agent-traces.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "d0f8b3887a8b011959d63ed2dd1cd5f58f74f4bb49ec85c0efc25a5f1b37f44d",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P19",
@@ -2437,7 +2452,7 @@
     {
       "contentId": "page:P20",
       "locale": "zh-CN",
-      "state": "missing",
+      "state": "ready",
       "sourceFiles": [
         "src/components/course/hackathon/HackathonCodeBlock.tsx",
         "src/components/course/hackathon/HackathonIcons.tsx",
@@ -2449,14 +2464,18 @@
         "src/components/course/hackathon/hackathonCommon.tsx",
         "src/components/course/hackathon/hackathonEvent.ts",
         "src/components/course/hackathon/tasks/trackB.tsx",
+        "src/components/course/hackathon/track-b-localization.js",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/course/hackathon/track-b.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
-      "targetFiles": [],
-      "reviewStatus": "unverified",
-      "sourceHash": null,
-      "targetHash": null
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "ee4058ea07cb2cd1283052af7f66fd195065e8630639d1aba77d3544c474ff3b",
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P20",
@@ -2559,8 +2578,8 @@
       ],
       "reviewStatus": "machine",
       "sourceHash": "da7de9d9a7cbda289ca2124dfb2abadd901b348c83c2b862e7b807bc0cda17b9",
-      "targetHash": "f5f07eb0dec3734f904b139e7f2b36bb2b5b91e99b43a2954136ecf42af8c48d",
-      "reviewedSourceCommit": "f7d383295d472261f31a3c4287fb315cb8746af1"
+      "targetHash": "6582099c9e1b55502e7d2341e2d337adb9b9a988984b73ae09d3b3e5ecfc0a20",
+      "reviewedSourceCommit": "a230906f4e6365d4c6d89da9c8ef165932ff365a"
     },
     {
       "contentId": "page:P21",
