@@ -15841,5 +15841,92 @@
     },
     "landing.download.unavailableBuild": {
         "message": "{version} 没有适用于 {architecture} 的构建包"
+    },
+    "landing.download.binary": {
+        "message": "二进制包"
+    },
+    "landing.download.source": {
+        "message": "源码包"
+    },
+    "landing.download.compatibility": {
+        "message": "适用于 {engine} {version}"
+    },
+    "landing.download.guide.version": {
+        "message": "了解 X.Y.Z 的含义、Latest（最新版本）与 Stable（稳定版本）的区别，以及如何为 CPU 选择构建包。"
+    },
+    "landing.download.guide.upgrade": {
+        "message": "将集群升级到新版本之前，请阅读各版本的注意事项。"
+    },
+    "landing.download.guide.archive": {
+        "message": "旧分支不再发布任何更新，包括安全补丁。"
+    },
+    "landing.download.dockerCommand": {
+        "message": "Docker 拉取命令"
+    },
+    "landing.trackB.done.demo": {
+        "message": "演示章节覆盖任务清单的每一项，可在空的 Doris 集群上从头运行到尾；每个预期结果都来自实际执行输出。"
+    },
+    "landing.trackB.done.mirrors": {
+        "message": "两个版本的页面均包含相同的演示章节。"
+    },
+    "landing.trackB.done.fixes": {
+        "message": "页面中发现的问题已在同一个拉取请求中修复，或在其描述中列明。"
+    },
+    "landing.trackB.done.pr": {
+        "message": "已向 apache/doris-website 提交拉取请求，并注明任务名称。"
+    },
+    "landing.profile.boolean.yes": {
+        "message": "是"
+    },
+    "landing.profile.boolean.no": {
+        "message": "否"
+    },
+    "landing.profile.error.graphLayout": {
+        "message": "无法完成执行图的布局。"
+    },
+    "landing.profile.error.secureId": {
+        "message": "此浏览器无法创建安全的分析请求标识符。"
+    },
+    "landing.profile.error.metricRange": {
+        "message": "Profile 中的指标超出了支持的数值范围。"
+    },
+    "landing.profile.error.duplicateNodes": {
+        "message": "执行图包含重复的节点 ID。"
+    },
+    "landing.profile.error.invalidEdge": {
+        "message": "执行图包含无效的连接。"
+    },
+    "landing.profile.error.duplicateEdge": {
+        "message": "执行图包含重复的连接。"
+    },
+    "landing.profile.error.graphCycle": {
+        "message": "执行图包含循环依赖。"
+    },
+    "landing.profile.error.preparedTooLarge": {
+        "message": "处理后的 Profile 超过 10 MiB。"
+    },
+    "landing.profile.error.tooManyLines": {
+        "message": "Profile 的行数过多。"
+    },
+    "landing.profile.error.longLine": {
+        "message": "Profile 中存在超过 64 KiB 的行。"
+    },
+    "landing.profile.error.tooManyFragments": {
+        "message": "Profile 中的 Fragment 数量过多。"
+    },
+    "landing.profile.error.tooManyPipelines": {
+        "message": "Profile 中的 Pipeline 数量过多。"
+    },
+    "landing.profile.error.tooManyNodes": {
+        "message": "执行图的节点数量过多。"
+    },
+    "landing.profile.error.noOperators": {
+        "message": "Profile 中没有可用的 MergedProfile 算子。"
+    },
+    "landing.profile.error.tooManyEdges": {
+        "message": "执行图的连接数量过多。"
+    },
+    "landing.download.noOptions": {
+        "message": "无可用选项"
     }
 }

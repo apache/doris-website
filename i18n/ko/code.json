@@ -8479,5 +8479,92 @@
   },
   "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
     "message": "진행 중인 커널 작업은 쿼리 정확성, 장애 격리, 자원 제어를 강화합니다. 새 작업은 특히 옵티마이저와 숫자 변환 오류, BE를 종료시킬 수 있는 스캐너 예외, 캐시 메모리 예산, 파티션 생성 제한에 집중합니다. 신뢰할 수 있는 복잡한 쿼리 결과, 예측 가능한 운영, 더 나은 진단을 목표로 합니다."
+  },
+  "landing.download.binary": {
+    "message": "바이너리"
+  },
+  "landing.download.source": {
+    "message": "소스"
+  },
+  "landing.download.compatibility": {
+    "message": "{engine} {version}용"
+  },
+  "landing.download.guide.version": {
+    "message": "X.Y.Z의 의미, Latest(최신)와 Stable(안정)의 차이, CPU에 맞는 바이너리를 확인하세요."
+  },
+  "landing.download.guide.upgrade": {
+    "message": "클러스터를 새 릴리스로 업그레이드하기 전에 버전별 주의 사항을 확인하세요."
+  },
+  "landing.download.guide.archive": {
+    "message": "이전 브랜치에는 보안 패치를 포함한 어떠한 추가 릴리스도 제공되지 않습니다."
+  },
+  "landing.download.dockerCommand": {
+    "message": "Docker pull 명령어"
+  },
+  "landing.trackB.done.demo": {
+    "message": "데모가 과제 체크리스트의 모든 항목을 다루고 빈 Doris에서 처음부터 끝까지 실행됩니다. 모든 예상 결과는 실제 출력입니다."
+  },
+  "landing.trackB.done.mirrors": {
+    "message": "두 페이지 모두에 같은 섹션이 있습니다."
+  },
+  "landing.trackB.done.fixes": {
+    "message": "발견한 문서 오류를 같은 풀 리퀘스트에서 수정했거나 설명에 적었습니다."
+  },
+  "landing.trackB.done.pr": {
+    "message": "apache/doris-website에 풀 리퀘스트를 열고 과제 이름을 적었습니다."
+  },
+  "landing.profile.boolean.yes": {
+    "message": "예"
+  },
+  "landing.profile.boolean.no": {
+    "message": "아니요"
+  },
+  "landing.profile.error.graphLayout": {
+    "message": "실행 그래프를 배치하지 못했습니다."
+  },
+  "landing.profile.error.secureId": {
+    "message": "이 브라우저에서는 안전한 분석 요청 식별자를 생성할 수 없습니다."
+  },
+  "landing.profile.error.metricRange": {
+    "message": "Profile 지표가 지원되는 숫자 범위를 벗어났습니다."
+  },
+  "landing.profile.error.duplicateNodes": {
+    "message": "실행 그래프에 중복된 노드 ID가 있습니다."
+  },
+  "landing.profile.error.invalidEdge": {
+    "message": "실행 그래프에 잘못된 연결이 있습니다."
+  },
+  "landing.profile.error.duplicateEdge": {
+    "message": "실행 그래프에 중복된 연결이 있습니다."
+  },
+  "landing.profile.error.graphCycle": {
+    "message": "실행 그래프에 순환이 있습니다."
+  },
+  "landing.profile.error.preparedTooLarge": {
+    "message": "처리된 Profile이 10 MiB를 초과합니다."
+  },
+  "landing.profile.error.tooManyLines": {
+    "message": "Profile에 행이 너무 많습니다."
+  },
+  "landing.profile.error.longLine": {
+    "message": "Profile에 64 KiB를 초과하는 행이 있습니다."
+  },
+  "landing.profile.error.tooManyFragments": {
+    "message": "Profile에 Fragment가 너무 많습니다."
+  },
+  "landing.profile.error.tooManyPipelines": {
+    "message": "Profile에 Pipeline이 너무 많습니다."
+  },
+  "landing.profile.error.tooManyNodes": {
+    "message": "실행 그래프에 노드가 너무 많습니다."
+  },
+  "landing.profile.error.noOperators": {
+    "message": "Profile에 사용 가능한 MergedProfile 연산자가 없습니다."
+  },
+  "landing.profile.error.tooManyEdges": {
+    "message": "실행 그래프에 연결이 너무 많습니다."
+  },
+  "landing.download.noOptions": {
+    "message": "사용 가능한 옵션이 없습니다"
   }
 }

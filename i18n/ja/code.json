@@ -8673,5 +8673,92 @@
   },
   "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
     "message": "進行中のカーネル開発では、クエリの正確性、障害の分離、リソース制御を強化します。新規の取り組みは特に、オプティマイザーと数値変換の誤り、BE を終了させるスキャナー例外、キャッシュのメモリ予算、パーティション作成制限に注力しています。信頼できる複雑クエリの結果、予測可能な運用、よりよい診断を目指します。"
+  },
+  "landing.download.binary": {
+    "message": "バイナリ"
+  },
+  "landing.download.source": {
+    "message": "ソース"
+  },
+  "landing.download.compatibility": {
+    "message": "{engine} {version} 向け"
+  },
+  "landing.download.guide.version": {
+    "message": "X.Y.Z の意味、Latest（最新版）と Stable（安定版）の違い、CPU に合うバイナリを確認します。"
+  },
+  "landing.download.guide.upgrade": {
+    "message": "クラスターを新しいリリースに移す前に、バージョン別の注意事項を確認してください。"
+  },
+  "landing.download.guide.archive": {
+    "message": "古いブランチには、セキュリティパッチを含む今後のリリースは提供されません。"
+  },
+  "landing.download.dockerCommand": {
+    "message": "Docker pull コマンド"
+  },
+  "landing.trackB.done.demo": {
+    "message": "デモはチェックリストの全項目を網羅し、空の Doris で最初から最後まで実行できます。期待する結果には実際の出力を記載します。"
+  },
+  "landing.trackB.done.mirrors": {
+    "message": "両方のページに同じセクションがあります。"
+  },
+  "landing.trackB.done.fixes": {
+    "message": "見つけたページの問題を同じプルリクエストで修正するか、説明欄に記載しています。"
+  },
+  "landing.trackB.done.pr": {
+    "message": "apache/doris-website にプルリクエストを作成し、タスク名を記載しています。"
+  },
+  "landing.profile.boolean.yes": {
+    "message": "はい"
+  },
+  "landing.profile.boolean.no": {
+    "message": "いいえ"
+  },
+  "landing.profile.error.graphLayout": {
+    "message": "実行グラフを配置できませんでした。"
+  },
+  "landing.profile.error.secureId": {
+    "message": "このブラウザーでは安全な分析リクエスト ID を生成できません。"
+  },
+  "landing.profile.error.metricRange": {
+    "message": "Profile のメトリクスがサポートする数値範囲を超えています。"
+  },
+  "landing.profile.error.duplicateNodes": {
+    "message": "実行グラフに重複するノード ID があります。"
+  },
+  "landing.profile.error.invalidEdge": {
+    "message": "実行グラフに無効な接続があります。"
+  },
+  "landing.profile.error.duplicateEdge": {
+    "message": "実行グラフに重複する接続があります。"
+  },
+  "landing.profile.error.graphCycle": {
+    "message": "実行グラフに循環があります。"
+  },
+  "landing.profile.error.preparedTooLarge": {
+    "message": "準備した Profile が 10 MiB を超えています。"
+  },
+  "landing.profile.error.tooManyLines": {
+    "message": "Profile の行数が多すぎます。"
+  },
+  "landing.profile.error.longLine": {
+    "message": "Profile に 64 KiB を超える行があります。"
+  },
+  "landing.profile.error.tooManyFragments": {
+    "message": "Profile の Fragment 数が多すぎます。"
+  },
+  "landing.profile.error.tooManyPipelines": {
+    "message": "Profile の Pipeline 数が多すぎます。"
+  },
+  "landing.profile.error.tooManyNodes": {
+    "message": "実行グラフのノード数が多すぎます。"
+  },
+  "landing.profile.error.noOperators": {
+    "message": "Profile に利用可能な MergedProfile オペレーターがありません。"
+  },
+  "landing.profile.error.tooManyEdges": {
+    "message": "実行グラフの接続数が多すぎます。"
+  },
+  "landing.download.noOptions": {
+    "message": "選択できる項目がありません"
   }
 }

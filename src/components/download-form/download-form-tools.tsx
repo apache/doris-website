@@ -7,6 +7,7 @@ import { CPUEnum, DownloadTypeEnum, Option } from '@site/src/constant/download.d
 import { ToolsEnum } from '@site/src/constant/download.data';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { DownloadIcon } from '../Icons/download-icon';
+import {DOWNLOAD_TYPE_LABELS, localizeDownloadOptions} from './download-labels';
 
 interface DownloadFormToolsProps {
     data: Option[];
@@ -189,7 +190,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 label={translate({id: "landing.downloadformtools.008", message: "Version"})}
                                 isCascader={tool !== ToolsEnum.Operator}
                                 popupExtraClass={popupExtraClass}
-                                options={getOptions}
+                                options={localizeDownloadOptions(getOptions)}
                                 displayRender={label => {
                                     if (label.length > 1) {
                                         return `${label[0]} (${label[1]})`;
@@ -212,11 +213,11 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                     popupExtraClass={popupExtraClass}
                     options={[
                         {
-                            label: DownloadTypeEnum.Binary,
+                            label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Binary],
                             value: DownloadTypeEnum.Binary,
                         },
                         {
-                            label: DownloadTypeEnum.Source,
+                            label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source],
                             value: DownloadTypeEnum.Source,
                         },
                     ]}
@@ -258,7 +259,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 $
                             </span>
                             <code
-                                aria-label="Docker pull command"
+                                aria-label={translate({id: 'landing.download.dockerCommand', message: 'Docker pull command'})}
                                 className="min-w-0 flex-1 select-text whitespace-normal break-all !bg-black !p-0 font-mono text-sm leading-6 !text-[var(--brand-terminal)]"
                                 style={{ backgroundColor: '#000000', color: 'var(--brand-terminal)' }}
                             >

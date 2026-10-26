@@ -6,6 +6,7 @@ import FormSelect from '../form-select/form-select';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import * as semver from 'semver';
 import copy from 'copy-to-clipboard';
+import {DOWNLOAD_TYPE_LABELS} from './download-labels';
 
 interface DownloadFormProps {
     versions: Option[];
@@ -130,11 +131,11 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 popupExtraClass={popupExtraClass}
                                 options={[
                                     {
-                                        label: DownloadTypeEnum.Binary,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Binary],
                                         value: DownloadTypeEnum.Binary,
                                     },
                                     {
-                                        label: DownloadTypeEnum.Source,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source],
                                         value: DownloadTypeEnum.Source,
                                     },
                                 ]}

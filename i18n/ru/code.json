@@ -8479,5 +8479,92 @@
   },
   "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
     "message": "Текущая работа над ядром укрепляет корректность запросов, изоляцию сбоев и контроль ресурсов. Новые задачи особенно касаются ошибок оптимизатора и числовых преобразований, исключений сканеров, способных завершить BE, бюджетов памяти кэша и ограничений создания партиций. Цель: достоверные результаты сложных запросов, предсказуемая работа и лучшая диагностика."
+  },
+  "landing.download.binary": {
+    "message": "Бинарный"
+  },
+  "landing.download.source": {
+    "message": "Исходный код"
+  },
+  "landing.download.compatibility": {
+    "message": "Для {engine} {version}"
+  },
+  "landing.download.guide.version": {
+    "message": "Что означает X.Y.Z, чем Latest (новая ветка) отличается от Stable (стабильная) и какая сборка подходит вашему CPU."
+  },
+  "landing.download.guide.upgrade": {
+    "message": "Меры предосторожности для каждой версии перед обновлением кластера."
+  },
+  "landing.download.guide.archive": {
+    "message": "Для старых веток больше не выпускаются обновления, включая исправления безопасности."
+  },
+  "landing.download.dockerCommand": {
+    "message": "Команда Docker pull"
+  },
+  "landing.trackB.done.demo": {
+    "message": "Демо охватывает все пункты задания и выполняется от начала до конца на пустом Doris; каждый ожидаемый результат содержит фактический вывод."
+  },
+  "landing.trackB.done.mirrors": {
+    "message": "Одинаковый раздел добавлен в обе копии страницы."
+  },
+  "landing.trackB.done.fixes": {
+    "message": "Найденные ошибки страницы исправлены в том же pull request либо перечислены в его описании."
+  },
+  "landing.trackB.done.pr": {
+    "message": "Pull request открыт в apache/doris-website и содержит название задания."
+  },
+  "landing.profile.boolean.yes": {
+    "message": "Да"
+  },
+  "landing.profile.boolean.no": {
+    "message": "Нет"
+  },
+  "landing.profile.error.graphLayout": {
+    "message": "Не удалось построить компоновку графа выполнения."
+  },
+  "landing.profile.error.secureId": {
+    "message": "Этот браузер не может создать безопасный идентификатор запроса анализа."
+  },
+  "landing.profile.error.metricRange": {
+    "message": "В Profile есть метрика вне поддерживаемого числового диапазона."
+  },
+  "landing.profile.error.duplicateNodes": {
+    "message": "Граф выполнения содержит повторяющиеся ID узлов."
+  },
+  "landing.profile.error.invalidEdge": {
+    "message": "Граф выполнения содержит недопустимую связь."
+  },
+  "landing.profile.error.duplicateEdge": {
+    "message": "Граф выполнения содержит повторяющуюся связь."
+  },
+  "landing.profile.error.graphCycle": {
+    "message": "Граф выполнения содержит цикл."
+  },
+  "landing.profile.error.preparedTooLarge": {
+    "message": "Подготовленный Profile превышает 10 MiB."
+  },
+  "landing.profile.error.tooManyLines": {
+    "message": "Profile содержит слишком много строк."
+  },
+  "landing.profile.error.longLine": {
+    "message": "Profile содержит строку больше 64 KiB."
+  },
+  "landing.profile.error.tooManyFragments": {
+    "message": "Profile содержит слишком много Fragment."
+  },
+  "landing.profile.error.tooManyPipelines": {
+    "message": "Profile содержит слишком много Pipeline."
+  },
+  "landing.profile.error.tooManyNodes": {
+    "message": "Граф выполнения содержит слишком много узлов."
+  },
+  "landing.profile.error.noOperators": {
+    "message": "В Profile нет пригодных операторов MergedProfile."
+  },
+  "landing.profile.error.tooManyEdges": {
+    "message": "Граф выполнения содержит слишком много связей."
+  },
+  "landing.download.noOptions": {
+    "message": "Нет доступных вариантов"
   }
 }
