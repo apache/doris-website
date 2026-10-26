@@ -58,9 +58,14 @@ test('CI fails early on cheap checks, retains required job identity and deduplic
     assert(index('Publish artifact optimization tests') < index('Translation gate for changed locales'));
     assert(index('Publish artifact optimization tests') < index('Verify native content manifest fixture'));
     assert.match(steps[index('Translation unit tests')].run, /__tests__\/\*\.test\.cjs/);
+    assert.equal(steps[index('Translation unit tests')].if, "steps.detect.outputs.translation_tests == 'true'");
     assert.match(steps[index('Install dependencies')].run, /\byarn --frozen-lockfile\b/);
     assert.equal(steps.filter(step => /docs:links:changed/.test(step.run ?? '')).length, 0);
     assert.match(steps[index('Docs governance report')].run, /docs:lint:changed/);
+    assert.match(steps[index('Docs governance report')].if, /steps\.detect\.outputs\.docs_report == 'true'/);
+    const browserTools = steps[index('Install browser verification tools')].if;
+    for (const fixture of ['content_fixture', 'publish_fixture', 'sampling_fixture'])
+        assert(browserTools.includes(`steps.detect.outputs.${fixture} == 'true'`), fixture);
     const verify = steps[index('Verify localized static pages')].run;
     assert.match(verify, /\[ "\$LOCALE" = "ru" \]; then EXTRA_ARGS\+=\(--source-locales/);
     assert.match(verify, /\[ "\$LOCALE" = "ko" \] \|\| \[ "\$LOCALE" = "ru" \]; then EXTRA_ARGS=\(--themes\)/);

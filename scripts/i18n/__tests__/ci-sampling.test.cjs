@@ -47,6 +47,46 @@ test('shared UI registry selects real samples and content fixtures while unknown
     assert.equal(policy([registry], {forceFull: true}).mode, 'full');
     assert.equal(policy([registry, 'translations/shared/unknown.json'], {forceSample: true}).mode, 'full');
 });
+test('community translation metadata does not upgrade a landing-page PR to full compilation', () => {
+    const files = ['translations/COMMUNITY_ENTRIES.md', 'translations/community-reports.json',
+        'translations/pages/registry.json', 'translations/pages/state.json',
+        'i18n/ja/code.json', 'src/components/community-report-next/CommunityReportNext.tsx'];
+    const selected = policy(files);
+    assert.equal(selected.mode, 'sample');
+    assert.equal(selected.selection, 'representative');
+    assert.equal(selected.publicationAllowed, false);
+    assert.equal(selected.runPublishFixture, false);
+    assert.equal(selected.runDocsReport, false);
+    assert.equal(policy(['translations/community-reports.json']).mode, 'sample');
+    for (const note of ['COMMUNITY_ENTRIES', 'FIRST_RELEASE', 'SHARED_UI', 'README'])
+        assert.equal(policy([`translations/${note}.md`]).mode, 'skip');
+    assert.equal(policy([...files, 'translations/unknown.json']).mode, 'full');
+    assert.equal(policy(files, {forceFull: true}).mode, 'full');
+});
+test('CI tooling only runs the fixtures for its own subsystem', () => {
+    const language = policy(['scripts/i18n/verify-global-language.cjs']);
+    assert.equal(language.mode, 'fixtures');
+    assert.equal(language.runContentFixture, true);
+    assert.equal(language.runSamplingFixture, false);
+    assert.equal(language.runPublishFixture, false);
+    const sampler = policy(['scripts/i18n/ci-sample.cjs']);
+    assert.equal(sampler.runSamplingFixture, true);
+    assert.equal(sampler.runPublishFixture, false);
+    const publishing = policy(['scripts/publish/apache.cjs']);
+    assert.equal(publishing.runPublishFixture, true);
+    assert.equal(publishing.runSamplingFixture, false);
+    assert.equal(policy(['.github/workflows/build-check.yml']).runDocsReport, false);
+    const docs = policy(['docs/topic.md']);
+    assert.equal(docs.runTranslationTests, false);
+    assert.equal(docs.runDocsReport, true);
+    const dictionary = policy(['i18n/ja/code.json']);
+    assert.equal(dictionary.runTranslationTests, false);
+    assert.equal(dictionary.runDocsReport, false);
+    assert.equal(policy(['src/utils/localizedRoute.ts']).runTranslationTests, true);
+    const full = policy([], {forceFull: true});
+    assert.equal(full.runTranslationTests, true);
+    assert.equal(full.runDocsReport, true);
+});
 test('a registry-only commit samples all configured languages and active versions without claiming publication coverage', t => {
     const root = directory(t), registry = 'translations/shared/registry.json';
     fs.mkdirSync(path.join(root, 'translations/shared'), {recursive: true});

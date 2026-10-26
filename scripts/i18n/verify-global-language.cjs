@@ -48,7 +48,14 @@ function verifyContent(site, directory) {
     }
     return reports;
 }
-async function verifyBrowser(site, {fixture = false, output = '.i18n-build/browser-global-language.json'} = {}) {
+async function verifyBrowser(site, {fixture = false, manifests = '.i18n-build/content-manifests',
+    ordinary = fixture ? 'sample-2/' : 'download/', output = '.i18n-build/browser-global-language.json'} = {}) {
+    const manifest = JSON.parse(fs.readFileSync(path.join(manifests, 'ja.json')));
+    const ordinaryPage = manifest.pages.find(page => page.kind === 'page' && page.route === '/ja/' + ordinary);
+    assert(ordinaryPage, `Missing ordinary-page manifest entry: /ja/${ordinary}`);
+    // The fixture deliberately exercises fallback. A real page may acquire a
+    // translation without changing its language-menu/navigation contract.
+    if (fixture && ordinary === 'sample-2/') assert.equal(ordinaryPage.fallback, true);
     const {chromium} = require('playwright');
     const server = createServer(site);
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -72,10 +79,9 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
         const page = await context.newPage();
         page.on('pageerror', error => {errors.push(error.message);});
         page.on('console', message => {if (/hydration|did not match|server HTML/i.test(message.text())) errors.push(message.text());});
-        const ordinary = fixture ? 'sample-2/' : 'download/';
         await page.goto(origin + '/ja/' + ordinary + '?from=qa#usage');
         await page.locator('.language-menu a[href*="from=qa"]').first().waitFor({state: 'attached'});
-        assert.equal(await page.locator('[data-content-id]').first().getAttribute('lang'), 'en');
+        assert.equal(await page.locator('[data-content-id]').first().getAttribute('lang'), ordinaryPage.contentLocale);
         const menu = page.locator('.language-menu:not(.language-menu--mobile)');
         await menu.locator('summary').click();
         const english = menu.locator('a[lang="en-US"]');
@@ -151,8 +157,8 @@ async function verifyBrowser(site, {fixture = false, output = '.i18n-build/brows
         }
         const noJs = await browser.newContext({javaScriptEnabled: false});
         const noJsPage = await noJs.newPage(); await noJsPage.goto(origin + '/ja/' + ordinary);
-        assert.equal(await noJsPage.locator('[data-content-id]').first().getAttribute('lang'), 'en');
-        assert.equal(await noJsPage.locator('.page-fallback-notice').count(), 1);
+        assert.equal(await noJsPage.locator('[data-content-id]').first().getAttribute('lang'), ordinaryPage.contentLocale);
+        assert.equal(await noJsPage.locator('.page-fallback-notice').count(), ordinaryPage.fallback ? 1 : 0);
         assert.equal(await noJsPage.locator('.language-menu a').first().getAttribute('href'), '/' + ordinary);
         await noJs.close();
         assert.deepEqual(errors, []);
@@ -165,8 +171,11 @@ async function main() {
     const args = process.argv.slice(2); const value = (name, fallback) => args.includes(name) ? args[args.indexOf(name) + 1] : fallback;
     const site = value('--site', 'build'), output = value('--output', '.i18n-build/browser-global-language.json');
     fs.mkdirSync(path.dirname(output), {recursive: true});
-    const content = verifyContent(site, value('--manifests', '.i18n-build/content-manifests'));
-    const browser = await verifyBrowser(site, {fixture: args.includes('--fixture'), output});
+    const manifests = value('--manifests', '.i18n-build/content-manifests');
+    const content = verifyContent(site, manifests);
+    const browser = await verifyBrowser(site, {fixture: args.includes('--fixture'), manifests, output});
+    if (args.includes('--fixture'))
+        browser.translatedPage = await verifyBrowser(site, {fixture: true, manifests, ordinary: 'sample-0/', output});
     fs.writeFileSync(output, JSON.stringify({content, ...browser}, null, 2) + '\n');
     console.log(JSON.stringify({content, ...browser}));
 }

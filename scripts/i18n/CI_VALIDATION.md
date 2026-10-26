@@ -9,7 +9,7 @@ committed lockfile after source planning. Source snapshot checks remain enabled.
 | Change | Validation |
 | --- | --- |
 | README, planning or review notes only | Configuration, move/link and workflow security checks; no dependency installation or site build |
-| CI and tooling | Unit tests, five-language native compilation fixture and publishing/Apache/Chromium fixture |
+| CI and tooling | Applicable unit tests and fixtures for the changed subsystem; no real-site build |
 | Shared UI, shared UI registry, routing, SEO, localization or sidebars | Representative real documents in five languages and every active version; native content fixtures for content/locale implementations, publishing fixtures for delivery/host implementations |
 | Documentation or assets | Changed documents and import dependants, plus representative real documents; English source changes select all five languages, localized changes select English and the affected locales |
 | Dependencies, active versions or unclassified inputs | Full five-language publication build and verification |
@@ -25,6 +25,18 @@ messages or dependency inventory select representative real documents in every
 configured language and active version, along with the native content fixture.
 Ordinary pages remain in the real build. This classification applies only to
 that exact registry path; other unknown inputs still require full validation.
+
+Top-level `translations/*.md` files are maintenance notes and do not request a
+site build. `translations/community-reports.json` controls ordinary page content
+and selects representative real builds. Combining these known inputs with a
+landing-page translation no longer upgrades it to a full publication build.
+Other unknown JSON inputs still require full validation.
+
+The sampling adapter, native content and publishing/Apache fixtures run only
+when their own implementation changes. Document, dictionary and translation-state
+edits retain content admission and real sampled compilation without rerunning
+unchanged translation unit tests. Docs governance runs for document/navigation
+changes and full validation, rather than scanning all docs for a landing UI edit.
 
 ## What a sample proves
 
