@@ -5,6 +5,14 @@
 // Markdown compiled by Docusaurus's MDX loader, so its rules target the plain
 // semantic tags (h2, ul, p, code, table…) that Markdown produces.
 
+.weekly-report__fallback {
+    padding: 1rem;
+    border: 1px solid var(--brand-primary);
+    border-radius: 8px;
+    color: var(--brand-ink);
+    background: var(--brand-cream-light);
+}
+
 .weekly-report {
     --wr-green: var(--brand-primary-dark);
     --wr-green-dark: var(--brand-primary-darker);

@@ -1692,6 +1692,7 @@
         "landing.DownloadFormNext.037",
         "landing.DownloadFormNext.038",
         "landing.DownloadFormNext.039",
+        "landing.download.unavailableBuild",
         "landing.downloadformallrelease.001",
         "landing.downloadformallrelease.002",
         "landing.downloadformallrelease.003",
@@ -1865,6 +1866,7 @@
         "landing.events.data.028",
         "landing.events.data.029",
         "landing.events.data.030",
+        "landing.events.mediaLanguage",
         "landing.events.seo.description",
         "landing.events.seo.title",
         "landing.events.status.completed",
@@ -1948,7 +1950,8 @@
         "src/pages/community-report/_reports/2026-09-28.mdx",
         "src/pages/community-report/_reports/2026-10-05.mdx",
         "src/pages/community-report/_reports/2026-10-12.mdx",
-        "src/pages/community-report/index.tsx"
+        "src/pages/community-report/index.tsx",
+        "translations/community-reports.json"
       ],
       "messageIds": [
         "landing.CommunityReportNext.001",
@@ -1976,6 +1979,8 @@
         "landing.CommunityReportNext.023",
         "landing.CommunityReportNext.024",
         "landing.CommunityReportNext.025",
+        "landing.report.english",
+        "landing.report.fallback",
         "landing.reportRefs.006e540c067e68f0",
         "landing.reportRefs.0107515eb324e584",
         "landing.reportRefs.01230f3d6c4df5b9",
@@ -5484,6 +5489,7 @@
         "landing.profile.graph.unavailable",
         "landing.profile.graph.zoomIn",
         "landing.profile.graph.zoomOut",
+        "landing.profile.responseLanguages",
         "landing.profile.status.analyzing",
         "landing.profile.status.completed",
         "landing.profile.status.queueMany",

@@ -75,6 +75,8 @@ export interface WeeklyReportData {
 export interface WeeklyReportEntry {
     /** Stable id (the markdown filename without extension); used as the URL hash. */
     id: string;
+    contentLocale?: string;
+    fallback?: boolean;
     /** Date range shown in the sidebar and page title, e.g. "Jun 29 – Jul 5, 2026". */
     label: string;
     /** Optional subtitle, e.g. "Week 27, 2026". */
@@ -193,7 +195,7 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                     onClick={() => select(latest.id)}
                                 >
                                     <span className="community-report__entry-badge">{translate({id: "landing.CommunityReportNext.009", message: "Latest"})}</span>
-                                    <span className="community-report__entry-label">{latest.label}</span>
+                                    <span className="community-report__entry-label" lang={latest.contentLocale}>{latest.label}</span>
                                 </button>
                             )}
 
@@ -240,7 +242,8 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                                                     }
                                                     onClick={() => select(r.id)}
                                                 >
-                                                    {r.label}
+                                                    <span lang={r.contentLocale}>{r.label}</span>
+                                                    {r.fallback && <> · {translate({id: 'landing.report.english', message: 'English'})}</>}
                                                 </button>
                                             ))}
                                         </div>
@@ -266,8 +269,13 @@ export default function CommunityReportNext({ reports }: CommunityReportNextProp
                     </aside>
 
                     <main className="community-report__content">
+                        {selected?.fallback && (
+                            <p className="weekly-report__fallback" role="note" data-report-fallback>
+                                {translate({id: 'landing.report.fallback', message: 'This report is available in English. The site navigation stays in your selected language.'})}
+                            </p>
+                        )}
                         {selected && (
-                            <article className="weekly-report">
+                            <article className="weekly-report" lang={selected.contentLocale ?? 'en'} data-report-id={selected.id}>
                                 <header className="weekly-report__header">
                                     <p className="weekly-report__eyebrow">{translate({id: "landing.CommunityReportNext.012", message: "Community Weekly Report"})}</p>
                                     <h1 className="weekly-report__title">{selected.label}</h1>

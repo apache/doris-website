@@ -22,10 +22,11 @@ function readReport(root, file) {
     if (!entry.label || !entry.report?.summary) throw new Error(`Incomplete structured report: ${file}`);
     return entry;
 }
-function reportMessages(root) {
+function reportMessages(root, ids) {
     const messages = new Map();
     for (const file of reportSources(root)) {
         const id = path.basename(file, '.mdx');
+        if (ids && !ids.includes(id)) continue;
         mapReportText(id, readReport(root, file), (key, value) => {
             if (messages.has(key) && messages.get(key) !== value) throw new Error(`Report message identity collision: ${key}`);
             messages.set(key, value); return value;

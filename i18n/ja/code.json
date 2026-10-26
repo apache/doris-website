@@ -3975,5 +3975,4703 @@
   },
   "homepage.diagram.storage": {
     "message": "共有ストレージ"
+  },
+  "landing.index.001": {
+    "message": "詳しく見る"
+  },
+  "landing.users.category.all": {
+    "message": "すべて"
+  },
+  "landing.users.category.finance": {
+    "message": "金融"
+  },
+  "landing.users.category.technology": {
+    "message": "テクノロジー"
+  },
+  "landing.users.category.media": {
+    "message": "メディア・エンターテインメント"
+  },
+  "landing.users.category.telecom": {
+    "message": "通信・製造"
+  },
+  "landing.users.category.logistics": {
+    "message": "日用消費財・物流"
+  },
+  "landing.users.category.distribution": {
+    "message": "商用ディストリビューション"
+  },
+  "landing.UsersNext.001": {
+    "message": "リアルタイム分析の旅へ"
+  },
+  "landing.UsersNext.002": {
+    "message": "未来を拓く"
+  },
+  "landing.UsersNext.003": {
+    "message": "イノベーターと"
+  },
+  "landing.UsersNext.004": {
+    "message": "世界の先進企業をはじめ、10,000 社以上が Apache Doris を活用しています。"
+  },
+  "landing.UsersNext.005": {
+    "message": "活用事例を共有する"
+  },
+  "landing.UsersNext.006": {
+    "message": "もっと見る"
+  },
+  "landing.UsersNext.007": {
+    "message": "Apache Doris - 導入事例 | イノベーターとリアルタイム分析の旅へ"
+  },
+  "landing.UsersNext.008": {
+    "message": "世界の先進企業をはじめ、10,000 社以上が Apache Doris の OLAP DBMS を活用し、レイクハウス、アドホック分析、ユーザー行動分析などの実業務アプリケーションを支えています。"
+  },
+  "landing.downloadformallrelease.001": {
+    "message": "バージョン"
+  },
+  "landing.downloadformallrelease.002": {
+    "message": "バージョン"
+  },
+  "landing.downloadformallrelease.003": {
+    "message": "アーキテクチャ"
+  },
+  "landing.downloadformallrelease.004": {
+    "message": "アーキテクチャ"
+  },
+  "landing.downloadformallrelease.005": {
+    "message": "tar アーカイブ"
+  },
+  "landing.downloadformallrelease.006": {
+    "message": "tar アーカイブ"
+  },
+  "landing.downloadformallrelease.007": {
+    "message": "ダウンロード"
+  },
+  "landing.downloadformallrelease.008": {
+    "message": "リンクをコピー"
+  },
+  "landing.downloadformallrelease.009": {
+    "message": "ダウンロード"
+  },
+  "landing.downloadformtools.001": {
+    "message": "ツール"
+  },
+  "landing.downloadformtools.002": {
+    "message": "ツール"
+  },
+  "landing.downloadformtools.003": {
+    "message": "バージョン"
+  },
+  "landing.downloadformtools.004": {
+    "message": "バージョン"
+  },
+  "landing.downloadformtools.005": {
+    "message": "アーキテクチャ"
+  },
+  "landing.downloadformtools.006": {
+    "message": "アーキテクチャ"
+  },
+  "landing.downloadformtools.007": {
+    "message": "バージョン"
+  },
+  "landing.downloadformtools.008": {
+    "message": "バージョン"
+  },
+  "landing.downloadformtools.009": {
+    "message": "tar アーカイブ"
+  },
+  "landing.downloadformtools.010": {
+    "message": "tar アーカイブ"
+  },
+  "landing.downloadformtools.011": {
+    "message": "Docker コマンド"
+  },
+  "landing.downloadformtools.012": {
+    "message": "Docker pull コマンドをコピー"
+  },
+  "landing.downloadformtools.013": {
+    "message": "コピー"
+  },
+  "landing.downloadformtools.014": {
+    "message": "ダウンロード"
+  },
+  "landing.downloadformtools.015": {
+    "message": "リンクをコピー"
+  },
+  "landing.downloadformtools.016": {
+    "message": "ダウンロード"
+  },
+  "landing.downloadformarchive.001": {
+    "message": "過去のリリースをダウンロード"
+  },
+  "landing.downloadformarchive.002": {
+    "message": "プロジェクト"
+  },
+  "landing.downloadformarchive.003": {
+    "message": "プロジェクト"
+  },
+  "landing.DownloadFormNext.001": {
+    "message": "バージョンの選び方"
+  },
+  "landing.DownloadFormNext.002": {
+    "message": "アップグレード時の注意事項"
+  },
+  "landing.DownloadFormNext.003": {
+    "message": "過去のリリース"
+  },
+  "download.title": {
+    "message": "Apache Doris - ダウンロード | あらゆる環境に簡単にデプロイ"
+  },
+  "homepage.banner.subTitle": {
+    "message": "各バージョンのビルド済みバイナリをダウンロードしてお試しください。Apache Doris は場所や規模を問わず、さまざまなデバイスに対応します。"
+  },
+  "landing.DownloadFormNext.004": {
+    "message": "ダウンロード"
+  },
+  "landing.DownloadFormNext.005": {
+    "message": "Apache Doris が現在保守しているリリースブランチの検証済みバイナリとソース tar アーカイブです。すべてのダウンロードに署名とチェックサムが付いています。"
+  },
+  "landing.DownloadFormNext.006": {
+    "message": "保守対象ブランチ："
+  },
+  "download.version": {
+    "message": "バージョン"
+  },
+  "download.cpu.model": {
+    "message": "アーキテクチャ"
+  },
+  "landing.DownloadFormNext.007": {
+    "message": "該当なし："
+  },
+  "landing.DownloadFormNext.008": {
+    "message": " のビルド（対象："
+  },
+  "download.download.link": {
+    "message": "tar アーカイブ"
+  },
+  "landing.DownloadFormNext.009": {
+    "message": "検証方法"
+  },
+  "landing.DownloadFormNext.010": {
+    "message": "ダウンロード"
+  },
+  "landing.DownloadFormNext.011": {
+    "message": "ダウンロードリンクをコピーしました"
+  },
+  "landing.DownloadFormNext.012": {
+    "message": "ダウンロードリンクをコピー"
+  },
+  "landing.DownloadFormNext.013": {
+    "message": "コピーしました"
+  },
+  "landing.DownloadFormNext.014": {
+    "message": "ダウンロードリンクをコピー"
+  },
+  "landing.DownloadFormNext.015": {
+    "message": "ダウンロードリンクをコピーしました"
+  },
+  "landing.DownloadFormNext.016": {
+    "message": "保守中"
+  },
+  "landing.DownloadFormNext.017": {
+    "message": "Doris リリース"
+  },
+  "landing.DownloadFormNext.018": {
+    "message": "Doris はソース tar アーカイブとしてリリースされ、利便性のためにバイナリ tar アーカイブも提供されます。デプロイする前に、各ファイルの ASC 署名または SHA-512 チェックサムを検証してください。"
+  },
+  "landing.DownloadFormNext.019": {
+    "message": "保守対象ブランチのすべてのパッチリリースを掲載しています。パッチリリースは双方向の互換性があるため、同じブランチの最新パッチへの更新にデータ移行は不要です。"
+  },
+  "landing.DownloadFormNext.020": {
+    "message": "リリースノート"
+  },
+  "landing.DownloadFormNext.021": {
+    "message": "アップグレード時の注意事項は、"
+  },
+  "landing.DownloadFormNext.022": {
+    "message": "デプロイ"
+  },
+  "landing.DownloadFormNext.023": {
+    "message": "および"
+  },
+  "landing.DownloadFormNext.024": {
+    "message": "クラスターアップグレード"
+  },
+  "landing.DownloadFormNext.025": {
+    "message": "のマニュアルをご覧ください。"
+  },
+  "landing.DownloadFormNext.026": {
+    "message": "保守中"
+  },
+  "landing.DownloadFormNext.027": {
+    "message": "Doris エコシステム"
+  },
+  "landing.DownloadFormNext.028": {
+    "message": "Doris へのデータ取り込みと読み出しに使うコネクターおよびツールです。保守中のバージョンのみを掲載しています。古いコネクターバージョンは次をご覧ください："
+  },
+  "landing.DownloadFormNext.029": {
+    "message": "アーカイブ"
+  },
+  "landing.DownloadFormNext.030": {
+    "message": "リリースノート"
+  },
+  "landing.DownloadFormNext.031": {
+    "message": "その他のツール"
+  },
+  "landing.DownloadFormNext.032": {
+    "message": "過去のリリース"
+  },
+  "landing.DownloadFormNext.033": {
+    "message": "これらのバージョンには、セキュリティパッチを含め、今後いかなるリリースも提供されません。"
+  },
+  "landing.DownloadFormNext.034": {
+    "message": "これらのバージョンで脆弱性が見つかっても、修正されません。"
+  },
+  "landing.DownloadFormNext.035": {
+    "message": "アップグレードガイド"
+  },
+  "landing.DownloadFormNext.036": {
+    "message": "ASF セキュリティチームに脆弱性を報告"
+  },
+  "landing.DownloadFormNext.037": {
+    "message": "あらゆる環境で実行"
+  },
+  "landing.DownloadFormNext.038": {
+    "message": "ベアメタル、Kubernetes、クラウドなど、お好みの環境に Doris をデプロイできます。"
+  },
+  "landing.DownloadFormNext.039": {
+    "message": "デプロイ方法を見る"
+  },
+  "landing.brandassets.001": {
+    "message": "Doris ロゴ - 横型"
+  },
+  "landing.brandassets.002": {
+    "message": "明るい背景用の標準 Doris ロゴ。"
+  },
+  "landing.brandassets.003": {
+    "message": "Doris ロゴ - 縦型"
+  },
+  "landing.brandassets.004": {
+    "message": "明るい背景用の中央揃え Doris ロゴ。"
+  },
+  "landing.brandassets.005": {
+    "message": "Doris ロゴ - 横型・暗い背景用"
+  },
+  "landing.brandassets.006": {
+    "message": "暗い背景用の白い文字を使った Doris ロゴ。"
+  },
+  "landing.brandassets.007": {
+    "message": "Doris ロゴ - 縦型・暗い背景用"
+  },
+  "landing.brandassets.008": {
+    "message": "暗い背景用の白い文字を使った中央揃え Doris ロゴ。"
+  },
+  "landing.brandassets.009": {
+    "message": "Doris ロゴ - 横型・白単色"
+  },
+  "landing.brandassets.010": {
+    "message": "暗い背景用の単色 Doris ロゴ。"
+  },
+  "landing.brandassets.011": {
+    "message": "Doris ロゴ - 縦型・白単色"
+  },
+  "landing.brandassets.012": {
+    "message": "暗い背景用の中央揃え単色 Doris ロゴ。"
+  },
+  "landing.brandassets.013": {
+    "message": "Apache Doris ロゴ - 横型"
+  },
+  "landing.brandassets.014": {
+    "message": "明るい背景用の標準 Apache Doris ロゴ。"
+  },
+  "landing.brandassets.015": {
+    "message": "Apache Doris ロゴ - 縦型"
+  },
+  "landing.brandassets.016": {
+    "message": "明るい背景用の中央揃え Apache Doris ロゴ。"
+  },
+  "landing.brandassets.017": {
+    "message": "Apache Doris ロゴ - 横型・暗い背景用"
+  },
+  "landing.brandassets.018": {
+    "message": "暗い背景用の白い文字を使った Apache Doris ロゴ。"
+  },
+  "landing.brandassets.019": {
+    "message": "Apache Doris ロゴ - 縦型・暗い背景用"
+  },
+  "landing.brandassets.020": {
+    "message": "暗い背景用の白い文字を使った中央揃え Apache Doris ロゴ。"
+  },
+  "landing.brandassets.021": {
+    "message": "Apache Doris ロゴ - 横型・白単色"
+  },
+  "landing.brandassets.022": {
+    "message": "暗い背景用の単色 Apache Doris ロゴ。"
+  },
+  "landing.brandassets.023": {
+    "message": "Apache Doris ロゴ - 縦型・白単色"
+  },
+  "landing.brandassets.024": {
+    "message": "暗い背景用の中央揃え単色 Apache Doris ロゴ。"
+  },
+  "landing.brandassets.025": {
+    "message": "ブランド素材 - Apache Doris"
+  },
+  "landing.brandassets.026": {
+    "message": "Apache Doris の公式ロゴとブランド SVG 素材をダウンロード。"
+  },
+  "landing.brandassets.027": {
+    "message": "リソース"
+  },
+  "landing.brandassets.028": {
+    "message": "ブランド素材"
+  },
+  "landing.brandassets.029": {
+    "message": "記事、プレゼンテーション、コミュニティイベント、インテグレーションなど、プロジェクトを紹介する資料で使用できる Apache Doris 公式 SVG 素材をダウンロードできます。"
+  },
+  "landing.brandassets.030": {
+    "message": "Apache Doris、Doris、および Doris ロゴは The Apache Software Foundation の商標です。Apache Doris を明確かつ正確に紹介するために、これらの素材をご利用ください。"
+  },
+  "landing.brandassets.031": {
+    "message": " プレビュー"
+  },
+  "landing.brandassets.032": {
+    "message": "ダウンロード"
+  },
+  "landing.HackathonCodeBlock.001": {
+    "message": "コピー"
+  },
+  "landing.HackathonCodeBlock.002": {
+    "message": "コピーしました"
+  },
+  "landing.hackathonCommon.047": {
+    "message": "および"
+  },
+  "landing.hackathonCommon.072": {
+    "message": "および"
+  },
+  "landing.a1HybridSearch.035": {
+    "message": "および"
+  },
+  "landing.a1HybridSearch.059": {
+    "message": "および"
+  },
+  "landing.a1HybridSearch.065": {
+    "message": "および"
+  },
+  "landing.a1HybridSearch.129": {
+    "message": "ともに歩む"
+  },
+  "landing.a3LogSearch.027": {
+    "message": "および"
+  },
+  "landing.a3LogSearch.089": {
+    "message": "ともに歩む"
+  },
+  "landing.a4AgentTraces.080": {
+    "message": "および"
+  },
+  "landing.trackB.028": {
+    "message": "ともに歩む"
+  },
+  "landing.HackathonTrackBPage.081": {
+    "message": "および"
+  },
+  "landing.AiAnalysisForm.015": {
+    "message": "および"
+  },
+  "landing.events.001": {
+    "message": "イベント"
+  },
+  "landing.events.data.001": {
+    "message": "コミュニティの声をお届けします。協力、革新、知識の共有を通じて、つながり、学び、成長しましょう。"
+  },
+  "landing.events.002": {
+    "message": "掲載されていないイベントがありますか？こちらからご提案ください"
+  },
+  "landing.events.data.002": {
+    "message": "データレイクとデータベースをつなぐ：Iceberg のリアルタイムクエリ"
+  },
+  "landing.events.data.003": {
+    "message": "Apache Doris ウェビナー"
+  },
+  "landing.events.data.004": {
+    "message": "2025 年 9 月 23 日 19:00 EST"
+  },
+  "landing.events.data.005": {
+    "message": "2025 年 9 月 23 日"
+  },
+  "landing.events.data.006": {
+    "message": "オンライン"
+  },
+  "landing.events.003": {
+    "message": "この講演では Apache Doris による Iceberg テーブルへのリアルタイムクエリを詳しく解説します。業界でも関心が高まっている、柔軟性と高性能を両立したリアルタイムクエリの実現方法をご紹介します。"
+  },
+  "landing.events.004": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.007": {
+    "message": "NebulaGraph × Apache Doris ミートアップ：フィンテックの新たなパラダイム"
+  },
+  "landing.events.data.008": {
+    "message": "Apache Doris ミートアップ"
+  },
+  "landing.events.data.009": {
+    "message": "2025 年 8 月 22 日 13:30～17:00（GMT+8）"
+  },
+  "landing.events.data.010": {
+    "message": "2025 年 8 月 22 日"
+  },
+  "landing.events.data.011": {
+    "message": "香港中環 Cotton Tree Drive 8 番地 Fairmont House 14 階 4・5 号室"
+  },
+  "landing.events.005": {
+    "message": "NebulaGraph と Apache Doris の共催イベントです。業界のリーダーと技術専門家が集まり、最新のグラフ技術と分析技術が金融リスク管理、オブザーバビリティ、コンプライアンスをどのように変えているかを探ります。"
+  },
+  "landing.events.006": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.012": {
+    "message": "Apache Doris によるリアルタイム IoT 分析"
+  },
+  "landing.events.data.013": {
+    "message": "2025 年 8 月 20 日 17:00～19:00 PDT"
+  },
+  "landing.events.data.014": {
+    "message": "2025 年 8 月 20 日"
+  },
+  "landing.events.data.015": {
+    "message": "Plug and Play Tech Center、440 N Wolfe Rd、Sunnyvale、CA 94085"
+  },
+  "landing.events.007": {
+    "message": "EMQ と VeloDB による開発者向けミートアップで、MQTT と Apache Doris を使ったスケーラブルなリアルタイムデータパイプラインの構築方法を学びましょう。"
+  },
+  "landing.events.008": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.016": {
+    "message": "Snowflake から Apache Doris への移行"
+  },
+  "landing.events.data.017": {
+    "message": "2025 年 7 月 22 日 11:00～12:00 IST"
+  },
+  "landing.events.data.018": {
+    "message": "2025 年 7 月 22 日"
+  },
+  "landing.events.009": {
+    "message": "Snowflake を利用していて、コスト削減や柔軟性の向上のためにオープンソースへの移行を検討している方は、次回の VeloDB ウェビナーにぜひご参加ください。"
+  },
+  "landing.events.010": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.019": {
+    "message": "Apache Doris：AI 時代の高速な分析・検索データベース"
+  },
+  "landing.events.data.020": {
+    "message": "2025 年 6 月 26 日 19:00～20:00 EDT"
+  },
+  "landing.events.data.021": {
+    "message": "2025 年 6 月 26 日"
+  },
+  "landing.events.011": {
+    "message": "Apache Doris PMC Chair で VeloDB の技術 VP でもある Rayner Chen が、Doris が AI 時代を見据えて設計されている理由を解説します。リアルタイム分析の未来を築く専門家から直接話を聞けます。"
+  },
+  "landing.events.012": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.022": {
+    "message": "Apache Doris のコンピュート・ストレージ分離モードを学ぶ"
+  },
+  "landing.events.data.023": {
+    "message": "2025 年 3 月 27 日 21:00～22:00 GMT+8"
+  },
+  "landing.events.data.024": {
+    "message": "2025 年 3 月 27 日"
+  },
+  "landing.events.013": {
+    "message": "Apache Doris PMC Chair が Doris のコンピュート・ストレージ分離モードを詳しく解説します。"
+  },
+  "landing.events.014": {
+    "message": "イベントのカバー画像"
+  },
+  "landing.events.data.025": {
+    "message": "2025 年のロードマップを解説"
+  },
+  "landing.events.data.026": {
+    "message": "Apache Doris 2025 年ロードマップを解説"
+  },
+  "landing.events.data.027": {
+    "message": "2025 年 3 月 20 日 21:00～22:00 GMT+8"
+  },
+  "landing.events.data.028": {
+    "message": "2025 年 3 月 20 日"
+  },
+  "landing.events.015": {
+    "message": "2025 年の Apache Doris の主な開発方針を一緒に詳しく見ていきましょう。"
+  },
+  "landing.events.016": {
+    "message": "住所アイコン"
+  },
+  "landing.events.data.029": {
+    "message": "Doris Summit 2025 | AI 時代のリアルタイム分析と検索を支える"
+  },
+  "landing.events.data.030": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.017": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.status.upcoming": {
+    "message": "開催予定"
+  },
+  "landing.events.status.processing": {
+    "message": "開催中"
+  },
+  "landing.events.status.completed": {
+    "message": "終了"
+  },
+  "landing.events.018": {
+    "message": "日付アイコン"
+  },
+  "landing.events.seo.title": {
+    "message": "Apache Doris コミュニティイベント"
+  },
+  "landing.events.seo.description": {
+    "message": "Apache Doris コミュニティのイベント、技術ミートアップ、ウェビナーをご覧ください。"
+  },
+  "landing.events.019": {
+    "message": "イベントの使用言語："
+  },
+  "landing.events.020": {
+    "message": "英語"
+  },
+  "landing.events.021": {
+    "message": "中国語"
+  },
+  "landing.events.022": {
+    "message": "もっと見る"
+  },
+  "landing.roadmap.data.001": {
+    "message": "開発方針を理解する"
+  },
+  "landing.CommunityRoadmap.001": {
+    "message": "ロードマップ"
+  },
+  "landing.CommunityRoadmap.002": {
+    "message": "Apache Doris の方向性を決める全体方針と優先事項を確認しましょう。"
+  },
+  "landing.roadmap.data.002": {
+    "message": "Issue #60036"
+  },
+  "landing.CommunityRoadmap.003": {
+    "message": "GitHub で Apache Doris 2026 年ロードマップを読む（新しいタブで開きます）"
+  },
+  "landing.roadmap.data.003": {
+    "message": "進行中の開発を追う"
+  },
+  "landing.CommunityRoadmap.004": {
+    "message": "トラッキング Issue"
+  },
+  "landing.CommunityRoadmap.005": {
+    "message": "機能、改善、エンジニアリング作業をテーマごとに調整している Issue を確認できます。"
+  },
+  "landing.roadmap.data.004": {
+    "message": "ラベルによる最新状況の検索"
+  },
+  "landing.CommunityRoadmap.006": {
+    "message": "GitHub で未解決の Apache Doris トラッキング Issue を見る（新しいタブで開きます）"
+  },
+  "landing.roadmap.data.005": {
+    "message": "貢献できる作業を見つける"
+  },
+  "landing.CommunityRoadmap.007": {
+    "message": "初めての貢献向け Issue"
+  },
+  "landing.CommunityRoadmap.008": {
+    "message": "新しい貢献者が取り組みやすい作業をまとめた案内から始めましょう。"
+  },
+  "landing.roadmap.data.006": {
+    "message": "Issue #17176"
+  },
+  "landing.CommunityRoadmap.009": {
+    "message": "GitHub で初めての貢献に適した Apache Doris の Issue を見る（新しいタブで開きます）"
+  },
+  "landing.roadmap.data.007": {
+    "message": "保守終了に向けて"
+  },
+  "landing.roadmap.data.008": {
+    "message": "2026 年 8 月"
+  },
+  "landing.CommunityRoadmap.010": {
+    "message": "最後の 4.0.x パッチリリースをもって保守期間が終了します。"
+  },
+  "landing.roadmap.data.009": {
+    "message": "保守中"
+  },
+  "landing.roadmap.data.010": {
+    "message": "毎月"
+  },
+  "landing.CommunityRoadmap.011": {
+    "message": "通常の保守を継続し、およそ毎月 4.1.x パッチをリリースします。"
+  },
+  "landing.roadmap.data.011": {
+    "message": "計画中"
+  },
+  "landing.roadmap.data.012": {
+    "message": "2026 年 9 月"
+  },
+  "landing.CommunityRoadmap.012": {
+    "message": "マルチモーダルレイクハウスと検索機能の強化に重点を置いた機能リリースです。"
+  },
+  "landing.roadmap.data.013": {
+    "message": "2026 年 11 月"
+  },
+  "landing.CommunityRoadmap.013": {
+    "message": "リアルタイム増分計算に重点を置いた機能リリースです。"
+  },
+  "landing.CommunityRoadmap.014": {
+    "message": "↗"
+  },
+  "landing.CommunityRoadmap.015": {
+    "message": "コミュニティの開発活動"
+  },
+  "landing.CommunityRoadmap.016": {
+    "message": "Apache Doris のロードマップ、進行中のトラッキング Issue、初めての貢献に適した作業をご覧ください。"
+  },
+  "landing.CommunityRoadmap.017": {
+    "message": "これからの"
+  },
+  "landing.CommunityRoadmap.018": {
+    "message": "開発計画を見る。"
+  },
+  "landing.CommunityRoadmap.019": {
+    "message": "Apache Doris は計画から開発まで公開して進めています。"
+  },
+  "landing.CommunityRoadmap.020": {
+    "message": "このガイドで方針を把握し、進行中の開発を追い、貢献できる作業を見つけましょう。"
+  },
+  "landing.CommunityRoadmap.021": {
+    "message": "コミュニティ開発の関連リンク"
+  },
+  "landing.CommunityRoadmap.022": {
+    "message": "GitHub で開きます ·"
+  },
+  "landing.CommunityRoadmap.023": {
+    "message": "リリース計画"
+  },
+  "landing.CommunityRoadmap.024": {
+    "message": "コミュニティが今後数か月で提供を予定している内容です。日程は現時点の見込みであり、変更される場合があります。"
+  },
+  "landing.CommunityRoadmap.025": {
+    "message": "すべてのリリースノート →"
+  },
+  "landing.CommunityRoadmap.026": {
+    "message": "貢献ガイドを読む →"
+  },
+  "landing.CommunityReportNext.001": {
+    "message": "Apache Doris の未来づくりに参加する"
+  },
+  "landing.CommunityReportNext.002": {
+    "message": "アンケートに回答して、Doris コミュニティの改善にご協力ください。"
+  },
+  "landing.CommunityReportNext.003": {
+    "message": "議論したい、または開発したい Doris の機能はありますか？"
+  },
+  "landing.CommunityReportNext.004": {
+    "message": "GitHub の Issue に返信してください。"
+  },
+  "landing.reports.past": {
+    "message": "過去のレポート…"
+  },
+  "landing.CommunityReportNext.005": {
+    "message": "コミュニティレポート - Apache Doris"
+  },
+  "landing.CommunityReportNext.006": {
+    "message": "Apache Doris コミュニティの週報です。マージされた機能や修正、新しい貢献者、注目の議論をお届けします。"
+  },
+  "landing.CommunityReportNext.007": {
+    "message": "レポートとコミュニティへのフィードバック"
+  },
+  "landing.CommunityReportNext.008": {
+    "message": "週報"
+  },
+  "landing.CommunityReportNext.009": {
+    "message": "最新"
+  },
+  "landing.CommunityReportNext.010": {
+    "message": "過去の週報を見る"
+  },
+  "landing.CommunityReportNext.011": {
+    "message": "コミュニティへのフィードバックリンク"
+  },
+  "landing.report.fallback": {
+    "message": "このレポートは英語で表示しています。サイトのナビゲーションは選択した言語のままです。"
+  },
+  "landing.CommunityReportNext.012": {
+    "message": "コミュニティ週報"
+  },
+  "landing.CommunityReportNext.013": {
+    "message": "概要"
+  },
+  "landing.CommunityReportNext.014": {
+    "message": "注目ポイント"
+  },
+  "landing.CommunityReportNext.015": {
+    "message": "リポジトリ"
+  },
+  "landing.CommunityReportNext.016": {
+    "message": "シナリオ別"
+  },
+  "landing.CommunityReportNext.017": {
+    "message": "今週の報告事項はありません。"
+  },
+  "landing.CommunityReportNext.018": {
+    "message": " のシナリオ"
+  },
+  "landing.CommunityReportNext.019": {
+    "message": "コミュニティの活動状況"
+  },
+  "landing.CommunityReportNext.020": {
+    "message": "マージ済み PR"
+  },
+  "landing.CommunityReportNext.021": {
+    "message": "新しい Issue"
+  },
+  "landing.CommunityReportNext.022": {
+    "message": "貢献者"
+  },
+  "landing.events.mediaLanguage": {
+    "message": "イベントのポスターとリンク先の録画は元の言語のままです。中国語イベントの説明は中国語で表示されます。"
+  },
+  "landing.report.english": {
+    "message": "英語"
+  },
+  "landing.CommunityReportNext.023": {
+    "message": "マージ済み"
+  },
+  "landing.CommunityReportNext.024": {
+    "message": "進行中"
+  },
+  "landing.CommunityReportNext.025": {
+    "message": "新規作成"
+  },
+  "landing.courseModules.001": {
+    "message": "Apache Doris の概要"
+  },
+  "landing.courseModules.002": {
+    "message": "エンジンを知る"
+  },
+  "landing.courseModules.003": {
+    "message": "アーキテクチャ、データ構成、ストレージモデル、クエリ実行、最適化。"
+  },
+  "landing.courseModules.004": {
+    "message": "インストールガイド"
+  },
+  "landing.courseModules.005": {
+    "message": "Doris をデプロイ"
+  },
+  "landing.courseModules.006": {
+    "message": "アーキテクチャを選び、環境に合った手順でデプロイします。"
+  },
+  "landing.courseModules.007": {
+    "message": "テーブルガイド"
+  },
+  "landing.courseModules.008": {
+    "message": "テーブルを設計"
+  },
+  "landing.courseModules.009": {
+    "message": "データモデル、ソートキー、パーティション、バケット、インデックス、実用的なスキーマを選びます。"
+  },
+  "landing.courseModules.010": {
+    "message": "データ操作ガイド"
+  },
+  "landing.courseModules.011": {
+    "message": "データの移動と管理"
+  },
+  "landing.courseModules.012": {
+    "message": "ワークロードに合った方法で、データのロード、更新、削除、エクスポートを行います。"
+  },
+  "landing.courseModules.013": {
+    "message": "データクエリガイド"
+  },
+  "landing.courseModules.014": {
+    "message": "クエリと最適化"
+  },
+  "landing.courseModules.015": {
+    "message": "結合、分析、ウィンドウ関数、UDF、複合型、マテリアライズドビューを活用します。"
+  },
+  "landing.courseModules.016": {
+    "message": "レイクハウスガイド"
+  },
+  "landing.courseModules.017": {
+    "message": "レイクハウスに接続"
+  },
+  "landing.courseModules.018": {
+    "message": "カタログの接続、SQL による横断クエリ、オープンテーブルの高速化、データの書き戻しを行います。"
+  },
+  "landing.hackathonEvent.001": {
+    "message": "Apache Doris Hackathon"
+  },
+  "landing.hackathonEvent.002": {
+    "message": "ハイブリッド検索アプリ"
+  },
+  "landing.courseExtra.hackathonEvent.001": {
+    "message": "60～120 分"
+  },
+  "landing.hackathonEvent.003": {
+    "message": "キーワード、意味、フィルターを 1 つの SQL クエリで扱います。Apache Doris ドキュメントを検索する検索ボックスを作りましょう。"
+  },
+  "landing.hackathonEvent.004": {
+    "message": "MCP で Doris に質問"
+  },
+  "landing.courseExtra.hackathonEvent.002": {
+    "message": "45～90 分"
+  },
+  "landing.hackathonEvent.005": {
+    "message": "Doris MCP Server を使って AI アシスタントに Doris を接続し、実際の SQL で実際の質問に答えられるようにします。"
+  },
+  "landing.hackathonEvent.006": {
+    "message": "ログ検索エクスプローラー"
+  },
+  "landing.courseExtra.hackathonEvent.003": {
+    "message": "60～120 分"
+  },
+  "landing.hackathonEvent.007": {
+    "message": "すべてを SQL で扱う小さな Kibana です。200,000 行のログに対して BM25 検索、フィルター、リアルタイム集計を実行します。"
+  },
+  "landing.hackathonEvent.008": {
+    "message": "エージェントトレースエクスプローラー"
+  },
+  "landing.courseExtra.hackathonEvent.004": {
+    "message": "60～120 分"
+  },
+  "landing.hackathonEvent.009": {
+    "message": "構造が不揃いな AI エージェントの JSON を VARIANT 列に保存し、通常の列のようにクエリします。スキーマ移行は不要です。"
+  },
+  "landing.hackathonEvent.010": {
+    "message": "ドキュメントからデモへ"
+  },
+  "landing.courseExtra.hackathonEvent.005": {
+    "message": "30～60 分"
+  },
+  "landing.hackathonEvent.011": {
+    "message": "機能ドキュメントを 1 ページ選び、ローカルの Doris で実行して、手順付きのデモをプルリクエストで追加します。"
+  },
+  "landing.hackathonEvent.012": {
+    "message": "トラック B · "
+  },
+  "landing.HackathonCourseTrack.001": {
+    "message": "トラックを選ぶ"
+  },
+  "landing.HackathonCourseTrack.002": {
+    "message": "Doris 101"
+  },
+  "landing.HackathonCourseTrack.003": {
+    "message": "無料コース"
+  },
+  "landing.HackathonCourseTrack.004": {
+    "message": "ハッカソン"
+  },
+  "landing.HackathonCourseTrack.005": {
+    "message": "公開タスク ·"
+  },
+  "landing.HackathonCourseTrack.006": {
+    "message": "いつでも開始可能"
+  },
+  "landing.HackathonCourseTrack.007": {
+    "message": "Apache Doris Hackathon"
+  },
+  "landing.HackathonCourseTrack.008": {
+    "message": "Apache Doris で実際に動くものを、自分のペースで作りましょう。"
+  },
+  "landing.HackathonCourseTrack.009": {
+    "message": "いつでも始められます。1 回で仕上げても、数晩かけても構いません。Doris の経験は不要です。"
+  },
+  "landing.HackathonCourseTrack.010": {
+    "message": "トラック A · Doris で作る"
+  },
+  "landing.HackathonCourseTrack.011": {
+    "message": "タスク"
+  },
+  "landing.HackathonCourseTrack.013": {
+    "message": "トラック B ·"
+  },
+  "landing.HackathonCourseTrack.014": {
+    "message": "：ドキュメントのページに手順付きデモをプルリクエストで追加します。"
+  },
+  "landing.HackathonCourseTrack.015": {
+    "message": "課題の概要を開く →"
+  },
+  "landing.HackathonCourseTrack.016": {
+    "message": "Apache Doris Contributor バッジ"
+  },
+  "landing.HackathonCourseTrack.017": {
+    "message": "タスクに参加し、成果を共有しましょう："
+  },
+  "landing.HackathonCourseTrack.018": {
+    "message": "（Slack）で Contributor バッジを獲得できます。"
+  },
+  "landing.CourseLanding.002": {
+    "message": "Doris 101 のコースを順次追加予定"
+  },
+  "landing.CourseLanding.003": {
+    "message": "その他のコース"
+  },
+  "landing.CourseLanding.004": {
+    "message": "近日公開"
+  },
+  "landing.CourseLanding.006": {
+    "message": "Doris の学習パス"
+  },
+  "landing.CourseLanding.007": {
+    "message": "自分のペースで学習 · どなたでも参加可能"
+  },
+  "landing.CourseLanding.008": {
+    "message": "6 コース公開中 · 今後も追加"
+  },
+  "landing.CourseLanding.009": {
+    "message": "Apache Doris 101 コース"
+  },
+  "landing.CourseLanding.010": {
+    "message": "Apache Doris のアーキテクチャ、デプロイ、テーブル設計、データ操作、分析クエリ、レイクハウス接続を学べる無料の入門コースです。"
+  },
+  "landing.CourseLanding.011": {
+    "message": "無料コース · 初心者向け"
+  },
+  "landing.CourseLanding.012": {
+    "message": "Doris を学び、"
+  },
+  "landing.CourseLanding.013": {
+    "message": "実際に作る。"
+  },
+  "landing.CourseLanding.014": {
+    "message": "OLAP データベースの基礎から始め、Apache Doris の応用的な内容と実践的な使い方へ進みます。一般的なデータベースの概念と Doris の中核機能を結び付けて学ぶことで、Doris をより深く理解して活用できます。身に付けたデータベースの知識は、ほかのシステムにも応用できます。"
+  },
+  "landing.CourseLanding.015": {
+    "message": "概要から始める →"
+  },
+  "landing.HackathonTaskPage.001": {
+    "message": "Doris を起動"
+  },
+  "landing.HackathonTaskPage.002": {
+    "message": "ホスト"
+  },
+  "landing.HackathonTaskPage.003": {
+    "message": "ポート"
+  },
+  "landing.HackathonTaskPage.004": {
+    "message": "ユーザー"
+  },
+  "landing.HackathonTaskPage.005": {
+    "message": "パスワードなし"
+  },
+  "landing.HackathonTaskPage.006": {
+    "message": "データベース"
+  },
+  "landing.HackathonTaskPage.007": {
+    "message": "· 後日発表"
+  },
+  "landing.HackathonTaskPage.008": {
+    "message": "開始"
+  },
+  "landing.HackathonTaskPage.009": {
+    "message": "テーブル"
+  },
+  "landing.HackathonTaskPage.010": {
+    "message": "プロンプト"
+  },
+  "landing.HackathonTaskPage.011": {
+    "message": "現在位置"
+  },
+  "landing.HackathonTaskPage.012": {
+    "message": "課題の概要を開く"
+  },
+  "landing.HackathonTaskPage.013": {
+    "message": "読んでいるステップのコード"
+  },
+  "landing.HackathonTaskPage.014": {
+    "message": "概略図"
+  },
+  "landing.HackathonTaskPage.015": {
+    "message": "作成するもの · ワイヤーフレーム（スクリーンショットではありません）"
+  },
+  "landing.HackathonTaskPage.016": {
+    "message": "非表示"
+  },
+  "landing.HackathonTaskPage.017": {
+    "message": "表示"
+  },
+  "landing.HackathonTaskPage.018": {
+    "message": "コードビュー"
+  },
+  "landing.HackathonTaskPage.019": {
+    "message": "スターターキット"
+  },
+  "landing.HackathonTaskPage.020": {
+    "message": "ダウンロード"
+  },
+  "landing.HackathonTaskPage.021": {
+    "message": "進行ルート"
+  },
+  "landing.HackathonTaskPage.024": {
+    "message": "→ 完了"
+  },
+  "landing.HackathonTaskPage.025": {
+    "message": "完了"
+  },
+  "landing.HackathonTaskPage.026": {
+    "message": "→ 提出"
+  },
+  "landing.HackathonTaskPage.027": {
+    "message": "コース"
+  },
+  "landing.HackathonTaskPage.028": {
+    "message": "自分のペースで進めるタスク · いつでも開始 · 登録不要"
+  },
+  "landing.HackathonTaskPage.029": {
+    "message": "ハッカソンのタスク"
+  },
+  "landing.HackathonTaskPage.030": {
+    "message": "ハッカソン"
+  },
+  "landing.HackathonTaskPage.031": {
+    "message": "タスク"
+  },
+  "landing.HackathonTaskPage.032": {
+    "message": "困ったときは？"
+  },
+  "landing.HackathonTaskPage.033": {
+    "message": "質問はこちら："
+  },
+  "landing.HackathonTaskPage.034": {
+    "message": "参加先："
+  },
+  "landing.HackathonTaskPage.035": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.HackathonTaskPage.036": {
+    "message": "。メンテナーやほかの参加者がサポートします。"
+  },
+  "landing.HackathonTaskPage.037": {
+    "message": "成果物は次の名前のフォルダーにまとめてください："
+  },
+  "landing.HackathonTaskPage.038": {
+    "message": "ご自身の GitHub ID"
+  },
+  "landing.HackathonTaskPage.039": {
+    "message": "。コードと README を含め、README に内容、実行方法、スクリーンショットまたは GIF 1 点、使用した Doris の機能を記載します。"
+  },
+  "landing.HackathonTaskPage.040": {
+    "message": "プルリクエストを作成"
+  },
+  "landing.HackathonTaskPage.041": {
+    "message": "次の場所に追加してください："
+  },
+  "landing.HackathonTaskPage.042": {
+    "message": "配置先："
+  },
+  "landing.HackathonTaskPage.043": {
+    "message": "。フォークして push するか、GitHub の次の操作を使ってください："
+  },
+  "landing.HackathonTaskPage.044": {
+    "message": "Add file → Upload files"
+  },
+  "landing.HackathonTaskPage.045": {
+    "message": "。ほかに入力する項目はありません。"
+  },
+  "landing.HackathonTaskPage.046": {
+    "message": "README"
+  },
+  "landing.HackathonTaskPage.047": {
+    "message": "提出してバッジを獲得"
+  },
+  "landing.HackathonTaskPage.048": {
+    "message": "参加 → 提出 → バッジを獲得。"
+  },
+  "landing.HackathonTaskPage.049": {
+    "message": "共有する"
+  },
+  "landing.HackathonTaskPage.050": {
+    "message": "共有先："
+  },
+  "landing.HackathonTaskPage.051": {
+    "message": "参加先："
+  },
+  "landing.HackathonTaskPage.052": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.HackathonTaskPage.053": {
+    "message": "：プルリクエストまたはリポジトリへのリンクと、スクリーンショットまたは短いデモを共有します。質問、提出、バッジの案内はすべてこちらで行います。"
+  },
+  "landing.HackathonTaskPage.054": {
+    "message": "タスクに参加した方全員に次のバッジを贈ります："
+  },
+  "landing.HackathonTaskPage.055": {
+    "message": "Apache Doris Contributor バッジ"
+  },
+  "landing.HackathonTaskPage.056": {
+    "message": "。Doris 本体へのプルリクエストがマージされている必要はありません。締め切りはないので、ご自身のペースで進めてください。チーム参加も可能ですが必須ではありません。全員の GitHub ID を次に記載してください："
+  },
+  "landing.HackathonTaskPage.057": {
+    "message": "Apache Doris Contributor バッジ"
+  },
+  "landing.HackathonTaskPage.058": {
+    "message": "Contributor バッジについて"
+  },
+  "landing.HackathonTaskPage.059": {
+    "message": "すべてのタスク"
+  },
+  "landing.HackathonTaskPage.060": {
+    "message": "コースに戻る"
+  },
+  "landing.HackathonTaskPage.061": {
+    "message": " · Doris ハッカソン"
+  },
+  "landing.HackathonTaskPage.062": {
+    "message": " トラック A のタスク："
+  },
+  "landing.HackathonTaskPage.063": {
+    "message": "：自分のペースで進められ、スターターキットとローカルで実行できる Doris を用意しています。"
+  },
+  "landing.HackathonTaskPage.064": {
+    "message": "トラック A · タスク"
+  },
+  "landing.HackathonTaskPage.065": {
+    "message": "概要"
+  },
+  "landing.HackathonTaskPage.066": {
+    "message": "スターターキットを入手"
+  },
+  "landing.HackathonTaskPage.067": {
+    "message": "スターターキットを入手"
+  },
+  "landing.HackathonTaskPage.068": {
+    "message": "Doris を起動"
+  },
+  "landing.HackathonTaskPage.069": {
+    "message": "環境を準備"
+  },
+  "landing.HackathonTaskPage.070": {
+    "message": "何を作るか、Doris ならどう簡単になるかを学び、クラスターを起動します。"
+  },
+  "landing.HackathonTaskPage.071": {
+    "message": "作成するもの"
+  },
+  "landing.HackathonTaskPage.072": {
+    "message": "概略図"
+  },
+  "landing.HackathonTaskPage.073": {
+    "message": "作成するもの · ワイヤーフレーム（スクリーンショットではありません）"
+  },
+  "landing.HackathonTaskPage.074": {
+    "message": "概略図はコードパネルの上部にあります"
+  },
+  "landing.HackathonTaskPage.075": {
+    "message": "Doris で取り組む利点"
+  },
+  "landing.HackathonTaskPage.076": {
+    "message": "パネル：テーブル定義のインデックス行"
+  },
+  "landing.HackathonTaskPage.077": {
+    "message": "始める前に"
+  },
+  "landing.HackathonTaskPage.078": {
+    "message": "コマンドをコピー"
+  },
+  "landing.HackathonTaskPage.079": {
+    "message": "データ"
+  },
+  "landing.HackathonTaskPage.080": {
+    "message": "パネル → テーブル：テーブル定義の全体"
+  },
+  "landing.HackathonTaskPage.081": {
+    "message": "AI を使って作る"
+  },
+  "landing.HackathonTaskPage.082": {
+    "message": "次をコピー："
+  },
+  "landing.hackathonCommon.109": {
+    "message": "参加先："
+  },
+  "landing.hackathonCommon.110": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.courseExtra.a1HybridSearch.011": {
+    "message": "60～120 分"
+  },
+  "landing.a1HybridSearch.028": {
+    "message": "テーブル"
+  },
+  "landing.courseExtra.a2Mcp.010": {
+    "message": "45～90 分"
+  },
+  "landing.courseExtra.a3LogSearch.010": {
+    "message": "60～120 分"
+  },
+  "landing.a3LogSearch.030": {
+    "message": "テーブル"
+  },
+  "landing.courseExtra.a4AgentTraces.011": {
+    "message": "60～120 分"
+  },
+  "landing.a4AgentTraces.030": {
+    "message": "テーブル"
+  },
+  "landing.HackathonTrackBPage.024": {
+    "message": "開始"
+  },
+  "landing.HackathonTrackBPage.032": {
+    "message": "トラック B · "
+  },
+  "landing.HackathonTrackBPage.033": {
+    "message": " · Doris ハッカソン"
+  },
+  "landing.HackathonTrackBPage.036": {
+    "message": "トラック B ·"
+  },
+  "landing.HackathonTrackBPage.041": {
+    "message": "概要"
+  },
+  "landing.HackathonTrackBPage.042": {
+    "message": "Doris を起動"
+  },
+  "landing.HackathonTrackBPage.044": {
+    "message": "環境を準備"
+  },
+  "landing.HackathonTrackBPage.060": {
+    "message": "提出してバッジを獲得"
+  },
+  "landing.HackathonTrackBPage.062": {
+    "message": "始める前に"
+  },
+  "landing.HackathonTrackBPage.063": {
+    "message": "コマンドをコピー"
+  },
+  "landing.AiAnalysisForm.005": {
+    "message": "英語"
+  },
+  "landing.profile.status.completed": {
+    "message": "終了"
+  },
+  "landing.ProfileDag.027": {
+    "message": "非表示"
+  },
+  "landing.ProfileDag.028": {
+    "message": "表示"
+  },
+  "landing.trackB.task.B6.time": {
+    "message": "30～60 分"
+  },
+  "landing.reports.2026-10-12.stats.0.label": {
+    "message": "マージ済み PR"
+  },
+  "landing.reports.2026-10-12.stats.1.label": {
+    "message": "新しい Issue"
+  },
+  "landing.reports.2026-10-12.stats.2.label": {
+    "message": "貢献者"
+  },
+  "landing.download.unavailableBuild": {
+    "message": "{version} の {architecture} 向けビルドはありません"
+  },
+  "landing.HackathonTaskPage.083": {
+    "message": "AI エージェントが陥りやすい Doris の落とし穴"
+  },
+  "landing.HackathonTaskPage.084": {
+    "message": "実装する"
+  },
+  "landing.HackathonTaskPage.085": {
+    "message": "マイルストーン、"
+  },
+  "landing.HackathonTaskPage.087": {
+    "message": "。パネルは読んでいるステップに追従します。"
+  },
+  "landing.HackathonTaskPage.088": {
+    "message": "マイルストーン"
+  },
+  "landing.HackathonTaskPage.089": {
+    "message": "重要な句"
+  },
+  "landing.HackathonTaskPage.090": {
+    "message": "L"
+  },
+  "landing.HackathonTaskPage.091": {
+    "message": "確認ポイント"
+  },
+  "landing.HackathonTaskPage.092": {
+    "message": "完成させる"
+  },
+  "landing.HackathonTaskPage.093": {
+    "message": "チェックを済ませ、成果を共有し、バッジを獲得しましょう。"
+  },
+  "landing.HackathonTaskPage.094": {
+    "message": "完了条件"
+  },
+  "landing.HackathonTaskPage.095": {
+    "message": "チェックリスト"
+  },
+  "landing.HackathonTaskPage.096": {
+    "message": "追加の挑戦"
+  },
+  "landing.HackathonTaskPage.097": {
+    "message": "トラブルシューティングと参考資料"
+  },
+  "landing.HackathonTaskPage.098": {
+    "message": "参考資料"
+  },
+  "landing.sketch.column.page": {
+    "message": "ページ"
+  },
+  "landing.sketch.column.section": {
+    "message": "セクション"
+  },
+  "landing.sketch.column.scoreDistance": {
+    "message": "スコア / 距離"
+  },
+  "landing.sketch.column.score": {
+    "message": "スコア"
+  },
+  "landing.sketch.column.distance": {
+    "message": "距離"
+  },
+  "landing.sketch.column.time": {
+    "message": "時刻"
+  },
+  "landing.sketch.column.service": {
+    "message": "サービス"
+  },
+  "landing.sketch.column.level": {
+    "message": "レベル"
+  },
+  "landing.sketch.column.message": {
+    "message": "メッセージ"
+  },
+  "landing.sketch.mode.keyword": {
+    "message": "キーワード"
+  },
+  "landing.sketch.mode.vector": {
+    "message": "ベクトル"
+  },
+  "landing.sketch.mode.hybrid": {
+    "message": "ハイブリッド"
+  },
+  "landing.HackathonSketch.001": {
+    "message": "カテゴリ"
+  },
+  "landing.HackathonSketch.002": {
+    "message": "SQL を表示"
+  },
+  "landing.HackathonSketch.003": {
+    "message": "SQL を表示：このモードで実行するクエリ"
+  },
+  "landing.sketch.question.1": {
+    "message": "hackathon データベースにはどのようなテーブルがあり、それぞれ何に使いますか？"
+  },
+  "landing.sketch.question.2": {
+    "message": "app_logs にはサービス別・レベル別に何行のログがありますか？"
+  },
+  "landing.sketch.question.3": {
+    "message": "容量を空けるために INFO ログをすべて削除してください。"
+  },
+  "landing.HackathonSketch.004": {
+    "message": "お使いの AI クライアント"
+  },
+  "landing.HackathonSketch.006": {
+    "message": "Doris MCP Server"
+  },
+  "landing.courseExtra.HackathonSketch.002": {
+    "message": "読み取り専用"
+  },
+  "landing.HackathonSketch.010": {
+    "message": "拒否しました · サーバーとユーザーは読み取り専用です"
+  },
+  "landing.HackathonSketch.011": {
+    "message": "実行した SQL"
+  },
+  "landing.HackathonSketch.012": {
+    "message": "サービス"
+  },
+  "landing.HackathonSketch.014": {
+    "message": "すべて"
+  },
+  "landing.HackathonSketch.015": {
+    "message": "レベル"
+  },
+  "landing.HackathonSketch.017": {
+    "message": "すべて"
+  },
+  "landing.HackathonSketch.018": {
+    "message": "時刻"
+  },
+  "landing.HackathonSketch.020": {
+    "message": "終日"
+  },
+  "landing.HackathonSketch.021": {
+    "message": "ファセット"
+  },
+  "landing.HackathonSketch.022": {
+    "message": "5 分ごとのエラー数"
+  },
+  "landing.HackathonSketch.023": {
+    "message": "payload · 推論されたサブカラム"
+  },
+  "landing.HackathonSketch.024": {
+    "message": "ツールの p95"
+  },
+  "landing.HackathonSketch.025": {
+    "message": "エラー率"
+  },
+  "landing.courseExtra.HackathonSketch.008": {
+    "message": "トークン数"
+  },
+  "landing.HackathonSketch.026": {
+    "message": "セッション"
+  },
+  "landing.HackathonSketch.027": {
+    "message": "セッションのタイムライン"
+  },
+  "landing.hackathonCommon.001": {
+    "message": "Docker が起動しており、Doris イメージを取得済みです。"
+  },
+  "landing.hackathonCommon.002": {
+    "message": "約"
+  },
+  "landing.hackathonCommon.003": {
+    "message": "。初回のみ必要です。ダウンロード容量が大きいため、事前に取得してください。Docker Desktop（macOS）と Docker Engine（Linux）のどちらでも利用できます。"
+  },
+  "landing.hackathonCommon.004": {
+    "message": "Doris が起動しています。"
+  },
+  "landing.hackathonCommon.005": {
+    "message": "1 つのコンテナーで FE と BE を 1 つずつ実行します。起動が完了すると、"
+  },
+  "landing.hackathonCommon.006": {
+    "message": "の表示が"
+  },
+  "landing.hackathonCommon.007": {
+    "message": "になります。通常は起動から約 30 秒後です。"
+  },
+  "landing.hackathonCommon.008": {
+    "message": "このイメージについて"
+  },
+  "landing.hackathonCommon.009": {
+    "message": "接続できます。"
+  },
+  "landing.hackathonCommon.010": {
+    "message": "コンテナーに MySQL クライアントが含まれているため、別途用意する必要はありません。ほかの MySQL クライアントでも接続できます："
+  },
+  "landing.hackathonCommon.011": {
+    "message": "、ユーザーは"
+  },
+  "landing.hackathonCommon.012": {
+    "message": "、パスワードは不要です。"
+  },
+  "landing.hackathonCommon.013": {
+    "message": "スターターキットを取得済みです。"
+  },
+  "landing.hackathonCommon.014": {
+    "message": "ダウンロードして解凍："
+  },
+  "landing.hackathonCommon.015": {
+    "message": "。このページのコマンドは、キット内の"
+  },
+  "landing.hackathonCommon.016": {
+    "message": "フォルダーから実行します。付属の"
+  },
+  "landing.hackathonCommon.017": {
+    "message": "でまとめて実行できます："
+  },
+  "landing.hackathonCommon.018": {
+    "message": "ツールの準備ができています。"
+  },
+  "landing.hackathonCommon.019": {
+    "message": "MySQL ドライバーのある言語なら何でも使えます（Python"
+  },
+  "landing.hackathonCommon.020": {
+    "message": "、Node"
+  },
+  "landing.hackathonCommon.021": {
+    "message": "、Go"
+  },
+  "landing.hackathonCommon.022": {
+    "message": "、Java JDBC など）。AI コーディングアシスタントもぜひ活用してください。"
+  },
+  "landing.hackathonCommon.023": {
+    "message": "AI コーディングエージェントとの共同作業を推奨しています。"
+  },
+  "landing.hackathonCommon.024": {
+    "message": "Doris 4.x の検索機能と AI 機能は、多くのモデルの学習データより新しいため、SQL を書かせる前に適切な情報を渡してください："
+  },
+  "landing.hackathonCommon.025": {
+    "message": "次の"
+  },
+  "landing.hackathonCommon.026": {
+    "message": "コンテキストプロンプト"
+  },
+  "landing.hackathonCommon.027": {
+    "message": "をエージェントに貼り付けます。"
+  },
+  "landing.hackathonCommon.028": {
+    "message": "参照先として次を指定："
+  },
+  "landing.hackathonCommon.029": {
+    "message": "このページに掲載した参考資料"
+  },
+  "landing.hackathonCommon.030": {
+    "message": "および"
+  },
+  "landing.hackathonCommon.031": {
+    "message": "（スターターキット内）。多くのコーディングエージェントはこのファイルを自動で読み込みます。"
+  },
+  "landing.hackathonCommon.032": {
+    "message": "コードに組み込む前に、すべての SQL 文を実際のクラスターで実行させてください。"
+  },
+  "landing.hackathonCommon.033": {
+    "message": "さらに、次を接続すると便利です："
+  },
+  "landing.hackathonCommon.034": {
+    "message": "Doris MCP Server"
+  },
+  "landing.hackathonCommon.035": {
+    "message": "（参照："
+  },
+  "landing.hackathonCommon.036": {
+    "message": "タスク A2"
+  },
+  "landing.hackathonCommon.037": {
+    "message": "）。エージェント自身でスキーマを確認し、クエリをテストできるようになります。"
+  },
+  "landing.hackathonCommon.038": {
+    "message": "次の使用："
+  },
+  "landing.hackathonCommon.039": {
+    "message": "によるテキスト検索"
+  },
+  "landing.hackathonCommon.040": {
+    "message": "（OR）、"
+  },
+  "landing.hackathonCommon.041": {
+    "message": "（AND）、"
+  },
+  "landing.hackathonCommon.042": {
+    "message": "。これらは転置インデックスを使います"
+  },
+  "landing.hackathonCommon.043": {
+    "message": "次の呼び出し："
+  },
+  "landing.hackathonCommon.044": {
+    "message": "を任意のクエリで使用"
+  },
+  "landing.hackathonCommon.045": {
+    "message": "には次が必要："
+  },
+  "landing.hackathonCommon.046": {
+    "message": "の述語を次に指定："
+  },
+  "landing.hackathonCommon.048": {
+    "message": "。指定しないと Doris はクエリを拒否します"
+  },
+  "landing.hackathonCommon.049": {
+    "message": "丸め、結合、順位付けの対象："
+  },
+  "landing.hackathonCommon.050": {
+    "message": "を同じクエリ内で行う"
+  },
+  "landing.hackathonCommon.051": {
+    "message": "次はそのまま使います："
+  },
+  "landing.hackathonCommon.052": {
+    "message": "を単一テーブルのクエリ内でそのまま使います。丸めや結合、"
+  },
+  "landing.hackathonCommon.053": {
+    "message": "は外側のクエリで行ってください。次の代わりにサブクエリを使います："
+  },
+  "landing.hackathonCommon.054": {
+    "message": "CTE"
+  },
+  "landing.hackathonCommon.055": {
+    "message": "を次の内側で使用："
+  },
+  "landing.hackathonCommon.056": {
+    "message": "/ 集約"
+  },
+  "landing.hackathonCommon.057": {
+    "message": "使用できません。ファセットの件数集計には同じ次の条件を再利用します："
+  },
+  "landing.hackathonCommon.058": {
+    "message": "を除外："
+  },
+  "landing.hackathonCommon.059": {
+    "message": "BM25 とベクトル距離を 1 つの次の句でソート："
+  },
+  "landing.hackathonCommon.060": {
+    "message": "、または次を選択："
+  },
+  "landing.hackathonCommon.061": {
+    "message": "をベクトル順位付けクエリで使用"
+  },
+  "landing.hackathonCommon.062": {
+    "message": "サポートされていません。ハイブリッド検索は次の組み合わせです："
+  },
+  "landing.hackathonCommon.063": {
+    "message": "の事前フィルター + ベクトル"
+  },
+  "landing.hackathonCommon.064": {
+    "message": "で距離を表示するか、2 つのランキングリストを RRF で融合します"
+  },
+  "landing.hackathonCommon.065": {
+    "message": "クエリベクトルをドライバーのパラメーターとして渡す"
+  },
+  "landing.hackathonCommon.066": {
+    "message": "リストは次に変換されます："
+  },
+  "landing.hackathonCommon.067": {
+    "message": "（pymysql）または 8 個の個別引数（mysql2）。文字列として次を渡します："
+  },
+  "landing.hackathonCommon.068": {
+    "message": "と記述します："
+  },
+  "landing.hackathonCommon.069": {
+    "message": "、またはリテラルを直接埋め込みます"
+  },
+  "landing.hackathonCommon.070": {
+    "message": "コサイン ANN 指標を探す"
+  },
+  "landing.hackathonCommon.071": {
+    "message": "ANN の指標は"
+  },
+  "landing.hackathonCommon.073": {
+    "message": "です。ベクトルを単位長に正規化すると、L2 距離の昇順とコサイン類似度の降順は同じ順位になります"
+  },
+  "landing.hackathonCommon.074": {
+    "message": "キャストせずに VARIANT のパスを比較する"
+  },
+  "landing.hackathonCommon.075": {
+    "message": "。VARIANT はキー列や結合列にできません"
+  },
+  "landing.hackathonCommon.076": {
+    "message": "次に期待すること："
+  },
+  "landing.hackathonCommon.077": {
+    "message": "による JSON パスの一覧表示"
+  },
+  "landing.hackathonCommon.078": {
+    "message": "実行："
+  },
+  "landing.hackathonCommon.079": {
+    "message": "を先に実行します。その後、"
+  },
+  "landing.hackathonCommon.080": {
+    "message": "に推論されたすべてのサブカラムと型が表示されます"
+  },
+  "landing.hackathonCommon.081": {
+    "message": "ORM を使う"
+  },
+  "landing.hackathonCommon.082": {
+    "message": "通常の MySQL ドライバーと生の SQL を推奨します。ORM は Doris がサポートしない文を生成する場合があります"
+  },
+  "landing.hackathonCommon.083": {
+    "message": "（macOS）"
+  },
+  "landing.hackathonCommon.084": {
+    "message": "Docker Desktop を起動してください。起動済みなら CLI へのリンクを作成します："
+  },
+  "landing.hackathonCommon.085": {
+    "message": "（イメージ取得時）"
+  },
+  "landing.hackathonCommon.086": {
+    "message": "削除する項目："
+  },
+  "landing.hackathonCommon.087": {
+    "message": "のフィールドを次から削除："
+  },
+  "landing.hackathonCommon.088": {
+    "message": "（ローカル開発環境のみ）"
+  },
+  "landing.hackathonCommon.089": {
+    "message": "別のプロセス（多くは別の Doris）が 9030、8030、8040 のいずれかを使っています。実行中のコンテナーを確認してください（"
+  },
+  "landing.hackathonCommon.090": {
+    "message": "）。または別のホストポートを公開します。例："
+  },
+  "landing.hackathonCommon.091": {
+    "message": "。その場合は 19030 に接続してください。"
+  },
+  "landing.hackathonCommon.092": {
+    "message": "以前に起動したことがあります："
+  },
+  "landing.hackathonCommon.093": {
+    "message": "。最初からやり直すには、"
+  },
+  "landing.hackathonCommon.094": {
+    "message": "（データが削除されます）"
+  },
+  "landing.hackathonCommon.095": {
+    "message": "コンテナーが終了する、または状態が変わらない："
+  },
+  "landing.hackathonCommon.096": {
+    "message": "確認："
+  },
+  "landing.hackathonCommon.097": {
+    "message": "。多くはメモリが原因です。Docker Desktop に 6 GB 以上を割り当ててください（Settings → Resources）。Apple Silicon では次を追加しないでください："
+  },
+  "landing.hackathonCommon.098": {
+    "message": "実行："
+  },
+  "landing.hackathonCommon.099": {
+    "message": "を先に実行するか、次で接続します："
+  },
+  "landing.hackathonCommon.100": {
+    "message": "次を追加："
+  },
+  "landing.a1HybridSearch.011": {
+    "message": "キーワード"
+  },
+  "landing.a1HybridSearch.013": {
+    "message": "ベクトル"
+  },
+  "landing.a1HybridSearch.015": {
+    "message": "ハイブリッド"
+  },
+  "landing.a1HybridSearch.083": {
+    "message": "ハイブリッド"
+  },
+  "landing.a1HybridSearch.099": {
+    "message": "SQL を表示"
+  },
+  "landing.a2Mcp.048": {
+    "message": "の表示が"
+  },
+  "landing.a2Mcp.067": {
+    "message": "レベル"
+  },
+  "landing.a2Mcp.070": {
+    "message": "レベル"
+  },
+  "landing.a2Mcp.091": {
+    "message": "実行："
+  },
+  "landing.a4AgentTraces.063": {
+    "message": "セッションのタイムライン"
+  },
+  "landing.a4AgentTraces.073": {
+    "message": "実行："
+  },
+  "landing.a4AgentTraces.094": {
+    "message": "タスク A2"
+  },
+  "landing.HackathonTrackBPage.070": {
+    "message": "完成させる"
+  },
+  "landing.HackathonTrackBPage.089": {
+    "message": "完了条件"
+  },
+  "landing.HackathonTrackBPage.090": {
+    "message": "チェックリスト"
+  },
+  "landing.HackathonTrackBPage.095": {
+    "message": "追加の挑戦"
+  },
+  "landing.HackathonTrackBPage.102": {
+    "message": "トラブルシューティングと参考資料"
+  },
+  "landing.HackathonTrackBPage.103": {
+    "message": "参考資料"
+  },
+  "landing.hackathonCommon.101": {
+    "message": "の述語、"
+  },
+  "landing.hackathonCommon.102": {
+    "message": "および"
+  },
+  "landing.hackathonCommon.103": {
+    "message": "、さらに次は"
+  },
+  "landing.hackathonCommon.104": {
+    "message": "を式で包まないでください（上記の落とし穴を参照）"
+  },
+  "landing.hackathonCommon.105": {
+    "message": "解凍ツールによって実行権限が失われています："
+  },
+  "landing.hackathonCommon.106": {
+    "message": "、または次を実行："
+  },
+  "landing.hackathonCommon.107": {
+    "message": "10 分以上解決できない場合"
+  },
+  "landing.hackathonCommon.108": {
+    "message": "投稿先："
+  },
+  "landing.a1HybridSearch.001": {
+    "message": "ハイブリッド検索"
+  },
+  "landing.a1HybridSearch.002": {
+    "message": "アプリ"
+  },
+  "landing.a1HybridSearch.003": {
+    "message": "キーワード、意味、フィルターを 1 つの SQL クエリで扱います。Apache Doris ドキュメントを検索する検索ボックスを作りましょう。"
+  },
+  "landing.courseExtra.a1HybridSearch.012": {
+    "message": "初心者向け"
+  },
+  "landing.courseExtra.a1HybridSearch.013": {
+    "message": "言語自由 · CLI または Web"
+  },
+  "landing.courseExtra.a1HybridSearch.014": {
+    "message": "AI ツールの利用歓迎"
+  },
+  "landing.a1HybridSearch.004": {
+    "message": "単語と意味の両方を理解する検索ボックスを作ります。"
+  },
+  "landing.a1HybridSearch.005": {
+    "message": "BM25 で順位付けしたキーワードの完全一致、ベクトルインデックスによる意味的な近傍、構造化フィルターを、1 つの Doris テーブルと 1 つの SQL 文で実現します。Elasticsearch や別のベクトルデータベースは不要です。"
+  },
+  "landing.a1HybridSearch.006": {
+    "message": "小さな検索アプリを作ります（CLI、ノートブック、Web ページのいずれでも構いません）。対象は"
+  },
+  "landing.a1HybridSearch.007": {
+    "message": "Apache Doris ドキュメントの 299 セクション"
+  },
+  "landing.a1HybridSearch.008": {
+    "message": "です。ユーザーは、たとえば次のような質問を入力し、"
+  },
+  "landing.a1HybridSearch.010": {
+    "message": "カテゴリを選び、次の 3 つのモードを切り替えます："
+  },
+  "landing.a1HybridSearch.012": {
+    "message": "BM25 で順位付けした全文一致。"
+  },
+  "landing.a1HybridSearch.014": {
+    "message": "埋め込みの類似度による最近傍。"
+  },
+  "landing.a1HybridSearch.016": {
+    "message": "キーワードによる事前フィルターとベクトル順位付け（追加の挑戦として Reciprocal Rank Fusion）。"
+  },
+  "landing.a1HybridSearch.017": {
+    "message": "各結果には、ページ、セクション、スコア（キーワード）または距離（ベクトル・ハイブリッド）、ドキュメントへのリンクを表示します。「SQL を表示」を切り替えると、Doris が実行したクエリを確認できます。"
+  },
+  "landing.a1HybridSearch.018": {
+    "message": "1 つのテーブルに 2 つのインデックス。"
+  },
+  "landing.a1HybridSearch.019": {
+    "message": "テキストの転置インデックスとベクトルの HNSW ANN インデックスを同じテーブルに保持します。プランナーは転置インデックスで事前フィルターし、残った候補を ANN インデックスで順位付けします。"
+  },
+  "landing.a1HybridSearch.020": {
+    "message": "SQL で検索エンジンの順位付け。"
+  },
+  "landing.a1HybridSearch.021": {
+    "message": "で、Lucene と同じ関連度関数 BM25 を通常の次の文で利用できます："
+  },
+  "landing.a1HybridSearch.022": {
+    "message": "フィルターは通常の SQL。"
+  },
+  "landing.a1HybridSearch.023": {
+    "message": "カテゴリ、ページ、"
+  },
+  "landing.a1HybridSearch.024": {
+    "message": "のリスト、範囲条件を次の隣に記述します："
+  },
+  "landing.a1HybridSearch.025": {
+    "message": "と同じ"
+  },
+  "landing.a1HybridSearch.026": {
+    "message": "句内に記述します。"
+  },
+  "landing.a1HybridSearch.027": {
+    "message": "：Doris 4.x ドキュメントの 47 の主要機能ページです。セクションごとに 1 行です："
+  },
+  "landing.a1HybridSearch.030": {
+    "message": "の値"
+  },
+  "landing.a1HybridSearch.031": {
+    "message": "（フィルタードロップダウン用）："
+  },
+  "landing.a1HybridSearch.032": {
+    "message": "ベクトルについて。"
+  },
+  "landing.a1HybridSearch.033": {
+    "message": "完全にオフラインで動かせるよう、スターターキットには英語専用の小さな"
+  },
+  "landing.a1HybridSearch.034": {
+    "message": "簡易埋め込み関数"
+  },
+  "landing.a1HybridSearch.036": {
+    "message": "が含まれています（出力は桁単位で同じです）。テキストを、手作業で定義した 8 つの概念次元に対応付けます："
+  },
+  "landing.a1HybridSearch.037": {
+    "message": "検索、ベクトルと AI、JSON、レイクハウス、取り込み、性能、データモデル、運用"
+  },
+  "landing.a1HybridSearch.038": {
+    "message": "。同義語リストを使い、結果を単位長に正規化します。テーブル内のベクトルも同じ関数で作成しているため、クエリベクトルは同じ空間にあります。意図的に簡素な仕組みにしていますが、これだけでもベクトル検索の利点を示せます："
+  },
+  "landing.a1HybridSearch.040": {
+    "message": "は、JSON や VARIANT と書かなくても VARIANT のページに到達します。追加の挑戦では本格的なモデルに置き換えます。"
+  },
+  "landing.a1HybridSearch.041": {
+    "message": "コンテキストプロンプト"
+  },
+  "landing.a1HybridSearch.042": {
+    "message": "エージェントに貼り付け"
+  },
+  "landing.a1HybridSearch.043": {
+    "message": "データをロード"
+  },
+  "landing.courseExtra.a1HybridSearch.001": {
+    "message": "5 分"
+  },
+  "landing.a1HybridSearch.044": {
+    "message": "スターターキットのフォルダー内で実行："
+  },
+  "landing.a1HybridSearch.045": {
+    "message": "M0 · データをロード"
+  },
+  "landing.a1HybridSearch.046": {
+    "message": "ロードの最後にカテゴリごとの件数が表示されます："
+  },
+  "landing.a1HybridSearch.047": {
+    "message": "7 カテゴリ、299 セクション"
+  },
+  "landing.a1HybridSearch.048": {
+    "message": "、合計です。"
+  },
+  "landing.a1HybridSearch.049": {
+    "message": "BM25 によるキーワード検索"
+  },
+  "landing.a1HybridSearch.050": {
+    "message": "キーワード検索"
+  },
+  "landing.courseExtra.a1HybridSearch.002": {
+    "message": "15 分"
+  },
+  "landing.a1HybridSearch.051": {
+    "message": "SQL シェルを開きます（"
+  },
+  "landing.a1HybridSearch.052": {
+    "message": "、または上記の"
+  },
+  "landing.a1HybridSearch.053": {
+    "message": "コマンド）。次を実行します："
+  },
+  "landing.a1HybridSearch.054": {
+    "message": "M1 · BM25 によるキーワード検索"
+  },
+  "landing.a1HybridSearch.055": {
+    "message": "続いて次を試します："
+  },
+  "landing.a1HybridSearch.056": {
+    "message": "（すべての語を含む）と"
+  },
+  "landing.a1HybridSearch.057": {
+    "message": "（隣接し、指定順）。入力ボックス → SQL → 結果リストの順に接続します。ユーザー入力はドライバーパラメーターで渡し（"
+  },
+  "landing.a1HybridSearch.058": {
+    "message": "）、SQL に直接埋め込まないでください。アポストロフィが 1 つあるだけでクエリが壊れます。"
+  },
+  "landing.a1HybridSearch.060": {
+    "message": "はこの方法を実装しています。"
+  },
+  "landing.a1HybridSearch.061": {
+    "message": "質問を全文入力しましたか？english パーサーはストップワードを残すため、"
+  },
+  "landing.a1HybridSearch.062": {
+    "message": "はテーブルの約 3 分の 1 に一致します。代わりに次を渡します："
+  },
+  "landing.a1HybridSearch.063": {
+    "message": "（簡易埋め込み関数から取得）。ストップワードに加え、次の語も除外します："
+  },
+  "landing.a1HybridSearch.067": {
+    "message": "。これらはほぼすべてのセクションに現れます。"
+  },
+  "landing.a1HybridSearch.068": {
+    "message": "次の入力の上位結果："
+  },
+  "landing.a1HybridSearch.069": {
+    "message": "は Vector Index と Hybrid Search のページです。先頭は"
+  },
+  "landing.a1HybridSearch.071": {
+    "message": "フィルターを追加"
+  },
+  "landing.courseExtra.a1HybridSearch.003": {
+    "message": "10 分"
+  },
+  "landing.a1HybridSearch.072": {
+    "message": "M2 · フィルターを追加"
+  },
+  "landing.a1HybridSearch.073": {
+    "message": "カテゴリをドロップダウンまたは CLI フラグで選べるようにします（7 つの値は「データ」に掲載）。追加条件は通常の SQL です："
+  },
+  "landing.a1HybridSearch.074": {
+    "message": "Vector Index のセクションは表示されなくなります。このページの分類は"
+  },
+  "landing.a1HybridSearch.075": {
+    "message": "なので、Hybrid Search が先頭に移動します。"
+  },
+  "landing.a1HybridSearch.076": {
+    "message": "ベクトル検索"
+  },
+  "landing.courseExtra.a1HybridSearch.004": {
+    "message": "15 分"
+  },
+  "landing.a1HybridSearch.077": {
+    "message": "コードまたはコマンドラインから簡易埋め込み関数で質問をベクトル化します："
+  },
+  "landing.a1HybridSearch.078": {
+    "message": "M3 · 質問をベクトル化"
+  },
+  "landing.a1HybridSearch.079": {
+    "message": "M3 · ベクトル検索"
+  },
+  "landing.a1HybridSearch.080": {
+    "message": "コードからは SQL を固定し、ベクトル文字列をパラメーターで渡します："
+  },
+  "landing.a1HybridSearch.081": {
+    "message": "。Python のリストや JavaScript の配列をパラメーターにすると動作しません。"
+  },
+  "landing.a1HybridSearch.082": {
+    "message": "質問には JSON も VARIANT も含まれていませんが、先頭 6 件はすべて VARIANT のセクションです。同じ語のキーワード検索では Metadata Cache や Binlog のセクションも混ざります。"
+  },
+  "landing.courseExtra.a1HybridSearch.005": {
+    "message": "20 分"
+  },
+  "landing.a1HybridSearch.084": {
+    "message": "質問："
+  },
+  "landing.a1HybridSearch.086": {
+    "message": "。ベクトルはこの質問の簡易埋め込みです。キーワードフィルターは次の語を含むセクションのみを残します："
+  },
+  "landing.a1HybridSearch.088": {
+    "message": "M4 · ハイブリッド"
+  },
+  "landing.a1HybridSearch.089": {
+    "message": "キーワードの事前フィルター（転置インデックス）"
+  },
+  "landing.a1HybridSearch.090": {
+    "message": "構造化フィルター"
+  },
+  "landing.a1HybridSearch.091": {
+    "message": "ベクトル順位付け（ANN）"
+  },
+  "landing.a1HybridSearch.092": {
+    "message": "アプリでは、1 つの入力を両方の処理に渡します："
+  },
+  "landing.a1HybridSearch.093": {
+    "message": "を次の用途に："
+  },
+  "landing.a1HybridSearch.094": {
+    "message": "をベクトルに使います。"
+  },
+  "landing.a1HybridSearch.095": {
+    "message": "は複数語に対して緩いフィルターです。厳密な条件を求める場合は「必須語」入力欄か次を用意してください："
+  },
+  "landing.a1HybridSearch.096": {
+    "message": "。ここでは次を選択しないでください："
+  },
+  "landing.a1HybridSearch.097": {
+    "message": "。距離を表示してください。"
+  },
+  "landing.a1HybridSearch.098": {
+    "message": "モード切り替え（キーワード / ベクトル / ハイブリッド）と次を追加します："
+  },
+  "landing.a1HybridSearch.100": {
+    "message": "の切り替え。同じ質問で 3 つのリストを比較し、どこが異なり、なぜ異なるかを考えてみましょう。"
+  },
+  "landing.a1HybridSearch.101": {
+    "message": "すべての結果に Kafka が含まれ、先頭は"
+  },
+  "landing.a1HybridSearch.103": {
+    "message": "ベクトルモードだけの場合、先頭は"
+  },
+  "landing.a1HybridSearch.105": {
+    "message": "になります（同じ質問）。"
+  },
+  "landing.courseExtra.a1HybridSearch.006": {
+    "message": "ユーザーが任意の自由文で検索できる（CLI 引数、プロンプト、テキストボックス）。"
+  },
+  "landing.a1HybridSearch.106": {
+    "message": "3 つのモードが動作する："
+  },
+  "landing.a1HybridSearch.107": {
+    "message": "キーワード"
+  },
+  "landing.a1HybridSearch.108": {
+    "message": "（BM25、使用する関数："
+  },
+  "landing.a1HybridSearch.109": {
+    "message": "ベクトル"
+  },
+  "landing.a1HybridSearch.110": {
+    "message": "（ANN）、"
+  },
+  "landing.a1HybridSearch.111": {
+    "message": "ハイブリッド"
+  },
+  "landing.a1HybridSearch.112": {
+    "message": "（キーワードの事前フィルター + ベクトル順位付け）。"
+  },
+  "landing.courseExtra.a1HybridSearch.007": {
+    "message": "少なくとも 1 つの構造化フィルター（カテゴリ）がある。"
+  },
+  "landing.courseExtra.a1HybridSearch.008": {
+    "message": "結果にページ、セクション、スコアまたは距離を表示し、実行した SQL を確認できる。"
+  },
+  "landing.courseExtra.a1HybridSearch.009": {
+    "message": "プルリクエストとして提出する：ご自身の GitHub ID のフォルダーにコードと README（実行方法とスクリーンショット 1 点）を含める。"
+  },
+  "landing.a1HybridSearch.113": {
+    "message": "Reciprocal Rank Fusion。"
+  },
+  "landing.a1HybridSearch.114": {
+    "message": "BM25 のリストとベクトルのリストを次で融合します："
+  },
+  "landing.a1HybridSearch.115": {
+    "message": "（1 つの SQL 文内）："
+  },
+  "landing.a1HybridSearch.116": {
+    "message": "（スターターキット内）は各リストの順位を次で計算します："
+  },
+  "landing.a1HybridSearch.117": {
+    "message": "単純な次のクエリの 1 つ外側で処理します："
+  },
+  "landing.a1HybridSearch.118": {
+    "message": "。その後、次の句で融合します："
+  },
+  "landing.a1HybridSearch.119": {
+    "message": "。参考資料："
+  },
+  "landing.a1HybridSearch.120": {
+    "message": "RRF のページ"
+  },
+  "landing.a1HybridSearch.121": {
+    "message": "で、4 行の例を使って同じパターンを解説しています。"
+  },
+  "landing.a1HybridSearch.122": {
+    "message": "本格的な埋め込みを次で生成："
+  },
+  "landing.a1HybridSearch.123": {
+    "message": "（API キーはご自身で用意）：AI リソースを作成し、次を作ります："
+  },
+  "landing.a1HybridSearch.124": {
+    "message": "、モデルの次の値に合わせます："
+  },
+  "landing.a1HybridSearch.125": {
+    "message": "。データを次で埋めます："
+  },
+  "landing.a1HybridSearch.126": {
+    "message": "（ベクトル列は"
+  },
+  "landing.a1HybridSearch.127": {
+    "message": "のため、更新ではなく挿入します）。クエリも SQL で埋め込みを生成します。参照："
+  },
+  "landing.a1HybridSearch.128": {
+    "message": "埋め込み"
+  },
+  "landing.courseExtra.a1HybridSearch.010": {
+    "message": "入力中に検索"
+  },
+  "landing.a1HybridSearch.130": {
+    "message": "一致した語を強調表示"
+  },
+  "landing.a1HybridSearch.131": {
+    "message": "します（Doris はスコアを返しますが、ハイライトは返しません。アプリ側で描画してください）。"
+  },
+  "landing.a1HybridSearch.132": {
+    "message": "レイテンシバッジ"
+  },
+  "landing.a1HybridSearch.133": {
+    "message": "：各モードの所要時間をミリ秒で表示します。"
+  },
+  "landing.a1HybridSearch.134": {
+    "message": "ベクトルリテラルが空、またはプレースホルダーのままです。次の出力を貼り付けてください："
+  },
+  "landing.a1HybridSearch.135": {
+    "message": "ドライバーが配列パラメーターを 8 個の値に展開しました。次を使ってベクトルを文字列で渡してください："
+  },
+  "landing.a1HybridSearch.136": {
+    "message": "ハイブリッド検索"
+  },
+  "landing.a1HybridSearch.137": {
+    "message": "BM25"
+  },
+  "landing.a1HybridSearch.138": {
+    "message": "全文検索"
+  },
+  "landing.a1HybridSearch.139": {
+    "message": "ベクトルインデックス"
+  },
+  "landing.a1HybridSearch.140": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a1HybridSearch.141": {
+    "message": "埋め込み"
+  },
+  "landing.a2Mcp.001": {
+    "message": "サービス別・レベル別のログ件数を調べます。対象："
+  },
+  "landing.a2Mcp.002": {
+    "message": "基本的な集約"
+  },
+  "landing.a2Mcp.003": {
+    "message": "11:00 から 12:30 までのサービスごとの ERROR 件数を 5 分単位で表示してください。最初に急増したサービスはどれですか？"
+  },
+  "landing.a2Mcp.004": {
+    "message": "時間バケットと推論"
+  },
+  "landing.a2Mcp.005": {
+    "message": "「payment gateway timeout」に最も関連するログを 10 行、関連度順で探してください。"
+  },
+  "landing.a2Mcp.006": {
+    "message": "Doris の全文検索 + BM25（使用する関数："
+  },
+  "landing.a2Mcp.007": {
+    "message": "、または次にフォールバック："
+  },
+  "landing.a2Mcp.008": {
+    "message": "p95 レイテンシが最も大きいエージェントツールはどれで、どのくらいの頻度で失敗しますか？"
+  },
+  "landing.courseExtra.a2Mcp.011": {
+    "message": "初心者向け"
+  },
+  "landing.courseExtra.a2Mcp.013": {
+    "message": "AI ツールの利用歓迎"
+  },
+  "landing.courseExtra.a2Mcp.002": {
+    "message": "5 分"
+  },
+  "landing.courseExtra.a2Mcp.003": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a2Mcp.004": {
+    "message": "10 分"
+  },
+  "landing.courseExtra.a2Mcp.006": {
+    "message": "5 分"
+  },
+  "landing.courseExtra.a3LogSearch.011": {
+    "message": "初心者向け"
+  },
+  "landing.courseExtra.a3LogSearch.012": {
+    "message": "言語自由 · CLI または Web"
+  },
+  "landing.courseExtra.a3LogSearch.013": {
+    "message": "AI ツールの利用歓迎"
+  },
+  "landing.a3LogSearch.036": {
+    "message": "コンテキストプロンプト"
+  },
+  "landing.a3LogSearch.037": {
+    "message": "エージェントに貼り付け"
+  },
+  "landing.courseExtra.a3LogSearch.001": {
+    "message": "5 分"
+  },
+  "landing.a3LogSearch.039": {
+    "message": "スターターキットのフォルダー内で実行："
+  },
+  "landing.a3LogSearch.045": {
+    "message": "BM25 によるキーワード検索"
+  },
+  "landing.a3LogSearch.046": {
+    "message": "キーワード検索"
+  },
+  "landing.courseExtra.a3LogSearch.002": {
+    "message": "15 分"
+  },
+  "landing.a3LogSearch.047": {
+    "message": "M1 · BM25 によるキーワード検索"
+  },
+  "landing.courseExtra.a3LogSearch.003": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a3LogSearch.004": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a3LogSearch.005": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a3LogSearch.009": {
+    "message": "プルリクエストとして提出する：ご自身の GitHub ID のフォルダーにコードと README（実行方法とスクリーンショット 1 点）を含める。"
+  },
+  "landing.a3LogSearch.091": {
+    "message": "全文検索"
+  },
+  "landing.a3LogSearch.092": {
+    "message": "BM25"
+  },
+  "landing.courseExtra.a4AgentTraces.014": {
+    "message": "AI ツールの利用歓迎"
+  },
+  "landing.a4AgentTraces.039": {
+    "message": "コンテキストプロンプト"
+  },
+  "landing.a4AgentTraces.040": {
+    "message": "エージェントに貼り付け"
+  },
+  "landing.courseExtra.a4AgentTraces.001": {
+    "message": "10 分"
+  },
+  "landing.a4AgentTraces.042": {
+    "message": "スターターキットのフォルダー内で実行："
+  },
+  "landing.courseExtra.a4AgentTraces.002": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a4AgentTraces.003": {
+    "message": "15 分"
+  },
+  "landing.courseExtra.a4AgentTraces.004": {
+    "message": "10 分"
+  },
+  "landing.courseExtra.a4AgentTraces.005": {
+    "message": "20 分"
+  },
+  "landing.courseExtra.a4AgentTraces.006": {
+    "message": "10 分"
+  },
+  "landing.a4AgentTraces.102": {
+    "message": "全文検索"
+  },
+  "landing.HackathonTrackBPage.019": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.trackB.chip.2": {
+    "message": "初心者向け"
+  },
+  "landing.trackB.task.B1.doc": {
+    "message": "全文検索"
+  },
+  "landing.trackB.task.B1.alsoSee.0": {
+    "message": "BM25"
+  },
+  "landing.trackB.task.B2.doc": {
+    "message": "ベクトルインデックス"
+  },
+  "landing.trackB.task.B3.title": {
+    "message": "ハイブリッド検索"
+  },
+  "landing.trackB.task.B3.doc": {
+    "message": "ハイブリッド検索"
+  },
+  "landing.trackB.task.B3.alsoSee.0": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a2Mcp.009": {
+    "message": "VARIANT のパスとキャスト"
+  },
+  "landing.a2Mcp.010": {
+    "message": "ベクトル検索の事前フィルターを説明している Doris ドキュメントのセクションはどれですか？"
+  },
+  "landing.a2Mcp.011": {
+    "message": "検索対象："
+  },
+  "landing.a2Mcp.012": {
+    "message": "Doris に質問"
+  },
+  "landing.a2Mcp.013": {
+    "message": "MCP を使って"
+  },
+  "landing.a2Mcp.014": {
+    "message": "普段使う AI アシスタントに Doris を接続し、実際の SQL で実際の質問に答えられるようにします。"
+  },
+  "landing.courseExtra.a2Mcp.012": {
+    "message": "Python 3.12+ · MCP クライアントは自由"
+  },
+  "landing.a2Mcp.015": {
+    "message": "AI アシスタントを Doris のデータアナリストに。"
+  },
+  "landing.a2Mcp.016": {
+    "message": "Apache Doris MCP Server を使うと、MCP 対応のアシスタントからクラスターを利用できます。接続後、ハッカソンのデータを調べ、SQL を書き、通常はダッシュボードで調べる質問に回答させてみましょう。"
+  },
+  "landing.a2Mcp.017": {
+    "message": "動作する構成を作ります。ご自身の MCP クライアントからローカルの Doris に、公式の次を介して接続します："
+  },
+  "landing.a2Mcp.018": {
+    "message": "Doris MCP Server 1.0"
+  },
+  "landing.a2Mcp.019": {
+    "message": "。さらに、アシスタントが次を行う様子を短くまとめます："
+  },
+  "landing.a2Mcp.020": {
+    "message": "自力で次を発見："
+  },
+  "landing.a2Mcp.021": {
+    "message": "テーブルを探索する。"
+  },
+  "landing.a2Mcp.022": {
+    "message": "SQL を作成・実行し、少なくとも 3 つのデータに関する質問に回答する。"
+  },
+  "landing.a2Mcp.023": {
+    "message": "破壊的な要求を拒否する（サーバーとユーザーが読み取り専用であるため）。"
+  },
+  "landing.a2Mcp.024": {
+    "message": "設計上、読み取り専用。"
+  },
+  "landing.a2Mcp.025": {
+    "message": "Doris MCP Server 1.0 が公開するのは読み取り専用の機能だけです。最終的な権限判断は Doris の RBAC が行います。"
+  },
+  "landing.a2Mcp.026": {
+    "message": "機能を羅列せず、8 つのドメインに整理。"
+  },
+  "landing.a2Mcp.027": {
+    "message": "カタログ、クエリ、クラスター、パイプライン、"
+  },
+  "landing.a2Mcp.028": {
+    "message": "検索"
+  },
+  "landing.a2Mcp.029": {
+    "message": "、ガバナンス、レイクハウス、セマンティックのドメインを段階的に公開し、モデルに必要なものだけを見せます。"
+  },
+  "landing.courseExtra.a2Mcp.001": {
+    "message": "検索機能を理解。"
+  },
+  "landing.a2Mcp.030": {
+    "message": "対象の"
+  },
+  "landing.a2Mcp.031": {
+    "message": "ドメインはテキスト、ベクトル、ハイブリッド検索を理解しているため、アシスタントは推測せずに Doris の検索機能を利用できます。"
+  },
+  "landing.a2Mcp.032": {
+    "message": "Python 3.12 以降と、インストール済みのサーバー。"
+  },
+  "landing.a2Mcp.033": {
+    "message": "確認コマンド："
+  },
+  "landing.a2Mcp.034": {
+    "message": "。約 80 個のパッケージを取得するため、サーバーは事前にインストールしてください（コマンドはマイルストーン 2）。"
+  },
+  "landing.a2Mcp.035": {
+    "message": "普段使っている MCP 対応 AI クライアント"
+  },
+  "landing.a2Mcp.036": {
+    "message": "（およびそのアカウント）。"
+  },
+  "landing.a2Mcp.037": {
+    "message": "すべてのハッカソン用テーブルをロード済み。"
+  },
+  "landing.a2Mcp.038": {
+    "message": "スターターキットのフォルダーから実行します。最後に各テーブルの行数が表示されます。"
+  },
+  "landing.a2Mcp.039": {
+    "message": "このタスク自体が AI を使うタスクです。"
+  },
+  "landing.a2Mcp.040": {
+    "message": "以下の文章で、アシスタントに Doris SQL を教えます。最初の追加課題で作成する指示ファイルの出発点として使えます。"
+  },
+  "landing.a2Mcp.041": {
+    "message": "指示ファイル"
+  },
+  "landing.a2Mcp.042": {
+    "message": "クライアントに貼り付け"
+  },
+  "landing.a2Mcp.043": {
+    "message": "読み取り専用ユーザーを作成"
+  },
+  "landing.a2Mcp.044": {
+    "message": "読み取り専用ユーザー"
+  },
+  "landing.a2Mcp.045": {
+    "message": "M1 · 読み取り専用ユーザー"
+  },
+  "landing.a2Mcp.046": {
+    "message": "ノート PC 上でも、LLM に root アカウントを渡さないでください。SQL シェルで実行するか、次をロードします："
+  },
+  "landing.a2Mcp.047": {
+    "message": "（スターターキット内）。"
+  },
+  "landing.a2Mcp.049": {
+    "message": "対象："
+  },
+  "landing.a2Mcp.050": {
+    "message": "、書き込み権限は付与しません。"
+  },
+  "landing.a2Mcp.051": {
+    "message": "サーバーをインストールして登録"
+  },
+  "landing.a2Mcp.052": {
+    "message": "サーバーをインストール"
+  },
+  "landing.a2Mcp.053": {
+    "message": "M2 · インストール"
+  },
+  "landing.a2Mcp.054": {
+    "message": "クライアントの MCP 設定に追加します（ファイル名と場所はクライアントによって異なります）。スターターキット内のファイル："
+  },
+  "landing.a2Mcp.055": {
+    "message": "M2 · MCP 設定"
+  },
+  "landing.a2Mcp.056": {
+    "message": "クライアントに Doris サーバーと 8 つの"
+  },
+  "landing.a2Mcp.057": {
+    "message": "ドメイン（catalog、cluster、governance、lakehouse、pipeline、query、search、semantic）が表示されます。"
+  },
+  "landing.a2Mcp.058": {
+    "message": "探索させる"
+  },
+  "landing.a2Mcp.059": {
+    "message": "質問："
+  },
+  "landing.a2Mcp.060": {
+    "message": "「hackathon データベースにはどのようなテーブルがあり、それぞれ何に使いますか？」"
+  },
+  "landing.a2Mcp.061": {
+    "message": "どの機能が呼び出されるかを観察してください。"
+  },
+  "landing.a2Mcp.062": {
+    "message": "M3 · アシスタントに質問"
+  },
+  "landing.a2Mcp.063": {
+    "message": "クライアントに貼り付け"
+  },
+  "landing.a2Mcp.064": {
+    "message": "実際の質問をする"
+  },
+  "landing.a2Mcp.065": {
+    "message": "実際の質問"
+  },
+  "landing.courseExtra.a2Mcp.005": {
+    "message": "20～40 分"
+  },
+  "landing.a2Mcp.066": {
+    "message": "少なくとも 3 つを選びます："
+  },
+  "landing.a2Mcp.068": {
+    "message": "質問"
+  },
+  "landing.a2Mcp.069": {
+    "message": "確認する内容"
+  },
+  "landing.a2Mcp.071": {
+    "message": "質問"
+  },
+  "landing.a2Mcp.072": {
+    "message": "確認する内容"
+  },
+  "landing.a2Mcp.073": {
+    "message": "M4 · 質問"
+  },
+  "landing.a2Mcp.074": {
+    "message": "クライアントに貼り付け"
+  },
+  "landing.a2Mcp.075": {
+    "message": "各回答について、アシスタントが実行した SQL を保存し、結果を自分で確認してください。"
+  },
+  "landing.a2Mcp.076": {
+    "message": "制限を試す"
+  },
+  "landing.a2Mcp.077": {
+    "message": "質問："
+  },
+  "landing.a2Mcp.078": {
+    "message": "「容量を空けるために INFO ログをすべて削除してください。」"
+  },
+  "landing.a2Mcp.079": {
+    "message": "何が起きるか記録します（期待する結果：拒否。サーバーの応答："
+  },
+  "landing.a2Mcp.080": {
+    "message": "、かつ"
+  },
+  "landing.a2Mcp.081": {
+    "message": "にも書き込み権限はありません）。"
+  },
+  "landing.a2Mcp.082": {
+    "message": "M5 · アシスタントに質問"
+  },
+  "landing.a2Mcp.083": {
+    "message": "クライアントに貼り付け"
+  },
+  "landing.courseExtra.a2Mcp.007": {
+    "message": "Doris MCP Server が AI クライアントに接続されている（ツール一覧のスクリーンショット）。"
+  },
+  "landing.a2Mcp.084": {
+    "message": "少なくとも"
+  },
+  "landing.a2Mcp.085": {
+    "message": "3 つ"
+  },
+  "landing.a2Mcp.086": {
+    "message": "の質問に回答し、それぞれに実行 SQL と結果がある。"
+  },
+  "landing.courseExtra.a2Mcp.008": {
+    "message": "安全性のテストを 1 つ記録する（書き込みの拒否）。"
+  },
+  "landing.courseExtra.a2Mcp.009": {
+    "message": "ご自身の GitHub ID フォルダーの README に、クライアント、設定（秘密情報は除く）、質疑応答、わかりにくかった点または改善点を 1 つ記載する。"
+  },
+  "landing.a2Mcp.087": {
+    "message": "アシスタントに Doris を教える。"
+  },
+  "landing.a2Mcp.088": {
+    "message": "クライアント用の再利用可能な指示ファイル（ルール、スキル、システムプロンプト）を作成します。内容："
+  },
+  "landing.a2Mcp.089": {
+    "message": "、ANN 距離関数、VARIANT のキャスト。レベル 3～4 の質問をもう一度行い、前後の正確性を比較します。"
+  },
+  "landing.a2Mcp.090": {
+    "message": "HTTP トランスポート。"
+  },
+  "landing.a2Mcp.092": {
+    "message": "して、2 つ目のクライアントを次に接続します："
+  },
+  "landing.a2Mcp.093": {
+    "message": "クエリが遅い理由を尋ねる。"
+  },
+  "landing.a2Mcp.094": {
+    "message": "次を調べる："
+  },
+  "landing.a2Mcp.095": {
+    "message": "ドメイン（explain、profile）。"
+  },
+  "landing.a2Mcp.096": {
+    "message": "ドキュメントを改善する。"
+  },
+  "landing.a2Mcp.097": {
+    "message": "次の資料にわかりにくい点はありましたか："
+  },
+  "landing.a2Mcp.098": {
+    "message": "MCP Server のページ"
+  },
+  "landing.a2Mcp.099": {
+    "message": "。修正する PR を作成してください。それもドキュメントへの貢献です。"
+  },
+  "landing.a2Mcp.100": {
+    "message": "クライアントがサーバーを起動できない"
+  },
+  "landing.a2Mcp.101": {
+    "message": "次で確認した絶対パスを使います："
+  },
+  "landing.a2Mcp.102": {
+    "message": "。GUI アプリはシェルの次の設定を継承しないことがあります："
+  },
+  "landing.a2Mcp.103": {
+    "message": "や virtualenv"
+  },
+  "landing.a2Mcp.104": {
+    "message": "が拒否する：Python が古すぎる"
+  },
+  "landing.a2Mcp.105": {
+    "message": "サーバーには Python 3.12+ が必要です。次で venv を作成します："
+  },
+  "landing.a2Mcp.106": {
+    "message": "（または次を使用："
+  },
+  "landing.a2Mcp.107": {
+    "message": "ドメインは表示されるが、子の機能を呼び出せない"
+  },
+  "landing.a2Mcp.108": {
+    "message": "クライアントが段階的な機能公開をサポートしていない可能性があります。次を追加："
+  },
+  "landing.a2Mcp.109": {
+    "message": "追加先："
+  },
+  "landing.a2Mcp.110": {
+    "message": "アクセスが拒否される"
+  },
+  "landing.a2Mcp.111": {
+    "message": "次を確認します："
+  },
+  "landing.a2Mcp.112": {
+    "message": "（M1）および"
+  },
+  "landing.a2Mcp.113": {
+    "message": "の組み合わせ"
+  },
+  "landing.a2Mcp.114": {
+    "message": "Doris MCP Server リポジトリ"
+  },
+  "landing.a2Mcp.115": {
+    "message": "1.0 の README とクイックスタート"
+  },
+  "landing.a2Mcp.116": {
+    "message": "MCP Server 機能ページ"
+  },
+  "landing.a2Mcp.117": {
+    "message": "Model Context Protocol"
+  },
+  "landing.a3LogSearch.001": {
+    "message": "ログ検索"
+  },
+  "landing.a3LogSearch.002": {
+    "message": "エクスプローラー"
+  },
+  "landing.a3LogSearch.003": {
+    "message": "すべてを SQL で扱う小さな Kibana を作り、11:40 に注文処理が失敗した原因を調べます。"
+  },
+  "landing.a3LogSearch.004": {
+    "message": "ログエクスプローラーを作り、障害を解明します。"
+  },
+  "landing.a3LogSearch.005": {
+    "message": "200,000 行のログ、6 つのサービス、そして問題のあった朝。BM25 の関連度順でキーワード検索し、サービス・レベル・時間で絞り込み、件数を随時計算します。すべて、1 つの Doris テーブルに対する通常の SQL で実行します。"
+  },
+  "landing.a3LogSearch.006": {
+    "message": "次の機能を持つ小さなログエクスプローラー："
+  },
+  "landing.a3LogSearch.007": {
+    "message": "検索用の"
+  },
+  "landing.a3LogSearch.008": {
+    "message": "検索ボックス"
+  },
+  "landing.a3LogSearch.009": {
+    "message": "（キーワード・フレーズ）と関連度による順位付け、"
+  },
+  "landing.a3LogSearch.010": {
+    "message": "フィルター"
+  },
+  "landing.a3LogSearch.011": {
+    "message": "（サービス、レベル、時間範囲）、"
+  },
+  "landing.a3LogSearch.012": {
+    "message": "ファセット件数"
+  },
+  "landing.a3LogSearch.013": {
+    "message": "（結果の隣にサービス別・レベル別の件数を表示）、"
+  },
+  "landing.a3LogSearch.014": {
+    "message": "任意で次も追加："
+  },
+  "landing.a3LogSearch.015": {
+    "message": "タイムライン"
+  },
+  "landing.a3LogSearch.016": {
+    "message": "（5 分ごとのエラー数）。"
+  },
+  "landing.a3LogSearch.017": {
+    "message": "最後に実際の調査を行います："
+  },
+  "landing.a3LogSearch.018": {
+    "message": "11:40 に注文処理が失敗し始めました。原因となったサービスはどれで、問題は実際にはいつ始まったのでしょうか？"
+  },
+  "landing.a3LogSearch.019": {
+    "message": "エクスプローラーから答えが明確にわかるようにしてください。"
+  },
+  "landing.a3LogSearch.020": {
+    "message": "同じテーブルで検索と分析。"
+  },
+  "landing.a3LogSearch.021": {
+    "message": "転置インデックスがキーワードクエリを処理し、同じ"
+  },
+  "landing.a3LogSearch.022": {
+    "message": "句を次に使います："
+  },
+  "landing.a3LogSearch.023": {
+    "message": "によるファセット集計。別システムとの同期は不要です。"
+  },
+  "landing.a3LogSearch.024": {
+    "message": "関連度に基づく順位付け。"
+  },
+  "landing.a3LogSearch.025": {
+    "message": "が BM25 で結果をソートするため、新しい行だけでなく、最も関連する行が先頭に並びます。"
+  },
+  "landing.a3LogSearch.026": {
+    "message": "低コストなフィルター。"
+  },
+  "landing.a3LogSearch.028": {
+    "message": "にはそれぞれ転置インデックスがあり、時間範囲はソートキーで絞り込みます。"
+  },
+  "landing.a3LogSearch.029": {
+    "message": "：6 つのサービスを 1 つのテーブルに保存します："
+  },
+  "landing.a3LogSearch.032": {
+    "message": "が生成するデータ："
+  },
+  "landing.a3LogSearch.033": {
+    "message": "2026 年 10 月 13 日の 200,000 行"
+  },
+  "landing.a3LogSearch.034": {
+    "message": "に対し、1 つの"
+  },
+  "landing.a3LogSearch.035": {
+    "message": "で生成します。ダウンロードは不要です。このデータのどこかに障害が潜んでいます。"
+  },
+  "landing.a3LogSearch.038": {
+    "message": "ログを生成"
+  },
+  "landing.a3LogSearch.040": {
+    "message": "M0 · ログを生成"
+  },
+  "landing.a3LogSearch.041": {
+    "message": "数秒後に表示："
+  },
+  "landing.a3LogSearch.042": {
+    "message": "行のログ、開始時刻："
+  },
+  "landing.a3LogSearch.043": {
+    "message": "終了時刻："
+  },
+  "landing.a3LogSearch.044": {
+    "message": "（10 月 13 日）。"
+  },
+  "landing.a3LogSearch.048": {
+    "message": "検索ボックスに接続します。ユーザー入力はドライバーパラメーターで渡します（"
+  },
+  "landing.a4AgentTraces.002": {
+    "message": "エクスプローラー"
+  },
+  "landing.a4AgentTraces.009": {
+    "message": "検索用の"
+  },
+  "landing.a4AgentTraces.012": {
+    "message": "検索用の"
+  },
+  "landing.a4AgentTraces.078": {
+    "message": "、かつ"
+  },
+  "landing.HackathonTrackBPage.058": {
+    "message": "対象："
+  },
+  "landing.HackathonTrackBPage.093": {
+    "message": "対象："
+  },
+  "landing.a3LogSearch.049": {
+    "message": "（スターターキット内）がこの処理を実装しています。"
+  },
+  "landing.a3LogSearch.050": {
+    "message": "20 件の結果はすべて"
+  },
+  "landing.a3LogSearch.051": {
+    "message": "の行です。BM25 は出現頻度の低い語を重視します："
+  },
+  "landing.a3LogSearch.053": {
+    "message": "は 68 行に出現し、"
+  },
+  "landing.a3LogSearch.055": {
+    "message": "は 347 行に出現します。検索語を次だけにすると、"
+  },
+  "landing.a3LogSearch.056": {
+    "message": "ほかの結果も確認できます。"
+  },
+  "landing.a3LogSearch.057": {
+    "message": "フィルター"
+  },
+  "landing.a3LogSearch.058": {
+    "message": "M2 · フィルター"
+  },
+  "landing.a3LogSearch.059": {
+    "message": "すべての結果は timeout を含む ERROR 行です。2 つのサービスのうち 1 つだけが表示されます。"
+  },
+  "landing.a3LogSearch.060": {
+    "message": "ファセット件数"
+  },
+  "landing.a3LogSearch.061": {
+    "message": "は集約できないため、ファセット集計にはこれを除いた同じフィルターを使います："
+  },
+  "landing.a3LogSearch.062": {
+    "message": "M3 · ファセット件数"
+  },
+  "landing.a3LogSearch.063": {
+    "message": "この時間帯に一致するログは 163 行で、すべて"
+  },
+  "landing.a3LogSearch.064": {
+    "message": "です。件数の合計は、次を除いた同じ検索の件数と一致する必要があります："
+  },
+  "landing.a3LogSearch.065": {
+    "message": "。確認コマンド："
+  },
+  "landing.a3LogSearch.066": {
+    "message": "と同じ"
+  },
+  "landing.a3LogSearch.067": {
+    "message": "エラーのタイムライン"
+  },
+  "landing.a3LogSearch.068": {
+    "message": "M4 · エラーのタイムライン"
+  },
+  "landing.a3LogSearch.069": {
+    "message": "11:35 から 12:00 の間に 2 つのサービスで急増します。それ以外の時間帯では、どのサービスも 5 分間のエラー数が 4 件を超えません。"
+  },
+  "landing.a3LogSearch.070": {
+    "message": "障害を解明"
+  },
+  "landing.a3LogSearch.071": {
+    "message": "エクスプローラーを使って答えます："
+  },
+  "landing.a3LogSearch.072": {
+    "message": "注文処理の失敗を引き起こしたサービスはどれで、何時何分に始まりましたか？"
+  },
+  "landing.a3LogSearch.073": {
+    "message": "答えと、それを裏付けるクエリを README に記載してください。"
+  },
+  "landing.a3LogSearch.074": {
+    "message": "BM25 で順位付けするキーワード検索（"
+  },
+  "landing.courseExtra.a3LogSearch.006": {
+    "message": "少なくとも 2 つの構造化フィルター（サービス、レベル）と時間範囲。"
+  },
+  "landing.courseExtra.a3LogSearch.007": {
+    "message": "現在の検索条件に追従するファセット件数。"
+  },
+  "landing.courseExtra.a3LogSearch.008": {
+    "message": "障害の原因サービスと開始時刻を、根拠となるクエリとともに特定する。"
+  },
+  "landing.a3LogSearch.075": {
+    "message": "フレーズ検索と入力補完"
+  },
+  "landing.a3LogSearch.076": {
+    "message": "を使って入力中に検索します。"
+  },
+  "landing.a3LogSearch.077": {
+    "message": "トレース表示"
+  },
+  "landing.a3LogSearch.078": {
+    "message": "：行をクリックすると、同じ次の値を持つログをすべて表示します："
+  },
+  "landing.a3LogSearch.079": {
+    "message": "。時刻順で表示します。"
+  },
+  "landing.a3LogSearch.080": {
+    "message": "クエリ文字列検索"
+  },
+  "landing.a3LogSearch.081": {
+    "message": "：次を試してください："
+  },
+  "landing.a3LogSearch.082": {
+    "message": "DSL（Lucene 形式の"
+  },
+  "landing.a3LogSearch.083": {
+    "message": "）。参照："
+  },
+  "landing.a3LogSearch.084": {
+    "message": "SEARCH 関数"
+  },
+  "landing.a3LogSearch.085": {
+    "message": "ログのリアルタイム追跡"
+  },
+  "landing.a3LogSearch.086": {
+    "message": "：毎秒数行を追加し、自動更新します。"
+  },
+  "landing.a3LogSearch.087": {
+    "message": "インデックスの有無を比較"
+  },
+  "landing.a3LogSearch.088": {
+    "message": "：比較対象："
+  },
+  "landing.a3LogSearch.090": {
+    "message": "を全テーブルで実行し、所要時間を表示します。"
+  },
+  "landing.a3LogSearch.093": {
+    "message": "転置インデックス"
+  },
+  "landing.a3LogSearch.094": {
+    "message": "SEARCH 関数"
+  },
+  "landing.a4AgentTraces.001": {
+    "message": "エージェントトレース"
+  },
+  "landing.a4AgentTraces.003": {
+    "message": "AI エージェントが出力する JSON はリリースごとに構造が変わります。VARIANT に保存し、通常の列のようにクエリします。"
+  },
+  "landing.courseExtra.a4AgentTraces.012": {
+    "message": "中級"
+  },
+  "landing.courseExtra.a4AgentTraces.013": {
+    "message": "言語自由 · CLI、ノートブック、Web"
+  },
+  "landing.a4AgentTraces.004": {
+    "message": "エージェントの不揃いな JSON も、そのままクエリ。"
+  },
+  "landing.a4AgentTraces.005": {
+    "message": "LLM 呼び出し、ツール呼び出し、エラー、最終回答。それぞれに独自のフィールドがあり、リリースごとに新しいフィールドも増えます。Doris の"
+  },
+  "landing.a4AgentTraces.006": {
+    "message": "は JSON を型付きの列に自動変換するため、通常の SQL でフィルター、検索、集約できます。スキーマ移行は不要です。"
+  },
+  "landing.a4AgentTraces.007": {
+    "message": "次を対象にしたトレースエクスプローラー："
+  },
+  "landing.a4AgentTraces.008": {
+    "message": "1,000 件の AI エージェントセッション（約 20,000 イベント）"
+  },
+  "landing.a4AgentTraces.010": {
+    "message": "セッション一覧"
+  },
+  "landing.a4AgentTraces.011": {
+    "message": "（イベント数、エラー、トークン数、レイテンシを表示）、"
+  },
+  "landing.a4AgentTraces.013": {
+    "message": "セッションのタイムライン"
+  },
+  "landing.a4AgentTraces.014": {
+    "message": "：セッションをクリックすると、エージェントの動作を順に再現、"
+  },
+  "landing.a4AgentTraces.015": {
+    "message": "ツールとモデルの統計"
+  },
+  "landing.a4AgentTraces.016": {
+    "message": "：p95 レイテンシ、エラー率、トークン使用量、"
+  },
+  "landing.a4AgentTraces.017": {
+    "message": "JSON 内の検索"
+  },
+  "landing.a4AgentTraces.018": {
+    "message": "：「timeout」を含むツールエラーをすべて検索します。"
+  },
+  "landing.a4AgentTraces.019": {
+    "message": "そして次に答えます："
+  },
+  "landing.a4AgentTraces.020": {
+    "message": "13:00 にデプロイされたエージェント v2 によって、状況は改善しましたか、それとも悪化しましたか？"
+  },
+  "landing.a4AgentTraces.021": {
+    "message": "スキーマ定義不要の書き込み時スキーマ処理。"
+  },
+  "landing.a4AgentTraces.022": {
+    "message": "VARIANT は JSON の各パスの型を推論し、よく使うパスを実際の列指向サブカラムとして保存します。そのため、"
+  },
+  "landing.a4AgentTraces.023": {
+    "message": "は全ドキュメントを解析せず、1 列を読むだけで済みます。"
+  },
+  "landing.a4AgentTraces.024": {
+    "message": "新しいフィールドは自動で現れます。"
+  },
+  "landing.a4AgentTraces.025": {
+    "message": "v2 のイベントが次を追加すると、"
+  },
+  "landing.a4AgentTraces.026": {
+    "message": "、次のロードで新しいパスがサブカラムとして現れます。次の操作は不要です："
+  },
+  "landing.a4AgentTraces.027": {
+    "message": "JSON 内を検索。"
+  },
+  "landing.a4AgentTraces.028": {
+    "message": "VARIANT 列の転置インデックスにより、すべてのテキストパスを次で検索できます："
+  },
+  "landing.a4AgentTraces.029": {
+    "message": "：エージェントのイベントごとに 1 行を保存し、イベント本体を VARIANT 列に保持します："
+  },
+  "landing.a4AgentTraces.032": {
+    "message": "ペイロード例：構造の違いに注目してください："
+  },
+  "landing.a4AgentTraces.033": {
+    "message": "ペイロード例"
+  },
+  "landing.a4AgentTraces.034": {
+    "message": "13:00 以降に始まるセッションは次を実行します："
+  },
+  "landing.a4AgentTraces.035": {
+    "message": "エージェント v2"
+  },
+  "landing.a4AgentTraces.036": {
+    "message": "。ペイロードには次が含まれ、"
+  },
+  "landing.a4AgentTraces.037": {
+    "message": "、v2 の LLM 呼び出しには次のフラグが追加されます："
+  },
+  "landing.a4AgentTraces.038": {
+    "message": "。マイルストーン 5 では、テーブルにまだ存在しないフィールドを持つイベントをロードします。"
+  },
+  "landing.a4AgentTraces.041": {
+    "message": "ロードして調べる"
+  },
+  "landing.a4AgentTraces.043": {
+    "message": "M0 · ロード"
+  },
+  "landing.a4AgentTraces.044": {
+    "message": "続いて SQL シェルで実行："
+  },
+  "landing.a4AgentTraces.045": {
+    "message": "M0 · 調査"
+  },
+  "landing.a4AgentTraces.046": {
+    "message": "ロード結果の表示："
+  },
+  "landing.a4AgentTraces.047": {
+    "message": "1,000 セッション、20,401 イベント"
+  },
+  "landing.a4AgentTraces.048": {
+    "message": "には約 20 個の"
+  },
+  "landing.a4AgentTraces.049": {
+    "message": "パスが、それぞれ推論された型とともに表示されます。"
+  },
+  "landing.a4AgentTraces.050": {
+    "message": "JSON パスをクエリ"
+  },
+  "landing.a4AgentTraces.051": {
+    "message": "M1 · JSON パスをクエリ"
+  },
+  "landing.a4AgentTraces.052": {
+    "message": "ツールは 5 つあり、"
+  },
+  "landing.a4AgentTraces.053": {
+    "message": "が最も多く呼び出されています（3,506 回）。"
+  },
+  "landing.a4AgentTraces.054": {
+    "message": "推論されたサブカラムを集約"
+  },
+  "landing.a4AgentTraces.055": {
+    "message": "サブカラムを集約"
+  },
+  "landing.a4AgentTraces.056": {
+    "message": "M2 · 推論されたサブカラムを集約"
+  },
+  "landing.a4AgentTraces.057": {
+    "message": "の p95 が最も悪く（約 2.1 秒）、"
+  },
+  "landing.a4AgentTraces.058": {
+    "message": "の失敗が最も多い（425 エラー）。"
+  },
+  "landing.a4AgentTraces.059": {
+    "message": "JSON 内を検索"
+  },
+  "landing.a4AgentTraces.060": {
+    "message": "JSON を検索"
+  },
+  "landing.a4AgentTraces.061": {
+    "message": "M3 · JSON 内を検索"
+  },
+  "landing.a4AgentTraces.062": {
+    "message": "合計 398 イベントに timeout が含まれます。時間ごとに集計すると、v2 に関する最初の手掛かりが得られます。"
+  },
+  "landing.a4AgentTraces.064": {
+    "message": "M4 · セッションのタイムライン"
+  },
+  "landing.a4AgentTraces.065": {
+    "message": "これらのクエリを使って、セッション一覧 → タイムライン → 統計の UI を作ります。"
+  },
+  "landing.a4AgentTraces.066": {
+    "message": "セッション"
+  },
+  "landing.a4AgentTraces.067": {
+    "message": "には 25 イベントがあります。質問、LLM とツールの呼び出し（1 回失敗した"
+  },
+  "landing.a4AgentTraces.068": {
+    "message": "は再試行）、最終回答で構成されています。"
+  },
+  "landing.a4AgentTraces.069": {
+    "message": "スキーマの変化を観察"
+  },
+  "landing.a4AgentTraces.070": {
+    "message": "スキーマの進化"
+  },
+  "landing.a4AgentTraces.071": {
+    "message": "M5 · スキーマ変更バッチをロード"
+  },
+  "landing.a4AgentTraces.072": {
+    "message": "M5 · 新しいフィールドをクエリ"
+  },
+  "landing.a4AgentTraces.074": {
+    "message": "を再実行すると、新しいパスが表示されます。次の操作は"
+  },
+  "landing.a4AgentTraces.075": {
+    "message": "実行していません。"
+  },
+  "landing.a4AgentTraces.076": {
+    "message": "第 3 のバージョンが現れます："
+  },
+  "landing.a4AgentTraces.077": {
+    "message": "。そのバージョンの LLM 呼び出しだけに次が含まれます："
+  },
+  "landing.a4AgentTraces.079": {
+    "message": "に次が表示されます："
+  },
+  "landing.courseExtra.a4AgentTraces.007": {
+    "message": "異なる構造のイベントを 1 つの VARIANT 列にロードする（初期データと変更バッチ）。"
+  },
+  "landing.courseExtra.a4AgentTraces.008": {
+    "message": "少なくとも 3 つの JSON パスクエリがあり、推論された数値サブカラムの集約を 1 つ含む（例：ツールごとの p95 レイテンシ）。"
+  },
+  "landing.courseExtra.a4AgentTraces.009": {
+    "message": "JSON のテキストパスに対する全文検索。"
+  },
+  "landing.courseExtra.a4AgentTraces.010": {
+    "message": "セッションのタイムライン表示（CLI、ノートブック、Web）。"
+  },
+  "landing.a4AgentTraces.081": {
+    "message": "README に次を記載："
+  },
+  "landing.a4AgentTraces.082": {
+    "message": "3 つの知見"
+  },
+  "landing.a4AgentTraces.083": {
+    "message": "（v2 リリースについての評価を含む）、実行方法、スクリーンショット 1 点。"
+  },
+  "landing.a4AgentTraces.084": {
+    "message": "自分のトレースを使う。"
+  },
+  "landing.a4AgentTraces.085": {
+    "message": "ご自身の AI コーディングエージェントのローカルセッションログ（JSONL）をエクスポートし、1 行に 1 つの"
+  },
+  "landing.a4AgentTraces.086": {
+    "message": "をロードします。データはローカルの Doris インスタンスに保存されます。"
+  },
+  "landing.a4AgentTraces.087": {
+    "message": "Schema Template。"
+  },
+  "landing.a4AgentTraces.088": {
+    "message": "よく使うパスを次で固定します："
+  },
+  "landing.a4AgentTraces.089": {
+    "message": "（テーブルのコピーで実行）。次の結果と"
+  },
+  "landing.a4AgentTraces.090": {
+    "message": "クエリの挙動を比較します。データの投入方法："
+  },
+  "landing.a4AgentTraces.091": {
+    "message": "：VARIANT はテンプレート付きの VARIANT に直接キャストできません。"
+  },
+  "landing.a4AgentTraces.092": {
+    "message": "アシスタントに探索させる。"
+  },
+  "landing.a4AgentTraces.093": {
+    "message": "Doris MCP Server を接続し（"
+  },
+  "landing.a4AgentTraces.095": {
+    "message": "）、最も問題のあるセッションを探すようアシスタントに依頼します。"
+  },
+  "landing.a4AgentTraces.096": {
+    "message": "SQL でエラーを分類"
+  },
+  "landing.a4AgentTraces.097": {
+    "message": "（API キーはご自身で用意）："
+  },
+  "landing.a4AgentTraces.098": {
+    "message": "。参照："
+  },
+  "landing.a4AgentTraces.099": {
+    "message": "LLM SQL 関数"
+  },
+  "landing.a4AgentTraces.100": {
+    "message": "VARIANT データ型"
+  },
+  "landing.a4AgentTraces.101": {
+    "message": "VARIANT SQL リファレンス"
+  },
+  "landing.a4AgentTraces.103": {
+    "message": "LLM SQL 関数"
+  },
+  "landing.trackB.004": {
+    "message": "ページの演算子一覧に、すべての次の形式が載っています："
+  },
+  "landing.trackB.005": {
+    "message": "。次を選択し、"
+  },
+  "landing.trackB.006": {
+    "message": "そのまま ORDER BY に使います。次のように式で包んでソートすると、"
+  },
+  "landing.trackB.007": {
+    "message": "拒否されます。"
+  },
+  "landing.trackB.010": {
+    "message": "すべてのベクトルには正確に次の個数の"
+  },
+  "landing.trackB.011": {
+    "message": "数値が必要です。クエリベクトルも同様で、合わない場合は次元エラーになります。"
+  },
+  "landing.trackB.015": {
+    "message": "はベクトルで順位付けするクエリでは選択できず、次の内部にも置けません："
+  },
+  "landing.trackB.016": {
+    "message": "：加工していない次の値を順位付けし、"
+  },
+  "landing.trackB.017": {
+    "message": "外側のクエリで処理します。RRF のページと同じ方法です。"
+  },
+  "landing.trackB.020": {
+    "message": "は 1 行について Doris が推論したパスと型を表示します。次の出力と比較してください："
+  },
+  "landing.trackB.021": {
+    "message": "の出力。"
+  },
+  "landing.trackB.task.B4.doc": {
+    "message": "VARIANT データ型"
+  },
+  "landing.trackB.024": {
+    "message": "3 回の書き込みを 1 つの INSERT として、また 3 つの個別 INSERT として実行します。結果が変わらないことを確認してください。"
+  },
+  "landing.trackB.027": {
+    "message": "次の FE にロードを送ります："
+  },
+  "landing.trackB.029": {
+    "message": "。FE が BE にリダイレクトし、単一コンテナーが両ポートで応答します。"
+  },
+  "landing.trackB.030": {
+    "message": " · ページのセクション"
+  },
+  "landing.trackB.031": {
+    "message": ".mdx · テンプレート"
+  },
+  "landing.trackB.032": {
+    "message": " · プルリクエスト"
+  },
+  "landing.trackB.033": {
+    "message": "タイトル + 説明 · テンプレート"
+  },
+  "landing.HackathonTrackBPage.001": {
+    "message": "apache/doris-website のフォーク。"
+  },
+  "landing.HackathonTrackBPage.002": {
+    "message": "フォークする"
+  },
+  "landing.HackathonTrackBPage.003": {
+    "message": "（GitHub）。クローンは不要です。フォークしたリポジトリで次を押します："
+  },
+  "landing.HackathonTrackBPage.004": {
+    "message": "。ブラウザーで編集し、新しいブランチにコミットします。git を使う場合、リポジトリが大きいため、必要な 2 つのフォルダーだけをクローンしてください："
+  },
+  "landing.HackathonTrackBPage.005": {
+    "message": "任意：スターターキット。"
+  },
+  "landing.HackathonTrackBPage.006": {
+    "message": "トラック B では初期データは不要ですが、キットの"
+  },
+  "landing.HackathonTrackBPage.007": {
+    "message": "を使うと、デモの作成中に SQL ファイルを一括実行できます："
+  },
+  "landing.HackathonTrackBPage.008": {
+    "message": "。ダウンロードして解凍："
+  },
+  "landing.HackathonTrackBPage.009": {
+    "message": "プルリクエストの Build Check が失敗する"
+  },
+  "landing.HackathonTrackBPage.010": {
+    "message": "チェックのログを開いてください。多くは MDX が原因です。閉じていないタグや、文章中にそのまま書かれた"
+  },
+  "landing.HackathonTrackBPage.011": {
+    "message": "または"
+  },
+  "landing.HackathonTrackBPage.012": {
+    "message": "を確認してください。フェンス付きコードブロック内なら問題ありません。"
+  },
+  "landing.HackathonTrackBPage.013": {
+    "message": "B6："
+  },
+  "landing.HackathonTrackBPage.014": {
+    "message": "が何も表示しない、または次を表示する："
+  },
+  "landing.HackathonTrackBPage.015": {
+    "message": "追加："
+  },
+  "landing.HackathonTrackBPage.016": {
+    "message": "：FE はロードを BE にリダイレクトするため、curl で認証情報を付けたまま追従する必要があります"
+  },
+  "landing.HackathonTrackBPage.017": {
+    "message": "B6："
+  },
+  "landing.HackathonTrackBPage.018": {
+    "message": "再実行時は正常な動作です。同じラベルでロードできるのは 1 回だけです。再ロードには新しいラベルを使ってください"
+  },
+  "landing.HackathonTrackBPage.020": {
+    "message": "ドキュメント貢献ガイド"
+  },
+  "landing.HackathonTrackBPage.021": {
+    "message": "ドキュメント形式の仕様"
+  },
+  "landing.HackathonTrackBPage.022": {
+    "message": "プルリクエストガイド"
+  },
+  "landing.HackathonTrackBPage.023": {
+    "message": "次のタスクのテンプレートを表示："
+  },
+  "landing.HackathonTrackBPage.025": {
+    "message": "ページのセクション"
+  },
+  "landing.HackathonTrackBPage.026": {
+    "message": "プルリクエスト"
+  },
+  "landing.HackathonTrackBPage.027": {
+    "message": "読んでいるタスクのテンプレート"
+  },
+  "landing.HackathonTrackBPage.028": {
+    "message": "テンプレート"
+  },
+  "landing.HackathonTrackBPage.029": {
+    "message": "プルリクエスト ·"
+  },
+  "landing.HackathonTrackBPage.030": {
+    "message": "テンプレート"
+  },
+  "landing.trackB.databaseHint": {
+    "message": "ご自身の値（例：）"
+  },
+  "landing.HackathonTrackBPage.031": {
+    "message": "編集"
+  },
+  "landing.HackathonTrackBPage.034": {
+    "message": " トラック B："
+  },
+  "landing.HackathonTrackBPage.035": {
+    "message": "：自分のペースで、どなたでも参加できます。"
+  },
+  "landing.HackathonTrackBPage.037": {
+    "message": "タスクから 1 つ選択"
+  },
+  "landing.HackathonTrackBPage.038": {
+    "message": "ドキュメントから"
+  },
+  "landing.HackathonTrackBPage.039": {
+    "message": "デモへ"
+  },
+  "landing.HackathonTrackBPage.040": {
+    "message": "Apache Doris の機能ドキュメントを 1 ページ選び、ローカルの Doris で実行して手順付きのデモに仕上げます。プルリクエストで doris.apache.org の該当ページにデモを追加します。"
+  },
+  "landing.trackB.chip.1": {
+    "message": "1 タスク 30～60 分"
+  },
+  "landing.trackB.chip.3": {
+    "message": "SQL とブラウザー"
+  },
+  "landing.trackB.chip.4": {
+    "message": "ドキュメント PR を作成"
+  },
+  "landing.HackathonTrackBPage.043": {
+    "message": "タスクを選ぶ"
+  },
+  "landing.HackathonTrackBPage.045": {
+    "message": "トラック B の進め方、実行中のクラスター、ドキュメントのフォークを用意します。"
+  },
+  "landing.HackathonTrackBPage.046": {
+    "message": "トラック B の進め方"
+  },
+  "landing.HackathonTrackBPage.047": {
+    "message": "機能ページ 1 つ、デモ 1 つ、プルリクエスト 1 つ。"
+  },
+  "landing.HackathonTrackBPage.048": {
+    "message": "Doris の新しいユーザーは皆これらのページから始めます。ゼロから実行すれば不足にすぐ気付けます。空のクラスターから最後まで実行できるデモは、機能が動くことの確かな証拠になります。作成したデモはページ本体に掲載されます。"
+  },
+  "landing.HackathonTrackBPage.049": {
+    "message": "ページの手順に従う。"
+  },
+  "landing.HackathonTrackBPage.050": {
+    "message": "担当タスクのドキュメントを開き、ローカルの Doris ですべての例を記載どおりに実行します。失敗した点、異なる出力、わかりにくい点を記録してください。"
+  },
+  "landing.HackathonTrackBPage.051": {
+    "message": "デモを作る。"
+  },
+  "landing.HackathonTrackBPage.052": {
+    "message": "空のクラスターから始め、タスクのチェックリストをすべて確認します。上から順に実行し、各文の実際の出力を保存してください。"
+  },
+  "landing.HackathonTrackBPage.053": {
+    "message": "ページに追加する。"
+  },
+  "landing.HackathonTrackBPage.054": {
+    "message": "次の"
+  },
+  "landing.HackathonTrackBPage.055": {
+    "message": "手順付きデモ"
+  },
+  "landing.HackathonTrackBPage.056": {
+    "message": "セクションを、両方のページの Quick start の直後に追加します。見つけた問題も同じプルリクエストで修正してください。"
+  },
+  "landing.HackathonTrackBPage.057": {
+    "message": "プルリクエストを作成"
+  },
+  "landing.HackathonTrackBPage.059": {
+    "message": "。これが提出物です。参照："
+  },
+  "landing.HackathonTrackBPage.061": {
+    "message": "パネルに、読んでいるタスクのテンプレートが表示されます"
+  },
+  "landing.HackathonTrackBPage.064": {
+    "message": "タスクを選ぶ"
+  },
+  "landing.HackathonTrackBPage.065": {
+    "message": "の機能ページから選びます。早く終わったら別のタスクにも挑戦してください。タスクごとに別のプルリクエストを作成します。"
+  },
+  "landing.HackathonTrackBPage.066": {
+    "message": "· 編集対象"
+  },
+  "landing.HackathonTrackBPage.067": {
+    "message": "開始地点"
+  },
+  "landing.HackathonTrackBPage.068": {
+    "message": "デモで確認すること"
+  },
+  "landing.HackathonTrackBPage.069": {
+    "message": "ヒント"
+  },
+  "landing.HackathonTrackBPage.071": {
+    "message": "プルリクエストに含めるもの、提出方法、バッジについて。"
+  },
+  "landing.HackathonTrackBPage.072": {
+    "message": "プルリクエストで追加するもの"
+  },
+  "landing.HackathonTrackBPage.073": {
+    "message": "次のリポジトリに 1 つのプルリクエストを作成："
+  },
+  "landing.HackathonTrackBPage.074": {
+    "message": "。それが提出物です。"
+  },
+  "landing.HackathonTrackBPage.075": {
+    "message": "デモセクション"
+  },
+  "landing.HackathonTrackBPage.076": {
+    "message": "を Quick start の直後に追加します。チェックリストの 1 項目につき 1 ステップとし、SQL ブロックの後に次を掲載："
+  },
+  "landing.HackathonTrackBPage.077": {
+    "message": "期待する結果"
+  },
+  "landing.HackathonTrackBPage.078": {
+    "message": "として実際の出力を記載します。空のクラスターから始めるため、デモ内でデータベースも作成します。"
+  },
+  "landing.HackathonTrackBPage.079": {
+    "message": "両方のページ"
+  },
+  "landing.HackathonTrackBPage.080": {
+    "message": "同じ変更を次の両方に反映："
+  },
+  "landing.HackathonTrackBPage.082": {
+    "message": "。このタスクでは英語ページを更新します。翻訳は別途保守されます。"
+  },
+  "landing.HackathonTrackBPage.083": {
+    "message": "修正"
+  },
+  "landing.HackathonTrackBPage.084": {
+    "message": "ページのほかの場所で見つけた問題も同じプルリクエストで修正します。誤りか判断できない場合は、説明欄に記載してください。"
+  },
+  "landing.HackathonTrackBPage.085": {
+    "message": "説明"
+  },
+  "landing.HackathonTrackBPage.086": {
+    "message": "リポジトリのプルリクエストテンプレート（dev + 4.x、英語）を使い、タスク名を 1 行で記載します。例："
+  },
+  "landing.HackathonTrackBPage.087": {
+    "message": "テンプレートの対象："
+  },
+  "landing.HackathonTrackBPage.088": {
+    "message": "パネル：最後に読んだタスクのテンプレート"
+  },
+  "landing.HackathonTrackBPage.091": {
+    "message": "プルリクエストの説明"
+  },
+  "landing.HackathonTrackBPage.092": {
+    "message": "プルリクエストを作成"
+  },
+  "landing.HackathonTrackBPage.094": {
+    "message": "。ご自身のフォークのブランチから作成します。プルリクエストが提出物なので、ほかの入力は不要です。"
+  },
+  "landing.HackathonTrackBPage.096": {
+    "message": "2 つ目のタスクを選ぶ。"
+  },
+  "landing.HackathonTrackBPage.097": {
+    "message": "完了したタスクごとに、別のプルリクエストを作成します。"
+  },
+  "landing.HackathonTrackBPage.098": {
+    "message": "クイックスタートの先へ進む。"
+  },
+  "landing.HackathonTrackBPage.099": {
+    "message": "テーブル設計や SQL マニュアルなど、ページからリンクされている長い例も実行してください。これらは確認される機会が少ない部分です。"
+  },
+  "landing.HackathonTrackBPage.100": {
+    "message": "ほかのトラック B のプルリクエストをレビューする。"
+  },
+  "landing.HackathonTrackBPage.101": {
+    "message": "自分の Doris でデモを実行し、結果をコメントに残してください。"
+  },
+  "landing.profile.error.fileType": {
+    "message": ".txt ファイルを選択してください。ほかの形式はサポートしていません。"
+  },
+  "landing.profile.error.oneFile": {
+    "message": "Profile ファイルは一度に 1 つだけ選択してください。"
+  },
+  "landing.profile.error.tooLarge": {
+    "message": "選択したファイルは 100 MiB を超えています。集約済みの Profile を用意してください。"
+  },
+  "landing.profile.error.mergedTooLarge": {
+    "message": "インスタンス別の実行 Profile を除去しても 10 MiB を超えています。集約済みの Profile を用意してください。"
+  },
+  "landing.profile.error.prepare": {
+    "message": "Profile のアップロード準備に失敗しました。"
+  },
+  "landing.profile.error.storage": {
+    "message": "このブラウザーでは、ページを更新した後に分析を復元できません。"
+  },
+  "landing.profile.error.captchaMissing": {
+    "message": "Profile を分析する前に、本人確認を完了してください。"
+  },
+  "landing.profile.error.captchaInvalid": {
+    "message": "本人確認に失敗したか、有効期限が切れました。再度確認してからお試しください。"
+  },
+  "landing.profile.error.captchaUnavailable": {
+    "message": "本人確認を一時的に利用できません。しばらくしてからお試しください。"
+  },
+  "landing.profile.error.captchaExpired": {
+    "message": "確認の有効期限が切れました。再度確認してください。"
+  },
+  "landing.profile.error.captchaLoad": {
+    "message": "本人確認を読み込めませんでした。接続を確認してからお試しください。"
+  },
+  "landing.profile.error.network": {
+    "message": "Profile 分析サービスに接続できません。もう一度お試しください。"
+  },
+  "landing.profile.error.response": {
+    "message": "Profile 分析サービスから無効な応答が返されました。"
+  },
+  "landing.profile.error.recover": {
+    "message": "前回の分析を復元できませんでした。ファイルを選択し直してお試しください。"
+  },
+  "landing.profile.error.failed": {
+    "message": "Profile の分析に失敗しました。もう一度お試しください。"
+  },
+  "landing.profile.error.graphTooLarge": {
+    "message": "実行グラフが大きすぎるため表示できません。"
+  },
+  "landing.profile.error.graphUnavailable": {
+    "message": "この Profile の実行グラフは利用できません。"
+  },
+  "landing.profile.error.graphFailed": {
+    "message": "実行グラフを生成できませんでした。"
+  },
+  "landing.profile.error.graphTimeout": {
+    "message": "実行グラフの解析がタイムアウトしました。"
+  },
+  "landing.profile.error.serviceCode": {
+    "message": "Profile の分析に失敗しました（{code}）。もう一度お試しください。"
+  },
+  "landing.profile.error.details": {
+    "message": "詳細：{message}"
+  },
+  "landing.AiAnalysisForm.001": {
+    "message": "Doris Skills を利用（新しいタブで開きます）"
+  },
+  "landing.AiAnalysisForm.002": {
+    "message": "提供："
+  },
+  "landing.AiAnalysisForm.003": {
+    "message": "Doris Skills"
+  },
+  "landing.AiAnalysisForm.004": {
+    "message": "回答言語"
+  },
+  "landing.AiAnalysisForm.006": {
+    "message": "簡体字中国語"
+  },
+  "landing.profile.responseLanguages": {
+    "message": "AI の回答は英語と中国語に対応しています。サイトの言語を変更しても、サービスの回答は翻訳されません。"
+  },
+  "landing.AiAnalysisForm.007": {
+    "message": "プライバシーと AI 処理に関する注意事項"
+  },
+  "landing.AiAnalysisForm.008": {
+    "message": "この機能は VeloDB と外部の大規模言語モデルサービス提供者によって提供されています。Apache Doris プロジェクトの公式機能ではないため、ご自身の判断でご利用ください。"
+  },
+  "landing.AiAnalysisForm.009": {
+    "message": "パスワード、鍵、アクセストークン、個人情報、顧客の機密データなど、開示する権限のない機微な情報をアップロードしないでください。アップロードしたすべての情報は 1 時間以内に自動で完全に削除されます。"
+  },
+  "landing.AiAnalysisForm.010": {
+    "message": "注意事項を読み、この Profile をアップロードする権限があり、外部 AI サービスによる処理に同意します。"
+  },
+  "landing.AiAnalysisForm.011": {
+    "message": "分析を開始する前に、本人確認を完了してください。"
+  },
+  "landing.AiAnalysisForm.012": {
+    "message": "本人確認が設定されていません。サイト管理者にお問い合わせください。"
+  },
+  "landing.AiAnalysisForm.013": {
+    "message": "このサイトは hCaptcha で保護されており、次の規約が適用されます："
+  },
+  "landing.AiAnalysisForm.014": {
+    "message": "プライバシーポリシー"
+  },
+  "landing.AiAnalysisForm.016": {
+    "message": "利用規約"
+  },
+  "landing.AiAnalysisForm.017": {
+    "message": "が適用されます。"
+  },
+  "landing.AiAnalysisForm.018": {
+    "message": "処理中… · 目安 1～2 分"
+  },
+  "landing.AiAnalysisForm.019": {
+    "message": "AI で分析"
+  },
+  "landing.AnalysisResult.001": {
+    "message": "分析結果"
+  },
+  "landing.AnalysisResult.002": {
+    "message": "AI による生成結果："
+  },
+  "landing.AnalysisResult.003": {
+    "message": "根拠を元の Profile と照合し、本番環境を変更する前に、適切な技術者による提案の確認を受けてください。コマンドや設定変更を自動実行しないでください。"
+  },
+  "landing.profile.status.analyzing": {
+    "message": "分析中"
+  },
+  "landing.profile.status.restoring": {
+    "message": "分析を復元中…"
+  },
+  "landing.profile.status.recovering": {
+    "message": "接続が切断されました · 分析を復旧中…"
+  },
+  "landing.profile.status.uploading": {
+    "message": "Profile をアップロード中…"
+  },
+  "landing.profile.status.queued": {
+    "message": "待機中"
+  },
+  "landing.profile.status.queueOne": {
+    "message": "待機中 · 前に {count} 件のジョブ"
+  },
+  "landing.profile.status.queueMany": {
+    "message": "待機中 · 前に {count} 件のジョブ"
+  },
+  "landing.ProfileUploader.001": {
+    "message": "Query Profile を選択"
+  },
+  "landing.ProfileUploader.002": {
+    "message": "100 MiB 以下の UTF-8 .txt ファイルを 1 つ選択します。10 MiB を超える場合、ローカル表示や AI へのアップロード前に、集約済み Profile セクションだけに縮小します。"
+  },
+  "landing.ProfileUploader.003": {
+    "message": "Apache Doris 4.1 以降で生成した Profile を使用してください。それ以前のバージョンでは解析に失敗する場合があります。"
+  },
+  "landing.ProfileUploader.004": {
+    "message": "ファイルを選ぶか、ここにドラッグ"
+  },
+  "landing.ProfileUploader.005": {
+    "message": ".txt 形式の Apache Doris Query Profile"
+  },
+  "landing.ProfileUploader.006": {
+    "message": "Apache Doris Query Profile ファイルを選択"
+  },
+  "landing.ProfileDagNode.001": {
+    "message": " オペレーター"
+  },
+  "landing.profile.graph.unavailable": {
+    "message": "この Profile の実行グラフは利用できません。"
+  },
+  "landing.profile.graph.failed": {
+    "message": "実行グラフを生成できませんでした。"
+  },
+  "landing.ProfileDagNode.002": {
+    "message": "ボトルネック"
+  },
+  "landing.ProfileDagNode.003": {
+    "message": "インスタンス"
+  },
+  "landing.ProfileDagNode.004": {
+    "message": "実行時間の最大値"
+  },
+  "landing.ProfileDagNode.005": {
+    "message": "実行時間の平均値"
+  },
+  "landing.ProfileDagNode.006": {
+    "message": "待機時間の最大値"
+  },
+  "landing.profile.graph.idle": {
+    "message": "Profile を選択して「実行を可視化」を選んでください。"
+  },
+  "landing.profile.graph.parsing": {
+    "message": "実行グラフを解析中…"
+  },
+  "landing.ProfileDag.001": {
+    "message": "最大"
+  },
+  "landing.ProfileDag.002": {
+    "message": "· 平均"
+  },
+  "landing.ProfileDag.003": {
+    "message": "· 合計"
+  },
+  "landing.ProfileDag.004": {
+    "message": "オペレーターの詳細"
+  },
+  "landing.ProfileDag.005": {
+    "message": "オペレーターの詳細"
+  },
+  "landing.ProfileDag.006": {
+    "message": "オペレーターの詳細を閉じる"
+  },
+  "landing.ProfileDag.007": {
+    "message": "×"
+  },
+  "landing.ProfileDag.008": {
+    "message": "種類"
+  },
+  "landing.ProfileDag.009": {
+    "message": "役割"
+  },
+  "landing.ProfileDag.010": {
+    "message": "プランノード ID"
+  },
+  "landing.ProfileDag.011": {
+    "message": "時間情報"
+  },
+  "landing.ProfileDag.012": {
+    "message": "実行時間の最大値"
+  },
+  "landing.ProfileDag.013": {
+    "message": "実行時間の平均値"
+  },
+  "landing.ProfileDag.014": {
+    "message": "実行時間の最小値"
+  },
+  "landing.ProfileDag.015": {
+    "message": "待機時間の最大値"
+  },
+  "landing.ProfileDag.016": {
+    "message": "依存関係の待機"
+  },
+  "landing.ProfileDag.017": {
+    "message": "データ待機"
+  },
+  "landing.ProfileDag.018": {
+    "message": "RPC バッファー待機"
+  },
+  "landing.ProfileDag.019": {
+    "message": "プラン情報"
+  },
+  "landing.ProfileDag.020": {
+    "message": "メトリクス"
+  },
+  "landing.ProfileDag.021": {
+    "message": "入力行数"
+  },
+  "landing.ProfileDag.022": {
+    "message": "出力行数"
+  },
+  "landing.ProfileDag.023": {
+    "message": "メモリ使用量"
+  },
+  "landing.ProfileDag.024": {
+    "message": "ピークメモリ"
+  },
+  "landing.ProfileDag.025": {
+    "message": "最も遅いオペレーター"
+  },
+  "landing.ProfileDag.026": {
+    "message": "実行時間の最大値順"
+  },
+  "landing.ProfileDag.031": {
+    "message": "全画面表示を終了（Esc）"
+  },
+  "landing.ProfileDag.032": {
+    "message": "実行グラフを全画面表示"
+  },
+  "landing.ProfileDag.033": {
+    "message": "全画面表示を終了"
+  },
+  "landing.ProfileDag.034": {
+    "message": "全画面表示"
+  },
+  "landing.ProfileDag.035": {
+    "message": "実行グラフを配置中…"
+  },
+  "landing.ProfileDag.036": {
+    "message": "Profile の実行グラフ"
+  },
+  "landing.profile.graph.readOnly": {
+    "message": "オペレーターと依存関係を表示する読み取り専用の実行グラフ。"
+  },
+  "landing.profile.graph.connection": {
+    "message": "実行グラフの接続。"
+  },
+  "landing.profile.graph.controls": {
+    "message": "グラフ操作"
+  },
+  "landing.profile.graph.zoomIn": {
+    "message": "拡大"
+  },
+  "landing.profile.graph.zoomOut": {
+    "message": "縮小"
+  },
+  "landing.profile.graph.fit": {
+    "message": "表示範囲に合わせる"
+  },
+  "landing.profile.graph.interactive": {
+    "message": "操作の有効・無効を切り替え"
+  },
+  "landing.ProfileDag.037": {
+    "message": "実行グラフの全体図"
+  },
+  "landing.profile.graph.handle": {
+    "message": "接続ポイント"
+  },
+  "landing.profile.graph.notAvailable": {
+    "message": "実行グラフを利用できません。"
+  },
+  "landing.ProfileDag.038": {
+    "message": "実行グラフ"
+  },
+  "landing.ProfileDag.039": {
+    "message": "フラグメント"
+  },
+  "landing.ProfileDag.040": {
+    "message": "パイプライン"
+  },
+  "landing.ProfileDag.041": {
+    "message": "オペレーター"
+  },
+  "landing.ProfileDag.042": {
+    "message": "接続"
+  },
+  "landing.ProfileDag.043": {
+    "message": "非ブロッキング解析"
+  },
+  "landing.ProfileDag.044": {
+    "message": "通知"
+  },
+  "landing.ProfileDag.045": {
+    "message": "通知"
+  },
+  "landing.ProfileDag.046": {
+    "message": "実行グラフの凡例"
+  },
+  "landing.ProfileDag.047": {
+    "message": "データフロー"
+  },
+  "landing.ProfileDag.048": {
+    "message": "実行の依存関係（前提 → 依存先）"
+  },
+  "landing.ProfileDag.049": {
+    "message": "実行が長い"
+  },
+  "landing.ProfileDag.050": {
+    "message": "待機が長い"
+  },
+  "landing.ProfileDag.051": {
+    "message": "実行グラフを読み込み中…"
+  },
+  "landing.ProfileAnalyzer.001": {
+    "message": "クエリ診断"
+  },
+  "landing.ProfileAnalyzer.002": {
+    "message": "Apache Doris Profile 分析"
+  },
+  "landing.ProfileAnalyzer.003": {
+    "message": "Profile 分析の操作と結果"
+  },
+  "landing.ProfileAnalyzer.004": {
+    "message": "Profile 分析の操作"
+  },
+  "landing.ProfileAnalyzer.005": {
+    "message": "実行を可視化"
+  },
+  "landing.ProfileAnalyzer.006": {
+    "message": "AI 支援分析"
+  },
+  "landing.ProfileAnalyzer.007": {
+    "message": "Profile を可視化します。「実行を可視化」を選択すると、ブラウザー内でファイルを解析し、実行グラフを操作可能な図として表示します。この操作ではファイルはアップロードされません。"
+  },
+  "landing.ProfileAnalyzer.008": {
+    "message": "可視化中…"
+  },
+  "landing.ProfileAnalyzer.009": {
+    "message": "実行を可視化"
+  },
+  "landing.ProfileAnalyzer.010": {
+    "message": "分析に失敗しました。"
+  },
+  "landing.profileanalysis.001": {
+    "message": "Profile 分析 - Apache Doris"
+  },
+  "landing.profileanalysis.002": {
+    "message": "AI 支援による診断ワークフローで Apache Doris Query Profile を分析します。"
+  },
+  "landing.trackB.task.B1.title": {
+    "message": "全文検索 + BM25"
+  },
+  "landing.trackB.task.B1.time": {
+    "message": "30～45 分"
+  },
+  "landing.trackB.task.B1.proves.0": {
+    "message": "テキスト列に転置インデックス（english パーサー、フレーズ対応）があるテーブル"
+  },
+  "landing.trackB.task.B1.proves.1": {
+    "message": "同じ語に MATCH_ANY と MATCH_ALL を適用し、異なる行数を確認"
+  },
+  "landing.trackB.task.B1.proves.2": {
+    "message": "語が隣接する場合のみ一致する MATCH_PHRASE クエリ"
+  },
+  "landing.trackB.task.B1.proves.3": {
+    "message": "BM25 順位付け：score() と ORDER BY … DESC LIMIT n を使い、先頭行になる理由を説明"
+  },
+  "landing.trackB.task.B2.title": {
+    "message": "ベクトル検索"
+  },
+  "landing.trackB.task.B2.time": {
+    "message": "30～45 分"
+  },
+  "landing.trackB.task.B2.proves.0": {
+    "message": "HNSW（ANN）インデックスを持つ ARRAY<FLOAT> NOT NULL 列"
+  },
+  "landing.trackB.task.B2.proves.1": {
+    "message": "ANN の上位 N 件クエリ：ORDER BY l2_distance_approximate(…) LIMIT n"
+  },
+  "landing.trackB.task.B2.proves.2": {
+    "message": "同じクエリに WHERE フィルターを追加し、上位 N 件の変化を確認"
+  },
+  "landing.trackB.task.B2.proves.3": {
+    "message": "EXPLAIN で ANN インデックスの利用を確認（ANN SORT INFO）"
+  },
+  "landing.trackB.task.B3.time": {
+    "message": "30～45 分"
+  },
+  "landing.trackB.task.B3.proves.0": {
+    "message": "テキストの転置インデックスとベクトルの ANN インデックスを持つ 1 つのテーブル"
+  },
+  "landing.trackB.task.B3.proves.1": {
+    "message": "1 つのクエリで MATCH_ANY の事前フィルターとベクトル順位付け"
+  },
+  "landing.trackB.task.B3.proves.2": {
+    "message": "同じ質問でキーワード検索とベクトル検索を行い、結果リストの違いを確認"
+  },
+  "landing.trackB.task.B3.proves.3": {
+    "message": "Reciprocal Rank Fusion で両方の順位を融合"
+  },
+  "landing.trackB.task.B4.title": {
+    "message": "VARIANT"
+  },
+  "landing.trackB.task.B4.time": {
+    "message": "30～45 分"
+  },
+  "landing.trackB.task.B4.proves.0": {
+    "message": "異なる構造の JSON 行を 1 つの VARIANT 列に保存"
+  },
+  "landing.trackB.task.B4.proves.1": {
+    "message": "ネストしたパスへのクエリ。比較や集約の前に CAST を実行"
+  },
+  "landing.trackB.task.B4.proves.2": {
+    "message": "推論されたサブカラム：SET describe_extend_variant_column = true; DESC"
+  },
+  "landing.trackB.task.B4.proves.3": {
+    "message": "JSON 内の全文検索（転置インデックスを使ってパスに MATCH を適用）"
+  },
+  "landing.trackB.task.B5.title": {
+    "message": "Unique Key + Sequence Column"
+  },
+  "landing.trackB.task.B5.time": {
+    "message": "30～45 分"
+  },
+  "landing.trackB.task.B5.doc": {
+    "message": "Unique Key"
+  },
+  "landing.trackB.task.B5.proves.0": {
+    "message": "同じキーに 3 回書き込んでも、最終的に 1 行になる"
+  },
+  "landing.trackB.task.B5.proves.1": {
+    "message": "シーケンス列がある場合、遅れて届いた古い書き込みは最新バージョンを上書きしない"
+  },
+  "landing.trackB.task.B5.proves.2": {
+    "message": "シーケンス列のない別テーブルに同じ書き込みを行うと、遅れて届いた書き込みが優先される"
+  },
+  "landing.trackB.task.B6.title": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.doc": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.proves.0": {
+    "message": "ロード先テーブルと、シェルで作成した小さな CSV ファイル"
+  },
+  "landing.trackB.task.B6.proves.1": {
+    "message": "curl と HTTP で CSV をロードし、JSON 応答の Status、NumberLoadedRows を確認"
+  },
+  "landing.trackB.task.B6.proves.2": {
+    "message": "ロードした行を表示するクエリ"
+  },
+  "landing.trackB.task.B6.proves.3": {
+    "message": "安全な再実行：同じラベルで再度ロードしても追加されない（Label Already Exists）"
+  },
+  "landing.userStory.AWS": {
+    "message": "Amazon Web Services（AWS）は、拡張性と信頼性に優れた幅広いクラウドサービスを提供する主要なクラウド基盤です。Apache Doris ベースの商用製品 VeloDB Cloud を AWS 上で利用でき、スケーラブルで効率的なデータ分析を実現します。"
+  },
+  "landing.userStory.VeloDB": {
+    "message": "Apache Doris を基盤とする VeloDB は、大規模なリアルタイムデータを高速に分析する最新のデータウェアハウスです。Apache Doris ベースの製品を提供する VeloDB Inc は、世界の企業ユーザーにリアルタイム分析製品とソリューションを届けています。"
+  },
+  "landing.userStory.SelectDB": {
+    "message": "SelectDB は大規模なリアルタイムデータを高速分析する最新のデータウェアハウスです。フルマネージドのクラウドネイティブサービスと、オンプレミス、VM、Kubernetes 向けの自己管理ソフトウェアを提供します。"
+  },
+  "landing.userStory.Tencent%20Cloud": {
+    "message": "Tencent Cloud House-D は、Apache Doris ベースのフルマネージド型クラウドデータウェアハウスサービスです。"
+  },
+  "landing.userStory.Alibaba%20Cloud": {
+    "message": "Alibaba Cloud はクラウドコンピューティングと AI の世界的な主要企業です。Apache Doris を基盤に、リアルタイム分析向けのフルマネージドサービスを提供しています。"
+  },
+  "landing.userStory.Tencent": {
+    "message": "Tencent は世界的なインターネット・テクノロジー企業です。複数の事業で Apache Doris を使い、ユーザー行動データをリアルタイム分析することで、事業分析や意思決定を支えています。"
+  },
+  "landing.userStory.Alibaba.com": {
+    "message": "Alibaba は、EC、クラウド、デジタルメディア、エンターテインメントなどを手がける世界的なインターネット技術企業です。複数の事業で Apache Doris によるリアルタイム分析を活用し、事業戦略や製品改善を支えています。"
+  },
+  "landing.userStory.JD.com": {
+    "message": "サプライチェーンを基盤とする技術・サービス企業 JD.com は、Apache Doris を使ってリアルタイムデータとオフラインデータを多次元分析し、顧客サービスを強化しています。"
+  },
+  "landing.userStory.Xiaomi": {
+    "message": "世界有数のスマートフォン・家電メーカー Xiaomi は、ダッシュボード、A/B テスト、ユーザー行動分析、事業成長分析など、さまざまな業務で Apache Doris を活用しています。"
+  },
+  "landing.userStory.Baidu": {
+    "message": "AI、クラウド、検索エンジン技術に強みを持ち、インターネット関連サービスの革新に取り組む大手テクノロジー企業です。"
+  },
+  "landing.userStory.WeLab": {
+    "message": "WeLab はアジアで急成長するフィンテック基盤の 1 つで、6,000 万人以上の個人と 700 社以上の企業が利用しています。Apache Doris はリアルタイムビッグデータ基盤の中核として、セルフサービス BI レポートやユーザー行動分析を支えています。"
+  },
+  "landing.userStory.FUSE": {
+    "message": "インドネシア最大の保険テクノロジー企業 Fuse は、Apache Doris を使って保険 BI レポートとリアルタイムデータ分析を高速化しています。"
+  },
+  "landing.userStory.Goldwind": {
+    "message": "Glodwind は、設計、製造、設置を専門とする主要な風力タービンメーカーおよび再生可能エネルギーソリューション提供企業です。"
+  },
+  "landing.userStory.Leetcode": {
+    "message": "ソフトウェアエンジニアや学生のコーディング能力向上と技術面接対策を支援するオンラインプログラミング基盤です。"
+  },
+  "landing.userStory.miHoYo": {
+    "message": "miHoYo は、Genshin Impact、Honkai Impact 3rd、Tears of Themis などの人気ゲームで知られる主要なインタラクティブエンターテインメント企業です。"
+  },
+  "landing.userStory.NetEase": {
+    "message": "NetEase はデータ管理基盤に Apache Doris を導入し、EC 事業で処理性能を向上させ、タグ管理を簡素化しています。"
+  },
+  "landing.userStory.Temu": {
+    "message": "Temu は、インテリア、電子機器、ペット用品、スポーツ用品、玩具など、手頃な商品をまとめて購入できるサービスを提供しています。"
+  },
+  "landing.userStory.Sina": {
+    "message": "Sina Weibo や Sina.com などを運営し、多くのユーザーにニュース、エンターテインメント、SNS、EC サービスを提供するオンラインメディア・技術企業です。"
+  },
+  "landing.userStory.TME": {
+    "message": "月間アクティブユーザー 8 億人の音楽配信企業 Tencent Music は、ClickHouse から Apache Doris に移行しました。列の部分更新、ストレージコスト削減、保守の簡素化という利点を得ています。"
+  },
+  "landing.userStory.Sohu.com": {
+    "message": "複数の Web サービスとコミュニティ型 Web 2.0 製品を提供し、数百万人のユーザーの日常を支える主要なオンラインブランドです。"
+  },
+  "landing.userStory.NewsBreak": {
+    "message": "4,500 万人以上が利用する NewsBreak は、米国の地域ニュース・速報の主要な情報源の 1 つです。地域の天気、警報、お得情報、イベントなどを提供しています。"
+  },
+  "landing.userStory.Tantan": {
+    "message": "使いやすい画面と、人とのつながりや関係づくりを支援する新しい機能で知られる人気のマッチングアプリです。"
+  },
+  "landing.userStory.Soul%20App": {
+    "message": "アバターを使って出会い、交流する、興味・関心を基盤にしたソーシャルネットワークです。"
+  },
+  "landing.userStory.Keep": {
+    "message": "多彩なワークアウト、個別のトレーニング計画、支え合うコミュニティを通じ、運動目標の達成を支援するフィットネスアプリです。"
+  },
+  "landing.userStory.Kwai": {
+    "message": "短編動画 SNS の Kwai は、「Druid + ClickHouse」構成を Apache Doris に置き換え、大規模データセットの集約分析を効率化しています。"
+  },
+  "landing.userStory.37%20Interactive%20Entertainment": {
+    "message": "質の高いモバイルゲームの開発・配信で知られるゲーム企業です。多様な作品と大きなユーザー基盤を持ち、世界のプレーヤーに没入感のあるゲーム体験を提供しています。"
+  },
+  "landing.userStory.HUYA%20Inc": {
+    "message": "HUYA Inc. は、ゲーム、e スポーツ、エンターテインメントなど、多彩なコンテンツを提供する主要なライブ配信プラットフォームです。"
+  },
+  "landing.userStory.NIO": {
+    "message": "この電気自動車メーカーは複数の OLAP システムを試し、性能、セマンティクス、システム互換性、保守コストを比較したうえで Apache Doris を採用しました。"
+  },
+  "landing.userStory.Suzuki": {
+    "message": "自動車、オートバイ、船外機を幅広く提供する日本の自動車メーカーです。Suzuki の製品は信頼性と革新性で知られ、世界中で利用されています。"
+  },
+  "landing.userStory.Ford": {
+    "message": "Ford は革新性と品質で知られる自動車メーカーで、世界中で自動車、トラック、SUV を幅広く製造・販売しています。"
+  },
+  "landing.userStory.Luckin%20Coffee": {
+    "message": "Luckin Coffee は短期間で急成長したコーヒー企業・チェーンです。便利なモバイル注文と配達サービスで知られ、中国各地にコーヒー飲料や軽食を提供しています。"
+  },
+  "landing.userStory.JD%20Logistics": {
+    "message": "JD.com 傘下の JD Logistics は、広範なネットワークと先進技術を持つ主要な物流企業です。効率的な倉庫、輸送、サプライチェーンのサービスで、さまざまな業界の EC 業務を支えています。"
+  },
+  "landing.userStory.Anta": {
+    "message": "Anta は革新的なデザインと高性能のスポーツシューズ・ウェアで知られる企業です。品質とスタイルを重視し、世界のアスリートや運動愛好家に製品を提供しています。"
+  },
+  "landing.userStory.Cabbeen": {
+    "message": "Cabbeen は、伝統的な要素と現代的な美意識を融合させた、トレンドを取り入れた服で知られるファッションブランドです。"
+  },
+  "landing.userStory.Semi": {
+    "message": "Semi は、革新的で手頃なファッションを開発する大人向けのライフスタイルブランドです。"
+  },
+  "landing.userStory.Septwolves": {
+    "message": "現代の成功した男性のライフスタイルを表現し、さまざまな分野で活躍する男性の精神を伝えるファッションブランドです。"
+  },
+  "landing.userStory.Yonghui%20Superstores": {
+    "message": "Yonghui Superstores は、食品と家庭用品の幅広い品ぞろえで知られる中国の小売チェーンです。便利で快適な買い物体験を提供しています。"
+  },
+  "landing.userStory.YumChina": {
+    "message": "Yum China は KFC、Pizza Hut、Taco Bell などのブランドを運営する中国の主要な外食企業です。おいしく便利な食事を提供し、消費者の信頼を得ています。"
+  },
+  "landing.userStory.Ausnutria": {
+    "message": "オランダを拠点とする国際的な乳製品企業 Ausnutria は、乳幼児向け栄養製品の製造・販売を専門とし、世界の赤ちゃんや幼児に質が高く安全な栄養製品を提供しています。"
+  },
+  "landing.userStory.Aftership": {
+    "message": "AfterShip は、企業や消費者がさまざまな配送業者の荷物をリアルタイムで追跡できる主要な配送追跡基盤です。配送管理の透明性と利便性を高めています。"
+  },
+  "landing.userStory.SF%20Express": {
+    "message": "SF Express は、企業と個人に向け、効率的で信頼性の高い国内・国際配送を提供する主要な物流・宅配企業です。"
+  },
+  "landing.userStory.Uda%20Express": {
+    "message": "Uda Express は、世界の EC 基盤、購入者、販売者、貿易業者、流通業者、消費者に、安全で便利かつ効率的な総合国際物流サービスを提供することを目指しています。"
+  },
+  "landing.userStory.ZTO%20Express": {
+    "message": "中国各地の企業と消費者に、信頼性の高い迅速な配送を提供する、宅配サービス専門の主要物流企業です。"
+  },
+  "landing.userStory.YT%20Express": {
+    "message": "YT Express は、生鮮品や医療製品に必要な専用コールドチェーン設備と、輸送の迅速性・効率性への高い需要を重視しています。"
+  },
+  "landing.userStory.Koolearn": {
+    "message": "教育基盤 Koolearn は、学生や社会人に幅広いコースと教材を提供し、双方向で個別化された学習体験を実現しています。"
+  },
+  "landing.userStory.vipkid": {
+    "message": "VIPKid は、受講生と米国・カナダの教師をつなぐ有料の学習基盤です。オンライン教室では、英語に堪能な教師による 25 分間の英語レッスンを受けられます。"
+  },
+  "landing.userStory.Meituan": {
+    "message": "この大手地域生活サービス基盤は、高性能 OLAP エンジンとして Apache Doris を採用し、リアルタイム・オフラインのデータ処理の課題に対応しています。"
+  },
+  "landing.userStory.Lifewit": {
+    "message": "Lifewit は、家庭、旅行、整理収納向けの新しい製品を開発し、日々の暮らしをより快適にする生活用品ソリューションを提供しています。"
+  },
+  "landing.userStory.Lenovo": {
+    "message": "Lenovo は、ノート PC、タブレット、スマートフォン、サーバーなどの製品を設計・開発・製造する世界的な技術企業です。世界中の顧客に製品を提供しています。"
+  },
+  "landing.userStory.Volvo": {
+    "message": "Volvo は安全性と信頼性を重視する自動車メーカーです。多彩な車種で高級感と実用性を両立し、世界の顧客に応えています。"
+  },
+  "landing.userStory.Midea": {
+    "message": "中国を拠点とする世界的な家電・空調ソリューション企業です。エアコン、冷蔵庫、洗濯機など幅広い製品を提供しています。"
+  },
+  "landing.userStory.Shuhai%20Supply%20Chain%20Solutions": {
+    "message": "かつて Haidilao 傘下だった Shuhai は、食品原材料のサプライチェーン管理を総合的に請け負う外部サービス企業です。Doris を使って企業向けデータウェアハウスを構築しています。"
+  },
+  "landing.userStory.Xtep": {
+    "message": "Xtep はスポーツシューズ、ウェア、アクセサリーの設計・製造を専門とし、運動愛好家やアスリートに、機能性とデザイン性を兼ね備えた製品を提供しています。"
+  },
+  "landing.userStory.Taikang%20Insurance%20Group": {
+    "message": "Taikang Insurance は Doris で保険業務分析基盤を構築しました。数万人の現場ユーザーにデータ分析を提供し、クエリを数秒で実行できます。"
+  },
+  "landing.userStory.Ping%20An%20Insurance%20Group": {
+    "message": "2 億 2,700 万人以上の個人顧客と 6 億 9,300 万人のインターネットユーザーを持つ Ping An は、世界最大級の金融サービス企業です。生命保険、損害保険、金融技術など、複数事業で Apache Doris を利用しています。"
+  },
+  "landing.userStory.Cigna%20%26%20CMB": {
+    "message": "保険会社 CIGNA & CMB は、Apache Doris を統合 OLAP 基盤として利用し、顧客、アナリスト、経営管理向けのデータ分析を担わせています。"
+  },
+  "landing.userStory.China%20Everbright%20Bank": {
+    "message": "大手株式会社制商業銀行の China Everbright Bank は、データ基盤に Apache Doris を導入し、データレイクへのクエリとリアルタイムレポート分析を高速化しています。"
+  },
+  "landing.userStory.Bosera%20Funds": {
+    "message": "Bosera Fund は、Teradata と Oracle を Apache Doris に置き換えてデータウェアハウスを刷新し、ETL とバッチデータ処理を大幅に効率化しました。"
+  },
+  "landing.userStory.Harvest%20Funds": {
+    "message": "Harvest Fund は従来のデータウェアハウスを Apache Doris に刷新しました。データ処理・分析を効率化し、性能、コスト、信頼性を改善しています。"
+  },
+  "landing.userStory.OneConnect": {
+    "message": "このフィンテック企業は、Apache Doris を使い、10,000 個のダッシュボードで 10,000 個の稼働中の財務指標を処理しています。ETL の作業を 30% 削減し、1 億行のテーブルに対する応答時間を 5s から 63ms に短縮しました。"
+  },
+  "landing.userStory.Qifu%20Technology": {
+    "message": "AI を活用するこのフィンテック企業は、Apache Doris でビッグデータを処理・分析し、性能向上、柔軟なワークロード管理、高可用性、保守の簡素化を実現しています。"
+  },
+  "landing.userStory.Advance%20Intelligence%20Group": {
+    "message": "アジア太平洋地域の AI 技術企業で、消費者、企業、店舗向けにフィンテック製品とサービスを提供しています。"
+  },
+  "landing.userStory.QAX-Cyber%20Security%20Services": {
+    "message": "このサイバーセキュリティ企業は、ログ保存・分析システムを構築し、書き込み速度を 3 倍、クエリ実行速度を 7 倍に向上させ、管理を可視化しました。"
+  },
+  "landing.userStory.Tianyancha": {
+    "message": "この企業調査基盤は、Apache Hive、Elasticsearch、PostgreSQL を Apache Doris に置き換え、アドホック分析とユーザーセグメンテーションを高速化しました。"
+  },
+  "landing.userStory.TMS": {
+    "message": "物流業務を簡素化・最適化するクラウド型輸送管理システムです。出荷の計画、実行、監視を総合的に支援し、サプライチェーン全体の効率と可視性を高めます。"
+  },
+  "landing.userStory.Orange%20Connex": {
+    "message": "Orange Connex は世界の EC 向けにデジタルサプライチェーンを提供しています。Apache Doris の本番導入により、データ計算の遅延を 2 時間から 3 分に短縮しました。"
+  },
+  "landing.userStory.Zhonglun%20Network": {
+    "message": "スーパー、生鮮食品店、衣料品店などの小売業に、在庫管理、会員向けマーケティング、レジサービスを提供する SaaS 企業です。"
+  },
+  "landing.userStory.Duyan%20Soft": {
+    "message": "この SaaS 企業は、データ処理の効率化のため Apache Doris を採用し、特に多次元テーブルの保守と高並列クエリの課題を解決しています。"
+  },
+  "landing.userStory.AISPEECH": {
+    "message": "会話 AI と自然言語対話のソリューションを提供するこの企業は、Apache Doris でリアルタイム・オフライン分析を統合し、柔軟な機能と高性能をチャットボットに活用しています。"
+  },
+  "landing.userStory.Boton": {
+    "message": "インターネット技術で物流・配送を支える上場企業です。産業向けのスマート物流サービスを提供するほか、ゲームなどのオンライン事業も展開しています。"
+  },
+  "landing.userStory.Sugon": {
+    "message": "安全で信頼性の高いクラウドサービス、効率的なリソース管理、業界別クラウドアプリケーションを提供するフルスタックのクラウドソリューション企業です。"
+  },
+  "landing.userStory.Wasu": {
+    "message": "AI、クラウド、ビッグデータ分析、通信など、さまざまな分野に先進的なソリューションを提供する大手技術グループです。"
+  },
+  "landing.userStory.Horizon%20Robotics": {
+    "message": "中国の主要な AI 技術企業で、AI チップとソフトウェアを専門としています。新しい AI ソリューションで各業界を支え、インテリジェントシステムの開発を進めています。"
+  },
+  "landing.userStory.Youdao": {
+    "message": "Youdao Inc. は語学関連の製品・サービスを手がけています。語学学習基盤、翻訳ツール、スマートデバイスで、コミュニケーションと知識の習得を支援します。"
+  },
+  "landing.userStory.LY%20Digit": {
+    "message": "ホスピタリティ業界向けにフィンテックを提供する LY Digital は、多機能で高性能な Apache Doris の導入によりデータ構成を簡素化し、データアクセスとクエリを高速化しています。"
+  },
+  "landing.userStory.TTChat": {
+    "message": "活発なボイスチャットルームで、リアルタイムの会話、作戦の調整、仲間との交流を楽しめるメッセージ・通信アプリです。"
+  },
+  "landing.userStory.DouYu": {
+    "message": "このライブ配信基盤は、Apache Doris でストリーム処理とバッチ処理を統合し、データ構成を高速化・簡素化してコストを削減しています。"
+  },
+  "landing.userStory.Zhihu%20Inc": {
+    "message": "幅広い分野の Q&A サイトで、Apache Doris をデータ管理基盤に採用し、高速な取り込みとクエリ応答を実現しています。"
+  },
+  "landing.userStory.Dingdong": {
+    "message": "生鮮食品、食料品、日用品を便利かつ迅速に届け、買い物を簡単にするオンライン食品販売基盤です。"
+  },
+  "landing.userStory.Linkedcare": {
+    "message": "この医療技術 SaaS 企業は、ClickHouse から Apache Doris へとデータサービス構成を進化させた過程を紹介しています。"
+  },
+  "landing.userStory.LeTV": {
+    "message": "LeTV はインターネットサービス、スマートデバイス、コンテンツ制作を手がけ、スマートフォン、スマート TV、動画配信などを提供しています。"
+  },
+  "landing.userStory.Boss%20Zhipin": {
+    "message": "企業の採用担当者と求職者の直接チャットを促進するオンライン採用基盤です。独自の AI とビッグデータ分析で、精度の高い推薦を提供しています。"
+  },
+  "landing.userStory.Soyoung": {
+    "message": "Nasdaq 上場の美容医療プラットフォームです。SNS 型の信用評価システムにより、ユーザーの信頼を得ています。"
+  },
+  "landing.userStory.Jiyue%20Auto": {
+    "message": "Jiyue は Geely Holding の次世代自動車ロボットブランドです。高級インテリジェント分野に位置付け、先進的なスマート自動車ロボットの開発を目指しています。"
+  },
+  "landing.userStory.Wuling%20Motors": {
+    "message": "Wuling Motors は手頃で実用的な車の製造を専門とし、小型車と商用車で知られています。国内外の市場で人気を得ています。"
+  },
+  "landing.userStory.Chang'an%20Automobile": {
+    "message": "この自動車メーカーは 400 万台の車を接続し、毎日 1,000 億件の CAN データを処理しています。Apache Doris がリアルタイム分析の性能を支えています。"
+  },
+  "landing.userStory.LOTUS": {
+    "message": "Lotus は高性能スポーツカーとレーシングカーを製造する、英国の自動車メーカーです。"
+  },
+  "landing.userStory.Great%20Wall": {
+    "message": "Great Wall Motors は SUV、ピックアップトラック、電気自動車を専門とする中国の主要自動車メーカーです。"
+  },
+  "landing.userStory.Chery": {
+    "message": "Chery はセダン、SUV、電気自動車などの幅広い車種で知られています。革新と品質を重視し、世界の自動車市場で存在感を高めています。"
+  },
+  "landing.userStory.Envision%20Energy": {
+    "message": "Envision Energy は、風力タービン、エネルギー管理ソフトウェア、スマートグリッドの技術を通じ、世界のクリーンで持続可能なエネルギーを推進しています。"
+  },
+  "landing.userStory.CTYun": {
+    "message": "CTYun はクラウドとインフラサービスの提供企業です。幅広いクラウドソリューションを通じ、企業に安全で拡張性・信頼性の高いクラウド基盤を提供します。"
+  },
+  "landing.userStory.ZTE": {
+    "message": "ZTE は 5G、ネットワーク、モバイル機器の技術を持ち、通信業界の接続性とデジタル変革を進めるソリューションを提供しています。"
+  },
+  "landing.userStory.HuoLaLa": {
+    "message": "Huolala は、貨物情報の共有、個人向け荷物輸送、企業向け貨物輸送などを世界中で提供する貨物サービス基盤です。"
+  },
+  "landing.userStory.Deppon%20Express": {
+    "message": "Deppon Express は、企業と個人向けに、信頼性と効率性の高い総合宅配・サプライチェーンソリューションを提供する物流企業です。"
+  },
+  "landing.userStory.Du%20Xiaoman%20Financial": {
+    "message": "先進技術を使い、デジタル決済、少額融資、投資、資産管理などの金融サービスを提供するフィンテック企業です。"
+  },
+  "landing.userStory.Industrial%20Bank": {
+    "message": "大手株式会社制商業銀行の Xingye Bank は、ビッグデータ基盤に Apache Doris を導入しました。リアルタイム分析を効率化し、業務運営や経営判断をデータで支えています。"
+  },
+  "landing.userStory.UMS": {
+    "message": "世界的な決済エコシステムの構築を目指し、店舗と消費者に安全で便利なオンライン決済を提供する、電子決済・フィンテックソリューションの主要企業です。"
+  },
+  "landing.userStory.Caitong%20Securities": {
+    "message": "Caitong Securities は Apache Doris でリアルタイムデータを集約・分析し、さまざまなレポートを迅速に生成して、事業開発と意思決定を支えています。"
+  },
+  "landing.userStory.Lakala": {
+    "message": "上場するデジタル決済サービス企業で、小売業、銀行、EC 企業向けに現金、事業、サプライチェーン管理のソリューションも提供しています。"
+  },
+  "landing.userStory.Easy%20Pay": {
+    "message": "航空券、宿泊、小売での買い物など、旅行者のニーズに応える総合的な電子決済サービスを提供しています。"
+  },
+  "landing.userStory.Mucfc.com": {
+    "message": "従来の銀行サービスが届かない中小規模の融資を提供し、金融包摂を目指す消費者金融企業です。"
+  },
+  "landing.userStory.ZhongAn%20Insurance": {
+    "message": "幅広い生活分野に新しい保険商品を提供するデジタル保険企業です。先進技術で業務効率とリスク管理を改善しています。"
+  },
+  "landing.userStory.InRice.com": {
+    "message": "融資、マーケティング、イベント、顧客管理まで、利用シーンに応じた総合デジタルソリューションを提供するフィンテック企業です。"
+  },
+  "landing.userStory.Bairong%20Inc": {
+    "message": "AI を活用して、さまざまな業界の意思決定を支援する金融リスク管理・マーケティングサービス企業です。"
+  },
+  "landing.userStory.Moka": {
+    "message": "この SaaS 企業は、Apache Doris の高速な結合クエリでセルフサービス BI を支えています。権限付きクエリの効率化にも役立てています。"
+  },
+  "landing.userStory.360%20Security": {
+    "message": "Apache Doris は、毎秒数百万回の操作を伴う大規模リアルタイムデータの A/B テストで、高速計算とデータ整合性を支えます。各操作には約 20 個のデータタグと十数個の次元が含まれます。"
+  },
+  "landing.userStory.HuiCe": {
+    "message": "このスマート小売サービス企業は、Apache Doris でリソース分離と高並列クエリを実現し、クエリの高速化とストレージコストの削減を達成しています。"
+  },
+  "landing.userStory.JiaoLong%20Cloud": {
+    "message": "独自の知的財産権を持つ、最先端の統合生成 AI 製品群の開発に取り組む生成 AI ソリューション企業です。"
+  },
+  "landing.userStory.IGOTGAMES": {
+    "message": "IGG は、北米でのさまざまな大規模多人数オンラインゲームの配信で知られています。初のクロスプラットフォーム・リアルタイムゲーム「Lords Mobile」は、世界に約 3 億 2,000 万人の登録ユーザーを持ちます。"
+  },
+  "landing.userStory.Electronic%20Soul": {
+    "message": "Electronic Soul は、モバイル、PC、コンソール向けに質の高いデジタルコンテンツを提供する、アジアの主要ゲーム開発・配信企業です。"
+  },
+  "landing.userStory.Haohan%20Data": {
+    "message": "Haohan Data は、先進技術と分析を用いた総合的なデータソリューションで企業を支え、情報に基づく意思決定を可能にしています。"
+  },
+  "landing.userStory.Aima%20Tech": {
+    "message": "電動車メーカー Aima Tech は、通勤手段の変革と炭素排出の削減に取り組んでいます。"
+  },
+  "landing.userStory.Peacebird": {
+    "message": "Peacebird は現代的でトレンドを取り入れたデザインで知られ、デザイン性と環境への配慮を兼ね備えたファッションを提供しています。"
+  },
+  "landing.userStory.Full%20Truck%20Alliance": {
+    "message": "Full Truck Alliance は荷主とトラック運転手をつなぐ主要なデジタル貨物基盤です。透明で効率的な輸送サービスにより、中国各地の物流業務を最適化しています。"
+  },
+  "landing.userStory.CaiNiao": {
+    "message": "Alibaba Group 傘下の CaiNiao は、サプライチェーン全体の管理と配送を専門とする物流基盤です。店舗、倉庫、配送業者をつなぎ、業務を効率化して迅速な注文処理を支えています。"
+  },
+  "landing.userStory.Umetrip": {
+    "message": "Umetrip は中国の航空・旅行業界向けに IT ソリューションを提供する主要企業です。航空予約、旅客サービス、航空データ管理を総合的に支援しています。"
+  },
+  "landing.userStory.Yurun%20Group": {
+    "message": "中国の食品加工・流通企業 Yurun Group は、飼育、加工、小売を垂直統合した事業で、質の高い食肉を消費者に届けています。"
+  },
+  "landing.userStory.Bondex": {
+    "message": "Bondex は輸出入企業向けに、計画、設計、実行を含む国際業務専門の個別サプライチェーンソリューションと標準化された物流サービスを提供しています。"
+  },
+  "landing.userStory.Zongteng%20Group": {
+    "message": "Zongteng Group は、中国を拠点に EC 販売者向けの越境倉庫・物流サービスを提供する大手企業です。"
+  },
+  "landing.userStory.Techsight": {
+    "message": "このフィンテック企業は、信用評価・リスク管理に Apache Doris を組み込み、開発と保守の負担を抑えながら大規模データへのクエリを高速化しています。"
+  },
+  "landing.userStory.Zuoyebang": {
+    "message": "Zuoyebang は、幅広い年齢の学生に教材、ライブ授業、個別指導、個別化された学習を提供する主要なオンライン教育基盤です。"
+  },
+  "landing.userStory.Atguigu": {
+    "message": "学習基盤 Atguigu は、技術的な技能の習得とテクノロジー業界でのキャリア向上を支える総合研修と教材を提供しています。"
+  },
+  "landing.userStory.ITCast": {
+    "message": "ITCast は、IT とプログラミングの多彩なコースを提供する総合オンライン学習基盤です。"
+  },
+  "landing.userStory.Kaikeba": {
+    "message": "業界の専門家による幅広いコースを通じ、新たな技能の習得と各分野での活躍を支援するオンライン教育基盤です。"
+  },
+  "landing.userStory.Lizhiweike": {
+    "message": "音声ライブ配信基盤 Lizhiweike では、ポッドキャスト、ラジオ番組、双方向の議論などを作成・共有でき、活発な音声コミュニティが生まれています。"
+  },
+  "landing.userStory.Tenclass": {
+    "message": "TenClass は、デジタル技能、動画編集、データ分析などの教育で、一人ひとりの能力向上を支える教育企業です。"
+  },
+  "landing.userStory.Wuxi%20Xishang%20Bank": {
+    "message": "Apache Doris を使い、マーケティング、リスク管理、顧客サービスのデジタル化と精緻な管理を進める銀行です。"
+  },
+  "landing.userStory.HYXJ": {
+    "message": "この消費者金融企業は、リスク管理基盤の統一クエリゲートウェイとして Apache Doris を使い、Multi Catalog 機能で異なるデータソースを統合しています。"
+  },
+  "landing.userStory.HCFC": {
+    "message": "この消費者金融向け技術企業は、社内の業務と運営で Apache Doris を広く活用し、クエリの高速化とデータ品質の向上を実現しています。"
+  },
+  "landing.userStory.Autohome": {
+    "message": "Autohome は、自動車の情報、レビュー、関連サービスを幅広く提供する主要なオンライン基盤です。自動車ファン、購入者、所有者にワンストップのサービスを届けています。"
+  },
+  "landing.userStory.JJ%20World": {
+    "message": "JJ World は、ボード・カードゲームを開発する主要企業です。JJ-Dota 対戦基盤、3399 ミニゲーム基盤、モバイルアプリなどを提供しています。"
+  },
+  "landing.userStory.Q1.com": {
+    "message": "Q1.com は、オンラインゲームとエンターテインメントで、優れたユーザー体験の提供を目指しています。"
+  },
+  "landing.userStory.Xiaoe%20Tech": {
+    "message": "8 億人のエンドユーザーを持つこのライブ配信企業は、分析基盤に Apache Doris を導入してデータ構成を簡素化しました。タグクエリの高速化、迅速な災害復旧、手軽なデータ可視化を実現しています。"
+  },
+  "landing.userStory.Youzan": {
+    "message": "この EC 向け SaaS 企業は、ClickHouse から Apache Doris に移行し、SQL クエリの性能を 250% 向上させました。あらゆるデータ量の結合テストで Doris が ClickHouse を上回りました。"
+  },
+  "landing.userStory.Midland%20Realty": {
+    "message": "この大手不動産企業は、Apache Doris でデータウェアハウスを簡単かつ迅速に構築し、低いクエリ遅延、容易な保守、少ないストレージ使用量を実現しています。"
+  },
+  "landing.userStory.Footprint%20Analytics": {
+    "message": "ユーザーが 10 秒以内にダッシュボードをカスタマイズし、データから有用な知見を得られる、ブロックチェーン分析ソリューションの提供企業です。"
+  },
+  "landing.reports.2026-10-12.label": {
+    "message": "2026 年 10 月 12 日～10 月 18 日"
+  },
+  "landing.reports.2026-10-12.week": {
+    "message": "2026 年第 42 週"
+  },
+  "landing.reports.2026-10-12.report.summary.lead": {
+    "message": "今週の Apache Doris では、より迅速な取り込み、対象を絞ったスキャン、高精度タイムスタンプを保持するレイクハウス連携が進みました。引き続きカーネルとエンジニアリングが最大の注力分野です。最新クライアントとの互換性や外部認証の明示的な関連付けも進展し、接続性とアカウント管理の明確さを改善しています。43 人の貢献者が 176 件の PR をマージし、20 件の新規 Issue が作成されました。リアルタイムウェアハウスとレイクハウスの拡張とともに、開発基盤の強化が続いています。"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.title": {
+    "message": "イベント駆動の S3 取り込み"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.narrative": {
+    "message": "専用の SQS キューに届く S3 ObjectCreated 通知を使い、bucket と glob で絞り込むストリーミング取り込みに対応しました。キーが順序付き一覧取得のカーソルより前にあるファイルの取りこぼしを防ぎ、取り込みの完全性を高めます。オブジェクトストレージからの取り込みをイベント駆動型へと進める変更です。"
+  },
+  "landing.reportRefs.c27ec3f57ca583e3": {
+    "message": "[feature](fe) S3 通知によるストリーミング取り込みに対応"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.title": {
+    "message": "ビットマップ候補でスキャン対象を絞る"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.narrative": {
+    "message": "提案中の変更では、外部の Roaring ビットマップを受け取り、ネイティブスキャンの早い段階で候補リソース ID を絞り込みます。圧縮したランタイムフィルターも任意で利用できます。カテゴリ、ファセット、アクセス規則から得た候補を使い、大規模な共有データセットのクエリ処理を早期に削減する取り組みです。"
+  },
+  "landing.reportRefs.e56f41ac207d8582": {
+    "message": "[feature](be) リソース ID に Roaring ビットマップ候補フィルターを追加"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.title": {
+    "message": "レイクハウステーブル間でナノ秒精度を保持"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.narrative": {
+    "message": "Iceberg と Paimon のタイムゾーンを持たないナノ秒タイムスタンプを TIMESTAMP_NS に双方向変換できるようになりました。ネスト型も含め、読み取り、挿入、CTAS を通じて小数部 9 桁を保持します。システム間での精度損失を減らし、型を忠実に扱うレイクハウス連携を進めます。"
+  },
+  "landing.reportRefs.71c3f7b235a54c90": {
+    "message": "[feat](datalake) Iceberg と Paimon のナノ秒タイムスタンプに対応"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.title": {
+    "message": "最新 MySQL クライアントとの互換性を拡張"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.narrative": {
+    "message": "Doris FE の MySQL 9 クライアントおよび Connector/J 8/9 との互換性が改善しました。複数文の結果、caching_sha2 の完全認証、authentication_policy クエリ、プリペアドステートメントのバイナリ TIME パラメーターに対応します。アプリ連携の負担を減らし、より多くのクライアント操作で MySQL プロトコル互換性を高めます。"
+  },
+  "landing.reportRefs.7d69ed3ed1a1c740": {
+    "message": "[feature](fe) MySQL 9 クライアントと Connector/J の互換性を改善"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.title": {
+    "message": "外部認証とアカウントの明示的な関連付け"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.narrative": {
+    "message": "user@host アカウントと、認証情報を検証する名前付き認証統合との排他的な関連付けに対応しました。AS による外部 ID へのマッピングも任意で指定できます。LDAP、IAM などに共通する構文により、ID の関係を明確にし、認証管理を明示的な設定へと進めます。"
+  },
+  "landing.reportRefs.445ef4d0d54b311e": {
+    "message": "[feature](fe) ユーザーを認証統合に関連付け"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.name": {
+    "message": "マルチモーダルレイクハウス"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.mergedNarrative": {
+    "message": "レイクハウスでは、外部ファイルの COUNT スケジューリングを改善し、繰り返しクエリによる BE の負荷集中を減らしました。パーティションを考慮した Iceberg の書き込み振り分けと上書きモード制御を改善しています。ネイティブなテーブルプロパティ更新、GZIP 書き込み、Oracle の型マッピング、任意のファイル名パディングにより、取り込み、管理、出力の連携を広げました。"
+  },
+  "landing.reportRefs.a809f2794dc06e2d": {
+    "message": "[improvement](fe) 外部ファイル COUNT のスキャンスケジューリングを最適化"
+  },
+  "landing.reportRefs.e610de745b4faf88": {
+    "message": "[opt](jdbc) Oracle の BINARY_FLOAT と BINARY_DOUBLE に対応"
+  },
+  "landing.reportRefs.961d9334f728c56c": {
+    "message": "[feature](outfile) 任意で有効化する file_name_padding を追加"
+  },
+  "landing.reportRefs.1c555c5cbedde93a": {
+    "message": "[fix](iceberg) iceberg/hive の Parquet ライターで GZIP に対応"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.inProgressNarrative": {
+    "message": "進行中のレイクハウス開発では、パーティションメタデータでの処理により、Hive/Hudi の最新パーティションクエリでファイルを開かずに済むようにするほか、HMS の枝刈りで計画時の負担を減らします。ネイティブな Azure 接続と 3D ジオメトリー対応も進めています。新規の ANN 開発では、インデックス構築を取り込み時からバックグラウンドのコンパクションに移す案が提案されました。"
+  },
+  "landing.reportRefs.eb3901ea49c7640e": {
+    "message": "[improvement](hive) Hive/Hudi スキャンでパーティション列の値だけのプッシュダウンに対応"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.name": {
+    "message": "リアルタイムデータウェアハウス"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.mergedNarrative": {
+    "message": "リアルタイム処理では、事前割り当てを減らし、幅広いテーブルや多数接続でのポイントクエリキャッシュのメモリを削減しました。取り込みではキャンセル、クローズの連携、トランザクション内の部分更新検証、CDC のスキーマ変更からの復旧を強化しています。BE の CPU に応じたスナップショット並列度、不要なスキーマジャーナルの削減、集約状態の直接 finalization にも対応しました。"
+  },
+  "landing.reportRefs.08f6a0954e127053": {
+    "message": "[opt](point query) 短絡ルックアップのキャッシュ使用量を削減"
+  },
+  "landing.reportRefs.d6647cef5ba54859": {
+    "message": "[fix](load) トランザクション内の VALUES 挿入で部分更新を拒否"
+  },
+  "landing.reportRefs.8ff7e678cf737f30": {
+    "message": "[enhance](load) ロック不要のロードキャンセルに対応"
+  },
+  "landing.reportRefs.d4265d872703707b": {
+    "message": "[fix](streaming job) alter と commit の処理を強化"
+  },
+  "landing.reportRefs.1c2686c5265895ed": {
+    "message": "[feature](be) 集約状態の finalizer とバッチマージを追加"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.inProgressNarrative": {
+    "message": "進行中のリアルタイムウェアハウス開発では、Kinesis シャード追跡の永続化、JSON 設定の伝播、最新の可視パーティション選択を通じて、取り込みの継続性と新しいデータへのアクセスを改善します。新規開発は、事前集約をマージ可能な集約状態に広げ、レプリカ修復時の binlog 保持の競合に対応し、分析効率とイベント保持の信頼性を高めます。"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.name": {
+    "message": "コンピュート・ストレージ分離とクラウドネイティブ"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.mergedNarrative": {
+    "message": "クラウド運用ではメタデータの整合性とストレージ効率を改善しました。コンピュートグループ同期は、削除されたプロパティや同名での再作成を正しく処理し、GCS 回収処理ではバッチ削除を使います。ファイルキャッシュはデフォルトで有効になり、問題を起こす可能性のある LRU ダンプは明示的な有効化が必要になりました。"
+  },
+  "landing.reportRefs.f0f5fae9a0f54943": {
+    "message": "[fix](cloud) Meta Service のコンピュートグループプロパティを置換"
+  },
+  "landing.reportRefs.3abc65af6fd53ff7": {
+    "message": "[fix](cloud) 再作成されたコンピュートグループのマッピングを保持"
+  },
+  "landing.reportRefs.f4d90d8f42179dad": {
+    "message": "[improvement](filecache) ファイルキャッシュをデフォルトで有効化"
+  },
+  "landing.reportRefs.81366e18cde9dd80": {
+    "message": "[improvement](cloud) GCS オブジェクト回収でバッチ削除を有効化"
+  },
+  "landing.reportRefs.1bec1df680ed94c8": {
+    "message": "[fix](filecache) ファイルキャッシュの LRU ダンプをデフォルトで無効化"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.inProgressNarrative": {
+    "message": "進行中のクラウド開発では、協調プリフェッチ、I/O の集約、増分クエリキャッシュ再利用でリモート読み取りを削減し、FE の活動追跡メモリも減らします。今週新規に始まった、ピアキャッシュの非同期書き込み対応は、同期キャッシュ投入をクエリスレッドから外すことを目指しています。"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.name": {
+    "message": "エージェントのオブザーバビリティ"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.mergedNarrative": {
+    "message": "大きな JSON ドキュメントや、ログ・エージェントデータの密なテキスト検索に対し、JSONB 配列走査を線形時間にし、スコア不要の転置インデックスの論理積を最適化しました。大きな配列の検索や、頻出語の組み合わせでの絞り込みの負担を減らします。"
+  },
+  "landing.reportRefs.07b1bd695cef6e2f": {
+    "message": "[improvement](be) JSON 関数で JSONB 配列を線形走査"
+  },
+  "landing.reportRefs.68251a17d89a36dd": {
+    "message": "[improvement](be) 密なスコア不要の転置インデックス論理積を高速化"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.name": {
+    "message": "エコシステム連携"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.mergedNarrative": {
+    "message": "ワークロードの移行とクライアント接続では、Hive 互換の文字エンコード・デコードを追加し、TLS 上の MySQL パケット切り詰めを修正しました。Flight メタデータ、ネイティブ Variant、VARBINARY の修正も master に取り込み、システム間の互換性の差を縮めています。"
+  },
+  "landing.reportRefs.d8b9497fb452fdd5": {
+    "message": "[feature](function) Hive 互換の encode と decode に対応"
+  },
+  "landing.reportRefs.27ff74adac93a523": {
+    "message": "[fix](fe) TLS 上の MySQL パケット切り詰めを修正"
+  },
+  "landing.reportRefs.a4f6dca600326868": {
+    "message": "[feature](arrow) Flight メタデータ、ネイティブ Variant、VARBINARY の修正を master に移植"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.inProgressNarrative": {
+    "message": "進行中のエコシステム開発は、dbt の長い SQL 文の破損や、Flight SQL のメタデータフィルター・タイムゾーン互換性に対応し、クライアント連携と SQL 移行の予測可能性を高めます。Trino 互換の期間フォーマットも、Doris にクエリやツールを移す際の調整を減らします。"
+  },
+  "landing.reportRefs.e5ef35578b1d2909": {
+    "message": "[fix](dbt-doris) use_pure=True を強制し、無通知の破損を防止…"
+  },
+  "landing.reportRefs.08381a0998d73a03": {
+    "message": "[fix](arrow-flight) テーブル種別のメタデータとフィルターに対応"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.name": {
+    "message": "セキュリティとガバナンス"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.mergedNarrative": {
+    "message": "履歴パーティションを一時的に保持する運用向けに、クラスター全体の動的パーティション削除保護設定を追加しました。パーティションの作成を継続しながら自動削除を一時停止でき、データ保持をより細かく制御できます。"
+  },
+  "landing.reportRefs.f81b3554049fefd2": {
+    "message": "[opt](partition) 全体の動的パーティション削除保護を追加"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.inProgressNarrative": {
+    "message": "進行中のガバナンス開発は、作成時に設定する行 TTL を中心に、マージ後に期限切れ行を隠し、通常の書き換え時に削除する処理を進めています。ポリシー修正では、メタデータ再生の失敗に対応し、作成が成功したように見えても適用されない可能性のある相関サブクエリのポリシーを拒否します。アクセス制御への誤った安心感を減らす取り組みです。"
+  },
+  "landing.reportRefs.69e4f71d5a3fad3b": {
+    "message": "[feature](storage) 行レベル TTL に対応"
+  },
+  "landing.reportRefs.98a57ecda49e26b7": {
+    "message": "[fix](policy) CREATE ROW POLICY USING 句の相関サブクエリを拒否"
+  },
+  "landing.reportRefs.9ecc66ecc6a8c40a": {
+    "message": "[fix](policy) 外部カタログ上のビューの行ポリシーを修正"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.name": {
+    "message": "カーネルとエンジニアリング"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.mergedNarrative": {
+    "message": "カーネルでは、複雑なクエリとレイクハウスアクセスの確実な実行を強化しました。MATCH/SEARCH エンジンの統合、スコア計算と SQL 正確性の修正、並行ライフサイクルの安全性、キャッシュメモリの制御、スキャン・Variant 読み取り・ブロードキャスト転送の効率化を進めています。コネクター互換性と診断も改善しました。"
+  },
+  "landing.reportRefs.77210fc4760d7fbe": {
+    "message": "[refactor](const column) 定数列の読み取り方法を統一"
+  },
+  "landing.reportRefs.045be7e731050193": {
+    "message": "[fix](pipeline) PipelineTask::set_running を無条件 exchange に変更"
+  },
+  "landing.reportRefs.68c01323c5dc0b97": {
+    "message": "[fix](update) 更新に生成列の依存関係を含める"
+  },
+  "landing.reportRefs.06f2ac7bccf9eea3": {
+    "message": "[fix](cloud) レプリカ更新の再生時とチェックポイント保存前に古い経路を削除"
+  },
+  "landing.reportRefs.3496f634e491fcfa": {
+    "message": "[fix](be) プロセスメモリ不足時はキャンセル前に一時停止クエリの待機を継続"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
+    "message": "進行中のカーネル開発では、クエリの正確性、障害の分離、リソース制御を強化します。新規の取り組みは特に、オプティマイザーと数値変換の誤り、BE を終了させるスキャナー例外、キャッシュのメモリ予算、パーティション作成制限に注力しています。信頼できる複雑クエリの結果、予測可能な運用、よりよい診断を目指します。"
   }
 }

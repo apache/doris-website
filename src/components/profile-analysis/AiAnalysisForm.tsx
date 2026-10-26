@@ -71,6 +71,9 @@ export function AiAnalysisForm({
                     {translate({id: "landing.AiAnalysisForm.006", message: "Simplified Chinese"})}
                 </label>
             </fieldset>
+            <p className="profile-analysis__language-help">
+                {translate({id: 'landing.profile.responseLanguages', message: 'AI responses are available in English and Chinese. Changing the site language does not translate the service response.'})}
+            </p>
 
             <div className="profile-analysis__privacy-notice" id="profile-analysis-privacy-notice" role="note">
                 <div className="profile-analysis__privacy-notice-title">

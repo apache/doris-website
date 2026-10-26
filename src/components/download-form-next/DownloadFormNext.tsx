@@ -237,7 +237,7 @@ export default function DownloadFormNext(): JSX.Element {
                                                 key={option}
                                                 disabled={isSource || !available}
                                                 aria-pressed={cpu === option}
-                                                title={available ? undefined : `${translate({id: "landing.DownloadFormNext.007", message: "No "})}${option}${translate({id: "landing.DownloadFormNext.008", message: " build for "})}${version}`}
+                                                title={available ? undefined : translate({id: 'landing.download.unavailableBuild', message: 'No {architecture} build for {version}'}, {architecture: option, version})}
                                                 className={clsx('download-next__seg-item', {
                                                     'is-checked': cpu === option,
                                                     'is-unavailable': !available,

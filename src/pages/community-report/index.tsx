@@ -1,6 +1,6 @@
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { translate } from '@docusaurus/Translate';
-import { mapReportText } from '@site/src/components/community-report-next/report-localization';
+import { localizeReportEntry } from '@site/src/components/community-report-next/report-localization';
 import React, { JSX, useMemo } from 'react';
 import CommunityReportNext, { WeeklyReportEntry } from '@site/src/components/community-report-next/CommunityReportNext';
 
@@ -37,9 +37,8 @@ export default function CommunityReportPage(): JSX.Element {
     } = useDocusaurusContext();
     const reports = useMemo(
         () =>
-            currentLocale === 'zh-CN'
-                ? REPORTS.map(entry => mapReportText(entry.id, entry, (id, message) => translate({ id, message })))
-                : REPORTS,
+            REPORTS.map(entry => localizeReportEntry(entry, currentLocale,
+                (id, message) => translate({ id, message }))),
         [currentLocale],
     );
     return <CommunityReportNext reports={reports} />;

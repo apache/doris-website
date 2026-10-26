@@ -3781,5 +3781,4703 @@
   },
   "homepage.diagram.storage": {
     "message": "공유 스토리지"
+  },
+  "landing.index.001": {
+    "message": "자세히 보기"
+  },
+  "landing.users.category.all": {
+    "message": "전체"
+  },
+  "landing.users.category.finance": {
+    "message": "금융"
+  },
+  "landing.users.category.technology": {
+    "message": "기술"
+  },
+  "landing.users.category.media": {
+    "message": "미디어 및 엔터테인먼트"
+  },
+  "landing.users.category.telecom": {
+    "message": "통신 및 제조"
+  },
+  "landing.users.category.logistics": {
+    "message": "소비재 및 물류"
+  },
+  "landing.users.category.distribution": {
+    "message": "상용 배포판"
+  },
+  "landing.UsersNext.001": {
+    "message": "실시간 분석을 시작하세요"
+  },
+  "landing.UsersNext.002": {
+    "message": "함께할 파트너는"
+  },
+  "landing.UsersNext.003": {
+    "message": "혁신가들"
+  },
+  "landing.UsersNext.004": {
+    "message": "전 세계 10,000개 이상의 선도 기업이 Apache Doris를 활용하고 있습니다."
+  },
+  "landing.UsersNext.005": {
+    "message": "활용 사례 공유하기"
+  },
+  "landing.UsersNext.006": {
+    "message": "더 보기"
+  },
+  "landing.UsersNext.007": {
+    "message": "Apache Doris - 고객 사례 | 혁신가들과 함께 실시간 분석을 시작하세요"
+  },
+  "landing.UsersNext.008": {
+    "message": "전 세계 10,000개 이상의 선도 기업이 Apache Doris OLAP DBMS로 레이크하우스, 애드혹 분석, 사용자 행동 분석 등 실제 비즈니스 애플리케이션을 운영하고 있습니다."
+  },
+  "landing.downloadformallrelease.001": {
+    "message": "버전"
+  },
+  "landing.downloadformallrelease.002": {
+    "message": "버전"
+  },
+  "landing.downloadformallrelease.003": {
+    "message": "아키텍처"
+  },
+  "landing.downloadformallrelease.004": {
+    "message": "아키텍처"
+  },
+  "landing.downloadformallrelease.005": {
+    "message": "tar 아카이브"
+  },
+  "landing.downloadformallrelease.006": {
+    "message": "tar 아카이브"
+  },
+  "landing.downloadformallrelease.007": {
+    "message": "다운로드"
+  },
+  "landing.downloadformallrelease.008": {
+    "message": "링크 복사"
+  },
+  "landing.downloadformallrelease.009": {
+    "message": "다운로드"
+  },
+  "landing.downloadformtools.001": {
+    "message": "도구"
+  },
+  "landing.downloadformtools.002": {
+    "message": "도구"
+  },
+  "landing.downloadformtools.003": {
+    "message": "버전"
+  },
+  "landing.downloadformtools.004": {
+    "message": "버전"
+  },
+  "landing.downloadformtools.005": {
+    "message": "아키텍처"
+  },
+  "landing.downloadformtools.006": {
+    "message": "아키텍처"
+  },
+  "landing.downloadformtools.007": {
+    "message": "버전"
+  },
+  "landing.downloadformtools.008": {
+    "message": "버전"
+  },
+  "landing.downloadformtools.009": {
+    "message": "tar 아카이브"
+  },
+  "landing.downloadformtools.010": {
+    "message": "tar 아카이브"
+  },
+  "landing.downloadformtools.011": {
+    "message": "Docker 명령어"
+  },
+  "landing.downloadformtools.012": {
+    "message": "Docker pull 명령어 복사"
+  },
+  "landing.downloadformtools.013": {
+    "message": "복사"
+  },
+  "landing.downloadformtools.014": {
+    "message": "다운로드"
+  },
+  "landing.downloadformtools.015": {
+    "message": "링크 복사"
+  },
+  "landing.downloadformtools.016": {
+    "message": "다운로드"
+  },
+  "landing.downloadformarchive.001": {
+    "message": "이전 릴리스 다운로드"
+  },
+  "landing.downloadformarchive.002": {
+    "message": "프로젝트"
+  },
+  "landing.downloadformarchive.003": {
+    "message": "프로젝트"
+  },
+  "landing.DownloadFormNext.001": {
+    "message": "버전 선택 안내"
+  },
+  "landing.DownloadFormNext.002": {
+    "message": "업그레이드 참고 사항"
+  },
+  "landing.DownloadFormNext.003": {
+    "message": "이전 릴리스"
+  },
+  "download.title": {
+    "message": "Apache Doris - 다운로드 | 어디서나 간편하게 Doris 배포"
+  },
+  "homepage.banner.subTitle": {
+    "message": "다양한 버전의 사전 빌드 바이너리를 다운로드해 사용해 보세요. Apache Doris는 장소와 규모에 관계없이 다양한 장치를 연결합니다."
+  },
+  "landing.DownloadFormNext.004": {
+    "message": "다운로드"
+  },
+  "landing.DownloadFormNext.005": {
+    "message": "Apache Doris가 현재 유지 관리하는 릴리스 브랜치의 검증된 바이너리와 소스 tar 아카이브입니다. 모든 다운로드 파일에 서명과 체크섬이 제공됩니다."
+  },
+  "landing.DownloadFormNext.006": {
+    "message": "유지 관리 중인 브랜치:"
+  },
+  "download.version": {
+    "message": "버전"
+  },
+  "download.cpu.model": {
+    "message": "아키텍처"
+  },
+  "landing.DownloadFormNext.007": {
+    "message": "사용할 수 없음: "
+  },
+  "landing.DownloadFormNext.008": {
+    "message": " 빌드, 대상: "
+  },
+  "download.download.link": {
+    "message": "tar 아카이브"
+  },
+  "landing.DownloadFormNext.009": {
+    "message": "검증 방법"
+  },
+  "landing.DownloadFormNext.010": {
+    "message": "다운로드"
+  },
+  "landing.DownloadFormNext.011": {
+    "message": "다운로드 링크를 복사했습니다"
+  },
+  "landing.DownloadFormNext.012": {
+    "message": "다운로드 링크 복사"
+  },
+  "landing.DownloadFormNext.013": {
+    "message": "복사됨"
+  },
+  "landing.DownloadFormNext.014": {
+    "message": "다운로드 링크 복사"
+  },
+  "landing.DownloadFormNext.015": {
+    "message": "다운로드 링크를 복사했습니다"
+  },
+  "landing.DownloadFormNext.016": {
+    "message": "유지 관리 중"
+  },
+  "landing.DownloadFormNext.017": {
+    "message": "Doris 릴리스"
+  },
+  "landing.DownloadFormNext.018": {
+    "message": "Doris는 소스 tar 아카이브로 릴리스되며 편의를 위해 바이너리 tar 아카이브도 제공합니다. 배포하기 전에 각 파일의 ASC 서명 또는 SHA-512 체크섬을 검증하세요."
+  },
+  "landing.DownloadFormNext.019": {
+    "message": "유지 관리 중인 브랜치의 모든 패치 릴리스가 여기에 표시됩니다. 패치 릴리스는 양방향 호환되므로 같은 브랜치의 최신 패치로 업데이트할 때 데이터를 마이그레이션할 필요가 없습니다."
+  },
+  "landing.DownloadFormNext.020": {
+    "message": "릴리스 노트"
+  },
+  "landing.DownloadFormNext.021": {
+    "message": "업그레이드 시 주의 사항은"
+  },
+  "landing.DownloadFormNext.022": {
+    "message": "배포"
+  },
+  "landing.DownloadFormNext.023": {
+    "message": "및"
+  },
+  "landing.DownloadFormNext.024": {
+    "message": "클러스터 업그레이드"
+  },
+  "landing.DownloadFormNext.025": {
+    "message": "설명서를 참고하세요."
+  },
+  "landing.DownloadFormNext.026": {
+    "message": "유지 관리 중"
+  },
+  "landing.DownloadFormNext.027": {
+    "message": "Doris 생태계"
+  },
+  "landing.DownloadFormNext.028": {
+    "message": "Doris에 데이터를 적재하거나 읽어오는 커넥터와 도구입니다. 유지 관리 중인 버전만 표시되며 이전 커넥터 버전은 다음에서 확인할 수 있습니다:"
+  },
+  "landing.DownloadFormNext.029": {
+    "message": "아카이브"
+  },
+  "landing.DownloadFormNext.030": {
+    "message": "릴리스 노트"
+  },
+  "landing.DownloadFormNext.031": {
+    "message": "더 많은 도구"
+  },
+  "landing.DownloadFormNext.032": {
+    "message": "이전 릴리스"
+  },
+  "landing.DownloadFormNext.033": {
+    "message": "이 버전에는 보안 패치를 포함한 어떠한 추가 릴리스도 제공되지 않습니다."
+  },
+  "landing.DownloadFormNext.034": {
+    "message": "이 버전에서 취약점이 발견되어도 수정되지 않습니다."
+  },
+  "landing.DownloadFormNext.035": {
+    "message": "업그레이드 가이드"
+  },
+  "landing.DownloadFormNext.036": {
+    "message": "ASF 보안 팀에 취약점 신고"
+  },
+  "landing.DownloadFormNext.037": {
+    "message": "어디서나 실행"
+  },
+  "landing.DownloadFormNext.038": {
+    "message": "베어메탈, Kubernetes, 클라우드 등 원하는 환경에 Doris를 배포하세요."
+  },
+  "landing.DownloadFormNext.039": {
+    "message": "배포 옵션 살펴보기"
+  },
+  "landing.brandassets.001": {
+    "message": "Doris 로고 - 가로형"
+  },
+  "landing.brandassets.002": {
+    "message": "밝은 배경용 기본 Doris 로고."
+  },
+  "landing.brandassets.003": {
+    "message": "Doris 로고 - 세로형"
+  },
+  "landing.brandassets.004": {
+    "message": "밝은 배경용 가운데 정렬 Doris 로고."
+  },
+  "landing.brandassets.005": {
+    "message": "Doris 로고 - 가로형, 어두운 배경용"
+  },
+  "landing.brandassets.006": {
+    "message": "어두운 배경용 흰색 워드마크 Doris 로고."
+  },
+  "landing.brandassets.007": {
+    "message": "Doris 로고 - 세로형, 어두운 배경용"
+  },
+  "landing.brandassets.008": {
+    "message": "어두운 배경용 흰색 워드마크 가운데 정렬 Doris 로고."
+  },
+  "landing.brandassets.009": {
+    "message": "Doris 로고 - 가로형, 흰색 단색"
+  },
+  "landing.brandassets.010": {
+    "message": "어두운 배경용 단색 Doris 로고."
+  },
+  "landing.brandassets.011": {
+    "message": "Doris 로고 - 세로형, 흰색 단색"
+  },
+  "landing.brandassets.012": {
+    "message": "어두운 배경용 가운데 정렬 단색 Doris 로고."
+  },
+  "landing.brandassets.013": {
+    "message": "Apache Doris 로고 - 가로형"
+  },
+  "landing.brandassets.014": {
+    "message": "밝은 배경용 기본 Apache Doris 로고."
+  },
+  "landing.brandassets.015": {
+    "message": "Apache Doris 로고 - 세로형"
+  },
+  "landing.brandassets.016": {
+    "message": "밝은 배경용 가운데 정렬 Apache Doris 로고."
+  },
+  "landing.brandassets.017": {
+    "message": "Apache Doris 로고 - 가로형, 어두운 배경용"
+  },
+  "landing.brandassets.018": {
+    "message": "어두운 배경용 흰색 워드마크 Apache Doris 로고."
+  },
+  "landing.brandassets.019": {
+    "message": "Apache Doris 로고 - 세로형, 어두운 배경용"
+  },
+  "landing.brandassets.020": {
+    "message": "어두운 배경용 흰색 워드마크 가운데 정렬 Apache Doris 로고."
+  },
+  "landing.brandassets.021": {
+    "message": "Apache Doris 로고 - 가로형, 흰색 단색"
+  },
+  "landing.brandassets.022": {
+    "message": "어두운 배경용 단색 Apache Doris 로고."
+  },
+  "landing.brandassets.023": {
+    "message": "Apache Doris 로고 - 세로형, 흰색 단색"
+  },
+  "landing.brandassets.024": {
+    "message": "어두운 배경용 가운데 정렬 단색 Apache Doris 로고."
+  },
+  "landing.brandassets.025": {
+    "message": "브랜드 자료 - Apache Doris"
+  },
+  "landing.brandassets.026": {
+    "message": "공식 Apache Doris 로고와 브랜드 SVG 자료를 다운로드하세요."
+  },
+  "landing.brandassets.027": {
+    "message": "자료"
+  },
+  "landing.brandassets.028": {
+    "message": "브랜드 자료"
+  },
+  "landing.brandassets.029": {
+    "message": "기사, 발표 자료, 커뮤니티 행사, 통합 및 프로젝트를 소개하는 자료에 사용할 공식 Apache Doris SVG 자료를 다운로드하세요."
+  },
+  "landing.brandassets.030": {
+    "message": "Apache Doris, Doris 및 Doris 로고는 The Apache Software Foundation의 상표입니다. Apache Doris를 명확하고 정확하게 소개하는 데 이 자료를 사용하세요."
+  },
+  "landing.brandassets.031": {
+    "message": " 미리 보기"
+  },
+  "landing.brandassets.032": {
+    "message": "다운로드"
+  },
+  "landing.HackathonCodeBlock.001": {
+    "message": "복사"
+  },
+  "landing.HackathonCodeBlock.002": {
+    "message": "복사됨"
+  },
+  "landing.hackathonCommon.047": {
+    "message": "및"
+  },
+  "landing.hackathonCommon.072": {
+    "message": "및"
+  },
+  "landing.a1HybridSearch.035": {
+    "message": "및"
+  },
+  "landing.a1HybridSearch.059": {
+    "message": "및"
+  },
+  "landing.a1HybridSearch.065": {
+    "message": "및"
+  },
+  "landing.a1HybridSearch.129": {
+    "message": "함께하는"
+  },
+  "landing.a3LogSearch.027": {
+    "message": "및"
+  },
+  "landing.a3LogSearch.089": {
+    "message": "함께하는"
+  },
+  "landing.a4AgentTraces.080": {
+    "message": "및"
+  },
+  "landing.trackB.028": {
+    "message": "함께하는"
+  },
+  "landing.HackathonTrackBPage.081": {
+    "message": "및"
+  },
+  "landing.AiAnalysisForm.015": {
+    "message": "및"
+  },
+  "landing.events.001": {
+    "message": "행사"
+  },
+  "landing.events.data.001": {
+    "message": "커뮤니티의 소식을 만나보세요. 협력과 혁신, 지식 공유를 통해 함께 연결하고 배우며 성장하세요!"
+  },
+  "landing.events.002": {
+    "message": "누락된 행사가 있나요? 여기를 클릭해 알려주세요"
+  },
+  "landing.events.data.002": {
+    "message": "데이터 레이크와 데이터베이스 연결: Iceberg 실시간 쿼리"
+  },
+  "landing.events.data.003": {
+    "message": "Apache Doris 웨비나"
+  },
+  "landing.events.data.004": {
+    "message": "2025년 9월 23일 오후 7시 EST"
+  },
+  "landing.events.data.005": {
+    "message": "2025년 9월 23일"
+  },
+  "landing.events.data.006": {
+    "message": "온라인"
+  },
+  "landing.events.003": {
+    "message": "이 세션에서는 Apache Doris가 Iceberg 테이블에 대한 실시간 쿼리를 지원하는 방법을 자세히 살펴봅니다. 업계의 관심이 높아지는 과제인 유연성과 높은 성능을 모두 갖춘 실시간 쿼리 구현을 다룹니다."
+  },
+  "landing.events.004": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.007": {
+    "message": "NebulaGraph × Apache Doris 밋업: 핀테크의 새로운 패러다임"
+  },
+  "landing.events.data.008": {
+    "message": "Apache Doris 밋업"
+  },
+  "landing.events.data.009": {
+    "message": "2025년 8월 22일 오후 1:30~5:00 (GMT+8)"
+  },
+  "landing.events.data.010": {
+    "message": "2025년 8월 22일"
+  },
+  "landing.events.data.011": {
+    "message": "홍콩 센트럴 Cotton Tree Drive 8, Fairmont House 14층 4·5호실"
+  },
+  "landing.events.005": {
+    "message": "NebulaGraph와 Apache Doris가 공동 주최하는 이번 행사에는 업계 리더와 기술 전문가가 참여해 최신 그래프 및 분석 기술이 금융 리스크 관리, 관측성, 규정 준수를 어떻게 바꾸고 있는지 살펴봅니다."
+  },
+  "landing.events.006": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.012": {
+    "message": "Apache Doris를 활용한 실시간 IoT 분석"
+  },
+  "landing.events.data.013": {
+    "message": "2025년 8월 20일 오후 5:00~7:00 PDT"
+  },
+  "landing.events.data.014": {
+    "message": "2025년 8월 20일"
+  },
+  "landing.events.data.015": {
+    "message": "Plug and Play Tech Center, 440 N Wolfe Rd, Sunnyvale, CA 94085"
+  },
+  "landing.events.007": {
+    "message": "EMQ와 VeloDB가 함께하는 개발자 밋업에서 MQTT와 Apache Doris를 사용해 확장 가능한 실시간 데이터 파이프라인을 구축하는 방법을 알아보세요."
+  },
+  "landing.events.008": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.016": {
+    "message": "Snowflake에서 Apache Doris로 마이그레이션"
+  },
+  "landing.events.data.017": {
+    "message": "2025년 7월 22일 오전 11:00~오후 12:00 IST"
+  },
+  "landing.events.data.018": {
+    "message": "2025년 7월 22일"
+  },
+  "landing.events.009": {
+    "message": "Snowflake를 사용하면서 비용 절감이나 유연성 향상을 위해 오픈 소스로의 전환을 고려하고 있다면 다음 VeloDB 웨비나를 놓치지 마세요!"
+  },
+  "landing.events.010": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.019": {
+    "message": "Apache Doris: AI 시대의 초고속 분석 및 검색 데이터베이스"
+  },
+  "landing.events.data.020": {
+    "message": "2025년 6월 26일 오후 7~8시 EDT"
+  },
+  "landing.events.data.021": {
+    "message": "2025년 6월 26일"
+  },
+  "landing.events.011": {
+    "message": "Apache Doris PMC 의장이자 VeloDB 기술 부사장인 Rayner Chen이 Doris가 AI 시대에 맞게 설계된 이유를 설명합니다. 실시간 분석의 미래를 만들어 가는 전문가의 이야기를 직접 들어보세요."
+  },
+  "landing.events.012": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.022": {
+    "message": "Apache Doris의 컴퓨트·스토리지 분리 모드 살펴보기"
+  },
+  "landing.events.data.023": {
+    "message": "2025년 3월 27일 21:00~22:00 GMT+8"
+  },
+  "landing.events.data.024": {
+    "message": "2025년 3월 27일"
+  },
+  "landing.events.013": {
+    "message": "Apache Doris PMC 의장이 Doris의 컴퓨트·스토리지 분리 모드를 자세히 설명합니다."
+  },
+  "landing.events.014": {
+    "message": "행사 표지 이미지"
+  },
+  "landing.events.data.025": {
+    "message": "2025년 로드맵 해설"
+  },
+  "landing.events.data.026": {
+    "message": "Apache Doris 2025년 로드맵 해설"
+  },
+  "landing.events.data.027": {
+    "message": "2025년 3월 20일 21:00~22:00 GMT+8"
+  },
+  "landing.events.data.028": {
+    "message": "2025년 3월 20일"
+  },
+  "landing.events.015": {
+    "message": "2025년 Apache Doris의 주요 개발 방향을 함께 자세히 살펴보세요!"
+  },
+  "landing.events.016": {
+    "message": "주소 아이콘"
+  },
+  "landing.events.data.029": {
+    "message": "Doris Summit 2025 | AI 시대의 실시간 분석 및 검색 지원"
+  },
+  "landing.events.data.030": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.017": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.status.upcoming": {
+    "message": "예정"
+  },
+  "landing.events.status.processing": {
+    "message": "진행 중"
+  },
+  "landing.events.status.completed": {
+    "message": "종료"
+  },
+  "landing.events.018": {
+    "message": "날짜 아이콘"
+  },
+  "landing.events.seo.title": {
+    "message": "Apache Doris 커뮤니티 행사"
+  },
+  "landing.events.seo.description": {
+    "message": "Apache Doris 커뮤니티 행사, 기술 밋업, 웨비나를 살펴보세요."
+  },
+  "landing.events.019": {
+    "message": "행사 진행 언어:"
+  },
+  "landing.events.020": {
+    "message": "영어"
+  },
+  "landing.events.021": {
+    "message": "중국어"
+  },
+  "landing.events.022": {
+    "message": "더 보기"
+  },
+  "landing.roadmap.data.001": {
+    "message": "개발 방향 이해하기"
+  },
+  "landing.CommunityRoadmap.001": {
+    "message": "로드맵"
+  },
+  "landing.CommunityRoadmap.002": {
+    "message": "Apache Doris의 개발 방향을 정하는 큰 흐름과 우선순위부터 살펴보세요."
+  },
+  "landing.roadmap.data.002": {
+    "message": "이슈 #60036"
+  },
+  "landing.CommunityRoadmap.003": {
+    "message": "GitHub에서 Apache Doris 2026년 로드맵 읽기(새 탭에서 열림)"
+  },
+  "landing.roadmap.data.003": {
+    "message": "진행 중인 작업 확인하기"
+  },
+  "landing.CommunityRoadmap.004": {
+    "message": "추적 이슈"
+  },
+  "landing.CommunityRoadmap.005": {
+    "message": "기능, 개선 및 엔지니어링 작업을 주제별로 조율하는 이슈를 살펴보세요."
+  },
+  "landing.roadmap.data.004": {
+    "message": "레이블로 최신 현황 검색"
+  },
+  "landing.CommunityRoadmap.006": {
+    "message": "GitHub에서 진행 중인 Apache Doris 추적 이슈 보기(새 탭에서 열림)"
+  },
+  "landing.roadmap.data.005": {
+    "message": "기여할 작업 찾기"
+  },
+  "landing.CommunityRoadmap.007": {
+    "message": "첫 기여에 적합한 이슈"
+  },
+  "landing.CommunityRoadmap.008": {
+    "message": "신규 기여자가 시작하기 쉬운 작업을 모아 놓은 안내를 확인하세요."
+  },
+  "landing.roadmap.data.006": {
+    "message": "이슈 #17176"
+  },
+  "landing.CommunityRoadmap.009": {
+    "message": "GitHub에서 Apache Doris 첫 기여 이슈 살펴보기(새 탭에서 열림)"
+  },
+  "landing.roadmap.data.007": {
+    "message": "유지 관리 종료 예정"
+  },
+  "landing.roadmap.data.008": {
+    "message": "2026년 8월"
+  },
+  "landing.CommunityRoadmap.010": {
+    "message": "마지막 4.0.x 패치 릴리스를 끝으로 유지 관리 기간이 종료됩니다."
+  },
+  "landing.roadmap.data.009": {
+    "message": "유지 관리 중"
+  },
+  "landing.roadmap.data.010": {
+    "message": "매월"
+  },
+  "landing.CommunityRoadmap.011": {
+    "message": "정기 유지 관리 중이며 대략 매월 4.1.x 패치가 릴리스됩니다."
+  },
+  "landing.roadmap.data.011": {
+    "message": "계획됨"
+  },
+  "landing.roadmap.data.012": {
+    "message": "2026년 9월"
+  },
+  "landing.CommunityRoadmap.012": {
+    "message": "멀티모달 레이크하우스와 검색 기능 강화에 중점을 둔 기능 릴리스입니다."
+  },
+  "landing.roadmap.data.013": {
+    "message": "2026년 11월"
+  },
+  "landing.CommunityRoadmap.013": {
+    "message": "실시간 증분 계산에 중점을 둔 기능 릴리스입니다."
+  },
+  "landing.CommunityRoadmap.014": {
+    "message": "↗"
+  },
+  "landing.CommunityRoadmap.015": {
+    "message": "커뮤니티 개발"
+  },
+  "landing.CommunityRoadmap.016": {
+    "message": "Apache Doris 로드맵, 진행 중인 추적 이슈, 처음 참여하기 좋은 기여 기회를 살펴보세요."
+  },
+  "landing.CommunityRoadmap.017": {
+    "message": "앞으로 만들어 갈"
+  },
+  "landing.CommunityRoadmap.018": {
+    "message": "기능을 살펴보세요."
+  },
+  "landing.CommunityRoadmap.019": {
+    "message": "Apache Doris는 계획과 개발 과정을 공개합니다."
+  },
+  "landing.CommunityRoadmap.020": {
+    "message": "이 안내를 통해 개발 방향과 진행 중인 엔지니어링 작업을 파악하고 기여할 곳을 찾아보세요."
+  },
+  "landing.CommunityRoadmap.021": {
+    "message": "커뮤니티 개발 링크"
+  },
+  "landing.CommunityRoadmap.022": {
+    "message": "GitHub에서 열림 ·"
+  },
+  "landing.CommunityRoadmap.023": {
+    "message": "릴리스 계획"
+  },
+  "landing.CommunityRoadmap.024": {
+    "message": "커뮤니티가 향후 몇 달간 제공할 예정인 내용입니다. 일정은 현재 예상이며 변경될 수 있습니다."
+  },
+  "landing.CommunityRoadmap.025": {
+    "message": "전체 릴리스 노트 →"
+  },
+  "landing.CommunityRoadmap.026": {
+    "message": "기여 가이드 읽기 →"
+  },
+  "landing.CommunityReportNext.001": {
+    "message": "Apache Doris의 미래를 함께 만들어 가세요"
+  },
+  "landing.CommunityReportNext.002": {
+    "message": "설문에 참여해 더 나은 Doris 커뮤니티를 만드는 데 도움을 주세요."
+  },
+  "landing.CommunityReportNext.003": {
+    "message": "논의하거나 개발하고 싶은 Doris 기능이 있나요?"
+  },
+  "landing.CommunityReportNext.004": {
+    "message": "GitHub 이슈에 의견을 남겨주세요."
+  },
+  "landing.reports.past": {
+    "message": "지난 보고서…"
+  },
+  "landing.CommunityReportNext.005": {
+    "message": "커뮤니티 보고서 - Apache Doris"
+  },
+  "landing.CommunityReportNext.006": {
+    "message": "Apache Doris 커뮤니티의 주간 보고서입니다. 병합된 기능과 수정 사항, 신규 기여자, 주목할 만한 논의를 확인하세요."
+  },
+  "landing.CommunityReportNext.007": {
+    "message": "보고서 및 커뮤니티 의견"
+  },
+  "landing.CommunityReportNext.008": {
+    "message": "주간 보고서"
+  },
+  "landing.CommunityReportNext.009": {
+    "message": "최신"
+  },
+  "landing.CommunityReportNext.010": {
+    "message": "지난 주간 보고서 보기"
+  },
+  "landing.CommunityReportNext.011": {
+    "message": "커뮤니티 의견 링크"
+  },
+  "landing.report.fallback": {
+    "message": "이 보고서는 영어로 표시됩니다. 사이트 탐색 메뉴는 선택한 언어로 유지됩니다."
+  },
+  "landing.CommunityReportNext.012": {
+    "message": "커뮤니티 주간 보고서"
+  },
+  "landing.CommunityReportNext.013": {
+    "message": "개요"
+  },
+  "landing.CommunityReportNext.014": {
+    "message": "주요 내용"
+  },
+  "landing.CommunityReportNext.015": {
+    "message": "저장소"
+  },
+  "landing.CommunityReportNext.016": {
+    "message": "시나리오별"
+  },
+  "landing.CommunityReportNext.017": {
+    "message": "이번 주에는 보고할 내용이 없습니다."
+  },
+  "landing.CommunityReportNext.018": {
+    "message": " 시나리오"
+  },
+  "landing.CommunityReportNext.019": {
+    "message": "커뮤니티 활동 현황"
+  },
+  "landing.CommunityReportNext.020": {
+    "message": "병합된 PR"
+  },
+  "landing.CommunityReportNext.021": {
+    "message": "새 이슈"
+  },
+  "landing.CommunityReportNext.022": {
+    "message": "기여자"
+  },
+  "landing.events.mediaLanguage": {
+    "message": "행사 포스터와 연결된 녹화 영상은 원래 언어로 제공됩니다. 중국어 행사 설명은 중국어로 표시됩니다."
+  },
+  "landing.report.english": {
+    "message": "영어"
+  },
+  "landing.CommunityReportNext.023": {
+    "message": "병합됨"
+  },
+  "landing.CommunityReportNext.024": {
+    "message": "진행 중"
+  },
+  "landing.CommunityReportNext.025": {
+    "message": "새로 등록됨"
+  },
+  "landing.courseModules.001": {
+    "message": "Apache Doris 개요"
+  },
+  "landing.courseModules.002": {
+    "message": "엔진 알아보기"
+  },
+  "landing.courseModules.003": {
+    "message": "아키텍처, 데이터 구성, 스토리지 모델, 쿼리 실행 및 최적화."
+  },
+  "landing.courseModules.004": {
+    "message": "설치 가이드"
+  },
+  "landing.courseModules.005": {
+    "message": "Doris 배포"
+  },
+  "landing.courseModules.006": {
+    "message": "아키텍처를 선택하고 환경에 맞는 배포 절차를 따르세요."
+  },
+  "landing.courseModules.007": {
+    "message": "테이블 가이드"
+  },
+  "landing.courseModules.008": {
+    "message": "테이블 설계"
+  },
+  "landing.courseModules.009": {
+    "message": "데이터 모델, 정렬 키, 파티셔닝, 버케팅, 인덱스 및 실용적인 스키마를 선택하세요."
+  },
+  "landing.courseModules.010": {
+    "message": "데이터 작업 가이드"
+  },
+  "landing.courseModules.011": {
+    "message": "데이터 이동 및 관리"
+  },
+  "landing.courseModules.012": {
+    "message": "워크로드에 맞는 방식으로 데이터를 적재, 업데이트, 삭제하고 내보내세요."
+  },
+  "landing.courseModules.013": {
+    "message": "데이터 쿼리 가이드"
+  },
+  "landing.courseModules.014": {
+    "message": "쿼리 및 최적화"
+  },
+  "landing.courseModules.015": {
+    "message": "조인, 분석, 윈도 함수, UDF, 복합 타입 및 구체화 뷰를 활용하세요."
+  },
+  "landing.courseModules.016": {
+    "message": "레이크하우스 가이드"
+  },
+  "landing.courseModules.017": {
+    "message": "레이크하우스 연결"
+  },
+  "landing.courseModules.018": {
+    "message": "카탈로그 연결, SQL 통합 쿼리, 오픈 테이블 가속 및 데이터 쓰기 작업을 수행하세요."
+  },
+  "landing.hackathonEvent.001": {
+    "message": "Apache Doris 해커톤"
+  },
+  "landing.hackathonEvent.002": {
+    "message": "하이브리드 검색 앱"
+  },
+  "landing.courseExtra.hackathonEvent.001": {
+    "message": "60~120분"
+  },
+  "landing.hackathonEvent.003": {
+    "message": "하나의 SQL 쿼리로 키워드, 의미 검색, 필터를 처리합니다. Apache Doris 문서를 검색하는 검색창을 만들어 보세요."
+  },
+  "landing.hackathonEvent.004": {
+    "message": "MCP로 Doris에 질문하기"
+  },
+  "landing.courseExtra.hackathonEvent.002": {
+    "message": "45~90분"
+  },
+  "landing.hackathonEvent.005": {
+    "message": "Doris MCP Server로 AI 어시스턴트에 Doris를 연결하고 실제 SQL로 실제 질문에 답하게 해보세요."
+  },
+  "landing.hackathonEvent.006": {
+    "message": "로그 검색 탐색기"
+  },
+  "landing.courseExtra.hackathonEvent.003": {
+    "message": "60~120분"
+  },
+  "landing.hackathonEvent.007": {
+    "message": "모든 작업을 SQL로 처리하는 작은 Kibana를 만듭니다. 200,000줄의 로그에서 BM25 검색, 필터링, 실시간 집계를 수행합니다."
+  },
+  "landing.hackathonEvent.008": {
+    "message": "에이전트 트레이스 탐색기"
+  },
+  "landing.courseExtra.hackathonEvent.004": {
+    "message": "60~120분"
+  },
+  "landing.hackathonEvent.009": {
+    "message": "구조가 제각각인 AI 에이전트 JSON을 VARIANT 열에 저장하고 일반 열처럼 쿼리합니다. 스키마 마이그레이션이 필요 없습니다."
+  },
+  "landing.hackathonEvent.010": {
+    "message": "문서에서 데모로"
+  },
+  "landing.courseExtra.hackathonEvent.005": {
+    "message": "30~60분"
+  },
+  "landing.hackathonEvent.011": {
+    "message": "기능 문서 하나를 골라 로컬 Doris에서 실행하고 풀 리퀘스트로 단계별 데모를 추가하세요."
+  },
+  "landing.hackathonEvent.012": {
+    "message": "트랙 B · "
+  },
+  "landing.HackathonCourseTrack.001": {
+    "message": "트랙 선택"
+  },
+  "landing.HackathonCourseTrack.002": {
+    "message": "Doris 101"
+  },
+  "landing.HackathonCourseTrack.003": {
+    "message": "무료 강좌"
+  },
+  "landing.HackathonCourseTrack.004": {
+    "message": "해커톤"
+  },
+  "landing.HackathonCourseTrack.005": {
+    "message": "공개 과제 ·"
+  },
+  "landing.HackathonCourseTrack.006": {
+    "message": "언제든 시작 가능"
+  },
+  "landing.HackathonCourseTrack.007": {
+    "message": "Apache Doris 해커톤"
+  },
+  "landing.HackathonCourseTrack.008": {
+    "message": "Apache Doris로 실제 작동하는 결과물을 자신의 속도에 맞춰 만들어 보세요."
+  },
+  "landing.HackathonCourseTrack.009": {
+    "message": "언제든 시작해 한 번에 끝내거나 며칠 저녁에 나눠 진행하세요. Doris 경험이 없어도 됩니다."
+  },
+  "landing.HackathonCourseTrack.010": {
+    "message": "트랙 A · Doris로 개발"
+  },
+  "landing.HackathonCourseTrack.011": {
+    "message": "과제"
+  },
+  "landing.HackathonCourseTrack.013": {
+    "message": "트랙 B ·"
+  },
+  "landing.HackathonCourseTrack.014": {
+    "message": ": 풀 리퀘스트로 문서 페이지에 단계별 데모를 추가합니다."
+  },
+  "landing.HackathonCourseTrack.015": {
+    "message": "과제 개요 열기 →"
+  },
+  "landing.HackathonCourseTrack.016": {
+    "message": "Apache Doris Contributor 배지"
+  },
+  "landing.HackathonCourseTrack.017": {
+    "message": "과제에 참여한 뒤 결과물을 다음 채널에 공유하세요:"
+  },
+  "landing.HackathonCourseTrack.018": {
+    "message": "Slack에서 Contributor 배지를 받으세요."
+  },
+  "landing.CourseLanding.002": {
+    "message": "더 많은 Doris 101 강좌가 곧 제공됩니다"
+  },
+  "landing.CourseLanding.003": {
+    "message": "더 많은 강좌"
+  },
+  "landing.CourseLanding.004": {
+    "message": "곧 공개"
+  },
+  "landing.CourseLanding.006": {
+    "message": "Doris 학습 경로"
+  },
+  "landing.CourseLanding.007": {
+    "message": "자기 주도 학습 · 누구나 참여 가능"
+  },
+  "landing.CourseLanding.008": {
+    "message": "6개 강좌 제공 중 · 계속 추가 예정"
+  },
+  "landing.CourseLanding.009": {
+    "message": "Apache Doris 101 강좌"
+  },
+  "landing.CourseLanding.010": {
+    "message": "아키텍처, 배포, 테이블 설계, 데이터 작업, 분석 쿼리 및 레이크하우스 연결을 다루는 무료 Apache Doris 101 강좌입니다."
+  },
+  "landing.CourseLanding.011": {
+    "message": "무료 강좌 · 입문자 환영"
+  },
+  "landing.CourseLanding.012": {
+    "message": "Doris를 배우고"
+  },
+  "landing.CourseLanding.013": {
+    "message": "직접 만들어 보세요."
+  },
+  "landing.CourseLanding.014": {
+    "message": "OLAP 데이터베이스의 기초부터 시작해 Apache Doris의 심화 주제와 실무 활용으로 나아갑니다. 일반적인 데이터베이스 개념과 Doris의 핵심 기능을 연결해 Doris를 더 잘 이해하고 활용하도록 돕습니다. 배운 데이터베이스 지식은 다른 시스템에도 적용할 수 있습니다."
+  },
+  "landing.CourseLanding.015": {
+    "message": "개요부터 시작하기 →"
+  },
+  "landing.HackathonTaskPage.001": {
+    "message": "Doris 시작"
+  },
+  "landing.HackathonTaskPage.002": {
+    "message": "호스트"
+  },
+  "landing.HackathonTaskPage.003": {
+    "message": "포트"
+  },
+  "landing.HackathonTaskPage.004": {
+    "message": "사용자"
+  },
+  "landing.HackathonTaskPage.005": {
+    "message": "비밀번호 없음"
+  },
+  "landing.HackathonTaskPage.006": {
+    "message": "데이터베이스"
+  },
+  "landing.HackathonTaskPage.007": {
+    "message": "· 추후 발표"
+  },
+  "landing.HackathonTaskPage.008": {
+    "message": "시작"
+  },
+  "landing.HackathonTaskPage.009": {
+    "message": "테이블"
+  },
+  "landing.HackathonTaskPage.010": {
+    "message": "프롬프트"
+  },
+  "landing.HackathonTaskPage.011": {
+    "message": "현재 위치"
+  },
+  "landing.HackathonTaskPage.012": {
+    "message": "과제 개요 열기"
+  },
+  "landing.HackathonTaskPage.013": {
+    "message": "현재 읽는 단계의 코드"
+  },
+  "landing.HackathonTaskPage.014": {
+    "message": "개략도"
+  },
+  "landing.HackathonTaskPage.015": {
+    "message": "만들 결과물 · 와이어프레임(스크린샷 아님)"
+  },
+  "landing.HackathonTaskPage.016": {
+    "message": "숨기기"
+  },
+  "landing.HackathonTaskPage.017": {
+    "message": "표시"
+  },
+  "landing.HackathonTaskPage.018": {
+    "message": "코드 보기"
+  },
+  "landing.HackathonTaskPage.019": {
+    "message": "스타터 키트"
+  },
+  "landing.HackathonTaskPage.020": {
+    "message": "다운로드"
+  },
+  "landing.HackathonTaskPage.021": {
+    "message": "진행 경로"
+  },
+  "landing.HackathonTaskPage.024": {
+    "message": "→ 완료"
+  },
+  "landing.HackathonTaskPage.025": {
+    "message": "완료"
+  },
+  "landing.HackathonTaskPage.026": {
+    "message": "→ 제출"
+  },
+  "landing.HackathonTaskPage.027": {
+    "message": "강좌"
+  },
+  "landing.HackathonTaskPage.028": {
+    "message": "자기 주도 과제 · 언제든 시작 · 등록 불필요"
+  },
+  "landing.HackathonTaskPage.029": {
+    "message": "해커톤 과제"
+  },
+  "landing.HackathonTaskPage.030": {
+    "message": "해커톤"
+  },
+  "landing.HackathonTaskPage.031": {
+    "message": "과제"
+  },
+  "landing.HackathonTaskPage.032": {
+    "message": "막히는 부분이 있나요?"
+  },
+  "landing.HackathonTaskPage.033": {
+    "message": "질문할 곳:"
+  },
+  "landing.HackathonTaskPage.034": {
+    "message": "참여할 곳:"
+  },
+  "landing.HackathonTaskPage.035": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.HackathonTaskPage.036": {
+    "message": ". 유지 관리자와 다른 참가자가 도와드립니다."
+  },
+  "landing.HackathonTaskPage.037": {
+    "message": "다음 이름의 폴더에 결과물을 넣으세요:"
+  },
+  "landing.HackathonTaskPage.038": {
+    "message": "본인의 GitHub ID"
+  },
+  "landing.HackathonTaskPage.039": {
+    "message": ". 코드와 README를 포함하고, README에 기능, 실행 방법, 스크린샷 또는 GIF 한 개, 사용한 Doris 기능을 적어주세요."
+  },
+  "landing.HackathonTaskPage.040": {
+    "message": "풀 리퀘스트 만들기"
+  },
+  "landing.HackathonTaskPage.041": {
+    "message": "다음 위치에 추가하세요:"
+  },
+  "landing.HackathonTaskPage.042": {
+    "message": "저장 경로:"
+  },
+  "landing.HackathonTaskPage.043": {
+    "message": ". 포크 후 push하거나 GitHub의 다음 기능을 사용하세요:"
+  },
+  "landing.HackathonTaskPage.044": {
+    "message": "Add file → Upload files"
+  },
+  "landing.HackathonTaskPage.045": {
+    "message": ". 그 외에 작성할 항목은 없습니다."
+  },
+  "landing.HackathonTaskPage.046": {
+    "message": "README"
+  },
+  "landing.HackathonTaskPage.047": {
+    "message": "제출하고 배지 받기"
+  },
+  "landing.HackathonTaskPage.048": {
+    "message": "참여 → 제출 → 배지 받기."
+  },
+  "landing.HackathonTaskPage.049": {
+    "message": "공유하기"
+  },
+  "landing.HackathonTaskPage.050": {
+    "message": "공유할 곳:"
+  },
+  "landing.HackathonTaskPage.051": {
+    "message": "참여할 곳:"
+  },
+  "landing.HackathonTaskPage.052": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.HackathonTaskPage.053": {
+    "message": ": 풀 리퀘스트 또는 저장소 링크와 함께 스크린샷이나 짧은 데모를 공유하세요. 질문, 제출, 배지 관련 안내는 모두 이곳에서 진행됩니다."
+  },
+  "landing.HackathonTaskPage.054": {
+    "message": "과제에 참여하는 모든 분께 다음 배지를 드립니다:"
+  },
+  "landing.HackathonTaskPage.055": {
+    "message": "Apache Doris Contributor 배지"
+  },
+  "landing.HackathonTaskPage.056": {
+    "message": ". Doris 프로젝트에 병합된 풀 리퀘스트가 없어도 됩니다. 마감일이 없으니 필요한 만큼 시간을 쓰세요. 팀 참여도 가능하지만 필수는 아닙니다. 모든 팀원의 GitHub ID를 다음에 적어주세요:"
+  },
+  "landing.HackathonTaskPage.057": {
+    "message": "Apache Doris Contributor 배지"
+  },
+  "landing.HackathonTaskPage.058": {
+    "message": "Contributor 배지 안내"
+  },
+  "landing.HackathonTaskPage.059": {
+    "message": "전체 과제"
+  },
+  "landing.HackathonTaskPage.060": {
+    "message": "강좌로 돌아가기"
+  },
+  "landing.HackathonTaskPage.061": {
+    "message": " · Doris 해커톤"
+  },
+  "landing.HackathonTaskPage.062": {
+    "message": " 트랙 A 과제: "
+  },
+  "landing.HackathonTaskPage.063": {
+    "message": ": 자기 주도 방식이며 스타터 키트와 로컬에서 실행 가능한 Doris가 제공됩니다."
+  },
+  "landing.HackathonTaskPage.064": {
+    "message": "트랙 A · 과제"
+  },
+  "landing.HackathonTaskPage.065": {
+    "message": "한눈에 보기"
+  },
+  "landing.HackathonTaskPage.066": {
+    "message": "스타터 키트 받기"
+  },
+  "landing.HackathonTaskPage.067": {
+    "message": "스타터 키트 받기"
+  },
+  "landing.HackathonTaskPage.068": {
+    "message": "Doris 시작"
+  },
+  "landing.HackathonTaskPage.069": {
+    "message": "환경 준비"
+  },
+  "landing.HackathonTaskPage.070": {
+    "message": "만들 결과물과 Doris로 간단히 구현하는 이유를 알아보고 클러스터를 실행합니다."
+  },
+  "landing.HackathonTaskPage.071": {
+    "message": "만들 결과물"
+  },
+  "landing.HackathonTaskPage.072": {
+    "message": "개략도"
+  },
+  "landing.HackathonTaskPage.073": {
+    "message": "만들 결과물 · 와이어프레임(스크린샷 아님)"
+  },
+  "landing.HackathonTaskPage.074": {
+    "message": "개략도는 코드 패널 상단에 있습니다"
+  },
+  "landing.HackathonTaskPage.075": {
+    "message": "Doris로 구현할 때의 장점"
+  },
+  "landing.HackathonTaskPage.076": {
+    "message": "패널: 테이블 정의의 인덱스 부분"
+  },
+  "landing.HackathonTaskPage.077": {
+    "message": "시작하기 전에"
+  },
+  "landing.HackathonTaskPage.078": {
+    "message": "명령어 복사"
+  },
+  "landing.HackathonTaskPage.079": {
+    "message": "데이터"
+  },
+  "landing.HackathonTaskPage.080": {
+    "message": "패널 → 테이블: 전체 테이블 정의"
+  },
+  "landing.HackathonTaskPage.081": {
+    "message": "AI로 개발하기"
+  },
+  "landing.HackathonTaskPage.082": {
+    "message": "다음을 복사하세요: "
+  },
+  "landing.hackathonCommon.109": {
+    "message": "참여할 곳:"
+  },
+  "landing.hackathonCommon.110": {
+    "message": "Apache Doris Slack"
+  },
+  "landing.courseExtra.a1HybridSearch.011": {
+    "message": "60~120분"
+  },
+  "landing.a1HybridSearch.028": {
+    "message": "테이블"
+  },
+  "landing.courseExtra.a2Mcp.010": {
+    "message": "45~90분"
+  },
+  "landing.courseExtra.a3LogSearch.010": {
+    "message": "60~120분"
+  },
+  "landing.a3LogSearch.030": {
+    "message": "테이블"
+  },
+  "landing.courseExtra.a4AgentTraces.011": {
+    "message": "60~120분"
+  },
+  "landing.a4AgentTraces.030": {
+    "message": "테이블"
+  },
+  "landing.HackathonTrackBPage.024": {
+    "message": "시작"
+  },
+  "landing.HackathonTrackBPage.032": {
+    "message": "트랙 B · "
+  },
+  "landing.HackathonTrackBPage.033": {
+    "message": " · Doris 해커톤"
+  },
+  "landing.HackathonTrackBPage.036": {
+    "message": "트랙 B ·"
+  },
+  "landing.HackathonTrackBPage.041": {
+    "message": "한눈에 보기"
+  },
+  "landing.HackathonTrackBPage.042": {
+    "message": "Doris 시작"
+  },
+  "landing.HackathonTrackBPage.044": {
+    "message": "환경 준비"
+  },
+  "landing.HackathonTrackBPage.060": {
+    "message": "제출하고 배지 받기"
+  },
+  "landing.HackathonTrackBPage.062": {
+    "message": "시작하기 전에"
+  },
+  "landing.HackathonTrackBPage.063": {
+    "message": "명령어 복사"
+  },
+  "landing.AiAnalysisForm.005": {
+    "message": "영어"
+  },
+  "landing.profile.status.completed": {
+    "message": "종료"
+  },
+  "landing.ProfileDag.027": {
+    "message": "숨기기"
+  },
+  "landing.ProfileDag.028": {
+    "message": "표시"
+  },
+  "landing.trackB.task.B6.time": {
+    "message": "30~60분"
+  },
+  "landing.reports.2026-10-12.stats.0.label": {
+    "message": "병합된 PR"
+  },
+  "landing.reports.2026-10-12.stats.1.label": {
+    "message": "새 이슈"
+  },
+  "landing.reports.2026-10-12.stats.2.label": {
+    "message": "기여자"
+  },
+  "landing.download.unavailableBuild": {
+    "message": "{version}에는 {architecture} 빌드가 없습니다"
+  },
+  "landing.HackathonTaskPage.083": {
+    "message": "AI 에이전트가 빠지기 쉬운 Doris 함정"
+  },
+  "landing.HackathonTaskPage.084": {
+    "message": "구현하기"
+  },
+  "landing.HackathonTaskPage.085": {
+    "message": "마일스톤,"
+  },
+  "landing.HackathonTaskPage.087": {
+    "message": ". 패널은 현재 읽는 단계를 따라갑니다."
+  },
+  "landing.HackathonTaskPage.088": {
+    "message": "마일스톤"
+  },
+  "landing.HackathonTaskPage.089": {
+    "message": "핵심 절"
+  },
+  "landing.HackathonTaskPage.090": {
+    "message": "L"
+  },
+  "landing.HackathonTaskPage.091": {
+    "message": "확인 사항"
+  },
+  "landing.HackathonTaskPage.092": {
+    "message": "완성하기"
+  },
+  "landing.HackathonTaskPage.093": {
+    "message": "체크리스트를 확인하고 결과물을 공유한 뒤 배지를 받으세요."
+  },
+  "landing.HackathonTaskPage.094": {
+    "message": "완료 기준"
+  },
+  "landing.HackathonTaskPage.095": {
+    "message": "체크리스트"
+  },
+  "landing.HackathonTaskPage.096": {
+    "message": "추가 도전 과제"
+  },
+  "landing.HackathonTaskPage.097": {
+    "message": "문제 해결 및 참고 자료"
+  },
+  "landing.HackathonTaskPage.098": {
+    "message": "참고 자료"
+  },
+  "landing.sketch.column.page": {
+    "message": "페이지"
+  },
+  "landing.sketch.column.section": {
+    "message": "섹션"
+  },
+  "landing.sketch.column.scoreDistance": {
+    "message": "점수 / 거리"
+  },
+  "landing.sketch.column.score": {
+    "message": "점수"
+  },
+  "landing.sketch.column.distance": {
+    "message": "거리"
+  },
+  "landing.sketch.column.time": {
+    "message": "시간"
+  },
+  "landing.sketch.column.service": {
+    "message": "서비스"
+  },
+  "landing.sketch.column.level": {
+    "message": "수준"
+  },
+  "landing.sketch.column.message": {
+    "message": "메시지"
+  },
+  "landing.sketch.mode.keyword": {
+    "message": "키워드"
+  },
+  "landing.sketch.mode.vector": {
+    "message": "벡터"
+  },
+  "landing.sketch.mode.hybrid": {
+    "message": "하이브리드"
+  },
+  "landing.HackathonSketch.001": {
+    "message": "범주"
+  },
+  "landing.HackathonSketch.002": {
+    "message": "SQL 보기"
+  },
+  "landing.HackathonSketch.003": {
+    "message": "SQL 보기: 이 모드에서 실행하는 정확한 쿼리"
+  },
+  "landing.sketch.question.1": {
+    "message": "hackathon 데이터베이스에는 어떤 테이블이 있으며 각각 어떤 용도인가요?"
+  },
+  "landing.sketch.question.2": {
+    "message": "app_logs에 서비스와 로그 수준별로 몇 줄의 로그가 있나요?"
+  },
+  "landing.sketch.question.3": {
+    "message": "공간을 확보하기 위해 INFO 로그를 모두 삭제해 주세요."
+  },
+  "landing.HackathonSketch.004": {
+    "message": "사용 중인 AI 클라이언트"
+  },
+  "landing.HackathonSketch.006": {
+    "message": "Doris MCP Server"
+  },
+  "landing.courseExtra.HackathonSketch.002": {
+    "message": "읽기 전용"
+  },
+  "landing.HackathonSketch.010": {
+    "message": "거부됨 · 서버와 사용자가 읽기 전용입니다"
+  },
+  "landing.HackathonSketch.011": {
+    "message": "실행된 SQL"
+  },
+  "landing.HackathonSketch.012": {
+    "message": "서비스"
+  },
+  "landing.HackathonSketch.014": {
+    "message": "전체"
+  },
+  "landing.HackathonSketch.015": {
+    "message": "수준"
+  },
+  "landing.HackathonSketch.017": {
+    "message": "전체"
+  },
+  "landing.HackathonSketch.018": {
+    "message": "시간"
+  },
+  "landing.HackathonSketch.020": {
+    "message": "하루 전체"
+  },
+  "landing.HackathonSketch.021": {
+    "message": "패싯"
+  },
+  "landing.HackathonSketch.022": {
+    "message": "5분당 오류 수"
+  },
+  "landing.HackathonSketch.023": {
+    "message": "payload · 추론된 하위 열"
+  },
+  "landing.HackathonSketch.024": {
+    "message": "도구 p95"
+  },
+  "landing.HackathonSketch.025": {
+    "message": "오류율"
+  },
+  "landing.courseExtra.HackathonSketch.008": {
+    "message": "토큰 수"
+  },
+  "landing.HackathonSketch.026": {
+    "message": "세션"
+  },
+  "landing.HackathonSketch.027": {
+    "message": "세션 타임라인"
+  },
+  "landing.hackathonCommon.001": {
+    "message": "Docker가 실행 중이고 Doris 이미지를 내려받았습니다."
+  },
+  "landing.hackathonCommon.002": {
+    "message": "약"
+  },
+  "landing.hackathonCommon.003": {
+    "message": ". 최초 한 번만 필요합니다. 용량이 크므로 미리 내려받으세요. Docker Desktop(macOS)과 Docker Engine(Linux) 모두 사용할 수 있습니다."
+  },
+  "landing.hackathonCommon.004": {
+    "message": "Doris가 실행 중입니다."
+  },
+  "landing.hackathonCommon.005": {
+    "message": "하나의 컨테이너에서 FE와 BE가 각각 하나씩 실행됩니다. 준비가 완료되면"
+  },
+  "landing.hackathonCommon.006": {
+    "message": "표시되는 값이"
+  },
+  "landing.hackathonCommon.007": {
+    "message": "로 바뀝니다. 보통 시작 후 약 30초가 걸립니다."
+  },
+  "landing.hackathonCommon.008": {
+    "message": "이 이미지 정보"
+  },
+  "landing.hackathonCommon.009": {
+    "message": "연결할 수 있습니다."
+  },
+  "landing.hackathonCommon.010": {
+    "message": "컨테이너에 MySQL 클라이언트가 포함되어 있어 별도로 설치할 필요가 없습니다. 다른 MySQL 클라이언트로도 연결할 수 있습니다:"
+  },
+  "landing.hackathonCommon.011": {
+    "message": " 사용자:"
+  },
+  "landing.hackathonCommon.012": {
+    "message": ", 비밀번호는 없습니다."
+  },
+  "landing.hackathonCommon.013": {
+    "message": "스타터 키트를 받았습니다."
+  },
+  "landing.hackathonCommon.014": {
+    "message": "다운로드 후 압축 해제:"
+  },
+  "landing.hackathonCommon.015": {
+    "message": ". 이 페이지의 명령어는 키트의 다음 폴더 안에서 실행하세요:"
+  },
+  "landing.hackathonCommon.016": {
+    "message": "폴더. 포함된"
+  },
+  "landing.hackathonCommon.017": {
+    "message": "가 명령을 감싸고 있습니다:"
+  },
+  "landing.hackathonCommon.018": {
+    "message": "도구가 준비되었습니다."
+  },
+  "landing.hackathonCommon.019": {
+    "message": "MySQL 드라이버를 지원하는 언어라면 무엇이든 가능합니다(Python"
+  },
+  "landing.hackathonCommon.020": {
+    "message": ", Node"
+  },
+  "landing.hackathonCommon.021": {
+    "message": ", Go"
+  },
+  "landing.hackathonCommon.022": {
+    "message": ", Java JDBC 등). AI 코딩 어시스턴트 사용도 환영합니다."
+  },
+  "landing.hackathonCommon.023": {
+    "message": "AI 코딩 에이전트와 함께 개발하는 것을 권장합니다."
+  },
+  "landing.hackathonCommon.024": {
+    "message": "Doris 4.x의 검색 및 AI 기능은 대부분의 모델 학습 데이터보다 최신이므로 SQL을 작성하기 전에 올바른 맥락을 제공하세요:"
+  },
+  "landing.hackathonCommon.025": {
+    "message": "다음"
+  },
+  "landing.hackathonCommon.026": {
+    "message": "컨텍스트 프롬프트"
+  },
+  "landing.hackathonCommon.027": {
+    "message": "를 에이전트에 붙여 넣으세요."
+  },
+  "landing.hackathonCommon.028": {
+    "message": "참조할 곳을 안내하세요:"
+  },
+  "landing.hackathonCommon.029": {
+    "message": "이 페이지에 나열된 참고 문서"
+  },
+  "landing.hackathonCommon.030": {
+    "message": "및"
+  },
+  "landing.hackathonCommon.031": {
+    "message": "(스타터 키트 내). 많은 코딩 에이전트가 이 파일을 자동으로 읽습니다."
+  },
+  "landing.hackathonCommon.032": {
+    "message": "코드에 연결하기 전에 모든 SQL 문을 실행 중인 클러스터에서 직접 실행하게 하세요."
+  },
+  "landing.hackathonCommon.033": {
+    "message": "더 나아가 다음을 연결하세요:"
+  },
+  "landing.hackathonCommon.034": {
+    "message": "Doris MCP Server"
+  },
+  "landing.hackathonCommon.035": {
+    "message": "(참고:"
+  },
+  "landing.hackathonCommon.036": {
+    "message": "과제 A2"
+  },
+  "landing.hackathonCommon.037": {
+    "message": ")를 연결하면 에이전트가 직접 스키마를 확인하고 쿼리를 테스트할 수 있습니다."
+  },
+  "landing.hackathonCommon.038": {
+    "message": "다음 사용:"
+  },
+  "landing.hackathonCommon.039": {
+    "message": "로 텍스트 검색"
+  },
+  "landing.hackathonCommon.040": {
+    "message": "(OR),"
+  },
+  "landing.hackathonCommon.041": {
+    "message": "(AND),"
+  },
+  "landing.hackathonCommon.042": {
+    "message": ". 이들은 역색인을 사용합니다"
+  },
+  "landing.hackathonCommon.043": {
+    "message": "다음 호출:"
+  },
+  "landing.hackathonCommon.044": {
+    "message": "를 임의의 쿼리에서 사용"
+  },
+  "landing.hackathonCommon.045": {
+    "message": "에 필요한 조건:"
+  },
+  "landing.hackathonCommon.046": {
+    "message": "조건자를 다음 절에 지정:"
+  },
+  "landing.hackathonCommon.048": {
+    "message": ". 그렇지 않으면 Doris가 쿼리를 거부합니다"
+  },
+  "landing.hackathonCommon.049": {
+    "message": "반올림, 조인 또는 순위 계산 대상:"
+  },
+  "landing.hackathonCommon.050": {
+    "message": "를 같은 쿼리에서 수행"
+  },
+  "landing.hackathonCommon.051": {
+    "message": "다음은 그대로 유지하세요:"
+  },
+  "landing.hackathonCommon.052": {
+    "message": "를 단일 테이블 쿼리에서 그대로 사용하세요. 반올림, 조인 또는"
+  },
+  "landing.hackathonCommon.053": {
+    "message": "작업은 바깥 쿼리에서 수행하고, 다음 대신 하위 쿼리를 사용하세요:"
+  },
+  "landing.hackathonCommon.054": {
+    "message": "CTE"
+  },
+  "landing.hackathonCommon.055": {
+    "message": "를 다음 안에서 사용:"
+  },
+  "landing.hackathonCommon.056": {
+    "message": "/ 집계"
+  },
+  "landing.hackathonCommon.057": {
+    "message": "허용되지 않습니다. 패싯 집계에는 동일한 다음 조건을 재사용하세요:"
+  },
+  "landing.hackathonCommon.058": {
+    "message": "제외:"
+  },
+  "landing.hackathonCommon.059": {
+    "message": "BM25와 벡터 거리를 하나의 다음 절로 정렬:"
+  },
+  "landing.hackathonCommon.060": {
+    "message": ", 또는 다음 선택:"
+  },
+  "landing.hackathonCommon.061": {
+    "message": "를 벡터 순위 쿼리에서 사용"
+  },
+  "landing.hackathonCommon.062": {
+    "message": "지원되지 않습니다. 하이브리드 검색은 다음 조합입니다:"
+  },
+  "landing.hackathonCommon.063": {
+    "message": "사전 필터 + 벡터"
+  },
+  "landing.hackathonCommon.064": {
+    "message": ", 거리를 표시하거나 두 순위 목록을 RRF로 결합합니다"
+  },
+  "landing.hackathonCommon.065": {
+    "message": "쿼리 벡터를 드라이버 매개변수로 전달"
+  },
+  "landing.hackathonCommon.066": {
+    "message": "리스트는 다음으로 변환됩니다:"
+  },
+  "landing.hackathonCommon.067": {
+    "message": "(pymysql) 또는 8개의 개별 인수(mysql2). 다음 문자열을 전달하세요:"
+  },
+  "landing.hackathonCommon.068": {
+    "message": "그리고 다음과 같이 작성하세요:"
+  },
+  "landing.hackathonCommon.069": {
+    "message": ", 또는 리터럴을 직접 넣으세요"
+  },
+  "landing.hackathonCommon.070": {
+    "message": "코사인 ANN 지표 찾기"
+  },
+  "landing.hackathonCommon.071": {
+    "message": "ANN 지표는"
+  },
+  "landing.hackathonCommon.073": {
+    "message": "입니다. 벡터를 단위 길이로 정규화하면 L2 거리 오름차순과 코사인 유사도 내림차순의 순위가 같습니다"
+  },
+  "landing.hackathonCommon.074": {
+    "message": "형 변환 없이 VARIANT 경로 비교"
+  },
+  "landing.hackathonCommon.075": {
+    "message": ". VARIANT는 키 열이나 조인 열로 사용할 수 없습니다"
+  },
+  "landing.hackathonCommon.076": {
+    "message": "다음에 기대하는 동작:"
+  },
+  "landing.hackathonCommon.077": {
+    "message": "로 JSON 경로 목록 표시"
+  },
+  "landing.hackathonCommon.078": {
+    "message": "실행:"
+  },
+  "landing.hackathonCommon.079": {
+    "message": "를 먼저 실행하세요. 그러면"
+  },
+  "landing.hackathonCommon.080": {
+    "message": "에 추론된 모든 하위 열과 타입이 표시됩니다"
+  },
+  "landing.hackathonCommon.081": {
+    "message": "ORM 사용"
+  },
+  "landing.hackathonCommon.082": {
+    "message": "일반 MySQL 드라이버와 직접 작성한 SQL을 권장합니다. ORM은 Doris가 지원하지 않는 문을 생성할 수 있습니다"
+  },
+  "landing.hackathonCommon.083": {
+    "message": "(macOS)"
+  },
+  "landing.hackathonCommon.084": {
+    "message": "Docker Desktop을 시작하세요. 이미 실행 중이면 CLI 링크를 연결하세요:"
+  },
+  "landing.hackathonCommon.085": {
+    "message": "이미지를 내려받을 때"
+  },
+  "landing.hackathonCommon.086": {
+    "message": "삭제할 항목:"
+  },
+  "landing.hackathonCommon.087": {
+    "message": "필드가 있는 파일:"
+  },
+  "landing.hackathonCommon.088": {
+    "message": "(로컬 개발 환경에서만)"
+  },
+  "landing.hackathonCommon.089": {
+    "message": "다른 프로세스(주로 다른 Doris)가 9030, 8030 또는 8040 포트를 사용 중입니다. 실행 중인 컨테이너를 확인하세요("
+  },
+  "landing.hackathonCommon.090": {
+    "message": "), 또는 다른 호스트 포트를 노출하세요. 예:"
+  },
+  "landing.hackathonCommon.091": {
+    "message": ", 이 경우 19030에 연결하세요"
+  },
+  "landing.hackathonCommon.092": {
+    "message": "이전에 실행한 적이 있습니다:"
+  },
+  "landing.hackathonCommon.093": {
+    "message": ". 처음부터 다시 시작하려면"
+  },
+  "landing.hackathonCommon.094": {
+    "message": "(데이터가 삭제됩니다)"
+  },
+  "landing.hackathonCommon.095": {
+    "message": "컨테이너가 종료되거나 다음 상태로 바뀌지 않음:"
+  },
+  "landing.hackathonCommon.096": {
+    "message": "확인:"
+  },
+  "landing.hackathonCommon.097": {
+    "message": ". 대개 메모리 문제입니다. Docker Desktop에 6 GB 이상을 할당하세요(Settings → Resources). Apple Silicon에서는 다음을 추가하지 마세요:"
+  },
+  "landing.hackathonCommon.098": {
+    "message": "실행:"
+  },
+  "landing.hackathonCommon.099": {
+    "message": "를 먼저 실행하거나 다음으로 연결하세요:"
+  },
+  "landing.hackathonCommon.100": {
+    "message": "다음 추가:"
+  },
+  "landing.a1HybridSearch.011": {
+    "message": "키워드"
+  },
+  "landing.a1HybridSearch.013": {
+    "message": "벡터"
+  },
+  "landing.a1HybridSearch.015": {
+    "message": "하이브리드"
+  },
+  "landing.a1HybridSearch.083": {
+    "message": "하이브리드"
+  },
+  "landing.a1HybridSearch.099": {
+    "message": "SQL 보기"
+  },
+  "landing.a2Mcp.048": {
+    "message": "표시되는 값이"
+  },
+  "landing.a2Mcp.067": {
+    "message": "수준"
+  },
+  "landing.a2Mcp.070": {
+    "message": "수준"
+  },
+  "landing.a2Mcp.091": {
+    "message": "실행:"
+  },
+  "landing.a4AgentTraces.063": {
+    "message": "세션 타임라인"
+  },
+  "landing.a4AgentTraces.073": {
+    "message": "실행:"
+  },
+  "landing.a4AgentTraces.094": {
+    "message": "과제 A2"
+  },
+  "landing.HackathonTrackBPage.070": {
+    "message": "완성하기"
+  },
+  "landing.HackathonTrackBPage.089": {
+    "message": "완료 기준"
+  },
+  "landing.HackathonTrackBPage.090": {
+    "message": "체크리스트"
+  },
+  "landing.HackathonTrackBPage.095": {
+    "message": "추가 도전 과제"
+  },
+  "landing.HackathonTrackBPage.102": {
+    "message": "문제 해결 및 참고 자료"
+  },
+  "landing.HackathonTrackBPage.103": {
+    "message": "참고 자료"
+  },
+  "landing.hackathonCommon.101": {
+    "message": "조건자,"
+  },
+  "landing.hackathonCommon.102": {
+    "message": "및"
+  },
+  "landing.hackathonCommon.103": {
+    "message": "그리고 다음을 유지하세요:"
+  },
+  "landing.hackathonCommon.104": {
+    "message": "를 다른 식으로 감싸지 마세요(위의 함정 참고)"
+  },
+  "landing.hackathonCommon.105": {
+    "message": "압축 해제 도구가 실행 권한을 제거했습니다:"
+  },
+  "landing.hackathonCommon.106": {
+    "message": ", 또는 다음 실행:"
+  },
+  "landing.hackathonCommon.107": {
+    "message": "10분 이상 해결하지 못한 경우"
+  },
+  "landing.hackathonCommon.108": {
+    "message": "게시할 곳:"
+  },
+  "landing.a1HybridSearch.001": {
+    "message": "하이브리드 검색"
+  },
+  "landing.a1HybridSearch.002": {
+    "message": "앱"
+  },
+  "landing.a1HybridSearch.003": {
+    "message": "하나의 SQL 쿼리로 키워드, 의미 검색, 필터를 처리합니다. Apache Doris 문서를 검색하는 검색창을 만들어 보세요."
+  },
+  "landing.courseExtra.a1HybridSearch.012": {
+    "message": "입문자 환영"
+  },
+  "landing.courseExtra.a1HybridSearch.013": {
+    "message": "언어 자유 · CLI 또는 웹"
+  },
+  "landing.courseExtra.a1HybridSearch.014": {
+    "message": "AI 도구 사용 환영"
+  },
+  "landing.a1HybridSearch.004": {
+    "message": "단어와 의미를 모두 이해하는 검색창을 만듭니다."
+  },
+  "landing.a1HybridSearch.005": {
+    "message": "BM25로 순위를 매긴 정확한 키워드 일치, 벡터 인덱스의 의미적 이웃, 구조화된 필터를 Doris 테이블 하나와 SQL 문 하나로 처리합니다. Elasticsearch나 별도의 벡터 데이터베이스가 필요 없습니다."
+  },
+  "landing.a1HybridSearch.006": {
+    "message": "작은 검색 앱을 만듭니다(CLI, 노트북, 웹 페이지 중 자유롭게 선택). 검색 대상은"
+  },
+  "landing.a1HybridSearch.007": {
+    "message": "Apache Doris 문서의 299개 섹션"
+  },
+  "landing.a1HybridSearch.008": {
+    "message": "입니다. 사용자가 다음과 같은 질문을 입력하고"
+  },
+  "landing.a1HybridSearch.010": {
+    "message": ", 범주를 선택한 뒤 다음 세 모드를 전환합니다:"
+  },
+  "landing.a1HybridSearch.012": {
+    "message": "BM25로 순위를 매긴 전문 검색 결과."
+  },
+  "landing.a1HybridSearch.014": {
+    "message": "임베딩 유사도에 따른 최근접 이웃."
+  },
+  "landing.a1HybridSearch.016": {
+    "message": "키워드 사전 필터 후 벡터 순위 계산(추가 과제로 Reciprocal Rank Fusion)."
+  },
+  "landing.a1HybridSearch.017": {
+    "message": "각 결과에는 페이지, 섹션, 점수(키워드) 또는 거리(벡터·하이브리드), 문서 링크가 표시됩니다. ‘SQL 보기’를 켜면 Doris가 실행한 정확한 쿼리를 확인할 수 있습니다."
+  },
+  "landing.a1HybridSearch.018": {
+    "message": "테이블 하나에 인덱스 두 개."
+  },
+  "landing.a1HybridSearch.019": {
+    "message": "텍스트의 역색인과 벡터의 HNSW ANN 인덱스가 같은 테이블에 있습니다. 플래너가 역색인으로 사전 필터링한 후 남은 후보를 ANN 인덱스로 정렬합니다."
+  },
+  "landing.a1HybridSearch.020": {
+    "message": "SQL에서 검색 엔진 순위 계산."
+  },
+  "landing.a1HybridSearch.021": {
+    "message": "로 Lucene과 같은 관련성 함수인 BM25를 일반적인 다음 문에서 사용할 수 있습니다:"
+  },
+  "landing.a1HybridSearch.022": {
+    "message": "필터는 일반 SQL로."
+  },
+  "landing.a1HybridSearch.023": {
+    "message": "범주, 페이지,"
+  },
+  "landing.a1HybridSearch.024": {
+    "message": "목록과 범위 조건을 다음 옆에 작성합니다:"
+  },
+  "landing.a1HybridSearch.025": {
+    "message": "와 같은"
+  },
+  "landing.a1HybridSearch.026": {
+    "message": "절에 작성합니다."
+  },
+  "landing.a1HybridSearch.027": {
+    "message": ": Doris 4.x 문서의 47개 주요 기능 페이지이며 섹션마다 한 행입니다:"
+  },
+  "landing.a1HybridSearch.030": {
+    "message": "값"
+  },
+  "landing.a1HybridSearch.031": {
+    "message": "(필터 드롭다운용):"
+  },
+  "landing.a1HybridSearch.032": {
+    "message": "벡터 정보."
+  },
+  "landing.a1HybridSearch.033": {
+    "message": "완전히 오프라인으로 실행할 수 있도록 스타터 키트에는 영어 전용 소형"
+  },
+  "landing.a1HybridSearch.034": {
+    "message": "간이 임베딩 함수"
+  },
+  "landing.a1HybridSearch.036": {
+    "message": "가 포함되어 있습니다(출력값은 모든 자릿수까지 같습니다). 텍스트를 수동으로 정의한 8개 개념 차원에 매핑합니다:"
+  },
+  "landing.a1HybridSearch.037": {
+    "message": "검색, 벡터 및 AI, JSON, 레이크하우스, 수집, 성능, 데이터 모델, 운영"
+  },
+  "landing.a1HybridSearch.038": {
+    "message": ". 동의어 목록을 사용한 뒤 결과를 단위 길이로 정규화합니다. 테이블의 벡터도 같은 함수로 생성했으므로 쿼리 벡터는 같은 공간에 있습니다. 의도적으로 단순하게 만들었지만 벡터 검색의 장점을 보여줍니다:"
+  },
+  "landing.a1HybridSearch.040": {
+    "message": "는 JSON이나 VARIANT라는 단어 없이도 VARIANT 페이지를 찾습니다. 추가 과제에서 실제 모델로 교체합니다."
+  },
+  "landing.a1HybridSearch.041": {
+    "message": "컨텍스트 프롬프트"
+  },
+  "landing.a1HybridSearch.042": {
+    "message": "에이전트에 붙여 넣기"
+  },
+  "landing.a1HybridSearch.043": {
+    "message": "데이터 적재"
+  },
+  "landing.courseExtra.a1HybridSearch.001": {
+    "message": "5분"
+  },
+  "landing.a1HybridSearch.044": {
+    "message": "스타터 키트 폴더 안에서 실행하세요:"
+  },
+  "landing.a1HybridSearch.045": {
+    "message": "M0 · 데이터 적재"
+  },
+  "landing.a1HybridSearch.046": {
+    "message": "적재가 끝나면 범주별 건수가 표시됩니다:"
+  },
+  "landing.a1HybridSearch.047": {
+    "message": "7개 범주, 299개 섹션"
+  },
+  "landing.a1HybridSearch.048": {
+    "message": "으로 구성됩니다."
+  },
+  "landing.a1HybridSearch.049": {
+    "message": "BM25 키워드 검색"
+  },
+  "landing.a1HybridSearch.050": {
+    "message": "키워드 검색"
+  },
+  "landing.courseExtra.a1HybridSearch.002": {
+    "message": "15분"
+  },
+  "landing.a1HybridSearch.051": {
+    "message": "SQL 셸을 여세요("
+  },
+  "landing.a1HybridSearch.052": {
+    "message": ", 또는 위의"
+  },
+  "landing.a1HybridSearch.053": {
+    "message": "명령어). 다음을 실행하세요:"
+  },
+  "landing.a1HybridSearch.054": {
+    "message": "M1 · BM25 키워드 검색"
+  },
+  "landing.a1HybridSearch.055": {
+    "message": "다음을 시도해 보세요:"
+  },
+  "landing.a1HybridSearch.056": {
+    "message": "(모든 단어 포함) 및"
+  },
+  "landing.a1HybridSearch.057": {
+    "message": "(인접하고 순서가 같음). 입력창 → SQL → 결과 목록을 연결하세요. 사용자 입력은 드라이버 매개변수로 전달하고("
+  },
+  "landing.a1HybridSearch.058": {
+    "message": "), SQL에 직접 붙여 넣지 마세요. 작은따옴표 하나만 있어도 쿼리가 깨집니다."
+  },
+  "landing.a1HybridSearch.060": {
+    "message": "가 이 방식을 사용합니다."
+  },
+  "landing.a1HybridSearch.061": {
+    "message": "질문 전체를 입력했나요? english 파서는 불용어를 유지하므로"
+  },
+  "landing.a1HybridSearch.062": {
+    "message": "는 테이블의 약 3분의 1에 일치합니다. 대신 다음을 전달하세요:"
+  },
+  "landing.a1HybridSearch.063": {
+    "message": "(간이 임베딩 함수에서 가져옴). 불용어와 함께 다음 단어도 제거합니다:"
+  },
+  "landing.a1HybridSearch.067": {
+    "message": ", 거의 모든 섹션에 등장하는 단어입니다."
+  },
+  "landing.a1HybridSearch.068": {
+    "message": "다음 검색어의 상위 결과:"
+  },
+  "landing.a1HybridSearch.069": {
+    "message": "는 Vector Index와 Hybrid Search 페이지에서 나옵니다. 첫 결과는"
+  },
+  "landing.a1HybridSearch.071": {
+    "message": "필터 추가"
+  },
+  "landing.courseExtra.a1HybridSearch.003": {
+    "message": "10분"
+  },
+  "landing.a1HybridSearch.072": {
+    "message": "M2 · 필터 추가"
+  },
+  "landing.a1HybridSearch.073": {
+    "message": "드롭다운이나 CLI 플래그로 범주를 선택하게 만드세요(7개 값은 데이터 절에 나열되어 있습니다). 추가 조건은 일반 SQL입니다:"
+  },
+  "landing.a1HybridSearch.074": {
+    "message": "Vector Index 섹션은 사라집니다. 해당 페이지의 범주는"
+  },
+  "landing.a1HybridSearch.075": {
+    "message": "이며 Hybrid Search가 최상위로 이동합니다."
+  },
+  "landing.a1HybridSearch.076": {
+    "message": "벡터 검색"
+  },
+  "landing.courseExtra.a1HybridSearch.004": {
+    "message": "15분"
+  },
+  "landing.a1HybridSearch.077": {
+    "message": "코드나 명령줄에서 간이 임베딩 함수로 질문을 임베딩하세요:"
+  },
+  "landing.a1HybridSearch.078": {
+    "message": "M3 · 질문 임베딩"
+  },
+  "landing.a1HybridSearch.079": {
+    "message": "M3 · 벡터 검색"
+  },
+  "landing.a1HybridSearch.080": {
+    "message": "코드에서는 SQL을 고정하고 벡터 문자열을 매개변수로 전달하세요:"
+  },
+  "landing.a1HybridSearch.081": {
+    "message": ". Python 리스트나 JavaScript 배열을 매개변수로 넘기면 작동하지 않습니다."
+  },
+  "landing.a1HybridSearch.082": {
+    "message": "질문에 JSON이나 VARIANT가 없어도 상위 6개 결과는 모두 VARIANT 섹션입니다. 같은 단어로 키워드 검색을 하면 Metadata Cache와 Binlog 섹션이 섞입니다."
+  },
+  "landing.courseExtra.a1HybridSearch.005": {
+    "message": "20분"
+  },
+  "landing.a1HybridSearch.084": {
+    "message": "질문:"
+  },
+  "landing.a1HybridSearch.086": {
+    "message": ". 벡터는 이 질문의 간이 임베딩입니다. 키워드 필터는 다음 단어가 있는 섹션만 남깁니다:"
+  },
+  "landing.a1HybridSearch.088": {
+    "message": "M4 · 하이브리드"
+  },
+  "landing.a1HybridSearch.089": {
+    "message": "키워드 사전 필터(역색인)"
+  },
+  "landing.a1HybridSearch.090": {
+    "message": "구조화된 필터"
+  },
+  "landing.a1HybridSearch.091": {
+    "message": "벡터 순위 계산(ANN)"
+  },
+  "landing.a1HybridSearch.092": {
+    "message": "앱에서는 하나의 입력을 두 처리에 전달합니다:"
+  },
+  "landing.a1HybridSearch.093": {
+    "message": "를 다음에 사용:"
+  },
+  "landing.a1HybridSearch.094": {
+    "message": "를 벡터로 사용합니다."
+  },
+  "landing.a1HybridSearch.095": {
+    "message": "는 여러 단어에 대해 느슨한 필터입니다. 엄격한 조건이 필요하면 ‘반드시 포함’ 입력창이나 다음을 제공하세요:"
+  },
+  "landing.a1HybridSearch.096": {
+    "message": ". 여기서는 다음을 선택하지 마세요:"
+  },
+  "landing.a1HybridSearch.097": {
+    "message": ". 거리를 표시하세요."
+  },
+  "landing.a1HybridSearch.098": {
+    "message": "모드 전환(키워드 / 벡터 / 하이브리드)과 다음을 추가하세요:"
+  },
+  "landing.a1HybridSearch.100": {
+    "message": "전환 기능. 같은 질문의 세 결과 목록을 비교해 어디서, 왜 차이가 나는지 살펴보세요."
+  },
+  "landing.a1HybridSearch.101": {
+    "message": "모든 결과에 Kafka가 포함되며 첫 결과는"
+  },
+  "landing.a1HybridSearch.103": {
+    "message": "벡터 모드만 사용하면"
+  },
+  "landing.a1HybridSearch.105": {
+    "message": "가 같은 질문에서 첫 결과가 됩니다."
+  },
+  "landing.courseExtra.a1HybridSearch.006": {
+    "message": "사용자가 자유로운 텍스트로 검색할 수 있습니다(CLI 인수, 프롬프트 또는 입력창)."
+  },
+  "landing.a1HybridSearch.106": {
+    "message": "세 모드가 작동합니다:"
+  },
+  "landing.a1HybridSearch.107": {
+    "message": "키워드"
+  },
+  "landing.a1HybridSearch.108": {
+    "message": "(BM25, 사용 함수:"
+  },
+  "landing.a1HybridSearch.109": {
+    "message": "벡터"
+  },
+  "landing.a1HybridSearch.110": {
+    "message": "(ANN),"
+  },
+  "landing.a1HybridSearch.111": {
+    "message": "하이브리드"
+  },
+  "landing.a1HybridSearch.112": {
+    "message": "(키워드 사전 필터 + 벡터 순위 계산)."
+  },
+  "landing.courseExtra.a1HybridSearch.007": {
+    "message": "구조화된 필터가 하나 이상 있습니다(범주)."
+  },
+  "landing.courseExtra.a1HybridSearch.008": {
+    "message": "결과에 페이지, 섹션, 점수 또는 거리가 표시되며 실행한 SQL을 볼 수 있습니다."
+  },
+  "landing.courseExtra.a1HybridSearch.009": {
+    "message": "풀 리퀘스트로 제출합니다. GitHub ID 이름의 폴더에 코드와 README(실행 방법 및 스크린샷 한 개)를 포함합니다."
+  },
+  "landing.a1HybridSearch.113": {
+    "message": "Reciprocal Rank Fusion."
+  },
+  "landing.a1HybridSearch.114": {
+    "message": "BM25 목록과 벡터 목록을 다음으로 결합하세요:"
+  },
+  "landing.a1HybridSearch.115": {
+    "message": "(하나의 SQL 문 안에서):"
+  },
+  "landing.a1HybridSearch.116": {
+    "message": "(스타터 키트 내)는 각 목록의 순위를 다음으로 계산합니다:"
+  },
+  "landing.a1HybridSearch.117": {
+    "message": "단순한 다음 쿼리의 한 단계 바깥에서:"
+  },
+  "landing.a1HybridSearch.118": {
+    "message": "쿼리. 이후 다음으로 결합합니다:"
+  },
+  "landing.a1HybridSearch.119": {
+    "message": ". 참고:"
+  },
+  "landing.a1HybridSearch.120": {
+    "message": "RRF 페이지"
+  },
+  "landing.a1HybridSearch.121": {
+    "message": "에서 4개 행의 예시로 같은 패턴을 설명합니다."
+  },
+  "landing.a1HybridSearch.122": {
+    "message": "다음으로 실제 임베딩 생성:"
+  },
+  "landing.a1HybridSearch.123": {
+    "message": "(본인 API 키 사용): AI 리소스를 만들고 다음을 생성하세요:"
+  },
+  "landing.a1HybridSearch.124": {
+    "message": "에 모델의 다음 값을 사용하세요:"
+  },
+  "landing.a1HybridSearch.125": {
+    "message": ", 다음으로 채우세요:"
+  },
+  "landing.a1HybridSearch.126": {
+    "message": "(벡터 열은"
+  },
+  "landing.a1HybridSearch.127": {
+    "message": "이므로 업데이트 대신 삽입합니다). 쿼리도 SQL에서 임베딩하세요. 참고:"
+  },
+  "landing.a1HybridSearch.128": {
+    "message": "임베딩"
+  },
+  "landing.courseExtra.a1HybridSearch.010": {
+    "message": "입력 즉시 검색"
+  },
+  "landing.a1HybridSearch.130": {
+    "message": "일치하는 용어 강조 표시"
+  },
+  "landing.a1HybridSearch.131": {
+    "message": "(Doris는 점수만 반환하고 강조 표시는 반환하지 않으므로 앱에서 구현하세요)."
+  },
+  "landing.a1HybridSearch.132": {
+    "message": "지연 시간 배지"
+  },
+  "landing.a1HybridSearch.133": {
+    "message": ": 각 모드에 걸린 시간을 밀리초로 표시하세요."
+  },
+  "landing.a1HybridSearch.134": {
+    "message": "벡터 리터럴이 비어 있거나 자리표시자가 남아 있습니다. 다음 출력값을 붙여 넣으세요:"
+  },
+  "landing.a1HybridSearch.135": {
+    "message": "드라이버가 배열 매개변수를 8개 값으로 확장했습니다. 다음을 사용해 벡터를 문자열로 전달하세요:"
+  },
+  "landing.a1HybridSearch.136": {
+    "message": "하이브리드 검색"
+  },
+  "landing.a1HybridSearch.137": {
+    "message": "BM25"
+  },
+  "landing.a1HybridSearch.138": {
+    "message": "전문 검색"
+  },
+  "landing.a1HybridSearch.139": {
+    "message": "벡터 인덱스"
+  },
+  "landing.a1HybridSearch.140": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a1HybridSearch.141": {
+    "message": "임베딩"
+  },
+  "landing.a2Mcp.001": {
+    "message": "서비스와 수준별 로그 줄 수를 확인합니다. 대상:"
+  },
+  "landing.a2Mcp.002": {
+    "message": "기본 집계"
+  },
+  "landing.a2Mcp.003": {
+    "message": "11:00부터 12:30까지 서비스별 ERROR 수를 5분 단위로 보여주세요. 어떤 서비스에서 가장 먼저 급증했나요?"
+  },
+  "landing.a2Mcp.004": {
+    "message": "시간 버킷 및 추론"
+  },
+  "landing.a2Mcp.005": {
+    "message": "‘payment gateway timeout’과 가장 관련 있는 로그 10줄을 관련성 순서로 찾아주세요."
+  },
+  "landing.a2Mcp.006": {
+    "message": "Doris 전문 검색 + BM25(사용 함수:"
+  },
+  "landing.a2Mcp.007": {
+    "message": ", 또는 다음으로 대체:"
+  },
+  "landing.a2Mcp.008": {
+    "message": "p95 지연 시간이 가장 긴 에이전트 도구는 무엇이며 얼마나 자주 실패하나요?"
+  },
+  "landing.courseExtra.a2Mcp.011": {
+    "message": "입문자 환영"
+  },
+  "landing.courseExtra.a2Mcp.013": {
+    "message": "AI 도구 사용 환영"
+  },
+  "landing.courseExtra.a2Mcp.002": {
+    "message": "5분"
+  },
+  "landing.courseExtra.a2Mcp.003": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a2Mcp.004": {
+    "message": "10분"
+  },
+  "landing.courseExtra.a2Mcp.006": {
+    "message": "5분"
+  },
+  "landing.courseExtra.a3LogSearch.011": {
+    "message": "입문자 환영"
+  },
+  "landing.courseExtra.a3LogSearch.012": {
+    "message": "언어 자유 · CLI 또는 웹"
+  },
+  "landing.courseExtra.a3LogSearch.013": {
+    "message": "AI 도구 사용 환영"
+  },
+  "landing.a3LogSearch.036": {
+    "message": "컨텍스트 프롬프트"
+  },
+  "landing.a3LogSearch.037": {
+    "message": "에이전트에 붙여 넣기"
+  },
+  "landing.courseExtra.a3LogSearch.001": {
+    "message": "5분"
+  },
+  "landing.a3LogSearch.039": {
+    "message": "스타터 키트 폴더 안에서 실행하세요:"
+  },
+  "landing.a3LogSearch.045": {
+    "message": "BM25 키워드 검색"
+  },
+  "landing.a3LogSearch.046": {
+    "message": "키워드 검색"
+  },
+  "landing.courseExtra.a3LogSearch.002": {
+    "message": "15분"
+  },
+  "landing.a3LogSearch.047": {
+    "message": "M1 · BM25 키워드 검색"
+  },
+  "landing.courseExtra.a3LogSearch.003": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a3LogSearch.004": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a3LogSearch.005": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a3LogSearch.009": {
+    "message": "풀 리퀘스트로 제출합니다. GitHub ID 이름의 폴더에 코드와 README(실행 방법 및 스크린샷 한 개)를 포함합니다."
+  },
+  "landing.a3LogSearch.091": {
+    "message": "전문 검색"
+  },
+  "landing.a3LogSearch.092": {
+    "message": "BM25"
+  },
+  "landing.courseExtra.a4AgentTraces.014": {
+    "message": "AI 도구 사용 환영"
+  },
+  "landing.a4AgentTraces.039": {
+    "message": "컨텍스트 프롬프트"
+  },
+  "landing.a4AgentTraces.040": {
+    "message": "에이전트에 붙여 넣기"
+  },
+  "landing.courseExtra.a4AgentTraces.001": {
+    "message": "10분"
+  },
+  "landing.a4AgentTraces.042": {
+    "message": "스타터 키트 폴더 안에서 실행하세요:"
+  },
+  "landing.courseExtra.a4AgentTraces.002": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a4AgentTraces.003": {
+    "message": "15분"
+  },
+  "landing.courseExtra.a4AgentTraces.004": {
+    "message": "10분"
+  },
+  "landing.courseExtra.a4AgentTraces.005": {
+    "message": "20분"
+  },
+  "landing.courseExtra.a4AgentTraces.006": {
+    "message": "10분"
+  },
+  "landing.a4AgentTraces.102": {
+    "message": "전문 검색"
+  },
+  "landing.HackathonTrackBPage.019": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.trackB.chip.2": {
+    "message": "입문자 환영"
+  },
+  "landing.trackB.task.B1.doc": {
+    "message": "전문 검색"
+  },
+  "landing.trackB.task.B1.alsoSee.0": {
+    "message": "BM25"
+  },
+  "landing.trackB.task.B2.doc": {
+    "message": "벡터 인덱스"
+  },
+  "landing.trackB.task.B3.title": {
+    "message": "하이브리드 검색"
+  },
+  "landing.trackB.task.B3.doc": {
+    "message": "하이브리드 검색"
+  },
+  "landing.trackB.task.B3.alsoSee.0": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a2Mcp.009": {
+    "message": "VARIANT 경로 및 형 변환"
+  },
+  "landing.a2Mcp.010": {
+    "message": "벡터 검색의 사전 필터링을 설명하는 Doris 문서 섹션은 무엇인가요?"
+  },
+  "landing.a2Mcp.011": {
+    "message": "검색 대상:"
+  },
+  "landing.a2Mcp.012": {
+    "message": "Doris에 질문하기"
+  },
+  "landing.a2Mcp.013": {
+    "message": "MCP로"
+  },
+  "landing.a2Mcp.014": {
+    "message": "평소 사용하는 AI 어시스턴트에 Doris를 연결하고 실제 SQL로 실제 질문에 답하게 해보세요."
+  },
+  "landing.courseExtra.a2Mcp.012": {
+    "message": "Python 3.12+ · 모든 MCP 클라이언트"
+  },
+  "landing.a2Mcp.015": {
+    "message": "AI 어시스턴트를 Doris 데이터 분석가로 바꿔보세요."
+  },
+  "landing.a2Mcp.016": {
+    "message": "Apache Doris MCP Server는 MCP 지원 어시스턴트에 클러스터를 연결합니다. 연결한 뒤 어시스턴트가 해커톤 데이터를 탐색하고 SQL을 작성하며 평소 대시보드로 확인하던 질문에 답하게 해보세요."
+  },
+  "landing.a2Mcp.017": {
+    "message": "동작하는 구성을 만듭니다. 본인의 MCP 클라이언트가 공식 서버를 통해 로컬 Doris와 통신합니다:"
+  },
+  "landing.a2Mcp.018": {
+    "message": "Doris MCP Server 1.0"
+  },
+  "landing.a2Mcp.019": {
+    "message": ". 그리고 어시스턴트의 다음 동작을 간단히 정리합니다:"
+  },
+  "landing.a2Mcp.020": {
+    "message": "스스로 다음을 탐색:"
+  },
+  "landing.a2Mcp.021": {
+    "message": "테이블을 찾습니다."
+  },
+  "landing.a2Mcp.022": {
+    "message": "SQL을 작성하고 실행해 데이터 질문 세 개 이상에 답합니다."
+  },
+  "landing.a2Mcp.023": {
+    "message": "파괴적인 요청을 거부합니다(서버와 사용자가 읽기 전용이기 때문)."
+  },
+  "landing.a2Mcp.024": {
+    "message": "설계부터 읽기 전용."
+  },
+  "landing.a2Mcp.025": {
+    "message": "Doris MCP Server 1.0은 읽기 전용 기능만 제공합니다. 최종 권한은 Doris RBAC가 결정합니다."
+  },
+  "landing.a2Mcp.026": {
+    "message": "도구 나열 대신 8개 도메인으로 구성."
+  },
+  "landing.a2Mcp.027": {
+    "message": "카탈로그, 쿼리, 클러스터, 파이프라인,"
+  },
+  "landing.a2Mcp.028": {
+    "message": "검색"
+  },
+  "landing.a2Mcp.029": {
+    "message": ", 거버넌스, 레이크하우스, 시맨틱 도메인을 점진적으로 공개해 모델이 필요한 기능만 보도록 합니다."
+  },
+  "landing.courseExtra.a2Mcp.001": {
+    "message": "검색 기능 이해."
+  },
+  "landing.a2Mcp.030": {
+    "message": "해당"
+  },
+  "landing.a2Mcp.031": {
+    "message": "도메인은 텍스트, 벡터, 하이브리드 검색을 이해하므로 어시스턴트가 추측 대신 Doris 검색 기능을 사용할 수 있습니다."
+  },
+  "landing.a2Mcp.032": {
+    "message": "Python 3.12 이상 및 설치된 서버."
+  },
+  "landing.a2Mcp.033": {
+    "message": "확인 명령어:"
+  },
+  "landing.a2Mcp.034": {
+    "message": ". 약 80개 패키지를 내려받으므로 서버를 미리 설치하세요(명령어는 마일스톤 2 참고)."
+  },
+  "landing.a2Mcp.035": {
+    "message": "평소 사용하는 MCP 지원 AI 클라이언트"
+  },
+  "landing.a2Mcp.036": {
+    "message": "(및 해당 계정)."
+  },
+  "landing.a2Mcp.037": {
+    "message": "모든 해커톤 테이블이 적재되었습니다."
+  },
+  "landing.a2Mcp.038": {
+    "message": "스타터 키트 폴더에서 실행합니다. 마지막에 각 테이블의 행 수가 표시됩니다."
+  },
+  "landing.a2Mcp.039": {
+    "message": "이 과제 자체가 AI를 활용하는 과제입니다."
+  },
+  "landing.a2Mcp.040": {
+    "message": "아래 내용은 어시스턴트에게 Doris SQL을 가르칩니다. 첫 번째 추가 과제의 지침 파일을 만드는 출발점이 됩니다."
+  },
+  "landing.a2Mcp.041": {
+    "message": "지침 파일"
+  },
+  "landing.a2Mcp.042": {
+    "message": "클라이언트에 붙여 넣기"
+  },
+  "landing.a2Mcp.043": {
+    "message": "읽기 전용 사용자 만들기"
+  },
+  "landing.a2Mcp.044": {
+    "message": "읽기 전용 사용자"
+  },
+  "landing.a2Mcp.045": {
+    "message": "M1 · 읽기 전용 사용자"
+  },
+  "landing.a2Mcp.046": {
+    "message": "노트북에서도 LLM에 root 계정을 제공하지 마세요. SQL 셸에서 실행하거나 다음 파일을 적재하세요:"
+  },
+  "landing.a2Mcp.047": {
+    "message": "(스타터 키트 내)."
+  },
+  "landing.a2Mcp.049": {
+    "message": "대상:"
+  },
+  "landing.a2Mcp.050": {
+    "message": ", 쓰기 권한은 부여하지 않습니다."
+  },
+  "landing.a2Mcp.051": {
+    "message": "서버 설치 및 등록"
+  },
+  "landing.a2Mcp.052": {
+    "message": "서버 설치"
+  },
+  "landing.a2Mcp.053": {
+    "message": "M2 · 설치"
+  },
+  "landing.a2Mcp.054": {
+    "message": "클라이언트의 MCP 설정에 추가하세요(파일 이름과 위치는 클라이언트마다 다릅니다). 스타터 키트의 파일:"
+  },
+  "landing.a2Mcp.055": {
+    "message": "M2 · MCP 설정"
+  },
+  "landing.a2Mcp.056": {
+    "message": "클라이언트에 Doris 서버와 8개"
+  },
+  "landing.a2Mcp.057": {
+    "message": "도메인(catalog, cluster, governance, lakehouse, pipeline, query, search, semantic)이 표시됩니다."
+  },
+  "landing.a2Mcp.058": {
+    "message": "탐색하게 하기"
+  },
+  "landing.a2Mcp.059": {
+    "message": "질문:"
+  },
+  "landing.a2Mcp.060": {
+    "message": "‘hackathon 데이터베이스에는 어떤 테이블이 있으며 각각 어떤 용도인가요?’"
+  },
+  "landing.a2Mcp.061": {
+    "message": "어떤 기능을 호출하는지 살펴보세요."
+  },
+  "landing.a2Mcp.062": {
+    "message": "M3 · 어시스턴트에 질문"
+  },
+  "landing.a2Mcp.063": {
+    "message": "클라이언트에 붙여 넣기"
+  },
+  "landing.a2Mcp.064": {
+    "message": "실제 질문하기"
+  },
+  "landing.a2Mcp.065": {
+    "message": "실제 질문"
+  },
+  "landing.courseExtra.a2Mcp.005": {
+    "message": "20~40분"
+  },
+  "landing.a2Mcp.066": {
+    "message": "세 개 이상 선택하세요:"
+  },
+  "landing.a2Mcp.068": {
+    "message": "질문"
+  },
+  "landing.a2Mcp.069": {
+    "message": "검증 내용"
+  },
+  "landing.a2Mcp.071": {
+    "message": "질문"
+  },
+  "landing.a2Mcp.072": {
+    "message": "검증 내용"
+  },
+  "landing.a2Mcp.073": {
+    "message": "M4 · 질문"
+  },
+  "landing.a2Mcp.074": {
+    "message": "클라이언트에 붙여 넣기"
+  },
+  "landing.a2Mcp.075": {
+    "message": "각 답변에서 어시스턴트가 실행한 SQL을 보관하고 결과를 직접 확인하세요."
+  },
+  "landing.a2Mcp.076": {
+    "message": "제한 시험하기"
+  },
+  "landing.a2Mcp.077": {
+    "message": "질문:"
+  },
+  "landing.a2Mcp.078": {
+    "message": "‘공간을 확보하기 위해 INFO 로그를 모두 삭제해 주세요.’"
+  },
+  "landing.a2Mcp.079": {
+    "message": "결과를 기록하세요(예상 결과: 거부. 서버 응답:"
+  },
+  "landing.a2Mcp.080": {
+    "message": ", 그리고"
+  },
+  "landing.a2Mcp.081": {
+    "message": "에도 쓰기 권한이 없습니다)."
+  },
+  "landing.a2Mcp.082": {
+    "message": "M5 · 어시스턴트에 질문"
+  },
+  "landing.a2Mcp.083": {
+    "message": "클라이언트에 붙여 넣기"
+  },
+  "landing.courseExtra.a2Mcp.007": {
+    "message": "Doris MCP Server가 AI 클라이언트에 연결되어 있습니다(도구 목록 스크린샷)."
+  },
+  "landing.a2Mcp.084": {
+    "message": "최소"
+  },
+  "landing.a2Mcp.085": {
+    "message": "세 개"
+  },
+  "landing.a2Mcp.086": {
+    "message": "질문에 답하고 각 질문에 실행한 SQL과 결과가 있습니다."
+  },
+  "landing.courseExtra.a2Mcp.008": {
+    "message": "안전성 테스트 한 건을 기록합니다(쓰기 거부)."
+  },
+  "landing.courseExtra.a2Mcp.009": {
+    "message": "GitHub ID 폴더의 README에 클라이언트, 설정(비밀 정보 제외), 질의응답 및 혼란스럽거나 개선할 점 한 가지를 적습니다."
+  },
+  "landing.a2Mcp.087": {
+    "message": "어시스턴트에게 Doris 가르치기."
+  },
+  "landing.a2Mcp.088": {
+    "message": "재사용 가능한 지침 파일(클라이언트용 규칙, 스킬, 시스템 프롬프트)을 작성하세요. 포함할 내용:"
+  },
+  "landing.a2Mcp.089": {
+    "message": ", ANN 거리 함수 및 VARIANT 형 변환. 3~4단계 질문을 다시 하고 전후 정확도를 비교하세요."
+  },
+  "landing.a2Mcp.090": {
+    "message": "HTTP 전송."
+  },
+  "landing.a2Mcp.092": {
+    "message": "그리고 두 번째 클라이언트를 다음에 연결하세요:"
+  },
+  "landing.a2Mcp.093": {
+    "message": "쿼리가 느린 이유 묻기."
+  },
+  "landing.a2Mcp.094": {
+    "message": "다음 탐색:"
+  },
+  "landing.a2Mcp.095": {
+    "message": "도메인(explain, profile)."
+  },
+  "landing.a2Mcp.096": {
+    "message": "문서 개선하기."
+  },
+  "landing.a2Mcp.097": {
+    "message": "다음 자료에서 막히는 부분이 있었나요:"
+  },
+  "landing.a2Mcp.098": {
+    "message": "MCP Server 페이지"
+  },
+  "landing.a2Mcp.099": {
+    "message": ". 수정 PR을 만들어 보세요. 이것도 문서 기여입니다."
+  },
+  "landing.a2Mcp.100": {
+    "message": "클라이언트가 서버를 시작하지 못함"
+  },
+  "landing.a2Mcp.101": {
+    "message": "다음에서 확인한 절대 경로를 사용하세요:"
+  },
+  "landing.a2Mcp.102": {
+    "message": ". GUI 앱은 종종 셸의 다음 환경을 상속하지 않습니다:"
+  },
+  "landing.a2Mcp.103": {
+    "message": "또는 virtualenv"
+  },
+  "landing.a2Mcp.104": {
+    "message": "거부됨: Python 버전이 너무 오래됨"
+  },
+  "landing.a2Mcp.105": {
+    "message": "서버에는 Python 3.12+가 필요합니다. 다음으로 venv를 만드세요:"
+  },
+  "landing.a2Mcp.106": {
+    "message": "(또는 다음 사용:"
+  },
+  "landing.a2Mcp.107": {
+    "message": "도메인은 보이지만 하위 기능을 호출하지 못함"
+  },
+  "landing.a2Mcp.108": {
+    "message": "클라이언트가 점진적 공개를 지원하지 않을 수 있습니다. 다음을 추가하세요:"
+  },
+  "landing.a2Mcp.109": {
+    "message": "추가 위치:"
+  },
+  "landing.a2Mcp.110": {
+    "message": "접근 거부"
+  },
+  "landing.a2Mcp.111": {
+    "message": "다음을 확인하세요:"
+  },
+  "landing.a2Mcp.112": {
+    "message": "(M1) 및"
+  },
+  "landing.a2Mcp.113": {
+    "message": "조합"
+  },
+  "landing.a2Mcp.114": {
+    "message": "Doris MCP Server 저장소"
+  },
+  "landing.a2Mcp.115": {
+    "message": "1.0 README 및 빠른 시작"
+  },
+  "landing.a2Mcp.116": {
+    "message": "MCP Server 기능 페이지"
+  },
+  "landing.a2Mcp.117": {
+    "message": "Model Context Protocol"
+  },
+  "landing.a3LogSearch.001": {
+    "message": "로그 검색"
+  },
+  "landing.a3LogSearch.002": {
+    "message": "탐색기"
+  },
+  "landing.a3LogSearch.003": {
+    "message": "모든 작업을 SQL로 처리하는 작은 Kibana를 만들고 11:40에 결제가 실패한 원인을 찾아보세요."
+  },
+  "landing.a3LogSearch.004": {
+    "message": "로그 탐색기를 만들고 장애 원인을 밝혀보세요."
+  },
+  "landing.a3LogSearch.005": {
+    "message": "200,000줄의 로그, 여섯 개 서비스, 장애가 발생한 어느 아침. BM25 순위로 키워드를 검색하고 서비스·수준·시간으로 필터링하며 건수를 집계합니다. 모두 Doris 테이블 하나에서 일반 SQL로 처리합니다."
+  },
+  "landing.a3LogSearch.006": {
+    "message": "다음 기능을 갖춘 작은 로그 탐색기:"
+  },
+  "landing.a3LogSearch.007": {
+    "message": "검색용"
+  },
+  "landing.a3LogSearch.008": {
+    "message": "검색창"
+  },
+  "landing.a3LogSearch.009": {
+    "message": "(키워드, 구문) 및 관련성 순위,"
+  },
+  "landing.a3LogSearch.010": {
+    "message": "필터"
+  },
+  "landing.a3LogSearch.011": {
+    "message": "(서비스, 수준, 시간 범위),"
+  },
+  "landing.a3LogSearch.012": {
+    "message": "패싯 집계"
+  },
+  "landing.a3LogSearch.013": {
+    "message": "(결과 옆에 서비스·수준별 건수 표시),"
+  },
+  "landing.a3LogSearch.014": {
+    "message": "선택적으로 다음 추가:"
+  },
+  "landing.a3LogSearch.015": {
+    "message": "타임라인"
+  },
+  "landing.a3LogSearch.016": {
+    "message": "(5분당 오류 수)."
+  },
+  "landing.a3LogSearch.017": {
+    "message": "마지막으로 실제 조사를 수행합니다:"
+  },
+  "landing.a3LogSearch.018": {
+    "message": "11:40에 결제가 실패하기 시작했습니다. 원인이 된 서비스는 무엇이며 실제 문제는 언제 시작됐나요?"
+  },
+  "landing.a3LogSearch.019": {
+    "message": "탐색기에서 답을 명확히 찾을 수 있어야 합니다."
+  },
+  "landing.a3LogSearch.020": {
+    "message": "같은 테이블에서 검색과 분석."
+  },
+  "landing.a3LogSearch.021": {
+    "message": "역색인이 키워드 쿼리를 처리하고 같은"
+  },
+  "landing.a3LogSearch.022": {
+    "message": "절을 다음에 사용합니다:"
+  },
+  "landing.a3LogSearch.023": {
+    "message": "로 패싯을 집계합니다. 별도 시스템과 동기화할 필요가 없습니다."
+  },
+  "landing.a3LogSearch.024": {
+    "message": "실제 관련성 순위."
+  },
+  "landing.a3LogSearch.025": {
+    "message": "가 결과를 BM25로 정렬하므로 최신 로그가 아니라 가장 관련 있는 로그가 먼저 나옵니다."
+  },
+  "landing.a3LogSearch.026": {
+    "message": "저비용 필터."
+  },
+  "landing.a3LogSearch.028": {
+    "message": "에는 각각 역색인이 있으며 시간 범위는 정렬 키로 가지치기합니다."
+  },
+  "landing.a3LogSearch.029": {
+    "message": ": 여섯 개 서비스를 테이블 하나에 저장합니다:"
+  },
+  "landing.a3LogSearch.032": {
+    "message": "생성되는 데이터:"
+  },
+  "landing.a3LogSearch.033": {
+    "message": "2026년 10월 13일의 로그 200,000줄"
+  },
+  "landing.a3LogSearch.034": {
+    "message": "하나의"
+  },
+  "landing.a3LogSearch.035": {
+    "message": "로 생성합니다. 다운로드가 필요 없습니다. 이 데이터 어딘가에 장애 원인이 있습니다."
+  },
+  "landing.a3LogSearch.038": {
+    "message": "로그 생성"
+  },
+  "landing.a3LogSearch.040": {
+    "message": "M0 · 로그 생성"
+  },
+  "landing.a3LogSearch.041": {
+    "message": "몇 초 후 표시:"
+  },
+  "landing.a3LogSearch.042": {
+    "message": "줄의 로그, 시작:"
+  },
+  "landing.a3LogSearch.043": {
+    "message": "종료:"
+  },
+  "landing.a3LogSearch.044": {
+    "message": "(10월 13일)."
+  },
+  "landing.a3LogSearch.048": {
+    "message": "검색창에 연결하세요. 사용자 입력은 드라이버 매개변수로 전달하세요("
+  },
+  "landing.a4AgentTraces.002": {
+    "message": "탐색기"
+  },
+  "landing.a4AgentTraces.009": {
+    "message": "검색용"
+  },
+  "landing.a4AgentTraces.012": {
+    "message": "검색용"
+  },
+  "landing.a4AgentTraces.078": {
+    "message": ", 그리고"
+  },
+  "landing.HackathonTrackBPage.058": {
+    "message": "대상:"
+  },
+  "landing.HackathonTrackBPage.093": {
+    "message": "대상:"
+  },
+  "landing.a3LogSearch.049": {
+    "message": "(스타터 키트 내)가 이 동작을 구현합니다."
+  },
+  "landing.a3LogSearch.050": {
+    "message": "20개 결과는 모두"
+  },
+  "landing.a3LogSearch.051": {
+    "message": "로그입니다. BM25는 드문 단어에 더 큰 가중치를 부여합니다:"
+  },
+  "landing.a3LogSearch.053": {
+    "message": "는 68개 행에 등장하고,"
+  },
+  "landing.a3LogSearch.055": {
+    "message": "는 347개 행에 등장합니다. 다음 단어만 검색하면"
+  },
+  "landing.a3LogSearch.056": {
+    "message": "나머지 결과도 볼 수 있습니다."
+  },
+  "landing.a3LogSearch.057": {
+    "message": "필터"
+  },
+  "landing.a3LogSearch.058": {
+    "message": "M2 · 필터"
+  },
+  "landing.a3LogSearch.059": {
+    "message": "모든 결과는 timeout이 포함된 ERROR 로그입니다. 두 서비스 중 하나만 표시됩니다."
+  },
+  "landing.a3LogSearch.060": {
+    "message": "패싯 집계"
+  },
+  "landing.a3LogSearch.061": {
+    "message": "는 집계할 수 없으므로 패싯 집계는 이를 제외한 동일한 필터를 사용합니다:"
+  },
+  "landing.a3LogSearch.062": {
+    "message": "M3 · 패싯 집계"
+  },
+  "landing.a3LogSearch.063": {
+    "message": "해당 시간대에 일치하는 로그는 163줄이며 모두"
+  },
+  "landing.a3LogSearch.064": {
+    "message": "입니다. 집계 합계는 다음을 제외한 동일 검색 건수와 같아야 합니다:"
+  },
+  "landing.a3LogSearch.065": {
+    "message": ": 확인 명령어:"
+  },
+  "landing.a3LogSearch.066": {
+    "message": "및 같은"
+  },
+  "landing.a3LogSearch.067": {
+    "message": "오류 타임라인"
+  },
+  "landing.a3LogSearch.068": {
+    "message": "M4 · 오류 타임라인"
+  },
+  "landing.a3LogSearch.069": {
+    "message": "11:35부터 12:00 사이에 두 서비스의 오류가 급증합니다. 나머지 시간에는 어떤 서비스도 5분당 오류가 4건을 넘지 않습니다."
+  },
+  "landing.a3LogSearch.070": {
+    "message": "장애 원인 파악"
+  },
+  "landing.a3LogSearch.071": {
+    "message": "탐색기로 다음에 답하세요:"
+  },
+  "landing.a3LogSearch.072": {
+    "message": "결제 실패를 일으킨 서비스는 무엇이며 몇 시 몇 분에 시작됐나요?"
+  },
+  "landing.a3LogSearch.073": {
+    "message": "답과 이를 입증하는 쿼리를 README에 적으세요."
+  },
+  "landing.a3LogSearch.074": {
+    "message": "BM25 순위 기반 키워드 검색("
+  },
+  "landing.courseExtra.a3LogSearch.006": {
+    "message": "구조화된 필터 두 개 이상(서비스, 수준) 및 시간 범위."
+  },
+  "landing.courseExtra.a3LogSearch.007": {
+    "message": "현재 검색 조건을 따르는 패싯 집계."
+  },
+  "landing.courseExtra.a3LogSearch.008": {
+    "message": "장애 원인 서비스와 시작 시각을 근거 쿼리와 함께 밝힙니다."
+  },
+  "landing.a3LogSearch.075": {
+    "message": "구문 검색 및 입력 자동 완성"
+  },
+  "landing.a3LogSearch.076": {
+    "message": "로 입력 중 검색을 구현합니다."
+  },
+  "landing.a3LogSearch.077": {
+    "message": "트레이스 보기"
+  },
+  "landing.a3LogSearch.078": {
+    "message": ": 로그 한 줄을 클릭하면 동일한 다음 값을 가진 모든 로그를 표시합니다:"
+  },
+  "landing.a3LogSearch.079": {
+    "message": ", 시간순으로 표시합니다."
+  },
+  "landing.a3LogSearch.080": {
+    "message": "쿼리 문자열 검색"
+  },
+  "landing.a3LogSearch.081": {
+    "message": ": 다음을 사용해 보세요:"
+  },
+  "landing.a3LogSearch.082": {
+    "message": "DSL(Lucene 스타일의"
+  },
+  "landing.a3LogSearch.083": {
+    "message": "). 참고:"
+  },
+  "landing.a3LogSearch.084": {
+    "message": "SEARCH 함수"
+  },
+  "landing.a3LogSearch.085": {
+    "message": "실시간 로그 추적"
+  },
+  "landing.a3LogSearch.086": {
+    "message": ": 매초 몇 행을 삽입하고 자동으로 새로 고칩니다."
+  },
+  "landing.a3LogSearch.087": {
+    "message": "인덱스 유무 비교"
+  },
+  "landing.a3LogSearch.088": {
+    "message": ": 비교 대상:"
+  },
+  "landing.a3LogSearch.090": {
+    "message": "를 전체 테이블에서 실행하고 소요 시간을 표시합니다."
+  },
+  "landing.a3LogSearch.093": {
+    "message": "역색인"
+  },
+  "landing.a3LogSearch.094": {
+    "message": "SEARCH 함수"
+  },
+  "landing.a4AgentTraces.001": {
+    "message": "에이전트 트레이스"
+  },
+  "landing.a4AgentTraces.003": {
+    "message": "AI 에이전트의 JSON은 릴리스마다 구조가 바뀝니다. VARIANT에 저장하고 일반 열처럼 쿼리하세요."
+  },
+  "landing.courseExtra.a4AgentTraces.012": {
+    "message": "중급"
+  },
+  "landing.courseExtra.a4AgentTraces.013": {
+    "message": "언어 자유 · CLI, 노트북 또는 웹"
+  },
+  "landing.a4AgentTraces.004": {
+    "message": "제각각인 에이전트 JSON도 그대로 쿼리하세요."
+  },
+  "landing.a4AgentTraces.005": {
+    "message": "LLM 호출, 도구 호출, 오류, 최종 답변은 각각 다른 필드를 가지며 릴리스마다 새 필드가 추가됩니다. Doris의"
+  },
+  "landing.a4AgentTraces.006": {
+    "message": "는 JSON을 타입이 있는 열로 자동 변환하므로 일반 SQL로 필터링, 검색, 집계할 수 있습니다. 스키마 마이그레이션이 필요 없습니다."
+  },
+  "landing.a4AgentTraces.007": {
+    "message": "다음을 위한 트레이스 탐색기:"
+  },
+  "landing.a4AgentTraces.008": {
+    "message": "AI 에이전트 세션 1,000개(약 20,000개 이벤트)"
+  },
+  "landing.a4AgentTraces.010": {
+    "message": "세션 목록"
+  },
+  "landing.a4AgentTraces.011": {
+    "message": "(이벤트 수, 오류, 토큰, 지연 시간 표시),"
+  },
+  "landing.a4AgentTraces.013": {
+    "message": "세션 타임라인"
+  },
+  "landing.a4AgentTraces.014": {
+    "message": ": 세션을 클릭하면 에이전트의 동작을 단계별로 재생,"
+  },
+  "landing.a4AgentTraces.015": {
+    "message": "도구 및 모델 통계"
+  },
+  "landing.a4AgentTraces.016": {
+    "message": ": p95 지연 시간, 오류율, 토큰 사용량,"
+  },
+  "landing.a4AgentTraces.017": {
+    "message": "JSON 내부 검색"
+  },
+  "landing.a4AgentTraces.018": {
+    "message": ": ‘timeout’이 포함된 모든 도구 오류를 찾습니다."
+  },
+  "landing.a4AgentTraces.019": {
+    "message": "그리고 다음에 답하세요:"
+  },
+  "landing.a4AgentTraces.020": {
+    "message": "13:00에 배포된 에이전트 v2로 상황이 좋아졌나요, 나빠졌나요?"
+  },
+  "landing.a4AgentTraces.021": {
+    "message": "스키마 정의 없이 쓰기 시점에 타입 결정."
+  },
+  "landing.a4AgentTraces.022": {
+    "message": "VARIANT는 각 JSON 경로의 타입을 추론하고 자주 쓰는 경로를 실제 컬럼형 하위 열로 저장합니다. 따라서"
+  },
+  "landing.a4AgentTraces.023": {
+    "message": "는 문서 전체를 파싱하지 않고 열 하나만 읽습니다."
+  },
+  "landing.a4AgentTraces.024": {
+    "message": "새 필드는 자동으로 나타납니다."
+  },
+  "landing.a4AgentTraces.025": {
+    "message": "v2 이벤트에 다음이 추가되면"
+  },
+  "landing.a4AgentTraces.026": {
+    "message": ", 다음 적재 시 새 경로가 하위 열로 나타납니다. 다음 작업은 필요 없습니다:"
+  },
+  "landing.a4AgentTraces.027": {
+    "message": "JSON 내부 검색."
+  },
+  "landing.a4AgentTraces.028": {
+    "message": "VARIANT 열의 역색인으로 모든 텍스트 경로를 다음과 같이 검색할 수 있습니다:"
+  },
+  "landing.a4AgentTraces.029": {
+    "message": ": 에이전트 이벤트마다 한 행이며 이벤트 본문은 VARIANT 열에 저장합니다:"
+  },
+  "landing.a4AgentTraces.032": {
+    "message": "페이로드 예시: 구조가 어떻게 다른지 살펴보세요:"
+  },
+  "landing.a4AgentTraces.033": {
+    "message": "페이로드 예시"
+  },
+  "landing.a4AgentTraces.034": {
+    "message": "13:00 이후에 시작하는 세션은 다음을 실행합니다:"
+  },
+  "landing.a4AgentTraces.035": {
+    "message": "에이전트 v2"
+  },
+  "landing.a4AgentTraces.036": {
+    "message": ": 페이로드에 다음이 표시되며"
+  },
+  "landing.a4AgentTraces.037": {
+    "message": ", v2의 LLM 호출에는 다음 플래그가 추가됩니다:"
+  },
+  "landing.a4AgentTraces.038": {
+    "message": ". 마일스톤 5에서는 테이블이 한 번도 본 적 없는 필드가 있는 이벤트를 적재합니다."
+  },
+  "landing.a4AgentTraces.041": {
+    "message": "적재 및 확인"
+  },
+  "landing.a4AgentTraces.043": {
+    "message": "M0 · 적재"
+  },
+  "landing.a4AgentTraces.044": {
+    "message": "다음으로 SQL 셸에서 실행:"
+  },
+  "landing.a4AgentTraces.045": {
+    "message": "M0 · 확인"
+  },
+  "landing.a4AgentTraces.046": {
+    "message": "적재 결과:"
+  },
+  "landing.a4AgentTraces.047": {
+    "message": "세션 1,000개, 이벤트 20,401개"
+  },
+  "landing.a4AgentTraces.048": {
+    "message": "에는 약 20개의"
+  },
+  "landing.a4AgentTraces.049": {
+    "message": "경로와 각각의 추론된 타입이 표시됩니다."
+  },
+  "landing.a4AgentTraces.050": {
+    "message": "JSON 경로 쿼리"
+  },
+  "landing.a4AgentTraces.051": {
+    "message": "M1 · JSON 경로 쿼리"
+  },
+  "landing.a4AgentTraces.052": {
+    "message": "도구는 다섯 개이며"
+  },
+  "landing.a4AgentTraces.053": {
+    "message": "가 가장 많이 호출됩니다(3,506회)."
+  },
+  "landing.a4AgentTraces.054": {
+    "message": "추론된 하위 열 집계"
+  },
+  "landing.a4AgentTraces.055": {
+    "message": "하위 열 집계"
+  },
+  "landing.a4AgentTraces.056": {
+    "message": "M2 · 추론된 하위 열 집계"
+  },
+  "landing.a4AgentTraces.057": {
+    "message": "의 p95가 가장 높고(약 2.1초),"
+  },
+  "landing.a4AgentTraces.058": {
+    "message": "가 가장 자주 실패합니다(오류 425건)."
+  },
+  "landing.a4AgentTraces.059": {
+    "message": "JSON 내부 검색"
+  },
+  "landing.a4AgentTraces.060": {
+    "message": "JSON 검색"
+  },
+  "landing.a4AgentTraces.061": {
+    "message": "M3 · JSON 내부 검색"
+  },
+  "landing.a4AgentTraces.062": {
+    "message": "총 398개 이벤트에 timeout이 포함되어 있습니다. 시간별로 집계하면 v2에 대한 첫 단서를 얻습니다."
+  },
+  "landing.a4AgentTraces.064": {
+    "message": "M4 · 세션 타임라인"
+  },
+  "landing.a4AgentTraces.065": {
+    "message": "이 쿼리로 세션 목록 → 타임라인 → 통계 UI를 만드세요."
+  },
+  "landing.a4AgentTraces.066": {
+    "message": "세션"
+  },
+  "landing.a4AgentTraces.067": {
+    "message": "에는 이벤트가 25개 있습니다. 질문, LLM 및 도구 호출(실패 후 재시도한"
+  },
+  "landing.a4AgentTraces.068": {
+    "message": ", 재시도), 최종 답변으로 구성됩니다."
+  },
+  "landing.a4AgentTraces.069": {
+    "message": "스키마 변화 관찰"
+  },
+  "landing.a4AgentTraces.070": {
+    "message": "스키마 변화"
+  },
+  "landing.a4AgentTraces.071": {
+    "message": "M5 · 변경 배치 적재"
+  },
+  "landing.a4AgentTraces.072": {
+    "message": "M5 · 새 필드 쿼리"
+  },
+  "landing.a4AgentTraces.074": {
+    "message": "를 다시 실행하면 새 경로가 표시됩니다. 다음 작업은"
+  },
+  "landing.a4AgentTraces.075": {
+    "message": "수행하지 않았습니다."
+  },
+  "landing.a4AgentTraces.076": {
+    "message": "세 번째 버전이 나타납니다:"
+  },
+  "landing.a4AgentTraces.077": {
+    "message": ": 해당 버전의 LLM 호출에만 다음이 포함됩니다:"
+  },
+  "landing.a4AgentTraces.079": {
+    "message": "에 다음이 표시됩니다:"
+  },
+  "landing.courseExtra.a4AgentTraces.007": {
+    "message": "서로 다른 구조의 이벤트를 VARIANT 열 하나에 적재합니다(초기 데이터 및 변경 배치)."
+  },
+  "landing.courseExtra.a4AgentTraces.008": {
+    "message": "JSON 경로 쿼리가 세 개 이상이며 추론된 숫자 하위 열의 집계를 하나 포함합니다(예: 도구별 p95 지연 시간)."
+  },
+  "landing.courseExtra.a4AgentTraces.009": {
+    "message": "JSON 텍스트 경로의 전문 검색."
+  },
+  "landing.courseExtra.a4AgentTraces.010": {
+    "message": "세션 타임라인 보기(CLI, 노트북 또는 웹)."
+  },
+  "landing.a4AgentTraces.081": {
+    "message": "README에 포함할 내용:"
+  },
+  "landing.a4AgentTraces.082": {
+    "message": "세 가지 인사이트"
+  },
+  "landing.a4AgentTraces.083": {
+    "message": "(v2 릴리스에 대한 평가 포함), 실행 방법 및 스크린샷 한 개."
+  },
+  "landing.a4AgentTraces.084": {
+    "message": "본인의 트레이스 사용하기."
+  },
+  "landing.a4AgentTraces.085": {
+    "message": "본인의 AI 코딩 에이전트 로컬 세션 로그(JSONL)를 내보내 한 줄에 하나의"
+  },
+  "landing.a4AgentTraces.086": {
+    "message": "를 적재합니다. 데이터는 로컬 Doris 인스턴스에 저장됩니다."
+  },
+  "landing.a4AgentTraces.087": {
+    "message": "Schema Template."
+  },
+  "landing.a4AgentTraces.088": {
+    "message": "자주 쓰는 경로를 다음으로 고정하세요:"
+  },
+  "landing.a4AgentTraces.089": {
+    "message": "(테이블 복사본에서 실행). 다음 결과와"
+  },
+  "landing.a4AgentTraces.090": {
+    "message": "쿼리 동작을 비교하세요. 데이터 적재 방법:"
+  },
+  "landing.a4AgentTraces.091": {
+    "message": ": VARIANT를 템플릿이 있는 VARIANT로 바로 형 변환할 수 없습니다."
+  },
+  "landing.a4AgentTraces.092": {
+    "message": "어시스턴트가 탐색하게 하기."
+  },
+  "landing.a4AgentTraces.093": {
+    "message": "Doris MCP Server를 연결하고("
+  },
+  "landing.a4AgentTraces.095": {
+    "message": "), 가장 문제가 많은 세션을 찾도록 어시스턴트에 요청하세요."
+  },
+  "landing.a4AgentTraces.096": {
+    "message": "SQL로 오류 분류"
+  },
+  "landing.a4AgentTraces.097": {
+    "message": "(본인 API 키 사용):"
+  },
+  "landing.a4AgentTraces.098": {
+    "message": ". 참고:"
+  },
+  "landing.a4AgentTraces.099": {
+    "message": "LLM SQL 함수"
+  },
+  "landing.a4AgentTraces.100": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "landing.a4AgentTraces.101": {
+    "message": "VARIANT SQL 참조"
+  },
+  "landing.a4AgentTraces.103": {
+    "message": "LLM SQL 함수"
+  },
+  "landing.trackB.004": {
+    "message": "페이지의 연산자 표에 다음의 모든 형식이 나와 있습니다:"
+  },
+  "landing.trackB.005": {
+    "message": ". 다음을 선택하고"
+  },
+  "landing.trackB.006": {
+    "message": "그대로 정렬하세요. 다음처럼 식으로 감싸 정렬하면"
+  },
+  "landing.trackB.007": {
+    "message": ", 거부됩니다."
+  },
+  "landing.trackB.010": {
+    "message": "모든 벡터에는 정확히 다음 개수의"
+  },
+  "landing.trackB.011": {
+    "message": "숫자가 필요합니다. 쿼리 벡터도 마찬가지이며 맞지 않으면 차원 오류로 실패합니다."
+  },
+  "landing.trackB.015": {
+    "message": "는 벡터 순위 쿼리에서 선택할 수 없고 다음 안에 넣을 수도 없습니다:"
+  },
+  "landing.trackB.016": {
+    "message": ": 가공하지 않은 다음 값을 정렬하고"
+  },
+  "landing.trackB.017": {
+    "message": "바깥 쿼리에서 처리하세요. RRF 페이지와 같은 방식입니다."
+  },
+  "landing.trackB.020": {
+    "message": "는 한 행에서 Doris가 추론한 경로와 타입을 표시합니다. 다음 결과와 비교하세요:"
+  },
+  "landing.trackB.021": {
+    "message": "출력."
+  },
+  "landing.trackB.task.B4.doc": {
+    "message": "VARIANT 데이터 타입"
+  },
+  "landing.trackB.024": {
+    "message": "세 번의 쓰기를 하나의 INSERT와 세 개의 별도 INSERT로 각각 실행하세요. 결과는 같아야 합니다."
+  },
+  "landing.trackB.027": {
+    "message": "다음 FE로 적재 요청을 보내세요:"
+  },
+  "landing.trackB.029": {
+    "message": ": FE가 BE로 리디렉션하며 올인원 컨테이너가 두 포트 모두에서 응답합니다."
+  },
+  "landing.trackB.030": {
+    "message": " · 페이지 섹션"
+  },
+  "landing.trackB.031": {
+    "message": ".mdx · 템플릿"
+  },
+  "landing.trackB.032": {
+    "message": " · 풀 리퀘스트"
+  },
+  "landing.trackB.033": {
+    "message": "제목 + 설명 · 템플릿"
+  },
+  "landing.HackathonTrackBPage.001": {
+    "message": "apache/doris-website의 포크."
+  },
+  "landing.HackathonTrackBPage.002": {
+    "message": "포크하기"
+  },
+  "landing.HackathonTrackBPage.003": {
+    "message": "(GitHub). 클론은 필요 없습니다. 포크에서 다음을 누르세요:"
+  },
+  "landing.HackathonTrackBPage.004": {
+    "message": ". 브라우저에서 파일을 편집한 뒤 새 브랜치에 커밋하세요. git을 선호하나요? 저장소가 크므로 필요한 두 폴더만 클론하세요:"
+  },
+  "landing.HackathonTrackBPage.005": {
+    "message": "선택 사항: 스타터 키트."
+  },
+  "landing.HackathonTrackBPage.006": {
+    "message": "트랙 B에는 초기 데이터가 필요 없지만 키트의"
+  },
+  "landing.HackathonTrackBPage.007": {
+    "message": "로 데모를 만드는 동안 SQL 파일을 한 번에 실행할 수 있습니다:"
+  },
+  "landing.HackathonTrackBPage.008": {
+    "message": ". 다운로드 후 압축 해제:"
+  },
+  "landing.HackathonTrackBPage.009": {
+    "message": "풀 리퀘스트의 Build Check 실패"
+  },
+  "landing.HackathonTrackBPage.010": {
+    "message": "검사 로그를 여세요. 보통 MDX 문제입니다. 닫히지 않은 태그나 본문에 그대로 쓴"
+  },
+  "landing.HackathonTrackBPage.011": {
+    "message": "또는"
+  },
+  "landing.HackathonTrackBPage.012": {
+    "message": "를 확인하세요. 코드 블록 안에서는 문제없습니다."
+  },
+  "landing.HackathonTrackBPage.013": {
+    "message": "B6:"
+  },
+  "landing.HackathonTrackBPage.014": {
+    "message": "가 아무것도 출력하지 않거나 다음을 출력함:"
+  },
+  "landing.HackathonTrackBPage.015": {
+    "message": "추가:"
+  },
+  "landing.HackathonTrackBPage.016": {
+    "message": ": FE가 적재를 BE로 리디렉션하므로 curl이 인증 정보를 유지한 채 따라가야 합니다"
+  },
+  "landing.HackathonTrackBPage.017": {
+    "message": "B6:"
+  },
+  "landing.HackathonTrackBPage.018": {
+    "message": "재실행 시 정상 동작입니다. 같은 레이블로는 한 번만 적재됩니다. 파일을 다시 적재하려면 새 레이블을 사용하세요"
+  },
+  "landing.HackathonTrackBPage.020": {
+    "message": "문서 기여 가이드"
+  },
+  "landing.HackathonTrackBPage.021": {
+    "message": "문서 형식 명세"
+  },
+  "landing.HackathonTrackBPage.022": {
+    "message": "풀 리퀘스트 가이드"
+  },
+  "landing.HackathonTrackBPage.023": {
+    "message": "다음 과제의 템플릿 보기:"
+  },
+  "landing.HackathonTrackBPage.025": {
+    "message": "페이지 섹션"
+  },
+  "landing.HackathonTrackBPage.026": {
+    "message": "풀 리퀘스트"
+  },
+  "landing.HackathonTrackBPage.027": {
+    "message": "현재 읽는 과제의 템플릿"
+  },
+  "landing.HackathonTrackBPage.028": {
+    "message": "템플릿"
+  },
+  "landing.HackathonTrackBPage.029": {
+    "message": "풀 리퀘스트 ·"
+  },
+  "landing.HackathonTrackBPage.030": {
+    "message": "템플릿"
+  },
+  "landing.trackB.databaseHint": {
+    "message": "본인의 값, 예:"
+  },
+  "landing.HackathonTrackBPage.031": {
+    "message": "편집"
+  },
+  "landing.HackathonTrackBPage.034": {
+    "message": " 트랙 B: "
+  },
+  "landing.HackathonTrackBPage.035": {
+    "message": ": 자기 주도 방식으로 누구나 참여할 수 있습니다."
+  },
+  "landing.HackathonTrackBPage.037": {
+    "message": "과제 중 하나 선택"
+  },
+  "landing.HackathonTrackBPage.038": {
+    "message": "문서에서"
+  },
+  "landing.HackathonTrackBPage.039": {
+    "message": "데모로"
+  },
+  "landing.HackathonTrackBPage.040": {
+    "message": "Apache Doris 기능 문서 하나를 골라 로컬 Doris에서 실행하고 단계별 데모로 만드세요. 풀 리퀘스트를 통해 doris.apache.org의 해당 페이지에 데모를 추가합니다."
+  },
+  "landing.trackB.chip.1": {
+    "message": "과제당 30~60분"
+  },
+  "landing.trackB.chip.3": {
+    "message": "SQL 및 브라우저"
+  },
+  "landing.trackB.chip.4": {
+    "message": "문서 PR로 마무리"
+  },
+  "landing.HackathonTrackBPage.043": {
+    "message": "과제 선택"
+  },
+  "landing.HackathonTrackBPage.045": {
+    "message": "트랙 B 진행 방식, 실행 중인 클러스터 및 문서 포크를 준비합니다."
+  },
+  "landing.HackathonTrackBPage.046": {
+    "message": "트랙 B 진행 방식"
+  },
+  "landing.HackathonTrackBPage.047": {
+    "message": "기능 페이지 하나, 데모 하나, 풀 리퀘스트 하나."
+  },
+  "landing.HackathonTrackBPage.048": {
+    "message": "새로운 Doris 사용자는 이 페이지들에서 시작합니다. 처음부터 실행해 보면 빠진 내용을 가장 빨리 찾을 수 있고, 빈 클러스터에서 끝까지 실행되는 데모는 기능이 작동한다는 가장 확실한 증거입니다. 만든 데모는 페이지 본문에 실립니다."
+  },
+  "landing.HackathonTrackBPage.049": {
+    "message": "문서 따라 하기."
+  },
+  "landing.HackathonTrackBPage.050": {
+    "message": "과제 문서를 열고 로컬 Doris에서 모든 예제를 적힌 그대로 실행하세요. 실패, 다른 출력, 설명이 불명확한 부분을 기록하세요."
+  },
+  "landing.HackathonTrackBPage.051": {
+    "message": "데모 만들기."
+  },
+  "landing.HackathonTrackBPage.052": {
+    "message": "빈 클러스터에서 시작해 과제 체크리스트의 모든 항목을 검증하세요. 처음부터 끝까지 실행하고 각 문의 실제 출력을 보관하세요."
+  },
+  "landing.HackathonTrackBPage.053": {
+    "message": "페이지에 추가하기."
+  },
+  "landing.HackathonTrackBPage.054": {
+    "message": "다음"
+  },
+  "landing.HackathonTrackBPage.055": {
+    "message": "단계별 데모"
+  },
+  "landing.HackathonTrackBPage.056": {
+    "message": "섹션을 두 페이지 모두 Quick start 바로 뒤에 추가합니다. 발견한 문제도 같은 풀 리퀘스트에서 수정하세요."
+  },
+  "landing.HackathonTrackBPage.057": {
+    "message": "풀 리퀘스트 만들기"
+  },
+  "landing.HackathonTrackBPage.059": {
+    "message": ". 이것이 제출물입니다. 참고:"
+  },
+  "landing.HackathonTrackBPage.061": {
+    "message": "패널에 현재 읽는 과제의 템플릿이 표시됩니다"
+  },
+  "landing.HackathonTrackBPage.064": {
+    "message": "과제 선택"
+  },
+  "landing.HackathonTrackBPage.065": {
+    "message": "기능 페이지 중 하나를 고르세요. 일찍 끝났다면 다른 과제도 선택하세요. 과제마다 별도의 풀 리퀘스트를 만듭니다."
+  },
+  "landing.HackathonTrackBPage.066": {
+    "message": "· 수정 대상"
+  },
+  "landing.HackathonTrackBPage.067": {
+    "message": "시작점"
+  },
+  "landing.HackathonTrackBPage.068": {
+    "message": "데모에서 입증할 내용"
+  },
+  "landing.HackathonTrackBPage.069": {
+    "message": "팁"
+  },
+  "landing.HackathonTrackBPage.071": {
+    "message": "풀 리퀘스트에 포함할 내용, 제출 방법 및 배지 안내."
+  },
+  "landing.HackathonTrackBPage.072": {
+    "message": "풀 리퀘스트에 추가할 내용"
+  },
+  "landing.HackathonTrackBPage.073": {
+    "message": "다음 저장소에 풀 리퀘스트 하나를 만듭니다:"
+  },
+  "landing.HackathonTrackBPage.074": {
+    "message": ", 이것이 제출물입니다."
+  },
+  "landing.HackathonTrackBPage.075": {
+    "message": "데모 섹션"
+  },
+  "landing.HackathonTrackBPage.076": {
+    "message": "을 Quick start 바로 뒤에 추가합니다. 체크리스트 항목마다 한 단계로 구성하고 SQL 블록 뒤에 다음을 적습니다:"
+  },
+  "landing.HackathonTrackBPage.077": {
+    "message": "예상 결과"
+  },
+  "landing.HackathonTrackBPage.078": {
+    "message": "에 실제 출력을 적습니다. 빈 클러스터에서 시작하므로 데모에서 데이터베이스도 생성합니다."
+  },
+  "landing.HackathonTrackBPage.079": {
+    "message": "두 페이지 모두"
+  },
+  "landing.HackathonTrackBPage.080": {
+    "message": "동일한 변경을 다음 두 곳에 반영:"
+  },
+  "landing.HackathonTrackBPage.082": {
+    "message": ". 이 과제에서는 영문 페이지를 수정합니다. 번역은 별도로 유지 관리됩니다."
+  },
+  "landing.HackathonTrackBPage.083": {
+    "message": "수정 사항"
+  },
+  "landing.HackathonTrackBPage.084": {
+    "message": "페이지의 다른 곳에서 발견한 오류도 같은 풀 리퀘스트에서 수정하세요. 오류인지 확실하지 않다면 설명에 적으세요."
+  },
+  "landing.HackathonTrackBPage.085": {
+    "message": "설명"
+  },
+  "landing.HackathonTrackBPage.086": {
+    "message": "저장소의 풀 리퀘스트 템플릿(dev + 4.x, 영어)을 사용하고 과제 이름을 한 줄로 적으세요. 예:"
+  },
+  "landing.HackathonTrackBPage.087": {
+    "message": "템플릿 대상:"
+  },
+  "landing.HackathonTrackBPage.088": {
+    "message": "패널: 마지막으로 읽은 과제의 템플릿"
+  },
+  "landing.HackathonTrackBPage.091": {
+    "message": "풀 리퀘스트 설명"
+  },
+  "landing.HackathonTrackBPage.092": {
+    "message": "풀 리퀘스트 만들기"
+  },
+  "landing.HackathonTrackBPage.094": {
+    "message": ", 본인 포크의 브랜치에서 만드세요. 풀 리퀘스트가 제출물이므로 별도로 작성할 것은 없습니다."
+  },
+  "landing.HackathonTrackBPage.096": {
+    "message": "두 번째 과제 선택하기."
+  },
+  "landing.HackathonTrackBPage.097": {
+    "message": "완료한 과제마다 별도의 풀 리퀘스트를 만드세요."
+  },
+  "landing.HackathonTrackBPage.098": {
+    "message": "빠른 시작을 넘어 도전하기."
+  },
+  "landing.HackathonTrackBPage.099": {
+    "message": "테이블 설계, SQL 매뉴얼 등 페이지에서 연결된 긴 예제도 실행하세요. 이 부분은 검증 빈도가 낮습니다."
+  },
+  "landing.HackathonTrackBPage.100": {
+    "message": "다른 트랙 B 풀 리퀘스트 검토하기."
+  },
+  "landing.HackathonTrackBPage.101": {
+    "message": "본인의 Doris에서 데모를 실행하고 결과를 댓글로 남기세요."
+  },
+  "landing.profile.error.fileType": {
+    "message": ".txt 파일을 선택하세요. 다른 파일 형식은 지원하지 않습니다."
+  },
+  "landing.profile.error.oneFile": {
+    "message": "Profile 파일은 한 번에 하나만 선택하세요."
+  },
+  "landing.profile.error.tooLarge": {
+    "message": "선택한 파일이 100 MiB를 초과합니다. 병합된 Profile을 제공하세요."
+  },
+  "landing.profile.error.mergedTooLarge": {
+    "message": "인스턴스별 실행 Profile을 제거한 뒤에도 10 MiB를 초과합니다. 병합된 Profile을 제공하세요."
+  },
+  "landing.profile.error.prepare": {
+    "message": "Profile 업로드를 준비하지 못했습니다."
+  },
+  "landing.profile.error.storage": {
+    "message": "이 브라우저에서는 페이지 새로고침 후 분석을 복원할 수 없습니다."
+  },
+  "landing.profile.error.captchaMissing": {
+    "message": "Profile을 분석하기 전에 사람 인증을 완료하세요."
+  },
+  "landing.profile.error.captchaInvalid": {
+    "message": "사람 인증에 실패했거나 만료되었습니다. 다시 인증한 뒤 재시도하세요."
+  },
+  "landing.profile.error.captchaUnavailable": {
+    "message": "사람 인증을 일시적으로 사용할 수 없습니다. 나중에 다시 시도하세요."
+  },
+  "landing.profile.error.captchaExpired": {
+    "message": "인증이 만료되었습니다. 다시 인증하세요."
+  },
+  "landing.profile.error.captchaLoad": {
+    "message": "사람 인증을 불러오지 못했습니다. 연결을 확인하고 다시 시도하세요."
+  },
+  "landing.profile.error.network": {
+    "message": "Profile 분석 서비스에 연결할 수 없습니다. 다시 시도하세요."
+  },
+  "landing.profile.error.response": {
+    "message": "Profile 분석 서비스가 잘못된 응답을 반환했습니다."
+  },
+  "landing.profile.error.recover": {
+    "message": "이전 분석을 복원하지 못했습니다. 파일을 다시 선택하고 시도하세요."
+  },
+  "landing.profile.error.failed": {
+    "message": "Profile 분석에 실패했습니다. 다시 시도하세요."
+  },
+  "landing.profile.error.graphTooLarge": {
+    "message": "실행 그래프가 너무 커서 표시할 수 없습니다."
+  },
+  "landing.profile.error.graphUnavailable": {
+    "message": "이 Profile의 실행 그래프를 사용할 수 없습니다."
+  },
+  "landing.profile.error.graphFailed": {
+    "message": "실행 그래프를 생성하지 못했습니다."
+  },
+  "landing.profile.error.graphTimeout": {
+    "message": "실행 그래프 파서의 시간이 초과되었습니다."
+  },
+  "landing.profile.error.serviceCode": {
+    "message": "Profile 분석에 실패했습니다({code}). 다시 시도하세요."
+  },
+  "landing.profile.error.details": {
+    "message": "세부 정보: {message}"
+  },
+  "landing.AiAnalysisForm.001": {
+    "message": "Doris Skills 기반(새 탭에서 열림)"
+  },
+  "landing.AiAnalysisForm.002": {
+    "message": "기반 기술:"
+  },
+  "landing.AiAnalysisForm.003": {
+    "message": "Doris Skills"
+  },
+  "landing.AiAnalysisForm.004": {
+    "message": "응답 언어"
+  },
+  "landing.AiAnalysisForm.006": {
+    "message": "중국어 간체"
+  },
+  "landing.profile.responseLanguages": {
+    "message": "AI 응답은 영어와 중국어로 제공됩니다. 사이트 언어를 바꿔도 서비스 응답은 번역되지 않습니다."
+  },
+  "landing.AiAnalysisForm.007": {
+    "message": "개인정보 및 AI 처리 안내"
+  },
+  "landing.AiAnalysisForm.008": {
+    "message": "이 기능은 VeloDB와 외부 대규모 언어 모델 서비스 제공업체가 제공합니다. Apache Doris 프로젝트의 공식 기능이 아니므로 사용 여부를 신중히 판단하세요."
+  },
+  "landing.AiAnalysisForm.009": {
+    "message": "비밀번호, 키, 액세스 토큰, 개인정보, 고객 기밀 데이터 등 공개할 권한이 없는 민감한 정보를 업로드하지 마세요. 업로드한 모든 정보는 한 시간 이내에 자동으로 영구 삭제됩니다."
+  },
+  "landing.AiAnalysisForm.010": {
+    "message": "안내를 읽었으며 이 Profile을 업로드할 권한이 있고 외부 AI 처리에 동의합니다."
+  },
+  "landing.AiAnalysisForm.011": {
+    "message": "분석을 시작하기 전에 사람 인증을 완료하세요."
+  },
+  "landing.AiAnalysisForm.012": {
+    "message": "사람 인증이 설정되지 않았습니다. 사이트 관리자에게 문의하세요."
+  },
+  "landing.AiAnalysisForm.013": {
+    "message": "이 사이트는 hCaptcha로 보호되며 다음 정책이"
+  },
+  "landing.AiAnalysisForm.014": {
+    "message": "개인정보 처리방침"
+  },
+  "landing.AiAnalysisForm.016": {
+    "message": "서비스 약관"
+  },
+  "landing.AiAnalysisForm.017": {
+    "message": "적용됩니다."
+  },
+  "landing.AiAnalysisForm.018": {
+    "message": "처리 중… · 약 1~2분 소요"
+  },
+  "landing.AiAnalysisForm.019": {
+    "message": "AI로 분석"
+  },
+  "landing.AnalysisResult.001": {
+    "message": "분석 결과"
+  },
+  "landing.AnalysisResult.002": {
+    "message": "AI 생성 결과:"
+  },
+  "landing.AnalysisResult.003": {
+    "message": "근거를 원본 Profile과 대조하고 프로덕션 환경을 변경하기 전에 자격을 갖춘 엔지니어가 권장 사항을 검토하도록 하세요. 명령어나 구성 변경을 자동으로 실행하지 마세요."
+  },
+  "landing.profile.status.analyzing": {
+    "message": "분석 중"
+  },
+  "landing.profile.status.restoring": {
+    "message": "분석 복원 중…"
+  },
+  "landing.profile.status.recovering": {
+    "message": "연결 중단 · 분석 복구 중…"
+  },
+  "landing.profile.status.uploading": {
+    "message": "Profile 업로드 중…"
+  },
+  "landing.profile.status.queued": {
+    "message": "대기 중"
+  },
+  "landing.profile.status.queueOne": {
+    "message": "대기 중 · 앞에 작업 {count}개"
+  },
+  "landing.profile.status.queueMany": {
+    "message": "대기 중 · 앞에 작업 {count}개"
+  },
+  "landing.ProfileUploader.001": {
+    "message": "Query Profile 선택"
+  },
+  "landing.ProfileUploader.002": {
+    "message": "100 MiB 이하의 UTF-8 .txt 파일 하나를 선택하세요. 10 MiB가 넘는 파일은 로컬 시각화나 AI 업로드 전에 집계된 Profile 섹션만 남겨 크기를 줄입니다."
+  },
+  "landing.ProfileUploader.003": {
+    "message": "Apache Doris 4.1 이상에서 생성한 Profile을 사용하세요. 이전 버전의 Profile은 파싱에 실패할 수 있습니다."
+  },
+  "landing.ProfileUploader.004": {
+    "message": "파일을 선택하거나 여기로 드래그하세요"
+  },
+  "landing.ProfileUploader.005": {
+    "message": ".txt 형식의 Apache Doris Query Profile"
+  },
+  "landing.ProfileUploader.006": {
+    "message": "Apache Doris Query Profile 파일 선택"
+  },
+  "landing.ProfileDagNode.001": {
+    "message": " 연산자"
+  },
+  "landing.profile.graph.unavailable": {
+    "message": "이 Profile의 실행 그래프를 사용할 수 없습니다."
+  },
+  "landing.profile.graph.failed": {
+    "message": "실행 그래프를 생성하지 못했습니다."
+  },
+  "landing.ProfileDagNode.002": {
+    "message": "병목"
+  },
+  "landing.ProfileDagNode.003": {
+    "message": "인스턴스"
+  },
+  "landing.ProfileDagNode.004": {
+    "message": "최대 실행 시간"
+  },
+  "landing.ProfileDagNode.005": {
+    "message": "평균 실행 시간"
+  },
+  "landing.ProfileDagNode.006": {
+    "message": "최대 대기 시간"
+  },
+  "landing.profile.graph.idle": {
+    "message": "Profile을 선택한 뒤 ‘실행 시각화’를 누르세요."
+  },
+  "landing.profile.graph.parsing": {
+    "message": "실행 그래프 파싱 중…"
+  },
+  "landing.ProfileDag.001": {
+    "message": "최대"
+  },
+  "landing.ProfileDag.002": {
+    "message": "· 평균"
+  },
+  "landing.ProfileDag.003": {
+    "message": "· 합계"
+  },
+  "landing.ProfileDag.004": {
+    "message": "연산자 세부 정보"
+  },
+  "landing.ProfileDag.005": {
+    "message": "연산자 세부 정보"
+  },
+  "landing.ProfileDag.006": {
+    "message": "연산자 세부 정보 닫기"
+  },
+  "landing.ProfileDag.007": {
+    "message": "×"
+  },
+  "landing.ProfileDag.008": {
+    "message": "유형"
+  },
+  "landing.ProfileDag.009": {
+    "message": "역할"
+  },
+  "landing.ProfileDag.010": {
+    "message": "계획 노드 ID"
+  },
+  "landing.ProfileDag.011": {
+    "message": "시간 정보"
+  },
+  "landing.ProfileDag.012": {
+    "message": "최대 실행 시간"
+  },
+  "landing.ProfileDag.013": {
+    "message": "평균 실행 시간"
+  },
+  "landing.ProfileDag.014": {
+    "message": "최소 실행 시간"
+  },
+  "landing.ProfileDag.015": {
+    "message": "최대 대기 시간"
+  },
+  "landing.ProfileDag.016": {
+    "message": "의존성 대기"
+  },
+  "landing.ProfileDag.017": {
+    "message": "데이터 대기"
+  },
+  "landing.ProfileDag.018": {
+    "message": "RPC 버퍼 대기"
+  },
+  "landing.ProfileDag.019": {
+    "message": "계획 정보"
+  },
+  "landing.ProfileDag.020": {
+    "message": "지표"
+  },
+  "landing.ProfileDag.021": {
+    "message": "입력 행 수"
+  },
+  "landing.ProfileDag.022": {
+    "message": "출력 행 수"
+  },
+  "landing.ProfileDag.023": {
+    "message": "메모리 사용량"
+  },
+  "landing.ProfileDag.024": {
+    "message": "최대 메모리"
+  },
+  "landing.ProfileDag.025": {
+    "message": "가장 느린 연산자"
+  },
+  "landing.ProfileDag.026": {
+    "message": "최대 실행 시간순"
+  },
+  "landing.ProfileDag.031": {
+    "message": "전체 화면 종료(Esc)"
+  },
+  "landing.ProfileDag.032": {
+    "message": "실행 그래프를 전체 화면으로 확대"
+  },
+  "landing.ProfileDag.033": {
+    "message": "전체 화면 종료"
+  },
+  "landing.ProfileDag.034": {
+    "message": "전체 화면"
+  },
+  "landing.ProfileDag.035": {
+    "message": "실행 그래프 배치 중…"
+  },
+  "landing.ProfileDag.036": {
+    "message": "Profile 실행 그래프"
+  },
+  "landing.profile.graph.readOnly": {
+    "message": "연산자와 의존성을 보여주는 읽기 전용 실행 그래프."
+  },
+  "landing.profile.graph.connection": {
+    "message": "실행 그래프 연결."
+  },
+  "landing.profile.graph.controls": {
+    "message": "그래프 제어"
+  },
+  "landing.profile.graph.zoomIn": {
+    "message": "확대"
+  },
+  "landing.profile.graph.zoomOut": {
+    "message": "축소"
+  },
+  "landing.profile.graph.fit": {
+    "message": "화면에 맞추기"
+  },
+  "landing.profile.graph.interactive": {
+    "message": "상호작용 전환"
+  },
+  "landing.ProfileDag.037": {
+    "message": "실행 그래프 개요"
+  },
+  "landing.profile.graph.handle": {
+    "message": "연결 지점"
+  },
+  "landing.profile.graph.notAvailable": {
+    "message": "실행 그래프를 사용할 수 없습니다."
+  },
+  "landing.ProfileDag.038": {
+    "message": "실행 그래프"
+  },
+  "landing.ProfileDag.039": {
+    "message": "프래그먼트"
+  },
+  "landing.ProfileDag.040": {
+    "message": "파이프라인"
+  },
+  "landing.ProfileDag.041": {
+    "message": "연산자"
+  },
+  "landing.ProfileDag.042": {
+    "message": "연결"
+  },
+  "landing.ProfileDag.043": {
+    "message": "비차단 파싱"
+  },
+  "landing.ProfileDag.044": {
+    "message": "알림"
+  },
+  "landing.ProfileDag.045": {
+    "message": "알림"
+  },
+  "landing.ProfileDag.046": {
+    "message": "실행 그래프 범례"
+  },
+  "landing.ProfileDag.047": {
+    "message": "데이터 흐름"
+  },
+  "landing.ProfileDag.048": {
+    "message": "실행 의존성(선행 → 후행)"
+  },
+  "landing.ProfileDag.049": {
+    "message": "실행 시간 증가"
+  },
+  "landing.ProfileDag.050": {
+    "message": "대기 시간 증가"
+  },
+  "landing.ProfileDag.051": {
+    "message": "실행 그래프 로딩 중…"
+  },
+  "landing.ProfileAnalyzer.001": {
+    "message": "쿼리 진단"
+  },
+  "landing.ProfileAnalyzer.002": {
+    "message": "Apache Doris Profile 분석"
+  },
+  "landing.ProfileAnalyzer.003": {
+    "message": "Profile 분석 작업 및 결과"
+  },
+  "landing.ProfileAnalyzer.004": {
+    "message": "Profile 분석 작업"
+  },
+  "landing.ProfileAnalyzer.005": {
+    "message": "실행 시각화"
+  },
+  "landing.ProfileAnalyzer.006": {
+    "message": "AI 지원 분석"
+  },
+  "landing.ProfileAnalyzer.007": {
+    "message": "Profile을 시각화합니다. ‘실행 시각화’를 선택하면 브라우저에서 파일을 파싱하고 실행 그래프를 상호작용 가능한 다이어그램으로 표시합니다. 이 작업에서는 파일을 업로드하지 않습니다."
+  },
+  "landing.ProfileAnalyzer.008": {
+    "message": "시각화 중…"
+  },
+  "landing.ProfileAnalyzer.009": {
+    "message": "실행 시각화"
+  },
+  "landing.ProfileAnalyzer.010": {
+    "message": "분석에 실패했습니다."
+  },
+  "landing.profileanalysis.001": {
+    "message": "Profile 분석 - Apache Doris"
+  },
+  "landing.profileanalysis.002": {
+    "message": "AI 지원 진단 워크플로로 Apache Doris Query Profile을 분석합니다."
+  },
+  "landing.trackB.task.B1.title": {
+    "message": "전문 검색 + BM25"
+  },
+  "landing.trackB.task.B1.time": {
+    "message": "30~45분"
+  },
+  "landing.trackB.task.B1.proves.0": {
+    "message": "텍스트 열에 역색인(english 파서, 구문 지원)이 있는 테이블"
+  },
+  "landing.trackB.task.B1.proves.1": {
+    "message": "동일한 단어에 MATCH_ANY와 MATCH_ALL을 적용해 서로 다른 행 수 확인"
+  },
+  "landing.trackB.task.B1.proves.2": {
+    "message": "단어가 인접할 때만 일치하는 MATCH_PHRASE 쿼리"
+  },
+  "landing.trackB.task.B1.proves.3": {
+    "message": "BM25 순위: score()와 ORDER BY … DESC LIMIT n 사용 및 첫 행이 최상위인 이유 설명"
+  },
+  "landing.trackB.task.B2.title": {
+    "message": "벡터 검색"
+  },
+  "landing.trackB.task.B2.time": {
+    "message": "30~45분"
+  },
+  "landing.trackB.task.B2.proves.0": {
+    "message": "HNSW(ANN) 인덱스가 있는 ARRAY<FLOAT> NOT NULL 열"
+  },
+  "landing.trackB.task.B2.proves.1": {
+    "message": "ANN 상위 N개 쿼리: ORDER BY l2_distance_approximate(…) LIMIT n"
+  },
+  "landing.trackB.task.B2.proves.2": {
+    "message": "동일한 쿼리에 WHERE 필터를 추가해 상위 N개 변화 확인"
+  },
+  "landing.trackB.task.B2.proves.3": {
+    "message": "EXPLAIN으로 ANN 인덱스 사용 확인(ANN SORT INFO)"
+  },
+  "landing.trackB.task.B3.time": {
+    "message": "30~45분"
+  },
+  "landing.trackB.task.B3.proves.0": {
+    "message": "텍스트 역색인과 벡터 ANN 인덱스를 가진 테이블 하나"
+  },
+  "landing.trackB.task.B3.proves.1": {
+    "message": "하나의 쿼리에서 MATCH_ANY 사전 필터와 벡터 순위 계산"
+  },
+  "landing.trackB.task.B3.proves.2": {
+    "message": "같은 질문으로 키워드 전용 및 벡터 전용 쿼리를 실행하고 결과 차이 확인"
+  },
+  "landing.trackB.task.B3.proves.3": {
+    "message": "Reciprocal Rank Fusion으로 두 순위 결합"
+  },
+  "landing.trackB.task.B4.title": {
+    "message": "VARIANT"
+  },
+  "landing.trackB.task.B4.time": {
+    "message": "30~45분"
+  },
+  "landing.trackB.task.B4.proves.0": {
+    "message": "서로 다른 구조의 JSON 행을 VARIANT 열 하나에 저장"
+  },
+  "landing.trackB.task.B4.proves.1": {
+    "message": "중첩 경로 쿼리, 비교 또는 집계 전에 CAST 수행"
+  },
+  "landing.trackB.task.B4.proves.2": {
+    "message": "추론된 하위 열: SET describe_extend_variant_column = true; DESC"
+  },
+  "landing.trackB.task.B4.proves.3": {
+    "message": "JSON 내부 전문 검색(역색인을 이용한 경로 MATCH)"
+  },
+  "landing.trackB.task.B5.title": {
+    "message": "Unique Key + Sequence Column"
+  },
+  "landing.trackB.task.B5.time": {
+    "message": "30~45분"
+  },
+  "landing.trackB.task.B5.doc": {
+    "message": "Unique Key"
+  },
+  "landing.trackB.task.B5.proves.0": {
+    "message": "같은 키에 세 번 써도 최종 결과는 한 행"
+  },
+  "landing.trackB.task.B5.proves.1": {
+    "message": "시퀀스 열이 있으면 늦게 도착한 오래된 쓰기가 최신 버전을 덮어쓰지 않음"
+  },
+  "landing.trackB.task.B5.proves.2": {
+    "message": "시퀀스 열이 없는 두 번째 테이블에 같은 쓰기를 수행하면 늦은 쓰기가 우선됨"
+  },
+  "landing.trackB.task.B6.title": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.doc": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.proves.0": {
+    "message": "대상 테이블 및 셸에서 만든 작은 CSV 파일"
+  },
+  "landing.trackB.task.B6.proves.1": {
+    "message": "curl과 HTTP로 CSV를 적재하고 JSON 응답의 Status, NumberLoadedRows 확인"
+  },
+  "landing.trackB.task.B6.proves.2": {
+    "message": "적재된 행을 표시하는 쿼리"
+  },
+  "landing.trackB.task.B6.proves.3": {
+    "message": "안전한 재실행: 같은 레이블로 다시 적재하면 추가되지 않음(Label Already Exists)"
+  },
+  "landing.userStory.AWS": {
+    "message": "Amazon Web Services(AWS)는 확장성과 안정성을 갖춘 다양한 서비스를 제공하는 대표적인 클라우드 플랫폼입니다. Apache Doris 기반 상용 제품인 VeloDB Cloud를 AWS에서 사용할 수 있으며 확장 가능하고 효율적인 데이터 분석을 제공합니다."
+  },
+  "landing.userStory.VeloDB": {
+    "message": "Apache Doris 기반의 VeloDB는 대규모 실시간 데이터를 빠르게 분석하는 현대적 데이터 웨어하우스입니다. Apache Doris 기반 제품을 개발하는 VeloDB Inc는 전 세계 기업 사용자에게 실시간 분석 제품과 솔루션을 제공합니다."
+  },
+  "landing.userStory.SelectDB": {
+    "message": "SelectDB는 대규모 실시간 데이터를 빠르게 분석하는 현대적 데이터 웨어하우스입니다. 완전 관리형 클라우드 네이티브 서비스와 온프레미스, VM, Kubernetes용 자체 관리 소프트웨어를 제공합니다."
+  },
+  "landing.userStory.Tencent%20Cloud": {
+    "message": "Tencent Cloud House-D는 Apache Doris 기반의 완전 관리형 클라우드 데이터 웨어하우스 서비스입니다."
+  },
+  "landing.userStory.Alibaba%20Cloud": {
+    "message": "Alibaba Cloud는 클라우드 컴퓨팅과 AI 분야의 글로벌 선도 기업으로, 실시간 분석을 위한 Apache Doris 기반 완전 관리형 서비스를 제공합니다."
+  },
+  "landing.userStory.Tencent": {
+    "message": "Tencent는 글로벌 인터넷 및 기술 기업입니다. 여러 사업에서 Apache Doris로 사용자 행동 데이터를 실시간 분석해 비즈니스 분석과 의사결정을 지원합니다."
+  },
+  "landing.userStory.Alibaba.com": {
+    "message": "Alibaba는 전자상거래, 클라우드, 디지털 미디어, 엔터테인먼트 등 다양한 사업을 운영하는 글로벌 인터넷 기술 기업입니다. 여러 사업에서 Apache Doris의 실시간 분석으로 사업 전략과 제품 최적화를 지원합니다."
+  },
+  "landing.userStory.JD.com": {
+    "message": "공급망 기반 기술 및 서비스 기업인 JD.com은 Apache Doris로 실시간·오프라인 데이터를 다차원 분석해 고객 서비스를 강화합니다."
+  },
+  "landing.userStory.Xiaomi": {
+    "message": "세계적인 스마트폰 및 소비자 전자제품 제조사인 Xiaomi는 대시보드, A/B 테스트, 사용자 행동 및 사업 성장 분석 등 다양한 업무에 Apache Doris를 활용합니다."
+  },
+  "landing.userStory.Baidu": {
+    "message": "AI, 클라우드 컴퓨팅, 검색 엔진 기술에 강점을 갖고 인터넷 서비스 혁신에 주력하는 대형 기술 기업입니다."
+  },
+  "landing.userStory.WeLab": {
+    "message": "WeLab은 개인 사용자 6,000만 명 이상과 기업 고객 700개 이상을 보유한 아시아의 빠르게 성장하는 핀테크 플랫폼입니다. Apache Doris는 실시간 빅데이터 플랫폼에서 셀프서비스 BI 보고와 사용자 행동 분석 등 주요 시나리오를 지원합니다."
+  },
+  "landing.userStory.FUSE": {
+    "message": "인도네시아 최대 보험 기술 기업 Fuse는 Apache Doris로 보험 BI 보고와 실시간 데이터 분석을 가속합니다."
+  },
+  "landing.userStory.Goldwind": {
+    "message": "Glodwind는 설계, 제조, 설치를 전문으로 하는 대표적인 풍력 터빈 제조사이자 재생 에너지 솔루션 제공업체입니다."
+  },
+  "landing.userStory.Leetcode": {
+    "message": "소프트웨어 엔지니어와 학생의 코딩 능력 향상 및 기술 면접 준비를 돕는 온라인 프로그래밍 플랫폼입니다."
+  },
+  "landing.userStory.miHoYo": {
+    "message": "miHoYo는 Genshin Impact, Honkai Impact 3rd, Tears of Themis 등 인기 게임으로 알려진 대표적인 인터랙티브 엔터테인먼트 기업입니다."
+  },
+  "landing.userStory.NetEase": {
+    "message": "NetEase는 데이터 관리 플랫폼에 Apache Doris를 도입해 전자상거래 사업의 성능을 높이고 태그 관리를 간소화했습니다."
+  },
+  "landing.userStory.Temu": {
+    "message": "Temu는 가정용 인테리어, 전자제품, 반려동물 용품, 스포츠용품, 장난감 등 합리적인 가격의 상품을 한곳에서 제공합니다."
+  },
+  "landing.userStory.Sina": {
+    "message": "Sina Weibo와 Sina.com 등을 운영하며 많은 사용자에게 뉴스, 엔터테인먼트, 소셜 네트워크, 전자상거래 서비스를 제공하는 온라인 미디어 및 기술 기업입니다."
+  },
+  "landing.userStory.TME": {
+    "message": "월간 활성 사용자 8억 명의 음악 스트리밍 서비스 Tencent Music은 ClickHouse에서 Apache Doris로 전환해 부분 열 업데이트, 저장 비용 절감, 유지 관리 간소화의 이점을 얻었습니다."
+  },
+  "landing.userStory.Sohu.com": {
+    "message": "여러 웹 서비스와 커뮤니티 기반 Web 2.0 제품을 제공하며 수백만 사용자의 일상에 자리 잡은 온라인 브랜드입니다."
+  },
+  "landing.userStory.NewsBreak": {
+    "message": "4,500만 명 이상이 이용하는 NewsBreak는 미국의 주요 지역 뉴스 및 속보 서비스로, 지역 날씨, 알림, 할인 정보, 행사 등을 제공합니다."
+  },
+  "landing.userStory.Tantan": {
+    "message": "사용하기 쉬운 인터페이스와 의미 있는 만남 및 관계 형성을 돕는 새로운 기능으로 알려진 인기 데이팅 앱입니다."
+  },
+  "landing.userStory.Soul%20App": {
+    "message": "아바타를 이용해 만나고 소통하는 관심사 기반 소셜 네트워크 플랫폼입니다."
+  },
+  "landing.userStory.Keep": {
+    "message": "다양한 운동 프로그램, 맞춤형 훈련 계획, 서로 돕는 커뮤니티로 사용자의 운동 목표 달성을 지원하는 피트니스 앱입니다."
+  },
+  "landing.userStory.Kwai": {
+    "message": "짧은 동영상 소셜 네트워크 Kwai는 ‘Druid + ClickHouse’ 구성을 Apache Doris로 대체해 대규모 데이터의 집계 분석 효율을 높였습니다."
+  },
+  "landing.userStory.37%20Interactive%20Entertainment": {
+    "message": "고품질 모바일 게임 개발 및 배포로 알려진 게임 기업입니다. 다양한 게임과 많은 사용자를 기반으로 전 세계 플레이어에게 몰입감 있는 게임 경험을 제공합니다."
+  },
+  "landing.userStory.HUYA%20Inc": {
+    "message": "HUYA Inc.는 게임, e스포츠, 엔터테인먼트 등 다양한 콘텐츠를 제공하는 주요 라이브 스트리밍 플랫폼입니다."
+  },
+  "landing.userStory.NIO": {
+    "message": "이 전기차 제조사는 여러 OLAP 시스템을 검토한 뒤 성능, 의미적 동작, 시스템 호환성 및 유지 관리 비용을 고려해 Apache Doris를 선택했습니다."
+  },
+  "landing.userStory.Suzuki": {
+    "message": "자동차, 오토바이, 선외기 등 다양한 제품을 만드는 일본 자동차 제조사입니다. Suzuki 제품은 신뢰성과 혁신으로 알려져 전 세계에서 사랑받고 있습니다."
+  },
+  "landing.userStory.Ford": {
+    "message": "Ford는 혁신과 품질로 알려진 자동차 기업으로, 전 세계에 다양한 승용차, 트럭, SUV를 제조·판매합니다."
+  },
+  "landing.userStory.Luckin%20Coffee": {
+    "message": "Luckin Coffee는 짧은 기간에 빠르게 성장한 커피 기업 및 체인입니다. 편리한 모바일 주문과 배달 서비스로 알려져 중국 전역에 커피 음료와 간식을 제공합니다."
+  },
+  "landing.userStory.JD%20Logistics": {
+    "message": "JD.com 자회사인 JD Logistics는 폭넓은 네트워크와 첨단 기술을 갖춘 주요 물류 기업입니다. 효율적인 창고, 운송, 공급망 솔루션으로 여러 산업의 전자상거래 운영을 지원합니다."
+  },
+  "landing.userStory.Anta": {
+    "message": "Anta는 혁신적 디자인과 고성능 운동화·의류로 알려진 스포츠웨어 기업입니다. 품질과 스타일을 중시하며 전 세계 운동선수와 피트니스 애호가에게 제품을 제공합니다."
+  },
+  "landing.userStory.Cabbeen": {
+    "message": "Cabbeen은 전통 요소와 현대적 미학을 조화시킨 트렌디한 의류 디자인으로 알려진 패션 브랜드입니다."
+  },
+  "landing.userStory.Semi": {
+    "message": "Semi는 혁신적이고 합리적인 가격의 패션을 개발하는 성인용 라이프스타일 브랜드입니다."
+  },
+  "landing.userStory.Septwolves": {
+    "message": "현대의 성공한 남성의 라이프스타일을 표현하고 여러 분야에서 활약하는 남성의 정신을 담는 패션 브랜드입니다."
+  },
+  "landing.userStory.Yonghui%20Superstores": {
+    "message": "Yonghui Superstores는 다양한 식료품과 생활용품으로 알려진 중국 소매 체인으로, 편리하고 쾌적한 쇼핑 경험을 제공합니다."
+  },
+  "landing.userStory.YumChina": {
+    "message": "Yum China는 KFC, Pizza Hut, Taco Bell 등을 운영하는 중국의 주요 외식 기업입니다. 맛있고 편리한 식사 경험으로 소비자의 신뢰를 얻고 있습니다."
+  },
+  "landing.userStory.Ausnutria": {
+    "message": "네덜란드에 본사를 둔 국제 유제품 기업 Ausnutria는 영유아 영양 제품의 생산과 유통을 전문으로 하며 전 세계 아기와 어린이에게 안전한 고품질 영양 제품을 제공합니다."
+  },
+  "landing.userStory.Aftership": {
+    "message": "AfterShip은 기업과 소비자가 여러 배송업체의 소포를 실시간으로 추적하는 주요 플랫폼입니다. 배송 관리의 투명성과 편의성을 높입니다."
+  },
+  "landing.userStory.SF%20Express": {
+    "message": "SF Express는 전 세계 기업과 개인에게 효율적이고 안정적인 국내·국제 배송을 제공하는 주요 물류 및 택배 기업입니다."
+  },
+  "landing.userStory.Uda%20Express": {
+    "message": "Uda Express는 전 세계 전자상거래 플랫폼, 구매자, 판매자, 무역업체, 유통업체 및 최종 소비자에게 안전하고 편리하며 효율적인 통합 글로벌 물류 서비스를 제공하고자 합니다."
+  },
+  "landing.userStory.ZTO%20Express": {
+    "message": "중국 전역의 기업과 소비자에게 안정적이고 빠른 배송을 제공하는 택배 전문 물류 기업입니다."
+  },
+  "landing.userStory.YT%20Express": {
+    "message": "YT Express는 신선식품과 의료 제품에 필요한 전용 콜드체인 장비 및 신속하고 효율적인 운송에 대한 높은 수요를 이해합니다."
+  },
+  "landing.userStory.Koolearn": {
+    "message": "교육 플랫폼 Koolearn은 학생과 성인 학습자에게 다양한 강좌와 학습 자료를 제공해 상호작용과 맞춤형 학습을 지원합니다."
+  },
+  "landing.userStory.vipkid": {
+    "message": "VIPKid는 유료 수강생과 미국·캐나다 교사를 연결하는 플랫폼입니다. 온라인 교실에서 유창한 영어를 구사하는 교사에게 25분 영어 수업을 받을 수 있습니다."
+  },
+  "landing.userStory.Meituan": {
+    "message": "이 주요 지역 생활 서비스 플랫폼은 고성능 OLAP 엔진으로 Apache Doris를 도입해 실시간·오프라인 데이터 처리 과제를 해결합니다."
+  },
+  "landing.userStory.Lifewit": {
+    "message": "Lifewit는 가정, 여행, 수납을 위한 새로운 제품을 개발해 편안한 일상을 돕는 생활용품 솔루션을 제공합니다."
+  },
+  "landing.userStory.Lenovo": {
+    "message": "Lenovo는 노트북, 태블릿, 스마트폰, 서버 등을 설계·개발·제조하는 글로벌 기술 기업으로 전 세계 고객에게 제품을 제공합니다."
+  },
+  "landing.userStory.Volvo": {
+    "message": "Volvo는 안전성과 신뢰성을 중시하는 자동차 제조사입니다. 다양한 차종에서 고급스러움과 실용성을 결합해 전 세계 고객의 요구에 응합니다."
+  },
+  "landing.userStory.Midea": {
+    "message": "중국에 본사를 둔 글로벌 가전 및 HVAC 솔루션 기업으로, 에어컨, 냉장고, 세탁기 등 다양한 제품을 제공합니다."
+  },
+  "landing.userStory.Shuhai%20Supply%20Chain%20Solutions": {
+    "message": "과거 Haidilao 자회사였던 Shuhai는 식자재 공급망 관리 전반을 제공하는 독립 서비스 기업으로, Doris로 기업용 데이터 웨어하우스를 구축합니다."
+  },
+  "landing.userStory.Xtep": {
+    "message": "Xtep은 운동화, 의류, 액세서리 설계·제조를 전문으로 하며 스포츠 애호가와 선수에게 기능성과 스타일을 갖춘 제품을 제공합니다."
+  },
+  "landing.userStory.Taikang%20Insurance%20Group": {
+    "message": "Taikang Insurance는 Doris로 보험 업무 분석 플랫폼을 구축해 수만 명의 현장 사용자에게 데이터 분석을 제공하며 쿼리는 수초 만에 완료됩니다."
+  },
+  "landing.userStory.Ping%20An%20Insurance%20Group": {
+    "message": "개인 고객 2억 2,700만 명 이상과 인터넷 사용자 6억 9,300만 명을 보유한 Ping An은 세계 최대 금융 서비스 기업 중 하나입니다. 생명보험, 손해보험, 금융 기술 등 여러 사업에서 Apache Doris를 사용합니다."
+  },
+  "landing.userStory.Cigna%20%26%20CMB": {
+    "message": "보험사 CIGNA & CMB는 Apache Doris를 통합 OLAP 플랫폼으로 사용해 고객, 분석가, 경영진을 위한 데이터 분석을 처리합니다."
+  },
+  "landing.userStory.China%20Everbright%20Bank": {
+    "message": "대형 주식제 상업은행인 China Everbright Bank는 데이터 플랫폼에 Apache Doris를 도입해 데이터 레이크 쿼리와 실시간 보고서 분석을 가속합니다."
+  },
+  "landing.userStory.Bosera%20Funds": {
+    "message": "Bosera Fund는 Teradata와 Oracle을 Apache Doris로 대체해 데이터 웨어하우스를 업그레이드하고 ETL 및 배치 데이터 처리 효율을 크게 높였습니다."
+  },
+  "landing.userStory.Harvest%20Funds": {
+    "message": "Harvest Fund는 기존 데이터 웨어하우스를 Apache Doris로 전환해 처리와 분석 효율을 높이고 성능, 비용, 신뢰성을 개선했습니다."
+  },
+  "landing.userStory.OneConnect": {
+    "message": "이 핀테크 기업은 Apache Doris로 10,000개 대시보드의 활성 금융 지표 10,000개를 처리하며 ETL 작업을 30% 줄였습니다. 1억 행 테이블의 쿼리 응답 시간도 5s에서 63ms로 단축했습니다."
+  },
+  "landing.userStory.Qifu%20Technology": {
+    "message": "AI 기반 핀테크 기업이 Apache Doris로 빅데이터를 처리·분석해 성능, 유연한 워크로드 관리, 높은 서비스 가용성 및 유지 관리 편의성을 확보했습니다."
+  },
+  "landing.userStory.Advance%20Intelligence%20Group": {
+    "message": "아시아 태평양 지역의 AI 기술 기업으로 소비자, 기업, 가맹점에 핀테크 제품과 서비스를 제공합니다."
+  },
+  "landing.userStory.QAX-Cyber%20Security%20Services": {
+    "message": "이 사이버 보안 기업은 로그 저장·분석 시스템을 구축해 쓰기 속도 3배, 쿼리 실행 속도 7배 및 시각화된 관리를 실현했습니다."
+  },
+  "landing.userStory.Tianyancha": {
+    "message": "이 기업 실사 플랫폼은 Apache Hive, Elasticsearch, PostgreSQL을 Apache Doris로 대체해 애드혹 분석과 사용자 세분화를 가속했습니다."
+  },
+  "landing.userStory.TMS": {
+    "message": "물류 운영을 간소화하고 최적화하는 클라우드 운송 관리 시스템입니다. 배송 계획, 실행, 모니터링을 통합 지원해 공급망 전체의 효율성과 가시성을 높입니다."
+  },
+  "landing.userStory.Orange%20Connex": {
+    "message": "Orange Connex는 전 세계 전자상거래용 디지털 공급망 솔루션을 제공합니다. Apache Doris를 운영에 도입한 뒤 데이터 계산 지연을 2시간에서 3분으로 줄였습니다."
+  },
+  "landing.userStory.Zhonglun%20Network": {
+    "message": "슈퍼마켓, 신선식품점, 의류점 등 소매업체에 재고 관리, 회원 마케팅, 계산대 서비스를 제공하는 SaaS 기업입니다."
+  },
+  "landing.userStory.Duyan%20Soft": {
+    "message": "이 SaaS 기업은 Apache Doris를 도입해 데이터 처리 효율을 높이고 특히 다차원 테이블 유지 관리와 높은 동시성 쿼리 과제를 해결합니다."
+  },
+  "landing.userStory.AISPEECH": {
+    "message": "대화형 AI와 자연어 상호작용 솔루션 기업이 Apache Doris로 실시간·오프라인 분석을 통합해 유연한 기능과 높은 성능을 챗봇에 활용합니다."
+  },
+  "landing.userStory.Boton": {
+    "message": "인터넷 기술로 물류와 배송을 지원하는 상장 기업입니다. 지능형 산업 물류 서비스를 제공하며 게임 등 온라인 사업도 운영합니다."
+  },
+  "landing.userStory.Sugon": {
+    "message": "안전하고 안정적인 클라우드 서비스, 효율적인 자원 관리 및 산업별 클라우드 애플리케이션을 제공하는 풀스택 클라우드 솔루션 기업입니다."
+  },
+  "landing.userStory.Wasu": {
+    "message": "AI, 클라우드 컴퓨팅, 빅데이터 분석, 통신 등 여러 산업에 첨단 솔루션을 제공하는 대형 기술 그룹입니다."
+  },
+  "landing.userStory.Horizon%20Robotics": {
+    "message": "AI 칩과 소프트웨어를 전문으로 하는 중국의 주요 AI 기술 기업입니다. 새로운 AI 솔루션으로 여러 산업을 지원하고 지능형 시스템 발전을 추진합니다."
+  },
+  "landing.userStory.Youdao": {
+    "message": "Youdao Inc.는 언어 관련 제품과 서비스를 제공합니다. 언어 학습 플랫폼, 번역 도구, 스마트 기기로 소통과 지식 습득을 돕습니다."
+  },
+  "landing.userStory.LY%20Digit": {
+    "message": "숙박업용 핀테크 솔루션을 제공하는 LY Digital은 기능이 풍부한 Apache Doris로 데이터 아키텍처를 간소화하고 데이터 접근과 쿼리를 가속합니다."
+  },
+  "landing.userStory.TTChat": {
+    "message": "음성 채팅방에서 실시간 대화, 전략 조율 및 친목을 돕는 메시징·커뮤니케이션 앱입니다."
+  },
+  "landing.userStory.DouYu": {
+    "message": "이 라이브 스트리밍 플랫폼은 Apache Doris로 스트림·배치 처리 파이프라인을 통합해 데이터 아키텍처를 빠르고 단순하며 비용 효율적으로 개선했습니다."
+  },
+  "landing.userStory.Zhihu%20Inc": {
+    "message": "다양한 분야의 Q&A 사이트로, Apache Doris를 데이터 관리 플랫폼에 활용해 빠른 수집과 쿼리 응답을 제공합니다."
+  },
+  "landing.userStory.Dingdong": {
+    "message": "신선식품, 식료품, 생활필수품을 편리하고 빠르게 배송해 장보기를 간편하게 하는 온라인 플랫폼입니다."
+  },
+  "landing.userStory.Linkedcare": {
+    "message": "이 헬스케어 기술 SaaS 기업은 ClickHouse에서 Apache Doris로 데이터 서비스 아키텍처를 발전시킨 과정을 소개합니다."
+  },
+  "landing.userStory.LeTV": {
+    "message": "LeTV는 인터넷 서비스, 스마트 기기, 콘텐츠 제작을 전문으로 하며 스마트폰, 스마트 TV, 스트리밍 서비스 등을 제공합니다."
+  },
+  "landing.userStory.Boss%20Zhipin": {
+    "message": "채용 담당자와 구직자의 즉각적인 직접 채팅을 지원하는 온라인 채용 플랫폼입니다. 자체 AI 알고리즘과 빅데이터 분석으로 정확한 추천을 제공합니다."
+  },
+  "landing.userStory.Soyoung": {
+    "message": "Nasdaq에 상장된 미용 의료 플랫폼입니다. 소셜 미디어 형태의 신뢰도 평가 시스템으로 사용자의 신뢰를 얻고 있습니다."
+  },
+  "landing.userStory.Jiyue%20Auto": {
+    "message": "Jiyue는 Geely Holding의 차세대 자동차 로봇 브랜드입니다. 프리미엄 지능형 시장을 지향하며 첨단 스마트 자동차 로봇 개발에 주력합니다."
+  },
+  "landing.userStory.Wuling%20Motors": {
+    "message": "Wuling Motors는 합리적인 가격의 실용적인 차량을 전문으로 하며 소형차와 상용차로 국내외 시장에서 인기를 얻고 있습니다."
+  },
+  "landing.userStory.Chang'an%20Automobile": {
+    "message": "이 자동차 제조사는 차량 400만 대를 연결하고 매일 CAN 데이터 1,000억 건을 처리합니다. Apache Doris가 실시간 분석 성능을 보장합니다."
+  },
+  "landing.userStory.LOTUS": {
+    "message": "Lotus는 고성능 스포츠카와 레이싱카를 제조하는 영국 자동차 기업입니다."
+  },
+  "landing.userStory.Great%20Wall": {
+    "message": "Great Wall Motors는 SUV, 픽업트럭, 전기차를 전문으로 하는 중국의 주요 자동차 제조사입니다."
+  },
+  "landing.userStory.Chery": {
+    "message": "Chery는 세단, SUV, 전기차 등 다양한 차종으로 알려져 있습니다. 혁신과 품질을 중시하며 글로벌 자동차 시장에서 입지를 구축했습니다."
+  },
+  "landing.userStory.Envision%20Energy": {
+    "message": "Envision Energy는 풍력 터빈, 에너지 관리 소프트웨어, 스마트 그리드 기술로 전 세계의 청정하고 지속 가능한 에너지 발전을 추진합니다."
+  },
+  "landing.userStory.CTYun": {
+    "message": "CTYun은 클라우드 컴퓨팅 및 인프라 서비스 기업입니다. 다양한 솔루션으로 기업에 안전하고 확장 가능하며 안정적인 클라우드 환경을 제공합니다."
+  },
+  "landing.userStory.ZTE": {
+    "message": "ZTE는 5G, 네트워크, 모바일 기기 기술을 바탕으로 통신 산업의 연결성과 디지털 전환을 추진하는 솔루션을 제공합니다."
+  },
+  "landing.userStory.HuoLaLa": {
+    "message": "Huolala는 화물 정보 공유, 개인 물품 운송, 기업 화물 운송 등 다양한 화물 서비스를 전 세계에 제공하는 플랫폼입니다."
+  },
+  "landing.userStory.Deppon%20Express": {
+    "message": "Deppon Express는 기업과 개인에게 안정적이고 효율적인 종합 택배 및 공급망 솔루션을 제공하는 물류 기업입니다."
+  },
+  "landing.userStory.Du%20Xiaoman%20Financial": {
+    "message": "첨단 기술로 디지털 결제, 소액 대출, 투자, 자산 관리 등 금융 서비스를 제공하는 핀테크 기업입니다."
+  },
+  "landing.userStory.Industrial%20Bank": {
+    "message": "대형 주식제 상업은행인 Xingye Bank는 빅데이터 플랫폼에 Apache Doris를 도입해 실시간 분석 효율을 높이고 업무 운영과 경영 의사결정을 지원합니다."
+  },
+  "landing.userStory.UMS": {
+    "message": "글로벌 결제 생태계를 구축하고 가맹점과 소비자에게 안전하고 편리한 온라인 결제를 제공하는 전자 결제 및 핀테크 솔루션 기업입니다."
+  },
+  "landing.userStory.Caitong%20Securities": {
+    "message": "Caitong Securities는 Apache Doris로 실시간 데이터를 요약·분석하고 다양한 보고서를 빠르게 생성해 사업 발전과 의사결정을 지원합니다."
+  },
+  "landing.userStory.Lakala": {
+    "message": "상장 디지털 결제 서비스 기업으로, 소매업체, 은행, 전자상거래 기업에 현금·사업·공급망 관리 솔루션도 제공합니다."
+  },
+  "landing.userStory.Easy%20Pay": {
+    "message": "항공, 숙박, 소매 구매 등 여행자의 요구에 맞춘 종합 전자 결제 서비스를 제공합니다."
+  },
+  "landing.userStory.Mucfc.com": {
+    "message": "기존 은행 서비스가 닿지 않는 중소 규모 금융 수요를 지원해 포용 금융을 추구하는 소비자 금융 기업입니다."
+  },
+  "landing.userStory.ZhongAn%20Insurance": {
+    "message": "다양한 생활 영역에 새로운 보험 상품을 제공하는 디지털 보험 기업입니다. 첨단 기술로 운영 효율과 리스크 관리를 개선합니다."
+  },
+  "landing.userStory.InRice.com": {
+    "message": "금융, 마케팅, 행사 및 고객 관리까지 시나리오별 종합 디지털 솔루션을 제공하는 핀테크 기업입니다."
+  },
+  "landing.userStory.Bairong%20Inc": {
+    "message": "AI로 여러 산업의 의사결정을 지원하는 금융 리스크 관리 및 마케팅 서비스 기업입니다."
+  },
+  "landing.userStory.Moka": {
+    "message": "이 SaaS 기업은 Apache Doris의 빠른 조인 쿼리로 셀프서비스 BI를 지원합니다. 권한 관련 쿼리의 효율도 높였습니다."
+  },
+  "landing.userStory.360%20Security": {
+    "message": "Apache Doris는 초당 수백만 작업이 발생하는 대규모 실시간 A/B 테스트에서 빠른 계산과 데이터 정합성을 제공합니다. 각 작업에는 약 20개 데이터 태그와 10여 개 차원이 포함됩니다."
+  },
+  "landing.userStory.HuiCe": {
+    "message": "이 지능형 소매 서비스 기업은 Apache Doris로 자원 격리와 높은 동시성 쿼리를 구현해 쿼리 속도를 높이고 저장 비용을 낮췄습니다."
+  },
+  "landing.userStory.JiaoLong%20Cloud": {
+    "message": "독자적인 지식재산권을 갖춘 최첨단 통합 생성형 AI 제품군을 개발하는 솔루션 기업입니다."
+  },
+  "landing.userStory.IGOTGAMES": {
+    "message": "IGG는 북미에서 여러 대규모 다중 사용자 온라인 게임을 배포한 것으로 알려져 있습니다. 첫 크로스 플랫폼 실시간 게임인 ‘Lords Mobile’은 전 세계 약 3억 2,000만 등록 사용자를 보유하고 있습니다."
+  },
+  "landing.userStory.Electronic%20Soul": {
+    "message": "Electronic Soul은 모바일, PC, 콘솔에 고품질 디지털 콘텐츠를 제공하는 아시아의 주요 게임 개발·배급사입니다."
+  },
+  "landing.userStory.Haohan%20Data": {
+    "message": "Haohan Data는 첨단 기술과 분석을 활용한 종합 데이터 솔루션으로 기업의 정보 기반 의사결정을 지원합니다."
+  },
+  "landing.userStory.Aima%20Tech": {
+    "message": "전기차 제조사 Aima Tech는 통근 방식의 혁신과 탄소 배출 감소에 주력합니다."
+  },
+  "landing.userStory.Peacebird": {
+    "message": "Peacebird는 현대적이고 트렌디한 디자인으로 알려져 있으며 세련되고 친환경적인 패션을 제공합니다."
+  },
+  "landing.userStory.Full%20Truck%20Alliance": {
+    "message": "Full Truck Alliance는 화주와 트럭 운전자를 연결하는 주요 디지털 화물 플랫폼입니다. 투명하고 효율적인 운송으로 중국 전역의 물류를 최적화합니다."
+  },
+  "landing.userStory.CaiNiao": {
+    "message": "Alibaba Group의 CaiNiao는 종단 간 공급망 관리와 배송을 전문으로 하는 물류 플랫폼입니다. 판매자, 창고, 배송업체를 연결해 운영을 간소화하고 신속한 주문 처리를 지원합니다."
+  },
+  "landing.userStory.Umetrip": {
+    "message": "Umetrip은 중국 항공·여행 산업의 주요 IT 솔루션 기업입니다. 항공 예약, 승객 서비스, 항공 데이터 관리를 종합적으로 지원합니다."
+  },
+  "landing.userStory.Yurun%20Group": {
+    "message": "중국 식품 가공·유통 기업 Yurun Group은 사육, 가공, 소매를 수직 통합해 소비자에게 고품질 육류를 제공합니다."
+  },
+  "landing.userStory.Bondex": {
+    "message": "Bondex는 수출입 기업에 계획, 설계, 실행을 포함한 국경 간 맞춤형 공급망 솔루션과 표준화된 물류 서비스를 제공합니다."
+  },
+  "landing.userStory.Zongteng%20Group": {
+    "message": "Zongteng Group은 중국에 본사를 두고 전자상거래 판매자에게 국경 간 창고·물류 서비스를 제공하는 대형 기업입니다."
+  },
+  "landing.userStory.Techsight": {
+    "message": "이 핀테크 기업은 신용 평가와 리스크 관리 솔루션에 Apache Doris를 도입해 개발·유지 관리 부담을 줄이면서 대규모 데이터 쿼리를 가속합니다."
+  },
+  "landing.userStory.Zuoyebang": {
+    "message": "Zuoyebang은 다양한 연령의 학생에게 교육 자료, 실시간 수업, 과외 및 맞춤형 학습을 제공하는 주요 온라인 교육 플랫폼입니다."
+  },
+  "landing.userStory.Atguigu": {
+    "message": "학습 플랫폼 Atguigu는 기술 역량 습득과 IT 업계 경력 발전을 돕는 종합 교육 프로그램과 자료를 제공합니다."
+  },
+  "landing.userStory.ITCast": {
+    "message": "ITCast는 다양한 IT 및 프로그래밍 강좌를 제공하는 종합 온라인 학습 플랫폼입니다."
+  },
+  "landing.userStory.Kaikeba": {
+    "message": "업계 전문가의 다양한 강좌와 프로그램으로 새로운 기술 습득과 전문 분야의 성장을 돕는 온라인 교육 플랫폼입니다."
+  },
+  "landing.userStory.Lizhiweike": {
+    "message": "음성 라이브 플랫폼 Lizhiweike는 팟캐스트, 라디오, 상호작용 토론 등의 실시간 음성 콘텐츠 제작·공유를 지원하는 커뮤니티입니다."
+  },
+  "landing.userStory.Tenclass": {
+    "message": "TenClass는 디지털 역량, 영상 편집, 데이터 분석 등의 교육으로 개인의 성장을 돕는 교육 기업입니다."
+  },
+  "landing.userStory.Wuxi%20Xishang%20Bank": {
+    "message": "Apache Doris로 마케팅, 리스크 관리 및 고객 서비스의 디지털화와 정교한 관리를 지원하는 은행입니다."
+  },
+  "landing.userStory.HYXJ": {
+    "message": "이 소비자 금융 기업은 리스크 관리 플랫폼의 통합 쿼리 게이트웨이로 Apache Doris를 사용하고 Multi Catalog 기능으로 이기종 데이터 소스를 통합합니다."
+  },
+  "landing.userStory.HCFC": {
+    "message": "이 소비자 금융 기술 기업은 내부 업무와 운영에 Apache Doris를 폭넓게 활용해 쿼리 성능과 데이터 품질을 높였습니다."
+  },
+  "landing.userStory.Autohome": {
+    "message": "Autohome은 자동차 정보, 리뷰 및 관련 서비스를 종합 제공하는 주요 온라인 플랫폼입니다. 자동차 애호가, 구매자, 소유자를 위한 원스톱 서비스를 제공합니다."
+  },
+  "landing.userStory.JJ%20World": {
+    "message": "JJ World는 보드·카드 게임 개발사로 JJ-Dota 대전 플랫폼, 3399 미니게임 플랫폼, 모바일 앱 등을 제공합니다."
+  },
+  "landing.userStory.Q1.com": {
+    "message": "Q1.com은 온라인 게임과 엔터테인먼트 분야에서 뛰어난 사용자 경험을 제공하는 데 주력합니다."
+  },
+  "landing.userStory.Xiaoe%20Tech": {
+    "message": "최종 사용자 8억 명을 보유한 이 라이브 스트리밍 기업은 Apache Doris로 분석 구성을 간소화했습니다. 태그 쿼리 가속, 신속한 재해 복구 및 편리한 데이터 시각화를 실현했습니다."
+  },
+  "landing.userStory.Youzan": {
+    "message": "이 전자상거래 SaaS 기업은 ClickHouse에서 Apache Doris로 전환해 SQL 쿼리 성능을 250% 높였습니다. 모든 데이터 크기의 조인 테스트에서 Doris가 ClickHouse를 앞섰습니다."
+  },
+  "landing.userStory.Midland%20Realty": {
+    "message": "이 대형 부동산 기업은 Apache Doris로 데이터 웨어하우스를 빠르고 쉽게 구축해 낮은 쿼리 지연, 쉬운 유지 관리 및 적은 저장 자원 사용량을 실현했습니다."
+  },
+  "landing.userStory.Footprint%20Analytics": {
+    "message": "사용자가 10초 이내에 대시보드를 맞춤 설정하고 데이터에서 유용한 인사이트를 얻도록 하는 블록체인 분석 솔루션 기업입니다."
+  },
+  "landing.reports.2026-10-12.label": {
+    "message": "2026년 10월 12일~10월 18일"
+  },
+  "landing.reports.2026-10-12.week": {
+    "message": "2026년 42주차"
+  },
+  "landing.reports.2026-10-12.report.summary.lead": {
+    "message": "이번 주 Apache Doris는 더 신속한 수집, 집중된 스캔, 고정밀 타임스탬프를 보존하는 레이크하우스 연동을 발전시켰습니다. 커널과 엔지니어링이 여전히 가장 큰 비중을 차지합니다. 최신 클라이언트 호환성과 외부 인증의 명시적 계정 연결도 개선되어 접속과 계정 관리가 명확해지고 있습니다. 기여자 43명이 PR 176개를 병합했고 새 이슈 20개가 등록되었습니다. 실시간 웨어하우스와 레이크하우스 기능 확장과 함께 엔지니어링 기반을 강화하고 있습니다."
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.title": {
+    "message": "이벤트 기반 S3 수집"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.narrative": {
+    "message": "전용 SQS 큐로 전달되는 S3 ObjectCreated 알림을 이용하고 bucket과 glob으로 필터링하는 스트리밍 수집을 지원합니다. 키가 정렬된 목록 커서 앞에 있어 누락되던 파일 문제를 해결해 수집 완전성을 높이고 객체 스토리지 수집을 이벤트 기반으로 발전시킵니다."
+  },
+  "landing.reportRefs.c27ec3f57ca583e3": {
+    "message": "[feature](fe) S3 알림 기반 스트리밍 수집 지원"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.title": {
+    "message": "비트맵 후보로 스캔 범위 축소"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.narrative": {
+    "message": "제안된 변경은 외부 Roaring 비트맵을 받아 네이티브 스캔 초기에 후보 리소스 ID를 필터링하고 선택적으로 압축 런타임 필터를 사용합니다. 범주, 패싯, 접근 규칙에서 얻은 후보 집합으로 대규모 공유 데이터의 쿼리 작업을 일찍 줄이는 방안을 탐색합니다."
+  },
+  "landing.reportRefs.e56f41ac207d8582": {
+    "message": "[feature](be) 리소스 ID용 Roaring 비트맵 후보 필터 추가"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.title": {
+    "message": "레이크하우스 테이블 간 나노초 정밀도 보존"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.narrative": {
+    "message": "Iceberg와 Paimon의 시간대 없는 나노초 타임스탬프를 TIMESTAMP_NS와 양방향 매핑합니다. 중첩 타입을 포함해 읽기, 삽입, CTAS에서 소수점 이하 9자리를 보존합니다. 시스템 간 정밀도 손실을 줄이고 레이크하우스의 정확한 타입 처리를 발전시킵니다."
+  },
+  "landing.reportRefs.71c3f7b235a54c90": {
+    "message": "[feat](datalake) Iceberg 및 Paimon 나노초 타임스탬프 지원"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.title": {
+    "message": "최신 MySQL 클라이언트 호환성 확대"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.narrative": {
+    "message": "Doris FE의 MySQL 9 클라이언트 및 Connector/J 8/9 호환성이 개선되었습니다. 다중 문 결과, caching_sha2 전체 인증, authentication_policy 쿼리, 준비된 문의 이진 TIME 매개변수를 다룹니다. 애플리케이션 연동 부담을 줄이고 더 많은 클라이언트 동작에서 MySQL 프로토콜 호환성을 높입니다."
+  },
+  "landing.reportRefs.7d69ed3ed1a1c740": {
+    "message": "[feature](fe) MySQL 9 클라이언트 및 Connector/J 호환성 개선"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.title": {
+    "message": "외부 인증의 명시적 계정 연결"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.narrative": {
+    "message": "user@host 계정과 자격 증명을 검증하는 이름 있는 인증 통합 간 배타적 연결을 지원합니다. AS로 외부 ID에 매핑하는 옵션도 제공합니다. LDAP, IAM 등 제공업체에 독립적인 문법으로 ID 관계를 명확히 하고 인증 관리를 명시적 구성으로 발전시킵니다."
+  },
+  "landing.reportRefs.445ef4d0d54b311e": {
+    "message": "[feature](fe) 사용자를 인증 통합에 연결"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.name": {
+    "message": "멀티모달 레이크하우스"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.mergedNarrative": {
+    "message": "레이크하우스에서는 외부 파일 COUNT 스케줄링으로 반복 쿼리의 BE 부하 집중을 줄였습니다. 파티션 인식 Iceberg 쓰기 라우팅과 덮어쓰기 모드 제어를 개선했습니다. 네이티브 테이블 속성 갱신, GZIP 쓰기, Oracle 타입 매핑, 선택적 파일명 패딩으로 수집·관리·내보내기 연동을 확대했습니다."
+  },
+  "landing.reportRefs.a809f2794dc06e2d": {
+    "message": "[improvement](fe) 외부 파일 COUNT 스캔 스케줄링 최적화"
+  },
+  "landing.reportRefs.e610de745b4faf88": {
+    "message": "[opt](jdbc) Oracle BINARY_FLOAT 및 BINARY_DOUBLE 타입 지원"
+  },
+  "landing.reportRefs.961d9334f728c56c": {
+    "message": "[feature](outfile) 선택적 file_name_padding 추가"
+  },
+  "landing.reportRefs.1c555c5cbedde93a": {
+    "message": "[fix](iceberg) iceberg/hive Parquet 쓰기에 GZIP 지원"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.inProgressNarrative": {
+    "message": "진행 중인 레이크하우스 작업은 파티션 메타데이터 처리로 Hive/Hudi 최신 파티션 쿼리가 파일을 열지 않게 하고 HMS 가지치기로 계획 비용을 줄이는 데 중점을 둡니다. 네이티브 Azure 접근과 3D 지오메트리 호환성도 확대합니다. 새 ANN 작업은 인덱스 구축을 수집 시점에서 백그라운드 컴팩션으로 옮기는 방안을 제안합니다."
+  },
+  "landing.reportRefs.eb3901ea49c7640e": {
+    "message": "[improvement](hive) Hive/Hudi 스캔의 파티션 열 값 전용 푸시다운 지원"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.name": {
+    "message": "실시간 데이터 웨어하우스"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.mergedNarrative": {
+    "message": "실시간 처리에서는 사전 할당을 줄여 넓은 테이블과 많은 연결의 포인트 쿼리 캐시 메모리를 절감했습니다. 수집 취소, 종료 조율, 트랜잭션 부분 업데이트 검증, CDC 스키마 변경 복구를 강화했습니다. BE CPU에 맞춘 스냅샷 병렬도, 중복 스키마 저널 감소, 집계 상태의 직접 최종 처리도 추가했습니다."
+  },
+  "landing.reportRefs.08f6a0954e127053": {
+    "message": "[opt](point query) 단축 조회 캐시 사용량 감소"
+  },
+  "landing.reportRefs.d6647cef5ba54859": {
+    "message": "[fix](load) 트랜잭션 VALUES 삽입의 부분 업데이트 거부"
+  },
+  "landing.reportRefs.8ff7e678cf737f30": {
+    "message": "[enhance](load) 잠금 없는 적재 취소 지원"
+  },
+  "landing.reportRefs.d4265d872703707b": {
+    "message": "[fix](streaming job) alter 및 commit 처리 강화"
+  },
+  "landing.reportRefs.1c2686c5265895ed": {
+    "message": "[feature](be) 집계 상태 finalizer 및 배치 병합 추가"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.inProgressNarrative": {
+    "message": "진행 중인 실시간 웨어하우스 작업은 영속적인 Kinesis 샤드 추적, JSON 설정 전파, 최신 가시 파티션 선택으로 수집 연속성과 최신 데이터 접근을 개선합니다. 새 작업은 사전 집계를 병합 가능한 집계 상태로 확대하고 복제본 복구 중 binlog 보존 경쟁을 해결해 분석 효율과 이벤트 보존 안정성을 높입니다."
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.name": {
+    "message": "컴퓨트·스토리지 분리 및 클라우드 네이티브"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.mergedNarrative": {
+    "message": "클라우드 운영에서는 메타데이터 정합성과 저장 효율을 개선했습니다. 컴퓨트 그룹 동기화가 삭제된 속성과 같은 이름의 재생성을 올바르게 처리하고 GCS 회수는 배치 삭제를 사용합니다. 파일 캐시는 기본 활성화되며 문제가 될 수 있는 LRU 덤프는 명시적으로 켜야 합니다."
+  },
+  "landing.reportRefs.f0f5fae9a0f54943": {
+    "message": "[fix](cloud) Meta Service의 컴퓨트 그룹 속성 교체"
+  },
+  "landing.reportRefs.3abc65af6fd53ff7": {
+    "message": "[fix](cloud) 재생성된 컴퓨트 그룹 매핑 보존"
+  },
+  "landing.reportRefs.f4d90d8f42179dad": {
+    "message": "[improvement](filecache) 파일 캐시 기본 활성화"
+  },
+  "landing.reportRefs.81366e18cde9dd80": {
+    "message": "[improvement](cloud) GCS 객체 회수의 배치 삭제 활성화"
+  },
+  "landing.reportRefs.1bec1df680ed94c8": {
+    "message": "[fix](filecache) 파일 캐시 LRU 덤프 기본 비활성화"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.inProgressNarrative": {
+    "message": "진행 중인 클라우드 작업은 조정된 프리페치, I/O 병합, 증분 쿼리 캐시 재사용으로 원격 읽기 비용을 줄이고 FE 활동 추적 메모리도 절감합니다. 이번 주 새 피어 캐시 비동기 쓰기 작업은 동기 캐시 채우기를 쿼리 스레드에서 분리하는 것을 목표로 합니다."
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.name": {
+    "message": "에이전트 관측성"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.mergedNarrative": {
+    "message": "큰 JSON 문서와 로그·에이전트 데이터의 밀집 텍스트 검색을 위해 JSONB 배열 순회를 선형으로 바꾸고 점수가 필요 없는 역색인 교집합을 최적화했습니다. 큰 배열 검색과 흔한 단어 조합 필터링 비용을 줄입니다."
+  },
+  "landing.reportRefs.07b1bd695cef6e2f": {
+    "message": "[improvement](be) JSON 함수의 JSONB 배열 선형 순회"
+  },
+  "landing.reportRefs.68251a17d89a36dd": {
+    "message": "[improvement](be) 밀집된 무점수 역색인 교집합 가속"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.name": {
+    "message": "생태계 통합"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.mergedNarrative": {
+    "message": "워크로드 이관과 클라이언트 연결을 위해 Hive 호환 문자 인코딩·디코딩을 추가하고 TLS의 MySQL 패킷 잘림을 수정했습니다. Flight 메타데이터, 네이티브 Variant, VARBINARY 수정도 master에 반영해 시스템 간 호환성 차이를 줄였습니다."
+  },
+  "landing.reportRefs.d8b9497fb452fdd5": {
+    "message": "[feature](function) Hive 호환 encode 및 decode 지원"
+  },
+  "landing.reportRefs.27ff74adac93a523": {
+    "message": "[fix](fe) TLS의 MySQL 패킷 잘림 수정"
+  },
+  "landing.reportRefs.a4f6dca600326868": {
+    "message": "[feature](arrow) Flight 메타데이터, 네이티브 Variant, VARBINARY 수정을 master에 이식"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.inProgressNarrative": {
+    "message": "진행 중인 생태계 작업은 dbt 긴 문장 손상과 Flight SQL 메타데이터 필터·시간대 호환성을 해결해 클라이언트 연동과 SQL 마이그레이션을 더 예측 가능하게 만듭니다. Trino 호환 기간 형식도 Doris로 쿼리와 도구를 옮길 때의 적응 작업을 줄입니다."
+  },
+  "landing.reportRefs.e5ef35578b1d2909": {
+    "message": "[fix](dbt-doris) use_pure=True를 강제해 조용한 손상 방지…"
+  },
+  "landing.reportRefs.08381a0998d73a03": {
+    "message": "[fix](arrow-flight) 테이블 유형 메타데이터 및 필터 지원"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.name": {
+    "message": "보안 및 거버넌스"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.mergedNarrative": {
+    "message": "과거 파티션을 일시적으로 보존해야 하는 운영을 위해 클러스터 전체의 동적 파티션 삭제 보호 설정을 추가했습니다. 파티션 생성은 계속하면서 자동 정리를 멈춰 데이터 보존을 더 세밀하게 제어할 수 있습니다."
+  },
+  "landing.reportRefs.f81b3554049fefd2": {
+    "message": "[opt](partition) 전역 동적 파티션 삭제 보호 추가"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.inProgressNarrative": {
+    "message": "진행 중인 거버넌스 작업은 생성 시 설정하는 행 TTL을 중심으로 병합 후 만료 행을 숨기고 일반 재작성에서 제거합니다. 정책 수정은 메타데이터 재생 실패를 해결하고 생성에 성공한 것처럼 보여도 적용되지 않을 수 있는 상관 하위 쿼리 정책을 거부해 접근 제어에 대한 잘못된 확신을 줄입니다."
+  },
+  "landing.reportRefs.69e4f71d5a3fad3b": {
+    "message": "[feature](storage) 행 수준 TTL 지원"
+  },
+  "landing.reportRefs.98a57ecda49e26b7": {
+    "message": "[fix](policy) CREATE ROW POLICY USING 절의 상관 하위 쿼리 거부"
+  },
+  "landing.reportRefs.9ecc66ecc6a8c40a": {
+    "message": "[fix](policy) 외부 카탈로그 뷰의 행 정책 수정"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.name": {
+    "message": "커널 및 엔지니어링"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.mergedNarrative": {
+    "message": "커널에서는 복잡한 쿼리와 레이크하우스 접근의 안정적인 실행을 강화했습니다. MATCH/SEARCH 엔진 통합, 점수 계산과 SQL 정확성 수정, 동시 수명 주기 안전성, 캐시 메모리 제어, 스캔·Variant 읽기·브로드캐스트 전송 효율 개선을 진행했습니다. 커넥터 호환성과 진단도 개선했습니다."
+  },
+  "landing.reportRefs.77210fc4760d7fbe": {
+    "message": "[refactor](const column) 상수 열 읽기 방식 통합"
+  },
+  "landing.reportRefs.045be7e731050193": {
+    "message": "[fix](pipeline) PipelineTask::set_running을 무조건 exchange로 변경"
+  },
+  "landing.reportRefs.68c01323c5dc0b97": {
+    "message": "[fix](update) 업데이트에 생성 열 의존성 포함"
+  },
+  "landing.reportRefs.06f2ac7bccf9eea3": {
+    "message": "[fix](cloud) 복제본 업데이트 재생 시 및 체크포인트 저장 전 오래된 경로 정리"
+  },
+  "landing.reportRefs.3496f634e491fcfa": {
+    "message": "[fix](be) 프로세스 메모리 압박 시 취소 전 일시 중지 쿼리의 대기 유지"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
+    "message": "진행 중인 커널 작업은 쿼리 정확성, 장애 격리, 자원 제어를 강화합니다. 새 작업은 특히 옵티마이저와 숫자 변환 오류, BE를 종료시킬 수 있는 스캐너 예외, 캐시 메모리 예산, 파티션 생성 제한에 집중합니다. 신뢰할 수 있는 복잡한 쿼리 결과, 예측 가능한 운영, 더 나은 진단을 목표로 합니다."
   }
 }

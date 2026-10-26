@@ -207,7 +207,7 @@ const EVENTS_PAGE_DATA = {
             description:
                 'Apache Doris 4.0 版本正式上线混合检索功能，实现全文搜索、向量搜索、结构化分析的一站式 SQL 引擎支持，彻底打破传统检索与分析的系统壁垒！',
             start_date: '2025-12-04T19:30:00.000Z',
-            end_date: '2025-012-04T20:30:00.000Z',
+            end_date: '2025-12-04T20:30:00.000Z',
             img: (
                 <img
                     alt="doris-meetup-20251204"
@@ -366,7 +366,7 @@ const EVENTS_PAGE_DATA = {
             description:
                 '此次活动将首次解读面向 AI 的实时分析型数据库 — Apache Doris 4.0 全新特性，聚焦其在 AI、湖仓一体、存算分离、可观测性、高并发点查等关键场景的技术实践。活动将深入探讨 Apache Doris 如何应对各类复杂业务需求，并邀请来自浪潮与中泰证券的技术专家分享实战经验，共同探索基于 Apache Doris 及其商业化产品 SelectDB 构建实时数据平台的最佳路径。',
             start_date: '2025-08-15T13:00:00.000Z',
-            end_date: '2025-08-14T17:00:00.000Z',
+            end_date: '2025-08-15T17:00:00.000Z',
             img: (
                 <img
                     alt="doris-meetup-20250717"
@@ -871,6 +871,8 @@ export default function Events() {
         return (
             <Link
                 to={data.link}
+                data-event-id={`${selectedLanguage}:${data.link}`}
+                lang={selectedLanguage === 'zh' ? 'zh-CN' : currentLocale}
                 style={{ transition: 'all 0.2s ease-in-out' }}
                 className="!no-underline w-[24rem] rounded-lg hover:translate-y-[-0.5rem]"
             >
@@ -949,9 +951,11 @@ export default function Events() {
                 </div>
             </section>
             <section className="mb-[5.5rem] mt-[1.25rem]">
-                <div className="max-w-[75rem] lg:px-0 px-4 text-[1rem]/[180%] mx-auto flex justify-start gap-x-[2.5rem] font-medium">
+                <div className="max-w-[75rem] lg:px-0 px-4 text-[1rem]/[180%] mx-auto flex flex-wrap justify-start gap-x-[2.5rem] font-medium">
                     <div className="h-[3.25rem] pb-4">{translate({id: "landing.events.019", message: "Event Language Type:"})}</div>
-                    <div
+                    <button
+                        type="button"
+                        aria-pressed={selectedLanguage === 'en'}
                         onClick={() => setSelectedLanguage('en')}
                         className={`h-[3.25rem] cursor-pointer pb-4 hover:text-[#1D1D1D] ${selectedLanguage === 'en'
                             ? 'text-[#1D1D1D] border-b-[2px]  border-primary'
@@ -959,9 +963,11 @@ export default function Events() {
                             }`}
                     >
                         {translate({id: "landing.events.020", message: "English"})}
-                    </div>
+                    </button>
 
-                    <div
+                    <button
+                        type="button"
+                        aria-pressed={selectedLanguage === 'zh'}
                         onClick={() => setSelectedLanguage('zh')}
                         className={`h-[3.25rem] cursor-pointer hover:text-[#1D1D1D] pb-4 ${selectedLanguage === 'zh'
                             ? 'text-[#1D1D1D] border-b-[2px] border-primary'
@@ -969,31 +975,33 @@ export default function Events() {
                             }`}
                     >
                         {translate({id: "landing.events.021", message: "Chinese"})}
-                    </div>
+                    </button>
                 </div>
+                <p className="container">{translate({id: 'landing.events.mediaLanguage', message: 'Event posters and linked recordings retain their original language. Chinese event descriptions are shown in Chinese.'})}</p>
                 <div className="max-w-[75rem] pt-[5rem] border-t-[0.5px] border-[#E3E8F2] mx-auto ">
                     <div
                         className={`flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] ${!showMore ? 'mb-[2.5rem]' : 'mb-[5rem]'
                             } `}
                     >
-                        {eventList.slice(0, 9).map((event: Event, index) => (
-                            <EventCard data={event} key={index} />
+                        {eventList.slice(0, 9).map((event: Event) => (
+                            <EventCard data={event} key={event.link} />
                         ))}
                     </div>
                     {showMore ? (
                         <div className="flex justify-center lg:justify-start flex-wrap gap-x-[1.5rem] gap-y-[5rem] mb-[2.5rem] ">
-                            {eventList.slice(9).map((event: Event, index) => (
-                                <EventCard data={event} key={index} />
+                            {eventList.slice(9).map((event: Event) => (
+                                <EventCard data={event} key={event.link} />
                             ))}
                         </div>
                     ) : null}
                     {eventList.length > 9 ? (
-                        <div
+                        <button
+                            type="button"
                             onClick={() => setShowMore(true)}
                             className="cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
                         >
                             {translate({id: "landing.events.022", message: "See More"})} <ArrowDown className="inline" />
-                        </div>
+                        </button>
                     ) : null}
                 </div>
             </section>

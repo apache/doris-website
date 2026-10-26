@@ -15826,5 +15826,20 @@
     },
     "landing.sketch.question.3": {
         "message": "删除所有 INFO 日志以节省空间。"
+    },
+    "landing.report.fallback": {
+        "message": "本篇周报显示英文正文，站点导航继续使用所选语言。"
+    },
+    "landing.report.english": {
+        "message": "英文"
+    },
+    "landing.profile.responseLanguages": {
+        "message": "AI 分析结果支持英文和中文。切换站点语言不会翻译服务返回的内容。"
+    },
+    "landing.events.mediaLanguage": {
+        "message": "活动海报和链接中的录像保留原始语言。中文活动说明以中文显示。"
+    },
+    "landing.download.unavailableBuild": {
+        "message": "{version} 没有适用于 {architecture} 的构建包"
     }
 }
