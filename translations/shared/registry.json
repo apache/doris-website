@@ -173,7 +173,7 @@
     "theme.SearchPage.noResultsText": "No documents were found",
     "theme.SearchPage.searchSource": "Search the source documents"
   },
-  "sourceHash": "a54946b85ccbc3af4604c042c56503a5f238e8f18a3f08a7bb42cee20a47582c",
+  "sourceHash": "49b20c4ebdb48a66567b57b80b1ff86bbe93a0b0fcb90b0bef5d95943329ecde",
   "entryFiles": [
     "src/components/home-next/NavbarNext.tsx",
     "src/components/home-next/SlackCommunityNudge.tsx",
@@ -183,5 +183,6 @@
     "src/theme/SearchBar/SearchBar.jsx",
     "src/theme/SearchPage/SearchPage.jsx",
     "src/theme/SkipToContent/index.tsx"
-  ]
+  ],
+  "reviewedSourceCommit": "b0537eadb78658668494cdb46aca5c73e4c233b4"
 }
