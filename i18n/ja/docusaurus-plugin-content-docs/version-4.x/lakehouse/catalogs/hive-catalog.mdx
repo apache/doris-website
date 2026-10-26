@@ -2,28 +2,28 @@
 {
     "title": "Hive Catalog",
     "language": "ja",
-    "description": "Apache Doris の Hive Catalog は Hive Metastore および互換サービスに接続し、HDFS やオブジェクトストレージ上の Hive、Iceberg、Hudi テーブルのクエリと書き込みをサポートします。設定、型マッピング、クエリ操作、書き込み操作について説明します。"
+    "description": "Apache Doris の Hive Catalog は Hive Metastore および互換サービスに接続し、HDFS やオブジェクトストレージ上の Hive、Iceberg、Hudi テーブルのクエリと書き込みを可能にします。豊富な設定、型マッピング、クエリ操作、書き込み操作をサポートします。"
 }
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Doris は Hive Metastore または Hive Metastore 互換のメタデータサービスに接続し、Hive のデータベースとテーブルの情報を自動的に取得してデータをクエリできます。
+Doris は Hive Metastore または Hive Metastore と互換性のあるメタデータサービスに接続することで、Hive のデータベースとテーブルの情報を自動的に取得し、データをクエリできます。
 
-Hive 以外にも、多くのシステムがメタデータの保存に Hive Metastore を使用しています。そのため、Hive Catalog からは Hive テーブルに加え、Hive Metastore にメタデータを保存する Iceberg や Hudi などのテーブル形式にもアクセスできます。
+Hive 以外にも、多くのシステムがメタデータの保存に Hive Metastore を使用しています。そのため、Hive Catalog を通じて Hive テーブルだけでなく、メタデータの保存に Hive Metastore を使用する Iceberg や Hudi などのテーブル形式にもアクセスできます。
 
-## 適用シナリオ
+## 適用シナリオ {#applicable-scenarios}
 
-| シナリオ     | 説明                                                  |
+| シナリオ | 説明 |
 |--------------|--------------------------------------------------------------|
 | クエリの高速化 | Doris の分散コンピューティングエンジンから Hive データに直接アクセスし、クエリを高速化します。 |
-| データ統合   | Hive データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンで ZeroETL 操作を実行します。 |
-| データの書き戻し   | Doris がサポートする任意のソースのデータを処理し、Hive テーブルに書き戻します。 |
+| データ統合 | Hive データを読み取って Doris の内部テーブルに書き込むか、Doris のコンピューティングエンジンを使用して ZeroETL 処理を実行します。 |
+| データの書き戻し | Doris がサポートする任意のソースのデータを処理し、Hive テーブルに書き戻します。 |
 
-## Catalog の設定
+## Catalog の設定 {#configuring-catalog}
 
-### 構文
+### 構文 {#syntax}
 
 ```sql
 CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
@@ -48,95 +48,95 @@ CREATE CATALOG [IF NOT EXISTS] catalog_name PROPERTIES (
 
 * `<fs_defaultfs>`
 
-  Doris からこの Hive Catalog のテーブルにデータを書き込む場合、このパラメータが必要です。例：
+  この Hive Catalog のテーブルへ Doris からデータを書き込む場合に必要です。例：
 
   `'fs.defaultFS' = 'hdfs://namenode:port'`
 
 * `{MetaStoreProperties}`
 
-  MetaStoreProperties には、Metastore メタデータサービスへの接続情報と認証情報を指定します。詳細は「サポートされるメタデータサービス」を参照してください。
+  MetaStoreProperties セクションには、Metastore メタデータサービスへの接続情報と認証情報を指定します。詳しくは「サポートされるメタデータサービス」のセクションを参照してください。
 
 * `{StorageProperties}`
 
-  StorageProperties には、ストレージシステムの接続情報と認証情報を指定します。詳細は「サポートされるストレージシステム」を参照してください。
+  StorageProperties セクションには、ストレージシステムに関する接続情報と認証情報を指定します。詳しくは「サポートされるストレージシステム」のセクションを参照してください。
 
 * `{HiveProperties}`
 
-  HiveProperties には、Hive Catalog に関連するプロパティを指定します。
+  HiveProperties セクションには、Hive Catalog に関するプロパティを指定します。
 
-  * `get_schema_from_table`: デフォルト値は false です。通常、Doris は Hive Metastore からテーブルのスキーマ情報を取得します。ただし、`Storage schema reading not supported` というエラーが発生するなど、互換性の問題が生じる場合があります。その場合、このパラメータを true に設定すると、Table オブジェクトからスキーマを直接取得できます。ただし、この方法では列のデフォルト値の情報が無視されます。このプロパティはバージョン 2.1.10 および 3.0.6 以降でサポートされます。
+  * `get_schema_from_table`: デフォルト値は false です。通常、Doris は Hive Metastore からテーブルのスキーマ情報を取得します。ただし、`Storage schema reading not supported` エラーなど、互換性の問題が生じる場合があります。その場合、このパラメータを true に設定すると、Table オブジェクトからテーブルスキーマを直接取得できます。ただし、この方法ではカラムのデフォルト値の情報が無視されます。このプロパティはバージョン 2.1.10 と 3.0.6 以降でサポートされています。
 
-  * `hive.recursive_directories`: パーティションディレクトリを一覧表示するときに、サブディレクトリを再帰的に探索するかを指定します。バージョン 3.0.2 以降でサポートされます。4.0 より前のデフォルト値は `false`、以降のバージョンでは `true` です。一部の Hive テーブルでは、パーティションパスがテーブルスキーマのパーティション情報と一致しない場合があります。サブディレクトリ内のデータファイルを取得するには、このパラメータを true に設定する必要があります。
+  * `hive.recursive_directories`: パーティションディレクトリを列挙する際にサブディレクトリを再帰的に探索するかどうかを指定します。このパラメータはバージョン 3.0.2 以降でサポートされています。バージョン 4.0 より前のデフォルト値は `false`、それ以降は `true` です。一部の Hive テーブルでは、パーティションパスがテーブルスキーマのパーティション情報と一致しない場合があります。サブディレクトリ内のデータファイルを取得するには、このパラメータを true に設定する必要があります。
 
-  * `hive.ignore_absent_partitions`: 存在しないパーティションを無視するかを指定します。デフォルトは `true` です。`false` に設定すると、存在しないパーティションが見つかったときにクエリがエラーを報告します。バージョン 3.0.2 以降でサポートされます。
+  * `hive.ignore_absent_partitions`: 存在しないパーティションを無視するかどうかを指定します。デフォルト値は `true` です。`false` に設定すると、存在しないパーティションが見つかったときにクエリでエラーが報告されます。このパラメータはバージョン 3.0.2 以降でサポートされています。
 
-  * `hive.staging_dir`: Hive への書き込み時に使用する一時ステージングのルートディレクトリを設定します。データはまずこのディレクトリに書き込まれ、完了後に最終的な Hive テーブルのディレクトリへ移動されます。Hive テーブルのルートディレクトリからの相対パス、または絶対パスを指定できます。デフォルト値は `/tmp/.doris_staging` です。`/tmp` ディレクトリとテーブルのディレクトリが異なる名前空間に属していると、Hive テーブルへの書き込みに失敗する場合があります。その場合は、このパラメータを相対パスに変更することで解決できます。バージョン 4.0.3 以降でサポートされます。
+  * `hive.staging_dir`: Hive への書き込み操作で使用する一時ステージングルートディレクトリを設定します。書き込み中、データは最初にこのディレクトリに書き込まれ、完了後に最終的な Hive テーブルディレクトリへ移動されます。Hive テーブルのルートディレクトリからの相対パス、または絶対パスを指定できます。デフォルト値は `/tmp/.doris_staging` です。Hive テーブルへの書き込み時に、`/tmp` ディレクトリとテーブルディレクトリが異なる名前空間に属し、書き込みに失敗することがあります。その場合、このパラメータを相対パスに変更すると問題を解決できます。このパラメータはバージョン 4.0.3 以降でサポートされています。
 
 * `{CommonProperties}`
 
-  CommonProperties には共通の属性を指定します。[Catalog の概要](../catalog-overview.md)の「共通プロパティ」を参照してください。
+  CommonProperties セクションには共通属性を指定します。[Catalog の概要](../catalog-overview.md)の「共通プロパティ」セクションを参照してください。
 
 ## メタデータキャッシュ {#meta-cache}
 
-Apache Doris は外部データソースへのアクセス性能を向上させるため、Hive のメタデータをキャッシュします。対象にはテーブル構造（スキーマ）、パーティション一覧、パーティションのプロパティ、ファイル一覧が含まれます。
+外部データソースへのアクセス性能を向上させるため、Apache Doris は Hive メタデータをキャッシュします。メタデータには、テーブル構造（スキーマ）、パーティション一覧、パーティションのプロパティ、ファイル一覧が含まれます。
 
 :::tip
-Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目でグローバルに制御されます。詳細は[メタデータキャッシュ](../meta-cache.md)を参照してください。
+Doris 4.1.x より前のバージョンでは、メタデータキャッシュは主に FE の設定項目でグローバルに制御します。詳しくは[メタデータキャッシュ](../meta-cache.md)を参照してください。
 Doris 4.1.x 以降では、Hive Catalog の外部メタデータキャッシュを統一された `meta.cache.*` キーで設定します。
 :::
 
-### キャッシュプロパティの設定（4.1.x 以降）{#meta-cache-unified-model}
+### キャッシュプロパティの設定（4.1.x 以降） {#meta-cache-unified-model}
 
-各エンジンのキャッシュエントリには、統一された設定キー形式 `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。`max-weight` は現在、推定器を備えた一部のエントリでのみサポートされます。詳細は[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
+各エンジンのキャッシュエントリには、統一された設定キーフォーマット `meta.cache.<engine>.<entry>.{enable,ttl-second,capacity,max-weight}` を使用します。現在、`max-weight` は推定器を備えた一部のエントリのみでサポートされています。[外部メタデータキャッシュのメモリ管理](../external-meta-cache-memory-management)を参照してください。
 
 | プロパティ | 例 | 意味 |
 |---|---|---|
-| `enable` | `true/false` | このキャッシュモジュールを有効にするかを指定します。 |
-| `ttl-second` | `600`, `0`, `-1` | `0` はキャッシュを無効化します（即時に反映され、最新データの確認に使用できます）。`-1` は無期限です。それ以外の正の整数は、アクセス時刻を基準とする有効期間を秒単位で指定します。 |
-| `capacity` | `10000` | キャッシュエントリの最大件数です。`max-weight` が有効な場合は同時に適用される件数上限ではありませんが、`0` にするとキャッシュは無効になります。 |
-| `max-weight` | `1GB` | Doris 4.1.4 以降でサポートされます。保持メモリの推定使用量に対する任意の上限です。現在は Hive の `partition_values` でサポートされ、`0` にするとそのエントリが無効になります。 |
+| `enable` | `true/false` | このキャッシュモジュールを有効にするかどうか。 |
+| `ttl-second` | `600`, `0`, `-1` | `0` はキャッシュを無効にします（直ちに反映され、最新データの確認に使用できます）。`-1` は有効期限なしを意味します。それ以外の正の整数は、アクセス時刻を基準とする TTL を秒単位で指定します。 |
+| `capacity` | `10000` | 件数で指定するキャッシュエントリの最大数。`max-weight` が有効な場合、件数の上限として同時には適用されませんが、`0` は引き続きキャッシュを無効にします。 |
+| `max-weight` | `1GB` | Doris 4.1.4 以降でサポートされます。推定される保持メモリ量の上限を任意で指定します。現在は Hive の `partition_values` でサポートされ、`0` を指定するとそのエントリは無効になります。 |
 
 **有効になる条件：** モジュールのキャッシュは、`enable=true`、`ttl-second != 0`、`capacity > 0` で、かつ `max-weight` が未指定または `0` 以外の場合に有効になります。
 
 ### キャッシュモジュール {#meta-cache-unified-modules}
 
-Hive Catalog には次のキャッシュモジュールがあります。
+Hive Catalog には、次のキャッシュモジュールがあります。
 
 | モジュール（`<entry>`） | プロパティキーのプレフィックス | キャッシュする内容と影響 |
 |---|---|---|
-| `schema` | `meta.cache.hive.schema.` | テーブル構造をキャッシュします。テーブルの列情報の可視性に影響します。無効にすると、クエリごとに最新のスキーマを取得します。 |
-| `partition_values` | `meta.cache.hive.partition_values.` | パーティションの値と名前の一覧をキャッシュします。パーティションのプルーニングと列挙に影響します。無効にすると、新しい外部パーティションをリアルタイムで確認できます。 |
-| `partition` | `meta.cache.hive.partition.` | 場所や入力形式など、パーティションのプロパティをキャッシュします。パーティション固有のメタデータに影響します。 |
-| `file` | `meta.cache.hive.file.` | ファイル一覧をキャッシュします。リモート LIST 操作の負荷を軽減します。無効にすると、ファイルの変更をリアルタイムで確認できます。 |
+| `schema` | `meta.cache.hive.schema.` | テーブル構造をキャッシュします。影響：テーブルのカラム情報がいつ反映されるかに関係します。無効にすると、クエリごとに最新のスキーマを取得します。 |
+| `partition_values` | `meta.cache.hive.partition_values.` | パーティションの値と名前の一覧をキャッシュします。影響：パーティションの枝刈りと列挙に関係します。無効にすると、外部で追加されたパーティションをリアルタイムに確認できます。 |
+| `partition` | `meta.cache.hive.partition.` | パーティションのプロパティ（Location、入力形式など）をキャッシュします。影響：各パーティションのメタデータに関係します。 |
+| `file` | `meta.cache.hive.file.` | ファイル一覧をキャッシュします。影響：リモートの LIST 操作の負荷を減らします。無効にすると、ファイルの変更をリアルタイムに確認できます。 |
 
-### 旧パラメータの対応関係と変換 {#meta-cache-mapping}
+### 従来のパラメータとの対応と変換 {#meta-cache-mapping}
 
-バージョン 4.1.x 以降では、統一されたキーの使用を推奨します。旧 Catalog プロパティと 4.1.x 以降の統一キーの対応は次のとおりです。
+バージョン 4.1.x 以降では、統一されたキーの使用を推奨します。従来の Catalog プロパティと 4.1.x 以降の統一キーの対応は次のとおりです。
 
-| 旧プロパティキー | 4.1.x 以降の統一キー | 説明 |
+| 従来のプロパティキー | 4.1.x 以降の統一キー | 説明 |
 |---|---|---|
-| `schema.cache.ttl-second` | `meta.cache.hive.schema.ttl-second` | テーブル構造キャッシュの有効期間 |
-| `partition.cache.ttl-second` | `meta.cache.hive.partition_values.ttl-second` | パーティション値キャッシュの有効期間 |
-| `file.meta.cache.ttl-second` | `meta.cache.hive.file.ttl-second` | ファイル一覧キャッシュの有効期間 |
+| `schema.cache.ttl-second` | `meta.cache.hive.schema.ttl-second` | テーブル構造キャッシュの有効期限 |
+| `partition.cache.ttl-second` | `meta.cache.hive.partition_values.ttl-second` | パーティション値キャッシュの有効期限 |
+| `file.meta.cache.ttl-second` | `meta.cache.hive.file.ttl-second` | ファイル一覧キャッシュの有効期限 |
 
 ### ベストプラクティス {#meta-cache-best-practices}
 
-* **最新データへのリアルタイムアクセス**：各クエリで外部データソースの最新のパーティションやファイルの変更を確認するには、対応する `ttl-second` を `0` に設定します。
+* **最新データへのリアルタイムアクセス**：各クエリで外部データソースの最新のパーティションまたはファイルの変更を確認したい場合は、対応する `ttl-second` を `0` に設定できます。
   ```sql
   -- Disable file list cache to see file changes in real-time
   ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.file.ttl-second" = "0");
   -- Disable partition value cache to see new partitions in real-time
   ALTER CATALOG hive_ctl SET PROPERTIES ("meta.cache.hive.partition_values.ttl-second" = "0");
   ```
-* **性能の最適化**：メタデータの変更が少ない場合は、`capacity` と `ttl-second` を適切に増やし、Hive Metastore とファイルシステムへのアクセス負荷を軽減することを推奨します。
+* **性能の最適化**：メタデータの変更が少ない場合は、`capacity` と `ttl-second` を適切に増やし、Hive Metastore とファイルシステムへのアクセス負荷を減らすことを推奨します。
 
 :::caution
-**Hive Catalog に関する注意**：Doris 4.1.4 以降では、Catalog プロパティの変更が成功すると、Catalog の実行コンテキストがリセットされ、その Catalog を経由するすべてのメタデータキャッシュエンジンで初期化済みエントリが消去されます。次回アクセス時に、新しいコンテキストと設定で再作成されます。実行中のクエリには影響しません。
+**Hive Catalog に関する注意**：Doris 4.1.4 以降では、Catalog プロパティの変更が成功すると、Catalog の実行コンテキストがリセットされ、その Catalog が経由するすべてのメタデータキャッシュエンジンの初期化済みエントリがクリアされます。次回のアクセス時に、新しいコンテキストと設定で再作成されます。実行中のクエリには影響しません。
 :::
 
-### 状態の確認 {#meta-cache-unified-observability}
+### 可観測性 {#meta-cache-unified-observability}
 
-キャッシュのメトリクスは、システムテーブル `information_schema.catalog_meta_cache_statistics` で確認できます。
+キャッシュのメトリクスは、`information_schema.catalog_meta_cache_statistics` システムテーブルで確認できます。
 
 ```sql
 SELECT catalog_name, engine_name, entry_name,
@@ -147,23 +147,23 @@ WHERE catalog_name = 'hive_ctl' AND engine_name = 'hive'
 ORDER BY entry_name;
 ```
 
-このシステムテーブルの詳細は、[catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md)を参照してください。
+このシステムテーブルのドキュメントは [catalog_meta_cache_statistics](../../admin-manual/system-tables/information_schema/catalog_meta_cache_statistics.md) を参照してください。
 
-### サポートされる Hive バージョン
+### サポートされる Hive のバージョン {#supported-hive-versions}
 
 Hive 1.x、2.x、3.x、4.x をサポートします。
 
-Hive トランザクションテーブルはバージョン 3.x 以降でサポートされます。詳細は「Hive トランザクションテーブル」を参照してください。
+Hive トランザクションテーブルはバージョン 3.x 以降でサポートされます。詳しくは「Hive トランザクションテーブル」のセクションを参照してください。
 
-### サポートされるメタデータサービス
+### サポートされるメタデータサービス {#supported-metadata-services}
 
 * [Hive Metastore](../metastores/hive-metastore.md)
 * [AWS Glue](../metastores/aws-glue.md)
 * [Aliyun DLF](../metastores/aliyun-dlf.md)
 
-> 注：サポートされるサービスの種類とパラメータは、Doris のバージョンによって多少異なります。「例」を参照してください。
+> 注：Doris のバージョンによって、サポートされるサービスの種類やパラメータは多少異なります。[例]セクションを参照してください。
 
-### Hive Catalog の機能サポート一覧
+### Hive Catalog の機能サポート一覧 {#hive-catalog-feature-support-matrix}
 
 | メタデータサービス | テーブルのクエリ | ビューのクエリ | DDL 操作 | データの書き戻し |
 |------------------|-------------|------------|----------------|----------------|
@@ -171,7 +171,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
 | AWS Glue         | ✅          | ✅         | ❌             | ❌             |
 | DLF              | ✅          | ✅         | ✅             | ✅             |
 
-### サポートされるストレージシステム
+### サポートされるストレージシステム {#supported-storage-systems}
 
 * [HDFS](../storages/hdfs.md)
 * [AWS S3](../storages/s3.md)
@@ -183,11 +183,15 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
 * [Huawei Cloud OBS](../storages/huawei-obs.md)
 * [MINIO](../storages/minio.md)
 
-> Doris から Hive テーブルを作成してデータを書き込むには、Catalog 属性に `fs.defaultFS` プロパティを明示的に追加する必要があります。クエリのみを目的として Catalog を作成する場合は省略できます。
+> Doris を通じて Hive テーブルを作成し、データを書き込むには、Catalog の属性に `fs.defaultFS` プロパティを明示的に追加する必要があります。クエリ専用の Catalog を作成する場合は、このパラメータを省略できます。
 >
-> サポートされるサービスの種類とパラメータは、Doris のバージョンによって多少異なります。「例」を参照してください。
+> Doris のバージョンによって、サポートされるサービスの種類やパラメータは多少異なります。[例]セクションを参照してください。
 
-### サポートされるデータ形式
+### Parquet INT96 の書き込み元のタイムゾーン（4.1.5 以降） {#parquet-int96-writer-time-zone-since-415}
+
+任意の Catalog プロパティ `hive.parquet.time-zone` は、Parquet INT96 を読み取る際に書き込み元のタイムゾーンを指定します。デフォルトは空文字列で、壁時計時刻をそのまま保持します。空でない値には、IANA タイムゾーン、または `-12:00` から `+14:00` までの UTC オフセットを指定する必要があります。`UTC` と `GMT` は使用できますが、`CST` や `PRC` などの短い別名は使用できません。たとえば `"hive.parquet.time-zone" = "Asia/Shanghai"` を指定します。INT96 にはタイムゾーンの注釈がないため、読み取り側のセッションから書き込み元のタイムゾーンを推測しないでください。[Parquet](../file-formats/parquet.md#timestamp-and-date-compatibility) を参照してください。
+
+### サポートされるデータ形式 {#supported-data-formats}
 
 * Hive
 
@@ -209,39 +213,18 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
 
   * [ORC](../file-formats/orc.md)
 
-## 列型のマッピング
+## カラム型のマッピング {#column-type-mapping}
 
-| Hive の型     | Doris の型    | 備考                                        |
-| ------------- | ------------- | ---------------------------------------------- |
-| boolean       | boolean       |                                                |
-| tinyint       | tinyint       |                                                |
-| smallint      | smallint      |                                                |
-| int           | int           |                                                |
-| bigint        | bigint        |                                                |
-| date          | date          |                                                |
-| timestamp     | datetime(6)   | 精度 6 の datetime にマッピングされます            |
-| float         | float         |                                                |
-| double        | double        |                                                |
-| decimal(P, S) | decimal(P, S) | 精度を指定しない場合はデフォルトで decimal(9, 0) になります |
-| char(N)       | char(N)       |                                                |
-| varchar(N)    | varchar(N)    |                                                |
-| string        | string        |                                                |
-| binary        | string/varbinary  | Catalog の `enable.mapping.varbinary` プロパティ（4.0.2 以降でサポート）で制御します。デフォルトの `false` では `string`、`true` では `varbinary` 型にマッピングされます。|
-| timestamp with local time zone| datetime/timestamptz | `enable.mapping.timestamp_tz` プロパティ（バージョン 4.0.3 以降でサポート）でマッピングを制御します。デフォルトの `false` では `datetime`、`true` では `timestamptz` 型にマッピングされます。     |
-| array         | array         |                                                |
-| map           | map           |                                                |
-| struct        | struct        |                                                |
-| other         | サポート対象外   |                                                |
+Doris 4.2 の完全なマッピング表、精度に関する規則、サポートされない型については、[Hive から Doris へのデータ型マッピング](hive-catalog/doris-type-mapping.md)を参照してください。
 
-
-## 例
-### Hive Metastore
+## 例 {#examples}
+### Hive Metastore {#hive-metastore}
 
 <details>
     <summary>バージョン 3.1 以降</summary>
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS と HDFS のサービスへアクセスする
+            Kerberos 認証を使用せずに HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
                 'type' = 'hms',
@@ -250,7 +233,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 'hadoop.username' = 'doris'
             );
             ```
-            Kerberos 認証を有効にして HMS と HDFS のサービスへアクセスする
+            Kerberos 認証を有効にして HMS と HDFS のサービスにアクセスする
             ```sql
             CREATE CATALOG hive_hms_hdfs_kerberos_test_catalog PROPERTIES (
                 'type' = 'hms',
@@ -288,7 +271,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             ```
         </TabItem>
         <TabItem value='S3' label='S3'>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_s3_test_catalog PROPERTIES (
                 'type' = 'hms',
@@ -298,7 +281,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 's3.secret_key' = '<sk>'
             );
             ```
-            IAM の引き受けロールを使用して S3 のアクセス認証情報を取得する（3.1.2 以降）
+            IAM Assumed Role を使用して S3 のアクセス認証情報を取得する（3.1.2 以降）
             ```sql
             CREATE CATALOG hive_hms_on_s3_iamrole PROPERTIES (
                 'type' = 'hms',
@@ -306,10 +289,10 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 's3.region'   = 'us-east-1',
                 's3.role_arn' = 'arn:aws:iam::543815668950:role/role'
             );
-            ``` 
+            ```
         </TabItem>
         <TabItem value='OSS' label='OSS'>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_on_oss_catalog PROPERTIES (
                 'type' = 'hms',
@@ -320,7 +303,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 'oss.secret_key' = '<sk>'
             );
             ```
-            Kerberos 認証を有効にして HMS へアクセスする
+            Kerberos 認証を有効にして HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_on_oss_kerberos_old_catalog PROPERTIES (
                 'type' = 'hms',
@@ -342,7 +325,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             ```
         </TabItem>
         <TabItem value='COS' label='COS'>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_cos_test_region_catalog PROPERTIES (
                 'type' = 'hms',
@@ -353,7 +336,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 'cos.secret_key' = '<sk>'
             );
             ```
-            Kerberos 認証を有効にして HMS へアクセスする
+            Kerberos 認証を有効にして HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_on_cos_kerberos_new_catalog PROPERTIES (
                 'type' = 'hms',
@@ -375,7 +358,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             ```
         </TabItem>
         <TabItem value='OBS' label='OBS'>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG test_hive_on_hms_obs_catalog PROPERTIES (
                 'type' = 'hms',
@@ -386,7 +369,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
                 'cos.secret_key' = '<sk>'
             );
             ```
-            Kerberos 認証を有効にして HMS へアクセスする
+            Kerberos 認証を有効にして HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_on_obs_kerberos_new_catalog PROPERTIES (
                 'type' = 'hms',
@@ -409,7 +392,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             ```
         </TabItem>
         <TabItem value='GCS' label='GCS'>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG `hive_hms_on_gcs_new_catalog` PROPERTIES (
                 'type' = 'hms',
@@ -464,11 +447,11 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
     </Tabs>
 </details>
 <details>
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
 
     <Tabs>
         <TabItem value='HDFS' label='HDFS' default>
-            Kerberos 認証を使用せずに HMS へアクセスする
+            Kerberos 認証を使用せずに HMS にアクセスする
             ```sql
             CREATE CATALOG hive_hms_hdfs_test_catalog PROPERTIES (
                 'type' = 'hms',
@@ -478,7 +461,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             );
 
             ```
-            Kerberos 認証を有効にして HMS へアクセスする
+            Kerberos 認証を有効にして HMS にアクセスする
             ```sql
             CREATE CATALOG test_two_hive_kerberos PROPERTIES (
                 'type' = 'hms',
@@ -573,12 +556,12 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
     </Tabs>
 </details>
 
-### AWS Glue
+### AWS Glue {#aws-glue}
 <details>
     <summary>バージョン 3.1 以降</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
-            AWS Glue と S3 ストレージサービスで同じ認証情報を使用します。
+            AWS Glue と S3 ストレージサービスで同じ認証情報を共有します。
             ```sql
             CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
                 'type' = 'hms',
@@ -590,7 +573,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             );
             ```
 
-            Glue サービスと S3 の認証情報が異なる場合は、次のように S3 の認証情報を個別に指定できます。
+            Glue サービスの認証情報が S3 の認証情報と異なる場合は、次のように S3 の認証情報を別途指定できます。
             ```sql
             CREATE CATALOG hive_glue_on_s3_catalog PROPERTIES (
                 'type' = 'hms',
@@ -606,9 +589,9 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
             );
             ```
 
-            IAM の引き受けロールを使用して S3 のアクセス認証情報を取得する（3.1.2 以降）
+            IAM Assumed Role を使用して S3 のアクセス認証情報を取得する（3.1.2 以降）
             ```sql
-            CREATE CATALOG `glue_hive_iamrole` PROPERTIES ( 
+            CREATE CATALOG `glue_hive_iamrole` PROPERTIES (
                 'type' = 'hms',
                 'hive.metastore.type' = 'glue',
                 'glue.region' = 'us-east-1',
@@ -620,14 +603,14 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
     </Tabs>
 </details>
 <details>
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='S3' label='S3' default>
-            AWS Glue と S3 ストレージサービスで同じ認証情報を使用します。
+            AWS Glue と S3 ストレージサービスで同じ認証情報を共有します。
 
-            EC2 以外の環境では、[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) を使用して認証情報を設定し、~/.aws ディレクトリに認証情報ファイルを生成する必要があります。
+            EC2 以外の環境では、[aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) を使用して Credentials 情報を設定し、~/.aws ディレクトリに認証情報ファイルを生成する必要があります。
 
-            または、Catalog の作成時に認証情報プロバイダーのファクトリクラスを明示的に指定できます。
+            または、Catalog の作成時に認証情報プロバイダーファクトリクラスを明示的に指定できます。
 
             <b>"aws.catalog.credentials.provider.factory.class" = "com.amazonaws.glue.catalog.credentials.ConfigurationAWSCredentialsProviderFactory"</b>
             ```sql
@@ -644,7 +627,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
     </Tabs>
 </details>
 
-### Aliyun DLF
+### Aliyun DLF {#aliyun-dlf}
 <details>
     <summary>バージョン 3.1 以降</summary>
     <Tabs>
@@ -666,7 +649,7 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
 </details>
 
 <details>
-    <summary>バージョン 2.1 と 3.0</summary>
+    <summary>バージョン 2.1 & 3.0</summary>
     <Tabs>
         <TabItem value='DLF 1.0' label='DLF 1.0' default>
             ```sql
@@ -685,11 +668,11 @@ Hive トランザクションテーブルはバージョン 3.x 以降でサポ�
     </Tabs>
 </details>
 
-## クエリ操作
+## クエリ操作 {#query-operations}
 
-### 基本的なクエリ
+### 基本的なクエリ {#basic-query}
 
-Catalog を設定したら、次の方法で Catalog 内のテーブルデータをクエリできます。
+Catalog の設定後、次の方法で Catalog 内のテーブルデータをクエリできます。
 
 ```sql
 -- 1. switch to catalog, use database and query
@@ -705,9 +688,9 @@ SELECT * FROM hive_tbl LIMIT 10;
 SELECT * FROM hive_ctl.hive_db.hive_tbl LIMIT 10;
 ```
 
-### Hive パーティションのクエリ
+### Hive パーティションのクエリ {#querying-hive-partitions}
 
-Hive パーティションの情報は、次の二つの方法でクエリできます。
+Hive のパーティション情報は、次の方法でクエリできます。
 
 * `SHOW PARTITIONS FROM [catalog.][db.]hive_table`
 
@@ -727,9 +710,9 @@ Hive パーティションの情報は、次の二つの方法でクエリでき
   +--------------------------------+
   ```
 
-* `table$partitions` メタデータテーブルの使用
+* `table$partitions` メタデータテーブルを使用する
 
-  バージョン 2.1.7 および 3.0.3 以降では、`table$partitions` メタデータテーブルから Hive パーティションの情報をクエリできます。このテーブルはリレーショナルテーブルとして扱われ、各パーティション列が列として表現されるため、任意の SELECT ステートメントで使用できます。
+  バージョン 2.1.7 と 3.0.3 以降では、`table$partitions` メタデータテーブルを通じて Hive のパーティション情報をクエリできます。このテーブルはリレーショナルテーブルとして扱われ、各パーティションカラムがそれぞれカラムとして表されるため、任意の SELECT ステートメントで使用できます。
 
   ```sql
   SELECT * FROM hive_table$partitions;
@@ -747,53 +730,53 @@ Hive パーティションの情報は、次の二つの方法でクエリでき
 
 :::caution 動作の変更（4.1.4）
 
-バージョン 4.1.4 以降では、Hive のディレクトリ形式のパーティショニングで使用されるデフォルトパーティションのマーカー `__HIVE_DEFAULT_PARTITION__` は、文字列 `\N` にエンコードされる代わりに、実際の **NULL** 値として解釈されます。一方、パーティションパスに実際に格納されたリテラルの `\N` はデータとして保持されます。
+バージョン 4.1.4 以降、Hive のディレクトリ形式のパーティショニングで使用されるデフォルトパーティションマーカー `__HIVE_DEFAULT_PARTITION__` は、文字列 `\N` としてエンコードされる代わりに、実際の **NULL** 値として解釈されます。同時に、パーティションパスに実際の値として保存されたリテラルの `\N` は、データとして保持されます。
 
-4.1.4 より前は両者を区別できず、どちらもクエリ結果には `\N` と表示されました。アップグレード後は、`WHERE <partition_col> IS NULL` が Hive のデフォルトパーティションに正しく一致します。
+4.1.4 より前は両者を区別できず、クエリ結果ではどちらも `\N` と表示されていました。アップグレード後は、`WHERE <partition_col> IS NULL` が Hive のデフォルトパーティションに正しく一致します。
 
 :::
 
-### Hive トランザクションテーブルのクエリ
+### Hive トランザクションテーブルのクエリ {#querying-hive-transactional-tables}
 
-Hive トランザクションテーブルは ACID セマンティクスをサポートします。詳細は [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions) を参照してください。
+Hive トランザクションテーブルは ACID セマンティクスをサポートします。詳しくは [Hive Transactions](https://cwiki.apache.org/confluence/display/Hive/Hive+Transactions) を参照してください。
 
 * Hive トランザクションテーブルのサポート
 
-  | テーブルの種類                      | Hive でサポートされる操作        | Hive テーブルのプロパティ                                                | サポートされる Hive バージョン                                          |
+  | テーブルの種類 | Hive でサポートされる操作 | Hive テーブルのプロパティ | サポートされる Hive のバージョン |
   | ------------------------------- | ----------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------- |
-  | Full-ACID トランザクションテーブル   | Insert、Update、Delete をサポート     | `'transactional'='true'`                                            | 4.x、3.x、2.x（2.x では読み取りに Hive での Major Compaction が必要）    |
-  | Insert-Only トランザクションテーブル | Insert のみサポート                | `'transactional'='true'`, `'transactional_properties'='insert_only'` | 4.x、3.x、2.x（Catalog の作成時に `hive.version` を指定） |
+  | Full-ACID トランザクションテーブル | Insert、Update、Delete をサポート | `'transactional'='true'` | 4.x、3.x、2.x（2.x で読み取るには Hive で Major Compaction が必要） |
+  | Insert-Only トランザクションテーブル | Insert のみをサポート | `'transactional'='true'`, `'transactional_properties'='insert_only'` | 4.x、3.x、2.x（Catalog 作成時に `hive.version` を指定） |
 
-* 現在の制限
+* 現在の制限事項
 
-  Original Files を含むケースはサポートされません。テーブルをトランザクションテーブルに変換すると、新しいデータファイルには Hive トランザクションテーブルのスキーマが使用されますが、既存のデータファイルは変換されません。これらの既存ファイルを Original Files と呼びます。
-  
-### Hive ビューのクエリ
+  Original Files を伴うケースはサポートされません。テーブルをトランザクションテーブルに変換すると、新しいデータファイルには Hive トランザクションテーブルのスキーマが使用されますが、既存のデータファイルは変換されません。これらのファイルを Original Files と呼びます。
+
+### Hive ビューのクエリ {#querying-hive-views}
 
 Hive ビューをクエリできますが、次の制限があります。
 
-* Hive ビューの定義（HiveQL）は、Doris がサポートする SQL ステートメントと互換性がある必要があります。互換性がない場合、解析エラーが発生します。
+* Hive ビューの定義（HiveQL）は、Doris がサポートする SQL ステートメントと互換性がある必要があります。互換性がない場合は解析エラーが発生します。
 
-* HiveQL がサポートする関数の中には、Doris の関数と名前が同じでも動作が異なるものがあります。その場合、Hive と Doris の結果に差が生じる可能性があります。このような問題が発生した場合は、コミュニティに報告してください。
+* HiveQL がサポートする関数の中には、Doris の関数と名前が同じでも動作が異なるものがあります。その場合、Hive と Doris で得られる結果に差が生じる可能性があります。このような問題が見つかった場合は、コミュニティに報告してください。
 
-### 関連パラメータ
+### 関連パラメータ {#related-parameters}
 
 * セッション変数
 
 | パラメータ名 | デフォルト値 | 説明 | 対応開始バージョン |
 | ----------| ---- | ---- | --- |
-| `hive_parquet_use_column_names` | `true` | Doris が Hive テーブルの Parquet データを読み取る際、デフォルトでは Hive テーブルの列名と同じ名前の列を Parquet ファイルから探して読み取ります。この変数が `false` の場合は列名にかかわらず、Hive テーブルでの列順に従って Parquet ファイルからデータを読み取ります。Hive の `parquet.column.index.access` 変数と同様です。このパラメータは最上位の列名にのみ適用され、Struct 内では無効です。 | 2.1.6 以降、3.0.3 以降 |
-| `hive_orc_use_column_names` | `true` | `hive_parquet_use_column_names` と同様の設定で、Hive テーブルの ORC データに適用されます。Hive の `orc.force.positional.evolution` 変数と同様です。 | 2.1.6 以降、3.0.3 以降 |
+| `hive_parquet_use_column_names` | `true` | Doris が Hive テーブルの Parquet データを読み取る際、デフォルトでは Hive テーブルのカラム名に従って、Parquet ファイル内の同名カラムからデータを読み取ります。この変数が `false` の場合、カラム名に関係なく、Hive テーブル内のカラム順に従って Parquet ファイルからデータを読み取ります。Hive の `parquet.column.index.access` 変数と同様です。このパラメータは最上位のカラム名にのみ適用され、Struct 内部では無効です。 | 2.1.6 以降、3.0.3 以降 |
+| `hive_orc_use_column_names` | `true` | `hive_parquet_use_column_names` と同様で、Hive テーブルの ORC データに適用されます。Hive の `orc.force.positional.evolution` 変数と同様です。 | 2.1.6 以降、3.0.3 以降 |
 
-## 書き込み操作
+## 書き込み操作 {#write-operations}
 
-INSERT ステートメントを使用して Hive テーブルにデータを書き込めます。Doris が作成した Hive テーブルと、互換性のある形式の既存の Hive テーブルが対象です。
+INSERT ステートメントを使用して Hive テーブルにデータを書き込めます。Doris が作成した Hive テーブル、または互換性のある形式の既存の Hive テーブルでサポートされます。
 
-パーティションテーブルでは、データに応じて対応するパーティションに自動的に書き込まれるか、新しいパーティションが作成されます。現在、書き込み先のパーティションを指定することはサポートされていません。
+パーティションテーブルでは、データに基づいて対応するパーティションへ自動的に書き込まれるか、新しいパーティションが作成されます。4.1.5 以降、`PARTITION (column = literal)` は静的パーティション、および静的パーティションカラムと動的パーティションカラムの混在をサポートします。静的パーティションカラムは INSERT の対象カラム一覧と SELECT または VALUES の出力から除外し、残りの動的パーティションカラムは入力に含めてください。
 
-### INSERT INTO
+### INSERT INTO {#insert-into}
 
-INSERT 操作はターゲットテーブルにデータを追加します。
+INSERT 操作は対象テーブルにデータを追記します。
 
 ```sql
 INSERT INTO hive_tbl VALUES (val1, val2, val3, val4);
@@ -803,7 +786,7 @@ INSERT INTO hive_tbl(col1, col2) VALUES (val1, val2);
 INSERT INTO hive_tbl(col1, col2, partition_col1, partition_col2) VALUES (1, 2, "beijing", "2023-12-12");
 ```
 
-バージョン 4.2.0 以降では、静的パーティション（または静的・動的パーティションの併用）への書き込みをサポートします。
+4.1.5 以降、静的パーティション、または静的パーティションと動的パーティションの混在への書き込みをサポートします。
 
 ```sql
 -- Full Static Partition
@@ -819,7 +802,7 @@ INSERT INTO hive_tbl PARTITION (partition_col1='2026-07-30')
 SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
-### INSERT OVERWRITE
+### INSERT OVERWRITE {#insert-overwrite}
 
 INSERT OVERWRITE は、テーブル内の既存データを新しいデータで完全に置き換えます。
 
@@ -828,7 +811,7 @@ INSERT OVERWRITE TABLE hive_tbl VALUES (val1, val2, val3, val4);
 INSERT OVERWRITE TABLE hive_ctl.hive_db.hive_tbl(col1, col2) SELECT col1, col2 FROM internal.db1.tbl1;
 ```
 
-バージョン 4.2.0 以降では、静的パーティション（または静的・動的パーティションの併用）への書き込みをサポートします。
+4.1.5 以降、静的パーティション、または静的パーティションと動的パーティションの混在への書き込みをサポートします。
 
 ```sql
 -- Full Static Partition
@@ -844,29 +827,63 @@ INSERT OVERWRITE TABLE hive_tbl PARTITION (partition_col1='2026-07-30')
 SELECT col1, col2, partition_col2 FROM source_table;
 ```
 
-INSERT OVERWRITE のセマンティクスは Hive と一致し、次のように動作します。
+INSERT OVERWRITE のセマンティクスは Hive と同じで、次のように動作します。
 
-* ターゲットテーブルがパーティションテーブルで、ソーステーブルが空の場合、この操作は影響を与えません。ターゲットテーブルは変更されません。
+* 対象テーブルがパーティションテーブルで、ソーステーブルが空の場合、操作は何も変更しません。対象テーブルはそのまま維持されます。
 
-* ターゲットテーブルがパーティションテーブルではなく、ソーステーブルが空の場合、ターゲットテーブルのデータは消去されます。
+* 対象テーブルが非パーティションテーブルで、ソーステーブルが空の場合、対象テーブルは空になります。
 
-* バージョン 4.2.0 以降では、書き込み時の静的パーティション指定に加え、静的パーティションと動的パーティションを組み合わせるモードもサポートされます。ただし、静的パーティションを指定していても、ソースクエリの結果が空の場合、指定したパーティションのデータは消去されません。
+* 4.1.5 以降、静的パーティションを指定した書き込みと、静的パーティションと動的パーティションを組み合わせた混在モードをサポートします。ただし、静的パーティションを指定していても、ソースクエリの結果が空の場合、指定したパーティションはクリアされません。
 
-### CTAS
+**静的パーティションを使用する完全な例（4.1.5 以降）**
 
-`CTAS (CREATE TABLE AS SELECT)` ステートメントを使用して、Hive テーブルの作成とデータの挿入を行えます。
+このページで説明した Hive Catalog を設定し、既存の `hive_ctl.hive_db` データベースを用意して、テーブルの作成、書き込み、クエリの権限を付与します。書き込みに使用する Catalog には `fs.defaultFS` の設定が必要です。この例では、静的な日付と動的な地域を組み合わせた後、完全に指定した静的パーティションを上書きします。
+
+```sql
+CREATE TABLE hive_ctl.hive_db.static_write_demo (
+    id INT,
+    dt STRING,
+    region STRING
+)
+ENGINE=HIVE
+PARTITION BY LIST (dt, region) ()
+PROPERTIES ("file_format" = "parquet");
+
+INSERT INTO hive_ctl.hive_db.static_write_demo PARTITION (dt='2026-10-01')
+VALUES (1, 'beijing'), (2, 'shanghai');
+
+INSERT OVERWRITE TABLE hive_ctl.hive_db.static_write_demo
+PARTITION (dt='2026-10-01', region='beijing') VALUES (3);
+
+SELECT id, dt, region FROM hive_ctl.hive_db.static_write_demo ORDER BY id;
+```
+
+```text
++----+------------+----------+
+| id | dt         | region   |
++----+------------+----------+
+|  2 | 2026-10-01 | shanghai |
+|  3 | 2026-10-01 | beijing  |
++----+------------+----------+
+```
+
+静的パーティションの値にはリテラルを指定する必要があります。同じパーティションキーを複数回指定したり、明示的な INSERT カラム一覧に静的パーティションカラムを重複して含めたりしないでください。静的キー名の照合では大文字と小文字を区別しません。存在しないパーティションカラムを指定するとエラーになります。
+
+### CTAS {#ctas}
+
+`CTAS (CREATE TABLE AS SELECT)` ステートメントを使用すると、Hive テーブルを作成してデータを挿入できます。
 
 ```sql
 CREATE TABLE hive_ctas ENGINE=hive AS SELECT * FROM other_table;
 ```
 
-次のように、CTAS ではファイル形式やパーティション分割方法などを指定できます。
+次の例のように、CTAS ではファイル形式やパーティショニング方法などを指定できます。
 
 ```sql
 CREATE TABLE hive_ctas ENGINE=hive
 PARTITION BY LIST (pt1, pt2) ()
 AS SELECT col1, pt1, pt2 FROM part_ctas_src WHERE col1 > 0;
-    
+
 CREATE TABLE hive_ctl.hive_db.hive_ctas (col1, col2, pt1) ENGINE=hive
 PARTITION BY LIST (pt1) ()
 PROPERTIES (
@@ -876,33 +893,33 @@ PROPERTIES (
 AS SELECT col1, pt1 AS col2, pt2 AS pt1 FROM test_ctas.part_ctas_src WHERE col1 > 0;
 ```
 
-### 関連パラメータ
+### 関連パラメータ {#related-parameters-1}
 
 * BE の設定
 
-  | パラメータ名                                                                | デフォルト値                                                                                                     | 説明 |
+  | パラメータ名 | デフォルト値 | 説明 |
   | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
-  | `hive_sink_max_file_size`                                                     | 1GB                                                                                                               | データファイルの最大サイズです。データサイズがこの上限を超えると現在のファイルを閉じ、後続の書き込み用に新しいファイルを作成します。 |
-  | `table_sink_partition_write_max_partition_nums_per_writer`                    | 128                                                                                                               | BE ノード上の各インスタンスが書き込めるパーティションの最大数です。 |
-  | `table_sink_non_partition_write_scaling_data_processed_threshold`             | 25MB                                                                                                              | 非パーティションテーブルで書き込みインスタンスの増加を開始するデータ量のしきい値です。データが `table_sink_non_partition_write_scaling_data_processed_threshold` だけ増えるごとに、新しいライター（インスタンス）を使用します。この仕組みはデータ量に応じてライター数を調整し、並列書き込みのスループットを高めます。少量のデータではリソース消費とファイル数を抑えます。 |
-  | `table_sink_partition_write_min_data_processed_rebalance_threshold`           | 25MB                                                                                                              | パーティションテーブルでリバランスを開始するためのデータ量の最小しきい値です。`current accumulated data volume` - `data volume since last rebalancing or initial accumulation` >= `table_sink_partition_write_min_data_processed_rebalance_threshold` の場合にリバランスが行われます。最終的なファイルサイズの差が大きい場合は、このしきい値を下げると均衡を改善できます。ただし、値を下げるとリバランスのコストが増え、性能に影響する可能性があります。 |
-  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` | 15MB                                                                                                              | リバランスを開始するためのパーティションデータ量の最小しきい値です。`current partition data volume` >= `threshold` \* `number of tasks already allocated to the partition` の場合にリバランスが行われます。最終的なファイルサイズの差が大きい場合は、このしきい値を下げると均衡を改善できます。ただし、値を下げるとリバランスのコストが増え、性能に影響する可能性があります。 |
-  
+  | `hive_sink_max_file_size` | 1GB | データファイルの最大サイズ。データサイズがこの上限を超えると、現在のファイルを閉じ、書き込みを続けるために新しいファイルを作成します。 |
+  | `table_sink_partition_write_max_partition_nums_per_writer` | 128 | BE ノード上で各インスタンスが書き込めるパーティションの最大数。 |
+  | `table_sink_non_partition_write_scaling_data_processed_threshold` | 25MB | 非パーティションテーブルで書き込みをスケールさせ始めるデータ量のしきい値。データ量が `table_sink_non_partition_write_scaling_data_processed_threshold` 増えるたびに、新しいライター（インスタンス）を使用します。この仕組みはデータ量に応じてライター（インスタンス）の数を調整し、並列書き込みのスループットを高めます。データ量が少ない場合は、リソースを節約し、ファイル数を抑えます。 |
+  | `table_sink_partition_write_min_data_processed_rebalance_threshold` | 25MB | パーティションテーブルで再バランシングを開始するための最小データ量のしきい値。`current accumulated data volume` - `data volume since last rebalancing or initial accumulation` >= `table_sink_partition_write_min_data_processed_rebalance_threshold` の場合に再バランシングが実行されます。最終的なファイルサイズに大きなばらつきがある場合は、このしきい値を下げるとバランスが改善します。ただし、しきい値を下げると再バランシングのコストが増え、性能に影響する可能性があります。 |
+  | `table_sink_partition_write_min_partition_data_processed_rebalance_threshold` | 15MB | 再バランシングを開始するためのパーティションデータ量の最小しきい値。`current partition data volume` >= `threshold` \* `number of tasks already allocated to the partition` の場合に再バランシングが実行されます。最終的なファイルサイズに大きなばらつきがある場合は、このしきい値を下げるとバランスが改善します。ただし、しきい値を下げると再バランシングのコストが増え、性能に影響する可能性があります。 |
 
-## データベースとテーブルの管理
 
-Doris を介して Hive Metastore 内のデータベースとテーブルを作成・削除できます。これらの操作では Doris は Hive Metastore API を呼び出すだけであり、Hive のメタデータを自身で保存・永続化しない点に注意してください。
+## データベースとテーブルの管理 {#database-and-table-management}
 
-### データベースの作成と削除
+ユーザーは Doris を通じて Hive Metastore 内のデータベースやテーブルを作成・削除できます。これらの操作では、Doris は Hive Metastore API を呼び出すだけで、Hive メタデータ自体を保存または永続化しません。
 
-`SWITCH` ステートメントで対象の Catalog に切り替え、`CREATE DATABASE` ステートメントを実行できます。
+### データベースの作成と削除 {#creating-and-dropping-databases}
+
+`SWITCH` ステートメントで該当する Catalog に切り替え、`CREATE DATABASE` ステートメントを実行できます。
 
 ```sql
 SWITCH hive_ctl;
 CREATE DATABASE [IF NOT EXISTS] hive_db;
 ```
 
-次のように、完全修飾名を使用したり、保存先を指定したりしてデータベースを作成することもできます。
+次のように、完全修飾名を使用してデータベースを作成したり、保存場所を指定したりすることもできます。
 
 ```sql
 CREATE DATABASE [IF NOT EXISTS] hive_ctl.hive_db;
@@ -911,7 +928,7 @@ CREATE DATABASE [IF NOT EXISTS] hive_ctl.hive_db
 PROPERTIES ('location'='hdfs://172.21.16.47:4007/path/to/db/');
 ```
 
-`SHOW CREATE DATABASE` コマンドでデータベースの保存先を確認できます。
+`SHOW CREATE DATABASE` コマンドでデータベースの保存場所を確認できます。
 
 ```sql
 mysql> SHOW CREATE DATABASE hive_db;
@@ -929,14 +946,14 @@ DROP DATABASE [IF EXISTS] hive_ctl.hive_db;
 ```
 
 :::caution
-Hive データベースを削除するには、先にそのデータベース内のすべてのテーブルを削除する必要があります。削除していないテーブルがあるとエラーになります。この操作では Hive 側の対応するデータベースも削除されます。
+Hive データベースを削除するには、まずそのデータベース内のすべてのテーブルを削除する必要があります。削除していない場合はエラーになります。この操作では、Hive 内の対応するデータベースも削除されます。
 :::
 
-### テーブルの作成と削除
+### テーブルの作成と削除 {#creating-and-dropping-tables}
 
 - **テーブルの作成**
 
-  Doris は Hive でパーティションテーブルと非パーティションテーブルの両方を作成できます。
+  Doris は、Hive でパーティションテーブルと非パーティションテーブルの両方を作成できます。
 
   ```sql
   -- Create unpartitioned hive table
@@ -954,7 +971,7 @@ Hive データベースを削除するには、先にそのデータベース内
   PROPERTIES (
     'file_format'='parquet'
   );
-  
+
   -- Create partitioned hive table
   -- The partition columns must be in table's column definition list
   CREATE TABLE partition_table (
@@ -970,7 +987,7 @@ Hive データベースを削除するには、先にそのデータベース内
     'file_format'='orc',
     'compression'='zlib'
   );
-  
+
   -- Create text format table(Since 2.1.7 & 3.0.3)
   CREATE TABLE text_table (
       `id` INT,
@@ -986,13 +1003,13 @@ Hive データベースを削除するには、先にそのデータベース内
       'escape.delim'='\\'
   );
   ```
-  
-  テーブルを作成した後、`SHOW CREATE TABLE` コマンドで Hive テーブルの作成ステートメントを確認できます。
 
-  Hive のテーブル作成構文とは異なり、Doris でパーティションテーブルを作成する場合は、テーブルスキーマにパーティション列を含める必要があります。また、パーティション列はスキーマの末尾に、パーティション指定と同じ順序で配置する必要があります。
+  テーブルの作成後、`SHOW CREATE TABLE` コマンドで Hive テーブルの作成ステートメントを確認できます。
+
+  Hive のテーブル作成構文とは異なり、Doris でパーティションテーブルを作成する際は、パーティションカラムをテーブルスキーマに含める必要があります。また、パーティションカラムはスキーマの末尾に、同じ順序で配置する必要があります。
 
   :::tip
-  ACID トランザクション機能がデフォルトで有効になっている Hive クラスターでは、Doris が作成するテーブルの `transactional` プロパティが `true` に設定されます。Doris がサポートする Hive トランザクションテーブルの機能は一部に限られるため、作成したテーブルを Doris から読み取れない場合があります。これを避けるには、テーブルプロパティで `"transactional" = "false"` を明示的に設定し、非トランザクション Hive テーブルを作成します。
+  ACID トランザクション機能がデフォルトで有効な Hive クラスターでは、Doris が作成したテーブルの `transactional` プロパティは `true` に設定されます。Doris がサポートする Hive トランザクションテーブルの機能は一部に限られるため、Doris が作成した Hive テーブルを読み取れない場合があります。これを避けるには、テーブルのプロパティに `"transactional" = "false"` を明示的に設定して、非トランザクション Hive テーブルを作成します。
 
   ```sql
   CREATE TABLE non_acid_table(
@@ -1008,36 +1025,36 @@ Hive データベースを削除するには、先にそのデータベース内
 
 - **テーブルの削除**
 
-  `DROP TABLE` ステートメントで Hive テーブルを削除できます。テーブルを削除すると、パーティションデータを含むすべてのデータも削除されます。
+  `DROP TABLE` ステートメントを使用して Hive テーブルを削除できます。テーブルを削除すると、パーティションデータを含むすべてのデータも削除されます。
 
-- **列型のマッピング**
+- **カラム型のマッピング**
 
-  詳細は「列型のマッピング」を参照してください。次の制限があります。
+  詳しくは[カラム型のマッピング]セクションを参照してください。次の制限事項に注意してください。
 
-  - 列はデフォルトの NULL 許容型にする必要があります。`NOT NULL` はサポートされません。
-  - Hive 3.0 ではデフォルト値を設定できます。デフォルト値を設定するには、Catalog プロパティに `"hive.version" = "3.0.0"` を明示的に追加します。
-  - 挿入するデータの型に互換性がない場合（たとえば、数値型に `'abc'` を挿入する場合）、その値は `null` に変換されます。
+  - カラムはデフォルトの NULL 許容型である必要があり、`NOT NULL` はサポートされません。
+  - Hive 3.0 はデフォルト値の設定をサポートしています。デフォルト値を設定するには、Catalog のプロパティに `"hive.version" = "3.0.0"` を明示的に追加します。
+  - 挿入するデータの型に互換性がない場合（たとえば数値型に `'abc'` を挿入する場合）、値は `null` に変換されます。
 
 - **パーティショニング**
 
-  Hive のパーティションの種類は、Doris の List パーティションに対応します。そのため、Doris で Hive パーティションテーブルを作成するときは List パーティションの構文を使用しますが、各パーティションを明示的に列挙する必要はありません。データの挿入時に、その値に応じた Hive パーティションが Doris によって自動的に作成されます。単一列と複数列のパーティションテーブルをサポートします。
+  Hive のパーティション型は Doris の List パーティションに対応します。そのため、Doris で Hive パーティションテーブルを作成する際は List パーティション構文を使用しますが、各パーティションを明示的に列挙する必要はありません。データの挿入時に、Doris がデータ値に基づいて対応する Hive パーティションを自動的に作成します。単一カラムまたは複数カラムによるパーティションテーブルをサポートします。
 
 - **ファイル形式**
 
-  - ORC (default)
+  - ORC（デフォルト）
   - Parquet
 
-    DATETIME 型を Parquet ファイルに書き込む際は、物理型として INT64 ではなく INT96 を使用します。これは Hive 4.0 より前の動作との互換性を保つためです。
+    DATETIME 型を Parquet ファイルに書き込む際は、物理型として INT64 ではなく INT96 を使用します。これは Hive 4.0 より前のバージョンの動作と互換性を保つためです。
 
-  - Text（バージョン 2.1.7 および 3.0.3 以降でサポート）
+  - Text（バージョン 2.1.7 と 3.0.3 以降でサポート）
 
       Text 形式では、次のテーブルプロパティをサポートします。
 
-		  - `field.delim`: 列の区切り文字。デフォルトは `\1` です。
+		  - `field.delim`: カラムの区切り文字。デフォルトは `\1` です。
 		  - `line.delim`: 行の区切り文字。デフォルトは `\n` です。
 		  - `collection.delim`: 複合型の要素の区切り文字。デフォルトは `\2` です。
-		  - `mapkey.delim`: Map のキーと値の区切り文字。デフォルトは `\3` です。
-		  - `serialization.null.format`: `NULL` 値の保存形式。デフォルトは `\N` です。
+		  - `mapkey.delim`: マップのキーと値の区切り文字。デフォルトは `\3` です。
+		  - `serialization.null.format`: `NULL` 値を保存する形式。デフォルトは `\N` です。
 		  - `escape.delim`: エスケープ文字。デフォルトは `\` です。
 
 - **圧縮形式**
@@ -1051,35 +1068,35 @@ Hive データベースを削除するには、先にそのデータベース内
   - HDFS
   - オブジェクトストレージ
 
-## Hive Metastore イベントの購読
+## Hive Metastore イベントの購読 {#subscribing-to-hive-metastore-events}
 
-FE ノードが HMS から Notification Events を定期的に読み取ることで、Doris は Hive テーブルのメタデータの変更をリアルタイムで検出し、メタデータの更新を速やかに反映できます。現在、次のイベントをサポートしています。
+FE ノードが HMS から Notification Events を定期的に読み取ることで、Doris は Hive テーブルのメタデータの変更をリアルタイムに検出し、メタデータの反映を早めることができます。現在、次のイベントをサポートします。
 
-| イベント            | 処理と動作                                         |
+| イベント | 操作と対応する動作 |
 | ---------------- | ------------------------------------------------------------------------- |
-| CREATE DATABASE  | 対応するデータディレクトリにデータベースを作成します。                   |
-| DROP DATABASE    | 対応するデータディレクトリからデータベースを削除します。                   |
-| ALTER DATABASE   | 主にデータベースのプロパティ、コメント、デフォルトの保存先の変更に関係します。これらの変更は Doris から外部データディレクトリをクエリする機能に影響しないため、現在はこのイベントを無視します。 |
-| CREATE TABLE     | 対応するデータベースにテーブルを作成します。                            |
-| DROP TABLE       | 対応するデータベースからテーブルを削除し、テーブルキャッシュを無効化します。 |
-| ALTER TABLE      | 名前が変更された場合は古いテーブルを削除して新しい名前のテーブルを作成します。それ以外の場合はテーブルキャッシュを無効化します。 |
-| ADD PARTITION    | 対応するテーブルのキャッシュ済みパーティション一覧にパーティションを追加します。 |
-| DROP PARTITION   | キャッシュ済みパーティション一覧からパーティションを削除し、パーティションキャッシュを無効化します。 |
-| ALTER PARTITION  | 名前が変更された場合は古いパーティションを削除して新しい名前のパーティションを作成します。それ以外の場合はパーティションキャッシュを無効化します。 |
+| CREATE DATABASE | 対応するデータディレクトリにデータベースを作成します。 |
+| DROP DATABASE | 対応するデータディレクトリからデータベースを削除します。 |
+| ALTER DATABASE | 主にデータベースのプロパティ、コメント、デフォルトの保存場所の変更に関係します。これらの変更は Doris による外部データディレクトリのクエリに影響しないため、現在このイベントは無視されます。 |
+| CREATE TABLE | 対応するデータベースにテーブルを作成します。 |
+| DROP TABLE | 対応するデータベースからテーブルを削除し、テーブルキャッシュを無効化します。 |
+| ALTER TABLE | 名前が変更された場合は古いテーブルを削除し、新しい名前でテーブルを作成します。それ以外の場合はテーブルキャッシュを無効化します。 |
+| ADD PARTITION | 対応するテーブルのキャッシュ済みパーティション一覧にパーティションを追加します。 |
+| DROP PARTITION | キャッシュ済みパーティション一覧からパーティションを削除し、パーティションキャッシュを無効化します。 |
+| ALTER PARTITION | 名前が変更された場合は古いパーティションを削除し、新しい名前でパーティションを作成します。それ以外の場合はパーティションキャッシュを無効化します。 |
 
 :::tip
-1. データのインポートによってファイルが変更されると、パーティションテーブルでは `ALTER PARTITION` イベントが、非パーティションテーブルでは `ALTER TABLE` イベントが発生します。
+1. データのインポートによってファイルが変更されると、パーティションテーブルでは `ALTER PARTITION` イベントが発生し、非パーティションテーブルでは `ALTER TABLE` イベントが発生します。
 
-2. HMS を介さずにファイルシステムを直接操作した場合、HMS は対応するイベントを生成せず、Doris はメタデータの変更を検出しません。
+2. HMS を経由せずにファイルシステムを直接操作すると、HMS は対応するイベントを生成せず、Doris はメタデータの変更を検出できません。
 :::
 
-`fe.conf` の次のパラメータがこの機能に関連します。
+`fe.conf` の次のパラメータがこの機能に関係します。
 
 1. `enable_hms_events_incremental_sync`: メタデータの自動増分同期を有効にします。デフォルトでは無効です。
 
-2. `hms_events_polling_interval_ms`: イベントを読み取る間隔です。デフォルトは 10000 ミリ秒です。
+2. `hms_events_polling_interval_ms`: イベントの読み取り間隔。デフォルトは 10000 ミリ秒です。
 
-3. `hms_events_batch_size_per_rpc`: RPC ごとに読み取るイベントの最大数です。デフォルトは 500 です。
+3. `hms_events_batch_size_per_rpc`: RPC ごとに読み取るイベントの最大数。デフォルトは 500 です。
 
 この機能を使用するには（Huawei Cloud MRS を除く）、HMS の `hive-site.xml` を変更し、HMS と HiveServer2 の両方を再起動する必要があります。
 
@@ -1098,7 +1115,7 @@ FE ノードが HMS から Notification Events を定期的に読み取ること
 </property>
 ```
 
-Huawei Cloud MRS では、`hivemetastore-site.xml` を変更し、HMS と HiveServer2 の両方を再起動する必要があります。
+Huawei Cloud MRS の場合は、`hivemetastore-site.xml` を変更し、HMS と HiveServer2 の両方を再起動する必要があります。
 
 ```xml
 <property>
@@ -1107,111 +1124,111 @@ Huawei Cloud MRS では、`hivemetastore-site.xml` を変更し、HMS と HiveSe
 </property>
 ```
 
-## 付録
+## 付録 {#appendix}
 
-### トランザクションの仕組み
+### トランザクションの仕組み {#transaction-mechanism}
 
-Hive への書き込み操作は独立したトランザクションで実行されます。コミット前のデータは外部から見えません。コミット後に初めて、関連するテーブル操作の結果が他の利用者に見えるようになります。
+Hive への書き込み操作は、独立したトランザクションで実行されます。トランザクションがコミットされるまでは、データは外部から見えません。コミット後に初めて、関連するテーブル操作が他のユーザーから見えるようになります。
 
 トランザクションは操作の原子性を保証します。つまり、トランザクション内のすべての操作がまとめて成功するか、まとめて失敗します。
 
-トランザクションでは操作の分離性を完全には保証できませんが、ファイルシステムの操作と Hive Metastore のメタデータ操作を分けることで、不整合を最小限に抑えます。
+トランザクションは操作の分離性を完全には保証できませんが、ファイルシステムの操作と Hive Metastore のメタデータ操作を分けることで、不整合を最小限に抑えます。
 
-たとえば、Hive テーブルの複数のパーティションを変更するトランザクションで、タスクが二つのバッチに分かれている場合、二番目のバッチが完了する前に最初のバッチが外部から見えることがあります。この場合、最初のバッチのパーティションは読み取れますが、二番目のバッチのパーティションは読み取れません。
+たとえば、Hive テーブルの複数のパーティションを変更するトランザクションで、タスクが2つのバッチに分かれている場合、後のバッチが完了する前に最初のバッチが外部から見えることがあります。この場合、最初のバッチのパーティションは読み取れますが、後のバッチのパーティションは読み取れません。
 
-トランザクションのコミット中に例外が発生した場合、HDFS ファイルと Hive Metastore メタデータの変更を含め、トランザクション全体がロールバックされます。ユーザーによる追加の操作は不要です。
+トランザクションのコミット中に例外が発生した場合は、HDFS ファイルと Hive Metastore メタデータの変更を含め、トランザクション全体がロールバックされます。ユーザーによる追加の操作は必要ありません。
 
-### 同時書き込みの仕組み
+### 同時書き込みの仕組み {#concurrent-writing-mechanism}
 
-Apache Doris は現在、複数の INSERT ステートメントによる同時書き込みをサポートします。ただし、同時書き込みによって競合が生じないよう、ユーザー側で確認する必要があります。
+Apache Doris は現在、複数の insert ステートメントによる同時書き込みをサポートしています。ただし、同時書き込みによって競合が生じないよう、ユーザーが確認する必要があります。
 
-通常の非トランザクション Hive テーブルには完全なトランザクションの仕組みがないため、Apache Doris のトランザクション機構は不整合が生じる時間を最小限に抑えますが、完全な ACID 特性は保証できません。そのため、Doris から Hive テーブルに同時書き込みを行うと、データの整合性に問題が生じる可能性があります。
+通常の非トランザクション Hive テーブルには完全なトランザクション機構がないため、Apache Doris のトランザクション機構は不整合が生じる期間を最小限に抑えることを目指しますが、完全な ACID 特性は保証できません。そのため、Apache Doris から Hive テーブルへ同時に書き込むと、データの整合性に問題が生じる可能性があります。
 
-1. **同時に行う `INSERT` 操作**
+1. **同時 `INSERT` 操作**
 
-2. `INSERT` 操作はデータを追加するため、同時に実行しても競合せず、期待どおりの結果になります。
+2. `INSERT` 操作はデータを追記するため、同時に実行しても競合せず、期待どおりの結果になります。
 
-3. **同時に行う `INSERT OVERWRITE` 操作**
+3. **同時 `INSERT OVERWRITE` 操作**
 
-4. 同じテーブルまたはパーティションに対して `INSERT OVERWRITE` を同時に実行すると、データの損失や破損が起き、結果が予測できなくなる可能性があります。
+4. 同じテーブルまたはパーティションに対する `INSERT OVERWRITE` 操作を同時に実行すると、データの損失や破損が生じ、結果を予測できなくなる可能性があります。
 
-5. 一般的な対策は次のとおりです。
+5. 一般的な対処方法は次のとおりです。
 
-   * パーティションテーブルでは、異なるパーティションに書き込みます。異なるパーティションに対する同時操作は競合しません。
+   * パーティションテーブルでは、異なるパーティションにデータを書き込みます。異なるパーティションへの同時操作は競合しません。
 
-   * 非パーティションテーブルでは、競合を避けるために `INSERT` を `INSERT OVERWRITE` の代わりに使用します。
+   * 非パーティションテーブルでは、競合を避けるために `INSERT OVERWRITE` の代わりに `INSERT` を使用します。
 
-   * 競合する可能性がある操作については、アプリケーション側で同時に一つの書き込み操作だけが行われるようにします。
+   * 競合する可能性のある操作については、業務側で書き込み操作が一度に1つだけ行われるようにします。
 
-### HDFS ファイル操作
+### HDFS のファイル操作 {#hdfs-file-operations}
 
-HDFS 上の Hive テーブルデータは通常、一時ディレクトリに書き込まれた後、`rename` などのファイルシステム操作によって確定されます。以下では、データ操作ごとに HDFS 上で行われるファイル操作を詳しく説明します。
+HDFS 上の Hive テーブルデータは、通常、最初に一時ディレクトリへ書き込まれ、`rename` などのファイルシステム操作で確定されます。以下では、データ操作ごとの HDFS 上の具体的なファイル操作について説明します。
 
 データの一時ディレクトリの形式：`/tmp/.doris_staging/<username>/<uuid>`
 
 書き込まれるデータファイル名の形式：`<query-id>_<uuid>-<index>.<compress-type>.<file-type>`
 
-以下に、シナリオ別のファイル操作の例を示します。
+各シナリオでのファイル操作の例を次に示します。
 
 1. **非パーティションテーブル**
 
-   * **追加（データの追加）**
+   * **追記（データの追加）**
 
-     * ターゲットテーブルのディレクトリ: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+     * 対象テーブルのディレクトリ：`hdfs://ns/usr/hive/warehouse/example.db/table1`
 
-     * 一時ファイル: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+     * 一時ファイル：`hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
 
-     * コミット時に、すべての一時ファイルがターゲットテーブルのディレクトリへ移動されます。
+     * コミット時に、すべての一時ファイルを対象テーブルのディレクトリへ移動します。
 
    * **上書き（データの置き換え）**
 
-     * ターゲットテーブルのディレクトリ: `hdfs://ns/usr/hive/warehouse/example.db/table1`
+     * 対象テーブルのディレクトリ：`hdfs://ns/usr/hive/warehouse/example.db/table1`
 
-     * 一時ファイル: `hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
+     * 一時ファイル：`hdfs://ns/tmp/.doris_staging/root/f02247cb662846038baae272af5eeb05/b35fdbcea3a4e39-86d1f36987ef1492_7e3985bf-9de9-4fc7-b84e-adf11aa08756-0.orc`
 
-     * コミット時の手順:
+     * コミット時の手順：
 
-       1. ターゲットテーブルのディレクトリを一時ディレクトリに名前変更します: `hdfs://ns/usr/hive/warehouse/example.db/_temp_b35fdbcea3a4e39-86d1f36987ef1492_table1`
+       1. 対象テーブルのディレクトリを一時ディレクトリにリネームします：`hdfs://ns/usr/hive/warehouse/example.db/_temp_b35fdbcea3a4e39-86d1f36987ef1492_table1`
 
-       2. 一時ディレクトリをターゲットテーブルのディレクトリに名前変更します。
+       2. 一時ディレクトリを対象テーブルのディレクトリにリネームします。
 
-       3. 一時化した元のターゲットテーブルのディレクトリを削除します。
+       3. 対象テーブルの一時ディレクトリを削除します。
 
 2. **パーティションテーブル**
 
    * **追加（新しいパーティションへの追加）**
 
-     * ターゲットテーブルのディレクトリ: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+     * 対象テーブルのディレクトリ：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
 
-     * 一時ファイル: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+     * 一時ファイル：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
 
-     * コミット時に、一時ディレクトリがターゲットテーブルのディレクトリに名前変更されます。
+     * コミット時に、一時ディレクトリを対象テーブルのディレクトリにリネームします。
 
-   * **追加（既存のパーティションへのデータ追加）**
+   * **追記（既存パーティションへのデータの追加）**
 
-     * ターゲットテーブルのディレクトリ: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+     * 対象テーブルのディレクトリ：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
 
-     * 一時ファイル: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+     * 一時ファイル：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
 
-     * コミット時に、一時ディレクトリ内のファイルがターゲットテーブルのディレクトリへ移動されます。
+     * コミット時に、一時ディレクトリ内のファイルを対象テーブルのディレクトリへ移動します。
 
-   * **上書き（既存のパーティションの置き換え）**
+   * **上書き（既存パーティションの置き換え）**
 
-     * ターゲットテーブルのディレクトリ: `hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
+     * 対象テーブルのディレクトリ：`hdfs://ns/usr/hive/warehouse/example.db/table2/part_col=2024-01-01`
 
-     * 一時ファイル: `hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
+     * 一時ファイル：`hdfs://ns/tmp/.doris_staging/root/a7eac7505d7a42fdb06cb9ef1ea3e912/par1=a/d678a74d232345e0-b659e2fb58e86ffd_549ad677-ee75-4fa1-b8a6-3e821e1dae61-0.orc`
 
-     * コミット時の手順:
+     * コミット時の手順：
 
-       1. ターゲットパーティションのディレクトリを一時パーティションディレクトリに名前変更します: `hdfs://ns/usr/hive/warehouse/example.db/table2/_temp_d678a74d232345e0-b659e2fb58e86ffd_part_col=2024-01-01`
+       1. 対象パーティションのディレクトリを一時パーティションディレクトリにリネームします：`hdfs://ns/usr/hive/warehouse/example.db/table2/_temp_d678a74d232345e0-b659e2fb58e86ffd_part_col=2024-01-01`
 
-       2. 一時パーティションディレクトリをターゲットパーティションのディレクトリに名前変更します。
+       2. 一時パーティションディレクトリを対象パーティションのディレクトリにリネームします。
 
-       3. 一時化した元のターゲットパーティションのディレクトリを削除します。
+       3. 対象パーティションの一時ディレクトリを削除します。
 
-### 変更履歴
+### 変更履歴 {#change-log}
 
-| Doris バージョン | サポートする機能                              |
+| Doris のバージョン | サポートされる機能 |
 | ------------- | --------------------------------------------- |
-| 2.1.6         | Hive テーブルへの書き戻しをサポート       |
-| 3.0.4         | JsonSerDe 形式の Hive テーブルと、Hive4 のトランザクションテーブルをサポートします。 |
+| 2.1.6 | Hive テーブルへの書き戻しをサポート |
+| 3.0.4 | JsonSerDe 形式の Hive テーブルと、Hive4 のトランザクションテーブルをサポート。 |
