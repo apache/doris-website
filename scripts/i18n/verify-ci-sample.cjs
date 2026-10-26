@@ -8,6 +8,13 @@ async function verifyCourseNavigation(page, url) {
     await page.goto(url + '?courseProbe=1');
     const progress = page.locator('.course-player [role="progressbar"]');
     await progress.waitFor();
+    const chineseTitle = page.locator('.course-doc-content[lang="zh-CN"] .course-player__unit:not([hidden]) h2');
+    if (await chineseTitle.count()) {
+        await chineseTitle.locator('.course-player__title-word').first().waitFor();
+        const title = await chineseTitle.evaluate(node => ({width: node.clientWidth, scrollWidth: node.scrollWidth,
+            words: [...node.querySelectorAll('.course-player__title-word')].map(word => word.getClientRects().length)}));
+        assert(title.scrollWidth <= title.width + 1 && title.words.every(rects => rects === 1), 'Chinese lesson title splits words or overflows');
+    }
     const secondId = await page.locator('.course-player__unit').nth(1).getAttribute('id');
     await page.locator('.course-player__next').click();
     await page.waitForFunction(() => document.querySelector('.course-player [role="progressbar"]')?.getAttribute('aria-valuenow') === '2');

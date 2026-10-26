@@ -1,5 +1,7 @@
+/// <reference lib="es2022.intl" />
 import React, {
     Children,
+    cloneElement,
     isValidElement,
     JSX,
     ReactElement,
@@ -12,6 +14,8 @@ import React, {
 import Link from '@docusaurus/Link';
 import Translate, {translate} from '@docusaurus/Translate';
 import {useHistory} from '@docusaurus/router';
+import useIsBrowser from '@docusaurus/useIsBrowser';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { COURSE_101_MODULES } from './courseModules';
 import './CourseLesson.scss';
 
@@ -21,6 +25,32 @@ interface CourseCheck {
     correctIndex: number;
     correctFeedback: string;
     incorrectFeedback: string;
+}
+
+function containsChinese(node: ReactNode): boolean {
+    return Children.toArray(node).some(child => typeof child === 'string'
+        ? /[\u3400-\u9fff]/.test(child)
+        : isValidElement<{children?: ReactNode}>(child) && containsChinese(child.props.children));
+}
+
+function chineseTitleWords(title: ReactNode): ReactNode {
+    const segmenter = new Intl.Segmenter('zh-CN', {granularity: 'word'});
+    const format = (children: ReactNode): ReactNode => Children.map(children, child => {
+        if (isValidElement<{children?: ReactNode}>(child))
+            return cloneElement(child, {}, format(child.props.children));
+        if (typeof child !== 'string') return child;
+        const text = child.trim();
+        if (!/[\u3400-\u9fff]/.test(text)) return text;
+        const words: string[] = [];
+        for (const {segment, isWordLike} of segmenter.segment(text)) {
+            if (!isWordLike && /[，。！？、；：）”’]/.test(segment) && words.length)
+                words[words.length - 1] += segment;
+            else words.push(segment);
+        }
+        return words.map((word, index) => /^\s+$/.test(word) ? word
+            : <span className="course-player__title-word" key={index}>{word}</span>);
+    });
+    return format(title);
 }
 
 interface CourseLessonUnitProps {
@@ -205,6 +235,10 @@ export function CourseLessonPlayer({
 }: CourseLessonPlayerProps): JSX.Element {
     const units = Children.toArray(children).filter(isValidElement) as ReactElement<CourseLessonUnitProps>[];
     const history = useHistory();
+    const isBrowser = useIsBrowser();
+    const {i18n: {currentLocale}} = useDocusaurusContext();
+    // Browser and server ICU versions can disagree on word boundaries.
+    const formatChineseTitle = isBrowser && currentLocale === 'zh-CN' && typeof Intl.Segmenter === 'function';
     const unitIds = useMemo(() => units.map(unit => unit.props.id), [children]);
     const [activeUnit, setActiveUnit] = useState(0);
     const [railCollapsed, setRailCollapsed] = useState(false);
@@ -379,7 +413,9 @@ export function CourseLessonPlayer({
                                 >
                                     <div className="course-player__visual">
                                         <span className="course-player__unit-label">{props.label}</span>
-                                        <h2 ref={index === activeUnit ? activeHeadingRef : undefined} tabIndex={-1}>{props.title}</h2>
+                                        <h2 ref={index === activeUnit ? activeHeadingRef : undefined} tabIndex={-1}>
+                                            {formatChineseTitle && containsChinese(props.title) ? chineseTitleWords(props.title) : props.title}
+                                        </h2>
                                         <p className="course-player__summary">{props.summary}</p>
                                         <div className="course-player__visual-content">{props.children}</div>
                                         <span className="course-player__visual-ring" aria-hidden="true" />
