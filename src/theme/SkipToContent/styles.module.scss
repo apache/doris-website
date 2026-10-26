@@ -1,0 +1,17 @@
+.skipToContent {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: calc(var(--ifm-z-index-fixed) + 1);
+    max-width: calc(100vw - 2rem);
+    padding: calc(var(--ifm-global-spacing) / 2) var(--ifm-global-spacing);
+    color: var(--brand-ink);
+    background: var(--brand-paper);
+    transform: translateY(calc(-100% - 2rem));
+
+    &:focus {
+        transform: translateY(0);
+        outline: 2px solid var(--brand-primary);
+        outline-offset: 2px;
+    }
+}
