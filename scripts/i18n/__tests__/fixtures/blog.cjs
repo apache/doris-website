@@ -10,10 +10,11 @@ async function createBlogFixture(root) {
     const fixture = await createContentFixture(root), {write} = fixture;
     for (const directory of ['src/theme/BlogListPage', 'src/theme/BlogListItem', 'src/theme/BlogFooter', 'src/theme/BlogLayout',
         'src/theme/BlogPostItem/Container', 'src/theme/BlogPostItem/Header/Title', 'src/theme/BlogPostPage/Metadata',
-        'src/theme/BlogPostPage/StructuredData', 'src/theme/BlogTagsListPage', 'src/theme/BlogTagsPostsPage', 'src/components/PageHeader'])
+        'src/theme/BlogPostPage/StructuredData', 'src/theme/BlogTagsListPage', 'src/theme/BlogTagsPostsPage', 'src/components/PageHeader',
+        'src/components/VersionsDoc'])
         fs.cpSync(path.join(repo, directory), path.join(root, directory), {recursive: true});
     for (const file of ['src/components/blogs/BlogLanguageNote.tsx', 'src/components/blogs/components/head-blogs.tsx',
-        'src/utils/blogLocale.ts', 'src/hooks/use-format-date.ts', 'src/theme/BlogPostItem/styles.scss', 'src/scss/_variables.scss'])
+        'src/utils/blogLocale.ts', 'src/hooks/use-format-date.ts', 'src/theme/BlogPostItem/styles.scss', 'src/scss/_variables.scss', 'src/theme/MDXComponents.js'])
         write(file, fs.readFileSync(path.join(repo, file), 'utf8'));
     write('static/sample.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="60"><rect width="120" height="60" fill="green"/></svg>');
     write('blog/_parts/sample.svg', fs.readFileSync(path.join(root, 'static/sample.svg'), 'utf8'));
@@ -22,7 +23,7 @@ async function createBlogFixture(root) {
     const states = JSON.parse(fs.readFileSync(path.join(root, 'translations/blog/state.json')));
     for (let i = 0; i < 3; i++) {
         const old = `2026-01-0${i + 1}-sample.md`, file = i === 2 ? old + 'x' : old;
-        const source = `---\ntitle: English article ${i}\nslug: /native-${i}\nauthors: [fixture]\ntags: [${i === 2 ? 'Glossary' : 'Tech Sharing'}]\nimage: /sample.svg\n${i === 0 ? 'order: 1\n' : ''}---\n\nimport Label from '@site/blog/_parts/Label';\n\nEnglish article ${i}.\n\n## Usage {#usage}\n\n<Label/>\n\n![Shared diagram](./_parts/sample.svg)\n\n[Another post](./2026-01-01-sample.md#usage)\n\n[Same-origin link](https://doris.apache.org/blog/native-0/#usage)\n`;
+        const source = `---\ntitle: English article ${i}\nslug: /native-${i}\nauthors: [fixture]\ntags: [${i === 2 ? 'Glossary' : 'Tech Sharing'}]\nimage: /sample.svg\n${i === 0 ? 'order: 1\n' : ''}---\n\nimport Label from '@site/blog/_parts/Label';\n\nEnglish article ${i}.\n\n## Usage {#usage}\n\n<Label/>\n\n![Shared diagram](./_parts/sample.svg)\n\n[Another post](./2026-01-01-sample.md#usage)\n\n[Fallback peer](./2026-01-03-sample.mdx#usage)\n\n[Same-origin link](https://doris.apache.org/blog/native-0/#usage)\n`;
         if (file !== old) fs.unlinkSync(path.join(root, 'blog', old));
         write('blog/' + file, source);
         for (const locale of ['zh-CN', 'ja', 'ko', 'ru']) {
@@ -31,8 +32,7 @@ async function createBlogFixture(root) {
             const target = `i18n/${locale}/docusaurus-plugin-content-blog/${file}`;
             if (file !== old) fs.unlinkSync(path.join(root, record.targetFiles[0]));
             write(target, source.replaceAll('English article', `${locale} translated article`)
-                .replace('./_parts/sample.svg', '@site/blog/_parts/sample.svg')
-                .replace('./2026-01-01-sample.md#usage', '@site/blog/2026-01-01-sample.md#usage'));
+                .replace('./_parts/sample.svg', '@site/blog/_parts/sample.svg'));
             Object.assign(record, {contentId: 'blog:' + file, sourceFiles: ['blog/' + file, 'blog/_parts/Label.jsx', 'blog/_parts/sample.svg'],
                 targetFiles: [target]});
             record.sourceHash = digestFiles(root, record.sourceFiles); record.targetHash = digestFiles(root, record.targetFiles);
@@ -72,6 +72,7 @@ async function createBlogFixture(root) {
     write('fixture.scss', "@use './src/scss/variables';\n@tailwind utilities;\n");
     let config = fs.readFileSync(path.join(root, 'docusaurus.config.js'), 'utf8');
     config = config.replace("blog:false,pages:false}", "blog:false,pages:false,theme:{customCss:require.resolve('./fixture.scss')}}");
+    config = config.replace(" title: 'Multi-locale fixture'", " onBrokenMarkdownLinks:'throw', title: 'Multi-locale fixture'");
     config = config.replace(' plugins: [', ` plugins: [function fixtureTailwind(){return {name:'fixture-tailwind',configurePostCss(options){
         options.plugins.push(require('tailwindcss')({...require('./tailwind.config.js'),content:[__dirname+'/src/**/*.{js,jsx,ts,tsx}']}));return options;}}},`);
     write('docusaurus.config.js', config);
@@ -90,6 +91,8 @@ async function createPilotFixture(root) {
     // Retain one untranslated headline to exercise mixed coverage. The four
     // actual pilot articles and their complete dependencies are copied verbatim.
     for(const file of ['2026-01-02-sample.md','2026-01-03-sample.mdx']) fs.unlinkSync(path.join(root,'blog',file));
+    const headline=path.join(root,'blog/2026-01-01-sample.md');
+    fs.writeFileSync(headline,fs.readFileSync(headline,'utf8').replace('./2026-01-03-sample.mdx#usage','./2026-01-01-sample.md#usage'));
     for(let i=1;i<=10;i++) write(`blog/2025-12-${String(i).padStart(2,'0')}-pagination.md`,
         `---\ntitle: English pagination article ${i}\nsummary: English pagination summary\ntags: [Tech Sharing]\nimage: /sample.svg\n---\n\nEnglish pagination body ${i}.\n`);
     for(const directory of ['src/theme/BlogPostPage','src/theme/BlogPostItem','src/components/recent-blogs','src/components/link-arrow'])
@@ -109,6 +112,10 @@ async function createPilotFixture(root) {
     // variant; retain their explicit fallback instead of declaring them ready.
     for(const record of pages.pages) {record.state='blocked';record.targetFiles=[];delete record.targetHash;}
     write('translations/pages/state.json',JSON.stringify(pages));
+    // Real pilot articles link to docs outside this tiny site. Report those
+    // omitted routes; blog/media checks remain explicit in the verifier.
+    const config=path.join(root,'docusaurus.config.js');
+    fs.writeFileSync(config,fs.readFileSync(config,'utf8').replace(" onBrokenMarkdownLinks:'throw',"," onBrokenLinks:'warn', onBrokenMarkdownLinks:'throw',"));
     execFileSync('git',['add','.'],{cwd:root});
     execFileSync('git',['-c','user.name=Fixture','-c','user.email=fixture@example.com','commit','-qm','Actual four-article pilot fixture'],{cwd:root});
     return fixture;

@@ -41,6 +41,8 @@ async function main() {
         const article=read(prefix+'/blog/native-0/');
         assert.equal(article('article[lang]').first().attr('lang'),locale==='zh-CN'?'en':locale);
         assert(article('#usage').length);assert(article('code').text().includes('SELECT 1;'));
+        for(const [label,route] of [['Another post','/blog/native-0/#usage'],['Fallback peer','/blog/native-2/#usage'],['Same-origin link','/blog/native-0/#usage']])
+            assert.equal(article('article a').filter((_,node)=>article(node).text()===label).attr('href'),prefix+route);
         for(const version of ['3.x','2.1']) {
             const old=manifest.pages.find(p=>p.pluginId==='default'&&p.version===version);
             const doc=read(old.route);assert.equal(old.contentLocale,locale==='zh-CN'?'zh-CN':'en');

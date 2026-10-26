@@ -68,9 +68,13 @@ function wrap(kind, native) {
                 const selected = kind === 'blog' && await blogSample.sample(context, options, args.content);
                 const english = kind === 'blog' && new Map(snapshots.get('en').blogPosts.map(post => [sourcePath(post.metadata,'en'),post]));
                 const aliases = kind === 'blog' ? args.content.blogPosts.flatMap(post => {
-                    const original = english.get(sourcePath(post.metadata,context.i18n.currentLocale));
-                    return original && original.metadata.source !== post.metadata.source
-                        ? [{...post,id:`english-link-alias:${post.id}`,metadata:{...post.metadata,source:original.metadata.source}}] : [];
+                    const locale=context.i18n.currentLocale,file=sourcePath(post.metadata,locale),original=english.get(file);
+                    if(!original||locale==='en') return [];
+                    const localizedDir=getPluginI18nPath({localizationDir:path.join(context.siteDir,'i18n',locale),
+                        pluginName:'docusaurus-plugin-content-blog',pluginId:options.id});
+                    const sources=[original.metadata.source,'@site/'+relative(context.siteDir,path.join(localizedDir,file))];
+                    return sources.filter(source=>source!==post.metadata.source).map((source,index)=>
+                        ({...post,id:`link-alias:${index}:${post.id}`,metadata:{...post.metadata,source}}));
                 }) : [];
                 if (!selected && !aliases.length) return plugin.contentLoaded(args);
                 // Seed native MDX link resolution with both physical source
