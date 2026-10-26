@@ -1698,15 +1698,27 @@
       "state": "ready",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
-        "src/pages/brand-assets/index.tsx"
+        "src/pages/brand-assets/index.tsx",
+        "static/images/brand-assets/apache-doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-white.svg",
+        "static/images/brand-assets/doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/doris-logo-stacked-white.svg"
       ],
       "targetFiles": [
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
+      "sourceHash": "eca1dd2eaf22825059040986b901880e13416a8ef56279c66e7516196e0b51f6",
       "targetHash": "04a7aef8248e958c09721ad3e1b3a4bf1da5574aa2ba3d280e8fae397cc86c60",
-      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4"
     },
     {
       "contentId": "page:P11",
@@ -1714,7 +1726,19 @@
       "state": "ready",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
-        "src/pages/brand-assets/index.tsx"
+        "src/pages/brand-assets/index.tsx",
+        "static/images/brand-assets/apache-doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-white.svg",
+        "static/images/brand-assets/doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/doris-logo-stacked-white.svg"
       ],
       "targetFiles": [
         "i18n/ja/code.json"
@@ -1723,8 +1747,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "eca1dd2eaf22825059040986b901880e13416a8ef56279c66e7516196e0b51f6",
       "targetHash": "756244256fdc1dd4e62cce731f936ff2a2f32aac7c423822ca450486cc3201d2"
     },
     {
@@ -1733,7 +1757,19 @@
       "state": "ready",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
-        "src/pages/brand-assets/index.tsx"
+        "src/pages/brand-assets/index.tsx",
+        "static/images/brand-assets/apache-doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-white.svg",
+        "static/images/brand-assets/doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/doris-logo-stacked-white.svg"
       ],
       "targetFiles": [
         "i18n/ko/code.json"
@@ -1742,8 +1778,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "eca1dd2eaf22825059040986b901880e13416a8ef56279c66e7516196e0b51f6",
       "targetHash": "1158a9e72608ba43c16478e3ebab5a092ad344f935ee3d9af1a46d888971e379"
     },
     {
@@ -1752,7 +1788,19 @@
       "state": "ready",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
-        "src/pages/brand-assets/index.tsx"
+        "src/pages/brand-assets/index.tsx",
+        "static/images/brand-assets/apache-doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-white.svg",
+        "static/images/brand-assets/doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/doris-logo-stacked-white.svg"
       ],
       "targetFiles": [
         "i18n/ru/code.json"
@@ -1761,8 +1809,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "c9d64b5f0b715f1648938e49825c25cffcb0ea8ce521576bab56ccd13ae92328",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "eca1dd2eaf22825059040986b901880e13416a8ef56279c66e7516196e0b51f6",
       "targetHash": "a9d992ff85bec94df98c94ebaeb9292c7229abad7ef4213ef30535e79ad6f91e"
     },
     {
@@ -1816,9 +1864,9 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
+      "sourceHash": "fbc29f6ab62e9b5ec55d2d2c689d881ef94cb313ef4de07026ca70ca30bae97c",
       "targetHash": "04a7aef8248e958c09721ad3e1b3a4bf1da5574aa2ba3d280e8fae397cc86c60",
-      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73"
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4"
     },
     {
       "contentId": "page:P12",
@@ -1874,8 +1922,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
-      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "fbc29f6ab62e9b5ec55d2d2c689d881ef94cb313ef4de07026ca70ca30bae97c",
       "targetHash": "756244256fdc1dd4e62cce731f936ff2a2f32aac7c423822ca450486cc3201d2"
     },
     {
@@ -1932,8 +1980,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
-      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "fbc29f6ab62e9b5ec55d2d2c689d881ef94cb313ef4de07026ca70ca30bae97c",
       "targetHash": "1158a9e72608ba43c16478e3ebab5a092ad344f935ee3d9af1a46d888971e379"
     },
     {
@@ -1990,8 +2038,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
-      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
+      "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
+      "sourceHash": "fbc29f6ab62e9b5ec55d2d2c689d881ef94cb313ef4de07026ca70ca30bae97c",
       "targetHash": "a9d992ff85bec94df98c94ebaeb9292c7229abad7ef4213ef30535e79ad6f91e"
     },
     {
