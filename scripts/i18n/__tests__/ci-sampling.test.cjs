@@ -63,6 +63,23 @@ test('community translation metadata does not upgrade a landing-page PR to full 
     assert.equal(policy([...files, 'translations/unknown.json']).mode, 'full');
     assert.equal(policy(files, {forceFull: true}).mode, 'full');
 });
+test('known translation scope and glossary inputs keep combined blog/maintenance work in representative CI',()=>{
+    const files=['docusaurus.config.js','src/theme/BlogListPage/index.tsx','scripts/i18n/blog-policy.cjs',
+        'scripts/i18n/docs-language-policy.cjs','translations/blog/state.json','translations/pages/state.json',
+        'translations/scope/ru.json','i18n/ru/docusaurus-plugin-content-blog/sample.mdx',
+        '.github/workflows/build-check.yml','.github/workflows/russian-coverage-audit.yml'];
+    const selected=policy(files);assert.equal(selected.mode,'sample');assert.equal(selected.selection,'representative');
+    assert.equal(selected.publicationAllowed,false);assert.equal(selected.runTranslationTests,true);assert.equal(selected.runContentFixture,true);
+    for(const locale of ['ja','ko','ru']) for(const kind of ['scope','glossary']) {
+        const config=`translations/${kind}/${locale}.json`;
+        assert.equal(policy([config]).mode,'sample');assert.equal(policy([config]).selection,'representative');
+        assert.equal(policy([config]).runTranslationTests,true);
+    }
+    for(const unknown of ['translations/scope/unknown.json','translations/scope/ru-extra.json','translations/unknown.json'])
+        assert.equal(policy([...files,unknown]).mode,'full',unknown);
+    for(const risk of ['package.json','yarn.lock','versions.json']) assert.equal(policy([...files,risk]).mode,'full',risk);
+    assert.equal(policy(files,{forceFull:true}).mode,'full');
+});
 test('CI tooling only runs the fixtures for its own subsystem', () => {
     const language = policy(['scripts/i18n/verify-global-language.cjs']);
     assert.equal(language.mode, 'fixtures');

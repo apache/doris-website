@@ -17,11 +17,18 @@ const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plu
 // Maintenance notes are not site content. The report registry, in contrast,
 // changes ordinary pages, which the real sample build always renders.
 const maintenanceNotes = /^translations\/[^/]+\.md$/;
+// Registered locale scope/glossary files are validated offline and exercised
+// through native metadata plus representative builds, like other known shared
+// language inputs. Unknown translation configuration still requires full CI.
+const maintenanceConfig = file => {
+    const match=file.match(/^translations\/(?:scope|glossary)\/([^/]+)\.json$/);
+    return !!match && localeRegistry.some(locale=>locale.optional&&locale.code===match[1]);
+};
 const reportRegistry = 'translations/community-reports.json';
 function policy(files, {forceFull = false, forceSample = false} = {}) {
     const risk = files.filter(file => highRisk.test(file));
     const changed = files.some(file => content.test(file));
-    const shared = files.some(file => runtime.test(file) || mechanism.test(file) || file === reportRegistry);
+    const shared = files.some(file => runtime.test(file) || mechanism.test(file) || file === reportRegistry || maintenanceConfig(file));
     const checks = validationScope(files);
     const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file));
     const unknown = files.filter(
@@ -30,6 +37,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
             !mechanism.test(file) &&
             !content.test(file) &&
             file !== reportRegistry &&
+            !maintenanceConfig(file) &&
             !maintenanceNotes.test(file) &&
             !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
                 file,
@@ -62,7 +70,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
             /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
         runPublishFixture: checks.check_publish_fixture || mode === 'full',
         runTranslationTests: mode === 'full' || files.some(file =>
-            runtime.test(file) || mechanism.test(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
+            runtime.test(file) || mechanism.test(file) || maintenanceConfig(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
                 || file === '.github/workflows/build-check.yml'),
         runDocsReport: mode === 'full' || (mode !== 'fixtures' && checks.check_docs_report),
         publicationAllowed: mode === 'full',

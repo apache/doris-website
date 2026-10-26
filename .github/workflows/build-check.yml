@@ -116,6 +116,7 @@ jobs:
             - name: Validate manual content and shared messages
               if: steps.detect.outputs.validation_mode != 'skip'
               run: |
+                  node scripts/i18n/check-configuration.cjs --all
                   node scripts/i18n/manual-report.cjs
                   node scripts/i18n/check-blog-translations.cjs
 
