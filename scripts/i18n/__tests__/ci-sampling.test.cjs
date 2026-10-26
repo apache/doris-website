@@ -75,6 +75,7 @@ test('CI tooling only runs the fixtures for its own subsystem', () => {
     const publishing = policy(['scripts/publish/apache.cjs']);
     assert.equal(publishing.runPublishFixture, true);
     assert.equal(publishing.runSamplingFixture, false);
+    assert.equal(policy(['.github/workflows/build-check.yml']).runDocsReport, false);
     const docs = policy(['docs/topic.md']);
     assert.equal(docs.runTranslationTests, false);
     assert.equal(docs.runDocsReport, true);

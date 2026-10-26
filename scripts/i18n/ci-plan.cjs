@@ -64,7 +64,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         runTranslationTests: mode === 'full' || files.some(file =>
             runtime.test(file) || mechanism.test(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
                 || file === '.github/workflows/build-check.yml'),
-        runDocsReport: mode === 'full' || checks.check_docs_report,
+        runDocsReport: mode === 'full' || (mode !== 'fixtures' && checks.check_docs_report),
         publicationAllowed: mode === 'full',
         checkRenderedLinks: !(files.length && files.every(file => /\.(css|scss|sass)$/.test(file))),
     };
