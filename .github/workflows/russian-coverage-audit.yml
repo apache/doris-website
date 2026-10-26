@@ -1,0 +1,43 @@
+name: Russian coverage audit
+
+# Read-only maintenance reporting; PR admission stays in Build Check.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '49 5 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: russian-coverage-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Russian coverage audit
+    env:
+      I18N_LOCALE: ru
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: yarn
+      - run: yarn --frozen-lockfile
+      - run: node scripts/i18n/check-configuration.cjs --all
+      - name: Recount native scope at checked-out source SHA
+        run: |
+          mkdir -p "$RUNNER_TEMP/russian-audit"
+          node scripts/i18n/audit-coverage.cjs --source-ref HEAD --output "$RUNNER_TEMP/russian-audit/coverage.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: russian-coverage-${{ github.sha }}
+          path: ${{ runner.temp }}/russian-audit/coverage.json
+          if-no-files-found: warn
+          retention-days: 30

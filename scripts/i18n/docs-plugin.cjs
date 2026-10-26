@@ -104,7 +104,8 @@ module.exports = async function translationDocsPlugin(context, options) {
             const englishDoc = await readMetadata(contexts.en, options, englishVersion, filename, englishFile, englishContent);
             seenIds.add(englishDoc.id);
             const page = {pluginId: options.id, version: englishVersion.versionName, docId: englishDoc.id, locale};
-            const requestedSourceLocale = sourceLocaleFor(settings[locale], page);
+            const fallbackOnly = require('./docs-language-policy.cjs').fallbackOnly(options.id, englishVersion.versionName);
+            const requestedSourceLocale = fallbackOnly ? 'en' : sourceLocaleFor(settings[locale], page);
             const chineseFile = path.join(versions['zh-CN'][index].contentPathLocalized, filename);
             const chineseContent = await read(chineseFile);
             const sourceLocale = requestedSourceLocale === 'zh-CN' && chineseContent !== undefined ? 'zh-CN' : 'en';
@@ -119,6 +120,7 @@ module.exports = async function translationDocsPlugin(context, options) {
             const sourceStructure = target !== undefined
                 ? await structure(source, path.extname(filename), maintainCase).catch(() => null) : null;
             let state = decide({page, source, target, record, technicalHash: sourceStructure?.technicalHash});
+            if (fallbackOnly) state = {...state, status: 'unsupported_translation_version', useTarget: false, indexable: false, contentLocale: 'en'};
             if (requestedSourceLocale !== sourceLocale) {
                 state = {...state, status: 'source_missing', useTarget: false, indexable: false, contentLocale: 'en'};
                 reports.push({kind: 'source_divergence', ...page, requestedSourceLocale});

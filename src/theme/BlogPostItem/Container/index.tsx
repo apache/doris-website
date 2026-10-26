@@ -4,16 +4,19 @@ import type { Props } from '@theme/BlogPostItem/Container';
 import MDXContent from '@theme/MDXContent';
 import { blogPostContainerID } from '@docusaurus/utils-common';
 import { useBlogPost } from '@docusaurus/plugin-content-blog/client';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {blogContentLocale} from '@site/src/utils/blogLocale';
 
 import '../styles.scss';
 
 export default function BlogPostItemContainer({ children, className }: Props): JSX.Element {
     const { isBlogPostPage, metadata } = useBlogPost();
     const page = useContentRouteData();
+    const {i18n: {currentLocale}} = useDocusaurusContext();
     return (
         <article
             className={!isBlogPostPage ? 'margin-bottom--xl' : 'blog-article-content'}
-            lang={page?.contentLocale ?? (metadata.source?.startsWith('@site/i18n/') ? undefined : 'en')}
+            lang={page && !page.aggregate ? page.contentLocale : blogContentLocale(metadata, currentLocale)}
             itemProp="blogPost"
             itemScope
             itemType="http://schema.org/BlogPosting"

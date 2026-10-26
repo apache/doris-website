@@ -18,6 +18,8 @@ function validateScope(scope, locale) {
     const identities = new Set();
     assert(Array.isArray(scope.groups) && scope.groups.length && Array.isArray(scope.retainEnglish), 'Scope needs groups and explicit exceptions');
     for (const group of scope.groups) {
+        assert(!require('./docs-language-policy.cjs').fallbackOnly(group.pluginId, group.version),
+            `${group.version} supports English/Chinese only; other locales use English fallback, not automatic translation`);
         assert(typeof group.pluginId === 'string' && group.pluginId && typeof group.version === 'string' && group.version, 'Group needs plugin/version');
         assert(/^[A-Z0-9]+$/.test(group.id) && !groups.has(group.id), 'Invalid/duplicate group');
         assert(!identities.has(key({...group, docId: ''})), 'Duplicate plugin/version group');
@@ -31,6 +33,9 @@ function validateScope(scope, locale) {
         identities.add(key({...group, docId: ''}));
     }
     const exceptions = new Set();
+    if (scope.automaticGroups !== undefined) assert(Array.isArray(scope.automaticGroups) && scope.automaticGroups.length
+        && new Set(scope.automaticGroups).size === scope.automaticGroups.length
+        && scope.automaticGroups.every(id => groups.has(id)), 'Automatic groups must name unique registered scope groups');
     for (const entry of scope.retainEnglish) {
         assert(entry.reason?.trim() && !exceptions.has(key(entry)), 'English exception needs a unique identity and reason');
         assert(scope.groups.some(group => group.pluginId === entry.pluginId && group.version === entry.version), 'English exception outside scope');

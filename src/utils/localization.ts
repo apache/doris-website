@@ -10,12 +10,10 @@ import {resolveLocalizedRoute, rootBaseUrl} from './localizedRoute';
 const fields = (siteConfig.customFields ?? {}) as {
     translatedLocales?: string[];
     defaultLocalePageLocales?: string[];
-    defaultLocaleBlogLocales?: string[];
     translatedPagePaths?: Record<string, string[]>;
 };
 const translatedLocales = fields.translatedLocales ?? [];
 const defaultLocalePageLocales = fields.defaultLocalePageLocales ?? [];
-const defaultLocaleBlogLocales = fields.defaultLocaleBlogLocales ?? [];
 export const translatedPagePaths = fields.translatedPagePaths ?? {};
 
 /** Ordinary pages with an explicit translation, even in a docs-first locale. */
@@ -37,24 +35,6 @@ export function isTranslatedLocale(locale: string): boolean {
  */
 export function usesDefaultLocalePages(): boolean {
     return defaultLocalePageLocales.includes(i18n.currentLocale);
-}
-
-/**
- * A locale whose blog has no translated posts, so every blog route under it
- * repeats the default locale's posts at its own URL. Those routes stay
- * reachable but must not be indexed as a second copy of the articles.
- */
-export function usesDefaultLocaleBlog(): boolean {
-    return defaultLocaleBlogLocales.includes(i18n.currentLocale);
-}
-
-/** Whether a route is one of those blog routes. */
-export function isDefaultLocaleBlogRoute(pathname: string): boolean {
-    if (!usesDefaultLocaleBlog()) return false;
-    // Blog routes live under the default locale's /blog, so its own prefix is
-    // what a localized route has to drop before the section can be told apart.
-    const path = normalizePathname(pathname, [i18n.currentLocale]).replace(/\/+$/, '');
-    return path === '/blog' || path.startsWith('/blog/');
 }
 
 /**

@@ -43,6 +43,10 @@ test('invalid or cross-locale scope and sidebar exceptions fail offline', t => {
     const entry = {pluginId:'default', version:'current', key:'sidebar.docs.category.SQL', reason:'SQL identifier'};
     write('translations/scope/ko.json', {...scope, retainSidebarLabels:[entry,entry]});
     assert.throws(() => checkConfiguration(root, 'ko'), /sidebar label/);
+    for (const version of ['3.x', '2.1']) {
+        write('translations/scope/ko.json', {...scope, groups: [{id:'OLD',pluginId:'default',version,sourceRoot:`versioned_docs/version-${version}`}]});
+        assert.throws(() => checkConfiguration(root, 'ko'), /English\/Chinese only/);
+    }
 });
 
 test('glossary duplicates, malformed terms and incomplete reasons fail before generation', t => {

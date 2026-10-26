@@ -132,6 +132,9 @@ async function audit({root,sourceRef,baseline,native}) {
             likelyMoveTo: groups.flatMap(group => group.entries).find(entry => entry.sourceHash === page.sourceHash
                 && entry.pluginId === page.pluginId && entry.version === page.version)?.sourcePath || null}));
     const sidebar = sidebarAudit(native,root,scope);
+    const automaticGroups=groups.filter(group=>!scope.automaticGroups||scope.automaticGroups.includes(group.id));
+    const automaticCounts=Object.fromEntries(['required','current','pending'].map(name=>[name,
+        automaticGroups.reduce((sum,group)=>sum+group.counts[name],0)]));
     const labels = Object.fromEntries(['translated','untranslated','missing','retained_technical']
         .map(state => [state,sidebar.filter(entry => entry.state === state).length]));
     const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
@@ -148,7 +151,10 @@ async function audit({root,sourceRef,baseline,native}) {
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
         routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,routingHashes.get(file)])),
-        groups,removed,labels,sidebar,reports:native.reports};
+        groups,removed,labels,sidebar,reports:native.reports,automaticCounts,
+        deferredAutomaticGroups:groups.filter(group=>!automaticGroups.includes(group)).map(group=>group.id),
+        fallbackOnlyVersions: require('./docs-language-policy.cjs').fallbackOnlyVersions.map(version => ({pluginId:'default',version,
+            proseLocales:['en','zh-CN'],otherLocaleContent:'en',requiredTranslation:false}))};
 }
 if (require.main === module) {
     const args = process.argv.slice(2), option = name => args[args.indexOf(name)+1];

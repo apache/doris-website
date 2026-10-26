@@ -8572,5 +8572,53 @@
   },
   "landing.download.required": {
     "message": "Выберите вариант."
+  },
+  "blog.title": {
+    "message": "Блог"
+  },
+  "blog.category.all": {
+    "message": "Все"
+  },
+  "blog.category.tech": {
+    "message": "Технические статьи"
+  },
+  "blog.category.practice": {
+    "message": "Практический опыт"
+  },
+  "blog.category.releases": {
+    "message": "Примечания к выпускам"
+  },
+  "blog.category.news": {
+    "message": "Новости"
+  },
+  "blog.category.glossary": {
+    "message": "Глоссарий"
+  },
+  "blog.total": {
+    "message": "Всего статей: {total}"
+  },
+  "blog.readOriginal": {
+    "message": "Читать оригинал на английском"
+  },
+  "blog.recent": {
+    "message": "Последние статьи (на английском)"
+  },
+  "blog.viewAll": {
+    "message": "Все статьи"
+  },
+  "blog.search.label": {
+    "message": "Поиск по блогу"
+  },
+  "blog.search.placeholder": {
+    "message": "Поиск по заголовку, описанию, тегу или автору"
+  },
+  "blog.search.clear": {
+    "message": "Очистить"
+  },
+  "blog.search.resultCount": {
+    "message": "Найдено статей: {count}"
+  },
+  "blog.search.noResults": {
+    "message": "Нет статей, соответствующих запросу и категории."
   }
 }

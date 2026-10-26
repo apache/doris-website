@@ -60,6 +60,7 @@ export function useTranslationRoutes() {
 // T01 consumers accept one page's routing payload. The build-only registry
 // (source/target digests, state and reports) must not be imported by the browser.
 export type ContentRouteData = {
+    aggregate?: boolean;
     schemaVersion: 1;
     renderIntegrated: boolean;
     sourceSha: string;

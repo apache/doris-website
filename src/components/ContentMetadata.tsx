@@ -14,8 +14,8 @@ export default function ContentMetadata(): JSX.Element {
     const page = useContentRouteData();
     const legacy = useTranslationRoutes();
     const info = localePath(pathname, {url, baseUrl: rootBaseUrl(baseUrl, currentLocale, defaultLocale), defaultLocale, locales});
-    // Aggregate blog UI is adopted in T14. Until then, non-English aggregates
-    // cannot advertise translated body coverage, even if one article is ready.
+    // Unknown blog routes stay conservative. Native aggregates carry their own
+    // decision based on actual translated membership.
     const blogAggregate = !page && currentLocale !== defaultLocale && /^\/blog(?:\/|$)/.test(info?.path ?? '');
     const contentLocale = page?.contentLocale ?? (blogAggregate ? defaultLocale : currentLocale);
     const canonicalPath = page?.fallback ? page.navigationRoutes[defaultLocale]

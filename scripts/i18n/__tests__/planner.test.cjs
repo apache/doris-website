@@ -11,6 +11,16 @@ const scope = {schemaVersion: 1, locale: 'ja', maxBatchPages: 20, groups: [
     {id: 'COMMUNITY', pluginId: 'community', version: 'current', sourceRoot: 'community'},
 ]};
 const source = '# Example\n\nHello.\n';
+test('disabled automatic groups remain visible in coverage and cannot be selected even with an explicit filter',async()=>{
+    const pages=[page('primary'),page('supplemental',{pluginId:'community'})];
+    const report={schemaVersion:1,sourceCommit:sha,baselineCommit:baselineSha,reports:[],
+        groups:scope.groups.map(group=>({...group,unregistered:[],entries:pages.filter(p=>p.pluginId===group.pluginId&&p.version===group.version)}))};
+    const args={report,scope:{...scope,automaticGroups:['DEV']},records:new Map(),readCurrent:()=>source,readAt:()=>null};
+    const result=await plan(args);assert.equal(result.counts.required,2);assert.equal(result.selectedCount,1);
+    assert.equal(result.deferredAutomationTasks,1);assert.equal(result.tasks.find(t=>t.pluginId==='community').automationEligible,false);
+    assert.deepEqual(result.automaticCounts,{required:1,mergedCurrent:0,pending:1});
+    const filtered=await plan({...args,filters:{plugin:'community'}});assert.equal(filtered.selectedCount,0);assert.equal(filtered.tasks.length,1);
+});
 function page(docId, options = {}) {
     const version = options.version ?? 'current';
     const pluginId = options.pluginId ?? 'default';

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "contentId": "blog:apache-doris-vs-rockset.md",
+    "locale": "ko",
+    "state": "ready",
+    "sourceFiles": [
+      "blog/apache-doris-vs-rockset.md",
+      "static/images/openai-twitter-rockset.png",
+      "static/images/doris-vs-rockset.jpeg"
+    ],
+    "targetFiles": [
+      "i18n/ko/docusaurus-plugin-content-blog/apache-doris-vs-rockset.md"
+    ],
+    "sourceHash": "cbfe3b23590d886890c87a00515cbdad327129eb0fb1a221b49424f1975b2e1a",
+    "targetHash": "279bd04bdeebbdca2bf69cada1b19d290b5dd20161a74e4b44c63cd41355d957",
+    "reviewStatus": "machine",
+    "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+  }
+}

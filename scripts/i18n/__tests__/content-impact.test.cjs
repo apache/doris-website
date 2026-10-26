@@ -12,7 +12,7 @@ function fixture(t) {
     write('translations/pages/registry.json', {pages: [{id: 'P01', kind: 'page', sourcePath: 'src/pages/index.tsx', sourceFiles: ['src/pages/index.tsx']}]});
     write('translations/pages/state.json', {pages: [{contentId: 'page:P01', locale: 'ja', state: 'ready', sourceFiles: ['src/pages/index.tsx']}]});
     write('blog/post.md', '# English source');
-    write('translations/blog/state.json', {pages: [{contentId: 'blog:post.md', locale: 'ja', state: 'ready', sourceFiles: ['blog/post.md']}]});
+    write('translations/blog/pages/ja/post.md.json', {schemaVersion:1,page:{contentId:'blog:post.md',locale:'ja',state:'ready',sourceFiles:['blog/post.md']}});
     write('i18n/ja/code.json', {label: {message: '例'}});
     git('init', '-q'); git('add', '.'); git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Base');
     return {root, write, base: git('rev-parse', 'HEAD')};
@@ -33,6 +33,16 @@ test('single-language messages and manual state changes keep their actual langua
     assert.deepEqual(impact.locales, ['en', 'ja', 'ko']);
     const plan = buildScope(['translations/pages/state.json'], ['4.x', '3.x', '2.1'], ['ja', 'ko', 'ru'], impact);
     assert.deepEqual(plan.locales, ['en', 'ja', 'ko']); assert.equal(plan.optimize_publish, false);
+});
+test('individual blog publication shards retain their locale impact when added or removed',t=>{
+    const {root,base,write}=fixture(t);
+    const first='translations/blog/pages/ja/post.md.json',second='translations/blog/pages/ko/post.md.json';
+    fs.unlinkSync(path.join(root,first));
+    write(second,{schemaVersion:1,page:{contentId:'blog:post.md',locale:'ko',state:'ready',sourceFiles:['blog/post.md']}});
+    const impact=analyzeImpact(root,base,[first,second]);
+    assert.equal(impact.complete,true);assert.deepEqual(impact.locales,['en','ja','ko']);
+    const scope=buildScope([first,second],['4.x','3.x','2.1'],['ja','ko','ru'],impact);
+    assert.deepEqual(scope.locales,['en','ja','ko']);assert.equal(scope.optimize_publish,false);
 });
 test('source additions/deletions widen consumers and unknown dependencies remain conservative', t => {
     const {root, base, write} = fixture(t);

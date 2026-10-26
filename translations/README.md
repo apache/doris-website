@@ -1,5 +1,18 @@
 # Documentation translation state
 
+The [manual blog contract](BLOG.md) covers per-article fallback, indexing,
+aggregates, feeds and the initial four-article/four-language pilot. It is separate
+from scheduled documentation generation.
+
+## Supported documentation versions
+
+Dev and 4.x remain eligible for managed ja/ko/ru documentation translation.
+Version 3.x and 2.1 documentation provides English and Chinese prose only.
+Other site locales keep their URLs and navigation with complete English prose,
+English canonical/noindex and no fictitious translated alternate. These versions
+are excluded from automatic translation and required-translation backlogs;
+configuration validation rejects accidentally adding them to a managed scope.
+
 A locale under translation stays opt-in. `DORIS_ENABLE_LOCALES` lists the ones a
 build should serve, and a developer can switch a single one on with its own
 `DORIS_ENABLE_<LANG>` flag instead. Both are read by `config/i18n.js`, which is
@@ -33,8 +46,20 @@ build; the scoped website build and static-page verification run afterward.
 Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
 or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
 workflows explicitly enable all three; default local builds still serve English
-and Chinese. Ordinary Russian pages link to English until individually registered.
+and Chinese. Ordinary Russian pages retain Russian URLs and navigation; missing manual prose falls back to English.
 Russian translation runs twice daily and on manual dispatch, as described below.
+
+The Russian scope's `automaticGroups` enables only DEV, 4X and COMMUNITY.
+Native audits still report course/releases and supplemental page groups so
+their existing content and pending work remain visible. They are not sent to a
+model: course/releases activation belongs to the separate expansion task, with
+Release Notes limited to the latest three selected entries. React landing pages
+and weekly reports use their manual page/entry state. Existing candidates from
+earlier expanded runs remain separate pending reviews, not merged coverage.
+The audit's `automaticCounts` and discovery summary report the effective
+required/current/pending totals. Additional registered groups remain in the
+raw census and `deferredAutomaticGroups`; their old-channel missing files do
+not become required translation backlog or override manual page/report state.
 
 The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
 1,619 4.x and 51 community documents, excluding two drafts. Four launch samples
@@ -77,6 +102,16 @@ also accepts manual dispatch. Scheduled runs and default manual runs use
 `generate`. Select `dry-run` explicitly to discover pending work without calling
 a model. Japanese, Korean and Russian runs share the whole-run
 `docs-translation` lock, including discovery and validation.
+
+The separate `russian-coverage-audit.yml` is a read-only weekly report at
+05:49 UTC on Mondays and supports manual dispatch. It has only `contents: read`,
+uses no model/publishing credentials, and uploads native coverage for the checked
+out SHA. It does not run for pull requests or hold the generation lock.
+
+Transient GitHub PR-list/file-list failures (429/5xx and connection errors)
+retry the complete paginated read at most twice, after one and two seconds.
+Authentication errors and exhausted retries still stop discovery. Partial API
+output must never be used to remove an active candidate from deduplication.
 
 The shared workflow runs only on Apache `master` and checks out `master` again
 before generation. Merge the Russian configuration and workflow before running
