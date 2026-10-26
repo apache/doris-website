@@ -5,7 +5,7 @@ const path = require('node:path');
 const os = require('node:os');
 const {createContentFixture} = require('./fixtures/content-manifest.cjs');
 const {loadManual, decideManual} = require('../manual-state.cjs');
-const {sourceSha, validateManifest, buildManifest, routeData} = require('../content-manifest.cjs');
+const {sourceSha, validateManifest, buildManifest, routeData, docsId} = require('../content-manifest.cjs');
 const {buildScope} = require('../build-scope.cjs');
 function directory(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-content-manifest-'));
@@ -79,6 +79,64 @@ test('manual targets reject corruption, retain source drift, and honor blocked p
     assert.equal(decide({...record, state: 'blocked'}).fallback, true);
     fs.appendFileSync(path.join(root, record.targetFiles[0]), 'Modified target.');
     assert.throws(() => decide(record), /target digest mismatch/);
+});
+
+test('native loading discovers new page dependencies and unregistered articles with English fallback', async t => {
+    const {root, write} = await createContentFixture(directory(t));
+    const document = 'src/pages/_content/guide.mdx';
+    write(document, '# New guide\n');
+    fs.appendFileSync(path.join(root, 'src/pages/sample-0.tsx'), "\nexport {default as Guide} from './_content/guide.mdx';\n");
+    write('src/pages/new-page.tsx', 'export default function Page(){return null;}');
+    write('blog/2026-01-20-new.md', '---\ntitle: New article\n---\n\nNew English article.\n');
+    for (const base of ['docs', 'versioned_docs/version-4.x', 'community'])
+        write(`${base}/new.md`, '---\ntitle: New document\n---\n\nNew English document.\n');
+    const {manifest} = await collect(root, 'ja');
+    const page = manifest.pages.find(row => row.contentId === 'page:sample-0');
+    assert.equal(page.state, 'needs-update');
+    assert.equal(page.fallback, false);
+    const {digestFiles} = require('../manual-state.cjs');
+    assert.equal(page.sourceHash, digestFiles(root, ['src/pages/sample-0.tsx', document]));
+    assert(manifest.reports.some(row => row.kind === 'manual_source_changed' && row.contentId === page.contentId));
+    // Blog aggregate routes have no source file. Select the new content by its
+    // stable identity instead of assuming every manifest row has an English path.
+    const addedIds = ['page:src/pages/new-page.tsx', 'blog:2026-01-20-new.md',
+        ...[['default', 'current'], ['default', '4.x'], ['community', 'current']]
+            .map(([pluginId, version]) => docsId({pluginId, version, docId: 'new'}))];
+    for (const contentId of addedIds) {
+        const row = manifest.pages.find(row => row.contentId === contentId);
+        assert(row, `Missing new content: ${contentId}`);
+        assert.equal(row.fallback, true, row.contentId);
+        assert.equal(row.contentLocale, 'en', row.contentId);
+    }
+});
+
+test('native report discovery and admission compute the same source drift without state edits', async t => {
+    const {root, write} = await createContentFixture(directory(t));
+    const {digestFiles} = require('../manual-state.cjs');
+    const {manualReport} = require('../manual-report.cjs');
+    const source = 'src/pages/community-report/index.tsx', coverage = 'translations/community-reports.json';
+    const oldReport = 'src/pages/community-report/_reports/2026-10-12.mdx';
+    const newReport = 'src/pages/community-report/_reports/2026-10-19.mdx';
+    write(source, 'export default function Page(){return null;}');
+    write(oldReport, 'export const label = "Week 42"; export const report = {"summary":{"lead":"Previous week"}};');
+    write(coverage, JSON.stringify({schemaVersion: 1, translatedReports: {}}));
+    const sourceFiles = [source, oldReport, coverage];
+    const registry = JSON.parse(fs.readFileSync(path.join(root, 'translations/pages/registry.json')));
+    registry.pages.push({id: 'P14', kind: 'page', sourcePath: source, sourceFiles});
+    write('translations/pages/registry.json', JSON.stringify(registry));
+    const states = JSON.parse(fs.readFileSync(path.join(root, 'translations/pages/state.json')));
+    states.pages.push({contentId: 'page:P14', locale: 'ja', state: 'ready', sourceFiles, targetFiles: ['i18n/ja/code.json'],
+        sourceHash: digestFiles(root, sourceFiles), targetHash: digestFiles(root, ['i18n/ja/code.json']), reviewStatus: 'machine'});
+    write('translations/pages/state.json', JSON.stringify(states));
+    const decision = () => manualReport(root).pages.find(row => row.contentId === 'page:P14' && row.locale === 'ja');
+    assert.equal(decision().state, 'ready');
+    write(newReport, 'export const label = "Week 43"; export const report = {"summary":{"lead":"New week"}};');
+    const {manifest} = await collect(root, 'ja');
+    const page = manifest.pages.find(row => row.contentId === 'page:P14');
+    assert.equal(page.state, 'needs-update');
+    assert.equal(page.fallback, false);
+    assert.equal(page.sourceHash, digestFiles(root, [...sourceFiles, newReport]));
+    assert.equal(page.sourceHash, decision().sourceHash);
 });
 test('validator rejects mixed source and fallback indexing; missing English has an explicit report', () => {
     const entry = {contentId: 'page:one', kind: 'page', updatePolicy: 'manual', renderIntegrated: false, siteLocale: 'ja', contentLocale: 'en', state: 'missing',

@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const {mapReportText, localizeReportEntry} = require('../../../src/components/community-report-next/report-localization');
+const {mapReportText, localizeReportEntry, translatedReportIds} = require('../../../src/components/community-report-next/report-localization');
 const {reportMessages, reportSources, readReport} = require('../report-messages.cjs');
 const {validateMessages} = require('../page-body.cjs');
 const root = path.resolve(__dirname, '../../..');
@@ -16,8 +16,8 @@ function technical(value, field = '') {
     return Object.fromEntries(Object.entries(value).filter(([key]) => key !== 'sourceTitle')
         .map(([key, item]) => [key, technical(item, key)]));
 }
-test('Chinese history covers every visible report field and preserves references, statistics and source data', () => {
-    const files = reportSources(root);
+test('registered Chinese history covers every visible report field and preserves references, statistics and source data', () => {
+    const files = translatedReportIds('zh-CN').map(id => `src/pages/community-report/_reports/${id}.mdx`);
     assert(files.length >= 16);
     for (const file of files) {
         const source = readReport(root, file), before = JSON.stringify(source);
@@ -73,6 +73,16 @@ test('untranslated reports fall back atomically without reading partial translat
     assert.equal(result.stats, entry.stats);
     assert.equal(result.label, entry.label);
     assert.equal(localizeReportEntry(entry, 'en', () => 'unused').fallback, false);
+});
+
+test('new reports need no translation registration and use English in every target locale', () => {
+    const entry = {id: '2099-01-01', label: 'New report', report: {summary: {lead: 'English source'}}};
+    for (const locale of ['zh-CN', 'ja', 'ko', 'ru']) {
+        const result = localizeReportEntry(entry, locale, () => { throw new Error('Unpublished translation read'); });
+        assert.equal(result.contentLocale, 'en');
+        assert.equal(result.fallback, true);
+        assert.equal(result.report, entry.report);
+    }
 });
 
 test('registered report samples use every translated field and preserve technical content', () => {

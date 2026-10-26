@@ -8,7 +8,7 @@ const {readJson, loadManual, decideManual, englishFallbackLocales} = require('./
 const {localizedContext} = require('./native-context.cjs');
 const fs = require('node:fs');
 const {withContentRoutes} = require('./route-context.cjs');
-const {validateMessages} = require('./page-body.cjs');
+const {pageDependencies, validateMessages} = require('./page-body.cjs');
 const blogSample = require('./ci-blog-sample.cjs');
 const blogPolicy = require('./blog-policy.cjs');
 
@@ -131,6 +131,8 @@ function wrap(kind, native) {
                     const registration = kind === 'pages' ? registry.pages.find(page => page.sourcePath === englishPath) : undefined;
                     const contentId = kind === 'blog' ? `blog:${options.id === 'default' ? '' : options.id + ':'}${file}`
                         : `${registration?.kind ?? 'page'}:${registration?.id ?? englishPath}`;
+                    const pageRegistration = registration ?? {id: contentId, sourcePath: englishPath};
+                    const sourceFiles = kind === 'pages' ? pageDependencies(context.siteDir, pageRegistration).files : [englishPath];
                     known.add(contentId);
                     if (kind === 'pages' && !registration) report.push({kind: 'unregistered_page_identity', contentId, englishPath});
                     for (const locale of context.i18n.locales) {
@@ -141,15 +143,13 @@ function wrap(kind, native) {
                         if (intentionalFallback && record && ['ready', 'needs-update'].includes(record.state))
                             throw new Error(`Landing translation disabled by English fallback policy: ${contentId}/${locale}`);
                         if (intentionalFallback) report.push({kind: 'intentional_english_fallback', contentId, locale});
-                        if (kind === 'pages' && record && ['ready', 'needs-update'].includes(record.state)) {
-                            const dependencies = validateMessages(context.siteDir, registration ?? {id: contentId, sourcePath: englishPath}, locale);
-                            if (dependencies.some(file => !record.sourceFiles.includes(file))) throw new Error(`Untracked body dependency: ${contentId}/${locale}`);
-                        }
+                        if (kind === 'pages' && record && ['ready', 'needs-update'].includes(record.state))
+                            validateMessages(context.siteDir, pageRegistration, locale);
                         if (record && (!record.sourceFiles.includes(englishPath) || (kind === 'blog' && ['ready', 'needs-update'].includes(record.state)
                             && !record.targetFiles.includes(`i18n/${locale}/docusaurus-plugin-content-blog${options.id === 'default' ? '' : '-' + options.id}/${file}`)))) {
                             throw new Error(`Manual state does not cover native source/target: ${contentId}/${locale}`);
                         }
-                        const decision = decideManual({root: context.siteDir, record: locale === 'en' ? undefined : record, sourceFiles: [englishPath]});
+                        const decision = decideManual({root: context.siteDir, record: locale === 'en' ? undefined : record, sourceFiles});
                         if (locale === 'en') Object.assign(decision, {state: 'source', contentLocale: 'en', fallback: false, indexable: true});
                         if (decision.state === 'needs-update') report.push({kind: 'manual_source_changed', contentId, locale,
                             sourceHash: decision.sourceHash, publishedSourceHash: record.sourceHash});
