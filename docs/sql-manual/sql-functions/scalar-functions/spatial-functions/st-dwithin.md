@@ -15,7 +15,7 @@ The development-version typed interface accepts nonempty XY Point, LineString an
 ## Syntax
 
 ```sql
-ST_DWITHIN(a, b, distance_meters)
+ST_DWITHIN(<a>, <b>, <distance_meters>)
 ```
 
 ## Parameters
@@ -25,7 +25,7 @@ ST_DWITHIN(a, b, distance_meters)
 | `a`, `b` | GEOGRAPHY values with their complete type parameters. |
 | `distance_meters` | Finite nonnegative distance threshold, in metres. |
 
-## Return value
+## Return Value
 
 Nullable BOOLEAN.
 
@@ -37,6 +37,16 @@ SELECT ST_DWithin(g, g, 0) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F0
 
 ```text
 true
+```
+
+NULL input:
+
+```sql
+SELECT ST_DWithin(NULL, g, 0) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+```
+
+```text
+NULL
 ```
 
 See also: [Iceberg spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types).

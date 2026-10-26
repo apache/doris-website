@@ -15,7 +15,7 @@
 ## 语法
 
 ```sql
-ST_OVERLAPS(a, b)
+ST_OVERLAPS(<a>, <b>)
 ```
 
 ## 参数
@@ -36,6 +36,16 @@ SELECT ST_Overlaps(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F
 
 ```text
 false
+```
+
+NULL 参数：
+
+```sql
+SELECT ST_Overlaps(NULL, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+```
+
+```text
+NULL
 ```
 
 相关说明：[Iceberg 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。

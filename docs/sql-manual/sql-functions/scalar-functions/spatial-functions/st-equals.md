@@ -15,7 +15,7 @@ The development-version typed interface accepts nonempty XY Point, LineString an
 ## Syntax
 
 ```sql
-ST_EQUALS(a, b)
+ST_EQUALS(<a>, <b>)
 ```
 
 ## Parameters
@@ -24,7 +24,7 @@ ST_EQUALS(a, b)
 | --- | --- |
 | `a`, `b` | GEOGRAPHY values with their complete type parameters. |
 
-## Return value
+## Return Value
 
 Nullable BOOLEAN.
 
@@ -36,6 +36,16 @@ SELECT ST_Equals(g, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F00
 
 ```text
 true
+```
+
+NULL input:
+
+```sql
+SELECT ST_Equals(NULL, g) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+```
+
+```text
+NULL
 ```
 
 See also: [Iceberg spatial types](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types).

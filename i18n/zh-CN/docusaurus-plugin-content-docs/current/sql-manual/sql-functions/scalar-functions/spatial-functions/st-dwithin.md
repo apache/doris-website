@@ -15,7 +15,7 @@
 ## 语法
 
 ```sql
-ST_DWITHIN(a, b, distance_meters)
+ST_DWITHIN(<a>, <b>, <distance_meters>)
 ```
 
 ## 参数
@@ -37,6 +37,16 @@ SELECT ST_DWithin(g, g, 0) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F0
 
 ```text
 true
+```
+
+NULL 参数：
+
+```sql
+SELECT ST_DWithin(NULL, g, 0) FROM (SELECT ST_GeogFromWKB('0101000000000000000000F03F0000000000000040') AS g) values_with_geography;
+```
+
+```text
+NULL
 ```
 
 相关说明：[Iceberg 空间类型](../../../../lakehouse/catalogs/iceberg-catalog.mdx#iceberg-spatial-types)。
