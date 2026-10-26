@@ -1,0 +1,262 @@
+---
+title: Apache Doris 설치 가이드
+description: 수동 배포, Kubernetes, 통합형 및 분리형 배포 경로를 다루는 여덟 개의 학습 단원을 통해 Apache Doris 배포 방식을 선택하고 검증하는 방법을 알아보세요.
+slug: /101/02-apache-doris-installation-guide
+sidebar_position: 2
+keywords:
+  - Apache Doris 101
+  - Apache Doris 설치
+  - Doris Operator
+  - 스토리지와 컴퓨팅 분리
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={2}
+    title="Apache Doris 설치 가이드"
+    readingTime="15–20분"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/install/intro"
+>
+    <CourseLessonUnit
+        id="choose-deployment-path"
+        label="배포 경로 선택"
+        title={<>두 가지를 <em>배포 전에</em> 결정하세요.</>}
+        summary="먼저 스토리지 아키텍처를 선택하세요. 그런 다음 프로세스를 어떻게 오케스트레이션할지 선택하세요. 이 두 가지 선택으로 네 가지 배포 경로가 정해집니다."
+        coachTitle="아키텍처와 오케스트레이션은 서로 다른 문제를 해결합니다."
+        coach={<p>통합형 아키텍처는 데이터를 BE 디스크에 저장합니다. 분리형 아키텍처는 영속 데이터를 공유 스토리지에 저장합니다. 수동 배포에서는 각 프로세스를 직접 관리하며, Kubernetes에서는 Doris Operator가 원하는 상태를 관리합니다.</p>}
+        calloutTitle="간단하게 시작하기"
+        callout={<p>첫 로컬 클러스터나 VM 기반 클러스터라면 수동 통합형 배포가 Doris 시스템을 실행하는 가장 빠른 경로입니다.</p>}
+        check={{
+            question: "영속 데이터의 저장 위치를 결정하는 선택은 무엇인가요?",
+            options: ["아키텍처", "오케스트레이션 플랫폼"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 통합형과 분리형 중 어떤 아키텍처를 선택하느냐에 따라 영속 스토리지 모델이 결정됩니다.",
+            incorrectFeedback: "Kubernetes는 오케스트레이션 방식을 바꾸고, 아키텍처 선택은 영속 스토리지 방식을 바꿉니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 배포 경로"
+            columns={2}
+            items={[
+                { tag: 'VM', title: "수동 · 통합형", description: "로컬 디스크가 있는 호스트에서 FE와 상태 유지형 BE 프로세스를 실행합니다." },
+                { tag: 'VM', title: "수동 · 분리형", description: "FE, Meta Service, 무상태 BE, FoundationDB 및 공유 스토리지를 사용합니다." },
+                { tag: 'K8S', title: "Operator · 통합형", description: "DorisCluster 리소스가 FE와 상태 유지형 BE 워크로드를 관리합니다." },
+                { tag: 'K8S', title: "Operator · 분리형", description: "Operator가 클라우드 모드 클러스터와 컴퓨팅 그룹을 관리합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-prerequisites"
+        label="사전 요구 사항"
+        title={<>예상치 못한 환경 문제를 <em>먼저 해결하세요.</em>.</>}
+        summary="배포의 안정성은 디스크, 네트워크 식별 정보, 시스템 시계, 포트 및 운영체제의 준비 상태에 달려 있습니다."
+        coachTitle="모든 노드의 환경을 검증하세요."
+        coach={<p>지원되는 CPU와 운영체제 조합, FE와 호환되는 JDK, 변경되지 않는 호스트 이름 또는 IP, 동기화된 시스템 시계, Doris 서비스 포트 간의 원활한 연결을 확인하세요.</p>}
+        calloutTitle="되돌리기 어려운 결정"
+        callout={<p>FE 메타데이터는 안정적인 전용 스토리지에 보관하고, 초기화 전에 클러스터 전체의 이름 지정 방식을 일관되게 설정하세요.</p>}
+        check={{
+            question: "모든 클러스터 노드에서 안정적으로 유지되어야 하는 것은 무엇인가요?",
+            options: ["네트워크 식별 정보와 시스템 시계", "SQL 클라이언트 수"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 안정적인 식별 정보, 연결성, 시간은 클러스터의 사전 요구 사항입니다.",
+            incorrectFeedback: "클라이언트 수는 바뀔 수 있지만, 노드 식별 정보와 시간의 일관성은 유지되어야 합니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 배포 사전 요구 사항"
+            columns={4}
+            items={[
+                { tag: 'CPU', title: "호환되는 호스트", description: "명령어 집합, 커널, 시스템 제한 및 Java 요구 사항을 확인하세요." },
+                { tag: 'NET', title: "연결 가능한 서비스", description: "필요한 노드 사이에서 FE, BE 및 웹 서비스 포트의 통신을 허용하세요." },
+                { tag: 'NTP', title: "동기화된 시간", description: "조정, 로그 기록 및 문제 진단을 위해 시스템 시계를 일치시키세요." },
+                { tag: 'SSD', title: "안정적인 저장 경로", description: "FE 메타데이터, BE 데이터, 로그 및 공유 스토리지의 저장 위치를 신중하게 계획하세요." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-integrated"
+        label="수동 통합형"
+        title={<>제어 기능을 실행한 다음 <em>스토리지를 추가하세요.</em>.</>}
+        summary="첫 FE를 초기화하고 FE 정족수를 확장한 다음, BE 노드를 등록하고 데이터를 적재하기 전에 클러스터 참여 상태를 확인하세요."
+        coachTitle="등록과 프로세스 시작은 별개의 단계입니다."
+        coach={<p>새 FE는 등록된 후 도우미 FE를 통해 클러스터에 참여합니다. BE는 하트비트 엔드포인트가 등록되고 프로세스가 정상 상태를 보고해야 사용할 수 있습니다.</p>}
+        calloutTitle="프로덕션 구성"
+        callout={<p>고가용성을 위해 투표권이 있는 FE를 홀수로 구성하고, 워크로드에서 요구하는 장애 허용 수준에 맞춰 BE 복제본을 충분히 확보하세요.</p>}
+        check={{
+            question: "새 팔로워 FE를 시작하기 전에 무엇을 해야 하나요?",
+            options: ["클러스터에 등록하기", "FE에 테이블을 적재하기"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 팔로워를 등록한 다음 기존 FE를 도우미로 지정해 시작하세요.",
+            incorrectFeedback: "FE 노드는 테이블 복제본을 저장하지 않습니다. 먼저 팔로워를 등록해야 합니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="수동 통합형 배포 순서"
+            focusIndex={0}
+            items={[
+                { title: "첫 FE", description: "메타데이터 초기화" },
+                { title: "FE 정족수", description: "투표권이 있는 구성원 추가" },
+                { title: "BE 노드", description: "스토리지 경로 등록" },
+                { title: "검증", description: "상태 확인 및 보안 설정" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-decoupled"
+        label="수동 분리형"
+        title={<>메타데이터와 스토리지 계층을 <em>컴퓨팅 계층보다 먼저 구축하세요.</em>.</>}
+        summary="분리형 클러스터에서는 기존 FE와 BE 프로세스에 FoundationDB, Meta Service, Storage Vault가 추가됩니다."
+        coachTitle="모든 계층이 동일한 클러스터 식별 정보를 사용해야 합니다."
+        coach={<p>FoundationDB는 시스템 메타데이터를 영속적으로 저장하고, Meta Service는 데이터 계층의 메타데이터를 조정합니다. FE는 클라우드 모드로 실행되고, BE는 컴퓨팅 그룹에 참여하며, Storage Vault는 공유 객체 스토리지 또는 파일 스토리지를 지정합니다.</p>}
+        calloutTitle="운영 부담"
+        callout={<p>FoundationDB와 공유 스토리지는 프로덕션 환경의 필수 구성 요소입니다. 탄력적인 확장에 의존하기 전에 백업과 모니터링을 마련하고 장애 시 동작을 테스트하세요.</p>}
+        check={{
+            question: "분리형 클러스터가 공유 데이터 파일에 접근할 수 있게 하는 것은 무엇인가요?",
+            options: ["Storage Vault", "FE 로컬 메타데이터 디렉터리"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Storage Vault가 공유 스토리지 계층에 대한 접근을 정의합니다.",
+            incorrectFeedback: "FE 메타데이터는 클러스터를 조정하고, Storage Vault는 공유 데이터 스토리지를 지정합니다.",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="수동 분리형 배포의 종속 구성 요소"
+            items={[
+                { title: "FoundationDB + Meta Service", description: "데이터 계층 메타데이터를 영속적으로 저장하고 조정합니다." },
+                { title: "클라우드 모드 FE + 컴퓨팅 그룹", description: "SQL을 계획하고 탄력적으로 작업을 실행합니다." },
+                { title: "Storage Vault", description: "영속 객체 스토리지 또는 분산 파일 시스템을 연결합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-integrated"
+        label="Kubernetes 통합형"
+        title={<>클러스터를 정의하고 Operator가 <em>원하는 상태로 조정하도록</em> 하세요.</>}
+        summary="Doris Operator는 DorisCluster 리소스를 FE 및 BE 워크로드, 서비스, 구성, 영속 스토리지로 구현합니다."
+        coachTitle="사용자 정의 리소스가 원하는 상태를 정의하는 기준이 됩니다."
+        coach={<p>DorisCluster 명세에서 이미지, 복제본 수, 리소스, ConfigMaps, 영구 볼륨 클레임, 서비스 노출 방식을 설정하세요. 워크로드가 이동해도 pod의 식별 정보가 안정적으로 유지되도록 FQDN 모드를 사용하세요.</p>}
+        calloutTitle="영구 저장을 확실히 보장하세요"
+        callout={<p>통합형 BE pod는 상태를 유지합니다. 프로덕션에 사용하기 전에 StorageClass의 동작, 볼륨 유지 정책, 용량, 장애 영역별 배치를 검증하세요.</p>}
+        check={{
+            question: "FE와 BE의 목표 복제본 수는 어디에 선언해야 하나요?",
+            options: ["DorisCluster 리소스", "임의의 SQL 주석"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다 — Operator는 DorisCluster 리소스에 선언된 복제본 수에 맞춰 실제 상태를 조정합니다.",
+            incorrectFeedback: "SQL 주석으로는 Kubernetes 워크로드를 제어할 수 없습니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Kubernetes 통합형 배포 워크플로"
+            focusIndex={2}
+            items={[
+                { title: "설치", description: "CRDs + Operator" },
+                { title: "구성", description: "이미지 + ConfigMaps" },
+                { title: "영구 저장", description: "PVCs + 서비스" },
+                { title: "적용", description: "DorisCluster" },
+                { title: "상태 확인", description: "Pods + SQL 상태" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-decoupled"
+        label="Kubernetes 분리형"
+        title={<>종속 요소도 <em>플랫폼의 일부로 다루세요</em>.</>}
+        summary="Kubernetes는 Doris 프로세스를 자동화하지만 FoundationDB, 공유 스토리지, 자격 증명, 장애 대응 계획에 대한 책임까지 없애 주지는 않습니다."
+        coachTitle="pod가 정상이라고 데이터 플랫폼 전체가 정상인 것은 아닙니다."
+        coach={<p>FoundationDB를 프로비저닝하고 분리형 Operator 리소스를 설치하세요. 클러스터 식별 정보와 스토리지 접근을 구성하고 Storage Vault를 생성한 다음, FE, Meta Service, 컴퓨트 그룹, 엔드투엔드 SQL을 검증하세요.</p>}
+        calloutTitle="환경 구성 안내"
+        callout={<p>복제본 하나로 빠르게 구성한 환경은 학습에 유용합니다. 프로덕션 환경에는 중복 구성된 메타데이터 서비스와 목표 가용성에 맞게 설계된 스토리지가 필요합니다.</p>}
+        check={{
+            question: "엔드투엔드 준비 상태 점검에는 무엇이 포함되어야 하나요?",
+            options: ["데이터 생성, 적재, 쿼리", "pod가 Running 상태인지 확인하기만 한다"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다 — 메타데이터, 컴퓨트, 스토리지를 거치는 전체 경로를 실제로 사용해 봐야 합니다.",
+            incorrectFeedback: "pod가 Running 상태여도 메타데이터와 공유 스토리지가 엔드투엔드로 작동한다는 뜻은 아닙니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Kubernetes 분리형 구성의 준비 상태 점검 계층"
+            columns={4}
+            items={[
+                { tag: 'FDB', title: "메타데이터 저장소", description: "중복 구성하고 용량을 모니터링하는 FoundationDB." },
+                { tag: 'MS', title: "Meta Service", description: "일관된 클러스터 식별 정보와 접근 가능한 엔드포인트." },
+                { tag: 'CG', title: "컴퓨트 그룹", description: "적절한 리소스와 캐시를 갖춘 상태 비저장 워커." },
+                { tag: 'OBJ', title: "공유 스토리지", description: "Vault 자격 증명, 권한, 내구성, 처리량." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operate-the-cluster"
+        label="운영 및 검증"
+        title={<>모든 <em>계층의 상태 신호를 확인하세요</em>.</>}
+        summary="배포를 마무리할 때는 상태 점검, 보안, 관측 가능성, 확장 규칙, 미리 연습해 둔 업그레이드 절차까지 갖춰야 합니다."
+        coachTitle="SQL과 플랫폼의 상태 신호를 함께 확인하세요."
+        coach={<p>SQL에서 FE와 BE의 클러스터 등록 상태를 확인하고, 플랫폼에서 프로세스나 pod의 상태를 점검하세요. 로그와 메트릭으로 장애 원인을 파악하고, 서비스를 노출하기 전에 기본 자격 증명을 변경하세요.</p>}
+        calloutTitle="업그레이드 순서"
+        callout={<p>해당 버전의 업그레이드 가이드와 호환성 매트릭스를 따르세요. 롤링 업그레이드 중에는 전체 과정에서 쿼럼과 복제본의 가용성을 유지하세요.</p>}
+        check={{
+            question: "BE가 Doris 클러스터에 합류했다는 것을 어떤 신호로 확인할 수 있나요?",
+            options: ["SHOW BACKENDS에서 정상 상태로 표시된다", "해당 호스트가 ping에 응답한다"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다 — Doris에서 클러스터 등록 상태와 하트비트의 정상 여부를 확인할 수 있어야 합니다.",
+            incorrectFeedback: "네트워크 연결은 필요하지만, 연결된다고 해서 Doris 클러스터에 합류한 것은 아닙니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 운영 점검 항목"
+            columns={4}
+            items={[
+                { tag: 'SQL', title: "클러스터 등록 상태", description: "FE 역할, BE 하트비트, 컴퓨트 그룹 상태를 확인하세요." },
+                { tag: 'SEC', title: "보안", description: "자격 증명을 설정하고, 서비스 노출을 제한하며, 스토리지 비밀 정보를 보호하세요." },
+                { tag: 'OBS', title: "관측 가능성", description: "첫 장애가 발생하기 전에 메트릭과 로그를 수집하세요." },
+                { tag: 'DR', title: "복구", description: "재시작, 교체, 백업, 업그레이드 절차를 테스트하세요." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-recap"
+        label="배포 요약"
+        title={<>배포 경로를 선택한다는 것은 <em>그에 따른 절충을 책임진다는 뜻입니다</em>.</>}
+        summary="스토리지, 탄력성, 가용성, 플랫폼 요구 사항을 충족하는 가장 단순한 경로를 선택하고 실제 데이터로 검증하세요."
+        coachTitle="워크플로를 실행할 준비가 되어야 클러스터도 준비된 것입니다."
+        coach={<p>선택한 아키텍처, 장애 도메인, 쿼럼, 복제본 정책, 스토리지 관리 책임, 접근 모델, 모니터링 및 업그레이드 절차를 배포 매니페스트와 함께 문서화하세요.</p>}
+        calloutTitle="다음 학습에 앞서"
+        callout={<p>배포 환경을 안정적으로 유지하세요. 다음 모듈에서는 워크로드 특성을 바탕으로 테이블 모델, 파티션, 버킷, 정렬 키를 결정합니다.</p>}
+        check={{
+            question: "배포를 마무리할 때 가장 좋은 테스트는 무엇인가요?",
+            options: ["대표적인 데이터 적재 및 쿼리 워크플로 실행", "아카이브가 성공적으로 압축 해제되었는지 확인"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다 — 대표적인 워크플로를 실행하면 시스템의 전체 경로를 검증할 수 있습니다.",
+            incorrectFeedback: "바이너리 압축 해제는 초기 설정 단계에 불과합니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="배포 경로 선택 요약"
+            leftTitle="통합형이 적합한 경우"
+            leftLead="로컬 스토리지를 사용하고 컴퓨트와 스토리지를 함께 확장해도 된다면 운영이 간단한 구성을 선택하세요."
+            leftItems={["더 적은 플랫폼 종속 요소", "상태를 유지하는 BE 노드", "로컬 디스크 직접 관리"]}
+            rightTitle="분리형이 적합한 경우"
+            rightLead="공유 스토리지를 사용하고 플랫폼을 직접 관리할 수 있다면 독립적으로 확장할 수 있는 구성을 선택하세요."
+            rightItems={["탄력적으로 확장하는 컴퓨트 그룹", "내구성 있는 공유 스토리지", "추가 메타데이터 서비스"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>
