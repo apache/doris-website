@@ -8814,5 +8814,59 @@
   },
   "blog.search.noResults": {
     "message": "検索条件とカテゴリに一致する記事はありません。"
+  },
+  "course.lesson.expandModules": {
+    "message": "コースモジュールを展開"
+  },
+  "course.lesson.collapseModules": {
+    "message": "コースモジュールを折りたたむ"
+  },
+  "course.lesson.reference": {
+    "message": "リファレンス"
+  },
+  "course.lesson.exit": {
+    "message": "レッスンを終了"
+  },
+  "course.lesson.modulesAria": {
+    "message": "Doris 101 のモジュール"
+  },
+  "course.lesson.modules": {
+    "message": "コースモジュール"
+  },
+  "course.lesson.moduleNumber": {
+    "message": "モジュール {number}"
+  },
+  "course.lesson.baseline": {
+    "message": "対象：{baseline}"
+  },
+  "course.lesson.progress": {
+    "message": "レッスンの進捗"
+  },
+  "course.lesson.coachNote": {
+    "message": "学習のヒント"
+  },
+  "course.lesson.chooseAnswer": {
+    "message": "回答を選んで理解度を確認してください。"
+  },
+  "course.lesson.overview": {
+    "message": "← コース概要"
+  },
+  "course.lesson.previous": {
+    "message": "← 前のユニット"
+  },
+  "course.lesson.units": {
+    "message": "レッスンのユニット"
+  },
+  "course.lesson.openUnit": {
+    "message": "ユニット {number} を開く：{label}"
+  },
+  "course.lesson.nextModule": {
+    "message": "次のモジュール：{title} →"
+  },
+  "course.lesson.finish": {
+    "message": "コースを完了 →"
+  },
+  "course.lesson.continue": {
+    "message": "次へ →"
   }
 }

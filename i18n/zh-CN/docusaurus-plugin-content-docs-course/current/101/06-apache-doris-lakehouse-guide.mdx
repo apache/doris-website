@@ -1,0 +1,234 @@
+---
+title: Apache Doris 湖仓指南
+description: 通过数据目录、Hive 集成、联邦 SQL、缓存和回写等课程单元，了解 Apache Doris 的湖仓工作流程。
+slug: /101/06-apache-doris-lakehouse-guide
+sidebar_position: 6
+keywords:
+  - Apache Doris 101
+  - 湖仓
+  - 数据目录
+  - 联邦查询
+  - Hive 数据目录
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={6}
+    title="Apache Doris 湖仓指南"
+    readingTime="10–15 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/lakehouse/lakehouse-overview"
+>
+    <CourseLessonUnit
+        id="lakehouse-mental-model"
+        label="湖仓模型"
+        title={<>查询开放数据，无需再建 <em>第二个数据孤岛</em>.</>}
+        summary="Doris 可以使用其 MPP 向量化查询引擎，查询数据仓库表以及通过数据目录接入的外部数据湖数据。"
+        coachTitle="源系统仍是权威数据源。"
+        coach={<p>外部元数据用于定位表和文件，Doris 负责规划和执行 SQL，缓存则减少重复的远程 I/O。数据可以继续保存在 Hive、Iceberg、Hudi、对象存储或其他已连接的系统中。</p>}
+        calloutTitle="两种不同的架构"
+        callout={<p>查询外部数据湖表与以计算存储分离模式部署 Doris 是两回事。前者是数据源联邦，后者是 Doris 的集群架构。</p>}
+        check={{
+            question: "外部 Hive 表的权威数据保存在哪里？",
+            options: ["外部数据目录及其存储中", "仅在 Doris 本地缓存中"],
+            correctIndex: 0,
+            correctFeedback: "正确。Doris 查询源系统，缓存只是加速层。",
+            incorrectFeedback: "缓存的数据块可以被替换，不会成为权威数据源。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Apache Doris 湖仓查询层次"
+            items={[
+                { title: "SQL 与优化器", description: "规划关联查询，并尽可能将计算下推到已连接的数据源。" },
+                { title: "数据目录与元数据", description: "解析数据库、表、分区、Schema 和快照。" },
+                { title: "远程存储与系统", description: "将权威数据保留在开放表、文件或数据库中。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="catalog-hierarchy"
+        label="数据目录"
+        title={<>为每个外部数据源提供熟悉的 <em>SQL 地址</em>.</>}
+        summary="一个数据目录定义一条连接，并通过 SQL 使用的三级命名空间暴露其中的数据库和表。"
+        coachTitle="数据目录属性属于基础设施配置。"
+        coach={<p>数据目录类型决定使用哪个连接器。属性定义端点、身份认证、存储访问方式和连接器行为。随后，Doris 将外部数据类型和元数据映射到自己的 SQL 模型中。</p>}
+        calloutTitle="妥善管理凭据"
+        callout={<p>使用受支持的密钥管理方式，并限制权限和网络访问。不要将对象存储或 Metastore 凭据提交到课程示例或应用代码中。</p>}
+        check={{
+            question: "Doris 数据目录代表什么？",
+            options: ["一个已配置的外部数据源", "一个缓存的数据块"],
+            correctIndex: 0,
+            correctFeedback: "正确。数据目录将 Doris 连接到外部系统及其命名空间。",
+            incorrectFeedback: "缓存与数据目录的连接和元数据模型是两回事。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 外部数据目录命名空间"
+            focusIndex={0}
+            items={[
+                { title: "数据目录", description: "数据源 + 连接器" },
+                { title: "数据库", description: "外部命名空间" },
+                { title: "表", description: "Schema + 文件" },
+                { title: "分区", description: "可用于裁剪的元数据" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="hive-catalog"
+        label="Hive 集成"
+        title={<>让元数据与存储形成 <em>统一的访问路径</em>.</>}
+        summary="Hive 数据目录既需要访问 Metastore，也需要有权限读取元数据所描述的文件。"
+        coachTitle="能够访问元数据，不代表能够访问数据。"
+        coach={<p>Doris 可能能通过 Hive Metastore 列出数据库，但查询 HDFS 或对象存储中的数据时仍会失败。应端到端检查 DNS、端口、身份认证、文件系统配置和委托凭据。</p>}
+        calloutTitle="Kerberos 环境"
+        callout={<p>统一分发并妥善保护所需的 krb5 配置和 keytab 文件，然后从实际运行的 Doris 进程验证票据续期和文件访问。</p>}
+        check={{
+            question: "能列出 Hive 表，却无法扫描该表。应该检查什么？",
+            options: ["存储访问权限和凭据", "仅检查 SQL 字体"],
+            correctIndex: 0,
+            correctFeedback: "正确。元数据访问和文件访问是连接中两个独立的环节。",
+            incorrectFeedback: "界面显示方式不会阻止 Doris 读取外部文件。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Hive 数据目录的访问层面"
+            leftTitle="元数据层"
+            leftLead="解析数据库、表、Schema 和分区。"
+            leftItems={["Hive Metastore 端点", "数据目录属性", "元数据事件与缓存"]}
+            rightTitle="数据层"
+            rightLead="读取或写入表定义所指向的文件。"
+            rightItems={["HDFS 或对象存储", "网络与凭据", "格式与快照支持"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="federated-sql"
+        label="联邦 SQL"
+        title={<>关联不同数据源，同时尽量减少 <em>数据传输量</em>.</>}
+        summary="Doris 可以在一条查询中关联外部数据湖表、外部数据库和内部表，并根据连接器的能力执行裁剪和下推。"
+        coachTitle="联邦查询不会消除网络开销。"
+        coach={<p>尽早过滤数据并选择所需列，明确指定外部分区条件，收集有用的统计信息，并查看 EXPLAIN，确认分区裁剪、谓词下推和关联查询的数据分布情况。</p>}
+        calloutTitle="生产环境中的使用方式"
+        callout={<p>联邦查询适合探索性分析和有选择性的关联查询。对于频繁复用或对延迟要求严格的结果，可以使用内部表或物化视图。</p>}
+        check={{
+            question: "通常什么措施能最直接地减少联邦查询的扫描量？",
+            options: ["使用有选择性的外部分区条件", "选择所有列"],
+            correctIndex: 0,
+            correctFeedback: "正确。分区裁剪可以避免读取无关的远程文件。",
+            incorrectFeedback: "选择所有列会增加远程 I/O，而不是减少它。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 联邦查询流程"
+            focusIndex={2}
+            items={[
+                { title: "解析", description: "数据目录元数据" },
+                { title: "裁剪", description: "分区 + 列" },
+                { title: "下推", description: "受支持的谓词" },
+                { title: "扫描", description: "并行远程 I/O" },
+                { title: "关联", description: "Doris 执行" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="cache-and-io"
+        label="缓存与 I/O"
+        title={<>将重复的远程读取转化为 <em>本地读取</em>.</>}
+        summary="元数据缓存减少对数据目录的往返请求，数据缓存则将频繁读取的远程数据块保存在本地存储中。"
+        coachTitle="冷查询和热查询的性能需要分别衡量。"
+        coach={<p>冷查询反映数据源和网络的吞吐能力，热查询反映缓存的收益。应根据工作集确定缓存容量，监控命中率和淘汰情况，并为并发扫描保留足够的本地带宽。</p>}
+        calloutTitle="缓存不保证结果正确"
+        callout={<p>根据外部数据的变化规律配置缓存刷新和失效机制。过期结果即使返回得快，仍然是错的。</p>}
+        check={{
+            question: "湖仓基准测试应分别报告哪些结果？",
+            options: ["冷缓存和热缓存的测试结果", "只报告重复运行中最快的一次"],
+            correctIndex: 0,
+            correctFeedback: "正确。这两种情况反映了不同的实际运行条件。",
+            incorrectFeedback: "只报告缓存最充分时的结果，会掩盖远程数据源的性能表现。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 湖仓加速层"
+            columns={3}
+            items={[
+                { tag: 'META', title: "元数据缓存", description: "复用表、分区、文件和快照的元数据。" },
+                { tag: 'DATA', title: "数据缓存", description: "将频繁访问的远程数据块保存在计算节点附近的本地磁盘上。" },
+                { tag: 'PUSH', title: "下推", description: "在传输前减少需要读取的列、分区和行。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="write-back-and-ddl"
+        label="回写与 DDL"
+        title={<>将外部写入视为一项 <em>共享系统变更</em>.</>}
+        summary="受支持的数据目录可以写入数据或管理外部对象，但目标格式、Metastore、权限配置以及其他引擎都必须能正确处理写入结果。"
+        coachTitle="具体能力取决于连接器和表格式。"
+        coach={<p>执行 INSERT、CTAS 或 DDL 前，先核对当前版本的功能支持矩阵。遵循外部分区约定，验证提交语义，并测试 Hive、Spark 或其他读取方如何识别变更。</p>}
+        calloutTitle="Hive Schema 规则"
+        callout={<p>创建 Hive 表时，应遵守连接器对 Schema 和事务表的限制，包括分区列的位置要求。</p>}
+        check={{
+            question: "启用外部回写前应验证什么？",
+            options: ["连接器支持情况及跨引擎可见性", "仅验证 Doris 中的 SELECT 权限"],
+            correctIndex: 0,
+            correctFeedback: "正确。写入操作必须受到支持，且结果应在共享生态中的各个引擎里保持一致、可见。",
+            incorrectFeedback: "仅有 SELECT 权限既不能授权外部写入，也不能验证写入结果。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="外部回写约定"
+            columns={4}
+            items={[
+                { tag: 'CAP', title: "功能支持", description: "确认连接器、格式和版本是否支持。" },
+                { tag: 'AUTH', title: "权限控制", description: "只授予必需的 Metastore 和存储权限。" },
+                { tag: 'COMMIT', title: "提交行为", description: "了解原子性、快照和失败后的清理机制。" },
+                { tag: 'READ', title: "跨引擎检查", description: "验证其他使用方能否看到预期结果。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="lakehouse-recap"
+        label="湖仓回顾"
+        title={<>将连接器边界作为 <em>产品来运营</em>.</>}
+        summary="生产环境中的湖仓访问路径需要具备正确的元数据、安全的存储访问、高效的裁剪、可衡量的缓存效果，以及经过测试的写入语义。"
+        coachTitle="要负责整条访问路径，而不只是 SQL 端点。"
+        coach={<p>监控 Metastore 延迟、缓存行为、远程读取字节数、扫描错误、凭据、Schema 变更和数据源可用性。明确每项依赖及相关故障由哪个团队负责。</p>}
+        calloutTitle="课程完成"
+        callout={<p>现在，你已掌握 Doris 101 的整体思路：架构、部署、表设计、数据操作、分析型 SQL 和湖仓集成。</p>}
+        check={{
+            question: "什么最能证明一个数据目录已具备生产环境使用条件？",
+            options: ["代表性查询在预期的故障和负载条件下仍能正常运行", "数据目录曾成功创建"],
+            correctIndex: 0,
+            correctFeedback: "正确。生产就绪还包括工作负载、可观测性、安全性和故障处理能力。",
+            incorrectFeedback: "CREATE CATALOG 只能验证端到端访问路径中的一小部分。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 湖仓生产运行流程"
+            focusIndex={4}
+            items={[
+                { title: "连接", description: "数据目录 + 认证" },
+                { title: "查询", description: "裁剪 + 下推" },
+                { title: "加速", description: "缓存 + 物化" },
+                { title: "治理", description: "写入 + Schema" },
+                { title: "运维", description: "端到端观测" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

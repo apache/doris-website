@@ -1,0 +1,262 @@
+---
+title: Apache Doris 安装指南
+description: 通过八个引导单元，了解如何在手动部署、Kubernetes 部署、存算一体和存算分离等路径中做出选择，并验证 Apache Doris 部署。
+slug: /101/02-apache-doris-installation-guide
+sidebar_position: 2
+keywords:
+  - Apache Doris 101
+  - Apache Doris 安装
+  - Doris Operator
+  - 存算分离
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={2}
+    title="Apache Doris 安装指南"
+    readingTime="15–20 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/install/intro"
+>
+    <CourseLessonUnit
+        id="choose-deployment-path"
+        label="选择部署路径"
+        title={<>先做两个决定， <em>再</em> 部署。</>}
+        summary="先选择存储架构，再决定由谁编排各个进程。这两个选择会形成四条部署路径。"
+        coachTitle="架构和编排解决的是不同的问题。"
+        coach={<p>存算一体架构将数据保存在 BE 磁盘上。存算分离架构将持久数据保存在共享存储中。手动部署需要自行管理每个进程；Kubernetes 则通过 Doris Operator 管理集群的期望状态。</p>}
+        calloutTitle="从简单方案开始"
+        callout={<p>首次在本地或虚拟机上部署集群时，手动部署存算一体架构是让 Doris 尽快运行起来的方式。</p>}
+        check={{
+            question: "哪个选择决定了持久数据存放在哪里？",
+            options: ["架构", "编排平台"],
+            correctIndex: 0,
+            correctFeedback: "正确。选择存算一体还是存算分离架构，决定了持久化存储模式。",
+            incorrectFeedback: "Kubernetes 改变的是编排方式；架构选择改变的是持久化存储方式。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 部署路径"
+            columns={2}
+            items={[
+                { tag: 'VM', title: "手动部署 · 存算一体", description: "FE 和有状态的 BE 进程运行在配有本地磁盘的主机上。" },
+                { tag: 'VM', title: "手动部署 · 存算分离", description: "FE、Meta Service、无状态 BE、FoundationDB 和共享存储。" },
+                { tag: 'K8S', title: "Operator · 存算一体", description: "DorisCluster 资源管理 FE 和有状态 BE 的工作负载。" },
+                { tag: 'K8S', title: "Operator · 存算分离", description: "Operator 管理云模式集群及其计算组。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-prerequisites"
+        label="前提条件"
+        title={<>先排除环境隐患， <em>再动手</em>.</>}
+        summary="部署的可靠性取决于磁盘、网络标识、时钟、端口和操作系统是否准备妥当。"
+        coachTitle="检查每个节点的运行环境。"
+        coach={<p>使用受支持的 CPU 与操作系统组合、与 FE 兼容的 JDK、稳定的主机名或 IP、同步的时钟，并确保 Doris 各服务端口之间完全连通。</p>}
+        calloutTitle="难以事后更改的决定"
+        callout={<p>将 FE 元数据保存在专用的持久化存储上，并在初始化前统一设置整个集群的命名规则。</p>}
+        check={{
+            question: "所有集群节点都应保持哪些条件稳定？",
+            options: ["网络标识和时钟", "SQL 客户端的数量"],
+            correctIndex: 0,
+            correctFeedback: "正确。稳定的节点标识、网络连接和时间是集群的前提条件。",
+            incorrectFeedback: "客户端数量可以变化，但节点标识和时间一致性必须可靠。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 部署前提条件"
+            columns={4}
+            items={[
+                { tag: 'CPU', title: "兼容的主机", description: "确认指令集、内核、系统限制和 Java 要求。" },
+                { tag: 'NET', title: "可访问的服务", description: "确保所需节点之间的 FE、BE 和 Web 服务端口相互连通。" },
+                { tag: 'NTP', title: "时钟同步", description: "保持时钟一致，以便协调运行、查看日志和排查问题。" },
+                { tag: 'SSD', title: "持久化存储路径", description: "妥善规划 FE 元数据、BE 数据、日志和共享存储的存放位置。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-integrated"
+        label="手动部署存算一体集群"
+        title={<>先启动控制节点，再 <em>加入存储节点</em>.</>}
+        summary="初始化第一个 FE，扩充 FE 仲裁组，注册 BE 节点，并在导入数据前验证节点是否已加入集群。"
+        coachTitle="注册节点和启动进程是两个独立步骤。"
+        coach={<p>新 FE 注册后，通过已有 FE 作为 helper 加入集群。BE 的心跳端点注册成功且进程报告健康后，才能承担工作。</p>}
+        calloutTitle="生产环境配置"
+        callout={<p>为实现高可用，应使用奇数个有投票权的 FE 节点，并配置足够的 BE 副本，以承受业务所要求的故障数量。</p>}
+        check={{
+            question: "启动新的 follower FE 之前应先做什么？",
+            options: ["将它注册到集群", "在上面加载一张表"],
+            correctIndex: 0,
+            correctFeedback: "正确。先注册 follower，再以已有 FE 作为 helper 启动它。",
+            incorrectFeedback: "FE 节点不存储表副本；必须先注册 follower。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="手动部署存算一体集群的步骤"
+            focusIndex={0}
+            items={[
+                { title: "第一个 FE", description: "初始化元数据" },
+                { title: "FE 仲裁组", description: "添加有投票权的成员" },
+                { title: "BE 节点", description: "注册存储路径" },
+                { title: "验证", description: "检查健康状态并完成安全配置" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="manual-decoupled"
+        label="手动部署存算分离集群"
+        title={<>先部署元数据与存储层， <em>再部署计算层</em>.</>}
+        summary="除常见的 FE 和 BE 进程外，存算分离集群还需要 FoundationDB、Meta Service 和 Storage Vault。"
+        coachTitle="各层必须使用相同的集群标识。"
+        coach={<p>FoundationDB 持久化保存系统元数据，Meta Service 协调数据层元数据，FE 以云模式运行，BE 加入计算组，Storage Vault 则指定共享的对象存储或文件存储。</p>}
+        calloutTitle="运维成本"
+        callout={<p>FoundationDB 和共享存储是生产环境的关键依赖。依赖弹性伸缩之前，应做好备份和监控，并测试故障情况下的行为。</p>}
+        check={{
+            question: "存算分离集群通过什么访问共享数据文件？",
+            options: ["Storage Vault", "FE 本地元数据目录"],
+            correctIndex: 0,
+            correctFeedback: "正确。Storage Vault 定义了对共享存储层的访问方式。",
+            incorrectFeedback: "FE 元数据用于协调集群；Storage Vault 指定共享数据存储。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="手动部署存算分离集群的依赖项"
+            items={[
+                { title: "FoundationDB + Meta Service", description: "持久化保存并协调数据层元数据。" },
+                { title: "云模式 FE + 计算组", description: "规划 SQL 并弹性执行任务。" },
+                { title: "Storage Vault", description: "连接持久化对象存储或分布式文件系统。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-integrated"
+        label="在 Kubernetes 上部署存算一体集群"
+        title={<>描述集群，让 Operator <em>持续调谐</em> 集群。</>}
+        summary="Doris Operator 根据 DorisCluster 资源创建并管理 FE 和 BE 工作负载、服务、配置及持久化存储。"
+        coachTitle="自定义资源成为集群期望状态的依据。"
+        coach={<p>在 DorisCluster 规范中设置镜像、副本数、资源、ConfigMaps、持久卷声明和服务暴露方式。使用 FQDN 模式，确保工作负载迁移时 pod 标识保持稳定。</p>}
+        calloutTitle="确保数据真正持久化"
+        callout={<p>存算一体架构中的 BE pod 是有状态的。投入生产前，应验证 StorageClass 的行为、卷保留策略、容量和故障域分布。</p>}
+        check={{
+            question: "应在哪里声明期望的 FE 和 BE 副本数？",
+            options: ["DorisCluster 资源", "一条临时写下的 SQL 注释"],
+            correctIndex: 0,
+            correctFeedback: "正确。Operator 根据 DorisCluster 资源中的配置调谐副本数。",
+            incorrectFeedback: "SQL 注释无法控制 Kubernetes 工作负载。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="在 Kubernetes 上部署存算一体集群的流程"
+            focusIndex={2}
+            items={[
+                { title: "安装", description: "CRDs + Operator" },
+                { title: "配置", description: "镜像 + ConfigMaps" },
+                { title: "持久化", description: "PVCs + 服务" },
+                { title: "应用配置", description: "DorisCluster" },
+                { title: "观察状态", description: "Pods + SQL 健康状态" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="kubernetes-decoupled"
+        label="在 Kubernetes 上部署存算分离集群"
+        title={<>将依赖服务纳入 <em>平台</em>.</>}
+        summary="Kubernetes 可以自动管理 Doris 进程，但 FoundationDB、共享存储、凭据和故障规划仍需妥善管理。"
+        coachTitle="pod 健康不代表整个数据平台健康。"
+        coach={<p>部署 FoundationDB，安装存算分离模式所需的 Operator 资源，配置集群标识和存储访问权限，创建 Storage Vault，然后验证 FE、Meta Service、计算组以及端到端的 SQL 操作。</p>}
+        calloutTitle="环境建议"
+        callout={<p>快速搭建的单副本环境适合学习。生产环境需要冗余的元数据服务，以及满足预期可用性目标的存储。</p>}
+        check={{
+            question: "端到端就绪检查必须包含什么？",
+            options: ["创建、导入和查询数据", "只确认 pod 处于 Running 状态"],
+            correctIndex: 0,
+            correctFeedback: "正确。应完整检验元数据、计算和存储的整个链路。",
+            incorrectFeedback: "pod 处于 Running 状态，并不能证明元数据服务和共享存储可以端到端正常工作。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Kubernetes 存算分离集群的就绪检查层次"
+            columns={4}
+            items={[
+                { tag: 'FDB', title: "元数据存储", description: "具有冗余部署和容量监控的 FoundationDB。" },
+                { tag: 'MS', title: "Meta Service", description: "一致的集群标识和可访问的端点。" },
+                { tag: 'CG', title: "计算组", description: "具备适当资源和缓存的无状态工作节点。" },
+                { tag: 'OBJ', title: "共享存储", description: "Vault 的凭据、权限、持久性和吞吐量。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="operate-the-cluster"
+        label="运行与验证"
+        title={<>检查每一 <em>层的运行信号</em>.</>}
+        summary="部署完成前，还应做好健康检查、安全防护、可观测性、扩缩容规则，并演练升级流程。"
+        coachTitle="结合 SQL 和平台状态判断集群健康情况。"
+        coach={<p>通过 SQL 检查 FE 和 BE 的集群成员状态，通过平台检查进程或 pod 的健康状态，并结合日志和指标查找故障原因。对外开放服务前，应修改默认凭据。</p>}
+        calloutTitle="升级顺序"
+        callout={<p>遵循对应版本的升级指南和兼容性矩阵。滚动升级期间，应始终保持仲裁组和副本的可用性。</p>}
+        check={{
+            question: "什么信号能证明 BE 已加入 Doris 集群？",
+            options: ["在 SHOW BACKENDS 中显示为健康状态", "其主机能响应 ping"],
+            correctIndex: 0,
+            correctFeedback: "正确。Doris 必须能看到该节点的集群成员身份和健康的心跳状态。",
+            incorrectFeedback: "网络连通是必要条件，但不足以证明节点已加入 Doris 集群。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 运行状态检查"
+            columns={4}
+            items={[
+                { tag: 'SQL', title: "集群成员状态", description: "验证 FE 角色、BE 心跳和计算组状态。" },
+                { tag: 'SEC', title: "安全", description: "设置凭据、限制服务暴露范围，并保护存储密钥。" },
+                { tag: 'OBS', title: "可观测性", description: "在首次发生故障前，就开始收集指标和日志。" },
+                { tag: 'DR', title: "故障恢复", description: "测试重启、替换、备份和升级流程。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="deployment-recap"
+        label="部署回顾"
+        title={<>每条部署路径都意味着一组 <em>需要自行承担的取舍</em>.</>}
+        summary="选择能满足存储、弹性、可用性和平台要求的最简单路径，并用真实数据验证。"
+        coachTitle="实际业务流程就绪，集群才算就绪。"
+        coach={<p>除部署清单外，还应记录所选架构、故障域、仲裁组、副本策略、存储管理职责、访问模式、监控和升级流程。</p>}
+        calloutTitle="进入下一课之前"
+        callout={<p>保持部署环境稳定。下一模块将介绍如何根据业务负载特点设计表模型、分区、分桶和排序键。</p>}
+        check={{
+            question: "部署完成前，最好的测试是什么？",
+            options: ["运行有代表性的数据导入和查询流程", "确认压缩包已成功解压"],
+            correctIndex: 0,
+            correctFeedback: "正确。有代表性的业务流程可以验证整个系统链路。",
+            incorrectFeedback: "解压二进制文件只是部署初期的一个步骤。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="部署路径选择回顾"
+            leftTitle="优先选择存算一体"
+            leftLead="如果本地存储和存算同步扩容符合需求，可选择运维更简单的方案。"
+            leftItems={["平台依赖更少", "有状态的 BE 节点", "直接管理本地磁盘"]}
+            rightTitle="优先选择存算分离"
+            rightLead="如果具备共享存储和平台运维能力，可选择独立扩缩容。"
+            rightItems={["弹性计算组", "持久化共享存储", "额外的元数据服务"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

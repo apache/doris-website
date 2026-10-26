@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
-const contexts = ['docs/dev', 'docs/4.x', 'community'];
+const {contexts, groupFor} = require('./search-plugin.cjs');
 const route = url => new URL(url, 'https://doris.apache.org').pathname.replace(/\/?$/, '/');
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
@@ -26,9 +26,7 @@ function checkIndexes({site, locale, manifest}) {
     const expected = new Map(contexts.map(context => [context, new Set()]));
     for (const page of manifest.pages) {
         if (page.locale !== locale || page.status !== 'current' || !page.useTarget || !page.indexable) continue;
-        const context = page.pluginId === 'community' && page.version === 'current' ? 'community'
-            : page.pluginId === 'default' && page.version === 'current' ? 'docs/dev'
-                : page.pluginId === 'default' && page.version === '4.x' ? 'docs/4.x' : null;
+        const context = groupFor(page);
         if (context) expected.get(context).add(route(page.permalink));
     }
     const indexFiles = {};
@@ -101,6 +99,7 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             {ctx:'docs/dev',query:corpus[locale].database}, {ctx:'docs/dev',query:corpus[locale].query},
             {ctx:'docs/dev',query:'SQL'}, {ctx:'docs/dev',query:'query_vector'},
             {ctx:'docs/4.x',query:'SQL'}, {ctx:'community',query:corpus[locale].community},
+            {ctx:'course',query:'SQL'},
             ...(locale === 'ru' ? ['ЗАПРОСЫ', 'отчёты', 'отчеты', 'ОТЧЁТЫ', 'match',
                 'query_vector()', '(SQL)', 'SQL запрос'].map(query => ({ctx:'docs/dev',query})) : []),
         ].filter(probe => (!devOnly || probe.ctx !== 'docs/4.x') && summary.contexts[probe.ctx] > 0);

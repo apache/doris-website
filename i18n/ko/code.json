@@ -8620,5 +8620,59 @@
   },
   "blog.search.noResults": {
     "message": "검색 및 카테고리 조건에 맞는 게시물이 없습니다."
+  },
+  "course.lesson.expandModules": {
+    "message": "강좌 모듈 펼치기"
+  },
+  "course.lesson.collapseModules": {
+    "message": "강좌 모듈 접기"
+  },
+  "course.lesson.reference": {
+    "message": "참고 문서"
+  },
+  "course.lesson.exit": {
+    "message": "수업 나가기"
+  },
+  "course.lesson.modulesAria": {
+    "message": "Doris 101 모듈"
+  },
+  "course.lesson.modules": {
+    "message": "강좌 모듈"
+  },
+  "course.lesson.moduleNumber": {
+    "message": "모듈 {number}"
+  },
+  "course.lesson.baseline": {
+    "message": "기준 버전: {baseline}"
+  },
+  "course.lesson.progress": {
+    "message": "수업 진행률"
+  },
+  "course.lesson.coachNote": {
+    "message": "학습 도움말"
+  },
+  "course.lesson.chooseAnswer": {
+    "message": "답을 선택하여 이해도를 확인하세요."
+  },
+  "course.lesson.overview": {
+    "message": "← 강좌 개요"
+  },
+  "course.lesson.previous": {
+    "message": "← 이전 단원"
+  },
+  "course.lesson.units": {
+    "message": "수업 단원"
+  },
+  "course.lesson.openUnit": {
+    "message": "{number}번 단원 열기: {label}"
+  },
+  "course.lesson.nextModule": {
+    "message": "다음 모듈: {title} →"
+  },
+  "course.lesson.finish": {
+    "message": "강좌 마치기 →"
+  },
+  "course.lesson.continue": {
+    "message": "계속 →"
   }
 }

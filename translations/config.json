@@ -9,7 +9,8 @@
       "searchContextLabels": {
         "docs/dev": "Dev ドキュメント",
         "docs/4.x": "4.x ドキュメント",
-        "community": "コミュニティ"
+        "community": "コミュニティ",
+        "course": "コース"
       }
     },
     "ko": {
@@ -20,7 +21,8 @@
       "searchContextLabels": {
         "docs/dev": "Dev 문서",
         "docs/4.x": "4.x 문서",
-        "community": "커뮤니티"
+        "community": "커뮤니티",
+        "course": "강좌"
       }
     },
     "ru": {
@@ -31,7 +33,8 @@
       "searchContextLabels": {
         "docs/dev": "Документация Dev",
         "docs/4.x": "Документация 4.x",
-        "community": "Сообщество"
+        "community": "Сообщество",
+        "course": "Курсы"
       }
     }
   }

@@ -15967,5 +15967,59 @@
     },
     "blog.viewAll": {
         "message": "查看全部博客"
+    },
+    "course.lesson.expandModules": {
+        "message": "展开课程模块"
+    },
+    "course.lesson.collapseModules": {
+        "message": "收起课程模块"
+    },
+    "course.lesson.reference": {
+        "message": "参考文档"
+    },
+    "course.lesson.exit": {
+        "message": "退出课程"
+    },
+    "course.lesson.modulesAria": {
+        "message": "Doris 101 课程模块"
+    },
+    "course.lesson.modules": {
+        "message": "课程模块"
+    },
+    "course.lesson.moduleNumber": {
+        "message": "模块 {number}"
+    },
+    "course.lesson.baseline": {
+        "message": "基于：{baseline}"
+    },
+    "course.lesson.progress": {
+        "message": "课程进度"
+    },
+    "course.lesson.coachNote": {
+        "message": "学习提示"
+    },
+    "course.lesson.chooseAnswer": {
+        "message": "选择一个答案，检查你的理解。"
+    },
+    "course.lesson.overview": {
+        "message": "← 课程概览"
+    },
+    "course.lesson.previous": {
+        "message": "← 上一单元"
+    },
+    "course.lesson.units": {
+        "message": "课程单元"
+    },
+    "course.lesson.openUnit": {
+        "message": "打开第 {number} 单元：{label}"
+    },
+    "course.lesson.nextModule": {
+        "message": "下一模块：{title} →"
+    },
+    "course.lesson.finish": {
+        "message": "完成课程 →"
+    },
+    "course.lesson.continue": {
+        "message": "继续 →"
     }
 }

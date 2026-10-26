@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-installation-guide",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/02-apache-doris-installation-guide.mdx",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs-course/current/101/02-apache-doris-installation-guide.mdx",
+    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceHash": "9e1e4a4e3d57be4d72fe24fc8cb976a7ee857ade123e888d49193243832b772b",
+    "sourceTechnicalHash": "5238c0f1a0f563c3eb9afe1cf5828c80c517ce3b329664249384a1b075bae1b0",
+    "targetHash": "e06d0a0a3b2d9b8a8ab31027a45d2f051c008cbf9d2c71832d7ec988e1e3c7d5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-26T14:05:22.089Z",
+    "glossaryVersion": "1"
+  }
+}

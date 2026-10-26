@@ -459,7 +459,19 @@ body:has(.course-player) {
                 color: var(--brand-primary);
                 font-style: normal;
             }
+
+            &:lang(zh-CN) {
+                font-family: var(--font-sans-zh, var(--ifm-font-family-base));
+                font-size: clamp(2rem, 3.8vw, 3.5rem);
+                line-height: 1.16;
+                letter-spacing: -0.02em;
+            }
         }
+    }
+
+    &__title-word {
+        display: inline-block;
+        white-space: nowrap;
     }
 
     &__unit-label {

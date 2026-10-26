@@ -1,0 +1,10 @@
+{
+  "version.label": {
+    "message": "课程",
+    "description": "The label for version current"
+  },
+  "sidebar.course101.category.Doris 101": {
+    "message": "Doris 101 入门",
+    "description": "The label for category Doris 101 in sidebar course101"
+  }
+}

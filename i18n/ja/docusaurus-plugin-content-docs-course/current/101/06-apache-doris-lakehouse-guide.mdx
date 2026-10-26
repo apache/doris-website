@@ -1,0 +1,234 @@
+---
+title: Apache Doris レイクハウスガイド
+description: カタログ、Hive 連携、フェデレーテッド SQL、キャッシュ、外部への書き込みを通じて、Apache Doris のレイクハウスの使い方を段階的に学びます。
+slug: /101/06-apache-doris-lakehouse-guide
+sidebar_position: 6
+keywords:
+  - Apache Doris 101
+  - レイクハウス
+  - データカタログ
+  - フェデレーテッドクエリ
+  - Hive カタログ
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={6}
+    title="Apache Doris レイクハウスガイド"
+    readingTime="10–15 分"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/lakehouse/lakehouse-overview"
+>
+    <CourseLessonUnit
+        id="lakehouse-mental-model"
+        label="レイクハウスの基本モデル"
+        title={<>オープンデータをクエリし、 <em>第二のサイロを作らない</em>.</>}
+        summary="Doris は MPP ベクトル化クエリエンジンを使い、ウェアハウスのテーブルと、カタログを通じて公開された外部のレイクデータを横断してクエリを実行できます。"
+        coachTitle="元のデータソースが正本であり続けます。"
+        coach={<p>外部メタデータがテーブルとファイルを特定し、Doris が SQL を計画・実行します。キャッシュは繰り返し発生するリモート I/O を減らします。データは Hive、Iceberg、Hudi、オブジェクトストレージ、その他の接続先システムに置いたままにできます。</p>}
+        calloutTitle="二つの異なるアーキテクチャ"
+        callout={<p>外部のレイクテーブルをクエリすることと、コンピュートとストレージを分離して Doris をデプロイすることは異なります。前者はデータソースのフェデレーション、後者は Doris クラスターのアーキテクチャです。</p>}
+        check={{
+            question: "外部の Hive テーブルでは、どこにあるデータが正本ですか？",
+            options: ["外部カタログとストレージ", "Doris のローカルキャッシュのみ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。Doris は元のデータソースをクエリし、キャッシュは処理を高速化します。",
+            incorrectFeedback: "キャッシュされたブロックは置き換え可能であり、正本にはなりません。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Apache Doris のレイクハウスクエリの階層"
+            items={[
+                { title: "SQL とオプティマイザ", description: "結合を計画し、接続先のデータソース側で実行できる処理を押し下げます。" },
+                { title: "カタログとメタデータ", description: "データベース、テーブル、パーティション、スキーマ、スナップショットを解決します。" },
+                { title: "リモートストレージとシステム", description: "正本となるデータをオープンテーブル、ファイル、データベースに保持します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="catalog-hierarchy"
+        label="カタログ"
+        title={<>すべての外部ソースに使い慣れた <em>SQL アドレスを与える</em>.</>}
+        summary="カタログは接続を定義し、SQL と同じ 三 階層の名前空間を通じて、接続先のデータベースとテーブルを公開します。"
+        coachTitle="カタログのプロパティはインフラストラクチャの設定です。"
+        coach={<p>カタログの種類によってコネクタを選びます。プロパティではエンドポイント、認証、ストレージへのアクセス、コネクタの動作を定義します。Doris は外部の型とメタデータを自身の SQL モデルに対応付けます。</p>}
+        calloutTitle="認証情報の適切な管理"
+        callout={<p>サポートされているシークレット管理の方法を使い、権限とネットワークアクセスを必要な範囲に絞ってください。オブジェクトストレージやメタストアの認証情報を、教材のサンプルやアプリケーションコードにコミットしないでください。</p>}
+        check={{
+            question: "Doris のカタログは何を表しますか？",
+            options: ["設定済みの外部データソース", "キャッシュされた一つのデータブロック"],
+            correctIndex: 0,
+            correctFeedback: "正解です。カタログは Doris を外部システムとその名前空間に接続します。",
+            incorrectFeedback: "キャッシュは、カタログの接続やメタデータのモデルとは別の仕組みです。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris の外部カタログの名前空間"
+            focusIndex={0}
+            items={[
+                { title: "カタログ", description: "データソース + コネクタ" },
+                { title: "データベース", description: "外部の名前空間" },
+                { title: "テーブル", description: "スキーマ + ファイル" },
+                { title: "パーティション", description: "枝刈りに使えるメタデータ" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="hive-catalog"
+        label="Hive 連携"
+        title={<>メタデータとストレージを <em>一つの経路としてつなぐ</em>.</>}
+        summary="Hive カタログには、メタストアへのアクセス権と、メタデータが指すファイルの読み取り権限の両方が必要です。"
+        coachTitle="メタデータにアクセスできても、データにアクセスできるとは限りません。"
+        coach={<p>Doris が Hive Metastore 経由でデータベースを一覧表示できても、HDFS やオブジェクトストレージへのクエリは失敗する場合があります。DNS、ポート、認証、ファイルシステムの設定、委譲された認証情報を一通り確認してください。</p>}
+        calloutTitle="Kerberos 環境"
+        callout={<p>必要な krb5 設定と keytab を各所に適切に配布・保護し、実際の Doris プロセスからチケットの更新とファイルアクセスをテストしてください。</p>}
+        check={{
+            question: "Hive テーブルは一覧表示できますが、スキャンできません。何を確認すべきですか？",
+            options: ["ストレージへのアクセスと認証情報", "SQL のフォントだけ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。メタデータへのアクセスとファイルへのアクセスは、接続の別々の要素です。",
+            incorrectFeedback: "表示形式が原因で、Doris が外部ファイルを読み取れなくなることはありません。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Hive カタログのアクセスプレーン"
+            leftTitle="メタデータプレーン"
+            leftLead="データベース、テーブル、スキーマ、パーティションを解決します。"
+            leftItems={["Hive Metastore のエンドポイント", "カタログのプロパティ", "メタデータのイベントとキャッシュ"]}
+            rightTitle="データプレーン"
+            rightLead="テーブル定義が指すファイルを読み書きします。"
+            rightItems={["HDFS またはオブジェクトストレージ", "ネットワークと認証情報", "形式とスナップショットのサポート"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="federated-sql"
+        label="フェデレーテッド SQL"
+        title={<>データソースを結合し、移動する <em>データを最小限に抑える</em>.</>}
+        summary="Doris は、コネクタに応じた枝刈りとプッシュダウンを適用しながら、外部のレイクテーブル、外部データベース、内部テーブルを一つのクエリで結合できます。"
+        coachTitle="フェデレーションを使っても、ネットワークコストはなくなりません。"
+        coach={<p>早い段階で行と列を絞り込み、外部パーティションの述語を明示し、有用な統計情報を収集してください。EXPLAIN でパーティションの枝刈り、述語のプッシュダウン、結合時のデータ分散を確認します。</p>}
+        calloutTitle="本番環境での使い方"
+        callout={<p>フェデレーションは探索や対象を絞った結合に適しています。頻繁に再利用する結果や低レイテンシーが必要な結果は、内部テーブルやマテリアライズドビューに格納するとよい場合があります。</p>}
+        check={{
+            question: "フェデレーテッドクエリのスキャン量を最も直接的に減らせるのは、通常どれですか？",
+            options: ["対象を絞る外部パーティションの述語", "すべての列を選択すること"],
+            correctIndex: 0,
+            correctFeedback: "正解です。パーティションの枝刈りによって、無関係なリモートファイルの読み取りを避けられます。",
+            incorrectFeedback: "すべての列を選択すると、リモート I/O は減るどころか増えます。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のフェデレーテッドクエリの流れ"
+            focusIndex={2}
+            items={[
+                { title: "解決", description: "カタログのメタデータ" },
+                { title: "枝刈り", description: "パーティション + 列" },
+                { title: "プッシュダウン", description: "サポートされる述語" },
+                { title: "スキャン", description: "並列リモート I/O" },
+                { title: "結合", description: "Doris による実行" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="cache-and-io"
+        label="キャッシュと I/O"
+        title={<>繰り返すリモート読み取りを <em>ローカル処理に変える</em>.</>}
+        summary="メタデータキャッシュはカタログへの往復アクセスを減らし、データキャッシュは頻繁に読み取るリモートブロックをローカルストレージに保持します。"
+        coachTitle="キャッシュが効いた状態と効いていない状態では、測定する性能が異なります。"
+        coach={<p>キャッシュが効いていないクエリからは、データソースとネットワークのスループットが分かります。キャッシュが効いたクエリからは、キャッシュの効果が分かります。作業対象のデータ量に合わせてキャッシュ容量を決め、ヒット率とデータの追い出しを監視し、並列スキャンに十分なローカル帯域を確保してください。</p>}
+        calloutTitle="キャッシュだけでは正しさは保証されない"
+        callout={<p>外部データの変更パターンに合わせて、更新と無効化の動作を設定してください。古いデータに基づく結果は、速く返っても誤った結果です。</p>}
+        check={{
+            question: "レイクハウスのベンチマークでは、何を分けて報告すべきですか？",
+            options: ["コールドキャッシュとウォームキャッシュの結果", "繰り返し実行した中で最速の結果だけ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。両方の結果が、それぞれ異なる実際の稼働条件を示します。",
+            incorrectFeedback: "キャッシュが最も効いた実行結果だけを報告すると、リモートのデータソースの性能が見えなくなります。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のレイクハウス高速化レイヤー"
+            columns={3}
+            items={[
+                { tag: 'META', title: "メタデータキャッシュ", description: "テーブル、パーティション、ファイル、スナップショットのメタデータを再利用します。" },
+                { tag: 'DATA', title: "データキャッシュ", description: "頻繁に使うリモートブロックを、コンピュートに近いローカルディスクに保持します。" },
+                { tag: 'PUSH', title: "プッシュダウン", description: "転送前に列、パーティション、行を絞り込みます。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="write-back-and-ddl"
+        label="外部への書き込みと DDL"
+        title={<>外部への書き込みを <em>共有システムへの変更として扱う</em>.</>}
+        summary="対応するカタログでは、データの書き込みや外部オブジェクトの管理ができます。ただし、その結果について、書き込み先の形式、メタストア、権限、他のエンジンとの整合性が必要です。"
+        coachTitle="利用できる機能はコネクタとテーブル形式によって異なります。"
+        coach={<p>INSERT、CTAS、DDL を実行する前に、現行バージョンの対応表を確認してください。外部パーティションの規約を守り、コミットの動作を検証し、Hive、Spark などの読み取り側から変更がどう見えるかをテストします。</p>}
+        calloutTitle="Hive のスキーマ規則"
+        callout={<p>Hive テーブルを作成するときは、パーティション列の配置を含め、コネクタのスキーマとトランザクショナルテーブルに関する制約に従ってください。</p>}
+        check={{
+            question: "外部への書き込みを有効にする前に、何を確認すべきですか？",
+            options: ["コネクタの対応状況と、他のエンジンから変更が見えること", "Doris での SELECT 権限だけ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。書き込みがサポートされ、共有環境全体から結果が一貫して見える必要があります。",
+            incorrectFeedback: "SELECT 権限だけでは、外部への書き込みは許可されず、その動作も検証できません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="外部への書き込みで守るべき条件"
+            columns={4}
+            items={[
+                { tag: 'CAP', title: "対応機能", description: "コネクタ、形式、バージョンの対応状況を確認します。" },
+                { tag: 'AUTH', title: "権限", description: "メタストアとストレージに必要な権限だけを付与します。" },
+                { tag: 'COMMIT', title: "コミットの動作", description: "原子性、スナップショット、失敗時のクリーンアップを理解します。" },
+                { tag: 'READ', title: "他のエンジンでの確認", description: "他の利用側から意図した結果が見えることを確認します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="lakehouse-recap"
+        label="レイクハウスの振り返り"
+        title={<>コネクタとの境界を <em>一つのプロダクトとして運用する</em>.</>}
+        summary="本番環境のレイクハウスには、正しいメタデータ、安全なストレージアクセス、効率的な枝刈り、効果を測定できるキャッシュ、検証済みの書き込み動作が必要です。"
+        coachTitle="SQL エンドポイントだけでなく、処理経路全体を管理してください。"
+        coach={<p>メタストアのレイテンシー、キャッシュの動作、リモートからの読み取りバイト数、スキャンエラー、認証情報、スキーマ変更、データソースの可用性を監視してください。各依存先と障害対応の範囲について、担当チームを記録します。</p>}
+        calloutTitle="コース修了"
+        callout={<p>これで、アーキテクチャ、デプロイ、テーブル設計、データ操作、分析 SQL、レイクハウス連携を含む Doris 101 の基本モデルを学びました。</p>}
+        check={{
+            question: "カタログを本番環境で利用できることを示す、最も確かな根拠は何ですか？",
+            options: ["想定される障害や負荷の下で、代表的なクエリが動作すること", "カタログを一度作成できたこと"],
+            correctIndex: 0,
+            correctFeedback: "正解です。本番環境での利用には、ワークロード、可観測性、セキュリティ、障害時の動作も確認する必要があります。",
+            incorrectFeedback: "CREATE CATALOG で確認できるのは、処理経路全体のごく一部だけです。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のレイクハウス運用サイクル"
+            focusIndex={4}
+            items={[
+                { title: "接続", description: "カタログ + 認証" },
+                { title: "クエリ", description: "枝刈り + プッシュダウン" },
+                { title: "高速化", description: "キャッシュ + マテリアライズ" },
+                { title: "管理", description: "書き込み + スキーマ" },
+                { title: "運用", description: "全体を通した監視" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

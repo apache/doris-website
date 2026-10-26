@@ -1,0 +1,263 @@
+---
+title: Apache Doris 数据查询指南
+description: 通过关于连接、子查询、分析计算、UDF、复杂类型和物化视图的分步内容，学习如何编写并加速 Apache Doris 分析查询。
+slug: /101/05-apache-doris-query-data-guide
+sidebar_position: 5
+keywords:
+  - Apache Doris 101
+  - 分析型 SQL
+  - 连接优化
+  - 窗口函数
+  - 物化视图
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={5}
+    title="Apache Doris 数据查询指南"
+    readingTime="15–20 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/query-data/querying-overview"
+>
+    <CourseLessonUnit
+        id="query-toolkit"
+        label="查询工具箱"
+        title={<>选择 SQL 结构，先看 <em>问题</em>.</>}
+        summary="连接用于关联实体，子查询和 CTE 用于组织逻辑，分析运算符用于计算上下文相关的值，物化视图则可避免重复计算。"
+        coachTitle="先确定正确的结构，再考虑提示。"
+        coach={<p>先写出最简单且正确的关系表达式，检查执行计划，再优化代价高的数据传输或扫描。相比晦涩的过程式逻辑，Doris 更容易对清晰的 SQL 进行重写和分布式执行。</p>}
+        calloutTitle="用证据形成优化闭环"
+        callout={<p>用 EXPLAIN 查看计划结构，用查询 Profile 获取运行时证据。不要仅凭 SQL 的长短判断性能。</p>}
+        check={{
+            question: "首次改写查询时，应依据什么？",
+            options: ["执行计划和 Profile 中的证据", "查询的代码行数"],
+            correctIndex: 0,
+            correctFeedback: "正确。执行计划的结构和运行时开销能帮助你找到有效的改写方式。",
+            incorrectFeedback: "SQL 很短，也可能传输或扫描海量数据。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 分析查询工具箱"
+            columns={4}
+            items={[
+                { tag: 'JOIN', title: "实体关系", description: "合并、判断或排除匹配的实体。" },
+                { tag: 'CTE', title: "逻辑组织", description: "为中间逻辑命名，组织复杂查询。" },
+                { tag: 'WIN', title: "分析计算", description: "计算排名、累计值和同序值相关的结果。" },
+                { tag: 'MV', title: "查询加速", description: "通过透明改写复用已存储的结果。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-semantics"
+        label="连接语义"
+        title={<>确定哪些行需要 <em>保留</em>.</>}
+        summary="内连接、外连接、半连接、反连接和交叉连接即使用相同的关联键，回答的问题也不同。"
+        coachTitle="从保留哪些行来理解连接。"
+        coach={<p>INNER 保留匹配的行；LEFT、RIGHT 和 FULL 保留相应一侧或两侧未匹配的行；SEMI 只判断是否存在匹配，不返回另一侧的数据；ANTI 保留未匹配的行；CROSS 生成所有行的配对。</p>}
+        calloutTitle="物理实现"
+        callout={<p>等值连接通常可以使用 Hash Join。非等值条件和笛卡尔积逻辑可能需要 Nested Loop Join，因此更要留意结果的基数。</p>}
+        check={{
+            question: "哪种连接会返回没有匹配订单的客户？",
+            options: ["LEFT ANTI JOIN", "INNER JOIN"],
+            correctIndex: 0,
+            correctFeedback: "正确。LEFT ANTI 会保留右侧没有匹配项的左侧行。",
+            incorrectFeedback: "INNER JOIN 只保留匹配成功的客户。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 连接类型"
+            columns={3}
+            items={[
+                { tag: 'MATCH', title: "内连接", description: "只保留满足连接条件的行对。" },
+                { tag: 'KEEP', title: "外连接", description: "还会保留一侧或两侧未匹配的行。" },
+                { tag: 'EXIST', title: "半连接", description: "只要存在至少一个匹配项，就返回指定一侧的行。" },
+                { tag: 'MISS', title: "反连接", description: "仅当不存在匹配项时，才返回指定一侧的行。" },
+                { tag: 'PAIR', title: "交叉连接", description: "生成两侧输入的笛卡尔积。" },
+                { tag: 'COND', title: "非等值连接", description: "使用范围或不等式条件进行连接，通常通过嵌套循环实现。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-distribution"
+        label="连接的数据分布"
+        title={<>减少必须通过 <em>网络传输的数据量</em>.</>}
+        summary="Broadcast、Shuffle、Bucket Shuffle 和 Colocate 策略对数据分布位置的要求依次提高，相应的灵活性也逐渐降低。"
+        coachTitle="表的大小和数据分布决定数据如何移动。"
+        coach={<p>Broadcast 将较小的构建侧复制到各节点。Shuffle 对两侧数据重新分区。当连接键与另一张表的分桶键一致时，Bucket Shuffle 可以只移动一侧数据。如果两张表的数据分布兼容，Colocate 就能避免数据移动。</p>}
+        calloutTitle="并行度同样重要"
+        callout={<p>分桶数过少会限制并行执行，使看似高效的 Colocate 或 Bucket Shuffle 计划反而变慢。</p>}
+        check={{
+            question: "对于很小的维度表，哪种策略更合适？",
+            options: ["Broadcast", "对两侧的大表都执行 Shuffle"],
+            correctIndex: 0,
+            correctFeedback: "正确。将确实很小的构建侧广播出去，可以避免对数据量较大的一侧重新分区。",
+            incorrectFeedback: "在这种情况下，对两侧都执行 Shuffle 通常会传输更多数据。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 连接时的数据移动方式"
+            focusIndex={0}
+            items={[
+                { title: "Broadcast", description: "复制较小的右侧数据" },
+                { title: "Shuffle", description: "移动两侧数据" },
+                { title: "Bucket Shuffle", description: "移动一侧数据" },
+                { title: "Colocate", description: "连接时无需 Shuffle" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="subqueries-and-ctes"
+        label="子查询与 CTE"
+        title={<>让中间逻辑 <em>清晰可见</em>.</>}
+        summary="子查询将一个关系查询嵌入另一个查询；CTE 为中间结果集命名，也可用于表达递归层级。"
+        coachTitle="关联性会影响执行方式的选择。"
+        coach={<p>非关联子查询可独立执行，支持范围较广。关联子查询依赖外层查询的当前行，因此有结构上的限制。CTE 可以让查询阶段更清晰，但这并不意味着它一定会被物化。</p>}
+        calloutTitle="尽量在当前层级内处理依赖"
+        callout={<p>避免跨越多个层级的深层关联。当显式连接或具名查询阶段能让依赖关系更易于优化和审查时，优先采用它们。</p>}
+        check={{
+            question: "什么使子查询成为关联子查询？",
+            options: ["它引用了外层查询中的列", "它包含 ORDER BY"],
+            correctIndex: 0,
+            correctFeedback: "正确。它的结果依赖外层查询当前的行或作用域。",
+            incorrectFeedback: "ORDER BY 本身不会形成关联。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="子查询与 CTE 的用途"
+            leftTitle="子查询"
+            leftLead="将值、集合或关系嵌入另一个表达式。"
+            leftItems={["返回标量或多行结果", "可以关联，也可以独立", "适合判断是否存在匹配项"]}
+            rightTitle="CTE"
+            rightLead="在主语句之前为一个查询阶段命名。"
+            rightItems={["提高可读性", "可复用的逻辑阶段", "可以表达递归逻辑"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="multidimensional-analysis"
+        label="多维 SQL"
+        title={<>在 <em>一条语句中计算多个聚合层级</em>.</>}
+        summary="GROUPING SETS 指定确切的分组组合，ROLLUP 增加层级汇总，CUBE 生成所有分组组合。"
+        coachTitle="组合越多，计算量越大。"
+        coach={<p>已知需要哪些聚合层级时，使用 GROUPING SETS；对于年、月、日这样的下钻层级，使用 ROLLUP；只有确实需要所有维度组合时，才使用 CUBE。</p>}
+        calloutTitle="区分小计产生的 NULL"
+        callout={<p>使用 GROUPING 或 GROUPING_ID，区分聚合产生的 NULL 和源数据中原本存在的 NULL。</p>}
+        check={{
+            question: "对于年 → 月 → 日的层级，哪个运算符最合适？",
+            options: ["ROLLUP", "CROSS JOIN"],
+            correctIndex: 0,
+            correctFeedback: "正确。ROLLUP 可以自然地表示分层小计。",
+            incorrectFeedback: "CROSS JOIN 生成行对，不定义聚合层级。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 多维聚合运算符"
+            columns={3}
+            items={[
+                { tag: 'SET', title: "GROUPING SETS", description: "只计算明确指定的分组组合。" },
+                { tag: 'TREE', title: "ROLLUP", description: "沿有序的维度层级添加小计。" },
+                { tag: 'ALL', title: "CUBE", description: "计算各维度的所有分组组合。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="window-functions"
+        label="窗口函数"
+        title={<>分析相邻行，同时 <em>保留每一行</em>.</>}
+        summary="窗口函数在保留各行明细的同时，添加排名、偏移值、累计聚合值和同序值相关的计算结果。"
+        coachTitle="分区、排序和窗口范围各有不同作用。"
+        coach={<p>PARTITION BY 划分计算组，ORDER BY 确定顺序和同序行，窗口范围则指定哪些行参与当前结果的计算。</p>}
+        calloutTitle="ROWS 与 RANGE"
+        callout={<p>ROWS 按物理行偏移确定范围。RANGE 按排序值将同序行归为一组；当排序值重复时，它可能包含比预期更多的行。</p>}
+        check={{
+            question: "哪个子句决定累计求和的计算顺序？",
+            options: ["窗口中的 ORDER BY", "表注释"],
+            correctIndex: 0,
+            correctFeedback: "正确。窗口内的排序决定计算顺序。",
+            incorrectFeedback: "表注释不会影响分析计算的排序。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="窗口函数的定义"
+            focusIndex={2}
+            items={[
+                { title: "分区", description: "划分计算组" },
+                { title: "排序", description: "确定行及同序行的顺序" },
+                { title: "窗口范围", description: "选择参与计算的行" },
+                { title: "函数", description: "排名、取偏移值、聚合" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="extensibility-and-types"
+        label="函数与类型"
+        title={<>扩展 SQL 前，先确认内置函数无法表达所需的 <em>逻辑</em>.</>}
+        summary="别名函数简化迁移，Java 和 Python UDF 增加自定义计算能力，复杂类型则让嵌套值保持可查询。"
+        coachTitle="扩展能力也意味着更多维护责任。"
+        coach={<p>优先使用内置函数，以便优化并提高可移植性。用别名函数映射熟悉的函数签名；需要托管的自定义执行逻辑时使用 Java；只有 Python 生态的价值足以抵消运行开销时才使用 Python。应有意识地设计 ARRAY、MAP、STRUCT 和 JSON 数据。</p>}
+        calloutTitle="生产环境检查清单"
+        callout={<p>对用户代码进行版本管理、安全防护、测试和监控。确认类型映射、NULL 行为、确定性、资源限制，以及所有相关节点上是否都具备部署条件。</p>}
+        check={{
+            question: "对于已有支持的转换，通常应先选什么？",
+            options: ["Doris 内置函数", "新的外部 UDF"],
+            correctIndex: 0,
+            correctFeedback: "正确。内置函数的优化方式和运维路径最清晰。",
+            incorrectFeedback: "UDF 会增加部署和运行维护成本；确有功能缺口时再使用。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 扩展方式"
+            columns={4}
+            items={[
+                { tag: 'AKA', title: "别名函数", description: "映射兼容的名称或可复用的表达式。" },
+                { tag: 'JVM', title: "Java UDF", description: "实现标量、聚合、窗口或表函数逻辑。" },
+                { tag: 'PY', title: "Python UDF", description: "当 Python 生态带来的价值足以抵消额外开销时，使用 Python 逻辑。" },
+                { tag: 'NEST', title: "复杂类型", description: "无需先展开数据，即可查询数组、映射、结构体和 JSON。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="materialized-views"
+        label="物化视图"
+        title={<>预先计算查询 <em>频繁重复的工作</em>.</>}
+        summary="同步物化视图为单表查询提供强一致性的加速；异步物化视图通过受控刷新支持复杂的多表结果。"
+        coachTitle="根据新鲜度要求和复杂程度选择视图类型。"
+        coach={<p>对于必须随基表写入同步更新、且受支持的投影与聚合，使用同步物化视图。对于连接、星型模式和代价高的转换，如果可以接受定时或按需刷新，则使用异步物化视图。</p>}
+        calloutTitle="透明改写"
+        callout={<p>应用仍可查询基表，由优化器选择兼容的物化视图。使用 EXPLAIN 验证是否发生改写。</p>}
+        check={{
+            question: "多表星型模式的汇总适合哪种视图？",
+            options: ["异步物化视图", "单表同步物化视图"],
+            correctIndex: 0,
+            correctFeedback: "正确。异步物化视图支持复杂的多表定义。",
+            incorrectFeedback: "同步物化视图仅支持符合条件的单表查询结构。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="同步与异步物化视图"
+            leftTitle="同步 MV"
+            leftLead="随基表数据一起维护，用于加速单表查询。"
+            leftItems={["强一致性", "透明改写", "支持的查询结构有限"]}
+            rightTitle="异步 MV"
+            rightLead="按刷新策略更新的灵活存储结果。"
+            rightItems={["支持多表定义", "定时或手动刷新", "需要管理数据新鲜度"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>
