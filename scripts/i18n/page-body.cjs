@@ -86,8 +86,16 @@ function transformBody({root, file, source, english, englishI18n}) {
     for (const [start, end, text] of edits.sort((a, b) => b[0] - a[0])) source = source.slice(0, start) + text + source.slice(end);
     return (anchors ? 'import __DorisContentLink from "@site/src/components/home-next/LocalizedLink";\n' : '') + source;
 }
+function pageDependencies(root, registration) {
+    const dependencies = bodyDependencies(root, registration.sourcePath);
+    // Reports are loaded through require.context, so ordinary import traversal
+    // cannot discover them. New reports do not need a publication-state edit.
+    if (registration.id === 'P14') dependencies.files.push(...require('./report-messages.cjs').reportSources(root));
+    dependencies.files = [...new Set([...dependencies.files, ...(registration.sourceFiles ?? [])])].sort();
+    return dependencies;
+}
 function validateMessages(root, registration, locale) {
-    const {files, messages} = bodyDependencies(root, registration.sourcePath);
+    const {files, messages} = pageDependencies(root, registration);
     if (registration.id === 'P20')
         require('./track-b-messages.cjs').trackBMessages(root).forEach((source, id) => messages.set(id, source));
     if (registration.id === 'P05')
@@ -103,7 +111,6 @@ function validateMessages(root, registration, locale) {
         if (!Array.isArray(ids) || new Set(ids).size !== ids.length || ids.some(id => !available.has(id)))
             throw new Error(`Invalid translated report identities: ${locale}`);
         reports.reportMessages(root, ids).forEach((source, id) => messages.set(id, source));
-        files.push(...reports.reportSources(root));
     }
     const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n', locale, 'code.json'), 'utf8'));
     const placeholders = text => [...text.matchAll(/\{\w+\}/g)].map(match => match[0]).sort().join();
@@ -111,8 +118,7 @@ function validateMessages(root, registration, locale) {
         if (typeof dictionary[id]?.message !== 'string' || !dictionary[id].message.trim() || (source && placeholders(source) !== placeholders(dictionary[id].message)))
             throw new Error(`Incomplete page messages: ${registration.id}/${locale}/${id}`);
     }
-    const required = [...new Set([...files, ...(registration.sourceFiles ?? [])])].sort();
-    require('./embedded-messages.cjs').validateEmbeddedMessages(root, required, locale);
-    return required;
+    require('./embedded-messages.cjs').validateEmbeddedMessages(root, files, locale);
+    return files;
 }
-module.exports = {bodyDependencies, transformBody, validateMessages};
+module.exports = {bodyDependencies, pageDependencies, transformBody, validateMessages};

@@ -42,7 +42,9 @@ function digestFiles(root, files) {
     })));
 }
 function decideManual({root, record, sourceFiles, targetFiles = []}) {
-    const sourceHash = digestFiles(root, record?.sourceFiles ?? sourceFiles);
+    // Keep explicitly declared inputs and discover additions at build time.
+    // The published hash stays unchanged until a translation is reviewed.
+    const sourceHash = digestFiles(root, [...(record?.sourceFiles ?? []), ...sourceFiles]);
     if (!record || ['missing', 'blocked'].includes(record.state)) return {state: record?.state ?? 'missing', sourceHash,
         targetHash: null, contentLocale: 'en', fallback: true, indexable: false, reviewStatus: record?.reviewStatus ?? 'unverified'};
     const targetHash = digestFiles(root, record.targetFiles ?? targetFiles);

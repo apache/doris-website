@@ -3,7 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const {readJson, loadManual, decideManual, digestFiles, englishFallbackLocales} = require('./manual-state.cjs');
-const {bodyDependencies, validateMessages} = require('./page-body.cjs');
+const {bodyDependencies, pageDependencies, validateMessages} = require('./page-body.cjs');
 const {locales} = require('../../config/i18n');
 function manualReport(root) {
     const registry = readJson(root, 'translations/pages/registry.json', {schemaVersion: 1, pages: []});
@@ -13,16 +13,13 @@ function manualReport(root) {
     const pages = [];
     for (const registration of registry.pages) {
         const contentId = `${registration.kind}:${registration.id}`;
-        const dependencies = bodyDependencies(root, registration.sourcePath);
+        const dependencies = pageDependencies(root, registration);
         for (const locale of locales.filter(locale => locale !== 'en')) {
             const record = records.find(row => row.contentId === contentId && row.locale === locale);
             const intentionalFallback = registration.kind === 'page' && fallbackLocales.includes(locale);
             if (intentionalFallback && record && ['ready', 'needs-update'].includes(record.state))
                 throw new Error(`Landing translation disabled by English fallback policy: ${contentId}/${locale}`);
-            if (record && ['ready', 'needs-update'].includes(record.state)) {
-                const required = validateMessages(root, registration, locale);
-                for (const file of required) if (!record.sourceFiles.includes(file)) throw new Error(`Untracked body dependency: ${contentId}/${locale}/${file}`);
-            }
+            if (record && ['ready', 'needs-update'].includes(record.state)) validateMessages(root, registration, locale);
             pages.push({contentId, locale, kind: registration.kind,
                 ...decideManual({root, record, sourceFiles: dependencies.files}),
                 action: 'manual', intentionalEnglishFallback: intentionalFallback, publishedSourceHash: record?.sourceHash ?? null});

@@ -165,5 +165,14 @@ fallback, stale translations and blocked decisions, retaining exclusions and
 source/orphan reports. The JSON schema is version 1. Both reports are artifacts;
 production also retains the native content manifests for public acceptance.
 
+Both admission and native builds discover page imports, referenced resources and
+weekly reports at build time. New dependencies join the declared publication
+inputs when computing source drift; authors do not need to edit dependency lists
+when adding content. Published translations remain available as `needs-update`
+until reviewed, and untranslated reports and new pages, blog posts and docs use
+the existing English fallback. Only reports declared translated in
+`translations/community-reports.json` require a complete translated message set.
+Missing required messages and target digest mismatches still fail validation.
+
 See `translations/SHARED_UI.md` for the shared-content inventory and
 `translations/FIRST_RELEASE.md` for the candidate/public evidence boundary.
