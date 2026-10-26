@@ -421,6 +421,8 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 | `symbol` | Yes | - | Python function entry name.<br/>• **Inline mode**: write the function name directly, such as `"evaluate"`<br/>• **Module mode**: format is `[package_name.]module_name.func_name`. See the module mode description for details |
 | `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
 | `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"`. The complete version number is required |
+| `pool_size` | No | `3` | Positive int32; maximum processes for this function on each BE, capped at that BE's CPU core count. Fixed at creation; each function has an independent pool |
+| `auto_suspend` | No | `14400` | Idle timeout in seconds after the last active client closes. `0` allows reclamation on the next scan; `-1` disables it. Other negative values are rejected |
 | `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 | `volatility` | No | `volatile` | Function volatility. Valid values are `immutable`, `stable`, and `volatile`.<br/>`immutable`: the same input always produces the same output. Most deterministic UDFs should use this value for better plan optimization.<br/>`stable`: the result is stable within one SQL statement but may change between statements, similar to `now()`. SQL cache and materialized view rewrite are disabled.<br/>`volatile`: the result may change on each call, similar to `random()`. SQL cache, materialized view rewrite, and many optimizer rewrite rules are disabled. |
 
@@ -1561,6 +1563,8 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 | `symbol` | Yes | - | Python class name.<br/>• **Inline mode**: write the class name directly, such as `"SumUDAF"`<br/>• **Module mode**: format is `[package_name.]module_name.ClassName` |
 | `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
 | `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"` |
+| `pool_size` | No | `3` | Positive int32; maximum processes for this function on each BE, capped at that BE's CPU core count. Fixed at creation; each function has an independent pool |
+| `auto_suspend` | No | `14400` | Idle timeout in seconds after the last active client closes. `0` allows reclamation on the next scan; `-1` disables it. Other negative values are rejected |
 | `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 | `volatility` | No | `immutable` | Function volatility. Valid values are `immutable`, `stable`, and `volatile`.<br/>`immutable`: the same input always produces the same output. Most deterministic UDFs should use this value for better plan optimization.<br/>`stable`: the result is stable within one SQL statement but may change between statements, similar to `now()`. SQL cache and materialized view rewrite are disabled.<br/>`volatile`: the result may change on each call, similar to `random()`. SQL cache, materialized view rewrite, and many optimizer rewrite rules are disabled. |
 
@@ -2577,6 +2581,8 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 | `symbol` | Yes | - | Python function name.<br/>• **Inline mode**: write the function name directly, such as `"split_string_udtf"`<br/>• **Module mode**: format is `[package_name.]module_name.function_name` |
 | `file` | No | - | Path to the Python `.zip` package. Required only in module mode. Supports three protocols:<br/>• `file://`: local file system path<br/>• `http://`: HTTP remote download<br/>• `https://`: HTTPS remote download |
 | `runtime_version` | Yes | - | Python runtime version, such as `"3.10.12"` |
+| `pool_size` | No | `3` | Positive int32; maximum processes for this function on each BE, capped at that BE's CPU core count. Fixed at creation; each function has an independent pool |
+| `auto_suspend` | No | `14400` | Idle timeout in seconds after the last active client closes. `0` allows reclamation on the next scan; `-1` disables it. Other negative values are rejected |
 | `always_nullable` | No | `true` | Whether the function always returns a nullable result |
 | `volatility` | No | `immutable` | Function volatility. Valid values are `immutable`, `stable`, and `volatile`.<br/>`immutable`: the same input always produces the same output. Most deterministic UDFs should use this value for better plan optimization.<br/>`stable`: the result is stable within one SQL statement but may change between statements, similar to `now()`. SQL cache and materialized view rewrite are disabled.<br/>`volatile`: the result may change on each call, similar to `random()`. SQL cache, materialized view rewrite, and many optimizer rewrite rules are disabled. |
 
@@ -3042,7 +3048,6 @@ Set the following parameters in the `be.conf` configuration file on every BE nod
 | `python_conda_root_path` | string | Directory path | `""` | The root directory of Miniconda<br/>Effective only when `python_env_mode = conda` |
 | `python_venv_root_path` | string | Directory path | `${DORIS_HOME}/lib/udf/python` | The root directory of venv multi-version management<br/>Effective only when `python_env_mode = venv` |
 | `python_venv_interpreter_paths` | string | Path list (separated by `:`) | `""` | The list of available Python interpreter directories<br/>Effective only when `python_env_mode = venv` |
-| `max_python_process_num` | int32 | Integer | `0` | The maximum number of processes in the Python Server process pool<br/>`0` means using the CPU core count as the default. You can set another positive integer to override the default |
 
 ### Method 1: Manage Python Environments with Conda
 
@@ -3340,16 +3345,7 @@ chown -R doris:doris /doris/python_envs  # Assume the BE process user is doris
 
 Adjust the Python process pool parameter according to actual needs:
 
-```properties
-## Use the CPU core count (recommended, max_python_process_num = 0)
-max_python_process_num = 0
-
-## High concurrency: specify the process count manually
-max_python_process_num = 128
-
-## Resource-constrained: limit the process count
-max_python_process_num = 32
-```
+Include `"pool_size" = "2"` in the function properties to limit it to two Python processes per BE. See the complete example under “Per-function process pool size” below.
 
 ### Environment Verification
 
@@ -3526,5 +3522,32 @@ grep python /path/to/be.conf
     - Specify the database name when calling (such as `db.func()`) to avoid ambiguity.
 
 4. **Concurrency limits**:
-    - Python UDFs run via a process pool. Concurrency is bounded by `max_python_process_num`.
-    - Increase this parameter for high-concurrency scenarios.
+    - Each Python function has an independent process pool on every BE. Its effective size is `min(pool_size, BE CPU core count)`.
+    - A process can serve multiple clients. Increasing `pool_size` allows more processes, with additional CPU and memory consumption.
+
+### Per-function process pool size
+
+```sql
+CREATE FUNCTION py_pool_increment(INT) RETURNS INT
+PROPERTIES (
+    "type" = "PYTHON_UDF",
+    "symbol" = "evaluate",
+    "runtime_version" = "3.12.11",
+    "pool_size" = "2",
+    "auto_suspend" = "60"
+)
+AS $$
+def evaluate(x):
+    return None if x is None else x + 1
+$$;
+
+SELECT py_pool_increment(1); -- 2
+```
+
+Set `pool_size` in `PROPERTIES` when creating a Python UDF, UDAF, or UDTF. This optional positive int32 defaults to `3`. Each BE uses `min(pool_size, BE CPU core count)` processes at most for that function ID. For example, the default permits at most one process on a one-core BE and two on a two-core BE. Different functions, including overloads, have independent pools even when they use the same Python runtime or zip package.
+
+The pool is created on first use. Each process can serve multiple clients; `pool_size` does not limit the number of clients. The value is fixed when the function is created; recreate the function to change it. Functions without the property use `3`, subject to each BE's CPU core count. Zero, negative values, non-integers, and values outside the int32 range are rejected during creation.
+
+In the example, `auto_suspend = 60` terminates the pool after it has had no active clients for 60 seconds, on the next scan. Omitting `auto_suspend` uses `14400` seconds (4 hours). Explicitly setting `-1` disables idle reclamation; `0` permits reclamation on the next scan. Values below `-1`, non-integers, and values outside the signed 64-bit range are rejected. The timeout starts again when the last active client closes, including clients holding UDAF aggregate states. The next invocation creates a new pool and reloads the function; Python process globals are reset.
+
+DROP FUNCTION stops the corresponding pool from accepting new clients. The health check reclaims it after the last active client closes, regardless of `auto_suspend`.
