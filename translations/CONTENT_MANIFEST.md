@@ -60,7 +60,11 @@ technical-content, source override, review or ownership rules. `current`,
 manual docs keep native per-file selection. English fallback is never converted
 to `current` or `ready` by a compatibility reader.
 
-`pages/state.json` and `blog/state.json` contain `{schemaVersion: 1, pages: []}`.
+`pages/state.json` contains `{schemaVersion: 1, pages: []}`. Blog publication
+records are independent files at `blog/pages/<locale>/<English-relative-path>.json`
+with `{schemaVersion: 1, page: <record>}`. Use `blogStateFileFor(record)` to obtain
+the stable path; there is no shared blog index for translation PRs to edit.
+The reader accepts the former index only when inspecting historical commits.
 Each manual record uses:
 
 ```json
@@ -99,9 +103,10 @@ ownership or human review. These records never enter the docs scheduler.
 A source update must not overwrite the old `sourceHash` just to clear drift.
 Re-review, update the target as needed, then record both current digests and the
 actual review identity. A target edit requires a new explicit publication record;
-it cannot silently fall back. The blog ledger remains empty in production; the page ledger records the
-explicit compatibility migration described below. Complete blog route, draft, tag, author,
-feed, anchor and lifecycle validation remains in T14.
+it cannot silently fall back. Blog records and native aggregate metadata are
+validated separately; [BLOG.md](BLOG.md) documents partial-coverage fixtures,
+feeds, stable routes and publication evidence. The page ledger retains its
+independent compatibility/content acceptance records.
 
 ## Consumers and validation
 
