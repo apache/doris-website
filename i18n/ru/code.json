@@ -5607,10 +5607,10 @@
     "message": "Напишите в"
   },
   "landing.a1HybridSearch.001": {
-    "message": "Гибридный поиск"
+    "message": "Приложение"
   },
   "landing.a1HybridSearch.002": {
-    "message": "Приложение"
+    "message": "гибридного поиска"
   },
   "landing.a1HybridSearch.003": {
     "message": "Ключевые слова, смысл и фильтры в одном SQL-запросе. Создайте поисковую строку по документации Apache Doris."
@@ -6492,10 +6492,10 @@
     "message": "Model Context Protocol"
   },
   "landing.a3LogSearch.001": {
-    "message": "Поиск по логам"
+    "message": "Обозреватель"
   },
   "landing.a3LogSearch.002": {
-    "message": "Обозреватель"
+    "message": "поиска по логам"
   },
   "landing.a3LogSearch.003": {
     "message": "Мини-Kibana, где всё работает на SQL. С её помощью выясните причину сбоя оформления заказов в 11:40."
@@ -6609,7 +6609,7 @@
     "message": "Подключите к полю поиска. Передавайте текст пользователя параметром драйвера ("
   },
   "landing.a4AgentTraces.002": {
-    "message": "Обозреватель"
+    "message": "трассировок агентов"
   },
   "landing.a4AgentTraces.009": {
     "message": "одним"
@@ -6759,7 +6759,7 @@
     "message": "Функция SEARCH"
   },
   "landing.a4AgentTraces.001": {
-    "message": "Трассировки агентов"
+    "message": "Обозреватель"
   },
   "landing.a4AgentTraces.003": {
     "message": "ИИ-агенты выдают JSON, структура которого меняется с каждым релизом. Храните его в VARIANT и запрашивайте как обычные столбцы."
