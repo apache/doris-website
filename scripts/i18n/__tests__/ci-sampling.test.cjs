@@ -35,6 +35,15 @@ test('PR policy separates fixtures, real samples, full upgrades and lightweight 
     assert.equal(policy(['docs/topic.md'], {forceFull: true}).mode, 'full');
     assert.equal(policy([], {forceSample: true}).mode, 'sample');
 });
+test('translation configuration selects representative samples and unknown sibling JSON remains full', () => {
+    const config = policy(['translations/config.json']);
+    assert.equal(config.mode, 'sample');
+    assert.equal(config.selection, 'representative');
+    assert.equal(config.publicationAllowed, false);
+    assert.equal(config.runTranslationTests, true);
+    assert.equal(policy(['translations/config-unknown.json']).mode, 'full');
+});
+
 test('shared UI registry selects real samples and content fixtures while unknown inputs still require full validation', () => {
     const registry = 'translations/shared/registry.json';
     const selected = policy([registry]);

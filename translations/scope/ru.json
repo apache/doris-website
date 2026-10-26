@@ -2,7 +2,12 @@
   "schemaVersion": 1,
   "locale": "ru",
   "maxBatchPages": 20,
-  "automaticGroups": ["DEV", "4X", "COMMUNITY"],
+  "automaticGroups": [
+    "DEV",
+    "4X",
+    "COMMUNITY",
+    "COURSE"
+  ],
   "groups": [
     {
       "id": "DEV",

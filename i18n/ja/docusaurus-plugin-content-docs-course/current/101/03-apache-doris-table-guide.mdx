@@ -1,0 +1,232 @@
+---
+title: Apache Doris テーブルガイド
+description: モデル、キー、パーティション、バケット、検証を順に学びながら、Apache Doris の実践的なテーブル設計の進め方を身につけます。
+slug: /101/03-apache-doris-table-guide
+sidebar_position: 3
+keywords:
+  - Apache Doris 101
+  - Apache Doris のテーブル設計
+  - テーブルモデル
+  - パーティショニング
+  - バケット分割
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={3}
+    title="Apache Doris テーブルガイド"
+    readingTime="12–18 分"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/table-design/overview"
+>
+    <CourseLessonUnit
+        id="design-sequence"
+        label="設計の順序"
+        title={<>ワークロードの実態を <em>四つの判断に落とし込む</em>.</>}
+        summary="長く使えるテーブル設計では、まず行の意味を定め、次にソートキー、パーティションの境界、物理的な分散方法を選びます。"
+        coachTitle="依存関係に沿った順序で判断しましょう。"
+        coach={<p>テーブルモデルは、キーが重複したときの意味を定めます。キー列はソート順を決めます。パーティションは、論理的なプルーニングとライフサイクル管理の境界を定めます。バケットは、タブレットの分散と並列処理の度合いを決めます。</p>}
+        calloutTitle="DDL を書く前に確認すること"
+        callout={<p>データは追記専用ですか、それとも更新されますか。よく使うフィルターは何ですか。期間ごとにどれだけのデータが届きますか。行を均等に分散できる列はどれですか。</p>}
+        check={{
+            question: "最初に決めるべきことは何ですか。",
+            options: ["行の意味とテーブルモデル", "根拠のないバケット数"],
+            correctIndex: 0,
+            correctFeedback: "正解です。物理的な配置を決める前に、キーの重複が何を意味するかを定めます。",
+            incorrectFeedback: "バケット数は、テーブル内の行の意味を定めた後に決める物理設計上の項目です。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のテーブル設計の順序"
+            focusIndex={0}
+            items={[
+                { title: "モデル", description: "キーが重複したときの動作" },
+                { title: "ソートキー", description: "読み取り時の局所性" },
+                { title: "パーティション", description: "範囲とライフサイクル" },
+                { title: "バケット", description: "タブレットの分散" },
+                { title: "検証", description: "サイズ・偏り・実行計画" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-table-model"
+        label="テーブルモデル"
+        title={<>キーの重複は何を <em>意味するのか</em>?</>}
+        summary="Duplicate はすべての行を保持し、Unique はキーごとに論理的な行を一つ保持します。Aggregate は、指定した関数で値列を集約します。"
+        coachTitle="モデルは、業務上のデータの意味に基づいて選びます。"
+        coach={<p>変更されないファクトやログには Duplicate、CDC や最新状態を表すレコードには Unique を使います。書き込み時の集約によって繰り返し実行するクエリの負荷を大きく減らせる場合は、Aggregate を使います。</p>}
+        calloutTitle="後から変更しにくい選択"
+        callout={<p>作成後にテーブルモデルを変更することはできません。モデルを変更するには、新しいテーブルを作成してデータを移行する必要があります。</p>}
+        check={{
+            question: "追記専用のクリックストリームに適したモデルはどれですか。",
+            options: ["Duplicate Key", "Unique Key", "Aggregate Key"],
+            correctIndex: 0,
+            correctFeedback: "正解です。Duplicate Key はすべてのイベントを保持します。",
+            incorrectFeedback: "追記専用のイベントストリームでは、通常、元の行をすべて保持する必要があります。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のテーブルモデルの選び方"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: "Duplicate Key", description: "ファクト、ログ、詳細なイベントを、キーに基づいてマージせずに追記します。" },
+                { tag: 'UNI', title: "Unique Key", description: "更新されるエンティティを UPSERT し、論理的な最新の行を保持します。" },
+                { tag: 'AGG', title: "Aggregate Key", description: "SUM、MAX、MIN、REPLACE などの関数で指標値を集約します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="design-sort-key"
+        label="ソートキー"
+        title={<>よく使うフィルターを、ストレージが <em>活用できる位置に置く</em>.</>}
+        summary="Doris はキー列の順にデータを格納します。そのため、先頭側のキー列はプルーニング、圧縮、スキャンのコストに大きく影響します。"
+        coachTitle="使用頻度、選択性、列幅のすべてが重要です。"
+        coach={<p>頻繁にフィルターに使われ、データを効果的に絞り込める列を先頭に置きます。コンパクトな固定長型を優先し、キー全体の幅を抑えましょう。また、すべてのキー列が値列より前に置かれることも考慮してください。</p>}
+        calloutTitle="インデックスで補う"
+        callout={<p>先頭側のソートキー列を活かせない重要なフィルターには、転置インデックスなどのセカンダリインデックスを使います。</p>}
+        check={{
+            question: "通常、先頭のソートキーに適しているのはどちらの列ですか。",
+            options: ["フィルターによく使う日付またはテナントのキー", "フィルターにはほとんど使わない長い説明文"],
+            correctIndex: 0,
+            correctFeedback: "正解です。選択性の高いフィルターで頻繁に使う列なら、ソート順を活かせます。",
+            incorrectFeedback: "幅が広く、フィルターにほとんど使わない説明文は、有効なプルーニングにつながらないままキーのコストを増やします。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="効果的なソートキーと効果の低いソートキー"
+            leftTitle="効果的な先頭列"
+            leftLead="よく使う条件に合ったコンパクトな列。"
+            leftItems={["フィルターによく使う", "プルーニングの効果が高い", "値が安定し、列幅が比較的小さい"]}
+            rightTitle="効果の低い先頭列"
+            rightLead="通常のアクセスパターンと関係のない幅の広い列。"
+            rightItems={["フィルターにほとんど使わない", "プルーニングの効果が低い", "長い文字列を先頭側に置いている"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-partitioning"
+        label="パーティショニング"
+        title={<>ワークロードに合わせて、不要なデータを <em>除外できる論理的な境界を作る</em>.</>}
+        summary="パーティションはデータの範囲や値のグループを分離し、ライフサイクル操作を支えます。また、クエリが無関係なデータを読み取らずに済むようにします。"
+        coachTitle="プルーニングと管理に役立つ境界でパーティションを分けましょう。"
+        coach={<p>境界を厳密に管理したい場合は手動パーティション、定期的な時間範囲には動的パーティションを使います。取り込む値に応じて範囲やリストを自動作成したい場合は、自動パーティションを使います。</p>}
+        calloutTitle="クエリ側の条件"
+        callout={<p>パーティションのプルーニングが役立つのは、クエリでパーティション列を絞り込む場合だけです。代表的な SQL と EXPLAIN で確認しましょう。</p>}
+        check={{
+            question: "日付パーティションがクエリに役立つ条件は何ですか。",
+            options: ["日付のパーティション列に対する条件式", "VARCHAR の長さを大きくすること"],
+            correctIndex: 0,
+            correctFeedback: "正解です。その条件式によって、Doris は無関係な日付パーティションを除外できます。",
+            incorrectFeedback: "列幅を変えても、パーティションのプルーニングは有効になりません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のパーティショニング方式"
+            columns={3}
+            items={[
+                { tag: 'MAN', title: "手動", description: "RANGE または LIST の境界を明示し、運用者が直接管理します。" },
+                { tag: 'DYN', title: "動的", description: "時間単位のパーティションをスケジュールに従って作成し、古いものを期限切れにします。" },
+                { tag: 'AUTO', title: "自動", description: "データ取り込み時の値に基づいて、RANGE または LIST パーティションを作成します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-bucketing"
+        label="バケット分割"
+        title={<>各パーティションを適切な <em>タブレットに分散する</em>.</>}
+        summary="ハッシュによるバケット分割では、キーに基づいて配置先が決まります。ランダムなバケット分割では、分散キーを指定せずに行を分散できます。"
+        coachTitle="データの局所性、偏り、並列性のバランスを取ります。"
+        coach={<p>同じ場所に配置されたデータへのアクセスが重要な場合は、カーディナリティが高く、値が均等に分布するハッシュキーを選びます。適切なキーがなく、書き込みを均等に分散することを優先する場合は、ランダム分散を使います。</p>}
+        calloutTitle="数を決める前にサイズを見積もる"
+        callout={<p>パーティションごとの圧縮後のデータ量を見積もり、適切なタブレットサイズを目標にして、タブレット数をクラスタのリソースに見合う範囲に抑えます。バケットを増やせば必ず速くなるわけではありません。</p>}
+        check={{
+            question: "カーディナリティの低いハッシュ用バケットキーには、主にどのようなリスクがありますか。",
+            options: ["データの偏り", "スキーマの自動進化"],
+            correctIndex: 0,
+            correctFeedback: "正解です。異なる値が少なすぎると、一部のタブレットにデータが集中する可能性があります。",
+            incorrectFeedback: "バケット分割が影響するのはデータの分散であり、スキーマの自動進化ではありません。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="ハッシュとランダムによるバケット分割の比較"
+            leftTitle="ハッシュによるバケット分割"
+            leftLead="同じキー値は決まった配置先に割り当てられます。"
+            leftItems={["値が均等に分布する、カーディナリティの高いキーを選ぶ", "データの分散を考慮した JOIN に役立つ", "キーの選び方が悪いと偏りが生じる"]}
+            rightTitle="ランダムなバケット分割"
+            rightLead="キーを指定せずに行を分散します。"
+            rightItems={["データを簡単に均等に取り込める", "安定したキーがなくても使える", "データ配置の局所性が低い"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="workload-templates"
+        label="ワークロードのパターン"
+        title={<>設計上の選択を組み合わせ、整合性のある <em>テーブル構成を作る</em>.</>}
+        summary="優れた DDL では、行の意味、プルーニング、分散、データ取り込み時の動作が互いに整合し、ワークロードに合っています。"
+        coachTitle="テンプレートは設計の出発点です。"
+        coach={<p>イベントのテーブルでは、Duplicate Key、時間に基づくパーティション、データを均等に分散するキーを使うことがよくあります。CDC で扱うエンティティには、業務上のキーを使った Unique Key が適しています。集約テーブルで Aggregate Key を使うのは、集約の粒度が安定している場合です。</p>}
+        calloutTitle="実際のデータ特性で検証する"
+        callout={<p>実際の運用を代表するデータ量、キーのカーディナリティ、フィルターのパターン、更新頻度を使います。少量の人工的なサンプルでは、データの偏りやタブレットサイズの問題を見逃します。</p>}
+        check={{
+            question: "本番用のテーブル構成は何に基づいて決めるべきですか。",
+            options: ["実際のワークロードを代表するデータとクエリ", "できるだけ短い CREATE TABLE 文"],
+            correctIndex: 0,
+            correctFeedback: "正解です。実際のデータとクエリのパターンに照らして、設計上の選択を検証します。",
+            incorrectFeedback: "DDL を短くすることは、性能や正しさを高めるための目標ではありません。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris でよく使うテーブル構成"
+            columns={3}
+            items={[
+                { tag: 'LOG', title: "イベント分析", description: "重複する行を保持し、時間でプルーニングして、均等に並列スキャンします。" },
+                { tag: 'CDC', title: "最新状態", description: "業務上の一意キーを使い、UPSERT を中心にデータを取り込みます。" },
+                { tag: 'KPI', title: "指標の集約", description: "安定したディメンションと、指定した値の集約を使います。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="validate-table-design"
+        label="検証と改善"
+        title={<>Doris が構築したテーブルの <em>実態を確認する</em>.</>}
+        summary="ワークロードを拡大する前に、パーティションのプルーニング、タブレットのサイズ、行の分散、クエリの実行計画、データロード時の動作を確認します。"
+        coachTitle="DDL はテーブル設計の出発点です。"
+        coach={<p>メタデータを確認するコマンドでパーティションとタブレットを調べ、タブレットごとの行数とサイズを比較して偏りを確認します。さらに、EXPLAIN とプロファイルを使って、想定したプルーニングと JOIN が行われているか確認します。</p>}
+        calloutTitle="よくある問題"
+        callout={<p>小さなタブレットが多すぎると、スケジューリングとコンパクションの負荷が増えます。大きなタブレットやデータが偏ったタブレットが少数しかないと、並列性が制限され、負荷が集中します。</p>}
+        check={{
+            question: "一つの BE に作業が大きく偏っている場合、何を調べるべきですか。",
+            options: ["タブレットの分散とバケットキーによるデータの偏り", "見出しの大文字・小文字"],
+            correctIndex: 0,
+            correctFeedback: "正解です。タブレットの配置や値の偏りが、作業量の不均衡を説明することがよくあります。",
+            incorrectFeedback: "表示の仕方は、データの物理的な分散に影響しません。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のテーブル設計の検証サイクル"
+            focusIndex={3}
+            items={[
+                { title: "データロード", description: "実際の運用を代表するデータ量" },
+                { title: "確認", description: "パーティションとタブレット" },
+                { title: "実行計画の確認", description: "プルーニングと実行計画" },
+                { title: "プロファイルの確認", description: "実行時のデータ" },
+                { title: "改善", description: "必要に応じて再構築" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

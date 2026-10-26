@@ -1,0 +1,234 @@
+---
+title: Apache Doris 레이크하우스 가이드
+description: Catalog, Hive 연동, 연합 SQL, 캐싱, 외부 데이터 쓰기를 단계별로 살펴보며 Apache Doris 레이크하우스의 작업 흐름을 알아봅니다.
+slug: /101/06-apache-doris-lakehouse-guide
+sidebar_position: 6
+keywords:
+  - Apache Doris 101
+  - 레이크하우스
+  - 데이터 카탈로그
+  - 연합 쿼리
+  - Hive 카탈로그
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={6}
+    title="Apache Doris 레이크하우스 가이드"
+    readingTime="10–15분"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/lakehouse/lakehouse-overview"
+>
+    <CourseLessonUnit
+        id="lakehouse-mental-model"
+        label="레이크하우스 모델"
+        title={<>개방형 데이터를 쿼리하면서 <em>두 번째 데이터 사일로를 만들지 마세요</em>.</>}
+        summary="Doris는 MPP 기반 벡터화 쿼리 엔진으로 데이터 웨어하우스 테이블과 Catalog를 통해 연결된 외부 레이크 데이터를 함께 처리할 수 있습니다."
+        coachTitle="원본 소스가 계속 데이터의 기준입니다."
+        coach={<p>외부 메타데이터는 테이블과 파일을 식별하고, Doris는 SQL을 계획하고 실행하며, 캐시는 반복되는 원격 I/O를 줄입니다. 데이터는 Hive, Iceberg, Hudi, 객체 스토리지 또는 연결된 다른 시스템에 그대로 둘 수 있습니다.</p>}
+        calloutTitle="서로 다른 두 가지 아키텍처"
+        callout={<p>외부 레이크 테이블을 쿼리하는 것과 컴퓨팅·스토리지 분리 방식으로 Doris를 배포하는 것은 다릅니다. 전자는 데이터 소스 연합이고 후자는 Doris 클러스터 아키텍처입니다.</p>}
+        check={{
+            question: "외부 Hive 테이블에서 데이터의 기준은 어디에 있나요?",
+            options: ["외부 카탈로그와 스토리지", "Doris 로컬 캐시에만"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Doris는 원본 소스를 쿼리하며, 캐시는 쿼리 속도를 높이는 계층입니다.",
+            incorrectFeedback: "캐시된 블록은 교체할 수 있으며 데이터의 기준이 되지 않습니다.",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="Apache Doris 레이크하우스 쿼리 계층"
+            items={[
+                { title: "SQL과 옵티마이저", description: "조인을 계획하고 가능한 연산을 연결된 소스로 보냅니다." },
+                { title: "Catalog와 메타데이터", description: "데이터베이스, 테이블, 파티션, 스키마, 스냅샷을 확인합니다." },
+                { title: "원격 스토리지와 시스템", description: "기준이 되는 데이터를 개방형 테이블, 파일 또는 데이터베이스에 보관합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="catalog-hierarchy"
+        label="Catalog"
+        title={<>모든 외부 소스에 익숙한 <em>SQL 주소를 부여하세요</em>.</>}
+        summary="Catalog는 연결을 정의하고, SQL에서 사용하는 것과 같은 세 단계 이름 체계로 해당 소스의 데이터베이스와 테이블을 제공합니다."
+        coachTitle="Catalog 속성은 인프라 설정입니다."
+        coach={<p>카탈로그 유형으로 커넥터를 선택합니다. 속성에는 엔드포인트, 인증, 스토리지 접근 방식, 커넥터 동작을 정의합니다. 그런 다음 Doris가 외부 데이터 유형과 메타데이터를 자체 SQL 모델에 매핑합니다.</p>}
+        calloutTitle="인증 정보 안전하게 관리하기"
+        callout={<p>지원되는 비밀 정보 관리 방식을 사용하고, 권한을 최소화하고, 네트워크 접근을 통제하세요. 객체 스토리지나 메타스토어의 인증 정보를 학습용 예제나 애플리케이션 코드에 커밋하지 마세요.</p>}
+        check={{
+            question: "Doris Catalog는 무엇을 나타내나요?",
+            options: ["설정된 외부 데이터 소스", "캐시된 데이터 블록 하나"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. Catalog는 Doris를 외부 시스템과 해당 시스템의 이름 체계에 연결합니다.",
+            incorrectFeedback: "캐싱은 Catalog 연결 및 메타데이터 모델과 별개입니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 외부 카탈로그 이름 체계"
+            focusIndex={0}
+            items={[
+                { title: "Catalog", description: "소스 + 커넥터" },
+                { title: "데이터베이스", description: "외부 이름 체계" },
+                { title: "테이블", description: "스키마 + 파일" },
+                { title: "파티션", description: "프루닝에 활용할 수 있는 메타데이터" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="hive-catalog"
+        label="Hive 연동"
+        title={<>메타데이터와 스토리지를 <em>하나의 경로로 연결하세요</em>.</>}
+        summary="Hive Catalog를 사용하려면 메타스토어에 접근할 수 있어야 하고, 메타데이터가 가리키는 파일을 읽을 권한도 있어야 합니다."
+        coachTitle="메타데이터를 조회할 수 있어도 데이터에 접근할 수 있다는 뜻은 아닙니다."
+        coach={<p>Doris가 Hive Metastore를 통해 데이터베이스 목록을 조회하더라도 HDFS나 객체 스토리지의 데이터를 쿼리할 때는 실패할 수 있습니다. DNS, 포트, 인증, 파일 시스템 설정, 위임된 인증 정보를 전체 경로에서 확인하세요.</p>}
+        calloutTitle="Kerberos 환경"
+        callout={<p>필요한 krb5 설정과 keytab 파일을 일관되게 배포하고 보호한 뒤, 실제 Doris 프로세스에서 티켓 갱신과 파일 접근을 테스트하세요.</p>}
+        check={{
+            question: "Hive 테이블 목록은 조회할 수 있지만 테이블을 스캔할 수 없습니다. 무엇을 확인해야 하나요?",
+            options: ["스토리지 접근 권한과 인증 정보", "SQL 글꼴만"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 메타데이터 접근과 파일 접근은 연결에서 서로 다른 부분입니다.",
+            incorrectFeedback: "화면 표시 방식 때문에 Doris가 외부 파일을 읽지 못하는 것은 아닙니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="Hive Catalog 접근 계층"
+            leftTitle="메타데이터 계층"
+            leftLead="데이터베이스, 테이블, 스키마, 파티션을 확인합니다."
+            leftItems={["Hive Metastore 엔드포인트", "Catalog 속성", "메타데이터 이벤트와 캐시"]}
+            rightTitle="데이터 계층"
+            rightLead="테이블 정의가 가리키는 파일을 읽거나 씁니다."
+            rightItems={["HDFS 또는 객체 스토리지", "네트워크와 인증 정보", "파일 형식과 스냅샷 지원"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="federated-sql"
+        label="연합 SQL"
+        title={<>소스를 조인하되 이동하는 데이터는 <em>최소화하세요</em>.</>}
+        summary="Doris는 커넥터에 맞는 프루닝과 푸시다운을 적용하면서 외부 레이크 테이블, 외부 데이터베이스, 내부 테이블을 하나의 쿼리에서 조인할 수 있습니다."
+        coachTitle="데이터를 연합해도 네트워크 비용이 사라지지는 않습니다."
+        coach={<p>필터링과 필요한 열 선택을 일찍 수행하고, 외부 파티션 조건이 드러나도록 유지하며, 유용한 통계를 수집하세요. EXPLAIN을 살펴 파티션 프루닝, 조건식 푸시다운, 조인 분배가 적용되는지도 확인하세요.</p>}
+        calloutTitle="운영 환경에서의 활용 방식"
+        callout={<p>데이터 연합은 탐색과 선택적인 조인에 적합합니다. 자주 재사용하거나 응답 속도가 중요한 결과는 내부 테이블이나 구체화된 뷰에 저장하는 편이 좋을 수 있습니다.</p>}
+        check={{
+            question: "연합 쿼리의 스캔량을 가장 직접적으로 줄이는 것은 보통 무엇인가요?",
+            options: ["선택도가 높은 외부 파티션 조건", "모든 열 선택"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 파티션 프루닝으로 관련 없는 원격 파일을 읽지 않을 수 있습니다.",
+            incorrectFeedback: "모든 열을 선택하면 원격 I/O가 줄어드는 대신 늘어납니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 연합 쿼리 흐름"
+            focusIndex={2}
+            items={[
+                { title: "확인", description: "Catalog 메타데이터" },
+                { title: "프루닝", description: "파티션 + 열" },
+                { title: "푸시다운", description: "지원되는 조건식" },
+                { title: "스캔", description: "병렬 원격 I/O" },
+                { title: "조인", description: "Doris에서 실행" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="cache-and-io"
+        label="캐시와 I/O"
+        title={<>반복되는 원격 읽기를 <em>로컬 작업으로 전환하세요</em>.</>}
+        summary="메타데이터 캐시는 카탈로그에 반복해서 요청하는 횟수를 줄이고, 데이터 캐시는 자주 읽는 원격 블록을 로컬 스토리지에 보관합니다."
+        coachTitle="캐시가 준비된 상태와 준비되지 않은 상태의 성능은 별도로 측정해야 합니다."
+        coach={<p>캐시가 비어 있을 때의 쿼리는 원본 소스와 네트워크의 처리량을 보여줍니다. 캐시가 채워졌을 때의 쿼리는 캐시 효과를 보여줍니다. 작업 데이터 규모에 맞춰 캐시 크기를 정하고, 적중률과 축출 현황을 모니터링하며, 동시 스캔에 충분한 로컬 대역폭을 확보하세요.</p>}
+        calloutTitle="캐시만으로 결과의 정확성을 보장할 수는 없습니다."
+        callout={<p>외부 데이터의 변경 패턴에 맞춰 새로고침과 캐시 무효화 방식을 설정하세요. 오래된 결과는 빠르게 반환되더라도 잘못된 결과입니다.</p>}
+        check={{
+            question: "레이크하우스 벤치마크에서는 무엇을 구분해 보고해야 하나요?",
+            options: ["캐시가 비어 있을 때와 채워졌을 때의 결과", "반복 실행 중 가장 빠른 결과만"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 두 결과는 서로 다른 실제 운영 조건을 보여줍니다.",
+            incorrectFeedback: "캐시가 가장 많이 채워졌을 때의 결과만 보고하면 원본 소스에서 읽는 성능이 드러나지 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 레이크하우스 가속 계층"
+            columns={3}
+            items={[
+                { tag: 'META', title: "메타데이터 캐시", description: "테이블, 파티션, 파일, 스냅샷의 메타데이터를 재사용합니다." },
+                { tag: 'DATA', title: "데이터 캐시", description: "자주 읽는 원격 블록을 컴퓨팅 노드와 가까운 로컬 디스크에 보관합니다." },
+                { tag: 'PUSH', title: "푸시다운", description: "전송 전에 열, 파티션, 행의 수를 줄입니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="write-back-and-ddl"
+        label="외부 데이터 쓰기와 DDL"
+        title={<>외부 데이터 쓰기를 <em>공유 시스템의 변경으로 다루세요</em>.</>}
+        summary="지원되는 카탈로그에서는 데이터를 쓰거나 외부 객체를 관리할 수 있습니다. 이때 대상 형식, 메타스토어, 권한, 다른 엔진이 모두 그 결과를 일관되게 처리할 수 있어야 합니다."
+        coachTitle="지원 기능은 커넥터와 테이블 형식에 따라 달라집니다."
+        coach={<p>INSERT, CTAS, DDL을 실행하기 전에 현재 버전의 지원 현황표를 확인하세요. 외부 파티션 규칙을 지키고, 커밋 동작을 검증하며, Hive, Spark 또는 다른 읽기 엔진에 변경 사항이 어떻게 보이는지 테스트하세요.</p>}
+        calloutTitle="Hive 스키마 규칙"
+        callout={<p>Hive 테이블을 만들 때는 파티션 열의 위치를 비롯해 커넥터의 스키마 및 트랜잭션 테이블 관련 제약을 따르세요.</p>}
+        check={{
+            question: "외부 데이터 쓰기를 활성화하기 전에 무엇을 확인해야 하나요?",
+            options: ["커넥터 지원 여부와 다른 엔진에서의 변경 사항 가시성", "Doris의 SELECT 권한만"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 쓰기 기능이 지원되어야 하며, 공유 환경의 여러 엔진에서 결과가 일관되게 보여야 합니다.",
+            incorrectFeedback: "SELECT 권한만으로는 외부 데이터 쓰기가 허용되거나 검증되지 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="외부 데이터 쓰기 계약"
+            columns={4}
+            items={[
+                { tag: 'CAP', title: "지원 기능", description: "커넥터, 형식, 버전의 지원 여부를 확인합니다." },
+                { tag: 'AUTH', title: "권한 부여", description: "필요한 메타스토어 및 스토리지 권한만 부여합니다." },
+                { tag: 'COMMIT', title: "커밋 동작", description: "원자성, 스냅샷, 실패 후 정리 방식을 파악합니다." },
+                { tag: 'READ', title: "다른 엔진에서 확인", description: "다른 소비자에게도 의도한 결과가 보이는지 확인합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="lakehouse-recap"
+        label="레이크하우스 요약"
+        title={<>커넥터 경계를 하나의 <em>제품처럼 운영하세요</em>.</>}
+        summary="운영 환경의 레이크하우스 경로에는 정확한 메타데이터, 안전한 스토리지 접근, 효율적인 프루닝, 측정 가능한 캐싱, 검증된 쓰기 동작이 모두 필요합니다."
+        coachTitle="SQL 엔드포인트뿐 아니라 전체 경로를 책임지세요."
+        coach={<p>메타스토어 지연 시간, 캐시 동작, 원격 읽기 바이트 수, 스캔 오류, 인증 정보, 스키마 변경, 원본 소스의 가용성을 모니터링하세요. 각 의존 요소와 장애 대응 범위를 어느 팀이 담당하는지도 기록하세요.</p>}
+        calloutTitle="과정 완료"
+        callout={<p>이제 아키텍처, 배포, 테이블 설계, 데이터 작업, 분석 SQL, 레이크하우스 연동을 아우르는 Doris 101의 기본 개념을 익혔습니다.</p>}
+        check={{
+            question: "카탈로그가 운영 환경에서 사용할 준비가 되었음을 가장 확실하게 보여주는 것은 무엇인가요?",
+            options: ["대표적인 쿼리가 예상되는 장애 및 부하 조건에서 정상 작동하는 것", "카탈로그를 한 번 생성한 것"],
+            correctIndex: 0,
+            correctFeedback: "정답입니다. 운영 준비 상태에는 작업 부하, 관측 가능성, 보안, 장애 시 동작이 포함됩니다.",
+            incorrectFeedback: "CREATE CATALOG는 전체 경로의 일부만 검증합니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 레이크하우스 운영 흐름"
+            focusIndex={4}
+            items={[
+                { title: "연결", description: "Catalog + 인증" },
+                { title: "쿼리", description: "프루닝 + 푸시다운" },
+                { title: "가속", description: "캐시 + 구체화" },
+                { title: "관리", description: "쓰기 + 스키마" },
+                { title: "운영", description: "전체 경로 관찰" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

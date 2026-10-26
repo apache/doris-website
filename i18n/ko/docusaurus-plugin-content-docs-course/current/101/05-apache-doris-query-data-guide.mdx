@@ -1,0 +1,263 @@
+---
+title: Apache Doris 데이터 쿼리 가이드
+description: 조인, 서브쿼리, 분석 기능, UDF, 복합 타입, 구체화된 뷰를 다루는 단계별 학습을 통해 Apache Doris 분석 쿼리를 작성하고 가속하는 방법을 알아봅니다.
+slug: /101/05-apache-doris-query-data-guide
+sidebar_position: 5
+keywords:
+  - Apache Doris 101
+  - 분석 SQL
+  - 조인 최적화
+  - 윈도 함수
+  - 구체화된 뷰
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={5}
+    title="Apache Doris 데이터 쿼리 가이드"
+    readingTime="15–20분"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/query-data/querying-overview"
+>
+    <CourseLessonUnit
+        id="query-toolkit"
+        label="쿼리 도구 모음"
+        title={<>SQL 구조는 <em>질문에 맞춰 선택하세요</em>.</>}
+        summary="조인은 개체를 연결하고, 서브쿼리와 CTE는 로직을 구성하며, 분석 연산자는 맥락을 계산합니다. 구체화된 뷰는 반복 작업을 줄여 줍니다."
+        coachTitle="힌트보다 올바른 구조가 먼저입니다."
+        coach={<p>가장 단순하면서도 정확한 관계형 표현식을 작성하고 실행 계획을 살펴본 뒤, 비용이 큰 데이터 이동이나 스캔을 최적화하세요. Doris는 불투명한 절차형 로직보다 명확한 SQL을 더 효과적으로 재작성하고 분산 처리할 수 있습니다.</p>}
+        calloutTitle="근거 확인 과정"
+        callout={<p>EXPLAIN으로 계획된 실행 구조를 확인하고, 쿼리 프로파일로 실제 실행 결과를 확인하세요. SQL의 길이만으로 성능을 판단하지 마세요.</p>}
+        check={{
+            question: "첫 번째 쿼리 재작성은 무엇을 기준으로 해야 하나요?",
+            options: ["실행 계획과 프로파일의 근거", "쿼리의 줄 수"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 실행 계획의 구조와 실제 실행 비용을 보면 어떤 재작성이 유용한지 알 수 있습니다.",
+            incorrectFeedback: "SQL이 짧아도 막대한 양의 데이터를 이동하거나 스캔할 수 있습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 분석 쿼리 도구 모음"
+            columns={4}
+            items={[
+                { tag: 'JOIN', title: "관계", description: "일치하는 개체를 결합하거나, 일치 여부를 검사하거나, 제외합니다." },
+                { tag: 'CTE', title: "구성", description: "중간 단계의 로직에 이름을 붙이고 복잡한 쿼리를 정리합니다." },
+                { tag: 'WIN', title: "분석", description: "순위, 누적 값, 동순위 행을 고려한 값을 계산합니다." },
+                { tag: 'MV', title: "가속", description: "투명한 재작성을 통해 저장된 결과를 재사용합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-semantics"
+        label="조인 의미"
+        title={<>어떤 행을 <em>남길지 선택하세요</em>.</>}
+        summary="내부, 외부, 세미, 안티, 크로스 조인은 같은 관계 키를 사용하더라도 서로 다른 질문에 답합니다."
+        coachTitle="결과에 남는 행 집합을 기준으로 생각하세요."
+        coach={<p>INNER는 일치하는 행을 남깁니다. LEFT, RIGHT, FULL은 지정한 쪽에서 일치하지 않는 행도 보존합니다. SEMI는 반대쪽 행을 반환하지 않고 일치 여부를 검사합니다. ANTI는 일치하지 않는 행을 남기고, CROSS는 가능한 모든 행 쌍을 만듭니다.</p>}
+        calloutTitle="물리적 실행 방식"
+        callout={<p>동등 조인에는 일반적으로 Hash Join을 사용할 수 있습니다. 비동등 조건과 카테시안 곱은 Nested Loop Join이 필요할 수 있으므로 결과 행 수를 특히 주의해서 살펴봐야 합니다.</p>}
+        check={{
+            question: "일치하는 주문이 없는 고객을 반환하는 조인은 무엇인가요?",
+            options: ["LEFT ANTI JOIN", "INNER JOIN"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. LEFT ANTI는 오른쪽에 일치하는 행이 없는 왼쪽 행을 남깁니다.",
+            incorrectFeedback: "INNER JOIN은 일치하는 고객만 남깁니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 조인 유형"
+            columns={3}
+            items={[
+                { tag: 'MATCH', title: "내부 조인", description: "조인 조건을 만족하는 행 쌍만 남깁니다." },
+                { tag: 'KEEP', title: "외부 조인", description: "한쪽 또는 양쪽에서 일치하지 않는 행도 보존합니다." },
+                { tag: 'EXIST', title: "세미 조인", description: "일치하는 행이 하나 이상 있으면 한쪽 행을 반환합니다." },
+                { tag: 'MISS', title: "안티 조인", description: "일치하는 행이 없을 때만 한쪽 행을 반환합니다." },
+                { tag: 'PAIR', title: "크로스 조인", description: "양쪽 입력의 카테시안 곱을 생성합니다." },
+                { tag: 'COND', title: "비동등 조인", description: "범위나 부등식으로 조인하며, 중첩 루프를 사용하는 경우가 많습니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="join-distribution"
+        label="조인 데이터 분산"
+        title={<>데이터가 <em>네트워크를 통과할 때 전송량을 줄이세요</em>.</>}
+        summary="Broadcast, Shuffle, Bucket shuffle, Colocate 전략은 데이터 배치 조건이 갈수록 엄격해지는 대신 데이터 이동을 줄일 수 있습니다."
+        coachTitle="테이블 크기와 데이터 분산 방식에 따라 데이터 이동 패턴이 달라집니다."
+        coach={<p>Broadcast는 작은 빌드 측을 복제합니다. Shuffle은 양쪽 데이터를 다시 분할합니다. Bucket shuffle은 조인 키가 다른 테이블의 버킷 키와 맞으면 한쪽만 이동할 수 있습니다. Colocate는 두 테이블의 데이터 배치가 호환되면 이동을 피합니다.</p>}
+        calloutTitle="병렬 처리 수준도 중요합니다"
+        callout={<p>버킷 수가 적으면 병렬 작업이 제한되어 효율적으로 보이는 Colocate 또는 Bucket shuffle 실행 계획도 느려질 수 있습니다.</p>}
+        check={{
+            question: "매우 작은 차원 테이블에 적합한 전략은 무엇인가요?",
+            options: ["Broadcast", "큰 입력 양쪽을 Shuffle"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 실제로 작은 빌드 측을 Broadcast하면 큰 쪽을 다시 분할하지 않아도 됩니다.",
+            incorrectFeedback: "이런 경우 양쪽을 Shuffle하면 대개 더 많은 데이터가 이동합니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 조인의 데이터 이동 방식"
+            focusIndex={0}
+            items={[
+                { title: "Broadcast", description: "작은 오른쪽 데이터를 복제" },
+                { title: "Shuffle", description: "양쪽 데이터를 이동" },
+                { title: "Bucket shuffle", description: "한쪽 데이터를 이동" },
+                { title: "Colocate", description: "조인을 위한 Shuffle 없음" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="subqueries-and-ctes"
+        label="서브쿼리와 CTE"
+        title={<>중간 단계의 로직을 <em>명확히 드러내세요</em>.</>}
+        summary="서브쿼리는 관계형 질의를 다른 쿼리 안에 포함합니다. CTE는 중간 결과 집합에 이름을 붙이며 재귀적인 계층 구조도 표현할 수 있습니다."
+        coachTitle="상관관계에 따라 실행 방식의 선택지가 달라집니다."
+        coach={<p>비상관 서브쿼리는 독립적으로 실행할 수 있고 폭넓게 지원됩니다. 상관 서브쿼리는 현재 외부 행에 의존하며 형태에 제약이 있습니다. CTE로 단계를 명확히 할 수 있지만, 그렇다고 결과가 반드시 구체화되는 것은 아닙니다.</p>}
+        calloutTitle="참조 범위를 가까운 단계로 제한하세요"
+        callout={<p>여러 단계에 걸친 깊은 상관 참조는 피하세요. 명시적 조인이나 이름을 붙인 단계로 의존 관계를 더 쉽게 최적화하고 검토할 수 있다면 그 방식을 사용하세요.</p>}
+        check={{
+            question: "서브쿼리가 상관 서브쿼리가 되는 조건은 무엇인가요?",
+            options: ["외부 쿼리의 열을 참조한다", "ORDER BY를 포함한다"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 결과가 외부 쿼리의 현재 행이나 범위에 따라 달라집니다.",
+            incorrectFeedback: "ORDER BY 자체가 상관관계를 만들지는 않습니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="서브쿼리와 CTE의 역할"
+            leftTitle="서브쿼리"
+            leftLead="다른 표현식 안에 값, 집합 또는 관계를 중첩합니다."
+            leftItems={["스칼라 또는 여러 행의 결과", "상관 또는 독립", "존재 여부 검사에 유용"]}
+            rightTitle="CTE"
+            rightLead="주요 문 앞에서 쿼리 단계에 이름을 붙입니다."
+            rightItems={["가독성 향상", "재사용 가능한 논리적 단계", "재귀 표현 가능"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="multidimensional-analysis"
+        label="다차원 SQL"
+        title={<>여러 집계 수준을 <em>하나의 문에서 계산하세요</em>.</>}
+        summary="GROUPING SETS는 지정한 그룹 조합을 선택하고, ROLLUP은 계층별 소계를 추가하며, CUBE는 모든 조합을 생성합니다."
+        coachTitle="조합이 많을수록 작업량도 늘어납니다."
+        coach={<p>필요한 집계 수준을 알고 있다면 GROUPING SETS를 사용하세요. 연도 → 월 → 일처럼 단계적으로 내려가는 계층에는 ROLLUP을, 모든 차원 조합이 유용할 때만 CUBE를 사용하세요.</p>}
+        calloutTitle="소계의 NULL을 구분하세요"
+        callout={<p>GROUPING 또는 GROUPING_ID를 사용해 집계 과정에서 생성된 NULL과 원본 데이터에 이미 있던 NULL을 구분하세요.</p>}
+        check={{
+            question: "연도 → 월 → 일 계층에 가장 적합한 연산자는 무엇인가요?",
+            options: ["ROLLUP", "CROSS JOIN"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. ROLLUP은 계층별 소계 수준을 자연스럽게 표현합니다.",
+            incorrectFeedback: "CROSS JOIN은 행 쌍을 만들 뿐 집계 수준을 정의하지 않습니다.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 다차원 집계 연산자"
+            columns={3}
+            items={[
+                { tag: 'SET', title: "GROUPING SETS", description: "명시적으로 요청한 그룹 조합만 계산합니다." },
+                { tag: 'TREE', title: "ROLLUP", description: "순서가 있는 차원 계층을 따라 소계를 추가합니다." },
+                { tag: 'ALL', title: "CUBE", description: "차원 간 가능한 모든 그룹 조합을 계산합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="window-functions"
+        label="윈도 함수"
+        title={<>주변 행을 분석하면서도 <em>행을 합치지 마세요</em>.</>}
+        summary="윈도 함수는 개별 행을 유지하면서 순위, 오프셋, 누적 집계, 동순위 행을 고려한 계산 결과를 추가합니다."
+        coachTitle="파티션, 정렬, 프레임은 각각 다른 역할을 합니다."
+        coach={<p>PARTITION BY는 계산 그룹을 나누고, ORDER BY는 순서와 동순위 행을 정하며, 프레임은 현재 결과에 기여하는 행을 정의합니다.</p>}
+        calloutTitle="ROWS와 RANGE 비교"
+        callout={<p>ROWS는 물리적인 행 위치를 기준으로 합니다. RANGE는 정렬 값이 같은 행을 묶으므로 값이 반복되면 예상보다 많은 행이 포함될 수 있습니다.</p>}
+        check={{
+            question: "누적 합계의 계산 순서를 정의하는 절은 무엇인가요?",
+            options: ["윈도 안의 ORDER BY", "테이블 주석"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 윈도의 정렬 순서가 계산 순서를 정의합니다.",
+            incorrectFeedback: "테이블 주석은 분석 계산의 정렬 순서에 영향을 주지 않습니다.",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="윈도 함수 정의"
+            focusIndex={2}
+            items={[
+                { title: "파티션", description: "계산 그룹 구분" },
+                { title: "정렬", description: "동순위 행의 순서 결정" },
+                { title: "프레임", description: "계산에 포함할 행 선택" },
+                { title: "함수", description: "순위, 오프셋, 집계" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="extensibility-and-types"
+        label="함수와 타입"
+        title={<>SQL 확장은 내장 함수로 표현할 수 없는 <em>로직이 있을 때만 사용하세요</em>.</>}
+        summary="별칭 함수는 마이그레이션을 간소화하고, Java와 Python UDF는 사용자 정의 계산을 추가하며, 복합 타입은 중첩된 값도 쿼리할 수 있게 합니다."
+        coachTitle="확장 기능을 사용하면 관리할 책임도 늘어납니다."
+        coach={<p>최적화와 이식성을 위해 내장 함수를 우선 사용하세요. 익숙한 함수 형식을 연결할 때는 별칭 함수를, 관리 가능한 사용자 정의 실행에는 Java를, 생태계의 이점이 실행 비용을 상쇄할 때는 Python을 사용하세요. ARRAY, MAP, STRUCT, JSON의 데이터 구조는 신중하게 설계하세요.</p>}
+        calloutTitle="운영 환경 점검 목록"
+        callout={<p>사용자 코드는 버전을 관리하고, 보안을 적용하고, 테스트하고, 모니터링하세요. 타입 매핑, NULL 처리, 결정성, 리소스 제한, 관련된 모든 노드에서의 배포 상태를 확인하세요.</p>}
+        check={{
+            question: "지원되는 데이터 변환에는 보통 무엇을 먼저 선택해야 하나요?",
+            options: ["Doris 내장 함수", "새 외부 UDF"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 내장 함수는 최적화와 운영 측면에서 가장 명확한 선택지입니다.",
+            incorrectFeedback: "UDF를 사용하면 배포와 실행 환경을 관리해야 합니다. 기존 기능으로 해결할 수 없을 때 사용하세요.",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 확장 기능 선택지"
+            columns={4}
+            items={[
+                { tag: 'AKA', title: "별칭 함수", description: "호환되는 이름이나 재사용할 표현식에 연결합니다." },
+                { tag: 'JVM', title: "Java UDF", description: "스칼라, 집계, 윈도 또는 테이블 로직을 구현합니다." },
+                { tag: 'PY', title: "Python UDF", description: "Python 생태계의 이점이 추가 비용을 상쇄할 때 Python 로직을 사용합니다." },
+                { tag: 'NEST', title: "복합 타입", description: "배열, 맵, 구조체, JSON을 먼저 평탄화하지 않고 쿼리합니다." },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="materialized-views"
+        label="구체화된 뷰"
+        title={<>쿼리가 <em>자주 반복하는 작업을 미리 계산하세요</em>.</>}
+        summary="동기식 구체화된 뷰는 강한 일관성을 유지하며 단일 테이블 쿼리를 가속합니다. 비동기식 뷰는 새로고침을 관리하면서 복잡한 다중 테이블 결과를 지원합니다."
+        coachTitle="데이터의 최신성과 쿼리의 복잡도에 따라 뷰 유형을 선택하세요."
+        coach={<p>기본 테이블에 쓴 내용을 따라가야 하는 지원 대상 프로젝션과 집계에는 동기식 뷰를 사용하세요. 예약 또는 요청 시 새로고침을 허용할 수 있다면 조인, 스타 스키마, 비용이 큰 변환에는 비동기식 뷰를 사용하세요.</p>}
+        calloutTitle="투명한 재작성"
+        callout={<p>애플리케이션은 계속 기본 테이블을 쿼리하고, 옵티마이저는 호환되는 구체화된 뷰를 선택할 수 있습니다. EXPLAIN으로 재작성 여부를 확인하세요.</p>}
+        check={{
+            question: "여러 테이블을 사용하는 스타 스키마의 ROLLUP에는 어떤 뷰 유형이 적합한가요?",
+            options: ["비동기식 구체화된 뷰", "단일 테이블 동기식 뷰"],
+            correctIndex: 0,
+            correctFeedback: "맞습니다. 비동기식 뷰는 복잡한 다중 테이블 정의를 지원합니다.",
+            incorrectFeedback: "동기식 구체화된 뷰는 지원되는 단일 테이블 형태로 제한됩니다.",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="동기식 및 비동기식 구체화된 뷰"
+            leftTitle="동기식 MV"
+            leftLead="기본 데이터와 함께 유지되는 단일 테이블 쿼리 가속 기능입니다."
+            leftItems={["강한 일관성", "투명한 재작성", "제한된 쿼리 형태"]}
+            rightTitle="비동기식 MV"
+            rightLead="정책에 따라 새로고침되는 유연한 저장 결과입니다."
+            rightItems={["다중 테이블 정의", "예약 또는 수동 새로고침", "데이터의 최신성 관리 필요"]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

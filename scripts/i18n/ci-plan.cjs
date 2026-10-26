@@ -21,6 +21,7 @@ const maintenanceNotes = /^translations\/[^/]+\.md$/;
 // through native metadata plus representative builds, like other known shared
 // language inputs. Unknown translation configuration still requires full CI.
 const maintenanceConfig = file => {
+    if (file === 'translations/config.json') return true;
     const match=file.match(/^translations\/(?:scope|glossary)\/([^/]+)\.json$/);
     return !!match && localeRegistry.some(locale=>locale.optional&&locale.code===match[1]);
 };

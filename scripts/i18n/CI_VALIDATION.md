@@ -32,6 +32,10 @@ and selects representative real builds. Combining these known inputs with a
 landing-page translation no longer upgrades it to a full publication build.
 Other unknown JSON inputs still require full validation.
 
+`translations/config.json` is also a known shared language input. It is checked
+by `check-configuration.cjs --all` before representative five-language builds.
+Unknown JSON files alongside it still require full validation.
+
 The sampling adapter, native content and publishing/Apache fixtures run only
 when their own implementation changes. Document, dictionary and translation-state
 edits retain content admission and real sampled compilation without rerunning

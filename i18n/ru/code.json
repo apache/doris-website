@@ -8620,5 +8620,59 @@
   },
   "blog.search.noResults": {
     "message": "Нет статей, соответствующих запросу и категории."
+  },
+  "course.lesson.expandModules": {
+    "message": "Развернуть модули курса"
+  },
+  "course.lesson.collapseModules": {
+    "message": "Свернуть модули курса"
+  },
+  "course.lesson.reference": {
+    "message": "Справочная документация"
+  },
+  "course.lesson.exit": {
+    "message": "Выйти из урока"
+  },
+  "course.lesson.modulesAria": {
+    "message": "Модули Doris 101"
+  },
+  "course.lesson.modules": {
+    "message": "Модули курса"
+  },
+  "course.lesson.moduleNumber": {
+    "message": "Модуль {number}"
+  },
+  "course.lesson.baseline": {
+    "message": "Базовая версия: {baseline}"
+  },
+  "course.lesson.progress": {
+    "message": "Прогресс урока"
+  },
+  "course.lesson.coachNote": {
+    "message": "Подсказка"
+  },
+  "course.lesson.chooseAnswer": {
+    "message": "Выберите ответ, чтобы проверить понимание."
+  },
+  "course.lesson.overview": {
+    "message": "← Обзор курса"
+  },
+  "course.lesson.previous": {
+    "message": "← Предыдущий раздел"
+  },
+  "course.lesson.units": {
+    "message": "Разделы урока"
+  },
+  "course.lesson.openUnit": {
+    "message": "Открыть раздел {number}: {label}"
+  },
+  "course.lesson.nextModule": {
+    "message": "Следующий модуль: {title} →"
+  },
+  "course.lesson.finish": {
+    "message": "Завершить курс →"
+  },
+  "course.lesson.continue": {
+    "message": "Далее →"
   }
 }

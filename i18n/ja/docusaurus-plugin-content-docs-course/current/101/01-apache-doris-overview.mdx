@@ -1,0 +1,294 @@
+---
+title: Apache Doris の概要
+description: データの構成、ストレージモデル、アーキテクチャ、クエリ実行、最適化を扱う9つの学習ユニットを通して、Apache Doris の仕組みを理解します。
+slug: /101/01-apache-doris-overview
+sidebar_position: 1
+keywords:
+  - Apache Doris 101
+  - Apache Doris のアーキテクチャ
+  - データモデル
+  - クエリ実行
+  - クエリ最適化
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLayerStack,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={1}
+    title="Apache Doris の概要"
+    readingTime="10–15 分"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/features-architecture/system-architecture"
+>
+    <CourseLessonUnit
+        id="data-organization"
+        label="データの構成"
+        title={<>Doris はデータをどのように <em>構成</em> するのか？</>}
+        summary="まず論理的な階層を押さえます。次に、テーブルがクラスター内でどのように分割・分散されるかを見ていきます。"
+        coachTitle="テーブルは、論理的な構成がストレージ上の配置につながる場所です。"
+        coach={
+            <p>
+                Catalog はデータソースを特定し、データベースは論理的な境界を作り、テーブルはスキーマとプロパティを定義します。テーブル内では、パーティションがデータの範囲を分け、バケットが並列処理のためにデータを分散します。
+            </p>
+        }
+        calloutTitle="この違いを押さえる"
+        callout={<p>パーティションが答えるのは「どのデータ範囲か？」、バケットが答えるのは「どこに、どのように分散するか？」です。</p>}
+        check={{
+            question: "日付範囲によるプルーニングを可能にするのはどの層ですか？",
+            options: ["バケット", "パーティション"],
+            correctIndex: 1,
+            correctFeedback: "正解です。パーティションは、Doris が除外できる論理的な範囲を定義します。",
+            incorrectFeedback: "惜しい。バケットは行を分散し、パーティションは論理的な範囲を定義します。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のデータ構成の階層"
+            focusIndex={2}
+            items={[
+                { title: "Catalog", description: "データソース" },
+                { title: "データベース", description: "業務上の境界" },
+                { title: "テーブル", description: "スキーマとプロパティ" },
+                { title: "パーティション", description: "論理的な範囲" },
+                { title: "バケット", description: "物理的な分散" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="columnar-storage"
+        label="列指向ストレージ"
+        title={<>値を <em>列ごとに保存するのはなぜか</em>?</>}
+        summary="分析クエリでは、多数の行にまたがる少数の列だけを参照することがよくあります。列指向ストレージなら、Doris はクエリに必要なデータだけを読み取り、処理できます。"
+        coachTitle="列指向の配置は無駄な処理を減らします。"
+        coach={<p>同じ列の値は型が同じで、分布も似ていることがよくあります。そのため、エンコーディング、圧縮、CPU キャッシュの利用効率、バッチ処理が改善します。</p>}
+        calloutTitle="基本的なイメージ"
+        callout={<p>行指向ストレージはレコード全体をまとめて保存します。列指向ストレージは同じフィールドの値をまとめて保存します。</p>}
+        check={{
+            question: "クエリが 80 列中 3 列を読み取る場合、主な利点は何ですか？",
+            options: ["不要な値の読み取りを減らせる", "テーブルのレプリカが増える"],
+            correctIndex: 0,
+            correctFeedback: "正解です。Doris は、関係のない列のデータをほとんど読み取らずに済みます。",
+            incorrectFeedback: "レプリカは可用性を高めます。列指向の配置は主に不要な I/O を減らします。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="列指向ストレージの利点"
+            columns={3}
+            items={[
+                { tag: 'I/O', title: "読み取り量を減らす", description: "クエリが参照する列だけをスキャンします。" },
+                { tag: 'ZIP', title: "圧縮効率を高める", description: "型や値の傾向が似ているデータは、コンパクトにエンコードしやすくなります。" },
+                { tag: 'CPU', title: "バッチ単位で処理する", description: "連続したベクトルはキャッシュの利用効率を高め、SIMD を利用可能にします。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="table-models"
+        label="テーブルモデル"
+        title={<>キーが <em>重複するとどうなるのか</em>?</>}
+        summary="テーブルモデルは、Doris がすべての行を保持するか、値を集約するか、Key ごとに一つの論理行を維持するかを決めます。"
+        coachTitle="データロードの前に、行をどう扱うか決めます。"
+        coach={<p>Duplicate Key は変更されない明細データに適し、Aggregate Key は定義済みの事前集約結果を保持します。Unique Key は UPSERT 方式で更新されるレコードに対応します。</p>}
+        calloutTitle="運用上のルール"
+        callout={<p>作成後にテーブルモデルは変更できません。選択する前に、必要な更新動作を確認してください。</p>}
+        check={{
+            question: "顧客プロフィールの CDC 更新に適したモデルはどれですか？",
+            options: ["Duplicate Key", "Aggregate Key", "Unique Key"],
+            correctIndex: 2,
+            correctFeedback: "正解です。Unique Key は Key ごとに一つの論理行を維持し、UPSERT の動作に対応します。",
+            incorrectFeedback: "もう一度考えてみましょう。更新されるレコードには、Key ごとに現在の状態を表す一つの論理行が必要です。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のテーブルモデル"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: "Duplicate Key", description: "イベントの明細やログについて、入力されたすべての行を保持します。" },
+                { tag: 'AGG', title: "Aggregate Key", description: "定義された集約関数を使って Value 列を集約します。" },
+                { tag: 'UNI', title: "Unique Key", description: "更新や CDC のために、Key ごとに一つの論理行を維持します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="integrated-architecture"
+        label="一体型アーキテクチャ"
+        title={<>従来型の <em>FE + BE</em> クラスターを見てみましょう。</>}
+        summary="一体型アーキテクチャでは、Frontend ノードがシステムを調整し、Backend ノードがクエリを実行して、タブレットのレプリカをローカルストレージに永続化します。"
+        coachTitle="制御とデータ処理の役割は分かれています。"
+        coach={<p>FE は認証、SQL の解析と計画、メタデータ、処理の調整を担当します。BE はタブレットを保存し、ベクトル化されたオペレーターを実行し、データをコンパクションし、修復とバランシングにも参加します。</p>}
+        calloutTitle="高可用性"
+        callout={<p>本番環境では、複数の FE ノードと、設定可能な数のタブレットレプリカを使用します。FE のメタデータ複製には BDB JE を使用し、ZooKeeper は必要ありません。</p>}
+        check={{
+            question: "分散クエリプランを作成するのはどのノードですか？",
+            options: ["Frontend", "Backend"],
+            correctIndex: 0,
+            correctFeedback: "正解です。FE が計画と調整を担当し、BE が実行とデータ保存を担当します。",
+            incorrectFeedback: "BE はプランのフラグメントを実行しますが、プランの作成と調整は FE が担当します。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="一体型 Apache Doris のリクエスト処理の流れ"
+            focusIndex={1}
+            items={[
+                { title: "SQL クライアント", description: "MySQL プロトコル" },
+                { title: "Frontend", description: "解析・計画・調整" },
+                { title: "Backend", description: "保存・実行" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="decoupled-architecture"
+        label="分離型アーキテクチャ"
+        title={<>ストレージとコンピュートが <em>分離すると何が変わるのか</em>?</>}
+        summary="永続データを共有ストレージに置いたまま、ステートレスなコンピュートグループを独立してスケールできます。"
+        coachTitle="柔軟なスケーリングには、もう一層の運用管理が伴います。"
+        coach={<p>FE はリクエストと SQL レイヤーのメタデータを扱い、Meta Service はデータレイヤーのメタデータを管理します。ステートレスな BE ノードは、共有の永続ストレージ上のデータを処理しながら、頻繁に使うデータをキャッシュします。</p>}
+        calloutTitle="運用上のトレードオフ"
+        callout={<p>共有ストレージには信頼性が必要です。キャッシュにないデータの読み取りは遅延を増やすことがあり、プラットフォームチームは追加のサービスも運用する必要があります。</p>}
+        check={{
+            question: "データの永続的なコピーはどこにありますか？",
+            options: ["BE のキャッシュ内のみ", "共有ストレージ内"],
+            correctIndex: 1,
+            correctFeedback: "正解です。コンピュートノードはデータをキャッシュし、共有ストレージが永続的なコピーを保持します。",
+            incorrectFeedback: "BE のキャッシュはアクセスを高速化しますが、永続ストレージの層ではありません。",
+        }}
+    >
+        <CourseLayerStack
+            ariaLabel="分離型 Apache Doris アーキテクチャの各層"
+            items={[
+                { title: "SQL とメタデータの層", description: "FE が SQL を処理し、Meta Service がデータレイヤーのメタデータを管理します。" },
+                { title: "コンピュートグループ", description: "ステートレスな BE ノードが処理を実行し、頻繁に使うデータをキャッシュします。" },
+                { title: "共有ストレージ", description: "オブジェクトストレージ、またはサポート対象の分散ファイルシステムにデータを永続化します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-architecture"
+        label="アーキテクチャの選択"
+        title={<>選択の出発点は制約条件。 <em>新しさではない</em>.</>}
+        summary="一体型と分離型の構成は、それぞれ異なる運用環境に適しています。どちらか一方が常に優れているわけではありません。"
+        coachTitle="シンプルさと柔軟なスケーリングでは、重視する点が異なります。"
+        coach={<p>通常は一体型から始めるほうが簡単です。共有ストレージ、プラットフォームチームによる運用、独立したスケーリング、分離されたコンピュートグループが実際に必要なら、分離型が適しています。</p>}
+        calloutTitle="判断の基準"
+        callout={<p>新しいという理由だけで分離型アーキテクチャを選ばないでください。増える構成要素が、具体的な制約の解決に役立つ必要があります。</p>}
+        check={{
+            question: "ローカルディスクを利用でき、コンピュートとストレージを一緒にスケールできる場合、どちらから始めますか？",
+            options: ["一体型アーキテクチャ", "分離型アーキテクチャ"],
+            correctIndex: 0,
+            correctFeedback: "正解です。その条件には、よりシンプルな一体型アーキテクチャが適しています。",
+            incorrectFeedback: "独立したスケーリングや共有ストレージが必要な場合、分離型が役立ちます。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="一体型と分離型のアーキテクチャの比較"
+            leftTitle="一体型"
+            leftLead="状態を持つ BE ノードが処理を行い、データをローカルに永続化します。"
+            leftItems={["運用が比較的シンプル", "ローカルストレージへのアクセス", "コンピュートとストレージを一緒にスケール"]}
+            rightTitle="分離型"
+            rightLead="ステートレスなコンピュートグループが永続ストレージを共有します。"
+            rightItems={["独立したスケーリング", "ワークロードごとに分離されたコンピュートグループ", "プラットフォームへの依存が増える"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="engine-modules"
+        label="エンジンの主要モジュール"
+        title={<>二つのエンジンが連携し、 <em>処理量を減らして高速化する</em>.</>}
+        summary="ストレージエンジンはデータとアクセス経路を構成します。クエリエンジンは SQL を分散・ベクトル化されたパイプラインに変換します。"
+        coachTitle="最適化は実行前から始まります。"
+        coach={<p>ソートキー、パーティション、インデックス、テーブルモデルによって、アクセスが必要なデータを減らします。MPP、ベクトル化、Pipeline スケジューリング、オプティマイザーによって、残りのデータを処理するコストを下げます。</p>}
+        calloutTitle="MPP と Pipeline の違い"
+        callout={<p>MPP はノード間に処理を分散します。Pipeline 実行は、各ノード内の CPU コアにオペレーターの処理を割り当てます。</p>}
+        check={{
+            question: "BE ノード間に処理を分散する仕組みはどれですか？",
+            options: ["MPP", "Pipeline スケジューリング"],
+            correctIndex: 0,
+            correctFeedback: "正解です。MPP はノード間の並列処理を実現します。",
+            incorrectFeedback: "Pipeline はノード内の処理を割り当て、MPP はノード間に処理を分散します。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris エンジンの主要モジュール"
+            columns={4}
+            items={[
+                { tag: 'COL', title: "列指向ストレージ", description: "必要な列を読み取り、分析用データを圧縮します。" },
+                { tag: 'IDX', title: "インデックス", description: "Prefix、Min/Max、Bloom、転置インデックスでスキャン対象を絞り込みます。" },
+                { tag: 'MPP', title: "分散処理", description: "クエリ実行を複数の Backend ノードに分割します。" },
+                { tag: 'OPT', title: "オプティマイザー", description: "ルール、コスト、履歴に基づく戦略を適用します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="query-execution"
+        label="クエリ実行"
+        title={<>SQL がテキストから <em>分散パイプラインに至る過程を追う</em>.</>}
+        summary="クエリは検証・最適化された後、フラグメントとインスタンスに分割され、複数の BE ノードで実行されます。最後に結果がまとめられます。"
+        coachTitle="フラグメントは処理内容を定義し、インスタンスがそれを実行します。"
+        coach={<p>フラグメントは分散プランの論理的な一部分です。インスタンスは BE 上で動くその物理的な実行単位です。データの再分散が必要な場合、Exchange オペレーターがインスタンス間で行を転送します。</p>}
+        calloutTitle="ベクトル化実行"
+        callout={<p>オペレーターは行を一つずつ処理する代わりに列のバッチを処理し、行ごとのオーバーヘッドを減らして CPU の利用効率を高めます。</p>}
+        check={{
+            question: "フラグメントのインスタンス間で行を転送するのは何ですか？",
+            options: ["Exchange オペレーター", "Catalog"],
+            correctIndex: 0,
+            correctFeedback: "正解です。プランでデータの再分散が必要なとき、Exchange が行を転送します。",
+            incorrectFeedback: "Catalog はデータソースを示し、Exchange は分散プランのインスタンス間を接続します。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris のクエリ実行段階"
+            focusIndex={2}
+            items={[
+                { title: "解析", description: "SQL を検証" },
+                { title: "計画", description: "書き換えとコスト評価" },
+                { title: "フラグメント", description: "分散処理を分割" },
+                { title: "実行", description: "ベクトル化されたパイプラインを実行" },
+                { title: "返却", description: "結果を結合" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="optimization-recap"
+        label="最適化と振り返り"
+        title={<>最も速く終わる処理は、Doris が <em>実行せずに済ませられる処理</em>.</>}
+        summary="Doris は事前計算、論理的な書き換え、統計情報に基づく計画、実行時フィルタリングを組み合わせ、実行前と実行中の両方で処理対象のデータを減らします。"
+        coachTitle="最適化は複数の段階で行われます。"
+        coach={<p>マテリアライズドビューは繰り返しの計算を置き換え、RBO はプランを簡素化し、CBO は推定コストを比較します。実行時フィルタは JOIN 中に行を早い段階で除外します。</p>}
+        calloutTitle="次のレッスンの前に"
+        callout={<p>データ構成の階層、FE と BE の役割分担、二つのアーキテクチャの選択肢、そして計画から分散実行までの流れを振り返っておきましょう。</p>}
+        check={{
+            question: "CBO が複数のプランを正確に比較するには、何が役立ちますか？",
+            options: ["テーブルと列の実態を反映した統計情報", "SQL コメントを増やすこと"],
+            correctIndex: 0,
+            correctFeedback: "正解です。最新の統計情報は、カーディナリティとコストの推定精度を高めます。",
+            incorrectFeedback: "コメントは人が SQL を理解する助けになりますが、CBO には実態を反映した統計情報が必要です。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris のクエリ最適化の各層"
+            columns={4}
+            items={[
+                { tag: 'MV', title: "マテリアライズドビュー", description: "クエリの書き換えによって、事前計算された結果を再利用します。" },
+                { tag: 'RBO', title: "ルールベース", description: "決定的な論理変換を適用します。" },
+                { tag: 'CBO', title: "コストベース", description: "統計情報を使って物理プランを比較します。" },
+                { tag: 'RF', title: "実行時フィルタ", description: "フィルタをスキャン側へ押し下げ、行を早い段階で除外します。" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

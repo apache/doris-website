@@ -10,6 +10,8 @@ import React, {
     useState,
 } from 'react';
 import Link from '@docusaurus/Link';
+import Translate, {translate} from '@docusaurus/Translate';
+import {useHistory} from '@docusaurus/router';
 import { COURSE_101_MODULES } from './courseModules';
 import './CourseLesson.scss';
 
@@ -202,6 +204,7 @@ export function CourseLessonPlayer({
     children,
 }: CourseLessonPlayerProps): JSX.Element {
     const units = Children.toArray(children).filter(isValidElement) as ReactElement<CourseLessonUnitProps>[];
+    const history = useHistory();
     const unitIds = useMemo(() => units.map(unit => unit.props.id), [children]);
     const [activeUnit, setActiveUnit] = useState(0);
     const [railCollapsed, setRailCollapsed] = useState(false);
@@ -212,6 +215,9 @@ export function CourseLessonPlayer({
     const nextModule = COURSE_101_MODULES[moduleNumber];
     const activeUnitProps = units[activeUnit]?.props;
     const lastUnit = activeUnit === units.length - 1;
+    const railToggleLabel = railCollapsed
+        ? translate({id: 'course.lesson.expandModules', message: 'Expand course modules'})
+        : translate({id: 'course.lesson.collapseModules', message: 'Collapse course modules'});
 
     useEffect(() => {
         const syncFromLocation = () => setActiveUnit(unitIndexFromLocation(unitIds));
@@ -252,9 +258,8 @@ export function CourseLessonPlayer({
     const selectUnit = (index: number) => {
         if (index < 0 || index >= units.length || index === activeUnit) return;
         setActiveUnit(index);
-        if (typeof window !== 'undefined') {
-            window.history.pushState(null, '', `#${unitIds[index]}`);
-        }
+        const {pathname, search} = history.location;
+        history.push({pathname, search, hash: `#${unitIds[index]}`});
     };
 
     return (
@@ -268,21 +273,21 @@ export function CourseLessonPlayer({
                 </div>
                 <div className="course-player__top-actions">
                     <span>{readingTime}</span>
-                    <Link to={referenceHref}>Reference docs</Link>
-                    <Link className="course-player__exit" to="/course">Exit lesson</Link>
+                    <Link to={referenceHref}><Translate id="course.lesson.reference">Reference docs</Translate></Link>
+                    <Link className="course-player__exit" to="/course"><Translate id="course.lesson.exit">Exit lesson</Translate></Link>
                 </div>
             </header>
 
             <div className="course-player__shell">
-                <aside className="course-player__rail" aria-label="Doris 101 modules">
+                <aside className="course-player__rail" aria-label={translate({id: 'course.lesson.modulesAria', message: 'Doris 101 modules'})}>
                     <div className="course-player__rail-head">
-                        <p className="course-player__rail-label">Course modules</p>
+                        <p className="course-player__rail-label"><Translate id="course.lesson.modules">Course modules</Translate></p>
                         <button
                             className="course-player__rail-toggle"
                             type="button"
                             aria-expanded={!railCollapsed}
-                            aria-label={railCollapsed ? 'Expand course modules' : 'Collapse course modules'}
-                            title={railCollapsed ? 'Expand course modules' : 'Collapse course modules'}
+                            aria-label={railToggleLabel}
+                            title={railToggleLabel}
                             onClick={toggleRail}
                         >
                             <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -341,14 +346,14 @@ export function CourseLessonPlayer({
                 <main className="course-player__learning">
                     <div className="course-player__learning-head">
                         <div>
-                            <span>Module {String(moduleNumber).padStart(2, '0')}</span>
+                            <span>{translate({id: 'course.lesson.moduleNumber', message: 'Module {number}'}, {number: String(moduleNumber).padStart(2, '0')})}</span>
                             <strong>{activeUnitProps?.label}</strong>
                         </div>
-                        <span className="course-player__baseline">Baseline: {baseline}</span>
+                        <span className="course-player__baseline">{translate({id: 'course.lesson.baseline', message: 'Baseline: {baseline}'}, {baseline})}</span>
                         <div
                             className="course-player__progress"
                             role="progressbar"
-                            aria-label="Lesson progress"
+                            aria-label={translate({id: 'course.lesson.progress', message: 'Lesson progress'})}
                             aria-valuemin={1}
                             aria-valuemax={units.length}
                             aria-valuenow={activeUnit + 1}
@@ -381,7 +386,7 @@ export function CourseLessonPlayer({
                                     </div>
 
                                     <aside className="course-player__coach">
-                                        <span className="course-player__coach-label">Coach note</span>
+                                        <span className="course-player__coach-label"><Translate id="course.lesson.coachNote">Coach note</Translate></span>
                                         <h3>{props.coachTitle}</h3>
                                         <div className="course-player__coach-copy">{props.coach}</div>
                                         {props.callout && (
@@ -409,7 +414,7 @@ export function CourseLessonPlayer({
                                                 className={answered ? (correct ? 'course-player__feedback--correct' : 'course-player__feedback--retry') : undefined}
                                                 aria-live="polite"
                                             >
-                                                {answered ? (correct ? props.check.correctFeedback : props.check.incorrectFeedback) : 'Choose an answer to check your understanding.'}
+                                                {answered ? (correct ? props.check.correctFeedback : props.check.incorrectFeedback) : <Translate id="course.lesson.chooseAnswer">Choose an answer to check your understanding.</Translate>}
                                             </p>
                                         </div>
                                     </aside>
@@ -420,18 +425,18 @@ export function CourseLessonPlayer({
 
                     <footer className="course-player__controls">
                         {activeUnit === 0 ? (
-                            <Link className="course-player__previous" to="/course">← Course overview</Link>
+                            <Link className="course-player__previous" to="/course"><Translate id="course.lesson.overview">← Course overview</Translate></Link>
                         ) : (
                             <button className="course-player__previous" type="button" onClick={() => selectUnit(activeUnit - 1)}>
-                                ← Previous unit
+                                <Translate id="course.lesson.previous">← Previous unit</Translate>
                             </button>
                         )}
-                        <div className="course-player__dots" aria-label="Lesson units">
+                        <div className="course-player__dots" aria-label={translate({id: 'course.lesson.units', message: 'Lesson units'})}>
                             {units.map((unit, index) => (
                                 <button
                                     type="button"
                                     className={index === activeUnit ? 'course-player__dot--active' : undefined}
-                                    aria-label={`Open unit ${index + 1}: ${unit.props.label}`}
+                                    aria-label={translate({id: 'course.lesson.openUnit', message: 'Open unit {number}: {label}'}, {number: index + 1, label: unit.props.label})}
                                     aria-current={index === activeUnit ? 'step' : undefined}
                                     onClick={() => selectUnit(index)}
                                     key={unit.props.id}
@@ -440,11 +445,11 @@ export function CourseLessonPlayer({
                         </div>
                         {lastUnit ? (
                             <Link className="course-player__next" to={nextModule?.href ?? '/course'}>
-                                {nextModule ? `Next module: ${nextModule.shortTitle} →` : 'Finish course →'}
+                                {nextModule ? translate({id: 'course.lesson.nextModule', message: 'Next module: {title} →'}, {title: nextModule.shortTitle}) : <Translate id="course.lesson.finish">Finish course →</Translate>}
                             </Link>
                         ) : (
                             <button className="course-player__next" type="button" onClick={() => selectUnit(activeUnit + 1)}>
-                                Continue →
+                                <Translate id="course.lesson.continue">Continue →</Translate>
                             </button>
                         )}
                     </footer>

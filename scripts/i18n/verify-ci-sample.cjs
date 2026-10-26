@@ -4,6 +4,27 @@ const assert = require('node:assert/strict');
 const cheerio = require('cheerio');
 const {verify: verifyStatic} = require('./verify-static.cjs');
 const {createServer} = require('../publish/serve.cjs');
+async function verifyCourseNavigation(page, url) {
+    await page.goto(url + '?courseProbe=1');
+    const progress = page.locator('.course-player [role="progressbar"]');
+    await progress.waitFor();
+    const secondId = await page.locator('.course-player__unit').nth(1).getAttribute('id');
+    await page.locator('.course-player__next').click();
+    await page.waitForFunction(() => document.querySelector('.course-player [role="progressbar"]')?.getAttribute('aria-valuenow') === '2');
+    assert.equal(new URL(page.url()).hash, '#' + secondId);
+    const links = '.language-menu__links a, a.dropdown__link[lang]';
+    assert(await page.locator(links).count() > 1, 'Course language links missing');
+    await page.waitForFunction(selector => [...document.querySelectorAll(selector)].every(anchor => {
+        const target = new URL(anchor.getAttribute('href'), window.location.href);
+        return target.search === window.location.search && target.hash === window.location.hash;
+    }), links);
+    await page.goBack();
+    await page.waitForFunction(() => document.querySelector('.course-player [role="progressbar"]')?.getAttribute('aria-valuenow') === '1');
+    await page.goForward();
+    await page.waitForFunction(() => document.querySelector('.course-player [role="progressbar"]')?.getAttribute('aria-valuenow') === '2');
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('.course-player [role="progressbar"]')?.getAttribute('aria-valuenow') === '2');
+}
 async function verify({root = process.cwd(), browser = true}) {
     const site = path.join(root, '.i18n-build/ci-sample/site');
     const plan = JSON.parse(fs.readFileSync(path.join(root, '.i18n-build/ci-plan.json')));
@@ -72,6 +93,8 @@ async function verify({root = process.cwd(), browser = true}) {
                 const response = await page.goto(origin + row.route);
                 assert.equal(response.status(), 200);
                 await page.locator('html[data-has-hydrated="true"]').waitFor();
+                const course = scope.selected.find(r => r.pluginId === 'course');
+                if (course) await verifyCourseNavigation(page, origin + course.route);
                 assert.deepEqual(errors, [], locale);
                 await context.close();
             }
@@ -113,4 +136,4 @@ if (require.main === module)
         console.error(e);
         process.exitCode = 1;
     });
-module.exports = {verify};
+module.exports = {verify, verifyCourseNavigation};

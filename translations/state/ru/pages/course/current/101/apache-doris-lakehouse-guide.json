@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-lakehouse-guide",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/06-apache-doris-lakehouse-guide.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-course/current/101/06-apache-doris-lakehouse-guide.mdx",
+    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceHash": "54d3c9de122417023a98372aa920a941f0699ded5c467c76c42788380119cf77",
+    "sourceTechnicalHash": "23c05355b6868a8eafd313b8e1eedafda1bb1b62cc64962562dc0954d3c18d8f",
+    "targetHash": "ac82d3c729aa27d672b212205e6d6d3556cd296703a71eefe36fc7bb91c01d9c",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-26T14:25:39.193Z",
+    "glossaryVersion": "1"
+  }
+}

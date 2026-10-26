@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-overview",
+    "locale": "zh-CN",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/01-apache-doris-overview.mdx",
+    "targetPath": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/01-apache-doris-overview.mdx",
+    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceHash": "2d17e48d80fdb26f103a42b2eb331cdca70e5162cca95a151e83bdc33edc076e",
+    "sourceTechnicalHash": "726b7fd50f03dfb6ba2d4a9f463ab2fc4a8f393d2714e022be9aa91079e907e8",
+    "targetHash": "a90dd8a971a1ff3f27e4629e5bef46ad37ae69b8e647739d9a7d671fac9d8723",
+    "reviewStatus": "machine",
+    "ownership": "human",
+    "translatedAt": "2026-10-26T13:53:53.469Z",
+    "glossaryVersion": "1"
+  }
+}

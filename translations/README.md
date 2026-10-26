@@ -28,7 +28,7 @@ the default source. A `sourceOverrides` entry identifies `pluginId`, `version`,
 registered by the English docs plugin. A Chinese-only file is reported as
 `unsupported_source_route`; setting an override does not create its route.
 `searchContextLabels` maps a search context path (`docs/dev`, `docs/4.x`,
-`community`) to the label that locale's search page shows; a locale without it
+`community`, `course`) to the label that locale's search page shows; a locale without it
 shows the raw context path.
 
 The translation workflow's `validate` mode selects one exact source page for a
@@ -49,11 +49,18 @@ workflows explicitly enable all three; default local builds still serve English
 and Chinese. Ordinary Russian pages retain Russian URLs and navigation; missing manual prose falls back to English.
 Russian translation runs twice daily and on manual dispatch, as described below.
 
-The Russian scope's `automaticGroups` enables only DEV, 4X and COMMUNITY.
-Native audits still report course/releases and supplemental page groups so
-their existing content and pending work remain visible. They are not sent to a
-model: course/releases activation belongs to the separate expansion task, with
-Release Notes limited to the latest three selected entries. React landing pages
+The ja/ko/ru scopes explicitly enable DEV, 4X, COMMUNITY and COURSE in
+`automaticGroups`. Course bodies use the same source hashes, per-page state,
+manual-edit protection, open-PR reservations and incremental maintenance as the
+other documentation plugins. Existing valid targets are reused. Chinese course
+bodies remain manually maintained; their page records retain machine review
+status and human ownership, without enabling a Chinese translation workflow.
+Course search uses its own localized context and indexes current targets only.
+
+Native audits still report releases and supplemental page groups so
+their existing content remains visible. These groups are not sent to a model.
+Release Notes expansion must pin a historical boundary before admitting future
+new entries; historical files and existing translations stay unchanged. React landing pages
 and weekly reports use their manual page/entry state. Existing candidates from
 earlier expanded runs remain separate pending reviews, not merged coverage.
 The audit's `automaticCounts` and discovery summary report the effective

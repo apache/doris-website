@@ -1,0 +1,232 @@
+---
+title: Apache Doris 表设计指南
+description: 通过表模型、键、分区、分桶和验证等引导式单元，学习实用的 Apache Doris 表设计流程。
+slug: /101/03-apache-doris-table-guide
+sidebar_position: 3
+keywords:
+  - Apache Doris 101
+  - Apache Doris 表设计
+  - 表模型
+  - 分区
+  - 分桶
+hide_title: true
+hide_table_of_contents: true
+pagination_prev: null
+pagination_next: null
+---
+
+import {
+    CourseComparison,
+    CourseConceptFlow,
+    CourseConceptGrid,
+    CourseLessonPlayer,
+    CourseLessonUnit,
+} from '@site/src/components/course/CourseLesson';
+
+<CourseLessonPlayer
+    moduleNumber={3}
+    title="Apache Doris 表设计指南"
+    readingTime="12–18 分钟"
+    baseline="Apache Doris 4.x"
+    referenceHref="/docs/4.x/table-design/overview"
+>
+    <CourseLessonUnit
+        id="design-sequence"
+        label="设计顺序"
+        title={<>根据工作负载的实际情况，做出 <em>四项决策</em>.</>}
+        summary="稳妥的表设计从确定行的语义开始，再依次选择排序键、分区边界和数据的物理分布方式。"
+        coachTitle="按依赖关系依次做决定。"
+        coach={<p>表模型决定相同键值的行如何处理。键列决定排序顺序。分区划定逻辑裁剪和生命周期管理的边界。分桶决定数据分片的分布和并行度。</p>}
+        calloutTitle="编写 DDL 前先想清楚"
+        callout={<p>数据是只追加，还是会更新？查询主要使用哪些筛选条件？每个周期会写入多少数据？哪些列能让数据均匀分布？</p>}
+        check={{
+            question: "应该先决定什么？",
+            options: ["行的语义和表模型", "随意指定的分桶数量"],
+            correctIndex: 0,
+            correctFeedback: "正确——先明确相同键值的含义，再设计物理布局。",
+            incorrectFeedback: "分桶数量属于后续的物理设计决策，需要以表的语义为基础。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 表设计顺序"
+            focusIndex={0}
+            items={[
+                { title: "表模型", description: "相同键值的处理方式" },
+                { title: "排序键", description: "读取局部性" },
+                { title: "分区", description: "数据范围 + 生命周期" },
+                { title: "分桶", description: "数据分片分布" },
+                { title: "验证", description: "大小 + 倾斜 + 执行计划" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-table-model"
+        label="表模型"
+        title={<>相同键值的行究竟 <em>意味着什么</em>?</>}
+        summary="Duplicate 保留每一行；Unique 为每个键保留一条逻辑记录；Aggregate 则使用声明的函数合并值列。"
+        coachTitle="选择表模型，就是确定业务语义。"
+        coach={<p>不可变的事实数据和日志可使用 Duplicate；CDC 和最新状态记录可使用 Unique；如果写入时预聚合能显著减少重复查询计算，可使用 Aggregate。</p>}
+        calloutTitle="创建后难以更改"
+        callout={<p>表模型创建后无法更改。要更换模型，需要新建表并迁移数据。</p>}
+        check={{
+            question: "哪种模型适合只追加的点击流？",
+            options: ["Duplicate Key", "Unique Key", "Aggregate Key"],
+            correctIndex: 0,
+            correctFeedback: "正确——Duplicate Key 会保留每条事件记录。",
+            incorrectFeedback: "只追加的事件流通常需要保留每一条原始记录。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 表模型选择"
+            columns={3}
+            items={[
+                { tag: 'DUP', title: "Duplicate Key", description: "追加事实数据、日志和明细事件，不按键合并。" },
+                { tag: 'UNI', title: "Unique Key", description: "通过 UPSERT 更新可变实体，并保留最新的逻辑记录。" },
+                { tag: 'AGG', title: "Aggregate Key", description: "使用 SUM、MAX、MIN、REPLACE 或相关函数合并指标值。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="design-sort-key"
+        label="排序键"
+        title={<>让存储层能够 <em>利用常用筛选条件</em>.</>}
+        summary="Doris 按键列顺序存储数据，因此排序键的前缀对数据裁剪、压缩和扫描成本影响很大。"
+        coachTitle="筛选频率、选择性和列宽都很重要。"
+        coach={<p>优先放置经常用于筛选且能有效缩小数据范围的列。尽量选择紧凑的定长类型，控制键的宽度，并记住所有键列都排在值列之前。</p>}
+        calloutTitle="用索引补充"
+        callout={<p>对于无法利用排序键前缀的重要筛选条件，可使用倒排索引或其他二级索引。</p>}
+        check={{
+            question: "通常哪种列更适合作为排序键的首列？",
+            options: ["经常用于筛选的日期列或租户键", "很少用于筛选的长描述列"],
+            correctIndex: 0,
+            correctFeedback: "正确——经常使用且选择性高的筛选条件能发挥排序的作用。",
+            incorrectFeedback: "宽而且很少用于筛选的描述列会增加键的开销，却难以帮助裁剪数据。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="有效与低效的排序键"
+            leftTitle="有效的前缀"
+            leftLead="与常用查询条件相匹配的紧凑列。"
+            leftItems={["经常用于筛选", "能有效裁剪数据", "值稳定且列宽适中"]}
+            rightTitle="效果较差的前缀"
+            rightLead="与常见访问路径无关的宽列。"
+            rightItems={["很少用于筛选", "裁剪效果有限", "过早放置长字符串列"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-partitioning"
+        label="分区"
+        title={<>划定可供查询 <em>裁剪的逻辑边界</em>.</>}
+        summary="分区隔离不同的数据范围或值组，支持生命周期管理，也让查询能够跳过无关数据。"
+        coachTitle="分区应服务于数据裁剪和维护。"
+        coach={<p>边界需要严格控制时使用手动分区；需要按计划管理时间窗口时使用动态分区；需要根据写入值自动创建范围或列表时使用自动分区。</p>}
+        calloutTitle="查询需满足的条件"
+        callout={<p>只有查询对分区列施加约束，分区裁剪才有帮助。请用有代表性的 SQL 和 EXPLAIN 验证。</p>}
+        check={{
+            question: "什么条件能让日期分区对查询有用？",
+            options: ["针对日期分区列的查询条件", "更大的 VARCHAR 长度"],
+            correctIndex: 0,
+            correctFeedback: "正确——该查询条件使 Doris 能裁剪掉无关的日期分区。",
+            incorrectFeedback: "列宽不会触发分区裁剪。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="Apache Doris 分区方式"
+            columns={3}
+            items={[
+                { tag: 'MAN', title: "手动分区", description: "显式指定 RANGE 或 LIST 边界，由用户直接控制。" },
+                { tag: 'DYN', title: "动态分区", description: "按计划滚动创建和过期的时间分区。" },
+                { tag: 'AUTO', title: "自动分区", description: "写入时根据数据值创建 RANGE 或 LIST 分区。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="choose-bucketing"
+        label="分桶"
+        title={<>将每个分区划分为便于处理的 <em>数据分片</em>.</>}
+        summary="哈希分桶按键确定数据的存放位置；随机分桶无需分布键，也能将行分散开。"
+        coachTitle="兼顾数据局部性、倾斜程度和并行度。"
+        coach={<p>如果需要让相关数据分布在一起，选择高基数且分布均匀的哈希键。如果没有可靠的键，并且优先考虑写入均衡，则使用随机分布。</p>}
+        calloutTitle="先估算大小，再确定数量"
+        callout={<p>估算每个分区的压缩后数据量，确定合适的数据分片大小，并让数据分片数量与集群资源相匹配。增加分桶数量并不一定会更快。</p>}
+        check={{
+            question: "使用低基数的哈希分桶键，主要风险是什么？",
+            options: ["数据倾斜", "自动演进表结构"],
+            correctIndex: 0,
+            correctFeedback: "正确——不同值太少，可能使数据集中在少数数据分片中。",
+            incorrectFeedback: "分桶影响数据分布，与表结构自动演进无关。",
+        }}
+    >
+        <CourseComparison
+            ariaLabel="哈希分桶与随机分桶对比"
+            leftTitle="哈希分桶"
+            leftLead="相同的键值会按确定的规则映射到数据分片。"
+            leftItems={["选择分布均匀的高基数键", "有利于利用数据分布优化 JOIN", "键选择不当会造成数据倾斜"]}
+            rightTitle="随机分桶"
+            rightLead="无需指定键，也能将行分散开。"
+            rightItems={["便于均匀写入", "没有稳定的键时也适用", "数据局部性较弱"]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="workload-templates"
+        label="工作负载模式"
+        title={<>将各项选择组合成一致的 <em>表设计模式</em>.</>}
+        summary="好的 DDL 应保持内在一致：行的语义、数据裁剪、分布和写入方式都要契合工作负载。"
+        coachTitle="模板是设计的起点，需要验证。"
+        coach={<p>事件表通常使用 Duplicate Key、时间分区和能使数据均匀分布的键。CDC 实体表通常使用 Unique Key 和业务键。只有聚合粒度稳定时，汇总表才适合使用 Aggregate Key。</p>}
+        calloutTitle="用真实的数据特征验证"
+        callout={<p>使用有代表性的数据量、键的基数、筛选方式和更新频率。很小的模拟样本会掩盖数据倾斜和数据分片大小问题。</p>}
+        check={{
+            question: "生产环境中的表设计模板应以什么为依据？",
+            options: ["有代表性的工作负载数据", "尽可能简短的 CREATE TABLE 语句"],
+            correctIndex: 0,
+            correctFeedback: "正确——要根据真实数据和查询模式验证设计选择。",
+            incorrectFeedback: "DDL 简短并不是性能或正确性目标。",
+        }}
+    >
+        <CourseConceptGrid
+            ariaLabel="常见的 Apache Doris 表设计模式"
+            columns={3}
+            items={[
+                { tag: 'LOG', title: "事件分析", description: "保留原始行、按时间裁剪数据，并均衡地并行扫描。" },
+                { tag: 'CDC', title: "最新状态", description: "使用唯一业务键，通过 UPSERT 写入数据。" },
+                { tag: 'KPI', title: "指标汇总", description: "使用稳定的维度和声明的值聚合方式。" },
+            ]}
+        />
+    </CourseLessonUnit>
+
+    <CourseLessonUnit
+        id="validate-table-design"
+        label="验证并优化"
+        title={<>检查 Doris <em>实际建成的表</em>.</>}
+        summary="扩大工作负载规模前，检查分区裁剪、数据分片大小、行分布、查询计划和数据导入表现。"
+        coachTitle="编写 DDL 只是表设计的开始。"
+        coach={<p>使用元数据命令检查分区和数据分片，对比各数据分片的行数与大小以发现倾斜，并结合 EXPLAIN 和 Profile 确认预期的数据裁剪及 JOIN 是否发生。</p>}
+        calloutTitle="常见问题"
+        callout={<p>小数据分片过多会增加调度和 Compaction 开销；大数据分片太少或分布不均，则会限制并行度并形成热点。</p>}
+        check={{
+            question: "如果某个 BE 的工作量远高于其他 BE，应该检查什么？",
+            options: ["数据分片分布和分桶键的数据倾斜情况", "标题中的字母大小写"],
+            correctIndex: 0,
+            correctFeedback: "正确——数据分片放置不均或键值分布不均，往往会导致工作量失衡。",
+            incorrectFeedback: "页面呈现方式不会影响数据的物理分布。",
+        }}
+    >
+        <CourseConceptFlow
+            ariaLabel="Apache Doris 表设计验证流程"
+            focusIndex={3}
+            items={[
+                { title: "导入", description: "有代表性的数据量" },
+                { title: "检查", description: "分区 + 数据分片" },
+                { title: "分析计划", description: "数据裁剪 + 执行计划" },
+                { title: "性能剖析", description: "运行时数据" },
+                { title: "优化", description: "必要时重建" },
+            ]}
+        />
+    </CourseLessonUnit>
+</CourseLessonPlayer>

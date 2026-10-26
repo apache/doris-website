@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-table-guide",
+    "locale": "ru",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/03-apache-doris-table-guide.mdx",
+    "targetPath": "i18n/ru/docusaurus-plugin-content-docs-course/current/101/03-apache-doris-table-guide.mdx",
+    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceHash": "7188a74214096313bd71bc8663d896fe5ad8f984b412a49239930b8fed2cb4d2",
+    "sourceTechnicalHash": "c25bf62b78bb1f0fad182507ba609f4f820567d208a75f7e32bb1d64d73b264f",
+    "targetHash": "33c526cb7d21c7b6a97c84115e03f204af2b2e6038bdb906776b27f54711e38e",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-26T14:20:45.459Z",
+    "glossaryVersion": "1"
+  }
+}

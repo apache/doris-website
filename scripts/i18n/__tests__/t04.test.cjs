@@ -60,12 +60,12 @@ test('publication changes exercise the complete optimized artifact on CI', () =>
 test('A localized index admits only current, reviewed and in-scope native targets', () => {
     const page = (pluginId,version,status='current',indexable=true,locale='ja') => ({pluginId,version,status,indexable,useTarget:true,locale,
         permalink:`/${locale}/${pluginId}/${version}/${status}/${indexable}/`});
-    const pages = [page('default','current'),page('default','4.x'),page('community','current'),
+    const pages = [page('default','current'),page('default','4.x'),page('community','current'),page('course','current'),
         page('default','3.x'),page('default','current','stale_unknown'),page('default','current','current',false)];
     const found = localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages}}}],'ja');
-    assert.deepEqual([...found.values()],['docs/dev','docs/4.x','community']);
+    assert.deepEqual([...found.values()],['docs/dev','docs/4.x','community','course']);
     // Another locale's pages never enter this locale's index.
-    assert.equal(localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages:pages.concat(page('default','current','current',true,'ko'))}}}],'ja').size,3);
+    assert.equal(localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages:pages.concat(page('default','current','current',true,'ko'))}}}],'ja').size,4);
     assert.equal(localizedPages([{name:'docusaurus-plugin-content-docs',content:{translationManifest:{pages}}}],'ko').size,0);
 });
 
