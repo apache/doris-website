@@ -426,10 +426,10 @@ export function HackathonTrackBPage(): JSX.Element {
                             </div>
                             <ul className="hk-task__checklist">
                                 {[
-                                    "The demo section covers every point on your task's checklist and runs top to bottom on an empty Doris; every Expected result is the real output.",
-                                    'The same section is in both copies of the page.',
-                                    'What you found wrong on the page is fixed in the same pull request, or listed in its description.',
-                                    'The pull request is open on apache/doris-website and names your task.',
+                                    translate({id: 'landing.trackB.done.demo', message: "The demo section covers every point on your task's checklist and runs top to bottom on an empty Doris; every Expected result is the real output."}),
+                                    translate({id: 'landing.trackB.done.mirrors', message: 'The same section is in both copies of the page.'}),
+                                    translate({id: 'landing.trackB.done.fixes', message: 'What you found wrong on the page is fixed in the same pull request, or listed in its description.'}),
+                                    translate({id: 'landing.trackB.done.pr', message: 'The pull request is open on apache/doris-website and names your task.'}),
                                 ].map((item, index) => (
                                     <li key={index}>
                                         <label>

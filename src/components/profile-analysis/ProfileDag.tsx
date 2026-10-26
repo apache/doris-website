@@ -71,7 +71,8 @@ function safePlanInfoValue(value: unknown): string | null {
         return String(value);
     }
     if (typeof value === 'boolean') {
-        return value ? 'Yes' : 'No';
+        return value ? translate({id: 'landing.profile.boolean.yes', message: 'Yes'})
+            : translate({id: 'landing.profile.boolean.no', message: 'No'});
     }
     if (Array.isArray(value)) {
         const values = value
@@ -355,7 +356,7 @@ function ProfileDagCanvas({ dag }: { dag: ProfileDagResponse }): JSX.Element {
     );
 
     if (layoutError) {
-        return <div className="profile-dag__message profile-dag__message--error" role="alert">{layoutError}</div>;
+        return <div className="profile-dag__message profile-dag__message--error" role="alert">{localizeProfileMessage(layoutError)}</div>;
     }
     if (nodes.length === 0) {
         return <div className="profile-dag__message"><span className="profile-analysis__spinner" aria-hidden="true" /> {translate({id: "landing.ProfileDag.035", message: "Laying out the execution graph…"})}</div>;

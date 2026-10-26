@@ -6,6 +6,7 @@ import copy from 'copy-to-clipboard';
 import DownloadFormAllRelease from '@site/src/components/download-form/download-form-all-release';
 import DownloadFormArchive from '@site/src/components/download-form/download-form-archive';
 import DownloadFormTools from '@site/src/components/download-form/download-form-tools';
+import {DOWNLOAD_TYPE_LABELS} from '@site/src/components/download-form/download-labels';
 import {
     ACTIVE_HEADS,
     ACTIVE_TOOL_VERSIONS,
@@ -55,7 +56,7 @@ const GUIDES = [
     {
         to: VERSIONING_URL,
         title: translate({id: "landing.DownloadFormNext.001", message: "Which version to choose"}),
-        desc: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.',
+        desc: translate({id: 'landing.download.guide.version', message: 'What X.Y.Z means, how Latest differs from Stable, and which binary fits your CPU.'}),
         icon: (
             <svg {...GUIDE_ICON}>
                 <circle cx="5" cy="4" r="1.8" {...GUIDE_STROKE} />
@@ -68,7 +69,7 @@ const GUIDES = [
     {
         to: UPGRADE_NOTES_URL,
         title: translate({id: "landing.DownloadFormNext.002", message: "Upgrade notes"}),
-        desc: 'Per-version precautions to read before moving a cluster to a new release.',
+        desc: translate({id: 'landing.download.guide.upgrade', message: 'Per-version precautions to read before moving a cluster to a new release.'}),
         icon: (
             <svg {...GUIDE_ICON}>
                 <path d="M9 12.5V3.5M5.5 7 9 3.5 12.5 7" {...GUIDE_STROKE} />
@@ -79,7 +80,7 @@ const GUIDES = [
     {
         to: '#archive',
         title: translate({id: "landing.DownloadFormNext.003", message: "Archived releases"}),
-        desc: 'Older branches receive no further releases of any kind, security patches included.',
+        desc: translate({id: 'landing.download.guide.archive', message: 'Older branches receive no further releases of any kind, security patches included.'}),
         archive: true,
         icon: (
             <svg {...GUIDE_ICON}>
@@ -237,7 +238,7 @@ export default function DownloadFormNext(): JSX.Element {
                                                 key={option}
                                                 disabled={isSource || !available}
                                                 aria-pressed={cpu === option}
-                                                title={available ? undefined : `${translate({id: "landing.DownloadFormNext.007", message: "No "})}${option}${translate({id: "landing.DownloadFormNext.008", message: " build for "})}${version}`}
+                                                title={available ? undefined : translate({id: 'landing.download.unavailableBuild', message: 'No {architecture} build for {version}'}, {architecture: option, version})}
                                                 className={clsx('download-next__seg-item', {
                                                     'is-checked': cpu === option,
                                                     'is-unavailable': !available,
@@ -268,7 +269,7 @@ export default function DownloadFormNext(): JSX.Element {
                                             })}
                                             onClick={() => setDownloadType(option)}
                                         >
-                                            {option}
+                                            {DOWNLOAD_TYPE_LABELS[option]}
                                         </button>
                                     ))}
                                 </div>

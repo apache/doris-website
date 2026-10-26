@@ -6,6 +6,7 @@ import FormSelect from '../form-select/form-select';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import * as semver from 'semver';
 import copy from 'copy-to-clipboard';
+import {DOWNLOAD_TYPE_LABELS} from './download-labels';
 
 interface DownloadFormProps {
     versions: Option[];
@@ -75,6 +76,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
 
     const formBody = (
         <Form
+            validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
             form={form}
             onFinish={val => {
                 const url = getDownloadLinkByCard({
@@ -130,11 +132,11 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 popupExtraClass={popupExtraClass}
                                 options={[
                                     {
-                                        label: DownloadTypeEnum.Binary,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Binary],
                                         value: DownloadTypeEnum.Binary,
                                     },
                                     {
-                                        label: DownloadTypeEnum.Source,
+                                        label: DOWNLOAD_TYPE_LABELS[DownloadTypeEnum.Source],
                                         value: DownloadTypeEnum.Source,
                                     },
                                 ]}
@@ -154,8 +156,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
             </Form.Item>
             {Array.isArray(version) && showArch(version[1]) && (
                 <>
-                    <div
-                        className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                    <button type="button"
+                        className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
                                 version: version,
@@ -164,7 +166,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 type: 'gz',
                             });
                             copy(url);
-                            message.success('Copy Successfully!');
+                            message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                         }}
                     >
                         <span className="mr-2">{translate({id: "landing.downloadformallrelease.008", message: "Copy link"})}</span>
@@ -185,9 +187,9 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                                 fill="var(--brand-primary)"
                             />
                         </svg>
-                    </div>
+                    </button>
                     <div className="flex justify-center mt-4">
-                        <div
+                        <button type="button"
                             className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -200,8 +202,8 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                             }}
                         >
                             ASC
-                        </div>
-                        <div
+                        </button>
+                        <button type="button"
                             className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                             onClick={() => {
                                 const url = getDownloadLinkByCard({
@@ -214,7 +216,7 @@ export default function DownloadFormAllRelease(props: DownloadFormProps) {
                             }}
                         >
                             SHA-512
-                        </div>
+                        </button>
                     </div>
                 </>
             )}

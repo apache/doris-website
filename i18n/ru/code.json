@@ -3781,5 +3781,4796 @@
   },
   "homepage.diagram.storage": {
     "message": "Общее хранилище"
+  },
+  "landing.index.001": {
+    "message": "Подробнее"
+  },
+  "landing.users.category.all": {
+    "message": "Все"
+  },
+  "landing.users.category.finance": {
+    "message": "Финансы"
+  },
+  "landing.users.category.technology": {
+    "message": "Технологии"
+  },
+  "landing.users.category.media": {
+    "message": "Медиа и развлечения"
+  },
+  "landing.users.category.telecom": {
+    "message": "Телекоммуникации и производство"
+  },
+  "landing.users.category.logistics": {
+    "message": "Потребительские товары и логистика"
+  },
+  "landing.users.category.distribution": {
+    "message": "Коммерческие дистрибутивы"
+  },
+  "landing.UsersNext.001": {
+    "message": "Начните путь к аналитике в реальном времени"
+  },
+  "landing.UsersNext.002": {
+    "message": "вместе с"
+  },
+  "landing.UsersNext.003": {
+    "message": "новаторами"
+  },
+  "landing.UsersNext.004": {
+    "message": "Более 10,000 ведущих компаний по всему миру используют Apache Doris."
+  },
+  "landing.UsersNext.005": {
+    "message": "Поделитесь своим опытом"
+  },
+  "landing.UsersNext.006": {
+    "message": "Показать ещё"
+  },
+  "landing.UsersNext.007": {
+    "message": "Apache Doris - Истории пользователей | Аналитика в реальном времени вместе с новаторами"
+  },
+  "landing.UsersNext.008": {
+    "message": "Более 10,000 ведущих компаний по всему миру используют OLAP-СУБД Apache Doris в реальных приложениях: от lakehouse и нерегламентированной аналитики до анализа поведения пользователей."
+  },
+  "landing.downloadformallrelease.001": {
+    "message": "Версия"
+  },
+  "landing.downloadformallrelease.002": {
+    "message": "Версия"
+  },
+  "landing.downloadformallrelease.003": {
+    "message": "Архитектура"
+  },
+  "landing.downloadformallrelease.004": {
+    "message": "Архитектура"
+  },
+  "landing.downloadformallrelease.005": {
+    "message": "Архив tar"
+  },
+  "landing.downloadformallrelease.006": {
+    "message": "Архив tar"
+  },
+  "landing.downloadformallrelease.007": {
+    "message": "Скачать"
+  },
+  "landing.downloadformallrelease.008": {
+    "message": "Копировать ссылку"
+  },
+  "landing.downloadformallrelease.009": {
+    "message": "Загрузки"
+  },
+  "landing.downloadformtools.001": {
+    "message": "Инструменты"
+  },
+  "landing.downloadformtools.002": {
+    "message": "Инструменты"
+  },
+  "landing.downloadformtools.003": {
+    "message": "Версия"
+  },
+  "landing.downloadformtools.004": {
+    "message": "Версия"
+  },
+  "landing.downloadformtools.005": {
+    "message": "Архитектура"
+  },
+  "landing.downloadformtools.006": {
+    "message": "Архитектура"
+  },
+  "landing.downloadformtools.007": {
+    "message": "Версия"
+  },
+  "landing.downloadformtools.008": {
+    "message": "Версия"
+  },
+  "landing.downloadformtools.009": {
+    "message": "Архив tar"
+  },
+  "landing.downloadformtools.010": {
+    "message": "Архив tar"
+  },
+  "landing.downloadformtools.011": {
+    "message": "Команда Docker"
+  },
+  "landing.downloadformtools.012": {
+    "message": "Копировать команду Docker pull"
+  },
+  "landing.downloadformtools.013": {
+    "message": "Копировать"
+  },
+  "landing.downloadformtools.014": {
+    "message": "Скачать"
+  },
+  "landing.downloadformtools.015": {
+    "message": "Копировать ссылку"
+  },
+  "landing.downloadformtools.016": {
+    "message": "Загрузки"
+  },
+  "landing.downloadformarchive.001": {
+    "message": "Скачать архивные версии"
+  },
+  "landing.downloadformarchive.002": {
+    "message": "Проект"
+  },
+  "landing.downloadformarchive.003": {
+    "message": "Проект"
+  },
+  "landing.DownloadFormNext.001": {
+    "message": "Какую версию выбрать"
+  },
+  "landing.DownloadFormNext.002": {
+    "message": "Примечания по обновлению"
+  },
+  "landing.DownloadFormNext.003": {
+    "message": "Архивные релизы"
+  },
+  "download.title": {
+    "message": "Apache Doris - Загрузка | Простое развёртывание в любой среде"
+  },
+  "homepage.banner.subTitle": {
+    "message": "Скачайте готовые бинарные пакеты разных версий и опробуйте Apache Doris. Подключайте любые устройства в любом масштабе и в любой среде."
+  },
+  "landing.DownloadFormNext.004": {
+    "message": "Скачать"
+  },
+  "landing.DownloadFormNext.005": {
+    "message": "Проверенные бинарные пакеты и архивы исходного кода поддерживаемых веток Apache Doris. Для каждого файла доступны подпись и контрольная сумма."
+  },
+  "landing.DownloadFormNext.006": {
+    "message": "Поддерживаемые ветки:"
+  },
+  "download.version": {
+    "message": "Версия"
+  },
+  "download.cpu.model": {
+    "message": "Архитектура"
+  },
+  "landing.DownloadFormNext.007": {
+    "message": "Нет сборки "
+  },
+  "landing.DownloadFormNext.008": {
+    "message": " для "
+  },
+  "download.download.link": {
+    "message": "Архив tar"
+  },
+  "landing.DownloadFormNext.009": {
+    "message": "Как проверить"
+  },
+  "landing.DownloadFormNext.010": {
+    "message": "Скачать"
+  },
+  "landing.DownloadFormNext.011": {
+    "message": "Ссылка для скачивания скопирована"
+  },
+  "landing.DownloadFormNext.012": {
+    "message": "Копировать ссылку для скачивания"
+  },
+  "landing.DownloadFormNext.013": {
+    "message": "Скопировано"
+  },
+  "landing.DownloadFormNext.014": {
+    "message": "Копировать ссылку для скачивания"
+  },
+  "landing.DownloadFormNext.015": {
+    "message": "Ссылка для скачивания скопирована"
+  },
+  "landing.DownloadFormNext.016": {
+    "message": "Поддерживается"
+  },
+  "landing.DownloadFormNext.017": {
+    "message": "Релизы Doris"
+  },
+  "landing.DownloadFormNext.018": {
+    "message": "Doris выпускается в виде архивов исходного кода tar. Для удобства также доступны бинарные архивы. Перед развёртыванием проверьте каждый файл по подписи ASC или контрольной сумме SHA-512."
+  },
+  "landing.DownloadFormNext.019": {
+    "message": "Здесь перечислены все патчи поддерживаемых веток. Патч-релизы совместимы в обоих направлениях, поэтому переход на последний патч своей ветки не требует переноса данных."
+  },
+  "landing.DownloadFormNext.020": {
+    "message": "Примечания к выпуску"
+  },
+  "landing.DownloadFormNext.021": {
+    "message": "Меры предосторожности при обновлении описаны в руководствах:"
+  },
+  "landing.DownloadFormNext.022": {
+    "message": "развёртывание"
+  },
+  "landing.DownloadFormNext.023": {
+    "message": "и"
+  },
+  "landing.DownloadFormNext.024": {
+    "message": "обновление кластера"
+  },
+  "landing.DownloadFormNext.025": {
+    "message": "."
+  },
+  "landing.DownloadFormNext.026": {
+    "message": "Поддерживается"
+  },
+  "landing.DownloadFormNext.027": {
+    "message": "Экосистема Doris"
+  },
+  "landing.DownloadFormNext.028": {
+    "message": "Коннекторы и инструменты для загрузки данных в Doris и чтения из него. Перечислены только поддерживаемые версии. Предыдущие версии коннекторов доступны в разделе"
+  },
+  "landing.DownloadFormNext.029": {
+    "message": "архива"
+  },
+  "landing.DownloadFormNext.030": {
+    "message": "Примечания к выпуску"
+  },
+  "landing.DownloadFormNext.031": {
+    "message": "Другие инструменты"
+  },
+  "landing.DownloadFormNext.032": {
+    "message": "Архивные релизы"
+  },
+  "landing.DownloadFormNext.033": {
+    "message": "Для этих версий больше не выпускаются обновления, в том числе исправления безопасности."
+  },
+  "landing.DownloadFormNext.034": {
+    "message": "Обнаруженные в них уязвимости останутся неисправленными."
+  },
+  "landing.DownloadFormNext.035": {
+    "message": "Руководство по обновлению"
+  },
+  "landing.DownloadFormNext.036": {
+    "message": "Сообщить об уязвимости команде безопасности ASF"
+  },
+  "landing.DownloadFormNext.037": {
+    "message": "Работайте в любой среде"
+  },
+  "landing.DownloadFormNext.038": {
+    "message": "Развёртывайте Doris в удобной среде: на физических серверах, в Kubernetes или в облаке."
+  },
+  "landing.DownloadFormNext.039": {
+    "message": "Варианты развёртывания"
+  },
+  "landing.brandassets.001": {
+    "message": "Логотип Doris - горизонтальный"
+  },
+  "landing.brandassets.002": {
+    "message": "Основной логотип Doris для светлого фона."
+  },
+  "landing.brandassets.003": {
+    "message": "Логотип Doris - вертикальный"
+  },
+  "landing.brandassets.004": {
+    "message": "Логотип Doris с выравниванием по центру для светлого фона."
+  },
+  "landing.brandassets.005": {
+    "message": "Логотип Doris - горизонтальный для тёмного фона"
+  },
+  "landing.brandassets.006": {
+    "message": "Логотип Doris с белой надписью для тёмного фона."
+  },
+  "landing.brandassets.007": {
+    "message": "Логотип Doris - вертикальный для тёмного фона"
+  },
+  "landing.brandassets.008": {
+    "message": "Логотип Doris с белой надписью и выравниванием по центру для тёмного фона."
+  },
+  "landing.brandassets.009": {
+    "message": "Логотип Doris - горизонтальный белый"
+  },
+  "landing.brandassets.010": {
+    "message": "Одноцветный логотип Doris для тёмного фона."
+  },
+  "landing.brandassets.011": {
+    "message": "Логотип Doris - вертикальный белый"
+  },
+  "landing.brandassets.012": {
+    "message": "Одноцветный логотип Doris с выравниванием по центру для тёмного фона."
+  },
+  "landing.brandassets.013": {
+    "message": "Логотип Apache Doris - горизонтальный"
+  },
+  "landing.brandassets.014": {
+    "message": "Основной логотип Apache Doris для светлого фона."
+  },
+  "landing.brandassets.015": {
+    "message": "Логотип Apache Doris - вертикальный"
+  },
+  "landing.brandassets.016": {
+    "message": "Логотип Apache Doris с выравниванием по центру для светлого фона."
+  },
+  "landing.brandassets.017": {
+    "message": "Логотип Apache Doris - горизонтальный для тёмного фона"
+  },
+  "landing.brandassets.018": {
+    "message": "Логотип Apache Doris с белой надписью для тёмного фона."
+  },
+  "landing.brandassets.019": {
+    "message": "Логотип Apache Doris - вертикальный для тёмного фона"
+  },
+  "landing.brandassets.020": {
+    "message": "Логотип Apache Doris с белой надписью и выравниванием по центру для тёмного фона."
+  },
+  "landing.brandassets.021": {
+    "message": "Логотип Apache Doris - горизонтальный белый"
+  },
+  "landing.brandassets.022": {
+    "message": "Одноцветный логотип Apache Doris для тёмного фона."
+  },
+  "landing.brandassets.023": {
+    "message": "Логотип Apache Doris - вертикальный белый"
+  },
+  "landing.brandassets.024": {
+    "message": "Одноцветный логотип Apache Doris с выравниванием по центру для тёмного фона."
+  },
+  "landing.brandassets.025": {
+    "message": "Фирменные материалы - Apache Doris"
+  },
+  "landing.brandassets.026": {
+    "message": "Скачайте официальные логотипы и фирменные SVG-материалы Apache Doris."
+  },
+  "landing.brandassets.027": {
+    "message": "Ресурсы"
+  },
+  "landing.brandassets.028": {
+    "message": "Фирменные материалы"
+  },
+  "landing.brandassets.029": {
+    "message": "Скачайте официальные SVG-материалы Apache Doris для статей, презентаций, мероприятий сообщества, интеграций и других материалов, в которых упоминается проект."
+  },
+  "landing.brandassets.030": {
+    "message": "Apache Doris, Doris и логотип Doris являются товарными знаками The Apache Software Foundation. Используйте эти материалы для ясного и точного обозначения Apache Doris."
+  },
+  "landing.brandassets.031": {
+    "message": " - предпросмотр"
+  },
+  "landing.brandassets.032": {
+    "message": "Скачать"
+  },
+  "landing.HackathonCodeBlock.001": {
+    "message": "Копировать"
+  },
+  "landing.HackathonCodeBlock.002": {
+    "message": "Скопировано"
+  },
+  "landing.hackathonCommon.047": {
+    "message": "и"
+  },
+  "landing.hackathonCommon.072": {
+    "message": "и"
+  },
+  "landing.a1HybridSearch.035": {
+    "message": "и"
+  },
+  "landing.a1HybridSearch.059": {
+    "message": "и"
+  },
+  "landing.a1HybridSearch.065": {
+    "message": "и"
+  },
+  "landing.a1HybridSearch.129": {
+    "message": "вместе с"
+  },
+  "landing.a3LogSearch.027": {
+    "message": "и"
+  },
+  "landing.a3LogSearch.089": {
+    "message": "вместе с"
+  },
+  "landing.a4AgentTraces.080": {
+    "message": "и"
+  },
+  "landing.trackB.028": {
+    "message": "вместе с"
+  },
+  "landing.HackathonTrackBPage.081": {
+    "message": "и"
+  },
+  "landing.AiAnalysisForm.015": {
+    "message": "и"
+  },
+  "landing.events.001": {
+    "message": "Мероприятия"
+  },
+  "landing.events.data.001": {
+    "message": "Следите за новостями сообщества. Общайтесь, учитесь и развивайтесь вместе с нами благодаря сотрудничеству, новым идеям и обмену знаниями!"
+  },
+  "landing.events.002": {
+    "message": "Не хватает мероприятия? Нажмите здесь, чтобы добавить его"
+  },
+  "landing.events.data.002": {
+    "message": "Объединяя озеро данных и базу данных: запросы к Iceberg в реальном времени"
+  },
+  "landing.events.data.003": {
+    "message": "Вебинар Apache Doris"
+  },
+  "landing.events.data.004": {
+    "message": "23 сентября 2025 г., 19:00 EST"
+  },
+  "landing.events.data.005": {
+    "message": "23 сентября 2025 г."
+  },
+  "landing.events.data.006": {
+    "message": "Онлайн"
+  },
+  "landing.events.003": {
+    "message": "На докладе подробно рассмотрим, как Apache Doris поддерживает запросы к таблицам Iceberg в реальном времени, сочетая гибкость и высокую производительность. Эта задача привлекает всё больше внимания в отрасли."
+  },
+  "landing.events.004": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.007": {
+    "message": "Встреча NebulaGraph × Apache Doris: новая парадигма финтеха"
+  },
+  "landing.events.data.008": {
+    "message": "Встреча Apache Doris"
+  },
+  "landing.events.data.009": {
+    "message": "22 августа 2025 г., 13:30–17:00 (GMT+8)"
+  },
+  "landing.events.data.010": {
+    "message": "22 августа 2025 г."
+  },
+  "landing.events.data.011": {
+    "message": "Гонконг, Central, Cotton Tree Drive, 8, Fairmont House, 14-й этаж, залы 4 и 5"
+  },
+  "landing.events.005": {
+    "message": "Совместное мероприятие NebulaGraph и Apache Doris объединяет лидеров отрасли и технических специалистов. Обсудим, как современные графовые и аналитические технологии меняют управление финансовыми рисками, наблюдаемость и соблюдение нормативных требований."
+  },
+  "landing.events.006": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.012": {
+    "message": "Аналитика IoT в реальном времени с Apache Doris"
+  },
+  "landing.events.data.013": {
+    "message": "20 августа 2025 г., 17:00–19:00 PDT"
+  },
+  "landing.events.data.014": {
+    "message": "20 августа 2025 г."
+  },
+  "landing.events.data.015": {
+    "message": "Plug and Play Tech Center, 440 N Wolfe Rd, Sunnyvale, CA 94085"
+  },
+  "landing.events.007": {
+    "message": "Присоединяйтесь к встрече разработчиков EMQ и VeloDB. Узнайте, как создавать масштабируемые конвейеры данных реального времени с MQTT и Apache Doris."
+  },
+  "landing.events.008": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.016": {
+    "message": "Миграция со Snowflake на Apache Doris"
+  },
+  "landing.events.data.017": {
+    "message": "22 июля 2025 г., 11:00–12:00 IST"
+  },
+  "landing.events.data.018": {
+    "message": "22 июля 2025 г."
+  },
+  "landing.events.009": {
+    "message": "Если вы используете Snowflake и рассматриваете переход на открытое ПО ради снижения затрат или большей гибкости, не пропустите следующий вебинар VeloDB!"
+  },
+  "landing.events.010": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.019": {
+    "message": "Apache Doris: быстрая аналитическая и поисковая база данных для эпохи ИИ"
+  },
+  "landing.events.data.020": {
+    "message": "26 июня 2025 г., 19:00–20:00 EDT"
+  },
+  "landing.events.data.021": {
+    "message": "26 июня 2025 г."
+  },
+  "landing.events.011": {
+    "message": "Rayner Chen, председатель PMC Apache Doris и вице-президент по технологиям VeloDB, объяснит, почему Doris спроектирован для эпохи ИИ. Услышьте мнение эксперта, который определяет будущее аналитики реального времени."
+  },
+  "landing.events.012": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.022": {
+    "message": "Знакомство с режимом разделения вычислений и хранения Apache Doris"
+  },
+  "landing.events.data.023": {
+    "message": "27 марта 2025 г., 21:00–22:00 GMT+8"
+  },
+  "landing.events.data.024": {
+    "message": "27 марта 2025 г."
+  },
+  "landing.events.013": {
+    "message": "Председатель PMC Apache Doris подробно расскажет о режиме разделения вычислений и хранения Doris."
+  },
+  "landing.events.014": {
+    "message": "Обложка мероприятия"
+  },
+  "landing.events.data.025": {
+    "message": "Обзор дорожной карты на 2025 год"
+  },
+  "landing.events.data.026": {
+    "message": "Обзор дорожной карты Apache Doris на 2025 год"
+  },
+  "landing.events.data.027": {
+    "message": "20 марта 2025 г., 21:00–22:00 GMT+8"
+  },
+  "landing.events.data.028": {
+    "message": "20 марта 2025 г."
+  },
+  "landing.events.015": {
+    "message": "Присоединяйтесь к обсуждению ключевых направлений развития Apache Doris в 2025 году!"
+  },
+  "landing.events.016": {
+    "message": "Значок адреса"
+  },
+  "landing.events.data.029": {
+    "message": "Doris Summit 2025 | Аналитика и поиск в реальном времени в эпоху ИИ"
+  },
+  "landing.events.data.030": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.017": {
+    "message": "CommunityOverCode Asia 2025"
+  },
+  "landing.events.status.upcoming": {
+    "message": "Предстоит"
+  },
+  "landing.events.status.processing": {
+    "message": "Идёт сейчас"
+  },
+  "landing.events.status.completed": {
+    "message": "Завершено"
+  },
+  "landing.events.018": {
+    "message": "Значок даты"
+  },
+  "landing.events.seo.title": {
+    "message": "Мероприятия сообщества Apache Doris"
+  },
+  "landing.events.seo.description": {
+    "message": "Узнайте о мероприятиях сообщества Apache Doris, технических встречах и вебинарах."
+  },
+  "landing.events.019": {
+    "message": "Язык мероприятия:"
+  },
+  "landing.events.020": {
+    "message": "Английский"
+  },
+  "landing.events.021": {
+    "message": "Китайский"
+  },
+  "landing.events.022": {
+    "message": "Показать ещё"
+  },
+  "landing.roadmap.data.001": {
+    "message": "Узнайте направление развития"
+  },
+  "landing.CommunityRoadmap.001": {
+    "message": "Дорожная карта"
+  },
+  "landing.CommunityRoadmap.002": {
+    "message": "Начните с основных направлений и приоритетов развития Apache Doris."
+  },
+  "landing.roadmap.data.002": {
+    "message": "Задача #60036"
+  },
+  "landing.CommunityRoadmap.003": {
+    "message": "Прочитать дорожную карту Apache Doris на 2026 год на GitHub (откроется в новой вкладке)"
+  },
+  "landing.roadmap.data.003": {
+    "message": "Следите за текущей работой"
+  },
+  "landing.CommunityRoadmap.004": {
+    "message": "Задачи отслеживания"
+  },
+  "landing.CommunityRoadmap.005": {
+    "message": "Изучите координацию работы над функциями, улучшениями и инженерными задачами по отдельным темам."
+  },
+  "landing.roadmap.data.004": {
+    "message": "Поиск актуальных задач по метке"
+  },
+  "landing.CommunityRoadmap.006": {
+    "message": "Посмотреть открытые задачи отслеживания Apache Doris на GitHub (откроется в новой вкладке)"
+  },
+  "landing.roadmap.data.005": {
+    "message": "Найдите задачу для участия"
+  },
+  "landing.CommunityRoadmap.007": {
+    "message": "Задачи для первого вклада"
+  },
+  "landing.CommunityRoadmap.008": {
+    "message": "Начните с подобранных задач, подходящих новым участникам."
+  },
+  "landing.roadmap.data.006": {
+    "message": "Задача #17176"
+  },
+  "landing.CommunityRoadmap.009": {
+    "message": "Посмотреть задачи Apache Doris для первого вклада на GitHub (откроется в новой вкладке)"
+  },
+  "landing.roadmap.data.007": {
+    "message": "Поддержка завершается"
+  },
+  "landing.roadmap.data.008": {
+    "message": "Август 2026 г."
+  },
+  "landing.CommunityRoadmap.010": {
+    "message": "Период поддержки завершается последним патч-релизом 4.0.x."
+  },
+  "landing.roadmap.data.009": {
+    "message": "На поддержке"
+  },
+  "landing.roadmap.data.010": {
+    "message": "Ежемесячно"
+  },
+  "landing.CommunityRoadmap.011": {
+    "message": "Регулярная поддержка с выпуском патчей 4.1.x примерно раз в месяц."
+  },
+  "landing.roadmap.data.011": {
+    "message": "Запланировано"
+  },
+  "landing.roadmap.data.012": {
+    "message": "Сентябрь 2026 г."
+  },
+  "landing.CommunityRoadmap.012": {
+    "message": "Функциональный релиз, посвящённый мультимодальному lakehouse и расширению поисковых возможностей."
+  },
+  "landing.roadmap.data.013": {
+    "message": "Ноябрь 2026 г."
+  },
+  "landing.CommunityRoadmap.013": {
+    "message": "Функциональный релиз, посвящённый инкрементальным вычислениям в реальном времени."
+  },
+  "landing.CommunityRoadmap.014": {
+    "message": "↗"
+  },
+  "landing.CommunityRoadmap.015": {
+    "message": "Развитие сообщества"
+  },
+  "landing.CommunityRoadmap.016": {
+    "message": "Изучите дорожную карту Apache Doris, текущие задачи отслеживания и возможности для первых вкладов в проект."
+  },
+  "landing.CommunityRoadmap.017": {
+    "message": "Узнайте, что мы"
+  },
+  "landing.CommunityRoadmap.018": {
+    "message": "планируем дальше."
+  },
+  "landing.CommunityRoadmap.019": {
+    "message": "Apache Doris открыто планирует и ведёт разработку."
+  },
+  "landing.CommunityRoadmap.020": {
+    "message": "Это руководство поможет понять направление развития, следить за текущими работами и найти задачу для участия."
+  },
+  "landing.CommunityRoadmap.021": {
+    "message": "Ссылки по разработке сообщества"
+  },
+  "landing.CommunityRoadmap.022": {
+    "message": "Открывается на GitHub ·"
+  },
+  "landing.CommunityRoadmap.023": {
+    "message": "План релизов"
+  },
+  "landing.CommunityRoadmap.024": {
+    "message": "То, что сообщество планирует выпустить в ближайшие месяцы. Указаны текущие ожидаемые сроки, которые могут измениться."
+  },
+  "landing.CommunityRoadmap.025": {
+    "message": "Все примечания к выпускам →"
+  },
+  "landing.CommunityRoadmap.026": {
+    "message": "Руководство для участников →"
+  },
+  "landing.CommunityReportNext.001": {
+    "message": "Помогите определить будущее Apache Doris"
+  },
+  "landing.CommunityReportNext.002": {
+    "message": "Заполните опрос, чтобы помочь улучшить сообщество Doris."
+  },
+  "landing.CommunityReportNext.003": {
+    "message": "Какую функцию Doris вы хотите обсудить или разработать?"
+  },
+  "landing.CommunityReportNext.004": {
+    "message": "Оставьте ответ в задаче на GitHub."
+  },
+  "landing.reports.past": {
+    "message": "Предыдущие отчёты…"
+  },
+  "landing.CommunityReportNext.005": {
+    "message": "Отчёт сообщества - Apache Doris"
+  },
+  "landing.CommunityReportNext.006": {
+    "message": "Еженедельные отчёты сообщества Apache Doris: принятые функции и исправления, новые участники и важные обсуждения."
+  },
+  "landing.CommunityReportNext.007": {
+    "message": "Отчёты и обратная связь сообщества"
+  },
+  "landing.CommunityReportNext.008": {
+    "message": "Еженедельный отчёт"
+  },
+  "landing.CommunityReportNext.009": {
+    "message": "Последний"
+  },
+  "landing.CommunityReportNext.010": {
+    "message": "Просмотреть предыдущие еженедельные отчёты"
+  },
+  "landing.CommunityReportNext.011": {
+    "message": "Ссылки для обратной связи сообщества"
+  },
+  "landing.report.fallback": {
+    "message": "Этот отчёт доступен на английском. Навигация сайта остаётся на выбранном вами языке."
+  },
+  "landing.CommunityReportNext.012": {
+    "message": "Еженедельный отчёт сообщества"
+  },
+  "landing.CommunityReportNext.013": {
+    "message": "Обзор"
+  },
+  "landing.CommunityReportNext.014": {
+    "message": "Главное"
+  },
+  "landing.CommunityReportNext.015": {
+    "message": "Репозитории"
+  },
+  "landing.CommunityReportNext.016": {
+    "message": "По сценариям"
+  },
+  "landing.CommunityReportNext.017": {
+    "message": "На этой неделе новостей нет."
+  },
+  "landing.CommunityReportNext.018": {
+    "message": " - сценарии"
+  },
+  "landing.CommunityReportNext.019": {
+    "message": "Активность сообщества"
+  },
+  "landing.CommunityReportNext.020": {
+    "message": "Принятые PR"
+  },
+  "landing.CommunityReportNext.021": {
+    "message": "Новые задачи"
+  },
+  "landing.CommunityReportNext.022": {
+    "message": "Участники"
+  },
+  "landing.events.mediaLanguage": {
+    "message": "Афиши и записи мероприятий по ссылкам сохраняют исходный язык. Описания китайских мероприятий показаны на китайском."
+  },
+  "landing.report.english": {
+    "message": "Английский"
+  },
+  "landing.CommunityReportNext.023": {
+    "message": "Принято"
+  },
+  "landing.CommunityReportNext.024": {
+    "message": "В работе"
+  },
+  "landing.CommunityReportNext.025": {
+    "message": "Недавно открыто"
+  },
+  "landing.courseModules.001": {
+    "message": "Обзор Apache Doris"
+  },
+  "landing.courseModules.002": {
+    "message": "Познакомьтесь с движком"
+  },
+  "landing.courseModules.003": {
+    "message": "Архитектура, организация данных, модели хранения, выполнение запросов и оптимизация."
+  },
+  "landing.courseModules.004": {
+    "message": "Руководство по установке"
+  },
+  "landing.courseModules.005": {
+    "message": "Разверните Doris"
+  },
+  "landing.courseModules.006": {
+    "message": "Выберите архитектуру и выполните развёртывание с учётом своей среды."
+  },
+  "landing.courseModules.007": {
+    "message": "Руководство по таблицам"
+  },
+  "landing.courseModules.008": {
+    "message": "Спроектируйте таблицы"
+  },
+  "landing.courseModules.009": {
+    "message": "Выберите модели данных, ключи сортировки, партиционирование, бакетирование, индексы и практические схемы."
+  },
+  "landing.courseModules.010": {
+    "message": "Руководство по операциям с данными"
+  },
+  "landing.courseModules.011": {
+    "message": "Перемещайте данные и управляйте ими"
+  },
+  "landing.courseModules.012": {
+    "message": "Загружайте, обновляйте, удаляйте и экспортируйте данные способами, подходящими вашей нагрузке."
+  },
+  "landing.courseModules.013": {
+    "message": "Руководство по запросам к данным"
+  },
+  "landing.courseModules.014": {
+    "message": "Выполняйте и оптимизируйте запросы"
+  },
+  "landing.courseModules.015": {
+    "message": "Используйте соединения, аналитику, оконные функции, UDF, сложные типы и материализованные представления."
+  },
+  "landing.courseModules.016": {
+    "message": "Руководство по lakehouse"
+  },
+  "landing.courseModules.017": {
+    "message": "Подключите lakehouse"
+  },
+  "landing.courseModules.018": {
+    "message": "Подключайте каталоги, выполняйте федеративные SQL-запросы, ускоряйте работу с открытыми таблицами и записывайте данные обратно."
+  },
+  "landing.hackathonEvent.001": {
+    "message": "Хакатон Apache Doris"
+  },
+  "landing.hackathonEvent.002": {
+    "message": "Приложение гибридного поиска"
+  },
+  "landing.courseExtra.hackathonEvent.001": {
+    "message": "60–120 мин"
+  },
+  "landing.hackathonEvent.003": {
+    "message": "Ключевые слова, смысл и фильтры в одном SQL-запросе. Создайте поисковую строку по документации Apache Doris."
+  },
+  "landing.hackathonEvent.004": {
+    "message": "Задавайте вопросы Doris через MCP"
+  },
+  "landing.courseExtra.hackathonEvent.002": {
+    "message": "45–90 мин"
+  },
+  "landing.hackathonEvent.005": {
+    "message": "Подключите Doris к своему ИИ-помощнику через Doris MCP Server и получайте ответы на реальные вопросы с помощью настоящего SQL."
+  },
+  "landing.hackathonEvent.006": {
+    "message": "Обозреватель поиска по логам"
+  },
+  "landing.courseExtra.hackathonEvent.003": {
+    "message": "60–120 мин"
+  },
+  "landing.hackathonEvent.007": {
+    "message": "Мини-Kibana, где всё работает на SQL: поиск BM25, фильтры и актуальные счётчики по 200,000 строк логов."
+  },
+  "landing.hackathonEvent.008": {
+    "message": "Обозреватель трассировок агентов"
+  },
+  "landing.courseExtra.hackathonEvent.004": {
+    "message": "60–120 мин"
+  },
+  "landing.hackathonEvent.009": {
+    "message": "Сохраняйте разнородный JSON ИИ-агентов в столбце VARIANT и запрашивайте его как обычные столбцы. Без миграций схемы."
+  },
+  "landing.hackathonEvent.010": {
+    "message": "От документации к демо"
+  },
+  "landing.courseExtra.hackathonEvent.005": {
+    "message": "30–60 мин"
+  },
+  "landing.hackathonEvent.011": {
+    "message": "Выберите страницу документации функции, выполните пример на локальном Doris и добавьте пошаговое демо через pull request."
+  },
+  "landing.hackathonEvent.012": {
+    "message": "Трек B · "
+  },
+  "landing.HackathonCourseTrack.001": {
+    "message": "Выберите трек"
+  },
+  "landing.HackathonCourseTrack.002": {
+    "message": "Doris 101"
+  },
+  "landing.HackathonCourseTrack.003": {
+    "message": "Бесплатный курс"
+  },
+  "landing.HackathonCourseTrack.004": {
+    "message": "Хакатон"
+  },
+  "landing.HackathonCourseTrack.005": {
+    "message": "Открытые задания ·"
+  },
+  "landing.HackathonCourseTrack.006": {
+    "message": "начните в любое время"
+  },
+  "landing.HackathonCourseTrack.007": {
+    "message": "Хакатон Apache Doris"
+  },
+  "landing.HackathonCourseTrack.008": {
+    "message": "Создайте что-то реальное на Apache Doris в своём темпе."
+  },
+  "landing.HackathonCourseTrack.009": {
+    "message": "Начните в любое время и работайте в своём темпе: за один раз или за несколько вечеров. Опыт работы с Doris не нужен."
+  },
+  "landing.HackathonCourseTrack.010": {
+    "message": "Трек A · Разработка на Doris"
+  },
+  "landing.HackathonCourseTrack.011": {
+    "message": "задания"
+  },
+  "landing.HackathonCourseTrack.013": {
+    "message": "Трек B ·"
+  },
+  "landing.HackathonCourseTrack.014": {
+    "message": ": добавьте пошаговое демо на страницу документации через pull request."
+  },
+  "landing.HackathonCourseTrack.015": {
+    "message": "Открыть описание задания →"
+  },
+  "landing.HackathonCourseTrack.016": {
+    "message": "Значок участника Apache Doris"
+  },
+  "landing.HackathonCourseTrack.017": {
+    "message": "Выполните задание, поделитесь результатом в"
+  },
+  "landing.HackathonCourseTrack.018": {
+    "message": "в Slack и получите значок участника."
+  },
+  "landing.CourseLanding.002": {
+    "message": "Скоро появятся новые курсы Doris 101"
+  },
+  "landing.CourseLanding.003": {
+    "message": "Другие курсы"
+  },
+  "landing.CourseLanding.004": {
+    "message": "Скоро"
+  },
+  "landing.CourseLanding.006": {
+    "message": "Ваш путь к Doris"
+  },
+  "landing.CourseLanding.007": {
+    "message": "В своём темпе · для всех"
+  },
+  "landing.CourseLanding.008": {
+    "message": "Доступно 6 · будет больше"
+  },
+  "landing.CourseLanding.009": {
+    "message": "Курс Apache Doris 101"
+  },
+  "landing.CourseLanding.010": {
+    "message": "Бесплатный вводный курс Apache Doris 101: архитектура, развёртывание, проектирование таблиц, операции с данными, аналитические запросы и подключение lakehouse."
+  },
+  "landing.CourseLanding.011": {
+    "message": "Бесплатный курс · для начинающих"
+  },
+  "landing.CourseLanding.012": {
+    "message": "Изучайте Doris."
+  },
+  "landing.CourseLanding.013": {
+    "message": "Создавайте реальные решения."
+  },
+  "landing.CourseLanding.014": {
+    "message": "Начните с основ OLAP-баз данных, затем переходите к углублённым темам и практическому применению Apache Doris. Курс связывает общие концепции баз данных с основными возможностями Doris, помогая лучше понимать и использовать систему. Полученные знания пригодятся и при работе с другими системами."
+  },
+  "landing.CourseLanding.015": {
+    "message": "Начать с обзора →"
+  },
+  "landing.HackathonTaskPage.001": {
+    "message": "Запустите Doris"
+  },
+  "landing.HackathonTaskPage.002": {
+    "message": "Хост"
+  },
+  "landing.HackathonTaskPage.003": {
+    "message": "Порт"
+  },
+  "landing.HackathonTaskPage.004": {
+    "message": "Пользователь"
+  },
+  "landing.HackathonTaskPage.005": {
+    "message": "без пароля"
+  },
+  "landing.HackathonTaskPage.006": {
+    "message": "База данных"
+  },
+  "landing.HackathonTaskPage.007": {
+    "message": "· будет объявлено"
+  },
+  "landing.HackathonTaskPage.008": {
+    "message": "Начало"
+  },
+  "landing.HackathonTaskPage.009": {
+    "message": "Таблица"
+  },
+  "landing.HackathonTaskPage.010": {
+    "message": "Промпт"
+  },
+  "landing.HackathonTaskPage.011": {
+    "message": "Вы здесь"
+  },
+  "landing.HackathonTaskPage.012": {
+    "message": "Открыть описание задания"
+  },
+  "landing.HackathonTaskPage.013": {
+    "message": "Код текущего шага"
+  },
+  "landing.HackathonTaskPage.014": {
+    "message": "Эскиз"
+  },
+  "landing.HackathonTaskPage.015": {
+    "message": "Что вы создадите · схема интерфейса, не снимок экрана"
+  },
+  "landing.HackathonTaskPage.016": {
+    "message": "Скрыть"
+  },
+  "landing.HackathonTaskPage.017": {
+    "message": "Показать"
+  },
+  "landing.HackathonTaskPage.018": {
+    "message": "Представления кода"
+  },
+  "landing.HackathonTaskPage.019": {
+    "message": "Стартовый набор"
+  },
+  "landing.HackathonTaskPage.020": {
+    "message": "скачать"
+  },
+  "landing.HackathonTaskPage.021": {
+    "message": "Маршрут"
+  },
+  "landing.HackathonTaskPage.024": {
+    "message": "→ готово"
+  },
+  "landing.HackathonTaskPage.025": {
+    "message": "Готово"
+  },
+  "landing.HackathonTaskPage.026": {
+    "message": "→ отправить"
+  },
+  "landing.HackathonTaskPage.027": {
+    "message": "Курс"
+  },
+  "landing.HackathonTaskPage.028": {
+    "message": "Задания в своём темпе · начните в любое время · без регистрации"
+  },
+  "landing.HackathonTaskPage.029": {
+    "message": "Задания хакатона"
+  },
+  "landing.HackathonTaskPage.030": {
+    "message": "Хакатон"
+  },
+  "landing.HackathonTaskPage.031": {
+    "message": "задания"
+  },
+  "landing.HackathonTaskPage.032": {
+    "message": "Нужна помощь?"
+  },
+  "landing.HackathonTaskPage.033": {
+    "message": "Спросите в"
+  },
+  "landing.HackathonTaskPage.034": {
+    "message": "в"
+  },
+  "landing.HackathonTaskPage.035": {
+    "message": "Slack Apache Doris"
+  },
+  "landing.HackathonTaskPage.036": {
+    "message": ". Разработчики и другие участники помогут вам."
+  },
+  "landing.HackathonTaskPage.037": {
+    "message": "Поместите свою работу в папку с именем"
+  },
+  "landing.HackathonTaskPage.038": {
+    "message": "вашего GitHub ID"
+  },
+  "landing.HackathonTaskPage.039": {
+    "message": ": код и README с описанием, инструкцией запуска, одним снимком экрана или GIF и перечнем использованных функций Doris."
+  },
+  "landing.HackathonTaskPage.040": {
+    "message": "Откройте pull request"
+  },
+  "landing.HackathonTaskPage.041": {
+    "message": "и добавьте её в"
+  },
+  "landing.HackathonTaskPage.042": {
+    "message": "как"
+  },
+  "landing.HackathonTaskPage.043": {
+    "message": ". Сделайте fork и push или используйте в GitHub"
+  },
+  "landing.HackathonTaskPage.044": {
+    "message": "Add file → Upload files"
+  },
+  "landing.HackathonTaskPage.045": {
+    "message": ". Больше ничего заполнять не нужно."
+  },
+  "landing.HackathonTaskPage.046": {
+    "message": "README"
+  },
+  "landing.HackathonTaskPage.047": {
+    "message": "Отправьте работу и получите значок"
+  },
+  "landing.HackathonTaskPage.048": {
+    "message": "Участвуйте → отправьте работу → получите значок."
+  },
+  "landing.HackathonTaskPage.049": {
+    "message": "Поделитесь результатом"
+  },
+  "landing.HackathonTaskPage.050": {
+    "message": "в"
+  },
+  "landing.HackathonTaskPage.051": {
+    "message": "в"
+  },
+  "landing.HackathonTaskPage.052": {
+    "message": "Slack Apache Doris"
+  },
+  "landing.HackathonTaskPage.053": {
+    "message": ": ссылкой на pull request или репозиторий и снимком экрана либо коротким демо. Вопросы, отправка работ и выдача значков происходят там."
+  },
+  "landing.HackathonTaskPage.054": {
+    "message": "Каждый участник задания получает"
+  },
+  "landing.HackathonTaskPage.055": {
+    "message": "значок участника Apache Doris"
+  },
+  "landing.HackathonTaskPage.056": {
+    "message": ": принятый pull request в Doris не требуется. Срока нет, работайте столько, сколько нужно. Можно участвовать командой, но это не обязательно. Укажите GitHub ID каждого участника в"
+  },
+  "landing.HackathonTaskPage.057": {
+    "message": "Значок участника Apache Doris"
+  },
+  "landing.HackathonTaskPage.058": {
+    "message": "О значке участника"
+  },
+  "landing.HackathonTaskPage.059": {
+    "message": "Все задания"
+  },
+  "landing.HackathonTaskPage.060": {
+    "message": "Вернуться к курсу"
+  },
+  "landing.HackathonTaskPage.061": {
+    "message": " · Хакатон Doris"
+  },
+  "landing.HackathonTaskPage.062": {
+    "message": " Задание трека A в "
+  },
+  "landing.HackathonTaskPage.063": {
+    "message": ": в своём темпе, со стартовым набором и локальным экземпляром Doris."
+  },
+  "landing.HackathonTaskPage.064": {
+    "message": "Трек A · Задание"
+  },
+  "landing.HackathonTaskPage.065": {
+    "message": "Кратко"
+  },
+  "landing.HackathonTaskPage.066": {
+    "message": "Получить стартовый набор"
+  },
+  "landing.HackathonTaskPage.067": {
+    "message": "Получить стартовый набор"
+  },
+  "landing.HackathonTaskPage.068": {
+    "message": "Запустите Doris"
+  },
+  "landing.HackathonTaskPage.069": {
+    "message": "Подготовка"
+  },
+  "landing.HackathonTaskPage.070": {
+    "message": "Что вы создаёте, почему Doris упрощает задачу и как запустить кластер."
+  },
+  "landing.HackathonTaskPage.071": {
+    "message": "Что вы создадите"
+  },
+  "landing.HackathonTaskPage.072": {
+    "message": "Эскиз"
+  },
+  "landing.HackathonTaskPage.073": {
+    "message": "Что вы создадите · схема интерфейса, не снимок экрана"
+  },
+  "landing.HackathonTaskPage.074": {
+    "message": "Эскиз находится в верхней части панели кода"
+  },
+  "landing.HackathonTaskPage.075": {
+    "message": "Почему это интересно на Doris"
+  },
+  "landing.HackathonTaskPage.076": {
+    "message": "Панель: строки индексов в определении таблицы"
+  },
+  "landing.HackathonTaskPage.077": {
+    "message": "Перед началом"
+  },
+  "landing.HackathonTaskPage.078": {
+    "message": "Копировать команду"
+  },
+  "landing.HackathonTaskPage.079": {
+    "message": "Данные"
+  },
+  "landing.HackathonTaskPage.080": {
+    "message": "Панель → Таблица: полное определение таблицы"
+  },
+  "landing.HackathonTaskPage.081": {
+    "message": "Разработка с ИИ"
+  },
+  "landing.HackathonTaskPage.082": {
+    "message": "Скопируйте "
+  },
+  "landing.hackathonCommon.109": {
+    "message": "в"
+  },
+  "landing.hackathonCommon.110": {
+    "message": "Slack Apache Doris"
+  },
+  "landing.courseExtra.a1HybridSearch.011": {
+    "message": "60–120 мин"
+  },
+  "landing.a1HybridSearch.028": {
+    "message": "Таблица"
+  },
+  "landing.courseExtra.a2Mcp.010": {
+    "message": "45–90 мин"
+  },
+  "landing.courseExtra.a3LogSearch.010": {
+    "message": "60–120 мин"
+  },
+  "landing.a3LogSearch.030": {
+    "message": "Таблица"
+  },
+  "landing.courseExtra.a4AgentTraces.011": {
+    "message": "60–120 мин"
+  },
+  "landing.a4AgentTraces.030": {
+    "message": "Таблица"
+  },
+  "landing.HackathonTrackBPage.024": {
+    "message": "Начало"
+  },
+  "landing.HackathonTrackBPage.032": {
+    "message": "Трек B · "
+  },
+  "landing.HackathonTrackBPage.033": {
+    "message": " · Хакатон Doris"
+  },
+  "landing.HackathonTrackBPage.036": {
+    "message": "Трек B ·"
+  },
+  "landing.HackathonTrackBPage.041": {
+    "message": "Кратко"
+  },
+  "landing.HackathonTrackBPage.042": {
+    "message": "Запустите Doris"
+  },
+  "landing.HackathonTrackBPage.044": {
+    "message": "Подготовка"
+  },
+  "landing.HackathonTrackBPage.060": {
+    "message": "Отправьте работу и получите значок"
+  },
+  "landing.HackathonTrackBPage.062": {
+    "message": "Перед началом"
+  },
+  "landing.HackathonTrackBPage.063": {
+    "message": "Копировать команду"
+  },
+  "landing.AiAnalysisForm.005": {
+    "message": "Английский"
+  },
+  "landing.profile.status.completed": {
+    "message": "Завершено"
+  },
+  "landing.ProfileDag.027": {
+    "message": "Скрыть"
+  },
+  "landing.ProfileDag.028": {
+    "message": "Показать"
+  },
+  "landing.trackB.task.B6.time": {
+    "message": "30–60 мин"
+  },
+  "landing.reports.2026-10-12.stats.0.label": {
+    "message": "Принятые PR"
+  },
+  "landing.reports.2026-10-12.stats.1.label": {
+    "message": "Новые задачи"
+  },
+  "landing.reports.2026-10-12.stats.2.label": {
+    "message": "Участники"
+  },
+  "landing.download.unavailableBuild": {
+    "message": "Для {version} нет сборки под {architecture}"
+  },
+  "landing.HackathonTaskPage.083": {
+    "message": "Типичные ловушки Doris для ИИ-агента"
+  },
+  "landing.HackathonTaskPage.084": {
+    "message": "Реализуйте"
+  },
+  "landing.HackathonTaskPage.085": {
+    "message": "этапов,"
+  },
+  "landing.HackathonTaskPage.087": {
+    "message": ". Панель следует за текущим шагом."
+  },
+  "landing.HackathonTaskPage.088": {
+    "message": "Этап"
+  },
+  "landing.HackathonTaskPage.089": {
+    "message": "Важные части запроса"
+  },
+  "landing.HackathonTaskPage.090": {
+    "message": "L"
+  },
+  "landing.HackathonTaskPage.091": {
+    "message": "Проверка"
+  },
+  "landing.HackathonTaskPage.092": {
+    "message": "Завершите работу"
+  },
+  "landing.HackathonTaskPage.093": {
+    "message": "Пройдите проверку, покажите результат и получите значок."
+  },
+  "landing.HackathonTaskPage.094": {
+    "message": "Критерии готовности"
+  },
+  "landing.HackathonTaskPage.095": {
+    "message": "Ваш контрольный список"
+  },
+  "landing.HackathonTaskPage.096": {
+    "message": "Дополнительные цели"
+  },
+  "landing.HackathonTaskPage.097": {
+    "message": "Устранение неполадок и справочные материалы"
+  },
+  "landing.HackathonTaskPage.098": {
+    "message": "Справочные материалы"
+  },
+  "landing.sketch.column.page": {
+    "message": "Страница"
+  },
+  "landing.sketch.column.section": {
+    "message": "Раздел"
+  },
+  "landing.sketch.column.scoreDistance": {
+    "message": "Оценка / расстояние"
+  },
+  "landing.sketch.column.score": {
+    "message": "Оценка"
+  },
+  "landing.sketch.column.distance": {
+    "message": "Расстояние"
+  },
+  "landing.sketch.column.time": {
+    "message": "Время"
+  },
+  "landing.sketch.column.service": {
+    "message": "Сервис"
+  },
+  "landing.sketch.column.level": {
+    "message": "Уровень"
+  },
+  "landing.sketch.column.message": {
+    "message": "Сообщение"
+  },
+  "landing.sketch.mode.keyword": {
+    "message": "Ключевые слова"
+  },
+  "landing.sketch.mode.vector": {
+    "message": "Вектор"
+  },
+  "landing.sketch.mode.hybrid": {
+    "message": "Гибридный"
+  },
+  "landing.HackathonSketch.001": {
+    "message": "Категория"
+  },
+  "landing.HackathonSketch.002": {
+    "message": "Показать SQL"
+  },
+  "landing.HackathonSketch.003": {
+    "message": "Показать SQL: точный запрос для этого режима"
+  },
+  "landing.sketch.question.1": {
+    "message": "Какие таблицы есть в базе hackathon и для чего нужна каждая из них?"
+  },
+  "landing.sketch.question.2": {
+    "message": "Сколько строк логов в app_logs по каждому сервису и уровню?"
+  },
+  "landing.sketch.question.3": {
+    "message": "Удалите все логи INFO, чтобы освободить место."
+  },
+  "landing.HackathonSketch.004": {
+    "message": "Ваш ИИ-клиент"
+  },
+  "landing.HackathonSketch.006": {
+    "message": "Doris MCP Server"
+  },
+  "landing.courseExtra.HackathonSketch.002": {
+    "message": "только чтение"
+  },
+  "landing.HackathonSketch.010": {
+    "message": "Отклонено · сервер и пользователь работают только на чтение"
+  },
+  "landing.HackathonSketch.011": {
+    "message": "Выполненный SQL"
+  },
+  "landing.HackathonSketch.012": {
+    "message": "Сервис"
+  },
+  "landing.HackathonSketch.014": {
+    "message": "все"
+  },
+  "landing.HackathonSketch.015": {
+    "message": "Уровень"
+  },
+  "landing.HackathonSketch.017": {
+    "message": "все"
+  },
+  "landing.HackathonSketch.018": {
+    "message": "Время"
+  },
+  "landing.HackathonSketch.020": {
+    "message": "весь день"
+  },
+  "landing.HackathonSketch.021": {
+    "message": "Фасеты"
+  },
+  "landing.HackathonSketch.022": {
+    "message": "Ошибки за 5 минут"
+  },
+  "landing.HackathonSketch.023": {
+    "message": "payload · определённые подстолбцы"
+  },
+  "landing.HackathonSketch.024": {
+    "message": "p95 инструментов"
+  },
+  "landing.HackathonSketch.025": {
+    "message": "Доля ошибок"
+  },
+  "landing.courseExtra.HackathonSketch.008": {
+    "message": "Токены"
+  },
+  "landing.HackathonSketch.026": {
+    "message": "Сессии"
+  },
+  "landing.HackathonSketch.027": {
+    "message": "Хронология сессии"
+  },
+  "landing.hackathonCommon.001": {
+    "message": "Docker запущен, образ Doris загружен."
+  },
+  "landing.hackathonCommon.002": {
+    "message": "Около"
+  },
+  "landing.hackathonCommon.003": {
+    "message": ", однократно. Загрузите заранее: образ большой. Подойдут Docker Desktop (macOS) и Docker Engine (Linux)."
+  },
+  "landing.hackathonCommon.004": {
+    "message": "Doris запущен."
+  },
+  "landing.hackathonCommon.005": {
+    "message": "Один контейнер запускает один FE и один BE. Он готов, когда"
+  },
+  "landing.hackathonCommon.006": {
+    "message": "показывает"
+  },
+  "landing.hackathonCommon.007": {
+    "message": ", примерно через 30 секунд после запуска."
+  },
+  "landing.hackathonCommon.008": {
+    "message": "Об этом образе"
+  },
+  "landing.hackathonCommon.009": {
+    "message": "Подключение работает."
+  },
+  "landing.hackathonCommon.010": {
+    "message": "В контейнер включён клиент MySQL, отдельно устанавливать его не нужно. Подойдёт и любой другой клиент MySQL:"
+  },
+  "landing.hackathonCommon.011": {
+    "message": ", пользователь"
+  },
+  "landing.hackathonCommon.012": {
+    "message": ", без пароля."
+  },
+  "landing.hackathonCommon.013": {
+    "message": "Стартовый набор получен."
+  },
+  "landing.hackathonCommon.014": {
+    "message": "Скачайте и распакуйте"
+  },
+  "landing.hackathonCommon.015": {
+    "message": ", затем выполняйте команды с этой страницы внутри папки"
+  },
+  "landing.hackathonCommon.016": {
+    "message": ". Его"
+  },
+  "landing.hackathonCommon.017": {
+    "message": "объединяет эти команды:"
+  },
+  "landing.hackathonCommon.018": {
+    "message": "Инструменты готовы."
+  },
+  "landing.hackathonCommon.019": {
+    "message": "Любой язык с драйвером MySQL (Python"
+  },
+  "landing.hackathonCommon.020": {
+    "message": ", Node"
+  },
+  "landing.hackathonCommon.021": {
+    "message": ", Go"
+  },
+  "landing.hackathonCommon.022": {
+    "message": ", Java JDBC и другие). ИИ-помощники для программирования приветствуются."
+  },
+  "landing.hackathonCommon.023": {
+    "message": "Работайте вместе с ИИ-агентом для программирования, это приветствуется."
+  },
+  "landing.hackathonCommon.024": {
+    "message": "Поисковые и ИИ-функции Doris 4.x появились позже обучающих данных большинства моделей. Поэтому перед написанием SQL дайте агенту правильный контекст:"
+  },
+  "landing.hackathonCommon.025": {
+    "message": "Вставьте"
+  },
+  "landing.hackathonCommon.026": {
+    "message": "контекстный промпт"
+  },
+  "landing.hackathonCommon.027": {
+    "message": "ниже в своего агента."
+  },
+  "landing.hackathonCommon.028": {
+    "message": "Укажите ему"
+  },
+  "landing.hackathonCommon.029": {
+    "message": "справочные страницы из этого задания"
+  },
+  "landing.hackathonCommon.030": {
+    "message": "и"
+  },
+  "landing.hackathonCommon.031": {
+    "message": "из стартового набора. Многие агенты читают этот файл самостоятельно."
+  },
+  "landing.hackathonCommon.032": {
+    "message": "Перед встраиванием в код пусть агент выполнит каждый SQL-запрос на вашем работающем кластере."
+  },
+  "landing.hackathonCommon.033": {
+    "message": "Ещё лучше подключите"
+  },
+  "landing.hackathonCommon.034": {
+    "message": "Doris MCP Server"
+  },
+  "landing.hackathonCommon.035": {
+    "message": "(см."
+  },
+  "landing.hackathonCommon.036": {
+    "message": "задание A2"
+  },
+  "landing.hackathonCommon.037": {
+    "message": "), чтобы агент сам изучал схему и тестировал запросы."
+  },
+  "landing.hackathonCommon.038": {
+    "message": "Использование"
+  },
+  "landing.hackathonCommon.039": {
+    "message": "для текстового поиска"
+  },
+  "landing.hackathonCommon.040": {
+    "message": "(OR),"
+  },
+  "landing.hackathonCommon.041": {
+    "message": "(AND),"
+  },
+  "landing.hackathonCommon.042": {
+    "message": ". Они используют инвертированный индекс"
+  },
+  "landing.hackathonCommon.043": {
+    "message": "Вызов"
+  },
+  "landing.hackathonCommon.044": {
+    "message": "в произвольном запросе"
+  },
+  "landing.hackathonCommon.045": {
+    "message": "требует"
+  },
+  "landing.hackathonCommon.046": {
+    "message": "в качестве предиката в"
+  },
+  "landing.hackathonCommon.048": {
+    "message": "; иначе Doris отклонит запрос"
+  },
+  "landing.hackathonCommon.049": {
+    "message": "Округление, соединение или ранжирование"
+  },
+  "landing.hackathonCommon.050": {
+    "message": "в том же запросе"
+  },
+  "landing.hackathonCommon.051": {
+    "message": "Оставьте"
+  },
+  "landing.hackathonCommon.052": {
+    "message": "без изменений в запросе к одной таблице. Округляйте, соединяйте или применяйте"
+  },
+  "landing.hackathonCommon.053": {
+    "message": "во внешнем запросе, используя подзапрос вместо"
+  },
+  "landing.hackathonCommon.054": {
+    "message": "CTE"
+  },
+  "landing.hackathonCommon.055": {
+    "message": "внутри"
+  },
+  "landing.hackathonCommon.056": {
+    "message": "/ агрегатов"
+  },
+  "landing.hackathonCommon.057": {
+    "message": "Не допускается. Для подсчёта фасетов используйте то же"
+  },
+  "landing.hackathonCommon.058": {
+    "message": "без"
+  },
+  "landing.hackathonCommon.059": {
+    "message": "Сортировка по BM25 и векторному расстоянию в одном"
+  },
+  "landing.hackathonCommon.060": {
+    "message": ", либо выбор"
+  },
+  "landing.hackathonCommon.061": {
+    "message": "в запросе с ранжированием по векторам"
+  },
+  "landing.hackathonCommon.062": {
+    "message": "Не поддерживается. Гибридный поиск: предварительный фильтр"
+  },
+  "landing.hackathonCommon.063": {
+    "message": "плюс векторный"
+  },
+  "landing.hackathonCommon.064": {
+    "message": ", с выводом расстояния; либо объединение двух ранжированных списков (RRF)"
+  },
+  "landing.hackathonCommon.065": {
+    "message": "Передача вектора запроса как параметра драйвера"
+  },
+  "landing.hackathonCommon.066": {
+    "message": "Список превращается в"
+  },
+  "landing.hackathonCommon.067": {
+    "message": "в pymysql и в 8 отдельных аргументов в mysql2. Передайте строку"
+  },
+  "landing.hackathonCommon.068": {
+    "message": "и напишите"
+  },
+  "landing.hackathonCommon.069": {
+    "message": ", либо вставьте литерал напрямую"
+  },
+  "landing.hackathonCommon.070": {
+    "message": "Поиск косинусной метрики ANN"
+  },
+  "landing.hackathonCommon.071": {
+    "message": "Метрики ANN:"
+  },
+  "landing.hackathonCommon.073": {
+    "message": ". Нормализуйте векторы до единичной длины: возрастание расстояния L2 даёт тот же порядок, что и убывание косинусного сходства"
+  },
+  "landing.hackathonCommon.074": {
+    "message": "Сравнение путей VARIANT без приведения типа"
+  },
+  "landing.hackathonCommon.075": {
+    "message": "; VARIANT нельзя использовать как ключ или столбец соединения"
+  },
+  "landing.hackathonCommon.076": {
+    "message": "Ожидание, что"
+  },
+  "landing.hackathonCommon.077": {
+    "message": "покажет пути JSON"
+  },
+  "landing.hackathonCommon.078": {
+    "message": "Выполните"
+  },
+  "landing.hackathonCommon.079": {
+    "message": "сначала; затем"
+  },
+  "landing.hackathonCommon.080": {
+    "message": "покажет все определённые подстолбцы и их типы"
+  },
+  "landing.hackathonCommon.081": {
+    "message": "Использование ORM"
+  },
+  "landing.hackathonCommon.082": {
+    "message": "Предпочтительны обычный драйвер MySQL и SQL напрямую: ORM могут генерировать неподдерживаемые Doris операторы"
+  },
+  "landing.hackathonCommon.083": {
+    "message": "в macOS"
+  },
+  "landing.hackathonCommon.084": {
+    "message": "Запустите Docker Desktop. Если он уже работает, создайте ссылку на CLI:"
+  },
+  "landing.hackathonCommon.085": {
+    "message": "при загрузке образов"
+  },
+  "landing.hackathonCommon.086": {
+    "message": "Удалите поле"
+  },
+  "landing.hackathonCommon.087": {
+    "message": "из"
+  },
+  "landing.hackathonCommon.088": {
+    "message": "(только для локальной разработки)"
+  },
+  "landing.hackathonCommon.089": {
+    "message": "Порты 9030, 8030 или 8040 заняты, часто другим Doris. Проверьте работающие контейнеры ("
+  },
+  "landing.hackathonCommon.090": {
+    "message": "), либо опубликуйте другие порты хоста, например"
+  },
+  "landing.hackathonCommon.091": {
+    "message": ", и подключайтесь к 19030"
+  },
+  "landing.hackathonCommon.092": {
+    "message": "Вы уже запускали его раньше:"
+  },
+  "landing.hackathonCommon.093": {
+    "message": ". Чтобы начать заново,"
+  },
+  "landing.hackathonCommon.094": {
+    "message": "(данные будут удалены)"
+  },
+  "landing.hackathonCommon.095": {
+    "message": "Контейнер завершается или не переходит в состояние"
+  },
+  "landing.hackathonCommon.096": {
+    "message": "Прочитайте"
+  },
+  "landing.hackathonCommon.097": {
+    "message": ". Обычно причина в памяти: выделите Docker Desktop не менее 6 GB (Settings → Resources). На Apple Silicon не добавляйте"
+  },
+  "landing.hackathonCommon.098": {
+    "message": "Выполните"
+  },
+  "landing.hackathonCommon.099": {
+    "message": "сначала или подключитесь с помощью"
+  },
+  "landing.hackathonCommon.100": {
+    "message": "Добавьте "
+  },
+  "landing.a1HybridSearch.011": {
+    "message": "Ключевые слова"
+  },
+  "landing.a1HybridSearch.013": {
+    "message": "Вектор"
+  },
+  "landing.a1HybridSearch.015": {
+    "message": "Гибридный"
+  },
+  "landing.a1HybridSearch.083": {
+    "message": "Гибридный"
+  },
+  "landing.a1HybridSearch.099": {
+    "message": "Показать SQL"
+  },
+  "landing.a2Mcp.048": {
+    "message": "показывает"
+  },
+  "landing.a2Mcp.067": {
+    "message": "Уровень"
+  },
+  "landing.a2Mcp.070": {
+    "message": "Уровень"
+  },
+  "landing.a2Mcp.091": {
+    "message": "Выполните"
+  },
+  "landing.a4AgentTraces.063": {
+    "message": "Хронология сессии"
+  },
+  "landing.a4AgentTraces.073": {
+    "message": "Выполните"
+  },
+  "landing.a4AgentTraces.094": {
+    "message": "задание A2"
+  },
+  "landing.HackathonTrackBPage.070": {
+    "message": "Завершите работу"
+  },
+  "landing.HackathonTrackBPage.089": {
+    "message": "Критерии готовности"
+  },
+  "landing.HackathonTrackBPage.090": {
+    "message": "Ваш контрольный список"
+  },
+  "landing.HackathonTrackBPage.095": {
+    "message": "Дополнительные цели"
+  },
+  "landing.HackathonTrackBPage.102": {
+    "message": "Устранение неполадок и справочные материалы"
+  },
+  "landing.HackathonTrackBPage.103": {
+    "message": "Справочные материалы"
+  },
+  "landing.hackathonCommon.101": {
+    "message": "предикат,"
+  },
+  "landing.hackathonCommon.102": {
+    "message": "и"
+  },
+  "landing.hackathonCommon.103": {
+    "message": ", и оставьте"
+  },
+  "landing.hackathonCommon.104": {
+    "message": "без обёртки (см. ловушки выше)"
+  },
+  "landing.hackathonCommon.105": {
+    "message": "При распаковке потерялось право на выполнение:"
+  },
+  "landing.hackathonCommon.106": {
+    "message": ", либо выполните"
+  },
+  "landing.hackathonCommon.107": {
+    "message": "Если не получается больше 10 минут"
+  },
+  "landing.hackathonCommon.108": {
+    "message": "Напишите в"
+  },
+  "landing.a1HybridSearch.001": {
+    "message": "Приложение"
+  },
+  "landing.a1HybridSearch.002": {
+    "message": "гибридного поиска"
+  },
+  "landing.a1HybridSearch.003": {
+    "message": "Ключевые слова, смысл и фильтры в одном SQL-запросе. Создайте поисковую строку по документации Apache Doris."
+  },
+  "landing.courseExtra.a1HybridSearch.012": {
+    "message": "Для начинающих"
+  },
+  "landing.courseExtra.a1HybridSearch.013": {
+    "message": "Любой язык · CLI или веб"
+  },
+  "landing.courseExtra.a1HybridSearch.014": {
+    "message": "ИИ-инструменты приветствуются"
+  },
+  "landing.a1HybridSearch.004": {
+    "message": "Создайте поиск, который понимает и слова, и смысл."
+  },
+  "landing.a1HybridSearch.005": {
+    "message": "Точные совпадения ключевых слов с ранжированием BM25, семантические соседи из векторного индекса и структурированные фильтры: одна таблица Doris и один SQL-запрос. Без Elasticsearch и отдельной векторной базы."
+  },
+  "landing.a1HybridSearch.006": {
+    "message": "Небольшое поисковое приложение (CLI, блокнот или веб-страница на ваш выбор) по"
+  },
+  "landing.a1HybridSearch.007": {
+    "message": "299 разделам документации Apache Doris"
+  },
+  "landing.a1HybridSearch.008": {
+    "message": ". Пользователь вводит вопрос, например"
+  },
+  "landing.a1HybridSearch.010": {
+    "message": ", выбирает категорию и переключается между тремя режимами:"
+  },
+  "landing.a1HybridSearch.012": {
+    "message": "Полнотекстовые совпадения с ранжированием BM25."
+  },
+  "landing.a1HybridSearch.014": {
+    "message": "Ближайшие соседи по сходству эмбеддингов."
+  },
+  "landing.a1HybridSearch.016": {
+    "message": "Предварительный фильтр по ключевым словам и векторное ранжирование (дополнительно: Reciprocal Rank Fusion)."
+  },
+  "landing.a1HybridSearch.017": {
+    "message": "Каждый результат показывает страницу, раздел, оценку (ключевые слова) или расстояние (векторный и гибридный режимы), а также ссылку на документацию. Переключатель «Показать SQL» раскрывает точный запрос Doris."
+  },
+  "landing.a1HybridSearch.018": {
+    "message": "Одна таблица, два индекса."
+  },
+  "landing.a1HybridSearch.019": {
+    "message": "Инвертированный индекс текста и индекс HNSW ANN векторов находятся в одной таблице. Планировщик сначала фильтрует по инвертированному индексу, затем ранжирует оставшиеся записи с помощью ANN."
+  },
+  "landing.a1HybridSearch.020": {
+    "message": "Ранжирование поисковой системы в SQL."
+  },
+  "landing.a1HybridSearch.021": {
+    "message": "даёт BM25, ту же функцию релевантности, что использует Lucene, внутри обычного"
+  },
+  "landing.a1HybridSearch.022": {
+    "message": "Фильтры: обычный SQL."
+  },
+  "landing.a1HybridSearch.023": {
+    "message": "Категория, страница,"
+  },
+  "landing.a1HybridSearch.024": {
+    "message": "списки, диапазоны записываются рядом с"
+  },
+  "landing.a1HybridSearch.025": {
+    "message": "в том же"
+  },
+  "landing.a1HybridSearch.026": {
+    "message": "условии."
+  },
+  "landing.a1HybridSearch.027": {
+    "message": ": 47 страниц основных функций документации Doris 4.x, по одной строке на раздел:"
+  },
+  "landing.a1HybridSearch.030": {
+    "message": "значения"
+  },
+  "landing.a1HybridSearch.031": {
+    "message": "(для раскрывающегося списка фильтра):"
+  },
+  "landing.a1HybridSearch.032": {
+    "message": "О векторах."
+  },
+  "landing.a1HybridSearch.033": {
+    "message": "Для полностью автономной работы в стартовый набор включена небольшая, только для английского,"
+  },
+  "landing.a1HybridSearch.034": {
+    "message": "учебная модель эмбеддингов"
+  },
+  "landing.a1HybridSearch.036": {
+    "message": "(вывод совпадает до каждой цифры). Она отображает текст в 8 заданных вручную смысловых измерений:"
+  },
+  "landing.a1HybridSearch.037": {
+    "message": "поиск, векторы и ИИ, JSON, lakehouse, загрузка, производительность, модель данных, эксплуатация"
+  },
+  "landing.a1HybridSearch.038": {
+    "message": "с помощью списков синонимов и нормализует результат до единичной длины. Векторы таблицы получены той же функцией, поэтому векторы запросов находятся в том же пространстве. Подход намеренно прост, но уже показывает пользу векторного поиска:"
+  },
+  "landing.a1HybridSearch.040": {
+    "message": "находит страницы VARIANT, не упоминая JSON или VARIANT. В дополнительных заданиях вы замените её настоящей моделью."
+  },
+  "landing.a1HybridSearch.041": {
+    "message": "Контекстный промпт"
+  },
+  "landing.a1HybridSearch.042": {
+    "message": "вставьте в своего агента"
+  },
+  "landing.a1HybridSearch.043": {
+    "message": "Загрузите данные"
+  },
+  "landing.courseExtra.a1HybridSearch.001": {
+    "message": "5 мин"
+  },
+  "landing.a1HybridSearch.044": {
+    "message": "Из папки стартового набора:"
+  },
+  "landing.a1HybridSearch.045": {
+    "message": "M0 · Загрузка данных"
+  },
+  "landing.a1HybridSearch.046": {
+    "message": "Загрузка завершается выводом количества по категориям:"
+  },
+  "landing.a1HybridSearch.047": {
+    "message": "7 категорий, 299 разделов"
+  },
+  "landing.a1HybridSearch.048": {
+    "message": "всего."
+  },
+  "landing.a1HybridSearch.049": {
+    "message": "Поиск по ключевым словам с BM25"
+  },
+  "landing.a1HybridSearch.050": {
+    "message": "Поиск по ключевым словам"
+  },
+  "landing.courseExtra.a1HybridSearch.002": {
+    "message": "15 мин"
+  },
+  "landing.a1HybridSearch.051": {
+    "message": "Откройте оболочку SQL ("
+  },
+  "landing.a1HybridSearch.052": {
+    "message": ", либо командой"
+  },
+  "landing.a1HybridSearch.053": {
+    "message": "выше) и выполните:"
+  },
+  "landing.a1HybridSearch.054": {
+    "message": "M1 · Поиск по ключевым словам с BM25"
+  },
+  "landing.a1HybridSearch.055": {
+    "message": "Затем попробуйте"
+  },
+  "landing.a1HybridSearch.056": {
+    "message": "(должны присутствовать все слова) и"
+  },
+  "landing.a1HybridSearch.057": {
+    "message": "(рядом и по порядку). Соедините поле ввода → SQL → список результатов. Передавайте текст пользователя как параметр драйвера ("
+  },
+  "landing.a1HybridSearch.058": {
+    "message": "), а не вставляйте в SQL: первая же одинарная кавычка нарушит запрос."
+  },
+  "landing.a1HybridSearch.060": {
+    "message": "делают именно это."
+  },
+  "landing.a1HybridSearch.061": {
+    "message": "Ввели целый вопрос? Парсер english сохраняет стоп-слова, поэтому"
+  },
+  "landing.a1HybridSearch.062": {
+    "message": "совпадает с третью таблицы. Передайте вместо этого"
+  },
+  "landing.a1HybridSearch.063": {
+    "message": "из учебной модели: она удаляет стоп-слова, а также"
+  },
+  "landing.a1HybridSearch.067": {
+    "message": ", встречающиеся почти в каждом разделе."
+  },
+  "landing.a1HybridSearch.068": {
+    "message": "Лучшие результаты для"
+  },
+  "landing.a1HybridSearch.069": {
+    "message": "относятся к страницам Vector Index и Hybrid Search; первый:"
+  },
+  "landing.a1HybridSearch.071": {
+    "message": "Добавьте фильтры"
+  },
+  "landing.courseExtra.a1HybridSearch.003": {
+    "message": "10 мин"
+  },
+  "landing.a1HybridSearch.072": {
+    "message": "M2 · Добавление фильтров"
+  },
+  "landing.a1HybridSearch.073": {
+    "message": "Добавьте выбор категории через раскрывающийся список или флаг CLI (7 значений указаны в разделе «Данные»). Дополнительные условия: обычный SQL:"
+  },
+  "landing.a1HybridSearch.074": {
+    "message": "Разделы Vector Index исчезают, эта страница относится к категории"
+  },
+  "landing.a1HybridSearch.075": {
+    "message": ", а Hybrid Search выходит на первое место."
+  },
+  "landing.a1HybridSearch.076": {
+    "message": "Векторный поиск"
+  },
+  "landing.courseExtra.a1HybridSearch.004": {
+    "message": "15 мин"
+  },
+  "landing.a1HybridSearch.077": {
+    "message": "Получите эмбеддинг вопроса учебной моделью из кода или командной строки:"
+  },
+  "landing.a1HybridSearch.078": {
+    "message": "M3 · Получение эмбеддинга вопроса"
+  },
+  "landing.a1HybridSearch.079": {
+    "message": "M3 · Векторный поиск"
+  },
+  "landing.a1HybridSearch.080": {
+    "message": "В коде оставьте SQL неизменным и передайте вектор строкой как параметр:"
+  },
+  "landing.a1HybridSearch.081": {
+    "message": ". Список Python или массив JavaScript в качестве параметра не подойдут."
+  },
+  "landing.a1HybridSearch.082": {
+    "message": "Первые шесть результатов относятся к VARIANT, хотя вопрос не содержит ни JSON, ни VARIANT. Поиск по тем же ключевым словам добавляет разделы Metadata Cache и Binlog."
+  },
+  "landing.courseExtra.a1HybridSearch.005": {
+    "message": "20 мин"
+  },
+  "landing.a1HybridSearch.084": {
+    "message": "Вопрос:"
+  },
+  "landing.a1HybridSearch.086": {
+    "message": ". Вектор: учебный эмбеддинг вопроса; фильтр оставляет только разделы, содержащие"
+  },
+  "landing.a1HybridSearch.088": {
+    "message": "M4 · Гибридный поиск"
+  },
+  "landing.a1HybridSearch.089": {
+    "message": "предварительный фильтр по ключевым словам (инвертированный индекс)"
+  },
+  "landing.a1HybridSearch.090": {
+    "message": "структурированный фильтр"
+  },
+  "landing.a1HybridSearch.091": {
+    "message": "векторное ранжирование (ANN)"
+  },
+  "landing.a1HybridSearch.092": {
+    "message": "В приложении один ввод используется для обеих частей:"
+  },
+  "landing.a1HybridSearch.093": {
+    "message": "для"
+  },
+  "landing.a1HybridSearch.094": {
+    "message": "для вектора."
+  },
+  "landing.a1HybridSearch.095": {
+    "message": "для нескольких слов даёт мягкий фильтр; для строгого условия предложите поле обязательных слов или"
+  },
+  "landing.a1HybridSearch.096": {
+    "message": ". Не выбирайте"
+  },
+  "landing.a1HybridSearch.097": {
+    "message": "здесь: показывайте расстояние."
+  },
+  "landing.a1HybridSearch.098": {
+    "message": "Добавьте переключатель режима (ключевые слова / векторы / гибридный) и"
+  },
+  "landing.a1HybridSearch.100": {
+    "message": ". Сравните три списка для одного вопроса: где и почему они расходятся?"
+  },
+  "landing.a1HybridSearch.101": {
+    "message": "Каждый результат упоминает Kafka, первым идёт"
+  },
+  "landing.a1HybridSearch.103": {
+    "message": "Только векторный режим ставит"
+  },
+  "landing.a1HybridSearch.105": {
+    "message": "на первое место для того же вопроса."
+  },
+  "landing.courseExtra.a1HybridSearch.006": {
+    "message": "Пользователь может ввести произвольный текстовый запрос (аргумент CLI, промпт или поле ввода)."
+  },
+  "landing.a1HybridSearch.106": {
+    "message": "Работают три режима:"
+  },
+  "landing.a1HybridSearch.107": {
+    "message": "ключевые слова"
+  },
+  "landing.a1HybridSearch.108": {
+    "message": "(BM25 через"
+  },
+  "landing.a1HybridSearch.109": {
+    "message": "векторный"
+  },
+  "landing.a1HybridSearch.110": {
+    "message": "(ANN),"
+  },
+  "landing.a1HybridSearch.111": {
+    "message": "гибридный"
+  },
+  "landing.a1HybridSearch.112": {
+    "message": "(предварительный фильтр по ключевым словам + векторное ранжирование)."
+  },
+  "landing.courseExtra.a1HybridSearch.007": {
+    "message": "Есть хотя бы один структурированный фильтр (категория)."
+  },
+  "landing.courseExtra.a1HybridSearch.008": {
+    "message": "Результаты показывают страницу, раздел и оценку либо расстояние; выполненный SQL можно просмотреть."
+  },
+  "landing.courseExtra.a1HybridSearch.009": {
+    "message": "Работа отправлена через pull request: папка с вашим GitHub ID, кодом и README (запуск и один снимок экрана)."
+  },
+  "landing.a1HybridSearch.113": {
+    "message": "Reciprocal Rank Fusion."
+  },
+  "landing.a1HybridSearch.114": {
+    "message": "Объедините списки BM25 и векторного поиска с помощью"
+  },
+  "landing.a1HybridSearch.115": {
+    "message": "в одном запросе:"
+  },
+  "landing.a1HybridSearch.116": {
+    "message": "из стартового набора ранжирует каждый список с помощью"
+  },
+  "landing.a1HybridSearch.117": {
+    "message": "на один уровень выше обычного"
+  },
+  "landing.a1HybridSearch.118": {
+    "message": "запроса и объединяет их через"
+  },
+  "landing.a1HybridSearch.119": {
+    "message": ". Страница"
+  },
+  "landing.a1HybridSearch.120": {
+    "message": "RRF"
+  },
+  "landing.a1HybridSearch.121": {
+    "message": "разбирает тот же шаблон на примере из четырёх строк."
+  },
+  "landing.a1HybridSearch.122": {
+    "message": "Настоящие эмбеддинги с"
+  },
+  "landing.a1HybridSearch.123": {
+    "message": "(с вашим API-ключом): создайте ресурс ИИ и"
+  },
+  "landing.a1HybridSearch.124": {
+    "message": "с параметром модели"
+  },
+  "landing.a1HybridSearch.125": {
+    "message": ", заполните через"
+  },
+  "landing.a1HybridSearch.126": {
+    "message": "(векторный столбец имеет тип"
+  },
+  "landing.a1HybridSearch.127": {
+    "message": ", поэтому вставляйте, а не обновляйте) и получите эмбеддинг запроса тоже в SQL. См."
+  },
+  "landing.a1HybridSearch.128": {
+    "message": "Эмбеддинги"
+  },
+  "landing.courseExtra.a1HybridSearch.010": {
+    "message": "Поиск по мере ввода"
+  },
+  "landing.a1HybridSearch.130": {
+    "message": "Подсветка совпавших слов"
+  },
+  "landing.a1HybridSearch.131": {
+    "message": "в результатах (Doris возвращает оценки, а не подсветку; отрисуйте её в приложении)."
+  },
+  "landing.a1HybridSearch.132": {
+    "message": "Индикатор задержки"
+  },
+  "landing.a1HybridSearch.133": {
+    "message": ": покажите время каждого режима в миллисекундах."
+  },
+  "landing.a1HybridSearch.134": {
+    "message": "Векторный литерал пуст или остался шаблоном: вставьте вывод"
+  },
+  "landing.a1HybridSearch.135": {
+    "message": "Драйвер развернул параметр-массив в 8 значений: передайте вектор строкой через"
+  },
+  "landing.a1HybridSearch.136": {
+    "message": "Гибридный поиск"
+  },
+  "landing.a1HybridSearch.137": {
+    "message": "BM25"
+  },
+  "landing.a1HybridSearch.138": {
+    "message": "Полнотекстовый поиск"
+  },
+  "landing.a1HybridSearch.139": {
+    "message": "Векторный индекс"
+  },
+  "landing.a1HybridSearch.140": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a1HybridSearch.141": {
+    "message": "Эмбеддинги"
+  },
+  "landing.a2Mcp.001": {
+    "message": "Сколько строк логов по сервисам и уровням в"
+  },
+  "landing.a2Mcp.002": {
+    "message": "Базовая агрегация"
+  },
+  "landing.a2Mcp.003": {
+    "message": "Покажите количество ERROR по сервисам с 11:00 до 12:30 с интервалом 5 минут. В каком сервисе всплеск начался первым?"
+  },
+  "landing.a2Mcp.004": {
+    "message": "Группировка по времени и рассуждение"
+  },
+  "landing.a2Mcp.005": {
+    "message": "Найдите 10 строк логов, наиболее релевантных «payment gateway timeout», в порядке релевантности."
+  },
+  "landing.a2Mcp.006": {
+    "message": "Полнотекстовый поиск Doris + BM25 (использует ли"
+  },
+  "landing.a2Mcp.007": {
+    "message": ", или переходит к"
+  },
+  "landing.a2Mcp.008": {
+    "message": "У какого инструмента агента худшая задержка p95 и как часто он завершается ошибкой?"
+  },
+  "landing.courseExtra.a2Mcp.011": {
+    "message": "Для начинающих"
+  },
+  "landing.courseExtra.a2Mcp.013": {
+    "message": "ИИ-инструменты приветствуются"
+  },
+  "landing.courseExtra.a2Mcp.002": {
+    "message": "5 мин"
+  },
+  "landing.courseExtra.a2Mcp.003": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a2Mcp.004": {
+    "message": "10 мин"
+  },
+  "landing.courseExtra.a2Mcp.006": {
+    "message": "5 мин"
+  },
+  "landing.courseExtra.a3LogSearch.011": {
+    "message": "Для начинающих"
+  },
+  "landing.courseExtra.a3LogSearch.012": {
+    "message": "Любой язык · CLI или веб"
+  },
+  "landing.courseExtra.a3LogSearch.013": {
+    "message": "ИИ-инструменты приветствуются"
+  },
+  "landing.a3LogSearch.036": {
+    "message": "Контекстный промпт"
+  },
+  "landing.a3LogSearch.037": {
+    "message": "вставьте в своего агента"
+  },
+  "landing.courseExtra.a3LogSearch.001": {
+    "message": "5 мин"
+  },
+  "landing.a3LogSearch.039": {
+    "message": "Из папки стартового набора:"
+  },
+  "landing.a3LogSearch.045": {
+    "message": "Поиск по ключевым словам с BM25"
+  },
+  "landing.a3LogSearch.046": {
+    "message": "Поиск по ключевым словам"
+  },
+  "landing.courseExtra.a3LogSearch.002": {
+    "message": "15 мин"
+  },
+  "landing.a3LogSearch.047": {
+    "message": "M1 · Поиск по ключевым словам с BM25"
+  },
+  "landing.courseExtra.a3LogSearch.003": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a3LogSearch.004": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a3LogSearch.005": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a3LogSearch.009": {
+    "message": "Работа отправлена через pull request: папка с вашим GitHub ID, кодом и README (запуск и один снимок экрана)."
+  },
+  "landing.a3LogSearch.091": {
+    "message": "Полнотекстовый поиск"
+  },
+  "landing.a3LogSearch.092": {
+    "message": "BM25"
+  },
+  "landing.courseExtra.a4AgentTraces.014": {
+    "message": "ИИ-инструменты приветствуются"
+  },
+  "landing.a4AgentTraces.039": {
+    "message": "Контекстный промпт"
+  },
+  "landing.a4AgentTraces.040": {
+    "message": "вставьте в своего агента"
+  },
+  "landing.courseExtra.a4AgentTraces.001": {
+    "message": "10 мин"
+  },
+  "landing.a4AgentTraces.042": {
+    "message": "Из папки стартового набора:"
+  },
+  "landing.courseExtra.a4AgentTraces.002": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a4AgentTraces.003": {
+    "message": "15 мин"
+  },
+  "landing.courseExtra.a4AgentTraces.004": {
+    "message": "10 мин"
+  },
+  "landing.courseExtra.a4AgentTraces.005": {
+    "message": "20 мин"
+  },
+  "landing.courseExtra.a4AgentTraces.006": {
+    "message": "10 мин"
+  },
+  "landing.a4AgentTraces.102": {
+    "message": "Полнотекстовый поиск"
+  },
+  "landing.HackathonTrackBPage.019": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.trackB.chip.2": {
+    "message": "Для начинающих"
+  },
+  "landing.trackB.task.B1.doc": {
+    "message": "Полнотекстовый поиск"
+  },
+  "landing.trackB.task.B1.alsoSee.0": {
+    "message": "BM25"
+  },
+  "landing.trackB.task.B2.doc": {
+    "message": "Векторный индекс"
+  },
+  "landing.trackB.task.B3.title": {
+    "message": "Гибридный поиск"
+  },
+  "landing.trackB.task.B3.doc": {
+    "message": "Гибридный поиск"
+  },
+  "landing.trackB.task.B3.alsoSee.0": {
+    "message": "Reciprocal Rank Fusion"
+  },
+  "landing.a2Mcp.009": {
+    "message": "Пути VARIANT и приведение типов"
+  },
+  "landing.a2Mcp.010": {
+    "message": "Какие разделы документации Doris объясняют предварительную фильтрацию для векторного поиска?"
+  },
+  "landing.a2Mcp.011": {
+    "message": "Поиск по"
+  },
+  "landing.a2Mcp.012": {
+    "message": "Спросите Doris"
+  },
+  "landing.a2Mcp.013": {
+    "message": "через MCP"
+  },
+  "landing.a2Mcp.014": {
+    "message": "Подключите Doris к привычному ИИ-помощнику и получайте ответы на реальные вопросы с помощью настоящего SQL."
+  },
+  "landing.courseExtra.a2Mcp.012": {
+    "message": "Python 3.12+ · любой клиент MCP"
+  },
+  "landing.a2Mcp.015": {
+    "message": "Превратите своего ИИ-помощника в аналитика данных Doris."
+  },
+  "landing.a2Mcp.016": {
+    "message": "Apache Doris MCP Server открывает доступ к кластеру любому помощнику с поддержкой MCP. Подключите его, затем предложите изучить данные хакатона, написать SQL и ответить на вопросы, для которых вы обычно используете дашборд."
+  },
+  "landing.a2Mcp.017": {
+    "message": "Рабочая конфигурация: ваш клиент MCP обращается к локальному Doris через официальный"
+  },
+  "landing.a2Mcp.018": {
+    "message": "Doris MCP Server 1.0"
+  },
+  "landing.a2Mcp.019": {
+    "message": ". Дополните её кратким описанием того, как помощник:"
+  },
+  "landing.a2Mcp.020": {
+    "message": "самостоятельно обнаруживает"
+  },
+  "landing.a2Mcp.021": {
+    "message": "таблицы,"
+  },
+  "landing.a2Mcp.022": {
+    "message": "отвечает минимум на три вопроса о данных, создавая и выполняя SQL,"
+  },
+  "landing.a2Mcp.023": {
+    "message": "отклоняет разрушительный запрос (поскольку сервер и пользователь работают только на чтение)."
+  },
+  "landing.a2Mcp.024": {
+    "message": "Только чтение по замыслу."
+  },
+  "landing.a2Mcp.025": {
+    "message": "Doris MCP Server 1.0 предоставляет только возможности чтения; окончательные полномочия определяются RBAC Doris."
+  },
+  "landing.a2Mcp.026": {
+    "message": "Восемь доменов вместо плоского списка инструментов."
+  },
+  "landing.a2Mcp.027": {
+    "message": "Каталог, запросы, кластер, конвейеры,"
+  },
+  "landing.a2Mcp.028": {
+    "message": "поиск"
+  },
+  "landing.a2Mcp.029": {
+    "message": ", управление, lakehouse и семантика раскрываются постепенно, чтобы модель видела только необходимое."
+  },
+  "landing.courseExtra.a2Mcp.001": {
+    "message": "Знание поиска."
+  },
+  "landing.a2Mcp.030": {
+    "message": "Домен"
+  },
+  "landing.a2Mcp.031": {
+    "message": "знает о текстовом, векторном и гибридном поиске, поэтому помощник может использовать поисковые функции Doris без догадок."
+  },
+  "landing.a2Mcp.032": {
+    "message": "Python 3.12 или новее и установленный сервер."
+  },
+  "landing.a2Mcp.033": {
+    "message": "Проверьте через"
+  },
+  "landing.a2Mcp.034": {
+    "message": ". Установите сервер заранее (команды в этапе 2): он загружает около 80 пакетов."
+  },
+  "landing.a2Mcp.035": {
+    "message": "Привычный ИИ-клиент с поддержкой MCP"
+  },
+  "landing.a2Mcp.036": {
+    "message": "(и его учётная запись)."
+  },
+  "landing.a2Mcp.037": {
+    "message": "Все таблицы хакатона загружены."
+  },
+  "landing.a2Mcp.038": {
+    "message": "Выполните из папки стартового набора. В конце выводится число строк каждой таблицы."
+  },
+  "landing.a2Mcp.039": {
+    "message": "Это задание уже посвящено ИИ."
+  },
+  "landing.a2Mcp.040": {
+    "message": "Текст ниже учит помощника писать SQL для Doris. Это основа файла инструкций в первом дополнительном задании."
+  },
+  "landing.a2Mcp.041": {
+    "message": "Файл инструкций"
+  },
+  "landing.a2Mcp.042": {
+    "message": "вставьте в клиент"
+  },
+  "landing.a2Mcp.043": {
+    "message": "Создайте пользователя только для чтения"
+  },
+  "landing.a2Mcp.044": {
+    "message": "Пользователь только для чтения"
+  },
+  "landing.a2Mcp.045": {
+    "message": "M1 · Пользователь только для чтения"
+  },
+  "landing.a2Mcp.046": {
+    "message": "Никогда не передавайте LLM учётную запись root, даже на ноутбуке. Выполните в SQL-оболочке или загрузите"
+  },
+  "landing.a2Mcp.047": {
+    "message": "из стартового набора."
+  },
+  "landing.a2Mcp.049": {
+    "message": "на"
+  },
+  "landing.a2Mcp.050": {
+    "message": ", без каких-либо прав записи."
+  },
+  "landing.a2Mcp.051": {
+    "message": "Установите и зарегистрируйте сервер"
+  },
+  "landing.a2Mcp.052": {
+    "message": "Установите сервер"
+  },
+  "landing.a2Mcp.053": {
+    "message": "M2 · Установка"
+  },
+  "landing.a2Mcp.054": {
+    "message": "Добавьте в настройки MCP клиента (имя и расположение файла зависят от клиента). В стартовом наборе это файл"
+  },
+  "landing.a2Mcp.055": {
+    "message": "M2 · Настройка MCP"
+  },
+  "landing.a2Mcp.056": {
+    "message": "Клиент показывает сервер Doris и восемь его"
+  },
+  "landing.a2Mcp.057": {
+    "message": "доменов (catalog, cluster, governance, lakehouse, pipeline, query, search, semantic)."
+  },
+  "landing.a2Mcp.058": {
+    "message": "Предложите изучить данные"
+  },
+  "landing.a2Mcp.059": {
+    "message": "Спросите:"
+  },
+  "landing.a2Mcp.060": {
+    "message": "«Какие таблицы есть в базе hackathon и для чего нужна каждая из них?»"
+  },
+  "landing.a2Mcp.061": {
+    "message": "Посмотрите, какие возможности он вызывает."
+  },
+  "landing.a2Mcp.062": {
+    "message": "M3 · Вопрос помощнику"
+  },
+  "landing.a2Mcp.063": {
+    "message": "вставьте в клиент"
+  },
+  "landing.a2Mcp.064": {
+    "message": "Задайте реальные вопросы"
+  },
+  "landing.a2Mcp.065": {
+    "message": "Реальные вопросы"
+  },
+  "landing.courseExtra.a2Mcp.005": {
+    "message": "20–40 мин"
+  },
+  "landing.a2Mcp.066": {
+    "message": "Выберите не менее трёх:"
+  },
+  "landing.a2Mcp.068": {
+    "message": "Вопрос"
+  },
+  "landing.a2Mcp.069": {
+    "message": "Что проверяется"
+  },
+  "landing.a2Mcp.071": {
+    "message": "Вопрос"
+  },
+  "landing.a2Mcp.072": {
+    "message": "Что проверяется"
+  },
+  "landing.a2Mcp.073": {
+    "message": "M4 · Вопросы"
+  },
+  "landing.a2Mcp.074": {
+    "message": "вставьте в клиент"
+  },
+  "landing.a2Mcp.075": {
+    "message": "Для каждого ответа сохраните выполненный помощником SQL и самостоятельно проверьте результат."
+  },
+  "landing.a2Mcp.076": {
+    "message": "Проверьте ограничения"
+  },
+  "landing.a2Mcp.077": {
+    "message": "Спросите:"
+  },
+  "landing.a2Mcp.078": {
+    "message": "«Удалите все логи INFO, чтобы освободить место.»"
+  },
+  "landing.a2Mcp.079": {
+    "message": "Запишите результат. (Ожидается отказ: сервер отвечает"
+  },
+  "landing.a2Mcp.080": {
+    "message": ", а"
+  },
+  "landing.a2Mcp.081": {
+    "message": "тоже не имеет права записи.)"
+  },
+  "landing.a2Mcp.082": {
+    "message": "M5 · Вопрос помощнику"
+  },
+  "landing.a2Mcp.083": {
+    "message": "вставьте в клиент"
+  },
+  "landing.courseExtra.a2Mcp.007": {
+    "message": "Doris MCP Server подключён к ИИ-клиенту (снимок списка инструментов)."
+  },
+  "landing.a2Mcp.084": {
+    "message": "Не менее"
+  },
+  "landing.a2Mcp.085": {
+    "message": "трёх"
+  },
+  "landing.a2Mcp.086": {
+    "message": "вопросов с ответами, выполненным SQL и результатом для каждого."
+  },
+  "landing.courseExtra.a2Mcp.008": {
+    "message": "Задокументирован один тест безопасности (отказ в записи)."
+  },
+  "landing.courseExtra.a2Mcp.009": {
+    "message": "Описание в README папки с вашим GitHub ID: клиент, настройки (без секретов), вопросы с ответами и один непонятный момент или предложение по улучшению."
+  },
+  "landing.a2Mcp.087": {
+    "message": "Обучите помощника Doris."
+  },
+  "landing.a2Mcp.088": {
+    "message": "Напишите многоразовый файл инструкций (правила, skill или системный промпт клиента), описывающий"
+  },
+  "landing.a2Mcp.089": {
+    "message": ", функции расстояния ANN и приведение VARIANT. Повторите вопросы уровней 3–4 и сравните точность до и после."
+  },
+  "landing.a2Mcp.090": {
+    "message": "Транспорт HTTP."
+  },
+  "landing.a2Mcp.092": {
+    "message": "и подключите второй клиент к"
+  },
+  "landing.a2Mcp.093": {
+    "message": "Спросите, почему запрос медленный."
+  },
+  "landing.a2Mcp.094": {
+    "message": "Изучите домен"
+  },
+  "landing.a2Mcp.095": {
+    "message": "(explain, profile)."
+  },
+  "landing.a2Mcp.096": {
+    "message": "Улучшите документацию."
+  },
+  "landing.a2Mcp.097": {
+    "message": "Что-нибудь на странице"
+  },
+  "landing.a2Mcp.098": {
+    "message": "MCP Server"
+  },
+  "landing.a2Mcp.099": {
+    "message": "замедлило вас? Откройте PR с исправлением: это тоже вклад в документацию."
+  },
+  "landing.a2Mcp.100": {
+    "message": "Клиент не может запустить сервер"
+  },
+  "landing.a2Mcp.101": {
+    "message": "Используйте абсолютный путь из"
+  },
+  "landing.a2Mcp.102": {
+    "message": "; GUI-приложения часто не наследуют"
+  },
+  "landing.a2Mcp.103": {
+    "message": "или virtualenv вашей оболочки"
+  },
+  "landing.a2Mcp.104": {
+    "message": "отказывает: слишком старая версия Python"
+  },
+  "landing.a2Mcp.105": {
+    "message": "Серверу нужен Python 3.12+; создайте venv через"
+  },
+  "landing.a2Mcp.106": {
+    "message": "(либо используйте"
+  },
+  "landing.a2Mcp.107": {
+    "message": "Клиент показывает домены, но не вызывает дочерние возможности"
+  },
+  "landing.a2Mcp.108": {
+    "message": "Возможно, клиент не поддерживает постепенное раскрытие: добавьте"
+  },
+  "landing.a2Mcp.109": {
+    "message": "в"
+  },
+  "landing.a2Mcp.110": {
+    "message": "Доступ запрещён"
+  },
+  "landing.a2Mcp.111": {
+    "message": "Проверьте"
+  },
+  "landing.a2Mcp.112": {
+    "message": "в M1 и пару"
+  },
+  "landing.a2Mcp.113": {
+    "message": "значений"
+  },
+  "landing.a2Mcp.114": {
+    "message": "Репозиторий Doris MCP Server"
+  },
+  "landing.a2Mcp.115": {
+    "message": "README и быстрый старт для 1.0"
+  },
+  "landing.a2Mcp.116": {
+    "message": "Страница функции MCP Server"
+  },
+  "landing.a2Mcp.117": {
+    "message": "Model Context Protocol"
+  },
+  "landing.a3LogSearch.001": {
+    "message": "Обозреватель"
+  },
+  "landing.a3LogSearch.002": {
+    "message": "поиска по логам"
+  },
+  "landing.a3LogSearch.003": {
+    "message": "Мини-Kibana, где всё работает на SQL. С её помощью выясните причину сбоя оформления заказов в 11:40."
+  },
+  "landing.a3LogSearch.004": {
+    "message": "Создайте обозреватель логов и разберите с его помощью сбой."
+  },
+  "landing.a3LogSearch.005": {
+    "message": "200,000 строк логов, шесть сервисов, одно неудачное утро. Ищите по ключевым словам с ранжированием BM25, фильтруйте по сервису, уровню и времени, считайте результаты. Всё на обычном SQL в одной таблице Doris."
+  },
+  "landing.a3LogSearch.006": {
+    "message": "Небольшой обозреватель логов с:"
+  },
+  "landing.a3LogSearch.007": {
+    "message": "одним"
+  },
+  "landing.a3LogSearch.008": {
+    "message": "полем поиска"
+  },
+  "landing.a3LogSearch.009": {
+    "message": "(ключевые слова, фразы) с ранжированием по релевантности,"
+  },
+  "landing.a3LogSearch.010": {
+    "message": "фильтрами"
+  },
+  "landing.a3LogSearch.011": {
+    "message": "по сервису, уровню и диапазону времени,"
+  },
+  "landing.a3LogSearch.012": {
+    "message": "счётчиками фасетов"
+  },
+  "landing.a3LogSearch.013": {
+    "message": "рядом с результатами (совпадения по сервисам и уровням),"
+  },
+  "landing.a3LogSearch.014": {
+    "message": "необязательной"
+  },
+  "landing.a3LogSearch.015": {
+    "message": "хронологией"
+  },
+  "landing.a3LogSearch.016": {
+    "message": "числа ошибок за каждые 5 минут."
+  },
+  "landing.a3LogSearch.017": {
+    "message": "Затем настоящее испытание:"
+  },
+  "landing.a3LogSearch.018": {
+    "message": "В 11:40 оформление заказов начало сбоить. Какой сервис стал причиной и когда проблема началась на самом деле?"
+  },
+  "landing.a3LogSearch.019": {
+    "message": "Ваш обозреватель должен сделать ответ очевидным."
+  },
+  "landing.a3LogSearch.020": {
+    "message": "Поиск и аналитика в одной таблице."
+  },
+  "landing.a3LogSearch.021": {
+    "message": "Инвертированный индекс отвечает на запрос по ключевым словам; то же условие"
+  },
+  "landing.a3LogSearch.022": {
+    "message": "подаётся в"
+  },
+  "landing.a3LogSearch.023": {
+    "message": "для подсчёта фасетов. Не нужно синхронизировать вторую систему."
+  },
+  "landing.a3LogSearch.024": {
+    "message": "Настоящее ранжирование."
+  },
+  "landing.a3LogSearch.025": {
+    "message": "сортирует результаты по BM25: первыми идут наиболее релевантные строки, а не просто самые новые."
+  },
+  "landing.a3LogSearch.026": {
+    "message": "Недорогие фильтры."
+  },
+  "landing.a3LogSearch.028": {
+    "message": "имеют собственные инвертированные индексы; диапазоны времени отсекаются по ключу сортировки."
+  },
+  "landing.a3LogSearch.029": {
+    "message": ": одна таблица для всех шести сервисов:"
+  },
+  "landing.a3LogSearch.032": {
+    "message": "генерирует"
+  },
+  "landing.a3LogSearch.033": {
+    "message": "200,000 строк за 13 октября 2026 г."
+  },
+  "landing.a3LogSearch.034": {
+    "message": "одним"
+  },
+  "landing.a3LogSearch.035": {
+    "message": ". Скачивать ничего не нужно. Где-то в этих данных скрыт сбой."
+  },
+  "landing.a3LogSearch.038": {
+    "message": "Сгенерируйте логи"
+  },
+  "landing.a3LogSearch.040": {
+    "message": "M0 · Генерация логов"
+  },
+  "landing.a3LogSearch.041": {
+    "message": "Через несколько секунд:"
+  },
+  "landing.a3LogSearch.042": {
+    "message": "строк логов, с"
+  },
+  "landing.a3LogSearch.043": {
+    "message": "до"
+  },
+  "landing.a3LogSearch.044": {
+    "message": "13 октября."
+  },
+  "landing.a3LogSearch.048": {
+    "message": "Подключите к полю поиска. Передавайте текст пользователя параметром драйвера ("
+  },
+  "landing.a4AgentTraces.002": {
+    "message": "трассировок агентов"
+  },
+  "landing.a4AgentTraces.009": {
+    "message": "одним"
+  },
+  "landing.a4AgentTraces.012": {
+    "message": "одним"
+  },
+  "landing.a4AgentTraces.078": {
+    "message": ", а"
+  },
+  "landing.HackathonTrackBPage.058": {
+    "message": "на"
+  },
+  "landing.HackathonTrackBPage.093": {
+    "message": "на"
+  },
+  "landing.a3LogSearch.049": {
+    "message": "из стартового набора делает именно это."
+  },
+  "landing.a3LogSearch.050": {
+    "message": "Все 20 результатов:"
+  },
+  "landing.a3LogSearch.051": {
+    "message": "строки. BM25 даёт больший вес редким словам:"
+  },
+  "landing.a3LogSearch.053": {
+    "message": "встречается в 68 строках,"
+  },
+  "landing.a3LogSearch.055": {
+    "message": "в 347. Выполните поиск только по"
+  },
+  "landing.a3LogSearch.056": {
+    "message": "и увидите остальные."
+  },
+  "landing.a3LogSearch.057": {
+    "message": "Фильтры"
+  },
+  "landing.a3LogSearch.058": {
+    "message": "M2 · Фильтры"
+  },
+  "landing.a3LogSearch.059": {
+    "message": "Каждый результат: строка ERROR с упоминанием timeout. Отображается только один из двух сервисов."
+  },
+  "landing.a3LogSearch.060": {
+    "message": "Счётчики фасетов"
+  },
+  "landing.a3LogSearch.061": {
+    "message": "нельзя агрегировать, поэтому для фасетов используйте тот же фильтр без него:"
+  },
+  "landing.a3LogSearch.062": {
+    "message": "M3 · Счётчики фасетов"
+  },
+  "landing.a3LogSearch.063": {
+    "message": "В этом интервале 163 совпадающие строки, все"
+  },
+  "landing.a3LogSearch.064": {
+    "message": ". Сумма должна совпадать с тем же поиском без"
+  },
+  "landing.a3LogSearch.065": {
+    "message": ": проверьте через"
+  },
+  "landing.a3LogSearch.066": {
+    "message": "и то же"
+  },
+  "landing.a3LogSearch.067": {
+    "message": "Хронология ошибок"
+  },
+  "landing.a3LogSearch.068": {
+    "message": "M4 · Хронология ошибок"
+  },
+  "landing.a3LogSearch.069": {
+    "message": "В двух сервисах наблюдается всплеск с 11:35 до 12:00. В остальное время ни один сервис не пишет больше 4 ошибок за 5 минут."
+  },
+  "landing.a3LogSearch.070": {
+    "message": "Разберите сбой"
+  },
+  "landing.a3LogSearch.071": {
+    "message": "Ответьте с помощью обозревателя:"
+  },
+  "landing.a3LogSearch.072": {
+    "message": "Какой сервис вызвал сбои оформления заказов и в какую минуту это началось?"
+  },
+  "landing.a3LogSearch.073": {
+    "message": "Запишите в README ответ и подтверждающий его запрос."
+  },
+  "landing.a3LogSearch.074": {
+    "message": "Поиск по ключевым словам с ранжированием BM25 ("
+  },
+  "landing.courseExtra.a3LogSearch.006": {
+    "message": "Не менее двух структурированных фильтров (сервис, уровень) и диапазон времени."
+  },
+  "landing.courseExtra.a3LogSearch.007": {
+    "message": "Счётчики фасетов, соответствующие текущему поиску."
+  },
+  "landing.courseExtra.a3LogSearch.008": {
+    "message": "Сбой разобран: определены сервис-причина и время начала, приведён подтверждающий запрос."
+  },
+  "landing.a3LogSearch.075": {
+    "message": "Фразы и поиск при вводе"
+  },
+  "landing.a3LogSearch.076": {
+    "message": "для поиска по мере ввода."
+  },
+  "landing.a3LogSearch.077": {
+    "message": "Просмотр трассировки"
+  },
+  "landing.a3LogSearch.078": {
+    "message": ": нажмите строку, чтобы увидеть все логи с тем же"
+  },
+  "landing.a3LogSearch.079": {
+    "message": ", в хронологическом порядке."
+  },
+  "landing.a3LogSearch.080": {
+    "message": "Поиск строкой запроса"
+  },
+  "landing.a3LogSearch.081": {
+    "message": ": попробуйте"
+  },
+  "landing.a3LogSearch.082": {
+    "message": "DSL (в стиле Lucene"
+  },
+  "landing.a3LogSearch.083": {
+    "message": ") см."
+  },
+  "landing.a3LogSearch.084": {
+    "message": "Функция SEARCH"
+  },
+  "landing.a3LogSearch.085": {
+    "message": "Отслеживание новых логов"
+  },
+  "landing.a3LogSearch.086": {
+    "message": ": вставляйте несколько строк каждую секунду и обновляйте автоматически."
+  },
+  "landing.a3LogSearch.087": {
+    "message": "С индексом и без него"
+  },
+  "landing.a3LogSearch.088": {
+    "message": ": сравните"
+  },
+  "landing.a3LogSearch.090": {
+    "message": "по всей таблице и покажите время."
+  },
+  "landing.a3LogSearch.093": {
+    "message": "Инвертированный индекс"
+  },
+  "landing.a3LogSearch.094": {
+    "message": "Функция SEARCH"
+  },
+  "landing.a4AgentTraces.001": {
+    "message": "Обозреватель"
+  },
+  "landing.a4AgentTraces.003": {
+    "message": "ИИ-агенты выдают JSON, структура которого меняется с каждым релизом. Храните его в VARIANT и запрашивайте как обычные столбцы."
+  },
+  "landing.courseExtra.a4AgentTraces.012": {
+    "message": "Средний уровень"
+  },
+  "landing.courseExtra.a4AgentTraces.013": {
+    "message": "Любой язык · CLI, блокнот или веб"
+  },
+  "landing.a4AgentTraces.004": {
+    "message": "JSON агента разнороден. Всё равно запрашивайте его."
+  },
+  "landing.a4AgentTraces.005": {
+    "message": "Вызовы LLM, вызовы инструментов, ошибки, итоговые ответы: у каждого свои поля, а каждый релиз добавляет новые. Doris"
+  },
+  "landing.a4AgentTraces.006": {
+    "message": "автоматически преобразует JSON в типизированные столбцы, позволяя фильтровать, искать и агрегировать обычным SQL. Без миграций схемы."
+  },
+  "landing.a4AgentTraces.007": {
+    "message": "Обозреватель трассировок для"
+  },
+  "landing.a4AgentTraces.008": {
+    "message": "1,000 сессий ИИ-агента (около 20,000 событий)"
+  },
+  "landing.a4AgentTraces.010": {
+    "message": "списком сессий"
+  },
+  "landing.a4AgentTraces.011": {
+    "message": "с числом событий, ошибками, токенами и задержкой,"
+  },
+  "landing.a4AgentTraces.013": {
+    "message": "хронологией сессии"
+  },
+  "landing.a4AgentTraces.014": {
+    "message": ": нажмите сессию, чтобы пошагово воспроизвести действия агента,"
+  },
+  "landing.a4AgentTraces.015": {
+    "message": "статистикой инструментов и моделей"
+  },
+  "landing.a4AgentTraces.016": {
+    "message": ": задержка p95, доля ошибок, расход токенов,"
+  },
+  "landing.a4AgentTraces.017": {
+    "message": "поиском внутри JSON"
+  },
+  "landing.a4AgentTraces.018": {
+    "message": ": найдите все ошибки инструментов с упоминанием «timeout»."
+  },
+  "landing.a4AgentTraces.019": {
+    "message": "Затем ответьте:"
+  },
+  "landing.a4AgentTraces.020": {
+    "message": "Стало лучше или хуже после выпуска v2 агента, развёрнутого в 13:00?"
+  },
+  "landing.a4AgentTraces.021": {
+    "message": "Схема при записи без задания схемы."
+  },
+  "landing.a4AgentTraces.022": {
+    "message": "VARIANT определяет тип каждого пути JSON и сохраняет частые пути как настоящие колоночные подстолбцы, поэтому"
+  },
+  "landing.a4AgentTraces.023": {
+    "message": "читает один столбец, а не разбирает каждый документ."
+  },
+  "landing.a4AgentTraces.024": {
+    "message": "Новые поля появляются автоматически."
+  },
+  "landing.a4AgentTraces.025": {
+    "message": "Когда события v2 добавляют"
+  },
+  "landing.a4AgentTraces.026": {
+    "message": ", новый путь появляется как подстолбец при следующей загрузке, без"
+  },
+  "landing.a4AgentTraces.027": {
+    "message": "Поиск внутри JSON."
+  },
+  "landing.a4AgentTraces.028": {
+    "message": "Инвертированный индекс на VARIANT позволяет искать по любому текстовому пути с помощью"
+  },
+  "landing.a4AgentTraces.029": {
+    "message": ": по строке на событие агента, содержимое события в столбце VARIANT:"
+  },
+  "landing.a4AgentTraces.032": {
+    "message": "Примеры данных: обратите внимание на различия структуры:"
+  },
+  "landing.a4AgentTraces.033": {
+    "message": "Примеры данных"
+  },
+  "landing.a4AgentTraces.034": {
+    "message": "Сессии, начавшиеся в 13:00 или позже, работают на"
+  },
+  "landing.a4AgentTraces.035": {
+    "message": "агенте v2"
+  },
+  "landing.a4AgentTraces.036": {
+    "message": ": в данных указано"
+  },
+  "landing.a4AgentTraces.037": {
+    "message": ", а вызовы LLM в v2 добавляют флаг"
+  },
+  "landing.a4AgentTraces.038": {
+    "message": ". На этапе 5 вы загрузите события с полями, которых таблица ещё не видела."
+  },
+  "landing.a4AgentTraces.041": {
+    "message": "Загрузите и изучите"
+  },
+  "landing.a4AgentTraces.043": {
+    "message": "M0 · Загрузка"
+  },
+  "landing.a4AgentTraces.044": {
+    "message": "Затем в оболочке SQL:"
+  },
+  "landing.a4AgentTraces.045": {
+    "message": "M0 · Изучение"
+  },
+  "landing.a4AgentTraces.046": {
+    "message": "Загрузка сообщает:"
+  },
+  "landing.a4AgentTraces.047": {
+    "message": "1,000 сессий и 20,401 событие"
+  },
+  "landing.a4AgentTraces.048": {
+    "message": "показывает около 20"
+  },
+  "landing.a4AgentTraces.049": {
+    "message": "путей, каждый с определённым типом."
+  },
+  "landing.a4AgentTraces.050": {
+    "message": "Запрашивайте пути JSON"
+  },
+  "landing.a4AgentTraces.051": {
+    "message": "M1 · Запросы по путям JSON"
+  },
+  "landing.a4AgentTraces.052": {
+    "message": "Пять инструментов;"
+  },
+  "landing.a4AgentTraces.053": {
+    "message": "вызывается чаще всего (3,506 раз)."
+  },
+  "landing.a4AgentTraces.054": {
+    "message": "Агрегируйте определённые подстолбцы"
+  },
+  "landing.a4AgentTraces.055": {
+    "message": "Агрегация подстолбцов"
+  },
+  "landing.a4AgentTraces.056": {
+    "message": "M2 · Агрегация определённых подстолбцов"
+  },
+  "landing.a4AgentTraces.057": {
+    "message": "имеет худший p95 (около 2.1 с);"
+  },
+  "landing.a4AgentTraces.058": {
+    "message": "чаще всего завершается ошибкой (425 ошибок)."
+  },
+  "landing.a4AgentTraces.059": {
+    "message": "Поиск внутри JSON"
+  },
+  "landing.a4AgentTraces.060": {
+    "message": "Поиск по JSON"
+  },
+  "landing.a4AgentTraces.061": {
+    "message": "M3 · Поиск внутри JSON"
+  },
+  "landing.a4AgentTraces.062": {
+    "message": "Всего 398 событий упоминают timeout. Подсчитайте их по часам: это первая подсказка о v2."
+  },
+  "landing.a4AgentTraces.064": {
+    "message": "M4 · Хронология сессии"
+  },
+  "landing.a4AgentTraces.065": {
+    "message": "Постройте интерфейс вокруг этих запросов: список сессий → хронология → статистика."
+  },
+  "landing.a4AgentTraces.066": {
+    "message": "Сессия"
+  },
+  "landing.a4AgentTraces.067": {
+    "message": "содержит 25 событий: вопрос, вызовы LLM и инструментов (один неудачный"
+  },
+  "landing.a4AgentTraces.068": {
+    "message": ", затем повторная попытка) и итоговый ответ."
+  },
+  "landing.a4AgentTraces.069": {
+    "message": "Наблюдайте эволюцию схемы"
+  },
+  "landing.a4AgentTraces.070": {
+    "message": "Эволюция схемы"
+  },
+  "landing.a4AgentTraces.071": {
+    "message": "M5 · Загрузка пакета с изменённой схемой"
+  },
+  "landing.a4AgentTraces.072": {
+    "message": "M5 · Запросы по новым полям"
+  },
+  "landing.a4AgentTraces.074": {
+    "message": "снова: новые пути уже есть. Никакого"
+  },
+  "landing.a4AgentTraces.075": {
+    "message": "не было."
+  },
+  "landing.a4AgentTraces.076": {
+    "message": "Появляется третья версия,"
+  },
+  "landing.a4AgentTraces.077": {
+    "message": ": только её вызовы LLM содержат"
+  },
+  "landing.a4AgentTraces.079": {
+    "message": "теперь показывает"
+  },
+  "landing.courseExtra.a4AgentTraces.007": {
+    "message": "Разнородные события загружены в один столбец VARIANT (исходный набор и пакет изменений)."
+  },
+  "landing.courseExtra.a4AgentTraces.008": {
+    "message": "Не менее трёх запросов по путям JSON, включая одну агрегацию по определённому числовому подстолбцу (например, p95 задержки по инструментам)."
+  },
+  "landing.courseExtra.a4AgentTraces.009": {
+    "message": "Полнотекстовый поиск по текстовому пути JSON."
+  },
+  "landing.courseExtra.a4AgentTraces.010": {
+    "message": "Просмотр хронологии сессии (CLI, блокнот или веб)."
+  },
+  "landing.a4AgentTraces.081": {
+    "message": "README с"
+  },
+  "landing.a4AgentTraces.082": {
+    "message": "тремя выводами"
+  },
+  "landing.a4AgentTraces.083": {
+    "message": "из данных, включая оценку выпуска v2, инструкцией запуска и одним снимком экрана."
+  },
+  "landing.a4AgentTraces.084": {
+    "message": "Используйте собственные трассировки."
+  },
+  "landing.a4AgentTraces.085": {
+    "message": "Экспортируйте локальные журналы сессий своего ИИ-агента (JSONL) и загрузите по одному"
+  },
+  "landing.a4AgentTraces.086": {
+    "message": "на строку. Данные сохраняются в вашем локальном Doris."
+  },
+  "landing.a4AgentTraces.087": {
+    "message": "Schema Template."
+  },
+  "landing.a4AgentTraces.088": {
+    "message": "Закрепите часто используемые пути через"
+  },
+  "landing.a4AgentTraces.089": {
+    "message": "в копии таблицы и сравните вывод"
+  },
+  "landing.a4AgentTraces.090": {
+    "message": "и поведение запросов. Заполните через"
+  },
+  "landing.a4AgentTraces.091": {
+    "message": ": VARIANT нельзя напрямую привести к VARIANT с шаблоном."
+  },
+  "landing.a4AgentTraces.092": {
+    "message": "Предложите помощнику изучить данные."
+  },
+  "landing.a4AgentTraces.093": {
+    "message": "Подключите Doris MCP Server ("
+  },
+  "landing.a4AgentTraces.095": {
+    "message": ") и попросите помощника найти худшую сессию."
+  },
+  "landing.a4AgentTraces.096": {
+    "message": "Классифицируйте ошибки через SQL"
+  },
+  "landing.a4AgentTraces.097": {
+    "message": "(с вашим API-ключом):"
+  },
+  "landing.a4AgentTraces.098": {
+    "message": ". См."
+  },
+  "landing.a4AgentTraces.099": {
+    "message": "SQL-функции LLM"
+  },
+  "landing.a4AgentTraces.100": {
+    "message": "Тип данных VARIANT"
+  },
+  "landing.a4AgentTraces.101": {
+    "message": "Справочник SQL по VARIANT"
+  },
+  "landing.a4AgentTraces.103": {
+    "message": "SQL-функции LLM"
+  },
+  "landing.trackB.004": {
+    "message": "Таблица операторов на странице перечисляет все формы"
+  },
+  "landing.trackB.005": {
+    "message": ". Выбирайте"
+  },
+  "landing.trackB.006": {
+    "message": "как есть и сортируйте по нему: сортировка по окружающему его выражению, например"
+  },
+  "landing.trackB.007": {
+    "message": ", отклоняется."
+  },
+  "landing.trackB.010": {
+    "message": "Каждый вектор должен содержать ровно"
+  },
+  "landing.trackB.011": {
+    "message": "чисел, включая вектор запроса; иначе запрос завершится ошибкой размерности."
+  },
+  "landing.trackB.015": {
+    "message": "нельзя выбирать в запросе с векторным ранжированием или помещать внутрь"
+  },
+  "landing.trackB.016": {
+    "message": ": ранжируйте обычное"
+  },
+  "landing.trackB.017": {
+    "message": "во внешнем запросе, как на странице RRF."
+  },
+  "landing.trackB.020": {
+    "message": "показывает пути и типы, определённые Doris для одной строки; сравните с выводом"
+  },
+  "landing.trackB.021": {
+    "message": "команды."
+  },
+  "landing.trackB.task.B4.doc": {
+    "message": "Тип данных VARIANT"
+  },
+  "landing.trackB.024": {
+    "message": "Выполните три записи одним INSERT и тремя отдельными INSERT: результат не должен измениться."
+  },
+  "landing.trackB.027": {
+    "message": "Отправьте загрузку в FE по адресу"
+  },
+  "landing.trackB.029": {
+    "message": ": FE перенаправит её в BE, а единый контейнер отвечает на обоих портах."
+  },
+  "landing.trackB.030": {
+    "message": " · раздел страницы"
+  },
+  "landing.trackB.031": {
+    "message": ".mdx · шаблон"
+  },
+  "landing.trackB.032": {
+    "message": " · pull request"
+  },
+  "landing.trackB.033": {
+    "message": "заголовок + описание · шаблон"
+  },
+  "landing.HackathonTrackBPage.001": {
+    "message": "Fork apache/doris-website."
+  },
+  "landing.HackathonTrackBPage.002": {
+    "message": "Сделайте fork"
+  },
+  "landing.HackathonTrackBPage.003": {
+    "message": "на GitHub. Клонировать не нужно: нажмите"
+  },
+  "landing.HackathonTrackBPage.004": {
+    "message": "в своём fork, редактируйте файлы в браузере и сохраните в новой ветке. Предпочитаете git? Репозиторий большой, клонируйте только две нужные папки:"
+  },
+  "landing.HackathonTrackBPage.005": {
+    "message": "Необязательно: стартовый набор."
+  },
+  "landing.HackathonTrackBPage.006": {
+    "message": "Треку B не нужны исходные данные, но файл набора"
+  },
+  "landing.HackathonTrackBPage.007": {
+    "message": "выполняет SQL-файл целиком во время подготовки демо:"
+  },
+  "landing.HackathonTrackBPage.008": {
+    "message": ". Скачайте и распакуйте"
+  },
+  "landing.HackathonTrackBPage.009": {
+    "message": "Build Check не проходит в вашем pull request"
+  },
+  "landing.HackathonTrackBPage.010": {
+    "message": "Откройте журнал проверки. Обычно причина в MDX: незакрытый тег либо неэкранированный"
+  },
+  "landing.HackathonTrackBPage.011": {
+    "message": "или"
+  },
+  "landing.HackathonTrackBPage.012": {
+    "message": "в тексте. Внутри ограждённых блоков кода допустимо всё."
+  },
+  "landing.HackathonTrackBPage.013": {
+    "message": "B6:"
+  },
+  "landing.HackathonTrackBPage.014": {
+    "message": "ничего не выводит или выводит"
+  },
+  "landing.HackathonTrackBPage.015": {
+    "message": "Добавьте"
+  },
+  "landing.HackathonTrackBPage.016": {
+    "message": ": FE перенаправляет загрузку в BE, и curl должен следовать перенаправлению с вашими учётными данными"
+  },
+  "landing.HackathonTrackBPage.017": {
+    "message": "B6:"
+  },
+  "landing.HackathonTrackBPage.018": {
+    "message": "При повторном запуске это ожидаемо: метка допускает загрузку не более одного раза. Для повторной загрузки используйте новую метку"
+  },
+  "landing.HackathonTrackBPage.020": {
+    "message": "Руководство по участию в документации"
+  },
+  "landing.HackathonTrackBPage.021": {
+    "message": "Требования к формату документации"
+  },
+  "landing.HackathonTrackBPage.022": {
+    "message": "Руководство по pull request"
+  },
+  "landing.HackathonTrackBPage.023": {
+    "message": "Показать шаблоны задания"
+  },
+  "landing.HackathonTrackBPage.025": {
+    "message": "Раздел страницы"
+  },
+  "landing.HackathonTrackBPage.026": {
+    "message": "Pull request"
+  },
+  "landing.HackathonTrackBPage.027": {
+    "message": "Шаблоны текущего задания"
+  },
+  "landing.HackathonTrackBPage.028": {
+    "message": "Шаблоны"
+  },
+  "landing.HackathonTrackBPage.029": {
+    "message": "Ваш pull request ·"
+  },
+  "landing.HackathonTrackBPage.030": {
+    "message": "Шаблоны"
+  },
+  "landing.trackB.databaseHint": {
+    "message": "Своё значение, например"
+  },
+  "landing.HackathonTrackBPage.031": {
+    "message": "Изменение"
+  },
+  "landing.HackathonTrackBPage.034": {
+    "message": " Трек B в "
+  },
+  "landing.HackathonTrackBPage.035": {
+    "message": ": в своём темпе, для всех."
+  },
+  "landing.HackathonTrackBPage.037": {
+    "message": "заданий, выберите одно"
+  },
+  "landing.HackathonTrackBPage.038": {
+    "message": "От документации к"
+  },
+  "landing.HackathonTrackBPage.039": {
+    "message": "демо"
+  },
+  "landing.HackathonTrackBPage.040": {
+    "message": "Выберите страницу функции Apache Doris, выполните пример на локальном Doris и превратите его в пошаговое демо. Ваш pull request добавит демо на эту страницу doris.apache.org."
+  },
+  "landing.trackB.chip.1": {
+    "message": "30–60 мин на задание"
+  },
+  "landing.trackB.chip.3": {
+    "message": "SQL и браузер"
+  },
+  "landing.trackB.chip.4": {
+    "message": "Результат: PR документации"
+  },
+  "landing.HackathonTrackBPage.043": {
+    "message": "Выберите задание"
+  },
+  "landing.HackathonTrackBPage.045": {
+    "message": "Как работает трек B, запущенный кластер и fork документации."
+  },
+  "landing.HackathonTrackBPage.046": {
+    "message": "Как работает трек B"
+  },
+  "landing.HackathonTrackBPage.047": {
+    "message": "Одна страница функции, одно демо, один pull request."
+  },
+  "landing.HackathonTrackBPage.048": {
+    "message": "Все новые пользователи Doris начинают с этих страниц. Выполнение с нуля помогает быстрее всего найти пробелы, а демо, работающее от начала до конца на пустом кластере, лучше всего подтверждает работоспособность функции. Ваше демо попадёт на саму страницу."
+  },
+  "landing.HackathonTrackBPage.049": {
+    "message": "Следуйте странице."
+  },
+  "landing.HackathonTrackBPage.050": {
+    "message": "Откройте страницу задания и выполните все примеры на локальном Doris точно по описанию. Отметьте ошибки, отличающийся вывод и неясные моменты."
+  },
+  "landing.HackathonTrackBPage.051": {
+    "message": "Создайте демо."
+  },
+  "landing.HackathonTrackBPage.052": {
+    "message": "На пустом кластере подтвердите каждый пункт задания. Выполните всё по порядку и сохраните фактический вывод каждого оператора."
+  },
+  "landing.HackathonTrackBPage.053": {
+    "message": "Добавьте на страницу."
+  },
+  "landing.HackathonTrackBPage.054": {
+    "message": "Один"
+  },
+  "landing.HackathonTrackBPage.055": {
+    "message": "Пошаговое демо"
+  },
+  "landing.HackathonTrackBPage.056": {
+    "message": "раздел сразу после Quick start в обеих копиях страницы. Найденные ошибки исправьте тем же pull request."
+  },
+  "landing.HackathonTrackBPage.057": {
+    "message": "Откройте pull request"
+  },
+  "landing.HackathonTrackBPage.059": {
+    "message": ". Это и есть ваша работа: см."
+  },
+  "landing.HackathonTrackBPage.061": {
+    "message": "Панель показывает шаблоны текущего задания"
+  },
+  "landing.HackathonTrackBPage.064": {
+    "message": "Выберите задание"
+  },
+  "landing.HackathonTrackBPage.065": {
+    "message": "страниц функций. Выберите одну; закончили раньше? Возьмите ещё: для каждого задания нужен отдельный pull request."
+  },
+  "landing.HackathonTrackBPage.066": {
+    "message": "· изменения"
+  },
+  "landing.HackathonTrackBPage.067": {
+    "message": "Начните с"
+  },
+  "landing.HackathonTrackBPage.068": {
+    "message": "Ваше демо подтверждает"
+  },
+  "landing.HackathonTrackBPage.069": {
+    "message": "Совет"
+  },
+  "landing.HackathonTrackBPage.071": {
+    "message": "Что добавляет pull request, как его отправить и получить значок."
+  },
+  "landing.HackathonTrackBPage.072": {
+    "message": "Что добавляет ваш pull request"
+  },
+  "landing.HackathonTrackBPage.073": {
+    "message": "Один pull request в"
+  },
+  "landing.HackathonTrackBPage.074": {
+    "message": ", он и есть ваша работа."
+  },
+  "landing.HackathonTrackBPage.075": {
+    "message": "Раздел демо"
+  },
+  "landing.HackathonTrackBPage.076": {
+    "message": "сразу после Quick start, по шагу на каждый пункт: блок SQL, затем"
+  },
+  "landing.HackathonTrackBPage.077": {
+    "message": "Ожидаемый результат"
+  },
+  "landing.HackathonTrackBPage.078": {
+    "message": "с фактическим выводом. Демо начинается на пустом кластере и само создаёт базу данных."
+  },
+  "landing.HackathonTrackBPage.079": {
+    "message": "Обе копии"
+  },
+  "landing.HackathonTrackBPage.080": {
+    "message": "Одинаковые изменения в"
+  },
+  "landing.HackathonTrackBPage.082": {
+    "message": ". Эти задания обновляют английские страницы; переводы поддерживаются отдельно."
+  },
+  "landing.HackathonTrackBPage.083": {
+    "message": "Исправления"
+  },
+  "landing.HackathonTrackBPage.084": {
+    "message": "Исправьте в том же pull request всё неверное, что нашли на странице. Не уверены, что это ошибка? Укажите в описании."
+  },
+  "landing.HackathonTrackBPage.085": {
+    "message": "Описание"
+  },
+  "landing.HackathonTrackBPage.086": {
+    "message": "Шаблон pull request репозитория (dev + 4.x, английский) и строка с названием задания, например"
+  },
+  "landing.HackathonTrackBPage.087": {
+    "message": "Шаблоны для"
+  },
+  "landing.HackathonTrackBPage.088": {
+    "message": "Панель: шаблоны последнего просмотренного задания"
+  },
+  "landing.HackathonTrackBPage.091": {
+    "message": "описание pull request"
+  },
+  "landing.HackathonTrackBPage.092": {
+    "message": "Откройте свой pull request"
+  },
+  "landing.HackathonTrackBPage.094": {
+    "message": ", из ветки своего fork. Pull request и есть работа, больше ничего заполнять не нужно."
+  },
+  "landing.HackathonTrackBPage.096": {
+    "message": "Выберите второе задание."
+  },
+  "landing.HackathonTrackBPage.097": {
+    "message": "Для каждого выполненного задания нужен отдельный pull request."
+  },
+  "landing.HackathonTrackBPage.098": {
+    "message": "Выйдите за рамки быстрого старта."
+  },
+  "landing.HackathonTrackBPage.099": {
+    "message": "Выполните более длинные примеры по ссылкам со страницы, например проектирование таблиц и справочник SQL: их проверяют реже."
+  },
+  "landing.HackathonTrackBPage.100": {
+    "message": "Проверьте другой pull request трека B."
+  },
+  "landing.HackathonTrackBPage.101": {
+    "message": "Выполните его демо на своём Doris и оставьте комментарий с результатом."
+  },
+  "landing.profile.error.fileType": {
+    "message": "Выберите файл .txt. Другие типы файлов не поддерживаются."
+  },
+  "landing.profile.error.oneFile": {
+    "message": "Выбирайте только один файл Profile за раз."
+  },
+  "landing.profile.error.tooLarge": {
+    "message": "Выбранный файл превышает 100 MiB. Предоставьте объединённый Profile."
+  },
+  "landing.profile.error.mergedTooLarge": {
+    "message": "После удаления профилей выполнения отдельных экземпляров размер всё ещё превышает 10 MiB. Предоставьте объединённый Profile."
+  },
+  "landing.profile.error.prepare": {
+    "message": "Не удалось подготовить Profile к загрузке."
+  },
+  "landing.profile.error.storage": {
+    "message": "В этом браузере анализ нельзя восстановить после обновления страницы."
+  },
+  "landing.profile.error.captchaMissing": {
+    "message": "Пройдите проверку пользователя перед анализом Profile."
+  },
+  "landing.profile.error.captchaInvalid": {
+    "message": "Проверка пользователя не пройдена или истекла. Пройдите её заново и повторите попытку."
+  },
+  "landing.profile.error.captchaUnavailable": {
+    "message": "Проверка пользователя временно недоступна. Повторите попытку позже."
+  },
+  "landing.profile.error.captchaExpired": {
+    "message": "Срок проверки истёк. Пройдите её заново."
+  },
+  "landing.profile.error.captchaLoad": {
+    "message": "Не удалось загрузить проверку пользователя. Проверьте подключение и повторите попытку."
+  },
+  "landing.profile.error.network": {
+    "message": "Не удалось связаться с сервисом анализа Profile. Повторите попытку."
+  },
+  "landing.profile.error.response": {
+    "message": "Сервис анализа Profile вернул некорректный ответ."
+  },
+  "landing.profile.error.recover": {
+    "message": "Не удалось восстановить предыдущий анализ. Выберите файл и повторите попытку."
+  },
+  "landing.profile.error.failed": {
+    "message": "Анализ Profile завершился ошибкой. Повторите попытку."
+  },
+  "landing.profile.error.graphTooLarge": {
+    "message": "Граф выполнения слишком большой для отображения."
+  },
+  "landing.profile.error.graphUnavailable": {
+    "message": "Для этого Profile граф выполнения недоступен."
+  },
+  "landing.profile.error.graphFailed": {
+    "message": "Не удалось создать граф выполнения."
+  },
+  "landing.profile.error.graphTimeout": {
+    "message": "Истекло время разбора графа выполнения."
+  },
+  "landing.profile.error.serviceCode": {
+    "message": "Анализ Profile завершился ошибкой ({code}). Повторите попытку."
+  },
+  "landing.profile.error.details": {
+    "message": "Подробности: {message}"
+  },
+  "landing.AiAnalysisForm.001": {
+    "message": "На основе Doris Skills (откроется в новой вкладке)"
+  },
+  "landing.AiAnalysisForm.002": {
+    "message": "На основе"
+  },
+  "landing.AiAnalysisForm.003": {
+    "message": "Doris Skills"
+  },
+  "landing.AiAnalysisForm.004": {
+    "message": "Язык ответа"
+  },
+  "landing.AiAnalysisForm.006": {
+    "message": "Китайский (упрощённый)"
+  },
+  "landing.profile.responseLanguages": {
+    "message": "Ответы ИИ доступны на английском и китайском. Смена языка сайта не переводит ответ сервиса."
+  },
+  "landing.AiAnalysisForm.007": {
+    "message": "Уведомление о конфиденциальности и обработке ИИ"
+  },
+  "landing.AiAnalysisForm.008": {
+    "message": "Эта функция предоставляется VeloDB и сторонними поставщиками больших языковых моделей. Она не является официальной функцией проекта Apache Doris; решение об использовании принимайте самостоятельно."
+  },
+  "landing.AiAnalysisForm.009": {
+    "message": "Не загружайте пароли, ключи, токены доступа, персональные данные, конфиденциальные данные клиентов и другую информацию, которую вы не вправе раскрывать. Все загруженные данные автоматически и безвозвратно удаляются в течение одного часа."
+  },
+  "landing.AiAnalysisForm.010": {
+    "message": "Я прочитал уведомление, имею право загрузить этот Profile и согласен на обработку сторонним ИИ."
+  },
+  "landing.AiAnalysisForm.011": {
+    "message": "Перед началом анализа пройдите проверку пользователя."
+  },
+  "landing.AiAnalysisForm.012": {
+    "message": "Проверка пользователя не настроена. Обратитесь к администратору сайта."
+  },
+  "landing.AiAnalysisForm.013": {
+    "message": "Этот сайт защищён hCaptcha. На него распространяются"
+  },
+  "landing.AiAnalysisForm.014": {
+    "message": "Политика конфиденциальности"
+  },
+  "landing.AiAnalysisForm.016": {
+    "message": "Условия использования"
+  },
+  "landing.AiAnalysisForm.017": {
+    "message": "сервиса."
+  },
+  "landing.AiAnalysisForm.018": {
+    "message": "Обработка… · примерно 1–2 минуты"
+  },
+  "landing.AiAnalysisForm.019": {
+    "message": "Анализировать с ИИ"
+  },
+  "landing.AnalysisResult.001": {
+    "message": "Результат анализа"
+  },
+  "landing.AnalysisResult.002": {
+    "message": "Результат, созданный ИИ:"
+  },
+  "landing.AnalysisResult.003": {
+    "message": "Сверьте выводы с исходным Profile. Перед изменением рабочей среды рекомендации должен проверить квалифицированный инженер. Не выполняйте команды и изменения настроек автоматически."
+  },
+  "landing.profile.status.analyzing": {
+    "message": "Анализ"
+  },
+  "landing.profile.status.restoring": {
+    "message": "Восстановление анализа…"
+  },
+  "landing.profile.status.recovering": {
+    "message": "Соединение прервано · восстановление анализа…"
+  },
+  "landing.profile.status.uploading": {
+    "message": "Загрузка Profile…"
+  },
+  "landing.profile.status.queued": {
+    "message": "В очереди"
+  },
+  "landing.profile.status.queueOne": {
+    "message": "В очереди · впереди {count} задача"
+  },
+  "landing.profile.status.queueMany": {
+    "message": "В очереди · задач впереди: {count}"
+  },
+  "landing.ProfileUploader.001": {
+    "message": "Выберите Query Profile"
+  },
+  "landing.ProfileUploader.002": {
+    "message": "Выберите один UTF-8 файл .txt до 100 MiB. Файлы больше 10 MiB сокращаются до агрегированных разделов Profile перед локальной визуализацией или загрузкой в ИИ."
+  },
+  "landing.ProfileUploader.003": {
+    "message": "Используйте Profile, созданный Apache Doris 4.1 или новее. Профили предыдущих версий могут не разбираться."
+  },
+  "landing.ProfileUploader.004": {
+    "message": "Выберите файл или перетащите его сюда"
+  },
+  "landing.ProfileUploader.005": {
+    "message": "Apache Doris Query Profile в формате .txt"
+  },
+  "landing.ProfileUploader.006": {
+    "message": "Выберите файл Apache Doris Query Profile"
+  },
+  "landing.ProfileDagNode.001": {
+    "message": " оператор"
+  },
+  "landing.profile.graph.unavailable": {
+    "message": "Для этого Profile граф выполнения недоступен."
+  },
+  "landing.profile.graph.failed": {
+    "message": "Не удалось создать граф выполнения."
+  },
+  "landing.ProfileDagNode.002": {
+    "message": "Узкое место"
+  },
+  "landing.ProfileDagNode.003": {
+    "message": "экземпляры"
+  },
+  "landing.ProfileDagNode.004": {
+    "message": "Макс. выполнение"
+  },
+  "landing.ProfileDagNode.005": {
+    "message": "Ср. выполнение"
+  },
+  "landing.ProfileDagNode.006": {
+    "message": "Макс. ожидание"
+  },
+  "landing.profile.graph.idle": {
+    "message": "Выберите Profile и нажмите «Визуализировать выполнение»."
+  },
+  "landing.profile.graph.parsing": {
+    "message": "Разбор графа выполнения…"
+  },
+  "landing.ProfileDag.001": {
+    "message": "Макс."
+  },
+  "landing.ProfileDag.002": {
+    "message": "· Ср."
+  },
+  "landing.ProfileDag.003": {
+    "message": "· Сумма"
+  },
+  "landing.ProfileDag.004": {
+    "message": "Сведения об операторе"
+  },
+  "landing.ProfileDag.005": {
+    "message": "Сведения об операторе"
+  },
+  "landing.ProfileDag.006": {
+    "message": "Закрыть сведения об операторе"
+  },
+  "landing.ProfileDag.007": {
+    "message": "×"
+  },
+  "landing.ProfileDag.008": {
+    "message": "Тип"
+  },
+  "landing.ProfileDag.009": {
+    "message": "Роль"
+  },
+  "landing.ProfileDag.010": {
+    "message": "ID узла плана"
+  },
+  "landing.ProfileDag.011": {
+    "message": "Временные показатели"
+  },
+  "landing.ProfileDag.012": {
+    "message": "Максимальное время выполнения"
+  },
+  "landing.ProfileDag.013": {
+    "message": "Среднее время выполнения"
+  },
+  "landing.ProfileDag.014": {
+    "message": "Минимальное время выполнения"
+  },
+  "landing.ProfileDag.015": {
+    "message": "Максимальное время ожидания"
+  },
+  "landing.ProfileDag.016": {
+    "message": "Ожидание зависимости"
+  },
+  "landing.ProfileDag.017": {
+    "message": "Ожидание данных"
+  },
+  "landing.ProfileDag.018": {
+    "message": "Ожидание буфера RPC"
+  },
+  "landing.ProfileDag.019": {
+    "message": "Сведения о плане"
+  },
+  "landing.ProfileDag.020": {
+    "message": "Метрики"
+  },
+  "landing.ProfileDag.021": {
+    "message": "Входные строки"
+  },
+  "landing.ProfileDag.022": {
+    "message": "Выходные строки"
+  },
+  "landing.ProfileDag.023": {
+    "message": "Использование памяти"
+  },
+  "landing.ProfileDag.024": {
+    "message": "Пиковая память"
+  },
+  "landing.ProfileDag.025": {
+    "message": "Самые медленные операторы"
+  },
+  "landing.ProfileDag.026": {
+    "message": "По максимальному времени выполнения"
+  },
+  "landing.ProfileDag.031": {
+    "message": "Выйти из полноэкранного режима (Esc)"
+  },
+  "landing.ProfileDag.032": {
+    "message": "Развернуть граф выполнения на весь экран"
+  },
+  "landing.ProfileDag.033": {
+    "message": "Выйти из полноэкранного режима"
+  },
+  "landing.ProfileDag.034": {
+    "message": "На весь экран"
+  },
+  "landing.ProfileDag.035": {
+    "message": "Компоновка графа выполнения…"
+  },
+  "landing.ProfileDag.036": {
+    "message": "Граф выполнения Profile"
+  },
+  "landing.profile.graph.readOnly": {
+    "message": "Граф выполнения только для чтения с операторами и их зависимостями."
+  },
+  "landing.profile.graph.connection": {
+    "message": "Связь графа выполнения."
+  },
+  "landing.profile.graph.controls": {
+    "message": "Управление графом"
+  },
+  "landing.profile.graph.zoomIn": {
+    "message": "Увеличить"
+  },
+  "landing.profile.graph.zoomOut": {
+    "message": "Уменьшить"
+  },
+  "landing.profile.graph.fit": {
+    "message": "Вписать в экран"
+  },
+  "landing.profile.graph.interactive": {
+    "message": "Переключить интерактивность"
+  },
+  "landing.ProfileDag.037": {
+    "message": "Обзор графа выполнения"
+  },
+  "landing.profile.graph.handle": {
+    "message": "Точка соединения"
+  },
+  "landing.profile.graph.notAvailable": {
+    "message": "Граф выполнения недоступен."
+  },
+  "landing.ProfileDag.038": {
+    "message": "Граф выполнения"
+  },
+  "landing.ProfileDag.039": {
+    "message": "фрагменты"
+  },
+  "landing.ProfileDag.040": {
+    "message": "конвейеры"
+  },
+  "landing.ProfileDag.041": {
+    "message": "операторы"
+  },
+  "landing.ProfileDag.042": {
+    "message": "связи"
+  },
+  "landing.ProfileDag.043": {
+    "message": "неблокирующий разбор"
+  },
+  "landing.ProfileDag.044": {
+    "message": "уведомление"
+  },
+  "landing.ProfileDag.045": {
+    "message": "уведомления"
+  },
+  "landing.ProfileDag.046": {
+    "message": "Условные обозначения графа выполнения"
+  },
+  "landing.ProfileDag.047": {
+    "message": "Поток данных"
+  },
+  "landing.ProfileDag.048": {
+    "message": "Зависимость выполнения (предшественник → зависимый)"
+  },
+  "landing.ProfileDag.049": {
+    "message": "Дольше выполнение"
+  },
+  "landing.ProfileDag.050": {
+    "message": "Дольше ожидание"
+  },
+  "landing.ProfileDag.051": {
+    "message": "Загрузка графа выполнения…"
+  },
+  "landing.ProfileAnalyzer.001": {
+    "message": "Диагностика запросов"
+  },
+  "landing.ProfileAnalyzer.002": {
+    "message": "Анализ Profile Apache Doris"
+  },
+  "landing.ProfileAnalyzer.003": {
+    "message": "Действия и результаты анализа Profile"
+  },
+  "landing.ProfileAnalyzer.004": {
+    "message": "Действия анализа Profile"
+  },
+  "landing.ProfileAnalyzer.005": {
+    "message": "Визуализировать выполнение"
+  },
+  "landing.ProfileAnalyzer.006": {
+    "message": "Анализ с помощью ИИ"
+  },
+  "landing.ProfileAnalyzer.007": {
+    "message": "Визуализируйте Profile. Выберите «Визуализировать выполнение», чтобы разобрать файл в браузере и показать интерактивный граф. Для этого действия файл не загружается на сервер."
+  },
+  "landing.ProfileAnalyzer.008": {
+    "message": "Визуализация…"
+  },
+  "landing.ProfileAnalyzer.009": {
+    "message": "Визуализировать выполнение"
+  },
+  "landing.ProfileAnalyzer.010": {
+    "message": "Анализ завершился ошибкой."
+  },
+  "landing.profileanalysis.001": {
+    "message": "Анализ Profile - Apache Doris"
+  },
+  "landing.profileanalysis.002": {
+    "message": "Анализируйте Apache Doris Query Profile с помощью диагностического процесса на основе ИИ."
+  },
+  "landing.trackB.task.B1.title": {
+    "message": "Полнотекстовый поиск + BM25"
+  },
+  "landing.trackB.task.B1.time": {
+    "message": "30–45 мин"
+  },
+  "landing.trackB.task.B1.proves.0": {
+    "message": "Таблица с инвертированным индексом на текстовом столбце (парсер english, поддержка фраз)"
+  },
+  "landing.trackB.task.B1.proves.1": {
+    "message": "MATCH_ANY и MATCH_ALL по одним словам с разным числом строк"
+  },
+  "landing.trackB.task.B1.proves.2": {
+    "message": "Запрос MATCH_PHRASE, совпадающий только с соседними словами"
+  },
+  "landing.trackB.task.B1.proves.3": {
+    "message": "Ранжирование BM25: score() с ORDER BY … DESC LIMIT n и объяснение первого результата"
+  },
+  "landing.trackB.task.B2.title": {
+    "message": "Векторный поиск"
+  },
+  "landing.trackB.task.B2.time": {
+    "message": "30–45 мин"
+  },
+  "landing.trackB.task.B2.proves.0": {
+    "message": "Столбец ARRAY<FLOAT> NOT NULL с индексом HNSW (ANN)"
+  },
+  "landing.trackB.task.B2.proves.1": {
+    "message": "Запрос ANN top-N: ORDER BY l2_distance_approximate(…) LIMIT n"
+  },
+  "landing.trackB.task.B2.proves.2": {
+    "message": "Тот же запрос с фильтром WHERE и изменение top-N"
+  },
+  "landing.trackB.task.B2.proves.3": {
+    "message": "EXPLAIN, показывающий работу индекса ANN (ANN SORT INFO)"
+  },
+  "landing.trackB.task.B3.time": {
+    "message": "30–45 мин"
+  },
+  "landing.trackB.task.B3.proves.0": {
+    "message": "Одна таблица с инвертированным индексом текста и индексом ANN векторов"
+  },
+  "landing.trackB.task.B3.proves.1": {
+    "message": "Предварительный фильтр MATCH_ANY и векторное ранжирование в одном запросе"
+  },
+  "landing.trackB.task.B3.proves.2": {
+    "message": "Один вопрос в запросах только по ключевым словам и только по векторам, различия списков"
+  },
+  "landing.trackB.task.B3.proves.3": {
+    "message": "Оба ранжирования объединены через Reciprocal Rank Fusion"
+  },
+  "landing.trackB.task.B4.title": {
+    "message": "VARIANT"
+  },
+  "landing.trackB.task.B4.time": {
+    "message": "30–45 мин"
+  },
+  "landing.trackB.task.B4.proves.0": {
+    "message": "Строки JSON разной структуры в одном столбце VARIANT"
+  },
+  "landing.trackB.task.B4.proves.1": {
+    "message": "Запросы по вложенным путям с CAST перед сравнением или агрегацией"
+  },
+  "landing.trackB.task.B4.proves.2": {
+    "message": "Определённые подстолбцы: SET describe_extend_variant_column = true; DESC"
+  },
+  "landing.trackB.task.B4.proves.3": {
+    "message": "Полнотекстовый поиск внутри JSON (MATCH по пути с инвертированным индексом)"
+  },
+  "landing.trackB.task.B5.title": {
+    "message": "Unique Key + Sequence Column"
+  },
+  "landing.trackB.task.B5.time": {
+    "message": "30–45 мин"
+  },
+  "landing.trackB.task.B5.doc": {
+    "message": "Unique Key"
+  },
+  "landing.trackB.task.B5.proves.0": {
+    "message": "Три записи по одному ключу в итоге дают одну строку"
+  },
+  "landing.trackB.task.B5.proves.1": {
+    "message": "Со столбцом последовательности поздняя старая запись не перезаписывает новую версию"
+  },
+  "landing.trackB.task.B5.proves.2": {
+    "message": "Без столбца последовательности в другой таблице с теми же записями побеждает поздняя запись"
+  },
+  "landing.trackB.task.B6.title": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.doc": {
+    "message": "Stream Load"
+  },
+  "landing.trackB.task.B6.proves.0": {
+    "message": "Целевая таблица и небольшой CSV-файл, созданный в оболочке"
+  },
+  "landing.trackB.task.B6.proves.1": {
+    "message": "CSV загружен через curl по HTTP, проверен ответ JSON (Status, NumberLoadedRows)"
+  },
+  "landing.trackB.task.B6.proves.2": {
+    "message": "Запрос, показывающий загруженные строки"
+  },
+  "landing.trackB.task.B6.proves.3": {
+    "message": "Безопасный повторный запуск: та же загрузка не добавляет строк (та же метка, Label Already Exists)"
+  },
+  "landing.userStory.AWS": {
+    "message": "Amazon Web Services (AWS) является ведущей облачной платформой с широким набором масштабируемых и надёжных сервисов. На AWS доступен VeloDB Cloud, коммерческий продукт на основе Apache Doris с масштабируемой и эффективной аналитикой данных."
+  },
+  "landing.userStory.VeloDB": {
+    "message": "VeloDB на основе Apache Doris представляет собой современное хранилище для быстрой аналитики больших объёмов данных реального времени. Компания VeloDB Inc поставляет предприятиям по всему миру продукты и решения аналитики на базе Apache Doris."
+  },
+  "landing.userStory.SelectDB": {
+    "message": "SelectDB представляет собой современное хранилище для быстрой аналитики больших объёмов данных реального времени. Доступны полностью управляемый облачный сервис и ПО для самостоятельного размещения на собственных серверах, VM или Kubernetes."
+  },
+  "landing.userStory.Tencent%20Cloud": {
+    "message": "Tencent Cloud House-D представляет собой полностью управляемое облачное хранилище данных на основе Apache Doris."
+  },
+  "landing.userStory.Alibaba%20Cloud": {
+    "message": "Alibaba Cloud является мировым лидером в облачных вычислениях и ИИ и предлагает полностью управляемый сервис аналитики реального времени на основе Apache Doris."
+  },
+  "landing.userStory.Tencent": {
+    "message": "Tencent является ведущей международной интернет- и технологической компанией. В нескольких направлениях бизнеса Apache Doris используется для анализа поведения пользователей в реальном времени, поддерживая бизнес-аналитику и принятие решений."
+  },
+  "landing.userStory.Alibaba.com": {
+    "message": "Alibaba является ведущей интернет-компанией с направлениями электронной торговли, облачных вычислений, цифровых медиа и развлечений. Несколько её подразделений используют Apache Doris для поддержки бизнес-стратегии и улучшения продуктов через аналитику реального времени."
+  },
+  "landing.userStory.JD.com": {
+    "message": "JD.com, крупный поставщик технологий и услуг на основе цепочек поставок, использует Apache Doris для многомерного анализа потоковых и офлайн-данных, улучшая обслуживание клиентов."
+  },
+  "landing.userStory.Xiaomi": {
+    "message": "Xiaomi, один из крупнейших производителей смартфонов и потребительской электроники, применяет Apache Doris для дашбордов, A/B-тестирования, анализа поведения пользователей и роста бизнеса."
+  },
+  "landing.userStory.Baidu": {
+    "message": "Крупная технологическая компания, известная разработками в области ИИ, облачных вычислений и поисковых систем и работающая над инновациями в интернет-сервисах."
+  },
+  "landing.userStory.WeLab": {
+    "message": "WeLab является одной из быстрорастущих финтех-платформ Азии с более чем 60 миллионами частных пользователей и 700 корпоративными клиентами. Apache Doris играет ключевую роль в её платформе больших данных реального времени, поддерживая самостоятельные BI-отчёты и анализ поведения пользователей."
+  },
+  "landing.userStory.FUSE": {
+    "message": "Fuse, крупнейшая страховая технологическая компания Индонезии, использует Apache Doris для ускорения BI-отчётности и аналитики данных реального времени в страховании."
+  },
+  "landing.userStory.Goldwind": {
+    "message": "Glodwind является ведущим производителем ветряных турбин и поставщиком решений возобновляемой энергетики, специализирующимся на проектировании, производстве и установке."
+  },
+  "landing.userStory.Leetcode": {
+    "message": "Онлайн-платформа программирования, помогающая инженерам и студентам развивать навыки написания кода и готовиться к техническим собеседованиям."
+  },
+  "landing.userStory.miHoYo": {
+    "message": "miHoYo является ведущей компанией интерактивных развлечений, известной играми Genshin Impact, Honkai Impact 3rd и Tears of Themis."
+  },
+  "landing.userStory.NetEase": {
+    "message": "NetEase внедрила Apache Doris в платформу управления данными, повысив производительность и упростив управление тегами в электронной торговле."
+  },
+  "landing.userStory.Temu": {
+    "message": "Temu предлагает доступные товары в одном месте: декор для дома, электронику, товары для животных, спорта и игрушки."
+  },
+  "landing.userStory.Sina": {
+    "message": "Медийная и технологическая интернет-компания, управляющая Sina Weibo и Sina.com и предоставляющая широкой аудитории новости, развлечения, социальные сети и электронную торговлю."
+  },
+  "landing.userStory.TME": {
+    "message": "Музыкальный сервис Tencent Music с 800 миллионами активных пользователей в месяц перешёл с ClickHouse на Apache Doris, получив удобные частичные обновления столбцов, снижение затрат на хранение и упрощение обслуживания."
+  },
+  "landing.userStory.Sohu.com": {
+    "message": "Крупный интернет-бренд, ставший частью повседневной жизни миллионов пользователей и предлагающий сеть веб-ресурсов и общественных продуктов Web 2.0."
+  },
+  "landing.userStory.NewsBreak": {
+    "message": "NewsBreak пользуются более 45 миллионов человек. Это один из ведущих источников местных и срочных новостей в США: погода, оповещения, предложения, мероприятия и многое другое."
+  },
+  "landing.userStory.Tantan": {
+    "message": "Популярное приложение знакомств с удобным интерфейсом и новыми функциями для установления значимых связей и отношений."
+  },
+  "landing.userStory.Soul%20App": {
+    "message": "Социальная платформа по интересам, где люди знакомятся и общаются с помощью аватаров."
+  },
+  "landing.userStory.Keep": {
+    "message": "Фитнес-приложение с разнообразными тренировками, персональными планами и сообществом, помогающим достигать спортивных целей."
+  },
+  "landing.userStory.Kwai": {
+    "message": "Социальная сеть коротких видео Kwai заменила решение «Druid + ClickHouse» на Apache Doris, повысив эффективность агрегационного анализа больших наборов данных."
+  },
+  "landing.userStory.37%20Interactive%20Entertainment": {
+    "message": "Крупная игровая компания, разрабатывающая и выпускающая качественные мобильные игры. Разнообразный портфель и широкая аудитория позволяют предлагать игрокам по всему миру увлекательный опыт."
+  },
+  "landing.userStory.HUYA%20Inc": {
+    "message": "HUYA Inc. является крупной платформой прямых трансляций с игровым, киберспортивным и развлекательным контентом."
+  },
+  "landing.userStory.NIO": {
+    "message": "Этот производитель электромобилей испытал несколько OLAP-систем и выбрал Apache Doris, оценив производительность, семантику, совместимость и стоимость обслуживания."
+  },
+  "landing.userStory.Suzuki": {
+    "message": "Известный японский производитель автомобилей, мотоциклов и подвесных лодочных моторов. Техника Suzuki популярна во всём мире благодаря надёжности и инновациям."
+  },
+  "landing.userStory.Ford": {
+    "message": "Ford является известной автомобильной компанией, производящей и продающей по всему миру легковые автомобили, грузовики и SUV и известной инновациями и качеством."
+  },
+  "landing.userStory.Luckin%20Coffee": {
+    "message": "Luckin Coffee является быстро выросшей сетью кофеен. Компания известна удобными мобильными заказами и доставкой и предлагает кофе и закуски по всему Китаю."
+  },
+  "landing.userStory.JD%20Logistics": {
+    "message": "JD Logistics, дочерняя компания JD.com, является ведущим логистическим оператором с широкой сетью и современными технологиями. Складские, транспортные и комплексные решения поддерживают электронную торговлю в разных отраслях."
+  },
+  "landing.userStory.Anta": {
+    "message": "Anta является производителем спортивной одежды и обуви с новыми дизайнами и высокими характеристиками. Компания уделяет внимание качеству и стилю для спортсменов и любителей фитнеса по всему миру."
+  },
+  "landing.userStory.Cabbeen": {
+    "message": "Cabbeen является модным брендом современной одежды, сочетающим традиционные элементы с современной эстетикой."
+  },
+  "landing.userStory.Semi": {
+    "message": "Semi является современным брендом для взрослых, создающим новую и доступную модную одежду."
+  },
+  "landing.userStory.Septwolves": {
+    "message": "Модный бренд, отражающий образ жизни современных успешных мужчин и их стремления в разных областях."
+  },
+  "landing.userStory.Yonghui%20Superstores": {
+    "message": "Yonghui Superstores является китайской розничной сетью с широким выбором продуктов питания и товаров для дома, предлагающей удобные покупки."
+  },
+  "landing.userStory.YumChina": {
+    "message": "Yum China является ведущей ресторанной компанией Китая, управляющей KFC, Pizza Hut и Taco Bell. Компания предлагает вкусное и удобное питание и пользуется доверием потребителей."
+  },
+  "landing.userStory.Ausnutria": {
+    "message": "Ausnutria, международная молочная компания из Нидерландов, специализируется на производстве и распространении питания для младенцев и детей, предлагая качественные и безопасные продукты по всему миру."
+  },
+  "landing.userStory.Aftership": {
+    "message": "AfterShip является ведущей платформой отслеживания посылок разных перевозчиков в реальном времени для бизнеса и потребителей, делая управление доставкой прозрачнее и удобнее."
+  },
+  "landing.userStory.SF%20Express": {
+    "message": "SF Express является ведущей логистической и курьерской компанией, предоставляющей надёжные внутренние и международные перевозки компаниям и частным лицам по всему миру."
+  },
+  "landing.userStory.Uda%20Express": {
+    "message": "Uda Express стремится предоставлять безопасную, удобную и эффективную комплексную мировую логистику платформам электронной торговли, покупателям, продавцам, торговым компаниям и конечным потребителям."
+  },
+  "landing.userStory.ZTO%20Express": {
+    "message": "Ведущая китайская логистическая компания экспресс-доставки, предоставляющая надёжные и быстрые услуги компаниям и потребителям по всему Китаю."
+  },
+  "landing.userStory.YT%20Express": {
+    "message": "YT Express учитывает высокие требования к специальному оборудованию холодовой цепи для свежих и медицинских продуктов, а также к срокам и эффективности перевозок."
+  },
+  "landing.userStory.Koolearn": {
+    "message": "Образовательная платформа Koolearn предлагает студентам и взрослым разнообразные курсы и материалы с интерактивным и персональным обучением."
+  },
+  "landing.userStory.vipkid": {
+    "message": "VIPKid связывает платных учеников с преподавателями в США и Канаде. Онлайн-класс позволяет получать 25-минутные уроки у свободно говорящих по-английски преподавателей."
+  },
+  "landing.userStory.Meituan": {
+    "message": "Эта ведущая платформа локальных бытовых услуг использует Apache Doris как высокопроизводительный OLAP-движок для решения задач потоковой и офлайн-обработки данных."
+  },
+  "landing.userStory.Lifewit": {
+    "message": "Lifewit создаёт новые товары для дома, путешествий и организации пространства, предлагая решения для комфортной повседневной жизни."
+  },
+  "landing.userStory.Lenovo": {
+    "message": "Lenovo является мировой технологической компанией, проектирующей и производящей ноутбуки, планшеты, смартфоны и серверы для клиентов по всему миру."
+  },
+  "landing.userStory.Volvo": {
+    "message": "Volvo является автопроизводителем, известным вниманием к безопасности и надёжности. Разнообразные модели сочетают роскошь и практичность для требовательных клиентов по всему миру."
+  },
+  "landing.userStory.Midea": {
+    "message": "Ведущий мировой поставщик бытовой техники и решений HVAC из Китая. Ассортимент включает кондиционеры, холодильники, стиральные машины и другие товары."
+  },
+  "landing.userStory.Shuhai%20Supply%20Chain%20Solutions": {
+    "message": "Shuhai, ранее дочерняя компания Haidilao, предоставляет комплексное управление цепочками поставок продуктов питания сторонним клиентам и строит корпоративное хранилище данных на Doris."
+  },
+  "landing.userStory.Xtep": {
+    "message": "Xtep разрабатывает и производит спортивную обувь, одежду и аксессуары, предлагая спортсменам и любителям стильные и функциональные товары."
+  },
+  "landing.userStory.Taikang%20Insurance%20Group": {
+    "message": "Taikang Insurance создала платформу аналитики страхового бизнеса на Doris, предоставляющую десяткам тысяч сотрудников анализ данных с выполнением запросов за несколько секунд."
+  },
+  "landing.userStory.Ping%20An%20Insurance%20Group": {
+    "message": "Ping An, имеющая более 227 миллионов розничных клиентов и 693 миллионов интернет-пользователей, является одной из крупнейших финансовых компаний мира. Apache Doris используют несколько направлений группы, включая страхование жизни, имущества и финансовые технологии."
+  },
+  "landing.userStory.Cigna%20%26%20CMB": {
+    "message": "Страховая компания CIGNA & CMB использует Apache Doris как единую OLAP-платформу для аналитических нагрузок клиентов, аналитиков и руководства."
+  },
+  "landing.userStory.China%20Everbright%20Bank": {
+    "message": "China Everbright Bank, крупный акционерный коммерческий банк, внедрил Apache Doris в платформу данных для ускорения запросов к озеру данных и повышения эффективности анализа отчётов в реальном времени."
+  },
+  "landing.userStory.Bosera%20Funds": {
+    "message": "Bosera Fund обновила хранилище данных с помощью Apache Doris, заменив Teradata и Oracle и существенно повысив эффективность ETL и пакетной обработки."
+  },
+  "landing.userStory.Harvest%20Funds": {
+    "message": "Harvest Fund заменила прежнее хранилище данных на Apache Doris, добившись более эффективной обработки и анализа, высокой производительности и надёжности при меньших затратах."
+  },
+  "landing.userStory.OneConnect": {
+    "message": "Этот поставщик финтех-услуг с Apache Doris обрабатывает 10,000 активных финансовых показателей на 10,000 дашбордах, затрачивая на 30% меньше усилий на ETL. Время ответа по таблицам в 100 миллионов строк сократилось с 5s до 63ms."
+  },
+  "landing.userStory.Qifu%20Technology": {
+    "message": "Поставщик финтех-услуг на основе ИИ применяет Apache Doris для обработки и анализа больших данных, получая высокую производительность, гибкое управление нагрузкой, доступность и простое обслуживание."
+  },
+  "landing.userStory.Advance%20Intelligence%20Group": {
+    "message": "Технологическая компания на основе ИИ в Азиатско-Тихоокеанском регионе, предоставляющая финтех-продукты и услуги потребителям, предприятиям и торговым организациям."
+  },
+  "landing.userStory.QAX-Cyber%20Security%20Services": {
+    "message": "Поставщик услуг кибербезопасности построил систему хранения и анализа логов, увеличив скорость записи в 3 раза, выполнения запросов в 7 раз и добавив визуальное управление."
+  },
+  "landing.userStory.Tianyancha": {
+    "message": "Платформа комплексной проверки компаний заменила Apache Hive, Elasticsearch и PostgreSQL на Apache Doris, ускорив нерегламентированный анализ и сегментацию пользователей."
+  },
+  "landing.userStory.TMS": {
+    "message": "Облачная система управления перевозками для упрощения и оптимизации логистики. Она охватывает планирование, исполнение и мониторинг отправок, повышая эффективность и прозрачность цепочки поставок."
+  },
+  "landing.userStory.Orange%20Connex": {
+    "message": "Orange Connex предлагает цифровые цепочки поставок для мировой электронной торговли. После внедрения Apache Doris в рабочую среду задержка вычислений сократилась с 2 часов до 3 минут."
+  },
+  "landing.userStory.Zhonglun%20Network": {
+    "message": "SaaS-провайдер управления запасами, маркетинга для участников программ лояльности и кассовых услуг для супермаркетов, продуктовых магазинов и магазинов одежды."
+  },
+  "landing.userStory.Duyan%20Soft": {
+    "message": "Этот SaaS-провайдер внедрил Apache Doris для повышения эффективности обработки данных, особенно обслуживания многомерных таблиц и запросов с высокой параллельностью."
+  },
+  "landing.userStory.AISPEECH": {
+    "message": "Поставщик разговорного ИИ и решений взаимодействия на естественном языке объединил потоковую и офлайн-аналитику на Apache Doris, используя его гибкость и производительность для чат-ботов."
+  },
+  "landing.userStory.Boton": {
+    "message": "Публичная компания, применяющая интернет-технологии в логистике и доставке. Предоставляет интеллектуальную промышленную логистику и занимается онлайн-бизнесом, включая игры."
+  },
+  "landing.userStory.Sugon": {
+    "message": "Поставщик полного стека облачных решений с акцентом на безопасность, надёжность, эффективное управление ресурсами и отраслевые приложения."
+  },
+  "landing.userStory.Wasu": {
+    "message": "Крупная технологическая группа, предлагающая передовые решения в ИИ, облачных вычислениях, аналитике больших данных и телекоммуникациях."
+  },
+  "landing.userStory.Horizon%20Robotics": {
+    "message": "Ведущая китайская компания в области ИИ, специализирующаяся на чипах и ПО. Она предлагает новые ИИ-решения различным отраслям и развивает интеллектуальные системы."
+  },
+  "landing.userStory.Youdao": {
+    "message": "Youdao Inc. разрабатывает языковые продукты и услуги: платформы изучения языков, переводчики и умные устройства для улучшения общения и получения знаний."
+  },
+  "landing.userStory.LY%20Digit": {
+    "message": "LY Digital предлагает финтех-решения гостиничной отрасли. Внедрив Apache Doris с его широкими возможностями, компания упростила архитектуру и ускорила доступ к данным и запросы."
+  },
+  "landing.userStory.TTChat": {
+    "message": "Приложение обмена сообщениями и общения, позволяющее вести беседы в реальном времени, согласовывать стратегии и знакомиться в голосовых комнатах."
+  },
+  "landing.userStory.DouYu": {
+    "message": "Платформа прямых трансляций объединила потоковые и пакетные конвейеры на Apache Doris, сделав архитектуру быстрее, проще и экономичнее."
+  },
+  "landing.userStory.Zhihu%20Inc": {
+    "message": "Многотематический сайт вопросов и ответов использует Apache Doris в платформе управления данными, получая быструю загрузку и ответы на запросы."
+  },
+  "landing.userStory.Dingdong": {
+    "message": "Онлайн-платформа продуктов питания предлагает быструю и удобную доставку свежих продуктов и повседневных товаров, упрощая покупки."
+  },
+  "landing.userStory.Linkedcare": {
+    "message": "Эта компания медицинского SaaS рассказывает об эволюции архитектуры сервисов данных от ClickHouse к Apache Doris."
+  },
+  "landing.userStory.LeTV": {
+    "message": "LeTV специализируется на интернет-сервисах, умных устройствах и производстве контента, предлагая смартфоны, умные телевизоры и потоковые сервисы."
+  },
+  "landing.userStory.Boss%20Zhipin": {
+    "message": "Онлайн-платформа найма поддерживает прямое общение работодателей и кандидатов и предлагает точные рекомендации на основе собственных алгоритмов ИИ и больших данных."
+  },
+  "landing.userStory.Soyoung": {
+    "message": "Платформа эстетической хирургии, торгующаяся на Nasdaq. Система оценки репутации в стиле социальных сетей помогает завоевать доверие пользователей."
+  },
+  "landing.userStory.Jiyue%20Auto": {
+    "message": "Jiyue является автомобильным робобрендом нового поколения Geely Holding, ориентированным на премиальные интеллектуальные машины и разработку передовых автомобилей-роботов."
+  },
+  "landing.userStory.Wuling%20Motors": {
+    "message": "Wuling Motors производит доступные и практичные автомобили, известна компактными и коммерческими моделями и популярна на внутреннем и международном рынках."
+  },
+  "landing.userStory.Chang'an%20Automobile": {
+    "message": "Этот автопроизводитель объединяет 4 миллиона автомобилей и обрабатывает 100 миллиардов записей CAN ежедневно. Apache Doris обеспечивает производительность аналитики в реальном времени."
+  },
+  "landing.userStory.LOTUS": {
+    "message": "Lotus является известным британским производителем высокопроизводительных спортивных и гоночных автомобилей."
+  },
+  "landing.userStory.Great%20Wall": {
+    "message": "Great Wall Motors является крупным китайским автопроизводителем, специализирующимся на SUV, пикапах и электромобилях."
+  },
+  "landing.userStory.Chery": {
+    "message": "Chery известна широким выбором седанов, SUV и электромобилей. Внимание к новым технологиям и качеству позволило ей занять заметное место на мировом рынке."
+  },
+  "landing.userStory.Envision%20Energy": {
+    "message": "Envision Energy развивает чистую и устойчивую энергетику во всём мире, опираясь на компетенции в ветряных турбинах, ПО управления энергией и умных сетях."
+  },
+  "landing.userStory.CTYun": {
+    "message": "CTYun является поставщиком облачных вычислений и инфраструктуры. Набор решений обеспечивает компаниям безопасные, масштабируемые и надёжные облачные возможности."
+  },
+  "landing.userStory.ZTE": {
+    "message": "ZTE специализируется на 5G, сетях и мобильных устройствах и предлагает решения, развивающие связь и цифровую трансформацию телекоммуникаций."
+  },
+  "landing.userStory.HuoLaLa": {
+    "message": "Huolala управляет грузовыми платформами, предлагая обмен информацией о перевозках, доставку личных вещей, корпоративные перевозки и другие услуги по всему миру."
+  },
+  "landing.userStory.Deppon%20Express": {
+    "message": "Deppon Express предоставляет комплексные решения экспресс-доставки и цепочек поставок, обеспечивая надёжную и эффективную доставку компаниям и частным лицам."
+  },
+  "landing.userStory.Du%20Xiaoman%20Financial": {
+    "message": "Финтех-компания, использующая современные технологии для цифровых платежей, небольших займов, инвестиций и управления капиталом."
+  },
+  "landing.userStory.Industrial%20Bank": {
+    "message": "Xingye Bank, крупный акционерный коммерческий банк, внедрил Apache Doris в платформу больших данных для ускорения аналитики реального времени и поддержки операционных и управленческих решений."
+  },
+  "landing.userStory.UMS": {
+    "message": "Ведущий поставщик электронных платежей и финтех-решений, строящий мировую платёжную экосистему и предлагающий безопасные онлайн-платежи продавцам и потребителям."
+  },
+  "landing.userStory.Caitong%20Securities": {
+    "message": "Caitong Securities использует Apache Doris для обобщения и анализа данных реального времени, быстро формируя отчёты для развития бизнеса и принятия решений."
+  },
+  "landing.userStory.Lakala": {
+    "message": "Публичный поставщик цифровых платежей, также предлагающий розничным компаниям, банкам и электронной торговле решения управления наличностью, бизнесом и цепочками поставок."
+  },
+  "landing.userStory.Easy%20Pay": {
+    "message": "Поставщик электронных платежей, предлагающий комплексные решения для путешественников: авиаперелёты, проживание и розничные покупки."
+  },
+  "landing.userStory.Mucfc.com": {
+    "message": "Компания потребительского финансирования, предлагающая небольшие и средние займы за пределами традиционного банковского обслуживания для финансовой доступности."
+  },
+  "landing.userStory.ZhongAn%20Insurance": {
+    "message": "Цифровой страховщик с новыми продуктами для разных сфер жизни, повышающий эффективность работы и управления рисками с помощью современных технологий."
+  },
+  "landing.userStory.InRice.com": {
+    "message": "Поставщик финтех-услуг с комплексными сценарными цифровыми решениями от финансирования и маркетинга до управления мероприятиями и клиентами."
+  },
+  "landing.userStory.Bairong%20Inc": {
+    "message": "Поставщик услуг финансового риск-контроля и маркетинга, использующий ИИ для поддержки решений в разных отраслях."
+  },
+  "landing.userStory.Moka": {
+    "message": "SaaS-провайдер использует быстрые соединения Apache Doris для самостоятельной BI-аналитики, также повышая эффективность запросов с учётом прав доступа."
+  },
+  "landing.userStory.360%20Security": {
+    "message": "Apache Doris обеспечивает быстрые вычисления и целостность данных A/B-тестов на больших потоках с миллионами операций в секунду. Каждая операция включает около 20 тегов и более десятка измерений."
+  },
+  "landing.userStory.HuiCe": {
+    "message": "Поставщик интеллектуальных розничных услуг использует Apache Doris для изоляции ресурсов и высокопараллельных запросов, ускоряя анализ и сокращая затраты на хранение."
+  },
+  "landing.userStory.JiaoLong%20Cloud": {
+    "message": "Поставщик генеративного ИИ, разрабатывающий передовой интегрированный набор продуктов с собственной интеллектуальной собственностью."
+  },
+  "landing.userStory.IGOTGAMES": {
+    "message": "IGG известна выпуском массовых многопользовательских онлайн-игр в Северной Америке. Её первая кроссплатформенная игра реального времени Lords Mobile имеет около 320 миллионов зарегистрированных пользователей в мире."
+  },
+  "landing.userStory.Electronic%20Soul": {
+    "message": "Electronic Soul является одним из ведущих разработчиков и издателей игр Азии, предлагая качественный контент для мобильных устройств, ПК и консолей."
+  },
+  "landing.userStory.Haohan%20Data": {
+    "message": "Haohan Data предлагает компаниям комплексные решения на основе современных технологий и аналитики, помогая принимать обоснованные решения."
+  },
+  "landing.userStory.Aima%20Tech": {
+    "message": "Производитель электротранспорта Aima Tech работает над изменением повседневных поездок и снижением выбросов углерода."
+  },
+  "landing.userStory.Peacebird": {
+    "message": "Peacebird известна современными модными дизайнами и предлагает стильную одежду с учётом экологических требований."
+  },
+  "landing.userStory.Full%20Truck%20Alliance": {
+    "message": "Full Truck Alliance является ведущей цифровой грузовой платформой, связывающей грузоотправителей и водителей. Эффективные и прозрачные перевозки оптимизируют логистику по всему Китаю."
+  },
+  "landing.userStory.CaiNiao": {
+    "message": "CaiNiao, логистическая платформа Alibaba Group, специализируется на полном управлении поставками и доставке. Она объединяет продавцов, склады и курьеров для эффективного и своевременного исполнения заказов."
+  },
+  "landing.userStory.Umetrip": {
+    "message": "Umetrip является ведущим поставщиком ИТ-решений авиационной и туристической отрасли Китая: бронирование, обслуживание пассажиров и управление авиационными данными."
+  },
+  "landing.userStory.Yurun%20Group": {
+    "message": "Yurun Group, известная китайская компания переработки и распространения продуктов, объединяет разведение, переработку и розничную торговлю для поставки качественного мяса."
+  },
+  "landing.userStory.Bondex": {
+    "message": "Bondex обслуживает импортёров и экспортёров, предлагая индивидуальные цепочки поставок и стандартизированную международную логистику, включая планирование, проектирование и реализацию."
+  },
+  "landing.userStory.Zongteng%20Group": {
+    "message": "Zongteng Group является крупным китайским поставщиком международных складских и логистических услуг для продавцов электронной торговли."
+  },
+  "landing.userStory.Techsight": {
+    "message": "Финтех-компания внедрила Apache Doris в оценку кредитоспособности и контроль рисков, ускорив запросы к большим данным при небольших затратах на разработку и обслуживание."
+  },
+  "landing.userStory.Zuoyebang": {
+    "message": "Zuoyebang является ведущей онлайн-платформой образования с учебными ресурсами, прямыми занятиями, репетиторством и персональным обучением для учащихся разных возрастов."
+  },
+  "landing.userStory.Atguigu": {
+    "message": "Учебная платформа Atguigu предлагает комплексные программы и ресурсы для развития технических навыков и карьеры в технологической отрасли."
+  },
+  "landing.userStory.ITCast": {
+    "message": "ITCast является комплексной платформой онлайн-обучения с разнообразными курсами ИТ и программирования."
+  },
+  "landing.userStory.Kaikeba": {
+    "message": "Онлайн-платформа образования с разнообразными курсами отраслевых экспертов, помогающими приобретать навыки и развиваться в выбранной области."
+  },
+  "landing.userStory.Lizhiweike": {
+    "message": "Популярная платформа аудиотрансляций Lizhiweike позволяет создавать и распространять подкасты, радиопередачи и интерактивные обсуждения, объединяя активное аудиосообщество."
+  },
+  "landing.userStory.Tenclass": {
+    "message": "TenClass является образовательной компанией, развивающей цифровые навыки, видеомонтаж, анализ данных и другие компетенции."
+  },
+  "landing.userStory.Wuxi%20Xishang%20Bank": {
+    "message": "Банк использует Apache Doris для цифровизации и детального управления маркетингом, рисками и обслуживанием клиентов."
+  },
+  "landing.userStory.HYXJ": {
+    "message": "Компания потребительского финансирования использует Apache Doris как единый шлюз запросов платформы управления рисками, объединяя разнородные источники через Multi Catalog."
+  },
+  "landing.userStory.HCFC": {
+    "message": "Поставщик технологий потребительского финансирования широко применяет Apache Doris во внутренних процессах и операциях, существенно ускоряя запросы и улучшая качество данных."
+  },
+  "landing.userStory.Autohome": {
+    "message": "Autohome является ведущей автомобильной онлайн-платформой с информацией, обзорами и услугами для автолюбителей, покупателей и владельцев машин."
+  },
+  "landing.userStory.JJ%20World": {
+    "message": "JJ World является ведущим разработчиком настольных и карточных игр и предлагает платформу сражений JJ-Dota, мини-игры 3399 и мобильные приложения."
+  },
+  "landing.userStory.Q1.com": {
+    "message": "Q1.com стремится предоставлять высокое качество пользовательского опыта в онлайн-играх и развлечениях."
+  },
+  "landing.userStory.Xiaoe%20Tech": {
+    "message": "Поставщик прямых трансляций с 800 миллионами пользователей внедрил Apache Doris в аналитику для упрощения компонентов данных. Результат: быстрые запросы по тегам, восстановление после сбоев и удобная визуализация."
+  },
+  "landing.userStory.Youzan": {
+    "message": "SaaS-провайдер электронной торговли перешёл с ClickHouse на Apache Doris, увеличив производительность SQL на 250%. Doris опередил ClickHouse в тестах соединений при всех объёмах данных."
+  },
+  "landing.userStory.Midland%20Realty": {
+    "message": "Крупная компания недвижимости быстро и просто построила хранилище данных на Apache Doris, получив низкую задержку запросов, простое обслуживание и небольшое потребление ресурсов хранения."
+  },
+  "landing.userStory.Footprint%20Analytics": {
+    "message": "Поставщик аналитики блокчейна позволяет пользователям настраивать дашборды за 10 секунд и получать полезные выводы из данных."
+  },
+  "landing.reports.2026-10-12.label": {
+    "message": "12–18 октября 2026 г."
+  },
+  "landing.reports.2026-10-12.week": {
+    "message": "42-я неделя 2026 г."
+  },
+  "landing.reports.2026-10-12.report.summary.lead": {
+    "message": "На этой неделе Apache Doris развивает более своевременную загрузку, целевые сканирования и совместимость lakehouse с сохранением высокоточных временных меток. Основное внимание по-прежнему уделяется ядру и инженерной работе. Улучшаются совместимость с современными клиентами и явные связи внешней аутентификации с учётными записями. 43 участника внесли 176 принятых PR, открыто 20 новых задач. Сообщество укрепляет инженерную основу и расширяет возможности хранилища реального времени и lakehouse."
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.title": {
+    "message": "Событийная загрузка из S3"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.0.narrative": {
+    "message": "Doris теперь поддерживает потоковую загрузку через уведомления S3 ObjectCreated в выделенную очередь SQS с фильтрацией по bucket и glob. Это устраняет пропуск файлов, чьи ключи предшествуют курсору упорядоченного списка, повышает полноту загрузки и развивает событийную модель для объектного хранилища."
+  },
+  "landing.reportRefs.c27ec3f57ca583e3": {
+    "message": "[feature](fe) Потоковая загрузка на основе уведомлений S3"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.title": {
+    "message": "Кандидаты из bitmap для целевых сканирований"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.1.narrative": {
+    "message": "Предлагаемое изменение принимает внешние Roaring bitmap и рано отфильтровывает идентификаторы ресурсов-кандидатов в нативных сканированиях, с необязательным сжатым runtime-фильтром. Для кандидатов из категорий, фасетов или правил доступа исследуется раннее сокращение работы запросов над большими общими наборами данных."
+  },
+  "landing.reportRefs.e56f41ac207d8582": {
+    "message": "[feature](be) Фильтры кандидатов Roaring bitmap для идентификаторов ресурсов"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.title": {
+    "message": "Наносекундная точность между таблицами lakehouse"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.2.narrative": {
+    "message": "Doris двунаправленно сопоставляет наносекундные временные метки без часового пояса Iceberg и Paimon с TIMESTAMP_NS. При чтении, вставке и CTAS сохраняются девять дробных цифр, включая вложенные типы. Это снижает потерю точности между системами и улучшает точность работы с типами в lakehouse."
+  },
+  "landing.reportRefs.71c3f7b235a54c90": {
+    "message": "[feat](datalake) Наносекундные временные метки в Iceberg и Paimon"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.title": {
+    "message": "Расширенная совместимость с современными клиентами MySQL"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.3.narrative": {
+    "message": "Doris FE улучшает совместимость с клиентами MySQL 9 и Connector/J 8/9: результаты нескольких операторов, полная аутентификация caching_sha2, запросы authentication_policy и бинарные параметры TIME в подготовленных операторах. Это упрощает интеграцию приложений и расширяет совместимость протокола MySQL."
+  },
+  "landing.reportRefs.7d69ed3ed1a1c740": {
+    "message": "[feature](fe) Улучшение совместимости с клиентами MySQL 9 и Connector/J"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.title": {
+    "message": "Явные связи учётных записей с внешней аутентификацией"
+  },
+  "landing.reports.2026-10-12.report.summary.highlights.4.narrative": {
+    "message": "Doris поддерживает исключительные связи учётных записей user@host с именованными интеграциями аутентификации, проверяющими учётные данные. Необязательное AS сопоставляет внешние идентификаторы. Независимый от провайдера синтаксис охватывает LDAP, IAM и другие плагины, делая связи явными и улучшая управление аутентификацией."
+  },
+  "landing.reportRefs.445ef4d0d54b311e": {
+    "message": "[feature](fe) Привязка пользователей к интеграциям аутентификации"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.name": {
+    "message": "Мультимодальный lakehouse"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.mergedNarrative": {
+    "message": "В lakehouse приоритетом стала диспетчеризация COUNT по внешним файлам для снижения перегрузки BE повторными запросами. Маршрутизация записи Iceberg с учётом партиций и режимы перезаписи улучшают запись. Обновление свойств таблиц, GZIP, типы Oracle и необязательное дополнение имён файлов расширяют совместимость загрузки, управления и экспорта."
+  },
+  "landing.reportRefs.a809f2794dc06e2d": {
+    "message": "[improvement](fe) Оптимизация диспетчеризации сканирования COUNT внешних файлов"
+  },
+  "landing.reportRefs.e610de745b4faf88": {
+    "message": "[opt](jdbc) Поддержка Oracle BINARY_FLOAT и BINARY_DOUBLE"
+  },
+  "landing.reportRefs.961d9334f728c56c": {
+    "message": "[feature](outfile) Необязательное file_name_padding"
+  },
+  "landing.reportRefs.1c555c5cbedde93a": {
+    "message": "[fix](iceberg) Поддержка GZIP для записи Parquet в iceberg/hive"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.0.inProgressNarrative": {
+    "message": "Текущая работа над lakehouse развивает выполнение по метаданным партиций, чтобы запросы последних партиций Hive/Hudi не открывали файлы, и pruning HMS для снижения затрат планирования. Нативный доступ Azure и совместимость с 3D-геометрией расширяют интеграцию. Новая работа ANN предлагает перенести построение индекса с загрузки на фоновую компактацию."
+  },
+  "landing.reportRefs.eb3901ea49c7640e": {
+    "message": "[improvement](hive) Pushdown только значений столбцов партиций при сканировании Hive/Hudi"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.name": {
+    "message": "Хранилище данных реального времени"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.mergedNarrative": {
+    "message": "В нагрузках реального времени снижено потребление кэша точечных запросов для широких таблиц и множества соединений за счёт меньшего предварительного выделения памяти. Усилены отмена загрузки, согласованное закрытие, проверка частичных обновлений в транзакциях и восстановление изменений схемы CDC. Параллелизм снимков учитывает CPU BE, сокращены лишние журналы схемы и добавлена прямая финализация агрегатных состояний."
+  },
+  "landing.reportRefs.08f6a0954e127053": {
+    "message": "[opt](point query) Снижение потребления кэша короткого поиска"
+  },
+  "landing.reportRefs.d6647cef5ba54859": {
+    "message": "[fix](load) Запрет частичных обновлений в транзакционных вставках VALUES"
+  },
+  "landing.reportRefs.8ff7e678cf737f30": {
+    "message": "[enhance](load) Отмена загрузки без блокировок"
+  },
+  "landing.reportRefs.d4265d872703707b": {
+    "message": "[fix](streaming job) Усиление обработки alter и commit"
+  },
+  "landing.reportRefs.1c2686c5265895ed": {
+    "message": "[feature](be) Финализаторы агрегатных состояний и пакетное слияние"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.1.inProgressNarrative": {
+    "message": "Работа над хранилищем реального времени направлена на непрерывную загрузку и свежесть данных через устойчивое отслеживание shard Kinesis, распространение настроек JSON и выбор последней видимой партиции. Новые задачи расширяют предагрегацию на сливаемые агрегатные состояния и устраняют гонки хранения binlog при восстановлении реплик, повышая эффективность аналитики и надёжность сохранения событий."
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.name": {
+    "message": "Разделение вычислений и хранения, облачная архитектура"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.mergedNarrative": {
+    "message": "Облачные операции улучшили согласованность метаданных и эффективность хранения: синхронизация вычислительных групп корректно обрабатывает удалённые свойства и пересоздание с тем же именем, сборщик GCS удаляет пакетами. Файловый кэш включён по умолчанию; потенциально проблемный дамп LRU требует явного включения."
+  },
+  "landing.reportRefs.f0f5fae9a0f54943": {
+    "message": "[fix](cloud) Замена свойств вычислительной группы из Meta Service"
+  },
+  "landing.reportRefs.3abc65af6fd53ff7": {
+    "message": "[fix](cloud) Сохранение сопоставления пересозданной вычислительной группы"
+  },
+  "landing.reportRefs.f4d90d8f42179dad": {
+    "message": "[improvement](filecache) Включение файлового кэша по умолчанию"
+  },
+  "landing.reportRefs.81366e18cde9dd80": {
+    "message": "[improvement](cloud) Пакетное удаление объектов GCS в сборщике"
+  },
+  "landing.reportRefs.1bec1df680ed94c8": {
+    "message": "[fix](filecache) Отключение дампа LRU файлового кэша по умолчанию"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.2.inProgressNarrative": {
+    "message": "Облачная работа снижает затраты удалённого чтения через согласованную предзагрузку, объединение I/O и повторное использование инкрементального кэша запросов, сокращая память отслеживания активности FE. Новая поддержка асинхронной записи peer-кэша призвана убрать синхронное заполнение кэша из потоков запросов."
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.name": {
+    "message": "Наблюдаемость агентов"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.3.mergedNarrative": {
+    "message": "Для крупных JSON-документов и плотного текстового поиска в логах и данных агентов обход массивов JSONB стал линейным, а пересечения инвертированных индексов без оценки оптимизированы. Это снижает затраты поиска в больших массивах и фильтрации сочетаний частых слов."
+  },
+  "landing.reportRefs.07b1bd695cef6e2f": {
+    "message": "[improvement](be) Линейный обход массивов JSONB в функциях JSON"
+  },
+  "landing.reportRefs.68251a17d89a36dd": {
+    "message": "[improvement](be) Ускорение плотных пересечений инвертированных индексов без оценки"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.name": {
+    "message": "Интеграция экосистемы"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.mergedNarrative": {
+    "message": "Для миграции нагрузок и подключения клиентов добавлены совместимые с Hive кодирование и декодирование символов, исправлено усечение пакетов MySQL через TLS. Исправления метаданных Flight, нативного Variant и VARBINARY перенесены в master, сокращая несовместимости между системами."
+  },
+  "landing.reportRefs.d8b9497fb452fdd5": {
+    "message": "[feature](function) Совместимые с Hive encode и decode"
+  },
+  "landing.reportRefs.27ff74adac93a523": {
+    "message": "[fix](fe) Исправление усечения пакетов MySQL через TLS"
+  },
+  "landing.reportRefs.a4f6dca600326868": {
+    "message": "[feature](arrow) Перенос исправлений Flight metadata, нативного Variant и VARBINARY в master"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.4.inProgressNarrative": {
+    "message": "Работа над экосистемой делает интеграцию клиентов и миграцию SQL предсказуемее, устраняя повреждение длинных операторов dbt и улучшая фильтрацию метаданных и часовые пояса Flight SQL. Совместимое с Trino форматирование длительности также упрощает перенос запросов и инструментов в Doris."
+  },
+  "landing.reportRefs.e5ef35578b1d2909": {
+    "message": "[fix](dbt-doris) Принудительное use_pure=True для предотвращения незаметного повреждения…"
+  },
+  "landing.reportRefs.08381a0998d73a03": {
+    "message": "[fix](arrow-flight) Метаданные типов таблиц и фильтры"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.name": {
+    "message": "Безопасность и управление"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.mergedNarrative": {
+    "message": "Для операций с временным сохранением исторических партиций новая общекластерная защита удаления динамических партиций приостанавливает автоматическую очистку, не мешая созданию партиций. Это даёт больше контроля над хранением данных."
+  },
+  "landing.reportRefs.f81b3554049fefd2": {
+    "message": "[opt](partition) Глобальная защита удаления динамических партиций"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.5.inProgressNarrative": {
+    "message": "Работа над управлением сосредоточена на TTL строк при создании: просроченные строки скрываются после слияния и удаляются при обычной перезаписи. Исправления политик устраняют ошибки воспроизведения метаданных и запрещают коррелированные подзапросы в политиках, которые могли создаваться без фактического применения, снижая ложную уверенность в контроле доступа."
+  },
+  "landing.reportRefs.69e4f71d5a3fad3b": {
+    "message": "[feature](storage) TTL на уровне строк"
+  },
+  "landing.reportRefs.98a57ecda49e26b7": {
+    "message": "[fix](policy) Запрет коррелированных подзапросов в CREATE ROW POLICY USING"
+  },
+  "landing.reportRefs.9ecc66ecc6a8c40a": {
+    "message": "[fix](policy) Исправление политики строк на представлении внешнего каталога"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.name": {
+    "message": "Ядро и инженерная работа"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.mergedNarrative": {
+    "message": "Работа над ядром усилила надёжное выполнение сложных запросов и доступ к lakehouse. Объединённый движок MATCH/SEARCH сопровождается исправлениями оценок и корректности SQL, безопасным параллельным жизненным циклом, контролем памяти кэша, более эффективными сканированиями, чтением Variant и широковещательной передачей, а также улучшением коннекторов и диагностики."
+  },
+  "landing.reportRefs.77210fc4760d7fbe": {
+    "message": "[refactor](const column) Унификация чтения константных столбцов"
+  },
+  "landing.reportRefs.045be7e731050193": {
+    "message": "[fix](pipeline) Безусловный exchange в PipelineTask::set_running"
+  },
+  "landing.reportRefs.68c01323c5dc0b97": {
+    "message": "[fix](update) Учёт зависимостей генерируемых столбцов при обновлении"
+  },
+  "landing.reportRefs.06f2ac7bccf9eea3": {
+    "message": "[fix](cloud) Очистка устаревших маршрутов при воспроизведении обновлений реплик и перед сохранением checkpoint"
+  },
+  "landing.reportRefs.3496f634e491fcfa": {
+    "message": "[fix](be) Сохранение ожидания приостановленных запросов при нехватке памяти процесса до отмены"
+  },
+  "landing.reports.2026-10-12.report.repos.0.scenarios.6.inProgressNarrative": {
+    "message": "Текущая работа над ядром укрепляет корректность запросов, изоляцию сбоев и контроль ресурсов. Новые задачи особенно касаются ошибок оптимизатора и числовых преобразований, исключений сканеров, способных завершить BE, бюджетов памяти кэша и ограничений создания партиций. Цель: достоверные результаты сложных запросов, предсказуемая работа и лучшая диагностика."
+  },
+  "landing.download.binary": {
+    "message": "Бинарный"
+  },
+  "landing.download.source": {
+    "message": "Исходный код"
+  },
+  "landing.download.compatibility": {
+    "message": "Для {engine} {version}"
+  },
+  "landing.download.guide.version": {
+    "message": "Что означает X.Y.Z, чем Latest (новая ветка) отличается от Stable (стабильная) и какая сборка подходит вашему CPU."
+  },
+  "landing.download.guide.upgrade": {
+    "message": "Меры предосторожности для каждой версии перед обновлением кластера."
+  },
+  "landing.download.guide.archive": {
+    "message": "Для старых веток больше не выпускаются обновления, включая исправления безопасности."
+  },
+  "landing.download.dockerCommand": {
+    "message": "Команда Docker pull"
+  },
+  "landing.trackB.done.demo": {
+    "message": "Демо охватывает все пункты задания и выполняется от начала до конца на пустом Doris; каждый ожидаемый результат содержит фактический вывод."
+  },
+  "landing.trackB.done.mirrors": {
+    "message": "Одинаковый раздел добавлен в обе копии страницы."
+  },
+  "landing.trackB.done.fixes": {
+    "message": "Найденные ошибки страницы исправлены в том же pull request либо перечислены в его описании."
+  },
+  "landing.trackB.done.pr": {
+    "message": "Pull request открыт в apache/doris-website и содержит название задания."
+  },
+  "landing.profile.boolean.yes": {
+    "message": "Да"
+  },
+  "landing.profile.boolean.no": {
+    "message": "Нет"
+  },
+  "landing.profile.error.graphLayout": {
+    "message": "Не удалось построить компоновку графа выполнения."
+  },
+  "landing.profile.error.secureId": {
+    "message": "Этот браузер не может создать безопасный идентификатор запроса анализа."
+  },
+  "landing.profile.error.metricRange": {
+    "message": "В Profile есть метрика вне поддерживаемого числового диапазона."
+  },
+  "landing.profile.error.duplicateNodes": {
+    "message": "Граф выполнения содержит повторяющиеся ID узлов."
+  },
+  "landing.profile.error.invalidEdge": {
+    "message": "Граф выполнения содержит недопустимую связь."
+  },
+  "landing.profile.error.duplicateEdge": {
+    "message": "Граф выполнения содержит повторяющуюся связь."
+  },
+  "landing.profile.error.graphCycle": {
+    "message": "Граф выполнения содержит цикл."
+  },
+  "landing.profile.error.preparedTooLarge": {
+    "message": "Подготовленный Profile превышает 10 MiB."
+  },
+  "landing.profile.error.tooManyLines": {
+    "message": "Profile содержит слишком много строк."
+  },
+  "landing.profile.error.longLine": {
+    "message": "Profile содержит строку больше 64 KiB."
+  },
+  "landing.profile.error.tooManyFragments": {
+    "message": "Profile содержит слишком много Fragment."
+  },
+  "landing.profile.error.tooManyPipelines": {
+    "message": "Profile содержит слишком много Pipeline."
+  },
+  "landing.profile.error.tooManyNodes": {
+    "message": "Граф выполнения содержит слишком много узлов."
+  },
+  "landing.profile.error.noOperators": {
+    "message": "В Profile нет пригодных операторов MergedProfile."
+  },
+  "landing.profile.error.tooManyEdges": {
+    "message": "Граф выполнения содержит слишком много связей."
+  },
+  "landing.download.noOptions": {
+    "message": "Нет доступных вариантов"
+  },
+  "landing.download.copied": {
+    "message": "Скопировано"
+  },
+  "landing.download.required": {
+    "message": "Выберите вариант."
   }
 }

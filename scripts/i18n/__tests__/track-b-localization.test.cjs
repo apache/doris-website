@@ -15,8 +15,8 @@ function loadTasks() {
         ? {translate: () => 'TRANSLATED_UI_ONLY'} : require(name), module, module.exports);
     return module.exports;
 }
-test('Chinese task text is complete while copied documentation and PR templates keep English source metadata', () => {
-    const dictionary = JSON.parse(fs.readFileSync(path.join(root, 'i18n/zh-CN/code.json')));
+for (const locale of ['zh-CN', 'ja', 'ko', 'ru']) test(`${locale} task text is complete while copied documentation and PR templates keep English source metadata`, () => {
+    const dictionary = JSON.parse(fs.readFileSync(path.join(root, `i18n/${locale}/code.json`)));
     for (const [id] of trackBMessages(root)) assert(dictionary[id]?.message?.trim(), id);
     const {TRACK_B_TASKS, sectionTemplate, prTemplate} = loadTasks();
     for (const task of TRACK_B_TASKS) {

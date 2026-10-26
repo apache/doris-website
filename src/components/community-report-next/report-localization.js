@@ -10,6 +10,22 @@ const proseFields = new Set([
     'mergedNarrative',
     'inProgressNarrative',
 ]);
+const coverage = require('../../../translations/community-reports.json');
+
+function translatedReportIds(locale) {
+    return coverage.translatedReports[locale] ?? [];
+}
+
+// Select the whole report before mapping any fields. A partially populated
+// dictionary must never turn an English report into a mixed-language body.
+function localizeReportEntry(entry, locale, map) {
+    const translated = locale !== 'en' && translatedReportIds(locale).includes(entry.id);
+    return {
+        ...(translated ? mapReportText(entry.id, entry, map) : entry),
+        contentLocale: translated ? locale : 'en',
+        fallback: locale !== 'en' && !translated,
+    };
+}
 function referenceMessageId(title) {
     let first = 2166136261,
         second = 2246822507;
@@ -46,4 +62,4 @@ function mapReportText(id, entry, map) {
         report: visit(entry.report, ['report']),
     };
 }
-module.exports = { mapReportText, referenceMessageId };
+module.exports = { mapReportText, referenceMessageId, translatedReportIds, localizeReportEntry };

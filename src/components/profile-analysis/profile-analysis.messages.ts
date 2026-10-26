@@ -23,6 +23,21 @@ export function localizeProfileMessage(message: string): string {
         'An execution graph is not available for this Profile.': translate({id: 'landing.profile.error.graphUnavailable', message: 'An execution graph is not available for this Profile.'}),
         'The execution graph could not be generated.': translate({id: 'landing.profile.error.graphFailed', message: 'The execution graph could not be generated.'}),
         'The execution graph parser timed out.': translate({id: 'landing.profile.error.graphTimeout', message: 'The execution graph parser timed out.'}),
+        "The execution graph could not be laid out.": translate({id: "landing.profile.error.graphLayout", message: "The execution graph could not be laid out."}),
+        "This browser cannot create a secure analysis request identifier.": translate({id: "landing.profile.error.secureId", message: "This browser cannot create a secure analysis request identifier."}),
+        "The Profile contains a metric outside the supported numeric range.": translate({id: "landing.profile.error.metricRange", message: "The Profile contains a metric outside the supported numeric range."}),
+        "The execution graph contains duplicate node IDs.": translate({id: "landing.profile.error.duplicateNodes", message: "The execution graph contains duplicate node IDs."}),
+        "The execution graph contains an invalid edge.": translate({id: "landing.profile.error.invalidEdge", message: "The execution graph contains an invalid edge."}),
+        "The execution graph contains a duplicate edge.": translate({id: "landing.profile.error.duplicateEdge", message: "The execution graph contains a duplicate edge."}),
+        "The execution graph contains a cycle.": translate({id: "landing.profile.error.graphCycle", message: "The execution graph contains a cycle."}),
+        "The prepared Profile is larger than 10 MiB.": translate({id: "landing.profile.error.preparedTooLarge", message: "The prepared Profile is larger than 10 MiB."}),
+        "The Profile contains too many lines.": translate({id: "landing.profile.error.tooManyLines", message: "The Profile contains too many lines."}),
+        "The Profile contains a line larger than 64 KiB.": translate({id: "landing.profile.error.longLine", message: "The Profile contains a line larger than 64 KiB."}),
+        "The Profile contains too many Fragments.": translate({id: "landing.profile.error.tooManyFragments", message: "The Profile contains too many Fragments."}),
+        "The Profile contains too many Pipelines.": translate({id: "landing.profile.error.tooManyPipelines", message: "The Profile contains too many Pipelines."}),
+        "The execution graph contains too many nodes.": translate({id: "landing.profile.error.tooManyNodes", message: "The execution graph contains too many nodes."}),
+        "The Profile has no usable MergedProfile operators.": translate({id: "landing.profile.error.noOperators", message: "The Profile has no usable MergedProfile operators."}),
+        "The execution graph contains too many edges.": translate({id: "landing.profile.error.tooManyEdges", message: "The execution graph contains too many edges."}),
     };
     const known = messages[message];
     if (known) return known;
