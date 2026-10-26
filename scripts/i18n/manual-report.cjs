@@ -59,7 +59,7 @@ function coverage(manifests, {partial = false} = {}) {
     const identities = new Map(), groups = new Map(), exceptions = [];
     const sourceGroups = new Map();
     for (const manifest of manifests) for (const page of manifest.pages) {
-        if (page.siteLocale !== 'en' || page.kind === 'utility') continue;
+        if (page.siteLocale !== 'en' || page.kind === 'utility' || page.aggregate) continue;
         const key = JSON.stringify([page.kind, page.pluginId ?? 'default', page.version ?? 'unversioned']);
         if (!sourceGroups.has(key)) sourceGroups.set(key, new Set());
         sourceGroups.get(key).add(page.contentId);
@@ -69,6 +69,7 @@ function coverage(manifests, {partial = false} = {}) {
     for (const manifest of manifests) {
         exceptions.push(...(manifest.reports ?? []).map(report => ({...report, manifestLocale: manifest.locale})));
         for (const page of manifest.pages) {
+            if (page.aggregate) {exceptions.push({kind: 'blog_aggregate', locale: page.siteLocale, contentId: page.contentId}); continue;}
             if (page.kind === 'utility') {exceptions.push({kind: 'utility_excluded', locale: page.siteLocale, contentId: page.contentId}); continue;}
             const family = [page.kind, page.pluginId ?? 'default', page.version ?? 'unversioned'];
             const key = JSON.stringify([page.siteLocale, ...family]);

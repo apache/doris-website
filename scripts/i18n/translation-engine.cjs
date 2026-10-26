@@ -405,6 +405,8 @@ function checkedTask(plan, taskId, scope, root) {
     assert(task && allowedKinds.has(task.kind) && !task.requiresHumanReview && !task.activePr,
         'Task requires manual cleanup or review');
     managedPath(scope, task);
+    const group = scope.groups.find(group => group.pluginId === task.pluginId && group.version === task.version);
+    assert(!scope.automaticGroups || scope.automaticGroups.includes(group.id), 'Automatic generation is not enabled for this scope group');
     const source = fs.readFileSync(safeFile(root, task.sourcePath), 'utf8');
     assert(sha(task.sourceHash) && hash(source) === task.sourceHash, 'Source changed since planning');
     assert.equal(execFileSync('git', ['show', `HEAD:${task.sourcePath}`], {cwd: root, encoding: 'utf8'}), source,

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import clsx from 'clsx';
 
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -13,6 +13,7 @@ import type { Props } from '@theme/BlogListPage';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { filterBlogs } from './blog-search.logic';
 import styles from './styles.module.scss';
+import {blogCategoryLabel} from '@site/src/utils/blogLocale';
 // import BlogListPageStructuredData from '@theme/BlogListPage/StructuredData';
 const allText = 'All';
 const PAGE_SIZE = 9;
@@ -24,8 +25,7 @@ function getBlogCategories(items) {
     const categories = [allCategory];
 
     items.forEach(({ content: BlogPostContent }) => {
-        const { frontMatter } = BlogPostContent;
-        const tags = frontMatter.tags || [];
+        const tags = BlogPostContent.metadata.tags || [];
 
         if (allCategory.values.every(val => val.metadata.permalink !== BlogPostContent.metadata.permalink)) {
             allCategory.values.push(BlogPostContent);
@@ -88,16 +88,20 @@ function BlogListPageMetadata(props) {
 }
 function BlogListPageContent(props) {
     const { items, sidebar } = props;
-    const [blogs, setBlogs] = useState([]);
     const blogCategories = useMemo(() => getBlogCategories(items), [items]);
     const ALL_BLOG = blogCategories.find(item => item.label === allText).values;
 
-    const [active, setActive] = useState(allText);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentBlogs, setCurrentBlogs] = useState([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
     const location = useLocation();
     const history = useHistory();
+    const params = new URLSearchParams(location.search);
+    const category = blogCategories.find(item => item.label === params.get('currentCategory')) ?? blogCategories[0];
+    const active = category.label;
+    const searchQuery = params.get('q') || '';
+    const blogs = filterBlogs(category.values, searchQuery);
+    const requestedPage = Number(params.get('currentPage'));
+    const currentPage = Math.min(Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1,
+        Math.max(1, Math.ceil(blogs.length / PAGE_SIZE)));
+    const currentBlogs = blogs.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
     const changeCategory = category => {
         const params = new URLSearchParams(location.search);
@@ -107,7 +111,6 @@ function BlogListPageContent(props) {
     };
 
     const changeSearchQuery = query => {
-        setSearchQuery(query);
         const params = new URLSearchParams(location.search);
         params.set('currentPage', '1');
         if (query) {
@@ -118,29 +121,6 @@ function BlogListPageContent(props) {
         history.replace(`${location.pathname}?${params.toString()}#blog`, location.state);
     };
 
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const requestedPage = Number(params.get('currentPage'));
-        const currentPageNumber = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-        const currentCategoryName = params.get('currentCategory') || allText;
-        const currentSearchQuery = params.get('q') || '';
-
-        let currentCategory = blogCategories.find(item => item.label === currentCategoryName);
-        if (!currentCategory) {
-            currentCategory = blogCategories.find(item => item.label === allText);
-        }
-
-        const filteredBlogs = filterBlogs(currentCategory.values, currentSearchQuery);
-        const lastPage = Math.max(1, Math.ceil(filteredBlogs.length / PAGE_SIZE));
-        const normalizedPage = Math.min(currentPageNumber, lastPage);
-
-        setActive(currentCategory.label);
-        setSearchQuery(currentSearchQuery);
-        setCurrentPage(normalizedPage);
-        setBlogs(filteredBlogs);
-        setCurrentBlogs(filteredBlogs.slice((normalizedPage - 1) * PAGE_SIZE, normalizedPage * PAGE_SIZE));
-    }, [blogCategories, location.search]);
-
     const searchLabel = translate({
         id: 'blog.search.label',
         message: 'Search blogs',
@@ -149,7 +129,7 @@ function BlogListPageContent(props) {
 
     return (
         <BlogLayout sidebar={sidebar} pageType="blogList" className="lg:max-w-7xl">
-            <PageHeader title="Blog" className="bg-white" {...props} />
+            <PageHeader title={translate({id: 'blog.title', message: 'Blog'})} className="bg-white" {...props} />
             <HeadBlogs blogs={ALL_BLOG} />
             <div id="blog" className="flex flex-col lg:max-w-7xl scroll-mt-24">
                 <section className={styles.searchSection} aria-label={searchLabel}>
@@ -202,7 +182,7 @@ function BlogListPageContent(props) {
                         </p>
                     )}
                 </section>
-                <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto text-[#4C576C] lg:justify-center lg:gap-6">
+                <ul className="scrollbar-none w-[100%] mt-6 custom-scrollbar m-auto flex gap-3 overflow-auto lg:justify-center lg:gap-6">
                     {blogCategories.map((item: any, index) => (
                         <li className="py-px" key={index}>
                             <button
@@ -213,7 +193,7 @@ function BlogListPageContent(props) {
                                     active === item.label && 'bg-primary text-white'
                                 }`}
                             >
-                                {item.label}
+                                {blogCategoryLabel(item.label)}
                             </button>
                         </li>
                     ))}

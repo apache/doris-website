@@ -1,6 +1,12 @@
 import { useHistory, useLocation } from '@docusaurus/router';
 import { ConfigProvider, Pagination } from 'antd';
+import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
+import jaJP from 'antd/locale/ja_JP';
+import koKR from 'antd/locale/ko_KR';
+import ruRU from 'antd/locale/ru_RU';
+import {translate} from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React from 'react';
 
 export default function BlogListFooter({
@@ -14,10 +20,12 @@ export default function BlogListFooter({
 }) {
     const location = useLocation();
     const history = useHistory();
+    const {i18n: {currentLocale}} = useDocusaurusContext();
 
     return (
-        <div className="mt-6 flex justify-between container">
-            <div className="text-sm text-[#8592A6]">Total {total} items</div>
+        <div className="blog-pagination mt-6 flex flex-wrap gap-4 justify-between container">
+            <div className="text-sm">{translate({id: 'blog.total', message: 'Total {total} items'}, {total})}</div>
+            <ConfigProvider locale={({en: enUS, 'zh-CN': zhCN, ja: jaJP, ko: koKR, ru: ruRU})[currentLocale] ?? enUS}>
             <Pagination
                 responsive
                 onChange={page => {
@@ -32,6 +40,7 @@ export default function BlogListFooter({
                 showSizeChanger={false}
                 showQuickJumper
             />
+            </ConfigProvider>
         </div>
     );
 }

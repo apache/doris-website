@@ -43,7 +43,7 @@ async function main() {
                     const i = page.contentId.slice(-1);
                     assert($('main').text().includes(page.fallback || locale === 'en' ? `English sample ${i}` : `${locale} translated sample ${i}`));
                 }
-                if (page.kind === 'blog') {
+                if (page.kind === 'blog' && !page.aggregate) {
                     const i = page.contentId.match(/01-0(\d)/)[1] - 1;
                     assert($('article').text().includes(page.fallback || locale === 'en' ? `English article ${i}` : `${locale} translated article ${i}`));
                 }

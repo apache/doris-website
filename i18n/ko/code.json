@@ -8572,5 +8572,53 @@
   },
   "landing.download.required": {
     "message": "옵션을 선택하세요."
+  },
+  "blog.title": {
+    "message": "블로그"
+  },
+  "blog.category.all": {
+    "message": "전체"
+  },
+  "blog.category.tech": {
+    "message": "기술 공유"
+  },
+  "blog.category.practice": {
+    "message": "활용 사례"
+  },
+  "blog.category.releases": {
+    "message": "릴리스 노트"
+  },
+  "blog.category.news": {
+    "message": "주요 소식"
+  },
+  "blog.category.glossary": {
+    "message": "용어집"
+  },
+  "blog.total": {
+    "message": "총 {total}개"
+  },
+  "blog.readOriginal": {
+    "message": "영어 원문 읽기"
+  },
+  "blog.recent": {
+    "message": "최근 게시물 (영어)"
+  },
+  "blog.viewAll": {
+    "message": "모든 블로그 보기"
+  },
+  "blog.search.label": {
+    "message": "블로그 검색"
+  },
+  "blog.search.placeholder": {
+    "message": "제목, 요약, 태그 또는 작성자로 검색"
+  },
+  "blog.search.clear": {
+    "message": "지우기"
+  },
+  "blog.search.resultCount": {
+    "message": "블로그 게시물 {count}개를 찾았습니다"
+  },
+  "blog.search.noResults": {
+    "message": "검색 및 카테고리 조건에 맞는 게시물이 없습니다."
   }
 }

@@ -115,7 +115,9 @@ jobs:
 
             - name: Validate manual content and shared messages
               if: steps.detect.outputs.validation_mode != 'skip'
-              run: node scripts/i18n/manual-report.cjs
+              run: |
+                  node scripts/i18n/manual-report.cjs
+                  node scripts/i18n/check-blog-translations.cjs
 
             - name: Translation unit tests
               env:
@@ -134,7 +136,9 @@ jobs:
 
             - name: Verify native content manifest fixture
               if: steps.detect.outputs.content_fixture == 'true'
-              run: node scripts/i18n/verify-content-fixture.cjs
+              run: |
+                  node scripts/i18n/verify-content-fixture.cjs
+                  node scripts/i18n/verify-blog-fixture.cjs
 
             - name: Workflow security boundary tests
               run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v

@@ -11,6 +11,13 @@ const load = name => yaml.load(fs.readFileSync(path.join(workflows, name), 'utf8
 const shared = load('translation-run.yml');
 const callers = {ja: load('japanese-translation.yml'), ko: load('korean-translation.yml'), ru: load('russian-translation.yml')};
 const russian = callers.ru;
+test('Russian coverage is a separate read-only scheduled report with no PR or model permissions',()=>{
+    const audit=load('russian-coverage-audit.yml');
+    assert.deepEqual(Object.keys(audit.on),['workflow_dispatch','schedule']);
+    assert.deepEqual(audit.permissions,{contents:'read'});assert.equal(audit.jobs.audit.env.I18N_LOCALE,'ru');
+    assert(audit.jobs.audit.steps.some(step=>/audit-coverage\.cjs --source-ref HEAD/.test(step.run??'')));
+    assert(!JSON.stringify(audit).includes('secrets.'));assert(!JSON.stringify(audit).includes('workflow-generate'));
+});
 
 test('Russian scheduled and manual generation use the shared run, lock and explicit secrets', () => {
     assert.deepEqual(Object.keys(russian.on), ['workflow_dispatch', 'schedule']);

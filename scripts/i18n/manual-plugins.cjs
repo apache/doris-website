@@ -10,6 +10,7 @@ const fs = require('node:fs');
 const {withContentRoutes} = require('./route-context.cjs');
 const {validateMessages} = require('./page-body.cjs');
 const blogSample = require('./ci-blog-sample.cjs');
+const blogPolicy = require('./blog-policy.cjs');
 
 function wrap(kind, native) {
     async function adapter(context, options) {
@@ -26,19 +27,29 @@ function wrap(kind, native) {
                 ? {...options, feedOptions: {...options.feedOptions, type: null}} : options;
             if (kind !== 'blog' || ctx.i18n.currentLocale === 'en') return base;
             const locale = ctx.i18n.currentLocale;
-            return {...options, feedOptions: {...options.feedOptions, type: null}, async processBlogPosts(args) {
+            return {...base, async processBlogPosts(args) {
                 const processed = await options.processBlogPosts?.(args);
                 const posts = Array.isArray(processed) ? processed : args.blogPosts;
                 const english = new Map(snapshots.get('en').blogPosts.map(post => [sourcePath(post.metadata, 'en'), post]));
-                return posts.flatMap(post => {
-                    const file = sourcePath(post.metadata, locale), original = english.get(file);
-                    if (!original) {nativeReports.push({kind: 'orphan_target', locale, targetPath: file}); return [];}
+                const parsed = new Map(posts.map(post => [sourcePath(post.metadata,locale),post]));
+                for (const file of parsed.keys()) if (!english.has(file)) nativeReports.push({kind:'orphan_target',locale,targetPath:file});
+                return [...english].map(([file, original]) => {
+                    const post = parsed.get(file) ?? original;
                     const contentId = `blog:${options.id === 'default' ? '' : options.id + ':'}${file}`;
                     const record = records.find(record => record.contentId === contentId && record.locale === locale);
                     const englishPath = relative(context.siteDir, path.resolve(context.siteDir, options.path, file));
                     const decision = decideManual({root: context.siteDir, record, sourceFiles: [englishPath]});
-                    return [decision.fallback ? {...original, metadata: {...original.metadata, permalink: post.metadata.permalink,
-                        tags: post.metadata.tags, authors: post.metadata.authors, prevItem: undefined, nextItem: undefined}} : post];
+                    if (!decision.fallback && !parsed.has(file)) throw new Error(`Published blog target has no native route: ${contentId}/${locale}`);
+                    if (!decision.fallback) blogPolicy.stableMetadata(original.metadata, post.metadata,
+                        localizedContext(context, 'en').baseUrl, ctx.baseUrl);
+                    const toLocale = route => ctx.baseUrl + route.slice(localizedContext(context, 'en').baseUrl.length);
+                    const selected = decision.fallback ? {...original, metadata: {...original.metadata, permalink: toLocale(original.metadata.permalink),
+                        tags: original.metadata.tags.map(tag => ({...tag, permalink: toLocale(tag.permalink)})),
+                        authors: original.metadata.authors.map(author => ({...author,
+                            ...(author.page && {page:{...author.page,permalink:toLocale(author.page.permalink)}})})),
+                        prevItem: undefined, nextItem: undefined}} : post;
+                    return {...selected, metadata: {...selected.metadata, dorisContent: {contentId, contentLocale: decision.contentLocale,
+                        fallback: decision.fallback, state: decision.state, indexable: decision.indexable && !original.metadata.unlisted}}};
                 });
             }};
         }
@@ -49,17 +60,34 @@ function wrap(kind, native) {
             fs.writeFileSync(englishI18n, JSON.stringify({...context.i18n, currentLocale: context.i18n.defaultLocale}));
         }
         return withContentRoutes({...plugin,
+            ...(kind === 'blog' && {
+                postBuild(args) {return plugin.postBuild?.({...args, content: blogPolicy.feedContent(args.content)});},
+                injectHtmlTags(args) {return plugin.injectHtmlTags?.({...args, content: blogPolicy.feedContent(args.content)});},
+            }),
             async contentLoaded(args) {
                 const selected = kind === 'blog' && await blogSample.sample(context, options, args.content);
-                if (!selected) return plugin.contentLoaded(args);
-                // Populate native metadata and Markdown-link/asset resolvers
-                // for every post, but register only sampled native routes.
-                await plugin.contentLoaded({...args, actions: {...args.actions, addRoute: blogSample.collect}});
-                Object.assign(args.content, selected);
+                const english = kind === 'blog' && new Map(snapshots.get('en').blogPosts.map(post => [sourcePath(post.metadata,'en'),post]));
+                const aliases = kind === 'blog' ? args.content.blogPosts.flatMap(post => {
+                    const original = english.get(sourcePath(post.metadata,context.i18n.currentLocale));
+                    return original && original.metadata.source !== post.metadata.source
+                        ? [{...post,id:`english-link-alias:${post.id}`,metadata:{...post.metadata,source:original.metadata.source}}] : [];
+                }) : [];
+                if (!selected && !aliases.length) return plugin.contentLoaded(args);
+                // Seed native MDX link resolution with both physical source
+                // paths. A fallback English article can link to a translated
+                // peer without losing that peer's locale or compiling its
+                // English body as a second public article.
+                await plugin.contentLoaded({...args, content:{...args.content,blogPosts:[...args.content.blogPosts,...aliases]},
+                    actions:{...args.actions,addRoute:()=>{}}});
                 const {createAllRoutes} = require('@docusaurus/plugin-content-blog/lib/routes.js');
                 const pluginDir = path.join(context.generatedFilesDir, 'docusaurus-plugin-content-blog');
+                const aliasedSource = source => '~blog/' + path.relative(pluginDir, source).split(path.sep).join('/');
+                if (selected) {
+                    await createAllRoutes({baseUrl:context.baseUrl,content:args.content,actions:{...args.actions,addRoute:blogSample.collect},options,aliasedSource});
+                    Object.assign(args.content, selected);
+                }
                 return createAllRoutes({baseUrl: context.baseUrl, content: args.content, actions: args.actions, options,
-                    aliasedSource: source => '~blog/' + path.relative(pluginDir, source).split(path.sep).join('/')});
+                    aliasedSource});
             },
             ...(kind === 'pages' && {configureWebpack(...args) {
                 const result = plugin.configureWebpack?.(...args) ?? {};
@@ -142,6 +170,17 @@ function wrap(kind, native) {
                         kind: 'missing_english_identity', contentId: `${page.kind}:${page.id}`, englishPath: page.sourcePath});
                 }
                 for (const record of records) if (!known.has(record.contentId)) report.push({kind: 'source_deleted', ...record});
+                if (kind === 'blog') {
+                    for (const post of snapshots.get('en').blogPosts) post.metadata.dorisContent = {
+                        contentLocale: 'en', fallback: false, state: 'source', indexable: !post.metadata.unlisted};
+                    entries.push(...await blogPolicy.aggregateEntries(context, options, snapshots, entries));
+                    const directory = path.join(context.siteDir, '.i18n-build/blog-inventories');
+                    fs.mkdirSync(directory, {recursive: true});
+                    const posts = [...english].map(([file, metadata]) => ({contentId: `blog:${options.id === 'default' ? '' : options.id + ':'}${file}`,
+                        sourcePath: relative(context.siteDir, path.resolve(context.siteDir, options.path, file)), ...metadata}));
+                    fs.writeFileSync(path.join(directory, `${options.id}-${context.i18n.currentLocale}.json`),
+                        JSON.stringify({schemaVersion: 1, posts, entries, reports: report}, null, 2) + '\n');
+                }
                 let content = snapshots.get(context.i18n.currentLocale);
                 if (kind === 'pages' && content) content = content.filter(item => english.has(sourcePath(item, context.i18n.currentLocale)));
                 if (content) content.contentIdentity = {entries, reports: report};
@@ -155,6 +194,7 @@ function wrap(kind, native) {
         }, context, {body: kind === 'pages'});
     }
     adapter.validateOptions = native.validateOptions;
+    adapter.isManualBlogPlugin = kind === 'blog';
     return adapter;
 }
 module.exports = {pages: wrap('pages', require('@docusaurus/plugin-content-pages')),

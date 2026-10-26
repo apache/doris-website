@@ -15,19 +15,13 @@ const {filterContentSitemap} = require('./scripts/i18n/sitemap.cjs');
 const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
 const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
-const {enabledLocales, enabledLocaleRecords, hasBlogTranslations} = require('./config/i18n');
+const {enabledLocales, enabledLocaleRecords} = require('./config/i18n');
 const {managedLocales} = require('./scripts/i18n/state.cjs');
 const DEFAULT_LOCALE = 'en';
 const ENABLED_LOCALES = enabledLocales();
 // Locales with translation state that are enabled in this build. Empty whenever
 // no localized content is being served, which disables the whole render path.
 const MANAGED_LOCALES = managedLocales(__dirname, ENABLED_LOCALES);
-
-// Locales whose blog is entirely the default locale's articles, see
-// hasBlogTranslations in config/i18n.js. The render path keeps those routes
-// out of the index.
-const DEFAULT_LOCALE_BLOG_LOCALES = ENABLED_LOCALES
-    .filter(locale => locale !== DEFAULT_LOCALE && !hasBlogTranslations(__dirname, locale));
 
 // Utility routes that are never content: /search renders a noindex search page
 // in every locale, and /slack is a tracking redirect. The sitemap filter below
@@ -368,15 +362,13 @@ const config = {
         // than naming a language. `translatedLocales` carry per-document
         // translation state and render its notices; `defaultLocalePageLocales`
         // show ordinary pages from the default locale, so a link to one must
-        // target it directly; `defaultLocaleBlogLocales` show the default
-        // locale's blog, so those routes must not be indexed on their own.
+        // target it directly. Blog indexing uses native per-route state.
         translatedLocales: MANAGED_LOCALES,
         defaultLocalePageLocales: enabledLocaleRecords()
             .filter(locale => locale.ordinaryPages === false).map(locale => locale.code),
         translatedPagePaths: Object.fromEntries(enabledLocaleRecords()
             .map(locale => [locale.code, [...(locale.translatedPages ?? []), ...translatedContentPages(__dirname, locale.code)]])
             .filter(([, pages]) => pages.length)),
-        defaultLocaleBlogLocales: DEFAULT_LOCALE_BLOG_LOCALES,
     },
     future: {
         experimental_faster: true,

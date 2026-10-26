@@ -82,6 +82,7 @@ function validateManifest(manifest) {
 function routeData(page) {
     return {schemaVersion, sourceSha: page.sourceSha, contentId: page.contentId, kind: page.kind,
         siteLocale: page.siteLocale, contentLocale: page.contentLocale, fallback: page.fallback, renderIntegrated: page.renderIntegrated,
-        indexable: page.indexable, navigationRoutes: page.navigationRoutes, availableTranslations: page.availableTranslations};
+        indexable: page.indexable, ...(page.aggregate && {aggregate: true}),
+        navigationRoutes: page.navigationRoutes, availableTranslations: page.availableTranslations};
 }
 module.exports = {schemaVersion, docsId, sourceSha, adaptDoc, buildManifest, validateManifest, routeData};

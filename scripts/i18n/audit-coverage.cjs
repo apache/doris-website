@@ -148,7 +148,9 @@ async function audit({root,sourceRef,baseline,native}) {
         `Routing input differs from source ref: ${file}`);
     return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
         routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,routingHashes.get(file)])),
-        groups,removed,labels,sidebar,reports:native.reports};
+        groups,removed,labels,sidebar,reports:native.reports,
+        fallbackOnlyVersions: require('./docs-language-policy.cjs').fallbackOnlyVersions.map(version => ({pluginId:'default',version,
+            proseLocales:['en','zh-CN'],otherLocaleContent:'en',requiredTranslation:false}))};
 }
 if (require.main === module) {
     const args = process.argv.slice(2), option = name => args[args.indexOf(name)+1];

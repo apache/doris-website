@@ -21,7 +21,7 @@
         "message": "找到 {count} 篇博客"
     },
     "blog.search.noResults": {
-        "message": "当前搜索词和分类下没有匹配的博客。"
+        "message": "没有符合搜索和分类条件的博客。"
     },
     "docs.navigation.sections": {
         "message": "文档分类导航"
@@ -15934,5 +15934,38 @@
     },
     "landing.download.required": {
         "message": "请选择一个选项。"
+    },
+    "blog.title": {
+        "message": "博客"
+    },
+    "blog.category.all": {
+        "message": "全部"
+    },
+    "blog.category.tech": {
+        "message": "技术分享"
+    },
+    "blog.category.practice": {
+        "message": "最佳实践"
+    },
+    "blog.category.releases": {
+        "message": "版本说明"
+    },
+    "blog.category.news": {
+        "message": "最新动态"
+    },
+    "blog.category.glossary": {
+        "message": "术语表"
+    },
+    "blog.total": {
+        "message": "共 {total} 篇"
+    },
+    "blog.readOriginal": {
+        "message": "阅读英文原文"
+    },
+    "blog.recent": {
+        "message": "近期文章（英文）"
+    },
+    "blog.viewAll": {
+        "message": "查看全部博客"
     }
 }

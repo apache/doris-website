@@ -8766,5 +8766,53 @@
   },
   "landing.download.required": {
     "message": "項目を選択してください。"
+  },
+  "blog.title": {
+    "message": "ブログ"
+  },
+  "blog.category.all": {
+    "message": "すべて"
+  },
+  "blog.category.tech": {
+    "message": "技術情報"
+  },
+  "blog.category.practice": {
+    "message": "活用事例"
+  },
+  "blog.category.releases": {
+    "message": "リリースノート"
+  },
+  "blog.category.news": {
+    "message": "ニュース"
+  },
+  "blog.category.glossary": {
+    "message": "用語集"
+  },
+  "blog.total": {
+    "message": "全 {total} 件"
+  },
+  "blog.readOriginal": {
+    "message": "英語の原文を読む"
+  },
+  "blog.recent": {
+    "message": "最近の記事（英語）"
+  },
+  "blog.viewAll": {
+    "message": "すべての記事を見る"
+  },
+  "blog.search.label": {
+    "message": "ブログを検索"
+  },
+  "blog.search.placeholder": {
+    "message": "タイトル、概要、タグ、著者で検索"
+  },
+  "blog.search.clear": {
+    "message": "クリア"
+  },
+  "blog.search.resultCount": {
+    "message": "{count} 件の記事が見つかりました"
+  },
+  "blog.search.noResults": {
+    "message": "検索条件とカテゴリに一致する記事はありません。"
   }
 }

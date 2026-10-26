@@ -56,6 +56,7 @@ function summarize(plan, reconciliation, eligible, mode, language, reused = fals
         `- Required: ${plan.counts.required}; merged current: ${plan.counts.mergedCurrent}; pending: ${plan.counts.pending}`,
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
+        `- Outside enabled automatic groups: ${plan.deferredAutomationTasks ?? 0}; reported separately, not sent to a model`,
         `- Robot batch PRs already open: ${reconciliation.botPrs.join(', ') || 'none'}`,
         `- Exceptions: ${[...exceptionKinds].map(([kind, count]) => `${kind}=${count}`).join(', ') || 'none'}`,
         '',

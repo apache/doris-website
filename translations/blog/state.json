@@ -1,4 +1,277 @@
 {
   "schemaVersion": 1,
-  "pages": []
+  "pages": [
+    {
+      "contentId": "blog:apache-doris-vs-rockset.md",
+      "locale": "zh-CN",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/apache-doris-vs-rockset.md",
+        "static/images/openai-twitter-rockset.png",
+        "static/images/doris-vs-rockset.jpeg"
+      ],
+      "targetFiles": [
+        "i18n/zh-CN/docusaurus-plugin-content-blog/apache-doris-vs-rockset.md"
+      ],
+      "sourceHash": "cbfe3b23590d886890c87a00515cbdad327129eb0fb1a221b49424f1975b2e1a",
+      "targetHash": "291a1245a6eb01d8ec06fa86bda37815939aa2983aaf990b084ab9ea5b02b175",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:apache-doris-vs-rockset.md",
+      "locale": "ja",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/apache-doris-vs-rockset.md",
+        "static/images/openai-twitter-rockset.png",
+        "static/images/doris-vs-rockset.jpeg"
+      ],
+      "targetFiles": [
+        "i18n/ja/docusaurus-plugin-content-blog/apache-doris-vs-rockset.md"
+      ],
+      "sourceHash": "cbfe3b23590d886890c87a00515cbdad327129eb0fb1a221b49424f1975b2e1a",
+      "targetHash": "7433957405e380f63676617ca2340bd08ab4f848e8adb976201eb94cbc75346d",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:apache-doris-vs-rockset.md",
+      "locale": "ko",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/apache-doris-vs-rockset.md",
+        "static/images/openai-twitter-rockset.png",
+        "static/images/doris-vs-rockset.jpeg"
+      ],
+      "targetFiles": [
+        "i18n/ko/docusaurus-plugin-content-blog/apache-doris-vs-rockset.md"
+      ],
+      "sourceHash": "cbfe3b23590d886890c87a00515cbdad327129eb0fb1a221b49424f1975b2e1a",
+      "targetHash": "279bd04bdeebbdca2bf69cada1b19d290b5dd20161a74e4b44c63cd41355d957",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:apache-doris-vs-rockset.md",
+      "locale": "ru",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/apache-doris-vs-rockset.md",
+        "static/images/openai-twitter-rockset.png",
+        "static/images/doris-vs-rockset.jpeg"
+      ],
+      "targetFiles": [
+        "i18n/ru/docusaurus-plugin-content-blog/apache-doris-vs-rockset.md"
+      ],
+      "sourceHash": "cbfe3b23590d886890c87a00515cbdad327129eb0fb1a221b49424f1975b2e1a",
+      "targetHash": "5c42449410c986ffc907f8b889fd9443408842307dd13dd8a7334f0ceee0f15d",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "locale": "zh-CN",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/zh-CN/docusaurus-plugin-content-blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx"
+      ],
+      "sourceHash": "8900bb6b34a20e01815fead2baa8359937b6643d7160f2d7aa3c07450c57f95f",
+      "targetHash": "0b6f86a96fcf3336a614a4651574f61202e4785f2fff2ad7f57244f2a5c4f538",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "locale": "ja",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ja/docusaurus-plugin-content-blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx"
+      ],
+      "sourceHash": "8900bb6b34a20e01815fead2baa8359937b6643d7160f2d7aa3c07450c57f95f",
+      "targetHash": "9a2cbb813276befe0529fac8f9a200358fcad3b8fc6a6599d453e649b566beef",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "locale": "ko",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ko/docusaurus-plugin-content-blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx"
+      ],
+      "sourceHash": "8900bb6b34a20e01815fead2baa8359937b6643d7160f2d7aa3c07450c57f95f",
+      "targetHash": "79216ad8166e4b44f93547931ef0bccf3282de3fb35ec2b77f6eca0807a923dd",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+      "locale": "ru",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ru/docusaurus-plugin-content-blog/why-ai-agents-need-real-time-analytics-and-hybrid-search.mdx"
+      ],
+      "sourceHash": "8900bb6b34a20e01815fead2baa8359937b6643d7160f2d7aa3c07450c57f95f",
+      "targetHash": "aeffcd2ffec595ad189ee1f064606c679d93bd3d4f88db6162d5d34959ccd599",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "locale": "zh-CN",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/zh-CN/docusaurus-plugin-content-blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx"
+      ],
+      "sourceHash": "2697c703f47d80e5ec621f58572347b1350022913094bbe80693b16ad04e008d",
+      "targetHash": "eea167c1017fcef73f293442126c6bdc8c15d35f01861330fc4251420c660571",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "locale": "ja",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ja/docusaurus-plugin-content-blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx"
+      ],
+      "sourceHash": "2697c703f47d80e5ec621f58572347b1350022913094bbe80693b16ad04e008d",
+      "targetHash": "4f0e60241c0fb1d9a72d130485e667f64be921c68e7530d7cec02036721ac620",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "locale": "ko",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ko/docusaurus-plugin-content-blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx"
+      ],
+      "sourceHash": "2697c703f47d80e5ec621f58572347b1350022913094bbe80693b16ad04e008d",
+      "targetHash": "4f6b93502bcd6a648ede668185f4d2c8b901fbd32ef00e947d7ae5221d7087a4",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "locale": "ru",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ru/docusaurus-plugin-content-blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx"
+      ],
+      "sourceHash": "2697c703f47d80e5ec621f58572347b1350022913094bbe80693b16ad04e008d",
+      "targetHash": "b4fe109dc767b2d7b9e4873d719674fd07830fef8644cac4e28a5cf2770275d0",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:HTAP-pg-doris.mdx",
+      "locale": "zh-CN",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/HTAP-pg-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/zh-CN/docusaurus-plugin-content-blog/HTAP-pg-doris.mdx"
+      ],
+      "sourceHash": "9fab9979a55df938b08cc0d19901034c0becf5020e5c639a74fbeac118c958fb",
+      "targetHash": "ae7525c803fd774a60d5681bd2884b5ba92fe653d60a502c328bf8846b865a6e",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:HTAP-pg-doris.mdx",
+      "locale": "ja",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/HTAP-pg-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ja/docusaurus-plugin-content-blog/HTAP-pg-doris.mdx"
+      ],
+      "sourceHash": "9fab9979a55df938b08cc0d19901034c0becf5020e5c639a74fbeac118c958fb",
+      "targetHash": "3b16917c219aee73e0a720ebff38c97d81aa5aafc84326c6124d46381578b32d",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:HTAP-pg-doris.mdx",
+      "locale": "ko",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/HTAP-pg-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ko/docusaurus-plugin-content-blog/HTAP-pg-doris.mdx"
+      ],
+      "sourceHash": "9fab9979a55df938b08cc0d19901034c0becf5020e5c639a74fbeac118c958fb",
+      "targetHash": "adb27bda801c0cc632958fe607341443b0d7de850efa11d021ca66652d71ca41",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    },
+    {
+      "contentId": "blog:HTAP-pg-doris.mdx",
+      "locale": "ru",
+      "state": "ready",
+      "sourceFiles": [
+        "blog/HTAP-pg-doris.mdx",
+        "src/components/blogs/components/blog-link.tsx",
+        "src/components/blogs/components/see-more.tsx"
+      ],
+      "targetFiles": [
+        "i18n/ru/docusaurus-plugin-content-blog/HTAP-pg-doris.mdx"
+      ],
+      "sourceHash": "9fab9979a55df938b08cc0d19901034c0becf5020e5c639a74fbeac118c958fb",
+      "targetHash": "3ec593376d8cb2731cd00b58c49282c0bcbc43810758a0e940ee1276151dc08f",
+      "reviewStatus": "machine",
+      "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+    }
+  ]
 }

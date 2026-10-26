@@ -92,34 +92,6 @@ test('route groups span every managed locale while a manifest carries one', asyn
     }
 });
 
-test('a blog counts as translated only when the locale holds a post file', t => {
-    const {hasBlogTranslations} = load();
-    const siteDir = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-blog-translations-'));
-    t.after(() => fs.rmSync(siteDir, {recursive: true, force: true}));
-    const blogDir = path.join(siteDir, 'i18n', 'ja', 'docusaurus-plugin-content-blog');
-    // No directory at all: the plugin serves the default locale's posts.
-    assert.equal(hasBlogTranslations(siteDir, 'ja'), false);
-    fs.mkdirSync(blogDir, {recursive: true});
-    // An empty directory, and one holding only the tag registry, translate nothing.
-    assert.equal(hasBlogTranslations(siteDir, 'ja'), false);
-    fs.writeFileSync(path.join(blogDir, 'tags.yml'), 'release-notes:\n');
-    assert.equal(hasBlogTranslations(siteDir, 'ja'), false);
-    fs.writeFileSync(path.join(blogDir, 'some-post.md'), '# 記事\n');
-    assert.equal(hasBlogTranslations(siteDir, 'ja'), true);
-});
-
-test('neither shipped locale translates the blog yet', () => {
-    // Guards the intent behind the noindex on localized blog routes: the
-    // Chinese translations were removed on purpose, and Japanese has not
-    // started. Translating a post flips that locale over to indexing, so this
-    // test fails on purpose and asks for the SEO decision to be revisited.
-    const {hasBlogTranslations} = load();
-    assert.equal(hasBlogTranslations(root, 'zh-CN'), false);
-    assert.equal(hasBlogTranslations(root, 'ja'), false);
-    assert.equal(hasBlogTranslations(root, 'ko'), false);
-    assert.equal(hasBlogTranslations(root, 'ru'), false);
-});
-
 test('Korean pipeline requires an explicit locale and its own inventory before planning', () => {
     const {pipelineLocale, inventoryBaseline, loadConfig} = require('../state.cjs');
     assert.throws(() => pipelineLocale(root, ''), /Set I18N_LOCALE/);
