@@ -72,6 +72,7 @@ async function createBlogFixture(root) {
     write('fixture.scss', "@use './src/scss/variables';\n@tailwind utilities;\n");
     let config = fs.readFileSync(path.join(root, 'docusaurus.config.js'), 'utf8');
     config = config.replace("blog:false,pages:false}", "blog:false,pages:false,theme:{customCss:require.resolve('./fixture.scss')}}");
+    config = config.replace("{onUntruncatedBlogPosts:","{postsPerPage:'ALL',onUntruncatedBlogPosts:");
     config = config.replace(" title: 'Multi-locale fixture'", " onBrokenMarkdownLinks:'throw', title: 'Multi-locale fixture'");
     config = config.replace(' plugins: [', ` plugins: [function fixtureTailwind(){return {name:'fixture-tailwind',configurePostCss(options){
         options.plugins.push(require('tailwindcss')({...require('./tailwind.config.js'),content:[__dirname+'/src/**/*.{js,jsx,ts,tsx}']}));return options;}}},`);
