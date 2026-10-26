@@ -18,6 +18,7 @@ test('disabled automatic groups remain visible in coverage and cannot be selecte
     const args={report,scope:{...scope,automaticGroups:['DEV']},records:new Map(),readCurrent:()=>source,readAt:()=>null};
     const result=await plan(args);assert.equal(result.counts.required,2);assert.equal(result.selectedCount,1);
     assert.equal(result.deferredAutomationTasks,1);assert.equal(result.tasks.find(t=>t.pluginId==='community').automationEligible,false);
+    assert.deepEqual(result.automaticCounts,{required:1,mergedCurrent:0,pending:1});
     const filtered=await plan({...args,filters:{plugin:'community'}});assert.equal(filtered.selectedCount,0);assert.equal(filtered.tasks.length,1);
 });
 function page(docId, options = {}) {

@@ -46,7 +46,7 @@ build; the scoped website build and static-page verification run afterward.
 Russian is an optional, docs-first locale. Enable it with `DORIS_ENABLE_RU=true`
 or use `DORIS_ENABLE_LOCALES=ja,ko,ru` for all managed languages. The deployment
 workflows explicitly enable all three; default local builds still serve English
-and Chinese. Ordinary Russian pages link to English until individually registered.
+and Chinese. Ordinary Russian pages retain Russian URLs and navigation; missing manual prose falls back to English.
 Russian translation runs twice daily and on manual dispatch, as described below.
 
 The Russian scope's `automaticGroups` enables only DEV, 4X and COMMUNITY.
@@ -56,6 +56,10 @@ model: course/releases activation belongs to the separate expansion task, with
 Release Notes limited to the latest three selected entries. React landing pages
 and weekly reports use their manual page/entry state. Existing candidates from
 earlier expanded runs remain separate pending reviews, not merged coverage.
+The audit's `automaticCounts` and discovery summary report the effective
+required/current/pending totals. Additional registered groups remain in the
+raw census and `deferredAutomaticGroups`; their old-channel missing files do
+not become required translation backlog or override manual page/report state.
 
 The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
 1,619 4.x and 51 community documents, excluding two drafts. Four launch samples

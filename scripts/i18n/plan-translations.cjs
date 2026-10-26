@@ -214,6 +214,9 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         activeCandidates: tasks.filter(task => task.activePr).length,
     };
     assert.equal(allCounts.required, allCounts.mergedCurrent + allCounts.pending);
+    const automaticPages=pages.filter(page=>!scope.automaticGroups||scope.automaticGroups.includes(page.groupId));
+    const automaticCounts={required:automaticPages.length,mergedCurrent:automaticPages.filter(page=>page.state==='current').length,
+        pending:automaticPages.filter(page=>page.state!=='current').length};
     const selectedTasks = tasks.filter(task => (!filters.plugin || task.pluginId === filters.plugin)
         && (!filters.version || task.version === filters.version)
         && (!filters.paths || filters.paths.includes(task.sourcePath))
@@ -236,6 +239,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         baselineCommit: report.baselineCommit, counts: allCounts, selectedCount: selected.length,
         selectedEstimatedSourceTokens: tokens, selected, tasks: selectedTasks,
         automaticGroups: scope.automaticGroups ?? scope.groups.map(group => group.id),
+        automaticCounts,
         deferredAutomationTasks: selectedTasks.filter(task => !task.automationEligible).length,
         exceptions: exceptions.sort((a, b) => compare(JSON.stringify(a), JSON.stringify(b)))};
 }

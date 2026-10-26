@@ -43,6 +43,7 @@ function planInputs(head, activeCandidates, env = process.env) {
 }
 
 function summarize(plan, reconciliation, eligible, mode, language, reused = false) {
+    const effective=plan.automaticCounts??plan.counts;
     const exceptionKinds = new Map();
     for (const item of [...plan.exceptions, ...reconciliation.exceptions])
         exceptionKinds.set(item.kind, (exceptionKinds.get(item.kind) ?? 0) + 1);
@@ -53,7 +54,8 @@ function summarize(plan, reconciliation, eligible, mode, language, reused = fals
         `- Plan: ${reused ? 'reused from discovery; master and open-PR reservations are unchanged'
             : 'recounted from the native documents'}`,
         `- Mode: \`${mode}\`; generation eligible: **${eligible}**`,
-        `- Required: ${plan.counts.required}; merged current: ${plan.counts.mergedCurrent}; pending: ${plan.counts.pending}`,
+        `- Required for enabled automatic groups: ${effective.required}; merged current: ${effective.mergedCurrent}; pending: ${effective.pending}`,
+        `- Additional registered content outside automatic maintenance: ${plan.counts.required-effective.required}; not a required translation backlog`,
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
         `- Outside enabled automatic groups: ${plan.deferredAutomationTasks ?? 0}; reported separately, not sent to a model`,
