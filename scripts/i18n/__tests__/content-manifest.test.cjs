@@ -5,7 +5,7 @@ const path = require('node:path');
 const os = require('node:os');
 const {createContentFixture} = require('./fixtures/content-manifest.cjs');
 const {loadManual, decideManual} = require('../manual-state.cjs');
-const {sourceSha, validateManifest, buildManifest, routeData} = require('../content-manifest.cjs');
+const {sourceSha, validateManifest, buildManifest, routeData, docsId} = require('../content-manifest.cjs');
 const {buildScope} = require('../build-scope.cjs');
 function directory(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-content-manifest-'));
@@ -97,10 +97,14 @@ test('native loading discovers new page dependencies and unregistered articles w
     const {digestFiles} = require('../manual-state.cjs');
     assert.equal(page.sourceHash, digestFiles(root, ['src/pages/sample-0.tsx', document]));
     assert(manifest.reports.some(row => row.kind === 'manual_source_changed' && row.contentId === page.contentId));
-    const added = manifest.pages.filter(row => row.englishPath === 'src/pages/new-page.tsx'
-        || row.englishPath === 'blog/2026-01-20-new.md' || row.englishPath.endsWith('/new.md'));
-    assert.equal(added.length, 5);
-    for (const row of added) {
+    // Blog aggregate routes have no source file. Select the new content by its
+    // stable identity instead of assuming every manifest row has an English path.
+    const addedIds = ['page:src/pages/new-page.tsx', 'blog:2026-01-20-new.md',
+        ...[['default', 'current'], ['default', '4.x'], ['community', 'current']]
+            .map(([pluginId, version]) => docsId({pluginId, version, docId: 'new'}))];
+    for (const contentId of addedIds) {
+        const row = manifest.pages.find(row => row.contentId === contentId);
+        assert(row, `Missing new content: ${contentId}`);
         assert.equal(row.fallback, true, row.contentId);
         assert.equal(row.contentLocale, 'en', row.contentId);
     }
