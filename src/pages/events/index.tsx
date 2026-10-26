@@ -998,7 +998,7 @@ export default function Events() {
                         <button
                             type="button"
                             onClick={() => setShowMore(true)}
-                            className="cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
+                            className="block cursor-pointer text-center mx-auto text-primary text-[0.875rem]/[1.375rem]"
                         >
                             {translate({id: "landing.events.022", message: "See More"})} <ArrowDown className="inline" />
                         </button>

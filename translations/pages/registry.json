@@ -1729,7 +1729,19 @@
       "sourcePath": "src/pages/brand-assets/index.tsx",
       "sourceFiles": [
         "src/pages/brand-assets/index.scss",
-        "src/pages/brand-assets/index.tsx"
+        "src/pages/brand-assets/index.tsx",
+        "static/images/brand-assets/apache-doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/apache-doris-logo-stacked-white.svg",
+        "static/images/brand-assets/doris-logo-horizontal-dark.svg",
+        "static/images/brand-assets/doris-logo-horizontal-primary.svg",
+        "static/images/brand-assets/doris-logo-horizontal-white.svg",
+        "static/images/brand-assets/doris-logo-stacked-dark.svg",
+        "static/images/brand-assets/doris-logo-stacked-primary.svg",
+        "static/images/brand-assets/doris-logo-stacked-white.svg"
       ],
       "messageIds": [
         "landing.brandassets.001",

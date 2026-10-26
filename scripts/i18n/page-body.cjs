@@ -95,9 +95,12 @@ function validateMessages(root, registration, locale) {
     if (registration.id === 'P14') {
         const reports = require('./report-messages.cjs');
         const coverage = JSON.parse(fs.readFileSync(path.join(root, 'translations/community-reports.json'), 'utf8'));
+        if (coverage.schemaVersion !== 1 || !coverage.translatedReports
+            || typeof coverage.translatedReports !== 'object' || Array.isArray(coverage.translatedReports))
+            throw new Error('Invalid report translation registry');
         const ids = coverage.translatedReports[locale] ?? [];
         const available = new Set(reports.reportSources(root).map(file => path.basename(file, '.mdx')));
-        if (new Set(ids).size !== ids.length || ids.some(id => !available.has(id)))
+        if (!Array.isArray(ids) || new Set(ids).size !== ids.length || ids.some(id => !available.has(id)))
             throw new Error(`Invalid translated report identities: ${locale}`);
         reports.reportMessages(root, ids).forEach((source, id) => messages.set(id, source));
         files.push(...reports.reportSources(root));
