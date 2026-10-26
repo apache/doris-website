@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/sql-manual/sql-statements/cluster-management/compute-management/ALTER-RESOURCE.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "5734be5af146436dca0457e25274d8ad05f5e88b62f3bec14c2fbd5c3320c3bd",
-    "sourceTechnicalHash": "2f352daa1e588ba8d99cef42ee5bd98efd764cc5937cd2d25ef0e35505c789e5",
-    "targetHash": "71652abe4019dd02f317e8bbf9a03d213b9b51e1115cd468853676f2448bf018",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+    "sourceTechnicalHash": "935500781e04a1d7192f1e855d36b13926a200a42d7682beb8acad644b0770d0",
+    "targetHash": "4e40b0cafffe5d7b815fc175fd2e427a86e10247017d7284029f9ae7378cd9a2",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T20:46:39.013Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-25T04:46:57.249Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ccd1541653c84c090804fd2f82a42c05762971f06c76533bce50be6b588e6cbb",
+      "targetHash": "4e40b0cafffe5d7b815fc175fd2e427a86e10247017d7284029f9ae7378cd9a2",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<value>\"]; received [\"inlineCode\",null,null,\"<key>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"<key>\"]; received [\"inlineCode\",null,null,\"<value>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<value>\"]; received [\"inlineCode\",null,null,\"<key>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"<key>\"]; received [\"inlineCode\",null,null,\"<value>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 3: expected [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`, \\n  [ , ... ]\\n);\"]; received [\"code\",\"sql\",null,\"ALTER RESOURCE '<resource_name>'\\nPROPERTIES (\\n  `<property>`,\\n  [ , ... ]\\n);\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<value>\"]; received [\"inlineCode\",null,null,\"<key>\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"<key>\"]; received [\"inlineCode\",null,null,\"<value>\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
