@@ -2151,9 +2151,9 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "4feb08f20ba1bcd5c794477db902fd5af83d1b6204477c04db81a8049bdd788a",
+      "sourceHash": "19ac30159720760fb2140606d3a5f145d7cf317d10436f362b7854a896aaded9",
       "targetHash": "04a7aef8248e958c09721ad3e1b3a4bf1da5574aa2ba3d280e8fae397cc86c60",
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d"
+      "reviewedSourceCommit": "bd675d25613a69a75e5f97196d6d32f2fd05a0c3"
     },
     {
       "contentId": "page:P14",
@@ -2190,8 +2190,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "4feb08f20ba1bcd5c794477db902fd5af83d1b6204477c04db81a8049bdd788a",
+      "reviewedSourceCommit": "bd675d25613a69a75e5f97196d6d32f2fd05a0c3",
+      "sourceHash": "19ac30159720760fb2140606d3a5f145d7cf317d10436f362b7854a896aaded9",
       "targetHash": "756244256fdc1dd4e62cce731f936ff2a2f32aac7c423822ca450486cc3201d2"
     },
     {
@@ -2229,8 +2229,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "4feb08f20ba1bcd5c794477db902fd5af83d1b6204477c04db81a8049bdd788a",
+      "reviewedSourceCommit": "bd675d25613a69a75e5f97196d6d32f2fd05a0c3",
+      "sourceHash": "19ac30159720760fb2140606d3a5f145d7cf317d10436f362b7854a896aaded9",
       "targetHash": "1158a9e72608ba43c16478e3ebab5a092ad344f935ee3d9af1a46d888971e379"
     },
     {
@@ -2268,8 +2268,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "4feb08f20ba1bcd5c794477db902fd5af83d1b6204477c04db81a8049bdd788a",
+      "reviewedSourceCommit": "bd675d25613a69a75e5f97196d6d32f2fd05a0c3",
+      "sourceHash": "19ac30159720760fb2140606d3a5f145d7cf317d10436f362b7854a896aaded9",
       "targetHash": "a9d992ff85bec94df98c94ebaeb9292c7229abad7ef4213ef30535e79ad6f91e"
     },
     {
