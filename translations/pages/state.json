@@ -1816,9 +1816,9 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "f87f4a826a96141706287315885eb758492704b4a441f3974dc4988656104c66",
+      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
       "targetHash": "04a7aef8248e958c09721ad3e1b3a4bf1da5574aa2ba3d280e8fae397cc86c60",
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d"
+      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73"
     },
     {
       "contentId": "page:P12",
@@ -1874,8 +1874,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "f87f4a826a96141706287315885eb758492704b4a441f3974dc4988656104c66",
+      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
+      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
       "targetHash": "756244256fdc1dd4e62cce731f936ff2a2f32aac7c423822ca450486cc3201d2"
     },
     {
@@ -1932,8 +1932,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "f87f4a826a96141706287315885eb758492704b4a441f3974dc4988656104c66",
+      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
+      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
       "targetHash": "1158a9e72608ba43c16478e3ebab5a092ad344f935ee3d9af1a46d888971e379"
     },
     {
@@ -1990,8 +1990,8 @@
       "messageNamespaces": [
         "landing"
       ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "f87f4a826a96141706287315885eb758492704b4a441f3974dc4988656104c66",
+      "reviewedSourceCommit": "fccbb75337748003bbffefc12f91b8f0aa81aa73",
+      "sourceHash": "90075ffe32382a90aa8d8a10292ed0f59090268f9c56dad0da66a519454759dd",
       "targetHash": "180854e26bd56a07b7724be198e6076dd3b230edc60000d0e77996c29213385e"
     },
     {
