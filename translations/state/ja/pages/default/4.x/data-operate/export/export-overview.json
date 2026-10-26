@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/export/export-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/export/export-overview.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "a1c1b20f715dc5a2b486a69da8bb84f06f6b460693ac4a1931d67d51a85f4c83",
-    "sourceTechnicalHash": "0145c5aa7e5e30436e2835e82167670d4aa9771a25b3a75e06623abef487df69",
-    "targetHash": "46fa9182982c4f7e0564b69299c4c27f414f33170c5b8682fef0d5bc38b237de",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "d43567d644b05c9434797141b4f4c72b8f0f41e46977a891faeb8dae6457d82b",
+    "sourceTechnicalHash": "3281aeb3f7cac85fa6b36afef91207e732edd6c75b1d9bc6d01ba603a69a854a",
+    "targetHash": "6233ac4bc61f895b492b8bfa6423c12236b41660f5b48e4c32294692639665ad",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.707Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T05:32:33.424Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d43567d644b05c9434797141b4f4c72b8f0f41e46977a891faeb8dae6457d82b",
+      "targetHash": "6233ac4bc61f895b492b8bfa6423c12236b41660f5b48e4c32294692639665ad",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"128\",\"16\",\"16\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"32\",\"4.1.5\",\"4.1.5\",\"64\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: アーキテクチャ選定の判断 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Data export solution selection / Cross-system data exchange -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: データエクスポート方式の選定 / システム間のデータ交換 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/connection-integration/data-integration/intro.mdx",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/connection-integration/data-integration/intro.mdx",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "5aa3cd94dc979b32b22711359f98d955a04897b6f115e6eab4085c237c3c99f4",
-    "sourceTechnicalHash": "647e3badc4a90ea80a36de0ecadcf3e43db06784a5a6e075d27b71b548859884",
-    "targetHash": "bd19b06418f48af2b23fbb31641df9ae26b3cd255f2c6ba3468fb1fd101c7012",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "ba91960ab0c4f1d90b37e57e7ef46b570fa31c4bcbf67f47d4db6e79d1c068ed",
+    "sourceTechnicalHash": "a3e98838cc58d3eaeddffcb1b3a909059cfa67b724f58eeff909ca404c9aaf9a",
+    "targetHash": "0601c19e5bae82cc91d6d15eadff42392dbdf2340af3f02da51d75c9b90673c4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.629Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T05:31:08.926Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "ba91960ab0c4f1d90b37e57e7ef46b570fa31c4bcbf67f47d4db6e79d1c068ed",
+      "targetHash": "0601c19e5bae82cc91d6d15eadff42392dbdf2340af3f02da51d75c9b90673c4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }
