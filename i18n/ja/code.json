@@ -8760,5 +8760,11 @@
   },
   "landing.download.noOptions": {
     "message": "選択できる項目がありません"
+  },
+  "landing.download.copied": {
+    "message": "コピーしました"
+  },
+  "landing.download.required": {
+    "message": "項目を選択してください。"
   }
 }

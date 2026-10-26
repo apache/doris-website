@@ -15928,5 +15928,11 @@
     },
     "landing.download.noOptions": {
         "message": "无可用选项"
+    },
+    "landing.download.copied": {
+        "message": "复制成功"
+    },
+    "landing.download.required": {
+        "message": "请选择一个选项。"
     }
 }

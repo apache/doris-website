@@ -8566,5 +8566,11 @@
   },
   "landing.download.noOptions": {
     "message": "Нет доступных вариантов"
+  },
+  "landing.download.copied": {
+    "message": "Скопировано"
+  },
+  "landing.download.required": {
+    "message": "Выберите вариант."
   }
 }

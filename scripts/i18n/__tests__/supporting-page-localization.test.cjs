@@ -83,3 +83,53 @@ test('owned Profile diagnostics from parser, upload, recovery and layout are loc
         assert(localizeProfileMessage('Vendor-specific diagnostic 123').includes('Vendor-specific diagnostic 123'));
     }
 });
+
+test('data-driven guide/checklist text and copy feedback cannot bypass message admission', () => {
+    let feedback = 0;
+    for (const file of ['src/components/download-form/download-form-all-release.tsx',
+        'src/components/download-form/download-form-tools.tsx']) {
+        const ast = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+        function visitFeedback(node) {
+            if (ts.isCallExpression(node) && node.expression.getText(ast) === 'message.success') {
+                feedback++;
+                assert(ts.isCallExpression(node.arguments[0]) && node.arguments[0].expression.getText(ast) === 'translate', file);
+            }
+            ts.forEachChild(node, visitFeedback);
+        }
+        visitFeedback(ast);
+    }
+    assert.equal(feedback, 3);
+    const guideFile = 'src/components/download-form-next/DownloadFormNext.tsx';
+    const guides = ts.createSourceFile(guideFile, fs.readFileSync(path.join(root, guideFile), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    let descriptions = 0;
+    function visitGuides(node) {
+        if (ts.isVariableDeclaration(node) && node.name.getText(guides) === 'GUIDES') {
+            for (const entry of node.initializer.elements) {
+                const description = entry.properties.find(p => p.name?.getText(guides) === 'desc').initializer;
+                assert(ts.isCallExpression(description) && description.expression.getText(guides) === 'translate');
+                descriptions++;
+            }
+        }
+        ts.forEachChild(node, visitGuides);
+    }
+    visitGuides(guides);
+    assert.equal(descriptions, 3);
+    const file = 'src/components/course/hackathon/HackathonTrackBPage.tsx';
+    const ast = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    let checklist = 0;
+    function visitChecklist(node) {
+        if (ts.isJsxElement(node) && node.openingElement.attributes.properties.some(p => p.name?.getText(ast) === 'id' && p.initializer?.text === 'done')) {
+            function check(child) {
+                if (ts.isArrayLiteralExpression(child)) {
+                    child.elements.forEach(item => assert(ts.isCallExpression(item) && item.expression.getText(ast) === 'translate'));
+                    checklist += child.elements.length;
+                }
+                ts.forEachChild(child, check);
+            }
+            check(node);
+        }
+        ts.forEachChild(node, visitChecklist);
+    }
+    visitChecklist(ast);
+    assert.equal(checklist, 4);
+});

@@ -8566,5 +8566,11 @@
   },
   "landing.download.noOptions": {
     "message": "사용 가능한 옵션이 없습니다"
+  },
+  "landing.download.copied": {
+    "message": "복사했습니다"
+  },
+  "landing.download.required": {
+    "message": "옵션을 선택하세요."
   }
 }

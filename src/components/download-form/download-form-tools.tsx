@@ -133,6 +133,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
 
     const formBody = (
         <Form
+            validateMessages={{required: translate({id: 'landing.download.required', message: 'Select an option.'})}}
             form={form}
             onFinish={val => {
                 if (isOperatorBinary) return;
@@ -245,7 +246,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                                 type="button"
                                 onClick={() => {
                                     copy(operatorBinaryCommand);
-                                    message.success('Copy Successfully!');
+                                    message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                                 }}
                             >
                                 {translate({id: "landing.downloadformtools.013", message: "Copy"})}
@@ -279,8 +280,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                 </Form.Item>
             )}
             {!isOperatorBinary && (
-                <div
-                    className="flex cursor-pointer text-primary items-center mt-4 justify-center"
+                <button type="button"
+                    className="flex w-full cursor-pointer text-primary items-center mt-4 justify-center"
                     onClick={() => {
                         const url = getDownloadLinkByCard({
                             version: version,
@@ -289,7 +290,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             type: '',
                         });
                         copy(url);
-                        message.success('Copy Successfully!');
+                        message.success(translate({id: 'landing.download.copied', message: 'Copied'}));
                     }}
                 >
                     <span className="mr-2">{translate({id: "landing.downloadformtools.015", message: "Copy link"})}</span>
@@ -310,11 +311,11 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                             fill="var(--brand-primary)"
                         />
                     </svg>
-                </div>
+                </button>
             )}
             {!isOperatorBinary && (
                 <div className="flex justify-center mt-4">
-                    <div
+                    <button type="button"
                         className="inline-flex items-center text-[#8592A6] cursor-pointer hover:underline hover:text-primary"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -327,8 +328,8 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         }}
                     >
                         ASC
-                    </div>
-                    <div
+                    </button>
+                    <button type="button"
                         className="inline-flex items-center ml-4 text-[#8592A6] hover:text-primary cursor-pointer hover:underline"
                         onClick={() => {
                             const url = getDownloadLinkByCard({
@@ -341,7 +342,7 @@ export default function DownloadFormTools(props: DownloadFormToolsProps) {
                         }}
                     >
                         SHA-512
-                    </div>
+                    </button>
                 </div>
             )}
             {/* {tool === ToolsEnum.StreamLoader && ( */}
