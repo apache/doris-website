@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "8288e8210e7232ce68129862db1c7f0c12618b9ddaf2922aa2ae16f01b64ebe7",
-    "sourceTechnicalHash": "655dafcc76ba1347bd3e9b75d3f909d99d29d028f75867c9d1bb491f516e1bf3",
-    "targetHash": "e94d97832c8cbb8db3c4612363115cd4e183b7a7d34923149d6fdd401206f080",
+    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
+    "sourceTechnicalHash": "e6a7a39aedeb314a75f78ccd94bac7d0861aec1bada9a2233641364ccf34a9ce",
+    "targetHash": "07c82c76feab1bc04e07c273fbfafb142977deaac57a439dfa37f0376a8cef22",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T05:48:45.477Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
+      "targetHash": "07c82c76feab1bc04e07c273fbfafb142977deaac57a439dfa37f0376a8cef22",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能の概要とアーキテクチャの選択 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: リアルタイムのデータ取り込み方式の選択 / 継続的なデータロードの運用 -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: アーキテクチャの選択 -->\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能の概要とアーキテクチャの選択 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: リアルタイムのデータ取り込み方式の選択 / 継続的なデータロードの運用 -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: アーキテクチャの選択 -->\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
