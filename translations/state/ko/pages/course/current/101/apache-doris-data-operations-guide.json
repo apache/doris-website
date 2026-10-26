@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "course",
+    "version": "current",
+    "docId": "101/apache-doris-data-operations-guide",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "course/101/04-apache-doris-data-operations-guide.mdx",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs-course/current/101/04-apache-doris-data-operations-guide.mdx",
+    "sourceCommit": "b260cd3d3f68f6e64faf12da4415e0df977e571a",
+    "sourceHash": "dba85eb86436c4121708351d23e5737b03701c3ee9415a4bb9b5a3449a8a33fd",
+    "sourceTechnicalHash": "bab25688682f4666e72b084675b66e4a265ca54dc9612e89f9bf91333eaf8653",
+    "targetHash": "66feefc728d6c6df390694ba560701673581856ca14cc978c133bd5146e2556d",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-25T05:17:45.753Z",
+    "glossaryVersion": "1"
+  }
+}
