@@ -5,8 +5,14 @@ live at `i18n/<locale>/docusaurus-plugin-content-blog/<same-relative-path>`.
 Native Docusaurus parsing owns dates, permalinks, authors, tags, drafts, unlisted
 posts and routing. Never derive a translated slug from the translated title.
 
-`translations/blog/state.json` records the source and target dependencies,
-their digests, publication state and actual review status. Missing or blocked
+Each article/locale has its own record at
+`translations/blog/pages/<locale>/<English-relative-path>.json`, for example
+`pages/ja/apache-doris-vs-rockset.md.json`. The record uses
+`{"schemaVersion": 1, "page": {...}}` and stores source/target dependencies,
+their digests, publication state and actual review status. There is no shared
+article index to update. Different article and language PRs can merge without
+editing one central state file; duplicate or misplaced identities fail admission.
+Missing or blocked
 posts use the complete English article at the selected locale URL. A changed
 manual source reports `needs-update` and retains the published translation;
 edited target bytes require a new explicit publication decision. Machine review

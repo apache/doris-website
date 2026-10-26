@@ -5,6 +5,7 @@ const os=require('node:os');
 const path=require('node:path');
 const {createContentFixture}=require('./fixtures/content-manifest.cjs');
 const {stableMetadata,feedContent}=require('../blog-policy.cjs');
+const {loadManual,blogStateFileFor}=require('../manual-state.cjs');
 async function nativeBlog(root,locale){
     const {loadContext}=require('@docusaurus/core/lib/server/site.js');
     const {loadPluginConfigs}=require('@docusaurus/core/lib/server/plugins/configs.js');
@@ -25,8 +26,8 @@ test('native aggregate and feed decisions remain independent of untranslated pee
         assert.equal(entries.filter(e=>!e.aggregate&&e.fallback).length,3-count);
     }
     // A blocked target's draft metadata must not remove the English identity.
-    const file=path.join(root,'translations/blog/state.json'),state=JSON.parse(fs.readFileSync(file));
-    state.pages.find(p=>p.locale==='ja').state='blocked';fs.writeFileSync(file,JSON.stringify(state));
+    const record=loadManual(root,'blog').find(p=>p.locale==='ja');record.state='blocked';
+    fs.writeFileSync(path.join(root,blogStateFileFor(record)),JSON.stringify({schemaVersion:1,page:record}));
     const target=path.join(root,'i18n/ja/docusaurus-plugin-content-blog/2026-01-01-sample.md');
     fs.writeFileSync(target,fs.readFileSync(target,'utf8').replace('---\ntitle:','---\ndraft: true\ntitle:'));
     const blocked=await nativeBlog(root,'ja');

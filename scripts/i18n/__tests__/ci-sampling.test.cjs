@@ -65,7 +65,7 @@ test('community translation metadata does not upgrade a landing-page PR to full 
 });
 test('known translation scope and glossary inputs keep combined blog/maintenance work in representative CI',()=>{
     const files=['docusaurus.config.js','src/theme/BlogListPage/index.tsx','scripts/i18n/blog-policy.cjs',
-        'scripts/i18n/docs-language-policy.cjs','translations/blog/state.json','translations/pages/state.json',
+        'scripts/i18n/docs-language-policy.cjs','translations/blog/pages/ru/sample.mdx.json','translations/pages/state.json',
         'translations/scope/ru.json','i18n/ru/docusaurus-plugin-content-blog/sample.mdx',
         '.github/workflows/build-check.yml','.github/workflows/russian-coverage-audit.yml'];
     const selected=policy(files);assert.equal(selected.mode,'sample');assert.equal(selected.selection,'representative');

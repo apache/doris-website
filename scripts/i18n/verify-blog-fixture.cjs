@@ -6,6 +6,7 @@ const path = require('node:path');
 const {spawnSync} = require('node:child_process');
 const cheerio = require('cheerio');
 const {createBlogFixture,createPilotFixture} = require('./__tests__/fixtures/blog.cjs');
+const {loadManual}=require('./manual-state.cjs');
 const repo = path.resolve(__dirname, '../..');
 async function main() {
     const pilot=process.argv.includes('--pilot');
@@ -60,7 +61,7 @@ async function main() {
 }
 function verifyPilot(root) {
     const results=[];
-    const pilotIds=new Set(JSON.parse(fs.readFileSync(path.join(repo,'translations/blog/state.json'))).pages.map(p=>p.contentId));
+    const pilotIds=new Set(loadManual(repo,'blog').map(p=>p.contentId));
     for(const locale of ['en','zh-CN','ja','ko','ru']) {
         const manifest=JSON.parse(fs.readFileSync(path.join(root,'.i18n-build/content-manifests',locale+'.json')));
         const posts=manifest.pages.filter(page=>pilotIds.has(page.contentId));

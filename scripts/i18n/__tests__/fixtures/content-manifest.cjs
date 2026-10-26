@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {createFixture} = require('./multi-locale.cjs');
-const {digestFiles} = require('../../manual-state.cjs');
+const {digestFiles,blogStateFileFor} = require('../../manual-state.cjs');
 const repo = path.resolve(__dirname, '../../../..');
 async function createContentFixture(root) {
     const fixture = await createFixture(root, {searchDocument: true});
@@ -69,7 +69,8 @@ export default function Layout({children,...props}){return <Original {...props}>
     // Source drift preserves the published manual target; docs drift above falls back.
     fs.appendFileSync(path.join(root, 'blog/2026-01-01-sample.md'), '\nSource update.\n');
     write('translations/pages/registry.json', JSON.stringify({schemaVersion: 1, englishFallbackLocales: ['zh-CN'], pages: registry}));
-    for (const kind of ['pages', 'blog']) write(`translations/${kind}/state.json`, JSON.stringify({schemaVersion: 1, pages: states[kind]}));
+    write('translations/pages/state.json',JSON.stringify({schemaVersion:1,pages:states.pages}));
+    for(const page of states.blog)write(blogStateFileFor(page),JSON.stringify({schemaVersion:1,page}));
     write('i18n/ja/docusaurus-plugin-content-blog/2026-01-10-orphan.md', '---\ntitle: Orphan\n---\n\nOrphan.\n');
     write('i18n/ja/docusaurus-plugin-content-pages/orphan.tsx', "import React from 'react'; export default function Page(){return <main>Orphan target</main>;}\n");
     let config = fs.readFileSync(path.join(root, 'docusaurus.config.js'), 'utf8');

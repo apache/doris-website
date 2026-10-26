@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "contentId": "blog:HTAP-pg-doris.mdx",
+    "locale": "ja",
+    "state": "ready",
+    "sourceFiles": [
+      "blog/HTAP-pg-doris.mdx",
+      "src/components/blogs/components/blog-link.tsx",
+      "src/components/blogs/components/see-more.tsx"
+    ],
+    "targetFiles": [
+      "i18n/ja/docusaurus-plugin-content-blog/HTAP-pg-doris.mdx"
+    ],
+    "sourceHash": "9fab9979a55df938b08cc0d19901034c0becf5020e5c639a74fbeac118c958fb",
+    "targetHash": "3b16917c219aee73e0a720ebff38c97d81aa5aafc84326c6124d46381578b32d",
+    "reviewStatus": "machine",
+    "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+  }
+}

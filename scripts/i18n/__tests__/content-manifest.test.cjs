@@ -95,7 +95,7 @@ test('validator rejects mixed source and fallback indexing; missing English has 
 });
 test('CI recognizes the new contract and manual state as shared inputs', () => {
     for (const file of ['scripts/i18n/content-manifest.cjs', 'scripts/i18n/manual-state.cjs', 'scripts/i18n/manual-plugins.cjs',
-        'scripts/i18n/native-context.cjs', 'translations/pages/state.json', 'translations/pages/registry.json', 'translations/blog/state.json']) {
+        'scripts/i18n/native-context.cjs', 'translations/pages/state.json', 'translations/pages/registry.json', 'translations/blog/pages/ja/post.md.json']) {
         const scope = buildScope([file], ['4.x'], ['ja', 'ko', 'ru']);
         assert.deepEqual(scope.locales, ['en', 'zh-CN', 'ja', 'ko', 'ru'], file);
         assert.equal(scope.optimize_publish, true);

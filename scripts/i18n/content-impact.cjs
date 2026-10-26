@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {locales} = require('../../config/i18n');
-const {readJson} = require('./manual-state.cjs');
+const {readJson,readManualRecords} = require('./manual-state.cjs');
 function analyzeImpact(root, base, files) {
     const previous = file => {
         // A genuinely new file has no base blob; malformed JSON must fail closed.
@@ -11,13 +11,17 @@ function analyzeImpact(root, base, files) {
     };
     const registry = readJson(root, 'translations/pages/registry.json', {pages: []});
     const oldRegistry = previous('translations/pages/registry.json') ?? {pages: []};
-    const state = ['pages', 'blog'].flatMap(kind => readJson(root, `translations/${kind}/state.json`, {pages: []}).pages);
-    const oldState = ['pages', 'blog'].flatMap(kind => previous(`translations/${kind}/state.json`)?.pages ?? []);
+    const state = ['pages', 'blog'].flatMap(kind => readManualRecords(root,kind));
+    const oldState = ['pages', 'blog'].flatMap(kind => readManualRecords(root,kind,base));
     const wanted = new Set(), affected = [], manualPending = [];
     let complete = true, structural = false;
     for (const file of files) {
         const match = file.match(/^i18n\/([^/]+)\/code.json$/);
         if (match) {wanted.add(match[1]); affected.push({file, locale: match[1], dependency: 'locale messages'}); continue;}
+        if(/^translations\/blog\/pages\/.+\.json$/.test(file)){
+            for(const record of [previous(file)?.page,readJson(root,file,null)?.page].filter(Boolean))wanted.add(record.locale);
+            wanted.add('en');continue;
+        }
         if (/^translations\/(pages|blog)\/state.json$/.test(file)) {
             const before = previous(file)?.pages ?? [], after = readJson(root, file, {pages: []}).pages;
             const identities = new Set([...before, ...after].map(r => JSON.stringify([r.contentId, r.locale])));

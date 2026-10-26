@@ -2,10 +2,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {createContentFixture} = require('./content-manifest.cjs');
-const {digestFiles} = require('../../manual-state.cjs');
+const {digestFiles,loadManual,blogStateFileFor} = require('../../manual-state.cjs');
 const {hash}=require('../../state.cjs');
 const {structure}=require('../../structure.cjs');
 const repo = path.resolve(__dirname, '../../../..');
+function writeBlogStates(root,write,pages){
+    fs.rmSync(path.join(root,'translations/blog/pages'),{recursive:true,force:true});
+    for(const page of pages)write(blogStateFileFor(page),JSON.stringify({schemaVersion:1,page}));
+}
 async function createBlogFixture(root) {
     const fixture = await createContentFixture(root), {write} = fixture;
     for (const directory of ['src/theme/BlogListPage', 'src/theme/BlogListItem', 'src/theme/BlogFooter', 'src/theme/BlogLayout',
@@ -20,7 +24,7 @@ async function createBlogFixture(root) {
     write('blog/_parts/sample.svg', fs.readFileSync(path.join(root, 'static/sample.svg'), 'utf8'));
     write('blog/_parts/Label.jsx', "import React from 'react'; export default function Label(){return <code>SELECT 1;</code>;}\n");
     write('blog/authors.yml', 'fixture:\n  name: Fixture Author\n  page: true\n');
-    const states = JSON.parse(fs.readFileSync(path.join(root, 'translations/blog/state.json')));
+    const states = {pages:loadManual(root,'blog')};
     for (let i = 0; i < 3; i++) {
         const old = `2026-01-0${i + 1}-sample.md`, file = i === 2 ? old + 'x' : old;
         const source = `---\ntitle: English article ${i}\nslug: /native-${i}\nauthors: [fixture]\ntags: [${i === 2 ? 'Glossary' : 'Tech Sharing'}]\nimage: /sample.svg\n${i === 0 ? 'order: 1\n' : ''}---\n\nimport Label from '@site/blog/_parts/Label';\n\nEnglish article ${i}.\n\n## Usage {#usage}\n\n<Label/>\n\n![Shared diagram](./_parts/sample.svg)\n\n[Another post](./2026-01-01-sample.md#usage)\n\n[Fallback peer](./2026-01-03-sample.mdx#usage)\n\n[Same-origin link](https://doris.apache.org/blog/native-0/#usage)\n`;
@@ -40,7 +44,7 @@ async function createBlogFixture(root) {
     }
     write('blog/2026-01-04-unlisted.md', '---\ntitle: Unlisted\nslug: /unlisted\nunlisted: true\ntags: [Secret]\n---\n\nUnlisted body.\n');
     write('blog/2026-01-05-draft.md', '---\ntitle: Draft\nslug: /draft\ndraft: true\n---\n\nDraft body.\n');
-    write('translations/blog/state.json', JSON.stringify(states));
+    writeBlogStates(root,write,states.pages);
     write('versions.json','["4.x","3.x","2.1"]');
     for(const version of ['3.x','2.1']) {
         const sourcePath=`versioned_docs/version-${version}/01-shared.md`;
@@ -83,7 +87,7 @@ async function createBlogFixture(root) {
 }
 async function createPilotFixture(root) {
     const fixture=await createBlogFixture(root),{write}=fixture;
-    const state=JSON.parse(fs.readFileSync(path.join(repo,'translations/blog/state.json')));
+    const state={pages:loadManual(repo,'blog')};
     for(const locale of ['zh-CN','ja','ko','ru']) {
         const dir=path.join(root,`i18n/${locale}/docusaurus-plugin-content-blog`);
         fs.rmSync(dir,{recursive:true,force:true});
@@ -107,7 +111,7 @@ async function createPilotFixture(root) {
     files.add('src/components/blogs/components/blog-link.css');
     files.add('src/components/Icons/external-link-icon.tsx');
     for(const file of files) write(file,fs.readFileSync(path.join(repo,file)));
-    write('translations/blog/state.json',JSON.stringify(state));
+    writeBlogStates(root,write,state.pages);
     const pages=JSON.parse(fs.readFileSync(path.join(root,'translations/pages/state.json')));
     // The synthetic ordinary pages have no dictionary translations in this
     // variant; retain their explicit fallback instead of declaring them ready.

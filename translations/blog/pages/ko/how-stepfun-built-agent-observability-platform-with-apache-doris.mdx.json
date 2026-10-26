@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "contentId": "blog:how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+    "locale": "ko",
+    "state": "ready",
+    "sourceFiles": [
+      "blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx",
+      "src/components/blogs/components/blog-link.tsx",
+      "src/components/blogs/components/see-more.tsx"
+    ],
+    "targetFiles": [
+      "i18n/ko/docusaurus-plugin-content-blog/how-stepfun-built-agent-observability-platform-with-apache-doris.mdx"
+    ],
+    "sourceHash": "2697c703f47d80e5ec621f58572347b1350022913094bbe80693b16ad04e008d",
+    "targetHash": "4f6b93502bcd6a648ede668185f4d2c8b901fbd32ef00e947d7ae5221d7087a4",
+    "reviewStatus": "machine",
+    "reviewedSourceCommit": "f304001fdc274bc5ebd98b7ebc08356d8f02928d"
+  }
+}
