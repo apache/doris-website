@@ -8,6 +8,8 @@
 
 ## 描述
 
+开发版本的 typed GEOGRAPHY 输入见[下文](#typed-geography)。以下既有示例使用历史 STRING 空间接口。
+
 判断两个几何图形是否仅边界接触（即边界存在公共点，但内部无任何交集）。具体来说：
 
 若两个图形的边界有至少一个公共点，且内部完全不相交（无重叠区域），则返回 1；
@@ -259,3 +261,8 @@ mysql> SELECT ST_TOUCHES(  ST_Polygon("POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))")
 |                                                                                        0 |
 +------------------------------------------------------------------------------------------+
 ```
+## Typed Geography（开发版本） {#typed-geography}
+
+开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
+
+支持 Point/LineString/Polygon 的组合：闭集相交且内部不相交时为 true。线内部交叉、正长度线段重合及正面积面交叠返回 false；线端点接触、面共边或共顶点可返回 true。Point/Point 总是 false；闭合线不把重复起终点视为边界。

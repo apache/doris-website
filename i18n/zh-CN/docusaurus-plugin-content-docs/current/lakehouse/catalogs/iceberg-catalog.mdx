@@ -324,7 +324,7 @@ NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区�
 
 值保留原始 WKB（XY、XYZ、XYM、XYZM） 字节，支持七种基础 WKB 类型、子几何混合字节序及 EMPTY。EMPTY 与 SQL NULL 不同；支持标准 ISO WKB 的 Z/M 保留，不支持 PostGIS EWKB 维度标记和内嵌 SRID。Geography 及已识别地理 CRS 的 Geometry（`OGC:CRS84`、`EPSG:4326`）要求已定义的 X/Y 坐标位于 [-180,180]/[-90,90]，投影 Geometry 不使用这一范围。其他 Geometry CRS 字符串按原样保留，不提供 CRS 解析或自动转换。
 
-通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。ST_AsText 输出维度标记及全部坐标，ST_X/ST_Y 返回点的 X/Y。typed 测量和关系计算仅支持 XY，要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains` 支持 Point/Point、LineString/Point 和 Polygon/Point，`ST_Within` 支持反向组合。`ST_Touches` 要求至少一个参数为 Point；其他包含或接触组合明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
+通过 `ST_AsText`、`ST_AsBinary`、`ST_X`、`ST_Y` 和 `ST_GeometryType` 查看原始值。 typed `ST_AsBinary` 以 `VARBINARY` 返回原始 WKB，包括不合法的 UTF-8 字节；历史 STRING 重载保持原返回类型。ST_AsText 输出维度标记及全部坐标，ST_X/ST_Y 返回点的 X/Y。typed 测量和关系计算仅支持 XY，要求默认 `GEOGRAPHY(OGC:CRS84, spherical)` 及受支持的非空 Point/LineString/Polygon；不支持的参数或形状组合明确报错。其他算法的值可读写，但不支持用于这些计算。 `ST_Contains`、`ST_Within` 和 `ST_Touches` 支持上述三类形状的组合，分别遵循包含、反向包含与仅边界接触的语义。仅沿面边界的线不满足 Contains；线内部交叉不满足 Touches。`ST_Equals` 判断同维度点集相等，`ST_Overlaps` 判断同维度的部分交叠；原始 WKB 字节顺序不参与这些拓扑判断。`ST_DWithin(a,b,d)` 判断球面距离是否小于或等于非负有限阈值 d，单位米；不支持的计算域仍明确报错。球面关系计算遍历全部测地线边，不会将开放的 LineString 自动闭合。
 
 球面多边形计算将每个环解释为较小区域（不超过半球），不根据环方向选择另一侧。反转环不会选择大于半球的补集；当前不支持按环方向表达大区域的计算。这一计算约定不会改变原始 WKB 访问器及 Iceberg 读写所保留的环顺序或字节。
 
