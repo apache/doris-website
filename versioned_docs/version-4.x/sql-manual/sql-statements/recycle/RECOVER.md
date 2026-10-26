@@ -83,6 +83,7 @@ Recover a partition
 - This operation can only recover metadata deleted within a certain period. The default is 1 day (configurable via the `catalog_trash_expire_second` parameter in `fe.conf`).
 - If no ID is specified when recovering metadata, the last deleted metadata with the same name is recovered by default.
 - You can query the currently recoverable metadata using `SHOW CATALOG RECYCLE BIN`.
+- Recovery reattaches existing metadata, data, and replicas from the recycle bin and is not treated as a new data write or replica creation. Therefore, data and replica quotas do not block `RECOVER`, even if the recovered object makes database usage exceed a quota. Subsequent operations that add data or replicas remain subject to the quotas.
 
 ## Examples
 
