@@ -1,108 +1,107 @@
 ---
 {
-    "title": "基本概念",
+    "title": "パーティショニングとバケット分割の仕組み",
+    "sidebar_label": "仕組み",
     "language": "ja",
-    "description": "Doris のパーティションとバケットを、基本概念と最初の CREATE TABLE の例から、自動パーティション、動的パーティション、自動バケット、Colocate などの高度な機能まで順を追って説明します。パーティションとバケットの設計指針や運用方法も紹介します。"
+    "description": "Doris のパーティショニングとバケット分割を支えるデータ分散モデルを説明します。パーティション、バケット、Tablet、ノードに加え、高度なパーティションモードとバケット分割方式、設計上の推奨事項、運用方法を扱います。"
 }
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 {/* Knowledge type: Concept introduction / Procedure */}
 {/* Applicable scenarios: Table design / Data organization and management */}
 
-このドキュメントでは、Doris のパーティション（Partition）とバケット（Bucket）の仕組みを紹介します。クエリ性能とデータ管理の効率を高めるためのテーブル設計に役立ちます。初めて使用する場合は、順に読むことをお勧めします。セクション 1～3 では基本概念と最初の CREATE TABLE の例、セクション 4～6 では高度な機能と設計上の推奨事項、セクション 7 では日常の運用で必要なパーティションの確認と変更方法を説明します。
+このページでは、Doris がパーティション、バケット、Tablet にデータを分散する仕組みを説明します。高度なパーティションモードとバケット分割方式、設計上の推奨事項、運用コマンドも取り上げます。推奨される初期設定と選択の指針については、まず[パーティショニングとバケット分割](./overview)を参照してください。その後、基礎となる仕組みを理解したい場合にこのページをお読みください。
 
-## 1. 概要
+## 1. 概要 {#1-overview}
 
-Doris は **Partition + Bucket** という二段階のデータ分割方式を使用して、テーブルのデータをクラスタ内のノードに体系的に配置します。
+Doris は、テーブルのデータを**パーティション**と**バケット**の二段階でクラスタ全体に分散します。
 
-- **パーティション（Partition）**: 列の値（日時や地域など）に基づいてテーブルを水平方向に小さな部分集合へ分割し、クエリ時の絞り込みやデータのライフサイクル管理を容易にします。
-- **バケット（Bucket）**: 各パーティション内のデータをさらに複数のデータシャード（Tablet）へ均等に分散し、クラスタの並列処理能力を十分に活用します。
+- **パーティション**: 列の値（時刻や地域など）に基づいてテーブルを水平方向に小さな部分集合へ分割し、クエリ時の枝刈りやデータのライフサイクル管理を容易にします。
+- **バケット**: 各パーティション内のデータを複数のデータシャード（Tablet）へさらに均等に分散し、クラスタの並列処理能力を十分に活用します。
 
-![Doris のデータ分割](/images/next/table-design/data-partitioning.jpg)
+![Doris のデータパーティショニング](/images/next/table-design/data-partitioning.jpg)
 
-データの流れは次のように表せます。
+データの流れは次のようにまとめられます。
 
 ```
 Table ──► Partition ──► Bucket ──► Tablet (data shard, stored on BE nodes)
 ```
 
-パーティションとバケットを適切に設計すると、**クエリの高速化**（パーティションの絞り込み、並列スキャン）、**柔軟な管理**（日時に基づくアーカイブやクリーンアップ）、**書き込みの均等化**（ホットスポットの回避）を同時に実現できます。
+適切なパーティショニングとバケット分割には、**クエリの高速化**（パーティションの枝刈りと並列スキャン）、**管理の簡素化**（時刻に基づくアーカイブやクリーンアップ）、**書き込みの均等化**（ホットスポットのリスク低減）という利点があります。
 
-## 2. 基本概念
+## 2. 基本概念 {#2-core-concepts}
 
-### 2.1 テーブルの構造: 行と列
+### 2.1 テーブルの構造: 行と列 {#21-table-structure-rows-and-columns}
 
-Doris では、データを論理的にテーブルとして表します。テーブルは行（Row）と列（Column）で構成されます。
+Doris では、データは論理的にテーブルとして表現されます。テーブルは行（Row）と列（Column）で構成されます。
 
 | 概念 | 説明 |
-| ---- | ---- |
-| 行 | ユーザーデータの一行 |
-| 列 | データの一行に含まれる各フィールドを表す |
+| ------- | --------------------------------- |
+| 行 | ユーザーデータの1行 |
+| 列 | データの1行に含まれる各フィールドを表します |
 
-列はさらに次の二種類に分けられます。
+列は、さらに次の2種類に分けられます。
 
-| 列の種類 | 業務上の対応 | 説明 |
-| -------- | ------------ | ---- |
+| 列の種類 | ビジネス上の対応 | 説明 |
+| ----------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
 | Key 列 | ディメンション列 | CREATE TABLE 文で `unique key`、`aggregate key`、または `duplicate key` キーワードの後に指定する列 |
-| Value 列 | メトリクス列 | Key 列以外の列。集約方法はテーブル作成時に指定する |
+| Value 列 | 指標列 | Key 列以外の列。集約方法はテーブル作成時に指定します |
 
-Aggregate モデルでは、Key 列が同じ行は一行に集約されます。Value 列の集約方法は、ユーザーがテーブル作成時に指定します。Aggregate モデルの詳細については、[Doris のデータモデル](../../table-design/data-model/intro.mdx)を参照してください。
+Aggregate モデルでは、Key 列が同じ行は1行に集約されます。Value 列の集約方法は、テーブル作成時にユーザーが指定します。Aggregate モデルの詳細については、[Doris のデータモデル](../../table-design/data-model/intro.mdx)を参照してください。
 
-### 2.2 パーティション
+### 2.2 パーティション {#22-partition}
 
-パーティションは、テーブル内の特定の列の値に基づいて、データを互いに重ならない小さな部分集合へ分割します。各データ行は必ず一つの特定のパーティションに属し、パーティションは論理的な管理の最小単位です。
+パーティションは、テーブル内の特定の列の値に基づいて、データを互いに重複しない小さな部分集合に分割します。データの各行は必ず1つのパーティションに属します。パーティションは論理的な管理の最小単位です。
 
-Doris は次の二つの**パーティション種別**をサポートします。
+Doris は、次の2つの**パーティション方式**をサポートします。
 
-- **Range パーティション**: 数値または日時の範囲で分割します。時系列データによく使用します。
-- **List パーティション**: 列挙値の集合で分割します。地域やカテゴリなどの離散的なディメンションによる分割によく使用します。
+- **Range パーティション**: 数値または時刻の範囲で分割します。時系列データでよく使われます。
+- **List パーティション**: 列挙された値の集合で分割します。地域やカテゴリなど、離散的なディメンションによる分割でよく使われます。
 
-テーブル作成時にパーティションを指定しない場合、Doris はテーブル内の全データを含むデフォルトのパーティションを生成します。このパーティションはユーザーには見えません。
+テーブル作成時にパーティションを指定しない場合、Doris はユーザーからは見えないデフォルトのパーティションを生成し、テーブル内のすべてのデータをそこに格納します。
 
-パーティションを適切に設計すると、次の利点があります。
+適切なパーティション設計には、次の利点があります。
 
-- **クエリ性能の向上**: パーティションの絞り込みにより、クエリ条件に関係のないパーティションを除外できます。スキャンするデータ量と I/O 負荷が大幅に減るため、特に大規模なデータセットに適しています。
-- **管理の柔軟性**: 日時や地域などの論理的な単位でデータを分割できるため、アーカイブ、クリーンアップ、バックアップが容易になります。たとえば日時で分割すると、履歴データと増分データを効率的に管理でき、日時に基づくデータ保守が可能になります。
+- **クエリの高速化**: パーティションの枝刈りにより、クエリ条件に一致しないパーティションをスキップできます。これにより、Doris がスキャンするデータ量と I/O が減ります。特に大規模なデータセットで効果的です。
+- **管理の簡素化**: 時刻や地域で分割すると、アーカイブ、クリーンアップ、バックアップが容易になります。たとえば、時刻でパーティショニングすれば、過去のデータと新しく入るデータを別々に管理できます。
 
-### 2.3 バケット
+### 2.3 バケット {#23-bucket}
 
-バケット分割は、一定の規則に従って、パーティション内のデータをさらに互いに重ならない小さなデータ単位へ分割します。各データ行は必ず一つの特定のバケットに属します。
+バケット分割では、一定の規則に従って、パーティション内のデータを互いに重複しない小さなデータ単位へさらに分割します。データの各行は必ず1つのバケットに属します。
 
-パーティションが列の値の範囲で分割するのに対し、バケット分割の目的は、事前に定義したバケットへデータを**均等に分散**することです。これによりデータの偏りを抑え、データ配置の改善を通じてクエリ実行性能を高めます。
+パーティションは、列値の範囲またはリストに基づいてデータを分割します。一方、バケット分割は、パーティション内の各バケットにデータを**均等に**分散し、偏りを抑えて並列スキャンを可能にすることを目的とします。実際の分散状況は、バケット分割方式とキーの分布によって異なります。
 
-Doris は次の二つの**バケット分割方式**をサポートします。
+Doris は、次の2つの**バケット分割方式**をサポートします。
 
-- **Hash バケット分割**: バケット分割に使用する列の値から `crc32` ハッシュを計算し、その値をバケット数で割った余りに基づいてデータを均等に分散します。
-- **Random バケット分割**: データをランダムにバケットへ割り当てます。Random バケット分割では、`load_to_single_tablet` パラメータを組み合わせることで、小規模なデータの高速書き込みを最適化できます。
+- **Hash バケット分割**: バケット分割に使う列の値について `crc32` ハッシュを計算し、バケット数で割った余りを使用してデータを均等に分散します。
+- **Random バケット分割**: データをバケットにランダムに割り当てます。Random バケット分割では、`load_to_single_tablet` パラメータを併用すると、少量のデータを高速に書き込む処理を最適化できます。
 
-バケットを適切に設計すると、次の利点があります。
+適切なバケット分割には、次の利点があります。
 
-- **データの均等な分散**: データの集中や偏りを抑え、一部のノードやストレージデバイスへの過負荷を防ぎます。
-- **ホットスポットの低減**: 一部のノードやパーティションへの負荷集中を防ぎ、システムの安定性と処理能力を高めます。
-- **並行処理性能の向上**: 複数のクエリが同じパーティション内の異なるデータにアクセスする場合、バケット分割によって複数のリクエストを効率よく並列処理でき、スループットが向上します。
+- **データ分散の均等化**: 適切なバケットキーを選ぶことで、データの偏りや、ノードまたはディスク間の負荷の偏りを抑えられます。
+- **ホットスポットの削減**: 処理を複数のバケットに分散することで、過負荷を抑え、安定性を高められます。
+- **同時実行性能の向上**: Doris は同じパーティション内の異なるバケットを並列に読み取るため、スループットが向上します。
 
-### 2.4 Tablet とノードの構成
+### 2.4 Tablet とノードのアーキテクチャ {#24-tablet-and-node-architecture}
 
-バケットは物理的には **Tablet（データシャード）** に対応します。Tablet は Doris におけるデータ管理の最小単位であり、データの移動やレプリケーションなどの操作を行う際の基本的な物理単位でもあります。
+バケットは、物理的には**Tablet（データシャード）**に対応します。Tablet は Doris におけるデータ管理の最小単位であり、データの移動やレプリケーションなどの操作における基本的な物理単位でもあります。
 
-Doris クラスタは次の二種類のノードで構成されます。
+Doris クラスタは、次の2種類のノードで構成されます。
 
-- **FE ノード（Frontend）**: テーブルや Tablet の情報などのクラスタメタデータを管理し、SQL の解析と実行計画の作成を担当します。
-- **BE ノード（Backend）**: Tablet のデータを保存し、計算タスクを実行します。BE からの結果は FE によって集約され、ユーザーに返されます。
+- **FE ノード（Frontend）**: テーブルや Tablet の情報など、クラスタのメタデータを管理し、SQL の解析と実行計画の作成を担当します。
+- **BE ノード（Backend）**: Tablet のデータを格納し、計算タスクを実行します。BE からの結果は FE が集約し、ユーザーに返します。
 
-データの書き込みとクエリでは、パーティションとバケットが次のように連携します。
+データの書き込みとクエリの実行では、パーティションとバケットが次のように連携します。
 
-- **データの書き込み**: 各データ行はまずパーティション分割方式に従って該当するパーティションに割り当てられ、次にバケット分割方式に従ってそのパーティション内の特定の Tablet に対応付けられます。
-- **クエリの実行**: FE のオプティマイザはクエリ条件に基づいて不要なパーティションとバケットを除外し、スキャン範囲を最小限に抑えます。JOIN や集約クエリでは、ノード間の Shuffle が発生することがあります。必要に応じて [Colocate](#52-colocate) を組み合わせた適切なパーティションとバケットの設計により、Shuffle のコストを大幅に削減できます。
+- **データの書き込み**: データの各行は、まずパーティショニングの方針に従って対応するパーティションに割り当てられ、次にバケット分割の方針に従って、そのパーティション内の特定の Tablet に割り当てられます。
+- **クエリの実行**: FE オプティマイザはクエリ条件に基づいて不要なパーティションとバケットを枝刈りし、スキャン範囲を最小化します。JOIN や集約クエリでは、ノード間の Shuffle が発生することがあります。適切なパーティショニングとバケット分割の設計により、必要に応じて [Colocate](#52-colocate) を組み合わせることで、Shuffle のコストを大幅に削減できます。
 
-## 3. 最初の CREATE TABLE の例
+## 3. 最初の CREATE TABLE の例 {#3-the-first-create-table-example}
 
-Doris でのテーブル作成は同期コマンドです。SQL 文の処理が完了すると結果が返され、正常な結果が返ればテーブルが作成されています。CREATE TABLE の完全な構文については [CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE) を参照するか、`HELP CREATE TABLE` でヘルプを確認してください。
+Doris でのテーブル作成は同期的に実行されます。SQL 文の実行が完了すると結果が返され、正常に結果が返ればテーブルは作成されています。CREATE TABLE の完全な構文については、[CREATE TABLE](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)を参照するか、`HELP CREATE TABLE` でヘルプを確認してください。
 
-次は、Range パーティションと Hash バケット分割を使用した最小限の CREATE TABLE の例です。
+次に、Range パーティショニングと Hash バケット分割を使用する最小限の CREATE TABLE の例を示します。
 
 ```sql
 -- Range Partition
@@ -133,255 +132,116 @@ PROPERTIES
 );
 ```
 
-**この例における書き込みとクエリの流れ**:
+**この例で書き込みとクエリの流れを理解する**:
 
-- 書き込み時には、各データ行がまず `date` に基づいて該当する Range パーティションに入ります（たとえば `2017-02-15` は `p201702` に入ります）。その後、`user_id` のハッシュ値に基づいて、そのパーティション内の 16 個の Tablet のいずれかに対応付けられます。
-- `WHERE date = '2017-02-15'` を指定したクエリでは、オプティマイザは `p201702` パーティションだけをスキャンします。さらに `user_id = 123` を指定すると、対象は一つの Tablet だけになります。
+- 書き込み時には、データの各行がまず `date` に基づいて対応する Range パーティションに入ります（たとえば、`2017-02-15` は `p201702` に入ります）。次に、`user_id` のハッシュ値に基づいて、そのパーティションに属する16個の Tablet のいずれかに割り当てられます。
+- `WHERE date = '2017-02-15'` を指定したクエリでは、オプティマイザは `p201702` パーティションのみをスキャンします。さらに `user_id = 123` を指定すると、対象は1つの Tablet に絞られます。
 
-## 4. 高度な機能: パーティションの作成方式
+## 4. 高度な機能: パーティションモード {#4-advanced-partition-modes}
 
-テーブル作成時にパーティションを手動で定義する方法に加えて、Doris は時刻に基づくスケジュールに従ってパーティションを自動作成する Dynamic Partition と、入力データに応じて必要なパーティションを作成する Auto Partition をサポートします。三つの方式の比較を次に示します。
+Doris では、テーブル作成時にパーティションを手動で宣言するほか、時刻に基づくスケジュールに従った自動作成（Dynamic Partition）と、入力データに応じた必要時の作成（Auto Partition）もサポートします。3つのモードの違いは次のとおりです。
 
-| パーティションの作成方式 | 作成されるタイミング | 適した用途 |
-| ------------------------ | -------------------- | ---------- |
-| 手動パーティション | テーブル作成時に明示的に定義するか、`ALTER` で追加する | パーティションの集合が安定しており、細かい制御が必要な場合 |
-| Dynamic Partition | 時刻に基づくスケジュール規則に従って、システムが自動的に作成、削除する | 過去 N 日、週、月のローリングパーティションを自動管理したい時系列データ |
-| Auto Partition | データの書き込み時に必要に応じて作成する | パーティションの値を予測できず（マルチテナントや疎な時系列など）、事前作成を避けたい場合 |
+| パーティションモード | パーティションが作成されるタイミング | 適用場面 |
+| -------------- | --------------------------------------- | ---------------------------------------------------------- |
+| Manual partition | テーブル作成時に明示的に宣言するか、`ALTER` で追加する | パーティションの集合が安定しており、細かな制御が必要な場合 |
+| Dynamic partition | 時刻に基づくスケジュール規則に従って、システムが自動的に作成・再利用する | 過去 N 日／週／月分のローリングパーティションを自動的に維持したい時系列データ |
+| Auto partition | データの書き込み時に必要に応じて作成する | マルチテナントや疎な時系列データなど、パーティションの値を予測できず、事前作成を避けたい場合 |
 
-よく使う組み合わせの CREATE TABLE の例を次に示します。
+各モードですぐに使える CREATE TABLE の例と、Auto Partition と Dynamic Partition を組み合わせる例については、[Auto Partition](./auto-partitioning)、[Dynamic Partition](./dynamic-partitioning)、[Manual Partition](./manual-partitioning)を参照してください。
 
-<Tabs>
-<TabItem value="auto-partition" label="自動パーティション" default>
+## 5. 高度な機能: バケット分割 {#5-advanced-bucketing}
 
-[Auto Partition](./auto-partitioning) では、データ取り込み時にユーザー定義の規則に従って対応するパーティションを自動作成でき、利用が容易になります。基本の例を Auto Range パーティションに書き換えると、次のようになります。
+### 5.1 Auto Bucketing {#51-auto-bucketing}
 
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1"
-);
-```
+適切なバケット数が分からない場合は、`BUCKETS AUTO` を設定すると、Doris が推定データ量（`estimate_partition_size`）に基づいてバケット数を決定します。これは極めて大きなテーブルには適していません。詳細については、[データのバケット分割](./data-bucketing)を参照してください。
 
-この CREATE TABLE 文を使用すると、データのロード時に Doris は `date` 列に対する月単位のパーティションを自動作成します。たとえば `2018-12-01` と `2018-12-31` は同じパーティションに入り、`2018-11-12` は別のパーティションに入ります。Auto Partition は List パーティションもサポートします。詳しい使い方は Auto Partition のドキュメントを参照してください。
+### 5.2 Colocate {#52-colocate}
 
-</TabItem>
+JOIN や集約クエリを頻繁に実行する複数の大きなテーブルでは、**Colocate** 戦略を有効にできます。バケット分割に使う列の値が同じデータを同じ物理ノードに配置することで、ノード間の Shuffle を回避し、クエリ性能を大幅に向上させます。詳しい使用方法については、Colocate Join のドキュメントを参照してください。
 
-<TabItem value="dynamic-partition" label="動的パーティション">
+## 6. 設計上の推奨事項 {#6-design-recommendations}
 
-[Dynamic Partition](./dynamic-partitioning) は、実際の時刻に基づいてパーティションを自動的に作成、削除する管理方式です。基本の例を Dynamic Partition に書き換えると、次のようになります。
+適切なパーティショニングとバケット分割の設計では、クエリ性能、データ管理、システムの安定性のバランスを取る必要があります。一般的な指針を以下に示します。
 
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-PARTITION BY RANGE(`date`)
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "WEEK", --- Partition granularity is week
-    "dynamic_partition.start" = "-2", --- Retain the past two weeks
-    "dynamic_partition.end" = "2", --- Pre-create the next two weeks
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
+### 6.1 設計目標 {#61-design-goals}
 
-Dynamic Partition は、階層化ストレージやカスタムのレプリカ数などもサポートします。詳細については Dynamic Partition のドキュメントを参照してください。
+1. **データの均等な分散**: 一部のノードに過負荷をもたらすデータの偏りを避けるため、カーディナリティの高い列をバケット分割に使う列として選びます。
+2. **クエリ性能の最適化**: パーティションの枝刈りはスキャンするデータ量を大幅に削減できます。適切なバケット数は計算処理の並列性を高めます。必要に応じて Colocate を使用し、Shuffle のコストを削減します。
+3. **柔軟なデータ管理**: 時刻によるパーティショニングはコールド／ホットデータの階層化（HDD/SSD）に役立ちます。また、過去のパーティションを削除することでストレージ容量を回収できます。
 
-</TabItem>
+### 6.2 経験則に基づく値と制限 {#62-empirical-values-and-limits}
 
-<TabItem value="auto-and-dynamic-partition" label="自動パーティション + 動的パーティション">
-
-Auto Partition と Dynamic Partition にはそれぞれ利点があります。両者を組み合わせると、パーティションを必要に応じて柔軟に作成し、自動的に削除できます。
-
-```sql
-CREATE TABLE example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-AUTO PARTITION BY RANGE(date_trunc(`date`, 'month')) --- Use month as the partition granularity
-()
-DISTRIBUTED BY HASH(`user_id`) BUCKETS 16
-PROPERTIES
-(
-    "replication_num" = "1",
-    "dynamic_partition.enable" = "true",
-    "dynamic_partition.time_unit" = "month", --- The two granularities must be the same
-    "dynamic_partition.start" = "-2", --- Dynamic Partition automatically cleans up historical partitions older than two weeks
-    "dynamic_partition.end" = "0", --- Dynamic Partition does not create future partitions; this is fully delegated to Auto Partition
-    "dynamic_partition.prefix" = "p",
-    "dynamic_partition.buckets" = "8"
-);
-```
-
-この機能の詳細については、[Auto Partition と Dynamic Partition の併用](./auto-partitioning#lifecycle-management)を参照してください。
-
-</TabItem>
-
-</Tabs>
-
-## 5. 高度な機能: バケット分割
-
-### 5.1 自動バケット分割
-
-適切なバケット数が分からない場合は、Auto Bucketing を使用して Doris に推定させることができます。必要なのは、テーブルの推定データサイズを指定することだけです。
-
-```sql
-CREATE TABLE IF NOT EXISTS example_range_tbl
-(
-    `user_id` LARGEINT NOT NULL COMMENT "User ID",
-    `date` DATE NOT NULL COMMENT "Data ingestion date",
-    `timestamp` DATETIME NOT NULL COMMENT "Data ingestion timestamp",
-    `city` VARCHAR(20) COMMENT "User's city",
-    `age` SMALLINT COMMENT "User age",
-    `sex` TINYINT COMMENT "User gender",
-    `last_visit_date` DATETIME REPLACE DEFAULT "1970-01-01 00:00:00" COMMENT "User's last visit time",
-    `cost` BIGINT SUM DEFAULT "0" COMMENT "Total user spending",
-    `max_dwell_time` INT MAX DEFAULT "0" COMMENT "Maximum user dwell time",
-    `min_dwell_time` INT MIN DEFAULT "99999" COMMENT "Minimum user dwell time"
-)
-PARTITION BY RANGE(`date`)
-(
-    PARTITION `p201701` VALUES LESS THAN ("2017-02-01"),
-    PARTITION `p201702` VALUES LESS THAN ("2017-03-01"),
-    PARTITION `p201703` VALUES LESS THAN ("2017-04-01"),
-    PARTITION `p2018` VALUES [("2018-01-01"), ("2019-01-01"))
-)
-DISTRIBUTED BY HASH(`user_id`) BUCKETS AUTO
-PROPERTIES
-(
-    "replication_num" = "1",
-    "estimate_partition_size" = "2G" --- Estimated data volume for one partition; defaults to 10G if not provided
-);
-```
-
-この方法は、テーブルのデータ量が極めて大きい場合には適していません。
-
-### 5.2 Colocate
-
-JOIN や集約クエリを頻繁に実行する複数の大きなテーブルでは、**Colocate** 戦略を有効にできます。同じバケット分割列の値を持つデータを同じ物理ノードに配置することで、ノード間の Shuffle を回避し、クエリ性能を大幅に高めます。詳しい使い方は Colocate Join のドキュメントを参照してください。
-
-## 6. 設計上の推奨事項
-
-パーティションとバケットを適切に設計するには、クエリ性能、データ管理、システムの安定性のバランスを取る必要があります。一般的な指針を次に示します。
-
-### 6.1 設計目標
-
-1. **データの均等な分散**: カーディナリティの高い列をバケット分割列に選び、一部のノードに負荷が集中するようなデータの偏りを防ぎます。
-2. **クエリ性能の最適化**: パーティションの絞り込みによってスキャンするデータ量を大幅に削減できます。適切なバケット数は計算処理の並列性を高めます。必要に応じて Colocate を使用し、Shuffle のコストを削減します。
-3. **柔軟なデータ管理**: 日時でパーティションを分割すると、コールドデータとホットデータの階層化（HDD/SSD）が容易になります。履歴パーティションを削除してストレージ容量を回収することもできます。
-
-### 6.2 目安と上限
-
-- **メタデータの規模**: 各 Tablet のメタデータは FE と BE の両方に保存されるため、規模を適切に制御する必要があります。
-  - Tablet 千万個（10 million）あたり、FE には少なくとも約 100 GB のメモリが必要です。
-  - 各 BE が保持する Tablet の数は 20,000 個未満に抑えてください。
+- **メタデータの規模**: 各 Tablet のメタデータは FE と BE の両方に保存されるため、その規模を適切に管理する必要があります。
+  - Tablet が1,000万個あるごとに、FE には少なくとも約100 GBのメモリが必要です。
+  - 単一の BE が保持する Tablet の数は20,000個未満にする必要があります。
 - **書き込みスループット**:
-  - パーティションあたりのバケット数は 128 未満を推奨します。バケットが多すぎると、書き込み性能に大きく影響します。
-  - 分散した書き込みによって小さなファイルが大量に生成されないよう、一回の書き込みは少数のパーティションに集中させてください。
-- **パーティション分割列とバケット分割列の選択**:
-  - パーティション分割列には、日時またはカーディナリティの低い列挙値を優先します。
-  - バケット分割列には、均等な分散を確保できるように、`user_id` などのカーディナリティの高い列を選びます。
-  - 一つの Tablet のデータ量は 1～10 GB を推奨します。
+  - パーティションあたりのバケット数は128未満にすることを推奨します。バケットが多すぎると、書き込み性能に大きな影響が出ます。
+  - 分散した書き込みによって小さなファイルが大量に生成されるのを避けるため、各書き込みの対象を少数のパーティションに集中させます。
+- **パーティション列とバケット分割に使う列の選択**:
+  - パーティション列には、時刻またはカーディナリティの低い列挙値を優先します。
+  - バケット分割に使う列には、均等な分散を確保するため、カーディナリティの高い列（`user_id` など）を選びます。
+  - 単一の Tablet のデータ量は1-10 GBにすることを推奨します。
 
-## 7. パーティションの確認と変更
+## 7. パーティションの表示と変更 {#7-viewing-and-modifying-partitions}
 
-### 7.1 SHOW CREATE TABLE で CREATE TABLE 文を確認する
+### 7.1 SHOW CREATE TABLE で CREATE TABLE 文を表示する {#71-view-the-create-table-statement-via-show-create-table}
 
-`SHOW CREATE TABLE` を使用すると、パーティション情報を含むテーブルの完全な CREATE TABLE 文を確認できます。
+`SHOW CREATE TABLE` を使用すると、パーティション情報を含むテーブルの完全な CREATE TABLE 文を表示できます。
 
 ```sql
-> show create table  example_range_tbl 
-+-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
-| Table             | Create Table                                                                                            |                                                                                                            
-+-------------------+---------------------------------------------------------------------------------------------------------+                                                                                                            
-| example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |                                                                                                            
-|                   |   `user_id` largeint(40) NOT NULL COMMENT 'User ID',                                                     |                                                                                                            
-|                   |   `date` date NOT NULL COMMENT 'Data ingestion date',                                                      |                                                                                                            
-|                   |   `timestamp` datetime NOT NULL COMMENT 'Data ingestion timestamp',                                             |                                                                                                            
-|                   |   `city` varchar(20) NULL COMMENT 'User city',                                                       |                                                                                                            
-|                   |   `age` smallint(6) NULL COMMENT 'User age',                                                            |                                                                                                            
-|                   |   `sex` tinyint(4) NULL COMMENT 'User gender',                                                             |                                                                                                            
-|                   |   `last_visit_date` datetime REPLACE NULL DEFAULT "1970-01-01 00:00:00" COMMENT 'User last visit time', |                                                                                                            
-|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user spending',                                          |                                                                                                            
-|                   |   `max_dwell_time` int(11) MAX NULL DEFAULT "0" COMMENT 'Maximum user dwell time',                             |                                                                                                            
-|                   |   `min_dwell_time` int(11) MIN NULL DEFAULT "99999" COMMENT 'Minimum user dwell time'                          |                                                                                                            
-|                   | )                                                                                                       |                                                                                                            
-|                   | PARTITION BY RANGE(`date`)                                                                              |                                                                                                            
-|                   | (PARTITION p201701 VALUES [('0000-01-01'), ('2017-02-01')),                                             |                                                                                                            
-|                   | PARTITION p201702 VALUES [('2017-02-01'), ('2017-03-01')),                                              |                                                                                                            
-|                   | PARTITION p201703 VALUES [('2017-03-01'), ('2017-04-01')))                                              |                                                                                                            
-|                   | DISTRIBUTED BY HASH(`user_id`) BUCKETS 16                                                               |                                                                                                            
-|                   | PROPERTIES (                                                                                            |                                                                                                            
-|                   | "replication_allocation" = "tag.location.default: 1",                                                   |                                                                                                            
-|                   | "storage_format" = "V2",                                                                                |                                                                                                            
-|                   | "light_schema_change" = "true",                                                                         |                                                                                                            
-|                   | "disable_auto_compaction" = "false"                                                                     |                                                                                                            
-|                   | );                                                                                                      |                                                                                                            
-+-------------------+---------------------------------------------------------------------------------------------------------+   
+> show create table  example_range_tbl
++-------------------+---------------------------------------------------------------------------------------------------------+
+| Table             | Create Table                                                                                            |
++-------------------+---------------------------------------------------------------------------------------------------------+
+| example_range_tbl | CREATE TABLE `example_range_tbl` (                                                                      |
+|                   |   `user_id` largeint(40) NOT NULL COMMENT 'User ID',                                                     |
+|                   |   `date` date NOT NULL COMMENT 'Data ingestion date',                                                      |
+|                   |   `timestamp` datetime NOT NULL COMMENT 'Data ingestion timestamp',                                             |
+|                   |   `city` varchar(20) NULL COMMENT 'User city',                                                       |
+|                   |   `age` smallint(6) NULL COMMENT 'User age',                                                            |
+|                   |   `sex` tinyint(4) NULL COMMENT 'User gender',                                                             |
+|                   |   `last_visit_date` datetime REPLACE NULL DEFAULT "1970-01-01 00:00:00" COMMENT 'User last visit time', |
+|                   |   `cost` bigint(20) SUM NULL DEFAULT "0" COMMENT 'Total user spending',                                          |
+|                   |   `max_dwell_time` int(11) MAX NULL DEFAULT "0" COMMENT 'Maximum user dwell time',                             |
+|                   |   `min_dwell_time` int(11) MIN NULL DEFAULT "99999" COMMENT 'Minimum user dwell time'                          |
+|                   | )                                                                                                       |
+|                   | PARTITION BY RANGE(`date`)                                                                              |
+|                   | (PARTITION p201701 VALUES [('0000-01-01'), ('2017-02-01')),                                             |
+|                   | PARTITION p201702 VALUES [('2017-02-01'), ('2017-03-01')),                                              |
+|                   | PARTITION p201703 VALUES [('2017-03-01'), ('2017-04-01')))                                              |
+|                   | DISTRIBUTED BY HASH(`user_id`) BUCKETS 16                                                               |
+|                   | PROPERTIES (                                                                                            |
+|                   | "replication_allocation" = "tag.location.default: 1",                                                   |
+|                   | "storage_format" = "V2",                                                                                |
+|                   | "light_schema_change" = "true",                                                                         |
+|                   | "disable_auto_compaction" = "false"                                                                     |
+|                   | );                                                                                                      |
++-------------------+---------------------------------------------------------------------------------------------------------+
 ```
 
-### 7.2 SHOW PARTITIONS でパーティション一覧を確認する
+### 7.2 SHOW PARTITIONS でパーティションの一覧を表示する {#72-view-the-partition-list-via-show-partitions}
 
-`SHOW PARTITIONS FROM <table_name>` を使用すると、テーブルのパーティション一覧と詳細情報を確認できます。
+`SHOW PARTITIONS FROM <table_name>` を使用すると、テーブルのパーティション一覧と詳細情報を表示できます。
 
 ```sql
 > show partitions from example_range_tbl
 +-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
-+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
-| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium 
-| CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |                                                                                                     
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
+| PartitionId | PartitionName | VisibleVersion | VisibleVersionTime  | State  | PartitionKey | Range                                                                          | DistributionKey | Buckets | ReplicationNum | StorageMedium
+| CooldownTime        | RemoteStoragePolicy | LastConsistencyCheckTime | DataSize | IsInMemory | ReplicaAllocation       | IsMutable |
 +-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
-+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                                                                                                     
-| 28731       | p201701       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2017-02-01]; ) | user_id         | 16      | 1              | HDD           
-| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
-| 28732       | p201702       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-02-01]; ..types: [DATEV2]; keys: [2017-03-01]; ) | user_id         | 16      | 1              | HDD           
-| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
-| 28733       | p201703       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-03-01]; ..types: [DATEV2]; keys: [2017-04-01]; ) | user_id         | 16      | 1              | HDD           
-| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |                                                                                                     
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
+| 28731       | p201701       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [0000-01-01]; ..types: [DATEV2]; keys: [2017-02-01]; ) | user_id         | 16      | 1              | HDD
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |
+| 28732       | p201702       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-02-01]; ..types: [DATEV2]; keys: [2017-03-01]; ) | user_id         | 16      | 1              | HDD
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |
+| 28733       | p201703       | 1              | 2024-01-25 10:50:51 | NORMAL | date         | [types: [DATEV2]; keys: [2017-03-01]; ..types: [DATEV2]; keys: [2017-04-01]; ) | user_id         | 16      | 1              | HDD
+| 9999-12-31 23:59:59 |                     |                    | 0.000    | false      | tag.location.default: 1 | true      |
 +-------------+---------------+----------------+---------------------+--------+--------------+--------------------------------------------------------------------------------+-----------------+---------+----------------+---------------
-+---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+                  
++---------------------+---------------------+--------------------------+----------+------------+-------------------------+-----------+
 ```
 
-### 7.3 パーティションを変更する
+### 7.3 パーティションを変更する {#73-modify-partitions}
 
 `ALTER TABLE ADD PARTITION` を使用すると、テーブルに新しいパーティションを追加できます。
 
@@ -389,15 +249,15 @@ JOIN や集約クエリを頻繁に実行する複数の大きなテーブルで
 ALTER TABLE example_range_tbl ADD  PARTITION p201704 VALUES LESS THAN("2020-05-01") DISTRIBUTED BY HASH(`user_id`) BUCKETS 5;
 ```
 
-その他のパーティション変更操作については、SQL マニュアルの [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION) を参照してください。
+パーティションの変更に関するその他の操作については、SQL マニュアルの [ALTER-TABLE-PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)を参照してください。
 
-### 7.4 パーティションの検索
+### 7.4 パーティションを検索する {#74-partition-lookup}
 
-`partitions` テーブル関数と `information_schema.partitions` システムテーブルには、クラスタのパーティション情報が記録されています。パーティションを自動管理する際に、これらを使ってパーティション情報を取得できます。
+`partitions` テーブル関数と `information_schema.partitions` システムテーブルには、クラスタのパーティション情報が記録されています。パーティションを自動的に管理する際は、これらを使用してパーティション情報を取得できます。
 
-#### 指定した値が属するパーティションを検索する
+#### 指定した値が属するパーティションを調べる {#find-the-partition-that-a-given-value-belongs-to}
 
-Auto Partition テーブルで、ある値に対応するパーティションを検索します。
+Auto Partition テーブルで、ある値に対応するパーティションを調べます。
 
 ```sql
 mysql> select * from partitions("catalog"="internal", "database"="optest", "table"="DAILY_TRADE_VALUE") where PartitionName = auto_partition_name('range', 'year', '2008-02-03');
@@ -409,7 +269,7 @@ mysql> select * from partitions("catalog"="internal", "database"="optest", "tabl
 1 row in set (0.30 sec)
 ```
 
-List パーティションテーブルで、対応するパーティションを検索します。
+List パーティションのテーブルで、対応するパーティションを調べます。
 
 ```sql
 mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' and TABLE_NAME='list_table1' and PARTITION_NAME=auto_partition_name('list', null);
@@ -421,7 +281,7 @@ mysql> select * from information_schema.partitions where TABLE_SCHEMA='optest' a
 1 row in set (0.24 sec)
 ```
 
-#### 指定した開始値を持つパーティションを検索する
+#### 指定した開始位置のパーティションを調べる {#find-partitions-with-a-given-starting-point}
 
 ```sql
 mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE_VALUE' and PARTITION_DESCRIPTION like "[('2012-01-01'),%";
@@ -433,12 +293,12 @@ mysql> select * from information_schema.partitions where TABLE_NAME='DAILY_TRADE
 1 row in set (0.65 sec)
 ```
 
-## 8. 関連ドキュメント
+## 8. 関連情報 {#8-further-reading}
 
-- [手動パーティション](./manual-partitioning)
-- [動的パーティション](./dynamic-partitioning)
-- [自動パーティション](./auto-partitioning)
-- [データのバケット分割](./data-bucketing)
+- [Manual Partitioning](./manual-partitioning)
+- [Dynamic Partitioning](./dynamic-partitioning)
+- [Auto Partitioning](./auto-partitioning)
+- [Data Bucketing](./data-bucketing)
 - [よくある問題](./common-issues)
 - [CREATE TABLE の構文](../../sql-manual/sql-statements/table-and-view/table/CREATE-TABLE)
 - [ALTER TABLE PARTITION](../../sql-manual/sql-statements/table-and-view/table/ALTER-TABLE-PARTITION)
