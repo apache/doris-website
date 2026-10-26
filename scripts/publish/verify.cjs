@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
+const {Script} = require('node:vm');
 const {inventory} = require('./optimize.cjs');
 
 function verify(site) {
@@ -25,7 +26,7 @@ function verify(site) {
     for (const [from,to] of manifest.redirects) {
         if (to.startsWith('/')) assert(resolve(to), `Missing redirect destination: ${from} -> ${to}`);
     }
-    let references = 0;
+    let references = 0, compiledJavaScriptFiles = 0;
     const check = (value,source) => {
         if (value.startsWith('data:')) return;
         const url = new URL(value,`https://doris.apache.org/${source}`);
@@ -44,9 +45,15 @@ function verify(site) {
             }
         } else if (item.relative.endsWith('.css')) {
             for (const match of fs.readFileSync(item.file,'utf8').matchAll(/url\(["']?([^\s"')]+)["']?\)/g)) check(match[1],item.relative);
+        } else if (item.relative.startsWith('assets/') && item.relative.endsWith('.js')) {
+            // Check syntax without executing browser code. A successful SSG
+            // build can still contain a malformed client entry or lazy chunk.
+            try {new Script(fs.readFileSync(item.file, 'utf8'), {filename: item.relative});}
+            catch (error) {throw new SyntaxError(`Invalid compiled JavaScript in ${item.relative}: ${error.message}`);}
+            compiledJavaScriptFiles++;
         }
     }
-    return {files:files.length,redirects:manifest.redirects.length,compiledAssetReferences:references};
+    return {files:files.length,redirects:manifest.redirects.length,compiledAssetReferences:references,compiledJavaScriptFiles};
 }
 
 if (require.main === module) {
