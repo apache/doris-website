@@ -60,9 +60,10 @@ async function main() {
 }
 function verifyPilot(root) {
     const results=[];
+    const pilotIds=new Set(JSON.parse(fs.readFileSync(path.join(repo,'translations/blog/state.json'))).pages.map(p=>p.contentId));
     for(const locale of ['en','zh-CN','ja','ko','ru']) {
         const manifest=JSON.parse(fs.readFileSync(path.join(root,'.i18n-build/content-manifests',locale+'.json')));
-        const posts=manifest.pages.filter(page=>page.contentId.startsWith('blog:')&&!page.contentId.includes('2026-01-'));
+        const posts=manifest.pages.filter(page=>pilotIds.has(page.contentId));
         assert.equal(posts.length,4);
         for(const entry of posts) {
             const $=cheerio.load(fs.readFileSync(path.join(root,'build',entry.route,'index.html')));
