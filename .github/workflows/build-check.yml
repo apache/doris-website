@@ -120,7 +120,7 @@ jobs:
             - name: Translation unit tests
               env:
                   NODE_OPTIONS: --max-old-space-size=8192
-              if: steps.detect.outputs.validation_mode != 'skip'
+              if: steps.detect.outputs.translation_tests == 'true'
               run: node --test scripts/i18n/__tests__/*.test.cjs
 
             - name: Publish artifact optimization tests
@@ -160,7 +160,7 @@ jobs:
                   done
 
             - name: Install browser verification tools
-              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true' || steps.detect.outputs.content_fixture == 'true' || steps.detect.outputs.sampling_fixture == 'true'
               run: |
                   DORIS_BROWSER_TOOLS="$RUNNER_TEMP/doris-browser-tools"
                   npm install --prefix "$DORIS_BROWSER_TOOLS" --no-save --no-package-lock playwright@1.64.1
@@ -263,7 +263,7 @@ jobs:
                   retention-days: 14
 
             - name: Docs governance report
-              if: always() && steps.install.outcome == 'success' && steps.detect.outputs.validation_mode != 'fixtures'
+              if: always() && steps.install.outcome == 'success' && steps.detect.outputs.docs_report == 'true'
               continue-on-error: true
               run: |
                   yarn docs:lint:changed --output website-quality-governance/generated/docs-governance-report.json

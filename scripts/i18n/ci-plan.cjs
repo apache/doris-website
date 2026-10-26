@@ -14,10 +14,14 @@ const runtime =
 const content =
     /^(static\/|docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|blog\/|i18n\/|translations\/(pages|blog|state)\/)/;
 const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
+// Maintenance notes are not site content. The report registry, in contrast,
+// changes ordinary pages, which the real sample build always renders.
+const maintenanceNotes = /^translations\/[^/]+\.md$/;
+const reportRegistry = 'translations/community-reports.json';
 function policy(files, {forceFull = false, forceSample = false} = {}) {
     const risk = files.filter(file => highRisk.test(file));
     const changed = files.some(file => content.test(file));
-    const shared = files.some(file => runtime.test(file) || mechanism.test(file));
+    const shared = files.some(file => runtime.test(file) || mechanism.test(file) || file === reportRegistry);
     const checks = validationScope(files);
     const ci = files.some(file => /^(scripts\/|\.github\/)/.test(file));
     const unknown = files.filter(
@@ -25,7 +29,9 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
             !runtime.test(file) &&
             !mechanism.test(file) &&
             !content.test(file) &&
-            !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|translations\/CONTENT_MANIFEST\.md$|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
+            file !== reportRegistry &&
+            !maintenanceNotes.test(file) &&
+            !/^((scripts|\.github|plan-doc|review-docs|\.agents)\/|README\.md$|AGENTS\.md$|LICENSE$|NOTICE$)/.test(
                 file,
             ),
     );
@@ -50,11 +56,15 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         runContentFixture:
             (shared && checks.check_content_fixture) ||
             files.some(file =>
-                /verify-content-fixture|__tests__\/fixtures\/content-manifest/.test(file),
+                /verify-(content-fixture|global-language)|__tests__\/fixtures\/content-manifest/.test(file),
             ),
-        runSamplingFixture: mode === 'fixtures' || files.some(file =>
-            /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache)\.cjs$)/.test(file)),
-        runPublishFixture: mode === 'fixtures' || checks.check_publish_fixture || mode === 'full',
+        runSamplingFixture: files.some(file =>
+            /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
+        runPublishFixture: checks.check_publish_fixture || mode === 'full',
+        runTranslationTests: mode === 'full' || files.some(file =>
+            runtime.test(file) || mechanism.test(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
+                || file === '.github/workflows/build-check.yml'),
+        runDocsReport: mode === 'full' || (mode !== 'fixtures' && checks.check_docs_report),
         publicationAllowed: mode === 'full',
         checkRenderedLinks: !(files.length && files.every(file => /\.(css|scss|sass)$/.test(file))),
     };
@@ -164,6 +174,8 @@ if (require.main === module) {
                     content_fixture: result.runContentFixture,
                     publish_fixture: result.runPublishFixture,
                     sampling_fixture: result.runSamplingFixture,
+                    translation_tests: result.runTranslationTests,
+                    docs_report: result.runDocsReport,
                 })
                     .map(([k, v]) => `${k}=${v}\n`)
                     .join(''),
