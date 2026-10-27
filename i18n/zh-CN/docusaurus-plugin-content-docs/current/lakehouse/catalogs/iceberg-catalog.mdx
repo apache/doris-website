@@ -229,6 +229,8 @@ ORDER BY engine_name, entry_name;
 | Iceberg Rest Catalog | ✅     | ✅       | 取决于服务提供方 | 取决于服务提供方 | 取决于服务提供方   |
 | FileSystem           | ✅     | ✅       | ✅             | ✅             | ✅                 |
 
+`labels` 系统表自 5.0.0 版本起支持，且仅适用于 Iceberg REST Catalog，详见下文 [labels](#labels)。
+
 ## 支持的存储系统
 
 * [HDFS](../storages/hdfs.md)
@@ -1739,6 +1741,8 @@ SELECT * FROM iceberg_table$history;
 > `all_manifests` 系统表从 4.0.4 版本开始支持。
 >
 > `position_deletes` 系统表从 4.1.4 版本开始支持。
+>
+> `labels` 系统表从 5.0.0 版本开始支持，仅适用于 Iceberg REST Catalog。
 
 :::caution 版本行为变更（4.1.4）
 
@@ -1831,6 +1835,86 @@ SELECT * FROM iceberg_table$history;
 | 2025-06-12 22:29:39.922000 | 4890031351138056789 | 1851184769713369003 |                   1 |
 +----------------------------+---------------------+---------------------+---------------------+
 ```
+
+### labels
+
+> 该功能自 5.0.0 版本支持
+
+显示 REST Catalog 为 Iceberg 表提供的表级（`object`）和字段级（`field`）标签，每个标签键值对占一行。可用于查看表的负责人、字段的数据分类等信息。
+
+仅当 Catalog 的 `iceberg.catalog.type` 为 `rest` 时支持该系统表，无需额外开启 Doris 配置。标签由 REST Catalog 服务在加载表时返回，标签的创建和修改需通过服务提供方完成。这里的标签是描述表或字段的键值对，与 [refs](#refs) 中引用快照的 Tag 不同。
+
+**字段说明：**
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `scope` | `TEXT` | 标签作用范围：`object` 表示表级标签，`field` 表示字段级标签。 |
+| `field_id` | `INT` | Iceberg 字段 ID。表级标签为 `NULL`。 |
+| `field_name` | `TEXT` | 根据当前表结构解析的字段名，嵌套字段使用完整路径，例如 `address.city`。表级标签为 `NULL`；字段 ID 在当前表结构中不存在时也为 `NULL`。 |
+| `key` | `TEXT` | 标签键。`key` 是 Doris 保留字，在 SQL 中显式引用该列时需使用反引号。 |
+| `value` | `TEXT` | 标签值。 |
+
+**查询示例：**
+
+以下示例假设已按照 [Iceberg REST Catalog](#iceberg-rest-catalog) 章节配置 Catalog `iceberg_ctl`，其中存在表 `iceberg_db.iceberg_tbl`，且当前用户具有该表的查询权限。REST Catalog 服务已为该表设置并返回以下标签：
+
+- 表级标签：`owner=team-a`。
+- 字段 `email`（字段 ID 为 `2`）的标签：`classification=pii`。
+- 嵌套字段 `address.city`（字段 ID 为 `5`）的标签：`classification=location`。
+
+查询全部标签，并按作用范围、字段 ID 和标签键排序：
+
+```sql
+SELECT * FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+ORDER BY scope, field_id, `key`;
+```
+
+结果：
+
+```text
++--------+----------+--------------+----------------+----------+
+| scope  | field_id | field_name   | key            | value    |
++--------+----------+--------------+----------------+----------+
+| field  |        2 | email        | classification | pii      |
+| field  |        5 | address.city | classification | location |
+| object |     NULL | NULL         | owner          | team-a   |
++--------+----------+--------------+----------------+----------+
+```
+
+筛选标记为 `pii` 的字段：
+
+```sql
+SELECT field_name, `key`, value
+FROM iceberg_ctl.iceberg_db.iceberg_tbl$labels
+WHERE scope = 'field' AND `key` = 'classification' AND value = 'pii';
+```
+
+结果：
+
+```text
++------------+----------------+-------+
+| field_name | key            | value |
++------------+----------------+-------+
+| email      | classification | pii   |
++------------+----------------+-------+
+```
+
+**缓存与刷新：**
+
+标签随表元数据一起缓存，遵循 `meta.cache.iceberg.table.ttl-second` 的设置。服务端修改标签后，建议刷新原始表，再查询 `$labels` 以获取更新后的标签：
+
+```sql
+REFRESH TABLE iceberg_ctl.iceberg_db.iceberg_tbl;
+```
+
+刷新后，下一次 `$labels` 查询会重新加载表并读取服务端返回的标签。将 `meta.cache.iceberg.table.ttl-second` 设为 `0` 可关闭表元数据缓存，使每次查询重新加载标签；缓存配置详见[元数据缓存](#meta-cache)。
+
+**注意事项：**
+
+- REST Catalog 服务未返回标签时，查询结果为空。即使表尚未产生任何快照，只要服务端返回标签，仍可查询到这些标签。`COUNT(*)` 统计的是标签键值对数量，而不是原始表的数据行数。
+- 标签不随快照进行版本管理。对 `$labels` 使用 `FOR VERSION AS OF` 不会读取历史标签，仍返回本次加载的标签，字段名也按当前表结构解析。
+- 字段标签按字段 ID 关联。字段重命名后，`field_name` 显示新名称；字段删除后，如果服务端仍返回该字段的标签，则保留 `field_id`，`field_name` 为 `NULL`。
+- 非 REST Catalog 不支持 `$labels`，查询会报 `Unknown sys table` 错误。要求服务端扫描规划（server-side scan planning）的 REST Catalog 也不支持查询该系统表。
 
 ### manifests
 
