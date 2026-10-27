@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-catalog-overview.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "1067d4e4060e5203cf362fbbd0a8dbba9e471500db9facfb854afaadffe98e51",
-    "sourceTechnicalHash": "112a93d7d4370cbe098935dc2b4912af7a18bf6c0bfa492b4695b91ca5d64979",
-    "targetHash": "63f12ea7a78212ecccada3f54db75e039e41e5a91fa73d9a6aba60440d6e8b4c",
+    "sourceCommit": "b207a93551a3705652bc261639e3eec7fd738c7a",
+    "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+    "sourceTechnicalHash": "91cd6bc33e1681ff640dee3fd9a1e178a37a95520f91d10887fb70e28dea7416",
+    "targetHash": "eb79e099b41508c97d657e284724de0b4c05a501c75bd981e4f4a85b26cb041b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.713Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-26T19:06:04.156Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a41fcecbe44a66c3556e9a066088800812e0194b50c68bf0fdf4e317715eff05",
+      "targetHash": "eb79e099b41508c97d657e284724de0b4c05a501c75bd981e4f4a85b26cb041b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]; received [\"0\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"jdbc_drivers_dir\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"jdbc_drivers_dir\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"jdbc_drivers_dir\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3\",\"3\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4\",\"4\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]; received [\"0\",\"1\",\"1\",\"1\",\"17\",\"1800000\",\"2\",\"2\",\"2.1.7\",\"2.1.7\",\"21\",\"28800\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.7\",\"30\",\"4.1.5\",\"5\",\"5000\",\"8\",\"8\"]\nprotected node 21: expected [\"inlineCode\",null,null,\"jdbc_drivers_dir\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 22: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
