@@ -55,13 +55,14 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         const links = sidebar.find('a[href]').map((_, node) => $(node).attr('href')).get();
         for (const link of links.filter(link => link.startsWith(`/${locale}/`))) read(new URL(link, 'https://doris.apache.org').pathname);
         const domains = [];
-        if (group.pluginId === 'default') {
+        if (group.pluginId === 'default' || group.pluginId === 'community') {
             const label = dictionary['docs.navigation.sections']?.message ?? 'Documentation sections';
             const nav = $('nav').filter((_, node) => $(node).attr('aria-label') === label);
             assert(nav.length, `Missing document domain navigation: ${representative.permalink}`);
             for (const node of nav.find('details a[href]').toArray()) {
                 const link = $(node).attr('href');
-                assert(link.startsWith(`/${locale}/docs/`), `Wrong domain locale: ${link}`);
+                const routeBase = group.pluginId === 'community' ? 'community' : 'docs';
+                assert(link.startsWith(`/${locale}/${routeBase}/`), `Wrong domain locale or plugin: ${link}`);
                 read(new URL(link, 'https://doris.apache.org').pathname);
                 domains.push($(node).text());
             }

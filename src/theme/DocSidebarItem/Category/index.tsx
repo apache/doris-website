@@ -222,7 +222,7 @@ export default function DocSidebarItemCategory({
             <Collapsible
                 lazy
                 as="ul"
-                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''} ${level === 1 && !isMainDocs ? 'community_level_2' : ''} `}
+                className={`menu__list ${level === 1 ? 'menu__list_level_2' : ''} ${level === 1 && !isMainDocs && !usesDomainNavigation ? 'community_level_2' : ''} `}
                 collapsed={collapsed}
             >
                 <DocSidebarItems

@@ -34,7 +34,7 @@ test('navigation samples a native sidebar member when a current standalone doc s
     write('manifest.json', JSON.stringify({locale:'ru',pages}));
     for (const doc of pages) {
         const navigation=doc.docId === 'standalone' ? '' : `<aside class="theme-doc-sidebar-container"><a href="${doc.permalink}">Документ</a></aside>`
-            + (doc.pluginId === 'default' ? `<nav aria-label="Разделы документации"><details><a href="${doc.permalink}">Раздел</a></details></nav>` : '');
+            + `<nav aria-label="Разделы документации"><details><a href="${doc.permalink}">Раздел</a></details></nav>`;
         write(`site${doc.permalink}index.html`, `<article class="theme-doc-markdown" lang="ru">Документ</article>${navigation}`);
     }
     write('site/ru/docs/index.html', createRedirect({toUrl:pages[2].permalink}));
@@ -44,7 +44,13 @@ test('navigation samples a native sidebar member when a current standalone doc s
     const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),scope});
     assert.equal(result.routes,4);
     assert.equal(result.checks.find(check=>check.group === 'DEV').sample,pages[1].permalink);
+    assert.deepEqual(result.checks.find(check=>check.group === 'COMMUNITY').domains, ['Раздел']);
     const options={site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),devOnly:true,scope};
+    const communityFile = `site${pages[3].permalink}index.html`;
+    const communityHtml = fs.readFileSync(path.join(root, communityFile), 'utf8');
+    write(communityFile, communityHtml.replace(/<nav[\s\S]*?<\/nav>/, ''));
+    assert.throws(() => verify(options), /Missing document domain navigation/);
+    write(communityFile, communityHtml);
     fs.unlinkSync(path.join(root,'site/ru/community/index.html'));
     assert.throws(()=>verify(options), /Missing compacted entry: \/ru\/community\//);
     write('site/.publish/redirects.json', JSON.stringify({redirects:[['/ru/community/',pages[3].permalink,true,301]]}));
