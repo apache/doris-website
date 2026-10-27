@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/parquet.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/parquet.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "69280e4466fc77ff46da2330aa432b37b0e4cfa86a82f75b79315841eea27cb7",
-    "sourceTechnicalHash": "d13cca33f63d0cd0e8134edc377c7c0ab91989a541668819ebee6576ae77b289",
-    "targetHash": "d9cd72443007cc89af58a6cc7f5825800ecf9501c593354692a8a44b788aea49",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "429c9c5f9a59b4110d56cb33d66103c19bcda822265be8f74d5dc583b157b666",
+    "sourceTechnicalHash": "72fb680c5533a16706f04df45be74a7dd588a94a92f4a28ca8ece374a6cc0cea",
+    "targetHash": "951c2123a12c80297c01024c7a97412666a56c58bc3436e29d0dfd65e16dc482",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.109Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T05:21:30.425Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "429c9c5f9a59b4110d56cb33d66103c19bcda822265be8f74d5dc583b157b666",
+      "targetHash": "951c2123a12c80297c01024c7a97412666a56c58bc3436e29d0dfd65e16dc482",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"128\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\"]; received [\"0\",\"1\",\"128\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

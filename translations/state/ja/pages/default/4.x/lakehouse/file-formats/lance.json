@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/lance.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/lance.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "82cbc465d87e877327c56f28493068253b286724a7379cb0423f95b1c0109543",
-    "sourceTechnicalHash": "e18ecbc2895c5ca9fb4292d3857de209c86bc656c4932b4b567b0b16f69d5720",
-    "targetHash": "1a0464d6899cf65dcb89359d1ebef2ee1ddfaca2498f23c85bcde20a1cfa875b",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "144b8e991b8f34901623472555b1bf0a54c31aada0a5f0845fdaebb0b0d461ac",
+    "sourceTechnicalHash": "5ebe5e6695127d7fd9a35074acd83309115416b0ef7984b5c3093e7eaac7433a",
+    "targetHash": "f3fe7b739d5e4d3baae2ce723682936c98380ef239933fa7d235cfa28397812a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.109Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T05:19:51.626Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "144b8e991b8f34901623472555b1bf0a54c31aada0a5f0845fdaebb0b0d461ac",
+      "targetHash": "f3fe7b739d5e4d3baae2ce723682936c98380ef239933fa7d235cfa28397812a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"3\",\"3\",\"4.2\"]; received [\"1\",\"1\",\"1\",\"3\",\"3\",\"4.2\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }

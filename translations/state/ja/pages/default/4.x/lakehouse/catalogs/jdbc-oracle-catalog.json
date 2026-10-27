@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-oracle-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-oracle-catalog.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "8fe00fede5978e5c6d2da8129bc7e14fd362066adbb57d32c121d5edb522cade",
-    "sourceTechnicalHash": "a1de65434ee0f6b49a419393d469a09eddb5d4b251f23f6c0f9f29b203ff885e",
-    "targetHash": "4ba32631f5f588eaf7886de5f5ff079e948cdf1766874b7550624340b7c63e26",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+    "sourceTechnicalHash": "bc982b10df710e4b5b677ddee2b560717c5659afe86ef317a499d111adfa5553",
+    "targetHash": "47e39eb31a41a3e0e698dac8f8985ec499d2f6af9c116bd54a67fc13fb14c526",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.714Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T04:49:49.484Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "fdae88028ec3394afa34c0e68428552f1b39ed755d02bea13e13abae29db3ccc",
+      "targetHash": "47e39eb31a41a3e0e698dac8f8985ec499d2f6af9c116bd54a67fc13fb14c526",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\", and perform the same mapping as \"]; received [\"inlineCode\",null,null,\" に設定し、\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }
