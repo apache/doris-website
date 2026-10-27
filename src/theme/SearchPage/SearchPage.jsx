@@ -33,7 +33,7 @@ export default function SearchPage() {
     </Layout>);
 }
 function SearchPageContent() {
-    const { siteConfig: { baseUrl,customFields }, i18n: { currentLocale }, } = useDocusaurusContext();
+    const { siteConfig: { baseUrl,customFields }, i18n: { currentLocale,defaultLocale }, } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
     const { selectMessage } = usePluralForm();
     const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
@@ -73,7 +73,7 @@ function SearchPageContent() {
         }
     }, [searchValue]);
     // The source index lives at the site root, so drop this locale's prefix.
-    const sourceBaseUrl = isTranslatedLocale(currentLocale)
+    const sourceBaseUrl = currentLocale!==defaultLocale
         ? baseUrl.replace(new RegExp(`${currentLocale.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/$`), '')
         : baseUrl;
     const sourceParams=new URLSearchParams(queryParams);
@@ -177,7 +177,7 @@ function SearchPageContent() {
                     message: "No documents were found",
                     description: "The paragraph for empty search result",
                 })}
-              {isTranslatedLocale(currentLocale) && <> <a href={englishSearch}>{translate({id: 'theme.SearchPage.searchSource', message: 'Search the source documents'})}</a></>}
+              {currentLocale!==defaultLocale && <> <a href={englishSearch} hrefLang="en">{translate({id: 'theme.SearchPage.searchSource', message: 'Search the source documents'})}</a></>}
             </p>) : (<p>
               ⚠️ The search index is only available when you run docusaurus
               build!

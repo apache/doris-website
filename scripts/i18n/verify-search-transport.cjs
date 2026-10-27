@@ -21,6 +21,7 @@ async function build() {
     write('src/search-fixture.scss','@use "./scss/variables";\n');
     fs.cpSync(path.join(root,'src/theme/NavbarItem/LocaleDropdownNavbarItem'),path.join(fixture,'src/theme/NavbarItem/LocaleDropdownNavbarItem'),{recursive:true});
     write('versions.json','["4.x","3.x","2.1"]');
+    write('docs/source-only.md','---\ntitle: Source only\n---\n\nDoris SourceOnlyFixtureKeyword.\n');
     for(const version of ['3.x','2.1']) {
         const body=`---\ntitle: Historical ${version}\n---\n\n## Usage\n\nDoris HistoricalFixtureSQL ${version}.\n`;
         write(`versioned_docs/version-${version}/historical.md`,body);
@@ -110,6 +111,22 @@ async function verify() {
     const input=page=>page.locator('input.navbar__search-input:not([readonly]):visible').first();
     const suggestions=page=>page.locator('[class*="suggestion_"]');
     try {
+        for(const locale of ['en','zh-CN']) {
+            const manifest=JSON.parse(fs.readFileSync(path.join(fixture,'.i18n-build/content-manifests',locale+'.json')));
+            const hidden=new Set(manifest.pages.filter(page=>page.kind==='docs'&&!page.indexable).map(page=>page.route.replace(/\/$/,'')));
+            assert(hidden.size>0,'Source fixture must contain an unlisted/fallback boundary');
+            function walk(directory) {
+                for(const entry of fs.readdirSync(directory,{withFileTypes:true})) {
+                    const file=path.join(directory,entry.name);
+                    if(entry.isDirectory())walk(file);
+                    else if(/^search-index.*\.json$/.test(entry.name)) {
+                        for(const section of JSON.parse(fs.readFileSync(file,'utf8')))for(const doc of section.documents??[])
+                            if(doc.u)assert(!hidden.has(doc.u.replace(/\/$/,'')),'Non-indexable source page entered search: '+doc.u);
+                    }
+                }
+            }
+            walk(locale==='en'?site:path.join(site,locale));
+        }
         for(const locale of ['en','zh-CN','ja','ko','ru']) {
             const {ctx,page,requests}=await context({delay:1000});
             const manifest=JSON.parse(fs.readFileSync(path.join(fixture,'.i18n-build/content-manifests',locale+'.json')));
@@ -136,6 +153,7 @@ async function verify() {
         for(const start of [
             {route:'/ja/search/?ctx=docs%2Fdev&q=Doris&probe=1#retained',target:'en-US',context:'docs',version:'docs/dev/'},
             {route:'/search/?ctx=docs&version=docs%2Fdev%2F&q=Doris&probe=1#retained',target:'ja',context:'docs/dev',version:''},
+            {route:'/search/?q=Doris&probe=1#retained',target:'ja',context:'docs/4.x',version:'',expectedVersion:'4.x'},
         ]) {
             const {ctx,page}=await context();await open(page,start.route);
             await page.locator('section article').first().waitFor();
@@ -149,7 +167,7 @@ async function verify() {
             await page.waitForSelector('html[data-has-hydrated="true"]');
             await page.locator('section article').first().waitFor();
             const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
-            assert(links.every(link=>link.includes('/docs/dev/')),'Language switch lost Dev scope');
+            assert(links.every(link=>link.includes('/docs/'+(start.expectedVersion??'dev')+'/')),'Language switch lost version scope');
             results.push({languageSwitch:start,links});await close(ctx);
         }
         for(const locale of ['ja','ko','ru']) for(const version of ['3.x','2.1']) {
@@ -190,6 +208,39 @@ async function verify() {
             const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
             assert(links.every(value=>value.startsWith('/'+plugin+'/')));
             results.push({sourcePlugin:plugin,links});await close(ctx);
+        }
+        for(const locale of ['ja','ko','ru']) for(const version of ['3.x','2.1']) {
+            const {ctx,page,requests}=await context();
+            await open(page,`/${locale}/search/?ctx=docs&version=docs%2F${version}%2F&q=HistoricalFixtureSQL#retained`);
+            const note=page.locator('.container.margin-vert--lg [role="note"]');await note.waitFor();
+            assert.equal(await page.locator('#context-selector').inputValue(),'docs/'+version);
+            assert.equal(requests.length,0,'Historical search queried translated current indexes');
+            const source=note.locator('a'),url=new URL(await source.getAttribute('href'),'https://doris.apache.org');
+            assert.equal(url.searchParams.get('version'),'docs/'+version+'/');assert.equal(url.hash,'#retained');
+            await source.click();await page.waitForFunction(()=>document.documentElement.lang==='en-US');
+            await page.waitForSelector('html[data-has-hydrated="true"]');await page.locator('section article').first().waitFor();
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.every(value=>value.includes('/docs/'+version+'/')));
+            results.push({historicalSearchPage:{locale,version},links});await close(ctx);
+        }
+        {
+            const {ctx,page}=await context();await open(page,'/zh-CN/search/?ctx=docs&version=docs%2Fdev%2F&q=SourceOnlyFixtureKeyword');
+            const link=page.locator('.container.margin-vert--lg a[hreflang="en"]');await link.waitFor();
+            const url=new URL(await link.getAttribute('href'),'https://doris.apache.org');assert.equal(url.pathname,'/search/');
+            assert.equal(url.searchParams.get('version'),'docs/dev/');await link.click();
+            await page.waitForFunction(()=>document.documentElement.lang==='en-US');await page.waitForSelector('html[data-has-hydrated="true"]');
+            await page.locator('section article').first().waitFor();
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.some(value=>value.startsWith('/docs/dev/source-only/')));results.push({chineseFallbackSource:true,links});await close(ctx);
+        }
+        {
+            const {ctx,page}=await context();await open(page,'/ja/search/?ctx=docs&version=docs%2F3.x%2F&q=Doris#retained');
+            await page.locator('.container.margin-vert--lg [role="note"]').waitFor();
+            await page.locator('#context-selector').selectOption('docs/dev');
+            await page.locator('section article').first().waitFor();
+            assert(!new URL(page.url()).searchParams.has('version'));assert.equal(new URL(page.url()).hash,'#retained');
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.every(value=>value.includes('/ja/docs/dev/')));results.push({historicalToSupported:true,links});await close(ctx);
         }
         const retryLabels={en:'Retry','zh-CN':'重试',ja:'再試行',ko:'다시 시도',ru:'Повторить'};
         for(const locale of Object.keys(retryLabels)) for(const fullPage of [false,true]) {

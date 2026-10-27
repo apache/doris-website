@@ -162,7 +162,15 @@ function searchPlugin(context, options) {
     if (indexFilename(context) !== filename) throw new Error('Search index filename differs from its browser URL');
     return {...plugin, postBuild: managed
         ? buildData => buildLocalizedIndex(buildData,config,filename,locale,contextNames)
-        : postBuildFactory(config,filename)};
+        : buildData => {
+            const hidden = new Set((buildData.plugins ?? []).flatMap(plugin=>plugin.content?.contentIdentity?.entries ?? [])
+                .filter(page=>page.kind==='docs'&&page.siteLocale===locale&&page.indexable===false)
+                .map(page=>normalize(page.route)));
+            // Native source-language indexing keeps its version/context layout,
+            // but cannot advertise English fallbacks as Chinese translations.
+            return postBuildFactory(config,filename)({...buildData,
+                routesPaths:buildData.routesPaths.filter(route=>!hidden.has(normalize(route)))});
+        }};
 }
 module.exports = searchPlugin;
 module.exports.validateOptions = nativeModule.validateOptions;

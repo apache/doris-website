@@ -26,8 +26,10 @@ export function useLanguageItems(queryString = '') {
         const relative = pathname.startsWith(root) ? pathname.slice(root.length).replace(new RegExp(`^(?:${locales.filter(value=>value!==defaultLocale).join('|')})/`),'') : '';
         const scopes = siteConfig.customFields?.searchContexts as {source?:string[];managed?:string[]} | undefined;
         const contexts = isTranslatedLocale(locale) ? scopes?.managed : scopes?.source;
+        const sourceContexts = isTranslatedLocale(currentLocale) ? scopes?.managed : scopes?.source;
         const suffix = browser && relative.replace(/\/$/,'') === 'search' && contexts
-            ? '?' + convertSearchParams(new URLSearchParams(search),{contexts,versions,managed:isTranslatedLocale(locale)}).toString()
+            ? '?' + convertSearchParams(new URLSearchParams(search),{contexts,versions,managed:isTranslatedLocale(locale)},
+                sourceContexts?{contexts:sourceContexts,versions,managed:isTranslatedLocale(currentLocale)}:undefined).toString()
             : browser ? search : '';
         let href = appendRouteSuffix(route.href, suffix, browser ? hash : '', queryString);
         if (englishRoot) href = appendRouteSuffix(href, '', '', `lang=${defaultLocale}`);

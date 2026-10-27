@@ -24,8 +24,14 @@ export function resolveSearchScope({context = '', version = ''}, {contexts = [],
     return {context:paths.includes(context)?context:fallback,version:'',sourceOnlyVersion:null};
 }
 
-export function convertSearchParams(params, options) {
+export function convertSearchParams(params, options, sourceOptions) {
     const result = new URLSearchParams(params);
+    if(sourceOptions) {
+        const current=resolveSearchScope({context:result.get('ctx')??'',version:result.get('version')??''},sourceOptions);
+        if(current.sourceOnlyVersion)result.set('ctx','docs');
+        else if(current.context)result.set('ctx',current.context);else result.delete('ctx');
+        if(current.version)result.set('version',current.version);else result.delete('version');
+    }
     const scope = resolveSearchScope({context:result.get('ctx')??'',version:result.get('version')??''},options);
     const context = scope.sourceOnlyVersion ? 'docs' : scope.context;
     if (context) result.set('ctx',context); else result.delete('ctx');

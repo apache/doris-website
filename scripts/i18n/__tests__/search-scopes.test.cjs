@@ -35,6 +35,11 @@ test('language conversion preserves the query and unrelated parameters through a
     for(const value of [english,japanese]){assert.equal(value.get('q'),original.get('q'));assert.equal(value.get('probe'),original.get('probe'));}
     assert.equal(original.get('ctx'),'docs/dev');
 });
+test('an implicit native default stays on the stable version when switching languages',()=>{
+    const target=convertSearchParams(new URLSearchParams({q:'Doris'}),managed,source);
+    assert.equal(target.get('ctx'),'docs/4.x');
+    assert.equal(target.get('q'),'Doris');assert(!target.has('version'));
+});
 test('latest version and unsupported status come from native metadata and registered contexts',()=>{
     const futureVersions=[{path:'/site/ru/docs/dev'},{path:'/site/ru/docs/5.x',isLast:true},{path:'/site/ru/docs/4.x'}];
     const options={managed:true,versions:futureVersions,contexts:['docs/dev','docs/5.x','community']};
