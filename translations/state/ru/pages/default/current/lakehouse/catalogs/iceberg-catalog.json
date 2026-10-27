@@ -8,45 +8,42 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/iceberg-catalog.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/lakehouse/catalogs/iceberg-catalog.mdx",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
-    "sourceTechnicalHash": "e9f8c84f129dd0fdca3d1ed9970af0fb66804333320cfd395d29e62ea0cb1a80",
-    "targetHash": "4d0a2d456071b30ee5e2d4761cccf44ef8eeee6bec0e8d96be6996a117d57556",
+    "sourceCommit": "69ecc79288512c3e2e665081e52bc44548383cd5",
+    "sourceHash": "35a6c84279e184d0256d95f0eb0dab459450461e9a5b59f592f704f9b46faa9d",
+    "sourceTechnicalHash": "f704deb3aabd4e7ad43ca6247650398b5dbce199408e5a34346a3af87a6fcfb7",
+    "targetHash": "e0c63e4194545933fe09b7f4ad6a223e1d71ad838cb51562e17e2907593dca8a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T18:31:55.387Z",
+    "translatedAt": "2026-10-27T20:27:28.669Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 3,
-      "modelCalls": 3,
+      "previousSourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
+      "previousTargetHash": "4d0a2d456071b30ee5e2d4761cccf44ef8eeee6bec0e8d96be6996a117d57556",
+      "mode": "incremental",
+      "reason": "source-change-within-30-percent",
+      "sourceChange": {
+        "changedLines": 60,
+        "totalLines": 2801,
+        "ratio": 0.021420921099607283
+      },
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
-      "targetHash": "4d0a2d456071b30ee5e2d4761cccf44ef8eeee6bec0e8d96be6996a117d57556",
+      "sourceHash": "35a6c84279e184d0256d95f0eb0dab459450461e9a5b59f592f704f9b46faa9d",
+      "targetHash": "e0c63e4194545933fe09b7f4ad6a223e1d71ad838cb51562e17e2907593dca8a",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
           "issues": [
             {
-              "check": "request",
-              "message": "Codex attempted a tool call during text-only translation\n\n1 !== 0\n"
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 475: expected [\"inlineCode\",null,null,\"iceberg.catalog.type\"]; received [\"inlineCode\",null,null,\"rest\"]\nprotected node 476: expected [\"inlineCode\",null,null,\"rest\"]; received [\"inlineCode\",null,null,\"iceberg.catalog.type\"]"
             }
           ]
         },
         {
           "attempt": 2,
-          "issues": [
-            {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 414: expected [\"inlineCode\",null,null,\"_row_id\"]; received [\"inlineCode\",null,null,\"INSERT\"]\nprotected node 415: expected [\"inlineCode\",null,null,\"_last_updated_sequence_number\"]; received [\"inlineCode\",null,null,\"_row_id\"]\nprotected node 416: expected [\"inlineCode\",null,null,\"INSERT\"]; received [\"inlineCode\",null,null,\"_last_updated_sequence_number\"]"
-            }
-          ]
-        },
-        {
-          "attempt": 3,
           "issues": []
         }
       ]
