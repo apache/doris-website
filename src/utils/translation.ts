@@ -63,7 +63,6 @@ export type ContentRouteData = {
     aggregate?: boolean;
     schemaVersion: 1;
     renderIntegrated: boolean;
-    sourceSha: string;
     contentId: string;
     kind: 'docs' | 'page' | 'blog' | 'utility';
     siteLocale: string;

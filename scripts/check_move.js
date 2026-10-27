@@ -4,17 +4,18 @@
  */
 
 
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const { sourceForLocalized } = require("./i18n/paths.cjs");
 const { managedLocales } = require("./i18n/state.cjs");
 const translationLocales = new Set(managedLocales(path.resolve(__dirname, "..")));
 
-const commitHash = process.argv[2];
+const baseRef = process.argv[2] === '--base' ? process.argv[3] : null;
+const commitHash = baseRef ? null : process.argv[2];
 
-if (require.main === module && !commitHash) {
-  console.error("❌ Please provide the commit hash, such as: node check-dead-links.js <commit-hash>");
+if (require.main === module && (!commitHash && !baseRef || commitHash === '--base')) {
+  console.error("Provide a commit hash, or --base <merge-base> to check the complete PR diff.");
   process.exit(1);
 }
 
@@ -22,27 +23,11 @@ const linkRegex = /\[.*?\]\((.*?)\)/g;
 let hasBrokenLinks = false;
 
 // Get the modified or newly added .md/.mdx files in the commit
-function getModifiedMarkdownFiles(commit) {
-  const output = execSync(
-    `git show --name-status --diff-filter=AM ${commit} -- '*.md' '*.mdx'`,
-    { encoding: "utf-8", maxBuffer: 100 * 1024 * 1024 }
-  );
-  const lines = output.split("\n");
-  console.log('lines',lines);
-
-  const files = [];
-
-  for (const line of lines) {
-    const parts = line.trim().split(/\s+/);
-    if (parts.length === 2) {
-      const [status, filePath] = parts;
-      if ((status === "A" || status === "M") && (filePath.endsWith(".md") || filePath.endsWith(".mdx"))) {
-        files.push(filePath);
-      }
-    }
-  }
-
-  return files;
+function getModifiedMarkdownFiles(commit, base) {
+  const selection = base ? ['diff', '--name-only', '--diff-filter=AMR', '-z', base, 'HEAD']
+    : ['show', '--format=', '--name-only', '--diff-filter=AMR', '-z', commit];
+  return execFileSync('git', [...selection, '--', '*.md', '*.mdx'],
+    {encoding: 'utf8', maxBuffer: 100 * 1024 * 1024}).split('\0').filter(Boolean);
 }
 
 // Checks if the link points to an existing local file
@@ -228,7 +213,7 @@ function checkFileLinks(filePath) {
 
 // Main function
 function main() {
-  const files = getModifiedMarkdownFiles(commitHash);
+  const files = getModifiedMarkdownFiles(commitHash, baseRef);
   if (files.length === 0) {
     console.log("✅ Unmodified Markdown files");
     return;

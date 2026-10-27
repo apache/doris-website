@@ -29,23 +29,26 @@ jobs:
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
-          # Only added (A) or modified (M) files in this PR — deletions and renames-source are skipped.
+          # Check added/modified files and rename destinations across all
+          # content plugins, versions and locales; deleted files are skipped.
           # github.event.pull_request.base.sha is the base branch tip from when the PR was opened,
           # not the current one, so diffing against it drags in every commit that landed on the base
           # branch since then. Resolve the merge base against the base branch as it is now: the
           # checkout is refs/pull/<n>/merge, so this leaves exactly the PR's own changes.
           BASE_SHA="$(git merge-base "origin/$BASE_REF" HEAD)"
           echo "Diffing against origin/$BASE_REF ($BASE_SHA)"
-          {
-            echo 'files<<EOF'
-            git diff --name-only --diff-filter=AM \
+          git diff --name-only --diff-filter=AMR -z \
               "$BASE_SHA" HEAD \
-              -- 'docs/**/*.md' 'docs/**/*.mdx' \
-                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.md' \
-                 'i18n/zh-CN/docusaurus-plugin-content-docs/current/**/*.mdx' \
-                 'i18n/ja/**/*.md' 'i18n/ja/**/*.mdx'
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
+              -- ':(glob)docs/**/*.md' ':(glob)docs/**/*.mdx' \
+                 ':(glob)versioned_docs/**/*.md' ':(glob)versioned_docs/**/*.mdx' \
+                 ':(glob)i18n/**/*.md' ':(glob)i18n/**/*.mdx' \
+                 ':(glob)community/**/*.md' ':(glob)community/**/*.mdx' \
+                 ':(glob)course/**/*.md' ':(glob)course/**/*.mdx' \
+                 ':(glob)releasenotes/**/*.md' ':(glob)releasenotes/**/*.mdx' \
+                 ':(glob)blog/**/*.md' ':(glob)blog/**/*.mdx' > "$RUNNER_TEMP/pr-markdown-files"
+          if [ -s "$RUNNER_TEMP/pr-markdown-files" ]; then
+            echo 'has_files=true' >> "$GITHUB_OUTPUT"
+          fi
           {
             echo 'scripts<<EOF'
             git diff --name-only "$BASE_SHA" HEAD \
@@ -54,7 +57,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Set up Python
-        if: steps.changed.outputs.files != '' || steps.changed.outputs.scripts != ''
+        if: steps.changed.outputs.has_files == 'true' || steps.changed.outputs.scripts != ''
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: '3.11'
@@ -64,22 +67,11 @@ jobs:
         run: python3 -m unittest scripts/__tests__/test_japanese_links.py
 
       - name: Check links in changed Markdown files
-        if: steps.changed.outputs.files != ''
-        env:
-          FILES: ${{ steps.changed.outputs.files }}
+        if: steps.changed.outputs.has_files == 'true'
         run: |
           set -u
-          if [ -z "$FILES" ]; then
-            echo "No Markdown files added or modified in this PR. Skipping."
-            exit 0
-          fi
-
-          echo "Markdown files to check:"
-          echo "$FILES"
-          echo "------------------------------------------------------------"
-
           FAILED=()
-          while IFS= read -r file; do
+          while IFS= read -r -d '' file; do
             [ -z "$file" ] && continue
             if [ ! -f "$file" ]; then
               echo "Skip (not found in working tree): $file"
@@ -90,7 +82,7 @@ jobs:
             if ! python3 scripts/check_md_links_single.py "$file" --no-external; then
               FAILED+=("$file")
             fi
-          done <<< "$FILES"
+          done < "$RUNNER_TEMP/pr-markdown-files"
 
           echo
           echo "============================================================"

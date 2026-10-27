@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime
 import hashlib
+import heapq
 import json
 import math
 import os
@@ -65,7 +66,8 @@ def start(job):
         "GITHUB_REPOSITORY", "GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT", "GITHUB_SHA",
         "GITHUB_WORKFLOW_REF", "GITHUB_EVENT_NAME", "RUNNER_OS", "RUNNER_ARCH",
         "ImageOS", "ImageVersion", "DEPLOY_SOURCE_SHA", "DORIS_ENABLE_JA",
-        "DORIS_ENABLE_KO", "DORIS_ENABLE_RU", "DOCS_VERSIONS")}
+        "DORIS_ENABLE_KO", "DORIS_ENABLE_RU", "DOCS_VERSIONS", "NODE_OPTIONS",
+        "TERSER_PARALLEL", "RAYON_NUM_THREADS", "DOCUSAURUS_SSR_CONCURRENCY")}
     write_json(REPORTS / "context.json", {
         "schemaVersion": 1, "job": job, "startedAt": time.time(),
         "checkoutSha": git("rev-parse", "HEAD"), "context": context,
@@ -73,24 +75,51 @@ def start(job):
         "activeVersions": (["current", *json.loads(Path("versions.json").read_text())]
                            if job == "build" else None),
         "checkoutActiveVersions": ["current", *json.loads(Path("versions.json").read_text())],
-        "cachePolicy": ("fresh runner; no dependency cache; yarn cache clean before install"
+        "cachePolicy": ("Yarn download cache keyed by yarn.lock; frozen install with postinstall"
                         if job == "build" else "fresh runner; site downloaded from this run's artifact"),
         "initialResources": snapshot(),
     })
     launch_sampler()
 
 
-def site_inventory(site):
+def site_inventory(site, detailed=False):
     if not site.is_dir():
         return None
     files, size = 0, 0
+    extensions, directories, largest = {}, {}, []
     for root, _, names in os.walk(site):
         for name in names:
             item = Path(root) / name
             if item.is_file():
+                item_size = item.stat().st_size
                 files += 1
-                size += item.stat().st_size
-    return {"files": files, "bytes": size}
+                size += item_size
+                if detailed:
+                    relative = item.relative_to(site)
+                    directory = "/".join(relative.parts[:2] if relative.parts[0] == "assets" else relative.parts[:1])
+                    for table, key in [(extensions, item.suffix.lower() or "(none)"), (directories, directory)]:
+                        row = table.setdefault(key, {"files": 0, "bytes": 0})
+                        row["files"] += 1
+                        row["bytes"] += item_size
+                    largest.append({"path": relative.as_posix(), "bytes": item_size})
+    return {"files": files, "bytes": size, **({"byExtension": extensions, "byDirectory": directories,
+        "largestFiles": heapq.nlargest(20, largest, key=lambda row: row["bytes"])} if detailed else {})}
+
+
+def archive_generated_inputs():
+    # These are public generated build inputs, not arbitrary tracked files or
+    # environment snapshots. Preserve their exact bytes for reproduction.
+    result = {}
+    for name in ["scripts/last-update/data.json", "src/constant/github.data.ts", "src/generated/key-features.ts"]:
+        source = Path(name)
+        if not source.is_file() or source.is_symlink() or not source.resolve().is_relative_to(Path.cwd().resolve()):
+            continue
+        content = source.read_bytes()
+        target = REPORTS / "inputs" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        result[name] = {"bytes": len(content), "sha256": hashlib.sha256(content).hexdigest()}
+    return result
 
 
 def api(url):
@@ -145,7 +174,12 @@ def finish(budget):
     report["finishedAt"] = time.time()
     report["elapsedThroughReportSeconds"] = report["finishedAt"] - report["startedAt"]
     report["finalResources"] = snapshot()
-    report["site"] = site_inventory(Path("build"))
+    report["site"] = site_inventory(Path("build"), detailed=True)
+    if report["job"] == "build":
+        report["dependencyCacheHit"] = os.environ.get("DEPENDENCY_CACHE_HIT")
+        report["generatedInputs"] = archive_generated_inputs()
+        changes = subprocess.check_output(["git", "diff", "--name-only", "-z", "HEAD"]).decode().split("\0")
+        report["unarchivedTrackedChanges"] = [name for name in changes if name and name not in report["generatedInputs"]]
     if report["job"] == "deploy" and Path("build/versions.json").is_file():
         # Manual deploy code is checked out at the workflow commit, which
         # may have different versions from the protected source branch.

@@ -50,6 +50,14 @@ function optimize({site, locales, reportFile}) {
     };
     let sharedFiles = 0, redirectPages = 0;
 
+    // Cached clients may still request the old query-versioned index URL.
+    // Preserve it with a temporary alias, without duplicating the large JSON.
+    for (const item of before) {
+        if (!/(?:^|\/)search-index(?:-[a-z0-9-]+)?-[a-f0-9]{16}\.json$/.test(item.relative)) continue;
+        const legacy = item.relative.replace(/-[a-f0-9]{16}\.json$/, '.json');
+        add(url(legacy), url(item.relative), true, 302);
+    }
+
     // All webpack runtimes already reference the root pool, including lazy
     // chunks and same-origin search workers. Never rewrite a hashed bundle.
     for (const item of before) {

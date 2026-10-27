@@ -53,15 +53,33 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
         const stop = signal => child.kill(signal);
         const term = () => stop('SIGTERM');
         const interrupt = () => stop('SIGINT');
+        const memory = process.env.DORIS_BUILD_METRICS === 'true' && process.platform === 'linux'
+            ? {sampleIntervalMs:1000,samples:0,peakRssKiB:0,minimumSystemAvailableKiB:null} : null;
+        const sample = () => {
+            try {
+                const rss = Number(fs.readFileSync(`/proc/${child.pid}/status`,'utf8').match(/^VmRSS:\s+(\d+)/m)?.[1]);
+                const available = Number(fs.readFileSync('/proc/meminfo','utf8').match(/^MemAvailable:\s+(\d+)/m)?.[1]);
+                if (rss > 0 && available > 0) {
+                    memory.samples++;
+                    memory.peakRssKiB = Math.max(memory.peakRssKiB,rss);
+                    memory.minimumSystemAvailableKiB = Math.min(memory.minimumSystemAvailableKiB ?? Infinity,available);
+                }
+            } catch {} // A child can exit between the timer and /proc read.
+        };
+        const sampler = memory ? setInterval(sample,1000) : null;
+        const cleanup = () => {
+            if (sampler) clearInterval(sampler);
+            process.removeListener('SIGTERM',term);
+            process.removeListener('SIGINT',interrupt);
+        };
         process.once('SIGTERM', term);
         process.once('SIGINT', interrupt);
-        child.once('error', reject);
+        child.once('error', error => {cleanup();reject(error);});
         child.once('exit', (code, signal) => {
-            process.removeListener('SIGTERM', term);
-            process.removeListener('SIGINT', interrupt);
+            cleanup();
             console.log(JSON.stringify({event:'locale_process_end', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid, code, signal}));
             if (code !== 0) reject(new Error(`Locale ${args[3]} failed (${signal ?? code}); output was not published`));
-            else resolve({pid:child.pid});
+            else resolve({pid:child.pid,...(memory && {memory})});
         });
     }));
     try {

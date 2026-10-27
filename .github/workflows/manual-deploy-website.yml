@@ -48,6 +48,12 @@ jobs:
         DORIS_ENABLE_JA: 'true'
         DORIS_ENABLE_KO: 'true'
         DORIS_ENABLE_RU: 'true'
+        NODE_OPTIONS: '--max-old-space-size=6144'
+        TERSER_PARALLEL: '2'
+        RAYON_NUM_THREADS: '2'
+        DOCUSAURUS_SSR_CONCURRENCY: '8'
+        DOCUSAURUS_PERF_LOGGER: 'true'
+        DORIS_BUILD_METRICS: 'true'
     steps:
         - name: Checkout
           uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -57,6 +63,7 @@ jobs:
               # Sitemap lastmod comes from each file's last commit, so a
               # shallow clone would date every page to the same commit.
               fetch-depth: 0
+              filter: blob:none
 
         - name: Checkout trusted measurement code
           uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -86,9 +93,11 @@ jobs:
               fc-list :lang=zh
 
         - name: Use Node.js
+          id: node
           uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3
           with:
               node-version: 20
+              cache: yarn
 
         - name: Add Swap Space
           run: |
@@ -104,12 +113,9 @@ jobs:
               GITHUB_TOKEN: ${{ github.token }}
           run: |
               /usr/bin/time -v -o .i18n-build/publish-metrics/build-time.txt bash -e -o pipefail <<'BUILD'
-              npm install -g yarn
-              yarn cache clean
-              export NODE_OPTIONS=--max-old-space-size=8192
-              yarn
+              npm install -g yarn@1.22.22
+              yarn --frozen-lockfile
               node ./scripts/update_github_info.js
-              yarn key-features:generate
               PWA_SERVICE_WORKER_URL=https://doris.apache.org/sw.js yarn build:publish
               touch build/.dummy
               cp .asf-site.yaml ./build/.asf.yaml
@@ -126,9 +132,8 @@ jobs:
               node scripts/i18n/manual-report.cjs --coverage
               for LOCALE in $(node scripts/i18n/managed-locales.cjs); do
                   test -s "build/${LOCALE}/index.html"
-                  node scripts/i18n/verify-static.cjs \
-                    --site build --manifest ".i18n-build/manifests/${LOCALE}.json"
               done
+              node scripts/i18n/verify-static.cjs --site build --all-managed
               VERIFY
 
         - name: Check file sizes for asf-site
@@ -147,7 +152,7 @@ jobs:
             name: site-build-${{ github.run_id }}-${{ github.run_attempt }}
             path: build
             include-hidden-files: true
-            compression-level: 0
+            compression-level: 1
             if-no-files-found: error
             retention-days: 1
 
@@ -157,6 +162,7 @@ jobs:
               GH_TOKEN: ${{ github.token }}
               SITE_ARTIFACT_ID: ${{ steps.site-artifact.outputs.artifact-id }}
               SITE_ARTIFACT_DIGEST: ${{ steps.site-artifact.outputs.artifact-digest }}
+              DEPENDENCY_CACHE_HIT: ${{ steps.node.outputs.cache-hit }}
           run: python3 .publish-tools/.github/scripts/publish_metrics.py finish --budget 180
 
         - name: Upload publishing measurements

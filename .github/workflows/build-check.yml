@@ -79,12 +79,9 @@ jobs:
                   
             
             - name: Run Node.js dead link checker
-              env:
-                PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-                CI_SHA: ${{ github.sha }}
               run: |
-                # git show on a clean merge omits the PR's changed files.
-                node ./scripts/check_move.js "${PR_HEAD_SHA:-$CI_SHA}"
+                BASE_SHA=$(git merge-base "origin/$BASE_REF" HEAD)
+                node ./scripts/check_move.js --base "$BASE_SHA"
         
             - name: Detect changed doc versions and locales
               id: detect
@@ -166,7 +163,7 @@ jobs:
                   done
 
             - name: Install browser verification tools
-              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true' || steps.detect.outputs.content_fixture == 'true' || steps.detect.outputs.sampling_fixture == 'true'
+              if: steps.detect.outputs.validation_mode == 'full' || steps.detect.outputs.validation_mode == 'sample' || steps.detect.outputs.publish_fixture == 'true' || steps.detect.outputs.content_fixture == 'true' || steps.detect.outputs.sampling_fixture == 'true' || steps.detect.outputs.search_fixture == 'true'
               run: |
                   DORIS_BROWSER_TOOLS="$RUNNER_TEMP/doris-browser-tools"
                   npm install --prefix "$DORIS_BROWSER_TOOLS" --no-save --no-package-lock playwright@1.64.1
@@ -176,6 +173,10 @@ jobs:
             - name: Verify CI sampling adapter
               if: steps.detect.outputs.sampling_fixture == 'true'
               run: node scripts/i18n/verify-ci-sampling-fixture.cjs --browser
+
+            - name: Verify search transport and recovery in Chromium
+              if: steps.detect.outputs.search_fixture == 'true'
+              run: node scripts/i18n/verify-search-transport.cjs --browser
 
             - name: Verify five-language publishing fixture in Chromium
               if: steps.detect.outputs.publish_fixture == 'true'
@@ -265,6 +266,7 @@ jobs:
                       .i18n-build/ci-sample/scopes/*.json
                       .i18n-build/ci-sample/verification.json
                       .i18n-build/ci-sampling-fixture-proof.json
+                      .i18n-build/search-transport-verification.json
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/content-fixture-verification.json

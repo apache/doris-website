@@ -69,6 +69,8 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
             ),
         runSamplingFixture: files.some(file =>
             /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
+        runSearchFixture: mode === 'full' || files.some(file =>
+            /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages)\.[jt]s$|scripts\/i18n\/(search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
         runPublishFixture: checks.check_publish_fixture || mode === 'full',
         runTranslationTests: mode === 'full' || files.some(file =>
             runtime.test(file) || mechanism.test(file) || maintenanceConfig(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
@@ -183,6 +185,7 @@ if (require.main === module) {
                     content_fixture: result.runContentFixture,
                     publish_fixture: result.runPublishFixture,
                     sampling_fixture: result.runSamplingFixture,
+                    search_fixture: result.runSearchFixture,
                     translation_tests: result.runTranslationTests,
                     docs_report: result.runDocsReport,
                 })

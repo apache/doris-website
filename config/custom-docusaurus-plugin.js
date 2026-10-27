@@ -20,7 +20,9 @@ function clientMinimizers(config) {
                 parse: {ecma: 2020},
                 compress: {ecma: 5},
                 mangle: {safari10: true},
-                format: {ecma: 5, comments: false, ascii_only: true},
+                // The site and assets are UTF-8. Keeping translated strings
+                // avoids expanding each CJK character into six ASCII bytes.
+                format: {ecma: 5, comments: false, ascii_only: false},
             },
         });
     });
@@ -38,13 +40,21 @@ module.exports = function (context, options) {
             const assetOrigin = getAssetOrigin();
             const generated = config.resolve?.alias?.['@generated'] ?? context.generatedFilesDir;
             const registry = typeof generated === 'string' ? path.join(generated, 'registry.js') : null;
+            const rules = [];
+            if (config.mode === 'production' && registry) rules.push({
+                enforce: 'pre',
+                test: file => path.resolve(file) === registry,
+                use: [{loader: require.resolve('../scripts/publish/registry-loader.cjs')}],
+            });
+            if (!isServer && config.mode === 'production') {
+                const worker = require.resolve('@yang1666204/docusaurus-search-local/dist/client/client/theme/worker.js');
+                rules.push({enforce: 'pre', test: file => path.resolve(file) === worker,
+                    use: [{loader: require.resolve('../scripts/i18n/search-worker-loader.cjs'),
+                        options: {assetOrigin, siteOrigin: context.siteConfig.url ?? ''}}]});
+            }
 
             return {
-                ...(config.mode === 'production' && registry ? {module: {rules: [{
-                    enforce: 'pre',
-                    test: file => path.resolve(file) === registry,
-                    use: [{loader: require.resolve('../scripts/publish/registry-loader.cjs')}],
-                }]}} : {}),
+                ...(rules.length ? {module: {rules}} : {}),
                 ...(!isServer && config.mode === 'production' ? {
                     mergeStrategy: {'optimization.minimizer': 'replace'},
                     optimization: {minimizer: clientMinimizers(config)},

@@ -67,3 +67,26 @@ test('the production bundler preserves numeric-looking route hashes as string ke
     new vm.Script(code).runInNewContext(context);
     assert.equal(JSON.stringify(context.window.registry), JSON.stringify(registry));
 });
+
+test('UTF-8 client strings remain exact without expanding translated prose to ASCII escapes', async t => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-utf8-minifier-'));
+    t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+    const values = {zh: '查询数据库', ja: 'データベースを検索', ko: '데이터베이스 검색',
+        ru: 'Поиск данных: ёж', special: '\u2028\u2029😀'};
+    fs.writeFileSync(path.join(root, 'entry.js'), `window.prose=${JSON.stringify(values)};`);
+    const config = {mode:'production',optimization:{minimizer:[new rspack.SwcJsMinimizerRspackPlugin()]}};
+    const optimization = plugin.configureWebpack(config, false).optimization;
+    const compiler = rspack({...config,context:root,entry:'./entry.js',
+        output:{path:path.join(root,'out'),filename:'main.js'},optimization});
+    const stats = await new Promise((resolve,reject)=>compiler.run((error,result)=>error?reject(error):resolve(result)));
+    await new Promise((resolve,reject)=>compiler.close(error=>error?reject(error):resolve()));
+    assert(!stats.hasErrors(),stats.toString({all:false,errors:true}));
+    const code = fs.readFileSync(path.join(root,'out/main.js'),'utf8');
+    const context = {window:{}};
+    new vm.Script(code).runInNewContext(context);
+    assert.equal(JSON.stringify(context.window.prose),JSON.stringify(values));
+    assert(code.includes(values.zh) && code.includes(values.ko));
+    const ascii = await require('terser').minify(code, {compress:false,mangle:false,
+        format:{ecma:5,comments:false,ascii_only:true}});
+    assert(Buffer.byteLength(code) < Buffer.byteLength(ascii.code));
+});
