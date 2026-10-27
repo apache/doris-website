@@ -95,7 +95,7 @@ test('the localized root index holds only documents outside every context', () =
     const all = [[doc('/ja/docs/dev/a/', 1), doc('/ja/docs/4.x/a/', 2), doc('/ja/community/a/', 3)], []];
     const selected = new Map([['/ja/docs/dev/a', 'docs/dev'], ['/ja/docs/4.x/a', 'docs/4.x'], ['/ja/community/a', 'community']]);
     const groups = indexGroups(all, selected);
-    assert.deepEqual([...groups.keys()], ['docs/dev', 'docs/4.x', 'community', 'course', '']);
+    assert.deepEqual([...groups.keys()], ['docs/dev', 'docs/4.x', 'community', 'course', 'releases', '']);
     assert.deepEqual(groups.get('docs/4.x'), [[doc('/ja/docs/4.x/a/', 2)], []]);
     assert.deepEqual(groups.get(''), [[], []]);
     assert.deepEqual(indexGroups([[doc('/ja/other/', 4)]], selected).get(''), [[doc('/ja/other/', 4)]]);

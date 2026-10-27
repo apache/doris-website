@@ -407,6 +407,15 @@ function checkedTask(plan, taskId, scope, root) {
     managedPath(scope, task);
     const group = scope.groups.find(group => group.pluginId === task.pluginId && group.version === task.version);
     assert(!scope.automaticGroups || scope.automaticGroups.includes(group.id), 'Automatic generation is not enabled for this scope group');
+    if (group.pluginId === 'releases') {
+        const {releasePolicy} = require('./release-policy.cjs');
+        assert(group.sourcePolicy, 'Automatic Release Notes generation requires a new-only source policy');
+        const policy = releasePolicy(root, group, plan.sourceCommit);
+        assert.equal(execFileSync('git', ['show', `${plan.sourceCommit}:${policy.baselinePath}`], {cwd:root,encoding:'utf8'}),
+            fs.readFileSync(safeFile(root, policy.baselinePath), 'utf8'), 'Release Notes policy changed since planning');
+        const eligibility = policy.classify(task);
+        assert.equal(eligibility.kind, 'eligible', `Release Notes task excluded by source policy: ${eligibility.kind}`);
+    }
     const source = fs.readFileSync(safeFile(root, task.sourcePath), 'utf8');
     assert(sha(task.sourceHash) && hash(source) === task.sourceHash, 'Source changed since planning');
     assert.equal(execFileSync('git', ['show', `HEAD:${task.sourcePath}`], {cwd: root, encoding: 'utf8'}), source,

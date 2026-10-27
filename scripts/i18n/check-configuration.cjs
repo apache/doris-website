@@ -10,6 +10,11 @@ function checkConfiguration(root, locale) {
     const read = kind => JSON.parse(fs.readFileSync(path.join(root, `translations/${kind}/${locale}.json`), 'utf8'));
     const scope = read('scope');
     validateScope(scope, locale);
+    for (const group of scope.groups.filter(group => group.pluginId === 'releases')) {
+        if (!scope.automaticGroups || scope.automaticGroups.includes(group.id))
+            assert(group.sourcePolicy, `${locale}: automatic Release Notes need a new-only source policy`);
+        if (group.sourcePolicy) require('./release-policy.cjs').loadBaseline(root, group);
+    }
     const retained = scope.retainSidebarLabels ?? [];
     assert(Array.isArray(retained), `${locale}: retainSidebarLabels must be an array`);
     const labels = new Set();

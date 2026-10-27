@@ -14,7 +14,7 @@ function repositoryUrl(repository = process.env.GITHUB_REPOSITORY || 'apache/dor
 }
 
 function batchWide(locale) {
-    const files = new Set(['translations/config.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+    const files = new Set(['translations/config.json', 'translations/release-notes-baseline.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
         'sidebarsCourse.ts', 'sidebarsReleases.json',
         `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`,
         `translations/protection-exceptions/${locale}.json`]);

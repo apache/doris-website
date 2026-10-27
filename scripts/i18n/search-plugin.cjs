@@ -15,18 +15,19 @@ const {buildIndex: buildNativeIndex} = require('@yang1666204/docusaurus-search-l
 const {loadConfig, managedLocales} = require('./state.cjs');
 const {normalizeRussianSearch} = require('../../src/utils/searchNormalization.js');
 
-const contexts = ['docs/dev', 'docs/4.x', 'community', 'course'];
+const contexts = ['docs/dev', 'docs/4.x', 'community', 'course', 'releases'];
 const normalize = url => url.replace(/\/+$/, '');
 function groupFor(page) {
     if (page.pluginId === 'default' && page.version === 'current') return 'docs/dev';
     if (page.pluginId === 'default' && page.version === '4.x') return 'docs/4.x';
     if (page.pluginId === 'community' && page.version === 'current') return 'community';
     if (page.pluginId === 'course' && page.version === 'current') return 'course';
+    if (page.pluginId === 'releases' && page.version === 'current') return 'releases';
     return null;
 }
 function localizedOptions(options, locale, labels) {
     return {...options, language:locale === 'ru' ? ['en', 'ru'] : [locale.split('-')[0]],
-        docsRouteBasePath:['docs','community','course',`${locale}/docs`,`${locale}/community`,`${locale}/course`],
+        docsRouteBasePath:['docs','community','course','releases',`${locale}/docs`,`${locale}/community`,`${locale}/course`,`${locale}/releases`],
         // A locale without configured labels falls back to the context path.
         searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
         // Outside every context, search all of them. The browser queries each
@@ -61,7 +62,7 @@ function targetFingerprint(root, locale) {
     }
     scan(path.join(root,'i18n',locale));
     scan(path.join(root,'translations/state',locale));
-    for (const dir of ['docs','versioned_docs/version-4.x','community','course']) scan(path.join(root,dir));
+    for (const dir of ['docs','versioned_docs/version-4.x','community','course','releasenotes']) scan(path.join(root,dir));
     return digester.digest('hex').slice(0,16);
 }
 function indexFilename(context) {

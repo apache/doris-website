@@ -71,7 +71,7 @@ function buildScope(files, versions, managed = [], dependencies = null) {
             json.add(file); // Offline configuration checks cover these without a site build.
         }
         // Translation configuration applies to every managed locale at once.
-        else if (file === 'translations/config.json') {managed.forEach(locale => languages.add(locale)); build();}
+        else if (['translations/config.json', 'translations/release-notes-baseline.json'].includes(file)) {managed.forEach(locale => languages.add(locale)); json.add(file); build();}
         else if ((match = file.match(/^translations\/state\/([^/]+)\/[^/]+\.json$/))) {
             if (!locales.includes(match[1])) throw new Error(`Unconfigured locale: ${match[1]}`);
             languages.add(match[1]); build();

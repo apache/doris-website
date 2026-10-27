@@ -18,20 +18,22 @@ function fixture(t) {
         {pluginId:'default',version:'4.x',permalink:'/ko/docs/4.x/current/'},
         {pluginId:'community',version:'current',permalink:'/ko/community/current/'},
         {pluginId:'course',version:'current',permalink:'/ko/course/101/lesson/'},
+        {pluginId:'releases',version:'current',permalink:'/ko/releases/v5.0/release-5.0.0/'},
     ].map(page => ({...page,locale:'ko',status:'current',indexable:true,useTarget:true}));
     const index = url => [{documents:[{u:url}]}];
-    write('ko-search-summary.json', {locale:'ko',indexedPages:4,contexts:{'docs/dev':1,'docs/4.x':1,community:1,course:1}});
+    write('ko-search-summary.json', {locale:'ko',indexedPages:5,contexts:{'docs/dev':1,'docs/4.x':1,community:1,course:1,releases:1}});
     write('search-index.json', [{documents:[]}]);
     write('search-index-docs-dev.json', index(pages[0].permalink));
     write('search-index-docs-4.x.json', index(pages[1].permalink));
     write('search-index-community.json', index(pages[2].permalink));
     write('search-index-course.json', index(pages[3].permalink));
+    write('search-index-releases.json', index(pages[4].permalink));
     return {site,write,pages,index};
 }
 
 test('Korean index verification agrees with current native targets and an empty root union', t => {
     const {site,pages} = fixture(t);
-    assert.equal(checkIndexes({site,locale:'ko',manifest:{pages}}).summary.indexedPages, 4);
+    assert.equal(checkIndexes({site,locale:'ko',manifest:{pages}}).summary.indexedPages, 5);
 });
 
 test('fallback, stale, unlisted and unverified targets cannot enter the Korean index', t => {

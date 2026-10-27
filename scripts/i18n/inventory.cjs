@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
 const {hash, identity, decide, loadConfig, languageName, loadRecordsAt, pipelineLocale} = require('./state.cjs');
+const {validatePolicy, policiesFor} = require('./release-policy.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 // The scope's own locale must be the one this run manages, so a scope file for
@@ -18,6 +19,7 @@ function validateScope(scope, locale) {
     const identities = new Set();
     assert(Array.isArray(scope.groups) && scope.groups.length && Array.isArray(scope.retainEnglish), 'Scope needs groups and explicit exceptions');
     for (const group of scope.groups) {
+        validatePolicy(group);
         assert(!require('./docs-language-policy.cjs').fallbackOnly(group.pluginId, group.version),
             `${group.version} supports English/Chinese only; other locales use English fallback, not automatic translation`);
         assert(typeof group.pluginId === 'string' && group.pluginId && typeof group.version === 'string' && group.version, 'Group needs plugin/version');
@@ -65,7 +67,7 @@ function mergedCurrent(page, committedHash) {
         && committedHash(page.targetPath) === page.targetHash;
 }
 
-function buildGroup({group, pages, files, order, scope, committedHash, committedRecords}) {
+function buildGroup({group, pages, files, order, scope, committedHash, committedRecords, policy}) {
     const key = keyFor(scope.locale);
     const relevant = pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && page.locale === scope.locale);
     assert(relevant.length, `Missing native plugin/version: ${group.id}`);
@@ -79,19 +81,22 @@ function buildGroup({group, pages, files, order, scope, committedHash, committed
         assert(page.englishPath.startsWith(group.sourceRoot + '/'), `Source root mismatch: ${page.englishPath}`);
         identities.add(key(page)); routes.add(page.permalink); paths.add(page.englishPath);
         const allowed = scope.retainEnglish.find(entry => key(entry) === key(page));
-        const disposition = page.draft ? 'draft' : allowed ? 'retain_english' : 'translate';
+        const eligibility = policy?.classify(page);
+        const disposition = page.draft ? 'draft' : allowed ? 'retain_english'
+            : eligibility && eligibility.kind !== 'eligible' ? eligibility.kind : 'translate';
         const record = committedRecords.get(key(page));
         const complete = disposition === 'translate' && mergedCurrent(page, committedHash)
             && record?.sourceHash === page.sourceHash && record?.targetHash === page.targetHash
             && record?.sourcePath === page.sourcePath && record?.targetPath === page.targetPath
             && record?.sourceLocale === page.sourceLocale && record?.reviewStatus === page.reviewStatus;
         if (disposition !== 'translate') exceptions.push({kind: disposition, sourcePath: page.englishPath,
-            docId: page.docId, reason: page.draft ? 'Native front matter marks this document as draft; no production page.' : allowed.reason});
+            docId: page.docId, reason: page.draft ? 'Native front matter marks this document as draft; no production page.'
+                : allowed?.reason ?? eligibility.reason});
         return {pluginId: page.pluginId, version: page.version, docId: page.docId, locale: scope.locale,
             sourceLocale: page.sourceLocale, sourcePath: page.sourcePath, englishPath: page.englishPath,
             targetPath: page.targetPath, permalink: page.permalink, englishPermalink: page.englishPermalink,
             sourceHash: page.sourceHash, targetHash: page.targetHash, status: page.status,
-            reviewStatus: page.reviewStatus, unlisted: page.unlisted, disposition,
+            reviewStatus: page.reviewStatus, unlisted: page.unlisted, disposition, ...(eligibility && {eligibility}),
             mergedCurrent: complete, batchId: null};
     }).sort((a, b) => (order.get(a.docId) ?? Infinity) - (order.get(b.docId) ?? Infinity)
         || compare(a.sourcePath, b.sourcePath));
@@ -122,6 +127,8 @@ function buildGroup({group, pages, files, order, scope, committedHash, committed
         needsUpdate: required.filter(page => !page.mergedCurrent && page.status !== 'untranslated').length,
         drafts: entries.filter(page => page.disposition === 'draft').length,
         retainEnglish: entries.filter(page => page.disposition === 'retain_english').length,
+        historicalExcluded: entries.filter(page => page.disposition === 'historical_excluded').length,
+        policyReview: entries.filter(page => page.disposition === 'policy_review').length,
         unregistered: exceptions.filter(entry => entry.kind === 'unregistered_file').length,
         pending: pending.length, batches: batches.length};
     assert.equal(counts.required, counts.mergedCurrent + counts.untranslated + counts.needsUpdate);
@@ -251,6 +258,7 @@ async function main() {
         const englishHash = hash(fs.readFileSync(path.join(root, page.englishPath), 'utf8'));
         assert.equal(committedHash(page.englishPath), englishHash, `English source differs from pinned commit: ${page.englishPath}`);
     }
+    const policies = policiesFor(root, scope, sourceCommit);
     const groups = scope.groups.map(group => {
         const files = group.kind ? require('./source-groups.cjs').sourceFiles(root, group)
             .filter(file => require('./source-groups.cjs').hasProse(root, group, file)) : markdownFiles(root, group.sourceRoot);
@@ -258,12 +266,13 @@ async function main() {
             .split('\n').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
                 && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file)).sort(compare);
         assert.deepEqual(files, committedFiles, `Source census differs from pinned commit: ${group.sourceRoot}`);
-        return buildGroup({group, pages: native.pages, files, scope, committedHash, committedRecords,
+        return buildGroup({group, pages: native.pages, files, scope, committedHash, committedRecords, policy: policies.get(group.id),
             order: native.versions.find(version => version.pluginId === group.pluginId && version.version === group.version)?.order ?? new Map()});
     });
     const reports = native.reports.map(report => ({...report, inScope: scope.groups.some(group => group.pluginId === report.pluginId && group.version === report.version)}))
         .sort((a, b) => compare(JSON.stringify(a), JSON.stringify(b)));
     const routingInputs = ['docusaurus.config.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json', 'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', `translations/scope/${locale}.json`];
+    routingInputs.push(...[...policies.values()].map(policy => policy.baselinePath));
     const snapshot = {schemaVersion: 1, locale, language: languageName(root, locale), sourceCommit,
         routingInputs: Object.fromEntries(routingInputs.map(file => [file, hash(fs.readFileSync(path.join(root, file), 'utf8'))])),
         nativeVersions: native.versions.map(({order, ...version}) => version), groups, reports};
