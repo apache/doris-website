@@ -21,6 +21,26 @@ test('rejects a different destination, missing redirect, or inconsistent meta ta
     assert.throws(() => verifyRedirect(html.replace(`0; url=${target}`, '0; url=/'), target));
 });
 
+test('the neutral docs entry follows the configured stable version instead of assuming 4.x', t => {
+    const fs = require('node:fs'), os = require('node:os'), path = require('node:path');
+    const {verify} = require('../verify-doc-navigation.cjs');
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'future-version-entry-'));
+    t.after(() => fs.rmSync(root, {recursive:true,force:true}));
+    const write = (file, text) => {const target=path.join(root,file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,text);};
+    const permalink = '/ru/docs/5.x/intro/';
+    write('snapshot/summary.json', JSON.stringify({locale:'ru',sourceCommit:'a'.repeat(40)}));
+    write('manifest.json', JSON.stringify({locale:'ru',pages:[{pluginId:'default',version:'5.x',docId:'intro',locale:'ru',
+        contentLocale:'ru',status:'current',indexable:true,permalink}]}));
+    write(`site${permalink}index.html`, '<article class="theme-doc-markdown" lang="ru">Документ</article>'
+        + `<aside class="theme-doc-sidebar-container"><a href="${permalink}">Документ</a></aside>`
+        + `<nav aria-label="Разделы документации"><details><a href="${permalink}">Раздел</a></details></nav>`);
+    write('site/ru/docs/index.html', createRedirect({toUrl:permalink}));
+    const options = {site:path.join(root,'site'),snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),
+        locale:'ru',defaultVersion:'5.x',scope:{groups:[{id:'5X',pluginId:'default',version:'5.x'}]}};
+    assert.equal(verify(options).checks.find(check=>check.entry==='/ru/docs/').target,permalink);
+    assert.throws(()=>verify({...options,defaultVersion:'4.x'}),/not a registered default\/4\.x/);
+});
+
 test('navigation samples a native sidebar member when a current standalone doc sorts first', t => {
     const fs = require('node:fs'), os = require('node:os'), path = require('node:path');
     const {verify} = require('../verify-doc-navigation.cjs');
@@ -41,7 +61,7 @@ test('navigation samples a native sidebar member when a current standalone doc s
     write('site/ru/community/index.html', createRedirect({toUrl:pages[3].permalink}));
     write('site/.publish/redirects.json', JSON.stringify({redirects:[]}));
     const scope = {groups: require('../../../translations/scope/ru.json').groups.filter(group => ['DEV','4X','COMMUNITY'].includes(group.id))};
-    const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),scope});
+    const result=verify({site:path.join(root,'site'),locale:'ru',snapshot:path.join(root,'snapshot'),manifest:path.join(root,'manifest.json'),scope,defaultVersion:'4.x'});
     assert.equal(result.routes,4);
     assert.equal(result.checks.find(check=>check.group === 'DEV').sample,pages[1].permalink);
     assert.deepEqual(result.checks.find(check=>check.group === 'COMMUNITY').domains, ['Раздел']);

@@ -4,8 +4,11 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const ts = require('typescript');
+const {execFileSync} = require('node:child_process');
 const {createFixture} = require('./fixtures/multi-locale.cjs');
 const {collect, validateScope} = require('../inventory.cjs');
+const {audit} = require('../audit-coverage.cjs');
+const {configuredDefaultVersion} = require('../verify-doc-navigation.cjs');
 const {contextsFor, groupFor, localizedPages, indexGroups, localizedOptions} = require('../search-plugin.cjs');
 
 test('a future native version joins language routes and search while paused versions stay published and old versions fall back', async t => {
@@ -48,6 +51,19 @@ test('a future native version joins language routes and search while paused vers
         .replace("lastVersion:'4.x'", "lastVersion:'5.x'")
         .replace("versions:{current:{path:'dev'},", "versions:{current:{path:'dev'},'5.x':{path:'5.x'},");
     write('docusaurus.config.js', config);
+    write('sidebars.ts', 'module.exports = {};\n');
+    write('sidebarsCommunity.json', '{}\n');
+    write('src/constant/version.ts', "export const DEFAULT_VERSION = '5.x';\n");
+    const oldCommit = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).trim();
+    for (const locale of ['ja', 'ko', 'ru']) {
+        write(`translations/state/${locale}/resolved-deletions.json`, JSON.stringify({schemaVersion: 1, deletions: []}));
+        const base = `translations/inventory/${locale}/fixture`;
+        write(`${base}/summary.json`, JSON.stringify({sourceCommit: oldCommit, locale}));
+        for (const file of ['dev', '4x', 'community']) write(`${base}/${file}.json`, JSON.stringify({entryFiles: []}));
+    }
+    execFileSync('git', ['add', '.'], {cwd: root});
+    execFileSync('git', ['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Future native version rehearsal'], {cwd: root});
+    assert.equal(await configuredDefaultVersion(root), '5.x');
     const code = ts.transpileModule(fs.readFileSync(path.resolve(__dirname, '../../../src/utils/localizedRoute.ts'), 'utf8'),
         {compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020}}).outputText;
     const module = {exports: {}};
@@ -75,6 +91,16 @@ test('a future native version joins language routes and search while paused vers
         for (const version of ['3.x', '2.1']) assert.throws(() => validateScope({...scope,
             groups: [...groups, {id: 'OLD', pluginId: 'default', version, sourceRoot: `versioned_docs/version-${version}`}]}, locale), /English\/Chinese only/);
         const native = await collect(root);
+        if (locale === 'ja') {
+            const options = {root, sourceRef: 'HEAD', native};
+            const report = await audit(options);
+            assert.equal(report.groups.find(group => group.id === '5X').counts.current, 1);
+            assert.equal(report.automaticCounts.required, report.groups.filter(group => ['DEV', '5X', 'COMMUNITY'].includes(group.id))
+                .reduce((sum, group) => sum + group.counts.required, 0));
+            write('versioned_sidebars/version-5.x-sidebars.json', '{"uncommitted":[]}\n');
+            await assert.rejects(audit(options), /Routing input differs from source ref: versioned_sidebars\/version-5\.x-sidebars\.json/);
+            write('versioned_sidebars/version-5.x-sidebars.json', '{}');
+        }
         const find = version => native.pages.find(page => page.pluginId === 'default' && page.version === version && page.docId === 'shared');
         const future = find('5.x');
         const retired = find('4.x');

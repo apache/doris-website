@@ -149,7 +149,7 @@ test('detection can be disabled independently of manual preference, and nested b
 test('locale bootstraps are content-addressed, identical across locale compilers, and bounded in size', () => {
     const all = scripts(root, {baseUrl: '/', defaultLocale: 'en', locales});
     const entry = all[0];
-    assert.match(entry.file, /^assets\/js\/locale-entry-bootstrap\.[a-f0-9]{16}\.js$/);
+    assert.match(entry.file, /^assets\/js\/bootstrap-v2\/locale-entry-bootstrap\.[a-f0-9]{16}\.js$/);
     assert.equal(scripts(root, entryOptions({baseUrl: '/ja/', siteConfig: {baseUrl: '/'},
         i18n: {currentLocale: 'ja', defaultLocale: 'en', locales}}))[0].file, entry.file);
     assert.notEqual(scripts(root, {locales: ['en', 'zh-CN']})[0].file, entry.file);

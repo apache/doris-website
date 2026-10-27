@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
-const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json',
+const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'versions.json', 'src/constant/version.ts', 'config/versions-plugin.js', 'sidebars.ts', 'sidebarsCommunity.json',
     'sidebarsCourse.ts', 'sidebarsReleases.json',
     'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json'];
 // A push to this locale's own scope or glossary changes what may be generated.

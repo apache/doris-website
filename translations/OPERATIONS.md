@@ -15,7 +15,7 @@ These are operational roles, not assignments of human proofreading to a named pe
 
 | Input | Authority and effect |
 | --- | --- |
-| `versions.json`, `docusaurus.config.js`, `versioned_docs/`, `versioned_sidebars/` | Native versions, source files, explicit paths and navigation |
+| `versions.json`, `src/constant/version.ts`, `docusaurus.config.js`, `config/versions-plugin.js`, `versioned_docs/`, `versioned_sidebars/` | Native versions, default-version pointer, source files, explicit paths and navigation |
 | `config/i18n.js` and deployment build flags | Which site languages are served; independent of generation |
 | `translations/config.json` | Managed languages, source overrides and search context labels |
 | `translations/scope/<locale>.json` → `groups` | Registered audit and maintenance identities |
@@ -101,7 +101,7 @@ RN history uses Git lineage as well as IDs, paths and hashes. Historical moves, 
 
 Use a future `5.x` only as a rehearsal until release maintainers actually create it. This task must not create real release content in advance.
 
-1. Create the native English source/sidebars and the expected Chinese counterparts using the normal release process. Add the version to `versions.json` and set its label, `path` and default-version behavior in `docusaurus.config.js`. Keep existing version paths explicit: Docusaurus can otherwise place a new last version at `/docs/` and move expected URLs.
+1. Create the native English source/sidebars and the expected Chinese counterparts using the normal release process. Add the version to `versions.json`, update `DEFAULT_VERSION` and the version list in `src/constant/version.ts` when promoting it, and check `config/versions-plugin.js` plus the label/`path` settings in `docusaurus.config.js`. Keep existing version paths explicit: Docusaurus can otherwise place a new last version at `/docs/` and move expected URLs. The native-entry verifier reads this configured default rather than assuming 4.x.
 2. Add a distinct group such as `5X` to each intended locale scope, with `pluginId: default`, `version: 5.x` and its real source root. Keep `DEV` registered. Add `5X` to `automaticGroups` only after admission and representative checks pass. Do not add 3.x/2.1.
 3. Add localized sidebar labels, retained technical-label reasons and `searchContextLabels['docs/5.x']`. Managed search contexts and source fingerprints read the active native version configuration; the shared domain navigation reads the same versions and legacy policy.
 4. Recount native identities and confirm stable doc IDs, source overrides, target paths and independent state records. Existing translations in two versions must be updated against their own baselines. Exact initial Dev/4.x copies may share one verified model result; another version can generate independently.

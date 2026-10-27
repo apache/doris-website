@@ -9,7 +9,9 @@ function scripts(siteDir, entryOptions) {
     if (entry) entries.unshift({name:'locale-entry-bootstrap',content:entry});
     return entries.map(({name, content}) => {
         const hash = createHash('sha256').update(content).digest('hex').slice(0,16);
-        return {file:`assets/js/${name}.${hash}.js`,content};
+        // A new delivery directory avoids reusing the older URLs whose bytes
+        // could be rewritten by the bundler after this hash was calculated.
+        return {file:`assets/js/bootstrap-v2/${name}.${hash}.js`,content};
     });
 }
 
@@ -18,7 +20,9 @@ class BootstrapAssetsPlugin {
     apply(compiler) {
         compiler.hooks.thisCompilation.tap('DorisBootstrapAssets', compilation => {
             compilation.hooks.processAssets.tap({name:'DorisBootstrapAssets',
-                stage:compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONAL}, () => {
+                // These are opaque, already-addressed assets. Emit after the
+                // JavaScript minimizer so their final bytes match their URLs.
+                stage:compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE}, () => {
                 for (const script of scripts(this.siteDir,this.entryOptions)) compilation.emitAsset(script.file,
                     new compiler.webpack.sources.RawSource(script.content));
             });

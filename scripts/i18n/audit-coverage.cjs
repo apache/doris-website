@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
 const {hash, identity, inventoryBaseline, loadRecordsAt, pipelineLocale} = require('./state.cjs');
-const {collect, validateScope} = require('./inventory.cjs');
+const {collect, validateScope, routingFiles} = require('./inventory.cjs');
 const {policiesFor, docKey} = require('./release-policy.cjs');
 
 const keyFor = locale => page => identity({...page,locale});
@@ -156,11 +156,8 @@ async function audit({root,sourceRef,baseline,native}) {
         .map(state => [state,sidebar.filter(entry => entry.state === state
             && (!scope.automaticGroups || scope.automaticGroups.includes(entry.group))
             && (!entry.maintenance || entry.maintenance === 'eligible')).length]));
-    const routingInputs = ['docusaurus.config.js','versions.json','sidebars.ts','sidebarsCommunity.json','versioned_sidebars/version-4.x-sidebars.json',
-        'translations/config.json',`translations/scope/${locale}.json`];
+    const routingInputs = routingFiles(root, scope);
     routingInputs.push(...[...policies.values()].map(policy => policy.baselinePath));
-    if (scope.groups.some(group => group.pluginId === 'course')) routingInputs.push('sidebarsCourse.ts');
-    if (scope.groups.some(group => group.pluginId === 'releases')) routingInputs.push('sidebarsReleases.json');
     routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
     const schemaPath = `translations/state/${locale}/shards.schema.json`;
     if (refHashes(root, commit, [schemaPath]).get(schemaPath) !== null) routingInputs.push(schemaPath);

@@ -34,7 +34,7 @@ Reading or rendering the menu never chooses a different page during SSR. The fir
 
 `scripts/i18n/locale-entry.cjs` validates the policy and receives enabled locales and the root base URL from the build. A configured but disabled locale is never an automatic destination. Do not replace the enabled list with a fixed five-language constant.
 
-Ordinary builds embed the small bootstrap in the head. Optimized publishing uses the existing `BootstrapAssetsPlugin` and a content-addressed asset. Every locale compiler must emit the same root-entry configuration and filename. An internal URL marker is removed on landing; if a host mistakenly redirects a locale root back to the neutral root, the marker prevents a loop even when storage is blocked. A short session guard also suppresses immediate repeated automatic attempts. Explicit manual choices remain higher priority.
+Ordinary builds embed the small bootstrap in the head. Optimized publishing uses the existing `BootstrapAssetsPlugin` and a content-addressed asset under `assets/js/bootstrap-v2/`. These opaque assets are emitted after minimization, so their final bytes match the filename hash; the new directory avoids reusing older URLs that could have been rewritten by a minimizer. Every locale compiler must emit the same root-entry configuration and filename. An internal URL marker is removed on landing; if a host mistakenly redirects a locale root back to the neutral root, the marker prevents a loop even when storage is blocked. A short session guard also suppresses immediate repeated automatic attempts. Explicit manual choices remain higher priority.
 
 To disable automatic browser/region detection, rebuild with:
 

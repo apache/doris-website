@@ -711,6 +711,7 @@ test('master drift discards the batch for translation configuration or tooling c
     assert.throws(() => checkMaster(options), /master changed translations\/glossary\/ja\.json after the source commit/);
     const wide = batchWide('ja');
     for (const file of ['translations/config.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+        'src/constant/version.ts', 'config/versions-plugin.js',
         'sidebars.ts', 'sidebarsCommunity.json', 'sidebarsCourse.ts', 'sidebarsReleases.json',
         'versioned_sidebars/version-5.x-sidebars.json',
         'translations/scope/ja.json', 'translations/protection-exceptions/ja.json', 'translations/state/ja/docs.json',
