@@ -5,7 +5,7 @@ const {loadConfig, pipelineLocale} = require('./state.cjs');
 const {validateScope} = require('./inventory.cjs');
 
 // Validate inputs without loading Docusaurus, an inventory, credentials or a model.
-function checkConfiguration(root, locale) {
+function checkConfiguration(root, locale, {releaseHistory = false} = {}) {
     assert(loadConfig(root).locales[locale], `Unconfigured translation locale: ${locale}`);
     const read = kind => JSON.parse(fs.readFileSync(path.join(root, `translations/${kind}/${locale}.json`), 'utf8'));
     const scope = read('scope');
@@ -13,7 +13,11 @@ function checkConfiguration(root, locale) {
     for (const group of scope.groups.filter(group => group.pluginId === 'releases')) {
         if (!scope.automaticGroups || scope.automaticGroups.includes(group.id))
             assert(group.sourcePolicy, `${locale}: automatic Release Notes need a new-only source policy`);
-        if (group.sourcePolicy) require('./release-policy.cjs').loadBaseline(root, group);
+        if (group.sourcePolicy) {
+            const policy = require('./release-policy.cjs');
+            policy.loadBaseline(root, group);
+            if (releaseHistory) policy.releasePolicy(root, group, 'HEAD');
+        }
     }
     const retained = scope.retainSidebarLabels ?? [];
     assert(Array.isArray(retained), `${locale}: retainSidebarLabels must be an array`);
@@ -52,9 +56,11 @@ if (require.main === module) {
     try {
         const root = path.resolve(__dirname, '../..');
         const args = process.argv.slice(2);
-        assert(args.every(arg => arg === '--all'), 'Usage: check-configuration.cjs [--all], or set I18N_LOCALE');
+        assert(args.every(arg => ['--all','--release-history'].includes(arg)),
+            'Usage: check-configuration.cjs [--all] [--release-history], or set I18N_LOCALE');
         const locales = args.includes('--all') ? Object.keys(loadConfig(root).locales) : [pipelineLocale(root)];
-        console.log(JSON.stringify({checked: locales.map(locale => checkConfiguration(root, locale))}, null, 2));
+        console.log(JSON.stringify({checked: locales.map(locale => checkConfiguration(root, locale,
+            {releaseHistory:args.includes('--release-history')})), releaseHistory:args.includes('--release-history')}, null, 2));
     } catch (error) {console.error(error.message); process.exitCode = 1;}
 }
 module.exports = {checkConfiguration};

@@ -103,8 +103,10 @@ committed policy and eligibility before reading a task for translation, so a
 forced task or stale plan cannot bypass the cutoff.
 
 Do not regenerate the baseline or move its source commit forward to hide
-pending work. Configuration validation checks the policy format; inventory and
-generation also verify its historical census, hashes and ancestry. A baseline
+pending work. Configuration validation checks the policy format; CI also runs
+`check-configuration.cjs --all --release-history` to verify its Git census,
+hashes and ancestry without a site build. Inventory and generation independently
+check the same evidence. A baseline
 or pipeline change during generation invalidates the batch.
 
 For a read-only check, use the existing locale workflow's `dry-run` mode or:
