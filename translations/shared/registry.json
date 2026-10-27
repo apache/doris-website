@@ -67,6 +67,7 @@
     "src/utils/searchInput.js",
     "src/utils/searchMessages.ts",
     "src/utils/searchNormalization.js",
+    "src/utils/searchScopes.js",
     "src/utils/searchVersion.js",
     "src/utils/tokenize.ts",
     "src/utils/translation.ts",
@@ -174,7 +175,7 @@
     "theme.SearchPage.noResultsText": "No documents were found",
     "theme.SearchPage.searchSource": "Search the source documents"
   },
-  "sourceHash": "9032b3ab8106811aad12c49fddb2b59f83e80c7f8892f2e532db634f446e1595",
+  "sourceHash": "3de2fa30873950f25e9d3d9a4d333904c39dd0881ea9b4cf1dda98070e87d20d",
   "entryFiles": [
     "src/components/home-next/NavbarNext.tsx",
     "src/components/home-next/SlackCommunityNudge.tsx",

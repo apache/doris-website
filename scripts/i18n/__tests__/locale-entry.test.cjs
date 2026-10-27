@@ -174,6 +174,9 @@ test('English-root menu links carry this manual choice even before hydration and
         './localePreference': {saveLocalePreference: locale => saved.push(locale)},
         './localizedRoute': routeModule.exports,
         './languageMessages': {languageMessages: () => ({note: 'English'})},
+        '@docusaurus/plugin-content-docs/client': {useAllDocsData:()=>({})},
+        './localization': {isTranslatedLocale:locale=>['ja','ko','ru'].includes(locale)},
+        './searchScopes': {convertSearchParams:()=>{throw new Error('Root links must not rewrite search scope');}},
     };
     const module = {exports: {}};
     new Function('require', 'module', 'exports', compile('useLanguageItems'))(name => {assert(Object.hasOwn(imports, name), name); return imports[name];}, module, module.exports);

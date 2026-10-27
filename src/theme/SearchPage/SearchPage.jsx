@@ -25,6 +25,7 @@ import {fetchContextIndexes, searchAcrossContexts} from "../../utils/searchConte
 import {isTranslatedLocale} from "../../utils/localization";
 import {searchIndexBaseUrl} from "../../utils/searchVersion";
 import {searchMessages} from "../../utils/searchMessages";
+import {convertSearchParams} from "../../utils/searchScopes";
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 export default function SearchPage() {
     return (<Layout>
@@ -32,16 +33,17 @@ export default function SearchPage() {
     </Layout>);
 }
 function SearchPageContent() {
-    const { siteConfig: { baseUrl }, i18n: { currentLocale }, } = useDocusaurusContext();
+    const { siteConfig: { baseUrl,customFields }, i18n: { currentLocale,defaultLocale }, } = useDocusaurusContext();
     const isBrowser = useIsBrowser();
     const { selectMessage } = usePluralForm();
-    const { searchValue, searchContext, searchVersion, updateSearchPath, updateSearchContext, } = useSearchQuery();
+    const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
+    const { searchValue, searchContext, searchVersion, sourceOnlyVersion, updateSearchPath, updateSearchContext, queryParams, hash } = useSearchQuery({
+        contexts:Array.isArray(searchContextByPaths)?searchContextByPaths:[],versions:sourceVersions,managed:isTranslatedLocale(currentLocale)});
     const [searchQuery, setSearchQuery] = useState(searchValue);
     const [searchResults, setSearchResults] = useState();
     const [searchWorkerReady, setSearchWorkerReady] = useState(false);
     const [loadError, setLoadError] = useState(false);
     const [retry, setRetry] = useState(0);
-    const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
     const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
         : searchIndexBaseUrl(baseUrl, sourceVersions, {versionPath: searchVersion});
     const pageTitle = useMemo(() => searchQuery
@@ -71,12 +73,14 @@ function SearchPageContent() {
         }
     }, [searchValue]);
     // The source index lives at the site root, so drop this locale's prefix.
-    const sourceBaseUrl = isTranslatedLocale(currentLocale)
+    const sourceBaseUrl = currentLocale!==defaultLocale
         ? baseUrl.replace(new RegExp(`${currentLocale.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/$`), '')
         : baseUrl;
-    const englishSearch = `${sourceBaseUrl}search/?${new URLSearchParams({q: searchQuery,
-        ...(searchContext?.startsWith('docs/') ? {ctx: 'docs'} : {}),
-        ...(searchContext === 'docs/dev' ? {version: 'docs/dev/'} : {})}).toString()}`;
+    const sourceParams=new URLSearchParams(queryParams);
+    if(searchQuery)sourceParams.set('q',searchQuery);else sourceParams.delete('q');
+    const sourceContexts=customFields?.searchContexts?.source ?? ['docs','community','course','releases'];
+    const englishSearch = `${sourceBaseUrl}search/?${convertSearchParams(sourceParams,
+        {contexts:sourceContexts,versions:sourceVersions,managed:false}).toString()}${hash}`;
     useEffect(() => {
         let active = true;
         setLoadError(false);
@@ -84,6 +88,7 @@ function SearchPageContent() {
         setSearchResults(undefined);
         async function doFetchIndexes() {
             try {
+                if(sourceOnlyVersion) {if(active)setSearchWorkerReady(true);return;}
                 if (!Array.isArray(searchContextByPaths) ||
                     searchContext ||
                     useAllContextsWithNoSearchContext) {
@@ -104,7 +109,7 @@ function SearchPageContent() {
             doFetchIndexes();
         }
         return () => {active = false;};
-    }, [isBrowser, searchContext, versionUrl, searchQuery, retry]);
+    }, [isBrowser, searchContext, versionUrl, searchQuery, retry, sourceOnlyVersion]);
     return (<React.Fragment>
       <Head>
         {/*
@@ -127,7 +132,8 @@ function SearchPageContent() {
             <input type="search" name="q" className={styles.searchQueryInput} aria-label={translate({id: 'theme.SearchBar.label', message: 'Search'})} onChange={handleSearchInputChange} value={searchQuery} autoComplete="off" autoFocus/>
           </div>
           {Array.isArray(searchContextByPaths) ? (<div className={clsx("col", "col--3", "padding-left--none", styles.searchContextColumn)}>
-              <select name="search-context" className={styles.searchContextInput} aria-label={translate({id: 'site.search.context', message: 'Search context'})} id="context-selector" value={searchContext} onChange={(e) => updateSearchContext(e.target.value)}>
+              <select name="search-context" className={styles.searchContextInput} aria-label={translate({id: 'site.search.context', message: 'Search context'})} id="context-selector" value={sourceOnlyVersion?'docs/'+sourceOnlyVersion:searchContext} onChange={(e) => updateSearchContext(e.target.value)}>
+                {sourceOnlyVersion&&<option value={'docs/'+sourceOnlyVersion} disabled>{sourceOnlyVersion} · {searchMessages(currentLocale).sourceOnly}</option>}
                 {useAllContextsWithNoSearchContext && (<option value="">
                     {translate({
                     id: "theme.SearchPage.searchContext.everywhere",
@@ -143,6 +149,10 @@ function SearchPageContent() {
               </select>
             </div>) : null}
         </div>
+
+        {sourceOnlyVersion&&<p role="note">{searchMessages(currentLocale).sourceOnly}{' '}
+            <a href={englishSearch} hrefLang="en">{translate({id:'theme.SearchPage.searchSource',message:'Search the source documents'})}</a>
+        </p>}
 
         {!searchWorkerReady && !loadError && searchQuery && (<div>
             <LoadingRing />
@@ -167,7 +177,7 @@ function SearchPageContent() {
                     message: "No documents were found",
                     description: "The paragraph for empty search result",
                 })}
-              {isTranslatedLocale(currentLocale) && <> <a href={englishSearch}>{translate({id: 'theme.SearchPage.searchSource', message: 'Search the source documents'})}</a></>}
+              {currentLocale!==defaultLocale && <> <a href={englishSearch} hrefLang="en">{translate({id: 'theme.SearchPage.searchSource', message: 'Search the source documents'})}</a></>}
             </p>) : (<p>
               ⚠️ The search index is only available when you run docusaurus
               build!
