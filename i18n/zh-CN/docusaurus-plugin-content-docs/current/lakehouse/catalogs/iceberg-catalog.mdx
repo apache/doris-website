@@ -328,6 +328,8 @@ NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区�
 
 球面多边形计算将每个环解释为较小区域（不超过半球），不根据环方向选择另一侧。反转环不会选择大于半球的补集；当前不支持按环方向表达大区域的计算。这一计算约定不会改变原始 WKB 访问器及 Iceberg 读写所保留的环顺序或字节。
 
+在极端坐标精度下，原始坐标所定义的不同 Polygon 边界可能在 S2 中折叠为同一个区域。`ST_Equals` 仍会区分这些边界；`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 对此类有歧义的多边形组合明确报错，避免返回不可靠的结果。普通包含关系，以及等价的边分段、环起点旋转、反向和洞顺序调整仍受支持。这一计算限制不影响原始 WKB 的存储或访问器。
+
 `GROUP BY`、`SELECT DISTINCT`、`COUNT(DISTINCT ...)` 和 `MIN`/`MAX` 不接受原生空间参数，包括嵌套空间值和窗口聚合。原始 WKB 不做规范化：不同字节序可以表示同一几何对象，字节顺序也不代表空间顺序。普通 `COUNT`、`ANY_VALUE` 以及按普通键分组并携带空间值仍受支持。需要显式按字节分组或去重时，可使用 `hex(ST_AsBinary(shape))`；单独使用 `ST_AsBinary` 仍受现有 VARBINARY 限制。
 
 `UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`COUNT_MAP(DISTINCT ...)`、`MIN_MAP(DISTINCT ...)`、`MAX_MAP(DISTINCT ...)`、`SUM_MAP(DISTINCT ...)` 和 `AVG_MAP(DISTINCT ...)` 同样拒绝包含空间叶子的 MAP 参数，包括嵌套 value。非 DISTINCT 的 `MAP_AGG`、`MAP_AGG_V2` 和 `COUNT_MAP` 仍支持普通 key＋空间 value。`MIN_MAP`、`MAX_MAP` 及其聚合状态组合器拒绝包含空间叶子的 value，因为空间值没有定义排序语义。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
