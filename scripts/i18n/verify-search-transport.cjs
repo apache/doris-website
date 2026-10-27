@@ -80,33 +80,40 @@ async function verify() {
     const localOrigin = `http://127.0.0.1:${server.address().port}`;
     const browser = await chromium.launch({headless:true}),api=await request.newContext();
     const csp=fs.readFileSync(path.join(root,'static/.htaccess'),'utf8').match(/Header set Content-Security-Policy "([^"]+)"/)[1];
-    const results=[],errors=[],contexts=new Set();
+    const results=[],errors=[],contexts=new Set(),closingContexts=new WeakSet();
     async function context(mode={}) {
         const ctx=await browser.newContext({serviceWorkers:'block',viewport:{width:1440,height:900}}),requests=[];
         contexts.add(ctx);
         await ctx.route('**/*',async route=>{
+            try {
             const url=new URL(route.request().url());
-            if(!['doris.apache.org','cdnd.selectdb.com'].includes(url.hostname))return route.abort();
+            if(!['doris.apache.org','cdnd.selectdb.com'].includes(url.hostname))return await route.abort();
             if(/search-index.*\.json$/.test(url.pathname)) {
                 requests.push({url:url.href,origin:url.origin});
                 if(mode.failBoth||mode.failCdn&&url.hostname==='cdnd.selectdb.com')
-                    return route.fulfill({status:503,body:'Unavailable',headers:{'access-control-allow-origin':'*'}});
+                    return await route.fulfill({status:503,body:'Unavailable',headers:{'access-control-allow-origin':'*'}});
                 if(mode.delay)await new Promise(resolve=>setTimeout(resolve,mode.delay));
             }
             const response=await api.get(localOrigin+url.pathname+url.search);
-            return route.fulfill({response,headers:{...response.headers(),'content-security-policy':csp,
+            return await route.fulfill({response,headers:{...response.headers(),'content-security-policy':csp,
                 'access-control-allow-origin':'*'}});
+            } catch(error) {
+                const cancelled=closingContexts.has(ctx)||route.request().failure()?.errorText==='net::ERR_ABORTED';
+                if(!cancelled||!/Route is already handled|Target.*closed|Request context disposed/i.test(error.message))throw error;
+            }
         });
         const page=await ctx.newPage();page.on('pageerror',error=>errors.push(error.message));
         return {ctx,page,requests};
     }
     async function close(ctx) {
-        await ctx.unrouteAll({behavior:'wait'});
+        closingContexts.add(ctx);
+        await ctx.unrouteAll({behavior:'ignoreErrors'});
         await ctx.close();contexts.delete(ctx);
     }
     const open=async(page,url)=>{
         assert.equal((await page.goto('https://doris.apache.org'+url,{waitUntil:'domcontentloaded'})).status(),200);
         await page.waitForSelector('html[data-has-hydrated="true"]');
+        await page.getByText('Search fixture',{exact:true}).first().waitFor();
     };
     const input=page=>page.locator('input.navbar__search-input:not([readonly]):visible').first();
     const suggestions=page=>page.locator('[class*="suggestion_"]');
