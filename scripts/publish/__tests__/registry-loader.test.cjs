@@ -54,7 +54,7 @@ for (const isServer of [true, false]) test(`production ${isServer ? 'SSR' : 'cli
         optimization:{minimize:!isServer,minimizer:[new rspack.SwcJsMinimizerRspackPlugin()]}};
     const plugin = createPlugin({siteDir:root,generatedFilesDir:generated,siteConfig:{baseUrl:'/'}});
     const changes = plugin.configureWebpack(base,isServer);
-    assert.equal(changes.module.rules.length,1);
+    assert.equal(changes.module.rules.filter(rule => rule.test(path.join(generated,'registry.js'))).length,1);
     assert(changes.module.rules[0].test(path.join(generated,'registry.js')));
     assert(!changes.module.rules[0].test(path.join(root,'registry.js')));
     assert.equal(plugin.configureWebpack({...base,mode:'development'},isServer).module,undefined);

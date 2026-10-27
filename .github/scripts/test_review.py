@@ -241,6 +241,7 @@ class WorkflowTests(unittest.TestCase):
             head = git("rev-parse", "HEAD")
             git("merge", "--no-ff", "-qm", "PR merge snapshot", "master")
             merge = git("rev-parse", "HEAD")
+            git("update-ref", "refs/remotes/origin/master", git("rev-parse", "master"))
             refs = {"${{ github.sha }}": merge, "${{ github.event.pull_request.head.sha }}": head}
             git("checkout", "--detach", refs[checkout["with"]["ref"]])
             completed = subprocess.run(security["run"], cwd=root, shell=True,
@@ -250,7 +251,7 @@ class WorkflowTests(unittest.TestCase):
             # A clean merge has no combined diff; the link checker must still inspect PR files.
             (root / "scripts").symlink_to(ROOT / "scripts", target_is_directory=True)
             completed = subprocess.run(links["run"], cwd=root, shell=True, executable="/bin/bash",
-                                       env={**os.environ, **{key: refs[value]
+                                       env={**os.environ, "BASE_REF": "master", **{key: refs[value]
                                             for key, value in links.get("env", {}).items()}},
                                        capture_output=True, text=True)
             self.assertEqual(completed.returncode, 1, completed.stdout + completed.stderr)

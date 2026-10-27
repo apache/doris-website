@@ -24,6 +24,7 @@ import {searchWithLocaleFallback} from "../../utils/searchInput";
 import {fetchContextIndexes, searchAcrossContexts} from "../../utils/searchContexts";
 import {isTranslatedLocale} from "../../utils/localization";
 import {searchIndexBaseUrl} from "../../utils/searchVersion";
+import {searchMessages} from "../../utils/searchMessages";
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 export default function SearchPage() {
     return (<Layout>
@@ -37,6 +38,9 @@ function SearchPageContent() {
     const { searchValue, searchContext, searchVersion, updateSearchPath, updateSearchContext, } = useSearchQuery();
     const [searchQuery, setSearchQuery] = useState(searchValue);
     const [searchResults, setSearchResults] = useState();
+    const [searchWorkerReady, setSearchWorkerReady] = useState(false);
+    const [loadError, setLoadError] = useState(false);
+    const [retry, setRetry] = useState(0);
     const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
     const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
         : searchIndexBaseUrl(baseUrl, sourceVersions, {versionPath: searchVersion});
@@ -55,18 +59,9 @@ function SearchPageContent() {
         }), [searchQuery]);
     useEffect(() => {
         updateSearchPath(searchQuery);
-        if (searchQuery) {
-            (async () => {
-                const results = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, searchQuery, searchResultLimits);
-                setSearchResults(results);
-            })();
-        }
-        else {
-            setSearchResults(undefined);
-        }
         // `updateSearchPath` should not be in the deps,
         // otherwise will cause call stack overflow.
-    }, [searchQuery, versionUrl, searchContext]);
+    }, [searchQuery]);
     const handleSearchInputChange = useCallback((e) => {
         setSearchQuery(e.target.value);
     }, []);
@@ -75,7 +70,6 @@ function SearchPageContent() {
             setSearchQuery(searchValue);
         }
     }, [searchValue]);
-    const [searchWorkerReady, setSearchWorkerReady] = useState(false);
     // The source index lives at the site root, so drop this locale's prefix.
     const sourceBaseUrl = isTranslatedLocale(currentLocale)
         ? baseUrl.replace(new RegExp(`${currentLocale.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/$`), '')
@@ -84,20 +78,33 @@ function SearchPageContent() {
         ...(searchContext?.startsWith('docs/') ? {ctx: 'docs'} : {}),
         ...(searchContext === 'docs/dev' ? {version: 'docs/dev/'} : {})}).toString()}`;
     useEffect(() => {
+        let active = true;
+        setLoadError(false);
+        setSearchWorkerReady(false);
+        setSearchResults(undefined);
         async function doFetchIndexes() {
-            if (!Array.isArray(searchContextByPaths) ||
-                searchContext ||
-                useAllContextsWithNoSearchContext) {
-                await fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext);
+            try {
+                if (!Array.isArray(searchContextByPaths) ||
+                    searchContext ||
+                    useAllContextsWithNoSearchContext) {
+                    await fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext);
+                }
+                if (searchQuery) {
+                    const results = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, searchQuery, searchResultLimits);
+                    if (active) setSearchResults(results);
+                }
+                if (active) setSearchWorkerReady(true);
+            } catch {
+                if (active) setLoadError(true);
             }
-            setSearchWorkerReady(true);
         }
         // The context comes from the query string, which is only read in the
         // browser; before that an empty one would load every context index.
         if (isBrowser) {
             doFetchIndexes();
         }
-    }, [isBrowser, searchContext, versionUrl]);
+        return () => {active = false;};
+    }, [isBrowser, searchContext, versionUrl, searchQuery, retry]);
     return (<React.Fragment>
       <Head>
         {/*
@@ -137,9 +144,15 @@ function SearchPageContent() {
             </div>) : null}
         </div>
 
-        {!searchWorkerReady && searchQuery && (<div>
+        {!searchWorkerReady && !loadError && searchQuery && (<div>
             <LoadingRing />
           </div>)}
+        {loadError && <p role="status">
+            {searchMessages(currentLocale).error}{' '}
+            <button type="button" className="button button--secondary button--sm" onClick={() => setRetry(value => value + 1)}>
+                {searchMessages(currentLocale).retry}
+            </button>
+        </p>}
 
         {searchResults &&
             (searchResults.length > 0 ? (<p>

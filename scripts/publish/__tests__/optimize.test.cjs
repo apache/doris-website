@@ -70,6 +70,21 @@ test('hash filename collisions fail instead of silently mixing languages', t => 
     assert.throws(() => optimize({site,locales}),/filename collision/);
 });
 
+test('legacy search URLs retain locale, context and query without copying the index', async t => {
+    const {site,write} = fixture(t);
+    const target = 'ja/search-index-docs-dev-aabbccddeeff0011.json';
+    write(target, '[{"documents":[]}]');
+    optimize({site,locales});
+    assert(!fs.existsSync(path.join(site,'ja/search-index-docs-dev.json')));
+    const server = require('../serve.cjs').createServer(site);
+    await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+    t.after(()=>new Promise(resolve=>{server.closeAllConnections?.();server.close(resolve);}));
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/ja/search-index-docs-dev.json?old=1`,{redirect:'manual'});
+    assert.equal(response.status,302);
+    assert.equal(response.headers.get('location'),'/'+target+'?old=1');
+    require('../verify.cjs').verify(site);
+});
+
 test('retains distinct compiled URLs even when their binary contents match', t => {
     const {site,write} = fixture(t);
     write('assets/shared/other-name.PNG',Buffer.alloc(65536,42));

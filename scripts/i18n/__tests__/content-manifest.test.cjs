@@ -57,6 +57,9 @@ test('real native plugin output binds stable identities, routes and all four cov
         assert.equal(missing.navigationRoutes['zh-CN'], '/zh-CN/docs/dev/english-missing/');
         assert(!JSON.stringify(globalData).includes('sourceHash'));
         assert(!JSON.stringify(routeData(page)).includes('sourceHash'));
+        assert.deepEqual(routeData({...page, sourceSha:'a'.repeat(40)}),
+            routeData({...page, sourceSha:'b'.repeat(40)}), 'Source identity cannot invalidate unchanged browser routing data');
+        assert.equal(page.sourceSha, manifest.sourceSha, 'Full build provenance remains in the manifest');
         assert(Buffer.byteLength(JSON.stringify(routeData(page))) < 2048);
     }
     const buildOnly = await collect(root, 'en', {browserData: false});

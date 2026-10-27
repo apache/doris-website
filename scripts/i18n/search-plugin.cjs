@@ -12,9 +12,11 @@ const {processPluginOptions} = require('@yang1666204/docusaurus-search-local/dis
 const {processDocInfos} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/processDocInfos');
 const {scanDocuments} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/scanDocuments');
 const {buildIndex: buildNativeIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
+const {postBuildFactory} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/postBuildFactory');
 const {loadConfig, managedLocales} = require('./state.cjs');
 const {normalizeRussianSearch} = require('../../src/utils/searchNormalization.js');
 const {fallbackOnly} = require('./docs-language-policy.cjs');
+const {sourceSha} = require('./content-manifest.cjs');
 
 function contextsFor(root) {
     const versions = JSON.parse(fs.readFileSync(path.join(root, 'versions.json'), 'utf8'));
@@ -52,7 +54,7 @@ function indexGroups(allDocuments, selected, contextNames = contexts) {
     groups.set('', allDocuments.map(documents => documents.filter(doc => !selected.has(normalize(doc.u)))));
     return groups;
 }
-function targetFingerprint(root, locale) {
+function targetFingerprint(root, locale, {allVersions = false} = {}) {
     const digester = createHash('sha256');
     digester.update(fs.readFileSync(__filename)); // Bust caches when indexing behavior changes.
     // The shared normalizer also changes indexed tokens independently of this file.
@@ -72,8 +74,16 @@ function targetFingerprint(root, locale) {
     scan(path.join(root,'i18n',locale));
     scan(path.join(root,'translations/state',locale));
     digester.update(fs.readFileSync(path.join(root, 'versions.json')));
-    for (const dir of ['docs', ...contextsFor(root).filter(context => context.startsWith('docs/') && context !== 'docs/dev')
-        .map(context => `versioned_docs/version-${context.slice('docs/'.length)}`), 'community','course','releasenotes']) scan(path.join(root,dir));
+    const versions = JSON.parse(fs.readFileSync(path.join(root, 'versions.json')))
+        .filter(version => allVersions || !fallbackOnly('default', version));
+    for (const dir of ['docs', ...versions.map(version => `versioned_docs/version-${version}`),
+        'community','course','releasenotes']) scan(path.join(root,dir));
+    for (const file of ['docusaurus.config.js','config/i18n.js','translations/config.json',
+        'sidebars.ts','sidebarsCommunity.json','sidebarsCourse.json','sidebarsReleases.json']) {
+        const target = path.join(root, file);
+        if (fs.existsSync(target)) {digester.update(file);digester.update(fs.readFileSync(target));}
+    }
+    digester.update(process.env.DOCS_VERSIONS ?? '');
     return digester.digest('hex').slice(0,16);
 }
 function indexFilename(context) {
@@ -127,23 +137,32 @@ async function buildLocalizedIndex(buildData, config, filename, locale, contextN
 }
 function searchPlugin(context, options) {
     const locale = context.i18n.currentLocale;
-    if (!managedLocales(context.siteDir, context.i18n.locales).includes(locale)) return native(context,options);
+    const managed = managedLocales(context.siteDir, context.i18n.locales).includes(locale);
     const contextNames = contextsFor(context.siteDir);
-    const localized = localizedOptions(options, locale, loadConfig(context.siteDir).locales[locale]?.searchContextLabels, contextNames);
+    const localized = managed ? localizedOptions(options, locale, loadConfig(context.siteDir).locales[locale]?.searchContextLabels, contextNames) : options;
     const plugin = native(context,localized);
     const config = processPluginOptions(localized,context);
     const constants = path.join(context.generatedFilesDir,'@yang1666204/docusaurus-search-local/default/generated-constants.js');
     const generated = fs.readFileSync(constants,'utf8');
-    const fingerprint = targetFingerprint(context.siteDir, locale);
+    const fingerprint = targetFingerprint(context.siteDir, locale, {allVersions: !managed});
+    const revision = sourceSha(context.siteDir);
+    let filename;
     const updated = generated.replace(/(export const searchIndexUrl = )("[^"\n]+")/,
         (_,prefix,value) => {
             const url = JSON.parse(value);
-            return prefix + JSON.stringify(`${url}${url.includes('?') ? '&' : '?'}${locale}=${fingerprint}`);
+            // A source-derived filename prevents a CDN from reusing an older
+            // index at the same path, even when it ignores query parameters.
+            const contentKey = createHash('sha256').update(url).update(fingerprint).update(revision).digest('hex').slice(0,16);
+            filename = config.hashed ? `search-index{dir}-${contentKey}.json` : url.split('?')[0];
+            return prefix + JSON.stringify(config.hashed ? filename
+                : `${url}${url.includes('?') ? '&' : '?'}${locale}=${fingerprint}`);
         });
     if (updated === generated) throw new Error('Could not fingerprint the localized search index');
     fs.writeFileSync(constants,updated);
-    const filename = indexFilename(context);
-    return {...plugin, postBuild: buildData => buildLocalizedIndex(buildData,config,filename,locale,contextNames)};
+    if (indexFilename(context) !== filename) throw new Error('Search index filename differs from its browser URL');
+    return {...plugin, postBuild: managed
+        ? buildData => buildLocalizedIndex(buildData,config,filename,locale,contextNames)
+        : postBuildFactory(config,filename)};
 }
 module.exports = searchPlugin;
 module.exports.validateOptions = nativeModule.validateOptions;
@@ -156,3 +175,4 @@ module.exports.indexGroups = indexGroups;
 module.exports.buildLocalizedIndex = buildLocalizedIndex;
 
 module.exports.buildLocalizedIndexes = buildLocalizedIndexes;
+module.exports.targetFingerprint = targetFingerprint;

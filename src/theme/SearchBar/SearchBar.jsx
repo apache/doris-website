@@ -19,7 +19,7 @@ import {
     useAllContextsWithNoSearchContext,
 } from '../../utils/proxiedGenerated';
 import LoadingRing from '../LoadingRing/LoadingRing';
-import { VERSIONS, DEFAULT_VERSION } from '@site/src/constant/version';
+import { VERSIONS } from '@site/src/constant/version';
 import styles from './SearchBar.module.css';
 import { normalizeContextByPath } from '../../utils/normalizeContextByPath';
 import { searchResultLimits } from "../../utils/proxiedGeneratedConstants";
@@ -30,6 +30,7 @@ import {searchWithLocaleFallback} from '@site/src/utils/searchInput';
 import {fetchContextIndexes, searchAcrossContexts} from '@site/src/utils/searchContexts';
 import {isTranslatedLocale} from '@site/src/utils/localization';
 import {searchIndexBaseUrl} from '@site/src/utils/searchVersion';
+import {searchMessages} from '@site/src/utils/searchMessages';
 
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 
@@ -49,7 +50,6 @@ async function fetchAutoCompleteJS() {
 const SEARCH_PARAM_HIGHLIGHT = '_highlight';
 export default function SearchBar({ handleSearchBarToggle }) {
     const isBrowser = useIsBrowser();
-    const [curVersion, setCurVersion] = useState(DEFAULT_VERSION);
     const location = useLocation();
     const {
         siteConfig: { baseUrl },
@@ -69,6 +69,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
     // Should the input be focused after the index is loaded?
     const focusAfterIndexLoaded = useRef(false);
     const [loading, setLoading] = useState(false);
+    const [loadError, setLoadError] = useState(false);
     const [inputChanged, setInputChanged] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const search = useRef(null);
@@ -76,7 +77,6 @@ export default function SearchBar({ handleSearchBarToggle }) {
     // finished after a newer call started) can abort before wrapping the
     // input with a second autocomplete instance — see #3655 race.
     const loadToken = useRef(0);
-    const prevSearchContext = useRef('');
     const [searchContext, setSearchContext] = useState('');
     useEffect(() => {
         if (!Array.isArray(searchContextByPaths)) {
@@ -108,30 +108,47 @@ export default function SearchBar({ handleSearchBarToggle }) {
         if (matchedPath) {
             nextSearchContext = matchedPath;
         }
-        if (prevSearchContext.current !== nextSearchContext) {
-            // Reset index state map once search context is changed.
-            indexStateMap.current.delete(nextSearchContext);
-            prevSearchContext.current = nextSearchContext;
-        }
         setSearchContext(nextSearchContext);
     }, [location.pathname, locales, currentLocale]);
     const hidden = !!hideSearchBarWithNoSearchContext && Array.isArray(searchContextByPaths) && searchContext === '';
+    const indexKey = `${versionUrl}:${searchContext}`;
+
+    useEffect(() => {
+        setLoadError(false);
+        setLoading(false);
+        return () => {
+            ++loadToken.current;
+            indexStateMap.current.clear();
+            search.current?.autocomplete.destroy();
+            search.current = null;
+        };
+    }, [versionUrl, searchContext]);
 
     const loadIndex = useCallback(
         async (forceLoad = false) => {
-            if (hidden || (indexStateMap.current.get(searchContext) && !forceLoad)) {
+            if (hidden || (indexStateMap.current.get(indexKey) && !forceLoad)) {
                 // Do not load the index (again) if its already loaded or in the process of being loaded.
                 return;
             }
             const myToken = ++loadToken.current;
-            indexStateMap.current.set(searchContext, 'loading');
+            indexStateMap.current.set(indexKey, 'loading');
             search.current?.autocomplete.destroy();
             search.current = null;
             setLoading(true);
-            const [autoComplete] = await Promise.all([
-                fetchAutoCompleteJS(),
-                fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext),
-            ]);
+            setLoadError(false);
+            let autoComplete;
+            try {
+                [autoComplete] = await Promise.all([
+                    fetchAutoCompleteJS(),
+                    fetchContextIndexes(fetchIndexesByWorker, versionUrl, searchContext),
+                ]);
+            } catch {
+                if (myToken !== loadToken.current) return;
+                indexStateMap.current.delete(indexKey);
+                setLoading(false);
+                setLoadError(true);
+                return;
+            }
             if (myToken !== loadToken.current) {
                 // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
                 return;
@@ -201,6 +218,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 });
                 return a;
             };
+            const pendingQuery = searchBarRef.current.value;
             search.current = autoComplete(
                 searchBarRef.current,
                 {
@@ -230,8 +248,15 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [
                     {
                         source: debounce(async (input, callback) => {
-                            const result = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, input, searchResultLimits);
-                            callback(result);
+                            try {
+                                const result = await searchWithLocaleFallback(searchContextsByWorker, versionUrl, searchContext, input, searchResultLimits);
+                                callback(result);
+                            } catch {
+                                if (myToken !== loadToken.current) return;
+                                indexStateMap.current.delete(indexKey);
+                                setLoadError(true);
+                                callback([]);
+                            }
                         }, 300),
                         templates: {
                             suggestion: SuggestionTemplate,
@@ -268,7 +293,13 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 .on('autocomplete:closed', () => {
                     searchBarRef.current?.blur();
                 });
-            indexStateMap.current.set(searchContext, 'done');
+            // Autocomplete was not listening while its index loaded. Replay
+            // the current input so the user's first query needs no extra key.
+            if (pendingQuery) {
+                search.current.autocomplete.setVal('');
+                search.current.autocomplete.setVal(pendingQuery);
+            }
+            indexStateMap.current.set(indexKey, 'done');
             setLoading(false);
             if (focusAfterIndexLoaded.current) {
                 const input = searchBarRef.current;
@@ -278,7 +309,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 input.focus();
             }
         },
-        [hidden, searchContext, versionUrl, baseUrl, history],
+        [hidden, indexKey, searchContext, versionUrl, baseUrl, history],
     );
     useEffect(() => {
         if (!Mark) {
@@ -337,25 +368,14 @@ export default function SearchBar({ handleSearchBarToggle }) {
     const isMac = isBrowser ? /mac/i.test(navigator.userAgentData?.platform ?? navigator.platform) : false;
 
     useEffect(() => {
-        const pathHaveVer = VERSIONS.some(item => location.pathname.includes(item));
-        if (!pathHaveVer && curVersion !== '2.1') {
-            setCurVersion('2.1');
-        } else {
-            VERSIONS.forEach(item => {
-                if (location.pathname.includes(item) && item !== curVersion) {
-                    setCurVersion(item);
-                }
-            });
-        }
-    }, [location.pathname]);
-    useEffect(() => {
         // On mount the page's search context is not resolved yet, and an empty
-        // one would load every context index. Leave that to focus or hover.
-        if (!searchContext && useAllContextsWithNoSearchContext) {
+        // one can load the wrong index or every index. Leave outside-context
+        // search to focus or hover, including the source-language search page.
+        if (!searchContext) {
             return;
         }
         loadIndex(true);
-    }, [curVersion]);
+    }, [loadIndex, searchContext]);
     useEffect(() => {
         if (!searchBarShortcut) {
             return;
@@ -413,6 +433,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 [styles.focused]: focused,
             })}
             hidden={hidden}
+            aria-busy={loading || undefined}
             // Manually make the search bar be LTR even if in RTL
             dir="ltr"
         >
@@ -428,6 +449,12 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 value={inputValue}
             />
             <LoadingRing className={styles.searchBarLoadingRing} />
+            {loadError && <div className={styles.searchLoadError} role="status">
+                <span>{searchMessages(currentLocale).error}</span>
+                <button type="button" onClick={() => loadIndex(true)}>
+                    {searchMessages(currentLocale).retry}
+                </button>
+            </div>}
             {searchBarShortcut &&
                 searchBarShortcutHint &&
                 (inputValue !== '' ? (

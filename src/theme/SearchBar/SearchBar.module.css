@@ -12,6 +12,39 @@
     padding: var(--search-local-spacing, 12px);
 }
 
+.searchLoadError {
+    position: absolute;
+    z-index: 20;
+    top: 100%;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: min(22rem, calc(100vw - 2rem));
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--brand-border-soft);
+    border-radius: 6px;
+    background: var(--brand-surface-note);
+    color: var(--brand-ink);
+    font-size: 0.875rem;
+}
+
+.searchLoadError button {
+    flex-shrink: 0;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.searchLoadError > span {
+    min-width: 0;
+    white-space: normal;
+}
+
 .searchBar .mobileDropdownMenu {
     left: 0 !important;
 }

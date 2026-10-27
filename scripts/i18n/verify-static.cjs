@@ -12,7 +12,7 @@ const htmlLangFor = locale => localeRegistry.find(item => item.code === locale)?
 // current locale itself still run; a counterpart page that the subset did not
 // build is reported as skipped instead of read. Publishing always verifies the
 // complete site, where every counterpart must be present.
-function verify({site, manifest, partial = false}) {
+function verify({site, manifest, partial = false, headCache = new Map()}) {
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     const locale = data.locale;
     const contentFile = path.join(path.dirname(path.dirname(manifest)), 'content-manifests', locale + '.json');
@@ -40,9 +40,25 @@ function verify({site, manifest, partial = false}) {
     readIndexes(path.join(site, locale));
     let verified = 0;
     let skipped = 0;
+    const headingIds = $ => $('.theme-doc-markdown h1,.theme-doc-markdown h2,.theme-doc-markdown h3,.theme-doc-markdown h4,.theme-doc-markdown h5,.theme-doc-markdown h6')
+        .map((i, node) => $(node).attr('id') ?? '').get();
+    function head(file, $) {
+        if (!headCache.has(file)) {
+            $ ??= cheerio.load(fs.readFileSync(file, 'utf8'));
+            // Retain only immutable metadata, not tens of thousands of DOMs.
+            const alternates = new Map();
+            for (const node of $('link[rel="alternate"][hreflang]').toArray()) {
+                const lang = $(node).attr('hreflang');
+                if (!alternates.has(lang)) alternates.set(lang, []);
+                alternates.get(lang).push($(node).attr('href'));
+            }
+            headCache.set(file, {headingIds:headingIds($), alternates});
+        }
+        return headCache.get(file);
+    }
     function counterpart(permalink, check) {
-        const file = path.join(site, permalink, 'index.html');
-        if (fs.existsSync(file)) return cheerio.load(fs.readFileSync(file, 'utf8'));
+        const file = path.join(site, decodeURIComponent(permalink), 'index.html');
+        if (fs.existsSync(file)) return head(file);
         assert(partial, `Missing counterpart page (${check}): ${permalink}`);
         skipped++;
         return null;
@@ -56,6 +72,7 @@ function verify({site, manifest, partial = false}) {
             continue;
         }
         const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
+        head(filename, $);
         const body = $('.theme-doc-markdown,.course-doc-content');
         assert.equal(body.attr('lang'), page.contentLocale, `Body language: ${page.permalink}`);
         assert.equal($('[data-translation-status]').attr('data-translation-status'), page.status, `Notice: ${page.permalink}`);
@@ -72,26 +89,24 @@ function verify({site, manifest, partial = false}) {
             for (const permalink of Object.values(alternateGroup)) {
                 const file = path.join(site, permalink, 'index.html');
                 if (fs.existsSync(file)) {
-                    const counterpart = cheerio.load(fs.readFileSync(file, 'utf8'));
-                    assert.equal(counterpart(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0,
+                    assert.equal(head(file).alternates.get(htmlLang)?.length ?? 0, 0,
                         `Fallback/stale localized alternate in ${permalink}`);
                 }
             }
         } else {
             assert(!($('meta[name="robots"]').attr('content') ?? '').includes('noindex'), page.permalink);
             assert(sitemapPaths.has(page.permalink), `Current page missing from sitemap: ${page.permalink}`);
-            const ids = root => root('.theme-doc-markdown h1,.theme-doc-markdown h2,.theme-doc-markdown h3,.theme-doc-markdown h4,.theme-doc-markdown h5,.theme-doc-markdown h6').map((i, node) => root(node).attr('id') ?? '').get();
             const english = counterpart(page.englishPermalink, 'source heading IDs');
-            if (english) assert.deepEqual(ids($), ids(english), `Source heading IDs: ${page.permalink}`);
+            if (english) assert.deepEqual(headingIds($), english.headingIds, `Source heading IDs: ${page.permalink}`);
             for (const [lang, permalink] of Object.entries(alternateGroup)) {
                 const counterpart$ = counterpart(permalink, 'reciprocal alternates');
                 if (!counterpart$) continue;
-                const links = counterpart$('link[rel="alternate"][hreflang]');
                 for (const [otherLang, otherPath] of Object.entries(alternateGroup)) {
                     const otherHtmlLang = htmlLangFor(otherLang);
-                    assert.equal(links.filter(`[hreflang="${otherHtmlLang}"]`).attr('href'), `https://doris.apache.org${otherPath}`,
+                    const links = counterpart$.alternates.get(otherHtmlLang) ?? [];
+                    assert.equal(links[0], `https://doris.apache.org${otherPath}`,
                         `Non-reciprocal alternates ${lang} -> ${otherLang}: ${permalink}`);
-                    assert.equal(links.filter(`[hreflang="${otherHtmlLang}"]`).length, 1, `Duplicate hreflang: ${permalink}`);
+                    assert.equal(links.length, 1, `Duplicate hreflang: ${permalink}`);
                 }
             }
         }
@@ -118,7 +133,7 @@ function verify({site, manifest, partial = false}) {
             assert.equal($(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0, `Ordinary fallback alternate: ${permalink}`);
             for (const sourceRoute of (decision ? Object.values(decision.navigationRoutes) : [source, `/zh-CN${source}`])) {
                 const source$ = counterpart(sourceRoute, 'ordinary fallback alternates');
-                if (source$) assert.equal(source$(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0,
+                if (source$) assert.equal(source$.alternates.get(htmlLang)?.length ?? 0, 0,
                     `Source advertises ordinary fallback: ${sourceRoute}`);
             }
             ordinaryPages.fallback++;
@@ -132,13 +147,24 @@ function verify({site, manifest, partial = false}) {
             .map(status => [status, data.pages.filter(page => page.status === status).length])), reports: data.reports};
 }
 
+function verifyAll({site, manifestDir, locales}) {
+    // One immutable artifact per invocation. Never share this cache across runs.
+    const headCache = new Map();
+    return locales.map(locale => ({locale, ...verify({site,
+        manifest:path.join(manifestDir, locale + '.json'), headCache})}));
+}
+
 if (require.main === module) {
     const args = process.argv.slice(2);
     const option = name => args[args.indexOf(name) + 1];
-    const result = verify({site: path.resolve(option('--site')), manifest: path.resolve(option('--manifest')),
-        partial: args.includes('--partial')});
+    const site = path.resolve(option('--site'));
+    const result = args.includes('--all-managed') ? verifyAll({site,
+        manifestDir:path.resolve(args.includes('--manifest-dir') ? option('--manifest-dir') : '.i18n-build/manifests'),
+        locales:require('./state.cjs').managedLocales(process.cwd(), require('../../config/i18n').enabledLocales())})
+        : verify({site, manifest: path.resolve(option('--manifest')), partial: args.includes('--partial')});
     if (args.includes('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
-    console.log(JSON.stringify({verified: result.verified, skipped: result.skipped, partial: result.partial,
-        states: result.states, ordinaryPages: result.ordinaryPages, reports: result.reports.length}));
+    const summary = row => ({locale:row.locale,verified:row.verified,skipped:row.skipped,partial:row.partial,
+        states:row.states,ordinaryPages:row.ordinaryPages,reports:row.reports.length});
+    console.log(JSON.stringify(Array.isArray(result) ? result.map(summary) : summary(result)));
 }
-module.exports = {verify};
+module.exports = {verify, verifyAll};

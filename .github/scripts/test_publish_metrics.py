@@ -18,6 +18,37 @@ spec.loader.exec_module(metrics)
 
 
 class PublishMetricsTests(unittest.TestCase):
+    def test_generated_inputs_archive_is_limited_to_public_inputs_and_rejects_symlinks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            previous = Path.cwd()
+            os.chdir(directory)
+            try:
+                source = Path('src/constant/github.data.ts')
+                source.parent.mkdir(parents=True)
+                source.write_text("export const STAR_COUNT = '16.1';")
+                Path('private.env').write_text('SECRET_MUST_NOT_APPEAR')
+                linked = Path('src/generated/key-features.ts')
+                linked.parent.mkdir(parents=True)
+                linked.symlink_to(Path('private.env').resolve())
+                result = metrics.archive_generated_inputs()
+                self.assertEqual(set(result), {'src/constant/github.data.ts'})
+                self.assertEqual((metrics.REPORTS / 'inputs' / source).read_bytes(), source.read_bytes())
+                self.assertNotIn('SECRET_MUST_NOT_APPEAR', json.dumps(result))
+            finally:
+                os.chdir(previous)
+
+    def test_detailed_inventory_retains_totals_and_reports_file_categories(self):
+        with tempfile.TemporaryDirectory() as directory:
+            site = Path(directory)
+            (site / 'assets/js').mkdir(parents=True)
+            (site / 'assets/js/main.js').write_bytes(b'12345')
+            (site / '.htaccess').write_bytes(b'abc')
+            detailed = metrics.site_inventory(site, detailed=True)
+            self.assertEqual({key: detailed[key] for key in ['files', 'bytes']}, metrics.site_inventory(site))
+            self.assertEqual(detailed['byExtension']['.js'], {'files': 1, 'bytes': 5})
+            self.assertEqual(detailed['byDirectory']['assets/js'], {'files': 1, 'bytes': 5})
+            self.assertEqual(detailed['largestFiles'][0]['path'], 'assets/js/main.js')
+
     def test_resource_summary_preserves_disk_and_memory_extrema(self):
         samples = [
             {"memory": {"MemAvailableKiB": 100}, "disks": {"/": {"usedBytes": 800, "freeBytes": 200}}},
