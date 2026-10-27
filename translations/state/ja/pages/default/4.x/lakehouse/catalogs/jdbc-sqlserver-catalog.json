@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/catalogs/jdbc-sqlserver-catalog.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "e4f2c79061892cd0d5cc98abe1cb7bcf1f0151d7e5b5db1d54fe888e6434367a",
-    "sourceTechnicalHash": "d3633a5c461d931c15b930df41259630dfd40d2263f49b3eda7ddf59543c90eb",
-    "targetHash": "41ab0cb0d92330e7b7984ffa6b89074a1d6b3171a2a1b0b80d9b325f39c601c1",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+    "sourceTechnicalHash": "408f21865827e3c77b88e77938cafd65940e3dd6144d8ce82967d25472e763ae",
+    "targetHash": "bbaa053df670d72d91ab912594f3614a24ce8ba06584c77f754eff69fc8be65d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.714Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T04:53:02.784Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "cb6c1222afac4f6d026ec020a3054c64c297a903574da7af5434171b325fdb51",
+      "targetHash": "bbaa053df670d72d91ab912594f3614a24ce8ba06584c77f754eff69fc8be65d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"<databaseName>\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"<databaseName>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]; received [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"16\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]\nprotected node 6: expected [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]; received [\"inlineCode\",null,null,\"encrypt\"]\nprotected node 7: expected [\"link\",\"https://learn.microsoft.com/zh-cn/sql/connect/jdbc/using-ssl-encryption?view=sql-server-ver16\",null]; received [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]; received [\"1.0\",\"1.0\",\"1.0\",\"1.2\",\"1.2\",\"10\",\"11.2\",\"1433\",\"16\",\"19\",\"2\",\"2012\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"6\"]\nprotected node 6: expected [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]; received [\"inlineCode\",null,null,\"encrypt\"]\nprotected node 7: expected [\"link\",\"https://learn.microsoft.com/zh-cn/sql/connect/jdbc/using-ssl-encryption?view=sql-server-ver16\",null]; received [\"code\",\"sql\",null,\"'jdbc_url' = 'jdbc:sqlserver://<host>:<port>;databaseName=<databaseName>;encrypt=false'\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"<databaseName>\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"<databaseName>\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

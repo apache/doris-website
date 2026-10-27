@@ -8,13 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/file-formats/orc.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/file-formats/orc.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "dd1006f0eda76e64c0e8e9148261338447c93a62ab77938fc25123212d350aeb",
-    "sourceTechnicalHash": "4f3918185e17891c8f2afa001ba86d0819b8990bd5b980346827aa53d9865bff",
-    "targetHash": "a619fddb7a9741679c9fcfdcc171f6dfa182c6803e08b6fbc4c60aec7fc812f7",
+    "sourceCommit": "819add3ae97a4996554421080fd612755b2c2129",
+    "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
+    "sourceTechnicalHash": "26c3359bd968d9af220c9b51de575c5133489bc6b7dadf700db1d080e16ac560",
+    "targetHash": "f92d342ba91f24053616724c9c618d09de6ff700370855fc7737bb584723dd53",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.109Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T05:20:42.443Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "bb309f78cee75df49af834cc20d4ee2ffe6ee792cc9609730643b57b783964ca",
+      "targetHash": "f92d342ba91f24053616724c9c618d09de6ff700370855fc7737bb584723dd53",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0.4\",\"1\",\"2.1\",\"2.1\",\"2.1.6\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"3.0\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.1.0\",\"3.1.0\",\"4\",\"4.1.5\",\"4.1.5\",\"8\",\"8\",\"8\"]; received [\"0\",\"0\",\"0.4\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1.6\",\"2.1.8\",\"2.1.8\",\"2.1.8\",\"3.0\",\"3.0\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.0.3\",\"3.1.0\",\"3.1.0\",\"4\",\"4.1.5\",\"4.1.5\",\"8\",\"8\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    }
   }
 }
