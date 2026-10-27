@@ -3,6 +3,14 @@
     "message": "커뮤니티",
     "description": "The label for version current"
   },
+  "sidebar.community.category.Community": {
+    "message": "커뮤니티",
+    "description": "The label for category Community in sidebar community"
+  },
+  "sidebar.community.category.For Contributor": {
+    "message": "기여자 가이드",
+    "description": "The label for category For Contributor in sidebar community"
+  },
   "sidebar.community.category.About the Community": {
     "message": "커뮤니티 소개",
     "description": "The label for category About the Community in sidebar community"
@@ -51,9 +59,9 @@
     "message": "데이터 형식 참조",
     "description": "The label for category Data Format Reference in sidebar community"
   },
-  "sidebar.community.category.Release": {
-    "message": "릴리스",
-    "description": "The label for category Release in sidebar community"
+  "sidebar.community.category.How to Release": {
+    "message": "릴리스 방법",
+    "description": "The label for category How to Release in sidebar community"
   },
   "sidebar.community.category.Design Documents": {
     "message": "설계 문서",

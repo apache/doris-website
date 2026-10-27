@@ -1,7 +1,6 @@
 import React, { type JSX } from 'react';
 import Link from '@docusaurus/Link';
 import SearchBar from '@theme/SearchBar';
-import LocaleDropdownNavbarItem from '@theme/NavbarItem/LocaleDropdownNavbarItem';
 import { translate } from '@docusaurus/Translate';
 import type { DocsDomain } from '@site/src/utils/docs-sidebar-scope';
 
@@ -61,9 +60,6 @@ export default function DocsDomainNav({ domains }: DocsDomainNavProps): JSX.Elem
                 <div className={styles.utilities}>
                     <div className={styles.search}>
                         <SearchBar />
-                    </div>
-                    <div className={styles.locale}>
-                        <LocaleDropdownNavbarItem mobile={false} {...({} as any)} />
                     </div>
                 </div>
             </div>

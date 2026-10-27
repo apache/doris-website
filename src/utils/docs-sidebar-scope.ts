@@ -21,7 +21,8 @@ export function supportsDocsDomainNavigation(
     pluginId: string | undefined,
     versionName: string | undefined,
 ): boolean {
-    return pluginId === 'default' && (versionName === 'current' || versionName === '4.x');
+    return (pluginId === 'default' && (versionName === 'current' || versionName === '4.x'))
+        || (pluginId === 'community' && versionName === 'current');
 }
 
 function getNavigationLabel(item: PropSidebarItem): string | undefined {
