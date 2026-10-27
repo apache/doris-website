@@ -6,7 +6,8 @@
     "DEV",
     "4X",
     "COMMUNITY",
-    "COURSE"
+    "COURSE",
+    "RELEASES"
   ],
   "groups": [
     {
@@ -37,7 +38,11 @@
       "id": "RELEASES",
       "pluginId": "releases",
       "version": "current",
-      "sourceRoot": "releasenotes"
+      "sourceRoot": "releasenotes",
+      "sourcePolicy": {
+        "mode": "new-only",
+        "baseline": "translations/release-notes-baseline.json"
+      }
     },
     {
       "id": "COURSEUI",

@@ -10,7 +10,8 @@
         "docs/dev": "Dev ドキュメント",
         "docs/4.x": "4.x ドキュメント",
         "community": "コミュニティ",
-        "course": "コース"
+        "course": "コース",
+        "releases": "リリースノート"
       }
     },
     "ko": {
@@ -22,7 +23,8 @@
         "docs/dev": "Dev 문서",
         "docs/4.x": "4.x 문서",
         "community": "커뮤니티",
-        "course": "강좌"
+        "course": "강좌",
+        "releases": "릴리스 노트"
       }
     },
     "ru": {
@@ -34,7 +36,8 @@
         "docs/dev": "Документация Dev",
         "docs/4.x": "Документация 4.x",
         "community": "Сообщество",
-        "course": "Курсы"
+        "course": "Курсы",
+        "releases": "Примечания к выпуску"
       }
     }
   }

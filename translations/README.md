@@ -49,7 +49,7 @@ workflows explicitly enable all three; default local builds still serve English
 and Chinese. Ordinary Russian pages retain Russian URLs and navigation; missing manual prose falls back to English.
 Russian translation runs twice daily and on manual dispatch, as described below.
 
-The ja/ko/ru scopes explicitly enable DEV, 4X, COMMUNITY and COURSE in
+The ja/ko/ru scopes explicitly enable DEV, 4X, COMMUNITY, COURSE and RELEASES in
 `automaticGroups`. Course bodies use the same source hashes, per-page state,
 manual-edit protection, open-PR reservations and incremental maintenance as the
 other documentation plugins. Existing valid targets are reused. Chinese course
@@ -57,16 +57,70 @@ bodies remain manually maintained; their page records retain machine review
 status and human ownership, without enabling a Chinese translation workflow.
 Course search uses its own localized context and indexes current targets only.
 
-Native audits still report releases and supplemental page groups so
-their existing content remains visible. These groups are not sent to a model.
-Release Notes expansion must pin a historical boundary before admitting future
-new entries; historical files and existing translations stay unchanged. React landing pages
+RELEASES uses the new-only policy below; supplemental page groups remain outside
+automatic generation. Historical release-note files and existing translations
+stay unchanged. React landing pages
 and weekly reports use their manual page/entry state. Existing candidates from
 earlier expanded runs remain separate pending reviews, not merged coverage.
 The audit's `automaticCounts` and discovery summary report the effective
 required/current/pending totals. Additional registered groups remain in the
 raw census and `deferredAutomaticGroups`; their old-channel missing files do
 not become required translation backlog or override manual page/report state.
+
+### New-only Release Notes maintenance
+
+`translations/release-notes-baseline.json` freezes the English native identities,
+source hashes and historical paths at commit
+`b207a93551a3705652bc261639e3eec7fd738c7a`: 83 registered notes and 83 source
+files, including the existing release index. Each managed RELEASES group names
+this file through `sourcePolicy: {mode: "new-only", baseline:
+"translations/release-notes-baseline.json"}`. Chinese remains manually maintained.
+
+The inventory and audit classify historical identities as `historical_excluded`.
+They remain in the census, with their ordinary native content/fallback state,
+but do not enter required/pending translation totals, update/deletion tasks or
+automatic generation. Existing targets and records are preserved; native stale
+checks and English fallback continue to apply. Publication does not depend on
+the automation policy.
+
+Raw sidebar label status remains visible. `automaticLabels` and
+`--fail-on-pending` use only enabled automatic groups and eligible note labels;
+historical release categories and version navigation remain manual native
+labels. They do not create an automatic missing-label backlog.
+
+Newly registered notes must have a genuinely new source identity committed after
+the cutoff. Their later source updates use the existing incremental workflow,
+open-PR reservations, ownership protection, batch limits, shared lock and normal
+PR/CI process. Current real translated notes have a `releases` search context;
+untranslated or stale English-fallback pages do not enter a managed locale's
+search index.
+
+Git lineage prevents a historical rename, move or re-registration from becoming
+a new translation task. Exact copies and ambiguous delete/add histories are
+excluded or reported as `policy_review` for manual identity reconciliation.
+These cases are not sent to a model. The generator independently checks the
+committed policy and eligibility before reading a task for translation, so a
+forced task or stale plan cannot bypass the cutoff.
+
+Do not regenerate the baseline or move its source commit forward to hide
+pending work. Configuration validation checks the policy format; CI also runs
+`check-configuration.cjs --all --release-history` to verify its Git census,
+hashes and ancestry without a site build. Inventory and generation independently
+check the same evidence. A baseline
+or pipeline change during generation invalidates the batch.
+
+For a read-only check, use the existing locale workflow's `dry-run` mode or:
+
+```bash
+I18N_LOCALE=ru node scripts/i18n/plan-translations.cjs --source-ref HEAD \
+  --plugin releases --output /tmp/release-plan.json --audit-output /tmp/release-audit.json
+```
+
+If no new eligible note exists, selected tasks stay empty and the workflow does
+not call a model or open a translation PR. Do not manufacture a note or source
+drift for acceptance. Record the first real future note's generation, merge and
+public result when it occurs. To pause RELEASES, remove it from the affected
+locale's `automaticGroups`; retain the fixed policy, existing content and URLs.
 
 The [initial Russian inventory](inventory/ru/2026-10-20/batches.md) records 1,674 Dev,
 1,619 4.x and 51 community documents, excluding two drafts. Four launch samples

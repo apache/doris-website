@@ -9,6 +9,7 @@ const {audit} = require('./audit-coverage.cjs');
 const {baselineEntries} = require('./plan-translations-baseline.cjs');
 const {hash, identity, loadConfig, languageName, loadRecords, pipelineLocale} = require('./state.cjs');
 const {structure} = require('./structure.cjs');
+const {docKey} = require('./release-policy.cjs');
 
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const keyFor = locale => page => identity({...page, locale});
@@ -116,10 +117,12 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const resolvedDeletions = validateResolved(resolved);
     const activeByKey = new Map(candidates.map(candidate => [key(candidate), candidate]));
     const baselineByKey = new Map(baseline.filter(page => managed(scope, page)).map(page => [key(page), page]));
-    const old = new Map(baselineByKey);
+    const excluded = new Set((report.policyExclusions ?? []).map(docKey));
+    const old = new Map([...baselineByKey].filter(([, page]) => !excluded.has(docKey(page))));
     for (const record of records.values()) if (managed(scope, record)) old.set(key(record), {...old.get(key(record)), ...record});
+    for (const [id, page] of old) if (excluded.has(docKey(page))) old.delete(id);
     const pages = report.groups.filter(group => managed(scope, group)).flatMap(group =>
-        group.entries.filter(page => page.state !== 'draft' && page.state !== 'retain_english')
+        group.entries.filter(page => !['draft','retain_english','historical_excluded','policy_review'].includes(page.state))
             .map(page => ({...page, groupId: group.id})));
     const sourcePaths = new Set(pages.map(page => page.sourcePath));
     for (const file of filters.paths ?? []) assert(sourcePaths.has(file), `Not a registered translatable source file: ${file}`);
@@ -131,6 +134,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const tasks = [];
     const exceptions = report.groups.flatMap(group => group.unregistered.map(sourcePath => ({kind: 'unregistered_file',
         groupId: group.id, sourcePath}))).concat(report.reports.filter(item => managed(scope, item)));
+    exceptions.push(...(report.policyExclusions ?? []).map(page => ({...page,
+        groupId:managed(scope, page)?.id})));
     const changedChinese = new Set(chineseChangedPaths);
     for (const page of pages) {
         const previous = old.get(key(page));

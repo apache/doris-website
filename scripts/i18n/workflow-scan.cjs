@@ -9,7 +9,7 @@ const {hash, languageName, pipelineLocale} = require('./state.cjs');
 const root = path.resolve(__dirname, '../..');
 const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
     'sidebarsCourse.ts', 'sidebarsReleases.json',
-    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json'];
+    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json'];
 // A push to this locale's own scope or glossary changes what may be generated.
 const rulesFor = locale => new Set([...configInputs,
     `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`]);
@@ -59,6 +59,7 @@ function summarize(plan, reconciliation, eligible, mode, language, reused = fals
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
         `- Outside enabled automatic groups: ${plan.deferredAutomationTasks ?? 0}; reported separately, not sent to a model`,
+        `- Release-note policy: historical excluded=${plan.exceptions.filter(item=>item.kind==='historical_excluded').length}; manual reconciliation=${plan.exceptions.filter(item=>item.kind==='policy_review').length}`,
         `- Robot batch PRs already open: ${reconciliation.botPrs.join(', ') || 'none'}`,
         `- Exceptions: ${[...exceptionKinds].map(([kind, count]) => `${kind}=${count}`).join(', ') || 'none'}`,
         '',

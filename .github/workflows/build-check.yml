@@ -116,7 +116,7 @@ jobs:
             - name: Validate manual content and shared messages
               if: steps.detect.outputs.validation_mode != 'skip'
               run: |
-                  node scripts/i18n/check-configuration.cjs --all
+                  node scripts/i18n/check-configuration.cjs --all --release-history
                   node scripts/i18n/manual-report.cjs
                   node scripts/i18n/check-blog-translations.cjs
 
@@ -140,6 +140,7 @@ jobs:
               run: |
                   node scripts/i18n/verify-content-fixture.cjs
                   node scripts/i18n/verify-blog-fixture.cjs
+                  node scripts/i18n/verify-release-policy-fixture.cjs
 
             - name: Workflow security boundary tests
               run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/scripts -p 'test_*.py' -v
@@ -185,6 +186,9 @@ jobs:
             - name: Verify global language fixture in Chromium
               if: steps.detect.outputs.content_fixture == 'true'
               run: node scripts/i18n/verify-global-language.cjs --fixture --site .i18n-build/content-fixture/build --manifests .i18n-build/content-fixture/.i18n-build/content-manifests --output .i18n-build/browser-global-language-fixture.json
+            - name: Verify release-note policy fixture in Chromium
+              if: steps.detect.outputs.content_fixture == 'true'
+              run: node scripts/i18n/verify-release-policy-fixture.cjs --verify-existing --browser
 
             - name: Build
               env:

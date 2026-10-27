@@ -90,6 +90,13 @@ function fixture(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'expanded-translation-'));
     t.after(() => fs.rmSync(root, {recursive: true, force: true}));
     const write = (file, text) => {fs.mkdirSync(path.dirname(path.join(root, file)), {recursive: true}); fs.writeFileSync(path.join(root, file), text);};
+    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}).trim();
+    git('init', '-q'); git('config', 'user.name', 'Fixture'); git('config', 'user.email', 'fixture@example.com');
+    write('fixture-baseline.txt', 'Before release-note registration.\n');
+    git('add', '.'); git('commit', '-qm', 'Release-note cutoff');
+    const cutoff = git('rev-parse', 'HEAD');
+    write('translations/release-notes-baseline.json', JSON.stringify({schemaVersion:1, sourceCommit:cutoff,
+        pluginId:'releases', version:'current', sourceRoot:'releasenotes', documents:[], sourceFiles:[], historicalPaths:[]}));
     fs.symlinkSync(path.join(repo, 'node_modules'), path.join(root, 'node_modules'));
     write('translations/config.json', read('translations/config.json'));
     for (const locale of ['ja', 'ko', 'ru']) {
@@ -116,8 +123,6 @@ plugins:[require(${JSON.stringify(path.join(repo, 'scripts/i18n/content-plugin.c
 [require(${JSON.stringify(path.join(repo, 'scripts/i18n/docs-plugin.cjs'))}),{id:'course',path:'course',routeBasePath:'course',sidebarPath:false}],
 [require(${JSON.stringify(path.join(repo, 'scripts/i18n/docs-plugin.cjs'))}),{id:'releases',path:'releasenotes',routeBasePath:'releases',sidebarPath:false}]],
 presets:[['classic',{docs:false,blog:false}]]};\n`);
-    const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}).trim();
-    git('init', '-q'); git('config', 'user.name', 'Fixture'); git('config', 'user.email', 'fixture@example.com');
     const commit = () => {git('add', '.'); git('commit', '-qm', 'fixture'); return git('rev-parse', 'HEAD');};
     return {root, write, git, commit};
 }
