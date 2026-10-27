@@ -48,7 +48,7 @@ export default function Page(){return <LayoutNext title={title}><h1>{title}</h1>
         for (const record of states.pages.filter(record => record.locale === locale)) record.targetHash = digestFiles(root, record.targetFiles);
         states.pages.push({contentId: 'page:blocked', locale, state: 'blocked', sourceFiles: ['src/pages/blocked.tsx'], targetFiles: []});
     }
-    for (const file of ['src/utils/useLocalizedRoute.ts', 'src/utils/useLanguageItems.ts', 'src/utils/localePreference.ts', 'src/utils/languageMessages.ts',
+    for (const file of ['src/utils/useLocalizedRoute.ts', 'src/utils/useLanguageItems.ts', 'src/utils/searchScopes.js', 'src/utils/localePreference.ts', 'src/utils/languageMessages.ts',
         'src/components/home-next/LocalizedLink.tsx', 'src/components/home-next/PageContent.tsx', 'src/components/home-next/PageContent.scss',
         'src/components/home-next/PageLanguageSwitcher.tsx', 'src/components/home-next/PageLanguageSwitcher.scss',
         'src/components/brand-theme/BrandThemeSwitcher.tsx', 'src/components/brand-theme/BrandThemeSwitcher.scss',
