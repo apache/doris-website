@@ -45,6 +45,22 @@
     white-space: normal;
 }
 
+.searchSourceLink {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 2.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--brand-border-soft);
+    border-radius: 6px;
+    background: var(--brand-surface-note);
+    color: var(--brand-ink);
+    font-size: 0.875rem;
+    line-height: 1.2;
+    white-space: normal;
+}
+
 .searchBar .mobileDropdownMenu {
     left: 0 !important;
 }

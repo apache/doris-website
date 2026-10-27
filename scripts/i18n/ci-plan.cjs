@@ -70,7 +70,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         runSamplingFixture: files.some(file =>
             /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
         runSearchFixture: mode === 'full' || files.some(file =>
-            /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages)\.[jt]s$|scripts\/i18n\/(search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
+            /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages|searchScopes|useLanguageItems)\.[jt]sx?$|src\/hooks\/use-search-query\.ts$|docusaurus\.config\.js$|scripts\/i18n\/(search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
         runPublishFixture: checks.check_publish_fixture || mode === 'full',
         runTranslationTests: mode === 'full' || files.some(file =>
             runtime.test(file) || mechanism.test(file) || maintenanceConfig(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)

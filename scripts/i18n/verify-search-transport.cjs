@@ -3,6 +3,8 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const {spawnSync, execFileSync} = require('node:child_process');
 const {createFixture} = require('./__tests__/fixtures/multi-locale.cjs');
+const {hash} = require('./state.cjs');
+const {structure} = require('./structure.cjs');
 const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
 const fixture = path.join(root, '.i18n-build/search-transport-fixture');
@@ -17,6 +19,30 @@ async function build() {
     write('src/scss/_variables.scss',fs.readFileSync(path.join(root,'src/scss/_variables.scss'),'utf8'));
     write('static/images/search-icon.svg',fs.readFileSync(path.join(root,'static/images/search-icon.svg')));
     write('src/search-fixture.scss','@use "./scss/variables";\n');
+    fs.cpSync(path.join(root,'src/theme/NavbarItem/LocaleDropdownNavbarItem'),path.join(fixture,'src/theme/NavbarItem/LocaleDropdownNavbarItem'),{recursive:true});
+    write('versions.json','["4.x","3.x","2.1"]');
+    for(const version of ['3.x','2.1']) {
+        const body=`---\ntitle: Historical ${version}\n---\n\n## Usage\n\nDoris HistoricalFixtureSQL ${version}.\n`;
+        write(`versioned_docs/version-${version}/historical.md`,body);
+        write(`versioned_sidebars/version-${version}-sidebars.json`,'{}');
+        write(`i18n/zh-CN/docusaurus-plugin-content-docs/version-${version}/historical.md`,body.replace('Historical','中文历史'));
+    }
+    for(const plugin of ['course','releases']) {
+        const sourceRoot=plugin==='course'?'course':'releasenotes',sourcePath=sourceRoot+'/sample.md';
+        const body=`---\ntitle: ${plugin} sample\n---\n\n## Usage\n\nDoris ${plugin}FixtureSQL.\n`;
+        write(sourcePath,body);
+        for(const locale of ['zh-CN','ja','ko','ru']) {
+            const targetPath=`i18n/${locale}/docusaurus-plugin-content-docs-${plugin}/current/sample.md`;
+            const target=body.replace('Doris ',`${{ja:'日本語',ko:'한국어',ru:'Русский','zh-CN':'中文'}[locale]} Doris `);
+            write(targetPath,target);
+            if(locale==='zh-CN')continue;
+            const stateFile=path.join(fixture,'translations/state',locale,'docs.json'),state=JSON.parse(fs.readFileSync(stateFile));
+            state.pages.push({pluginId:plugin,version:'current',docId:'sample',locale,sourceLocale:'en',sourcePath,targetPath,
+                sourceHash:hash(body),targetHash:hash(target),sourceTechnicalHash:(await structure(body,'.md')).technicalHash,
+                sourceCommit:'a'.repeat(40),reviewStatus:'machine',ownership:'machine',translatedAt:'2026-10-28T00:00:00Z',glossaryVersion:'0'});
+            fs.writeFileSync(stateFile,JSON.stringify(state));
+        }
+    }
     write('src/theme/Root.tsx',`import React, {useEffect} from 'react';
 export default function Root({children}){useEffect(()=>{document.documentElement.dataset.hasHydrated='true';},[]);return children;}\n`);
     fs.appendFileSync(path.join(fixture,'docusaurus.config.js'),`
@@ -24,12 +50,19 @@ const base = module.exports;
 module.exports = () => {const config = base();
  config.future = {experimental_faster:true};
  config.plugins.push('docusaurus-plugin-sass',require(${JSON.stringify(path.join(root,'config/custom-docusaurus-plugin.js'))}));
+ for(const [id,folder] of [['course','course'],['releases','releasenotes']])config.plugins.splice(2,0,
+  [require(${JSON.stringify(path.join(root,'scripts/i18n/docs-plugin.cjs'))}),{id,path:folder,routeBasePath:id,sidebarPath:false}]);
+ config.plugins.push(context=>({name:'fixture-search-identity',loadContent:()=>({contentIdentity:{reports:[],entries:
+  context.i18n.locales.map(locale=>({contentId:'utility:search',kind:'utility',renderIntegrated:false,siteLocale:locale,
+   contentLocale:locale,state:'source',fallback:false,indexable:false,route:(locale==='en'?'':'/'+locale)+'/search/',
+   englishRoute:'/search/',englishPath:'src/theme/SearchPage/index.js',sourceHash:'fixture',targetHash:null,updatePolicy:'native-manual-docs'}))}})}));
  config.presets[0][1].theme = {customCss:[require.resolve('./src/search-fixture.scss')]};
  config.themes = [[require(${JSON.stringify(path.join(root,'scripts/i18n/search-plugin.cjs'))}),{
   hashed:true,language:['en','zh'],indexDocs:true,indexBlog:false,indexPages:false,
-  docsRouteBasePath:['docs','community'],searchContextByPaths:['docs','community'],
+  docsRouteBasePath:['docs','community','course','releases'],searchContextByPaths:['docs','community','course','releases'],
   useAllContextsWithNoSearchContext:false,highlightSearchTermsOnTargetPage:true}]];
- config.themeConfig = {navbar:{title:'Search fixture',items:[{type:'search',position:'right'}]}};
+ config.customFields.searchContexts={source:['docs','community','course','releases'],managed:require(${JSON.stringify(path.join(root,'scripts/i18n/search-plugin.cjs'))}).contextsFor(__dirname)};
+ config.themeConfig = {navbar:{title:'Search fixture',items:[{type:'localeDropdown',position:'right'},{type:'search',position:'right'}]}};
  return config;};\n`);
     execFileSync('git',['add','.'],{cwd:fixture});
     execFileSync('git',['-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','Search transport fixture'],{cwd:fixture});
@@ -99,6 +132,64 @@ async function verify() {
             assert(requests.some(r=>r.origin==='https://cdnd.selectdb.com'));
             assert(requests.some(r=>r.origin==='https://doris.apache.org'));
             results.push({fallbackToOrigin:true,requests});await close(ctx);
+        }
+        for(const start of [
+            {route:'/ja/search/?ctx=docs%2Fdev&q=Doris&probe=1#retained',target:'en-US',context:'docs',version:'docs/dev/'},
+            {route:'/search/?ctx=docs&version=docs%2Fdev%2F&q=Doris&probe=1#retained',target:'ja',context:'docs/dev',version:''},
+        ]) {
+            const {ctx,page}=await context();await open(page,start.route);
+            await page.locator('section article').first().waitFor();
+            const language=page.locator(`a.dropdown__link[lang="${start.target}"]`).first();
+            const target=new URL(await language.getAttribute('href'),'https://doris.apache.org');
+            assert.equal(target.searchParams.get('ctx'),start.context);
+            assert.equal(target.searchParams.get('version')??'',start.version);
+            assert.equal(target.searchParams.get('q'),'Doris');assert.equal(target.searchParams.get('probe'),'1');assert.equal(target.hash,'#retained');
+            await page.locator('.navbar__item.dropdown').first().hover();await language.click();
+            await page.waitForFunction(value=>document.documentElement.lang===value,start.target);
+            await page.waitForSelector('html[data-has-hydrated="true"]');
+            await page.locator('section article').first().waitFor();
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.every(link=>link.includes('/docs/dev/')),'Language switch lost Dev scope');
+            results.push({languageSwitch:start,links});await close(ctx);
+        }
+        for(const locale of ['ja','ko','ru']) for(const version of ['3.x','2.1']) {
+            const {ctx,page,requests}=await context();await open(page,`/${locale}/docs/${version}/historical/`);
+            const link=page.locator('[data-source-search="'+version+'"]');await link.waitFor();
+            const target=new URL(await link.getAttribute('href'),'https://doris.apache.org');
+            assert.equal(target.pathname,'/search/');assert.equal(target.searchParams.get('version'),'docs/'+version+'/');
+            assert.equal(await page.locator('input.navbar__search-input:visible').count(),0);
+            assert.equal(requests.length,0,'Unsupported version fetched a current translated index');
+            const sourceLinkThemes=[];
+            for(const width of [1440,390]) {
+                await page.setViewportSize({width,height:900});
+                for(const theme of ['doris','golden','blue','read','yellow-blue','purple','yellow-black','sky']) {
+                    await page.evaluate(value=>{document.documentElement.dataset.brandTheme=value;},theme);
+                    const box=await link.boundingBox();
+                    assert(box.x>=-1&&box.x+box.width<=width+1,'Source search link overflows');
+                    sourceLinkThemes.push({width,theme,box});
+                }
+            }
+            await page.keyboard.press(process.platform==='darwin'?'Meta+k':'Control+k');
+            assert(await link.evaluate(e=>e===document.activeElement));
+            await link.click();await page.waitForFunction(()=>document.documentElement.lang==='en-US');
+            await page.waitForSelector('html[data-has-hydrated="true"]');
+            const query=page.locator('input[name="q"]');await query.fill('HistoricalFixtureSQL');
+            await page.locator('section article').first().waitFor();
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.every(value=>value.includes('/docs/'+version+'/')));
+            results.push({sourceVersion:{locale,version},sourceLinkThemes,links});await close(ctx);
+        }
+        for(const plugin of ['community','course','releases']) {
+            const {ctx,page}=await context();await open(page,`/ja/search/?ctx=${plugin}&q=NoMatchingFixtureValue#retained`);
+            const link=page.locator('.container.margin-vert--lg a[href*="/search/"]').first();await link.waitFor();
+            const target=new URL(await link.getAttribute('href'),'https://doris.apache.org');
+            assert.equal(target.searchParams.get('ctx'),plugin);assert.equal(target.hash,'#retained');assert(!target.searchParams.has('version'));
+            await link.click();await page.waitForFunction(()=>document.documentElement.lang==='en-US');
+            await page.waitForSelector('html[data-has-hydrated="true"]');
+            await page.locator('input[name="q"]').fill('Doris');await page.locator('section article').first().waitFor();
+            const links=await page.locator('section article a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+            assert(links.every(value=>value.startsWith('/'+plugin+'/')));
+            results.push({sourcePlugin:plugin,links});await close(ctx);
         }
         const retryLabels={en:'Retry','zh-CN':'重试',ja:'再試行',ko:'다시 시도',ru:'Повторить'};
         for(const locale of Object.keys(retryLabels)) for(const fullPage of [false,true]) {

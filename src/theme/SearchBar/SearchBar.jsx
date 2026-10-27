@@ -31,6 +31,7 @@ import {fetchContextIndexes, searchAcrossContexts} from '@site/src/utils/searchC
 import {isTranslatedLocale} from '@site/src/utils/localization';
 import {searchIndexBaseUrl} from '@site/src/utils/searchVersion';
 import {searchMessages} from '@site/src/utils/searchMessages';
+import {docSearchSourceVersion} from '@site/src/utils/searchScopes';
 
 const searchContextsByWorker = searchAcrossContexts(searchByWorker);
 
@@ -57,6 +58,8 @@ export default function SearchBar({ handleSearchBarToggle }) {
     } = useDocusaurusContext();
     const [isDocsPage] = useIsDocPage(false);
     const sourceVersions = useAllDocsData()[docsPluginIdForPreferredVersion ?? 'default']?.versions ?? [];
+    const sourceOnlyVersion = isTranslatedLocale(currentLocale)
+        ? docSearchSourceVersion(location.pathname,sourceVersions,Array.isArray(searchContextByPaths)?searchContextByPaths:[]) : null;
     const versionUrl = isTranslatedLocale(currentLocale) ? baseUrl
         : searchIndexBaseUrl(baseUrl, sourceVersions, {pathname: location.pathname});
 
@@ -65,6 +68,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
 
     const history = useHistory();
     const searchBarRef = useRef(null);
+    const sourceSearchRef = useRef(null);
     const indexStateMap = useRef(new Map());
     // Should the input be focused after the index is loaded?
     const focusAfterIndexLoaded = useRef(false);
@@ -122,11 +126,11 @@ export default function SearchBar({ handleSearchBarToggle }) {
             search.current?.autocomplete.destroy();
             search.current = null;
         };
-    }, [versionUrl, searchContext]);
+    }, [versionUrl, searchContext, sourceOnlyVersion]);
 
     const loadIndex = useCallback(
         async (forceLoad = false) => {
-            if (hidden || (indexStateMap.current.get(indexKey) && !forceLoad)) {
+            if (sourceOnlyVersion || hidden || (indexStateMap.current.get(indexKey) && !forceLoad)) {
                 // Do not load the index (again) if its already loaded or in the process of being loaded.
                 return;
             }
@@ -149,7 +153,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 setLoadError(true);
                 return;
             }
-            if (myToken !== loadToken.current) {
+            if (myToken !== loadToken.current || !searchBarRef.current) {
                 // Superseded by a newer loadIndex; don't mount a second autocomplete on the same input.
                 return;
             }
@@ -309,7 +313,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
                 input.focus();
             }
         },
-        [hidden, indexKey, searchContext, versionUrl, baseUrl, history],
+        [hidden, indexKey, searchContext, versionUrl, baseUrl, history, sourceOnlyVersion],
     );
     useEffect(() => {
         if (!Mark) {
@@ -384,6 +388,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         const handleShortcut = event => {
             if ((isMac ? event.metaKey : event.ctrlKey) && (event.key === 'k' || event.key === 'K')) {
                 event.preventDefault();
+                if(sourceOnlyVersion) {sourceSearchRef.current?.focus();return;}
                 searchBarRef.current?.focus();
                 onInputFocus();
             }
@@ -392,7 +397,7 @@ export default function SearchBar({ handleSearchBarToggle }) {
         return () => {
             document.removeEventListener('keydown', handleShortcut);
         };
-    }, [isMac, onInputFocus]);
+    }, [isMac, onInputFocus, sourceOnlyVersion]);
     useEffect(() => {
         if (inputValue) {
             const inputDoms = document.getElementsByClassName('navbar__search-input');
@@ -425,6 +430,18 @@ export default function SearchBar({ handleSearchBarToggle }) {
         setInputValue('');
         search.current?.autocomplete.setVal('');
     }, [location.pathname, location.search, location.hash, history]);
+
+    if(sourceOnlyVersion) {
+        const sourceBase=baseUrl.endsWith('/'+currentLocale+'/')?baseUrl.slice(0,-(currentLocale.length+1)):baseUrl;
+        const params=new URLSearchParams({ctx:'docs',version:'docs/'+sourceOnlyVersion+'/'});
+        if(inputValue)params.set('q',inputValue);
+        return <div className={clsx('navbar__search',styles.searchBarContainer)}>
+            <a ref={sourceSearchRef} className={styles.searchSourceLink} href={`${sourceBase}search/?${params}`} hrefLang="en"
+                title={searchMessages(currentLocale).sourceOnly} data-source-search={sourceOnlyVersion}>
+                {translate({id:'theme.SearchPage.searchSource',message:'Search the source documents'})} ({sourceOnlyVersion})
+            </a>
+        </div>;
+    }
 
     return (
         <div

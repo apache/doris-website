@@ -15,6 +15,9 @@ const {filterContentSitemap} = require('./scripts/i18n/sitemap.cjs');
 const contentTranslationPlugin = require('./scripts/i18n/content-plugin.cjs');
 const {translatedContentPages} = require('./scripts/i18n/source-groups.cjs');
 const searchPlugin = require('./scripts/i18n/search-plugin.cjs');
+const SOURCE_SEARCH_CONTEXTS = ['docs',
+    {path:'community',label:{en:'Community','zh-CN':'社区'}}, 'course',
+    {path:'releases',label:{en:'Release Notes','zh-CN':'发行说明'}}];
 const {enabledLocales, enabledLocaleRecords} = require('./config/i18n');
 const {managedLocales} = require('./scripts/i18n/state.cjs');
 const DEFAULT_LOCALE = 'en';
@@ -332,6 +335,8 @@ const config = {
     ],
     projectName: 'apache/doris-website', // Usually your repo name.
     customFields: {
+        searchContexts: {source:SOURCE_SEARCH_CONTEXTS.map(item=>typeof item==='string'?item:item.path),
+            managed:searchPlugin.contextsFor(__dirname)},
         // Real Slack invite link. `/slack` (src/pages/slack.tsx) records the
         // click in Matomo and then forwards visitors here, so every public
         // channel keeps linking to https://doris.apache.org/slack and this is
@@ -543,13 +548,13 @@ const config = {
                 highlightSearchTermsOnTargetPage: true,
                 // indexPages: true,
                 indexDocs: true,
-                docsRouteBasePath: ['docs', 'course', 'releases', 'zh-CN/docs', 'zh-CN/course', 'zh-CN/releases'],
+                docsRouteBasePath: ['docs', 'community', 'course', 'releases', 'zh-CN/docs', 'zh-CN/community', 'zh-CN/course', 'zh-CN/releases'],
                 indexBlog: false,
                 explicitSearchResultPath: true,
                 searchBarShortcut: true,
                 searchBarShortcutHint: true,
                 searchResultLimits: 100,
-                searchContextByPaths: ['docs', 'course', { path: 'releases', label: { en: 'Release Notes', 'zh-CN': '发行说明' } }],
+                searchContextByPaths: SOURCE_SEARCH_CONTEXTS,
                 useAllContextsWithNoSearchContext: false,
                 ignoreFiles: [/^docs\/(?:[^/]+\/)?key-features\//],
             },

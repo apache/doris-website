@@ -74,6 +74,7 @@ function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePa
         '@generated/docusaurus.config': config,
         '@docusaurus/Translate': {translate: ({message}) => message},
         '@docusaurus/useDocusaurusContext': () => ({i18n, siteConfig: config}),
+        '@docusaurus/plugin-content-docs/client': {useAllDocsData:()=>({})},
         '@docusaurus/useBaseUrl': source => source,
         '@docusaurus/useGlobalData': () => ({'doris-translation-status': {default: {
             alternates: {}, locales: enabled ? ['ja','ko','ru'] : [], prefixes: [`${prefix}/docs/dev`,`${prefix}/community`],

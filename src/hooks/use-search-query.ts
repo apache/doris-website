@@ -7,19 +7,19 @@
 import { useHistory, useLocation } from "@docusaurus/router";
 import useIsBrowser from "@docusaurus/useIsBrowser";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import { searchContextByPaths } from "../utils/proxiedGenerated";
+import { resolveSearchScope } from "../utils/searchScopes";
 const SEARCH_PARAM_QUERY = "q";
 const SEARCH_PARAM_CONTEXT = "ctx";
 const SEARCH_PARAM_VERSION = "version";
-function useSearchQuery() {
+function useSearchQuery(scopeOptions) {
     const isBrowser = useIsBrowser();
     const history = useHistory();
     const location = useLocation();
     const { siteConfig: { baseUrl }, } = useDocusaurusContext();
     const params = isBrowser ? new URLSearchParams(location.search) : null;
     const searchValue = params?.get(SEARCH_PARAM_QUERY) || "";
-    const searchContext = params?.get(SEARCH_PARAM_CONTEXT) || "";
-    const searchVersion = params?.get(SEARCH_PARAM_VERSION) || "";
+    const scope = resolveSearchScope({context:params?.get(SEARCH_PARAM_CONTEXT) || '',
+        version:params?.get(SEARCH_PARAM_VERSION) || ''}, scopeOptions);
     const getSearchParams = (searchValue) => {
         const searchParams = new URLSearchParams(location.search);
         if (searchValue) {
@@ -32,25 +32,27 @@ function useSearchQuery() {
     };
     return {
         searchValue,
-        searchContext: searchContext &&
-            Array.isArray(searchContextByPaths) &&
-            searchContextByPaths.some((item) => typeof item === "string"
-                ? item === searchContext
-                : item.path === searchContext)
-            ? searchContext
-            : "",
-        searchVersion,
+        searchContext:scope.context,
+        searchVersion:scope.version,
+        sourceOnlyVersion:scope.sourceOnlyVersion,
+        queryParams:params??new URLSearchParams(),
+        hash:location.hash,
         updateSearchPath: (searchValue) => {
             const searchParams = getSearchParams(searchValue);
             history.replace({
+                pathname:location.pathname,
                 search: searchParams.toString(),
+                hash:location.hash,
             });
         },
         updateSearchContext: (value) => {
             const searchParams = new URLSearchParams(location.search);
             searchParams.set(SEARCH_PARAM_CONTEXT, value);
+            searchParams.delete(SEARCH_PARAM_VERSION);
             history.replace({
+                pathname:location.pathname,
                 search: searchParams.toString(),
+                hash:location.hash,
             });
         },
         generateSearchPageLink: (searchValue) => {
