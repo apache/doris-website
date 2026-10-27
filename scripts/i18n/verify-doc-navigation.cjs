@@ -7,6 +7,13 @@ const cheerio = require('cheerio');
 const {inventoryBaseline} = require('./state.cjs');
 const root = path.resolve(__dirname, '../..');
 
+async function configuredDefaultVersion(siteDir = root) {
+    const {loadFreshModule} = require('@docusaurus/utils');
+    const {DEFAULT_VERSION} = await loadFreshModule(path.join(siteDir, 'src/constant/version.ts'));
+    assert(typeof DEFAULT_VERSION === 'string' && DEFAULT_VERSION, 'Missing configured default documentation version');
+    return DEFAULT_VERSION;
+}
+
 function verifyRedirect(html, target) {
     const $ = cheerio.load(html);
     const origin = 'https://doris.apache.org';
@@ -21,6 +28,7 @@ function verifyRedirect(html, target) {
 }
 
 function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale), devOnly = false,
+    defaultVersion,
     manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`),
     scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`), 'utf8'))}) {
     const summary = JSON.parse(fs.readFileSync(path.join(snapshot, 'summary.json'), 'utf8'));
@@ -72,7 +80,10 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
             contentLocale: representative.contentLocale, sidebarLinks: links.length, domains: [...new Set(domains)]});
     }
     const entries = [];
-    if (!devOnly) entries.push({entry: `/${locale}/docs/`, pluginId: 'default', version: '4.x'});
+    if (!devOnly) {
+        assert(typeof defaultVersion === 'string' && defaultVersion, 'Provide the configured default documentation version');
+        entries.push({entry: `/${locale}/docs/`, pluginId: 'default', version: defaultVersion});
+    }
     if (scope.groups.some(group => group.pluginId === 'community'))
         entries.push({entry: `/${locale}/community/`, pluginId: 'community', version: 'current'});
     for (const {entry, pluginId, version} of entries) {
@@ -95,18 +106,17 @@ function verify({site, locale = 'ja', snapshot = inventoryBaseline(root, locale)
         read(target);
         checks.push({entry, target});
     }
-    return {locale, snapshotSourceCommit: summary.sourceCommit, manifest, devOnly, routes, bodyLanguageSamples: checks.filter(check => check.sample).length, checks};
+    return {locale, snapshotSourceCommit: summary.sourceCommit, manifest, devOnly, defaultVersion, routes, bodyLanguageSamples: checks.filter(check => check.sample).length, checks};
 }
-if (require.main === module) {
-    try {
+async function main() {
         const args = process.argv.slice(2);
         const option = name => args.includes(name) ? args[args.indexOf(name) + 1] : undefined;
         const locale = option('--locale') ?? 'ja';
-        const result = verify({site: path.resolve(option('--site')), locale,
+        const result = verify({site: path.resolve(option('--site')), locale, defaultVersion:await configuredDefaultVersion(),
             snapshot: option('--snapshot') ? path.resolve(option('--snapshot')) : undefined,
             manifest: option('--manifest') ? path.resolve(option('--manifest')) : undefined, devOnly: args.includes('--dev-only')});
         if (option('--output')) fs.writeFileSync(option('--output'), JSON.stringify(result, null, 2) + '\n');
         console.log(JSON.stringify(result));
-    } catch (error) {console.error(error); process.exitCode = 1;}
 }
-module.exports = {verify, verifyRedirect};
+if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
+module.exports = {verify, verifyRedirect, configuredDefaultVersion};

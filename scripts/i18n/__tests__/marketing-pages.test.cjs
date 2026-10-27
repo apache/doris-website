@@ -105,6 +105,7 @@ function modules(locale, pathname, enabled = true, translatedPages = {ja: pagePa
                 .find(candidate => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
         }
         if (file.endsWith('/src/utils/contentRoute.ts')) return imports['@site/src/utils/contentRoute'];
+        if (file.endsWith('.json')) return JSON.parse(fs.readFileSync(file, 'utf8'));
         if (cache.has(file)) return cache.get(file).exports;
         const module = {exports: {}};
         cache.set(file, module);

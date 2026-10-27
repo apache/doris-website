@@ -77,6 +77,10 @@ export default function Layout({children,...props}){return <Original {...props}>
     config = config.replace(" presets: [['classic',{docs:false,blog:false}]],", ` presets: [['classic',{docs:false,blog:false,pages:false}]],`)
         .replace(" plugins: [", ` plugins: ['docusaurus-plugin-sass', [require(${JSON.stringify(path.join(repo, 'scripts/i18n/manual-plugins.cjs'))}).pages, {}],
  [require(${JSON.stringify(path.join(repo, 'scripts/i18n/manual-plugins.cjs'))}).blog, {onUntruncatedBlogPosts:'ignore', onInlineAuthors:'ignore'}],`);
+    write('static/js/locale-entry-bootstrap.js', fs.readFileSync(path.join(repo, 'static/js/locale-entry-bootstrap.js'), 'utf8'));
+    config += `\nconst original = module.exports; module.exports = () => {const config = original();
+config.headTags = [{tagName:'script',attributes:{},innerHTML:require(${JSON.stringify(path.join(repo, 'scripts/i18n/locale-entry.cjs'))}).bootstrap(__dirname,
+ {baseUrl:config.baseUrl,defaultLocale:config.i18n.defaultLocale,locales:config.i18n.locales})}]; return config;};\n`;
     write('docusaurus.config.js', config);
     execFileSync('git', ['add', '.'], {cwd: root});
     execFileSync('git', ['-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.com', 'commit', '-qm', 'Five-language content source'], {cwd: root});

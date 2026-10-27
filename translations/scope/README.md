@@ -1,5 +1,9 @@
 # Japanese document scope
 
+For current multi-language maintenance and version changes, use the
+[operations runbook](../OPERATIONS.md). The snapshot and first-delivery examples
+below describe the historical Japanese rollout.
+
 `ja.json` is the candidate allowlist for the first delivery: the native `default`
 docs plugin's `current` and `4.x` versions, and the `community` plugin's `current`
 version. It does not filter a website build. All other active versions/plugins
@@ -66,7 +70,7 @@ English, with an explicit reason per plugin and version. A new sidebar key is
 never exempt just because it was absent from the T03 snapshot.
 
 The read-only `Japanese coverage audit` workflow runs weekly and supports
-manual dispatch; matching source PRs also get a report artifact. Pending
+manual dispatch; ordinary source PRs do not trigger this full audit. Pending
 Japanese work does not fail source PRs. Use `--fail-on-pending` only for the
 final T05 coverage gate. Source SHA and routing hashes in each report identify
 the exact checkout; after a failed or cancelled workflow, rerun it manually

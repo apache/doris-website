@@ -1,7 +1,9 @@
 const { getAssetOrigin } = require('./asset-origin');
 const {enabled, SharedAssetsPlugin} = require('../scripts/publish/shared-assets.cjs');
 const {BootstrapAssetsPlugin} = require('../scripts/publish/bootstrap.cjs');
+const {entryOptions} = require('../scripts/i18n/locale-entry.cjs');
 const TerserPlugin = require('terser-webpack-plugin');
+const path = require('node:path');
 
 function clientMinimizers(config) {
     return config.optimization.minimizer.map(minimizer => {
@@ -34,14 +36,21 @@ module.exports = function (context, options) {
             // An empty origin serves this build's assets locally. Unset keeps
             // the production CDN. Worker bootstrap always stays same-origin.
             const assetOrigin = getAssetOrigin();
+            const generated = config.resolve?.alias?.['@generated'] ?? context.generatedFilesDir;
+            const registry = typeof generated === 'string' ? path.join(generated, 'registry.js') : null;
 
             return {
+                ...(config.mode === 'production' && registry ? {module: {rules: [{
+                    enforce: 'pre',
+                    test: file => path.resolve(file) === registry,
+                    use: [{loader: require.resolve('../scripts/publish/registry-loader.cjs')}],
+                }]}} : {}),
                 ...(!isServer && config.mode === 'production' ? {
                     mergeStrategy: {'optimization.minimizer': 'replace'},
                     optimization: {minimizer: clientMinimizers(config)},
                 } : {}),
                 plugins: enabled() ? [new SharedAssetsPlugin(),
-                    ...(!isServer ? [new BootstrapAssetsPlugin(context.siteDir)] : [])] : [],
+                    ...(!isServer ? [new BootstrapAssetsPlugin(context.siteDir,entryOptions(context))] : [])] : [],
                 ...(enabled() && config.cache ? {cache:{...config.cache,name:`${config.cache.name}-publish-v1`}} : {}),
                 output: {
                     ...config.output,

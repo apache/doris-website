@@ -35,7 +35,8 @@ function validateScope(scope, locale) {
         identities.add(key({...group, docId: ''}));
     }
     const exceptions = new Set();
-    if (scope.automaticGroups !== undefined) assert(Array.isArray(scope.automaticGroups) && scope.automaticGroups.length
+    // An explicit empty list pauses generation without disabling published routes.
+    if (scope.automaticGroups !== undefined) assert(Array.isArray(scope.automaticGroups)
         && new Set(scope.automaticGroups).size === scope.automaticGroups.length
         && scope.automaticGroups.every(id => groups.has(id)), 'Automatic groups must name unique registered scope groups');
     for (const entry of scope.retainEnglish) {
@@ -58,6 +59,18 @@ function sidebarOrder(sidebars) {
     }
     Object.values(sidebars).forEach(walk);
     return new Map([...new Set(ids)].map((id, index) => [id, index]));
+}
+
+function routingFiles(root, scope) {
+    const files = ['docusaurus.config.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json',
+        'translations/config.json', `translations/scope/${scope.locale}.json`,
+        ...scope.groups.filter(group => group.pluginId === 'default' && group.version !== 'current')
+            .map(group => `versioned_sidebars/version-${group.version}-sidebars.json`)];
+    for (const file of ['src/constant/version.ts', 'config/versions-plugin.js',
+        ...(scope.groups.some(group => group.pluginId === 'course') ? ['sidebarsCourse.ts'] : []),
+        ...(scope.groups.some(group => group.pluginId === 'releases') ? ['sidebarsReleases.json'] : [])])
+        if (fs.existsSync(path.join(root, file))) files.push(file);
+    return [...new Set(files)];
 }
 
 // A candidate in the working tree, or even on a feature branch, cannot count
@@ -271,7 +284,7 @@ async function main() {
     });
     const reports = native.reports.map(report => ({...report, inScope: scope.groups.some(group => group.pluginId === report.pluginId && group.version === report.version)}))
         .sort((a, b) => compare(JSON.stringify(a), JSON.stringify(b)));
-    const routingInputs = ['docusaurus.config.js', 'versions.json', 'sidebars.ts', 'sidebarsCommunity.json', 'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', `translations/scope/${locale}.json`];
+    const routingInputs = routingFiles(root, scope);
     routingInputs.push(...[...policies.values()].map(policy => policy.baselinePath));
     const snapshot = {schemaVersion: 1, locale, language: languageName(root, locale), sourceCommit,
         routingInputs: Object.fromEntries(routingInputs.map(file => [file, hash(fs.readFileSync(path.join(root, file), 'utf8'))])),
@@ -301,4 +314,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(error => {console.error(error); process.exitCode = 1;});
-module.exports = {validateScope, sidebarOrder, buildGroup, mergedCurrent, renderBatches, collect, keyFor};
+module.exports = {validateScope, sidebarOrder, routingFiles, buildGroup, mergedCurrent, renderBatches, collect, keyFor};

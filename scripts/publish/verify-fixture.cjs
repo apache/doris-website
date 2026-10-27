@@ -29,8 +29,9 @@ async function main() {
     };
     write('package.json','{"name":"publish-fixture","private":true}');
     fs.symlinkSync(path.join(root,'node_modules'),path.join(fixture,'node_modules'));
-    for (const name of ['brand-theme-bootstrap','course-rail-bootstrap']) write(`static/js/${name}.js`,
+    for (const name of ['brand-theme-bootstrap','course-rail-bootstrap','locale-entry-bootstrap']) write(`static/js/${name}.js`,
         fs.readFileSync(path.join(root,`static/js/${name}.js`)));
+    for (const file of ['config/i18n.js','config/locale-entry.json']) write(file,fs.readFileSync(path.join(root,file)));
     write('static/.htaccess',fs.readFileSync(path.join(root,'static/.htaccess')));
     write('static/images/shared.png',image);
     write('static/pdf/reference.pdf','%PDF-1.4\nFixture reference document\n');
@@ -55,7 +56,7 @@ module.exports = {title:'Publish fixture',url:'https://doris.apache.org',baseUrl
 future:{experimental_faster:${!process.argv.includes('--webpack')}},
 i18n:{defaultLocale:'en',locales:${JSON.stringify(locales)}},
 ...require(${JSON.stringify(path.join(root,'config/ssrTemplate.js'))}),
-headTags:shared.enabled()?scripts(__dirname).map(s=>({tagName:'script',attributes:{src:'/'+s.file}})):[],
+headTags:shared.enabled()?scripts(__dirname,{locales:${JSON.stringify(locales)}}).map(s=>({tagName:'script',attributes:{src:'/'+s.file}})):[],
 presets:[['classic',{docs:{path:'docs',sidebarPath:false},blog:false,theme:{customCss:'./static/fixture.css'}}]],
 plugins:[${JSON.stringify(path.join(root,'config/custom-docusaurus-plugin.js'))},
 ['@docusaurus/plugin-client-redirects',{fromExtensions:['html','htm'],redirects:[{from:'/legacy',to:'/docs/intro/'}]}]],

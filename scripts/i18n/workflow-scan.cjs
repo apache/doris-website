@@ -7,7 +7,7 @@ const {execFileSync} = require('node:child_process');
 const {hash, languageName, pipelineLocale} = require('./state.cjs');
 
 const root = path.resolve(__dirname, '../..');
-const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'sidebars.ts', 'sidebarsCommunity.json',
+const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'versions.json', 'src/constant/version.ts', 'config/versions-plugin.js', 'sidebars.ts', 'sidebarsCommunity.json',
     'sidebarsCourse.ts', 'sidebarsReleases.json',
     'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json'];
 // A push to this locale's own scope or glossary changes what may be generated.
@@ -25,7 +25,7 @@ function relevantPush(changed, audit, scope) {
         return group.entries.map(page => `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/`
             + page.sourcePath.slice(scopeGroup.sourceRoot.length + 1));
     }));
-    return changed.some(file => source.has(file) || chinese.has(file) || rules.has(file));
+    return changed.some(file => source.has(file) || chinese.has(file) || rules.has(file) || file.startsWith('versioned_sidebars/'));
 }
 
 function changedPaths(before, head) {

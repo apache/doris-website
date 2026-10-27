@@ -14,22 +14,30 @@ const {scanDocuments} = require('@yang1666204/docusaurus-search-local/dist/serve
 const {buildIndex: buildNativeIndex} = require('@yang1666204/docusaurus-search-local/dist/server/server/utils/buildIndex');
 const {loadConfig, managedLocales} = require('./state.cjs');
 const {normalizeRussianSearch} = require('../../src/utils/searchNormalization.js');
+const {fallbackOnly} = require('./docs-language-policy.cjs');
 
-const contexts = ['docs/dev', 'docs/4.x', 'community', 'course', 'releases'];
+function contextsFor(root) {
+    const versions = JSON.parse(fs.readFileSync(path.join(root, 'versions.json'), 'utf8'));
+    if (!Array.isArray(versions) || versions.some(version => typeof version !== 'string'
+        || !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(version))) throw new Error('Invalid native docs versions');
+    return [...new Set(['docs/dev', ...versions.filter(version => !fallbackOnly('default', version))
+        .map(version => `docs/${version}`), 'community', 'course', 'releases'])];
+}
+const contexts = contextsFor(path.resolve(__dirname, '../..'));
 const normalize = url => url.replace(/\/+$/, '');
 function groupFor(page) {
     if (page.pluginId === 'default' && page.version === 'current') return 'docs/dev';
-    if (page.pluginId === 'default' && page.version === '4.x') return 'docs/4.x';
+    if (page.pluginId === 'default' && typeof page.version === 'string' && !fallbackOnly(page.pluginId, page.version)) return `docs/${page.version}`;
     if (page.pluginId === 'community' && page.version === 'current') return 'community';
     if (page.pluginId === 'course' && page.version === 'current') return 'course';
     if (page.pluginId === 'releases' && page.version === 'current') return 'releases';
     return null;
 }
-function localizedOptions(options, locale, labels) {
+function localizedOptions(options, locale, labels, contextNames = contexts) {
     return {...options, language:locale === 'ru' ? ['en', 'ru'] : [locale.split('-')[0]],
         docsRouteBasePath:['docs','community','course','releases',`${locale}/docs`,`${locale}/community`,`${locale}/course`,`${locale}/releases`],
         // A locale without configured labels falls back to the context path.
-        searchContextByPaths:contexts.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
+        searchContextByPaths:contextNames.map(value => ({path:value,label:{[locale]:labels?.[value] ?? value}})),
         // Outside every context, search all of them. The browser queries each
         // context index for that (src/utils/searchContexts.js); see indexGroups.
         useAllContextsWithNoSearchContext:true, ignoreFiles:[]};
@@ -38,8 +46,8 @@ function localizedOptions(options, locale, labels) {
 // context. The root does not repeat the contexts the way the native plugin's
 // union does: that copy held every context a second time, and the Japanese one
 // outgrew GitHub's 100 MiB file limit, which rejected the deployment.
-function indexGroups(allDocuments, selected) {
-    const groups = new Map(contexts.map(group => [group,
+function indexGroups(allDocuments, selected, contextNames = contexts) {
+    const groups = new Map(contextNames.map(group => [group,
         allDocuments.map(documents => documents.filter(doc => selected.get(normalize(doc.u)) === group))]));
     groups.set('', allDocuments.map(documents => documents.filter(doc => !selected.has(normalize(doc.u)))));
     return groups;
@@ -49,6 +57,7 @@ function targetFingerprint(root, locale) {
     digester.update(fs.readFileSync(__filename)); // Bust caches when indexing behavior changes.
     // The shared normalizer also changes indexed tokens independently of this file.
     digester.update(fs.readFileSync(require.resolve('../../src/utils/searchNormalization.js')));
+    digester.update(fs.readFileSync(require.resolve('./docs-language-policy.cjs')));
     function scan(dir) {
         if (!fs.existsSync(dir)) return;
         for (const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b) => a.name.localeCompare(b.name))) {
@@ -62,7 +71,9 @@ function targetFingerprint(root, locale) {
     }
     scan(path.join(root,'i18n',locale));
     scan(path.join(root,'translations/state',locale));
-    for (const dir of ['docs','versioned_docs/version-4.x','community','course','releasenotes']) scan(path.join(root,dir));
+    digester.update(fs.readFileSync(path.join(root, 'versions.json')));
+    for (const dir of ['docs', ...contextsFor(root).filter(context => context.startsWith('docs/') && context !== 'docs/dev')
+        .map(context => `versioned_docs/version-${context.slice('docs/'.length)}`), 'community','course','releasenotes']) scan(path.join(root,dir));
     return digester.digest('hex').slice(0,16);
 }
 function indexFilename(context) {
@@ -73,12 +84,12 @@ function indexFilename(context) {
     if (!/^search-index\{dir\}(?:-[a-f0-9]+)?\.json$/.test(value)) throw new Error('Unexpected search index filename');
     return value;
 }
-function localizedPages(plugins, locale) {
+function localizedPages(plugins, locale, contextNames = contexts) {
     const selected = new Map();
     for (const plugin of plugins.filter(item => item.name === 'docusaurus-plugin-content-docs')) {
         for (const page of plugin.content?.translationManifest?.pages || []) {
             const group = groupFor(page);
-            if (page.locale === locale && group && page.status === 'current' && page.useTarget && page.indexable)
+            if (page.locale === locale && contextNames.includes(group) && page.status === 'current' && page.useTarget && page.indexable)
                 selected.set(normalize(page.permalink), group);
         }
     }
@@ -99,8 +110,8 @@ function buildLocalizedIndexes(documents, config) {
     } finally {lunr.tokenizer = original;}
 }
 
-async function buildLocalizedIndex(buildData, config, filename, locale) {
-    const selected = localizedPages(buildData.plugins || [], locale);
+async function buildLocalizedIndex(buildData, config, filename, locale, contextNames = contexts) {
+    const selected = localizedPages(buildData.plugins || [], locale, contextNames);
     const nativePaths = processDocInfos(buildData, config).flatMap(item => item.paths);
     const unique = new Map();
     for (const item of nativePaths) if (selected.has(normalize(item.url))) unique.set(normalize(item.url), item);
@@ -110,14 +121,15 @@ async function buildLocalizedIndex(buildData, config, filename, locale) {
         const name = filename.replace('{dir}', group ? `-${group.replace(/\//g,'-')}` : '');
         fs.writeFileSync(path.join(buildData.outDir,name), JSON.stringify(buildLocalizedIndexes(documents,config)));
     };
-    for (const [group, documents] of indexGroups(allDocuments, selected)) write(group, documents);
+    for (const [group, documents] of indexGroups(allDocuments, selected, contextNames)) write(group, documents);
     fs.writeFileSync(path.join(buildData.outDir,`${locale}-search-summary.json`), JSON.stringify({schemaVersion:1,locale,
-        indexedPages:selected.size, contexts:Object.fromEntries(contexts.map(group => [group,[...selected.values()].filter(value => value === group).length]))})+'\n');
+        indexedPages:selected.size, contexts:Object.fromEntries(contextNames.map(group => [group,[...selected.values()].filter(value => value === group).length]))})+'\n');
 }
 function searchPlugin(context, options) {
     const locale = context.i18n.currentLocale;
     if (!managedLocales(context.siteDir, context.i18n.locales).includes(locale)) return native(context,options);
-    const localized = localizedOptions(options, locale, loadConfig(context.siteDir).locales[locale]?.searchContextLabels);
+    const contextNames = contextsFor(context.siteDir);
+    const localized = localizedOptions(options, locale, loadConfig(context.siteDir).locales[locale]?.searchContextLabels, contextNames);
     const plugin = native(context,localized);
     const config = processPluginOptions(localized,context);
     const constants = path.join(context.generatedFilesDir,'@yang1666204/docusaurus-search-local/default/generated-constants.js');
@@ -131,13 +143,14 @@ function searchPlugin(context, options) {
     if (updated === generated) throw new Error('Could not fingerprint the localized search index');
     fs.writeFileSync(constants,updated);
     const filename = indexFilename(context);
-    return {...plugin, postBuild: buildData => buildLocalizedIndex(buildData,config,filename,locale)};
+    return {...plugin, postBuild: buildData => buildLocalizedIndex(buildData,config,filename,locale,contextNames)};
 }
 module.exports = searchPlugin;
 module.exports.validateOptions = nativeModule.validateOptions;
 module.exports.localizedOptions = localizedOptions;
 module.exports.groupFor = groupFor;
 module.exports.contexts = contexts;
+module.exports.contextsFor = contextsFor;
 module.exports.localizedPages = localizedPages;
 module.exports.indexGroups = indexGroups;
 module.exports.buildLocalizedIndex = buildLocalizedIndex;

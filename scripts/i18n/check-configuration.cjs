@@ -6,6 +6,7 @@ const {validateScope} = require('./inventory.cjs');
 
 // Validate inputs without loading Docusaurus, an inventory, credentials or a model.
 function checkConfiguration(root, locale, {releaseHistory = false} = {}) {
+    require('./locale-entry.cjs').settings(root);
     assert(loadConfig(root).locales[locale], `Unconfigured translation locale: ${locale}`);
     const read = kind => JSON.parse(fs.readFileSync(path.join(root, `translations/${kind}/${locale}.json`), 'utf8'));
     const scope = read('scope');

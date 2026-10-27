@@ -1,5 +1,10 @@
 # Documentation translation state
 
+The [operations runbook](OPERATIONS.md) covers version upgrades and retirement,
+source lifecycle, consistent reporting, ownership, pause/resume and recovery.
+The [root language-entry policy](LOCALE_ENTRY.md) documents manual preference,
+browser language order, the regional fallback table and detection rollback.
+
 The [manual blog contract](BLOG.md) covers per-article fallback, indexing,
 aggregates, feeds and the initial four-article/four-language pilot. It is separate
 from scheduled documentation generation.
