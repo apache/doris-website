@@ -13,6 +13,7 @@ async function createFixture(root, {searchDocument = false} = {}) {
     };
     fs.mkdirSync(root, {recursive: true});
     fs.symlinkSync(path.join(repoRoot, 'node_modules'), path.join(root, 'node_modules'));
+    for (const file of ['config/locale-entry.json', 'config/i18n.js']) write(file, fs.readFileSync(path.join(repoRoot, file), 'utf8'));
     const settings = locale => ({sourceLocale: 'en', sourceOverrides: [],
         languageName: ({ja:'Japanese',ko:'Korean',ru:'Russian'})[locale], scriptPattern: ({ja:'[\\u3040-\\u30ff]',ko:'[\\uac00-\\ud7af]',ru:'[\\u0400-\\u04ff]'})[locale]});
     write('translations/config.json', JSON.stringify({schemaVersion: 1, locales: {ja: settings('ja'), ko: settings('ko'), ru: settings('ru')}}));

@@ -237,6 +237,20 @@ test('one model result creates separate Dev and 4.x targets and state records', 
     assert(state.pages.every(page => page.reviewStatus === 'machine' && page.sourceHash === hash(source)));
 });
 
+test('a paused language rejects a forced old plan before calling the provider or changing targets', async t => {
+    const fixture = pairFixture(t);
+    const scopeFile = path.join(fixture.dir, 'translations/scope/ja.json');
+    fs.writeFileSync(scopeFile, JSON.stringify({...scope, automaticGroups: []}));
+    const stateFile = path.join(fixture.dir, 'translations/state/ja/docs.json');
+    const before = fs.readFileSync(stateFile, 'utf8');
+    const manifest = await fixture.run(() => {});
+    assert.equal(fixture.calls(), 0);
+    assert.equal(manifest.candidates.length, 0);
+    assert.match(manifest.failures[0].error, /Automatic generation is not enabled/);
+    assert.equal(fs.existsSync(path.join(fixture.dir, fixture.dev.targetPath)), false);
+    assert.equal(fs.readFileSync(stateFile, 'utf8'), before);
+});
+
 test('a page changed on master after its model call is dropped together with its Dev/4.x copy', async t => {
     const {dir, dev, x4, run, calls} = pairFixture(t);
     const seen = [];
@@ -697,11 +711,19 @@ test('master drift discards the batch for translation configuration or tooling c
     assert.throws(() => checkMaster(options), /master changed translations\/glossary\/ja\.json after the source commit/);
     const wide = batchWide('ja');
     for (const file of ['translations/config.json', 'config/i18n.js', 'docusaurus.config.js', 'versions.json',
+        'sidebars.ts', 'sidebarsCommunity.json', 'sidebarsCourse.ts', 'sidebarsReleases.json',
+        'versioned_sidebars/version-5.x-sidebars.json',
         'translations/scope/ja.json', 'translations/protection-exceptions/ja.json', 'translations/state/ja/docs.json',
         'translations/state/ja/shards.schema.json', 'translations/inventory/ja/2026-10-12/summary.json',
         'scripts/i18n/workflow-generate.cjs']) assert(wide(file), file);
     for (const file of [stateFileFor(record), 'translations/glossary/ko.json', 'translations/state/ko/docs.json',
-        'i18n/ja/code.json', 'sidebars.ts', 'blog/post.md', 'scripts/check_move.js']) assert(!wide(file), file);
+        'i18n/ja/code.json', 'blog/post.md', 'scripts/check_move.js']) assert(!wide(file), file);
+});
+
+test('a sidebar registration change invalidates an in-flight translation batch', t => {
+    const {advance, options} = driftFixture(t);
+    advance('sidebarsCommunity.json', '{"community":[]}\n');
+    assert.throws(() => checkMaster(options), /master changed sidebarsCommunity\.json/);
 });
 
 test('master drift stops when master no longer contains the source commit', t => {

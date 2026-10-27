@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import { useLanguageItems } from '@site/src/utils/useLanguageItems';
 import { languageMessages } from '@site/src/utils/languageMessages';
+import { clearLocalePreference } from '@site/src/utils/localePreference';
 import { BrandThemeSwitcher } from '@site/src/components/brand-theme/BrandThemeSwitcher';
 import { translate } from '@docusaurus/Translate';
 import './LanguageMenu.scss';
@@ -20,6 +21,7 @@ export function LanguageMenu({
     } = useDocusaurusContext();
     const items = useLanguageItems();
     const details = useRef<HTMLDetailsElement>(null);
+    const [reset, setReset] = useState<boolean | undefined>();
     useEffect(() => {
         const close = (event: KeyboardEvent | PointerEvent) => {
             if (!details.current?.open) return;
@@ -92,6 +94,12 @@ export function LanguageMenu({
                         </a>
                     ))}
                 </div>
+                <button type="button" className="language-menu__reset" onClick={() => setReset(clearLocalePreference())}>
+                    {languageMessages(currentLocale).reset}
+                </button>
+                <p className="language-menu__status" role="status" aria-live="polite">
+                    {reset === undefined ? '' : reset ? languageMessages(currentLocale).resetDone : languageMessages(currentLocale).resetFailed}
+                </p>
                 {appearance && (
                     <div className="language-menu__appearance">
                         <div className="language-menu__heading">

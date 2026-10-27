@@ -3,6 +3,8 @@ import {
     isActiveSidebarItem,
 } from '@docusaurus/plugin-content-docs/client';
 import type { PropSidebar, PropSidebarItem } from '@docusaurus/plugin-content-docs';
+import versions from '@site/versions.json';
+import { fallbackOnly } from '@site/scripts/i18n/docs-language-policy.cjs';
 
 export interface DocsDomain {
     href: string;
@@ -21,7 +23,8 @@ export function supportsDocsDomainNavigation(
     pluginId: string | undefined,
     versionName: string | undefined,
 ): boolean {
-    return (pluginId === 'default' && (versionName === 'current' || versionName === '4.x'))
+    return (pluginId === 'default' && (versionName === 'current' || versions.includes(versionName ?? ''))
+        && !fallbackOnly(pluginId, versionName))
         || (pluginId === 'community' && versionName === 'current');
 }
 

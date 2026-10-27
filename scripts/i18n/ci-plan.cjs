@@ -8,7 +8,7 @@ const {locales, localeRegistry} = require('../../config/i18n');
 const {buildScope, validationScope} = require('./build-scope.cjs');
 const {managedLocales} = require('./state.cjs');
 const {analyzeImpact} = require('./content-impact.cjs');
-const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/(pages|shared)\/registry\.json$|config\/(i18n|ssrTemplate)\.js$)/;
+const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages|locale-entry)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/(pages|shared)\/registry\.json$|config\/(?:(i18n|ssrTemplate)\.js|locale-entry\.json)$)/;
 const runtime =
     /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
 const content =
@@ -16,7 +16,7 @@ const content =
 const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
 // Maintenance notes are not site content. The report registry, in contrast,
 // changes ordinary pages, which the real sample build always renders.
-const maintenanceNotes = /^translations\/[^/]+\.md$/;
+const maintenanceNotes = /^translations\/(?:[^/]+\.md|scope\/README\.md)$/;
 // Registered locale scope/glossary files are validated offline and exercised
 // through native metadata plus representative builds, like other known shared
 // language inputs. Unknown translation configuration still requires full CI.

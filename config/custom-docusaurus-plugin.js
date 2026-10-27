@@ -1,6 +1,7 @@
 const { getAssetOrigin } = require('./asset-origin');
 const {enabled, SharedAssetsPlugin} = require('../scripts/publish/shared-assets.cjs');
 const {BootstrapAssetsPlugin} = require('../scripts/publish/bootstrap.cjs');
+const {entryOptions} = require('../scripts/i18n/locale-entry.cjs');
 const TerserPlugin = require('terser-webpack-plugin');
 
 function clientMinimizers(config) {
@@ -41,7 +42,7 @@ module.exports = function (context, options) {
                     optimization: {minimizer: clientMinimizers(config)},
                 } : {}),
                 plugins: enabled() ? [new SharedAssetsPlugin(),
-                    ...(!isServer ? [new BootstrapAssetsPlugin(context.siteDir)] : [])] : [],
+                    ...(!isServer ? [new BootstrapAssetsPlugin(context.siteDir,entryOptions(context))] : [])] : [],
                 ...(enabled() && config.cache ? {cache:{...config.cache,name:`${config.cache.name}-publish-v1`}} : {}),
                 output: {
                     ...config.output,

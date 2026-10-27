@@ -32,12 +32,10 @@ const UTILITY_PATHS = new Set(ENABLED_LOCALES.flatMap(locale => {
     return [`${prefix}/search`, `${prefix}/slack`];
 }));
 
-const BRAND_THEME_BOOTSTRAP = require('node:fs').readFileSync(require('node:path').join(__dirname, 'static/js/brand-theme-bootstrap.js'), 'utf8');
-
-// Doris 101 remembers whether its module rail is collapsed. Applying the stored
-// choice before first paint keeps the rail from rendering expanded and then
-// snapping shut once React mounts on every lesson navigation.
-const COURSE_RAIL_BOOTSTRAP = require('node:fs').readFileSync(require('node:path').join(__dirname, 'static/js/course-rail-bootstrap.js'), 'utf8');
+// Root-entry selection precedes hydration; theme and course rail preferences
+// still apply before paint. Publish builds emit these exact bytes by hash.
+const BOOTSTRAPS = require('./scripts/publish/bootstrap.cjs').scripts(__dirname,
+    {baseUrl:'/',defaultLocale:DEFAULT_LOCALE,locales:ENABLED_LOCALES});
 
 // Per-document last-update timestamps, generated from git history by
 // scripts/last-update/generate.js. The 2-hourly Cron Deploy regenerates the map
@@ -303,21 +301,10 @@ const config = {
             .map(({code, label, htmlLang}) => [code, {label, htmlLang}])),
     },
     headTags: require('./scripts/publish/shared-assets.cjs').enabled()
-        ? require('./scripts/publish/bootstrap.cjs').scripts(__dirname).map(script => ({
+        ? BOOTSTRAPS.map(script => ({
             // Blocking head scripts retain the before-paint theme/rail setup.
             tagName:'script', attributes:{src:require('./config/asset-origin').getAssetOrigin()+'/'+script.file},
-        })) : [
-        {
-            tagName: 'script',
-            attributes: {},
-            innerHTML: BRAND_THEME_BOOTSTRAP,
-        },
-        {
-            tagName: 'script',
-            attributes: {},
-            innerHTML: COURSE_RAIL_BOOTSTRAP,
-        },
-    ],
+        })) : BOOTSTRAPS.map(script => ({tagName:'script',attributes:{},innerHTML:script.content})),
     scripts: ['/js/custom-script.js',
         {
             async: true,

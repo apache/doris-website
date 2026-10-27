@@ -190,6 +190,10 @@ jobs:
               if: steps.detect.outputs.content_fixture == 'true'
               run: node scripts/i18n/verify-release-policy-fixture.cjs --verify-existing --browser
 
+            - name: Verify automatic language entry in Chromium
+              if: steps.detect.outputs.content_fixture == 'true'
+              run: node scripts/i18n/verify-locale-entry-fixture.cjs
+
             - name: Build
               env:
                   DORIS_OPTIMIZE_PUBLISH: ${{ steps.detect.outputs.validation_mode == 'full' }}

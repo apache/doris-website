@@ -1,5 +1,6 @@
-export const LOCALE_PREFERENCE_KEY = 'doris.localePreference';
-const lifetime = 180 * 24 * 60 * 60 * 1000;
+import policy from '@site/config/locale-entry.json';
+export const LOCALE_PREFERENCE_KEY = policy.preference.key;
+const lifetime = policy.preference.maxAgeDays * 24 * 60 * 60 * 1000;
 type StorageAccess = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 function browserStorage(): StorageAccess | undefined {
     try {return typeof window === 'undefined' ? undefined : window.localStorage;} catch {return undefined;}
@@ -23,5 +24,12 @@ export function saveLocalePreference(locale: string, locales: readonly string[],
         return true;
     } catch {return false;}
 }
-// Reading a preference never navigates. URL language remains authoritative;
-// only the future root-entry policy (T21) may consume a saved default.
+export function clearLocalePreference(storage = browserStorage()): boolean {
+    try {
+        if (!storage) return false;
+        storage.removeItem(LOCALE_PREFERENCE_KEY);
+    } catch {return false;}
+    try {if (typeof window !== 'undefined') window.sessionStorage.removeItem(policy.sessionKey);} catch { /* Optional guard. */ }
+    return true;
+}
+// Reading a preference never navigates. Explicit URL language remains authoritative.

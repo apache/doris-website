@@ -34,6 +34,12 @@ test('scope and glossary checks need no site, inventory or credentials and isola
     assert.equal(checkConfiguration(root, 'ja').locale, 'ja');
 });
 
+test('an empty automatic group list can pause a language while retaining registered content', t => {
+    const {root, write, scope} = fixture(t);
+    write('translations/scope/ko.json', {...scope, automaticGroups: []});
+    assert.equal(checkConfiguration(root, 'ko').groups, 1);
+});
+
 test('invalid or cross-locale scope and sidebar exceptions fail offline', t => {
     const {root, write, scope} = fixture(t);
     write('translations/scope/ko.json', {...scope, locale: 'ja'});

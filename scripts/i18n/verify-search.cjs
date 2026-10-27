@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
-const {contexts, groupFor} = require('./search-plugin.cjs');
+const {contextsFor, groupFor} = require('./search-plugin.cjs');
 const route = url => new URL(url, 'https://doris.apache.org').pathname.replace(/\/?$/, '/');
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
@@ -11,7 +11,8 @@ const corpus = {
     ru: {database:'данных', query:'запрос', community:'сообщество'},
 };
 
-function checkIndexes({site, locale, manifest}) {
+function checkIndexes({site, locale, manifest, rootDir = root}) {
+    const contexts = contextsFor(rootDir);
     const summary = JSON.parse(fs.readFileSync(path.join(site, locale, `${locale}-search-summary.json`), 'utf8'));
     assert.equal(summary.locale, locale);
     assert.deepEqual(Object.keys(summary.contexts).sort(), [...contexts].sort());
@@ -27,7 +28,10 @@ function checkIndexes({site, locale, manifest}) {
     for (const page of manifest.pages) {
         if (page.locale !== locale || page.status !== 'current' || !page.useTarget || !page.indexable) continue;
         const context = groupFor(page);
-        if (context) expected.get(context).add(route(page.permalink));
+        if (context) {
+            assert(expected.has(context), `Unregistered documentation search context: ${context}`);
+            expected.get(context).add(route(page.permalink));
+        }
     }
     const indexFiles = {};
     for (const context of ['', ...contexts]) {
@@ -50,6 +54,7 @@ function checkIndexes({site, locale, manifest}) {
 
 async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [], themes = false,
     manifest = path.join(root, '.i18n-build/manifests', `${locale}.json`)}) {
+    const contexts = contextsFor(root);
     assert(corpus[locale], `Add representative search queries for ${locale}`);
     const data = JSON.parse(fs.readFileSync(manifest, 'utf8'));
     assert.equal(data.locale, locale);

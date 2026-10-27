@@ -35,7 +35,8 @@ function validateScope(scope, locale) {
         identities.add(key({...group, docId: ''}));
     }
     const exceptions = new Set();
-    if (scope.automaticGroups !== undefined) assert(Array.isArray(scope.automaticGroups) && scope.automaticGroups.length
+    // An explicit empty list pauses generation without disabling published routes.
+    if (scope.automaticGroups !== undefined) assert(Array.isArray(scope.automaticGroups)
         && new Set(scope.automaticGroups).size === scope.automaticGroups.length
         && scope.automaticGroups.every(id => groups.has(id)), 'Automatic groups must name unique registered scope groups');
     for (const entry of scope.retainEnglish) {

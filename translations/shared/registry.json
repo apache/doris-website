@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "sourceFiles": [
     "config/footer.js",
+    "config/locale-entry.json",
     "shared/interfaces.js",
     "src/components/Icons/discord-icon.tsx",
     "src/components/Icons/doris-logo-horizontal.tsx",
@@ -77,7 +78,8 @@
     "static/images/empty-data.png",
     "static/images/next/home-page/doris-mascot.png",
     "static/js/brand-theme-bootstrap.js",
-    "static/js/embedded-brand-theme.js"
+    "static/js/embedded-brand-theme.js",
+    "static/js/locale-entry-bootstrap.js"
   ],
   "messages": {
     "homepage.ai.loading": "Loading AI…",

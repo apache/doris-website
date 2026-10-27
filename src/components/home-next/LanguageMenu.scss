@@ -18,7 +18,8 @@
         display: none;
     }
     summary:focus-visible,
-    a:focus-visible {
+    a:focus-visible,
+    button:focus-visible {
         outline: 2px solid var(--brand-primary);
         outline-offset: 2px;
     }
@@ -73,6 +74,30 @@
         margin-top: 12px;
         padding-top: 10px;
         border-top: 1px solid var(--brand-border-soft);
+    }
+    &__reset {
+        display: block;
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px 12px;
+        border: 1px solid var(--brand-border-soft);
+        border-radius: 5px;
+        background: transparent;
+        color: var(--brand-ink);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+    }
+    &__reset:hover {
+        background: var(--brand-surface-note);
+    }
+    &__status {
+        margin: 8px 8px 0;
+        color: var(--brand-ink-soft);
+        font-size: 11px;
+    }
+    &__status:empty {
+        display: none;
     }
     &--mobile {
         display: none;

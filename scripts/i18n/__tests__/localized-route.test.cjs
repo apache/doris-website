@@ -5,9 +5,12 @@ const path = require('node:path');
 const ts = require('typescript');
 function load(name) {
     const source = fs.readFileSync(path.resolve(__dirname, '../../../src/utils', name + '.ts'), 'utf8');
-    const code = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020}}).outputText;
+    const code = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true}}).outputText;
     const mod = {exports: {}};
-    new Function('module', 'exports', code)(mod, mod.exports);
+    new Function('require', 'module', 'exports', code)(name => {
+        assert.equal(name, '@site/config/locale-entry.json');
+        return require('../../../config/locale-entry.json');
+    }, mod, mod.exports);
     return mod.exports;
 }
 const {resolveLocalizedRoute, rootBaseUrl, appendRouteSuffix, isSystemNoindexPath} = load('localizedRoute');
