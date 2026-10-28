@@ -62,7 +62,8 @@ function readState(root, locale) {
         assert(schema.schemaVersion === 1 && schema.format === 'page-record-v1', 'Unsupported translation shard schema');
     }
     // Build the effective view from the same bytes we retain for write guards.
-    const data = {...legacy, pages: [...collectRecords(locale, legacy, shards).values()]};
+    const data = {...legacy, pages: [...require('./source-revisions.cjs').hydrate(root,locale,
+        collectRecords(locale, legacy, shards)).values()]};
     return {root, locale, file, raw, legacy, shards, schemaFile, schemaRaw, sharded: schemaRaw !== null, data};
 }
 
@@ -98,14 +99,20 @@ function writeAtomic(file, value) {
 
 async function prepare({root, plan, taskId, scope, state, adapter, glossary, target, maxDocumentChars, maxChunkChars}) {
     const {task, source} = checkedTask(plan, taskId, scope, root);
-    const existing = state.data.pages.find(item => identity(item) === identity(task));
-    assert(!existing || existing.ownership === 'machine', 'Human maintained target requires manual review');
+    let existing = state.data.pages.find(item => identity(item) === identity(task));
+    const sourcePolicy=require('./source-revisions.cjs');
     const targetFile = safeFile(root, task.targetPath);
     const previousTarget = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : null;
+    if(!existing&&previousTarget!==null){existing=sourcePolicy.resolveRecord(root,{...task,sourceLocale:'en'},undefined);
+        if(existing)state.data.pages.push(existing);}
+    const sourceControl=sourcePolicy.info(existing);
+    assert(sourcePolicy.canGenerate(existing),sourceControl?'Corresponding sources are unchanged; preserve the target':'Human maintained target requires manual review');
+    if(sourceControl)assert.deepEqual(sourcePolicy.snapshot(root,existing,plan.sourceCommit),sourceControl.current,
+        'English/Chinese sources have uncommitted changes');
     assert(!previousTarget || existing, 'Untracked target needs human review');
     if (existing) {
         assert(existing.sourcePath === task.sourcePath && existing.targetPath === task.targetPath
-            && previousTarget !== null && hash(previousTarget) === existing.targetHash,
+            && (previousTarget === null ? !!sourceControl : hash(previousTarget) === existing.targetHash),
         'Existing target or identity changed; manual review required');
     }
     const baseline = stagedBaseline(state, task, previousTarget);
@@ -123,14 +130,19 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         if (previousSource !== null) assert(hash(previousSource) === existing.sourceHash, 'Previous source record is invalid');
     }
     const extension = path.extname(task.sourcePath);
-    const canReuse = existing?.glossaryVersion === glossary.version;
-    const generated = wholeDocument ? await translateManagedDocument({source, extension, adapter, glossary,
+    const chineseRefresh=sourceControl?.changed.includes('zh-CN');
+    const references=sourcePolicy.referenceSources(root,existing??{...task,sourceLocale:'en'});
+    const translationAdapter=Object.create(adapter);
+    for(const method of ['translate','translateDocument','translateChanges'])if(typeof adapter[method]==='function')
+        translationAdapter[method]=request=>adapter[method]({...request,referenceSources:references});
+    const canReuse = existing?.glossaryVersion === glossary.version && !chineseRefresh;
+    const generated = wholeDocument ? await translateManagedDocument({source, extension, adapter:translationAdapter, glossary,
         previousSource, previousTarget,
-        baselineReason: baselineReason || (existing && !canReuse ? 'glossary-version-changed' : undefined),
+        baselineReason: baselineReason || (chineseRefresh?'chinese-reference-changed':existing && !canReuse ? 'glossary-version-changed' : undefined),
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern, root, targetPath: task.targetPath,
         onAttempt: ({attempt, issues}) => process.stdout.write(`${task.sourcePath}: attempt ${attempt}/3: `
             + (issues.length ? issues.map(item => `${item.check}: ${item.message}`).join('; ') : 'passed') + '\n')})
-        : await translateDocument({source, extension, adapter, glossary,
+        : await translateDocument({source, extension, adapter:translationAdapter, glossary,
         previousSource: canReuse ? previousSource : null,
         previousTarget: canReuse ? previousTarget : null,
         targetLocale: target.locale, targetScriptPattern: target.scriptPattern, blog:group.kind==='blog',
@@ -148,6 +160,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         reviewStatus: 'machine', ownership: 'machine', translatedAt: new Date().toISOString(),
         glossaryVersion: glossary.version,
         ...(generated.generation ? {generation: generated.generation} : {})};
+    if(sourcePolicy.enabled(root))record.sourceRevisions=sourcePolicy.snapshot(root,record,plan.sourceCommit);
     return {task, targetFile, previousTarget, baseline, target: generated.target, record,
         units: generated.units, reusedUnits: generated.reusedUnits, requests: generated.requests,
         targetChanged: generated.targetChanged};
@@ -162,7 +175,10 @@ function applyCandidates(state, candidates) {
         const actual = readOptional(candidate.targetFile);
         assert.equal(actual, candidate.previousTarget, `Target changed during generation: ${candidate.task.targetPath}`);
         const existing = state.data.pages.find(item => identity(item) === identity(candidate.record));
-        assert(!existing || existing.ownership === 'machine', 'Human maintained target requires manual review');
+        assert(require('./source-revisions.cjs').canGenerate(existing), 'Human maintained target or corresponding sources unchanged; manual review required');
+        if(candidate.record.sourceRevisions)assert.deepEqual(
+            require('./source-revisions.cjs').currentSnapshot(state.root,candidate.record),candidate.record.sourceRevisions,
+            'Corresponding English/Chinese source changed during generation');
     }
     const writes = candidates.map(item => ({file: item.targetFile, before: item.previousTarget, after: item.target}));
     const legacyCandidates = [];
@@ -227,11 +243,14 @@ async function applyStaged(root, planFile, relativeStage) {
         const fields = ['pluginId', 'version', 'docId', 'locale', 'sourceLocale', 'sourcePath', 'targetPath',
             'sourceCommit', 'sourceHash', 'sourceTechnicalHash', 'targetHash', 'reviewStatus', 'ownership',
             'translatedAt', 'glossaryVersion'];
+        if(require('./source-revisions.cjs').enabled(root))fields.push('sourceRevisions');
         assert(record && JSON.stringify(Object.keys(record).sort()) === JSON.stringify(fields.sort())
             && identity(record) === identity(task) && record.sourceLocale === 'en'
             && record.reviewStatus === 'machine' && record.ownership === 'machine'
             && record.glossaryVersion === manifest.glossaryVersion
             && Number.isFinite(Date.parse(record.translatedAt)), 'Invalid staged state record');
+        if(record.sourceRevisions)assert.deepEqual(record.sourceRevisions,
+            require('./source-revisions.cjs').snapshot(root,record,plan.sourceCommit),'Staged source revisions changed');
         assert(item.sourceHash === task.sourceHash && item.sourcePath === task.sourcePath
             && item.targetPath === task.targetPath && item.record?.sourceHash === task.sourceHash
             && item.record?.sourcePath === task.sourcePath && item.record?.targetPath === task.targetPath

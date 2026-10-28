@@ -7,7 +7,7 @@ const {languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 const {statePathFor} = require('./workflow-prs.cjs');
 const {botBranchFor, botBranchPattern} = require('./automation-naming.cjs');
-const {checkMaster} = require('./master-drift.cjs');
+const {checkMaster,pageFiles} = require('./master-drift.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -78,7 +78,7 @@ async function main() {
     // The branch stays on the source commit; the PR checks run against current master.
     const drift = checkMaster({root, sourceCommit: manifest.sourceCommit, locale,
         pages: new Map(manifest.candidates.map(item => [item.id,
-            [item.sourcePath, item.targetPath, item.statePath ?? statePathFor(locale)]]))});
+            [...pageFiles({...item,locale},locale), item.statePath ?? statePathFor(locale)]]))});
     assert(!drift.affected.length, `master changed ${drift.affected.join(', ')} after the source commit; rescan required`);
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
         + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`

@@ -115,10 +115,11 @@ module.exports = async function translationDocsPlugin(context, options) {
             const target = await read(targetFile);
             Object.assign(page, {sourceLocale, sourcePath: relative(context.siteDir, sourceFile),
                 englishPath: relative(context.siteDir, englishFile), targetPath: relative(context.siteDir, targetFile)});
-            const record = records[locale].get(identity(page));
+            let record = records[locale].get(identity(page));
             const maintainCase = context.siteConfig.markdown.anchors.maintainCase;
             const sourceStructure = target !== undefined
                 ? await structure(source, path.extname(filename), maintainCase).catch(() => null) : null;
+            record=require('./source-revisions.cjs').resolveRecord(context.siteDir,page,record,sourceStructure?.technicalHash);
             let state = decide({page, source, target, record, technicalHash: sourceStructure?.technicalHash});
             if (fallbackOnly) state = {...state, status: 'unsupported_translation_version', useTarget: false, indexable: false, contentLocale: 'en'};
             if (requestedSourceLocale !== sourceLocale) {

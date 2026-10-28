@@ -6,10 +6,11 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import {translate} from '@docusaurus/Translate';
 import type {TranslationState} from '@site/src/utils/translation';
 import styles from './LocalizedNotice.module.css';
+import {languageMessages} from '@site/src/utils/languageMessages';
 
 // Every message belongs to the locale's dictionary, so a locale shows its own
 // wording and a partially translated one falls back to the English default.
-function description(state: TranslationState): string {
+function description(state: TranslationState,locale:string): string {
     if (state.status === 'untranslated') return translate({id: 'docs.translation.untranslated',
         message: 'This page is not translated yet.'});
     if (state.status === 'stale_prose') return translate({id: 'docs.translation.staleProse',
@@ -25,6 +26,7 @@ function description(state: TranslationState): string {
     }
     if (state.status !== 'current') return translate({id: 'docs.translation.stale',
         message: 'The translation does not reflect the latest changes to the source.'});
+    if(state.reviewStatus==='manual')return languageMessages(locale).manualTranslation;
     return state.reviewStatus === 'human'
         ? translate({id: 'docs.translation.reviewedHuman', message: 'This translation was reviewed by a person.'})
         : translate({id: 'docs.translation.machine',
@@ -44,7 +46,7 @@ export default function TranslationStatus({state}: {state: TranslationState}): J
         <aside className={styles.notice} lang={i18n.currentLocale}
             aria-label={translate({id: 'docs.translation.status.label', message: 'Translation status'})}
             data-translation-status={state.status}>
-            <strong>{description(state)}</strong>{' '}
+            <strong>{description(state,i18n.currentLocale)}</strong>{' '}
             {!state.useTarget && `${translate({id: 'docs.translation.showingSource',
                 message: 'Showing the source content for the current version.'})} `}
             <Link to={`pathname://${target}${suffix}`} autoAddBaseUrl={false} hrefLang={i18n.defaultLocale}>

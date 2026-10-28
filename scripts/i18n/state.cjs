@@ -14,6 +14,8 @@ function readJson(file, fallback) {
 function loadConfig(root) {
     const config = readJson(path.join(root, 'translations/config.json'), {schemaVersion: 1, locales: {}});
     if (config.schemaVersion !== 1) throw new Error('Unsupported translation config schemaVersion');
+    if(config.maintenancePolicy!==undefined&&config.maintenancePolicy!=='source-revisions-v1')
+        throw new Error('Unsupported translation maintenancePolicy');
     for (const [locale, settings] of Object.entries(config.locales)) {
         if (!/^[a-z]{2}(?:-[A-Za-z0-9]+)*$/.test(locale) || !['en', 'zh-CN'].includes(settings.sourceLocale)) {
             throw new Error(`Invalid translation locale/sourceLocale: ${locale}`);
@@ -140,7 +142,8 @@ function collectRecords(locale, data, shards) {
 function loadRecords(root, locale) {
     const data = readJson(path.join(root, `${stateRoot(locale)}/docs.json`), {schemaVersion: 1, pages: []});
     const shards = listShardFiles(root, locale).map(file => [file, fs.readFileSync(path.join(root, file), 'utf8')]);
-    return collectRecords(locale, data, shards);
+    const records=collectRecords(locale,data,shards);
+    return loadConfig(root).maintenancePolicy?require('./source-revisions.cjs').hydrate(root,locale,records):records;
 }
 function loadRecordsAt(root, locale, ref) {
     const read = file => {
@@ -153,7 +156,8 @@ function loadRecordsAt(root, locale, ref) {
         {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean).sort();
     const shards = paths.map(file => [file, read(file)]);
     if (shards.some(([, raw]) => raw === null)) throw new Error('Committed translation shard is unreadable');
-    return collectRecords(locale, base === null ? {schemaVersion: 1, pages: []} : JSON.parse(base), shards);
+    const records=collectRecords(locale,base === null ? {schemaVersion:1,pages:[]} : JSON.parse(base),shards);
+    return loadConfig(root).maintenancePolicy?require('./source-revisions.cjs').hydrate(root,locale,records,{ref,worktree:false}):records;
 }
 
 function sourceLocaleFor(settings, page) {
@@ -180,11 +184,19 @@ function decide({page, source, target, record, technicalHash}) {
         || !/^[a-f0-9]{64}$/.test(record.sourceHash ?? '')
         || !/^[a-f0-9]{64}$/.test(record.sourceTechnicalHash ?? '')
         || !/^[a-f0-9]{64}$/.test(record.targetHash ?? '')
-        || !['machine', 'human', 'unverified'].includes(record.reviewStatus)
+        || !['machine', 'human', 'manual', 'unverified'].includes(record.reviewStatus)
         || !['machine', 'human'].includes(record.ownership)
         || typeof record.glossaryVersion !== 'string'
         || !/^[a-f0-9]{40}$/.test(record.sourceCommit ?? '')
         || !Number.isFinite(Date.parse(record.translatedAt))) return result('state_conflict');
+    const control = record[Symbol.for('doris.source-revision-policy')];
+    if (control) {
+        if (control.error) return result('state_conflict');
+        if (record.targetHash !== targetHash) return result('target_modified');
+        if (control.changed.length) return result('stale_unknown');
+        return record.sourceHash === sourceHash ? result('current',true,record.reviewStatus !== 'unverified')
+            : result('state_conflict');
+    }
     if (record.targetHash !== targetHash) return result('target_modified');
     if (record.sourceHash === sourceHash) return result('current', true, record.reviewStatus !== 'unverified');
     if (record.sourceTechnicalHash !== technicalHash) return result('stale_technical');

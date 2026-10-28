@@ -84,6 +84,11 @@ async function audit({root,sourceRef,baseline,native}) {
     const key = keyFor(locale);
     baseline ??= inventoryBaseline(root, locale);
     const commit = execFileSync('git',['rev-parse',`${sourceRef}^{commit}`],{cwd:root,encoding:'utf8'}).trim();
+    if(require('./state.cjs').loadConfig(root).maintenancePolicy){
+        execFileSync('git',['diff','--quiet',commit,'--','i18n/zh-CN'],{cwd:root});
+        assert(!execFileSync('git',['ls-files','--others','--exclude-standard','--','i18n/zh-CN'],
+            {cwd:root,encoding:'utf8'}).trim(),'Uncommitted Chinese source cannot enter the audit');
+    }
     execFileSync('git',['diff','--quiet',commit,'--',`i18n/${locale}`,`translations/state/${locale}`],{cwd:root});
     const untracked = execFileSync('git',['ls-files','--others','--exclude-standard','--',`i18n/${locale}`,`translations/state/${locale}`],
         {cwd:root,encoding:'utf8'}).trim();
@@ -121,7 +126,8 @@ async function audit({root,sourceRef,baseline,native}) {
             const mergedCurrent = page.status === 'current' && page.reviewStatus !== 'unverified' && page.useTarget
                     && targetHashes.get(page.targetPath) !== null
                     && targetHashes.get(page.targetPath) === page.targetHash
-                && committedRecords.get(key(page))?.targetHash === page.targetHash;
+                && require('./source-revisions.cjs').resolveRecord(root,page,committedRecords.get(key(page)),undefined,
+                    {ref:commit,worktree:false})?.targetHash === page.targetHash;
             const state = disposition !== 'translate' ? disposition : page.status === 'current'
                 ? mergedCurrent ? 'current' : 'unverified' : page.status;
             entries.push({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
@@ -166,7 +172,8 @@ async function audit({root,sourceRef,baseline,native}) {
     const routingHashes = refHashes(root, commit, routingInputs);
     for (const file of routingInputs) assert.equal(routingHashes.get(file),hash(fs.readFileSync(path.join(root,file),'utf8')),
         `Routing input differs from source ref: ${file}`);
-    return {schemaVersion:1,sourceCommit:commit,baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
+    return {schemaVersion:1,sourceCommit:commit,maintenancePolicy:require('./state.cjs').loadConfig(root).maintenancePolicy,
+        baselineCommit:JSON.parse(fs.readFileSync(path.join(baseline,'summary.json'),'utf8')).sourceCommit,
         routingInputHashes:Object.fromEntries(routingInputs.map(file => [file,routingHashes.get(file)])),
         groups,removed,labels,automaticLabels,sidebar,reports:native.reports,automaticCounts,
         policyExclusions: [...new Map([...old.values(), ...committedRecords.values(), ...native.pages]

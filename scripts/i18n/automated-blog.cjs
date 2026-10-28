@@ -71,6 +71,7 @@ async function decision(root, locale, file, selected = policy(root), records) {
         record = (records ?? loadRecords(root, locale)).get(identity(page));
         const targetFile = path.join(root, page.targetPath),
             target = fs.existsSync(targetFile) ? fs.readFileSync(targetFile, 'utf8') : undefined;
+        record=require('./source-revisions.cjs').resolveRecord(root,page,record);
         automatic = decide({
             page,
             source,

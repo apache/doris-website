@@ -47,7 +47,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             errors.push({path:exceptionFile,message:'Protection exception is not bound to the merged T01 PoC bytes'});
     }
     for (const page of selected) {
-        const record = records.get(identity(page));
+        const record = require('./source-revisions.cjs').resolveRecord(root,page,records.get(identity(page)));
         if (!record && !fs.existsSync(path.join(root, page.targetPath))) continue; // Intentional removal of both.
         try {
             if (page.status !== 'current' || !record) throw new Error(`Translation must match its current source/state (${page.status})`);
@@ -62,14 +62,16 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             catch (error) {if (!fallback) throw error;}
             const exception = exceptions.find(entry => identity(entry) === identity(page)
                 && entry.sourceHash === page.sourceHash && entry.targetHash === page.targetHash && entry.reason?.trim());
+            const control=require('./source-revisions.cjs').info(record);
             const compare = page.pluginId === 'blog' ? parsed => protectionSignature(parsed, {blog: true})
-                : isDocumentGeneration(record, source, target) ? signature : protectionSignature;
+                : isDocumentGeneration(record, source, target) || control?.manual&&record.generation?.policy==='whole-document-v1'
+                    ? signature : protectionSignature;
             if (!exception && !fallback && compare(await structure(aligned, ext)) !== compare(parsed)) {
                 throw new Error('Protected code, links, numbers, MDX or metadata differ from the source');
             }
             if (fallback) warnings.push({path: page.targetPath, message: 'Third attempt retained for manual review',
                 issues: record.generation.warnings});
-            if (record.sourceTechnicalHash !== parsed.technicalHash) throw new Error('sourceTechnicalHash does not match the current source');
+            if (!control?.manual && record.sourceTechnicalHash !== parsed.technicalHash) throw new Error('sourceTechnicalHash does not match the current source');
             const committed = execFileSync('git', ['show', `${record.sourceCommit}:${page.sourcePath}`],
                 {cwd:root, encoding:'utf8', stdio:['ignore','pipe','ignore'], maxBuffer:16*1024*1024});
             if (hash(committed) !== record.sourceHash) throw new Error('sourceCommit/sourcePath does not contain the recorded sourceHash');

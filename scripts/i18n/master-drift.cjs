@@ -27,7 +27,7 @@ function batchWide(locale) {
 
 // Every file one page of a batch reads or writes.
 function pageFiles(task, locale) {
-    return [task.sourcePath, task.targetPath, stateFileFor({...task, locale})];
+    return [task.sourcePath, task.targetPath, task.targetPath.replace(`i18n/${locale}/`,'i18n/zh-CN/'),stateFileFor({...task, locale})];
 }
 
 // `pages` maps a task or candidate ID to its page files.

@@ -7,7 +7,7 @@ This runbook covers managed documentation maintenance, version changes and recov
 | Responsibility | Maintainer role | Evidence required |
 | --- | --- | --- |
 | Version support, native routes, sidebars and redirects | Website and release maintainers | Reviewed source/configuration PR and native navigation checks |
-| Terminology and manual prose changes | Reviewer for the affected language | Reviewed source/target revisions; retain machine status until human proofreading actually occurs |
+| Terminology and manual prose changes | Reviewer for the affected language | Git-bound source/target revisions; repository edits and complete human proofreading are reported separately |
 | Scheduled discovery, provider access and automation credentials | Translation workflow maintainers | Run URL, source SHA, mode, failure stage and sanitized diagnostics |
 | Publishing and public rollback | Website deployment maintainers | Production source SHA, immutable asf-site SHA and public content/resource checks |
 
@@ -21,7 +21,7 @@ These are operational roles, not assignments of human proofreading to a named pe
 | `translations/scope/<locale>.json` → `groups` | Registered audit and maintenance identities |
 | The same file → `automaticGroups` | Groups permitted to generate; `[]` pauses the entire language |
 | `scripts/i18n/docs-language-policy.cjs` | Explicit English/Chinese-only legacy versions; currently 3.x and 2.1 |
-| `translations/state/<locale>/pages/` and legacy `docs.json` | Exact source/target revisions, freshness and ownership; a page shard supersedes its legacy entry |
+| `translations/state/<locale>/pages/` and legacy `docs.json` | Automation provenance and source snapshots; Git-derived body edits supersede old target hashes without developer metadata edits |
 | `translations/release-notes-baseline.json` | Fixed historical release-note boundary; never advance it to hide work |
 | `translations/blog-baseline.json` | Fixed blog boundary and historical fallback languages; never advance it during discovery |
 
@@ -29,33 +29,19 @@ Course UI, weekly report source groups and landing pages remain outside schedule
 
 ## Correct a translation manually
 
-You can edit a Japanese, Korean or Russian target in `i18n/<locale>/`. A target hash mismatch becomes `target_modified`: generation and write-back stop for that page, and publication falls back to English. The checks also protect edits made after a model request starts. An open human PR reserves or blocks its target during scheduled reconciliation.
+Developers edit only the Japanese, Korean or Russian body under `i18n/<locale>/` and submit the usual PR. They do not edit state shards, calculate hashes, migrate a legacy record or set ownership/review flags. For a Dev document, edit `i18n/ja/docusaurus-plugin-content-docs/current/<path>.md`; use `version-4.x/` for 4.x. The same procedure applies to Korean and Russian and to admitted new blogs.
 
-To publish the correction and keep future automation from replacing it:
+1. Start from current `master`, revise the translation against its source, and preserve routing, links, code and technical facts.
+2. Submit only the body changes. Normal PR admission checks syntax, source consistency, protected technical content and the applicable native build. Open human PRs reserve or block their targets during scheduled reconciliation.
+3. Merge after review and CI. The `master` push triggers the normal website publishing workflow; the correction appears after that publication succeeds.
+4. Subsequent translation scans retain the correction while the corresponding English and Chinese input bytes are unchanged. Unrelated documents, ledger timestamps, glossary/tool changes and translation-body edits alone do not permit retranslation.
+5. When either corresponding source changes, automatic maintenance may update the translation and its internal state through the usual PR flow. English remains authoritative for technical facts; the current Chinese counterpart is supplementary context. A missing Chinese counterpart is tracked too, so creating or deleting it is a source change.
 
-1. Edit the target and review it against the English revision in its effective state record. Most records are page shards under `translations/state/<locale>/pages/`. Some Japanese records still exist only in `translations/state/ja/docs.json`: copy that record unchanged into `{ "schemaVersion": 1, "page": <record> }` at the path returned by `stateFileFor(record)` in `scripts/i18n/state.cjs`, then update the new shard. A shard supersedes the legacy entry; do not edit an obsolete legacy copy when a shard already exists.
-2. Set the shard's `page.targetHash` to the SHA-256 of the exact UTF-8 target bytes and set `page.ownership` to `human`. Preserve the recorded source revision when it is unchanged. For example, after reviewing a Japanese blog correction, run the following with its actual shard path:
+`translations/config.json` enables `maintenancePolicy: source-revisions-v1`. The state readers derive an effective record from Git: an edited target acknowledges the English/Chinese revisions present in its own content-changing commit. A later upstream source change is not hidden by that edit. A registered manual translation without a pre-existing state record follows the same rule. Local uncommitted target edits can be previewed, but do not count as merged coverage and cannot be replaced by a generation run.
 
-   ```bash
-   node - translations/state/ja/pages/blog/current/example.mdx.json <<'NODE'
-   const fs = require('node:fs');
-   const {hash} = require('./scripts/i18n/state.cjs');
-   const {safeFile} = require('./scripts/i18n/translation-engine.cjs');
-   const file = safeFile(process.cwd(), process.argv[2]);
-   const state = JSON.parse(fs.readFileSync(file, 'utf8'));
-   const page = state.page;
-   if (hash(fs.readFileSync(safeFile(process.cwd(), page.sourcePath), 'utf8')) !== page.sourceHash)
-       throw new Error('Source changed: review and synchronize the source revision first');
-   page.targetHash = hash(fs.readFileSync(safeFile(process.cwd(), page.targetPath), 'utf8'));
-   page.ownership = 'human';
-   fs.writeFileSync(file, JSON.stringify(state, null, 2) + '\n');
-   NODE
-   ```
+The JSON files remain automation provenance. A manual-only PR need not create any metadata commit; readers resolve its effective hashes and source revisions without writing the checkout. Generation refreshes the ordinary page record and both source fingerprints when it actually produces an update. Legacy records are read automatically. `ownership: human` is no longer a permanent generation lock under this policy: source changes determine eligibility. `reviewStatus: manual` identifies repository edits and does not claim complete human proofreading.
 
-3. Submit the target and matching shard in the same PR. Preserve `reviewStatus: machine` unless human proofreading actually occurred; then record the real review. `reviewStatus: human` alone does **not** transfer ownership.
-4. Run the applicable PR checks and inspect the published page. Once the English source changes, a human-owned page can fall back to English until its target and source revision are manually synchronized. Automation reports the work for human review and does not replace it.
-
-Updating only `targetHash` while leaving `ownership: machine` allows a later English source update to generate a new translation. Use `ownership: human` for continuing manual control. Do not blindly refresh source hashes or change ownership back to machine to clear an exception.
+Target/state changes during a model request still discard its candidate; English or Chinese changes during generation or publication do too. The publisher cannot force an unchanged-source page through an old or hand-written plan. Historical blog exclusion, English/Chinese-only old versions and paused generation groups retain their existing scope rules.
 
 ## New-blog policy
 
@@ -129,11 +115,11 @@ Record each report's source SHA, capture time, enabled groups, active PR snapsho
 | Unique byte-identical rename | A verified target may be reused; preserve its review/ownership identity and check every old URL/reference |
 | Ambiguous rename, or rename with changed facts | Review the identity and facts before changing files/state; a matching filename alone is insufficient |
 | Source deletion | Human-reviewed cleanup task; reconcile targets, shards, inbound links and redirects before recording its resolution |
-| Manual target edit | Hash mismatch or human ownership blocks automatic replacement; review the actual edited bytes |
+| Manual target edit | Git acknowledges the body edit; publish without shard edits, retain until its English/Chinese source pair changes |
 | Source changes during generation | Drop affected pages and their dependent copies; configuration/tooling/native-sidebar changes invalidate the batch |
 | Human/bot PR already open | Reserve the identity or block its target until reconciliation; closing/merging the PR triggers a fresh scan |
 
-Do not repair freshness by updating a hash without reviewing the corresponding bytes. Do not change `ownership` to machine to bypass a human edit. Prose approvals must bind the old source hash, new source hash and unchanged target hash; protected technical content is still checked.
+Do not repair freshness by updating a hash without reviewing the corresponding bytes. Do not refresh metadata to bypass an open human PR or an edit that arrived during generation. Prose approvals must bind the old source hash, new source hash and unchanged target hash; protected technical content is still checked.
 
 For reviewed deletion cleanup, copy the exact task identity, source path and source hash from the current plan into `translations/state/<locale>/resolved-deletions.json`, with actual `reviewedBy`, `resolvedAt` and evidence. Do not invent a reviewer or resolve a different revision. The schema is enforced by `validateResolved` in the planner.
 
@@ -173,7 +159,7 @@ For an immediate workflow-trigger pause, maintainers can disable the affected wo
 | GitHub PR pagination, HTTP 429/5xx or connection failure | Complete paginated reads retry twice; after exhaustion rerun discovery. Never use a partial PR list to free reservations |
 | GitHub/provider authentication or authorization | Repair the responsible secret/installation permission; rerun from current trusted master. Authentication failures are not empty-success scans |
 | Provider timeout or translation/technical validation failure | Keep the reported failure pending, inspect attempt diagnostics, reconcile targets and retry the exact current source. No manual hash refresh |
-| Human target/state changed during generation | Preserve that edit; reconcile ownership and get a reviewer decision before any new candidate |
+| Human target/state changed during generation | Preserve that edit; discard the candidate and rescan its latest Git/source revisions |
 | Source, configuration or sidebar moved on master | Discard stale work as reported and scan the new commit; do not force-publish the old plan |
 | Target/state write failure | Verify rollback restored every affected target and shard before retrying; atomic rollback cases are covered by the workflow tests |
 | Shared-lock queue or delayed review/merge | Inspect the predecessor or open PR; do not start a duplicate provider run for the same identity |
@@ -194,7 +180,7 @@ node --test scripts/i18n/__tests__/configuration.test.cjs \
 
 ## Content and publication rollback
 
-For a bad translation, revert its target and matching page state together through a reviewed PR, or quarantine it so native English fallback applies. Verify actual target/state hashes, ownership, canonical/noindex and search exclusion. Do not remove a public language just to hide one bad page.
+For a bad translation, correct or revert its target body through a reviewed PR; Git derives its effective source revision without a state-file edit. For a faulty automation commit, revert that commit and its generated record together. Verify source freshness, canonical/noindex and search exclusion. Do not remove a public language just to hide one bad page.
 
 For a generation-policy regression, pause the affected groups and revert the policy/tooling change while preserving source content and the RN historical boundary. A pause does not undo a batch already merged.
 

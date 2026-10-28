@@ -20,7 +20,7 @@ const priority = {delete: 0, move: 1, move_and_update: 1, update: 2, formatting_
 const managed = (scope, item) => scope.groups.find(group => group.pluginId === item.pluginId && group.version === item.version);
 const taskId = item => {
     const seed = JSON.stringify([item.pluginId, item.version, item.docId, item.locale, item.kind,
-        item.sourceHash ?? '', item.previousDocId ?? '']);
+        item.sourceHash ?? '', item.previousDocId ?? '',...(Object.hasOwn(item,'chineseSourceBlob')?[item.chineseSourceBlob]:[])]);
     const number = BigInt(`0x${createHash('sha256').update(seed).digest('hex').slice(0, 12)}`).toString().padStart(15, '0');
     return `T06-${item.groupId}-${number}`;
 };
@@ -139,8 +139,13 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
     const changedChinese = new Set(chineseChangedPaths);
     for (const page of pages) {
         const previous = old.get(key(page));
+        const sourceControl=require('./source-revisions.cjs').info(previous);
         const group = managed(scope, page);
         const chinese = chinesePath(group, page);
+        const sourceDriven=report.maintenancePolicy==='source-revisions-v1'||!!sourceControl;
+        let chineseSourceBlob;
+        if(sourceDriven){let content=null;try{content=chinese?readCurrent(chinese):null;}catch(e){if(e.code!=='ENOENT')throw e;}
+            chineseSourceBlob=content==null?null:require('./source-revisions.cjs').blob(content);}
         if (chinese && changedChinese.has(chinese) && baselineByKey.get(key(page))?.sourceHash === page.sourceHash) {
             exceptions.push({kind: 'zh_only_change', groupId: page.groupId, docId: page.docId,
                 sourcePath: page.sourcePath, chinesePath: chinese,
@@ -163,7 +168,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         }
         if (moveFrom && !current.has(key(moveFrom))) matchedRemoval.add(key(moveFrom));
         const candidate = activeByKey.get(key(page));
-        const activeValid = candidate?.sourceHash === page.sourceHash && candidate.sourcePath === page.sourcePath;
+        const activeValid = candidate?.sourceHash === page.sourceHash && candidate.sourcePath === page.sourcePath
+            && (!sourceDriven||candidate.chineseSourceBlob===chineseSourceBlob);
         if (candidate && !activeValid) exceptions.push({kind: 'stale_active_candidate', groupId: page.groupId,
             docId: page.docId, pr: candidate.pr, candidateHash: candidate.sourceHash, sourceHash: page.sourceHash});
         let kind;
@@ -174,14 +180,16 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         else if (page.state.startsWith('stale_')) {
             const historical = previous?.sourcePath
                 ? readAt(previous.sourceCommit ?? report.baselineCommit, previous.sourcePath) : null;
-            kind = historical && hash(historical) === previous.sourceHash
+            kind = !sourceControl && historical && hash(historical) === previous.sourceHash
                 && await formattingOnly(historical, source, page.sourcePath) ? 'formatting_review' : 'update';
         } else kind = previous ? 'translate_backlog' : 'translate_new';
-        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind)||previous?.ownership==='human';
+        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind)
+            || (sourceControl ? !require('./source-revisions.cjs').canGenerate(previous) : previous?.ownership==='human');
         const task = {groupId: page.groupId, pluginId: page.pluginId, version: page.version, docId: page.docId,
             locale: scope.locale, kind, sourcePath: page.sourcePath, targetPath: page.targetPath,
             permalink: page.permalink, sourceHash: page.sourceHash, sourceCommit: report.sourceCommit,
             targetHash: page.targetHash, state: page.state, reviewStatus: page.reviewStatus,
+            ...(sourceDriven&&{chineseSourceBlob}),
             estimatedSourceTokens: estimate(source), requiresHumanReview: protectedTask,
             sourceChange: page.change,
             // An open PR owns this identity until it is merged or closed,
@@ -272,13 +280,14 @@ async function main() {
     assert(!(options['--path'] && sourcePaths), 'path and paths are mutually exclusive');
     const report = await audit({root, sourceRef: options['--source-ref'] ?? 'HEAD'});
     if (options['--audit-output']) fs.writeFileSync(options['--audit-output'], JSON.stringify(report, null, 2) + '\n');
-    const chineseRoots = ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
+    const chineseRoots = config.maintenancePolicy?['i18n/zh-CN']:
+        ['i18n/zh-CN/docusaurus-plugin-content-docs', 'i18n/zh-CN/docusaurus-plugin-content-docs-community'];
     execFileSync('git', ['diff', '--quiet', report.sourceCommit, '--', ...chineseRoots], {cwd: root});
     const untrackedChinese = execFileSync('git', ['ls-files', '--others', '--exclude-standard', '--', ...chineseRoots],
         {cwd: root, encoding: 'utf8'}).trim();
     assert(!untrackedChinese, `Uncommitted Chinese counterpart: ${untrackedChinese}`);
-    const chineseChangedPaths = execFileSync('git', ['diff', '--name-only', report.baselineCommit, report.sourceCommit, '--', ...chineseRoots],
-        {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
+    const chineseChangedPaths = execFileSync('git', ['diff', '--name-only','-z', report.baselineCommit, report.sourceCommit, '--', ...chineseRoots],
+        {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean);
     const records = loadRecords(root, scope.locale);
     const active = options['--active-candidates'] ? JSON.parse(fs.readFileSync(options['--active-candidates'], 'utf8')) : null;
     const resolved = JSON.parse(fs.readFileSync(path.join(root, `translations/state/${scope.locale}/resolved-deletions.json`), 'utf8'));
