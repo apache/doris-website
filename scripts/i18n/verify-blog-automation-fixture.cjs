@@ -157,8 +157,41 @@ async function create() {
             reservationPassed: true,
         });
     }
+    await checkReload();
     write('eligibility.json', JSON.stringify(results, null, 2));
     return results;
+}
+async function checkReload() {
+    const { loadContext } = require('@docusaurus/core/lib/server/site.js');
+    const { loadPluginConfigs } = require('@docusaurus/core/lib/server/plugins/configs.js');
+    const { initPluginsConfigs } = require('@docusaurus/core/lib/server/plugins/init.js');
+    const ctx = await loadContext({ siteDir: root, locale: 'ja' });
+    const configs = (await loadPluginConfigs(ctx)).filter(c => c.plugin.isManualBlogPlugin);
+    const [{ plugin }] = await initPluginsConfigs(ctx, configs);
+    await plugin.loadContent();
+    const rule = plugin
+        .configureWebpack()
+        .module.rules.find(r => r.use?.some(u => u.loader.endsWith('/automated-blog-body-loader.cjs')));
+    const mapping = rule.use[0].options.translations,
+        resource = path.join(root, sourcePath);
+    const target = mapping[resource].target,
+        original = fs.readFileSync(target, 'utf8');
+    assert(rule.test(resource));
+    try {
+        fs.writeFileSync(target, original + '\nA human correction.\n');
+        await plugin.loadContent();
+        assert(!rule.test(resource));
+        assert(!mapping[resource], 'An earlier Webpack loader must not retain stale target hashes');
+    } finally {
+        fs.writeFileSync(target, original);
+    }
+    await plugin.loadContent();
+    assert(rule.test(resource));
+    assert.equal(mapping[resource].target, target);
+    write(
+        'reload-guard.json',
+        JSON.stringify({ sameLoaderOptions: true, targetModifiedFallback: true, restoredTarget: true }),
+    );
 }
 function verify() {
     const results = [];
@@ -297,7 +330,16 @@ async function main() {
     fs.writeFileSync(
         output,
         JSON.stringify(
-            { scope: 'small isolated fixture; no full website build', root, generation, publication, browser },
+            {
+                scope: 'small isolated fixture; no full website build',
+                root,
+                generation,
+                publication,
+                browser,
+                reloadGuard: fs.existsSync(path.join(root, 'reload-guard.json'))
+                    ? JSON.parse(fs.readFileSync(path.join(root, 'reload-guard.json')))
+                    : undefined,
+            },
             null,
             2,
         ) + '\n',

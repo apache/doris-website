@@ -120,7 +120,11 @@ function wrap(kind, native) {
                 ...loadManual(context.siteDir, kind).flatMap(record => [...record.sourceFiles, ...record.targetFiles])
                     .map(file => path.join(context.siteDir, file))];},
             async loadContent() {
-                snapshots = new Map(); records = loadManual(context.siteDir, kind); nativeReports = [];translations={};automaticDecision=kind==='blog'?automatedBlog.reader(context.siteDir):()=>null;
+                snapshots = new Map(); records = loadManual(context.siteDir, kind); nativeReports = [];
+                // Webpack keeps the loader's options object across plugin hot
+                // reloads. Update that map in place when state/targets change.
+                for (const source of Object.keys(translations)) delete translations[source];
+                automaticDecision=kind==='blog'?automatedBlog.reader(context.siteDir):()=>null;
                 for (const locale of context.i18n.locales) {
                     const ctx = localizedContext(context, locale);
                     const instance = locale === context.i18n.currentLocale ? plugin : await native.default(ctx, nativeOptions(ctx));
