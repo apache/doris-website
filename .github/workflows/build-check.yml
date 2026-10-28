@@ -282,6 +282,7 @@ jobs:
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/content-fixture-verification.json
+                      .i18n-build/blog-automation-verification.json
                       .i18n-build/content-manifests/*.sizes.json
                       .i18n-build/ci-*.txt
                       .i18n-build/browser-*-time.txt
