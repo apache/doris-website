@@ -328,15 +328,15 @@ NULL 容器、空容器、NULL 元素/value/字段与空间 EMPTY 值保持区�
 
 球面多边形计算将每个环解释为较小区域（不超过半球），不根据环方向选择另一侧。反转环不会选择大于半球的补集；当前不支持按环方向表达大区域的计算。这一计算约定不会改变原始 WKB 访问器及 Iceberg 读写所保留的环顺序或字节。
 
-在极端坐标精度下，原始坐标所定义的不同 Polygon 边界可能在 S2 中折叠为同一个区域。`ST_Equals` 仍会区分这些边界；`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 对此类有歧义的多边形组合明确报错，避免返回不可靠的结果。涉及 Polygon 的 `ST_Touches` 要求确认原始坐标上的边界接触。确认接触后，若 LineString 中正长度的原始线段在 S2 中折叠为一个点，且并非共享的多边形边界线段，则明确拒绝该 LineString/Polygon 组合。这一保守限制也适用于位于多边形外部的分段，因为舍入后的坐标无法可靠判断其内部关系。对于依赖 Polygon 内部关系的判断，如果点的原始坐标不在边界上，但其 S2 位置落在舍入后的边界上，也会明确拒绝。当 `ST_Contains`/`ST_Within`、`ST_Touches` 或多边形 `ST_Overlaps` 的判定还需要依赖舍入后的内部不相交这一结果时，如果非共享的原始边与舍入后的 Polygon 边界发生正长度重合，则拒绝这一无法可靠判断的边界组合。`ST_Overlaps` 还会拒绝以下 Polygon 组合：舍入后的内部不相交，但仅属于其中一方原始边界的顶点，与另一方边界顶点具有相同的 S2 位置。不存在原始坐标边界接触时，Touches 仍返回 false。这些检查没有引入独立的原始坐标区域求解器。除这些精度限制外，普通包含关系，以及等价的边分段、环起点旋转、反向和洞顺序调整仍受支持。这些计算限制不影响原始 WKB 的存储或访问器。
+在极端坐标精度下，原始坐标所定义的不同 Polygon 边界可能在 S2 中折叠为同一个区域。`ST_Equals` 仍会区分这些边界；`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 对此类有歧义的多边形组合明确报错，避免返回不可靠的结果。涉及 Polygon 的 `ST_Touches` 要求确认原始坐标上的边界接触。确认接触后，若 LineString 中正长度的原始线段在 S2 中折叠为一个点，且并非共享的多边形边界线段，则明确拒绝该 LineString/Polygon 组合。这一保守限制也适用于位于多边形外部的分段，因为舍入后的坐标无法可靠判断其内部关系。对于依赖 Polygon 内部关系的判断，如果点的原始坐标不在边界上，但其 S2 位置落在舍入后的边界上，也会明确拒绝。当 `ST_Contains`/`ST_Within`、`ST_Touches` 或多边形 `ST_Overlaps` 的判定还需要依赖舍入后的内部不相交这一结果时，如果非共享的原始边与舍入后的 Polygon 边界发生正长度重合，则拒绝这一无法可靠判断的边界组合。`ST_Contains`、`ST_Within` 和 `ST_Overlaps` 还会拒绝以下 Polygon 组合：仅属于其中一方原始边界的顶点，与另一方边界顶点具有相同的 S2 位置，即使舍入后的区域呈现严格包含关系。不存在原始坐标边界接触时，Touches 仍返回 false。这些检查没有引入独立的原始坐标区域求解器。除这些精度限制外，普通包含关系，以及等价的边分段、环起点旋转、反向和洞顺序调整仍受支持。这些计算限制不影响原始 WKB 的存储或访问器。
 
-`GROUP BY`、`SELECT DISTINCT`、`COUNT(DISTINCT ...)` 和 `MIN`/`MAX` 不接受原生空间参数，包括嵌套空间值和窗口聚合。原始 WKB 不做规范化：不同字节序可以表示同一几何对象，字节顺序也不代表空间顺序。普通 `COUNT`、`ANY_VALUE` 以及按普通键分组并携带空间值仍受支持。需要显式按字节分组或去重时，可使用 `hex(ST_AsBinary(shape))`；单独使用 `ST_AsBinary` 仍受现有 VARBINARY 限制。
+`GROUP BY`、`SELECT DISTINCT`、`COUNT(DISTINCT ...)` 和 `MIN`/`MAX` 不接受原生空间参数，包括嵌套空间值和窗口聚合。`COLLECT_SET` 及其聚合状态入口也拒绝空间参数，以及包含空间叶子的 Array/Map/Struct 值。原始 WKB 不做规范化：不同字节序可以表示同一几何对象，字节顺序也不代表空间顺序。普通 `COUNT`、`ANY_VALUE` 以及按普通键分组并携带空间值仍受支持。需要显式按字节分组或去重时，可使用 `hex(ST_AsBinary(shape))`；单独使用 `ST_AsBinary` 仍受现有 VARBINARY 限制。
 
 `UNION`（包括 `UNION DISTINCT`）、`INTERSECT` 和 `EXCEPT` 不接受空间键。`ARRAY_AGG(DISTINCT ...)` 和 `COLLECT_LIST(DISTINCT ...)` 不接受空间参数。`COUNT_MAP(DISTINCT ...)`、`MIN_MAP(DISTINCT ...)`、`MAX_MAP(DISTINCT ...)`、`SUM_MAP(DISTINCT ...)` 和 `AVG_MAP(DISTINCT ...)` 同样拒绝包含空间叶子的 MAP 参数，包括嵌套 value。非 DISTINCT 的 `MAP_AGG`、`MAP_AGG_V2` 和 `COUNT_MAP` 仍支持普通 key＋空间 value。`MIN_MAP`、`MAX_MAP` 及其聚合状态组合器拒绝包含空间叶子的 value，因为空间值没有定义排序语义。`UNION ALL` 以及非 DISTINCT 的标量 `ARRAY_AGG`/`COLLECT_LIST` 仍受支持。
 
 `LEAST`、`GREATEST`、`COUNT_AT_MIN` 和 `COUNT_AT_MAX` 不接受空间参数。窗口 `PARTITION BY` 也拒绝空间 key，包括含空间叶子的嵌套类型；普通 partition key 上受支持的空间窗口 value 仍可使用。`MIN_BY` 和 `MAX_BY` 不接受标量空间结果 value，并递归拒绝包含空间叶子的排序键，聚合状态路径也遵循此限制；普通排序 key＋嵌套空间结果 value 仍受支持。`TOPN_ARRAY` 拒绝空间值及包含空间值的嵌套类型。`MULTI_DISTINCT_COUNT` 拒绝空间参数，包括嵌套空间叶子；`GROUP_ARRAY_UNION` 和 `GROUP_ARRAY_INTERSECT` 拒绝包含空间值的数组。
 
-`INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。嵌套叶子同样递归检查这些身份。对于 V2 或使用非 Parquet 写入格式的表，CREATE 和 ALTER 拒绝空间列。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
+`INSERT ... SELECT` 必须保留 kind、CRS 和 algorithm；复制投影 Geometry 或非默认 Geography 时，目标列参数需与源列一致。嵌套叶子同样递归检查这些身份。`MERGE` 分支可将 `CAST(ARRAY(CAST(NULL AS INT)) AS ARRAY<INT>)` 写入 Geometry 或 Geography 的数组列。数组容器保持非 NULL，NULL 元素按目标类型标记；这不会绕过非 NULL 空间值的身份校验或非法数组维度转换的拒绝。对于 V2 或使用非 Parquet 写入格式的表，CREATE 和 ALTER 拒绝空间列。本轮不增加空间索引、bounds 裁剪、谓词下推或 GeoArrow 支持。
 
 所有参与 FE 和 BE 均需支持空间类型。本功能不提供 4.x 升级到 5.0 期间的混合版本执行兼容。
 
