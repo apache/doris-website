@@ -25,6 +25,7 @@ function pairFor(task, tasks, scope) {
     const otherVersion = task.version === 'current' ? '4.x' : 'current';
     const matches = tasks.filter(other => other.pluginId === 'default' && other.version === otherVersion
         && other.docId === task.docId && other.sourceHash === task.sourceHash
+        && other.chineseSourceBlob===task.chineseSourceBlob
         && relativeSource(other, scope) === relativeSource(task, scope));
     assert(matches.length <= 1, 'Ambiguous Dev/4.x source pair');
     const partner = matches[0];
@@ -34,7 +35,7 @@ function pairFor(task, tasks, scope) {
 
 function machineOwned(task, state) {
     const existing = state.data.pages.find(item => identity(item) === identity(task));
-    return !existing || existing.ownership === 'machine';
+    return require('./source-revisions.cjs').canGenerate(existing);
 }
 
 function copyPair(primary, partner, scope, state, rootDir = root) {
@@ -51,6 +52,7 @@ function copyPair(primary, partner, scope, state, rootDir = root) {
     const record = {...primary.record, pluginId: partner.pluginId, version: partner.version,
         docId: partner.docId, sourcePath: partner.sourcePath, targetPath: partner.targetPath,
         sourceHash: partner.sourceHash};
+    if(require('./source-revisions.cjs').enabled(rootDir))record.sourceRevisions=require('./source-revisions.cjs').snapshot(rootDir,record,record.sourceCommit);
     return {...primary, task: partner, targetFile, previousTarget, record,
         baseline: stagedBaseline(state, partner, previousTarget),
         requests: 0, reusedFrom: primary.task.id};

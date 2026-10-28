@@ -3,11 +3,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {languageName, pipelineLocale, stateFileFor} = require('./state.cjs');
+const {languageName, pipelineLocale, stateFileFor,hash} = require('./state.cjs');
 const {managedPath} = require('./translation-engine.cjs');
 const {statePathFor} = require('./workflow-prs.cjs');
 const {botBranchFor, botBranchPattern} = require('./automation-naming.cjs');
-const {checkMaster} = require('./master-drift.cjs');
+const {checkMaster,pageFiles} = require('./master-drift.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const git = (...args) => execFileSync('git', args, {cwd: root, encoding: 'utf8'}).trim();
@@ -28,14 +28,23 @@ function expectedFiles(manifest, scope) {
     return [...new Set(files)].sort();
 }
 
-function checkStaged(manifest, scope) {
+function checkStaged(manifest, scope,{rootDir=root}={}) {
+    const git=(...args)=>execFileSync('git',args,{cwd:rootDir,encoding:'utf8'}).trim();
     const expected = expectedFiles(manifest, scope);
     git('add', '--', ...expected);
     const staged = git('diff', '--cached', '--name-only', '-z').split('\0').filter(Boolean).sort();
-    assert.deepEqual(staged, expected, 'Staged files differ from the managed targets/state');
+    assert(staged.every(file=>expected.includes(file)),'Staged files differ from the managed targets/state');
+    for(const candidate of manifest.candidates){
+        const statePath=candidate.statePath??statePathFor(scope.locale);
+        assert(staged.includes(statePath),'Candidate state was not updated');
+        if(!staged.includes(candidate.targetPath)){
+            const unchanged=execFileSync('git',['show',`HEAD:${candidate.targetPath}`],{cwd:rootDir,encoding:'utf8'});
+            assert.equal(hash(unchanged),candidate.targetHash,'Unstaged target differs from the validated candidate');
+        }
+    }
     assert.equal(git('diff', '--name-only'), '', 'Unstaged tracked changes remain');
     git('diff', '--cached', '--check');
-    return expected;
+    return staged;
 }
 
 function authorFor(kind, user = {}, language) {
@@ -78,7 +87,7 @@ async function main() {
     // The branch stays on the source commit; the PR checks run against current master.
     const drift = checkMaster({root, sourceCommit: manifest.sourceCommit, locale,
         pages: new Map(manifest.candidates.map(item => [item.id,
-            [item.sourcePath, item.targetPath, item.statePath ?? statePathFor(locale)]]))});
+            [...pageFiles({...item,locale},locale), item.statePath ?? statePathFor(locale)]]))});
     assert(!drift.affected.length, `master changed ${drift.affected.join(', ')} after the source commit; rescan required`);
     fs.writeFileSync(bodyFile, body.replace('bot-head=PENDING', `bot-head=${newHead}`)
         + `\nShared PR admission checks: passed (translation state, syntax, internal links).\n`

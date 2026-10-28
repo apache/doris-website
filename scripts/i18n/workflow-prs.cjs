@@ -107,6 +107,7 @@ async function reconcileOpenPrs({scope, language, pulls, filesFor, readHead, rea
                 assert(target !== null && hash(target) === record.targetHash, 'Target does not match PR state hash');
                 const candidate = {pluginId: record.pluginId, version: record.version, docId: record.docId,
                     locale: scope.locale, sourcePath: record.sourcePath, sourceHash: record.sourceHash,
+                    ...(record.sourceRevisions&&{chineseSourceBlob:record.sourceRevisions['zh-CN'].blob}),
                     pr: `#${pull.number}`};
                 const key = identity(candidate);
                 if (active.has(key)) {

@@ -262,7 +262,8 @@ test('a page changed on master after its model call is dropped together with its
     });
     assert.equal(calls(), 1);
     assert.deepEqual([...seen[0].keys()].sort(), [dev.id, x4.id].sort());
-    assert.deepEqual(seen[0].get(x4.id), [x4.sourcePath, x4.targetPath, stateFileFor(x4)]);
+    assert.deepEqual(seen[0].get(x4.id), [x4.sourcePath, x4.targetPath,
+        x4.targetPath.replace('i18n/ja/','i18n/zh-CN/'),stateFileFor(x4)]);
     assert.deepEqual(manifest.candidates, []);
     assert.deepEqual(manifest.failures.map(item => item.id), [dev.id, x4.id]);
     assert.match(manifest.failures[0].error, /master changed this page/);

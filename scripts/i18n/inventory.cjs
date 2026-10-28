@@ -81,7 +81,7 @@ function mergedCurrent(page, committedHash) {
         && committedHash(page.targetPath) === page.targetHash;
 }
 
-function buildGroup({group, pages, files, order, scope, committedHash, committedRecords, policy}) {
+function buildGroup({group, pages, files, order, scope, committedHash, committedRecords, policy,root,sourceCommit}) {
     const key = keyFor(scope.locale);
     const relevant = pages.filter(page => page.pluginId === group.pluginId && page.version === group.version && page.locale === scope.locale);
     assert(relevant.length, `Missing native plugin/version: ${group.id}`);
@@ -98,7 +98,8 @@ function buildGroup({group, pages, files, order, scope, committedHash, committed
         const eligibility = policy?.classify(page);
         const disposition = page.draft ? 'draft' : allowed ? 'retain_english'
             : eligibility && eligibility.kind !== 'eligible' ? eligibility.kind : 'translate';
-        const record = committedRecords.get(key(page));
+        const record = committedRecords.get(key(page)) ?? (root&&loadConfig(root).maintenancePolicy
+            ?require('./source-revisions.cjs').resolveRecord(root,page,undefined,undefined,{ref:sourceCommit,worktree:false}):undefined);
         const complete = disposition === 'translate' && mergedCurrent(page, committedHash)
             && record?.sourceHash === page.sourceHash && record?.targetHash === page.targetHash
             && record?.sourcePath === page.sourcePath && record?.targetPath === page.targetPath
@@ -284,7 +285,7 @@ async function main() {
             .split('\n').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
                 && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file)).sort(compare);
         assert.deepEqual(files, committedFiles, `Source census differs from pinned commit: ${group.sourceRoot}`);
-        return buildGroup({group, pages: native.pages, files, scope, committedHash, committedRecords, policy: policies.get(group.id),
+        return buildGroup({group, pages: native.pages, files, scope, committedHash, committedRecords, policy: policies.get(group.id),root,sourceCommit,
             order: native.versions.find(version => version.pluginId === group.pluginId && version.version === group.version)?.order ?? new Map()});
     });
     const reports = native.reports.map(report => ({...report, inScope: scope.groups.some(group => group.pluginId === report.pluginId && group.version === report.version)}))

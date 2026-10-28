@@ -95,7 +95,10 @@ function fixture(t) {
     t.after(()=>fs.rmSync(root,{recursive:true,force:true}));
     const write=(file,text)=>{const full=path.join(root,file);fs.mkdirSync(path.dirname(full),{recursive:true});fs.writeFileSync(full,text);};
     write('.gitignore','.i18n-build/\n.codex/\n');
-    write('translations/config.json',fs.readFileSync(path.join(repo,'translations/config.json'),'utf8'));
+    // These cases exercise legacy ledger/write guards; the source-driven
+    // contributor workflow has dedicated real-Git tests.
+    const config=JSON.parse(fs.readFileSync(path.join(repo,'translations/config.json'),'utf8'));
+    delete config.maintenancePolicy;write('translations/config.json',JSON.stringify(config));
     write('translations/scope/ko.json',JSON.stringify(scope));
     write('translations/scope/ja.json',JSON.stringify({...scope,locale:'ja'}));
     write('translations/state/ko/docs.json','{"schemaVersion":1,"pages":[]}\n');

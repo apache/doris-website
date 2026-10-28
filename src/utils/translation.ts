@@ -10,7 +10,7 @@ export type TranslationState = {
     contentLocale: string;
     indexable: boolean;
     useTarget: boolean;
-    reviewStatus: 'machine' | 'human' | 'unverified';
+    reviewStatus: 'machine' | 'human' | 'manual' | 'unverified';
     translatedAt: string | null;
     englishPermalink: string;
     sourcePermalink: string;
