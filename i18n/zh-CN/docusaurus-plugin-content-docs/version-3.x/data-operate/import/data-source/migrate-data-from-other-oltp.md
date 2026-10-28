@@ -161,3 +161,4 @@ val jdbcDF = spark.read
 - [DataX](../../../ecosystem/datax.md)
 - [Seatunnel](../../../ecosystem/seatunnel.md)
 - [CloudCanal](../../../ecosystem/cloudcanal.md)
+- [NineData](https://docs.ninedata.cloud/replication/mysql_to_others/mysql_to_doris/)
