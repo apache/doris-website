@@ -95,6 +95,9 @@ test('CI tooling only runs the fixtures for its own subsystem', () => {
     assert.equal(language.runContentFixture, true);
     assert.equal(language.runSamplingFixture, false);
     assert.equal(language.runPublishFixture, false);
+    const dates=policy(['scripts/i18n/verify-doc-dates-fixture.cjs']);
+    assert.equal(dates.mode,'fixtures');assert.equal(dates.runContentFixture,true);
+    assert.equal(dates.publicationAllowed,false);
     const sampler = policy(['scripts/i18n/ci-sample.cjs']);
     assert.equal(sampler.runSamplingFixture, true);
     assert.equal(sampler.runPublishFixture, false);

@@ -39,3 +39,16 @@ test('each invocation rereads the artifact and rejects damaged heading IDs and d
     const $=cheerio.load(original);$('head').append($('link[hreflang="ko"]').clone());fs.writeFileSync(file,$.html());
     assert.throws(()=>verifyAll(data),/Duplicate hreflang/);
 });
+
+test('cached counterpart metadata still rejects each page own language, notice, canonical and robots defects',t=>{
+    const data=fixture(t),file=path.join(data.site,'ko/topic/index.html'),original=fs.readFileSync(file,'utf8');
+    for(const [change,message]of [
+        [text=>text.replace('lang="ko"><h2','lang="en"><h2'),/Body language/],
+        [text=>text.replace('data-translation-status="current"','data-translation-status="wrong"'),/Notice/],
+        [text=>text.replace('</head>','<link rel="canonical"></head>'),/Duplicate canonical/],
+        [text=>text.replace('</head>','<meta name="robots" content="noindex"></head>'),/ko\/topic/],
+    ]){
+        fs.writeFileSync(file,change(original));
+        assert.throws(()=>verifyAll(data),message);
+    }
+});

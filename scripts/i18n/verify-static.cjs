@@ -52,7 +52,12 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
                 if (!alternates.has(lang)) alternates.set(lang, []);
                 alternates.get(lang).push($(node).attr('href'));
             }
-            headCache.set(file, {headingIds:headingIds($), alternates});
+            headCache.set(file, {headingIds:headingIds($), alternates,
+                htmlLang:$('html').attr('lang'), bodyLang:$('.theme-doc-markdown,.course-doc-content').attr('lang'),
+                translationStatus:$('[data-translation-status]').attr('data-translation-status'),
+                canonicals:$('link[rel="canonical"]').toArray().map(node=>$(node).attr('href')),
+                robots:$('meta[name="robots"]').attr('content'),
+                ogUrl:$('meta[property="og:url"]').attr('content'), ogLocale:$('meta[property="og:locale"]').attr('content')});
         }
         return headCache.get(file);
     }
@@ -71,19 +76,15 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
             assert(page.draft, `Missing non-draft static page: ${page.permalink}`);
             continue;
         }
-        const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
-        head(filename, $);
-        const body = $('.theme-doc-markdown,.course-doc-content');
-        assert.equal(body.attr('lang'), page.contentLocale, `Body language: ${page.permalink}`);
-        assert.equal($('[data-translation-status]').attr('data-translation-status'), page.status, `Notice: ${page.permalink}`);
-        assert.equal($('link[rel="canonical"]').length, 1, `Duplicate canonical: ${page.permalink}`);
+        const metadata = head(filename);
+        assert.equal(metadata.bodyLang, page.contentLocale, `Body language: ${page.permalink}`);
+        assert.equal(metadata.translationStatus, page.status, `Notice: ${page.permalink}`);
+        assert.equal(metadata.canonicals.length, 1, `Duplicate canonical: ${page.permalink}`);
         const canonical = page.useTarget ? page.permalink : page.contentLocale === 'en' ? page.englishPermalink : page.sourcePermalink;
-        assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${canonical}`);
-        const alternates = $('link[rel="alternate"][hreflang]');
-        const localized = alternates.filter(`[hreflang="${htmlLang}"]`);
-        assert.equal(localized.length, alternateGroup[locale] ? 1 : 0, `Localized alternate: ${page.permalink}`);
+        assert.equal(metadata.canonicals[0], `https://doris.apache.org${canonical}`);
+        assert.equal(metadata.alternates.get(htmlLang)?.length ?? 0, alternateGroup[locale] ? 1 : 0, `Localized alternate: ${page.permalink}`);
         if (!page.indexable) {
-            assert($('meta[name="robots"]').attr('content').includes('noindex'), page.permalink);
+            assert(metadata.robots.includes('noindex'), page.permalink);
             assert(!sitemapPaths.has(page.permalink), `Fallback/stale page in sitemap: ${page.permalink}`);
             assert(!indexedPaths.has(page.permalink), `Fallback/stale page in local search index: ${page.permalink}`);
             for (const permalink of Object.values(alternateGroup)) {
@@ -94,10 +95,10 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
                 }
             }
         } else {
-            assert(!($('meta[name="robots"]').attr('content') ?? '').includes('noindex'), page.permalink);
+            assert(!(metadata.robots ?? '').includes('noindex'), page.permalink);
             assert(sitemapPaths.has(page.permalink), `Current page missing from sitemap: ${page.permalink}`);
             const english = counterpart(page.englishPermalink, 'source heading IDs');
-            if (english) assert.deepEqual(headingIds($), english.headingIds, `Source heading IDs: ${page.permalink}`);
+            if (english) assert.deepEqual(metadata.headingIds, english.headingIds, `Source heading IDs: ${page.permalink}`);
             for (const [lang, permalink] of Object.entries(alternateGroup)) {
                 const counterpart$ = counterpart(permalink, 'reciprocal alternates');
                 if (!counterpart$) continue;
@@ -117,20 +118,20 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
     for (const permalink of data.pageRoutes ?? []) {
         const filename = path.join(site, decodeURIComponent(permalink), 'index.html');
         assert(fs.existsSync(filename), `Missing ordinary page: ${permalink}`);
-        const $ = cheerio.load(fs.readFileSync(filename, 'utf8'));
+        const metadata = head(filename);
         const source = permalink.startsWith(`/${locale}/`) ? permalink.slice(locale.length + 1) : permalink;
         const translatedPages = data.translatedPagePaths?.[locale] ?? record?.translatedPages;
         const decision = contentByRoute.get(permalink);
         const fallback = decision ? decision.fallback : record?.ordinaryPages === false && !translatedPages?.includes(source.replace(/\/+$/, ''));
         if (fallback) {
-            assert.equal($('html').attr('lang'), htmlLang, `Fallback navigation language: ${permalink}`);
-            assert.equal($('link[rel="canonical"]').length, 1, `Duplicate ordinary canonical: ${permalink}`);
-            assert.equal($('link[rel="canonical"]').attr('href'), `https://doris.apache.org${source}`);
-            assert.equal($('meta[property="og:url"]').attr('content'), `https://doris.apache.org${source}`);
-            assert.equal($('meta[property="og:locale"]').attr('content'), 'en_US');
-            assert(($('meta[name="robots"]').attr('content') ?? '').includes('noindex'), `Indexed English fallback: ${permalink}`);
+            assert.equal(metadata.htmlLang, htmlLang, `Fallback navigation language: ${permalink}`);
+            assert.equal(metadata.canonicals.length, 1, `Duplicate ordinary canonical: ${permalink}`);
+            assert.equal(metadata.canonicals[0], `https://doris.apache.org${source}`);
+            assert.equal(metadata.ogUrl, `https://doris.apache.org${source}`);
+            assert.equal(metadata.ogLocale, 'en_US');
+            assert((metadata.robots ?? '').includes('noindex'), `Indexed English fallback: ${permalink}`);
             assert(!sitemapPaths.has(permalink), `Ordinary fallback in sitemap: ${permalink}`);
-            assert.equal($(`link[rel="alternate"][hreflang="${htmlLang}"]`).length, 0, `Ordinary fallback alternate: ${permalink}`);
+            assert.equal(metadata.alternates.get(htmlLang)?.length ?? 0, 0, `Ordinary fallback alternate: ${permalink}`);
             for (const sourceRoute of (decision ? Object.values(decision.navigationRoutes) : [source, `/zh-CN${source}`])) {
                 const source$ = counterpart(sourceRoute, 'ordinary fallback alternates');
                 if (source$) assert.equal(source$.alternates.get(htmlLang)?.length ?? 0, 0,
@@ -138,7 +139,7 @@ function verify({site, manifest, partial = false, headCache = new Map()}) {
             }
             ordinaryPages.fallback++;
         } else {
-            assert.equal($('html').attr('lang'), htmlLang, `Translated ordinary page language: ${permalink}`);
+            assert.equal(metadata.htmlLang, htmlLang, `Translated ordinary page language: ${permalink}`);
         }
         ordinaryPages.verified++;
     }
