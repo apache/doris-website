@@ -63,7 +63,7 @@ function buildScope(files, versions, managed = [], dependencies = null) {
         else if (/^sidebars(Community|Releases|Course)\./.test(file)) shared();
         else if (/^(src|config)\//.test(file) || ['docusaurus.config.js','package.json','yarn.lock','tailwind.config.js','tsconfig.json'].includes(file)
             || /^scripts\/(key-features|last-update|publish)\//.test(file) || /^scripts\/(patch-search-tokenize.js|build-locales.cjs|build-locale.cjs)$/.test(file)
-            || /^scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$/.test(file)) shared();
+            || /^scripts\/i18n\/(automated-blog|automated-blog-body-loader|release-policy|docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages)\.cjs$/.test(file)) shared();
         else if (file === 'translations/shared/registry.json') {shared(); json.add(file);}
         else if (/^translations\/(pages|blog)\//.test(file)) {shared(); if (file.endsWith('.json')) json.add(file);}
         else if ((match = file.match(/^translations\/(scope|glossary)\/([^/]+)\.json$/))) {
@@ -71,7 +71,7 @@ function buildScope(files, versions, managed = [], dependencies = null) {
             json.add(file); // Offline configuration checks cover these without a site build.
         }
         // Translation configuration applies to every managed locale at once.
-        else if (['translations/config.json', 'translations/release-notes-baseline.json'].includes(file)) {managed.forEach(locale => languages.add(locale)); json.add(file); build();}
+        else if (['translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json'].includes(file)) {managed.forEach(locale => languages.add(locale)); json.add(file); build();}
         else if ((match = file.match(/^translations\/state\/([^/]+)\/[^/]+\.json$/))) {
             if (!locales.includes(match[1])) throw new Error(`Unconfigured locale: ${match[1]}`);
             languages.add(match[1]); build();

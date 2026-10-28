@@ -74,7 +74,7 @@ function readOptional(file) {
 function statePathForRecord(state, record) {
     assert.equal(record.locale, state.locale, 'Candidate state locale changed');
     const shard = stateFileFor(record);
-    return state.sharded || state.shards.has(shard) ? shard : relative(state.root, state.file);
+    return record.pluginId==='blog'||state.sharded || state.shards.has(shard) ? shard : relative(state.root, state.file);
 }
 
 // Capture the inputs from the generation snapshot, before awaiting a model.
@@ -133,7 +133,7 @@ async function prepare({root, plan, taskId, scope, state, adapter, glossary, tar
         : await translateDocument({source, extension, adapter, glossary,
         previousSource: canReuse ? previousSource : null,
         previousTarget: canReuse ? previousTarget : null,
-        targetLocale: target.locale, targetScriptPattern: target.scriptPattern,
+        targetLocale: target.locale, targetScriptPattern: target.scriptPattern, blog:group.kind==='blog',
         maxDocumentChars: maxDocumentChars ?? (group.kind || task.pluginId === 'course' ? 300000 : 60000), maxChunkChars});
     if (!wholeDocument) checkFrontMatter(source, generated.target, target.locale);
     if (!wholeDocument && adapter.model !== 'fixture') {

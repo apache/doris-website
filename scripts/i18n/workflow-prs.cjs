@@ -16,7 +16,7 @@ function managedTarget(scope, target) {
     return scope.groups.some(group => {
         const suffix = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
         const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-        return target.startsWith(`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
+        return target.startsWith(group.kind==='blog'?`i18n/${scope.locale}/docusaurus-plugin-content-blog/`:`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
             && (group.kind === 'code' ? /\.tsx?$/.test(target) : /\.mdx?$/.test(target));
     });
 }
@@ -134,7 +134,7 @@ function targetFor(scope, candidate) {
     assert(group && candidate.sourcePath.startsWith(`${group.sourceRoot}/`), 'Invalid candidate source root');
     const suffix = candidate.pluginId === 'default' ? '' : `-${candidate.pluginId}`;
     const version = candidate.version === 'current' ? 'current' : `version-${candidate.version}`;
-    return `i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`
+    return (group.kind==='blog'?`i18n/${scope.locale}/docusaurus-plugin-content-blog/`:`i18n/${scope.locale}/docusaurus-plugin-content-docs${suffix}/${version}/`)
         + candidate.sourcePath.slice(group.sourceRoot.length + 1);
 }
 

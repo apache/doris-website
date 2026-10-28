@@ -19,7 +19,7 @@ export default function BlogPostPageMetadata(): JSX.Element {
   // counterpart is the default locale's article. It keeps the localized URL,
   // but the default locale's copy is the one worth ranking.
   const isDefaultLocalePost =
-    currentLocale !== defaultLocale && !(metadata.source ?? '').startsWith(`@site/i18n/${currentLocale}/`);
+    page ? page.fallback : currentLocale !== defaultLocale && !(metadata.source ?? '').startsWith(`@site/i18n/${currentLocale}/`);
   return (
     <PageMetadata
       title={frontMatter.title_meta ?? title}

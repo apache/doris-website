@@ -36,7 +36,7 @@ test('blog lists/tags contain representative bodies and all changed import owner
     assert(selected.blogPosts.some(post => post.id === 'owner.mdx'));
     assert(!selected.blogPosts.some(post => post.id === 'other.md'));
     restore();
-    for (const file of ['blog/owner.mdx', 'i18n/ja/docusaurus-plugin-content-blog/owner.mdx', 'translations/blog/pages/ja/owner.mdx.json']) {
+    for (const file of ['blog/owner.mdx', 'i18n/ja/docusaurus-plugin-content-blog/owner.mdx', 'translations/blog/pages/ja/owner.mdx.json', 'translations/state/ja/pages/blog/current/owner.mdx.json']) {
         restore = sampler.enable({mode: 'sample', files: [file]});
         assert.equal(await sampler.sample(context, options, content), undefined);
         restore();

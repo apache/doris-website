@@ -101,7 +101,7 @@ function fixture(t) {
     write('translations/config.json', read('translations/config.json'));
     for (const locale of ['ja', 'ko', 'ru']) {
         const scope = JSON.parse(read(`translations/scope/${locale}.json`));
-        scope.groups = scope.groups.filter(group => !['DEV', '4X', 'COMMUNITY'].includes(group.id));
+        scope.groups = scope.groups.filter(group => !['DEV', '4X', 'COMMUNITY','BLOG'].includes(group.id));
         delete scope.automaticGroups; // This fixture explicitly exercises expanded generation.
         scope.retainSidebarLabels = [];
         write(`translations/scope/${locale}.json`, JSON.stringify(scope));

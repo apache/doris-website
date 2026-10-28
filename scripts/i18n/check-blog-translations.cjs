@@ -13,7 +13,9 @@ function normalizeImports(raw) {
 }
 async function checkBlogTranslations(root) {
     const checked = [];
+    const automation=require('./automated-blog.cjs'),selected=automation.policy(root);
     for (const record of loadManual(root, 'blog')) {
+        if(automation.excluded(root,record.locale,record.contentId.slice(5),selected))continue;
         const decision = decideManual({root, record, sourceFiles: record.sourceFiles});
         if (decision.fallback) continue;
         const sourceFile = record.sourceFiles.find(file => file.startsWith('blog/') && /\.mdx?$/.test(file));
@@ -32,8 +34,7 @@ async function checkBlogTranslations(root) {
         const translated = await structure(target, path.extname(targetFile));
         // Blog summary is prose. All other metadata uses the existing protected
         // content contract, including date/author/order/tags and externalLink.
-        delete original.technicalMetadata.summary; delete translated.technicalMetadata.summary;
-        assert.equal(protectionSignature(translated), protectionSignature(original),
+        assert.equal(protectionSignature(translated,{blog:true}), protectionSignature(original,{blog:true}),
             `Protected blog content changed: ${record.contentId}/${record.locale}`);
         checked.push({contentId:record.contentId,locale:record.locale,state:decision.state,reviewStatus:record.reviewStatus});
     }

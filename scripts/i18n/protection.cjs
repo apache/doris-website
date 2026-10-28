@@ -11,8 +11,9 @@ function normalizedNumbers(text) {
 
 // Keep the T02 freshness hash unchanged. This separate signature permits prose
 // in HTML and visible string attributes while protecting executable MDX.
-function protectedContent(parsed, {normalizeProseNumbers = false} = {}) {
+function protectedContent(parsed, {normalizeProseNumbers = false, blog = false} = {}) {
     const nodes = [], numbers = [];
+    if(blog&&typeof parsed.technicalMetadata.summary==='string')numbers.push(...normalizedNumbers(parsed.technicalMetadata.summary));
     for (const node of parsed.protectedNodes) {
         if (node[0] === 'numbers') {if (!normalizeProseNumbers) numbers.push(...node[1]); continue;}
         if (node[0] === 'script' || node[0] === 'mdxjsEsm' && reportEsm(node[3])) {
@@ -52,7 +53,7 @@ function protectedContent(parsed, {normalizeProseNumbers = false} = {}) {
             })]);
         } else nodes.push(node);
     }
-    return [Object.fromEntries(Object.entries(parsed.technicalMetadata).filter(([key]) => !translatable.has(key))),
+    return [Object.fromEntries(Object.entries(parsed.technicalMetadata).filter(([key]) => !translatable.has(key)&&!(blog&&key==='summary'))),
         nodes, [...numbers, ...(normalizeProseNumbers ? parsed.proseNumbers || [] : [])].sort(),
         parsed.headings.map(({depth,id}) => ({depth,id}))];
 }

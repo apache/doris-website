@@ -11,10 +11,11 @@ const {withContentRoutes} = require('./route-context.cjs');
 const {pageDependencies, validateMessages} = require('./page-body.cjs');
 const blogSample = require('./ci-blog-sample.cjs');
 const blogPolicy = require('./blog-policy.cjs');
+const automatedBlog=require('./automated-blog.cjs');
 
 function wrap(kind, native) {
     async function adapter(context, options) {
-        let snapshots = new Map(), records = [], nativeReports = [];
+        let snapshots = new Map(), records = [], nativeReports = [], translations = {}, automaticDecision=()=>null;
         function sourcePath(item, locale) {
             const source = path.resolve(context.siteDir, item.source.replace(/^@site\//, ''));
             const localized = getPluginI18nPath({localizationDir: path.join(context.siteDir, 'i18n', locale),
@@ -33,12 +34,13 @@ function wrap(kind, native) {
                 const english = new Map(snapshots.get('en').blogPosts.map(post => [sourcePath(post.metadata, 'en'), post]));
                 const parsed = new Map(posts.map(post => [sourcePath(post.metadata,locale),post]));
                 for (const file of parsed.keys()) if (!english.has(file)) nativeReports.push({kind:'orphan_target',locale,targetPath:file});
-                return [...english].map(([file, original]) => {
+                return Promise.all([...english].map(async ([file, original]) => {
                     const post = parsed.get(file) ?? original;
                     const contentId = `blog:${options.id === 'default' ? '' : options.id + ':'}${file}`;
                     const record = records.find(record => record.contentId === contentId && record.locale === locale);
                     const englishPath = relative(context.siteDir, path.resolve(context.siteDir, options.path, file));
-                    const decision = decideManual({root: context.siteDir, record, sourceFiles: [englishPath]});
+                    const automatic=options.id==='default'?await automaticDecision(locale,file):null;
+                    const decision = automatic??decideManual({root: context.siteDir, record, sourceFiles: [englishPath]});
                     if (!decision.fallback && !parsed.has(file)) throw new Error(`Published blog target has no native route: ${contentId}/${locale}`);
                     if (!decision.fallback) blogPolicy.stableMetadata(original.metadata, post.metadata,
                         localizedContext(context, 'en').baseUrl, ctx.baseUrl);
@@ -48,9 +50,14 @@ function wrap(kind, native) {
                         authors: original.metadata.authors.map(author => ({...author,
                             ...(author.page && {page:{...author.page,permalink:toLocale(author.page.permalink)}})})),
                         prevItem: undefined, nextItem: undefined}} : post;
-                    return {...selected, metadata: {...selected.metadata, dorisContent: {contentId, contentLocale: decision.contentLocale,
+                    if(automatic?.useTarget&&locale===context.i18n.currentLocale){
+                        const source=path.resolve(context.siteDir,englishPath);
+                        translations[source]={target:path.resolve(context.siteDir,automatic.targetPath),state:path.resolve(context.siteDir,automatic.statePath),sourceHash:automatic.sourceHash,targetHash:automatic.targetHash};
+                    }
+                    const rendered=automatic?.useTarget?{...selected,metadata:{...selected.metadata,source:original.metadata.source}}:selected;
+                    return {...rendered, metadata: {...rendered.metadata, dorisContent: {contentId, contentLocale: decision.contentLocale,
                         fallback: decision.fallback, state: decision.state, indexable: decision.indexable && !original.metadata.unlisted}}};
-                });
+                }));
             }};
         }
         const plugin = await native.default(context, nativeOptions(context));
@@ -93,6 +100,13 @@ function wrap(kind, native) {
                 return createAllRoutes({baseUrl: context.baseUrl, content: args.content, actions: args.actions, options,
                     aliasedSource});
             },
+            ...(kind === 'blog' && {configureWebpack(...args){
+                const result=plugin.configureWebpack?.(...args)??{};
+                return {...result,module:{...result.module,rules:[...(result.module?.rules??[]),{
+                    enforce:'pre',test:file=>Object.hasOwn(translations,path.resolve(file)),
+                    use:[{loader:require.resolve('./automated-blog-body-loader.cjs'),options:{translations}}],
+                }]}};
+            }}),
             ...(kind === 'pages' && {configureWebpack(...args) {
                 const result = plugin.configureWebpack?.(...args) ?? {};
                 return {...result, module: {...result.module, rules: [...(result.module?.rules ?? []), {
@@ -101,10 +115,16 @@ function wrap(kind, native) {
                 }]}};
             }}),
             getPathsToWatch() {return [...plugin.getPathsToWatch(), path.join(context.siteDir, `translations/${kind}/**/*.json`),
+                ...(kind==='blog'?[path.join(context.siteDir,'translations/blog-baseline.json'),
+                    path.join(context.siteDir,`translations/state/*/pages/blog/current/**/*.json`)]:[]),
                 ...loadManual(context.siteDir, kind).flatMap(record => [...record.sourceFiles, ...record.targetFiles])
                     .map(file => path.join(context.siteDir, file))];},
             async loadContent() {
                 snapshots = new Map(); records = loadManual(context.siteDir, kind); nativeReports = [];
+                // Webpack keeps the loader's options object across plugin hot
+                // reloads. Update that map in place when state/targets change.
+                for (const source of Object.keys(translations)) delete translations[source];
+                automaticDecision=kind==='blog'?automatedBlog.reader(context.siteDir):()=>null;
                 for (const locale of context.i18n.locales) {
                     const ctx = localizedContext(context, locale);
                     const instance = locale === context.i18n.currentLocale ? plugin : await native.default(ctx, nativeOptions(ctx));
@@ -149,14 +169,15 @@ function wrap(kind, native) {
                             && !record.targetFiles.includes(`i18n/${locale}/docusaurus-plugin-content-blog${options.id === 'default' ? '' : '-' + options.id}/${file}`)))) {
                             throw new Error(`Manual state does not cover native source/target: ${contentId}/${locale}`);
                         }
-                        const decision = decideManual({root: context.siteDir, record: locale === 'en' ? undefined : record, sourceFiles});
+                        const automatic=kind==='blog'&&options.id==='default'&&locale!=='en'?await automaticDecision(locale,file):null;
+                        const decision = automatic?automatedBlog.publication(automatic):decideManual({root: context.siteDir, record: locale === 'en' ? undefined : record, sourceFiles});
                         if (locale === 'en') Object.assign(decision, {state: 'source', contentLocale: 'en', fallback: false, indexable: true});
-                        if (decision.state === 'needs-update') report.push({kind: 'manual_source_changed', contentId, locale,
+                        if (!automatic && decision.state === 'needs-update') report.push({kind: 'manual_source_changed', contentId, locale,
                             sourceHash: decision.sourceHash, publishedSourceHash: record.sourceHash});
                         const utility = registration?.kind === 'utility';
                         entries.push({contentId, kind: utility ? 'utility' : kind === 'pages' ? 'page' : 'blog',
                             pluginId: options.id, englishPath, renderIntegrated: true, siteLocale: locale, englishRoute: route(source.permalink), route: route(item.permalink),
-                            ...decision, indexable: !utility && !item.unlisted && decision.indexable, updatePolicy: 'manual'});
+                            ...decision, ...(automatic&&{automation:automatic}), indexable: !utility && !item.unlisted && decision.indexable, updatePolicy: automatic?'automatic-blog':'manual'});
                     }
                 }
                 for (const [locale, items] of locales) {

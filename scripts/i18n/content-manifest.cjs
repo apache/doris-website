@@ -69,7 +69,7 @@ function validateManifest(manifest) {
         assert(typeof page.state === 'string' && typeof page.indexable === 'boolean' && typeof page.fallback === 'boolean' && typeof page.renderIntegrated === 'boolean', 'Invalid content decision');
         assert(manifest.enabledLocales.includes(page.contentLocale) && (page.fallback ? page.contentLocale === 'en' && !page.indexable : page.contentLocale === page.siteLocale), 'Invalid fallback decision');
         assert(page.kind !== 'utility' || !page.indexable, 'Utility must not be indexed');
-        assert(['automatic-docs', 'native-manual-docs', 'manual'].includes(page.updatePolicy), 'Invalid update policy');
+        assert(['automatic-docs', 'automatic-blog', 'native-manual-docs', 'manual'].includes(page.updatePolicy), 'Invalid update policy');
         assert(Object.entries(page.navigationRoutes).every(([locale, route]) => manifest.enabledLocales.includes(locale) && isRoute(route)), 'Disabled/invalid navigation route');
         assert(page.navigationRoutes[page.siteLocale] === page.route && page.navigationRoutes.en === page.englishRoute, 'Missing self/English navigation route');
         assert(new Set(page.availableTranslations).size === page.availableTranslations.length && page.availableTranslations.every(locale => page.navigationRoutes[locale]), 'Invalid available translations');

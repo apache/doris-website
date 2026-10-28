@@ -142,6 +142,7 @@ jobs:
                   node scripts/i18n/verify-content-fixture.cjs
                   node scripts/i18n/verify-doc-dates-fixture.cjs
                   node scripts/i18n/verify-blog-fixture.cjs
+                  node scripts/i18n/verify-blog-automation-fixture.cjs
                   node scripts/i18n/verify-release-policy-fixture.cjs
 
             - name: Workflow security boundary tests
@@ -195,6 +196,10 @@ jobs:
             - name: Verify release-note policy fixture in Chromium
               if: steps.detect.outputs.content_fixture == 'true'
               run: node scripts/i18n/verify-release-policy-fixture.cjs --verify-existing --browser
+
+            - name: Verify new-blog automation fixture in Chromium
+              if: steps.detect.outputs.content_fixture == 'true'
+              run: node scripts/i18n/verify-blog-automation-fixture.cjs --verify-existing --browser
 
             - name: Verify automatic language entry in Chromium
               if: steps.detect.outputs.content_fixture == 'true'
@@ -277,6 +282,7 @@ jobs:
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/content-fixture-verification.json
+                      .i18n-build/blog-automation-verification.json
                       .i18n-build/content-manifests/*.sizes.json
                       .i18n-build/ci-*.txt
                       .i18n-build/browser-*-time.txt

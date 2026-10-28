@@ -27,8 +27,17 @@ function manualReport(root) {
     }
     for (const record of records.filter(row => !registry.pages.some(page => `${page.kind}:${page.id}` === row.contentId)))
         pages.push({contentId: record.contentId, locale: record.locale, exception: 'source_deleted', action: 'manual'});
-    for (const record of blogs) pages.push({contentId: record.contentId, locale: record.locale, kind: 'blog',
-        ...decideManual({root, record, sourceFiles: record.sourceFiles}), action: 'manual', publishedSourceHash: record.sourceHash ?? null});
+    const automation = require('./automated-blog.cjs'), selected = automation.policy(root);
+    for (const record of blogs) {
+        if (automation.excluded(root, record.locale, record.contentId.slice(5), selected)) {
+            pages.push({contentId: record.contentId, locale: record.locale, kind: 'blog',
+                state: 'historical_excluded', fallback: true, indexable: false, contentLocale: 'en', action: 'excluded'});
+            continue;
+        }
+        pages.push({contentId: record.contentId, locale: record.locale, kind: 'blog',
+            ...decideManual({root, record, sourceFiles: record.sourceFiles}), action: 'manual',
+            publishedSourceHash: record.sourceHash ?? null});
+    }
     const shared = readJson(root, 'translations/shared/registry.json', null);
     let sharedUi = null;
     if (shared) {

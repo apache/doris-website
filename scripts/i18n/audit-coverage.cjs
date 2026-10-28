@@ -95,8 +95,8 @@ async function audit({root,sourceRef,baseline,native}) {
     native ||= await collect(root);
     const old = new Map(baselineEntries(baseline).map(page => [key(page),page]));
     const current = new Set(), groups = [];
-    const files = group => execFileSync('git',['ls-tree','-r','--name-only',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
-        .split('\n').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
+    const files = group => execFileSync('git',['ls-tree','-r','--name-only','-z',commit,'--',group.sourceRoot],{cwd:root,encoding:'utf8'})
+        .split('\0').filter(file => group.kind ? require('./source-groups.cjs').matchesSource(group, file)
             && require('./source-groups.cjs').hasProse(root, group, file) : /\.(md|mdx)$/.test(file));
     const scoped = scope.groups.map(group => ({group,
         pages:native.pages.filter(page => page.pluginId === group.pluginId && page.version === group.version)}));
@@ -161,8 +161,8 @@ async function audit({root,sourceRef,baseline,native}) {
     routingInputs.push(`translations/state/${locale}/docs.json`, `translations/state/${locale}/resolved-deletions.json`);
     const schemaPath = `translations/state/${locale}/shards.schema.json`;
     if (refHashes(root, commit, [schemaPath]).get(schemaPath) !== null) routingInputs.push(schemaPath);
-    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', commit, '--', `translations/state/${locale}/pages`],
-        {cwd:root,encoding:'utf8'}).split('\n').filter(Boolean));
+    routingInputs.push(...execFileSync('git', ['ls-tree', '-r', '--name-only', '-z', commit, '--', `translations/state/${locale}/pages`],
+        {cwd:root,encoding:'utf8'}).split('\0').filter(Boolean));
     const routingHashes = refHashes(root, commit, routingInputs);
     for (const file of routingInputs) assert.equal(routingHashes.get(file),hash(fs.readFileSync(path.join(root,file),'utf8')),
         `Routing input differs from source ref: ${file}`);
