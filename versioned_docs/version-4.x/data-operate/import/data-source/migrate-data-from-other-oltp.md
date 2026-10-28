@@ -32,9 +32,10 @@ The following table summarizes the main migration options that Doris supports. Y
 | Flink Doris Connector (CDC) | Real-time full + incremental synchronization | Real-time | Supported | Supported (INSERT / UPDATE / DELETE) |
 | Spark Connector | Batch data writes in the Spark stack | Offline | No | No |
 | Streaming Job | Built-in continuous synchronization from MySQL / PostgreSQL in Doris | Streaming (continuous) | Supported | Supported |
-| Third-party tools (DataX / SeaTunnel / CloudCanal / NineData) | Existing synchronization platforms, visual operations | Offline / real-time | Depends on the tool | Depends on the tool |
+| Third-party tools (DataX / SeaTunnel / CloudCanal) | Existing synchronization platforms, visual operations | Offline / real-time | Depends on the tool | Depends on the tool |
+| NineData (MySQL-compatible sources to Doris) | Full and incremental data replication | Full + incremental (Binlog) | Supported | Supported |
 
-> Note: If you need to complete the migration without introducing an external compute engine, use **Multi-Catalog** or **Streaming Job**. If you need real-time incremental synchronization, use **Flink Doris Connector + CDC** or **Streaming Job**.
+> Note: If you need to complete the migration without introducing an external compute engine, use **Multi-Catalog** or **Streaming Job**. If you need real-time incremental synchronization, use **Flink Doris Connector + CDC**, **Streaming Job**, or **NineData** for MySQL-compatible sources to Doris.
 
 ---
 
