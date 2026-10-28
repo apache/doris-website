@@ -65,7 +65,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         runContentFixture:
             (shared && checks.check_content_fixture) ||
             files.some(file =>
-                /verify-(content-fixture|global-language)|__tests__\/fixtures\/content-manifest/.test(file),
+                /verify-(content-fixture|doc-dates-fixture|global-language)|__tests__\/fixtures\/content-manifest/.test(file),
             ),
         runSamplingFixture: files.some(file =>
             /^scripts\/(build-locales?\.cjs$|i18n\/(compiler-processes|ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),

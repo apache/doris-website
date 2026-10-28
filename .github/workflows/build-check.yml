@@ -140,6 +140,7 @@ jobs:
               if: steps.detect.outputs.content_fixture == 'true'
               run: |
                   node scripts/i18n/verify-content-fixture.cjs
+                  node scripts/i18n/verify-doc-dates-fixture.cjs
                   node scripts/i18n/verify-blog-fixture.cjs
                   node scripts/i18n/verify-release-policy-fixture.cjs
 

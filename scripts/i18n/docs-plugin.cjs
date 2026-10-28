@@ -208,7 +208,15 @@ module.exports = async function translationDocsPlugin(context, options) {
             // the view, just like a new static build. Do not watch our own view.
             if (loaded) return (await translationDocsPlugin(context, options)).loadContent();
             loaded = true;
-            const content = await plugin.loadContent();
+            let content;
+            const dateOptions = {showLastUpdateTime: options.showLastUpdateTime,
+                showLastUpdateAuthor: options.showLastUpdateAuthor};
+            // Native dates for generated views would query untracked files.
+            // Every managed doc receives its actual source dates below. Keep
+            // the original options for contentLoaded and the displayed footer.
+            if (activeLocale) Object.assign(options, {showLastUpdateTime: false, showLastUpdateAuthor: false});
+            try {content = await plugin.loadContent();}
+            finally {if (activeLocale) Object.assign(options, dateOptions);}
             if (activeLocale) {
                 for (const version of content.loadedVersions) {
                     for (const doc of [...version.docs, ...version.drafts]) {
