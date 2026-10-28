@@ -50,7 +50,8 @@ jobs:
         DORIS_ENABLE_RU: 'true'
         NODE_OPTIONS: '--max-old-space-size=6144'
         TERSER_PARALLEL: '2'
-        RAYON_NUM_THREADS: '2'
+        RAYON_NUM_THREADS: '4'
+        DORIS_COMPILER_MODE: 'isolated'
         DOCUSAURUS_SSR_CONCURRENCY: '8'
         DOCUSAURUS_PERF_LOGGER: 'true'
         DORIS_BUILD_METRICS: 'true'
@@ -178,6 +179,7 @@ jobs:
                   .i18n-build/manual-drift.json
                   .i18n-build/coverage.json
                   .i18n-build/content-manifests/*.json
+                  .i18n-build/compiler-metrics/*.json
               if-no-files-found: error
               retention-days: 14
 

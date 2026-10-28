@@ -67,7 +67,7 @@ def start(job):
         "GITHUB_WORKFLOW_REF", "GITHUB_EVENT_NAME", "RUNNER_OS", "RUNNER_ARCH",
         "ImageOS", "ImageVersion", "DEPLOY_SOURCE_SHA", "DORIS_ENABLE_JA",
         "DORIS_ENABLE_KO", "DORIS_ENABLE_RU", "DOCS_VERSIONS", "NODE_OPTIONS",
-        "TERSER_PARALLEL", "RAYON_NUM_THREADS", "DOCUSAURUS_SSR_CONCURRENCY")}
+        "TERSER_PARALLEL", "RAYON_NUM_THREADS", "DOCUSAURUS_SSR_CONCURRENCY", "DORIS_COMPILER_MODE")}
     write_json(REPORTS / "context.json", {
         "schemaVersion": 1, "job": job, "startedAt": time.time(),
         "checkoutSha": git("rev-parse", "HEAD"), "context": context,

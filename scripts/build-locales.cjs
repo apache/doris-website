@@ -43,11 +43,12 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
     if(samplePlan)report.validation={mode:'sample',publicationAllowed:false};
     const reportDir = path.join(siteDir, '.i18n-build');
     fs.mkdirSync(reportDir, {recursive:true});
+    fs.rmSync(path.join(reportDir,'compiler-metrics'),{recursive:true,force:true});
     const reportPath = path.join(reportDir, 'build-result.json');
     const execute = run ?? ((args) => new Promise((resolve, reject) => {
         const child = spawn(process.execPath,[path.join(__dirname,'build-locale.cjs'), ...args],{
             cwd:siteDir,stdio:'inherit',env:{...process.env,
-                ...(samplePlan && {DORIS_I18N_STRUCTURE_CACHE:path.join(stage,'structure-cache')})},
+                ...((samplePlan || process.env.DORIS_COMPILER_MODE !== 'parallel') && {DORIS_I18N_STRUCTURE_CACHE:path.join(stage,'structure-cache')})},
         });
         console.log(JSON.stringify({event:'locale_process_start', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid}));
         const stop = signal => child.kill(signal);
@@ -79,7 +80,15 @@ async function buildLocales({siteDir = process.cwd(), outDir = 'build', locales:
             cleanup();
             console.log(JSON.stringify({event:'locale_process_end', mode:args[0], locale:args[0] === 'plan' ? null : args[3], pid:child.pid, code, signal}));
             if (code !== 0) reject(new Error(`Locale ${args[3]} failed (${signal ?? code}); output was not published`));
-            else resolve({pid:child.pid,...(memory && {memory})});
+            else {
+                const compilerFile=path.join(reportDir,'compiler-metrics',args[3]+'.json');
+                if(memory && fs.existsSync(compilerFile))for(const record of JSON.parse(fs.readFileSync(compilerFile)).records??[]){
+                    memory.peakRssKiB=Math.max(memory.peakRssKiB,Math.ceil(record.peakRssBytes/1024));
+                    if(record.minimumSystemAvailableKiB)memory.minimumSystemAvailableKiB=Math.min(memory.minimumSystemAvailableKiB??Infinity,record.minimumSystemAvailableKiB);
+                }
+                if(memory)memory.scope='Maximum sampled individual process RSS across locale and isolated client; system availability includes all processes';
+                resolve({pid:child.pid,...(memory && {memory})});
+            }
         });
     }));
     try {
@@ -153,4 +162,4 @@ if (require.main === module) {
         locales:localeList === undefined ? undefined : localeList.split(',').map(locale => locale.trim()).filter(Boolean)})
         .catch(error => {console.error(error);process.exitCode = 1;});
 }
-module.exports = {buildLocales, selectLocales};
+module.exports = {buildLocales, selectLocales, sourceStamp};

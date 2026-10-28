@@ -68,10 +68,12 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
                 /verify-(content-fixture|global-language)|__tests__\/fixtures\/content-manifest/.test(file),
             ),
         runSamplingFixture: files.some(file =>
-            /^scripts\/(build-locales?\.cjs$|i18n\/(ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
+            /^scripts\/(build-locales?\.cjs$|i18n\/(compiler-processes|ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),
+        runCompilerFixture: mode === 'full' || files.some(file =>
+            /^scripts\/(build-locales?\.cjs|i18n\/(compiler-processes|verify-compiler-fixture)\.cjs)$/.test(file)),
         runSearchFixture: mode === 'full' || files.some(file =>
-            /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages|searchScopes|useLanguageItems)\.[jt]sx?$|src\/hooks\/use-search-query\.ts$|docusaurus\.config\.js$|scripts\/i18n\/(search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
-        runPublishFixture: checks.check_publish_fixture || mode === 'full',
+            /^(src\/theme\/(SearchBar|SearchPage)\/|src\/utils\/(fetchSearchIndex|searchMessages|searchScopes|useLanguageItems)\.[jt]sx?$|src\/hooks\/use-search-query\.ts$|docusaurus\.config\.js$|scripts\/build-locales?\.cjs$|scripts\/i18n\/(compiler-processes|search-plugin|search-worker-loader|verify-search-transport)\.cjs$)/.test(file)),
+        runPublishFixture: checks.check_publish_fixture || mode === 'full' || files.includes('scripts/i18n/compiler-processes.cjs'),
         runTranslationTests: mode === 'full' || files.some(file =>
             runtime.test(file) || mechanism.test(file) || maintenanceConfig(file) || /^scripts\/(i18n\/|build-locales?\.cjs$)/.test(file)
                 || file === '.github/workflows/build-check.yml'),
@@ -186,6 +188,7 @@ if (require.main === module) {
                     publish_fixture: result.runPublishFixture,
                     sampling_fixture: result.runSamplingFixture,
                     search_fixture: result.runSearchFixture,
+                    compiler_fixture: result.runCompilerFixture,
                     translation_tests: result.runTranslationTests,
                     docs_report: result.runDocsReport,
                 })
