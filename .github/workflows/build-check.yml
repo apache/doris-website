@@ -132,6 +132,10 @@ jobs:
                   node --test scripts/publish/__tests__/*.test.cjs
                   node scripts/publish/verify-fixture.cjs
 
+            - name: Verify isolated compiler outputs
+              if: steps.detect.outputs.compiler_fixture == 'true'
+              run: node scripts/i18n/verify-compiler-fixture.cjs
+
             - name: Verify native content manifest fixture
               if: steps.detect.outputs.content_fixture == 'true'
               run: |
@@ -267,6 +271,8 @@ jobs:
                       .i18n-build/ci-sample/verification.json
                       .i18n-build/ci-sampling-fixture-proof.json
                       .i18n-build/search-transport-verification.json
+                      .i18n-build/compiler-fixture-verification.json
+                      .i18n-build/compiler-metrics/*.json
                       .i18n-build/publish-result.json
                       .i18n-build/build-result.json
                       .i18n-build/content-fixture-verification.json
