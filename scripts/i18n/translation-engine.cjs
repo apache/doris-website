@@ -50,8 +50,25 @@ async function extractUnits(raw, extension, {blog=false}={}) {
     const parsed = matter(raw);
     const prefix = raw.length - parsed.content.length;
     const processor = unified().use(parse).use(gfm);
-    if (extension === '.mdx' || parsed.data.mdx?.format === 'mdx') processor.use(mdx);
-    const tree = processor.parse(parsed.content);
+    const isMdx = extension === '.mdx' || parsed.data.mdx?.format === 'mdx';
+    if (isMdx) processor.use(mdx);
+    // Generated blog headings carry native {#id} markers. Escape those as
+    // Docusaurus does, then map parser offsets back to the unchanged raw bytes.
+    // This also preserves imports and JSX attributes after an escaped heading.
+    const content = blog && isMdx ? require('@docusaurus/utils').escapeMarkdownHeadingIds(parsed.content) : parsed.content;
+    let offsets;
+    if (content !== parsed.content) {
+        offsets = [];
+        let original = 0;
+        for (let i = 0; i < content.length; i++) {
+            offsets[i] = original;
+            if (content[i] === parsed.content[original]) original++;
+            else assert.equal(content[i], '\\', 'Unexpected native heading preprocessing change');
+        }
+        offsets[content.length] = parsed.content.length;
+    }
+    const at = offset => prefix + (offsets ? offsets[offset] : offset);
+    const tree = processor.parse(content);
     const units = [];
     const headings = [];
     function add(start, end, kind, quote = null, decoded = null) {
@@ -119,12 +136,12 @@ async function extractUnits(raw, extension, {blog=false}={}) {
         }
     }
     visit(tree, node => {
-        if (node.type === 'heading' && node.position) headings.push(prefix + node.position.start.offset);
+        if (node.type === 'heading' && node.position) headings.push(at(node.position.start.offset));
         if (node.type === 'text' && node.position) {
-            add(prefix + node.position.start.offset, prefix + node.position.end.offset, 'text');
+            add(at(node.position.start.offset), at(node.position.end.offset), 'text');
         } else if (node.type === 'image' && node.position && node.alt) {
-            const start = prefix + node.position.start.offset;
-            const end = prefix + node.position.end.offset;
+            const start = at(node.position.start.offset);
+            const end = at(node.position.end.offset);
             const image = raw.slice(start, end);
             const marker = image.indexOf('![');
             if (marker >= 0) {
@@ -132,8 +149,8 @@ async function extractUnits(raw, extension, {blog=false}={}) {
                 if (closing >= 0) add(start + marker + 2, start + closing, 'image-alt');
             }
         } else if (node.type === 'html' && node.position && !node.value.trim().startsWith('<!--')) {
-            const start = prefix + node.position.start.offset;
-            const fragment = raw.slice(start, prefix + node.position.end.offset);
+            const start = at(node.position.start.offset);
+            const fragment = raw.slice(start, at(node.position.end.offset));
             for (const match of fragment.matchAll(/>([^<>]+)</g)) {
                 if (match[1].trim()) add(start + match.index + 1, start + match.index + 1 + match[1].length, 'html:text');
             }
@@ -145,14 +162,14 @@ async function extractUnits(raw, extension, {blog=false}={}) {
             }
         } else if (node.type === 'mdxjsEsm' && reportEsm(node.value)) {
             for (const unit of scriptUnits(node.value, {report: true})) units.push({...unit,
-                start: prefix + node.position.start.offset + unit.start, end: prefix + node.position.start.offset + unit.end});
+                start: at(node.position.start.offset) + unit.start, end: at(node.position.start.offset) + unit.end});
         } else if (node.type.startsWith('mdxJsx') && node.position) {
             for (const attribute of node.attributes ?? []) {
                 const visible = visibleAttributes.has(attribute.name) || node.name?.startsWith('Course')
                     && (textFields.has(attribute.name) || containers.has(attribute.name));
                 if (attribute.type !== 'mdxJsxAttribute' || !visible || !attribute.position) continue;
-                const start = prefix + attribute.position.start.offset;
-                const end = prefix + attribute.position.end.offset;
+                const start = at(attribute.position.start.offset);
+                const end = at(attribute.position.end.offset);
                 const fragment = raw.slice(start, end);
                 if (attribute.value?.type === 'mdxJsxAttributeValueExpression') {
                     const offset = fragment.indexOf('{') + 1;

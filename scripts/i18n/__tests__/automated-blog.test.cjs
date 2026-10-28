@@ -215,6 +215,51 @@ test('blog summary translation preserves numeric facts and does not weaken docum
     assert.notEqual(protectionSignature(a, { blog: true }), protectionSignature(c, { blog: true }));
     assert.notEqual(protectionSignature(a), protectionSignature(b));
 });
+test('a previously generated MDX blog can be updated again with native heading IDs and unchanged imports', async t => {
+    const f = fixture(t),
+        name = 'new.mdx',
+        source =
+            '---\ntitle: New post\nsummary: Summary with 6 nodes\n---\n\nimport Card from \'./_parts/Card\';\n\n## Usage\n\nOriginal prose with 6 nodes.\n\n<Card title="Visible label" timeout={10}/>\n';
+    f.write('blog/' + name, source);
+    f.commit();
+    const target = { locale: 'ja', language: 'Japanese', scriptPattern: '[日]' };
+    let state = readState(f.root, 'ja'),
+        candidate = await prepare({
+            root: f.root,
+            plan: f.selected(f.page(name)),
+            taskId: 'future',
+            scope: f.scope,
+            state,
+            adapter,
+            glossary,
+            target,
+        });
+    applyCandidates(state, [candidate]);
+    f.commit();
+    const first = candidate.target;
+    assert(first.includes('{#usage}'));
+    f.write('blog/' + name, source.replace('Original prose with 6 nodes.', 'Updated prose with 7 nodes.'));
+    f.commit();
+    state = readState(f.root, 'ja');
+    candidate = await prepare({
+        root: f.root,
+        plan: f.selected(f.page(name)),
+        taskId: 'future',
+        scope: f.scope,
+        state,
+        adapter,
+        glossary,
+        target,
+    });
+    assert(candidate.target.includes('Updated prose with 7 nodes.'));
+    assert(!candidate.target.includes('Original prose'));
+    assert(candidate.target.includes("import Card from './_parts/Card';"));
+    assert(candidate.target.includes('timeout={10}'));
+    assert(candidate.target.includes('{#usage}'));
+    assert.equal(require('gray-matter')(candidate.target).data.title, require('gray-matter')(first).data.title);
+    applyCandidates(state, [candidate]);
+    assert((await decision(f.root, 'ja', name)).useTarget);
+});
 test('blog generation uses its real native target and independent state shard, translating summary while retaining facts', async t => {
     const f = fixture(t),
         source =

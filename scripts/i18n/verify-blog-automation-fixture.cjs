@@ -157,6 +157,55 @@ async function create() {
             reservationPassed: true,
         });
     }
+    // Update the same committed MDX identity after the first translations.
+    // Its prior targets now contain native heading IDs, as real bots produce.
+    write(sourcePath, source.replace('Future English body with 6 nodes.', 'Future English body with 7 nodes.'));
+    commit('Update the genuinely new blog after its first translation');
+    for (const locale of managed) {
+        process.env.I18N_LOCALE = locale;
+        const report = await audit({ root, sourceRef: 'HEAD', baseline: path.join(root, 'audit-baseline') });
+        const scope = JSON.parse(fs.readFileSync(path.join(root, `translations/scope/${locale}.json`)));
+        const planned = await plan({
+            report,
+            scope,
+            records: loadRecords(root, locale),
+            readCurrent: name => fs.readFileSync(path.join(root, name), 'utf8'),
+            readAt: (ref, name) => git('show', `${ref}:${name}`),
+        });
+        assert.equal(planned.selected.length, 1);
+        const task = planned.tasks.find(t => t.id === planned.selected[0]);
+        assert.equal(task.kind, 'update');
+        const state = readState(root, locale),
+            oldTitle = require('gray-matter')(fs.readFileSync(path.join(root, task.targetPath), 'utf8')).data.title;
+        const candidate = await prepare({
+            root,
+            plan: planned,
+            taskId: task.id,
+            scope,
+            state,
+            target: targetFor(root, locale),
+            glossary: { schemaVersion: 1, version: 'fixture', keep: [], terms: [] },
+            adapter: {
+                model: 'fixture',
+                async translate({ units }) {
+                    return { translations: units.map(u => ({ id: u.id, text: words[locale] + ' ' + u.text })) };
+                },
+            },
+        });
+        assert(candidate.target.includes('Future English body with 7 nodes.'));
+        assert.equal(require('gray-matter')(candidate.target).data.title, oldTitle);
+        applyCandidates(state, [candidate]);
+        commit(`${locale} updated MDX blog and page state`);
+        const admission = await require('./check-translations.cjs').checkChangedTranslations({
+            root,
+            base: planned.sourceCommit,
+            locale,
+        });
+        assert.equal(admission.checked, 1);
+        assert.deepEqual(admission.errors, []);
+        assert((await decision(root, locale, file)).useTarget);
+        results.find(r => r.locale === locale).subsequentUpdate = true;
+    }
     await checkReload();
     write('eligibility.json', JSON.stringify(results, null, 2));
     return results;
