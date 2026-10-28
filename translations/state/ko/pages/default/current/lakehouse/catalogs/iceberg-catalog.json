@@ -8,34 +8,62 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/catalogs/iceberg-catalog.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/lakehouse/catalogs/iceberg-catalog.mdx",
-    "sourceCommit": "82ccae858254f24b1b3a85f181ec289e386d33ae",
-    "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
-    "sourceTechnicalHash": "e9f8c84f129dd0fdca3d1ed9970af0fb66804333320cfd395d29e62ea0cb1a80",
-    "targetHash": "75f3dc20f7330de565e2441db21f37e5be2650a30e6bde21929abcc218154650",
+    "sourceCommit": "5e9ed76441890c1096e7c562746d00702e93f038",
+    "sourceHash": "35a6c84279e184d0256d95f0eb0dab459450461e9a5b59f592f704f9b46faa9d",
+    "sourceTechnicalHash": "f704deb3aabd4e7ad43ca6247650398b5dbce199408e5a34346a3af87a6fcfb7",
+    "targetHash": "d857af27707f1d87500602b9b40f781661f4f30dc707af6dd0da664dc0cde15b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-20T20:42:23.530Z",
+    "translatedAt": "2026-10-28T05:07:02.492Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "previousSourceHash": "4563a78906e476f20ab16e10bb90e7d63df7ccf65827e3aa40a7923adaeaff68",
-      "previousTargetHash": "0fa20645ae42eb0afe1d31856284428c4b5b8aa763eb80ae162c5ffaa7452037",
+      "previousSourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
+      "previousTargetHash": "75f3dc20f7330de565e2441db21f37e5be2650a30e6bde21929abcc218154650",
       "mode": "incremental",
       "reason": "source-change-within-30-percent",
       "sourceChange": {
-        "changedLines": 27,
-        "totalLines": 2767,
-        "ratio": 0.009757860498735092
+        "changedLines": 60,
+        "totalLines": 2801,
+        "ratio": 0.021420921099607283
       },
-      "attempts": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "5f9e59a11f12864bda19ad944ec51c7d8426b4f44f914da483a5b02f322381c9",
-      "targetHash": "75f3dc20f7330de565e2441db21f37e5be2650a30e6bde21929abcc218154650",
-      "warnings": [],
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "35a6c84279e184d0256d95f0eb0dab459450461e9a5b59f592f704f9b46faa9d",
+      "targetHash": "d857af27707f1d87500602b9b40f781661f4f30dc707af6dd0da664dc0cde15b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 517: expected [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]; received [\"inlineCode\",null,null,\"$labels\"]\nprotected node 518: expected [\"inlineCode\",null,null,\"$labels\"]; received [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 494: expected [\"inlineCode\",null,null,\"iceberg_ctl\"]; received [\"link\",\"#iceberg-rest-catalog\",null]\nprotected node 495: expected [\"link\",\"#iceberg-rest-catalog\",null]; received [\"inlineCode\",null,null,\"iceberg_ctl\"]\nprotected node 517: expected [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]; received [\"inlineCode\",null,null,\"$labels\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 517: expected [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]; received [\"inlineCode\",null,null,\"$labels\"]\nprotected node 518: expected [\"inlineCode\",null,null,\"$labels\"]; received [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 517: expected [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]; received [\"inlineCode\",null,null,\"$labels\"]\nprotected node 518: expected [\"inlineCode\",null,null,\"$labels\"]; received [\"inlineCode\",null,null,\"FOR VERSION AS OF\"]"
+            }
+          ]
         }
       ]
     }
