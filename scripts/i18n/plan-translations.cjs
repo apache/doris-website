@@ -29,7 +29,7 @@ const chinesePath = (group, page) => {
     if (!group.sourceRoot || !page.sourcePath.startsWith(`${group.sourceRoot}/`)) return null;
     const plugin = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
     const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-    return `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/${page.sourcePath.slice(group.sourceRoot.length + 1)}`;
+    return group.kind==='blog'?`i18n/zh-CN/docusaurus-plugin-content-blog/${page.sourcePath.slice(group.sourceRoot.length+1)}`:`i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/${page.sourcePath.slice(group.sourceRoot.length + 1)}`;
 };
 
 function validateActive(data, scope) {
@@ -177,7 +177,7 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
             kind = historical && hash(historical) === previous.sourceHash
                 && await formattingOnly(historical, source, page.sourcePath) ? 'formatting_review' : 'update';
         } else kind = previous ? 'translate_backlog' : 'translate_new';
-        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind);
+        const protectedTask = ['target_modified', 'state_conflict', 'source_divergence', 'unsupported_route', 'formatting_review'].includes(kind)||previous?.ownership==='human';
         const task = {groupId: page.groupId, pluginId: page.pluginId, version: page.version, docId: page.docId,
             locale: scope.locale, kind, sourcePath: page.sourcePath, targetPath: page.targetPath,
             permalink: page.permalink, sourceHash: page.sourceHash, sourceCommit: report.sourceCommit,

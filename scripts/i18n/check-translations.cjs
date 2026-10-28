@@ -12,9 +12,10 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
     const changed = new Set(files);
     const stateChanged = files.some(file => file === `translations/state/${locale}/docs.json`
         || file.startsWith(`translations/state/${locale}/pages/`));
-    const selected = pages.filter(page => changed.has(page.targetPath)
+    const selected = pages.filter(page => !(page.pluginId === 'blog' && page.eligibility?.kind !== 'eligible')
+        && (changed.has(page.targetPath)
         || (stateChanged
-            && JSON.stringify(records.get(identity(page))) !== JSON.stringify(previousRecords.get(identity(page)))));
+            && JSON.stringify(records.get(identity(page))) !== JSON.stringify(previousRecords.get(identity(page))))));
     const errors = [];
     const warnings = [];
     const exceptionFile = path.join(root,`translations/protection-exceptions/${locale}.json`);
@@ -61,7 +62,8 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
             catch (error) {if (!fallback) throw error;}
             const exception = exceptions.find(entry => identity(entry) === identity(page)
                 && entry.sourceHash === page.sourceHash && entry.targetHash === page.targetHash && entry.reason?.trim());
-            const compare = isDocumentGeneration(record, source, target) ? signature : protectionSignature;
+            const compare = page.pluginId === 'blog' ? parsed => protectionSignature(parsed, {blog: true})
+                : isDocumentGeneration(record, source, target) ? signature : protectionSignature;
             if (!exception && !fallback && compare(await structure(aligned, ext)) !== compare(parsed)) {
                 throw new Error('Protected code, links, numbers, MDX or metadata differ from the source');
             }
@@ -74,7 +76,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
         } catch (error) {errors.push({path:page.targetPath, message:error.message});}
     }
     const known = new Set(pages.map(page => page.targetPath));
-    const targetPattern = new RegExp(`^i18n/${locale}/docusaurus-plugin-content-docs[^/]*/(current|version-[^/]+)/.+\\.(mdx?|tsx?)$`);
+    const targetPattern = new RegExp(`^i18n/${locale}/(?:docusaurus-plugin-content-docs[^/]*/(current|version-[^/]+)/|docusaurus-plugin-content-blog/).+\\.(mdx?|tsx?)$`);
     for (const file of files.filter(file => targetPattern.test(file))) {
         if (fs.existsSync(path.join(root,file)) && !known.has(file)) errors.push({path:file, message:'Target has no registered source in the same plugin/version'});
     }
@@ -89,7 +91,7 @@ async function checkTranslations({root, locale = pipelineLocale(root), pages, re
 function needsNativeInventory(files, locale) {
     const prefix = `i18n/${locale}/`;
     return files.some(file => (file.startsWith(prefix)
-        && /^docusaurus-plugin-content-docs[^/]*\/.+\.(mdx?|tsx?)$/.test(file.slice(prefix.length)))
+        && /^(?:docusaurus-plugin-content-docs[^/]*|docusaurus-plugin-content-blog)\/.+\.(mdx?|tsx?)$/.test(file.slice(prefix.length)))
         || file === `translations/state/${locale}/docs.json` || file.startsWith(`translations/state/${locale}/pages/`));
 }
 

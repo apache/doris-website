@@ -149,8 +149,8 @@ function loadRecordsAt(root, locale, ref) {
         catch {return null;}
     };
     const base = read(`${stateRoot(locale)}/docs.json`);
-    const paths = execFileSync('git', ['ls-tree', '-r', '--name-only', ref, '--', shardRoot(locale)],
-        {cwd: root, encoding: 'utf8'}).split('\n').filter(Boolean).sort();
+    const paths = execFileSync('git', ['ls-tree', '-r', '--name-only', '-z', ref, '--', shardRoot(locale)],
+        {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean).sort();
     const shards = paths.map(file => [file, read(file)]);
     if (shards.some(([, raw]) => raw === null)) throw new Error('Committed translation shard is unreadable');
     return collectRecords(locale, base === null ? {schemaVersion: 1, pages: []} : JSON.parse(base), shards);

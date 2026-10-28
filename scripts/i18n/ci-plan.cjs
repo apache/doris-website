@@ -10,7 +10,7 @@ const {managedLocales} = require('./state.cjs');
 const {analyzeImpact} = require('./content-impact.cjs');
 const mechanism = /^(src\/utils\/(localizedRoute|localePreference|contentRoute|useLocalizedRoute|useLanguageItems)\.[jt]sx?$|src\/components\/Content(Route|Metadata)\.tsx$|scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap|content-impact|manual-report|embedded-messages|locale-entry)\.cjs$|static\/js\/[^/]*bootstrap\.js$|static\/\.htaccess$|translations\/(pages|shared)\/registry\.json$|config\/(?:(i18n|ssrTemplate)\.js|locale-entry\.json)$)/;
 const runtime =
-    /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
+    /^(src\/|config\/|docusaurus\.config\.js$|sidebars[^/]*\.(ts|json)$|versioned_sidebars\/|scripts\/i18n\/(automated-blog|automated-blog-body-loader|release-policy|docs-plugin|status-plugin|state|structure|content-plugin|content-loader|source-groups|code-prose|protection|content-manifest|manual-state|manual-plugins|native-context|route-context|page-body|page-body-loader|sitemap)\.cjs$)/;
 const content =
     /^(static\/|docs\/|versioned_docs\/|community\/|course\/|releasenotes\/|blog\/|i18n\/|translations\/(pages|blog|state)\/)/;
 const highRisk = /^(package\.json|yarn\.lock|versions\.json|config\/versions-plugin\.js)$/;
@@ -21,7 +21,7 @@ const maintenanceNotes = /^translations\/(?:[^/]+\.md|scope\/README\.md)$/;
 // through native metadata plus representative builds, like other known shared
 // language inputs. Unknown translation configuration still requires full CI.
 const maintenanceConfig = file => {
-    if (['translations/config.json', 'translations/release-notes-baseline.json'].includes(file)) return true;
+    if (['translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json'].includes(file)) return true;
     const match=file.match(/^translations\/(?:scope|glossary)\/([^/]+)\.json$/);
     return !!match && localeRegistry.some(locale=>locale.optional&&locale.code===match[1]);
 };
@@ -65,7 +65,7 @@ function policy(files, {forceFull = false, forceSample = false} = {}) {
         runContentFixture:
             (shared && checks.check_content_fixture) ||
             files.some(file =>
-                /verify-(content-fixture|doc-dates-fixture|global-language)|__tests__\/fixtures\/content-manifest/.test(file),
+                /verify-(content-fixture|doc-dates-fixture|blog(?:-automation)?-fixture|global-language)|create-blog-baseline\.cjs$|__tests__\/fixtures\/(content-manifest|blog)\.cjs$/.test(file),
             ),
         runSamplingFixture: files.some(file =>
             /^scripts\/(build-locales?\.cjs$|i18n\/(compiler-processes|ci-sample|ci-blog-sample|build-cache|verify-ci-sampl(?:e|ing-fixture))\.cjs$)/.test(file)),

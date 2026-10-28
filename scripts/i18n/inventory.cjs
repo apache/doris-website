@@ -26,7 +26,8 @@ function validateScope(scope, locale) {
         assert(/^[A-Z0-9]+$/.test(group.id) && !groups.has(group.id), 'Invalid/duplicate group');
         assert(!identities.has(key({...group, docId: ''})), 'Duplicate plugin/version group');
         assert(group.sourceRoot && !path.isAbsolute(group.sourceRoot) && !group.sourceRoot.split('/').includes('..'), 'Invalid source root');
-        if (group.kind) assert(['partial', 'code'].includes(group.kind) && group.version === 'current'
+        if(group.kind==='blog')assert(group.id==='BLOG'&&group.pluginId==='blog'&&group.sourceRoot==='blog'&&group.routeBasePath==='/blog'&&group.sourcePolicy,'Invalid blog automation group');
+        if (group.kind) assert(['partial', 'code', 'blog'].includes(group.kind) && group.version === 'current'
             && /^\/[a-z0-9/-]+$/.test(group.routeBasePath), 'Invalid supplemental content group');
         if (group.include) assert(group.kind && Array.isArray(group.include) && group.include.length > 0
             && group.include.every(prefix => typeof prefix === 'string' && prefix && !path.isAbsolute(prefix)
@@ -193,6 +194,10 @@ async function collect(root) {
         }
         labels.push({pluginId: plugin.options.id, files: await plugin.getTranslationFiles({content})});
     }
+    const scopeFile=path.join(root,`translations/scope/${locale}.json`);
+    const hasBlog=fs.existsSync(scopeFile)&&JSON.parse(fs.readFileSync(scopeFile)).groups.some(g=>g.kind==='blog');
+    const blogs=hasBlog?await require('./automated-blog.cjs').collect(root,locale):{pages:[],reports:[],versions:[]};
+    pages.push(...blogs.pages);reports.push(...blogs.reports);versions.push(...blogs.versions);
     const extra = await require('./source-groups.cjs').collectSources(root, locale);
     pages.push(...extra.pages); reports.push(...extra.reports); versions.push(...extra.versions);
     return {pages, reports: [...new Map(reports.map(report => [JSON.stringify(report), report])).values()], versions, labels};

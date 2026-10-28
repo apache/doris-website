@@ -27,7 +27,7 @@ function pageFor(group, sourcePath, locale) {
 }
 function contentGroups(root, locale) {
     const file = path.join(root, `translations/scope/${locale}.json`);
-    return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')).groups.filter(group => group.kind) : [];
+    return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')).groups.filter(group => group.kind && group.kind!=='blog') : [];
 }
 function hasProse(root, group, file) {
     return group.kind !== 'code' || scriptUnits(fs.readFileSync(path.join(root, file), 'utf8')).length > 0;

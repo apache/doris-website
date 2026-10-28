@@ -23,7 +23,7 @@ function managedPath(scope, task) {
         && (group.kind === 'code' ? /\.tsx?$/.test(suffix) : /\.mdx?$/.test(suffix)), 'Invalid managed source path');
     const plugin = task.pluginId === 'default' ? '' : `-${task.pluginId}`;
     const version = task.version === 'current' ? 'current' : `version-${task.version}`;
-    const expected = `i18n/${scope.locale}/docusaurus-plugin-content-docs${plugin}/${version}/${suffix}`;
+    const expected = group.kind==='blog'?`i18n/${scope.locale}/docusaurus-plugin-content-blog/${suffix}`:`i18n/${scope.locale}/docusaurus-plugin-content-docs${plugin}/${version}/${suffix}`;
     assert.equal(task.targetPath, expected, 'Task target does not match its managed source');
     return expected;
 }
@@ -40,7 +40,8 @@ function safeFile(root, relativePath) {
     return cursor;
 }
 
-async function extractUnits(raw, extension) {
+async function extractUnits(raw, extension, {blog=false}={}) {
+    const fields=blog?new Set([...translatableFields,'summary']):translatableFields;
     if (/^\.tsx?$/.test(extension)) return scriptUnits(raw).map((unit, index) =>
         ({...unit, id: `u${String(index + 1).padStart(4, '0')}`, section: 0}));
     const [{unified}, {default: parse}, {default: gfm}, {default: mdx}, {visit}] = await Promise.all([
@@ -69,14 +70,16 @@ async function extractUnits(raw, extension) {
         const header = raw.slice(0, prefix);
         const objectStyle = /^---\s*\n\s*\{/.test(header);
         if (objectStyle) {
-            for (const match of header.matchAll(/^[ \t]*(['"])(title|description|sidebar_label)\1:[ \t]*(['"])((?:\\.|(?!\3)[^\n])*)\3/gm)) {
+            for (const match of header.matchAll(/^[ \t]*(['"])(title|description|sidebar_label|summary)\1:[ \t]*(['"])((?:\\.|(?!\3)[^\n])*)\3/gm)) {
+                if(!fields.has(match[2]))continue;
                 const value = match[4];
                 const start = match.index + match[0].lastIndexOf(value);
                 const decoded = match[3] === '"' ? JSON.parse(`"${value}"`) : value.replace(/\\'/g, "'").replace(/\\\\/g, '\\');
                 add(start, start + value.length, `frontmatter:${match[2]}`, `json-${match[3]}`, decoded);
             }
         }
-        for (const match of objectStyle ? [] : header.matchAll(/^(title|description|sidebar_label):[ \t]*(.+?)[ \t]*$/gm)) {
+        for (const match of objectStyle ? [] : header.matchAll(/^(title|description|sidebar_label|summary):[ \t]*(.+?)[ \t]*$/gm)) {
+            if(!fields.has(match[1]))continue;
             const value = match[2];
             const start = match.index + match[0].indexOf(value);
             const quoted = /^(["'])(.*)\1$/.exec(value);
@@ -84,7 +87,7 @@ async function extractUnits(raw, extension) {
             else if (!/[\[\]{}#]|^\s*[>|]/.test(value)) add(start, start + value.length, `frontmatter:${match[1]}`);
             else throw new Error(`Unsupported front matter value for ${match[1]}`);
         }
-        for (const field of translatableFields) {
+        for (const field of fields) {
             if (parsed.data[field] !== undefined && !units.some(unit => unit.kind === `frontmatter:${field}`)) {
                 throw new Error(`Unsupported front matter value for ${field}`);
             }
@@ -289,7 +292,7 @@ function mockAdapter(fixtures) {
 }
 
 async function translateDocument({source, extension, adapter, glossary, previousSource, previousTarget,
-    targetLocale, targetScriptPattern, maxDocumentChars = 60000, maxChunkChars = 5000}) {
+    targetLocale, targetScriptPattern, blog=false, maxDocumentChars = 60000, maxChunkChars = 5000}) {
     assert(typeof targetLocale === 'string' && targetLocale, 'A target locale is required');
     // The script a finished translation must contain, so a model that answers in
     // the source language is rejected instead of published. It is per-language
@@ -297,10 +300,10 @@ async function translateDocument({source, extension, adapter, glossary, previous
     const targetScript = new RegExp(targetScriptPattern ?? '.', 'u');
     assert(source.length <= maxDocumentChars, 'Document exceeds configured length limit');
     validateGlossary(glossary);
-    const units = await extractUnits(source, extension);
+    const units = await extractUnits(source, extension,{blog});
     assert(units.length > 0, 'No translatable text units; handle this document manually');
-    const priorSourceUnits = previousSource ? await extractUnits(previousSource, extension) : [];
-    const priorTargetUnits = previousTarget ? await extractUnits(previousTarget, extension) : [];
+    const priorSourceUnits = previousSource ? await extractUnits(previousSource, extension,{blog}) : [];
+    const priorTargetUnits = previousTarget ? await extractUnits(previousTarget, extension,{blog}) : [];
     const reuse = new Map();
     if (priorSourceUnits.length === priorTargetUnits.length) {
         for (let i = 0; i < priorSourceUnits.length; i++) {
@@ -381,7 +384,7 @@ async function translateDocument({source, extension, adapter, glossary, previous
     // git diff --check before the draft branch is pushed.
     target = target.replace(/\n{2,}$/, '\n');
     const targetStructure = await structure(target, extension);
-    assert.equal(protectionSignature(targetStructure), protectionSignature(sourceStructure),
+    assert.equal(protectionSignature(targetStructure,{blog}), protectionSignature(sourceStructure,{blog}),
         'Protected content changed (code, links, numbers, MDX, anchors, or metadata)');
     if (extension === '.mdx') {
         const {compile} = await import('@mdx-js/mdx');
@@ -407,14 +410,15 @@ function checkedTask(plan, taskId, scope, root) {
     managedPath(scope, task);
     const group = scope.groups.find(group => group.pluginId === task.pluginId && group.version === task.version);
     assert(!scope.automaticGroups || scope.automaticGroups.includes(group.id), 'Automatic generation is not enabled for this scope group');
-    if (group.pluginId === 'releases') {
+    if (group.pluginId === 'releases'||group.kind==='blog') {
         const {releasePolicy} = require('./release-policy.cjs');
-        assert(group.sourcePolicy, 'Automatic Release Notes generation requires a new-only source policy');
+        const label=group.kind==='blog'?'Blog':'Release Notes';
+        assert(group.sourcePolicy, `Automatic ${label} generation requires a new-only source policy`);
         const policy = releasePolicy(root, group, plan.sourceCommit);
         assert.equal(execFileSync('git', ['show', `${plan.sourceCommit}:${policy.baselinePath}`], {cwd:root,encoding:'utf8'}),
-            fs.readFileSync(safeFile(root, policy.baselinePath), 'utf8'), 'Release Notes policy changed since planning');
+            fs.readFileSync(safeFile(root, policy.baselinePath), 'utf8'), `${label} policy changed since planning`);
         const eligibility = policy.classify(task);
-        assert.equal(eligibility.kind, 'eligible', `Release Notes task excluded by source policy: ${eligibility.kind}`);
+        assert.equal(eligibility.kind, 'eligible', `${label} task excluded by source policy: ${eligibility.kind}`);
     }
     const source = fs.readFileSync(safeFile(root, task.sourcePath), 'utf8');
     assert(sha(task.sourceHash) && hash(source) === task.sourceHash, 'Source changed since planning');

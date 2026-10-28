@@ -19,7 +19,7 @@ on:
         type: string
         required: true
       plugin:
-        description: Optional plugin filter (default, community, course, releases, course-ui, community-report, community-report-ui)
+        description: Optional plugin filter (default, community, course, releases, blog, course-ui, community-report, community-report-ui)
         type: string
         default: ''
       version:

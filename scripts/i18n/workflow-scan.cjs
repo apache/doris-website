@@ -9,7 +9,7 @@ const {hash, languageName, pipelineLocale} = require('./state.cjs');
 const root = path.resolve(__dirname, '../..');
 const configInputs = ['docusaurus.config.js', 'config/i18n.js', 'versions.json', 'src/constant/version.ts', 'config/versions-plugin.js', 'sidebars.ts', 'sidebarsCommunity.json',
     'sidebarsCourse.ts', 'sidebarsReleases.json',
-    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json'];
+    'versioned_sidebars/version-4.x-sidebars.json', 'translations/config.json', 'translations/release-notes-baseline.json', 'translations/blog-baseline.json'];
 // A push to this locale's own scope or glossary changes what may be generated.
 const rulesFor = locale => new Set([...configInputs,
     `translations/scope/${locale}.json`, `translations/glossary/${locale}.json`]);
@@ -22,7 +22,7 @@ function relevantPush(changed, audit, scope) {
         const scopeGroup = scope.groups.find(item => item.id === group.id);
         const plugin = group.pluginId === 'default' ? '' : `-${group.pluginId}`;
         const version = group.version === 'current' ? 'current' : `version-${group.version}`;
-        return group.entries.map(page => `i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/`
+        return group.entries.map(page => (scopeGroup.kind==='blog'?'i18n/zh-CN/docusaurus-plugin-content-blog/':`i18n/zh-CN/docusaurus-plugin-content-docs${plugin}/${version}/`)
             + page.sourcePath.slice(scopeGroup.sourceRoot.length + 1));
     }));
     return changed.some(file => source.has(file) || chinese.has(file) || rules.has(file) || file.startsWith('versioned_sidebars/'));
@@ -30,8 +30,8 @@ function relevantPush(changed, audit, scope) {
 
 function changedPaths(before, head) {
     if (!/^[a-f0-9]{40}$/.test(before ?? '') || /^0{40}$/.test(before)) return null;
-    try {return execFileSync('git', ['diff', '--name-only', before, head],
-        {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);}
+    try {return execFileSync('git', ['diff', '--name-only','-z', before, head],
+        {cwd: root, encoding: 'utf8'}).split('\0').filter(Boolean);}
     catch {return null;}
 }
 
@@ -59,7 +59,7 @@ function summarize(plan, reconciliation, eligible, mode, language, reused = fals
         `- Open PRs inspected: ${reconciliation.openPrCount}; relevant: ${reconciliation.relevantPrs.length}; active candidates: ${plan.counts.activeCandidates}`,
         `- Selected for a possible next batch: ${plan.selected.length}; blocked targets: ${reconciliation.blockedTargets.length}`,
         `- Outside enabled automatic groups: ${plan.deferredAutomationTasks ?? 0}; reported separately, not sent to a model`,
-        `- Release-note policy: historical excluded=${plan.exceptions.filter(item=>item.kind==='historical_excluded').length}; manual reconciliation=${plan.exceptions.filter(item=>item.kind==='policy_review').length}`,
+        ...['releases','blog'].map(plugin=>`- ${plugin==='blog'?'Blog':'Release-note'} policy: historical excluded=${plan.exceptions.filter(item=>item.pluginId===plugin&&item.kind==='historical_excluded').length}; manual reconciliation=${plan.exceptions.filter(item=>item.pluginId===plugin&&item.kind==='policy_review').length}`),
         `- Robot batch PRs already open: ${reconciliation.botPrs.join(', ') || 'none'}`,
         `- Exceptions: ${[...exceptionKinds].map(([kind, count]) => `${kind}=${count}`).join(', ') || 'none'}`,
         '',

@@ -1,5 +1,5 @@
-// The release-note cutoff controls automation only. Native publication and
-// existing translated files/records keep their ordinary fallback semantics.
+// Fixed Git cutoffs for release notes and blogs. Callers decide publication:
+// release-note history keeps manual translations; blog history renders English.
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -10,36 +10,39 @@ const cache = new Map();
 const sourcePath = file => typeof file === 'string' && file && !path.isAbsolute(file)
     && !/[\\\x00-\x1f\x7f]/.test(file) && file.split('/').every(part => part && part !== '.' && part !== '..');
 const docKey = page => JSON.stringify([page.pluginId, page.version, page.docId]);
+const labelFor=group=>group.kind==='blog'?'Blog':'Release Notes';
 
 function validatePolicy(group) {
     const policy = group.sourcePolicy;
     if (policy === undefined) return;
-    assert(group.pluginId === 'releases' && group.version === 'current' && !group.kind
-        && policy && policy.mode === 'new-only' && policy.baseline === 'translations/release-notes-baseline.json',
-    'Invalid release-note source policy');
+    const blog=group.pluginId==='blog'&&group.kind==='blog'&&group.sourceRoot==='blog';
+    assert((group.pluginId === 'releases' && !group.kind || blog) && group.version === 'current'
+        && policy && policy.mode === 'new-only' && policy.baseline === (blog?'translations/blog-baseline.json':'translations/release-notes-baseline.json'),
+    `Invalid ${blog?'blog':'release-note'} source policy`);
 }
 
 function loadBaseline(root, group) {
     validatePolicy(group);
-    assert(group.sourcePolicy, 'Automatic Release Notes generation requires a new-only source policy');
+    const label=labelFor(group);
+    assert(group.sourcePolicy, `Automatic ${label} generation requires a new-only source policy`);
     const file = group.sourcePolicy.baseline;
     let cursor = root;
     for (const part of file.split('/')) {
         cursor = path.join(cursor, part);
-        assert(!fs.lstatSync(cursor).isSymbolicLink(), 'Symlink in Release Notes baseline path');
+        assert(!fs.lstatSync(cursor).isSymbolicLink(), `Symlink in ${label} baseline path`);
     }
-    assert(fs.lstatSync(cursor).isFile(), 'Release Notes baseline must be a regular file');
+    assert(fs.lstatSync(cursor).isFile(), `${label} baseline must be a regular file`);
     const source = fs.readFileSync(path.join(root, file), 'utf8');
     const data = JSON.parse(source);
     assert(data.schemaVersion === 1 && /^[a-f0-9]{40}$/.test(data.sourceCommit)
         && data.pluginId === group.pluginId && data.version === group.version
-        && data.sourceRoot === group.sourceRoot, 'Invalid Release Notes baseline identity');
+        && data.sourceRoot === group.sourceRoot, `Invalid ${label} baseline identity`);
     for (const name of ['documents', 'sourceFiles', 'historicalPaths']) assert(Array.isArray(data[name]), `Missing baseline ${name}`);
     const ids = new Set(), files = new Set();
     for (const doc of data.documents) {
         assert(typeof doc.docId === 'string' && doc.docId && !ids.has(doc.docId)
             && sourcePath(doc.sourcePath) && doc.sourcePath.startsWith(group.sourceRoot + '/')
-            && !files.has(doc.sourcePath) && /^[a-f0-9]{64}$/.test(doc.sourceHash), 'Invalid/duplicate historical release note');
+            && !files.has(doc.sourcePath) && /^[a-f0-9]{64}$/.test(doc.sourceHash), `Invalid/duplicate historical ${group.kind==='blog'?'blog':'release note'}`);
         ids.add(doc.docId); files.add(doc.sourcePath);
     }
     for (const name of ['sourceFiles', 'historicalPaths']) {
@@ -53,6 +56,7 @@ function loadBaseline(root, group) {
 
 function releasePolicy(root, group, sourceRef = 'HEAD') {
     if (!group.sourcePolicy) return null;
+    const label=labelFor(group),noun=group.kind==='blog'?'blog':'release-note';
     const baseline = loadBaseline(root, group);
     const git = args => execFileSync('git', args, {cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024,
         stdio: ['ignore', 'pipe', 'pipe']});
@@ -61,15 +65,15 @@ function releasePolicy(root, group, sourceRef = 'HEAD') {
     if (cache.has(key)) return cache.get(key);
     const data = baseline.data;
     try {git(['merge-base', '--is-ancestor', data.sourceCommit, ref]);}
-    catch {throw new Error('Release Notes baseline must be an ancestor of the audited source commit');}
-    const census = git(['ls-tree', '-r', '--name-only', data.sourceCommit, '--', group.sourceRoot])
-        .split('\n').filter(file => /\.mdx?$/.test(file)).sort();
-    assert.deepEqual([...data.sourceFiles].sort(), census, 'Release Notes baseline omits historical source files');
-    const historicalCensus = [...new Set(git(['log', '--format=', '--name-only', data.sourceCommit, '--', group.sourceRoot])
-        .split('\n').filter(file => file.startsWith(group.sourceRoot + '/') && /\.mdx?$/.test(file)))].sort();
-    assert.deepEqual([...data.historicalPaths].sort(), historicalCensus, 'Release Notes baseline omits historical path identities');
+    catch {throw new Error(`${label} baseline must be an ancestor of the audited source commit`);}
+    const census = git(['ls-tree', '-r', '--name-only', '-z', data.sourceCommit, '--', group.sourceRoot])
+        .split('\0').filter(file => /\.mdx?$/.test(file)).sort();
+    assert.deepEqual([...data.sourceFiles].sort(), census, `${label} baseline omits historical source files`);
+    const historicalCensus = [...new Set(git(['log', '--format=', '--name-only', '-z', data.sourceCommit, '--', group.sourceRoot])
+        .split('\0').filter(file => file.startsWith(group.sourceRoot + '/') && /\.mdx?$/.test(file)))].sort();
+    assert.deepEqual([...data.historicalPaths].sort(), historicalCensus, `${label} baseline omits historical path identities`);
     for (const doc of data.documents) assert.equal(hash(git(['show', `${data.sourceCommit}:${doc.sourcePath}`])),
-        doc.sourceHash, `Historical release-note hash mismatch: ${doc.sourcePath}`);
+        doc.sourceHash, `Historical ${noun} hash mismatch: ${doc.sourcePath}`);
     const historical = new Set(data.historicalPaths), ids = new Set(data.documents.map(doc => doc.docId));
     const hashes = new Set(data.documents.map(doc => doc.sourceHash));
     const origins = new Map([...historical].map(file => [file, {kind: 'historical', origin: file}]));
@@ -80,12 +84,12 @@ function releasePolicy(root, group, sourceRef = 'HEAD') {
         '--format=%x1e%H', '--name-status', '-z', '-M', '-C100%', '--find-copies-harder', `${data.sourceCommit}..${ref}`]);
     for (const chunk of history.split('\x1e').filter(Boolean)) {
         const tokens = chunk.split('\0'), commit = tokens.shift().trim();
-        assert(/^[a-f0-9]{40}$/.test(commit), 'Invalid release-note Git history');
+        assert(/^[a-f0-9]{40}$/.test(commit), `Invalid ${noun} Git history`);
         const events = [];
         for (let index = 0; index < tokens.length;) {
             const status = tokens[index++].trim();
             if (!status) continue;
-            assert(/^[ACDMRTUXB][0-9]*$/.test(status), 'Invalid release-note Git change');
+            assert(/^[ACDMRTUXB][0-9]*$/.test(status), `Invalid ${noun} Git change`);
             const from = tokens[index++];
             const to = /^[RC]/.test(status) ? tokens[index++] : from;
             events.push({status, from, to});
@@ -108,11 +112,11 @@ function releasePolicy(root, group, sourceRef = 'HEAD') {
         const origin = origins.get(file);
         let kind, reason;
         if (ids.has(page.docId) || historical.has(file) || origin?.kind === 'historical') {
-            kind = 'historical_excluded'; reason = 'Registered or present before the fixed release-note cutoff, including moves and re-registrations.';
+            kind = 'historical_excluded'; reason = `Registered or present before the fixed ${noun} cutoff, including moves and re-registrations.`;
         } else if (origin?.kind !== 'new' || hashes.has(page.sourceHash)) {
-            kind = 'policy_review'; reason = 'Cannot establish a genuinely new release note after the cutoff; reconcile its source identity manually.';
+            kind = 'policy_review'; reason = `Cannot establish a genuinely new ${group.kind==='blog'?'blog':'release note'} after the cutoff; reconcile its source identity manually.`;
         } else {
-            kind = 'eligible'; reason = 'A new source identity committed after the fixed release-note cutoff.';
+            kind = 'eligible'; reason = `A new source identity committed after the fixed ${noun} cutoff.`;
         }
         return {kind, reason, baselineCommit: data.sourceCommit, originPath: origin?.origin ?? file,
             introducedCommit: origin?.commit ?? null};

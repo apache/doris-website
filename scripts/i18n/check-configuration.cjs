@@ -11,12 +11,17 @@ function checkConfiguration(root, locale, {releaseHistory = false} = {}) {
     const read = kind => JSON.parse(fs.readFileSync(path.join(root, `translations/${kind}/${locale}.json`), 'utf8'));
     const scope = read('scope');
     validateScope(scope, locale);
-    for (const group of scope.groups.filter(group => group.pluginId === 'releases')) {
+    for (const group of scope.groups.filter(group => group.pluginId === 'releases'||group.kind==='blog')) {
         if (!scope.automaticGroups || scope.automaticGroups.includes(group.id))
-            assert(group.sourcePolicy, `${locale}: automatic Release Notes need a new-only source policy`);
+            assert(group.sourcePolicy, `${locale}: automatic ${group.kind==='blog'?'blogs':'Release Notes'} need a new-only source policy`);
         if (group.sourcePolicy) {
             const policy = require('./release-policy.cjs');
-            policy.loadBaseline(root, group);
+            const baseline=policy.loadBaseline(root, group).data;
+            if(group.kind==='blog'){
+                require('./automated-blog.cjs').validateSettings(root,baseline);
+                if(!scope.automaticGroups||scope.automaticGroups.includes(group.id))
+                    assert(baseline.locales.includes(locale),`${locale}: blog automation is not admitted by its baseline`);
+            }
             if (releaseHistory) policy.releasePolicy(root, group, 'HEAD');
         }
     }

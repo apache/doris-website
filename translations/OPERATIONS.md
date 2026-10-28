@@ -23,8 +23,49 @@ These are operational roles, not assignments of human proofreading to a named pe
 | `scripts/i18n/docs-language-policy.cjs` | Explicit English/Chinese-only legacy versions; currently 3.x and 2.1 |
 | `translations/state/<locale>/pages/` and legacy `docs.json` | Exact source/target revisions, freshness and ownership; a page shard supersedes its legacy entry |
 | `translations/release-notes-baseline.json` | Fixed historical release-note boundary; never advance it to hide work |
+| `translations/blog-baseline.json` | Fixed blog boundary and historical fallback languages; never advance it during discovery |
 
-Course UI, weekly report source groups, landing pages and blog batches remain outside scheduled documentation generation unless explicitly admitted. The user's historical blog backfill is a separate manual batch. A registered supplemental group is not automatically a required generation backlog.
+Course UI, weekly report source groups and landing pages remain outside scheduled generation unless explicitly admitted. New blogs are admitted as `BLOG` for Japanese, Korean and Russian. Historical blogs are excluded from generation and render English in all four non-English languages, including Chinese. A registered supplemental group is not automatically a required generation backlog.
+
+## Correct a translation manually
+
+You can edit a Japanese, Korean or Russian target in `i18n/<locale>/`. A target hash mismatch becomes `target_modified`: generation and write-back stop for that page, and publication falls back to English. The checks also protect edits made after a model request starts. An open human PR reserves or blocks its target during scheduled reconciliation.
+
+To publish the correction and keep future automation from replacing it:
+
+1. Edit the target and review it against the English revision recorded in its page shard under `translations/state/<locale>/pages/`.
+2. Set the shard's `page.targetHash` to the SHA-256 of the exact UTF-8 target bytes and set `page.ownership` to `human`. Preserve the recorded source revision when it is unchanged. For example, after reviewing a Japanese blog correction, run the following with its actual shard path:
+
+   ```bash
+   node - translations/state/ja/pages/blog/current/example.mdx.json <<'NODE'
+   const fs = require('node:fs');
+   const {hash} = require('./scripts/i18n/state.cjs');
+   const {safeFile} = require('./scripts/i18n/translation-engine.cjs');
+   const file = safeFile(process.cwd(), process.argv[2]);
+   const state = JSON.parse(fs.readFileSync(file, 'utf8'));
+   const page = state.page;
+   if (hash(fs.readFileSync(safeFile(process.cwd(), page.sourcePath), 'utf8')) !== page.sourceHash)
+       throw new Error('Source changed: review and synchronize the source revision first');
+   page.targetHash = hash(fs.readFileSync(safeFile(process.cwd(), page.targetPath), 'utf8'));
+   page.ownership = 'human';
+   fs.writeFileSync(file, JSON.stringify(state, null, 2) + '\n');
+   NODE
+   ```
+
+3. Submit the target and matching shard in the same PR. Preserve `reviewStatus: machine` unless human proofreading actually occurred; then record the real review. `reviewStatus: human` alone does **not** transfer ownership.
+4. Run the applicable PR checks and inspect the published page. Once the English source changes, a human-owned page can fall back to English until its target and source revision are manually synchronized. Automation reports the work for human review and does not replace it.
+
+Updating only `targetHash` while leaving `ownership: machine` allows a later English source update to generate a new translation. Use `ownership: human` for continuing manual control. Do not blindly refresh source hashes or change ownership back to machine to clear an exception.
+
+## New-blog policy
+
+The cutoff is source commit `5e9ed76441890c1096e7c562746d00702e93f038`, recorded with 206 native posts, 206 source files and 308 historical paths. A post's filename date or front matter date does not determine eligibility. Git lineage, IDs, paths and source hashes exclude historical moves, copies and re-registration; ambiguous identities require manual reconciliation. Genuinely new posts committed after this cutoff, including their later updates, use the existing scheduled Japanese, Korean and Russian workflows.
+
+Historical articles, including the existing Chinese and three-language pilot targets, render the English body with English canonical URLs and `noindex` on localized fallback routes. Their files and legacy manual shards remain preserved as archival inputs. Editing an archived historical target does not enable its publication under this policy. Chinese new-blog translations remain manually maintained.
+
+New automatic targets use `i18n/<locale>/docusaurus-plugin-content-blog/<English-relative-filename>` and independent `translations/state/<locale>/pages/blog/current/<English-relative-filename>.json` records. The filename extension is part of the blog identity. Do not create a second legacy `translations/blog/pages/` record for an automatic target. Titles, descriptions, summaries and body prose are translated; routing, dates, authors, tags, code, numbers, links and relative asset/import resolution remain protected.
+
+The native audit includes `BLOG` and reports `historicalExcluded` separately from required/current/pending work. An empty new-blog scan does not claim historical translation coverage. To inspect without a model call, run each language workflow with `mode=dry-run` and `plugin=blog` on `master`.
 
 ## Daily read-only checks
 
@@ -73,6 +114,7 @@ Use the matching Japanese or Korean workflow for those languages. `validate` and
 | Active candidates / blocked targets | Open PR reservations and ambiguous or manually edited candidate targets; not additional merged coverage |
 | English fallback / stale / unverified | Existing routes may render English; inspect canonical/noindex and target ownership |
 | Historical RN exclusion | Preserved history outside the new-only policy, not untranslated required work |
+| Historical blog exclusion | English fallback in zh-CN/ja/ko/ru; preserved target files are not published translations or required work |
 | 3.x/2.1 fallback | English/Chinese-only versions, not missing ja/ko/ru translations |
 
 Record each report's source SHA, capture time, enabled groups, active PR snapshot and exceptions. For delivery latency, retain source change time, run creation/start/end, PR creation/merge and the first verified public artifact. If a deployment or future note has not occurred, leave that interval pending. Do not substitute a successful PR build for public evidence.

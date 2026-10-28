@@ -6,7 +6,7 @@ let active;
 function enable(plan) {
     // Content edits retain the existing complete blog build. This optimization
     // is for PRs that change implementations rather than published content.
-    const contentChanged = plan.files.some(file => /^(blog\/|i18n\/[^/]+\/docusaurus-plugin-content-blog(?:\/|-[^/]+\/)|translations\/blog\/)/.test(file));
+    const contentChanged = plan.files.some(file => /^(blog\/|i18n\/[^/]+\/docusaurus-plugin-content-blog(?:\/|-[^/]+\/)|translations\/blog\/|translations\/state\/[^/]+\/pages\/blog\/)/.test(file));
     active = plan.mode === 'sample' && !contentChanged ? {plan, routes: [], reports: []} : undefined;
     return () => {active = undefined;};
 }

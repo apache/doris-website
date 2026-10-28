@@ -7,7 +7,8 @@
     "4X",
     "COMMUNITY",
     "COURSE",
-    "RELEASES"
+    "RELEASES",
+    "BLOG"
   ],
   "groups": [
     {
@@ -75,6 +76,18 @@
         "components/community-report-next/",
         "pages/community-report/"
       ]
+    },
+    {
+      "id": "BLOG",
+      "pluginId": "blog",
+      "version": "current",
+      "sourceRoot": "blog",
+      "kind": "blog",
+      "routeBasePath": "/blog",
+      "sourcePolicy": {
+        "mode": "new-only",
+        "baseline": "translations/blog-baseline.json"
+      }
     }
   ],
   "retainEnglish": [],

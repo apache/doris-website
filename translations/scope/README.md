@@ -4,6 +4,12 @@ For current multi-language maintenance and version changes, use the
 [operations runbook](../OPERATIONS.md). The snapshot and first-delivery examples
 below describe the historical Japanese rollout.
 
+The current Japanese, Korean and Russian scopes also admit `BLOG` for genuinely
+new posts after the fixed Git cutoff in `translations/blog-baseline.json`.
+Historical posts, including existing Chinese targets, render English and remain
+outside generation. See the runbook for the cutoff, independent blog state
+paths and permanent protection of manual corrections.
+
 `ja.json` is the candidate allowlist for the first delivery: the native `default`
 docs plugin's `current` and `4.x` versions, and the `community` plugin's `current`
 version. It does not filter a website build. All other active versions/plugins

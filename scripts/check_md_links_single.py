@@ -182,6 +182,13 @@ def resolve_internal(base_dir: str, target: str):
     site_root, _ = _find_site_roots(base_dir)
     if site_root:
         relative = os.path.relpath(full, site_root).replace(os.sep, "/")
+        # Automated blog bodies compile at their English resource path, so
+        # unchanged relative links/media resolve against the source blog tree.
+        blog = re.match(r"i18n/[^/]+/docusaurus-plugin-content-blog/(.*)", relative)
+        if blog:
+            for candidate in _candidates_for(os.path.join(site_root, "blog", blog.group(1))):
+                if os.path.isfile(candidate):
+                    return candidate
         localized = re.match(r"i18n/[^/]+/docusaurus-plugin-content-docs(-[^/]+)?/(current|version-([^/]+))/(.*)", relative)
         if localized:
             suffix, _, version, rest = localized.groups()
