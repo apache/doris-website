@@ -49,6 +49,10 @@ When the Catalog is refreshed, the object-related Cache is forced to be invalida
 
 `invalid_cache` currently applies to `REFRESH CATALOG`.
 
+In the development version (master), `REFRESH TABLE` treats a table name in an existing external database as a metadata invalidation target. It succeeds even if the remote table has been dropped or the supplied table name has never existed. A missing catalog or database, an internal catalog, or insufficient privileges still causes an error.
+
+A successful table refresh does not confirm remote table existence or immediately reload its schema. Doris reloads metadata on subsequent access, so a query against a dropped table can still fail. This allows stale table lookups to be invalidated across FEs even when the master has not cached the table.
+
 ## Example
 
 1. Refresh hive catalog

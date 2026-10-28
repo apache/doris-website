@@ -50,6 +50,10 @@ REFRESH TABLE [[<catalog_name>.]<database_name>.]<table_name>;
 
 `invalid_cache` 当前用于 `REFRESH CATALOG`。
 
+在开发版本（master）中，`REFRESH TABLE` 将已存在的外部数据库中的表名作为元数据缓存失效的目标。即使远端表已被删除，或指定的表名从未存在，该语句也会成功。Catalog 或数据库不存在、指定内部 Catalog，或权限不足时仍会报错。
+
+表刷新成功不表示远端表存在，也不会立即重新加载其 schema。Doris 会在后续访问时重新加载元数据，因此查询已删除的表仍可能失败。这使多 FE 集群能够清除旧表的查找缓存，即使 master 尚未缓存该表。
+
 ## 示例
 
 1. 刷新 hive catalog
