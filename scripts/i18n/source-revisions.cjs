@@ -16,7 +16,7 @@ const files = new Map(),
 const normalize = value => value.replace(/\r\n/g, '\n');
 const hash = value => createHash('sha256').update(normalize(value)).digest('hex');
 const blob = value => {
-    const bytes = Buffer.from(normalize(value));
+    const bytes = Buffer.from(value);
     return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
 };
 const git = (root, args) =>
@@ -71,7 +71,7 @@ function working(root, file) {
         const stamp = `${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
         if (files.get(full)?.stamp !== stamp) {
             const content = fs.readFileSync(full, 'utf8');
-            files.set(full, { stamp, hash: hash(content), blob: blob(content) });
+            files.set(full, { stamp, hash: hash(content), blob: blob(content), lfBlob: blob(normalize(content)) });
         }
         return files.get(full);
     } catch (error) {
@@ -110,14 +110,26 @@ function snapshot(root, record, ref) {
         Object.entries(paths).map(([locale, file]) => [locale, { path: file, blob: blobAt(root, ref, file) }]),
     );
 }
-function currentSnapshot(root, record) {
+function currentSnapshot(root, record, ref) {
     const paths = pathsFor(root, record);
+    const head = ref ?? git(root, ['rev-parse', 'HEAD']).trim();
     return paths
         ? Object.fromEntries(
-              Object.entries(paths).map(([lang, file]) => [
-                  lang,
-                  { path: file, blob: working(root, file)?.blob ?? null },
-              ]),
+              Object.entries(paths).map(([lang, file]) => {
+                  const content = working(root, file),
+                      committed = blobAt(root, head, file);
+                  return [
+                      lang,
+                      {
+                          path: file,
+                          blob: content
+                              ? content.blob === committed || content.lfBlob === committed
+                                  ? committed
+                                  : content.blob
+                              : null,
+                      },
+                  ];
+              }),
           )
         : null;
 }
@@ -181,7 +193,7 @@ function hydrate(root, locale, records, { ref = 'HEAD', worktree = true } = {}) 
                 preview = false;
             if (targetHash && targetHash !== raw.targetHash) {
                 manual = true;
-                preview = worktree && target.blob !== committedBlob;
+                preview = worktree && target.blob !== committedBlob && target.lfBlob !== committedBlob;
                 const key = JSON.stringify([root, head, raw.targetPath]);
                 if (!preview && !targetCommits.has(key))
                     targetCommits.set(key, git(root, ['log', '-1', '--format=%H', head, '--', raw.targetPath]).trim());
@@ -204,7 +216,7 @@ function hydrate(root, locale, records, { ref = 'HEAD', worktree = true } = {}) 
             const baseline = snapshot(root, record, anchor);
             if (!manual && raw.sourceRevisions)
                 assert.deepEqual(raw.sourceRevisions, baseline, 'Source revision ledger mismatch');
-            const current = worktree ? currentSnapshot(root, record) : snapshot(root, record, head);
+            const current = worktree ? currentSnapshot(root, record, head) : snapshot(root, record, head);
             const changed = Object.keys(paths).filter(lang => baseline[lang].blob !== current[lang].blob);
             control = { head, anchor, manual, preview, baseline, current, changed };
         } catch (error) {

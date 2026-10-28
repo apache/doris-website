@@ -145,7 +145,8 @@ async function plan({report, scope, records, baseline = [], active, readCurrent,
         const sourceDriven=report.maintenancePolicy==='source-revisions-v1'||!!sourceControl;
         let chineseSourceBlob;
         if(sourceDriven){let content=null;try{content=chinese?readCurrent(chinese):null;}catch(e){if(e.code!=='ENOENT')throw e;}
-            chineseSourceBlob=content==null?null:require('./source-revisions.cjs').blob(content);}
+            chineseSourceBlob=Object.hasOwn(page,'chineseSourceBlob')?page.chineseSourceBlob
+                :sourceControl?.current?.['zh-CN']?.blob??(content==null?null:require('./source-revisions.cjs').blob(content));}
         if (chinese && changedChinese.has(chinese) && baselineByKey.get(key(page))?.sourceHash === page.sourceHash) {
             exceptions.push({kind: 'zh_only_change', groupId: page.groupId, docId: page.docId,
                 sourcePath: page.sourcePath, chinesePath: chinese,

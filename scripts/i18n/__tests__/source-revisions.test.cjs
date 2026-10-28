@@ -437,3 +437,65 @@ test('implicit target adoption rejects symbolic links, including a linked parent
         assert.equal(state.useTarget, false);
     }
 });
+
+test('unchanged CRLF Git inputs and LF-to-CRLF checkout conversions do not cause regeneration', async t => {
+    for (const committed of [false, true]) {
+        const f = await fixture(t),
+            locale = 'ja';
+        for (const file of ['docs/guide.md', 'i18n/zh-CN/docusaurus-plugin-content-docs/current/guide.md'])
+            f.write(file, f.read(file).replace(/\n/g, '\r\n'));
+        if (committed) {
+            const anchor = f.commit();
+            for (const l of locales) {
+                const file = `translations/state/${l}/docs.json`,
+                    state = JSON.parse(f.read(file));
+                state.pages[0].sourceCommit = anchor;
+                f.write(file, state);
+            }
+            f.commit();
+        }
+        assert.equal((await f.current(locale)).status, 'current');
+        assert.equal((await f.planned(locale)).selected.length, 0);
+    }
+});
+
+test('a source refresh with identical translated bytes can publish its updated automation snapshot', async t => {
+    const f = await fixture(t),
+        locale = 'ja',
+        p = f.page(locale),
+        target = f.read(p.targetPath);
+    f.write(
+        'i18n/zh-CN/docusaurus-plugin-content-docs/current/guide.md',
+        source.replace('Original source.', '中文措辞变化。'),
+    );
+    f.commit();
+    const planned = await f.planned(locale),
+        task = planned.tasks.find(x => x.id === planned.selected[0]),
+        state = readState(f.root, locale);
+    const candidate = await prepare({
+        root: f.root,
+        plan: planned,
+        taskId: task.id,
+        scope: f.scope(locale),
+        state,
+        glossary,
+        target: { locale, language: 'Japanese', scriptPattern: '.' },
+        adapter: {
+            model: 'fixture',
+            async translateDocument() {
+                return { translation: target };
+            },
+        },
+    });
+    assert.equal(candidate.target, target);
+    applyCandidates(state, [candidate]);
+    const manifest = {
+        schemaVersion: 1,
+        provider: 'codex',
+        candidates: [
+            { ...task, targetHash: candidate.record.targetHash, statePath: `translations/state/${locale}/docs.json` },
+        ],
+    };
+    const changed = require('../workflow-publish.cjs').checkStaged(manifest, f.scope(locale), { rootDir: f.root });
+    assert.deepEqual(changed, [`translations/state/${locale}/docs.json`]);
+});

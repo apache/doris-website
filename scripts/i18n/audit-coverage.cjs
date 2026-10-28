@@ -133,6 +133,8 @@ async function audit({root,sourceRef,baseline,native}) {
             entries.push({pluginId:page.pluginId,version:page.version,docId:page.docId,sourcePath:page.sourcePath,
                 targetPath:page.targetPath,sourceHash:page.sourceHash,targetHash:page.targetHash,
                 sourceCommit:commit,permalink:page.permalink,reviewStatus:page.reviewStatus,state,
+                ...(require('./state.cjs').loadConfig(root).maintenancePolicy&&{
+                    chineseSourceBlob:require('./source-revisions.cjs').currentSnapshot(root,page,commit)?.['zh-CN']?.blob??null}),
                 ...(eligibility && {eligibility, contentState: page.status}),
                 change:!previous ? 'new' : previous.sourcePath !== page.sourcePath ? 'moved'
                     : previous.sourceHash !== page.sourceHash ? 'source_changed' : 'unchanged'});
