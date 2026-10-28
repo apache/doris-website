@@ -139,28 +139,38 @@ test('discovery and generation exchange artifacts in the caller workspace', () =
     assert(scripts.every(step => step.run.endsWith(' "$RUNNER_TEMP/$TRANSLATION_WORKSPACE"')));
     const index = name => generate.findIndex(step => step.name === name);
     assert(index('Reconcile again immediately before model calls') < index('Replan exact source and open PRs'));
-    assert(index('Replan exact source and open PRs') < index('Verify the PR label before model calls'));
+    assert(index('Replan exact source and open PRs') < index('Verify the PR labels before model calls'));
     assert.equal(generate.find(step => step.id === 'translation').env.I18N_CODEX_MODEL,
         "${{ vars.I18N_CODEX_MODEL || 'gpt-6-sol' }}");
 });
 
-test('the label check runs before auth loading and fails for a missing locale label', t => {
+test('the label check runs before auth loading and requires both PR labels for every language', t => {
     const steps = shared.jobs.generate.steps;
-    const label = steps.findIndex(step => step.name === 'Verify the PR label before model calls');
+    const label = steps.findIndex(step => step.name === 'Verify the PR labels before model calls');
     const auth = steps.findIndex(step => step.id === 'auth');
     assert(label >= 0 && label < auth);
     assert.equal(steps[label].if, "steps.fresh.outputs.can_generate == 'true'");
     assert.equal(steps[label].env.GH_TOKEN, '${{ github.token }}');
     const bin = fs.mkdtempSync(path.join(os.tmpdir(), 'translation-label-'));
     t.after(() => fs.rmSync(bin, {recursive: true, force: true}));
-    // The mock answers like the labels API: the name, or nothing when missing.
-    fs.writeFileSync(path.join(bin, 'gh'), '#!/bin/sh\ncase "$2" in */labels/translate-ja) echo translate-ja;; */labels/translate-ru) echo translate-ru;; esac\n',
-        {mode: 0o755});
-    const run = locale => spawnSync('bash', ['-e', '-c', steps[label].run],
-        {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale}}).status;
-    assert.equal(run('ja'), 0);
-    assert.equal(run('ru'), 0);
-    assert.notEqual(run('ko'), 0);
+    // The mock answers like the labels API, including a failed request for a missing label.
+    fs.writeFileSync(path.join(bin, 'gh'), `#!/bin/sh
+case "$2" in
+  */labels/translate-ja|*/labels/translate-ko|*/labels/translate-ru|*/labels/ai-translate)
+    label="\${2##*/}";;
+  *) exit 1;;
+esac
+test "$label" != "$TEST_MISSING_LABEL" || exit 1
+echo "$label"
+`, {mode: 0o755});
+    const run = (locale, missing = '') => spawnSync('bash', ['-e', '-c', steps[label].run],
+        {env: {...process.env, PATH: `${bin}:${process.env.PATH}`, I18N_LOCALE: locale,
+            TEST_MISSING_LABEL: missing}}).status;
+    for (const locale of Object.keys(callers)) {
+        assert.equal(run(locale), 0, locale);
+        assert.notEqual(run(locale, `translate-${locale}`), 0, `${locale}: missing language label`);
+        assert.notEqual(run(locale, 'ai-translate'), 0, `${locale}: missing shared label`);
+    }
 });
 
 test('publication preserves the verified runtime and refresh path', () => {
