@@ -413,3 +413,27 @@ test('body-only admission still rejects changed SQL or numerical facts', async t
         });
     assert(result.errors.some(e => e.message.includes('Protected')));
 });
+
+test('implicit target adoption rejects symbolic links, including a linked parent directory', async t => {
+    for (const parent of [false, true]) {
+        const f = await fixture(t),
+            locale = 'ja',
+            p = f.page(locale),
+            full = path.join(f.root, p.targetPath);
+        if (parent) {
+            const original = path.dirname(full),
+                moved = path.join(f.root, 'linked-bodies');
+            fs.renameSync(original, moved);
+            fs.symlinkSync(moved, original, 'dir');
+        } else {
+            const outside = path.join(f.root, 'private-body.md');
+            f.write('private-body.md', 'Private text.');
+            fs.unlinkSync(full);
+            fs.symlinkSync(outside, full);
+        }
+        f.commit();
+        const state = await f.current(locale);
+        assert.equal(state.status, 'state_conflict');
+        assert.equal(state.useTarget, false);
+    }
+});

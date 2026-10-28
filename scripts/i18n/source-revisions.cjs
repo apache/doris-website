@@ -59,8 +59,15 @@ function pathsFor(root, record) {
 }
 function working(root, file) {
     try {
-        const full = path.join(root, file),
-            stat = fs.statSync(full, { bigint: true });
+        assert(safe(file), 'Invalid translation input path');
+        let full = root,
+            stat;
+        for (const part of file.split('/')) {
+            full = path.join(full, part);
+            stat = fs.lstatSync(full, { bigint: true });
+            assert(!stat.isSymbolicLink(), 'Symlink in translation input');
+        }
+        assert(stat.isFile(), 'Translation input must be a regular file');
         const stamp = `${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
         if (files.get(full)?.stamp !== stamp) {
             const content = fs.readFileSync(full, 'utf8');
@@ -193,6 +200,7 @@ function hydrate(root, locale, records, { ref = 'HEAD', worktree = true } = {}) 
                     translatedAt: commitDates.get(dateKey),
                 };
             }
+            assert(/^[a-f0-9]{40}$/.test(anchor), 'Invalid source revision commit');
             const baseline = snapshot(root, record, anchor);
             if (!manual && raw.sourceRevisions)
                 assert.deepEqual(raw.sourceRevisions, baseline, 'Source revision ledger mismatch');
