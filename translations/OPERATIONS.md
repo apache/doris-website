@@ -33,7 +33,7 @@ You can edit a Japanese, Korean or Russian target in `i18n/<locale>/`. A target 
 
 To publish the correction and keep future automation from replacing it:
 
-1. Edit the target and review it against the English revision recorded in its page shard under `translations/state/<locale>/pages/`.
+1. Edit the target and review it against the English revision in its effective state record. Most records are page shards under `translations/state/<locale>/pages/`. Some Japanese records still exist only in `translations/state/ja/docs.json`: copy that record unchanged into `{ "schemaVersion": 1, "page": <record> }` at the path returned by `stateFileFor(record)` in `scripts/i18n/state.cjs`, then update the new shard. A shard supersedes the legacy entry; do not edit an obsolete legacy copy when a shard already exists.
 2. Set the shard's `page.targetHash` to the SHA-256 of the exact UTF-8 target bytes and set `page.ownership` to `human`. Preserve the recorded source revision when it is unchanged. For example, after reviewing a Japanese blog correction, run the following with its actual shard path:
 
    ```bash
