@@ -29,7 +29,7 @@ Returns an array containing the intersection results
 ## Example
 
 ```sql
-select c_array_string from group_array_intersect_test where id in (18, 20);
+select id, col from group_array_intersect_test;
 ```
 
 ```text
