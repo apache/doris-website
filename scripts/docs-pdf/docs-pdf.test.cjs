@@ -5,7 +5,8 @@ const path = require('node:path');
 const {execFileSync, spawnSync} = require('node:child_process');
 const test = require('node:test');
 const {parseOptions} = require('./cli.cjs');
-const {normalize} = require('./generate.cjs');
+const {normalize, addHeadingTargets} = require('./generate.cjs');
+const cheerio = require('cheerio');
 const {availableVersions, inventory, filename} = require('../docs-inventory.cjs');
 const root = path.resolve(__dirname, '../..');
 function fixture(t) {
@@ -94,4 +95,15 @@ test('real current/active/historical inventories keep sidebar entries and outsid
         assert.equal(docs.length, new Set(docs.map(doc => doc.source)).size);
         assert(docs[0].id.includes('intro') || docs[0].id.includes('what-is-apache-doris'));
     }
+});
+
+test('custom heading IDs remain destinations and card links are not nested inside marker links', () => {
+    const $ = cheerio.load('<article><h1>Title</h1><h2 id="stable-anchor">New heading</h2><h3 id="card"><a href="quick-start">Quick Start</a></h3></article>');
+    const aliases = {};
+    addHeadingTargets($, $('article'), 'doc-1', aliases);
+    assert.equal(aliases['doc-1#stable-anchor'], 'doc-1#new-heading');
+    assert.equal(aliases['doc-1#card'], 'doc-1#quick-start');
+    assert.equal($('a[href="quick-start"]').length, 1);
+    assert.equal($('a a').length, 0);
+    assert.equal($('a[href^="https://archive.invalid/start/"]').length, 3);
 });

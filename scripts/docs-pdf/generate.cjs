@@ -29,6 +29,18 @@ function staticProps(tag) {
     }
     return props;
 }
+function addHeadingTargets($, article, docKey, aliases) {
+    const slugger = new GithubSlugger();
+    article.find('h1,h2,h3,h4,h5,h6').each((index, heading) => {
+        const original = $(heading).attr('id');
+        const headingKey = docKey + (index ? '#' + slugger.slug($(heading).text()) : '');
+        if (index && original && `${docKey}#${original}` !== headingKey) aliases[`${docKey}#${original}`] = headingKey;
+        const inner = $(heading).html();
+        $(heading).attr('id', headingKey);
+        if ($(heading).find('a[href]').length) $(heading).append(` <a class="section-link" href="https://archive.invalid/start/${escape(headingKey)}">§</a>`);
+        else $(heading).html(`<a href="https://archive.invalid/start/${escape(headingKey)}">${inner}</a>`);
+    });
+}
 function findChrome(explicit) {
     const candidates = explicit ? [explicit] : [
         ...(process.platform === 'darwin' ? ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -159,7 +171,7 @@ async function generate({version, locales, output, python = 'python3', chrome, l
             const contentsTitle = cn ? '目录' : 'Contents';
             const directory = path.join(temporary, `${version}-${locale}${limit ? '-sample' : ''}`);
             fs.mkdirSync(directory, {recursive: true});
-            const batches = [], warnings = [];
+            const batches = [], warnings = [], headingAliases = {};
             const cover = `<div class="cover"><img src="${pathToFileURL(path.join(root, 'static/images/logo-doris.svg')).href}"><h1>${escape(title)}</h1><p>${cn ? '归档版本文档' : 'Archived documentation'}</p><p>${date} · ${docs.length} ${cn ? '篇文档' : 'documents'}</p><p>Source: ${commit.slice(0, 12)}</p></div>`;
             const toc = `<nav class="toc"><h1>${contentsTitle}</h1><ol>${docs.map(doc => `<li><a href="https://archive.invalid/${doc.key}">${escape(doc.title)}</a></li>`).join('')}</ol></nav>`;
             const page = await browser.newPage();
@@ -186,14 +198,7 @@ async function generate({version, locales, output, python = 'python3', chrome, l
                     for (const doc of selected) {
                         const article = $(`.archive-doc[data-key="${doc.key}"]`);
                         if (!article.length) throw new Error(`Missing rendered document: ${doc.source}`);
-                        const slugger = new GithubSlugger();
-                        article.find('h1,h2,h3,h4,h5,h6').each((index, heading) => {
-                            const headingKey = doc.key + (index ? '#' + slugger.slug($(heading).text()) : '');
-                            const inner = $(heading).html();
-                            $(heading).attr('id', headingKey);
-                            if ($(heading).find('a[href]').length) $(heading).append(` <a class="section-link" href="https://archive.invalid/start/${escape(headingKey)}">§</a>`);
-                            else $(heading).html(`<a href="https://archive.invalid/start/${escape(headingKey)}">${inner}</a>`);
-                        });
+                        addHeadingTargets($, article, doc.key, headingAliases);
                         article.find('a[href]').each((_, anchor) => {
                             const href = $(anchor).attr('href');
                             if (href.startsWith('https://archive.invalid/')) return;
@@ -249,7 +254,7 @@ async function generate({version, locales, output, python = 'python3', chrome, l
             const outputPath = path.join(output, filename(version, locale));
             const mergedPath = path.join(directory, 'merged.pdf');
             const jobPath = path.join(directory, 'merge.json');
-            fs.writeFileSync(jobPath, JSON.stringify({title, contentsTitle, version, locale, commit, docs: docs.map(({key, title}) => ({key, title})), batches, output: mergedPath}));
+            fs.writeFileSync(jobPath, JSON.stringify({title, contentsTitle, version, locale, commit, docs: docs.map(({key, title}) => ({key, title})), batches, headingAliases, output: mergedPath}));
             const stats = JSON.parse(execFileSync(python, [path.join(__dirname, 'merge.py'), jobPath], {encoding: 'utf8', maxBuffer: 10 * 1024 * 1024}));
             fs.copyFileSync(mergedPath, outputPath + '.partial');
             fs.renameSync(outputPath + '.partial', outputPath);
@@ -264,4 +269,4 @@ async function generate({version, locales, output, python = 'python3', chrome, l
         }
     } finally {await browser.close();}
 }
-module.exports = {generate, normalize, findChrome};
+module.exports = {generate, normalize, findChrome, addHeadingTargets};

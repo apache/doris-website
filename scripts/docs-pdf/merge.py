@@ -23,6 +23,10 @@ for index, page in enumerate(writer.pages):
             rect = link['/Rect']
             targets[uri[len(prefix + 'start/'):]] = (index, float(rect[0]), float(rect[3]))
 
+for alias, canonical in job.get('headingAliases', {}).items():
+    if canonical in targets:
+        targets.setdefault(alias, targets[canonical])
+
 for page in writer.pages:
     for ref in page.get('/Annots', []):
         link = ref.get_object()
