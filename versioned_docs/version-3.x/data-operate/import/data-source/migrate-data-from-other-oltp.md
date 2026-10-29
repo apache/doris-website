@@ -155,10 +155,10 @@ val jdbcDF = spark.read
 ```
 For more details, refer to [JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#batch-write)
 
-## DataX / Seatunnel / CloudCanal and other third-party tools.
+## NineData / DataX / Seatunnel / CloudCanal and other third-party tools.
 
 In addition, you can also use third-party synchronization tools for data synchronization. For more details, please refer to:
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 - [DataX](../../../ecosystem/datax)
 - [Seatunnel](../../../ecosystem/seatunnel)
 - [CloudCanal](../../../ecosystem/cloudcanal)
-- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
