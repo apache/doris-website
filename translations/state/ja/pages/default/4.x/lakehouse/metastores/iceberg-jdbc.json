@@ -8,13 +8,29 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/lakehouse/metastores/iceberg-jdbc.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/lakehouse/metastores/iceberg-jdbc.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "8c2b202a71f6a4e91b1eddf872606abdbe650770a9e7fb624729e72429b6078e",
-    "sourceTechnicalHash": "6b52b05b31ba3f535df841a299dbaaab891b2bfee224f738df7efc02a0a256bb",
-    "targetHash": "b062e0562f838ea5e5c86b7ffa9f54636149ebfa27c8c591b3fd53ecff1b3376",
+    "sourceCommit": "759a81aadfe5c9649e8b7eef8dab84dd6ee913d3",
+    "sourceHash": "46331dc866700127760c1b6a4f9ddcd4b001b139336de5fe5ddbce2ff2a26e61",
+    "sourceTechnicalHash": "58b4b5bdf72c46f02fe3cd41bd54c5ba8a6590fb2b55b1c6184e0924f23b50ff",
+    "targetHash": "30e8ee5627a2a7715031fb37bb302b95605f9a5235bf26872a3ea2162fe53af4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:38:46.108Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T17:48:30.195Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "46331dc866700127760c1b6a4f9ddcd4b001b139336de5fe5ddbce2ff2a26e61",
+      "targetHash": "30e8ee5627a2a7715031fb37bb302b95605f9a5235bf26872a3ea2162fe53af4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    }
   }
 }

@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/query-acceleration/dictionary.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/query-acceleration/dictionary.md",
-    "sourceCommit": "0a1b0e8f51533d31accde6e8ae4770dd5f225636",
-    "sourceHash": "6df3023c9ca855bd36f445ad68a8e78238d17106ff0b0912d46bb63a04d4cffa",
-    "sourceTechnicalHash": "23f027aef9d7900b5588020f8a5ca7886b17f52db6693837b6416b03580c6c9f",
-    "targetHash": "f6a89588c9884d6384e7a519130a02e1dd9c93d41fb62a1f2b516e096937bce4",
+    "sourceCommit": "759a81aadfe5c9649e8b7eef8dab84dd6ee913d3",
+    "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+    "sourceTechnicalHash": "bd8432953bc21831c33c7a3a91ab45ac99661d9a3624879d27bd78958033056b",
+    "targetHash": "0ac0048bd62fd196116a69c7eec5d4914c0388fee89462f94a5418d0c6acd01c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T03:18:55.711Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-27T17:57:14.611Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "f482eeaa274f7b0e87df78aa60e422545ca416c7f0aa92e10c685524ab1660a4",
+      "targetHash": "0ac0048bd62fd196116a69c7eec5d4914c0388fee89462f94a5418d0c6acd01c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT \\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]; received [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT\\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"id\"]; received [\"inlineCode\",null,null,\"source_table\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT \\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]; received [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT\\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"id\"]; received [\"inlineCode\",null,null,\"source_table\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT \\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]; received [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT\\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"id\"]; received [\"inlineCode\",null,null,\"source_table\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1024\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.0\",\"4.1.5\",\"5\",\"5\",\"5\",\"5000\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT \\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]; received [\"code\",\"sql\",null,\"-- Count the number of orders and total sales for each category\\nSELECT\\n    p.category_name,\\n    p.brand_name,\\n    COUNT(DISTINCT o.order_id) as order_count,\\n    SUM(o.quantity) as total_quantity,\\n    SUM(o.actual_price * o.quantity) as total_amount\\nFROM orders o\\nLEFT JOIN products p ON o.product_id = p.product_id\\nWHERE o.order_time >= '2024-02-22 00:00:00'\\nGROUP BY p.category_name, p.brand_name\\nORDER BY total_amount DESC;\"]\nprotected node 42: expected [\"inlineCode\",null,null,\"id\"]; received [\"inlineCode\",null,null,\"source_table\"]"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
