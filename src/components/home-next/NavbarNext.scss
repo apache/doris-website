@@ -173,6 +173,9 @@
         width: 18px;
         height: 18px;
     }
+    &__ask-ai-icon--full path {
+        fill: currentColor;
+    }
     &__ask-ai-icon--compact,
     &__ask-ai-label--compact {
         display: none;
