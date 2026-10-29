@@ -4,8 +4,8 @@ const yaml = require('js-yaml');
 
 const DOC_SUFFIX_RE = /\.(md|mdx)$/i;
 
-const DEFAULT_ACTIVE_VERSIONS = ['4.x', '3.x', '2.1', 'current'];
-const DEFAULT_ARCHIVED_VERSIONS = ['2.0', '1.2'];
+const DEFAULT_ACTIVE_VERSIONS = ['4.x', '3.x', 'current'];
+const DEFAULT_ARCHIVED_VERSIONS = ['2.1', '2.0', '1.2'];
 const DEFAULT_VERSION = '4.x';
 const CURRENT_ROUTE_VERSION = 'dev';
 

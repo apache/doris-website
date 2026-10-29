@@ -30,7 +30,7 @@ function buildNavItems(
     devDocsHref: string,
     stableDocsHref: string,
     v3xDocsHref: string,
-    v21DocsHref: string,
+    archivedDocsHref: string,
     releasesHref: string,
     roadmapHref: string,
     joinCommunityHref: string,
@@ -82,7 +82,7 @@ function buildNavItems(
                 { label: 'Dev', href: devDocsHref },
                 { label: '4.x', href: stableDocsHref },
                 { label: '3.x', href: v3xDocsHref },
-                { label: '2.1', href: v21DocsHref },
+                { label: translate({id: 'docs.archive.title', message: 'Archived Versions'}), href: archivedDocsHref },
             ],
         },
         {
@@ -172,9 +172,9 @@ export function NavbarNext(): JSX.Element {
     const navbarRef = useRef<HTMLElement>(null);
     const devDocsHref = `/docs/dev/getting-started/what-is-apache-doris`;
     const stableDocsHref = `/docs/4.x/getting-started/what-is-apache-doris`;
-    // 3.x and 2.1 use the legacy slug structure (gettingStarted/ with camelCase).
+    // 3.x uses the legacy slug structure (gettingStarted/ with camelCase).
     const v3xDocsHref = `/docs/3.x/gettingStarted/what-is-apache-doris`;
-    const v21DocsHref = `/docs/2.1/gettingStarted/what-is-apache-doris`;
+    const archivedDocsHref = '/archived-docs';
     const releasesHref = `/releases/all-release`;
     const roadmapHref = `/community/roadmap`;
     const joinCommunityHref = `/community/join-community`;
@@ -185,7 +185,7 @@ export function NavbarNext(): JSX.Element {
         devDocsHref,
         stableDocsHref,
         v3xDocsHref,
-        v21DocsHref,
+        archivedDocsHref,
         releasesHref,
         roadmapHref,
         joinCommunityHref,

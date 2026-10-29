@@ -7,7 +7,7 @@ const React = require('react');
 const {renderToString} = require('react-dom/server');
 const cheerio = require('cheerio');
 
-function fixture(kind, singleVersion = false) {
+function fixture(kind, singleVersion = false, docsPluginId = 'default') {
     const locales = ['en', 'zh-CN', 'ja', 'ko', 'ru'];
     const route = locale => `${locale === 'en' ? '' : '/' + locale}${kind === 'page' ? '/use-cases/ai/' : '/docs/dev/topic/'}`;
     const i18n = {currentLocale: 'ru', defaultLocale: 'en', locales,
@@ -30,6 +30,7 @@ function fixture(kind, singleVersion = false) {
         '@docusaurus/router': {useLocation: () => ({pathname: route('ru'),
             search: phase === 'server' ? '' : '?from=search', hash: phase === 'server' ? '' : '#usage'})},
         '@docusaurus/useIsBrowser': () => phase === 'hydrated',
+        '@docusaurus/useBaseUrl': pathname => '/ru' + pathname,
         '@docusaurus/useDocusaurusContext': () => ({i18n}),
         '@docusaurus/Translate': {translate: ({message}) => message},
         '@docusaurus/theme-common/internal': {useAlternatePageUtils: () => ({createUrl: ({locale}) => route(locale)})},
@@ -54,7 +55,8 @@ function fixture(kind, singleVersion = false) {
     }, module, module.exports);
     return next => {
         phase = next;
-        return renderToString(React.createElement(kind === 'page' ? module.exports.PageLanguageSwitcher : module.exports.default));
+        return renderToString(React.createElement(kind === 'page' ? module.exports.PageLanguageSwitcher : module.exports.default,
+            kind === 'version' ? {docsPluginId} : {}));
     };
 }
 
@@ -66,6 +68,12 @@ for (const [kind, singleVersion] of [['locale', false], ['version', false], ['ve
         const links = html => cheerio.load(html)('a').map((_, node) => node.attribs.href).get();
         const initial = links(server), hydrated = links(render('hydrated'));
         assert(initial.length > 0);
-        assert.deepEqual(hydrated, initial.map(href => href + '?from=search#usage'));
+        assert.deepEqual(hydrated, initial.map(href => href.endsWith('/archived-docs') ? href : href + '?from=search#usage'));
+        if (kind === 'version') assert(initial.includes('/ru/archived-docs'));
     });
 }
+
+test('unversioned docs plugins do not acquire the main documentation archive link', () => {
+    const html = fixture('version', true, 'community')('server');
+    assert(!html.includes('/archived-docs'));
+});

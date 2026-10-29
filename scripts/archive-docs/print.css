@@ -1,0 +1,25 @@
+@page { size: A4; margin: 18mm 16mm 20mm; }
+html { color: #172b25; background: white; }
+body { font: 10pt/1.55 Arial, 'PingFang SC', 'Hiragino Sans GB', sans-serif; overflow-wrap: anywhere; }
+h1 { font-size: 23pt; line-height: 1.2; }
+h1.doc-title { break-before: page; border-bottom: 2pt solid #11a679; padding-bottom: 10pt; }
+h2, h3, h4, h5, h6 { break-after: avoid; line-height: 1.3; margin-top: 16pt; }
+h2 { font-size: 16pt; } h3 { font-size: 13pt; } h4, h5, h6 { font-size: 11pt; }
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { color: inherit; text-decoration: none; }
+a { color: #087352; text-decoration: underline; }
+pre { font: 8pt/1.4 Menlo, Consolas, 'PingFang SC', monospace; white-space: pre-wrap; overflow-wrap: anywhere; background: #f4f7f6; padding: 8pt; border: .5pt solid #d9e5df; }
+code { font: .9em Menlo, Consolas, 'PingFang SC', monospace; }
+table { width: 100%; border-collapse: collapse; font-size: 8pt; table-layout: fixed; margin: 10pt 0; }
+th, td { border: .5pt solid #c4d2cc; padding: 4pt; vertical-align: top; overflow-wrap: anywhere; }
+th { background: #e8f4ee; } tr { break-inside: avoid; }
+img { max-width: 100%; height: auto; max-height: 220mm; object-fit: contain; }
+figure { margin: 10pt 0; break-inside: avoid; }
+blockquote, .admonition { border-left: 3pt solid #11a679; padding: 6pt 10pt; margin: 10pt 0; background: #f1f8f5; }
+details > * { display: block; } summary { font-weight: bold; }
+.cover { padding-top: 50mm; text-align: center; break-after: page; }
+.cover img { width: 65mm; margin-bottom: 20mm; }
+.cover h1 { font-size: 32pt; }
+.cover p { color: #465c52; font-size: 12pt; }
+.toc { break-after: page; } .toc ol { padding-left: 2.6em; } .toc li { margin: 2pt 0; }
+.source { font-size: 8pt; color: #576b61; }
+.missing-image { border: 1pt solid #9d7630; padding: 8pt; font-size: 9pt; }

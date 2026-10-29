@@ -128,9 +128,9 @@ PR 提交流程还可以参考：
 | `blog/` | 博客文章 Markdown | 所有版本共用 |
 | `community/` | 英文社区文档 | 所有版本共用 |
 | `docs/` | 英文最新版（Dev / Master）文档 | 当前主干 |
-| `versioned_docs/version-X.X/` | 英文已发布版本文档 | 4.x / 3.x / 2.1（见 `versions.json`） |
+| `versioned_docs/version-X.X/` | 英文已发布版本文档 | 在线发布的 4.x / 3.x（见 `versions.json`） |
 | `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | 中文最新版文档 | 当前主干 |
-| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 中文已发布版本文档 | 4.x / 3.x / 2.1（见 `versions.json`） |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | 中文已发布版本文档 | 在线发布的 4.x / 3.x（见 `versions.json`） |
 | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | 中文社区文档 | 所有版本共用 |
 | `sidebars.ts` | 最新版文档侧边栏 | 中英文共用 |
 | `versioned_sidebars/version-X.X-sidebars.json` | 已发布版本文档侧边栏 | 中英文共用 |
@@ -261,17 +261,16 @@ Dev 版本的目录栏中文翻译文件位于 `i18n/zh-CN/docusaurus-plugin-con
 },
 ```
 
-### 4.x / 3.x / 2.1 已发布版本
+### 4.x / 3.x 已发布版本 {#4x--3x--21-已发布版本}
 
 **1. 内容修改位置**
 
-网站发布的已发布版本列在根目录的 `versions.json` 中，目前为 4.x、3.x 和 2.1。仓库中仍保留 `version-1.2` 和 `version-2.0` 目录，但它们不在 `versions.json` 中，也不会构建到网站。
+网站在线发布的已发布版本列在根目录的 `versions.json` 中，目前为 4.x 和 3.x。2.1、2.0 和 1.2 版本的 PDF 文档可在[归档版本](https://doris.apache.org/zh-CN/archived-docs)页面下载。对应的源码目录保留在仓库中供查阅，不再构建到网站。
 
 | 版本 | 英文文档位置 | 中文文档位置 |
 | --- | --- | --- |
 | 4.x | `/versioned_docs/version-4.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x` |
 | 3.x | `/versioned_docs/version-3.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x` |
-| 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
 
 ```plain
 .

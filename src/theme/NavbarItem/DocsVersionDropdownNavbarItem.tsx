@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {type JSX} from 'react';
 import {
     useVersions,
     useActiveDocContext,
@@ -9,6 +9,7 @@ import { translate } from '@docusaurus/Translate';
 import { useLocation } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useIsBrowser from '@docusaurus/useIsBrowser';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import DefaultNavbarItem from '@theme/NavbarItem/DefaultNavbarItem';
 import DropdownNavbarItem from '@theme/NavbarItem/DropdownNavbarItem';
 import type { Props } from '@theme/NavbarItem/DocsVersionDropdownNavbarItem';
@@ -39,6 +40,7 @@ export default function DocsVersionDropdownNavbarItem({
         i18n: { currentLocale },
     } = useDocusaurusContext();
     const activeDocContext = useActiveDocContext(docsPluginId);
+    const archiveUrl = useBaseUrl('/archived-docs');
     const versions = useVersions(docsPluginId);
     const { savePreferredVersionName } = useDocsPreferredVersion(docsPluginId);
     const versionLinks = versions.map(version => {
@@ -64,7 +66,10 @@ export default function DocsVersionDropdownNavbarItem({
             onClick: () => savePreferredVersionName(version.name),
         };
     }
-    const items: LinkLikeNavbarItemProps[] = [...dropdownItemsBefore, ...versionLinks, ...dropdownItemsAfter];
+    const archiveLinks = !docsPluginId || docsPluginId === 'default'
+        ? [{label: translate({id: 'docs.archive.title', message: 'Archived Versions'}), to: archiveUrl}]
+        : [];
+    const items: LinkLikeNavbarItemProps[] = [...dropdownItemsBefore, ...versionLinks, ...archiveLinks, ...dropdownItemsAfter];
 
     const dropdownVersion = useDocsVersionCandidates(docsPluginId)[0];
 
