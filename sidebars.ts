@@ -510,6 +510,7 @@ const sidebars: SidebarsConfig = {
                     link: {type: 'doc', id: 'data-operate/delete/delete-overview'},
                     items: [
                         'data-operate/delete/delete-manual',
+                        'data-operate/delete/row-ttl',
                         'data-operate/delete/batch-delete-manual',
                         'data-operate/delete/truncate-manual',
                         'data-operate/delete/atomicity-replace',
