@@ -12,27 +12,7 @@ STRUCT type is used to store and process structured data, which can contain fiel
 
 ### FROM FILE
 
-:::note
-Since 4.2.0
-:::
-
-[FILE](../semi-structured/FILE.md) can be explicitly cast to a six-field STRUCT, preserving inline bytes. See [FILE Type Conversion](file-conversion.md) for field matching and the reverse conversion.
-
-```sql
-SELECT CAST(f AS STRUCT<uri:STRING, offset:BIGINT, size:BIGINT,
-    content_type:STRING, checksum:STRING, inline:VARBINARY>) AS s
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
-```
-```text
-+------------------------------------------------------------------------------------------------------------------+
-| s                                                                                                                |
-+------------------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg", "offset":null, "size":3, "content_type":null, "checksum":null, "inline":0x616263} |
-+------------------------------------------------------------------------------------------------------------------+
-```
+CAST and TRY_CAST do not support converting [FILE](../semi-structured/FILE.md) to STRUCT, including FILE values nested in containers. Use [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md) to extract all six fields, or read metadata with ELEMENT_AT and binary contents with FL_GET_BINARY. See [FILE Type Conversion](file-conversion.md) for conversion rules.
 
 ### FROM String
 

@@ -23,7 +23,7 @@ AS <uri>, <offset>, <size>, <content_type>, <checksum>, <inline>
 
 ## 参数
 
-| 参数 | 说明 |
+| 参数 | 描述 |
 | --- | --- |
 | `<file>` | 必填，FILE 表达式或 NULL FILE。普通 STRUCT 不直接接受，应先显式 CAST 为 FILE。 |
 | `<table_alias>` | 展开结果的表别名。 |

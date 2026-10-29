@@ -22,14 +22,14 @@ TO_FILE(<resource_name>, <uri>)
 
 ## 参数
 
-| 参数 | 说明 |
+| 参数 | 描述 |
 | --- | --- |
 | `<resource_name>` | 必填，非 NULL 字符串字面量，指定已有 S3 resource。调用者须有 USAGE 权限。resource 提供 S3 兼容存储的连接配置和访问凭据。 |
 | `<uri>` | 必填，CHAR/VARCHAR/STRING 表达式或 NULL。支持 `s3://bucket/key` 或路径式 `http(s)://host/bucket/key`。完整对象 key 按原值使用，不做编码或解码。 |
 
 ## 返回值
 
-返回可为 NULL 的 `FILE`。URI 非 NULL 时，远端元数据访问失败会使查询报错，不会转换为 NULL。
+返回类型为可为 NULL 的 `FILE`。URI 非 NULL 时，远端元数据访问失败会使查询报错，不会转换为 NULL。
 
 | 字段 | 返回内容 |
 | --- | --- |
@@ -56,6 +56,10 @@ CREATE RESOURCE 'file_test_s3_resource' PROPERTIES (
     "s3.access_key" = "<access_key>",
     "s3.secret_key" = "<secret_key>"
 );
+```
+
+```text
+Query OK, 0 rows affected
 ```
 
 成功执行后创建 resource。以下示例读取 `doris-file-type-test/my-github-avatar.jpg`，大小及其他元数据以实际对象为准。

@@ -32,12 +32,14 @@ Converts Doris internal data types to JSONB type. This function allows for conve
 ## Syntax
 
 ```sql
-TO_JSON(value)
+TO_JSON(<value>)
 ```
 
 ## Parameters
 
-**value** - The value to be converted to JSONB type.
+| Parameter | Description |
+| --- | --- |
+| `<value>` | A value or NULL to convert to JSONB. Accepted types are listed below. |
 
 The following types have direct mapping to JSONB types and can be converted directly:
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL

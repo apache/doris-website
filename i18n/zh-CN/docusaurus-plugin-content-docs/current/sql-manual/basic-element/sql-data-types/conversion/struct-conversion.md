@@ -12,23 +12,7 @@ STRUCT 类型用于存储和处理结构化数据，可以包含不同类型的�
 
 ### FROM FILE
 
-[FILE](../semi-structured/FILE.md) 支持显式转换为六字段 STRUCT，并保留 inline 原始字节。字段匹配及反向转换规则见 [FILE 类型转换](file-conversion.md)。
-
-```sql
-SELECT CAST(f AS STRUCT<uri:STRING, offset:BIGINT, size:BIGINT,
-    content_type:STRING, checksum:STRING, inline:VARBINARY>) AS s
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
-```
-```text
-+------------------------------------------------------------------------------------------------------------------+
-| s                                                                                                                |
-+------------------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg", "offset":null, "size":3, "content_type":null, "checksum":null, "inline":0x616263} |
-+------------------------------------------------------------------------------------------------------------------+
-```
+CAST 和 TRY_CAST 不支持将 [FILE](../semi-structured/FILE.md) 转换为 STRUCT，包括容器中嵌套的 FILE 值。可以使用 [EXPLODE_FILE](../../../sql-functions/table-functions/explode-file.md) 展开全部六个字段，或使用 ELEMENT_AT 读取元数据、FL_GET_BINARY 读取二进制内容。转换规则见 [FILE 类型转换](file-conversion.md)。
 
 ### FROM String
 

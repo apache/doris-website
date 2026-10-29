@@ -29,7 +29,7 @@ TO_FILE(<resource_name>, <uri>)
 
 ## Return Value
 
-Returns nullable `FILE`. For a non-NULL URI, metadata access failures fail the query; they do not return NULL.
+Returns a nullable value of type `FILE`. For a non-NULL URI, metadata access failures fail the query; they do not return NULL.
 
 | Field | Returned value |
 | --- | --- |
@@ -56,6 +56,10 @@ CREATE RESOURCE 'file_test_s3_resource' PROPERTIES (
     "s3.access_key" = "<access_key>",
     "s3.secret_key" = "<secret_key>"
 );
+```
+
+```text
+Query OK, 0 rows affected
 ```
 
 Successful execution creates the resource. The example reads `doris-file-type-test/my-github-avatar.jpg`; size and other metadata depend on the actual object.

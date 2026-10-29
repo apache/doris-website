@@ -32,12 +32,14 @@ under the License.
 ## 语法
 
 ```sql
-TO_JSON(value)
+TO_JSON(<value>)
 ```
 
 ## 参数
 
-**value** - 要转换为 JSONB 类型的值。
+| 参数 | 描述 |
+| --- | --- |
+| `<value>` | 要转换为 JSONB 的值或 NULL；支持的类型见下文。 |
 
 以下类型都有一一对应的 JSONB 类型，可以直接转换成 JSONB：
 - 数字类型：TINYINT、SMALLINT、INT、BIGINT、LARGEINT、FLOAT、DOUBLE、DECIMAL

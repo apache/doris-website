@@ -26,7 +26,7 @@ LIST_FILES(
 
 ## 参数
 
-| 参数 | 说明 |
+| 参数 | 描述 |
 | --- | --- |
 | resource | 必填非空字符串，指定已有 S3 resource，调用者须有 USAGE 权限。 |
 | uri | 必填字符串，格式为 `s3://bucket/directory/` 或路径式 `http(s)://host/bucket/directory/`。bucket 从 URI 取得，无须与 resource 匹配；目录前缀不做编码或解码。 |
