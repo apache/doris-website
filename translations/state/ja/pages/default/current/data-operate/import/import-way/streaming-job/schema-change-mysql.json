@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "114e51a4a15ae74358e7887d18bef7f472c715a884b413b73d2a2aaa642e73e3",
     "sourceTechnicalHash": "82dae752a6ace72d210035fe7471669c8327210aa2a5b53650a626f217611c11",
-    "targetHash": "76b71d074be196b71d10de408b530a212a780c168827f85397805ac5980f86aa",
+    "targetHash": "8a7f7edb653812e90a8c0883f0a57303b4a0e74c95d2e9eb9201072d95766326",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-29T19:49:41.534Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "114e51a4a15ae74358e7887d18bef7f472c715a884b413b73d2a2aaa642e73e3",
+      "targetHash": "8a7f7edb653812e90a8c0883f0a57303b4a0e74c95d2e9eb9201072d95766326",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: MySQL Auto Table Creation Sync 中の上流スキーマ変更 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "31ca1d6de1b508427497a27f57149f7ef7ed2d5e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "1f29025c436daf6b980b46353e78c93b20425413"
+      }
+    }
   }
 }

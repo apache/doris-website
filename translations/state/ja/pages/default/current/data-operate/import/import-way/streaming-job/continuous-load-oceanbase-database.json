@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
     "sourceTechnicalHash": "9c495e6fb067ae4589571ad04d37d69067c1d2aa463c392f389886dd063d978f",
-    "targetHash": "8faf2479ffaa295d5c005d82a8a399e3c10ff0c0e3bb8c9d6f5cbe6ff90a8b0f",
+    "targetHash": "a2fa640804b7530dad2797b2785259803d403a9255890f04aa6a2f5871e4901e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.097Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-29T19:41:53.842Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "790ee17a3c1a22b2602225f3359df603f0aadde04f65e378c8e71cce93af7fae",
+      "targetHash": "a2fa640804b7530dad2797b2785259803d403a9255890f04aa6a2f5871e4901e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 + 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase MySQL 互換モードのデータベースを Doris にミラーリング -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "20a29ab267bb92343e4033bef25d7d3e29275b95"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "f22d16727566cfc581f9c85af089c9fcea4794bc"
+      }
+    }
   }
 }
