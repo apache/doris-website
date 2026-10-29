@@ -14,7 +14,7 @@ Row-level TTL (Time to Live) makes individual rows invisible after their expirat
 
 :::caution Experimental feature
 
-Row-level TTL is experimental. This page describes the current development version; it does not indicate availability in released versions. Validate it in a test environment before adopting it. Enable TTL when creating the table: it cannot subsequently be enabled on an existing ordinary table, disabled, or switched to another TTL mode. Partial column updates, Sequence Columns, and materialized views have restrictions described below. Expiration does not guarantee immediate disk-space reclamation.
+Row-level TTL is experimental and requires the corresponding implementation to be merged. This page describes the proposed development implementation; the feature is not currently available in master, 4.x, or 3.x. Validate it in a test environment before adopting it. Enable TTL when creating the table: it cannot subsequently be enabled on an existing ordinary table, disabled, or switched to another TTL mode. Partial column updates, Sequence Columns, and materialized views have restrictions described below. Expiration does not guarantee immediate disk-space reclamation.
 
 :::
 
