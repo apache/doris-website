@@ -24,7 +24,7 @@
 | obs.access_key               | s3.access_key            | OBS access key，用于身份验证的 OBS 访问密钥                  |        | 是       |
 | obs.secret_key               | s3.secret_key            | OBS secret key，与 access key 配合使用的访问密钥             |        | 是       |
 | obs.region                   | s3.region                | OBS region，指定华为云 OBS 的区域                            |        | 否       |
-| obs.use_path_style           | s3.use_path_style        | 是否使用 path-style（路径风格）访问。兼容 MinIO/Ceph 等非 AWS S3 服务建议设置为 true | FALSE  | 否       |
+| obs.use_path_style           | use_path_style        | 是否使用 path-style（路径风格）访问。兼容 MinIO/Ceph 等非 AWS S3 服务建议设置为 true | FALSE  | 否       |
 | obs.connection.maximum       | s3.connection.maximum    | 最大连接数，指定与 OBS 服务建立的最大连接数                  | 50     | 否       |
 | obs.connection.request.timeout | s3.connection.request.timeout | 请求超时时间，单位为毫秒，指定连接 OBS 服务时的请求超时时间  | 3000   | 否       |
 | obs.connection.timeout       | s3.connection.timeout    | 连接超时时间，单位为毫秒，指定与 OBS 服务建立连接时的超时时间 | 1000   | 否       |
