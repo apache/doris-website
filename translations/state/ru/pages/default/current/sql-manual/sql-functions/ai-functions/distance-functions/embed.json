@@ -8,30 +8,71 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
-    "sourceTechnicalHash": "dbe51ba33ee3b36651525acfe1fa7ddbb3e253196985d5d369f61f518ae35f44",
-    "targetHash": "493c05dcd24b2bfb60a983f89618d4cb503dc2ef24043cd9f243cb5f8d1ccdaa",
+    "sourceCommit": "1fe3a22bd5392f5ee86fba8afcc0a24e883dc059",
+    "sourceHash": "1c01383e523193974bbee4b689113aaf2c865cc92bb877e4ac224792ef1036d5",
+    "sourceTechnicalHash": "851ca80b8bf3742a97b6be7780eec2aa00b4094770e5ded04b75123247a0ee42",
+    "targetHash": "bc9a6ab190681ce136edb538e9c39852239f269dbce67828e4d733cbc0508c1a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T10:30:31.851Z",
+    "translatedAt": "2026-10-29T07:51:37.303Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
-      "targetHash": "493c05dcd24b2bfb60a983f89618d4cb503dc2ef24043cd9f243cb5f8d1ccdaa",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "1c01383e523193974bbee4b689113aaf2c865cc92bb877e4ac224792ef1036d5",
+      "targetHash": "bc9a6ab190681ce136edb538e9c39852239f269dbce67828e4d733cbc0508c1a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 57: expected [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\n            \\\"uri\\\": \\\"https://example.com/images/product.png\\\",\\n            \\\"content_type\\\": \\\"image/png\\\"\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]; received [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\\\n            \\\"uri\\\": \\\"https://example.com/images/product.png\\\",\\\\n            \\\"content_type\\\": \\\"image/png\\\"\\\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]\nprotected node 59: expected [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\n            \\\"uri\\\": \\\"s3://example-bucket/videos/demo.mp4\\\",\\n            \\\"content_type\\\": \\\"video/mp4\\\",\\n            \\\"endpoint\\\": \\\"s3.us-east-1.amazonaws.com\\\",\\n            \\\"region\\\": \\\"us-east-1\\\",\\n            \\\"ak\\\": \\\"<access_key>\\\",\\n            \\\"sk\\\": \\\"<secret_key>\\\"\\n        }' AS JSON)\\n    )\\n) AS video_embedding_dimension;\"]; received [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\\\n            \\\"uri\\\": \\\"s3://example-bucket/videos/demo.mp4\\\",\\\\n            \\\"content_type\\\": \\\"video/mp4\\\",\\\\n            \\\"endpoint\\\": \\\"s3.us-east-1.amazonaws.com\\\",\\\\n            \\\"region\\\": \\\"us-east-1\\\",\\\\n            \\\"ak\\\": \\\"<access_key>\\\",\\\\n            \\\"sk\\\": \\\"<secret_key>\\\"\\\\n        }' AS JSON)\\n    )\\n) AS video_embedding_dimension;\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "frontmatter",
+              "message": "Restore front matter field: title"
+            },
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\ntechnical front matter: expected {}; received {\"\\\\u0022description\\\\u0022\":\"\\\\u0022Генерирует вектор эмбеддинга для текста\",\"\\\\u0022language\\\\u0022\":\"\\\\u0022ru\\\\u0022\",\"\\\\u0022title\\\\u0022\":\"\\\\u0022EMBED\\\\u0022\",\"видео или аудио.\\\\u0022\":null,\"изображения\":null}\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\\u0022License\\\\u0022); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\\u0022AS IS\\\\u0022 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 57: expected [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\n            \\\"uri\\\": \\\"https://example.com/images/product.png\\\",\\n            \\\"content_type\\\": \\\"image/png\\\"\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]; received [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\\\u0022uri\\\\u0022: \\\\u0022https://example.com/images/product.png\\\\u0022,\\\\n            \\\\u0022content_type\\\\u0022: \\\\u0022image/png\\\\u0022\\\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 65: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]\nprotected node 68: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 57: expected [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\n            \\\"uri\\\": \\\"https://example.com/images/product.png\\\",\\n            \\\"content_type\\\": \\\"image/png\\\"\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]; received [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\\\n            \\\"uri\\\": \\\"https://example.com/images/product.png\\\",\\\\n            \\\"content_type\\\": \\\"image/png\\\"\\\\n        }' AS JSON)\\n    )\\n) AS image_embedding_dimension;\"]\nprotected node 59: expected [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\n            \\\"uri\\\": \\\"s3://example-bucket/videos/demo.mp4\\\",\\n            \\\"content_type\\\": \\\"video/mp4\\\",\\n            \\\"endpoint\\\": \\\"s3.us-east-1.amazonaws.com\\\",\\n            \\\"region\\\": \\\"us-east-1\\\",\\n            \\\"ak\\\": \\\"<access_key>\\\",\\n            \\\"sk\\\": \\\"<secret_key>\\\"\\n        }' AS JSON)\\n    )\\n) AS video_embedding_dimension;\"]; received [\"code\",\"sql\",null,\"SELECT ARRAY_SIZE(\\n    EMBED(\\n        'multimodal_embed_resource',\\n        CAST('{\\\\n            \\\"uri\\\": \\\"s3://example-bucket/videos/demo.mp4\\\",\\\\n            \\\"content_type\\\": \\\"video/mp4\\\",\\\\n            \\\"endpoint\\\": \\\"s3.us-east-1.amazonaws.com\\\",\\\\n            \\\"region\\\": \\\"us-east-1\\\",\\\\n            \\\"ak\\\": \\\"<access_key>\\\",\\\\n            \\\"sk\\\": \\\"<secret_key>\\\"\\\\n        }' AS JSON)\\n    )\\n) AS video_embedding_dimension;\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+        "blob": "80d32664bc9d2f3982fc5c376ddef0f72e3db2d7"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+        "blob": "3d33e7640d6ffd8ed48ff0d8e73d0c9d4218c6df"
+      }
     }
   }
 }

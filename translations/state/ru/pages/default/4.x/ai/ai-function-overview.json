@@ -8,42 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/ai/ai-function-overview.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-    "sourceTechnicalHash": "3001a20159aeb47f42108af480abb173193fa80d2386dace1cdb20cbd4dae4ac",
-    "targetHash": "0a52fa523b457eab8e1a008789c01e36826998d5e8bee0c146b7f5d2035c4f64",
+    "sourceCommit": "1fe3a22bd5392f5ee86fba8afcc0a24e883dc059",
+    "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+    "sourceTechnicalHash": "c61cca1dfa22d1ee247ec36511cf610c216b9088901b419db2b25c6a7d3ebc0e",
+    "targetHash": "6dcf4184137c4e79e492b436bd58fc3d64f967f70786e644649c3ccea441b38b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:19:58.925Z",
+    "translatedAt": "2026-10-29T08:11:23.278Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-      "targetHash": "0a52fa523b457eab8e1a008789c01e36826998d5e8bee0c146b7f5d2035c4f64",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+      "targetHash": "6dcf4184137c4e79e492b436bd58fc3d64f967f70786e644649c3ccea441b38b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 102: expected [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------------------------------+-------+\\n| c                                                                                                             | score |\\n+---------------------------------------------------------------------------------------------------------------+-------+\\n| Apache Doris is a lightning-fast MPP analytical database that supports sub-second multidimensional analytics. |   9.5 |\\n| In Doris, materialized views can automatically route queries, saving significant compute resources.           |   9.2 |\\n| Doris's vectorized execution engine boosts aggregation query performance by 5–10×.                            |   9.2 |\\n| Apache Doris Stream Load supports second-level real-time data ingestion.                                      |   9.2 |\\n| Doris cost-based optimizer (CBO) generates better distributed execution plans.                                |   8.5 |\\n| Enabling the Doris Pipeline execution engine noticeably improves CPU utilization.                             |   8.5 |\\n| Doris supports Hive external tables for federated queries without moving data.                                |   8.5 |\\n| Doris Light Schema Change lets you add or drop columns instantly.                                             |   8.5 |\\n| Doris AUTO BUCKET automatically scales bucket count with data volume.                                         |   8.5 |\\n| U; received [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------------------------------+\\n| c                                                                                                             | score |\\n+---------------------------------------------------------------------------------------------------------------+-------+\\n| Apache Doris is a lightning-fast MPP analytical database that supports sub-second multidimensional analytics. |   9.5 |\\n| In Doris, materialized views can automatically route queries, saving significant compute resources.           |   9.2 |\\n| Doris's vectorized execution engine boosts aggregation query performance by 5–10×.                            |   9.2 |\\n| Apache Doris Stream Load supports second-level real-time data ingestion.                                      |   9.2 |\\n| Doris cost-based optimizer (CBO) generates better distributed execution plans.                                |   8.5 |\\n| Enabling the Doris Pipeline execution engine noticeably improves CPU utilization.                             |   8.5 |\\n| Doris supports Hive external tables for federated queries without moving data.                                |   8.5 |\\n| Doris Light Schema Change lets you add or drop columns instantly.                                             |   8.5 |\\n| Doris AUTO BUCKET automatically scales bucket count with data volume.                                         |   8.5 |\\n| Using Dor"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: определение возможностей -->\"]\nprotected node 19: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: параметры конфигурации -->\"]\nprotected node 20: expected [\"html\",null,null,\"<!-- Applicable scenario: Connecting to an external LLM service -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: подключение к внешней службе LLM -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 102: expected [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------------------------------+-------+\\n| c                                                                                                             | score |\\n+---------------------------------------------------------------------------------------------------------------+-------+\\n| Apache Doris is a lightning-fast MPP analytical database that supports sub-second multidimensional analytics. |   9.5 |\\n| In Doris, materialized views can automatically route queries, saving significant compute resources.           |   9.2 |\\n| Doris's vectorized execution engine boosts aggregation query performance by 5–10×.                            |   9.2 |\\n| Apache Doris Stream Load supports second-level real-time data ingestion.                                      |   9.2 |\\n| Doris cost-based optimizer (CBO) generates better distributed execution plans.                                |   8.5 |\\n| Enabling the Doris Pipeline execution engine noticeably improves CPU utilization.                             |   8.5 |\\n| Doris supports Hive external tables for federated queries without moving data.                                |   8.5 |\\n| Doris Light Schema Change lets you add or drop columns instantly.                                             |   8.5 |\\n| Doris AUTO BUCKET automatically scales bucket count with data volume.                                         |   8.5 |\\n| U; received [\"code\",\"text\",null,\"+---------------------------------------------------------------------------------------------------------------+\\n| c                                                                                                             | score |\\n+---------------------------------------------------------------------------------------------------------------+-------+\\n| Apache Doris is a lightning-fast MPP analytical database that supports sub-second multidimensional analytics. |   9.5 |\\n| In Doris, materialized views can automatically route queries, saving significant compute resources.           |   9.2 |\\n| Doris's vectorized execution engine boosts aggregation query performance by 5–10×.                            |   9.2 |\\n| Apache Doris Stream Load supports second-level real-time data ingestion.                                      |   9.2 |\\n| Doris cost-based optimizer (CBO) generates better distributed execution plans.                                |   8.5 |\\n| Enabling the Doris Pipeline execution engine noticeably improves CPU utilization.                             |   8.5 |\\n| Doris supports Hive external tables for federated queries without moving data.                                |   8.5 |\\n| Doris Light Schema Change lets you add or drop columns instantly.                                             |   8.5 |\\n| Doris AUTO BUCKET automatically scales bucket count with data volume.                                         |   8.5 |\\n| Using Dor"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "ai/ai-function-overview",
-        "sourcePath": "docs/ai/ai-function-overview.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/ai/ai-function-overview.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-        "targetHash": "0a52fa523b457eab8e1a008789c01e36826998d5e8bee0c146b7f5d2035c4f64",
-        "commit": "2d4031bb0a2310b737fc97223d40892fef646db4",
-        "pr": "https://github.com/apache/doris-website/pull/4435"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "af6c01bb9c2293351c02cc2edded031943375c68"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "2a6708da50e2d24b9cd20a655cff3cd4c757eaf5"
       }
     }
   }

@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/sql-manual/sql-functions/ai-functions/overview.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/overview.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "08a32b448a392f004fd22b5575efa78737805942135a90bc12015d99a0bc0f43",
-    "sourceTechnicalHash": "2a410382152f3f34dc9850b5565f358f6326b37cba09d32fa4cbc90f2658ae60",
-    "targetHash": "1245d45115085dffebef129111963d372da68f234ac13ce6b04f920dcbd37ea1",
+    "sourceCommit": "1fe3a22bd5392f5ee86fba8afcc0a24e883dc059",
+    "sourceHash": "3fb80f97083c03bf1e0dc2aad8d411f10883e94fab3b167cd2b2faac6560cfbf",
+    "sourceTechnicalHash": "2123ce941ab686a1567828564987890bf80818d2f00654a2c7f06489c3d7f98d",
+    "targetHash": "f423a53a223c245b9440089fe780b56404c62e1c1d218cc80c1298bae3f9d70f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T10:31:16.488Z",
+    "translatedAt": "2026-10-29T08:04:22.239Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "08a32b448a392f004fd22b5575efa78737805942135a90bc12015d99a0bc0f43",
-      "targetHash": "1245d45115085dffebef129111963d372da68f234ac13ce6b04f920dcbd37ea1",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3fb80f97083c03bf1e0dc2aad8d411f10883e94fab3b167cd2b2faac6560cfbf",
+      "targetHash": "f423a53a223c245b9440089fe780b56404c62e1c1d218cc80c1298bae3f9d70f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"ai.provider_type = local\"]; received [\"inlineCode\",null,null,\"ai.provider_type\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"ai.temperature\"]; received [\"inlineCode\",null,null,\"local\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 43: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 44: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/sql-manual/sql-functions/ai-functions/overview.md",
+        "blob": "a7fa2546d79fe95d9560b36024e79c100fc2124e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/overview.md",
+        "blob": "1c7bb0e8cf9449061816f3da7350e0f1383de53a"
+      }
     }
   }
 }
