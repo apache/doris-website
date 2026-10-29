@@ -8,6 +8,12 @@
 
 ## Description
 
+:::caution Availability
+
+This page describes the proposed behavior in [Doris PR #69027](https://github.com/apache/doris/pull/69027). That PR has not been merged; the functions are not available in dev, 4.x, or 3.x. A first supported release has not been confirmed. The examples below describe the proposal and cannot yet be run against these versions.
+
+:::
+
 Returns the Unicode code point of the first character in a UTF-8 string. Only the first character is decoded. Returns NULL if the input is NULL.
 
 ## Alias
@@ -96,5 +102,3 @@ SELECT ORD(UNHEX('FF')) AS invalid_code, ORD(UNHEX('E4BD')) AS incomplete_code,
 |           -1 |              -1 |               65 |
 +--------------+-----------------+------------------+
 ```
-
-<!-- TODO: A Chinese-speaking contributor should add the matching Chinese ORD/UNICODE documentation. -->
