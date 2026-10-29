@@ -264,6 +264,10 @@ Doris DELETE 语法与 MySQL 基本一致。但由于 Doris 是一个分析型�
 
 #### SELECT
 
+:::note
+`MAX_VISIBLE_PARTITION()` 面向开发版本，需在对应实现合入后使用；当前 master、4.x 和 3.x 均尚未支持。具体范围和限制参见[查询最大可见分区](../sql-manual/sql-statements/data-query/SELECT.md#查询最大可见分区)。
+:::
+
 ```sql
 SELECT
     [hint_statement, ...]
