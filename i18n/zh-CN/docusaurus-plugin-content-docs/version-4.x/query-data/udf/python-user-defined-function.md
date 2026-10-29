@@ -24,6 +24,12 @@ Python UDF/UDAF/UDTF 是 Apache Doris 提供的自定义函数扩展机制，允
 
 本文从典型用户场景出发，分别介绍三类函数的用法、参数、数据类型映射、性能建议、限制以及多版本 Python 环境的部署方式。
 
+:::caution 进程池版本说明
+
+本文中的按函数独立进程池、`pool_size` 和 `auto_suspend` 需要对应的开发版本实现合入后才能使用，当前 master、4.x 和 3.x 均尚未支持。现有 Python UDF 实现按 Python 运行时版本共享进程池，并通过 BE 配置 `max_python_process_num` 控制大小。下文的新进程池参数和示例仅适用于包含新实现的构建。
+
+:::
+
 ## 何时选择 Python UDF/UDAF/UDTF
 
 <!-- 知识类型: 选型决策 -->
@@ -420,8 +426,8 @@ DROP FUNCTION IF EXISTS py_is_prime(INT);
 | `symbol` | 是 | - | Python 函数入口名称。<br/>• **内联模式**：直接写函数名，如 `"evaluate"`<br/>• **模块模式**：格式为 `[package_name.]module_name.func_name`，详见模块模式说明 |
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"`，需填写完整的版本号 |
-| `pool_size` | 否 | `3` | 自 4.2.0 起支持。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
-| `auto_suspend` | 否 | `14400` | 自 4.2.0 起支持。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
+| `pool_size` | 否 | `3` | 开发版本，需对应实现合入。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
+| `auto_suspend` | 否 | `14400` | 开发版本，需对应实现合入。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 | `volatility` | 否 | `volatile` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
@@ -1561,8 +1567,8 @@ DROP FUNCTION IF EXISTS py_variance(DOUBLE);
 | `symbol` | 是 | - | Python 类名。<br/>• **内联模式**：直接写类名，如 `"SumUDAF"`<br/>• **模块模式**：格式为 `[package_name.]module_name.ClassName` |
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
-| `pool_size` | 否 | `3` | 自 4.2.0 起支持。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
-| `auto_suspend` | 否 | `14400` | 自 4.2.0 起支持。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
+| `pool_size` | 否 | `3` | 开发版本，需对应实现合入。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
+| `auto_suspend` | 否 | `14400` | 开发版本，需对应实现合入。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 | `volatility` | 否 | `immutable` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
@@ -2578,8 +2584,8 @@ CREATE TABLES FUNCTION py_split(STRING, STRING) ...;
 | `symbol` | 是 | - | Python 函数名。<br/>• **内联模式**：直接写函数名，如 `"split_string_udtf"`<br/>• **模块模式**：格式为 `[package_name.]module_name.function_name` |
 | `file` | 否 | - | Python `.zip` 包路径，仅模块模式需要。支持三种协议：<br/>• `file://` —— 本地文件系统路径<br/>• `http://` —— HTTP 远程下载<br/>• `https://` —— HTTPS 远程下载 |
 | `runtime_version` | 是 | - | Python 运行时版本，如 `"3.10.12"` |
-| `pool_size` | 否 | `3` | 自 4.2.0 起支持。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
-| `auto_suspend` | 否 | `14400` | 自 4.2.0 起支持。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
+| `pool_size` | 否 | `3` | 开发版本，需对应实现合入。正整数，int32；每个 BE 上该函数的最大进程数，有效值不超过该 BE 的 CPU 核心数。创建后固定，不同函数使用独立进程池 |
+| `auto_suspend` | 否 | `14400` | 开发版本，需对应实现合入。最后一个活跃 client 关闭后的空闲回收时间，单位秒。`0` 允许在下一轮检查时回收，`-1` 禁用回收，其他负数会被拒绝 |
 | `always_nullable` | 否 | `true` | 是否总是返回可空结果 |
 | `volatility` | 否 | `immutable` | 函数易变性，自 4.1.2 起支持。可选值为 `immutable`、`stable`、`volatile`。<br/>`immutable`：相同输入始终产生相同输出。大部分确定性 UDF 建议设置为 `immutable`，这样计划优化效果更好。<br/>`stable`：在同一条 SQL 语句内结果稳定，但不同语句之间可能变化，类似 `now()`。这类函数会禁用 SQL Cache 和物化视图改写。<br/>`volatile`：每次调用结果都可能变化，类似 `random()`。这类函数会禁用 SQL Cache、物化视图改写以及很多优化器改写规则。 |
 
@@ -3045,6 +3051,7 @@ Python UDF、UDAF、UDTF 都可以使用第三方库。但由于 Doris 的分布
 | `python_conda_root_path` | string | 目录路径 | `""` | Miniconda 的根目录<br/>仅在 `python_env_mode = conda` 时生效 |
 | `python_venv_root_path` | string | 目录路径 | `${DORIS_HOME}/lib/udf/python` | venv 多版本管理的根目录<br/>仅在 `python_env_mode = venv` 时生效 |
 | `python_venv_interpreter_paths` | string | 路径列表（用 `:` 分隔） | `""` | 可用 Python 解释器的目录列表<br/>仅在 `python_env_mode = venv` 时生效 |
+| `max_python_process_num` | int32 | 整数 | `0` | 现有按运行时共享进程池实现使用的最大进程数；`0` 表示使用 CPU 核心数，正整数覆盖默认值。包含按函数独立进程池新实现的构建改用 `pool_size` |
 
 ### 方式一：使用 Conda 管理 Python 环境
 
@@ -3342,7 +3349,9 @@ chown -R doris:doris /doris/python_envs  # 假设 BE 进程用户为 doris
 
 根据实际需求调整 Python 进程池参数：
 
-在函数的 `PROPERTIES` 中加入 `"pool_size" = "2"`，即可将该函数在每个 BE 上的 Python 进程数限制为 2。完整示例见下方“每个函数的进程池大小”。
+现有实现使用 BE 配置 `max_python_process_num`：`0` 表示使用 CPU 核心数，正整数指定进程数。
+
+仅在包含新实现的构建中，在函数的 `PROPERTIES` 中加入 `"pool_size" = "2"`，即可将该函数在每个 BE 上的 Python 进程数限制为 2。完整示例见下方“每个函数的进程池大小”。
 
 ### 环境验证
 
