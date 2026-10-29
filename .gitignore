@@ -3,7 +3,7 @@
 
 # Production
 /build
-/output/pdf/archived-docs/
+/output/pdf/
 /tmp/pdfs/
 
 # Generated files

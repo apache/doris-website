@@ -1,5 +1,5 @@
 const path = require('node:path');
-const {inventory} = require('../scripts/archive-docs/inventory.cjs');
+const {inventory} = require('../scripts/docs-inventory.cjs');
 const {versions} = require('./archived-docs.json');
 const cache = new Map();
 
