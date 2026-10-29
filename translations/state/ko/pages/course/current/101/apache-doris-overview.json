@@ -8,13 +8,23 @@
     "sourceLocale": "en",
     "sourcePath": "course/101/01-apache-doris-overview.mdx",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs-course/current/101/01-apache-doris-overview.mdx",
-    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
+    "sourceCommit": "38d51ed68f58649235d42916d51398dc7dab6934",
     "sourceHash": "2d17e48d80fdb26f103a42b2eb331cdca70e5162cca95a151e83bdc33edc076e",
     "sourceTechnicalHash": "726b7fd50f03dfb6ba2d4a9f463ab2fc4a8f393d2714e022be9aa91079e907e8",
-    "targetHash": "aa456a3da306fc34e6cbcdddfc34f9f6390930d346d2dd3d025bfda88ff9eb93",
+    "targetHash": "36ef303e6d7f168c7f34fb8fff82879a6aff5350191823443203e3f3c5e74533",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-25T17:25:54.074Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-10-28T19:33:14.582Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "course/101/01-apache-doris-overview.mdx",
+        "blob": "fe09967e83eb12182b0dc12ab91e5219cd02c700"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/01-apache-doris-overview.mdx",
+        "blob": "24965a0819a16fdd8963bd35660d4674bec19cdc"
+      }
+    }
   }
 }

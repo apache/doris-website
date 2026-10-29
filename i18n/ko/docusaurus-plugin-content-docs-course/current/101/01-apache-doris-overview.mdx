@@ -1,6 +1,6 @@
 ---
 title: Apache Doris 개요
-description: 데이터 구성, 스토리지 모델, 아키텍처, 쿼리 실행, 최적화를 다루는 아홉 개의 학습 단위를 통해 Apache Doris의 핵심 개념을 알아보세요.
+description: 데이터 구성, 저장 모델, 아키텍처, 쿼리 실행과 최적화를 다루는 9개의 학습 단원을 통해 Apache Doris의 핵심 개념을 익힙니다.
 slug: /101/01-apache-doris-overview
 sidebar_position: 1
 keywords:
@@ -35,21 +35,21 @@ import {
         id="data-organization"
         label="데이터 구성"
         title={<>Doris는 데이터를 어떻게 <em>구성</em> 하나요?</>}
-        summary="먼저 논리적 계층 구조를 살펴보세요. 그런 다음 테이블이 클러스터 전체에서 어떻게 나뉘고 분산되는지 자세히 알아봅니다."
-        coachTitle="테이블은 논리적 구조가 실제 스토리지로 이어지는 지점입니다."
+        summary="먼저 논리적 계층 구조를 살펴봅니다. 이어서 테이블이 클러스터 전체에 어떻게 나뉘어 분산되는지 알아봅니다."
+        coachTitle="테이블에서는 논리 구조가 실제 저장 방식으로 이어집니다."
         coach={
             <p>
-                Catalog는 데이터 소스를 식별하고, 데이터베이스는 논리적 경계를 만들며, 테이블은 스키마와 속성을 정의합니다. 테이블 안에서는 파티션이 데이터 범위를 나누고 버킷이 병렬 처리를 위해 데이터를 분산합니다.
+                Catalog는 데이터 소스를 식별하고, 데이터베이스는 논리적 경계를 만들며, 테이블은 스키마와 속성을 정의합니다. 테이블 안에서는 파티션이 데이터 범위를 구분하고 버킷이 병렬 처리를 위해 데이터를 분산합니다.
             </p>
         }
         calloutTitle="이 차이를 기억하세요"
-        callout={<p>파티션은 ‘어느 데이터 범위인가?’에 답하고, 버킷은 ‘데이터가 어디에 어떻게 분산되는가?’에 답합니다.</p>}
+        callout={<p>파티션은 “어느 데이터 범위인가?”에, 버킷은 “어디에 어떻게 분산되는가?”에 답합니다.</p>}
         check={{
-            question: "날짜 범위를 기준으로 데이터를 제외할 수 있게 해 주는 계층은 무엇인가요?",
+            question: "날짜 범위를 기준으로 데이터를 걸러내는 데 쓰이는 계층은 무엇인가요?",
             options: ["버킷", "파티션"],
             correctIndex: 1,
             correctFeedback: "정답입니다. 파티션은 Doris가 제외할 수 있는 논리적 범위를 제공합니다.",
-            incorrectFeedback: "아쉽지만 틀렸습니다. 버킷은 행을 분산하고, 파티션은 논리적 범위를 정의합니다.",
+            incorrectFeedback: "아쉽습니다. 버킷은 행을 분산하고, 파티션은 논리적 범위를 정의합니다.",
         }}
     >
         <CourseConceptFlow
@@ -57,7 +57,7 @@ import {
             focusIndex={2}
             items={[
                 { title: "Catalog", description: "데이터 소스" },
-                { title: "데이터베이스", description: "비즈니스 영역의 경계" },
+                { title: "데이터베이스", description: "업무 영역" },
                 { title: "테이블", description: "스키마 + 속성" },
                 { title: "파티션", description: "논리적 범위" },
                 { title: "버킷", description: "물리적 분산" },
@@ -67,28 +67,28 @@ import {
 
     <CourseLessonUnit
         id="columnar-storage"
-        label="열 기반 스토리지"
-        title={<>값을 왜 <em>열별로 저장할까요</em>?</>}
-        summary="분석 쿼리는 많은 행에서 일부 열만 사용하는 경우가 많습니다. 열 기반 스토리지를 사용하면 Doris가 쿼리에 필요한 데이터만 읽고 처리할 수 있습니다."
-        coachTitle="열 기반 배치는 불필요한 작업을 줄입니다."
-        coach={<p>같은 열의 값은 자료형이 같고 분포도 비슷한 경우가 많습니다. 덕분에 인코딩, 압축, CPU 캐시 활용, 일괄 처리가 개선됩니다.</p>}
-        calloutTitle="개념적 이해"
-        callout={<p>행 기반 스토리지는 완전한 레코드를 함께 저장합니다. 열 기반 스토리지는 같은 필드의 값을 함께 저장합니다.</p>}
+        label="열 지향 저장"
+        title={<>값을 <em>열별로 저장하는 이유는 무엇일까요</em>?</>}
+        summary="분석 쿼리는 많은 행에서 일부 열만 참조하는 경우가 많습니다. 열 지향 저장을 사용하면 Doris는 쿼리에 필요한 데이터만 읽고 처리할 수 있습니다."
+        coachTitle="열 지향 배치는 불필요한 작업을 줄입니다."
+        coach={<p>같은 열의 값은 자료형이 같고 분포도 비슷한 경우가 많습니다. 따라서 인코딩, 압축, CPU 캐시 지역성, 일괄 처리에 유리합니다.</p>}
+        calloutTitle="이렇게 이해하세요"
+        callout={<p>행 지향 저장은 완전한 레코드를 한데 모으고, 열 지향 저장은 같은 필드의 값을 한데 모읍니다.</p>}
         check={{
-            question: "쿼리가 80개 열 중 3개를 읽습니다. 가장 큰 장점은 무엇인가요?",
+            question: "쿼리가 80개 열 중 3개만 읽는다면 가장 큰 이점은 무엇인가요?",
             options: ["불필요한 값을 덜 읽습니다", "테이블 복제본을 더 많이 만듭니다"],
             correctIndex: 0,
-            correctFeedback: "정답입니다. Doris는 관련 없는 열 데이터 대부분을 읽지 않아도 됩니다.",
-            incorrectFeedback: "복제본은 가용성을 높입니다. 열 기반 배치의 주된 이점은 불필요한 I/O를 줄이는 것입니다.",
+            correctFeedback: "정답입니다. Doris는 관련 없는 열의 데이터를 대부분 읽지 않아도 됩니다.",
+            incorrectFeedback: "복제본은 가용성을 높입니다. 열 지향 배치는 주로 불필요한 I/O를 줄입니다.",
         }}
     >
         <CourseConceptGrid
-            ariaLabel="열 기반 스토리지의 이점"
+            ariaLabel="열 지향 저장의 이점"
             columns={3}
             items={[
-                { tag: 'I/O', title: "읽는 양 줄이기", description: "쿼리가 참조하는 열만 스캔합니다." },
-                { tag: 'ZIP', title: "압축률 높이기", description: "자료형이 비슷한 값은 더 간결하게 인코딩할 수 있습니다." },
-                { tag: 'CPU', title: "일괄 처리하기", description: "연속된 벡터는 캐시 활용도를 높이고 SIMD 처리를 가능하게 합니다." },
+                { tag: 'I/O', title: "읽기량 감소", description: "쿼리가 참조하는 열만 스캔합니다." },
+                { tag: 'ZIP', title: "압축 효율 향상", description: "자료형이 같고 비슷한 값은 더 작은 크기로 인코딩하기 쉽습니다." },
+                { tag: 'CPU', title: "일괄 처리", description: "연속된 벡터는 캐시 활용도를 높이고 SIMD를 사용할 수 있게 합니다." },
             ]}
         />
     </CourseLessonUnit>
@@ -96,26 +96,26 @@ import {
     <CourseLessonUnit
         id="table-models"
         label="테이블 모델"
-        title={<>키가 <em>반복되면 어떻게 될까요</em>?</>}
-        summary="테이블 모델은 Doris가 모든 행을 유지할지, 값을 결합할지, 각 Key마다 하나의 논리적 행을 유지할지를 결정합니다."
+        title={<>키가 중복되면 무엇이 <em>달라질까요</em>?</>}
+        summary="테이블 모델은 Doris가 모든 행을 보존할지, 값을 결합할지, 각 Key마다 하나의 논리적 행을 유지할지를 결정합니다."
         coachTitle="데이터를 적재하기 전에 행의 처리 방식을 선택하세요."
-        coach={<p>Duplicate Key는 변경되지 않는 상세 데이터에 적합하고, Aggregate Key는 지정된 사전 집계 결과를 저장하며, Unique Key는 UPSERT 방식으로 변경 가능한 레코드를 지원합니다.</p>}
+        coach={<p>Duplicate Key는 변경되지 않는 상세 데이터에 적합하고, Aggregate Key는 선언된 방식에 따라 사전 집계한 값을 저장하며, Unique Key는 UPSERT 방식으로 변경되는 레코드를 지원합니다.</p>}
         calloutTitle="운영 환경에서의 원칙"
-        callout={<p>테이블을 만든 뒤에는 테이블 모델을 변경할 수 없습니다. 모델을 선택하기 전에 업데이트 동작을 확인하세요.</p>}
+        callout={<p>테이블을 만든 뒤에는 테이블 모델을 변경할 수 없습니다. 선택하기 전에 필요한 업데이트 동작을 확인하세요.</p>}
         check={{
-            question: "고객 프로필에 대한 CDC 업데이트에는 어떤 모델이 적합한가요?",
+            question: "CDC로 고객 프로필을 업데이트할 때 적합한 모델은 무엇인가요?",
             options: ["Duplicate Key", "Aggregate Key", "Unique Key"],
             correctIndex: 2,
-            correctFeedback: "정답입니다. Unique Key는 각 Key마다 하나의 논리적 행을 유지하며 UPSERT 방식을 지원합니다.",
-            incorrectFeedback: "다시 생각해 보세요. 변경 가능한 레코드는 각 Key마다 현재 상태를 나타내는 논리적 행이 하나씩 필요합니다.",
+            correctFeedback: "정답입니다. Unique Key는 각 Key마다 하나의 논리적 행을 유지하고 UPSERT 의미 체계를 지원합니다.",
+            incorrectFeedback: "다시 생각해 보세요. 변경되는 레코드는 각 Key마다 현재 상태를 나타내는 논리적 행 하나가 필요합니다.",
         }}
     >
         <CourseConceptGrid
             ariaLabel="Apache Doris 테이블 모델"
             columns={3}
             items={[
-                { tag: 'DUP', title: "Duplicate Key", description: "이벤트 상세 정보와 로그를 위해 입력된 모든 행을 유지합니다." },
-                { tag: 'AGG', title: "Aggregate Key", description: "지정된 집계 함수를 사용해 Value 열을 병합합니다." },
+                { tag: 'DUP', title: "Duplicate Key", description: "이벤트 상세 데이터와 로그에 적합하며, 입력된 모든 행을 보존합니다." },
+                { tag: 'AGG', title: "Aggregate Key", description: "선언된 집계 함수를 사용해 Value 열을 병합합니다." },
                 { tag: 'UNI', title: "Unique Key", description: "업데이트와 CDC를 위해 각 Key마다 하나의 논리적 행을 유지합니다." },
             ]}
         />
@@ -124,26 +124,26 @@ import {
     <CourseLessonUnit
         id="integrated-architecture"
         label="통합 아키텍처"
-        title={<>전통적인 <em>FE + BE</em> 클러스터를 살펴보세요.</>}
-        summary="통합 아키텍처에서는 Frontend 노드가 시스템을 조율하고, Backend 노드가 쿼리를 실행하며 태블릿 복제본을 로컬 스토리지에 영구 저장합니다."
-        coachTitle="제어와 데이터 처리는 서로 다른 역할을 맡습니다."
-        coach={<p>FE는 인증, SQL 파싱과 계획 수립, 메타데이터, 조율을 담당합니다. BE는 태블릿을 저장하고, 벡터화 연산자를 실행하며, 데이터를 컴팩션하고, 복구와 균형 조정에 참여합니다.</p>}
+        title={<>전통적인 <em>FE + BE</em> 클러스터를 살펴봅시다.</>}
+        summary="통합 아키텍처에서는 Frontend 노드가 시스템을 조정하고, Backend 노드가 쿼리를 실행하며 tablet 복제본을 로컬 저장소에 영구 저장합니다."
+        coachTitle="제어와 데이터 처리의 역할이 구분됩니다."
+        coach={<p>FE는 인증, SQL 파싱과 계획 수립, 메타데이터 관리, 조정을 담당합니다. BE는 tablet을 저장하고 벡터화 연산자를 실행하며 데이터를 압축 정리하고 복구와 균형 조정에 참여합니다.</p>}
         calloutTitle="고가용성"
-        callout={<p>운영 환경에서는 여러 FE 노드와 설정 가능한 수의 태블릿 복제본을 사용합니다. FE 메타데이터 복제에는 BDB JE를 사용하며 ZooKeeper는 필요하지 않습니다.</p>}
+        callout={<p>운영 환경에서는 여러 FE 노드를 사용하고 tablet 복제본 수를 설정할 수 있습니다. FE 메타데이터 복제에는 BDB JE를 사용하며 ZooKeeper는 필요하지 않습니다.</p>}
         check={{
             question: "분산 쿼리 계획을 만드는 노드는 무엇인가요?",
             options: ["Frontend", "Backend"],
             correctIndex: 0,
-            correctFeedback: "정답입니다. FE는 계획을 세우고 조율하며, BE는 실행하고 데이터를 저장합니다.",
-            incorrectFeedback: "BE는 계획 조각을 실행하지만, 계획을 만들고 조율하는 것은 FE입니다.",
+            correctFeedback: "정답입니다. FE는 계획을 세우고 조정하며, BE는 쿼리를 실행하고 데이터를 저장합니다.",
+            incorrectFeedback: "BE는 계획 조각을 실행하지만, 계획을 만들고 조정하는 것은 FE입니다.",
         }}
     >
         <CourseConceptFlow
-            ariaLabel="통합 Apache Doris의 요청 처리 흐름"
+            ariaLabel="Apache Doris 통합 아키텍처의 요청 흐름"
             focusIndex={1}
             items={[
                 { title: "SQL 클라이언트", description: "MySQL 프로토콜" },
-                { title: "Frontend", description: "파싱 + 계획 수립 + 조율" },
+                { title: "Frontend", description: "파싱 + 계획 수립 + 조정" },
                 { title: "Backend", description: "저장 + 실행" },
             ]}
         />
@@ -151,56 +151,56 @@ import {
 
     <CourseLessonUnit
         id="decoupled-architecture"
-        label="분리형 아키텍처"
+        label="스토리지와 컴퓨팅 분리 아키텍처"
         title={<>스토리지와 컴퓨팅이 <em>분리되면 무엇이 달라질까요</em>?</>}
-        summary="상태를 유지하지 않는 컴퓨팅 그룹은 독립적으로 확장할 수 있으며, 영구 데이터는 공유 스토리지에 남습니다."
-        coachTitle="탄력적인 확장에는 운영할 계층이 하나 더 필요합니다."
-        coach={<p>FE는 요청과 SQL 계층의 메타데이터를 처리하고, Meta Service는 데이터 계층의 메타데이터를 관리합니다. 상태를 유지하지 않는 BE 노드는 자주 사용하는 데이터를 캐시하고 공유 영구 스토리지의 데이터를 대상으로 연산합니다.</p>}
-        calloutTitle="운영상 고려 사항"
-        callout={<p>공유 스토리지는 안정적이어야 합니다. 캐시에 없는 데이터를 읽으면 지연 시간이 늘어날 수 있으며, 플랫폼 팀은 추가 서비스도 운영해야 합니다.</p>}
+        summary="영구 데이터는 공유 저장소에 두고, 상태를 유지하지 않는 컴퓨팅 그룹은 독립적으로 확장하거나 축소할 수 있습니다."
+        coachTitle="탄력적인 확장에는 운영해야 할 계층이 하나 더 필요합니다."
+        coach={<p>FE는 요청과 SQL 계층의 메타데이터를 처리하고, Meta Service는 데이터 계층의 메타데이터를 관리합니다. 상태를 유지하지 않는 BE 노드는 자주 사용하는 데이터를 캐시하면서 공유 영구 저장소의 데이터를 대상으로 연산합니다.</p>}
+        calloutTitle="운영상의 절충점"
+        callout={<p>공유 저장소는 안정적이어야 합니다. 캐시에 없는 데이터를 읽으면 지연이 늘어날 수 있으며, 플랫폼 팀은 추가 서비스도 운영해야 합니다.</p>}
         check={{
-            question: "데이터의 영구 복사본은 어디에 저장되나요?",
-            options: ["BE 캐시에만 저장됩니다", "공유 스토리지에 저장됩니다"],
+            question: "데이터의 영구 복사본은 어디에 있나요?",
+            options: ["BE 캐시에만 있습니다", "공유 저장소에 있습니다"],
             correctIndex: 1,
-            correctFeedback: "정답입니다. 컴퓨팅 노드는 데이터를 캐시하고, 공유 스토리지는 영구 복사본을 보관합니다.",
-            incorrectFeedback: "BE 캐시는 데이터 접근 속도를 높이지만 영구 스토리지 계층은 아닙니다.",
+            correctFeedback: "정답입니다. 컴퓨팅 노드는 데이터를 캐시하고, 공유 저장소는 영구 복사본을 보관합니다.",
+            incorrectFeedback: "BE 캐시는 데이터 접근 속도를 높이지만 영구 저장 계층은 아닙니다.",
         }}
     >
         <CourseLayerStack
-            ariaLabel="분리형 Apache Doris 아키텍처의 계층"
+            ariaLabel="Apache Doris 스토리지와 컴퓨팅 분리 아키텍처의 계층"
             items={[
                 { title: "SQL 및 메타데이터 계층", description: "FE는 SQL 요청을 처리하고, Meta Service는 데이터 계층의 메타데이터를 관리합니다." },
                 { title: "컴퓨팅 그룹", description: "상태를 유지하지 않는 BE 노드는 작업을 실행하고 자주 사용하는 데이터를 캐시합니다." },
-                { title: "공유 스토리지", description: "객체 스토리지나 지원되는 분산 파일 시스템에 데이터를 영구 저장합니다." },
+                { title: "공유 저장소", description: "객체 저장소 또는 지원되는 분산 파일 시스템에 데이터를 영구 저장합니다." },
             ]}
         />
     </CourseLessonUnit>
 
     <CourseLessonUnit
         id="choose-architecture"
-        label="아키텍처 선택하기"
-        title={<>기술이 얼마나 <em>새로운지보다 제약 조건을 먼저 살펴보세요</em>.</>}
-        summary="통합형 배포와 컴퓨팅·스토리지 분리형 배포는 서로 다른 운영 환경에 맞춰 최적화됩니다. 어느 아키텍처가 항상 더 나은 것은 아닙니다."
-        coachTitle="단순성과 탄력성은 서로 다른 방향의 요구 사항입니다."
-        coach={<p>통합형 배포는 보통 시작하기가 더 쉽습니다. 공유 스토리지, 플랫폼 운영 주체, 독립적인 확장 또는 격리된 컴퓨팅 그룹이 실제로 필요하다면 분리형 배포가 적합합니다.</p>}
+        label="아키텍처 선택"
+        title={<>실제 제약 조건에서 출발하세요. 단지 <em>더 새롭다는 이유로 선택하지 마세요</em>.</>}
+        summary="통합형 배포와 분리형 배포는 각각 다른 운영 환경에 최적화되어 있습니다. 어느 아키텍처가 항상 더 나은 것은 아닙니다."
+        coachTitle="단순성과 탄력적 확장성 사이에는 절충이 필요합니다."
+        coach={<p>대체로 통합형 배포가 시작하기 더 쉽습니다. 공유 스토리지, 플랫폼 팀의 운영 책임, 컴퓨팅 자원의 독립적인 확장, 격리된 컴퓨팅 그룹이 실제 요구사항이라면 분리형 배포가 적합합니다.</p>}
         calloutTitle="선택 기준"
-        callout={<p>더 새롭다는 이유만으로 분리형 아키텍처를 선택하지 마세요. 추가되는 구성 요소가 구체적인 요구 사항을 해결해야 합니다.</p>}
+        callout={<p>단지 더 새로운 방식이라는 이유로 분리형 아키텍처를 선택하지 마세요. 추가되는 구성 요소가 구체적인 제약을 해결해야 합니다.</p>}
         check={{
-            question: "로컬 디스크를 사용할 수 있고 컴퓨팅과 스토리지를 함께 확장해도 된다면, 어떤 아키텍처로 시작해야 할까요?",
+            question: "로컬 디스크를 사용할 수 있고 컴퓨팅 자원을 스토리지와 함께 확장할 수 있다면, 어떤 아키텍처로 시작해야 할까요?",
             options: ["통합형 아키텍처", "분리형 아키텍처"],
             correctIndex: 0,
-            correctFeedback: "정답입니다. 이런 조건에서는 통합형 아키텍처가 더 간단하고 적합합니다.",
-            incorrectFeedback: "컴퓨팅의 독립적인 확장이나 공유 스토리지가 필요할 때 분리형 아키텍처의 이점이 커집니다.",
+            correctFeedback: "정답입니다. 이러한 조건에서는 통합형 아키텍처가 더 단순하고 적합합니다.",
+            incorrectFeedback: "컴퓨팅 자원의 독립적인 탄력적 확장이나 공유 스토리지가 필요할 때 분리형 아키텍처의 가치가 커집니다.",
         }}
     >
         <CourseComparison
             ariaLabel="통합형 아키텍처와 분리형 아키텍처 비교"
             leftTitle="통합형"
-            leftLead="상태를 유지하는 BE 노드가 연산을 수행하고 데이터를 로컬에 영구 저장합니다."
-            leftItems={["낮은 운영 복잡도", "로컬 스토리지에 접근", "컴퓨팅과 스토리지를 함께 확장"]}
+            leftLead="상태를 유지하는 BE 노드가 컴퓨팅을 수행하고 데이터를 로컬에 영구 저장합니다."
+            leftItems={["운영 복잡도 감소", "로컬 스토리지 접근", "컴퓨팅과 스토리지를 함께 확장"]}
             rightTitle="분리형"
             rightLead="상태를 유지하지 않는 컴퓨팅 그룹이 영구 스토리지를 공유합니다."
-            rightItems={["독립적인 탄력적 확장", "워크로드별로 격리된 컴퓨팅 그룹", "더 많은 플랫폼 구성 요소에 의존"]}
+            rightItems={["독립적인 탄력적 확장", "워크로드가 격리된 컴퓨팅 그룹", "더 많은 플랫폼 구성 요소에 의존"]}
         />
     </CourseLessonUnit>
 
@@ -208,27 +208,27 @@ import {
         id="engine-modules"
         label="핵심 엔진 모듈"
         title={<>두 엔진이 협력해 <em>작업을 줄이고 처리 속도를 높입니다</em>.</>}
-        summary="스토리지 엔진은 데이터와 접근 경로를 구성합니다. 쿼리 엔진은 SQL을 분산된 벡터화 파이프라인으로 변환합니다."
+        summary="스토리지 엔진은 데이터와 접근 경로를 구성합니다. 쿼리 엔진은 SQL을 분산형 벡터화 파이프라인으로 변환합니다."
         coachTitle="최적화는 실행 전에 시작됩니다."
         coach={<p>정렬 키, 파티션, 인덱스, 테이블 모델은 접근해야 할 데이터의 양을 줄입니다. MPP, 벡터화, Pipeline 스케줄링, 옵티마이저는 남은 데이터를 처리하는 비용을 줄입니다.</p>}
         calloutTitle="MPP와 Pipeline 비교"
-        callout={<p>MPP는 노드 간에 작업을 분산합니다. Pipeline 실행은 각 노드 내의 코어에 연산자 작업을 배치합니다.</p>}
+        callout={<p>MPP는 작업을 여러 노드에 분산합니다. Pipeline 실행은 각 노드에서 여러 코어에 걸쳐 연산자 작업을 스케줄링합니다.</p>}
         check={{
-            question: "BE 노드 간에 작업을 분산하는 방식은 무엇인가요?",
+            question: "여러 BE 노드에 작업을 분산하는 메커니즘은 무엇인가요?",
             options: ["MPP", "Pipeline 스케줄링"],
             correctIndex: 0,
             correctFeedback: "정답입니다. MPP는 노드 수준의 병렬 처리를 제공합니다.",
-            incorrectFeedback: "Pipeline은 노드 내부의 작업을 배치하고, MPP는 노드 간에 작업을 분산합니다.",
+            incorrectFeedback: "Pipeline은 노드 내부에서 작업을 스케줄링하고, MPP는 여러 노드에 작업을 분산합니다.",
         }}
     >
         <CourseConceptGrid
             ariaLabel="Apache Doris의 핵심 엔진 모듈"
             columns={4}
             items={[
-                { tag: 'COL', title: "컬럼형 저장 방식", description: "필요한 컬럼만 읽고 분석 데이터를 압축합니다." },
-                { tag: 'IDX', title: "인덱스", description: "Prefix, Min/Max, Bloom, 역인덱스를 사용해 스캔 범위를 줄입니다." },
-                { tag: 'MPP', title: "분산 처리", description: "쿼리 실행 작업을 Backend 노드에 분산합니다." },
-                { tag: 'OPT', title: "옵티마이저", description: "규칙 기반, 비용 기반, 이력 기반 전략을 적용합니다." },
+                { tag: 'COL', title: "열 기반 스토리지", description: "필요한 열을 읽고 분석 데이터를 압축합니다." },
+                { tag: 'IDX', title: "인덱스", description: "Prefix, Min/Max, Bloom, 역색인은 스캔 범위를 줄입니다." },
+                { tag: 'MPP', title: "분산 처리", description: "여러 Backend 노드에 쿼리 실행을 분산합니다." },
+                { tag: 'OPT', title: "옵티마이저", description: "규칙, 비용, 이력에 기반한 전략을 적용합니다." },
             ]}
         />
     </CourseLessonUnit>
@@ -237,17 +237,17 @@ import {
         id="query-execution"
         label="쿼리 실행"
         title={<>SQL 텍스트가 <em>분산 파이프라인으로 이어지는 과정을 살펴보세요</em>.</>}
-        summary="쿼리는 검증과 최적화를 거쳐 프래그먼트와 인스턴스로 나뉩니다. 그런 다음 BE 노드에서 실행되고, 실행 결과가 하나로 합쳐집니다."
+        summary="쿼리는 검증과 최적화를 거쳐 프래그먼트와 인스턴스로 나뉘고, 여러 BE 노드에서 실행된 뒤 하나의 결과로 합쳐집니다."
         coachTitle="프래그먼트는 작업을 정의하고, 인스턴스는 그 작업을 수행합니다."
-        coach={<p>프래그먼트는 분산 실행 계획의 논리적 부분입니다. 인스턴스는 BE에서 실행되는 프래그먼트의 물리적 복제본입니다. 데이터를 다시 분산해야 할 때는 Exchange 연산자가 인스턴스 간에 행을 이동합니다.</p>}
+        coach={<p>프래그먼트는 분산 실행 계획의 논리적 부분입니다. 인스턴스는 BE에서 실행되는 물리적 복사본입니다. 데이터를 다시 분산해야 할 때 Exchange 연산자가 인스턴스 사이에서 행을 이동합니다.</p>}
         calloutTitle="벡터화 실행"
-        callout={<p>연산자는 행을 하나씩 처리하는 대신 컬럼을 배치 단위로 처리해 행별 처리 오버헤드를 줄이고 CPU 효율을 높입니다.</p>}
+        callout={<p>연산자는 행을 하나씩 처리하는 대신 열 단위의 배치를 처리합니다. 이를 통해 행마다 발생하는 오버헤드를 줄이고 CPU 효율을 높입니다.</p>}
         check={{
-            question: "프래그먼트 인스턴스 간에 행을 이동하는 것은 무엇인가요?",
+            question: "프래그먼트 인스턴스 사이에서 행을 이동하는 것은 무엇인가요?",
             options: ["Exchange 연산자", "Catalog"],
             correctIndex: 0,
-            correctFeedback: "정답입니다. 실행 계획에서 데이터 재분산이 필요하면 Exchange가 행을 전달합니다.",
-            incorrectFeedback: "Catalog는 데이터 소스를 식별하고, Exchange는 분산 실행 계획의 인스턴스를 연결합니다.",
+            correctFeedback: "정답입니다. 실행 계획에서 데이터를 다시 분산해야 할 때 Exchange가 행을 전송합니다.",
+            incorrectFeedback: "Catalog는 데이터 소스를 식별하고, Exchange는 분산 실행 계획의 인스턴스들을 연결합니다.",
         }}
     >
         <CourseConceptFlow
@@ -255,39 +255,39 @@ import {
             focusIndex={2}
             items={[
                 { title: "파싱", description: "SQL 검증" },
-                { title: "계획 수립", description: "재작성 + 비용 평가" },
-                { title: "프래그먼트 분할", description: "분산 작업 분할" },
+                { title: "계획 수립", description: "재작성 + 비용 추정" },
+                { title: "프래그먼트", description: "분산 작업 분할" },
                 { title: "실행", description: "벡터화 파이프라인 실행" },
-                { title: "결과 반환", description: "결과 결합" },
+                { title: "반환", description: "결과 취합" },
             ]}
         />
     </CourseLessonUnit>
 
     <CourseLessonUnit
         id="optimization-recap"
-        label="최적화와 핵심 내용 복습"
-        title={<>가장 빨리 끝나는 작업은 Doris가 <em>하지 않아도 되는 작업입니다</em>.</>}
+        label="최적화와 요약"
+        title={<>가장 빠른 작업은 Doris가 <em>생략할 수 있는 작업입니다</em>.</>}
         summary="Doris는 사전 계산, 논리적 재작성, 통계 기반 계획 수립, 런타임 필터링을 결합해 실행 전과 실행 중에 처리할 데이터의 양을 줄입니다."
         coachTitle="최적화는 여러 단계에서 이루어집니다."
-        coach={<p>구체화된 뷰는 반복 계산을 대신할 수 있고, RBO는 실행 계획을 단순화하며, CBO는 예상 비용을 비교합니다. 런타임 필터는 조인 중에 불필요한 행을 조기에 제외합니다.</p>}
-        calloutTitle="다음 강의로 넘어가기 전에"
+        coach={<p>구체화된 뷰는 반복 계산을 대체할 수 있고, RBO는 실행 계획을 단순화하며, CBO는 추정 비용을 비교합니다. 런타임 필터는 조인 중에 행을 일찍 걸러냅니다.</p>}
+        calloutTitle="다음 학습으로 넘어가기 전에"
         callout={<p>데이터 구성 계층, FE와 BE의 역할 구분, 두 가지 아키텍처 선택지, 계획 수립부터 분산 실행까지의 흐름을 기억하세요.</p>}
         check={{
-            question: "CBO가 여러 실행 계획을 정확하게 비교하는 데 도움이 되는 것은 무엇인가요?",
-            options: ["데이터를 잘 대표하는 테이블 및 컬럼 통계", "더 많은 SQL 주석"],
+            question: "CBO가 대안 실행 계획을 정확하게 비교하는 데 도움이 되는 것은 무엇인가요?",
+            options: ["대표성 있는 테이블 및 열 통계 정보", "더 많은 SQL 주석"],
             correctIndex: 0,
-            correctFeedback: "정답입니다. 최신 통계는 카디널리티와 비용 추정의 정확도를 높입니다.",
-            incorrectFeedback: "주석은 사람이 SQL을 이해하는 데 도움이 되지만, CBO에는 데이터를 잘 대표하는 통계가 필요합니다.",
+            correctFeedback: "정답입니다. 최신 통계 정보는 카디널리티와 비용 추정의 정확도를 높입니다.",
+            incorrectFeedback: "주석은 사람이 SQL을 이해하는 데 도움이 되지만, CBO에는 대표성 있는 통계 정보가 필요합니다.",
         }}
     >
         <CourseConceptGrid
-            ariaLabel="Apache Doris 쿼리 최적화 계층"
+            ariaLabel="Apache Doris의 쿼리 최적화 계층"
             columns={4}
             items={[
-                { tag: 'MV', title: "구체화된 뷰", description: "쿼리 재작성을 통해 미리 계산된 결과를 재사용합니다." },
-                { tag: 'RBO', title: "규칙 기반", description: "정해진 규칙에 따라 논리적 변환을 적용합니다." },
-                { tag: 'CBO', title: "비용 기반", description: "통계를 사용해 물리적 실행 계획을 비교합니다." },
-                { tag: 'RF', title: "런타임 필터", description: "필터를 스캔 단계에 가깝게 적용해 불필요한 행을 조기에 제외합니다." },
+                { tag: 'MV', title: "구체화된 뷰", description: "쿼리 재작성을 통해 사전 계산된 결과를 재사용합니다." },
+                { tag: 'RBO', title: "규칙 기반", description: "결정적인 논리 변환을 적용합니다." },
+                { tag: 'CBO', title: "비용 기반", description: "통계 정보를 사용해 물리 실행 계획을 비교합니다." },
+                { tag: 'RF', title: "런타임 필터", description: "필터를 스캔 단계로 밀어 넣어 행을 일찍 걸러냅니다." },
             ]}
         />
     </CourseLessonUnit>
