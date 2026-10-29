@@ -32,7 +32,8 @@ COLLECT_SET(<expr> [,<max_size>])
 The return type is ARRAY. This array contains all values after deduplication. Special case:
 
 - If the value is NULL, it will filter
-- The order of elements in the returned array is not guaranteed. Use `array_sort` if you need a deterministic order. When `max_size` is specified, which elements are kept is also not guaranteed.
+
+The order of elements in the returned array is not guaranteed. Use `array_sort` to sort the result, but when `max_size` is specified, which elements are retained is still not guaranteed. The results below show one possible output; sorting the result does not fix which elements are selected.
 
 ## Example
 
@@ -97,4 +98,18 @@ select k1,array_sort(collect_set(k2)),collect_set(k3,1) from collect_set_test gr
 | 3  | ["2023-01-02"]                | ["world"]           |
 | 4  | ["2023-01-02", "2023-01-03"]  | ["sql"]             |
 +----+-------------------------------+---------------------+
+```
+
+An input containing only NULL returns an empty array:
+
+```sql
+SELECT COLLECT_SET(CAST(NULL AS INT)) AS result;
+```
+
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
 ```

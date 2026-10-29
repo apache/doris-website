@@ -33,6 +33,8 @@ COLLECT_LIST(<expr> [,<max_size>])
 
 - 如果值为 NULL，则会过滤
 
+返回数组中元素的顺序不保证。可使用 `array_sort` 对结果排序，但指定 `max_size` 时，保留哪些元素仍不保证。以下结果展示一种可能的输出；对结果排序不会固定截取的元素。
+
 ## 举例
 
 ```sql
@@ -96,4 +98,18 @@ select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1
 | 3  | ["2023-01-02"]               | ["world"]            |
 | 4  | ["2023-01-02", "2023-01-03"] | ["sql"]              |
 +----+------------------------------+----------------------+
+```
+
+仅包含 NULL 的输入返回空数组：
+
+```sql
+SELECT COLLECT_LIST(CAST(NULL AS INT)) AS result;
+```
+
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
 ```

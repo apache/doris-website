@@ -33,6 +33,8 @@ The return type is ARRAY, which contains all values. Special circumstances:
 
 - If the value is NULL, it will filter
 
+The order of elements in the returned array is not guaranteed. Use `array_sort` to sort the result, but when `max_size` is specified, which elements are retained is still not guaranteed. The results below show one possible output; sorting the result does not fix which elements are selected.
+
 ## Example
 
 ```sql
@@ -96,4 +98,18 @@ select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1
 | 3  | ["2023-01-02"]               | ["world"]            |
 | 4  | ["2023-01-02", "2023-01-03"] | ["sql"]              |
 +----+------------------------------+----------------------+
+```
+
+An input containing only NULL returns an empty array:
+
+```sql
+SELECT COLLECT_LIST(CAST(NULL AS INT)) AS result;
+```
+
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
 ```
