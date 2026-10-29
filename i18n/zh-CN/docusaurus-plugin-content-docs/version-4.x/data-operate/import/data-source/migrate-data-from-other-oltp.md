@@ -32,9 +32,10 @@
 | Flink Doris Connector（CDC） | 实时全量 + 增量同步 | 实时 | 支持 | 支持（INSERT / UPDATE / DELETE） |
 | Spark Connector | Spark 体系下的批量数据写入 | 离线 | 否 | 否 |
 | Streaming Job | Doris 内置的 MySQL / PostgreSQL 持续同步 | 流式（持续） | 支持 | 支持 |
-| 第三方工具（DataX / SeaTunnel / CloudCanal） | 已有同步平台、可视化运维 | 离线 / 实时 | 支持 | 视工具而定 |
+| 第三方工具（DataX / SeaTunnel / CloudCanal） | 已有同步平台、可视化运维 | 离线 / 实时 | 视工具而定 | 视工具而定 |
+| NineData（MySQL 兼容数据源到 Doris） | 全量和增量数据复制 | 全量 + 增量（Binlog） | 支持 | 支持 |
 
-> 说明：如果需要在不引入外部计算引擎的情况下完成迁移，推荐使用 **Multi-Catalog** 或 **Streaming Job**；如果需要实时增量同步，推荐使用 **Flink Doris Connector + CDC** 或 **Streaming Job**。
+> 说明：如果需要在不引入外部计算引擎的情况下完成迁移，推荐使用 **Multi-Catalog** 或 **Streaming Job**；如果需要实时增量同步，推荐使用 **Flink Doris Connector + CDC**、**Streaming Job**，或 **NineData**（适用于 MySQL 兼容数据源到 Doris）。
 
 ---
 
@@ -252,6 +253,7 @@ TO DATABASE target_test_db (
 - [DataX](../../../connection-integration/data-integration/datax.md)
 - [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)
 - [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md)
+- [NineData](https://docs.ninedata.cloud/replication/mysql_to_others/mysql_to_doris/)
 
 ---
 

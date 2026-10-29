@@ -161,3 +161,4 @@ In addition, you can also use third-party synchronization tools for data synchro
 - [DataX](../../../ecosystem/datax)
 - [Seatunnel](../../../ecosystem/seatunnel)
 - [CloudCanal](../../../ecosystem/cloudcanal)
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
