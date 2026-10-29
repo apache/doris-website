@@ -82,6 +82,8 @@ The lifetime of the presigned URL is controlled by the session variable `file_pr
 SET file_presigned_url_ttl_seconds = 7200;
 ```
 
+**Since 4.1.5**, for text input, `EMBED` uses the resource's complete `ai.embed.*` connection group when configured, otherwise its general `ai.*` group. For JSON multimodal input, the selection order is `ai.embed.mm.*`, `ai.embed.*`, then general `ai.*`. Each group contains `endpoint`, `provider_type`, `model_name`, and `api_key` (optional for `LOCAL`). Selection uses complete groups; the selected provider and model must support the input type. A resource containing only embedding properties is valid for the corresponding `EMBED` calls. Earlier versions use the general group. See [dedicated embedding properties](../../../../ai/ai-function-overview.md#dedicated-embedding-properties).
+
 ## Return Value
 
 The return type is `ARRAY<FLOAT>`, representing the generated vector.
