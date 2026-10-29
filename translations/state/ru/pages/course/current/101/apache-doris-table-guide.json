@@ -8,13 +8,23 @@
     "sourceLocale": "en",
     "sourcePath": "course/101/03-apache-doris-table-guide.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs-course/current/101/03-apache-doris-table-guide.mdx",
-    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "7188a74214096313bd71bc8663d896fe5ad8f984b412a49239930b8fed2cb4d2",
     "sourceTechnicalHash": "c25bf62b78bb1f0fad182507ba609f4f820567d208a75f7e32bb1d64d73b264f",
-    "targetHash": "33c526cb7d21c7b6a97c84115e03f204af2b2e6038bdb906776b27f54711e38e",
+    "targetHash": "816ca2275b3b4d3483999844cf2b9b1b874ab76155c82ffade1ae7a82839e8fd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-26T14:20:45.459Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-10-29T23:30:50.952Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "course/101/03-apache-doris-table-guide.mdx",
+        "blob": "b0817228885e17b890f0e9b27e26219a1a662451"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/03-apache-doris-table-guide.mdx",
+        "blob": "045bc0eecd193dcd1bd2bce3acd20dda2de460d1"
+      }
+    }
   }
 }

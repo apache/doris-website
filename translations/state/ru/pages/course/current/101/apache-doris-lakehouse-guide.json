@@ -8,13 +8,23 @@
     "sourceLocale": "en",
     "sourcePath": "course/101/06-apache-doris-lakehouse-guide.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs-course/current/101/06-apache-doris-lakehouse-guide.mdx",
-    "sourceCommit": "8b63adc6dffaae56e0353e0b5ca8b9dce41803f6",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "54d3c9de122417023a98372aa920a941f0699ded5c467c76c42788380119cf77",
     "sourceTechnicalHash": "23c05355b6868a8eafd313b8e1eedafda1bb1b62cc64962562dc0954d3c18d8f",
-    "targetHash": "ac82d3c729aa27d672b212205e6d6d3556cd296703a71eefe36fc7bb91c01d9c",
+    "targetHash": "0baf7ff854be8899308f1967447746a45cb0231ecee741d9e00aa53ffe438d13",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-26T14:25:39.193Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-10-29T23:40:15.789Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "course/101/06-apache-doris-lakehouse-guide.mdx",
+        "blob": "ee51049d6b2a5a28bbaeb6d425ee7c450b236b7e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/06-apache-doris-lakehouse-guide.mdx",
+        "blob": "a8b6a2a66d9fc2f37b286df4b16838ffd1380ec6"
+      }
+    }
   }
 }
