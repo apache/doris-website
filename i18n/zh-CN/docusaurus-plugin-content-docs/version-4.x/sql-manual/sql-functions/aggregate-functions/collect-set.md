@@ -32,6 +32,8 @@ COLLECT_SET(<expr> [,<max_size>])
 返回类型是 ARRAY，该数组包含所有非 NULL 值。
 如果组内没有合法数据，则返回空数组。
 
+返回数组中元素的顺序不保证。可使用 `array_sort` 对结果排序，但指定 `max_size` 时，保留哪些元素仍不保证。以下结果展示一种可能的输出；对结果排序不会固定截取的元素。
+
 ## 举例
 
 ```sql
@@ -69,4 +71,18 @@ select k1,collect_set(k2),collect_set(k3,1) from collect_set_test group by k1 or
 |    2 | [200, 100]      | ["x"]             |
 |    3 | []              | []                |
 +------+-----------------+-------------------+
+```
+
+仅包含 NULL 的输入返回空数组：
+
+```sql
+SELECT COLLECT_SET(CAST(NULL AS INT)) AS result;
+```
+
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
 ```

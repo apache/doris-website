@@ -31,6 +31,8 @@ COLLECT_LIST(<expr> [,<max_size>])
 
 Returns ARRAY type, containing all non-NULL values. If there is no valid data in the group, returns an empty array.
 
+The order of elements in the returned array is not guaranteed. Use `array_sort` to sort the result, but when `max_size` is specified, which elements are retained is still not guaranteed. The results below show one possible output; sorting the result does not fix which elements are selected.
+
 ## Example
 
 ```sql
@@ -68,4 +70,18 @@ select k1,collect_list(k2),collect_list(k3,1) from collect_list_test group by k1
 |    2 | [100, 200]       | ["x"]              |
 |    3 | []               | []                 |
 +------+------------------+--------------------+
+```
+
+An input containing only NULL returns an empty array:
+
+```sql
+SELECT COLLECT_LIST(CAST(NULL AS INT)) AS result;
+```
+
+```text
++--------+
+| result |
++--------+
+| []     |
++--------+
 ```
