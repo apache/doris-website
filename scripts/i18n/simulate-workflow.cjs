@@ -82,10 +82,11 @@ if (args[0] === 'api' && args.some(arg => arg.startsWith('repos/apache/doris-web
     assert(!args.includes('--draft'));
     assert.equal(value('--base'), 'master');
     assert.equal(value('--repo'), 'apache/doris-website');
-    assert.equal(value('--label'), 'translate-ja');
+    const labels = args.flatMap((arg, index) => arg === '--label' ? [args[index + 1]] : []);
+    assert.deepEqual(labels, ['translate-ja', 'ai-translate']);
     const body = fs.readFileSync(value('--body-file'), 'utf8');
     assert.match(body, /japanese-translation-automation:v1 bot-head=[a-f0-9]{40}/);
-    const record = {draft: false, base: value('--base'), head: value('--head'), labels: [value('--label')], body,
+    const record = {draft: false, base: value('--base'), head: value('--head'), labels, body,
         url: 'https://example.invalid/apache/doris-website/pull/1'};
     fs.writeFileSync(process.env.I18N_SIM_PR_RECORD, JSON.stringify(record, null, 2) + '\\n');
     process.stdout.write(record.url + '\\n');

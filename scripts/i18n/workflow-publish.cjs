@@ -98,7 +98,7 @@ async function main() {
     execFileSync('gh', ['auth', 'setup-git'], {cwd: root, stdio: 'inherit'});
     git('push', 'origin', `HEAD:refs/heads/${branch}`);
     const url = execFileSync('gh', ['pr', 'create', '--repo', 'apache/doris-website', '--base', 'master',
-        '--head', branch, '--label', `translate-${locale}`,
+        '--head', branch, '--label', `translate-${locale}`, '--label', 'ai-translate',
         '--title', `docs(i18n): machine ${language} translation candidates`,
         '--body-file', bodyFile], {cwd: root, encoding: 'utf8'}).trim();
     if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,

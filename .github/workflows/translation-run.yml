@@ -157,11 +157,14 @@ jobs:
         id: fresh
         run: node scripts/i18n/workflow-scan.cjs "$RUNNER_TEMP/$TRANSLATION_WORKSPACE"
       # The publisher labels the PR only after the model calls and the branch push.
-      - name: Verify the PR label before model calls
+      - name: Verify the PR labels before model calls
         if: steps.fresh.outputs.can_generate == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: test "$(gh api "repos/apache/doris-website/labels/translate-$I18N_LOCALE" --jq .name)" = "translate-$I18N_LOCALE"
+        run: |
+          for label in "translate-$I18N_LOCALE" ai-translate; do
+            test "$(gh api "repos/apache/doris-website/labels/$label" --jq .name)" = "$label"
+          done
       - name: Install ossutil for the pinned Codex package and auth pool
         if: steps.fresh.outputs.can_generate == 'true'
         run: |
