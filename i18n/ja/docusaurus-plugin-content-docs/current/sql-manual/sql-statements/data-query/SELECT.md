@@ -18,7 +18,7 @@ SELECT
     [ALL | DISTINCT | DISTINCTROW | ALL EXCEPT ( col_name1 [, col_name2, col_name3, ...] )]
     select_expr [, select_expr ...]
     [FROM table_references
-      [PARTITION partition_list]
+      [PARTITION (partition_list) | MAX_VISIBLE_PARTITION()]
       [TABLET tabletid_list]
       [TABLESAMPLE sample_value [ROWS | PERCENT]
         [REPEATABLE pos_seek]]
@@ -64,9 +64,11 @@ SELECT
 
    11. SELECT では、`table_reference` のテーブル名に続けて、パーティション、サブパーティション、またはその両方のリストを含む PARTITION を指定し、対象を明示的に選択できます。
 
-   12. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: FROM 句のテーブルから読み取る行数を制限します。指定した行数または割合に応じてテーブルの Tablet を疑似ランダムに選びます。REPEATABLE でシードを指定すると、同じサンプルを再び取得できます。TableID を手動で指定することもできます。これは OLAP テーブルでのみ使用できます。
+   12. `MAX_VISIBLE_PARTITION()`: クエリプラン作成時に、パーティションキーが最大の可視パーティションを選択します。`PARTITION(...)` と同時には使用できません。詳細は [最大可視パーティションのクエリ](#query-the-maximum-visible-partition) を参照してください。
+
+   13. `[TABLET tids] TABLESAMPLE n [ROWS | PERCENT] [REPEATABLE seek]`: FROM 句のテーブルから読み取る行数を制限します。指定した行数または割合に応じてテーブルの Tablet を疑似ランダムに選びます。REPEATABLE でシードを指定すると、同じサンプルを再び取得できます。TableID を手動で指定することもできます。これは OLAP テーブルでのみ使用できます。
    
-   13. `hint_statement`: 選択リストの前に置くヒントです。オプティマイザーの動作に影響を与え、目的の実行プランを得るために使用します。詳しくは [joinHint の使用方法] (https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview) を参照してください。
+   14. `hint_statement`: 選択リストの前に置くヒントです。オプティマイザーの動作に影響を与え、目的の実行プランを得るために使用します。詳しくは [joinHint の使用方法] (https://doris.apache.org/docs/dev/query-acceleration/hints/hints-overview) を参照してください。
 
 **構文上の制約:**
 
@@ -76,6 +78,56 @@ SELECT
 4. WHERE 句: WHERE は GROUP BY の対象となる行を決定し、HAVING は結果セットで使用する行を決定します。
 5. HAVING 句では COUNT、SUM、MAX、MIN、AVG などの集約関数を参照できますが、WHERE 句では参照できません。WHERE 句では集約関数以外の関数を参照できます。列の別名を WHERE 句の条件に使用することはできません。
 6. GROUP BY に WITH ROLLUP を続けると、結果を一回以上集計できます。
+
+### 最大可視パーティションのクエリ {#query-the-maximum-visible-partition}
+
+:::note
+この構文は開発バージョン向けであり、対応する実装がマージされた後に使用できます。リリース済みの 4.x バージョンでは使用できません。
+:::
+
+`MAX_VISIBLE_PARTITION()` は、パーティションキーが最大の可視パーティションを自動的に選択します。用途は Hive エコシステムで一般的な `max_pt` と似ていますが、Doris のパーティションキーのセマンティクスと可視バージョンに基づいて選択します。
+
+```sql
+SELECT *
+FROM <table_name> MAX_VISIBLE_PARTITION() [[AS] <table_alias>];
+```
+
+可視バージョンが初期バージョンを上回る通常パーティションのみが選択対象です。一時パーティションは対象外です。
+
+| パーティションタイプ | 選択ルール |
+| --- | --- |
+| RANGE パーティション | 上限値が最大のパーティションを選択 |
+| LIST パーティション | 各パーティション内の最大列挙キーを比較し、キーが最大のパーティションを選択 |
+| LIST DEFAULT パーティション | 可視の非 DEFAULT パーティションが存在しない場合にのみ選択 |
+| 非パーティションテーブル | テーブルが可視の場合、唯一のパーティションを選択 |
+
+複数列のパーティションキーは、パーティション列の定義順に比較されます。可視パーティションが存在しない場合、クエリは空の結果を返します。この構文は内部 OLAP テーブルと非同期マテリアライズドビューでのみ使用でき、`PARTITION(...)` または履歴スナップショットクエリと同時には使用できません。
+
+CTE 参照には直接適用できません。代わりに、CTE 定義内のベーステーブルに適用してください。
+
+:::note
+「可視」は「空ではない」という意味ではありません。`DELETE` ですべての行を削除した後も、そのパーティションが選択される場合があります。`TRUNCATE PARTITION` はパーティションバージョンをリセットします。
+:::
+
+次の例を実行するには、現在のデータベースに対する CREATE、INSERT、SELECT 権限が必要です。結果は、上限値が最大の可視パーティションから返されます。
+
+```sql
+CREATE TABLE max_partition_example (d DATE, amount INT)
+DUPLICATE KEY(d)
+PARTITION BY RANGE(d) (
+    PARTITION p202601 VALUES LESS THAN ('2026-02-01'),
+    PARTITION p202602 VALUES LESS THAN ('2026-03-01')
+)
+DISTRIBUTED BY HASH(d) BUCKETS 1
+PROPERTIES ('replication_num' = '1');
+INSERT INTO max_partition_example VALUES ('2026-01-15', 10), ('2026-02-15', 20);
+SELECT * FROM max_partition_example MAX_VISIBLE_PARTITION();
+```
+
+```text
+d           amount
+2026-02-15  20
+```
 
 **JOIN クエリ:**
 
