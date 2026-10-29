@@ -8,13 +8,23 @@
     "sourceLocale": "en",
     "sourcePath": "course/101/04-apache-doris-data-operations-guide.mdx",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs-course/current/101/04-apache-doris-data-operations-guide.mdx",
-    "sourceCommit": "0d1f9e7894e56c20377c199a25f50d6b55023112",
+    "sourceCommit": "38d51ed68f58649235d42916d51398dc7dab6934",
     "sourceHash": "dba85eb86436c4121708351d23e5737b03701c3ee9415a4bb9b5a3449a8a33fd",
     "sourceTechnicalHash": "bab25688682f4666e72b084675b66e4a265ca54dc9612e89f9bf91333eaf8653",
-    "targetHash": "40cc845847af8f6c7f6d86d89626a59e104abb2220a92f9d032191c4621cb6a5",
+    "targetHash": "ef3c98677233c23581ee3b2b7636fe22861d3b94f5e63e2b944577b0d6a7f925",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-24T18:05:57.423Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-10-28T20:53:01.581Z",
+    "glossaryVersion": "1",
+    "sourceRevisions": {
+      "en": {
+        "path": "course/101/04-apache-doris-data-operations-guide.mdx",
+        "blob": "1b38b0a1aafd813d5bc02833393c6515618fa6ae"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-course/current/101/04-apache-doris-data-operations-guide.mdx",
+        "blob": "5ad6ef82c9b2f2927bab3c1bec0f31e7c54946c6"
+      }
+    }
   }
 }
