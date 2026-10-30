@@ -597,15 +597,16 @@ CREATE TABLE example_table (
 
 | 属性 | 默认值 | ALTER | 描述 |
 | --- | --- | --- | --- |
-| `variant_max_subcolumns_count` | `2048` | 否 | 单个数据文件中参与子列列式提取（Subcolumnization）的动态路径数上限；非空值多的路径优先入选，其余路径存入稀疏列。`0` 表示不限制。取值范围 0 到 100000，建议不超过 10000。默认值已足够覆盖大多数 workload；如果确实需要大规模子列，优先考虑 [DOC mode](./variant-workload-guide.md#doc-mode-template)。 |
+| `variant_max_subcolumns_count` | `2048` | 否 | 单个数据文件中参与子列列式提取（Subcolumnization）的动态路径数上限；非空值多的路径优先入选，其余路径存入稀疏列。`0` 的含义取决于 `variant_serialize_type`。取值范围 0 到 100000，建议不超过 10000。默认值已足够覆盖大多数 workload；如果确实需要大规模子列，优先考虑 [DOC mode](./variant-workload-guide.md#doc-mode-template)。 |
 | `variant_enable_typed_paths_to_sparse` | `false` | 否 | 默认情况下，Schema Template 路径一定参与子列列式提取，且不计入 `variant_max_subcolumns_count`。设置为 `true` 后，这些路径也计入上限，并可能存入稀疏列。 |
+| `variant_serialize_type` | `v2` | 否 | `variant_max_subcolumns_count = 0` 对动态路径的含义。`v2`：动态路径都不参与子列列式提取（Subcolumnization），全部存入稀疏列。`v1`：动态路径全部参与子列列式提取（Subcolumnization），不限制数量。其他取值和 DOC mode 在这两种取值下行为相同。该属性出现之前创建的列都是 `v1`。 |
 | `variant_sparse_hash_shard_count` | `1` | 否 | 稀疏路径按 Hash 分散到的物理稀疏列数量。取值范围 0 到 1024，`0` 按 `1` 处理。 |
 | `variant_max_sparse_column_statistics_size` | `10000` | 否 | 单个数据文件中记录统计信息的稀疏路径数上限。超过后，查询没有统计信息的路径时无法跳过稀疏列。取值范围 1 到 50000。 |
 | `variant_enable_doc_mode` | `false` | 否 | 开启 DOC mode。不能与 `variant_max_subcolumns_count`、`variant_enable_typed_paths_to_sparse`、`variant_max_sparse_column_statistics_size`、`variant_sparse_hash_shard_count` 同时设置。 |
 | `variant_doc_materialization_min_rows` | `0` | 仅限没有 Schema Template 的列 | 仅用于 DOC mode。行数少于该值的写入只存储文档，待 Compaction 把文件合并到该阈值后再执行子列列式提取。`0` 表示写入时即执行子列列式提取。取值范围 0 到 1000000000。 |
 | `variant_doc_hash_shard_count` | `64` | 否 | 仅用于 DOC mode。存储的文档被拆分到的列数。取值范围 0 到 1024，`0` 按 `1` 处理。 |
 
-表中 **ALTER** 列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性，参见 [ALTER TABLE](#alter-table)。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。
+表中 **ALTER** 列表示 `ALTER TABLE ... MODIFY COLUMN` 能否修改该属性，参见 [ALTER TABLE](#alter-table)。稀疏列和 DOC mode 相关属性的用法参见[宽列](#wide-columns)。`DESC` 和 `SHOW CREATE TABLE` 会为每个 VARIANT 列写明 `variant_serialize_type`，因此打印出来的定义会保留原列的存储布局。
 
 ### 会话变量 {#session-variables}
 
@@ -737,6 +738,7 @@ CREATE TABLE IF NOT EXISTS tbl (
    );
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
+4. 路径存储在稀疏列中：子路径索引依赖子列。超出 `variant_max_subcolumns_count` 的路径没有子列；`variant_max_subcolumns_count = 0` 且 `variant_serialize_type = 'v2'` 时，所有动态路径都没有子列。可以用 Schema Template 固定路径，或参见[稀疏列机制](#sparse-columns)。
 
 ## 宽列 {#wide-columns}
 
@@ -752,6 +754,14 @@ CREATE TABLE IF NOT EXISTS tbl (
 
 - 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先执行子列列式提取（Subcolumnization），并存为独立子列；可执行 Subcolumnization 的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
 - 在 Schema Template 中声明过的路径，默认不会被放入稀疏列；可通过 `variant_enable_typed_paths_to_sparse` 允许这些路径进入稀疏列。
+- 在 `variant_serialize_type = 'v2'`（新建列的默认值）的列上设置 `variant_max_subcolumns_count = 0`，所有动态路径都存入稀疏列；Schema Template 路径仍参与子列列式提取（Subcolumnization），除非设置了 `variant_enable_typed_paths_to_sparse`。适合值主要被整体读取的场景。如果希望所有动态路径都参与子列列式提取（Subcolumnization），比如要保留它们的子路径索引，请设置 `variant_serialize_type = 'v1'`：
+  ```sql
+  -- 所有动态路径都在稀疏列中
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- 所有动态路径都成为子列
+  v VARIANT<properties('variant_max_subcolumns_count' = '0', 'variant_serialize_type' = 'v1')>
+  ```
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
 **参考说明**
