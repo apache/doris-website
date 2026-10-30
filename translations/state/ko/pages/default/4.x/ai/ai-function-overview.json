@@ -8,41 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/ai/ai-function-overview.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-    "sourceTechnicalHash": "3001a20159aeb47f42108af480abb173193fa80d2386dace1cdb20cbd4dae4ac",
-    "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+    "sourceTechnicalHash": "c61cca1dfa22d1ee247ec36511cf610c216b9088901b419db2b25c6a7d3ebc0e",
+    "targetHash": "ee856e197832e2bb5d108f00cdb8d7b48f68069600cc0caf11aaa68c7836aae3",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T08:52:15.415Z",
+    "translatedAt": "2026-10-30T07:12:45.560Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-      "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0c8e37791c0503d9859f078c3c424421db47980442a0c0ee4d0592504a522255",
+      "targetHash": "ee856e197832e2bb5d108f00cdb8d7b48f68069600cc0caf11aaa68c7836aae3",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Capability definition -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 기능 정의 -->\"]\nprotected node 19: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 구성 매개변수 -->\"]\nprotected node 20: expected [\"html\",null,null,\"<!-- Applicable scenario: Connecting to an external LLM service -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 외부 LLM 서비스 연결 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"LOCAL\"]; received [\"inlineCode\",null,null,\"api_key\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "ai/ai-function-overview",
-        "sourcePath": "docs/ai/ai-function-overview.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/ai/ai-function-overview.md",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "5cbcf71720c2c5ae0b4502f3a3fb3e99e1d40a044838470024cb3149cce6e100",
-        "targetHash": "ac2bf6b3d9f6d6aa9482892aa234265899f2224a8b999b95c5b2353b8f21e54a",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "af6c01bb9c2293351c02cc2edded031943375c68"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/ai/ai-function-overview.md",
+        "blob": "2a6708da50e2d24b9cd20a655cff3cd4c757eaf5"
       }
     }
   }
