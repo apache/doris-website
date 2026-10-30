@@ -2,33 +2,32 @@
 {
     "title": "ELEMENT_AT",
     "language": "en",
-    "description": "The ELEMENTAT function is used to extract the element value from an array or map based on the specified index or key."
+    "description": "The ELEMENTAT function is used to extract the element value from an array, map, struct, variant, or FILE based on the specified index or key."
 }
 ---
 
-## Function
+## Description {#function}
 
-The `ELEMENT_AT` function is used to extract the element value from an array, map, struct, or variant based on the specified index or key.
+The `ELEMENT_AT` function is used to extract an element or field value from an array, map, struct, variant, or FILE based on the specified index, key, or field name.
 
 - When applied to an **ARRAY**, it returns the element at the specified position.  
 - When applied to a **MAP**, it returns the value corresponding to the specified key.  
 - When applied to a **STRUCT**, it returns the subfield at the specified position (starting from 1) or with the specified field name, equivalent to `STRUCT_ELEMENT`.  
 - When applied to a **VARIANT**, it returns the value of the specified subfield.
+- When applied to a **FILE**, it returns the value of the specified field.
 
 ## Syntax
 
 ```sql
-ELEMENT_AT(container, key_or_index)
+ELEMENT_AT(<container>, <key_or_index>)
 ```
 
 ## Parameters
 
-- `container`: Can be `ARRAY`, `MAP`, `STRUCT`, or `VARIANT`.
-- `key_or_index`:
-  - For `ARRAY`: An integer, with indexing starting from **1**.  
-  - For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.  
-  - For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).  
-  - For `VARIANT`: A string type.
+| Parameter | Description |
+| --- | --- |
+| `<container>` | Can be `ARRAY`, `MAP`, `STRUCT`, `VARIANT`, or `FILE`. |
+| `<key_or_index>` | For `ARRAY`: An integer, with indexing starting from **1**.<br />For `MAP`: The key type (`K`) of the `MAP`, which can be any supported primitive type.<br />For `STRUCT`: A constant integer field position (starting from **1**) or a constant string field name (matched **case-insensitively**).<br />For `VARIANT`: A string type.<br />For `FILE`: A non-NULL constant string naming `uri`, `offset`, `size`, `content_type`, or `checksum`. Names are case-insensitive. The `inline` selector produces an error; use [FL_GET_BINARY](../fl-get-binary.md) to read binary contents. |
 
 ## Return Value
 
@@ -36,28 +35,38 @@ ELEMENT_AT(container, key_or_index)
 - For `MAP`: Returns the value corresponding to the specified key (`V` type).  
 - For `STRUCT`: Returns the specified subfield value.  
 - For `VARIANT`: Returns a `VARIANT` type value.  
-- If the index or key does not exist, returns `NULL` (for `STRUCT`, an out-of-bound position or a non-existent field name reports an error).  
-- If the parameter is `NULL`, returns `NULL`.
+- For `FILE`: Returns the selected field value with its corresponding type, or `NULL` when FILE or the field is `NULL`.
+- If the index or key does not exist, returns `NULL` (out-of-bound `STRUCT` positions and non-existent `STRUCT` or `FILE` field names report errors).
+- If the parameter is `NULL`, returns `NULL` (FILE requires a non-NULL constant field name).
 
 ## Notes
 
 1. **Array indexes start from 1**, not 0.  
 2. Negative indexes are supported: `-1` represents the last element, `-2` the second-to-last, and so on.  
 3. The `ELEMENT_AT(container, key_or_index)` function behaves the same as `container[key_or_index]` (see examples for details).
+4. FILE field access (Since 4.2): Unknown field names, dynamic selectors, and numeric indexes produce errors.
 
 ## Examples
 
 1. The `ELEMENT_AT` function works the same as `[]`.
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 2);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 2) |
     +--------------------------+
     |                        2 |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT [1, 2, 3][2];
+    ```
+
+    ```text
     +--------------+
     | [1, 2, 3][2] |
     +--------------+
@@ -67,15 +76,23 @@ ELEMENT_AT(container, key_or_index)
 
 2. Array indexing starts from 1; out-of-bounds access returns `NULL`.
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 0);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 0) |
     +--------------------------+
     |                     NULL |
     +--------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT([1, 2, 3], 4);
+    ```
+
+    ```text
     +--------------------------+
     | ELEMENT_AT([1, 2, 3], 4) |
     +--------------------------+
@@ -85,8 +102,11 @@ ELEMENT_AT(container, key_or_index)
 
 3. Accessing a non-existent KEY in a `MAP` returns `NULL`.
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT({"a": 1, "b": 2}, "c");
+    ```
+
+    ```text
     +-----------------------------------+
     | ELEMENT_AT({"a": 1, "b": 2}, "c") |
     +-----------------------------------+
@@ -96,15 +116,23 @@ ELEMENT_AT(container, key_or_index)
 
 4. Accessing a `STRUCT` subfield by position or by field name (equivalent to `STRUCT_ELEMENT`).
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1);
+    ```
+
+    ```text
     +------------------------------------------------------------+
     | ELEMENT_AT(NAMED_STRUCT('name', 'Jack', 'id', 1728923), 1) |
     +------------------------------------------------------------+
     | Jack                                                       |
     +------------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'];
+    ```
+
+    ```text
     +--------------------------------------------------+
     | NAMED_STRUCT('name', 'Jack', 'id', 1728923)['id'] |
     +--------------------------------------------------+
@@ -114,18 +142,44 @@ ELEMENT_AT(container, key_or_index)
 
 5. When accessing a subfield of a `VARIANT`, if the `VARIANT` value is not an OBJECT, an empty value is returned.
 
-    ```SQL
+    ```sql
     SELECT ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a");
+    ```
+
+    ```text
     +------------------------------------------------------+
     | ELEMENT_AT(CAST('{"a": 1, "b": 2}' AS VARIANT), "a") |
     +------------------------------------------------------+
     | 1                                                    |
     +------------------------------------------------------+
+    ```
 
+    ```sql
     SELECT ELEMENT_AT(CAST('123' AS VARIANT), "");
+    ```
+
+    ```text
     +----------------------------------------+
     | ELEMENT_AT(CAST('123' AS VARIANT), "") |
     +----------------------------------------+
     |                                        |
     +----------------------------------------+
+    ```
+
+6. Accessing a `FILE` field by its case-insensitive name.
+
+    ```sql
+    SELECT ELEMENT_AT(f, 'URI') AS uri,
+           ELEMENT_AT(f, 'size') AS size
+    FROM (SELECT CAST(NAMED_STRUCT(
+        'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+        'content_type', NULL, 'checksum', NULL, 'inline', NULL
+    ) AS FILE) AS f) t;
+    ```
+    ```text
+    +-------------------------+------+
+    | uri                     | size |
+    +-------------------------+------+
+    | s3://bucket/picture.jpg |    3 |
+    +-------------------------+------+
     ```
