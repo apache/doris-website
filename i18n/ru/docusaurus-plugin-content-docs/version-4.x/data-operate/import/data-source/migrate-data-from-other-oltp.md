@@ -1,17 +1,17 @@
 ---
 {
-    "title": "Миграция данных из других систем TP",
+    "title": "Миграция данных из других TP-систем",
     "language": "ru",
-    "description": "Как перенести данные из систем OLTP, таких как MySQL, SQL Server, Oracle и PostgreSQL, в Apache Doris: варианты офлайн-синхронизации и синхронизации в реальном времени.",
+    "description": "Как перенести данные из OLTP-систем, таких как MySQL, SQL Server, Oracle и PostgreSQL, в Apache Doris, включая варианты офлайн-синхронизации и синхронизации в реальном времени.",
     "keywords": [
-        "миграция из MySQL в Doris",
-        "миграция из Oracle в Doris",
-        "миграция из SQL Server в Doris",
-        "синхронизация PostgreSQL с Doris",
-        "миграция данных OLTP",
+        "Миграция MySQL в Doris",
+        "Миграция Oracle в Doris",
+        "Миграция SQL Server в Doris",
+        "Синхронизация PostgreSQL с Doris",
+        "Миграция данных OLTP",
         "Flink CDC Doris",
         "JDBC Catalog",
-        "синхронизация всей базы данных"
+        "Синхронизация всей базы данных"
     ]
 }
 ---
@@ -19,33 +19,34 @@
 <!-- Knowledge type: Architecture selection decision / Operational steps -->
 <!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->
 
-В этом документе описано, как перенести данные из традиционных транзакционных баз данных (OLTP / TP), таких как MySQL, SQL Server, Oracle и PostgreSQL, в Apache Doris. Doris предоставляет несколько способов загрузки данных для разовой миграции, пакетной офлайн-синхронизации и инкрементальной синхронизации в реальном времени.
+В этом документе описано, как перенести данные из традиционных транзакционных (OLTP / TP) баз данных, таких как MySQL, SQL Server, Oracle и PostgreSQL, в Apache Doris. Doris предоставляет несколько вариантов загрузки данных для однократной миграции, офлайн-пакетной синхронизации и синхронизации инкрементных данных в реальном времени.
 
-## Обзор способов миграции {#overview-of-migration-options}
+## Обзор вариантов миграции {#overview-of-migration-options}
 
-В таблице ниже приведены основные способы миграции, которые поддерживает Doris. Выбор зависит от объёма данных, требований к задержке синхронизации и необходимости использования CDC (Change Data Capture).
+В следующей таблице приведены основные варианты миграции, поддерживаемые Doris. Выберите подходящий вариант с учетом объема данных, требований к задержке синхронизации и необходимости CDC (захвата изменений данных).
 
-| Способ | Сценарий применения | Режим синхронизации | Поддержка синхронизации всей базы данных | Поддержка инкрементальной синхронизации / CDC |
+| Вариант | Сценарий применения | Режим синхронизации | Поддержка всей базы данных | Поддержка инкрементных данных / CDC |
 |------|----------|----------|--------------|--------------------|
-| Multi-Catalog | Разовая миграция, нерегулярные запросы, создание таблиц с помощью CTAS | Офлайн / по запросу | Реализуется с помощью SQL | Нет |
-| Flink Doris Connector (JDBC) | Пакетная офлайн-синхронизация в стеке Flink | Офлайн | Нет | Нет |
-| Flink Doris Connector (CDC) | Полная + инкрементальная синхронизация в реальном времени | В реальном времени | Поддерживается | Поддерживается (INSERT / UPDATE / DELETE) |
+| Multi-Catalog | Однократная миграция, нерегулярные запросы, создание таблицы с помощью CTAS | Офлайн / по запросу | Реализуется с помощью SQL | Нет |
+| Flink Doris Connector (JDBC) | Офлайн-пакетная синхронизация в стеке Flink | Офлайн | Нет | Нет |
+| Flink Doris Connector (CDC) | Синхронизация полных и инкрементных данных в реальном времени | В реальном времени | Поддерживается | Поддерживается (INSERT / UPDATE / DELETE) |
 | Spark Connector | Пакетная запись данных в стеке Spark | Офлайн | Нет | Нет |
-| Streaming Job | Встроенная в Doris непрерывная синхронизация из MySQL / PostgreSQL | Потоковая (непрерывная) | Поддерживается | Поддерживается |
-| Сторонние инструменты (DataX / SeaTunnel / CloudCanal) | Существующие платформы синхронизации, управление через визуальный интерфейс | Офлайн / в реальном времени | Поддерживается | Зависит от инструмента |
+| Streaming Job | Встроенная в Doris непрерывная синхронизация из MySQL / PostgreSQL | Потоковый (непрерывный) | Поддерживается | Поддерживается |
+| Сторонние инструменты (DataX / SeaTunnel / CloudCanal) | Существующие платформы синхронизации, визуальное управление | Офлайн / в реальном времени | Зависит от инструмента | Зависит от инструмента |
+| NineData (совместимые с MySQL источники в Doris) | Репликация полных и инкрементных данных | Полная + инкрементная (Binlog) | Поддерживается | Поддерживается |
 
-> Примечание: если нужно выполнить миграцию без подключения внешнего вычислительного движка, используйте **Multi-Catalog** или **Streaming Job**. Если нужна инкрементальная синхронизация в реальном времени, используйте **Flink Doris Connector + CDC** или **Streaming Job**.
+> Примечание: если нужно выполнить миграцию без добавления внешнего вычислительного движка, используйте **Multi-Catalog** или **Streaming Job**. Для синхронизации инкрементных данных в реальном времени используйте **Flink Doris Connector + CDC**, **Streaming Job** или **NineData** для совместимых с MySQL источников в Doris.
 
 ---
 
-## Способ 1: Multi-Catalog (рекомендуется для разовой миграции) {#option-1-multi-catalog-recommended-for-one-time-migration}
+## Вариант 1: Multi-Catalog (рекомендуется для однократной миграции) {#option-1-multi-catalog-recommended-for-one-time-migration}
 
-Используйте JDBC Catalog, чтобы представить таблицы базы данных TP как внешние таблицы в Doris, а затем загрузите данные с помощью `INSERT INTO` или `CREATE TABLE AS SELECT (CTAS)`.
+С помощью JDBC Catalog сопоставьте таблицы в TP-базе данных с внешними таблицами в Doris, затем используйте `INSERT INTO` или `CREATE TABLE AS SELECT (CTAS)` для загрузки данных.
 
-### Порядок действий {#steps}
+### Шаги {#steps}
 
-1. Создайте JDBC Catalog, указывающий на исходную базу данных TP.
-2. Используйте `INSERT INTO` для записи в существующую таблицу Doris или `CTAS`, чтобы создать таблицу и загрузить данные за один шаг.
+1. Создайте JDBC Catalog, указывающий на исходную TP-базу данных.
+2. Используйте `INSERT INTO` для записи в существующую таблицу Doris либо `CTAS` для создания таблицы и загрузки данных за один шаг.
 3. Проверьте количество строк и соответствие полей.
 
 ### Пример: миграция данных из MySQL {#example-migrating-data-from-mysql}
@@ -75,13 +76,13 @@ SELECT * FROM mysql_catalog.mysql_db.table1;
 
 ---
 
-## Способ 2: Flink Doris Connector {#option-2-flink-doris-connector}
+## Вариант 2: Flink Doris Connector {#option-2-flink-doris-connector}
 
-С помощью Flink можно синхронизировать данные из систем TP как в пакетном офлайн-режиме, так и в инкрементальном режиме реального времени.
+С помощью Flink можно синхронизировать данные TP-системы в пакетном офлайн-режиме или в режиме инкрементной синхронизации в реальном времени.
 
 ### 2.1 Офлайн-синхронизация: Flink JDBC Source + Doris Sink {#21-offline-synchronization-flink-jdbc-source--doris-sink}
 
-Этот способ подходит для переноса данных в офлайн-режиме в стеке Flink. Следующий пример Flink SQL показывает, как это сделать:
+Этот вариант подходит для офлайн-переноса данных в стеке Flink. Следующий пример Flink SQL показывает этот шаблон:
 
 ```sql
 CREATE TABLE student_source (
@@ -118,7 +119,7 @@ INSERT into student_sink select * from student_source;
 
 ### 2.2 Синхронизация в реальном времени: Flink CDC {#22-real-time-synchronization-flink-cdc}
 
-С помощью Flink CDC можно выполнить полное чтение данных и инкрементальный захват изменений в одном задании, а также синхронизировать события INSERT / UPDATE / DELETE.
+С помощью Flink CDC можно в одной задаче выполнить полное чтение данных и захват инкрементных изменений, а также синхронизировать события INSERT / UPDATE / DELETE.
 
 #### Пример синхронизации одной таблицы в реальном времени {#single-table-real-time-synchronization-example}
 
@@ -161,7 +162,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 #### Синхронизация всей базы данных / нескольких таблиц {#whole-database--multi-table-synchronization}
 
-Для синхронизации всей базы данных TP или нескольких её таблиц Flink Doris Connector предоставляет готовую функцию, которая синхронизирует схему и записывает данные за один шаг:
+Для синхронизации всей базы данных или нескольких таблиц из TP-базы данных Flink Doris Connector предоставляет готовую функцию синхронизации всей базы данных, которая за один шаг синхронизирует схему и записывает данные:
 
 ```shell
 <FLINK_HOME>bin/flink run \
@@ -189,9 +190,9 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 ---
 
-## Способ 3: Spark Connector {#option-3-spark-connector}
+## Вариант 3: Spark Connector {#option-3-spark-connector}
 
-Этот способ подходит, если вы уже используете Spark для пакетной обработки. С помощью JDBC Source в Spark Connector можно читать данные из базы данных TP, а с помощью Doris Sink записывать их в Doris.
+Этот вариант подходит для сценариев, где Spark уже используется для пакетной обработки. С помощью JDBC Source в Spark Connector можно читать данные из TP-базы данных, а с помощью Doris Sink — записывать их в Doris.
 
 ```java
 val jdbcDF = spark.read
@@ -210,16 +211,16 @@ val jdbcDF = spark.read
   .save()
 ```
 
-Связанные документы:
+Связанная документация:
 
 - [JDBC для других баз данных](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
-- [Пакетная запись с помощью Spark Doris Connector](../../../connection-integration/data-integration/spark-doris-connector.md#scenario-2-batch-write-doris-data)
+- [Пакетная запись данных через Spark Doris Connector](../../../connection-integration/data-integration/spark-doris-connector.md#scenario-2-batch-write-doris-data)
 
 ---
 
-## Способ 4: Streaming Job (встроенная непрерывная синхронизация в Doris) {#option-4-streaming-job-built-in-continuous-synchronization-in-doris}
+## Вариант 4: Streaming Job (встроенная непрерывная синхронизация в Doris) {#option-4-streaming-job-built-in-continuous-synchronization-in-doris}
 
-Doris предоставляет встроенную возможность Streaming Job для непрерывной синхронизации данных из MySQL или PostgreSQL без зависимости от внешнего вычислительного движка.
+Doris предоставляет встроенную возможность Streaming Job, которая непрерывно синхронизирует данные из MySQL или PostgreSQL без внешнего вычислительного движка.
 
 ### Пример синхронизации нескольких таблиц {#multi-table-synchronization-example}
 
@@ -241,38 +242,39 @@ TO DATABASE target_test_db (
 )
 ```
 
-Подробнее см. в разделе [Непрерывная загрузка из Postgres / MySQL](../import-way/streaming-job/continuous-load-overview.md).
+Подробнее см. в разделе [Непрерывная загрузка Postgres / MySQL](../import-way/streaming-job/continuous-load-overview.md).
 
 ---
 
-## Способ 5: Сторонние инструменты синхронизации {#option-5-third-party-synchronization-tools}
+## Вариант 5: Сторонние инструменты синхронизации {#option-5-third-party-synchronization-tools}
 
-Помимо перечисленных выше встроенных способов, можно использовать распространённые сторонние инструменты синхронизации, поддерживаемые сообществом. Они подходят, если у вас уже есть платформа синхронизации или вы хотите управлять заданиями через визуальный интерфейс:
+Помимо встроенных вариантов выше, можно использовать распространенные сторонние инструменты синхронизации из сообщества. Они подходят для сценариев, где уже есть платформа синхронизации или требуется управлять задачами через визуальный интерфейс:
 
 - [DataX](../../../connection-integration/data-integration/datax.md)
 - [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)
 - [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md)
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 
 ---
 
-## Часто задаваемые вопросы {#faq}
+## Часто задаваемые вопросы (FAQ) {#faq}
 
-**Вопрос 1: какой способ выбрать для разовой миграции нескольких таблиц MySQL в Doris?**
+**Q1: Какой вариант выбрать для однократной миграции нескольких таблиц MySQL в Doris?**
 
 Используйте **Multi-Catalog**. После создания JDBC Catalog выполните `INSERT INTO` или `CTAS`, чтобы завершить миграцию без дополнительных компонентов.
 
-**Вопрос 2: как синхронизировать инкрементальные данные (включая UPDATE / DELETE) из MySQL в Doris в реальном времени?**
+**Q2: Как синхронизировать инкрементные данные (включая UPDATE / DELETE) из MySQL в Doris в реальном времени?**
 
 Используйте **Flink Doris Connector + Flink CDC** и включите `sink.enable-delete = true` в Doris Sink либо используйте встроенный в Doris **Streaming Job** для непрерывной синхронизации.
 
-**Вопрос 3: как синхронизировать всю базу данных MySQL с Doris за один шаг?**
+**Q3: Как за один шаг синхронизировать всю базу MySQL с Doris?**
 
-Используйте функцию синхронизации всей базы данных `mysql-sync-database` в Flink Doris Connector или возможность синхронизации нескольких таблиц в Streaming Job. Оба способа синхронизируют схему и данные за один шаг.
+Используйте функцию синхронизации всей базы данных `mysql-sync-database` в Flink Doris Connector или возможность синхронизации нескольких таблиц в Streaming Job. В обоих случаях схема и данные синхронизируются за один шаг.
 
-**Вопрос 4: поддерживаются ли Oracle, SQL Server и PostgreSQL в качестве исходных баз данных?**
+**Q4: Поддерживаются ли также Oracle, SQL Server и PostgreSQL в качестве исходных баз данных?**
 
-Да. Multi-Catalog и коннекторы Flink / Spark поддерживают базы данных TP, такие как Oracle, SQL Server и PostgreSQL, через соответствующие драйверы JDBC. Streaming Job в настоящее время поддерживает MySQL и PostgreSQL.
+Да. Multi-Catalog и Flink / Spark Connectors поддерживают TP-базы данных, такие как Oracle, SQL Server и PostgreSQL, через соответствующие JDBC-драйверы. Streaming Job в настоящее время поддерживает MySQL и PostgreSQL.
 
-**Вопрос 5: как указать число реплик для таблицы Doris при миграции?**
+**Q5: Как указать количество реплик таблицы Doris во время миграции?**
 
-Укажите `PROPERTIES('replication_num' = 'N')` в операторе `CTAS` или передайте `--table-conf replication_num=N` в команде Flink для синхронизации всей базы данных.
+Укажите `PROPERTIES('replication_num' = 'N')` в операторе `CTAS` либо передайте `--table-conf replication_num=N` в команде синхронизации всей базы данных во Flink.
