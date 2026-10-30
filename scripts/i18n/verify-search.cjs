@@ -5,6 +5,13 @@ const {createServer} = require('../publish/serve.cjs');
 const root = path.resolve(__dirname, '../..');
 const {contextsFor, groupFor} = require('./search-plugin.cjs');
 const route = url => new URL(url, 'https://doris.apache.org').pathname.replace(/\/?$/, '/');
+const englishLanguageSwitchSelector = '.language-menu__links a[lang="en-US"]';
+async function verifyLanguageSwitchHref(page, expected) {
+    await page.waitForFunction(({selector, href}) =>
+        document.querySelector(selector)?.getAttribute('href') === href,
+        {selector: englishLanguageSwitchSelector, href: expected});
+    assert.equal(await page.locator(englishLanguageSwitchSelector).first().getAttribute('href'), expected);
+}
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
     ko: {database:'데이터베이스', query:'쿼리', community:'커뮤니티'},
@@ -157,11 +164,7 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
             assert.equal(source.hash, '#core-highlights');
             // Hydration must update language-switch attributes as well as the
             // source link. SSR cannot know the request's query or fragment.
-            const englishSwitch = navigation.locator('a.dropdown__link[lang="en-US"]').first();
-            await navigation.waitForFunction(expected =>
-                document.querySelector('a.dropdown__link[lang="en-US"]')?.getAttribute('href') === expected,
-            current.englishPermalink + source.search + source.hash);
-            assert.equal(await englishSwitch.getAttribute('href'), current.englishPermalink + source.search + source.hash);
+            await verifyLanguageSwitchHref(navigation, current.englishPermalink + source.search + source.hash);
             const linked = await navigation.locator('a[href]').evaluateAll(nodes => nodes.map(node => new URL(node.href).pathname));
             // A fully translated Dev links no fallback, but the version menu still
             // reaches versions outside the scope. Dev-only builds omit them.
@@ -281,4 +284,4 @@ if (require.main === module) {
         .then(result=>{if(option('--output'))fs.writeFileSync(option('--output'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));})
         .catch(error=>{console.error(error);process.exitCode=1;});
 }
-module.exports = {verify, checkIndexes};
+module.exports = {verify, checkIndexes, englishLanguageSwitchSelector, verifyLanguageSwitchHref};
