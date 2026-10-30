@@ -2,34 +2,34 @@
 {
     "title": "RESUME JOB",
     "language": "ja",
-    "description": "PAUSED 状態のジョブを RUNNING 状態に戻します。RUNNING 状態のジョブは、設定されたスケジュールの周期に従って実行されます。"
+    "description": "PAUSED 状態のジョブを RUNNING 状態に戻します。RUNNING 状態のジョブは、スケジュールされた期間に従って実行されます。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-PAUSED 状態のジョブを RUNNING 状態に戻します。RUNNING 状態のジョブは、設定されたスケジュールの周期に従って実行されます。
+PAUSED 状態のジョブを RUNNING 状態に戻します。RUNNING 状態のジョブは、スケジュールされた期間に従って実行されます。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 RESUME JOB where jobName = <job_name> ;
 ```
-## 必須パラメータ
+## 必須パラメータ {#required-parameters}
 
 **1. `<job_name>`**
-> 再開するジョブの名前（`<job_name>`）。
+> 復旧タスクの `<job_name>`。
 
-## アクセス権限の要件
+## アクセス制御要件 {#access-control-requirements}
 
-この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です。
+この SQL コマンドを実行するユーザーには、少なくとも次の権限が必要です：
 
-| 権限 | 対象 | 実行タイプ | 備考 |
+| 権限 (Privilege) | オブジェクト (Object) | 実行タイプ (ExecuteType) | 備考 (Notes) |
 |:--------------|:-----------|:------------------------|:------------------------|
-| ADMIN_PRIV | データベース | 非ストリーミング | 現在、この操作の実行には **ADMIN** 権限のみがサポートされています |
-| LOAD_PRIV | データベース | ストリーミング | この操作の実行には **LOAD** 権限がサポートされています |
+| ADMIN_PRIV | データベース | NO Streaming | 現在、この操作の実行には **ADMIN** 権限のみ対応しています |
+| LOAD_PRIV | データベース | Streaming | **LOAD** 権限でこの操作を実行できます |
 
-## 例
+## 例 {#example}
 
 - example という名前のジョブを再開します。
 

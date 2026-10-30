@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
     "sourceTechnicalHash": "91cfae8692af2c259e4abb27eec32bc7203b9fcbbc4c8931a2cda3b85895d512",
-    "targetHash": "9783efc3b749622d108fe809e269198a9eb4933ef1d18061601bc671614cf34a",
+    "targetHash": "5bd169031cc0a540a80fd1807e64bcdf944f189c34386063ee31a3c3c7fbc229",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T04:47:44.555Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:40:17.346Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "91a2f6f36bef19faf3fb4a96816b0ed7fa57cbd7929aac5b91c378a7ae502f37",
+      "targetHash": "5bd169031cc0a540a80fd1807e64bcdf944f189c34386063ee31a3c3c7fbc229",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"0\",\"0\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.5\",\"70\",\"70\"]; received [\"0\",\"0\",\"0\",\"0\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.5\",\"70\",\"70\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+        "blob": "7e5fc6ab2cb63eb6a34ad7598fcc604ce727b7d9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/trouble-shooting/memory-management/memory-feature/memory-tracker.md",
+        "blob": "cc5757409c1a71230914c8bb93188126301969d9"
+      }
+    }
   }
 }
