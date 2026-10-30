@@ -1,17 +1,17 @@
 ---
 {
-    "title": "テーブル自動作成を使用する OceanBase CDC",
+    "title": "OceanBase CDC による自動テーブル作成",
     "language": "ja",
-    "sidebar_label": "テーブル自動作成同期",
-    "description": "ストリーミングジョブを使用して、OceanBase の MySQL 互換モードにある主キーテーブルの全量データと増分データを Doris に継続的に同期する方法を説明します。",
+    "sidebar_label": "自動テーブル作成同期",
+    "description": "Streaming Job を通じて、OceanBase の MySQL 互換モードにある主キー テーブルの全量データと増分データを Doris に継続的に同期する方法を説明します。",
     "keywords": [
-        "OceanBase テーブル自動作成同期",
+        "OceanBase 自動テーブル作成同期",
         "OceanBase CDC",
         "OBBinlog",
-        "Doris ストリーミングジョブ",
-        "継続ロード",
-        "全量同期と増分同期",
-        "テーブル自動作成"
+        "Doris Streaming Job",
+        "継続的なデータロード",
+        "全量および増分同期",
+        "自動テーブル作成"
     ]
 }
 ---
@@ -19,49 +19,49 @@
 <!-- Knowledge type: Procedure + Configuration parameters -->
 <!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->
 
-テーブル自動作成を使用する OceanBase CDC では、`FROM OCEANBASE (...) TO DATABASE (...)` を使用します。Doris は OBBinlog サービスを介して全量データと増分データを読み取り、同期元のスキーマに基づいて Doris の Unique Key テーブルを自動的に作成します。`include_tables` を使用すると、データベース内の単一のテーブル、複数のテーブル、またはすべてのテーブルを同期できます。
+OceanBase CDC の自動テーブル作成は `FROM OCEANBASE (...) TO DATABASE (...)` を使用します。Doris は OBBinlog サービスを介して全量データと増分データを読み取り、上流スキーマから Doris の Unique Key テーブルを自動的に作成します。`include_tables` を使用して、データベース内の 1 つのテーブル、複数のテーブル、またはすべてのテーブルを同期できます。
 
 :::caution 実験的機能
 
-OceanBase CDC の継続ロードは、Doris 4.1.4 以降で実験的機能として利用できます。現在サポートされるのは、OceanBase の MySQL 互換モードとテーブル自動作成同期のみです。Oracle 互換モードと SQL マッピング同期はサポートされません。
+OceanBase CDC の継続的なデータロードは、Doris 4.1.4 以降、実験的機能として利用できます。現在は OceanBase の MySQL 互換モードと Auto Table Creation Sync のみをサポートし、Oracle 互換モードと SQL Mapping Sync はサポートしていません。
 
 :::
 
-### 適用シナリオ
+### 適用シナリオ {#applicable-scenarios}
 
 - OceanBase のテーブル群またはデータベース全体を Doris にミラーリングする。
-- 同期元のスキーマに基づいて、Doris に同期先テーブルと主キーを作成させる。
-- 初回の全量ロードを実行し、その後の増分変更を継続的に同期する。
-- SQL 式、行フィルター、データ変換を使用せずに、同期先テーブルの名前を変更したり、カラムを除外したりする。
+- 上流スキーマから Doris にターゲットテーブルと主キーを作成させる。
+- 初回の全量データロードを実行してから、増分変更を継続的に同期する。
+- SQL 式、行フィルター、データ変換を使わずに、ターゲットテーブルの名前変更または列の除外を行う。
 
-### 機能と制限
+### 機能と制限 {#capabilities-and-limitations}
 
 | 項目 | 説明 |
 | --- | --- |
 | 互換モード | OceanBase の MySQL 互換モードのみ |
-| 同期方式 | テーブル自動作成同期のみ。SQL マッピング同期はサポートされません |
-| 一貫性のセマンティクス | At-least-once |
-| テーブルの種類 | 同期元テーブルには主キーが必要です。自動作成される Doris テーブルには Unique Key モデルを使用します |
-| 権限 | Load 権限が必要です。同期先テーブルが存在しない場合は Create 権限も必要です |
-| スキーマ変更 | `ADD COLUMN` と `DROP COLUMN` を同期します。詳しくは[スキーマ変更の同期](./schema-change-oceanbase.md)を参照してください |
-| データ型 | MySQL 互換の型変換を使用します。詳しくは[データ型のマッピング](./data-type-mapping-oceanbase.md)を参照してください |
+| 同期方法 | Auto Table Creation Sync のみ。SQL Mapping Sync はサポートされません |
+| 一貫性セマンティクス | At-least-once |
+| テーブルタイプ | 上流テーブルには主キーが必要です。自動作成される Doris テーブルは Unique Key モデルを使用します |
+| 権限 | Load 権限が必要です。ターゲットテーブルが存在しない場合は Create 権限も必要です |
+| Schema Change | `ADD COLUMN` と `DROP COLUMN` を同期します。[Schema Change 同期](./schema-change-oceanbase.md) を参照してください |
+| データ型 | MySQL 互換の型変換を使用します。[データ型マッピング](./data-type-mapping-oceanbase.md) を参照してください |
 
-## 前提条件
+## 前提条件 {#prerequisites}
 
-ジョブを作成する前に、以下を確認してください。
+ジョブを作成する前に、次の事項を確認してください。
 
-1. OceanBase が MySQL 互換モードで稼働していること。Doris はジョブの作成時に `SHOW VARIABLES LIKE 'ob_compatibility_mode'` を実行して、互換モードを検証します。
-2. OBBinlog サービスがデプロイされ、利用可能であること。その MySQL プロトコルのエンドポイントに対して `SHOW MASTER STATUS` を実行すると、有効な binlog ファイルと位置が返されます。
-3. Doris の FE、BE、CDC Client から OBBinlog サービスにアクセスできること。
-4. 互換性のある MySQL Connector/J ドライバーが利用可能で、`jdbc_url` が `jdbc:mysql://` で始まること。
-5. 同期元のアカウントに、同期対象のテーブル、スキーマ、binlog を読み取る権限があること。
-6. 同期対象となるすべての同期元テーブルに主キーがあること。
+1. OceanBase が MySQL 互換モードで実行されている。Doris はジョブ作成時に `SHOW VARIABLES LIKE 'ob_compatibility_mode'` を実行してモードを検証します。
+2. OBBinlog サービスがデプロイされ、利用可能である。その MySQL プロトコルエンドポイントに対して `SHOW MASTER STATUS` を実行すると、有効な binlog ファイルと位置が返されます。
+3. Doris FE、BE、CDC Client から OBBinlog サービスにアクセスできる。
+4. 互換性のある MySQL Connector/J ドライバーが利用可能で、`jdbc_url` が `jdbc:mysql://` で始まっている。
+5. ソースアカウントが、同期対象範囲のテーブル、スキーマ、binlog を読み取れる。
+6. 同期対象となるすべての上流テーブルに主キーがある。
 
-## クイックスタート
+## クイックスタート {#quick-start}
 
-### ステップ 1: ロードジョブを作成する
+### 手順 1: データロードジョブを作成する {#step-1-create-a-load-job}
 
-次の例では、`users` テーブルと `orders` テーブルを `source_db` から同期します。
+次の例では、`users` と `orders` テーブルを `source_db` で同期します。
 
 ```sql
 CREATE JOB oceanbase_db_sync
@@ -81,12 +81,12 @@ TO DATABASE target_db (
 );
 ```
 
-- `jdbc_url` には、OBBinlog サービスの MySQL プロトコル用ポートを指定します。デプロイ環境で設定したポートを使用してください。
+- `jdbc_url` は OBBinlog サービスの MySQL プロトコルポートを指します。デプロイで設定したポートを使用してください。
 - `offset = "initial"` は、既存の行を先にロードし、その後 binlog の変更を継続的に同期します。
-- `include_tables` を省略すると、`database` 内の対象となるすべてのテーブルが同期されます。
-- BE が一台のみの環境では、`replication_num` を `1` に設定します。本番環境では、クラスターの規模に応じてレプリカ数を設定してください。
+- `include_tables` を省略すると、`database` 内の条件を満たすすべてのテーブルが同期されます。
+- 単一 BE デプロイでは `replication_num` を `1` に設定します。本番環境では、クラスターサイズに応じてレプリカ数を設定してください。
 
-### ステップ 2: ロードの状態を確認する
+### 手順 2: データロードのステータスを確認する {#step-2-check-load-status}
 
 ```sql
 SELECT Name, Status, CurrentOffset, ErrorMsg
@@ -94,7 +94,7 @@ FROM jobs("type" = "insert")
 WHERE Name = "oceanbase_db_sync";
 ```
 
-ジョブが正常に稼働している場合、`Status` は `RUNNING` です。
+ジョブが正常に実行されている場合、`Status` は `RUNNING` です。
 
 ```text
 +-------------------+---------+-----------------------------------------------+----------+
@@ -104,43 +104,43 @@ WHERE Name = "oceanbase_db_sync";
 +-------------------+---------+-----------------------------------------------+----------+
 ```
 
-### ステップ 3: 増分同期を確認する
+### 手順 3: 増分同期を確認する {#step-3-verify-incremental-sync}
 
-OceanBase の同期元テーブルで `INSERT`、`UPDATE`、または `DELETE` を実行した後、対応する Doris テーブルをクエリして、変更が同期されたことを確認します。
+OceanBase のソーステーブルに対して `INSERT`、`UPDATE`、または `DELETE` を実行した後、対応する Doris テーブルをクエリして、変更が同期されていることを確認します。
 
 ```sql
 SELECT * FROM target_db.users ORDER BY id;
 ```
 
-一時停止、再開、削除、Task のクエリ操作については、[継続ロードの概要](./continuous-load-overview.md#common-operations)を参照してください。
+一時停止、再開、削除、および Task クエリ操作については、[継続的データロードの概要](./continuous-load-overview.md#common-operations) を参照してください。
 
-## データソースのパラメータ
+## データソースパラメータ {#data-source-parameters}
 
 | パラメータ | 必須 | デフォルト | 説明 |
 | --- | --- | --- | --- |
-| `jdbc_url` | はい | - | OBBinlog サービスの JDBC 接続文字列。`jdbc:mysql://` で始まる必要があります。 |
-| `driver_url` | はい | - | MySQL Connector/J ドライバーの jar ファイルのパス。ファイル名、ローカルの絶対パス、HTTP URL を指定できます。 |
-| `driver_class` | はい | - | MySQL JDBC ドライバーのクラス。例: `com.mysql.cj.jdbc.Driver`。 |
-| `user` | はい | - | OceanBase のユーザー名。OceanBase で必要なユーザー名の形式を使用して、テナント情報を含めてください。 |
-| `password` | はい | - | OceanBase ユーザーのパスワード。 |
-| `database` | はい | - | OceanBase のデータベース名。 |
-| `include_tables` | いいえ | - | 同期するテーブル名。カンマで区切ります。省略すると、データベース内のすべてのテーブルが同期されます。 |
-| `exclude_tables` | いいえ | - | 同期対象から除外するテーブル名。カンマで区切ります。このパラメータは `include_tables` が設定されていない場合にのみ有効です。 |
-| `table.<table_name>.target_table` | いいえ | 同期元のテーブル名 | 同期元テーブルに対応する Doris の同期先テーブル名を設定します。 |
-| `table.<table_name>.exclude_columns` | いいえ | - | 同期元テーブルで除外する主キー以外のカラムを、カンマ区切りで指定します。各カラムは存在する必要があり、主キーカラムは指定できません。 |
-| `offset` | いいえ | `latest` | 開始位置。`initial`: 全量同期と増分同期、`snapshot`: 全量同期のみ、`earliest`: 利用可能な最も古い binlog の位置から開始、`latest`: ジョブ開始後の変更のみを同期します。`{"file":"binlog.000001","pos":"154"}` のような正確な位置も指定できます。 |
-| `snapshot_split_size` | いいえ | `40960` | 全量同期フェーズで、各分割に含める行数。正の整数である必要があります。 |
-| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズで、単一の Task が同時にスケジュールする分割の最大数。正の整数である必要があります。 |
-| `skip_snapshot_backfill` | いいえ | `true` | スナップショットフェーズで binlog のバックフィルをスキップするかどうか。テーブル自動作成同期では At-least-once セマンティクスが提供されます。 |
-| `server_id` | いいえ | 自動生成 | CDC リーダーのサーバー ID。`5400` のような単一の値、または `5400-5408` のような両端を含む範囲を指定できます。範囲には `snapshot_parallelism` 個以上の ID が含まれる必要があります。 |
+| `jdbc_url` | はい | - | OBBinlog サービスへの JDBC 接続文字列。`jdbc:mysql://` で始まる必要があります。 |
+| `driver_url` | はい | - | MySQL Connector/J ドライバー jar のパス。ファイル名、ローカル絶対パス、HTTP URL をサポートします。 |
+| `driver_class` | はい | - | MySQL JDBC ドライバークラス。例: `com.mysql.cj.jdbc.Driver`。 |
+| `user` | はい | - | OceanBase ユーザー名。OceanBase が要求するユーザー名形式を使用してテナント情報を含めます。 |
+| `password` | はい | - | OceanBase ユーザーパスワード。 |
+| `database` | はい | - | OceanBase データベース名。 |
+| `include_tables` | いいえ | - | 同期するテーブル名。複数のテーブルはカンマで区切ります。省略すると、データベース内のすべてのテーブルが同期されます。 |
+| `exclude_tables` | いいえ | - | 同期しないテーブル名。複数のテーブルはカンマで区切ります。このパラメータは `include_tables` が設定されていない場合にのみ有効です。 |
+| `table.<table_name>.target_table` | いいえ | ソーステーブル名 | ソーステーブルの Doris ターゲットテーブル名を設定します。 |
+| `table.<table_name>.exclude_columns` | いいえ | - | ソーステーブルから非キー列を除外します。複数の列はカンマで区切ります。各列が存在している必要があり、主キー列は指定できません。 |
+| `offset` | いいえ | `latest` | 起動位置。`initial`: 全量および増分同期、`snapshot`: 全量同期のみ、`earliest`: 利用可能な最も早い binlog 位置から開始、`latest`: ジョブ開始後の変更のみを同期します。`{"file":"binlog.000001","pos":"154"}` のような正確な位置もサポートされます。 |
+| `snapshot_split_size` | いいえ | `40960` | 全量同期フェーズで各 split に含める行数。正の整数である必要があります。 |
+| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズで 1 つの Task が同時にスケジュールできる split の最大数。正の整数である必要があります。 |
+| `skip_snapshot_backfill` | いいえ | `true` | スナップショットフェーズ中に binlog のバックフィルをスキップするかどうか。Auto Table Creation Sync は at-least-once セマンティクスを提供します。 |
+| `server_id` | いいえ | 自動生成 | CDC リーダーのサーバー ID。`5400` のような単一値、または `5400-5408` のような閉区間をサポートします。範囲には少なくとも `snapshot_parallelism` 個の ID が含まれている必要があります。 |
 | `ssl_mode` | いいえ | `disable` | SSL モード。有効な値は `disable`、`require`、`verify-ca` です。 |
-| `ssl_rootcert` | 条件付きで必須 | - | `ssl_mode` が `verify-ca` の場合に必要です。`FILE:<file_name>` 形式を使用し、先に [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) でファイルをアップロードしてください。 |
+| `ssl_rootcert` | 条件付き必須 | - | `ssl_mode` が `verify-ca` の場合に必要です。形式 `FILE:<file_name>` を使用し、先に [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) でファイルをアップロードしてください。 |
 
-`schema`、`slot_name`、`publication_name` パラメータはサポートされません。いずれかを指定すると、ジョブの作成に失敗します。
+`schema`、`slot_name`、`publication_name` パラメータはサポートされていません。いずれかを指定すると、ジョブの作成に失敗します。
 
-## リファレンスマニュアル
+## リファレンスマニュアル {#reference-manual}
 
-### ロード文
+### ロード文 {#load-statement}
 
 ```sql
 CREATE JOB <job_name>
@@ -155,51 +155,51 @@ TO DATABASE <target_db> (
 );
 ```
 
-| 項目 | 説明 |
+| モジュール | 説明 |
 | --- | --- |
 | `job_name` | ジョブ名。 |
-| `job_properties` | `max_interval` などの共通ジョブパラメータ。 |
-| `comment` | ジョブのコメント。 |
-| `source_properties` | OceanBase データソースのパラメータ。 |
-| `target_properties` | Doris の同期先データベースのパラメータ。 |
+| `job_properties` | `max_interval` などの共通 Job パラメータ。 |
+| `comment` | ジョブコメント。 |
+| `source_properties` | OceanBase データソースパラメータ。 |
+| `target_properties` | Doris ターゲットデータベースパラメータ。 |
 
-### Doris の同期先データベースのパラメータ
+### Doris ターゲットデータベースパラメータ {#doris-target-database-parameters}
 
 | パラメータ | デフォルト | 説明 |
 | --- | --- | --- |
-| `table.create.properties.*` | - | Doris がテーブルを作成する際に、テーブルのプロパティを追加します。例: `table.create.properties.replication_num`。 |
-| `load.strict_mode` | `false` | Stream Load の strict mode を有効にするかどうか。 |
-| `load.max_filter_ratio` | `0` | サンプリングウィンドウで許容されるフィルター比率の上限。範囲は `[0, 1]` です。この値を超えると、ジョブが一時停止されます。 |
+| `table.create.properties.*` | - | Doris がテーブルを作成するときにテーブルプロパティを追加します。例: `table.create.properties.replication_num`。 |
+| `load.strict_mode` | `false` | Stream Load で strict mode を有効にするかどうか。 |
+| `load.max_filter_ratio` | `0` | サンプリングウィンドウで許可される最大フィルター比率。範囲は `[0, 1]` です。この値を超えるとジョブは一時停止されます。 |
 
-## 注意事項とベストプラクティス
+## 考慮事項とベストプラクティス {#considerations-and-best-practices}
 
-- 本番環境で同期対象を広げる前に、少数のテーブルで OBBinlog への接続、型のマッピング、増分同期の遅延を確認してください。
-- 後から追加された無関係なテーブルが自動的に同期されないように、`include_tables` で同期対象を明示的に指定してください。
-- サポートされていない主キー以外のカラムは、`table.<table_name>.exclude_columns` で除外してください。主キーカラムは除外できません。
-- サポートされていないスキーマ変更を行う前にジョブを一時停止し、Doris テーブルに互換性のある変更を適用してからジョブを再開してください。
-- `CurrentOffset`、`LagBytes`、`ErrorMsg` を監視し、ジョブが処理を続けていて、自動的に一時停止されていないことを確認してください。
+- 本番環境で同期範囲を拡大する前に、少数のテーブルで OBBinlog 接続、型マッピング、増分レイテンシを検証します。
+- 後から追加される無関係なテーブルが自動的に含まれないよう、`include_tables` で同期範囲を明示的に定義します。
+- サポートされていない非キー列は `table.<table_name>.exclude_columns` で除外します。主キー列は除外できません。
+- サポートされていないスキーマ変更を行う前にジョブを一時停止し、Doris テーブルに互換性のある変更を適用してからジョブを再開します。
+- `CurrentOffset`、`LagBytes`、`ErrorMsg` を監視して、ジョブが進行し続け、自動的に一時停止されていないことを確認します。
 
-## FAQ
+## FAQ {#faq}
 
-**Q1: OceanBase の Oracle 互換モードはサポートされますか？**
+**Q1: OceanBase の Oracle 互換モードはサポートされていますか？**
 
-いいえ。Doris はジョブの作成時に `ob_compatibility_mode` を確認し、MySQL 互換モード以外を拒否します。
+いいえ。Doris はジョブ作成時に `ob_compatibility_mode` を確認し、MySQL 互換モード以外は拒否します。
 
-**Q2: SQL マッピング同期はサポートされますか？**
+**Q2: SQL Mapping Sync はサポートされていますか？**
 
-いいえ。OceanBase で現在サポートされるのは、`FROM OCEANBASE (...) TO DATABASE (...)` によるテーブル自動作成同期のみです。
+いいえ。OceanBase が現在サポートしているのは、`FROM OCEANBASE (...) TO DATABASE (...)` による Auto Table Creation Sync のみです。
 
-**Q3: ジョブの開始後に発生した変更だけを同期するにはどうすればよいですか？**
+**Q3: ジョブ開始後に発生する変更のみを同期するにはどうすればよいですか？**
 
-`offset` を `latest` に設定します。ジョブが `RUNNING` になる前から存在する行は、スナップショットによってロードされません。
+`offset` を `latest` に設定します。ジョブが `RUNNING` になる前に存在していた行は、スナップショットを介してロードされません。
 
-**Q4: 既存の同期先テーブルは上書きされますか？**
+**Q4: 既存のターゲットテーブルは上書きされますか？**
 
-いいえ。テーブル自動作成では、既存の同期先テーブルに対する作成処理をスキップします。その主キーとカラムの型が同期元テーブルと互換性があることを確認してください。
+いいえ。自動テーブル作成では、すでに存在するターゲットテーブルをスキップします。主キーと列型がソーステーブルと互換性を持つことを確認してください。
 
-## 関連ドキュメント
+## 関連ドキュメント {#related-documents}
 
-- [継続ロードの概要](./continuous-load-overview.md)
-- [OceanBase のスキーマ変更の同期](./schema-change-oceanbase.md)
-- [OceanBase のデータ型のマッピング](./data-type-mapping-oceanbase.md)
+- [継続的データロードの概要](./continuous-load-overview.md)
+- [OceanBase Schema Change 同期](./schema-change-oceanbase.md)
+- [OceanBase データ型マッピング](./data-type-mapping-oceanbase.md)
 - [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)

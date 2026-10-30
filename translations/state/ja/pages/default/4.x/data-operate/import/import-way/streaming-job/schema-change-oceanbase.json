@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
     "sourceTechnicalHash": "4ac3778545d692c84078e2a00500536db7ea4e54563f4b2bca41f3cadf3047dc",
-    "targetHash": "19721447854b6f5ed2a7aaadbae0d7ed508232206739034fa70a040fdfe9ad68",
+    "targetHash": "e833f3a0bdda75df80c2173e3f3d25fcb1983252ae19df3b15bc6447b6d32cf7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.605Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T18:37:39.875Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
+      "targetHash": "e833f3a0bdda75df80c2173e3f3d25fcb1983252ae19df3b15bc6447b6d32cf7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during OceanBase Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase Auto Table Creation Sync 中の上流スキーマ変更 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
+        "blob": "958b3be3531cc07daa1ebf6d029f72d1cba3d803"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
+        "blob": "6d3ec123372828358533c15e0c0f2d03d57ee9ef"
+      }
+    }
   }
 }

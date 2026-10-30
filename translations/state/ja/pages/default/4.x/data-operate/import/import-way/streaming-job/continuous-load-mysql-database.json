@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "4e0998cbe0c8dfa5f6c76c883bfc7280d3ebd8fbe8cf3f6aafdc7644fd0e582a",
     "sourceTechnicalHash": "ea90cac5285d38f34ed3c25d62a87c758da50de50f85bef24d0a8caca0e9c834",
-    "targetHash": "4739227165adb7b33a9dd66d906b08b37625ae2c9fc822b7edfb1890554fd5d9",
+    "targetHash": "d2af02431db1bf5cfb762138f26cd7de24cb213456feea6b60a18e040721d179",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T17:59:58.967Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "4e0998cbe0c8dfa5f6c76c883bfc7280d3ebd8fbe8cf3f6aafdc7644fd0e582a",
+      "targetHash": "d2af02431db1bf5cfb762138f26cd7de24cb213456feea6b60a18e040721d179",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]\nprotected node 19: expected [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment: \\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]; received [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment:\\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 + 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror sync of a whole MySQL database to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: MySQL データベース全体の Doris へのミラー同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 19: expected [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment: \\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]; received [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment:\\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]\nprotected node 19: expected [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment: \\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]; received [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\"\\n             Id: 1765332859199\\n             Name: mysql_db_sync\\n          Definer: root\\n      ExecuteType: STREAMING\\nRecurringStrategy: \\\\N\\n           Status: RUNNING\\n       ExecuteSql: FROM MYSQL('include_tables'='user_info','database'='test','driver_class'='com.mysql.cj.jdbc.Driver','driver_url'='mysql-connector-java-8.0.25.jar','offset'='initial','jdbc_url'='jdbc:mysql://127.0.0.1:3306','user'='root' ) TO DATABASE target_test_db ('table.create.properties.replication_num'='1')\\n       CreateTime: 2025-12-10 10:19:35\\n SucceedTaskCount: 1\\n  FailedTaskCount: 0\\nCanceledTaskCount: 0\\n          Comment:\\n       Properties: \\\\N\\n    CurrentOffset: {\\\"ts_sec\\\":\\\"1765284495\\\",\\\"file\\\":\\\"binlog.000002\\\",\\\"pos\\\":\\\"9350\\\",\\\"kind\\\":\\\"SPECIFIC\\\",\\\"splitId\\\":\\\"binlog-split\\\",\\\"row\\\":\\\"1\\\",\\\"event\\\":\\\"2\\\",\\\"server_id\\\":\\\"1\\\"}\\n        EndOffset: \\\\N\\n    LoadStatistic: {\\\"scannedRows\\\":24,\\\"loadBytes\\\":1146,\\\"fileNumber\\\":0,\\\"fileSize\\\":0}\\n         ErrorMsg: \\\\N\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
+        "blob": "c06dbeee7370deeaa20c92455e5e673ba10b8ec3"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-database.md",
+        "blob": "43d82cc3cc8950ec3f32b712140df011c0b25d6d"
+      }
+    }
   }
 }

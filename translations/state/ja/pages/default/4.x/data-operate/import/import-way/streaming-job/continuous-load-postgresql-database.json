@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "38c8570d44569f85c317c4c39e64319e83a9c55c4f2348d94a2ee9771e9adf4d",
     "sourceTechnicalHash": "d5acc16549ae2f33f9be9e50d154761d3aa9bee8a81f85ea0872931ec533b9ab",
-    "targetHash": "584fbc7f96d269cc78f370a1ddde69ebd21e6521024c6d41fec10ba8e84f68f2",
+    "targetHash": "dedcc60bb1642b7c62a03bf87b27fb7b6558e652826b2e12e6361f11b0fc96a4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T18:25:48.421Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "38c8570d44569f85c317c4c39e64319e83a9c55c4f2348d94a2ee9771e9adf4d",
+      "targetHash": "dedcc60bb1642b7c62a03bf87b27fb7b6558e652826b2e12e6361f11b0fc96a4",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operating procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL データベース全体を Doris に継続的に同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]; received [\"inlineCode\",null,null,\"TO DATABASE\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"TO DATABASE\"]; received [\"inlineCode\",null,null,\"\\\"table.create.properties.replication_num\\\" = \\\"1\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"8096\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "da9ce1a1324cc90ba2425776f510cb0b030e8751"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-postgresql-database.md",
+        "blob": "cf1b5a7ad1acd174e08960fe50e034349b58d29d"
+      }
+    }
   }
 }
