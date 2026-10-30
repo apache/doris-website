@@ -1,20 +1,20 @@
 ---
 {
-    "title": "テーブル自動作成を使用する PostgreSQL CDC",
+    "title": "PostgreSQL CDC による自動テーブル作成同期",
     "language": "ja",
-    "sidebar_label": "テーブル自動作成同期",
-    "description": "Doris のストリーミングジョブで、テーブルの自動作成、フィルタリング、レプリケーションリソース、SSL、データ品質の制御を使用して PostgreSQL のテーブルを同期する方法を説明します。",
+    "sidebar_label": "自動テーブル作成同期",
+    "description": "Doris Streaming Job で PostgreSQL テーブルを自動テーブル作成、フィルタリング、レプリケーションリソース、SSL、データ品質制御とともに同期する方法を説明します。",
     "keywords": [
         "PostgreSQL 同期",
         "PostgreSQL CDC",
-        "テーブル自動作成同期",
+        "自動テーブル作成同期",
         "データベース全体の同期",
-        "ストリーミングジョブ",
+        "Streaming Job",
         "Flink CDC",
-        "Doris データ取り込み",
-        "PostgreSQL から Doris への同期",
-        "全量同期と増分同期",
-        "テーブルの自動作成"
+        "Doris データロード",
+        "PostgreSQL to Doris",
+        "全量および増分同期",
+        "自動テーブル作成"
     ]
 }
 ---
@@ -22,33 +22,33 @@
 <!-- Knowledge type: Operating procedure -->
 <!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->
 
-テーブル自動作成同期は、ネイティブの `FROM POSTGRES (...) TO DATABASE (...)` DDL で実行します。同期先は Doris のデータベースであり、Doris は同期元のテーブルスキーマに基づいて対応する同期先テーブルを自動的に作成します。`include_tables` を使うと、単一のテーブル、複数のテーブル、またはすべてのテーブルを同期するか指定できます。初回の同期時に、Doris は同期先に主キーテーブルを自動作成し、その主キーを同期元と一致させます。この方法は、データに対する SQL 処理が不要で、同期先のテーブルスキーマを同期元に自動的に追従させたいミラーレプリケーションに適しています。
+自動テーブル作成同期（Auto Table Creation Sync）は、ネイティブの `FROM POSTGRES (...) TO DATABASE (...)` DDL によって実装されます。ターゲットは Doris データベースで、Doris は上流テーブルのスキーマに基づいて対応する下流テーブルを自動的に作成します。`include_tables` を使用して、1 つのテーブル、複数のテーブル、またはすべてのテーブルを同期するかどうかを制御できます。初回同期時、Doris は下流の主キーテーブルを自動的に作成し、その主キーを上流と一致させます。この方式は、データに対する SQL 処理が不要で、下流テーブルのスキーマを上流に自動的に追従させたいミラー レプリケーションのシナリオに適しています。
 
-Doris は [Flink CDC](https://github.com/apache/flink-cdc) の機能を統合し、PostgreSQL の変更ログを読み取って、テーブル群の全量データと増分データを Stream Load で継続的に Doris に書き込みます。テーブル自動作成同期では、個別の同期元テーブルに同期先テーブル名を指定したり、主キー以外のカラムを除外したりできます。SQL 式、行のフィルタリング、データ変換が必要な場合は、[SQL マッピングを使用する PostgreSQL CDC](./continuous-load-postgresql-table.md) を参照してください。
+[Flink CDC](https://github.com/apache/flink-cdc) の機能を統合することで、Doris は PostgreSQL から変更ログを読み取り、一連のテーブルの全量 + 増分データを Stream Load で継続的に Doris に書き込みます。自動テーブル作成同期では、個々のソーステーブルにターゲットテーブル名を割り当てたり、非キー列を除外したりできます。SQL 式、行フィルタリング、またはデータ変換が必要な場合は、[PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) を参照してください。
 
-### ユースケース
+### ユースケース {#use-cases}
 
--   PostgreSQL データベース全体または複数のテーブルを Doris にミラーレプリケーションする
--   手動でテーブルを作成せずに、同期先のテーブルスキーマを同期元と一致させる
--   SQL 式、行のフィルタリング、データ変換は不要で、同期先テーブルの単純な名前変更やカラムの除外だけが必要な場合
--   初回の全量同期と、その後の増分変更の継続的な取り込みが必要な場合
+-   PostgreSQL データベース全体または複数のテーブルを Doris にミラー レプリケーションする
+-   手動でテーブルを作成せず、下流テーブルのスキーマを上流と一致させる
+-   SQL 式、行フィルタリング、データ変換を行わず、単純なターゲットテーブル名の変更または列の削減だけが必要
+-   全量初期化と増分変更の継続的な取得の両方が必要
 
-### 注意事項
+### 注意事項 {#notes}
 
-1.  現時点では少なくとも一回の処理（at-least-once）セマンティクスのみが保証されます。
-2.  同期できるのは主キーを持つ同期元テーブルだけです。自動作成される同期先テーブルには Unique Key モデルが使用されます。
-3.  Load 権限が必要です。同期先テーブルが存在しない場合は、Create 権限も必要です。
-4.  テーブルの自動作成時に同期先テーブルがすでに存在する場合、作成はスキップされます。そのため、用途に応じてテーブルをカスタマイズできます。
+1.  現在保証されるのは at-least-once セマンティクスのみです。
+2.  主キーを持つ上流テーブルのみ同期できます。自動作成される下流テーブルは Unique Key モデルを使用します。
+3.  Load 権限が必要です。下流テーブルが存在しない場合は、Create 権限も必要です。
+4.  自動テーブル作成中にターゲットテーブルがすでに存在する場合はスキップされるため、ユーザーは異なるシナリオに合わせてテーブルをカスタマイズできます。
 
-## クイックスタート
+## クイックスタート {#quick-start}
 
 <!-- Knowledge type: Operating procedure -->
 
-次の手順で PostgreSQL のテーブル自動作成同期ジョブを作成し、状態を確認します。
+以下の手順で PostgreSQL 自動テーブル作成同期ジョブを作成し、ステータスを確認します。
 
-### ステップ 1: ロードジョブを作成する
+### ステップ 1：ロードジョブの作成 {#step-1-create-a-load-job}
 
-[CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) を使用して継続ロードジョブを作成します。
+[CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md) を使用して継続的なロードジョブを作成します。
 
 ```sql
 CREATE JOB test_postgres_job
@@ -69,44 +69,44 @@ TO DATABASE target_test_db (
 )
 ```
 
-### ステップ 2: ロード状態を確認する
+### ステップ 2：ロードステータスの確認 {#step-2-check-load-status}
 
 ```sql
 select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 ```
 
-一時停止、再開、削除、タスクの表示など、一般的な操作については[継続ロードの概要](./continuous-load-overview.md)を参照してください。
+より一般的な操作（一時停止、再開、削除、タスクの表示など）については、[Continuous Load Overview](./continuous-load-overview.md) を参照してください。
 
-## パラメータリファレンス
+## パラメータリファレンス {#parameter-reference}
 
 <!-- Knowledge type: Configuration parameters -->
 
-### 同期元のパラメータ（PostgreSQL 側）
+### ソースパラメータ（PostgreSQL 側） {#source-parameters-postgresql-side}
 
-PostgreSQL の同期元パラメータでは、JDBC 接続、同期対象、および全量スナップショットの分割方法を設定します。接続情報、ドライバー情報、`database`、`schema` は必須です。
+PostgreSQL ソースパラメータは、JDBC 接続、同期範囲、および全量スナップショットの分割動作を設定します。接続情報、ドライバー情報、`database`、`schema` は必須です。
 
 | パラメータ | 必須 | デフォルト | 説明 |
 | --- | --- | --- | --- |
-| `jdbc_url` | はい | - | PostgreSQL の JDBC 接続文字列。 |
-| `driver_url` | はい | - | JDBC ドライバーの jar ファイルへのパス。ファイル名、ローカルの絶対パス、HTTP URL を指定できます。詳しくは [JDBC Catalog の概要](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)を参照してください。 |
-| `driver_class` | はい | - | JDBC ドライバーのクラス名。例: `org.postgresql.Driver`。 |
+| `jdbc_url` | はい | - | PostgreSQL JDBC 接続文字列。 |
+| `driver_url` | はい | - | JDBC ドライバー jar のパス。ファイル名、ローカルの絶対パス、または HTTP URL を指定できます。詳細は [JDBC Catalog Overview](../../../../lakehouse/catalogs/jdbc-catalog-overview.md) を参照してください。 |
+| `driver_class` | はい | - | JDBC ドライバークラス名。例：`org.postgresql.Driver`。 |
 | `user` | はい | - | データベースのユーザー名。 |
 | `password` | はい | - | データベースのパスワード。 |
-| `database` | はい | - | PostgreSQL のデータベース名。JDBC URL 内のデータベース名と一致する必要があり、63 バイトを超えてはなりません（UTF-8 エンコード後）。 |
+| `database` | はい | - | PostgreSQL データベース名。JDBC URL のデータベース名と一致している必要があり、UTF-8 エンコード後に 63 バイトを超えることはできません。 |
 | `schema` | はい | - | スキーマ名。 |
-| `include_tables` | いいえ | - | 同期するテーブルの名前をカンマで区切って指定します。未設定の場合、スキーマ内のすべてのテーブルが同期されます。 |
-| `exclude_tables` | いいえ | - | 同期対象から除外するテーブルの名前をカンマで区切って指定します。`include_tables` が未設定の場合のみ有効です。 |
-| `table.<table_name>.target_table` | いいえ | 同期元テーブル名 | バージョン 4.1.0 以降でサポートされます。同期元テーブルの Doris 側の同期先テーブル名を設定します。`<table_name>` は同期元テーブル名です。 |
-| `table.<table_name>.exclude_columns` | いいえ | - | バージョン 4.1.0 以降でサポートされます。同期対象から除外する同期元カラムをカンマで区切って指定します。カラムは存在する必要があり、主キーカラムは指定できません。 |
-| `offset` | いいえ | `latest` | 開始オフセット。`initial` は全量同期と増分同期、`latest` はジョブ開始後の変更のみを同期します。`{"lsn":"12345678"}` のように、正確な JSON オフセットも指定できます。バージョン 4.1.0 以降では、全量同期のみを行う `snapshot` もサポートされます。PostgreSQL では `earliest` はサポートされません。 |
-| `snapshot_split_size` | いいえ | `40960`（`8096` は 4.1.4 より前のデフォルト値） | 分割あたりの行数。全量同期時に、テーブルは複数の分割に分けられます。正の整数を指定する必要があります。 |
-| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズの並列度。Task が一度にスケジュールする分割の最大数です。正の整数を指定する必要があります。 |
-| `slot_name` | いいえ | `doris_cdc_<job_id>` | バージョン 4.1.0 以降でサポートされます。論理レプリケーションスロット名。小文字の英字、数字、アンダースコアのみを使用でき、先頭に数字は使用できません。最大 63 文字です。カスタムスロットは事前に作成する必要があり、Doris によって削除されません。 |
-| `publication_name` | いいえ | `doris_pub_<job_id>` | バージョン 4.1.0 以降でサポートされます。パブリケーション名。命名規則は `slot_name` と同じです。カスタムパブリケーションは事前に作成し、同期対象のすべてのテーブルを含める必要があります。Doris によって削除されません。 |
-| `ssl_mode` | いいえ | `disable` | バージョン 4.1.0 以降でサポートされます。SSL モード。有効な値は `disable`、`require`、`verify-ca` です。 |
-| `ssl_rootcert` | 条件付きで必須 | - | バージョン 4.1.0 以降でサポートされます。`FILE:<file_name>` 形式の CA 証明書ファイル。`ssl_mode` が `verify-ca` の場合は必須です。先に [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) を使用してファイルをアップロードしてください。 |
+| `include_tables` | いいえ | - | 同期するテーブル名。複数のテーブルはカンマで区切ります。設定しない場合は、Schema 内のすべてのテーブルが同期されます。 |
+| `exclude_tables` | いいえ | - | 同期しないテーブル名。複数のテーブルはカンマで区切ります。このパラメータは `include_tables` が設定されていない場合にのみ有効です。 |
+| `table.<table_name>.target_table` | いいえ | ソーステーブル名 | 4.1.0 以降でサポートされています。ソーステーブルの Doris ターゲットテーブル名を設定します。`<table_name>` はソーステーブル名です。 |
+| `table.<table_name>.exclude_columns` | いいえ | - | 4.1.0 以降でサポートされています。同期しないソース列を指定します。複数の列はカンマで区切ります。列は存在している必要があり、主キー列を含めることはできません。 |
+| `offset` | いいえ | `latest` | 起動オフセット。`initial`：全量および増分同期、`latest`：ジョブ開始後の変更のみを同期します。`{"lsn":"12345678"}` のような正確な JSON オフセットも指定できます。4.1.0 以降では、全量同期のみを行う `snapshot` もサポートされています。PostgreSQL は `earliest` をサポートしていません。 |
+| `snapshot_split_size` | いいえ | `40960`（4.1.4 より前は `8096`） | 行数で指定する分割サイズ。全量同期中、テーブルは複数の分割に分割されます。正の整数である必要があります。 |
+| `snapshot_parallelism` | いいえ | `1` | 全量同期フェーズの並列度。つまり、1 回に Task がスケジュールできる分割の最大数です。正の整数である必要があります。 |
+| `slot_name` | いいえ | `doris_cdc_<job_id>` | 4.1.0 以降でサポートされています。論理レプリケーションスロット名。名前には小文字、数字、アンダースコアのみを使用でき、数字で始めることはできず、長さは 63 文字に制限されます。カスタムスロットは事前に作成する必要があり、Doris によって削除されません。 |
+| `publication_name` | いいえ | `doris_pub_<job_id>` | 4.1.0 以降でサポートされています。パブリケーション名。命名規則は `slot_name` と同じです。カスタムパブリケーションは事前に作成し、同期するすべてのテーブルを含める必要があり、Doris によって削除されません。 |
+| `ssl_mode` | いいえ | `disable` | 4.1.0 以降でサポートされています。SSL モード。有効な値は `disable`、`require`、`verify-ca` です。 |
+| `ssl_rootcert` | 条件付きで必須 | - | 4.1.0 以降でサポートされています。`FILE:<file_name>` 形式の CA 証明書ファイル。`ssl_mode` が `verify-ca` の場合に必要です。まず [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md) を使用してファイルをアップロードしてください。 |
 
-`include_tables` と `exclude_tables` の両方を設定した場合は、`include_tables` が優先されます。次の `FROM POSTGRES` パラメータの例では、`orders` と `customers` を同期し、`orders` を `ods_orders` に書き込み、主キー以外の `internal_note` カラムを除外します。また、事前に作成した論理レプリケーションリソースと CA 証明書による検証を使用します。
+`include_tables` と `exclude_tables` の両方を設定した場合は、`include_tables` が優先されます。次の `FROM POSTGRES` パラメータ断片は、`orders` と `customers` を同期し、`orders` を `ods_orders` に書き込み、非キー列 `internal_note` を除外するとともに、事前に作成した論理レプリケーションリソースと CA 検証を使用します。
 
 ```sql
 "include_tables" = "orders,customers",
@@ -118,25 +118,25 @@ PostgreSQL の同期元パラメータでは、JDBC 接続、同期対象、お�
 "ssl_rootcert" = "FILE:ca.pem"
 ```
 
-カスタムのレプリケーションスロットとパブリケーションはユーザーが管理し、ストリーミングジョブを削除しても残ります。`slot_name` または `publication_name` を省略した場合、Doris はジョブ用に該当するリソースを作成し、ジョブの削除時に Doris が作成したリソースをクリーンアップします。
+カスタムレプリケーションスロットとパブリケーションはユーザーが管理し、Streaming Job を削除しても保持されます。`slot_name` または `publication_name` を省略した場合、Doris はジョブ用に対応するリソースを作成し、ジョブの削除時に自ら作成したリソースをクリーンアップします。
 
-### Doris の同期先データベースのパラメータ
+### Doris ターゲットデータベースパラメータ {#doris-target-database-parameters}
 
-同期先側のパラメータでは、自動作成されるテーブルのプロパティと Stream Load の書き込み方法を制御します。以下のパラメータはすべて省略可能です。
+ターゲット側のパラメータは、自動作成されるテーブルのプロパティと Stream Load の書き込み戦略を制御します。以下のパラメータはすべて任意です。
 
 | パラメータ | デフォルト | 説明 |
 | --- | --- | --- |
-| `table.create.properties.*` | - | Doris がテーブルを作成する際に、`table.create.properties.replication_num` などのテーブルプロパティを追加します。 |
-| `load.strict_mode` | `false` | Stream Load の書き込みで厳格モードを有効にするかどうかを指定します。有効な値は `true` と `false` です。 |
-| `load.max_filter_ratio` | `0` | サンプリングウィンドウ内で許容されるフィルタリング比率の最大値。範囲は `[0, 1]` です。`0` の場合、エラーのある行はフィルタリングできません。サンプリングウィンドウは `max_interval * 10` 秒です。ウィンドウ内の全行に対するエラーのある行の比率がこの値を超えると、ジョブは一時停止します。 |
+| `table.create.properties.*` | - | Doris がテーブルを作成するときに追加するテーブルプロパティ。例：`table.create.properties.replication_num`。 |
+| `load.strict_mode` | `false` | Stream Load の書き込みで strict モードを有効にするかどうか。有効な値は `true` と `false` です。 |
+| `load.max_filter_ratio` | `0` | サンプリングウィンドウで許可される最大フィルタリング率。範囲は `[0, 1]` です。`0` はエラー行をフィルタリングできないことを意味します。サンプリングウィンドウは `max_interval * 10` 秒です。ウィンドウ内のエラー行数と総行数の比率がこの値を超えると、ジョブは一時停止されます。 |
 
-## リファレンス
+## リファレンス {#reference}
 
 <!-- Knowledge type: Syntax reference -->
 
-### ロードコマンドの構文
+### ロードコマンド構文 {#load-command-syntax}
 
-テーブル自動作成同期ジョブを作成する構文は次のとおりです。
+自動テーブル作成同期ジョブを作成する構文は次のとおりです。
 
 ```sql
 CREATE JOB <job_name>
@@ -151,46 +151,46 @@ TO DATABASE <target_db> (
 )
 ```
 
-各要素の説明を次に示します。
+各モジュールについて、以下で説明します。
 
-| 要素 | 説明 |
-| --- | --- |
+| モジュール | 説明 |
+| ----------------- | ----------------------------- |
 | job_name | ジョブ名 |
-| job_properties | ジョブの共通ロードパラメータを指定します。 |
-| comment | ジョブを説明するコメントを指定します。 |
-| source_properties | PostgreSQL の同期元に関するパラメータを指定します。 |
-| target_properties | Doris の同期先データベースに関するパラメータを指定します。 |
+| job_properties | ジョブの一般的なロードパラメータを指定するために使用 |
+| comment | コメント情報でジョブを説明するために使用 |
+| source_properties | PostgreSQL ソース関連のパラメータ |
+| target_properties | Doris ターゲットデータベース関連のパラメータ |
 
-`job_properties` では `max_interval` と `compute_group` を指定できます。詳しくは[ジョブの共通ロード設定パラメータ](./continuous-load-overview.md#job-common-load-configuration-parameters)を参照してください。テーブル自動作成モードでは `session.*` は使用しません。
+`job_properties` は `max_interval` と `compute_group` をサポートします。詳細は [Common Job Load Configuration Parameters](./continuous-load-overview.md#job-common-load-configuration-parameters) を参照してください。自動テーブル作成モードでは `session.*` は使用しません。
 
-## よくある質問
+## FAQ {#faq}
 
 <!-- Knowledge type: Frequently asked questions -->
 
-**Q1: テーブル自動作成同期と SQL マッピング同期はどのように使い分けますか？**
+**Q1：自動テーブル作成同期と SQL Mapping Sync はどのように選択すればよいですか？**
 
--   ミラーレプリケーションやテーブルの自動作成が必要な場合、または同期先テーブルの名前変更と主キー以外のカラムの除外だけが必要な場合は、テーブル自動作成同期を使用します。
--   同期パイプラインで SQL 式、行のフィルタリング、データ変換が必要な場合は、[SQL マッピングを使用する PostgreSQL CDC](./continuous-load-postgresql-table.md)を使用します。
+-   ミラー レプリケーション、自動テーブル作成、またはターゲットテーブル名の変更と非キー列の除外だけが必要な場合は、自動テーブル作成同期を使用します。
+-   同期パイプラインで SQL 式、行フィルタリング、またはデータ変換が必要な場合は、[PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md) を使用します。
 
-**Q2: 主キーのないテーブルはサポートされますか？**
+**Q2：主キーを持たないテーブルはサポートされていますか？**
 
-現時点では、主キーを持つテーブルの同期のみがサポートされます。主キーのないテーブルはサポートされません。
+現在サポートされているのは主キーテーブルの同期のみです。主キーを持たないテーブルは現時点ではサポートされていません。
 
-**Q3: BE が一台の環境でテーブルの作成に失敗した場合はどうすればよいですか？**
+**Q3：単一 BE のデプロイでテーブル作成に失敗した場合はどうすればよいですか？**
 
-デフォルトのレプリカ数と利用可能な BE の台数が一致しないことを避けるため、`"table.create.properties.replication_num" = "1"` を `TO DATABASE` 句で明示的に設定してください。
+デフォルトのレプリカ数と使用可能な BE の数の不一致を避けるため、`"table.create.properties.replication_num" = "1"` を `TO DATABASE` 句に明示的に設定する必要があります。
 
-**Q4: 同期先テーブルがすでに存在する場合、上書きされますか？**
+**Q4：ターゲットテーブルがすでに存在する場合、上書きされますか？**
 
-いいえ。テーブルの自動作成フェーズでは、既存の同期先テーブルはスキップされます。必要に応じて、事前にテーブルスキーマをカスタマイズできます。
+いいえ。自動テーブル作成フェーズでは、すでに存在するターゲットテーブルをスキップします。必要に応じて、事前にテーブルスキーマをカスタマイズできます。
 
-**Q5: 全量同期フェーズをスキップして増分データだけを同期するにはどうすればよいですか？**
+**Q5：増分データのみを同期し、全量同期フェーズをスキップするにはどうすればよいですか？**
 
-`offset` を `latest` に設定します。ジョブは開始後の増分変更のみを取り込み、全量の初期化は行いません。
+`offset` を `latest` に設定します。ジョブは最新の増分変更だけを消費し、全量初期化は実行しなくなります。
 
-## 関連ドキュメント
+## 関連ドキュメント {#related-docs}
 
--   [SQL マッピングを使用する PostgreSQL CDC](./continuous-load-postgresql-table.md)
--   [継続ロードの概要](./continuous-load-overview.md)
+-   [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md)
+-   [Continuous Load Overview](./continuous-load-overview.md)
 -   [CREATE STREAMING JOB](../../../../sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md)
--   [JDBC Catalog の概要](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)
+-   [JDBC Catalog Overview](../../../../lakehouse/catalogs/jdbc-catalog-overview.md)

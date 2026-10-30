@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
+    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
     "sourceHash": "601a0937496024527f980bf3cf41f4b5c1ea8766ec89ad342c25c760f722068f",
     "sourceTechnicalHash": "314a94abb841454e6d9ca080e4009f80097125fbddfcc0e81752a8bc3e36a99d",
-    "targetHash": "9451b9edf11b88838bb642fc3bdb1a9adfe5923da10ccb70a8587b78895efa89",
+    "targetHash": "6ef25edb7cf12be60705a0fb94678133c82f1ba139d082aae21f47db28cbc5a6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-29T19:56:26.609Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "601a0937496024527f980bf3cf41f4b5c1ea8766ec89ad342c25c760f722068f",
+      "targetHash": "6ef25edb7cf12be60705a0fb94678133c82f1ba139d082aae21f47db28cbc5a6",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4.1.0\",\"4.1.4\",\"4.1.4\"]; received [\"1\",\"4.1.0\",\"4.1.4\",\"4.1.4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL 自動テーブル作成同期中の上流スキーマ変更 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "bb5d9031dc2d55caa0d39ce13f4f4595cfb0fc74"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "86bc4c6f6e1fa8340cfd006801b2cd4855b6e797"
+      }
+    }
   }
 }
