@@ -12,6 +12,13 @@ async function verifyLanguageSwitchHref(page, expected) {
         {selector: englishLanguageSwitchSelector, href: expected});
     assert.equal(await page.locator(englishLanguageSwitchSelector).first().getAttribute('href'), expected);
 }
+function verifySourceSearchHref(href, origin, query) {
+    const source = new URL(href, origin);
+    assert.equal(source.origin, origin, href);
+    assert.equal(source.pathname, '/search/', href);
+    for (const [name, value] of Object.entries({q:query, ctx:'docs', version:'docs/dev/'}))
+        assert.deepEqual(source.searchParams.getAll(name), [value], href);
+}
 const corpus = {
     ja: {database:'データベース', query:'分析', community:'コミュニティ'},
     ko: {database:'데이터베이스', query:'쿼리', community:'커뮤니티'},
@@ -222,12 +229,12 @@ async function verify({site, locale = 'ja', devOnly = false, sourceLocales = [],
         results.push({mobile:true,inputWidth:Math.round(box.width)});
         await mobile.close();
         const empty = await newPage();
-        await open(empty, `/${locale}/search/?q=zzzzqqqq_xxxxwwww&ctx=docs/dev`);
+        const emptyQuery = 'zzzzqqqq_xxxxwwww';
+        await open(empty, `/${locale}/search/?${new URLSearchParams({q:emptyQuery,ctx:'docs/dev'})}`);
         const label = dictionary['theme.SearchPage.searchSource'].message;
         await empty.getByRole('link',{name:label,exact:true}).waitFor({timeout:30000});
         const original = await empty.getByRole('link',{name:label,exact:true}).getAttribute('href');
-        assert(original.startsWith('/search/?q='), original);
-        assert.equal(new URL(original,origin).searchParams.get('version'), 'docs/dev/');
+        verifySourceSearchHref(original, origin, emptyQuery);
         results.push({noResultsOriginalSearch:original});
         await empty.close();
         for (const sourceLocale of sourceLocales) {
@@ -284,4 +291,4 @@ if (require.main === module) {
         .then(result=>{if(option('--output'))fs.writeFileSync(option('--output'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));})
         .catch(error=>{console.error(error);process.exitCode=1;});
 }
-module.exports = {verify, checkIndexes, englishLanguageSwitchSelector, verifyLanguageSwitchHref};
+module.exports = {verify, checkIndexes, englishLanguageSwitchSelector, verifyLanguageSwitchHref, verifySourceSearchHref};
