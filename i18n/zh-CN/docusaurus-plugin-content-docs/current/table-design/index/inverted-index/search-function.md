@@ -482,7 +482,7 @@ ORDER BY id;
 -- 带 VARIANT 列与倒排索引
 CREATE TABLE test_variant_search_subcolumn (
     id BIGINT,
-    properties VARIANT<PROPERTIES("variant_max_subcolumns_count"="0", "variant_serialize_type"="v1")>,
+    properties VARIANT<PROPERTIES("variant_max_subcolumns_count"="2048")>,
     INDEX idx_properties (properties) USING INVERTED PROPERTIES (
         "parser" = "unicode",
         "lower_case" = "true",
