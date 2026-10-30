@@ -791,7 +791,7 @@ Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint
 Use `normal` as the initial baseline. `approx_mode` changes the native search algorithm's policy; its effect depends on the selected index and execution path. It does not change `nprobes`, `ef`, `refine_factor`, the stored index, or the split plan. Omitting it preserves Lance's default, currently `normal`.
 
 :::note
-This option requires a Doris build containing [the approximation-mode implementation](https://github.com/apache/doris/pull/69852). The details below describe the native Lance revision used by that implementation. Upgrade all participating FEs and BEs before relying on an explicit mode: earlier FEs reject the property, while earlier BEs ignore the optional field.
+This option requires a Doris build containing [the approximation-mode implementation](https://github.com/apache/doris/pull/69852). The details below describe the native Lance revision used by that implementation. Earlier FEs reject the property, and earlier BEs ignore the optional field. During a smooth upgrade, FE rejects explicit `fast` or `accurate` if any backend in the query's candidate pool is marked as an old upgrade source, preventing different splits from using different policies. The error identifies the backend and requested mode. Finish upgrading those backends, or omit the option/use `normal`; omission and explicit `normal` retain the native default and remain compatible with these upgrade sources. Upgrade all participating FEs and BEs before relying on non-default modes; this guard does not detect arbitrary older builds that are not marked as smooth-upgrade sources.
 :::
 
 #### Differences Between Modes

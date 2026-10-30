@@ -791,7 +791,7 @@ ORDER BY _distance ASC, user_id;
 建议先使用 `normal` 建立基线。`approx_mode` 调整的是原生检索算法的策略，实际效果取决于所选索引和执行路径。它不改变 `nprobes`、`ef`、`refine_factor`、已存储的索引或 Split 规划。省略该参数时保留 Lance 的默认策略，当前为 `normal`。
 
 :::note
-该参数需要包含[近似检索模式实现](https://github.com/apache/doris/pull/69852)的 Doris 构建。下文描述的是该实现采用的原生 Lance 版本。依赖显式指定的模式前，请升级所有参与查询的 FE 和 BE：较早的 FE 会拒绝该属性，较早的 BE 则会忽略新增的可选字段。
+该参数需要包含[近似检索模式实现](https://github.com/apache/doris/pull/69852)的 Doris 构建。下文描述的是该实现采用的原生 Lance 版本。较早的 FE 会拒绝该属性，较早的 BE 则会忽略新增的可选字段。在平滑升级期间，只要查询的候选 BE 中仍有被标记为旧升级源的节点，FE 就会拒绝显式指定的 `fast` 或 `accurate`，避免不同 Split 混用不同策略。错误信息会指出相关 BE 和请求的模式。请完成这些 BE 的升级，或省略该参数/使用 `normal`；省略参数和显式 `normal` 都保留原生默认策略，仍可兼容这些升级源节点。依赖非默认模式前，应升级所有参与查询的 FE 和 BE；该检查无法识别未被标记为平滑升级源的任意旧构建。
 :::
 
 #### 三种模式的区别
