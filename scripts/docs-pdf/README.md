@@ -26,6 +26,22 @@ installation and OS sandbox configuration.
 
 ## Export a version
 
+The shell wrapper locates the repository root and accepts the version and
+optional language as positional arguments:
+
+```sh
+./scripts/docs-pdf/generate.sh 4.x
+./scripts/docs-pdf/generate.sh dev zh-CN
+./scripts/docs-pdf/generate.sh 2.1 en --output ./output/pdf/2.1-english
+./scripts/docs-pdf/generate.sh --list-versions
+```
+
+It also accepts the original `--version` and `--locale` flags and forwards
+additional options unchanged. You can invoke it by its path from another
+directory; relative option paths are resolved from the repository root.
+
+The Yarn command is also available directly:
+
 ```sh
 # Discover the versions present in this checkout.
 yarn docs:pdf --list-versions
