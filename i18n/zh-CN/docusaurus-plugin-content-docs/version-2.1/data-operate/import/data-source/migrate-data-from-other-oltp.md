@@ -155,10 +155,10 @@ val jdbcDF = spark.read
 ```
 具体可参考：[JDBC To Other Databases](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)，[Spark Doris Connector](../../../ecosystem/spark-doris-connector.md#批量写入)
 
-## DataX / Seatunnel / CloudCanal 等三方工具
+## NineData / DataX / Seatunnel / CloudCanal 等三方工具
 
 除此之外，也可以使用第三方同步工具来进行数据同步，更多可参考：
+- [NineData](https://docs.ninedata.cloud/replication/mysql_to_others/mysql_to_doris/)
 - [DataX](../../../ecosystem/datax.md)
 - [Seatunnel](../../../ecosystem/seatunnel.md)
 - [CloudCanal](../../../ecosystem/cloudcanal.md)
-- [NineData](https://docs.ninedata.cloud/replication/mysql_to_others/mysql_to_doris/)
