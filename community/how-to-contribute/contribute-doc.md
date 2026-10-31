@@ -128,9 +128,9 @@ The following table summarizes the purpose of each directory to help you quickly
 | `blog/` | Blog article Markdown files | Shared across all versions |
 | `community/` | English community documentation | Shared across all versions |
 | `docs/` | English latest version (Dev / Master) documentation | Current main branch |
-| `versioned_docs/version-X.X/` | English documentation for released versions | 4.x / 3.x / 2.1 (listed in `versions.json`) |
+| `versioned_docs/version-X.X/` | English documentation for released versions | 4.x / 3.x published online (listed in `versions.json`) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs/current/` | Chinese latest version documentation | Current main branch |
-| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | Chinese documentation for released versions | 4.x / 3.x / 2.1 (listed in `versions.json`) |
+| `i18n/zh-CN/docusaurus-plugin-content-docs/version-X.X/` | Chinese documentation for released versions | 4.x / 3.x published online (listed in `versions.json`) |
 | `i18n/zh-CN/docusaurus-plugin-content-docs-community/` | Chinese community documentation | Shared across all versions |
 | `sidebars.ts` | Sidebar for the latest version of the documentation | Shared between Chinese and English |
 | `versioned_sidebars/version-X.X-sidebars.json` | Sidebar for released version documentation | Shared between Chinese and English |
@@ -261,17 +261,16 @@ The corresponding `sidebars.ts` snippet:
 },
 ```
 
-### 4.x / 3.x / 2.1 Released Versions
+### 4.x / 3.x Released Versions {#4x--3x--21-released-versions}
 
 **1. Where to modify content**
 
-The released versions published on the website are listed in `versions.json` in the root directory, currently 4.x, 3.x, and 2.1. The `version-1.2` and `version-2.0` directories still exist in the repository, but they are not listed in `versions.json` and are not built into the website.
+The released versions published on the website are listed in `versions.json` in the root directory, currently 4.x and 3.x. Versions 2.1, 2.0, and 1.2 are available as PDFs on the [Archived Versions](https://doris.apache.org/archived-docs) page. Their source directories remain in the repository for reference, but are not built into the website.
 
 | Version | English documentation location | Chinese documentation location |
 | --- | --- | --- |
 | 4.x | `/versioned_docs/version-4.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x` |
 | 3.x | `/versioned_docs/version-3.x` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x` |
-| 2.1 | `/versioned_docs/version-2.1` | `i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1` |
 
 ```plain
 .

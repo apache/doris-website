@@ -42,7 +42,7 @@
     "message": "разрабатываемой"
   },
   "theme.docs.versions.latestVersionSuggestionLabel": {
-    "message": "Обратитесь к официальной документации версий {v4xLink} / {v3xLink} / {v21Link}."
+    "message": "Обратитесь к официальной документации версий {v4xLink} / {v3xLink}."
   },
   "theme.docs.versions.unmaintainedVersionLabel": {
     "message": "Документация для {siteTitle} {versionLabel} больше не поддерживается."
@@ -8674,5 +8674,17 @@
   },
   "course.lesson.continue": {
     "message": "Далее →"
+  },
+  "docs.archive.title": {
+    "message": "Архивные версии"
+  },
+  "docs.archive.description": {
+    "message": "Скачайте документацию прошлых версий Apache Doris в формате PDF."
+  },
+  "docs.archive.notice": {
+    "message": "Документация этих версий больше не обновляется. Каждый PDF содержит полную документацию выбранной версии на указанном языке."
+  },
+  "docs.archive.current": {
+    "message": "Документация текущей стабильной версии"
   }
 }

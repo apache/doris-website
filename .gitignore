@@ -3,6 +3,8 @@
 
 # Production
 /build
+/output/pdf/
+/tmp/pdfs/
 
 # Generated files
 .docusaurus

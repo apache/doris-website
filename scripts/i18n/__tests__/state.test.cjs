@@ -7,11 +7,11 @@ const {execFileSync} = require('node:child_process');
 const {hash, identity, decide, loadRecords, loadRecordsAt, stateFileFor} = require('../state.cjs');
 const {structure, alignHeadings} = require('../structure.cjs');
 
-for (const locale of ['ja', 'ko', 'ru']) test(`${locale} version messages match the custom banner interpolation contract`, () => {
+for (const locale of ['zh-CN', 'ja', 'ko', 'ru']) test(`${locale} version messages match the custom banner interpolation contract`, () => {
     const dictionary = require(`../../../i18n/${locale}/code.json`);
     const variables = key => [...dictionary[key].message.matchAll(/\{(\w+)\}/g)].map(match => match[1]).sort();
     assert.deepEqual(variables('theme.docs.versions.unreleasedVersionLabel'), ['unreleased']);
-    assert.deepEqual(variables('theme.docs.versions.latestVersionSuggestionLabel'), ['v21Link', 'v3xLink', 'v4xLink']);
+    assert.deepEqual(variables('theme.docs.versions.latestVersionSuggestionLabel'), ['v3xLink', 'v4xLink']);
 });
 
 const page = {pluginId: 'default', version: 'current', docId: 'intro', locale: 'ja', sourceLocale: 'en',

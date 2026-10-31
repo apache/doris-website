@@ -5551,6 +5551,22 @@
       "id": "slack",
       "kind": "utility",
       "sourcePath": "src/pages/slack.tsx"
+    },
+    {
+      "id": "archived-docs",
+      "kind": "page",
+      "sourcePath": "src/pages/archived-docs/index.tsx",
+      "sourceFiles": [
+        "config/archived-docs.json",
+        "src/pages/archived-docs/index.tsx",
+        "src/pages/archived-docs/styles.scss"
+      ],
+      "messageKeys": [
+        "docs.archive.current",
+        "docs.archive.description",
+        "docs.archive.notice",
+        "docs.archive.title"
+      ]
     }
   ],
   "englishFallbackLocales": []
