@@ -1633,6 +1633,7 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/multi-search-all-positions',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/ngram-search',
+                                        'sql-manual/sql-functions/scalar-functions/string-functions/ord',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/overlay',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size',
                                         'sql-manual/sql-functions/scalar-functions/string-functions/parse-url',
