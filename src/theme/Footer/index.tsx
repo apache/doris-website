@@ -11,7 +11,8 @@ import { MailIcon } from '@site/src/components/Icons/mail';
 import { GithubIcon } from '@site/src/components/Icons/github';
 import { TwitterIcon } from '@site/src/components/Icons/twitter';
 import { SlackIcon } from '@site/src/components/Icons/slack';
-import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { buildCommunityEntryUrl, getCommunityName } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { TelegramIcon } from '@site/src/components/Icons/telegram';
 import { DiscordIcon } from '@site/src/components/Icons/discord-icon';
 import { YoutubeIcon } from '@site/src/components/Icons/youtube';
 import { LinkedinIcon } from '@site/src/components/Icons/linkedin';
@@ -43,6 +44,7 @@ function footerLabels(): Record<string, string> {
 function Footer(): React.ReactElement {
     const { copyright, logo } = footer;
     const {i18n: {currentLocale}} = useDocusaurusContext();
+    const communityName = getCommunityName(currentLocale);
     const labels = footerLabels();
     const links = footer.links.map(column => ({...column, title: labels[column.title] ?? column.title,
         items: column.items.map(item => ({...item, label: labels[item.label] ?? item.label}))}));
@@ -81,12 +83,12 @@ function Footer(): React.ReactElement {
                                     <TwitterIcon />
                                 </a>
                                 <a
-                                    href={buildSlackEntryUrl({ medium: 'website', content: 'footer' })}
-                                    title="Slack" aria-label="Slack"
+                                    href={buildCommunityEntryUrl({ locale: currentLocale, medium: 'website', content: 'footer' })}
+                                    title={communityName} aria-label={communityName}
                                     target="_blank" rel="noopener noreferrer"
                                     className="item"
                                 >
-                                    <SlackIcon />
+                                    {communityName === 'Telegram' ? <TelegramIcon /> : <SlackIcon />}
                                 </a>
                             </div>
                             <div className="social">

@@ -1,8 +1,10 @@
 import { localizedAiLabels } from '@site/src/utils/localization';
 import { translate } from '@docusaurus/Translate';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import React, { JSX, useState, useEffect, useMemo, useRef } from 'react';
 import { StarGreenIcon } from '@site/src/components/Icons/star-green-icon';
-import { buildSlackEntryUrl } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { buildCommunityEntryUrl, getCommunityName } from '@site/src/components/slack-redirect/slack-attribution.logic';
+import { TelegramIcon } from '@site/src/components/Icons/telegram';
 import './HeroSection.scss';
 
 // ─── SVG atoms ───────────────────────────────────────────────────────────────
@@ -843,6 +845,8 @@ function MascotWithEyes(): JSX.Element {
 // ─── HeroSection ─────────────────────────────────────────────────────────────
 
 export function HeroSection(): JSX.Element {
+    const { i18n: { currentLocale } } = useDocusaurusContext();
+    const communityName = getCommunityName(currentLocale);
     return (
         <section className="hero-next">
             {/* Layered backgrounds */}
@@ -898,11 +902,11 @@ export function HeroSection(): JSX.Element {
                             </button>
                             <a
                                 className="hero-next__btn hero-next__btn--ghost"
-                                href={buildSlackEntryUrl({ medium: 'website', content: 'homepage_hero' })}
+                                href={buildCommunityEntryUrl({ locale: currentLocale, medium: 'website', content: 'homepage_hero' })}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <SlackIcon />
+                                {communityName === 'Telegram' ? <TelegramIcon width="14" height="14" /> : <SlackIcon />}
                                 {translate({ id: "homepage.hero.058", message: "Join Slack" })}</a>
                         </div>
                     </div>

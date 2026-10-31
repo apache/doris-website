@@ -27,12 +27,12 @@ const ENABLED_LOCALES = enabledLocales();
 const MANAGED_LOCALES = managedLocales(__dirname, ENABLED_LOCALES);
 
 // Utility routes that are never content: /search renders a noindex search page
-// in every locale, and /slack is a tracking redirect. The sitemap filter below
-// drops them by exact path, so the set follows the enabled locales instead of
-// naming a language.
+// in every locale, and /slack and /telegram are tracking redirects. The sitemap
+// filter drops them by exact path, so the set follows the enabled locales
+// instead of naming a language.
 const UTILITY_PATHS = new Set(ENABLED_LOCALES.flatMap(locale => {
     const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
-    return [`${prefix}/search`, `${prefix}/slack`];
+    return [`${prefix}/search`, `${prefix}/slack`, `${prefix}/telegram`];
 }));
 
 // Root-entry selection precedes hydration; theme and course rail preferences
@@ -343,6 +343,9 @@ const config = {
         // the only value to update when the invite is rotated.
         slackInviteUrl:
             'https://join.slack.com/t/apachedoriscommunity/shared_invite/zt-4ce61raf7-LPi99HBnrzHOZ7E0_bQZXA',
+        // Keep public links on https://doris.apache.org/telegram. Update only
+        // this destination when the Telegram community link changes.
+        telegramInviteUrl: 'https://t.me/dorisapache',
         // The public HTTPS reverse proxy is the default browser entry point.
         // Local development can still replace this build-time value when needed.
         profileAnalysisApiBaseUrl: process.env.PROFILE_ANALYSIS_API_BASE_URL ?? 'https://agent.velodb.io',
