@@ -780,10 +780,87 @@ Do not use the unquoted form `lance_catalog.doris.analytics.items`; it parses as
 | `nprobes` | No | Minimum `1`, with no maximum | Number of IVF index partitions to probe. It must be a positive integer. When unset, Lance starts with one partition and can probe additional partitions when `prefilter=true` leaves too few candidates. Setting it explicitly to `N` fixes both the minimum and maximum number of probes to `N`. |
 | `refine_factor` | No | Single-vector: disabled; multi-vector: `1` | Candidate refinement multiplier. It must be a positive integer. For single-vector search, when unset, Lance does not recompute distances from the original vectors, so `_distance` from a quantized index may be approximate. When set to `N`, Lance first retrieves `(top_k + offset) × N` candidates, recomputes their exact distances from the original vectors, and reorders them. **Refinement reads the original vector data for these candidates. As `N` increases, more candidates are read and evaluated, which can significantly increase I/O and reduce query performance.** For single-vector search, setting it to `1` enables refinement and differs from leaving it unset. Multi-vector search always refines candidates against their original values, using a default factor of `1`. |
 | `ef` | No | `floor(1.5 × (top_k + offset))` | Candidate width retained during HNSW graph search. It must be a positive integer. If `refine_factor` is also set, the default is `floor(1.5 × (top_k + offset) × refine_factor)`. It has no effect on non-HNSW indexes. |
+| `approx_mode` | No | Native default, currently `normal` | String policy for approximate search: `fast`, `normal`, or `accurate`, ignoring case and surrounding whitespace. Other values, including numeric strings, are rejected. Applies to single-vector and multi-vector queries. See [Choose an Approximation Mode](#vector-approx-mode). |
 | `use_index` | No | `true` | When `true`, Doris prefers a Lance vector index compatible with the vector column and distance metric, and automatically uses Flat Search if no usable index is available. When `false`, Doris disables vector indexes and performs Flat Search over the data. |
 | `version`, `timestamp`, `tag`, `branch` | No | - | Search a historical version, the version at a time, a tag, or a branch instead of the latest version of `main`. See [Search a Historical Version or Branch](#search-a-historical-version-or-branch). |
 
 Omitting `metric` selects `l2` for both indexed and Flat Search paths. For `uint8` columns, explicitly set `"metric" = "hamming"`; the default `l2` is unsupported. Multi-vector searches also enforce the [candidate budgets](#multi-vector-search) described below.
+
+### Choose an Approximation Mode {#vector-approx-mode}
+
+Use `normal` as the initial baseline. `approx_mode` changes the native search algorithm's policy; its effect depends on the selected index and execution path. It does not change `nprobes`, `ef`, `refine_factor`, the stored index, or the split plan. Omitting it preserves Lance's default, currently `normal`.
+
+:::note
+This option requires a Doris build containing [the approximation-mode implementation](https://github.com/apache/doris/pull/69852). The details below describe the native Lance revision used by that implementation. Earlier FEs reject the property, and earlier BEs ignore the optional field. During a smooth upgrade, FE rejects explicit `fast` or `accurate` if any backend in the query's candidate pool is marked as an old upgrade source, preventing different splits from using different policies. The error identifies the backend and requested mode. Finish upgrading those backends, or omit the option/use `normal`; omission and explicit `normal` retain the native default and remain compatible with these upgrade sources. Upgrade all participating FEs and BEs before relying on non-default modes; this guard does not detect arbitrary older builds that are not marked as smooth-upgrade sources.
+:::
+
+#### Differences Between Modes
+
+| Search path | `fast` | `normal` | `accurate` |
+|---|---|---|---|
+| RabitQ raw-query distance estimation | Uses one-bit scores even for a multi-bit index, skipping extension-bit computation and its lower-bound gate. | Uses the standard 8-bit quantized distance lookup table and extension-bit computation when available. | Uses a higher-precision 16-bit distance lookup table and extension-bit computation when available. |
+| HNSW with prefiltering | Enables ACORN traversal when the runtime conditions below permit it. | Uses regular filtered graph traversal. | Uses the same traversal policy as `normal`; quantized distance computation can still differ. |
+| IVF_FLAT or exhaustive Flat Search | No mode-specific quantization change. | Same scoring policy. | Same scoring policy. |
+
+The 8-bit and 16-bit values describe the **query-time distance lookup table**, not the number of bits stored per dimension in the index. For example, on a 5-bit RabitQ index, `fast` uses one-bit scores on the raw-query path; the other modes can use the additional four bits. Other RabitQ paths, including residual-query scoring, can behave differently. A mode description does not expand the supported vector-type or metric combinations.
+
+`accurate` is still approximate search. It does not guarantee exact Top-K, exhaustive candidate evaluation, or original-vector `_distance` on a quantized index. `refine_factor` controls reranking with original vectors; increasing it can improve scores and recall but cannot recover every candidate missed earlier. Multi-vector queries retain their mandatory original-vector refinement.
+
+#### When to Use Each Mode
+
+| Workload | Starting choice | What to verify |
+|---|---|---|
+| General workloads or an unknown bottleneck | `normal` | Establish recall and latency before changing the policy. |
+| HNSW_FLAT with an effective prefilter, where latency matters | Compare `fast` with `normal` | ACORN can reduce wasted distance calculations. Check recall, result count, median latency, and p95; a speedup is not guaranteed. |
+| Multi-bit RabitQ where recall matters | `normal` | `fast` can discard useful encoding information and substantially reduce recall. Use it only if representative queries still meet the quality target. |
+| RabitQ without original-vector reranking, where approximate score error matters | Compare `accurate` with `normal` | Measure score error and ranking quality against original-vector distances, as well as extra latency. Better estimation does not guarantee higher recall. |
+| RabitQ already using original-vector reranking | `normal` | The final score benefit of `accurate` may be smaller; candidate selection can still differ, so validate recall separately. |
+| IVF_FLAT or HNSW_FLAT without an effective prefilter | Keep `normal` | The current implementation offers no corresponding quantization or ACORN benefit from changing the mode. IVF_FLAT recall still depends on the probed partitions. |
+
+For a compatible **HNSW index backed by RabitQ**, `fast` can both enable ACORN traversal and simplify RabitQ distance estimation on the applicable raw-query path. These effects are coupled by one option. Do not infer its recall from an HNSW_FLAT test; validate the combined index independently. `normal` and `accurate` have the same HNSW traversal policy, but their RabitQ scoring can differ.
+
+Recommended tuning order:
+
+1. Pin the same dataset snapshot, query set, metric, filters, and index coverage. Use `use_index=false` to obtain exact Top-K ground truth over the same eligible rows; put eligibility conditions in the TVF `filter` with `prefilter=true`.
+2. Establish a `normal` baseline. Measure Recall@K, result count, score error where relevant, and median/p95 latency.
+3. If recall is insufficient, tune IVF `nprobes` and HNSW `ef`. If original-vector scores or more reranked candidates are required, configure `refine_factor`, accounting for the extra vector reads and computation.
+4. With the other settings fixed, compare `fast` for filtered HNSW or `accurate` for RabitQ estimation precision. Select a mode only if it meets the quality target and provides a worthwhile measured benefit. Measure cold and warm cache behavior separately.
+
+#### Enable ACORN for Filtered HNSW
+
+The selected compatible index must contain an HNSW graph. Set `approx_mode="fast"`, and place the predicate inside the TVF with `prefilter="true"`. An outer Doris `WHERE` does not supply this prefilter, and `use_index=true` alone does not force selection of an HNSW index.
+
+For the four-dimensional `embedding`, `user_id`, and string `category` columns used in the syntax example, with an existing compatible L2 HNSW index and `SELECT` privilege:
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "filter" = "category = 'book'",
+    "prefilter" = "true",
+    "use_index" = "true",
+    "approx_mode" = "fast",
+    "ef" = "64"
+)
+ORDER BY _distance, user_id;
+```
+
+This returns up to ten eligible rows ranked by distance; the actual IDs and recall depend on the data and ANN search. Running `EXPLAIN` for the query includes `lanceApproxMode=FAST`, confirming the requested policy. It does not prove that every subindex executed ACORN.
+
+The current native implementation dispatches separately inside each HNSW subindex (an IVF partition), using the number of nodes passing the prefilter:
+
+| Runtime condition | Path |
+|---|---|
+| No effective prefilter, or all nodes pass | Ordinary HNSW traversal. |
+| Fewer than roughly 10% of nodes pass | Flat scoring over the remaining nodes. |
+| A partial filter remains and the sparse-filter rule does not apply | `fast` uses ACORN; `normal` and `accurate` use regular filtered graph traversal. |
+| ACORN returns too few required candidates and the query has no distance bounds | Retry with regular filtered graph traversal. |
+
+The threshold applies within each subindex, not to the whole table. There is no separate force-ACORN property in this interface. In Doris, distance-range safety rules can also select Flat Search before native graph dispatch; see [Radius and Range Search](#radius-and-range-search).
 
 ### Radius and Range Search
 

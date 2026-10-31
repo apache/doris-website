@@ -780,10 +780,87 @@ ORDER BY _distance ASC, user_id;
 | `nprobes` | 否 | 最少 `1`，不限制最大值 | IVF 索引探测的分区数量，必须为正整数。不设置时从 1 个分区开始；设置 `prefilter=true` 且候选不足时，Lance 可以继续探测更多分区。显式设置为 `N` 时，最少和最多探测数都会固定为 `N`。 |
 | `refine_factor` | 否 | 单向量不启用；多向量为 `1` | 候选集精排倍数，必须为正整数。对于单向量检索，不设置时不基于原始向量重新计算距离，量化索引返回的 `_distance` 可能是近似距离；设置为 `N` 后，Lance 先获取 `(top_k + offset) × N` 个候选，再用原始向量计算真实距离并重新排序。**精排会读取这些候选的原始向量数据；`N` 越大，读取和计算的候选越多，可能显著增加 I/O 并降低查询性能。** 对于单向量检索，设为 `1` 会执行精排，与不设置不同。多向量检索始终使用原始向量精排，默认倍数为 `1`。 |
 | `ef` | 否 | `floor(1.5 × (top_k + offset))` | HNSW 图索引搜索时保留的候选宽度，必须为正整数。如果同时设置了 `refine_factor`，默认值为 `floor(1.5 × (top_k + offset) × refine_factor)`。对非 HNSW 索引无效。 |
+| `approx_mode` | 否 | Lance 默认策略，当前为 `normal` | 近似检索策略，取字符串 `fast`、`normal` 或 `accurate`，忽略大小写和首尾空格。其他值（包括数字字符串）会被拒绝。适用于单向量和多向量查询。见[选择近似检索模式](#vector-approx-mode)。 |
 | `use_index` | 否 | `true` | `true` 表示优先使用与向量列和距离类型兼容的 Lance 向量索引；没有可用索引时自动使用 Flat Search。`false` 表示禁用向量索引，对数据执行 Flat Search。 |
 | `version`、`timestamp`、`tag`、`branch` | 否 | - | 检索历史版本、某个时间点的版本、tag 或 branch，而不是 main 的最新版本。见[检索历史版本或 branch](#search-a-historical-version-or-branch)。 |
 
 不设置 `metric` 时，索引检索和 Flat Search 均使用 `l2`。`uint8` 列必须显式设置 `"metric" = "hamming"`，不支持默认的 `l2`。多向量检索还需要满足下文的[候选预算限制](#multi-vector-search)。
+
+### 选择近似检索模式 {#vector-approx-mode}
+
+建议先使用 `normal` 建立基线。`approx_mode` 调整的是原生检索算法的策略，实际效果取决于所选索引和执行路径。它不改变 `nprobes`、`ef`、`refine_factor`、已存储的索引或 Split 规划。省略该参数时保留 Lance 的默认策略，当前为 `normal`。
+
+:::note
+该参数需要包含[近似检索模式实现](https://github.com/apache/doris/pull/69852)的 Doris 构建。下文描述的是该实现采用的原生 Lance 版本。较早的 FE 会拒绝该属性，较早的 BE 则会忽略新增的可选字段。在平滑升级期间，只要查询的候选 BE 中仍有被标记为旧升级源的节点，FE 就会拒绝显式指定的 `fast` 或 `accurate`，避免不同 Split 混用不同策略。错误信息会指出相关 BE 和请求的模式。请完成这些 BE 的升级，或省略该参数/使用 `normal`；省略参数和显式 `normal` 都保留原生默认策略，仍可兼容这些升级源节点。依赖非默认模式前，应升级所有参与查询的 FE 和 BE；该检查无法识别未被标记为平滑升级源的任意旧构建。
+:::
+
+#### 三种模式的区别
+
+| 检索路径 | `fast` | `normal` | `accurate` |
+|---|---|---|---|
+| RabitQ raw-query 距离估算 | 即使索引为多 bit 编码，也使用 one-bit 分数，跳过额外编码位的计算及其对应的距离下界筛选。 | 使用标准的 8-bit 量化距离查找表，并在可用时利用额外编码位进一步计算。 | 使用精度更高的 16-bit 距离查找表，并在可用时利用额外编码位进一步计算。 |
+| HNSW 前置过滤检索 | 满足下文运行时条件时启用 ACORN 遍历。 | 使用常规过滤图遍历。 | 图遍历策略与 `normal` 相同，量化距离计算仍可能不同。 |
+| IVF_FLAT 或全量 Flat Search | 不引入模式特有的量化变化。 | 距离计算策略相同。 | 距离计算策略相同。 |
+
+这里的 8-bit、16-bit 指**查询时距离查找表的精度**，不是索引中每个维度存储的位数。例如，同一个 5-bit RabitQ 索引，在 raw-query 路径下，`fast` 使用 one-bit 分数，另外两种模式可以利用额外的 4 bit 编码。其他 RabitQ 路径（包括 residual-query 距离估算）的行为可能不同。模式说明不代表扩大了支持的向量类型或距离类型组合。
+
+`accurate` 仍是近似检索，不保证精确 Top-K、遍历全部候选，或在量化索引上直接返回原始向量的 `_distance`。`refine_factor` 控制使用原始向量精排；增大它可以改善分数和召回率，但无法找回所有在前面阶段遗漏的候选。多向量查询保留原有的强制原始向量精排行为。
+
+#### 什么时候使用哪种模式
+
+| 场景 | 建议起点 | 需要验证的内容 |
+|---|---|---|
+| 常规负载，或尚未明确瓶颈 | `normal` | 先建立召回率和延迟基线，再调整策略。 |
+| HNSW_FLAT 有实际生效的前置过滤，并且关注延迟 | 对比 `fast` 与 `normal` | ACORN 可以减少无效距离计算，但不保证加速；同时检查召回率、返回数量及延迟中位数和 p95。 |
+| 多 bit RabitQ，业务重视召回率 | `normal` | `fast` 会舍弃部分有用的编码信息，可能显著降低召回率；只有代表性查询仍达到质量目标时才使用。 |
+| RabitQ 未做原始向量精排，关注近似分数误差 | 对比 `accurate` 与 `normal` | 对照原始向量距离检查分数误差、排序质量及额外延迟；估算更精细不保证召回率更高。 |
+| RabitQ 已使用原始向量精排 | `normal` | `accurate` 对最终分数的额外收益可能较小；候选选择仍可能不同，需要单独验证召回率。 |
+| IVF_FLAT，或没有有效前置过滤的 HNSW_FLAT | 保持 `normal` | 当前实现中，切换模式没有对应的量化或 ACORN 收益；IVF_FLAT 的召回率仍取决于探测的分区。 |
+
+对于兼容的 **HNSW 与 RabitQ 组合索引**，`fast` 可能同时启用 ACORN 遍历，并在适用的 raw-query 路径中简化 RabitQ 距离估算。这两种效果由同一个参数控制，不能根据 HNSW_FLAT 的测试结果推断它的召回率，必须单独验证组合索引。`normal` 与 `accurate` 的 HNSW 遍历策略相同，但 RabitQ 距离计算仍可能不同。
+
+建议按以下顺序调优：
+
+1. 固定相同的数据集快照、查询集、metric、过滤条件和索引覆盖范围。使用 `use_index=false`，对相同的合格行计算精确 Top-K 基准；资格过滤条件放在 TVF 的 `filter` 中，并设置 `prefilter=true`。
+2. 使用 `normal` 建立基线，测量 Recall@K、返回数量、相关场景下的分数误差，以及延迟中位数和 p95。
+3. 召回率不足时调整 IVF 的 `nprobes`、HNSW 的 `ef`；需要原始向量分数或更多精排候选时配置 `refine_factor`，同时考虑额外的向量读取和计算开销。
+4. 固定其他参数，对过滤 HNSW 测试 `fast`，或对 RabitQ 的估算精度测试 `accurate`。只有达到质量目标且实测收益值得时才采用，并分别测量冷、热缓存下的效果。
+
+#### 为带过滤的 HNSW 启用 ACORN
+
+实际选中的兼容索引必须包含 HNSW 图。设置 `approx_mode="fast"`，并将过滤条件放入 TVF，设置 `prefilter="true"`。外层 Doris `WHERE` 不提供这种前置过滤，仅设置 `use_index=true` 也不能强制选中 HNSW 索引。
+
+沿用语法示例中的四维 `embedding`、`user_id` 和字符串 `category` 列，提前创建兼容的 L2 HNSW 索引，并确保用户拥有 `SELECT` 权限：
+
+```sql
+SELECT user_id, _distance
+FROM vector_search(
+    "table" = "lance_catalog.default.items",
+    "column" = "embedding",
+    "query_vector" = "[0.1,0.2,0.3,0.4]",
+    "metric" = "l2",
+    "top_k" = "10",
+    "filter" = "category = 'book'",
+    "prefilter" = "true",
+    "use_index" = "true",
+    "approx_mode" = "fast",
+    "ef" = "64"
+)
+ORDER BY _distance, user_id;
+```
+
+该查询返回最多 10 条满足条件、按距离排序的记录，实际 ID 和召回率取决于数据及 ANN 检索。对该查询执行 `EXPLAIN` 会显示 `lanceApproxMode=FAST`，表示指定了该策略，不能证明每个子索引最终都执行了 ACORN。
+
+当前原生实现会在每个 HNSW 子索引（一个 IVF 分区）内，根据通过前置过滤的节点数量分别选择路径：
+
+| 运行时条件 | 执行路径 |
+|---|---|
+| 没有有效前置过滤，或所有节点都通过 | 普通 HNSW 遍历。 |
+| 通过的节点少于约 10% | 对剩余节点进行 Flat 距离计算。 |
+| 部分节点通过，且未触发上述稀疏过滤规则 | `fast` 使用 ACORN，`normal` 和 `accurate` 使用常规过滤图遍历。 |
+| ACORN 找到的必要候选数量不足，且查询没有距离边界 | 重新执行常规过滤图遍历。 |
+
+该阈值针对每个子索引判断，不是按整张表的过滤比例判断。此接口没有独立的强制 ACORN 属性。在 Doris 中，距离范围的正确性规则还可能在进入原生图检索前就选择 Flat Search，见[半径与范围检索](#半径与范围检索)。
 
 ### 半径与范围检索
 
