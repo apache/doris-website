@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "community/how-to-contribute/contribute-doc.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "65d2d46b954648611c80316916487b7879046b25e6a092ded691cb7e811fbf4c",
-    "sourceTechnicalHash": "89f650720d3566eec6ecd7ef612306f5f6c273b3119e6cf40c37ad77cf07f689",
-    "targetHash": "e46904d7a1dfdb56a4e90dcf4e0457cabece739bdf1c84c30578ff2bceee3457",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "3633dba5cef91c3a29d2d8a4824881ab61549a398317098ffacccff3649ea2c8",
+    "sourceTechnicalHash": "b0d10b02ba6922b2499679494c80be2a137a0fb0b733f8b28934753a71e24f7e",
+    "targetHash": "c7a25c7a09f22e9a306c8d964e3ca19536359466d4eee6b20e31c0b72920e48c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-23T02:32:04.970Z",
+    "translatedAt": "2026-10-31T06:57:35.423Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "65d2d46b954648611c80316916487b7879046b25e6a092ded691cb7e811fbf4c",
-      "targetHash": "e46904d7a1dfdb56a4e90dcf4e0457cabece739bdf1c84c30578ff2bceee3457",
+      "sourceHash": "3633dba5cef91c3a29d2d8a4824881ab61549a398317098ffacccff3649ea2c8",
+      "targetHash": "c7a25c7a09f22e9a306c8d964e3ca19536359466d4eee6b20e31c0b72920e48c",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: процедура -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Applicable scenario: Documentation contribution / submitting documentation modification PRs -->\"]; received [\"html\",null,null,\"<!-- Применимый сценарий: внесение вклада в документацию / отправка PR с изменениями документации -->\"]\nprotected node 25: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "community/how-to-contribute/contribute-doc.md",
+        "blob": "0d710460248228f906244aaf6eceb716dbd5c77e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
+        "blob": "9cc439c077bb2bb3cbcfb879338e37cc757c63ea"
+      }
     }
   }
 }
