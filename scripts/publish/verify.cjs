@@ -3,6 +3,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const {Script} = require('node:vm');
 const {inventory} = require('./optimize.cjs');
+const {validateApacheControls} = require('./apache-controls.cjs');
 
 function verify(site) {
     site = path.resolve(site);
@@ -36,7 +37,9 @@ function verify(site) {
         references++;
     };
     for (const item of files) {
-        if (item.relative.endsWith('.html')) {
+        if (path.basename(item.file) === '.htaccess') {
+            validateApacheControls(fs.readFileSync(item.file,'utf8'),item.relative);
+        } else if (item.relative.endsWith('.html')) {
             const content = fs.readFileSync(item.file,'utf8');
             for (const tag of content.matchAll(/<(?:script|link|img|source|video|audio)\b[^>]*>/g)) {
                 for (const attribute of tag[0].matchAll(/\b(?:src|href)=(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g)) {
