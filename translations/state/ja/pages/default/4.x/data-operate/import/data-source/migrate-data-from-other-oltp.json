@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "52bd4bf3d46f13aa99c9f347e8d8a8a8736a966397f15a82bbe39813a7ef9df4",
-    "sourceTechnicalHash": "59ba3e4652b33d8337940521ebf469d5881cf2d6734dbdd2fc08dcb2d89aeb16",
-    "targetHash": "28fca7c91ebe7d633854f73d2eaa1655e3c4e3c485ad9565350077affe585969",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "141a5604840e64aa078f02a765bb2bf490031c5531d3cda5ae149d42fd9cbaf9",
+    "sourceTechnicalHash": "051616835fdf2e3c68a5e270f459fd5b22a596606535d12f40d122eb2e75ab74",
+    "targetHash": "f7cddfe06df62c776763929b08bae36fe363f2226e420649bc402953c74caf5a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T06:08:27.579Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "141a5604840e64aa078f02a765bb2bf490031c5531d3cda5ae149d42fd9cbaf9",
+      "targetHash": "f7cddfe06df62c776763929b08bae36fe363f2226e420649bc402953c74caf5a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: アーキテクチャ選定の判断 / 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OLTP データベース（MySQL / SQL Server / Oracle / PostgreSQL）から Apache Doris へのデータ移行または同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 27: expected [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]; received [\"inlineCode\",null,null,\"CTAS\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"CTAS\"]; received [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2.1\",\"2.2\",\"3\",\"3\",\"4\",\"4\",\"5\",\"5\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "bac3a99eac0e010be68d5dccbe9837636ae761de"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "edc8557e75530890e91480c6d51e6f8e19449fef"
+      }
+    }
   }
 }
