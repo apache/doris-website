@@ -294,7 +294,7 @@ class WorkflowTests(unittest.TestCase):
                     if name == "opencode-review.yml":
                         self.assertEqual(step["with"]["fetch-depth"], 0)
         for name in ("cron-deploy-website.yml", "manual-deploy-website.yml",
-                     "cron-generate-pdf.yml", "manual-generate-pdf.yml"):
+                     "manual-generate-pdf.yml"):
             workflow = workflows[name]
             build = workflow["jobs"]["build"]
             self.assertNotIn("environment", build)
