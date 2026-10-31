@@ -15,7 +15,7 @@ const globalLanguageRuntime = file => /^src\/utils\/(locale|localization|transla
 function validationScope(files) {
     const dependencies = files.some(file => /^(package.json|yarn.lock)$/.test(file));
     const workflow = files.includes('.github/workflows/build-check.yml');
-    const publishing = files.some(file => /^(scripts\/publish\/|scripts\/i18n\/locale-entry\.cjs$|scripts\/build-locales\.cjs$|scripts\/build-locale\.cjs$|config\/(?:(custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
+    const publishing = files.some(file => /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|scripts\/build-locales\.cjs$|scripts\/build-locale\.cjs$|config\/(?:(custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron|manual)-deploy-website\.yml$)/.test(file));
     const content = files.some(file => globalLanguageRuntime(file)
         || file === 'translations/shared/registry.json'
         || /^scripts\/i18n\/(?!__tests__\/).*\.[cm]?js$/.test(file)
@@ -95,7 +95,7 @@ function buildScope(files, versions, managed = [], dependencies = null) {
         || /^scripts\/i18n\/verify-(doc-navigation|search)\.cjs$/.test(file));
     const contractChanged = files.some(file => /^scripts\/i18n\/(content-manifest|manual-state|manual-plugins|native-context|docs-plugin|status-plugin|route-context|page-body|page-body-loader|sitemap)\.cjs$/.test(file)
         || (/^translations\/(pages|blog)\//.test(file) && !dependencies?.complete));
-    const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|scripts\/i18n\/locale-entry\.cjs$|package\.json$|yarn\.lock$|docusaurus\.config\.js$|config\/(?:(i18n|custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|scripts\/build-locales?\.cjs$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron-deploy-website|manual-deploy-website|build-check)\.yml$)/.test(file));
+    const optimizePublish = contractChanged || searchChanged || navigationChanged || files.some(file => /^(scripts\/publish\/|config\/matomo-plugin\/|scripts\/i18n\/locale-entry\.cjs$|package\.json$|yarn\.lock$|docusaurus\.config\.js$|config\/(?:(i18n|custom-docusaurus-plugin|ssrTemplate|asset-origin)\.js|locale-entry\.json)$|scripts\/build-locales?\.cjs$|static\/\.htaccess$|static\/js\/[^/]*bootstrap\.js$|\.github\/workflows\/(cron-deploy-website|manual-deploy-website|build-check)\.yml$)/.test(file));
     // Publication changes need the same complete artifact as deployment, on
     // the CI runner. Keep local checks scoped to fixtures and Dev versions.
     if (optimizePublish) {tier = 'full'; shared();}

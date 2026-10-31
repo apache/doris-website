@@ -189,7 +189,9 @@ jobs:
               if: steps.detect.outputs.publish_fixture == 'true'
               env:
                   NODE_OPTIONS: --max-old-space-size=4096
-              run: node scripts/publish/verify-fixture.cjs --verify-existing --browser
+              run: |
+                  node scripts/publish/verify-fixture.cjs --verify-existing --browser
+                  node scripts/publish/verify-matomo-fixture.cjs
 
             - name: Verify global language fixture in Chromium
               if: steps.detect.outputs.content_fixture == 'true'
