@@ -2,7 +2,7 @@
 {
     "title": "サブクエリ",
     "language": "ja",
-    "description": "Doris のサブクエリガイド。スカラー、非スカラー、相関、非相関サブクエリの構文、制約、および Mark Join による処理を説明します。",
+    "description": "Doris サブクエリガイド：スカラー、非スカラー、相関、非相関サブクエリの構文、制限、および Mark Join の処理。",
     "keywords": [
         "Doris サブクエリ",
         "サブクエリ",
@@ -17,31 +17,31 @@
 <!-- Knowledge type: Capability definition + Usage limitations -->
 <!-- Applicable scenarios: Writing nested SQL queries / Troubleshooting subquery errors -->
 
-サブクエリは、別のクエリ（通常は SELECT 文）の中に入れ子になった SQL クエリです。SELECT、FROM、WHERE、HAVING 句に記述でき、外側のクエリにデータや条件を提供します。サブクエリを使うと、より複雑な絞り込み、集計、結合のロジックを一つの SQL 文で実現できます。
+サブクエリは、別のクエリ（通常は SELECT 文）の中にネストされた SQL クエリです。`SELECT`、`FROM`、`WHERE`、`HAVING` 句に記述して、外側のクエリにデータや条件を提供できます。サブクエリを使用すると、単一の SQL 文でより複雑なフィルタリング、集計、結合ロジックを実装できます。
 
-このドキュメントでは、Doris におけるサブクエリの分類、サポート範囲、制約、および特殊なケースで使用する Mark Join の仕組みを説明します。
+このドキュメントでは、Doris におけるサブクエリのカテゴリ、サポート範囲、制限事項、および特殊なシナリオで使用される Mark Join の仕組みについて説明します。
 
-## 利用シーン
+## 適用シナリオ {#applicable-scenarios}
 
-サブクエリは、主に次のような場合に使用します。
+サブクエリは、一般に次のシナリオで使用されます。
 
-- **複雑な絞り込み**: `WHERE` 句または `HAVING` 句でサブクエリを使い、絞り込み条件を動的に計算します。
-- **派生列の計算**: `SELECT` リストでスカラーサブクエリを使い、列を追加します。
-- **派生テーブル**: `FROM` 句でサブクエリを、結合に参加する一時的なテーブルとして使用します。
-- **存在チェック**: `EXISTS`/`NOT EXISTS` または `IN`/`NOT IN` を使い、集合間の関係を評価します。
+- **複雑なフィルタリング**：`WHERE` または `HAVING` 句でサブクエリを使用し、フィルタ条件を動的に計算します。
+- **派生列の計算**：`SELECT` リストでスカラーサブクエリを使用して、追加フィールドを補います。
+- **派生テーブル**：`FROM` 句でサブクエリを一時テーブルとして使用し、結合に参加させます。
+- **存在チェック**：`EXISTS`/`NOT EXISTS` または `IN`/`NOT IN` を使用して、集合間の関係を評価します。
 
-## サブクエリの基本的な特徴
+## サブクエリの基本的な特徴 {#basic-characteristics-of-subqueries}
 
-サブクエリを使う際は、次の基本的な特徴に注意してください。
+サブクエリを使用するときは、次の基本的な特徴に注意してください。
 
 | 特徴 | 説明 |
 | --- | --- |
-| 記述位置 | `SELECT`、`FROM`、`WHERE`、`HAVING` 句に記述でき、`SELECT`、`UPDATE`、`INSERT`、`DELETE`、および `=`、`>`、`<`、`<=`、`IN`、`EXISTS` などの式演算子と組み合わせて使用できます。 |
-| 外側と内側の関係 | 外側のクエリをメインクエリ、その中に入れ子になったクエリをサブクエリと呼びます。 |
-| 実行順序 | 独立したサブクエリは通常先に実行されます。相関がある場合は、必要に応じてパーサーが実行順序を決定し、サブクエリの結果をメインクエリに渡します。 |
-| 構文上の制約 | メインクエリと区別するため、サブクエリは括弧で囲む必要があります。 |
+| 位置 | `SELECT`、`FROM`、`WHERE`、`HAVING` 句に記述でき、`SELECT`、`UPDATE`、`INSERT`、`DELETE`、および `=`、`>`、`<`、`<=`、`IN`、`EXISTS` などの式演算子と組み合わせて使用できます。 |
+| 外側と内側の関係 | 外側のクエリをメインクエリと呼び、その内部にネストされたクエリをサブクエリと呼びます。 |
+| 実行順序 | 独立したサブクエリは通常、先に実行されます。相関がある場合、パーサーが必要に応じて実行順序を決定し、サブクエリの結果をメインクエリに返します。 |
+| 構文上の制約 | サブクエリは、メインクエリと区別するために括弧で囲む必要があります。 |
 
-以下の例では、いずれも `t1` と `t2` の二つのテーブルを使用します。DDL は次のとおりです。
+以下の例では、すべて `t1` と `t2` の二つのテーブルを使用します。DDL は次のとおりです。
 
 ```sql
 create table t1
@@ -61,20 +61,20 @@ DISTRIBUTED BY HASH(c1) BUCKETS 3
 PROPERTIES ("replication_num" = "1");
 ```
 
-## サブクエリの分類
+## サブクエリのカテゴリ {#categories-of-subqueries}
 
-サブクエリは、**返すデータの特徴**と**外側のクエリの列を参照するかどうか**という二つの観点で分類できます。
+サブクエリは、**返されるデータの特性**と、**外側のクエリの列を参照するかどうか**という二つの観点で分類できます。
 
-### 返すデータの特徴による分類
+### 返されるデータの特性による分類 {#classification-by-returned-data-characteristics}
 
-返すデータの特徴によって、サブクエリはスカラーサブクエリと非スカラーサブクエリに分けられます。
+返されるデータの特性により、サブクエリはスカラーサブクエリと非スカラーサブクエリに分けられます。
 
-| 種類 | 返す結果 | テーブルが空の場合の戻り値 | 使用できる場所 |
+| 種類 | 返される結果 | テーブルが空の場合の戻り値 | 記述できる位置 |
 | --- | --- | --- | --- |
-| スカラーサブクエリ | 単一の値（一行一列の関係） | `NULL` | 単一値の式を使用できる場所 |
-| 非スカラーサブクエリ | 関係（複数の行や列を含むことが可能） | 空集合（0 行） | 関係（集合）を使用できる場所 |
+| スカラーサブクエリ | 単一の値（一行一列のリレーション） | `NULL` | 単一値の式を使用できる任意の場所 |
+| 非スカラーサブクエリ | リレーション（複数の行と列を含むことができます） | 空集合（0 行） | リレーション（集合）を使用できる任意の場所 |
 
-例（`t2` が空の場合、二つのサブクエリは異なる結果を返します）。
+例（`t2` が空の場合、二つのサブクエリは異なる結果を返します）：
 
 ```sql
 -- Scalar subquery. When t2 is empty, the subquery returns the scalar value null.
@@ -84,14 +84,14 @@ select * from t1 where t1.c1 > (select sum(t2.c1) from t2);
 select * from t1 where t1.c1 in (select t2.c1 from t2);
 ```
 
-### 外側のクエリの列を参照するかどうかによる分類
+### 外側の列を参照するかどうかによる分類 {#classification-by-whether-outer-columns-are-referenced}
 
-サブクエリが外側のクエリの列を参照するかどうかによって、相関サブクエリと非相関サブクエリに分けられます。
+サブクエリが外側のクエリの列を参照するかどうかにより、サブクエリは相関サブクエリと非相関サブクエリに分けられます。
 
-| 種類 | 外側のクエリの列を参照するか | 実行方法 |
+| 種類 | 外側の列を参照するか | 実行方法 |
 | --- | --- | --- |
-| 非相関サブクエリ | いいえ | 通常は独立して一度だけ評価でき、その結果を外側のクエリで使用します。 |
-| 相関サブクエリ | はい（一般にサブクエリの `WHERE` 句で参照） | 外側のテーブルの各行に対してサブクエリを一回実行する必要があり、外側のテーブルに対するフィルター操作に相当します。 |
+| 非相関サブクエリ | いいえ | 通常は独立して評価でき、外側のクエリで使用する結果を一度返します。 |
+| 相関サブクエリ | はい（一般にサブクエリの `WHERE` 句で参照します） | 外側のテーブルの各行についてサブクエリを一度実行する必要があり、外側のテーブルに対するフィルタ操作に相当します。 |
 
 例：
 
@@ -103,30 +103,32 @@ select * from t1 where t1.c1 in (select t2.c1 from t2 where t2.c2 = t1.c2);
 select * from t1 where t1.c1 in (select t2.c1 from t2);
 ```
 
-## Doris がサポートするサブクエリ
+## Doris がサポートするサブクエリ {#subqueries-supported-by-doris}
 
 <!-- Knowledge type: Capability support matrix -->
 
-Doris は、すべての非相関サブクエリをサポートします。相関サブクエリのサポート範囲は次のとおりです。
+Doris はすべての非相関サブクエリをサポートします。相関サブクエリのサポート範囲は次のとおりです。
 
-- `WHERE` 句と `HAVING` 句の相関スカラーサブクエリをサポートします。
-- `IN`、`NOT IN`、`EXISTS`、`NOT EXISTS` を使用した、`WHERE` 句と `HAVING` 句の相関非スカラーサブクエリをサポートします。
+- `WHERE` および `HAVING` 句の相関スカラーサブクエリをサポートします。
+- `WHERE` および `HAVING` 句の `IN`、`NOT IN`、`EXISTS`、`NOT EXISTS` を使用する相関非スカラーサブクエリをサポートします。
 - `SELECT` リストの相関スカラーサブクエリをサポートします。
-- 入れ子になったサブクエリでは、直近の親クエリとの相関のみをサポートします。さらに外側のクエリとの、階層をまたぐ相関はサポートしません。
+- ネストされたサブクエリでは、サブクエリ自身の直接の親クエリへの相関のみをサポートします。より外側のクエリへの階層をまたぐ相関はサポートしません。
 
-## 相関サブクエリの制約
+## 相関サブクエリの制限 {#limitations-of-correlated-subqueries}
 
 <!-- Knowledge type: Usage limitations -->
 <!-- Applicable scenarios: SQL error troubleshooting / Rewriting correlated subqueries -->
 
-Doris では、相関サブクエリの形式によって制約が異なります。以下でそれぞれ説明します。
+Doris では、相関サブクエリの形態ごとに異なる制限があります。以下で説明します。
 
-### 相関スカラーサブクエリの制約
+### 相関スカラーサブクエリの制限 {#limitations-of-correlated-scalar-subqueries}
 
-次の二つの条件を両方満たす必要があります。
+4.1.5 以降、`UNION`、`INTERSECT`、`EXCEPT` などの集合演算を含み、外側の列を参照するサブクエリは、分析時に明示的に拒否されます。たとえば、`Unsupported correlated subquery with set operation` が返されます。非相関の集合演算サブクエリには影響ありません。結果が既知の場合、グループ化されていない集約に対するトップレベルの `EXISTS` または `NOT EXISTS` は、引き続き true または false に簡約できます。これは、集合演算を含むすべてのサブクエリがサポートされないことを意味しません。
 
-- 相関条件は等値条件でなければなりません。
-- サブクエリの出力は単一の集約関数の結果である必要があり、`group by` 句を含めることはできません。
+次の二つの条件を同時に満たす必要があります。
+
+- 相関条件は等価条件でなければなりません。
+- サブクエリの出力は単一の集約関数の結果であり、`group by` 句を含んではなりません。
 
 ```sql
 -- Single aggregate function and no group by: supported.
@@ -145,9 +147,9 @@ select * from t1 where t1.c1 = (select t2.c1 from t2 where t1.c2 = t2.c2);
 select * from t1 where t1.c1 = (select max(t2.c1) from t2 where t1.c2 = t2.c2 group by t2.c2);
 ```
 
-### 相関 (NOT) EXISTS サブクエリの制約
+### 相関 (NOT) EXISTS サブクエリの制限 {#limitations-of-correlated-not-exists-subqueries}
 
-- サブクエリでは `offset` と `limit` を同時に使用できません。
+- サブクエリで `offset` と `limit` を同時に使用することはできません。
 
 ```sql
 -- With limit but without offset: supported.
@@ -160,13 +162,13 @@ select * from t1 left semi join t2 on t1.c2 = t2.c2;
 select * from t1 where exists (select t2.c1 from t2 where t1.c2 = t2.c2 limit 2, 3);
 ```
 
-### 相関 (NOT) IN サブクエリの制約
+### 相関 (NOT) IN サブクエリの制限 {#limitations-of-correlated-not-in-subqueries}
 
-次の三つの条件をすべて満たす必要があります。
+次の三つの条件を同時に満たす必要があります。
 
-- サブクエリの出力は一列でなければなりません。
-- サブクエリでは `limit` を使用できません。
-- サブクエリでは集約関数や `group by` 句を使用できません。
+- サブクエリの出力は単一列でなければなりません。
+- サブクエリで `limit` を使用することはできません。
+- サブクエリで集約関数または `group by` 句を使用することはできません。
 
 ```sql
 -- Supported subquery.
@@ -188,11 +190,11 @@ select * from t1 where t1.c1 in (select t2.c1 from t2 where t1.c2 = t2.c2 group 
 select * from t1 where t1.c1 in (select sum(t2.c1) from t2 where t1.c2 = t2.c2);
 ```
 
-### 入れ子になったサブクエリの制約
+### ネストされたサブクエリの制限 {#limitations-of-nested-subqueries}
 
-現在、サブクエリとその直近の親クエリの間の相関のみをサポートします。さらに外側のクエリとの相関はサポートしません。
+現在、サブクエリとその直接の親クエリの間の相関のみをサポートします。より外側のクエリへの相関はサポートしません。
 
-以下のように定義した `t3` テーブルもあるとします。
+` t3` テーブルもあると仮定します。定義は次のとおりです。
 
 ```sql
 create table t3
@@ -204,7 +206,7 @@ DISTRIBUTED BY HASH(c1) BUCKETS 3
 PROPERTIES ("replication_num" = "1");
 ```
 
-- サポート対象：サブクエリは直近の親クエリの列のみを参照します。
+- サポート対象：サブクエリが直接の親クエリの列のみを参照する場合。
 
     ```sql
     select
@@ -227,7 +229,7 @@ PROPERTIES ("replication_num" = "1");
     );
     ```
 
-- サポート対象外：最も内側のサブクエリが、直近の親クエリの `t2.c2` と、最も外側のクエリの `t1.c1` の両方を参照します。
+- サポート対象外：最内側のサブクエリが、直接の親クエリの `t2.c2` と最外側のクエリの `t1.c1` の両方を参照する場合。
 
     ```sql
     select
@@ -250,12 +252,12 @@ PROPERTIES ("replication_num" = "1");
     );
     ```
 
-## Mark Join
+## Mark Join {#mark-join}
 
 <!-- Knowledge type: Execution mechanism -->
 <!-- Applicable scenarios: When a subquery has an OR relationship with other filter conditions -->
 
-`WHERE` 句で `(NOT) IN` または `(NOT) EXISTS` サブクエリが別の絞り込み条件と `OR` で結ばれている場合、正しい結果を得るには特別な処理が必要です。例：
+`WHERE` 句で、`(NOT) IN` または `(NOT) EXISTS` サブクエリが別のフィルタ条件と `OR` 関係で組み合わされている場合、正しい結果を生成するには特別な処理が必要です。例：
 
 ```sql
 select
@@ -271,13 +273,13 @@ where exists (
     ) or t1.c1 > 0;
 ```
 
-上記の `EXISTS` 句をそのまま `LEFT SEMI JOIN` に書き換えると、その意味上、`t1` の行のうち `t1.c2 = t2.c2` を満たす行しか返されません。しかし、`t1.c1 > 0` を満たす行も返す必要があります。このために、Doris は **Mark Join** という仕組みを導入しています。
+上記の `EXISTS` 句を直接 `LEFT SEMI JOIN` に書き換えると、その意味上、`t1.c2 = t2.c2` を満たす `t1` の行だけが返されます。しかし、`t1.c1 > 0` を満たす行も返す必要があります。これに対応するため、Doris は **Mark Join** の仕組みを導入しています。
 
 :::info 注記
-`RIGHT SEMI JOIN` も同様で、左右のテーブルが入れ替わるだけです。ここでは `LEFT SEMI JOIN` を例にします。
+`RIGHT SEMI JOIN` も同様ですが、左テーブルと右テーブルを入れ替えます。ここでは `LEFT SEMI JOIN` を使用します。
 :::
 
-例として、次の SQL を示します。
+例の SQL は次のとおりです。
 
 ```sql
 -- This SQL cannot actually be executed. It is shown for illustration only.
@@ -297,7 +299,7 @@ where
     tx.mark_join_flag or tx.c1 > 0;
 ```
 
-Mark Join と通常の `LEFT SEMI JOIN` の違いは次のとおりです。通常の `LEFT SEMI JOIN` は条件を満たす左側のテーブルの行を直接出力します。一方、Mark Join は左側のテーブルの元の行に加え、値が `TRUE`、`FALSE`、または `NULL` のフラグ列（この例では `mark_join_flag`）を出力します。このフラグの値は `JOIN` 条件式 `t1.c2 = t2.c2` によって決まります。各行に対応するフラグ値は次のとおりです。
+Mark Join と通常の `LEFT SEMI JOIN` の違いは次のとおりです。通常の `LEFT SEMI JOIN` は条件を満たす左テーブルの行を直接出力します。一方、Mark Join は元の左テーブルに加えて、値が `TRUE`、`FALSE`、または `NULL` となるフラグ列（例では `mark_join_flag`）を出力します。このフラグの値は `JOIN` 条件式 `t1.c2 = t2.c2` によって決まり、各行に対応するフラグ値が生成されます。対応関係は次のとおりです。
 
 | t1.c2 | t2.c2 | mark_join_flag |
 | ----- | ----- | -------------- |
@@ -307,18 +309,18 @@ Mark Join と通常の `LEFT SEMI JOIN` の違いは次のとおりです。通�
 | NULL  | 1     | NULL           |
 | NULL  | NULL  | NULL           |
 
-このフラグ列を使うと、元の `WHERE` 句の絞り込み条件を `where mark_join_flag or t1.c1 > 0` と書き換えられ、正しい結果が得られます。
+このフラグ列を使用すると、元の `WHERE` フィルタ条件を `where mark_join_flag or t1.c1 > 0` と書き換えることができ、正しい結果が得られます。
 
-## FAQ
+## よくある質問 {#faq}
 
 <!-- Knowledge type: Troubleshooting -->
 <!-- Applicable scenarios: Troubleshooting runtime errors of scalar subqueries -->
 
-スカラーサブクエリの出力は単一の値でなければならないため、サブクエリが複数のレコードを返すと実行時エラーになります。
+スカラーサブクエリの出力は単一の値でなければならないため、サブクエリが複数のレコードを返すと実行時エラーが報告されます。
 
-### 相関スカラーサブクエリが複数行を返す場合
+### 相関スカラーサブクエリが複数行を返す場合 {#correlated-scalar-subquery-returns-multiple-rows}
 
-相関スカラーサブクエリを使用するとき、外側のクエリのある行に対し、相関条件に一致する行をサブクエリが複数返すと、実行時エラーが発生します。
+相関スカラーサブクエリを使用する場合、外側のある行について、相関条件に一致する行をサブクエリが複数返すと、実行時エラーが発生します。
 
 ```sql
 -- Correlated scalar subquery. If more than one row in t2 satisfies t1.c2 = t2.c2, a runtime error is reported.
@@ -328,9 +330,9 @@ select t1.*, (select t2.c1 from t2 where t1.c2 = t2.c2) from t1;
 ERROR 1105 (HY000): errCode = 2, detailMessage = (127.0.0.1)[INVALID_ARGUMENT][E33] correlate scalar subquery must return only 1 row
 ```
 
-### 非相関スカラーサブクエリが複数行を返す場合
+### 非相関スカラーサブクエリが複数行を返す場合 {#uncorrelated-scalar-subquery-returns-multiple-rows}
 
-Doris は実行時に `assert num rows` 演算子を追加します。サブクエリが複数のレコードを返すと、実行時エラーが発生します。
+Doris は実行時に `assert num rows` オペレーターを追加します。サブクエリが複数のレコードを返すと、実行時エラーが発生します。
 
 ```sql
 -- Uncorrelated scalar subquery. If t2 contains more than one row, a runtime error may be reported.
