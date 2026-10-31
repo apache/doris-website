@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "d08a135018ca3997151cf379106aa22a6d81959ecf7ef895af0fd126105c012a",
-    "sourceTechnicalHash": "972d1a46cc2a50313206d0b6cd5542ea09c619a4bbb956290b7be0a28c6bb155",
-    "targetHash": "04acad3bb8fa433669c678c3edb31d4cc30746e02e094fc4957f711b62e77a67",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "4b0b9bffc68fe4c78fbb779df6a9ba8ef2e7735165d6a346ce8915a92fedc777",
+    "sourceTechnicalHash": "3b41bf2b469b7d3c9746f3e8125215c3828bab846ef21c878dcc620979cf44c4",
+    "targetHash": "2a7ec05d89460c2bd79cdf7840e701512f9792492fb2b134a65fa5344b68101f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:51:14.571Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "4b0b9bffc68fe4c78fbb779df6a9ba8ef2e7735165d6a346ce8915a92fedc777",
+      "targetHash": "2a7ec05d89460c2bd79cdf7840e701512f9792492fb2b134a65fa5344b68101f",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]\nprotected node 60: expected [\"code\",\"sql\",null,\"...  \\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]; received [\"code\",\"sql\",null,\"...\\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]\nprotected node 60: expected [\"code\",\"sql\",null,\"...  \\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]; received [\"code\",\"sql\",null,\"...\\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]\nprotected node 60: expected [\"code\",\"sql\",null,\"...  \\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]; received [\"code\",\"sql\",null,\"...\\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]; received [\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"10000\",\"12.618\",\"12.718\",\"128\",\"128\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1\",\"2.1.7\",\"2.1.8\",\"2000\",\"2048\",\"233.79\",\"248.66\",\"25\",\"255\",\"256\",\"3\",\"3\",\"3\",\"3.0\",\"3.1\",\"3.1\",\"32\",\"32\",\"35.711\",\"4\",\"4.0\",\"4.1.4\",\"4.1.5\",\"4096\",\"43\",\"5\",\"6\",\"64\",\"64\",\"64\",\"65\",\"65\",\"743.69\",\"789.24\",\"8\",\"8\",\"8000\",\"83.03\",\"86.02\",\"92.29\",\"94.82\"]\nprotected node 60: expected [\"code\",\"sql\",null,\"...  \\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]; received [\"code\",\"sql\",null,\"...\\nPROPERTIES(\\\"replication_num\\\" = \\\"1\\\", \\\"bloom_filter_columns\\\" = \\\"v\\\");\\n\\n-- Use BloomFilter for equality/IN filters\\nSELECT * FROM tbl WHERE v['id'] = 12345678;\\nSELECT * FROM tbl WHERE v['id'] IN (1, 2, 3);\"]\nprotected node 116: expected [\"inlineCode\",null,null,\"\\\"storage_format\\\" = \\\"V3\\\"\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+        "blob": "75e43709fe5d6e174a0732583caa3fbb1af8217c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md",
+        "blob": "37e6ba94112d708ff6c302f1de091fee1f27afa3"
+      }
+    }
   }
 }

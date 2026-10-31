@@ -42,7 +42,7 @@
     "message": "개발 중인"
   },
   "theme.docs.versions.latestVersionSuggestionLabel": {
-    "message": "사용 방법은 버전 {v4xLink} / {v3xLink} / {v21Link}의 공식 문서를 참고하세요."
+    "message": "사용 방법은 버전 {v4xLink} / {v3xLink}의 공식 문서를 참고하세요."
   },
   "theme.docs.versions.unmaintainedVersionLabel": {
     "message": "현재 유지 관리되지 않는 {siteTitle} {versionLabel}의 문서입니다."
@@ -8674,5 +8674,17 @@
   },
   "course.lesson.continue": {
     "message": "계속 →"
+  },
+  "docs.archive.title": {
+    "message": "보관된 버전"
+  },
+  "docs.archive.description": {
+    "message": "Apache Doris 이전 버전의 PDF 문서를 다운로드하세요."
+  },
+  "docs.archive.notice": {
+    "message": "이 버전의 문서는 더 이상 업데이트되지 않습니다. 각 PDF에는 선택한 버전과 언어의 전체 문서가 포함되어 있습니다."
+  },
+  "docs.archive.current": {
+    "message": "현재 안정 버전 문서 읽기"
   }
 }

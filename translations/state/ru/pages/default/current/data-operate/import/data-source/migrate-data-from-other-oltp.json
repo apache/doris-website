@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/data-source/migrate-data-from-other-oltp.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-    "sourceCommit": "1fe3a22bd5392f5ee86fba8afcc0a24e883dc059",
-    "sourceHash": "aa055aa166d619abafd744c7d5081cca6f05d684e511148a3fff3f750cad7139",
-    "sourceTechnicalHash": "232a6ae25bf91fa4d19d3ec19046fe1e5736ad1f619360d5c8bb3886d8f34e6a",
-    "targetHash": "90726125d3e8efe0e92ad89459049ddb895c98c99e16693004fc0eab6b4e6d64",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "7bd4e9b2bf1c5a21f9ba4c6ac300e0ae311e37e55574f00eb2ebb987c7309aec",
+    "sourceTechnicalHash": "18c224cbfae3e18dfbfc0397c04c48d8b3ae2dea8beb317abda008d1d28c41ac",
+    "targetHash": "664da45d27b5a6bacb4e90554b110508f4e0162b671ffdbe97b1e21c826fb16e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-29T07:41:18.742Z",
+    "translatedAt": "2026-10-31T06:47:17.856Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "aa055aa166d619abafd744c7d5081cca6f05d684e511148a3fff3f750cad7139",
-      "targetHash": "90726125d3e8efe0e92ad89459049ddb895c98c99e16693004fc0eab6b4e6d64",
+      "sourceHash": "7bd4e9b2bf1c5a21f9ba4c6ac300e0ae311e37e55574f00eb2ebb987c7309aec",
+      "targetHash": "664da45d27b5a6bacb4e90554b110508f4e0162b671ffdbe97b1e21c826fb16e",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: решение по выбору архитектуры / операционные шаги -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: миграция или синхронизация данных из баз данных OLTP (MySQL / SQL Server / Oracle / PostgreSQL) в Apache Doris -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: выбор архитектуры / операционные шаги -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- Подходящий сценарий: миграция или синхронизация данных из OLTP-баз данных (MySQL / SQL Server / Oracle / PostgreSQL) в Apache Doris -->\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-        "blob": "29a40f8ccca44cce19c36b56b697440bbe155b21"
+        "blob": "88ac452aee67008efb0c8878c866ffc3ba018e6a"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-        "blob": "97421910ae75807f3ef66490baca6103196a806b"
+        "blob": "4a4e9201b2335481c12e8adb28ee75d1b8227acb"
       }
     }
   }

@@ -445,7 +445,7 @@ const config = {
                     // before forwarding to customFields.slackInviteUrl.
                 ],
                 createRedirects(existingPath) {
-                    const redirects = [];
+                    const redirects = [...require('./config/archived-docs-redirects.cjs')(existingPath)];
 
                     // Static redirects indexed by target. Trim trailing slash
                     // for the lookup since Docusaurus' trailingSlash:true

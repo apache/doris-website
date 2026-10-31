@@ -7,6 +7,7 @@ const {createHash} = require('node:crypto');
 const {createServer} = require('../publish/serve.cjs');
 const {verifyContent} = require('./verify-global-language.cjs');
 const {localeRegistry} = require('../../config/i18n');
+const {activeDocVersions, assertDocVersionCoverage} = require('./active-doc-versions.cjs');
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 function verifyPublicIdentity({publicOrigin, landingOnly, sourceSha, asfSha, runUrl, report, sha, site}) {
         assert(!landingOnly, 'Public acceptance requires the complete artifact');
@@ -23,6 +24,7 @@ function verifyPublicIdentity({publicOrigin, landingOnly, sourceSha, asfSha, run
 async function verify({site, directory, output, origin: publicOrigin, landingOnly = false, sample = false, buildReport, sourceSha, asfSha, runUrl}) {
     const {chromium} = require('playwright');
     const locales = ['en', 'zh-CN', 'ja', 'ko', 'ru'];
+    const versions = landingOnly ? [] : activeDocVersions();
     const manifests = Object.fromEntries(locales.map(locale => [locale, JSON.parse(fs.readFileSync(path.join(directory, locale + '.json')))]));
     const sha = manifests.en.sourceSha;
     for (const locale of locales) {
@@ -32,8 +34,7 @@ async function verify({site, directory, output, origin: publicOrigin, landingOnl
         assert(home && home.fallback === intentionalFallback && home.contentLocale === (intentionalFallback ? 'en' : locale)
             && home.indexable === !intentionalFallback, `Homepage policy mismatch: ${locale}`);
         assert.deepEqual([...home.availableTranslations].sort(), locales.slice().sort());
-        if (!landingOnly) for (const version of ['current', '4.x', '3.x', '2.1'])
-            assert(manifests[locale].pages.some(row => row.kind === 'docs' && row.pluginId === 'default' && row.version === version), `Missing version: ${locale}/${version}`);
+        if (!landingOnly) assertDocVersionCoverage(manifests[locale].pages, locale, versions);
     }
     if (publicOrigin) verifyPublicIdentity({publicOrigin, landingOnly: landingOnly || sample, sourceSha, asfSha, runUrl,
         report: JSON.parse(fs.readFileSync(buildReport)), sha, site});

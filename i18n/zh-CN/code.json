@@ -1,6 +1,6 @@
 {
     "theme.docs.versions.latestVersionSuggestionLabel": {
-        "message": "使用参考请跳转至 {v4xLink}/{v3xLink}/{v21Link} 正式版本文档进行查阅。"
+        "message": "使用参考请跳转至 {v4xLink}/{v3xLink} 正式版本文档进行查阅。"
     },
     "theme.docs.versions.unreleasedVersionLabel": {
         "message": "此处为 Apache Doris {unreleased}的版本文档，不建议作为使用参考。"
@@ -16021,5 +16021,17 @@
     },
     "course.lesson.continue": {
         "message": "继续 →"
+    },
+    "docs.archive.title": {
+        "message": "归档版本"
+    },
+    "docs.archive.description": {
+        "message": "下载 Apache Doris 历史版本的 PDF 文档。"
+    },
+    "docs.archive.notice": {
+        "message": "这些版本的文档已停止更新。每份 PDF 包含对应版本和语言的完整文档。"
+    },
+    "docs.archive.current": {
+        "message": "阅读当前稳定版本文档"
     }
 }

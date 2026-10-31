@@ -9,6 +9,7 @@ const cheerio = require('cheerio');
 const matter = require('gray-matter');
 const {createServer} = require('../publish/serve.cjs');
 const {localeRegistry} = require('../../config/i18n');
+const {activeDocVersions, assertDocVersionCoverage} = require('./active-doc-versions.cjs');
 const {generate} = require('../key-features/generate');
 
 const root = path.resolve(__dirname, '../..');
@@ -135,11 +136,10 @@ async function verify({site, directory, output, origin: publicOrigin, requireCom
     if (publicOrigin) {
         assert(!fs.existsSync(path.join(site, '.ci-validation.json')), 'A partial CI artifact cannot establish public acceptance');
         assert(fs.existsSync(path.join(site, '.publish/redirects.json')), 'Public acceptance requires the optimized publication artifact');
+        const versions = activeDocVersions();
         for (const locale of locales) {
             const manifest = JSON.parse(fs.readFileSync(path.join(directory, locale + '.json')));
-            for (const version of ['current', '4.x', '3.x', '2.1'])
-                assert(manifest.pages.some(row => row.kind === 'docs' && row.pluginId === 'default' && row.version === version),
-                    `Missing publication version: ${locale}/${version}`);
+            assertDocVersionCoverage(manifest.pages, locale, versions);
         }
     }
     const report = {schemaVersion: 1, sourceSha: native.sourceSha,

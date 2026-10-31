@@ -705,7 +705,7 @@
     "description": "The label used to tell the user that he's browsing an unmaintained doc version"
   },
   "theme.docs.versions.latestVersionSuggestionLabel": {
-    "message": "利用方法は、バージョン {v4xLink} / {v3xLink} / {v21Link} の正式ドキュメントを参照してください。",
+    "message": "利用方法は、バージョン {v4xLink} / {v3xLink} の正式ドキュメントを参照してください。",
     "description": "The label used to tell the user to check the latest version"
   },
   "theme.NotFound.title": {
@@ -8868,5 +8868,17 @@
   },
   "course.lesson.continue": {
     "message": "次へ →"
+  },
+  "docs.archive.title": {
+    "message": "アーカイブ版"
+  },
+  "docs.archive.description": {
+    "message": "Apache Doris の過去のバージョンの PDF ドキュメントをダウンロードできます。"
+  },
+  "docs.archive.notice": {
+    "message": "これらのバージョンのドキュメントは更新されません。各 PDF には、選択したバージョンと言語のドキュメント全体が含まれています。"
+  },
+  "docs.archive.current": {
+    "message": "現在の安定版のドキュメントを読む"
   }
 }

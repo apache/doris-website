@@ -25,6 +25,7 @@
         "generatePDF": "npx vitpress-generate-pdf -buildDirPath='./build/'  --firstDocPath='/docs/summary/basic-summary/' --paginationSelector='.pagination-nav__link--next' --contentSelector='article' --coverImage='https://cdn.selectdb.com/images/doris-logo-512.png' --coverTitle='Apache Doris 1.1 (English)' --outputPDFFilename='Apache Doris 1.1 (English).pdf'",
         "write-translations": "docusaurus write-translations --locale zh-CN",
         "write-heading-ids": "docusaurus write-heading-ids",
+        "docs:pdf": "node scripts/docs-pdf/cli.cjs",
         "docs:manifest": "node scripts/docs-governance/manifest.js --output website-quality-governance/generated/docs-manifest.json",
         "docs:links": "node scripts/docs-governance/lint-links.js",
         "docs:links:changed": "node scripts/docs-governance/lint-links.js --changed",

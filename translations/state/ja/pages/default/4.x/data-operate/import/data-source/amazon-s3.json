@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
     "sourceHash": "ca94f799c99260becf89bd1419e5abb4db3fa11137043d53a616a9176523d8f4",
     "sourceTechnicalHash": "5f352f21821df1430ddd72b2efc2356480c487e7a6f6673eb052ba12175c2e96",
-    "targetHash": "b181a5927970c69f8c96c74a3ec64c2d2ece2962a1cc08239239373240047708",
+    "targetHash": "e28e5835557d252be7d5cc03f20c89dac841c16a52cd4ba89b170a4cffef5fdd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.603Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-30T05:54:51.577Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ca94f799c99260becf89bd1419e5abb4db3fa11137043d53a616a9176523d8f4",
+      "targetHash": "e28e5835557d252be7d5cc03f20c89dac841c16a52cd4ba89b170a4cffef5fdd",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]\nprotected node 24: expected [\"code\",\"text\",null,\"mysql> select * from test_s3load;\\n+---------+-----------+------+\\n| user_id | name      | age  |\\n+---------+-----------+------+\\n|       5 | Ava       |   17 |\\n|      10 | Liam      |   64 |\\n|       7 | Sophia    |   32 |\\n|       9 | Emma      |   37 |\\n|       1 | Emily     |   25 |\\n|       4 | Alexander |   60 |\\n|       2 | Benjamin  |   35 |\\n|       3 | Olivia    |   28 |\\n|       6 | William   |   69 |\\n|       8 | James     |   64 |\\n+---------+-----------+------+\\n10 rows in set (0.04 sec)\"]; received [\"code\",\"text\",null,\"mysql> select * from test_s3load;\\n+---------+-----------+------+\\n| user_id | name      | age  |\\n+---------+-----------+------+\\n|       5 | Ava       |   17 |\\n|      10 | Liam      |   64 |\\n|       7 | Sophia    |   32 |\\n|       9 | Emma      |   37 |\\n|       1 | Emily     |   25 |\\n|       4 | Alexander |   60 |\\n|       2 | Benjamin  |   35 |\\n|       3 | Olivia    |   28 |\\n|       6 | William   |   69 |\\n|       8 | James    |   64 |\\n+---------+-----------+------+\\n10 rows in set (0.04 sec)\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure / Data loading -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 / データロード -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use case: Load files from AWS S3 into Doris -->\"]; received [\"html\",null,null,\"<!-- 用途: AWS S3 から Doris にファイルをロード -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 56: expected [\"inlineCode\",null,null,\"timeout\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"PROPERTIES\"]; received [\"inlineCode\",null,null,\"timeout\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"403\"]\nprotected node 24: expected [\"code\",\"text\",null,\"mysql> select * from test_s3load;\\n+---------+-----------+------+\\n| user_id | name      | age  |\\n+---------+-----------+------+\\n|       5 | Ava       |   17 |\\n|      10 | Liam      |   64 |\\n|       7 | Sophia    |   32 |\\n|       9 | Emma      |   37 |\\n|       1 | Emily     |   25 |\\n|       4 | Alexander |   60 |\\n|       2 | Benjamin  |   35 |\\n|       3 | Olivia    |   28 |\\n|       6 | William   |   69 |\\n|       8 | James     |   64 |\\n+---------+-----------+------+\\n10 rows in set (0.04 sec)\"]; received [\"code\",\"text\",null,\"mysql> select * from test_s3load;\\n+---------+-----------+------+\\n| user_id | name      | age  |\\n+---------+-----------+------+\\n|       5 | Ava       |   17 |\\n|      10 | Liam      |   64 |\\n|       7 | Sophia    |   32 |\\n|       9 | Emma      |   37 |\\n|       1 | Emily     |   25 |\\n|       4 | Alexander |   60 |\\n|       2 | Benjamin  |   35 |\\n|       3 | Olivia    |   28 |\\n|       6 | William   |   69 |\\n|       8 | James    |   64 |\\n+---------+-----------+------+\\n10 rows in set (0.04 sec)\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
+        "blob": "dd9a9ceb665c497bf3a6161dcafd63be49a9b733"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/data-source/amazon-s3.md",
+        "blob": "6ac48081671ac3c2b0c4e9097ba5463b56a6cc97"
+      }
+    }
   }
 }

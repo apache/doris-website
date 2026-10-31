@@ -2,6 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const {outputText}=ts.transpileModule(fs.readFileSync(path.resolve(__dirname,'../../../src/utils/searchScopes.js'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}});
 const moduleValue={exports:{}};new Function('exports',outputText)(moduleValue.exports);
 const {resolveSearchScope,convertSearchParams,docSearchSourceVersion}=moduleValue.exports;
+const {verifySourceSearchHref}=require('../verify-search.cjs');
 const versions=['dev','4.x','3.x','2.1'].map(name=>({path:'/docs/'+name,isLast:name==='4.x'}));
 const source={versions,contexts:['docs','community','course','releases'],managed:false};
 const managed={versions,contexts:['docs/dev','docs/4.x','community','course','releases'],managed:true};
@@ -34,6 +35,27 @@ test('language conversion preserves the query and unrelated parameters through a
     assert.equal(japanese.get('ctx'),'docs/dev');assert(!japanese.has('version'));
     for(const value of [english,japanese]){assert.equal(value.get('q'),original.get('q'));assert.equal(value.get('probe'),original.get('probe'));}
     assert.equal(original.get('ctx'),'docs/dev');
+});
+test('source search acceptance validates URL values independently of parameter order',()=>{
+    const origin='http://127.0.0.1:3000',query='zzzzqqqq_xxxxwwww';
+    // Use the same scope conversion as SearchPage, including its canonical
+    // ctx-first URL, which failed the old /search/?q= prefix assertion.
+    for(const input of [{q:query,ctx:'docs/dev'},{ctx:'docs/dev',q:query}]) {
+        const params=convertSearchParams(new URLSearchParams(input),source);
+        verifySourceSearchHref('/search/?'+params,origin,query);
+    }
+    const encodedQuery='Doris + 日本語 & запрос';
+    verifySourceSearchHref('/search/?'+new URLSearchParams({version:'docs/dev/',ctx:'docs',q:encodedQuery}),origin,encodedQuery);
+    for(const href of [
+        '/search/?ctx=docs&q=other&version=docs%2Fdev%2F',
+        '/search/?q='+query+'&version=docs%2Fdev%2F',
+        '/search/?ctx=community&q='+query+'&version=docs%2Fdev%2F',
+        '/search/?ctx=docs&q='+query,
+        '/search/?ctx=docs&q='+query+'&version=docs%2F4.x%2F',
+        '/ja/search/?ctx=docs&q='+query+'&version=docs%2Fdev%2F',
+        'https://example.invalid/search/?ctx=docs&q='+query+'&version=docs%2Fdev%2F',
+        '/search/?ctx=docs&q='+query+'&q=other&version=docs%2Fdev%2F',
+    ])assert.throws(()=>verifySourceSearchHref(href,origin,query),undefined,href);
 });
 test('an implicit native default stays on the stable version when switching languages',()=>{
     const target=convertSearchParams(new URLSearchParams({q:'Doris'}),managed,source);
