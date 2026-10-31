@@ -14,12 +14,20 @@
 #   - counts and prints total broken links at the end
 
 import argparse
+import json
 import os
 import re
 import sys
 from urllib.parse import urlparse
 
-search_dirs = ["docs", "i18n/zh-CN/docusaurus-plugin-content-docs/version-2.1","i18n/zh-CN/docusaurus-plugin-content-docs/version-3.x","i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x", "versioned_docs/version-2.1","versioned_docs/version-3.x","versioned_docs/version-4.x", "community"]
+with open(os.path.join(os.path.dirname(__file__), "..", "versions.json"), encoding="utf-8") as versions_file:
+    active_versions = json.load(versions_file)
+search_dirs = ["docs", "i18n/zh-CN/docusaurus-plugin-content-docs/current", "community"]
+for version in active_versions:
+    search_dirs.extend([
+        f"versioned_docs/version-{version}",
+        f"i18n/zh-CN/docusaurus-plugin-content-docs/version-{version}",
+    ])
 broken_count = 0  # 全局死链计数
 
 def process_md_file(file_path):

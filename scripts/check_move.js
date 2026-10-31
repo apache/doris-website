@@ -27,7 +27,9 @@ function getModifiedMarkdownFiles(commit, base) {
   const selection = base ? ['diff', '--name-only', '--diff-filter=AMR', '-z', base, 'HEAD']
     : ['show', '--format=', '--name-only', '--diff-filter=AMR', '-z', commit];
   return execFileSync('git', [...selection, '--', '*.md', '*.mdx'],
-    {encoding: 'utf8', maxBuffer: 100 * 1024 * 1024}).split('\0').filter(Boolean);
+    {encoding: 'utf8', maxBuffer: 100 * 1024 * 1024}).split('\0')
+    // Frozen sources are retained for redirects/PDFs and are not site pages.
+    .filter(file => file && !file.startsWith('archived_docs/'));
 }
 
 // Checks if the link points to an existing local file
