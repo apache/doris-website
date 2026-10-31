@@ -2089,8 +2089,10 @@ const sidebars: SidebarsConfig = {
                                         'sql-manual/sql-functions/scalar-functions/hll-functions/hll-cardinality',
                                         'sql-manual/sql-functions/scalar-functions/hll-functions/hll-empty',
                                         'sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-base64',
+                                        'sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-binary',
                                         'sql-manual/sql-functions/scalar-functions/hll-functions/hll-hash',
                                         'sql-manual/sql-functions/scalar-functions/hll-functions/hll-to-base64',
+                                        'sql-manual/sql-functions/scalar-functions/hll-functions/hll-to-binary',
                                     ],
                                 },
                                 {
