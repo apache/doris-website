@@ -32,8 +32,7 @@
 | Flink Doris Connector (CDC) | 실시간 전체 + 증분 동기화 | 실시간 | 지원 | 지원(INSERT / UPDATE / DELETE) |
 | Spark Connector | Spark 스택에서의 일괄 데이터 쓰기 | 오프라인 | 아니요 | 아니요 |
 | Streaming Job | Doris에 내장된 MySQL / PostgreSQL 지속 동기화 | 스트리밍(지속) | 지원 | 지원 |
-| 타사 도구(DataX / SeaTunnel / CloudCanal) | 기존 동기화 플랫폼, 시각적 운영 | 오프라인 / 실시간 | 도구에 따라 다름 | 도구에 따라 다름 |
-| NineData(MySQL 호환 소스에서 Doris로) | 전체 및 증분 데이터 복제 | 전체 + 증분(Binlog) | 지원 | 지원 |
+| 타사 도구(NineData / DataX / SeaTunnel / CloudCanal) | 기존 동기화 플랫폼, 시각적 운영 | 오프라인 / 실시간 | 지원 | 지원 |
 
 > 참고: 외부 컴퓨팅 엔진을 도입하지 않고 마이그레이션을 완료해야 한다면 **Multi-Catalog** 또는 **Streaming Job**을 사용하세요. 실시간 증분 동기화가 필요하다면 **Flink Doris Connector + CDC**, **Streaming Job**, 또는 MySQL 호환 소스에서 Doris로 사용할 수 있는 **NineData**를 사용하세요.
 
@@ -250,10 +249,10 @@ TO DATABASE target_test_db (
 
 앞서 설명한 기본 제공 옵션 외에도 커뮤니티 프로젝트나 공급업체가 제공하는 타사 동기화 도구를 사용해 데이터를 마이그레이션할 수 있습니다. 특히 이미 동기화 플랫폼을 사용하고 있거나 시각적 인터페이스를 통해 작업을 관리하려는 경우에 적합합니다.
 
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 - [DataX](../../../connection-integration/data-integration/datax.md)
 - [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)
 - [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md)
-- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 
 ---
 
