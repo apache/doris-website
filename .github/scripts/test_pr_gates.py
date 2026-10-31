@@ -103,6 +103,18 @@ class PrGateRegression(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn('missing.md', result.stderr)
 
+    def test_node_link_checker_skips_frozen_archives_after_a_move(self):
+        self.write('versioned_docs/version-2.1/topic.md', '# Legacy\n\n[Old link](missing.md)\n')
+        self.commit()
+        self.base = self.git('rev-parse', 'HEAD').strip()
+        destination = self.root / 'archived_docs/versioned_docs/version-2.1'
+        destination.parent.mkdir(parents=True)
+        self.git('mv', 'versioned_docs/version-2.1', str(destination))
+        self.commit()
+        result = subprocess.run(['node', str(ROOT / 'scripts/check_move.js'), '--base', self.base],
+                                cwd=self.root, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
 
 if __name__ == '__main__':
     unittest.main()

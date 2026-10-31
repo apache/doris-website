@@ -3,6 +3,8 @@
 Generate the documentation for a selected version from this checkout. The
 command reads local Markdown/MDX and version sidebars, so you can export Dev,
 active releases, or historical versions without building or deploying the site.
+Historical versions 2.1, 2.0, and 1.2 are read from `archived_docs/`, including
+their sidebars and Chinese sources. These snapshots are no longer maintained.
 Remote images are downloaded and embedded; uploading the finished PDF is a
 separate step. The working tree is exported, including uncommitted documentation
 edits; the recorded source commit identifies the checkout base.
@@ -78,7 +80,7 @@ to the CLI.
 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `--version <version>` | Required for an export | `dev` (`current` is an alias), or a version directory present in `versioned_docs/`. Use `--list-versions` for the names available in this checkout. |
+| `--version <version>` | Required for an export | `dev` (`current` is an alias), or a version directory present in `versioned_docs/` or `archived_docs/versioned_docs/`. Use `--list-versions` for the names available in this checkout. |
 | `--locale <locales>` | `en,zh-CN` | Export `en`, `zh-CN`, or both as `en,zh-CN`. The selected source directories must exist. |
 | `--output <directory>` | `output/pdf/docs/<version>/` | Destination for the selected PDFs and their manifest/checksums. With the shell wrapper, relative paths start at the repository root. |
 | `--chrome <executable>` | Auto-detected | Chrome/Chromium executable. Paths containing spaces must be quoted. |

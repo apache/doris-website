@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://apache-doris-releases.oss-accelerate.aliyuncs.com/docs/",
+  "baseUrl": "https://apache-doris-releases.oss-accelerate.aliyuncs.com/archived-docs/",
   "versions": ["2.1", "2.0", "1.2"],
   "locales": ["en", "zh-CN"]
 }

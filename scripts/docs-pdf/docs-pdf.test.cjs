@@ -7,7 +7,7 @@ const test = require('node:test');
 const {parseOptions} = require('./cli.cjs');
 const {normalize, addHeadingTargets} = require('./generate.cjs');
 const cheerio = require('cheerio');
-const {availableVersions, inventory, filename} = require('../docs-inventory.cjs');
+const {availableVersions, contentDirectory, inventory, filename} = require('../docs-inventory.cjs');
 const root = path.resolve(__dirname, '../..');
 function fixture(t) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'doris-pdf-test-'));
@@ -36,6 +36,24 @@ test('version discovery and current alias use the actual local source roots', t 
         assert.equal(docs[1].route, `${locale === 'en' ? '' : '/zh-CN'}/docs/${version === 'current' ? 'dev' : version}/custom-topic`);
     }
     assert.equal(filename('current', 'zh-CN'), 'apache-doris-dev-zh-CN.pdf');
+});
+
+test('archived versions retain source selection, sidebar order, routes, and PDF CLI support', t => {
+    const {directory} = fixture(t);
+    const before = Object.fromEntries(['en', 'zh-CN'].map(locale => [locale, inventory(directory, '4.x', locale)]));
+    for (const source of ['versioned_docs', 'versioned_sidebars', 'i18n']) {
+        const destination = path.join(directory, 'archived_docs', source);
+        fs.mkdirSync(path.dirname(destination), {recursive: true});
+        fs.renameSync(path.join(directory, source), destination);
+    }
+    assert.deepEqual(availableVersions(directory), ['dev', '4.x']);
+    for (const locale of ['en', 'zh-CN']) {
+        const docs = inventory(directory, '4.x', locale);
+        assert.deepEqual(docs.map(({file, ...doc}) => doc), before[locale].map(({file, ...doc}) => doc));
+        assert(docs.every(doc => doc.file.startsWith(contentDirectory(directory, '4.x', locale) + path.sep)));
+        assert(contentDirectory(directory, '4.x', locale).startsWith(path.join(directory, 'archived_docs') + path.sep));
+    }
+    assert.deepEqual(parseOptions(['--version', '4.x'], directory).locales, ['en', 'zh-CN']);
 });
 
 test('explicit CLI selection, locale subsets, output paths, and samples are retained', t => {

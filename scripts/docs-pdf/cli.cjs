@@ -8,7 +8,7 @@ const help = `Export a local Apache Doris documentation version to PDF.
 
 Usage: yarn docs:pdf --version <version> [options]
 
-  --version <version>       Required: dev (alias: current), or a versioned_docs version
+  --version <version>       Required: dev (alias: current), an active or archived version
   --locale <locales>        en, zh-CN, or en,zh-CN (default: en,zh-CN)
   --output <directory>      Default: output/pdf/docs/<version>/
   --chrome <executable>     Installed Chrome/Chromium; auto-detected when omitted

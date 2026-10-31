@@ -6,14 +6,20 @@ const {DefaultNumberPrefixParser, stripPathNumberPrefixes} = require('@docusauru
 
 const normalizeVersion = version => version === 'current' ? 'dev' : version;
 function availableVersions(root) {
-    const directory = path.join(root, 'versioned_docs');
-    const versions = fs.existsSync(directory) ? fs.readdirSync(directory, {withFileTypes: true})
-        .filter(entry => entry.isDirectory() && entry.name.startsWith('version-')).map(entry => entry.name.slice(8)) : [];
-    return [...(fs.existsSync(path.join(root, 'docs')) ? ['dev'] : []), ...versions.sort((a, b) => b.localeCompare(a, 'en', {numeric: true}))];
+    const versions = [root, path.join(root, 'archived_docs')].flatMap(sourceRoot => {
+        const directory = path.join(sourceRoot, 'versioned_docs');
+        return fs.existsSync(directory) ? fs.readdirSync(directory, {withFileTypes: true})
+            .filter(entry => entry.isDirectory() && entry.name.startsWith('version-')).map(entry => entry.name.slice(8)) : [];
+    });
+    return [...(fs.existsSync(path.join(root, 'docs')) ? ['dev'] : []), ...[...new Set(versions)].sort((a, b) => b.localeCompare(a, 'en', {numeric: true}))];
+}
+function versionRoot(root, version) {
+    const archived = path.join(root, 'archived_docs');
+    return fs.existsSync(path.join(archived, `versioned_docs/version-${version}`)) ? archived : root;
 }
 function contentDirectory(root, version, locale) {
     const current = normalizeVersion(version) === 'dev';
-    return path.join(root, locale === 'en' ? (current ? 'docs' : `versioned_docs/version-${version}`)
+    return path.join(current ? root : versionRoot(root, version), locale === 'en' ? (current ? 'docs' : `versioned_docs/version-${version}`)
         : `i18n/${locale}/docusaurus-plugin-content-docs/${current ? 'current' : `version-${version}`}`);
 }
 function inventory(root, inputVersion, locale) {
@@ -44,7 +50,8 @@ function inventory(root, inputVersion, locale) {
         }
     }
     walk(directory);
-    const sidebarFile = path.join(root, version === 'dev' ? 'sidebars.ts' : `versioned_sidebars/version-${version}-sidebars.json`);
+    const sidebarFile = path.join(version === 'dev' ? root : versionRoot(root, version),
+        version === 'dev' ? 'sidebars.ts' : `versioned_sidebars/version-${version}-sidebars.json`);
     if (!fs.existsSync(sidebarFile)) throw new Error(`Missing documentation sidebar: ${sidebarFile}`);
     const sidebar = version === 'dev' ? require('jiti')(__filename, {interopDefault: true})(sidebarFile)
         : JSON.parse(fs.readFileSync(sidebarFile, 'utf8'));
