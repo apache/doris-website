@@ -8,29 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/data-source/migrate-data-from-other-oltp.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/data-source/migrate-data-from-other-oltp.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "b5d6888dcd9b597791232d5fe342f589d3d7dfbea4c7e3e5d73ea7668174a0ac",
-    "sourceTechnicalHash": "0cf91a80f69bc74aa2f80072cb34951a970423532541fa2d94f80e93938eb6c4",
-    "targetHash": "d2eba153309cb945457ddbfb8df43dc681a46225693b2c8c28d05efa61fdcdef",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "aa055aa166d619abafd744c7d5081cca6f05d684e511148a3fff3f750cad7139",
+    "sourceTechnicalHash": "232a6ae25bf91fa4d19d3ec19046fe1e5736ad1f619360d5c8bb3886d8f34e6a",
+    "targetHash": "746b9bc36147d61a191985950eb1ccf442c28d699a07828145e4bee271d63d4f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T02:50:27.209Z",
+    "translatedAt": "2026-10-30T06:40:30.423Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "b5d6888dcd9b597791232d5fe342f589d3d7dfbea4c7e3e5d73ea7668174a0ac",
-      "targetHash": "d2eba153309cb945457ddbfb8df43dc681a46225693b2c8c28d05efa61fdcdef",
+      "sourceHash": "aa055aa166d619abafd744c7d5081cca6f05d684e511148a3fff3f750cad7139",
+      "targetHash": "746b9bc36147d61a191985950eb1ccf442c28d699a07828145e4bee271d63d4f",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision / Operational steps -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 아키텍처 선택 결정 / 운영 단계 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: OLTP 데이터베이스(MySQL / SQL Server / Oracle / PostgreSQL)에서 Apache Doris로 데이터 마이그레이션 또는 동기화 -->\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"PROPERTIES('replication_num' = 'N')\"]; received [\"inlineCode\",null,null,\"CTAS\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "29a40f8ccca44cce19c36b56b697440bbe155b21"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/data-source/migrate-data-from-other-oltp.md",
+        "blob": "97421910ae75807f3ef66490baca6103196a806b"
+      }
     }
   }
 }

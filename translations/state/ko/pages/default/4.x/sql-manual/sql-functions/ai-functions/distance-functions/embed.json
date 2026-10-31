@@ -8,41 +8,66 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
-    "sourceTechnicalHash": "dbe51ba33ee3b36651525acfe1fa7ddbb3e253196985d5d369f61f518ae35f44",
-    "targetHash": "c203236637205e1904200a49e5e8aa99f75a0717841ffabda101ee9cba325be6",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "a7d4008553e5c8dc0c9bb51e65993a92d90d8daa49a152e99dfac1cb64932915",
+    "sourceTechnicalHash": "5fc11a93a0ae06a701faff2d1824e05e3b857a460063a81d91766bfe72994e8a",
+    "targetHash": "f1c3698a5e79f2e2687d1f9443d77200cac756709a2234110ee91112f60b73e1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T13:24:19.314Z",
+    "translatedAt": "2026-10-30T07:29:10.194Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
-      "acceptedWithWarnings": false,
-      "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
-      "targetHash": "c203236637205e1904200a49e5e8aa99f75a0717841ffabda101ee9cba325be6",
-      "warnings": [],
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a7d4008553e5c8dc0c9bb51e65993a92d90d8daa49a152e99dfac1cb64932915",
+      "targetHash": "f1c3698a5e79f2e2687d1f9443d77200cac756709a2234110ee91112f60b73e1",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 65: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]\nprotected node 68: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
-          "issues": []
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 65: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]\nprotected node 68: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 65: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    COSINE_DISTANCE(embedding, EMBED(\\\"How to apply for travel reimbursement?\\\")) AS score\\nFROM knowledge_base\\nORDER BY score ASC\\nLIMIT 2;\"]\nprotected node 68: expected [\"code\",\"sql\",null,\"SELECT \\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]; received [\"code\",\"sql\",null,\"SELECT\\n    id, title, content,\\n    L2_DISTANCE(embedding, EMBED(\\\"How to access the company intranet\\\")) AS distance\\nFROM knowledge_base\\nORDER BY distance ASC\\nLIMIT 2;\"]"
+            }
+          ]
         }
-      ],
-      "reusedFrom": {
-        "origin": "merged",
-        "version": "current",
-        "docId": "sql-manual/sql-functions/ai-functions/distance-functions/embed",
-        "sourcePath": "docs/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
-        "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
-        "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-        "sourceHash": "ad556fcd533a031685b267a37895a7b26b987dba9f2b0a398512f899bd0fdf96",
-        "targetHash": "c203236637205e1904200a49e5e8aa99f75a0717841ffabda101ee9cba325be6",
-        "commit": "f1464d3fb0dd6007d36104a970c3bc7db282d822"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+        "blob": "f48656edd15c6f4004333517f3ea1e6aeab551ef"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/distance-functions/embed.md",
+        "blob": "28f3be66e4f05d95e38b0e79c0264d216455afe1"
       }
     }
   }
