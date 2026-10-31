@@ -1,0 +1,52 @@
+{
+    "name": "Apache Doris",
+    "short_name": "Apache Doris",
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "./index.html",
+    "related_applications": [
+        {
+            "platform": "webapp",
+            "url": "https://doris.apache.org/manifest.json"
+        }
+    ],
+    "icons": [
+        {
+            "src": "images/logo-only.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo-only.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo-only.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo-only.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo-only.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "images/logo-only.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/doris-logo-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
