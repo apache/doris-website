@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "c09d7cdbec22e1525a53de97e33d228810dc6af796e440492b9cc4a6183df1c6",
-    "sourceTechnicalHash": "930a02d19fcbf4fbf9274e665f9d5a25af1494f94761a6467469835439145fbd",
-    "targetHash": "95566d8e54b7e53cd8254e631a3c5042326b9cb95c14f1470c2656da213d858e",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "e3f67a57d561bdb73202fbe0c242068c56670acf4c881d615d09edf848738fe9",
+    "sourceTechnicalHash": "dbf20085afde27f24d7968c03a3b86a23fe51199739ba4455ca260e8ec6ee253",
+    "targetHash": "871f7931454c532ba19fc8cb56ac1307c98ed46218600387d23eed116769e1e7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:10:24.680Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e3f67a57d561bdb73202fbe0c242068c56670acf4c881d615d09edf848738fe9",
+      "targetHash": "871f7931454c532ba19fc8cb56ac1307c98ed46218600387d23eed116769e1e7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 24: expected [\"code\",\"sql\",null,\"-- Using the current time zone (assuming +08:00) to convert a time string without time zone information\\nselect cast(\\\"2020-01-01 00:00:00\\\" as timestamptz);\"]; received [\"code\",\"sql\",null,\"-- 現在のタイムゾーン（+08:00 と仮定）を使用して、タイムゾーン情報のない時間文字列を変換\\nselect cast(\\\"2020-01-01 00:00:00\\\" as timestamptz);\"]\nprotected node 26: expected [\"code\",\"sql\",null,\"-- TIMESTAMPTZ supports microseconds\\nselect cast(\\\"2020-01-01 00:00:00.123456\\\" as timestamptz(5));\"]; received [\"code\",\"sql\",null,\"-- TIMESTAMPTZ はマイクロ秒をサポート\\nselect cast(\\\"2020-01-01 00:00:00.123456\\\" as timestamptz(5));\"]\nprotected node 28: expected [\"code\",\"sql\",null,\"-- Using a time string with time zone information\\nselect cast(\\\"2020-01-01 00:00:00 +03:00\\\" as timestamptz);\"]; received [\"code\",\"sql\",null,\"-- タイムゾーン情報を含む時間文字列を使用\\nselect cast(\\\"2020-01-01 00:00:00 +03:00\\\" as timestamptz);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+        "blob": "2bd9134e6d21d01efffe763494734596aff58ffd"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/TIMESTAMPTZ.md",
+        "blob": "0409c8f04516f6a8c7c1283256617ab5b752a553"
+      }
+    }
   }
 }

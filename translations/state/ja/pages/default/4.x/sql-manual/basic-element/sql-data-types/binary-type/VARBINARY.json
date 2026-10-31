@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "37686de7eed3e80c1ffe82ebe2189eece9f4e8fbfa3ac7af322af05e1af22a9b",
-    "sourceTechnicalHash": "e8037d1e88a7ffeac18c4754bcbb931a9d52ba67cbe198efad3bd0a4d7de0ccd",
-    "targetHash": "e0b2cabdabc1bb70548c0d5d95a4f7b0c847ff07be290bcdb7a728739763c0be",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "afc80c94f400a9ccd7c3026010915f4bd7f8782640869ccd656ea276a7549862",
+    "sourceTechnicalHash": "243064a2baa164f170425638f6f4fae0cfef2612cfa9a1fbc98382ce29f4cd9b",
+    "targetHash": "b96bbc9bd0e92b16529f4d9b2d2557ec62e439082a1ffd3cd4b9bf7ce4c8bcda",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T04:59:49.320Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "afc80c94f400a9ccd7c3026010915f4bd7f8782640869ccd656ea276a7549862",
+      "targetHash": "b96bbc9bd0e92b16529f4d9b2d2557ec62e439082a1ffd3cd4b9bf7ce4c8bcda",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]; received [\"16\",\"16\",\"2147483647\",\"4.0\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+        "blob": "a12afdde029e392d4fd5b81589af54d565a94d68"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/binary-type/VARBINARY.md",
+        "blob": "b6ded5575922f4c19d1a38c5c45fe478e78308ca"
+      }
+    }
   }
 }

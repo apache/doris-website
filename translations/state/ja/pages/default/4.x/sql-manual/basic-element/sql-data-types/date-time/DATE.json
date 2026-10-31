@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "e1efe0685e075e454811a66bb037325134480ca25e4cba05c156d4895ad987a1",
-    "sourceTechnicalHash": "fb2aeb78433ca67d1961de4d2084e98dc500009ba64aeb589d92e03bc842fa29",
-    "targetHash": "0433b3bb7dde01b6c246b57146c0d1b2fa3692d44e3cd62c3e4c16712a8cd6ba",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+    "sourceTechnicalHash": "e06d8d43fcde346b6593d4a342f73cb56bb62b703a008485a48d71ef85214ddf",
+    "targetHash": "a371152784da3b1ae5c7238b52627897869095edcf7c1a65edd2dc62097bd291",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:05:31.369Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e371e854ddb4657655ba17a222548fd98e8a0b4c7cf73b915b1dc84a82913611",
+      "targetHash": "a371152784da3b1ae5c7238b52627897869095edcf7c1a65edd2dc62097bd291",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"4\",\"4.1.5\"]; received [\"0\",\"1\",\"1\",\"2\",\"2\",\"4\",\"4.1.5\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+        "blob": "a5c6e672858a35df6b28f030887c6690fe0d15b6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/date-time/DATE.md",
+        "blob": "0dab2c10065c4ae69ec6c5a4a5e2e1081b362717"
+      }
+    }
   }
 }
