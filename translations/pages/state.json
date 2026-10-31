@@ -7,6 +7,7 @@
       "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
+        "src/components/Icons/telegram.tsx",
         "src/components/home-next/HomeNext.scss",
         "src/components/home-next/HomeNext.tsx",
         "src/components/home-next/NewsTicker.logic.js",
@@ -56,7 +57,7 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "sourceHash": "bca2747fd4817a46b41471167f6b7846302202a59559f7dfea05a70827ba6557",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewStatus": "machine",
       "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
@@ -67,6 +68,7 @@
       "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
+        "src/components/Icons/telegram.tsx",
         "src/components/home-next/HomeNext.scss",
         "src/components/home-next/HomeNext.tsx",
         "src/components/home-next/NewsTicker.logic.js",
@@ -116,7 +118,7 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "sourceHash": "bca2747fd4817a46b41471167f6b7846302202a59559f7dfea05a70827ba6557",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167",
       "reviewStatus": "machine",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
@@ -127,6 +129,7 @@
       "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
+        "src/components/Icons/telegram.tsx",
         "src/components/home-next/HomeNext.scss",
         "src/components/home-next/HomeNext.tsx",
         "src/components/home-next/NewsTicker.logic.js",
@@ -176,7 +179,7 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
+      "sourceHash": "bca2747fd4817a46b41471167f6b7846302202a59559f7dfea05a70827ba6557",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0",
       "reviewStatus": "machine",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
@@ -187,6 +190,7 @@
       "state": "ready",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
+        "src/components/Icons/telegram.tsx",
         "src/components/home-next/HomeNext.scss",
         "src/components/home-next/HomeNext.tsx",
         "src/components/home-next/NewsTicker.logic.js",
@@ -236,8 +240,8 @@
       "messageNamespaces": [
         "homepage"
       ],
-      "sourceHash": "04fd2ce6e5f2be735f687ceb1ec9bec5ed53b8d366183d51cf475c35c7669a12",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "sourceHash": "bca2747fd4817a46b41471167f6b7846302202a59559f7dfea05a70827ba6557",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259"
     },
@@ -353,7 +357,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "337dfd3f9d86e98e05591d6fdf27f5d460fabb70298294ad7f770a74d74c9dff",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -435,7 +439,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "faa2dfb60b7b2f2f263f67eb4dd791feb6b1c763259ce1aacb0280c3f2d1184c",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -523,7 +527,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "0e443a2d62bcd13a7bd71a95a3aad9a856a8789f5c423e533ba0f75fb9c4909b",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "derivedDependencies": [
@@ -1171,7 +1175,7 @@
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
       "sourceHash": "cc12416cf9494de15597003e40491c91a2197b819a99dc0d293cb0cf07660438",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P06",
@@ -1269,7 +1273,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "572f5460f3e88a1d45232ffa837c236f06d2a8f18132fcd63cade5f19d831500",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -1371,7 +1375,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "82b97c655120ad6aafaa445bc35f4b6a48330ad70aba5e8128c998c7ca3dd92f",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -1473,7 +1477,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "41300ff30c8bfa4923eadc74667c4195cc246a20fb823c4edb4f3aaa97124aef",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -1563,7 +1567,7 @@
         "i18n/ru/code.json"
       ],
       "sourceHash": "15d1b62c09dd2e12754c4219df7a67b426d8088d7b3506837e12171349acec00",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine",
       "compatibilitySource": "Existing seven marketing pages at bb7e86a7ff7b9232af24090928cfbc9a87d8a3b2",
       "reviewedSourceCommit": "2df4bc3783d68b5d1b9b50cca4ffda6f8046b259",
@@ -1694,7 +1698,7 @@
       ],
       "reviewedSourceCommit": "df07fea7243b149566236fc0932304564fab2d25",
       "sourceHash": "9a606e29b717c97f10e92019c0449174ad2dc7f411a28e5e921abecff3576cb4",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P11",
@@ -1815,7 +1819,7 @@
       ],
       "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
       "sourceHash": "eca1dd2eaf22825059040986b901880e13416a8ef56279c66e7516196e0b51f6",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P12",
@@ -2044,7 +2048,7 @@
       ],
       "reviewedSourceCommit": "5264923f07b0cb362febce45b5d62abd94966de4",
       "sourceHash": "fbc29f6ab62e9b5ec55d2d2c689d881ef94cb313ef4de07026ca70ca30bae97c",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P13",
@@ -2121,7 +2125,7 @@
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
       "sourceHash": "04aea9fc522482abd7826e6bc880d753a67c298e71a743cb8b660ba599924aa3",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P14",
@@ -2274,7 +2278,7 @@
       ],
       "reviewedSourceCommit": "bd675d25613a69a75e5f97196d6d32f2fd05a0c3",
       "sourceHash": "19ac30159720760fb2140606d3a5f145d7cf317d10436f362b7854a896aaded9",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P15",
@@ -2295,7 +2299,7 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
+      "sourceHash": "bbf902c3ffce41a8f90113d196a8b1cf48b9c9881b5a8fe0592240e9cd2ef16f",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
@@ -2322,7 +2326,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
+      "sourceHash": "bbf902c3ffce41a8f90113d196a8b1cf48b9c9881b5a8fe0592240e9cd2ef16f",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
     },
     {
@@ -2348,7 +2352,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
+      "sourceHash": "bbf902c3ffce41a8f90113d196a8b1cf48b9c9881b5a8fe0592240e9cd2ef16f",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
     },
     {
@@ -2374,8 +2378,8 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "29ba179001533b26c301882a156148556ce5cfd423754b1b4afc7af0cc6aad98",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "sourceHash": "bbf902c3ffce41a8f90113d196a8b1cf48b9c9881b5a8fe0592240e9cd2ef16f",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P16",
@@ -2399,7 +2403,7 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "3d1c44d11b35385356c1254afadae40ed492110abfc9d5406d603585bfd23a63",
+      "sourceHash": "ab6284412105c7267bf08532153b58e1b420dfd681da6a9e2952fa4387f0bec3",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
@@ -2429,7 +2433,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "3d1c44d11b35385356c1254afadae40ed492110abfc9d5406d603585bfd23a63",
+      "sourceHash": "ab6284412105c7267bf08532153b58e1b420dfd681da6a9e2952fa4387f0bec3",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
     },
     {
@@ -2458,7 +2462,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "3d1c44d11b35385356c1254afadae40ed492110abfc9d5406d603585bfd23a63",
+      "sourceHash": "ab6284412105c7267bf08532153b58e1b420dfd681da6a9e2952fa4387f0bec3",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
     },
     {
@@ -2487,8 +2491,8 @@
         "landing"
       ],
       "reviewedSourceCommit": "3f9be0688303724a81180847311584185ee1baa7",
-      "sourceHash": "3d1c44d11b35385356c1254afadae40ed492110abfc9d5406d603585bfd23a63",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "sourceHash": "ab6284412105c7267bf08532153b58e1b420dfd681da6a9e2952fa4387f0bec3",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P17",
@@ -2512,7 +2516,7 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "ea46072e6b95eaea26b71cd718979c46ba20acbee027800a115ca3c7bae76ef9",
+      "sourceHash": "cd29749441d766c54f2d43cbb0c70e1ce881406430e760fda796deb01e3626d8",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
@@ -2542,7 +2546,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "ea46072e6b95eaea26b71cd718979c46ba20acbee027800a115ca3c7bae76ef9",
+      "sourceHash": "cd29749441d766c54f2d43cbb0c70e1ce881406430e760fda796deb01e3626d8",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
     },
     {
@@ -2571,7 +2575,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "ea46072e6b95eaea26b71cd718979c46ba20acbee027800a115ca3c7bae76ef9",
+      "sourceHash": "cd29749441d766c54f2d43cbb0c70e1ce881406430e760fda796deb01e3626d8",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
     },
     {
@@ -2600,8 +2604,8 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "ea46072e6b95eaea26b71cd718979c46ba20acbee027800a115ca3c7bae76ef9",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "sourceHash": "cd29749441d766c54f2d43cbb0c70e1ce881406430e760fda796deb01e3626d8",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P18",
@@ -2625,7 +2629,7 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "d73b197f3be189748bc2cf90cf871bcfcc9ffce5ed5940961741be5722ea8036",
+      "sourceHash": "f694e146285128c00fb1a8987b4c1060fb5757015e1bffc308b6516bdfc3c6fa",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
     },
@@ -2655,7 +2659,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "d73b197f3be189748bc2cf90cf871bcfcc9ffce5ed5940961741be5722ea8036",
+      "sourceHash": "f694e146285128c00fb1a8987b4c1060fb5757015e1bffc308b6516bdfc3c6fa",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
     },
     {
@@ -2684,7 +2688,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "d73b197f3be189748bc2cf90cf871bcfcc9ffce5ed5940961741be5722ea8036",
+      "sourceHash": "f694e146285128c00fb1a8987b4c1060fb5757015e1bffc308b6516bdfc3c6fa",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
     },
     {
@@ -2703,119 +2707,6 @@
         "src/components/course/hackathon/tasks/a3LogSearch.tsx",
         "src/components/slack-redirect/slack-attribution.logic.js",
         "src/pages/course/hackathon/a3-log-search.tsx",
-        "static/images/community-badges/badge-contributor.png"
-      ],
-      "targetFiles": [
-        "i18n/ru/code.json"
-      ],
-      "reviewStatus": "machine",
-      "messageNamespaces": [
-        "landing"
-      ],
-      "reviewedSourceCommit": "3f9be0688303724a81180847311584185ee1baa7",
-      "sourceHash": "d73b197f3be189748bc2cf90cf871bcfcc9ffce5ed5940961741be5722ea8036",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
-    },
-    {
-      "contentId": "page:P19",
-      "locale": "zh-CN",
-      "state": "ready",
-      "sourceFiles": [
-        "src/components/course/hackathon/HackathonCodeBlock.tsx",
-        "src/components/course/hackathon/HackathonIcons.tsx",
-        "src/components/course/hackathon/HackathonSketch.tsx",
-        "src/components/course/hackathon/HackathonTaskPage.scss",
-        "src/components/course/hackathon/HackathonTaskPage.tsx",
-        "src/components/course/hackathon/hackathon.logic.js",
-        "src/components/course/hackathon/hackathonCommon.tsx",
-        "src/components/course/hackathon/hackathonEvent.ts",
-        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
-        "src/components/slack-redirect/slack-attribution.logic.js",
-        "src/pages/course/hackathon/a4-agent-traces.tsx",
-        "static/images/community-badges/badge-contributor.png"
-      ],
-      "targetFiles": [
-        "i18n/zh-CN/code.json"
-      ],
-      "reviewStatus": "machine",
-      "sourceHash": "009c25f0cea8f61ecd48644d2f53c3434503616f31334a79a33061983525ad6a",
-      "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
-      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
-    },
-    {
-      "contentId": "page:P19",
-      "locale": "ja",
-      "state": "ready",
-      "sourceFiles": [
-        "src/components/course/hackathon/HackathonCodeBlock.tsx",
-        "src/components/course/hackathon/HackathonIcons.tsx",
-        "src/components/course/hackathon/HackathonSketch.tsx",
-        "src/components/course/hackathon/HackathonTaskPage.scss",
-        "src/components/course/hackathon/HackathonTaskPage.tsx",
-        "src/components/course/hackathon/hackathon.logic.js",
-        "src/components/course/hackathon/hackathonCommon.tsx",
-        "src/components/course/hackathon/hackathonEvent.ts",
-        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
-        "src/components/slack-redirect/slack-attribution.logic.js",
-        "src/pages/course/hackathon/a4-agent-traces.tsx",
-        "static/images/community-badges/badge-contributor.png"
-      ],
-      "targetFiles": [
-        "i18n/ja/code.json"
-      ],
-      "reviewStatus": "machine",
-      "messageNamespaces": [
-        "landing"
-      ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "009c25f0cea8f61ecd48644d2f53c3434503616f31334a79a33061983525ad6a",
-      "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
-    },
-    {
-      "contentId": "page:P19",
-      "locale": "ko",
-      "state": "ready",
-      "sourceFiles": [
-        "src/components/course/hackathon/HackathonCodeBlock.tsx",
-        "src/components/course/hackathon/HackathonIcons.tsx",
-        "src/components/course/hackathon/HackathonSketch.tsx",
-        "src/components/course/hackathon/HackathonTaskPage.scss",
-        "src/components/course/hackathon/HackathonTaskPage.tsx",
-        "src/components/course/hackathon/hackathon.logic.js",
-        "src/components/course/hackathon/hackathonCommon.tsx",
-        "src/components/course/hackathon/hackathonEvent.ts",
-        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
-        "src/components/slack-redirect/slack-attribution.logic.js",
-        "src/pages/course/hackathon/a4-agent-traces.tsx",
-        "static/images/community-badges/badge-contributor.png"
-      ],
-      "targetFiles": [
-        "i18n/ko/code.json"
-      ],
-      "reviewStatus": "machine",
-      "messageNamespaces": [
-        "landing"
-      ],
-      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
-      "sourceHash": "009c25f0cea8f61ecd48644d2f53c3434503616f31334a79a33061983525ad6a",
-      "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
-    },
-    {
-      "contentId": "page:P19",
-      "locale": "ru",
-      "state": "ready",
-      "sourceFiles": [
-        "src/components/course/hackathon/HackathonCodeBlock.tsx",
-        "src/components/course/hackathon/HackathonIcons.tsx",
-        "src/components/course/hackathon/HackathonSketch.tsx",
-        "src/components/course/hackathon/HackathonTaskPage.scss",
-        "src/components/course/hackathon/HackathonTaskPage.tsx",
-        "src/components/course/hackathon/hackathon.logic.js",
-        "src/components/course/hackathon/hackathonCommon.tsx",
-        "src/components/course/hackathon/hackathonEvent.ts",
-        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
-        "src/components/slack-redirect/slack-attribution.logic.js",
-        "src/pages/course/hackathon/a4-agent-traces.tsx",
         "static/images/community-badges/badge-contributor.png"
       ],
       "targetFiles": [
@@ -2826,8 +2717,121 @@
         "landing"
       ],
       "reviewedSourceCommit": "3f9be0688303724a81180847311584185ee1baa7",
-      "sourceHash": "009c25f0cea8f61ecd48644d2f53c3434503616f31334a79a33061983525ad6a",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "sourceHash": "f694e146285128c00fb1a8987b4c1060fb5757015e1bffc308b6516bdfc3c6fa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
+    },
+    {
+      "contentId": "page:P19",
+      "locale": "zh-CN",
+      "state": "ready",
+      "sourceFiles": [
+        "src/components/course/hackathon/HackathonCodeBlock.tsx",
+        "src/components/course/hackathon/HackathonIcons.tsx",
+        "src/components/course/hackathon/HackathonSketch.tsx",
+        "src/components/course/hackathon/HackathonTaskPage.scss",
+        "src/components/course/hackathon/HackathonTaskPage.tsx",
+        "src/components/course/hackathon/hackathon.logic.js",
+        "src/components/course/hackathon/hackathonCommon.tsx",
+        "src/components/course/hackathon/hackathonEvent.ts",
+        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
+        "src/components/slack-redirect/slack-attribution.logic.js",
+        "src/pages/course/hackathon/a4-agent-traces.tsx",
+        "static/images/community-badges/badge-contributor.png"
+      ],
+      "targetFiles": [
+        "i18n/zh-CN/code.json"
+      ],
+      "reviewStatus": "machine",
+      "sourceHash": "24161716f6bbce2657bbea22222bee874084d111cac639b6a0f73e4765e16398",
+      "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
+      "reviewedSourceCommit": "3a9e30380a8f000d7583b107059af36f885af6ac"
+    },
+    {
+      "contentId": "page:P19",
+      "locale": "ja",
+      "state": "ready",
+      "sourceFiles": [
+        "src/components/course/hackathon/HackathonCodeBlock.tsx",
+        "src/components/course/hackathon/HackathonIcons.tsx",
+        "src/components/course/hackathon/HackathonSketch.tsx",
+        "src/components/course/hackathon/HackathonTaskPage.scss",
+        "src/components/course/hackathon/HackathonTaskPage.tsx",
+        "src/components/course/hackathon/hackathon.logic.js",
+        "src/components/course/hackathon/hackathonCommon.tsx",
+        "src/components/course/hackathon/hackathonEvent.ts",
+        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
+        "src/components/slack-redirect/slack-attribution.logic.js",
+        "src/pages/course/hackathon/a4-agent-traces.tsx",
+        "static/images/community-badges/badge-contributor.png"
+      ],
+      "targetFiles": [
+        "i18n/ja/code.json"
+      ],
+      "reviewStatus": "machine",
+      "messageNamespaces": [
+        "landing"
+      ],
+      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
+      "sourceHash": "24161716f6bbce2657bbea22222bee874084d111cac639b6a0f73e4765e16398",
+      "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
+    },
+    {
+      "contentId": "page:P19",
+      "locale": "ko",
+      "state": "ready",
+      "sourceFiles": [
+        "src/components/course/hackathon/HackathonCodeBlock.tsx",
+        "src/components/course/hackathon/HackathonIcons.tsx",
+        "src/components/course/hackathon/HackathonSketch.tsx",
+        "src/components/course/hackathon/HackathonTaskPage.scss",
+        "src/components/course/hackathon/HackathonTaskPage.tsx",
+        "src/components/course/hackathon/hackathon.logic.js",
+        "src/components/course/hackathon/hackathonCommon.tsx",
+        "src/components/course/hackathon/hackathonEvent.ts",
+        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
+        "src/components/slack-redirect/slack-attribution.logic.js",
+        "src/pages/course/hackathon/a4-agent-traces.tsx",
+        "static/images/community-badges/badge-contributor.png"
+      ],
+      "targetFiles": [
+        "i18n/ko/code.json"
+      ],
+      "reviewStatus": "machine",
+      "messageNamespaces": [
+        "landing"
+      ],
+      "reviewedSourceCommit": "84fc102161d192a2ef7547a034db5035b21fc12d",
+      "sourceHash": "24161716f6bbce2657bbea22222bee874084d111cac639b6a0f73e4765e16398",
+      "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
+    },
+    {
+      "contentId": "page:P19",
+      "locale": "ru",
+      "state": "ready",
+      "sourceFiles": [
+        "src/components/course/hackathon/HackathonCodeBlock.tsx",
+        "src/components/course/hackathon/HackathonIcons.tsx",
+        "src/components/course/hackathon/HackathonSketch.tsx",
+        "src/components/course/hackathon/HackathonTaskPage.scss",
+        "src/components/course/hackathon/HackathonTaskPage.tsx",
+        "src/components/course/hackathon/hackathon.logic.js",
+        "src/components/course/hackathon/hackathonCommon.tsx",
+        "src/components/course/hackathon/hackathonEvent.ts",
+        "src/components/course/hackathon/tasks/a4AgentTraces.tsx",
+        "src/components/slack-redirect/slack-attribution.logic.js",
+        "src/pages/course/hackathon/a4-agent-traces.tsx",
+        "static/images/community-badges/badge-contributor.png"
+      ],
+      "targetFiles": [
+        "i18n/ru/code.json"
+      ],
+      "reviewStatus": "machine",
+      "messageNamespaces": [
+        "landing"
+      ],
+      "reviewedSourceCommit": "3f9be0688303724a81180847311584185ee1baa7",
+      "sourceHash": "24161716f6bbce2657bbea22222bee874084d111cac639b6a0f73e4765e16398",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P20",
@@ -2853,7 +2857,7 @@
         "i18n/zh-CN/code.json"
       ],
       "reviewStatus": "machine",
-      "sourceHash": "2ea6430ef3e51508a055113c5311f8e6f487fd133592861cfc10f4cec3c22506",
+      "sourceHash": "6fe0e95a478c3fca62da5d3d0f30f91bbeeb5a72ff8a7ff4c73bab56d081e215",
       "targetHash": "69ce7f26d6a8e4838bec8a1e766c1e926f3d24a1c8d14c87cd5bb37fbefba322",
       "reviewedSourceCommit": "83db37675df50061dbf657a93706b920ffccbcbc"
     },
@@ -2885,7 +2889,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "83db37675df50061dbf657a93706b920ffccbcbc",
-      "sourceHash": "2ea6430ef3e51508a055113c5311f8e6f487fd133592861cfc10f4cec3c22506",
+      "sourceHash": "6fe0e95a478c3fca62da5d3d0f30f91bbeeb5a72ff8a7ff4c73bab56d081e215",
       "targetHash": "abe03ef14786120753856c57e34c89caa5cd155f9e0f1cdd82f0f7661f34a167"
     },
     {
@@ -2916,7 +2920,7 @@
         "landing"
       ],
       "reviewedSourceCommit": "83db37675df50061dbf657a93706b920ffccbcbc",
-      "sourceHash": "2ea6430ef3e51508a055113c5311f8e6f487fd133592861cfc10f4cec3c22506",
+      "sourceHash": "6fe0e95a478c3fca62da5d3d0f30f91bbeeb5a72ff8a7ff4c73bab56d081e215",
       "targetHash": "d02fe109727675a20e7c5f44696f6ce7449b058462f7fffda54b681c66a6ffe0"
     },
     {
@@ -2947,8 +2951,8 @@
         "landing"
       ],
       "reviewedSourceCommit": "83db37675df50061dbf657a93706b920ffccbcbc",
-      "sourceHash": "2ea6430ef3e51508a055113c5311f8e6f487fd133592861cfc10f4cec3c22506",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "sourceHash": "6fe0e95a478c3fca62da5d3d0f30f91bbeeb5a72ff8a7ff4c73bab56d081e215",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:P21",
@@ -3113,7 +3117,7 @@
       ],
       "reviewedSourceCommit": "83db37675df50061dbf657a93706b920ffccbcbc",
       "sourceHash": "adbbc6ec57dabb8bf267b547ebd87a096031e99fd69ecc2697ddb1c27d665c29",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa"
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9"
     },
     {
       "contentId": "page:archived-docs",
@@ -3200,7 +3204,7 @@
         "docs.archive.title"
       ],
       "sourceHash": "0df5166f5ec3532c2dd3a4e3a2d591dbbb10b0e66537d9bd24d8c26cf7592c83",
-      "targetHash": "1a7386bb841974641f33176fdfdea5c7a8c79bab2fbcce78969b438e1851a9aa",
+      "targetHash": "76db980280935ae0c031354800545018619580a84c65af81855a6c8ccf3f17f9",
       "reviewStatus": "machine"
     }
   ]

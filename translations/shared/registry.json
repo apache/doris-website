@@ -13,6 +13,7 @@
     "src/components/Icons/mail.tsx",
     "src/components/Icons/medium.tsx",
     "src/components/Icons/slack.tsx",
+    "src/components/Icons/telegram.tsx",
     "src/components/Icons/star-green-icon.tsx",
     "src/components/Icons/twitter.tsx",
     "src/components/Icons/youtube.tsx",
@@ -175,7 +176,7 @@
     "theme.SearchPage.noResultsText": "No documents were found",
     "theme.SearchPage.searchSource": "Search the source documents"
   },
-  "sourceHash": "b43c249af470c0bdbffe32efa9a7bbbcb19dc60c8709a61a37f2c33601b0239a",
+  "sourceHash": "fcb54288bc7f5875a678619accd4f7ed878f9e5ba57acf98c62cf175791c9b25",
   "entryFiles": [
     "src/components/home-next/NavbarNext.tsx",
     "src/components/home-next/SlackCommunityNudge.tsx",

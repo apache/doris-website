@@ -43,6 +43,10 @@ export function buildSlackEventName(
 
 export function buildSlackEntryUrl(options: SlackEntryUrlOptions): string;
 
+export function getCommunityName(locale: string): 'Slack' | 'Telegram';
+
+export function buildCommunityEntryUrl(options: SlackEntryUrlOptions & { locale: string }): string;
+
 export interface MatomoThemeConfig {
     matomoUrl?: string;
     jsLoader?: string;
