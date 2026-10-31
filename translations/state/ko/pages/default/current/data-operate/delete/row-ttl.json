@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "data-operate/delete/row-ttl",
+    "locale": "ko",
+    "sourceLocale": "en",
+    "sourcePath": "docs/data-operate/delete/row-ttl.md",
+    "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
+    "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+    "sourceTechnicalHash": "0d26dfe54a7c06155e041af85882282e56827f0d9ff92f71e5c60f5ce81d5b99",
+    "targetHash": "b1b99e44959aa628908c06a11d216df180c7de3f747242b6c136757631989cf0",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-10-30T20:24:38.646Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "70c2ecde0c056eb0396c8be44a77d497a624e2b3951d78e72c707b5a711590a8",
+      "targetHash": "b1b99e44959aa628908c06a11d216df180c7de3f747242b6c136757631989cf0",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"-12:00\"]; received [\"inlineCode\",null,null,\"+HH:MM\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"+14:00\"]; received [\"inlineCode\",null,null,\"-HH:MM\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge Type: Feature Overview -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 기능 개요 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use Case: Row-level Data Expiration -->\"]; received [\"html\",null,null,\"<!-- 사용 사례: 행 수준 데이터 만료 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"-12:00\"]; received [\"inlineCode\",null,null,\"+HH:MM\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"+14:00\"]; received [\"inlineCode\",null,null,\"-HH:MM\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]; received [\"0\",\"0\",\"10\",\"2\",\"2\",\"2099\",\"24\",\"5.0.0\",\"5.0.0\",\"64\",\"64\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"-12:00\"]; received [\"inlineCode\",null,null,\"+HH:MM\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"+14:00\"]; received [\"inlineCode\",null,null,\"-HH:MM\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/delete/row-ttl.md",
+        "blob": "f03fb16a7346487f9a8a882cd4c8d492db5630d5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/delete/row-ttl.md",
+        "blob": "41d144d2e6e489864eea5771cc9ac03b81607f56"
+      }
+    }
+  }
+}

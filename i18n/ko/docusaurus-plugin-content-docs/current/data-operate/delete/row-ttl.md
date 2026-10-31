@@ -1,0 +1,337 @@
+---
+{
+    "title": "행 수준 TTL",
+    "language": "ko",
+    "description": "Apache Doris에서 행 수준 TTL을 구성하여 소스 타임스탬프 또는 행별 기한으로 행을 만료시키고 보존을 관리합니다.",
+    "keywords": ["row-level TTL", "data expiration", "retention", "experimental", "Compaction", "row TTL", "Time to Live", "automatic data expiration", "per-row expiration", "data retention", "function_column.enable_row_ttl", "Doris 5.0.0"],
+    "doc_type": "feature"
+}
+---
+
+:::caution 실험적 기능
+
+행 수준 TTL은 Apache Doris 5.0.0부터 지원되는 실험적 기능입니다. 도입하기 전에 테스트 환경에서 검증하십시오.
+
+TTL은 테이블을 생성할 때 활성화해야 합니다. 이후에는 기존 일반 테이블에서 활성화하거나 비활성화하거나 다른 TTL 모드로 전환할 수 없습니다. 부분 열 업데이트, Sequence Columns 및 구체화된 뷰에는 아래에 설명된 제한이 있습니다. 만료가 디스크 공간의 즉각적인 회수를 보장하지는 않습니다.
+
+:::
+
+<!-- Knowledge Type: Feature Overview -->
+<!-- Use Case: Row-level Data Expiration -->
+## 개요 {#overview}
+
+행 수준 TTL(Time to Live)은 개별 행이 만료 시간 이후 보이지 않게 하고 백그라운드 Compaction이 해당 행을 회수하도록 합니다. 같은 테이블 또는 파티션의 행마다 서로 다른 만료 시간이 필요할 때 사용하십시오. 기본 Duplicate Key 및 Unique Key 테이블(쓰기 시 병합(MOW) 및 읽기 시 병합(MOR) 포함)을 지원하지만 Aggregate Key 테이블은 지원하지 않습니다.
+
+### TTL 모드 선택 {#choose-a-ttl-mode}
+
+테이블을 생성할 때 다음 상호 배타적인 모드 중 하나를 선택하십시오.
+
+| 사용 사례 | 모드 | 구성 | 만료 시간 |
+| --- | --- | --- | --- |
+| 각 이벤트를 해당 타임스탬프 이후 동일한 기간 동안 보존 | 소스 열 | TTL을 활성화하고 `function_column.ttl_col` 및 `function_column.ttl`을 함께 설정 | 소스 타임스탬프 + 테이블 보존 기간 |
+| 애플리케이션이 각 행에 절대 기한을 지정 | 직접 만료 | 두 속성을 설정하지 않고 TTL 활성화 | `__DORIS_TTL_COL__`에 기록된 행별 절대 만료 시간 |
+
+### 만료 규칙 {#expiration-rules}
+
+- NULL 소스 값 또는 NULL 직접 만료 값은 해당 행이 TTL로 만료되지 않음을 의미합니다.
+- 만료 시간이 쿼리에서 사용하는 현재 시간보다 **작거나 같으면** 행이 만료됩니다.
+- 각 쿼리는 스캔 전체에서 하나의 현재 시간 값을 사용합니다. 따라서 쓰기가 없어도 이후 쿼리에서 더 적은 행을 반환할 수 있습니다.
+
+<!-- Knowledge Type: Operational Steps -->
+<!-- Use Case: Configure Source-column TTL -->
+## 빠른 시작 {#quick-start}
+
+### 사전 요구 사항 {#prerequisites}
+
+- Apache Doris 5.0.0 이상을 사용하고 테스트 환경에서 실험적 기능을 검증하십시오.
+- 테이블을 생성하고 데이터를 적재하며 쿼리할 권한이 있는 계정으로 테스트 데이터베이스에 연결하십시오.
+- 지원되는 테이블 모델인 기본 Duplicate Key 또는 Unique Key(MOW/MOR)를 사용하십시오.
+
+### 테이블 생성 및 만료 확인 {#create-a-table-and-verify-expiration}
+
+다음 예제는 각 이벤트를 `event_time` 이후 하루 동안 보존합니다. 단일 복제본 설정은 이 예제용이며 프로덕션 복제 권장 사항이 아닙니다.
+
+```sql
+SET time_zone = '+00:00';
+DROP TABLE IF EXISTS row_ttl_events;
+CREATE TABLE row_ttl_events (
+    id INT,
+    event_time DATETIME(6) NULL,
+    message STRING
+)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "function_column.enable_row_ttl" = "true",
+    "function_column.ttl_col" = "event_time",
+    "function_column.ttl" = "1 day",
+    "function_column.ttl_time_zone" = "+00:00"
+);
+
+INSERT INTO row_ttl_events VALUES
+    (1, NOW(6) - INTERVAL 2 DAY, 'expired'),
+    (2, NULL, 'persistent'),
+    (3, NOW(6), 'live');
+
+SELECT id, message FROM row_ttl_events ORDER BY id;
+```
+
+삽입 직후 쿼리하면 다음이 반환됩니다.
+
+```text
+id  message
+2   persistent
+3   live
+```
+
+오래된 이벤트는 Compaction을 기다리지 않아도 이미 보이지 않습니다. 이벤트 시간이 NULL인 행은 만료되지 않습니다. TTL은 제공된 이벤트 시간을 기준으로 하며 적재 시간을 자동으로 기준으로 삼지 않습니다. 따라서 늦게 도착한 이벤트는 적재되는 즉시 만료될 수 있습니다.
+
+<!-- Knowledge Type: Configuration Parameters -->
+## 매개변수 {#parameters}
+
+아래의 모든 `function_column.*` 속성은 문자열 값의 테이블 속성입니다.
+
+| 속성 | 기본값 / 필수 조건 | 의미 및 수정 규칙 |
+| --- | --- | --- |
+| `function_column.enable_row_ttl` | `false`; 어느 모드든 활성화하려면 `true`로 설정 | 불리언 문자열입니다. 테이블 생성 시에만 설정할 수 있습니다. |
+| `function_column.ttl_col` | 설정되지 않음; 소스 열 모드에서는 `function_column.ttl`과 함께 필수 | DATE/DATEV2, DATETIME/DATETIMEV2 또는 TIMESTAMPTZ 유형의 기존 비생성 Value 열 이름입니다. Key 열과 TIMESTAMP_NS는 지원되지 않습니다. 생성 후 변경할 수 없습니다. |
+| `function_column.ttl` | 설정되지 않음; `function_column.ttl_col`과 함께 필수 | 음수가 아닌 정수 기간입니다. 생성 후에는 같거나 더 짧은 기간만 허용됩니다. `0`은 소스 타임스탬프에 도달하면 만료됨을 의미하며 **TTL 비활성화를 의미하지 않습니다**. 직접 만료 모드에서는 사용할 수 없습니다. |
+| `function_column.ttl_time_zone` | DATE/DATETIME 계열 소스 열에 필수; TIMESTAMPTZ의 기본값은 `+00:00` | 소스 타임스탬프를 해석하는 시간대입니다. `UTC`, `Z` 또는 `+HH:MM` / `-HH:MM` 형식의 `-12:00`부터 `+14:00`까지 고정 오프셋을 허용합니다. TIMESTAMPTZ에는 0 오프셋만 허용됩니다. 생성 후 변경할 수 없으며 직접 만료 모드에서 설정할 수 없습니다. |
+
+### 기간 형식 {#duration-format}
+
+단위가 없는 기간은 초로 해석됩니다. 단위는 대소문자를 구분하지 않습니다.
+
+| 단위 | 허용 형식 |
+| --- | --- |
+| 주 | `week`, `weeks` |
+| 일 | `day`, `days`, `d` |
+| 시간 | `hour`, `hours`, `h` |
+| 분 | `minute`, `minutes`, `m` |
+| 초 | `second`, `seconds`, `s` |
+
+예를 들어 `86400`, `1 day` 및 `24h`는 같은 기간을 나타냅니다. 하루는 고정된 24시간입니다.
+
+- 소수, 음수, `1 day 2 hours`와 같은 복합 기간, 월 및 연도는 거부됩니다.
+- 기간은 부호 있는 64비트 마이크로초 정수 범위에 들어가야 합니다.
+- 소스 타임스탬프에 기간을 더한 값도 부호 있는 64비트 epoch 마이크로초 범위에 들어가야 합니다. 오버플로가 발생하면 만료 계산이 실패합니다.
+
+### 시간대 {#time-zones}
+
+소스 열 모드에서는 `Asia/Shanghai`와 같은 지역 시간대 및 일광 절약 시간 규칙을 지원하지 않습니다. DATE 값은 구성된 오프셋의 자정으로 해석되고 TIMESTAMPTZ 값은 절대 시각을 나타냅니다. 쿼리 세션의 시간대를 변경해도 이미 저장된 행의 TTL 정책은 변경되지 않습니다.
+
+### 숨겨진 TTL 열 {#hidden-ttl-column}
+
+Doris는 nullable 숨겨진 열 `__DORIS_TTL_COL__`을 자동으로 생성합니다. 테이블 스키마에 이 열을 선언하지 마십시오.
+
+소스 열 모드에서 Doris는 소스 값을 이 숨겨진 열에 복사합니다. 소스 열을 쓰거나 업데이트하고 숨겨진 열을 통해 독립적인 만료 시간을 제공하지 마십시오.
+
+직접 만료 모드에서 숨겨진 열은 BIGINT이며 **Unix epoch 이후의 마이크로초**를 저장합니다. 초나 밀리초가 아닙니다. 입력은 다음과 같이 처리됩니다.
+
+| 입력 | 직접 만료 모드의 동작 |
+| --- | --- |
+| 전체 삽입 중 NULL, DEFAULT 또는 열 생략 | NULL 만료가 되어 행이 TTL로 만료되지 않습니다. |
+| BIGINT | epoch 마이크로초로 직접 사용됩니다. `0`과 음수 값은 현재 시점의 쿼리에서 이미 만료된 값입니다. |
+| DATE/DATETIME 표현식 | SQL 세션의 `time_zone` 또는 적재 작업의 `timezone`을 사용하여 epoch 마이크로초로 변환됩니다. |
+| TIMESTAMPTZ 표현식 | epoch 마이크로초로 변환됩니다. 값 자체가 이미 절대 시각을 나타냅니다. |
+| 텍스트 날짜 | 지원되는 시간 유형으로 명시적으로 캐스팅하십시오. |
+| TIMESTAMP_NS | 지원되지 않습니다. |
+
+검사를 위해 `show_hidden_columns`를 활성화하고 숨겨진 열을 명시적으로 선택하십시오. 이렇게 해도 TTL 필터링을 우회하거나 만료된 행을 표시할 수 없습니다.
+
+<!-- Knowledge Type: Operational Steps -->
+<!-- Use Case: Load and Update Row Expiration Times -->
+## 예제 {#examples}
+
+### 각 행에 만료 시간 할당 {#assign-an-expiration-to-each-row}
+
+애플리케이션이 각 행에 별도의 만료 시간을 제공할 때 직접 만료 모드를 사용하십시오.
+
+```sql
+SET time_zone = '+00:00';
+DROP TABLE IF EXISTS row_ttl_expirations;
+CREATE TABLE row_ttl_expirations (id INT, message STRING)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "function_column.enable_row_ttl" = "true"
+);
+
+INSERT INTO row_ttl_expirations(id, message, __DORIS_TTL_COL__) VALUES
+    (1, 'expired', 0),
+    (2, 'persistent', NULL),
+    (3, 'live', NOW(6) + INTERVAL 1 DAY);
+INSERT INTO row_ttl_expirations VALUES (4, 'omitted');
+
+SELECT id, message FROM row_ttl_expirations ORDER BY id;
+```
+
+즉시 쿼리하면 다음이 반환됩니다.
+
+```text
+id  message
+2   persistent
+3   live
+4   omitted
+```
+
+`INSERT ... SELECT`도 숨겨진 열에 시간 표현식을 허용하며 동일한 규칙으로 변환합니다.
+
+### Stream Load로 만료 타임스탬프 적재 {#load-expiration-timestamps-with-stream-load}
+
+위의 `row_ttl_expirations` 테이블을 사용하십시오. 연결 자리 표시자를 바꾸고 적재 권한이 있는 계정을 사용하십시오. 입력에 만료 타임스탬프가 포함되어 있으므로 열 매핑에서 명시적으로 캐스팅하고 적재 시간대를 지정합니다.
+
+```bash
+curl --location-trusted -u '<user>:<password>' \
+  -H 'label:row_ttl_expirations_example_1' \
+  -H 'column_separator:,' \
+  -H 'timezone:+00:00' \
+  -H 'columns:id,message,expiration,__DORIS_TTL_COL__=cast(expiration as datetime(6))' \
+  -T - 'http://<fe_host>:<http_port>/api/<database>/row_ttl_expirations/_stream_load' <<'DATA'
+10,stream-live,2099-01-01 00:00:00.000000
+11,stream-expired,2000-01-01 00:00:00.000000
+DATA
+```
+
+적재를 반복할 때는 새 label을 사용하십시오. 성공 응답의 `Status`는 `Success`입니다. 만료 자체는 다른 조건을 충족하는 입력 행을 적재 오류로 만들지 않습니다. 2099년 이전에는 다음 쿼리가 10번 행만 반환합니다.
+
+```sql
+SELECT id, message FROM row_ttl_expirations WHERE id >= 10 ORDER BY id;
+```
+
+```text
+id  message
+10  stream-live
+```
+
+입력에 이미 epoch **마이크로초**가 포함되어 있으면 DATETIME으로 캐스팅하지 말고 `columns:id,message,__DORIS_TTL_COL__`로 직접 매핑하십시오.
+
+### Unique Key 행 업데이트 {#update-a-unique-key-row}
+
+일반 SQL UPDATE가 지원됩니다. 표시되는 행에서 관련 없는 열을 변경하면 TTL 값이 유지되고 소스 타임스탬프 또는 직접 만료를 변경하면 행의 만료 시점이 변경됩니다. 이는 지원되지 않는 부분 열 업데이트 적재 모드와 다릅니다.
+
+```sql
+DROP TABLE IF EXISTS row_ttl_accounts;
+CREATE TABLE row_ttl_accounts (id INT, message STRING)
+UNIQUE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES (
+    "replication_num" = "1",
+    "enable_unique_key_merge_on_write" = "true",
+    "function_column.enable_row_ttl" = "true"
+);
+INSERT INTO row_ttl_accounts(id, message, __DORIS_TTL_COL__) VALUES
+    (1, 'original', 9223372036854775807);
+UPDATE row_ttl_accounts SET message = 'updated' WHERE id = 1;
+
+SET show_hidden_columns = true;
+SELECT id, message, __DORIS_TTL_COL__ FROM row_ttl_accounts ORDER BY id;
+SET show_hidden_columns = false;
+```
+
+```text
+id  message  __DORIS_TTL_COL__
+1   updated  9223372036854775807
+```
+
+전체 행 UPSERT는 행을 대체합니다. 따라서 직접 만료 모드에서 만료 값을 생략하면 이전 만료 값이 지워집니다.
+
+```sql
+INSERT INTO row_ttl_accounts(id, message) VALUES (1, 'replaced');
+SET show_hidden_columns = true;
+SELECT id, message, __DORIS_TTL_COL__ FROM row_ttl_accounts ORDER BY id;
+SET show_hidden_columns = false;
+```
+
+```text
+id  message   __DORIS_TTL_COL__
+1   replaced  NULL
+```
+
+업데이트할 때 다음 규칙을 기억하십시오.
+
+- 소스 열 모드에서 전체 삽입 시 소스 열을 생략하면 이전 행의 타임스탬프가 아니라 해당 열의 일반적인 기본값/NULL 규칙이 적용됩니다.
+- 일반 쿼리로 이미 만료된 행을 UPDATE에서 찾을 수 없습니다. 새 버전을 쓰려면 원하는 값을 포함한 전체 삽입을 사용하십시오.
+- Unique Key 테이블에서는 최신 버전이 만료되어도 같은 키의 이전 버전이 다시 표시되지 않습니다.
+
+### 보존 기간 단축 {#shorten-retention}
+
+빠른 시작의 소스 열 테이블과 ALTER 권한이 있는 계정을 사용하십시오.
+
+```sql
+ALTER TABLE row_ttl_events SET ("function_column.ttl" = "12 hours");
+SHOW CREATE TABLE row_ttl_events;
+```
+
+새 보존 기간은 기존 소스 값과 이후 쓰기 모두에 적용됩니다. `SHOW CREATE TABLE`은 업데이트된 `function_column.ttl` 속성을 표시하며, 단위가 없는 정수로 표시되는 기간의 단위는 초입니다.
+
+새 정책에 따라 보존 기간을 벗어난 행은 해당 정책을 사용하는 쿼리에서 보이지 않게 되고 회수 대상이 됩니다. 같은 기간을 다시 설정하는 것은 허용되지만, 이전에 만료된 데이터가 이미 회수되었을 수 있으므로 기간을 늘리는 것은 거부됩니다.
+
+:::caution 실패한 ALTER가 롤백을 의미하지 않음
+
+더 짧은 쿼리 정책은 회수 설정이 배포되기 전에 먼저 유지됩니다. 따라서 ALTER가 시간 초과, 구성 버전 확인 누락 또는 동시 테이블 변경을 보고하더라도 더 짧은 보존 기간이 이미 적용되었을 수 있습니다.
+
+`SHOW CREATE TABLE`을 확인하고 보고된 문제를 해결한 다음 같은 기간으로 재시도하여 정책을 동기화하십시오. 이전의 더 긴 기간으로 복원하려고 하지 마십시오.
+
+:::
+
+<!-- Knowledge Type: Feature Constraints -->
+## 제한 사항 {#limitations}
+
+TTL을 활성화하기 전에 기존 테이블 기능 및 워크로드와의 호환성을 확인하십시오.
+
+| 영역 | 현재 동작 / 제한 |
+| --- | --- |
+| 테이블 모델 | 기본 Duplicate Key 및 Unique Key(MOW/MOR) 테이블만 지원되며 Aggregate Key는 거부됩니다. |
+| 활성화 및 모드 변경 | CREATE TABLE 시에만 활성화할 수 있습니다. ALTER로 TTL을 활성화/비활성화하거나 소스 또는 시간대를 변경하거나 모드를 전환할 수 없습니다. `ENABLE FEATURE "ROW_TTL"`은 지원되지 않습니다. 소스 열 보존 기간만 단축할 수 있습니다. |
+| Sequence Column | 나중에 `SEQUENCE_LOAD`를 활성화하는 경우를 포함하여 행 수준 TTL과 함께 사용할 수 없습니다. |
+| 스키마 변경 | TTL 소스 열 또는 숨겨진 열을 삭제하거나 수정하거나 소스 열의 이름을 바꿀 수 없습니다. 관련 없는 열 변경은 일반적인 스키마 변경 규칙을 따릅니다. |
+| 부분 열 업데이트 | 두 TTL 모드 모두 지원되지 않습니다. 여기에는 `enable_unique_key_partial_update = true`를 사용하는 INSERT, Stream Load의 `partial_columns = true`, `UPDATE_FIXED_COLUMNS` 및 `UPDATE_FLEXIBLE_COLUMNS`가 포함되며 요청에 TTL 값을 제공해도 지원되지 않습니다. 전체 UPSERT, 일반 SQL UPDATE 및 DELETE는 각 테이블 모델의 일반 규칙에 따라 계속 사용할 수 있습니다. |
+| 구체화된 뷰 | TTL 테이블에서 동기식 구체화된 뷰를 위한 `CREATE MATERIALIZED VIEW`는 거부됩니다. 비동기식 구체화된 뷰는 TTL 기본 테이블을 사용할 수 없습니다. 이는 일반 `ALTER TABLE ... ADD ROLLUP`과 다르며, 해당 작업은 지원되고 TTL 숨겨진 열은 Doris가 유지 관리합니다. |
+| 과거 및 증분 액세스 | TTL 테이블에서는 `FOR VERSION AS OF`, `FOR TIME AS OF`, `@incr(...)` 및 `CREATE STREAM ... ON TABLE`이 지원되지 않습니다. |
+| 쿼리 힌트 | `PREAGGOPEN`은 거부됩니다. MOR 스캔은 버전 병합 및 만료 의미를 보존하기 위해 저장소 사전 집계를 비활성화합니다. |
+| 쿼리 성능 | TTL 스캔에서는 SQL Cache, Query Cache, 단락 포인트 쿼리 및 일부 TopN 푸시다운이 비활성화됩니다. 포인트 조회, 집계, 조인 및 ORDER BY/LIMIT는 계속 작동하지만 TTL이 아닌 테이블과 동일한 실행 계획이나 성능을 가정해서는 안 됩니다. |
+| 일관성 검사 | 자동 체크섬 일관성 검사는 TTL 테이블을 건너뛰며 TTL Tablet에 대한 명시적 체크섬 일관성 검사는 거부됩니다. 일반 복제 기능이 비활성화되는 것은 아닙니다. |
+
+<!-- Knowledge Type: Data Reclamation Behavior -->
+## 물리적 회수 경계 {#physical-reclamation-boundaries}
+
+TTL 가시성은 쿼리 중 확인되지만 디스크 회수는 적격 백그라운드 Compaction과 이후의 오래된 파일 정리에 따라 달라집니다. 유휴 테이블, 지연된 Compaction 또는 보존된 이전 파일로 인해 만료된 데이터가 디스크에 남을 수 있습니다. 고정된 삭제 기한은 없습니다.
+
+회수는 테이블 모델과 Compaction 경로에 따라 달라집니다.
+
+| 테이블 모델 / 데이터 경로 | 회수 동작 |
+| --- | --- |
+| Duplicate Key | 지원되는 segment, cumulative, base 및 full Compaction 경로에서 만료된 행을 회수할 수 있습니다. |
+| Unique Key MOW | 게시된 rowset의 만료된 행은 cumulative, base 및 full Compaction에서 회수할 수 있습니다. 게시 전 segment Compaction은 쓰기 충돌 해결을 위해 만료된 키를 유지합니다. |
+| Unique Key MOR | full Compaction 또는 버전 0부터의 버전을 포함하는 base Compaction에서만 만료된 행을 회수하므로, 회수 후 같은 키의 이전 버전이 다시 표시되지 않습니다. |
+| Cold-data Compaction | 행 TTL 회수를 수행하지 않습니다. |
+| Changelog tablets | 로그 항목을 제거하기 위해 행 TTL을 적용하지 않습니다. 원시 Changelog에는 기본 테이블의 행이 만료된 후에도 해당 쓰기가 남을 수 있으며, 보존 기간은 별도로 관리됩니다. |
+
+행 수준 TTL은 만료 시 모든 복사본 또는 변경 기록이 삭제된다는 보장이 아닙니다.
+
+<!-- Knowledge Type: Troubleshooting -->
+<!-- Use Case: Resolve TTL Configuration Errors and Reclamation Delays -->
+## 문제 해결 {#error-handling}
+
+구성 오류 또는 저장소 회수 지연에는 다음 확인을 사용하십시오.
+
+| 오류 / 증상 | 조치 |
+| --- | --- |
+| `function_column.ttl_col and function_column.ttl must be set together` | 소스 열 모드에서는 두 속성을 모두 제공하고 직접 만료 모드에서는 둘 다 생략하십시오. |
+| `function_column.ttl_time_zone is required` | DATE/DATETIME 소스 열에 명시적인 고정 오프셋을 설정하십시오. |
+| `row ttl column must be a value column` | 지원되는 시간 유형의 Value 열을 선택하고 Key 열은 사용하지 마십시오. |
+| `Partial update is not supported on tables with row TTL` | 생략된 열에 의도한 기본값을 적용한 전체 UPSERT 또는 일반 SQL UPDATE를 사용하십시오. 생략된 값 확인 없이 부분 업데이트 설정만 제거하지 마십시오. |
+| `Increasing function_column.ttl is not supported` | 기간을 유지하거나 단축하십시오. 더 긴 보존이 필요하면 새 테이블을 계획하고 보존된 소스에서 다시 적재하십시오. TTL은 회수된 데이터를 복원할 수 없습니다. |
+| `TTL properties can only be specified when creating a table` | 활성화 플래그, 소스 또는 시간대를 ALTER로 변경하지 마십시오. 소스 열 TTL 테이블에서는 `function_column.ttl`만 변경할 수 있습니다. |
+| 행은 사라졌지만 저장소 크기가 줄어들지 않음 | Compaction 진행 상황과 위의 회수 경계를 확인하십시오. 만료와 물리적 삭제는 별개의 단계입니다. |
+
+<!-- Knowledge Type: Architecture Decision -->
+## 모범 사례 {#best-practices}
+
+- 각 이벤트 이후 동일한 기간을 보존하려면 소스 열 모드를 선택하고, 애플리케이션이 행별 절대 기한을 지정하면 직접 만료 모드를 선택하십시오. 적재 전에 늦게 도착한 타임스탬프와 NULL 값을 확인하십시오.
+- 보존이 자연스럽게 전체 시간 파티션을 따르는 경우 [동적 파티셔닝](../../table-design/data-partitioning/dynamic-partitioning)을 우선 고려하십시오. 행 수준 TTL은 더 세밀한 관리에 유용하지만 행별 필터링을 추가하고 일부 쿼리 최적화를 제한합니다.
+- 도입 전에 실제 데이터 적재, 업데이트, 쿼리 및 Compaction 워크로드를 테스트하십시오. 특히 부분 열 업데이트, Sequence Columns, 구체화된 뷰, 과거 쿼리 및 캐싱에 대한 종속성을 확인하십시오.
+- 보존 기간을 단축하기 전에 원하는 만료 기준을 확인하고 이 TTL 정책 외부에서 복구해야 하는 데이터를 보존하십시오. 일반 쿼리로 가시성을 검증하고 디스크 사용량이나 숨겨진 열 검사를 만료 또는 완전 삭제의 증거로 간주하지 마십시오.
