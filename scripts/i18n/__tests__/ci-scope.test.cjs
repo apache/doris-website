@@ -25,7 +25,9 @@ test('content-only edits retain scoped real builds without rerunning unchanged f
 
 test('new global language entry points select five languages and every active version', () => {
     for (const file of ['src/components/home-next/NavbarNext.tsx', 'src/components/home-next/LocalizedLink.tsx',
-        'src/components/ContentMetadata.tsx', 'src/utils/localizedRoute.ts', 'src/utils/useLocalizedRoute.ts', 'static/.htaccess', 'config/i18n.js', 'docusaurus.config.js', 'package.json', 'yarn.lock', 'scripts/build-locale.cjs']) {
+        'src/components/ContentMetadata.tsx', 'src/utils/localizedRoute.ts', 'src/utils/useLocalizedRoute.ts', 'static/.htaccess', 'config/i18n.js',
+        'config/matomo-plugin/index.cjs', 'config/matomo-plugin/track.js', 'config/matomo-plugin/tracking.cjs',
+        'docusaurus.config.js', 'package.json', 'yarn.lock', 'scripts/build-locale.cjs']) {
         const plan = buildScope([file], versions, managed);
         assert.deepEqual(plan.locales, ['en', 'zh-CN', 'ja', 'ko', 'ru'], file);
         assert.equal(plan.docs_versions, '', file);
@@ -43,6 +45,7 @@ test('fixture work follows rendering/publishing dependencies and plan-only edits
     assert.equal(validationScope(['src/utils/localizedRoute.ts']).check_publish_fixture, false);
     assert.equal(validationScope(['scripts/publish/apache.cjs']).check_publish_fixture, true);
     assert.equal(validationScope(['scripts/publish/apache.cjs']).check_content_fixture, false);
+    assert.equal(validationScope(['config/matomo-plugin/tracking.cjs']).check_publish_fixture, true);
     assert.equal(validationScope(['scripts/i18n/__tests__/localized-route.test.cjs']).check_content_fixture, false);
     assert.equal(validationScope(['scripts/i18n/__tests__/fixtures/content-manifest.cjs']).check_content_fixture, true);
     for (const file of ['package.json', 'yarn.lock', '.github/workflows/build-check.yml']) {
@@ -67,6 +70,7 @@ test('CI fails early on cheap checks, retains required job identity and deduplic
     for (const fixture of ['content_fixture', 'publish_fixture', 'sampling_fixture'])
         assert(browserTools.includes(`steps.detect.outputs.${fixture} == 'true'`), fixture);
     const verify = steps[index('Verify localized static pages')].run;
+    assert.match(steps[index('Verify five-language publishing fixture in Chromium')].run, /verify-matomo-fixture\.cjs/);
     assert.match(verify, /\[ "\$LOCALE" = "ru" \]; then EXTRA_ARGS\+=\(--source-locales/);
     assert.match(verify, /\[ "\$LOCALE" = "ko" \] \|\| \[ "\$LOCALE" = "ru" \]; then EXTRA_ARGS=\(--themes\)/);
     assert.match(verify, /verify-static\.cjs/);

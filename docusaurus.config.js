@@ -381,7 +381,7 @@ const config = {
             onInlineAuthors: 'ignore',
         }],
         'docusaurus-plugin-sass',
-        'docusaurus-plugin-matomo',
+        require.resolve('./config/matomo-plugin/index.cjs'),
         // Use custom blog plugin
         versionsPlugin,
         SKIP_COURSE ? null : [
