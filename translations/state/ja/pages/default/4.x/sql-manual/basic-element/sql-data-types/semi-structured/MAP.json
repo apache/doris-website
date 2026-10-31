@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "648cc3b37d3a08d7f599181dddd09306a9353db8e84dd854396ab6a154125e91",
-    "sourceTechnicalHash": "714854932fc9e13c2106e2bfa77bd94568f5cd645040d540aa9e23bea5a40280",
-    "targetHash": "8288d4dcc35f3c402bad5b9d37e3cc1b2a96e30c2c928898417242346df0974f",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "5a0d0629420308742f7059d4957fa8731e4a176559662485149b0ddb63662e81",
+    "sourceTechnicalHash": "ab993e0167675305c4c05e2f7555a4eaf77830eb8752901433bb4482ca610be8",
+    "targetHash": "b6e4f27aeb0f5707442bedbc349a20186c7f3b17bc40b93d3fc22343f80c0d23",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:28:57.485Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5a0d0629420308742f7059d4957fa8731e4a176559662485149b0ddb63662e81",
+      "targetHash": "b6e4f27aeb0f5707442bedbc349a20186c7f3b17bc40b93d3fc22343f80c0d23",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"9\"]; received [\"1\",\"9\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"key_type\"]; received [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"value_type\"]; received [\"inlineCode\",null,null,\"key_type\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 12: expected [\"inlineCode\",null,null,\"MAP<INT, INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"MAP<BIGINT, BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"INT\"]; received [\"inlineCode\",null,null,\"MAP<INT, INT>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 35: expected [\"inlineCode\",null,null,\"key_type\"]; received [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"value_type\"]; received [\"inlineCode\",null,null,\"key_type\"]\nprotected node 37: expected [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]; received [\"inlineCode\",null,null,\"value_type\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"9\"]; received [\"1\",\"9\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"key_type\"]; received [\"inlineCode\",null,null,\"MAP<key_type, value_type>\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"value_type\"]; received [\"inlineCode\",null,null,\"key_type\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+        "blob": "e06373dcbc9a1213a25a24327c1b5b959341f959"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/MAP.md",
+        "blob": "5cd0a2fbbb8b1bad94528f612c2daa4b07222c6f"
+      }
+    }
   }
 }

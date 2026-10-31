@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "9f21694924c426fe0213a6419941a278b0c7d2e6e5245101a6479b019f9de5ea",
-    "sourceTechnicalHash": "6682d1b0b794c623985c0258d3ae6ef4afed11fead5db05f90446c87810fc46a",
-    "targetHash": "2bd3f74af4e47078d6ad57f32c9b97c3347ee37f33ecb626cd24ad4320424304",
+    "sourceCommit": "9a969fc33c1fa48ba09267331512f7620dd23084",
+    "sourceHash": "9b219568e876667fcb1cff3eafae759fdec4667f59ab7bed18a2f34e4be33716",
+    "sourceTechnicalHash": "02e4acf61ebb42046c723379597127f89c48bce7d4650c9ac10eeefc110b7f01",
+    "targetHash": "b72f167e9d4602a2fa360f482503bc007d7a8b1c6b3eefa592bcbbc72f3a715e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.668Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T05:20:32.415Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "9b219568e876667fcb1cff3eafae759fdec4667f59ab7bed18a2f34e4be33716",
+      "targetHash": "b72f167e9d4602a2fa360f482503bc007d7a8b1c6b3eefa592bcbbc72f3a715e",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 52: expected [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);                      \\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]; received [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);\\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 52: expected [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);                      \\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]; received [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);\\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"9\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"ARRAY<INT>\"]; received [\"inlineCode\",null,null,\"INT\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"ARRAY<BIGINT>\"]; received [\"inlineCode\",null,null,\"BIGINT\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"9\"]\nprotected node 52: expected [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);                      \\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]; received [\"code\",\"SQL\",null,\"SELECT ELEMENT_AT(ARRAY(1, 2, 3) , 2);\\n+--------------------------------+\\n| ELEMENT_AT(ARRAY(1, 2, 3) , 2) |\\n+--------------------------------+\\n|                              2 |\\n+--------------------------------+\\n\\nSELECT ELEMENT_AT([1, 2, 3] , 3);\\n+---------------------------+\\n| ELEMENT_AT([1, 2, 3] , 3) |\\n+---------------------------+\\n|                         3 |\\n+---------------------------+\\n\\nSELECT ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3);\\n+-------------------------------------------------------+\\n| ELEMENT_AT([[\\\"abc\\\", \\\"def\\\"], [\\\"def\\\", \\\"gef\\\"], [3]] , 3) |\\n+-------------------------------------------------------+\\n| [\\\"3\\\"]                                                 |\\n+-------------------------------------------------------+\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+        "blob": "d0cf93dbf998235121508af311778ada26d6d0d3"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/basic-element/sql-data-types/semi-structured/ARRAY.md",
+        "blob": "ccafc9015c541885a02603628d275e6cc0bf24ab"
+      }
+    }
   }
 }

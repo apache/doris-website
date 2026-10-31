@@ -2,7 +2,7 @@
 {
     "title": "他の TP システムからのデータ移行",
     "language": "ja",
-    "description": "MySQL、SQL Server、Oracle、PostgreSQL などの OLTP システムから Apache Doris へデータを移行する方法について説明します。オフラインとリアルタイムの同期オプションを網羅しています。",
+    "description": "MySQL、SQL Server、Oracle、PostgreSQL などの OLTP システムから Apache Doris にデータを移行する方法について説明し、オフライン同期とリアルタイム同期の両方のオプションを網羅します。",
     "keywords": [
         "MySQL から Doris への移行",
         "Oracle から Doris への移行",
@@ -19,7 +19,7 @@
 <!-- Knowledge type: Architecture selection decision / Operational steps -->
 <!-- Applicable scenario: Migrating or synchronizing data from OLTP databases (MySQL / SQL Server / Oracle / PostgreSQL) to Apache Doris -->
 
-このドキュメントでは、MySQL、SQL Server、Oracle、PostgreSQL などの従来型トランザクション（OLTP / TP）データベースから Apache Doris へデータを移行する方法を説明します。Doris には複数のデータ取り込みオプションがあり、1 回限りの移行、オフラインバッチ同期、リアルタイム増分同期をカバーします。
+このドキュメントでは、MySQL、SQL Server、Oracle、PostgreSQL などの従来型トランザクション（OLTP / TP）データベースから Apache Doris にデータを移行する方法を説明します。Doris は、一度限りの移行、オフラインバッチ同期、リアルタイム増分同期に対応する複数のデータ取り込みオプションを提供します。
 
 ## 移行オプションの概要 {#overview-of-migration-options}
 
@@ -27,29 +27,28 @@
 
 | オプション | 適用シナリオ | 同期モード | データベース全体をサポート | 増分 / CDC をサポート |
 |------|----------|----------|--------------|--------------------|
-| Multi-Catalog | 1 回限りの移行、アドホッククエリ、CTAS テーブル作成 | オフライン / オンデマンド | SQL で実装 | いいえ |
+| Multi-Catalog | 一度限りの移行、アドホッククエリ、CTAS によるテーブル作成 | オフライン / オンデマンド | SQL で実装 | いいえ |
 | Flink Doris Connector (JDBC) | Flink スタックでのオフラインバッチ同期 | オフライン | いいえ | いいえ |
-| Flink Doris Connector (CDC) | リアルタイムの全量 + 増分同期 | リアルタイム | サポート | サポート（INSERT / UPDATE / DELETE） |
+| Flink Doris Connector (CDC) | リアルタイムの全量 + 増分同期 | リアルタイム | 対応 | 対応（INSERT / UPDATE / DELETE） |
 | Spark Connector | Spark スタックでのバッチデータ書き込み | オフライン | いいえ | いいえ |
-| Streaming Job | Doris に組み込まれた MySQL / PostgreSQL からの継続同期 | ストリーミング（継続） | サポート | サポート |
-| サードパーティツール（DataX / SeaTunnel / CloudCanal） | 既存の同期プラットフォーム、ビジュアル運用 | オフライン / リアルタイム | ツールによる | ツールによる |
-| NineData（MySQL 互換ソースから Doris へ） | 全量および増分データレプリケーション | 全量 + 増分（Binlog） | サポート | サポート |
+| Streaming Job | Doris に組み込まれた MySQL / PostgreSQL からの継続同期 | ストリーミング（継続） | 対応 | 対応 |
+| サードパーティツール（NineData / DataX / SeaTunnel / CloudCanal） | 既存の同期プラットフォーム、可視化された運用 | オフライン / リアルタイム | 対応 | 対応 |
 
-> 注: 外部コンピュートエンジンを導入せずに移行を完了する必要がある場合は、**Multi-Catalog** または **Streaming Job** を使用してください。リアルタイムの増分同期が必要な場合は、**Flink Doris Connector + CDC**、**Streaming Job**、または MySQL 互換ソースから Doris への **NineData** を使用してください。
+> 注：外部のコンピュートエンジンを導入せずに移行を完了する必要がある場合は、**Multi-Catalog** または **Streaming Job** を使用します。リアルタイムの増分同期が必要な場合は、**Flink Doris Connector + CDC**、**Streaming Job**、または MySQL 互換ソースから Doris への同期に対応する **NineData** を使用します。
 
 ---
 
-## オプション 1: Multi-Catalog（1 回限りの移行に推奨） {#option-1-multi-catalog-recommended-for-one-time-migration}
+## オプション 1：Multi-Catalog（一度限りの移行に推奨） {#option-1-multi-catalog-recommended-for-one-time-migration}
 
-JDBC Catalog を使用して TP データベースのテーブルを Doris の外部テーブルとしてマッピングし、`INSERT INTO` または `CREATE TABLE AS SELECT (CTAS)` でデータをロードします。
+JDBC Catalog を使用して TP データベースのテーブルを Doris の外部テーブルとしてマッピングし、`INSERT INTO` または `CREATE TABLE AS SELECT (CTAS)` を使用してデータロードを行います。
 
 ### 手順 {#steps}
 
 1. ソース TP データベースを指す JDBC Catalog を作成します。
-2. `INSERT INTO` を使用して既存の Doris テーブルに書き込むか、`CTAS` を使用してテーブルを作成し、1 ステップでデータをロードします。
+2. `INSERT INTO` を使用して既存の Doris テーブルに書き込むか、`CTAS` を使用してテーブルを作成し、データを書き込みます。
 3. 行数とフィールドの整合性を確認します。
 
-### 例: MySQL からのデータ移行 {#example-migrating-data-from-mysql}
+### 例：MySQL からのデータ移行 {#example-migrating-data-from-mysql}
 
 ```sql
 CREATE CATALOG mysql_catalog properties(
@@ -72,15 +71,15 @@ AS
 SELECT * FROM mysql_catalog.mysql_db.table1;
 ```
 
-詳細は、[Catalog データインポート](../../../lakehouse/catalog-overview.md#data-ingestion) を参照してください。
+詳細については、[Catalog データインポート](../../../lakehouse/catalog-overview.md#data-ingestion)を参照してください。
 
 ---
 
-## オプション 2: Flink Doris Connector {#option-2-flink-doris-connector}
+## オプション 2：Flink Doris Connector {#option-2-flink-doris-connector}
 
-Flink を使用すると、TP システムの同期をオフラインバッチモードまたはリアルタイム増分モードで実行できます。
+Flink を使用すると、TP システムのオフラインバッチ同期とリアルタイム増分同期の両方を実行できます。
 
-### 2.1 オフライン同期: Flink JDBC Source + Doris Sink {#21-offline-synchronization-flink-jdbc-source--doris-sink}
+### 2.1 オフライン同期：Flink JDBC Source + Doris Sink {#21-offline-synchronization-flink-jdbc-source--doris-sink}
 
 このオプションは、Flink スタックでのオフラインデータ移動に適しています。次の Flink SQL の例にパターンを示します。
 
@@ -115,11 +114,11 @@ CREATE TABLE student_sink (
 INSERT into student_sink select * from student_source;
 ```
 
-詳細は、[Flink JDBC](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/connectors/table/jdbc/#%e5%a6%82%e4%bd%95%e5%88%9b%e5%bb%ba-jdbc-%e8%a1%a8) を参照してください。
+詳細については、[Flink JDBC](https://nightlies.apache.org/flink/flink-docs-master/zh/docs/connectors/table/jdbc/#%e5%a6%82%e4%bd%95%e5%88%9b%e5%bb%ba-jdbc-%e8%a1%a8)を参照してください。
 
-### 2.2 リアルタイム同期: Flink CDC {#22-real-time-synchronization-flink-cdc}
+### 2.2 リアルタイム同期：Flink CDC {#22-real-time-synchronization-flink-cdc}
 
-Flink CDC を使用すると、1 つのジョブで全量データの読み取りと増分キャプチャを実行し、INSERT / UPDATE / DELETE イベントを同期できます。
+Flink CDC を使用すると、単一のジョブで全量データの読み取りと増分キャプチャを実行し、INSERT / UPDATE / DELETE イベントを同期できます。
 
 #### 単一テーブルのリアルタイム同期の例 {#single-table-real-time-synchronization-example}
 
@@ -162,7 +161,7 @@ insert into doris_sink select id,name from cdc_mysql_source;
 
 #### データベース全体 / 複数テーブルの同期 {#whole-database--multi-table-synchronization}
 
-TP データベース全体または複数テーブルを同期する場合、Flink Doris Connector にはすぐに使えるデータベース全体同期機能があり、スキーマ同期とデータ書き込みを 1 ステップで実行できます。
+TP データベース全体または複数テーブルを同期する場合、Flink Doris Connector にはすぐに利用できるデータベース全体同期機能があり、スキーマ同期とデータ書き込みを一度の手順で実行できます。
 
 ```shell
 <FLINK_HOME>bin/flink run \
@@ -186,13 +185,13 @@ TP データベース全体または複数テーブルを同期する場合、Fl
     --table-conf replication_num=1
 ```
 
-詳細は、[データベース全体の同期](../../../connection-integration/data-integration/flink-doris-connector.md#case-4-full-database-cdc-synchronization) を参照してください。
+詳細については、[データベース全体の同期](../../../connection-integration/data-integration/flink-doris-connector.md#case-4-full-database-cdc-synchronization)を参照してください。
 
 ---
 
-## オプション 3: Spark Connector {#option-3-spark-connector}
+## オプション 3：Spark Connector {#option-3-spark-connector}
 
-このオプションは、Spark をすでにバッチ処理に使用しているシナリオに適しています。Spark Connector の JDBC Source で TP データベースから読み取り、Doris Sink で Doris に書き込めます。
+このオプションは、すでに Spark をバッチ処理に使用しているシナリオに適しています。Spark Connector の JDBC Source で TP データベースから読み取り、Doris Sink で Doris に書き込むことができます。
 
 ```java
 val jdbcDF = spark.read
@@ -211,16 +210,16 @@ val jdbcDF = spark.read
   .save()
 ```
 
-関連ドキュメント:
+関連ドキュメント：
 
-- [他のデータベースへの JDBC](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
+- [JDBC とその他のデータベース](https://spark.apache.org/docs/latest/sql-data-sources-jdbc.html)
 - [Spark Doris Connector バッチ書き込み](../../../connection-integration/data-integration/spark-doris-connector.md#scenario-2-batch-write-doris-data)
 
 ---
 
-## オプション 4: Streaming Job（Doris に組み込まれた継続同期） {#option-4-streaming-job-built-in-continuous-synchronization-in-doris}
+## オプション 4：Streaming Job（Doris に組み込まれた継続同期） {#option-4-streaming-job-built-in-continuous-synchronization-in-doris}
 
-Doris には組み込みの Streaming Job 機能があり、外部コンピュートエンジンに依存せず、MySQL または PostgreSQL からデータを継続的に同期できます。
+Doris には組み込みの Streaming Job 機能があり、外部のコンピュートエンジンに依存せずに MySQL または PostgreSQL からデータを継続的に同期できます。
 
 ### 複数テーブル同期の例 {#multi-table-synchronization-example}
 
@@ -242,39 +241,39 @@ TO DATABASE target_test_db (
 )
 ```
 
-詳細は、[Postgres / MySQL 継続ロード](../import-way/streaming-job/continuous-load-overview.md) を参照してください。
+詳細については、[Postgres / MySQL 継続データロード](../import-way/streaming-job/continuous-load-overview.md)を参照してください。
 
 ---
 
-## オプション 5: サードパーティ同期ツール {#option-5-third-party-synchronization-tools}
+## オプション 5：サードパーティ同期ツール {#option-5-third-party-synchronization-tools}
 
-上記のネイティブオプションに加えて、コミュニティで一般的なサードパーティ同期ツールを使用できます。既に同期プラットフォームがある場合や、ビジュアルインターフェースでタスクを管理したい場合に適しています:
+上記のネイティブオプションに加えて、コミュニティで一般的に使用されているサードパーティ同期ツールも利用できます。既存の同期プラットフォームがある場合や、ビジュアルインターフェースでタスクを管理したい場合に適しています。
 
+- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 - [DataX](../../../connection-integration/data-integration/datax.md)
 - [SeaTunnel](../../../connection-integration/data-integration/seatunnel.md)
 - [CloudCanal](../../../connection-integration/data-integration/cloudcanal.md)
-- [NineData](https://docs.ninedata.cloud/en/replication/mysql_to_others/mysql_to_doris/)
 
 ---
 
 ## FAQ {#faq}
 
-**Q1: MySQL の数個のテーブルを Doris に 1 回だけ移行する場合、どのオプションを選ぶべきですか?**
+**Q1: MySQL の数個のテーブルを一度だけ Doris に移行する場合、どのオプションを選ぶべきですか？**
 
-**Multi-Catalog** を使用してください。JDBC Catalog を作成した後、`INSERT INTO` または `CTAS` を実行すれば、追加コンポーネントなしで移行を完了できます。
+**Multi-Catalog** を使用します。JDBC Catalog を作成した後、`INSERT INTO` または `CTAS` を実行すれば、追加コンポーネントなしで移行を完了できます。
 
-**Q2: MySQL から Doris に増分データ（UPDATE / DELETE を含む）をリアルタイムで同期するにはどうすればよいですか?**
+**Q2: MySQL から Doris に増分データ（UPDATE / DELETE を含む）をリアルタイムで同期するにはどうすればよいですか？**
 
-**Flink Doris Connector + Flink CDC** を使用し、Doris Sink で `sink.enable-delete = true` を有効にするか、Doris に組み込まれた **Streaming Job** を使用して継続的に同期します。
+**Flink Doris Connector + Flink CDC** を使用し、Doris Sink で `sink.enable-delete = true` を有効にするか、Doris に組み込まれた **Streaming Job** を使用して継続同期を行います。
 
-**Q3: MySQL データベース全体を Doris に 1 ステップで同期するにはどうすればよいですか?**
+**Q3: MySQL データベース全体を一度の手順で Doris に同期するにはどうすればよいですか？**
 
-Flink Doris Connector の `mysql-sync-database` データベース全体同期機能、または Streaming Job の複数テーブル同期機能を使用してください。どちらのオプションでも、スキーマとデータを 1 ステップで同期できます。
+Flink Doris Connector の `mysql-sync-database` データベース全体同期機能、または Streaming Job の複数テーブル同期機能を使用します。いずれもスキーマとデータを一度の手順で同期できます。
 
-**Q4: Oracle、SQL Server、PostgreSQL もソースデータベースとしてサポートされますか?**
+**Q4: Oracle、SQL Server、PostgreSQL もソースデータベースとしてサポートされていますか？**
 
 はい。Multi-Catalog と Flink / Spark Connector は、それぞれの JDBC ドライバを介して Oracle、SQL Server、PostgreSQL などの TP データベースをサポートします。Streaming Job は現在、MySQL と PostgreSQL をサポートしています。
 
-**Q5: 移行中に Doris テーブルのレプリケーション数を指定するにはどうすればよいですか?**
+**Q5: 移行中に Doris テーブルのレプリケーション数を指定するにはどうすればよいですか？**
 
-`PROPERTIES('replication_num' = 'N')` を `CTAS` ステートメントで指定するか、Flink のデータベース全体同期コマンドで `--table-conf replication_num=N` を渡します。
+`CTAS` ステートメントで `PROPERTIES('replication_num' = 'N')` を指定するか、Flink のデータベース全体同期コマンドで `--table-conf replication_num=N` を渡します。

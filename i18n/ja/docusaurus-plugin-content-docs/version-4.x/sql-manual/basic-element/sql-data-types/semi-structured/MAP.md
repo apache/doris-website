@@ -7,26 +7,26 @@
 }
 ---
 
-# MAP
+# MAP {#map}
 
-## 型の説明
+## 型の説明 {#type-description}
 
-- `MAP<key_type, value_type>` 型は、キーと値のペアからなる複合型を表します。各キーは値に一意に対応します。
-  - `key_type` はキーの型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6` などの型をサポートします。キーには NULL を使用でき、NOT NULL は指定できません。
-  - `value_type` は値の型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT` をサポートします。値には NULL を使用でき、NOT NULL は指定できません。
+- `MAP<key_type, value_type>` 型は、キーと値のペアの複合型を表し、各キーが 1 つの値に一意に対応します。
+  - `key_type` はキーの型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6` などの型をサポートします。キーは NULL を許容し、NOT NULL は指定できません。
+  - `value_type` は値の型を表し、`BOOLEAN, TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL, DATE, DATETIME, TIMESTAMPTZ, CHAR, VARCHAR, STRING, IPV4, IPV6, ARRAY, MAP, STRUCT` をサポートします。値は NULL を許容し、NOT NULL は指定できません。
 
-## 型の制約
+## 型の制約 {#type-constraints}
 
-- `MAP<key_type, value_type>` 型の最大ネスト深度は 9 です。
-- `MAP<key_type, value_type>` では、キーに NULL を使用でき、同じキーを複数指定できます（NULL と NULL は同じキーと見なされます）。
-- `MAP<key_type, value_type>` 型同士の変換可否は、`key_type` と `value_type` を変換できるかどうかによって決まります。`MAP<key_type, value_type>` を他の型に変換することはできません。
-  - たとえば、`MAP<INT, INT>` は `MAP<BIGINT, BIGINT>` に変換できます。これは `INT` から `BIGINT` に変換できるためです。
-  - 文字列型は、解析によって `MAP<key_type, value_type>` に変換できます。解析に失敗した場合は NULL を返します。
-- `AGGREGATE` テーブルモデルでは、`MAP<key_type, value_type>` がサポートする集約方法は `REPLACE` と `REPLACE_IF_NOT_NULL` のみです。**どのテーブルモデルでも、KEY 列、パーティション列、バケット列には使用できません**。
-- `MAP<key_type, value_type>` 型の列は比較演算や算術演算をサポートしません。**`ORDER BY` と `GROUP BY` でも使用できず、`JOIN KEY` として使用したり、`DELETE` 文で使用したりすることもできません**。
-- `MAP<key_type, value_type>` 型の列には、いかなるインデックスも作成できません。
+- `MAP<key_type, value_type>` 型で許可される最大ネスト深度は 9 です。
+- `MAP<key_type, value_type>` ではキーに NULL を指定でき、同一のキーも許可されます（NULL と NULL は同じキーと見なされます）。
+- `MAP<key_type, value_type>` 型間の変換は、`key_type` と `value_type` をそれぞれ変換できるかどうかによって決まります。`MAP<key_type, value_type>` は他の型に変換できません。
+  - 例: `MAP<INT, INT>` は `MAP<BIGINT, BIGINT>` に変換できます。`INT` と `BIGINT` は変換可能なためです。
+  - 文字列型は `MAP<key_type, value_type>` に変換できます（解析によって行われ、解析に失敗した場合は NULL が返されます）。
+- `AGGREGATE` テーブルモデルでは、`MAP<key_type, value_type>` は `REPLACE` と `REPLACE_IF_NOT_NULL` のみをサポートします。**どのテーブルモデルでも KEY 列、パーティション列、バケット列として使用できません**。
+- `MAP<key_type, value_type>` 型の列は、`IN` や `NOT IN` を含む比較演算や算術演算をサポートしません。**`ORDER BY` と `GROUP BY` 操作をサポートせず、`JOIN KEY` として使用できず、`DELETE` ステートメントでも使用できません**。
+- `MAP<key_type, value_type>` 型の列では、インデックスを作成できません。
 
-## 値の構築
+## 型の構築 {#type-construction}
 
 - `MAP()` 関数は `MAP` 型の値を返します。
 
@@ -52,10 +52,10 @@
   +---------------+
   ```
 
-## 型の変更
+## 型の変更 {#modifying-type}
 
-- `key_type` または `value_type` の変更は、`MAP<key_type, value_type>` で対象の型が `VARCHAR` の場合にのみ可能です。
-  - `VARCHAR` のパラメーターは、小さい値から大きい値への変更のみ可能です。大きい値から小さい値へは変更できません。
+- `MAP<key_type, value_type>` の `key_type` または `value_type` が `VARCHAR` の場合にのみ変更できます。
+  - `VARCHAR` のパラメーターを小さい値から大きい値へ変更する場合のみ許可され、逆方向は許可されません。
 
     ```SQL
     CREATE TABLE `map_table` (
@@ -77,9 +77,9 @@
     ALTER TABLE map_table MODIFY COLUMN map_varchar_varchar MAP<VARCHAR(20), VARCHAR(20)>;
     ```
 
-- `MAP<key_type, value_type>` 型の列に指定できるデフォルト値は NULL のみで、指定後に変更することはできません。
+- `MAP<key_type, value_type>` 型の列のデフォルト値には NULL のみ指定でき、指定後は変更できません。
 
-## 要素へのアクセス
+## 要素へのアクセス {#element-access}
 
 - `[key]` を使用して、`MAP` 内のキーに対応する値にアクセスします。
 
@@ -105,7 +105,7 @@
   +------------------------------------+
   ```
 
-## 使用例
+## 例 {#examples}
 
 - ネストした MAP
 
