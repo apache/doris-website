@@ -12,6 +12,8 @@
 
 开发版本的 typed 接口只支持默认 `GEOGRAPHY(OGC:CRS84, spherical)` 的非空 XY Point、LineString、Polygon。Geometry、其他 CRS/算法、Z/M、Multi*/GeometryCollection 和 EMPTY 不支持用于计算；合法原始值仍可存储和访问。NULL 参数返回 NULL。函数使用球面测地线边，沿用较小区域的多边形环解释；不提供空间索引或谓词下推。
 
+涉及 LineString 或 Polygon 的计算中，S2 给出的零距离需用原始坐标确认两者相交。只因舍入产生或无法确认的零距离会报错，阈值为 0 或正数时同样如此。
+
 ## 语法
 
 ```sql

@@ -12,6 +12,8 @@ Tests whether the shortest spherical distance between two spatial values is less
 
 The development-version typed interface accepts nonempty XY Point, LineString and Polygon values with default `GEOGRAPHY(OGC:CRS84, spherical)` semantics. Geometry, other CRS/algorithms, Z/M, Multi*/GeometryCollection and EMPTY are not supported for calculations; valid raw values remain available for storage and access. NULL arguments return NULL. Edges are spherical geodesics, with the existing smaller-region polygon-ring interpretation. No spatial index or predicate pushdown is provided.
 
+For calculations involving a LineString or Polygon, a zero distance reported by S2 must be confirmed as an intersection using the original coordinates. A rounded-only or unresolved zero raises an error for both zero and positive thresholds.
+
 ## Syntax
 
 ```sql
