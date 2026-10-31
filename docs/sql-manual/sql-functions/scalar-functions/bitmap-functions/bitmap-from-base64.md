@@ -10,6 +10,12 @@
 
 Convert a base64 string (which can be converted by `bitmap_to_base64` function) to a BITMAP. Returns NULL when the input string is invalid.
 
+:::note
+
+This function expects Base64 **text**. External binary columns such as Hive `binary` are mapped to `VARBINARY` and hold the raw serialized bytes, so `bitmap_from_base64` returns NULL on them. Use [`bitmap_from_binary`](bitmap-from-binary) for those columns, or decode the text first with `from_base64`.
+
+:::
+
 ## Syntax
 
 ```sql

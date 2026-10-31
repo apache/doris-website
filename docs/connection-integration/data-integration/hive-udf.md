@@ -208,20 +208,45 @@ select k3, hll_cardinality(hll_union(uuid)) from hive_hll_table group by k3;
 
 **Recommended approach: Hive Catalog**
 
-When a Hive table is stored in `TEXT` format, the `binary` type is saved as a Base64-encoded string. With Hive Catalog, you can write the data into a Doris internal table directly through the [`bitmap_from_base64`](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-base64) or [`hll_from_base64`](../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-base64) function.
+The Hive `binary` column is mapped to the Doris `VARBINARY` type by the Hive Catalog, and the raw serialized Bitmap / HLL bytes it holds are loaded with one uniform syntax, regardless of the storage format of the Hive table:
+
+- **Parquet / ORC**: `BINARY` is a native physical type of these formats, so the `binary` column keeps the raw Doris Bitmap / HLL bytes on disk with zero encoding overhead.
+- **TEXTFILE**: a delimiter-based text protocol cannot embed arbitrary binary bytes, so Hive serializes a `binary` column as a Base64-encoded string on disk (roughly +33% storage). When the mapped VARBINARY column is read, Doris decodes the Base64 text back into the raw bytes automatically.
+
+In both cases, load the column through the [`bitmap_from_binary`](../../sql-manual/sql-functions/scalar-functions/bitmap-functions/bitmap-from-binary) / [`hll_from_binary`](../../sql-manual/sql-functions/scalar-functions/hll-functions/hll-from-binary) function:
+
+```sql
+-- Bitmap
+SELECT k1, k2, k3, bitmap_from_binary(uuid) FROM hive.test.hive_bitmap_table;
+-- HLL
+SELECT k1, k2, k3, hll_from_binary(uuid) FROM hive.test.hive_hll_table;
+```
+
+:::caution Why `bitmap_from_base64` / `hll_from_base64` no longer work on Hive `binary` columns
+
+In Doris 4.1.4.1 and earlier, the Hive `binary` type was mapped to `STRING` by default (with `enable.mapping.varbinary = true` opting into `VARBINARY`), so a TEXTFILE `binary` column arrived as Base64 text and had to be decoded with `bitmap_from_base64` / `hll_from_base64`. Since 4.1.5, Hive `binary` is mapped to `VARBINARY` unconditionally, and the `enable.mapping.varbinary` property no longer takes effect (absent, `false`, and `true` all produce the same mapping). A `binary` column therefore always exposes the decoded raw bytes instead of Base64 text, and the `*_from_base64` functions fail on it - they would try to Base64-decode bytes that are not Base64 text. Use `bitmap_from_binary` / `hll_from_binary` for all Hive storage formats instead.
+
+:::
+
+:::note Performance
+
+Although the syntax is uniform, prefer Parquet / ORC over TEXTFILE for performance-sensitive queries: reading a TEXTFILE `binary` column involves the Base64 decode on every cell (plus the ~33% larger text on disk), while Parquet / ORC deliver the raw bytes directly.
+
+:::
 
 The complete workflow is as follows:
 
-1. Create the table in `TEXTFILE` format in Hive
+1. Create a table with a `binary` column in Hive (any storage format: TEXTFILE, ORC, or Parquet)
 2. Create a [Hive Catalog](../../lakehouse/catalogs/hive-catalog) in Doris
 3. Create the corresponding Bitmap / HLL internal table in Doris
 4. Write data from Hive into Doris using `INSERT INTO ... SELECT`
 
 #### Complete Bitmap Example
 
-**1. Create the TEXT format table in Hive**
+**1. Create the table in Hive**
 
 ```sql
+-- TEXTFILE is used here; ORC and Parquet work the same way
 CREATE TABLE IF NOT EXISTS `test`.`hive_bitmap_table`(
     `k1`   int       COMMENT '',
     `k2`   String    COMMENT '',
@@ -259,15 +284,16 @@ PROPERTIES (
 
 ```sql
 insert into test.doris_bitmap_table
-select k1, k2, k3, bitmap_from_base64(uuid)
+select k1, k2, k3, bitmap_from_binary(uuid)
 from hive.test.hive_bitmap_table;
 ```
 
 #### Complete HLL Example
 
-**1. Create the TEXT format table in Hive**
+**1. Create the table in Hive**
 
 ```sql
+-- TEXTFILE is used here; ORC and Parquet work the same way
 CREATE TABLE IF NOT EXISTS `hive_hll_table`(
     `k1`   int       COMMENT '',
     `k2`   String    COMMENT '',
@@ -307,7 +333,7 @@ PROPERTIES (
 
 ```sql
 insert into doris_test.doris_hll_table
-select k1, k2, k3, hll_from_base64(uuid)
+select k1, k2, k3, hll_from_binary(uuid)
 from hive.hive_test.hive_hll_table;
 
 -- View the loaded results, can be combined with hll_to_base64 for decoding
@@ -332,11 +358,11 @@ select k3, hll_cardinality(hll_union(uuid)) from doris_test.doris_hll_table grou
 +------+----------------------------------+
 
 -- Query the Hive external table directly (data before loading) for cross-validation to confirm consistency
-select k3, hll_cardinality(hll_union(hll_from_base64(uuid)))
+select k3, hll_cardinality(hll_union(hll_from_binary(uuid)))
 from hive.hive_test.hive_hll_table
 group by k3;
 +------+---------------------------------------------------+
-| k3   | hll_cardinality(hll_union(hll_from_base64(uuid))) |
+| k3   | hll_cardinality(hll_union(hll_from_binary(uuid))) |
 +------+---------------------------------------------------+
 | d    |                                                 1 |
 | b    |                                                 1 |
@@ -347,6 +373,6 @@ group by k3;
 ## Notes
 
 - **HLL precision**: HLL is an approximate algorithm, and the result usually has an error of 1% to 2% compared with the exact value. For scenarios with strict precision requirements, use Bitmap instead.
-- **Storage format**: When loading through Hive Catalog, the Hive table must use the `TEXTFILE` format so that the `binary` column is saved as a Base64 string.
+- **Storage format**: When loading through Hive Catalog, the Hive `binary` column is mapped to VARBINARY and loaded with `bitmap_from_binary` / `hll_from_binary` for every storage format (TEXTFILE, ORC, Parquet). Parquet / ORC store the raw bytes natively; TEXTFILE stores the `binary` column as a Base64 string, which Doris decodes on read - correct but slower, so prefer Parquet / ORC for performance-sensitive queries.
 - **JAR path**: The `hdfs://hostname:port/hive-udf.jar` in the examples must be replaced with the actual HDFS address, and it is recommended that all UDFs reference the same JAR.
 - **Function correspondence**: `to_hll` corresponds to `to_bitmap`, `hll_union` corresponds to `bitmap_union`, and `hll_cardinality` corresponds to `bitmap_count`, making it easy to switch between the Bitmap and HLL solutions.

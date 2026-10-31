@@ -23,7 +23,7 @@ The following table describes how Doris 4.2 (`branch-4.2`) maps Hive external-ta
 | char(N)       | char(N)       |                                                |
 | varchar(N)    | varchar(N)    |                                                |
 | string        | string        |                                                |
-| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`. |
+| binary | VARBINARY | Since 4.1.5, this type always maps to `VARBINARY`, and the `enable.mapping.varbinary` property no longer takes effect (absent, `false`, and `true` all produce the same mapping). In 4.1.4.1 and earlier, the default was `string` and `true` opted into `varbinary`. |
 | timestamp with local time zone | TIMESTAMPTZ(6) | Since 4.1.5, this type always maps to `TIMESTAMPTZ(6)`. Precision is capped at 6, so higher precision is lost. |
 | array         | array         |                                                |
 | map           | map           |                                                |
