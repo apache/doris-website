@@ -2,34 +2,34 @@
 {
     "title": "TOPN_ARRAY",
     "language": "ja",
-    "description": "TOPN_ARRAY は、指定した列で出現頻度の高い上位 N 個の値を配列で返します。"
+    "description": "TOPNARRAY は、指定した列で出現頻度が最も高い N 個の値の配列を返します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-TOPN_ARRAY は、指定した列で出現頻度の高い上位 N 個の値を配列で返します。近似計算を行い、出現回数の降順で結果を並べます。
+TOPN_ARRAY は、指定した列で出現頻度が最も高い N 個の値の配列を返します。件数の降順で結果を返す近似計算関数です。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 TOPN_ARRAY(<expr>, <top_num> [, <space_expand_rate>])
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
 | -- | -- |
-| `<expr>` | 集計対象の列または式。サポートされる型は TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、String です。 |
-| `<top_num>` | 返す値の数。正の整数である必要があります。サポートされる型は Integer です。 |
-| `<space_expand_rate>` | 省略可能。Space-Saving アルゴリズムで使用するカウンターの数を `counter_numbers = top_num * space_expand_rate` で設定します。値が大きいほど結果の精度が高くなります。デフォルト値は 50 です。サポートされる型は Integer です。 |
+| `<expr>` | カウント対象の列または式。サポートされる型: Boolean（Doris 4.1 系列では 4.1.5 以降）、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、String。 |
+| `<top_num>` | 返す出現頻度が最も高い値の数。正の INT 定数である必要があります。 |
+| `<space_expand_rate>` | オプションの INT 定数で、デフォルト値は 50 です。正の値を指定すると、中間状態のシリアライズ時に最大 `top_num * space_expand_rate` 個の候補を保持します。値が大きいほど、通常は精度が向上します。これはローカル集約メモリのハード上限ではありません。Doris 4.1 系列では 4.1.5 以降、0 以下の値を指定するとすべての中間候補を保持しますが、最終結果に含まれる値は `top_num` 個以下です。このモードではより多くのメモリを使用する可能性があり、クエリのメモリ制限が適用されます。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-出現頻度の高い上位 N 個の値を含む配列を返します。
-グループに有効なデータがない場合は NULL を返します。
+出現頻度が最も高い N 個の値を含む配列を返します。
+グループ内に有効なデータがない場合は NULL を返します。
 
-## 例
+## 例 {#example}
 ```sql
 -- setup
 CREATE TABLE page_visits (
@@ -56,7 +56,7 @@ SELECT TOPN_ARRAY(page_id, 3) as top_pages
 FROM page_visits;
 ```
 
-アクセス数が多いページの上位 3 件を求めます。
+訪問数が最も多い上位 3 ページを検索します。
 
 ```text
 +-----------+
@@ -76,4 +76,14 @@ SELECT TOPN_ARRAY(page_id, 3) as top_pages FROM page_visits where page_id is nul
 +-----------+
 | NULL      |
 +-----------+
+```
+
+BOOLEAN 入力（Doris 4.1 系列では 4.1.5 以降）:
+
+```sql
+SELECT TOPN_ARRAY(TRUE, 2), TOPN_ARRAY(CAST(NULL AS BOOLEAN), 2);
+```
+
+```text
+[1]    NULL
 ```

@@ -2,35 +2,35 @@
 {
     "title": "TOPN_WEIGHTED",
     "language": "ja",
-    "description": "TOPNWEIGHTED 関数は、指定した列で重み付きの出現回数が多い上位 N 個の値を返します。通常の TOPN 関数とは異なり、"
+    "description": "TOPNWEIGHTED 関数は、重み付きカウントを使用して、指定した列で最も頻繁に出現する N 個の値を返します。通常の TOPN 関数とは異なり、"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-TOPN_WEIGHTED 関数は、指定した列で重み付きの出現回数が多い上位 N 個の値を返します。通常の TOPN 関数とは異なり、重みによって値の重要度を調整できます。
+TOPN_WEIGHTED 関数は、重み付きカウントを使用して、指定した列で最も頻繁に出現する N 個の値を返します。通常の TOPN 関数とは異なり、TOPN_WEIGHTED では重みを使用して値の重要度を調整できます。
 
-## 構文
+## 構文 {#syntax}
 
 ```sql
 TOPN_WEIGHTED(<expr>, <weight>, <top_num> [, <space_expand_rate>])
 ```
 
-## パラメータ
+## パラメーター {#parameters}
 
-| パラメータ | 説明 |
+| パラメーター | 説明 |
 | -- | -- |
-| `<expr>` | 集計対象の列または式。対応する型: TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、String。 |
-| `<weight>` | 重みの調整に使用する列または式。対応する型: Double。|
-| `<top_num>` | 返す値の個数。正の整数を指定する必要があります。対応する型: Integer。 |
-| `<space_expand_rate>` | 省略可能。Space-Saving アルゴリズムで使用するカウンターの数を `counter_numbers = top_num * space_expand_rate` として設定します。値が大きいほど結果の精度が高くなります。デフォルトは 50 です。対応する型: Integer。 |
+| `<expr>` | カウント対象の列または式。サポートされる型: Boolean（Doris 4.1 系列では 4.1.5 以降）、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Date、Datetime、IPV4、IPV6、String。 |
+| `<weight>` | 重みの調整に使用する列または式。型: BIGINT。|
+| `<top_num>` | 出現頻度が最も高い値を返す数。正の INT 定数である必要があります。 |
+| `<space_expand_rate>` | オプションの INT 定数。デフォルトは 50 です。正の値を指定すると、中間状態のシリアル化時に最大 `top_num * space_expand_rate` 個の候補を保持し、値を大きくすると通常は精度が向上します。これはローカル集約メモリの厳密な上限ではありません。Doris 4.1 系列では 4.1.5 以降、0 以下の値を指定するとすべての中間候補を保持しますが、最終結果に含まれる値は最大で `top_num` 個です。このモードではメモリ使用量が増える可能性があり、クエリのメモリ制限が引き続き適用されます。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
-重み付きの出現回数が多い上位 N 個の値を含む配列を返します。
+重み付きカウントが最も高い N 個の値を含む配列を返します。
 グループ内に有効なデータがない場合は NULL を返します。
 
-## 例
+## 例 {#example}
 ```sql
 -- setup
 CREATE TABLE product_sales (
@@ -57,7 +57,7 @@ SELECT TOPN_WEIGHTED(product_id, sale_amount, 3) as top_products
 FROM product_sales;
 ```
 
-売上金額を重みとして、上位 3 件の商品を取得します。
+売上金額で重み付けした上位 3 つの製品を検索します。
 
 ```text
 +--------------+
@@ -72,7 +72,7 @@ SELECT TOPN_WEIGHTED(product_id, sale_amount, 3) as top_products
 FROM product_sales where product_id is null;
 ```
 
-売上金額を重みとして、上位 3 件の商品を取得します。
+売上金額で重み付けした上位 3 つの製品を検索します。
 
 ```text
 +--------------+
@@ -80,4 +80,14 @@ FROM product_sales where product_id is null;
 +--------------+
 | NULL         |
 +--------------+
+```
+
+BOOLEAN 入力（Doris 4.1 系列では 4.1.5 以降）:
+
+```sql
+SELECT TOPN_WEIGHTED(TRUE, 1, 2), TOPN_WEIGHTED(CAST(NULL AS BOOLEAN), 1, 2);
+```
+
+```text
+[1]    NULL
 ```
