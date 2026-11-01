@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "406f52c620405f3eff61b0dc5df8eb4caa5bcf31fabdaae6a843d153a639d0f1",
-    "sourceTechnicalHash": "315812bfff67d5b167dbeb20d0d1cbf3543af66212d8dda53f1999d6e2212488",
-    "targetHash": "492de970cfeb4a87eaf41684ea2124d5074ae602447d449c7040c955aae83271",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "35563b72149e1959be24a87bc44c43301f80490d7b95b2f0b6c06bc4e5e2b607",
+    "sourceTechnicalHash": "219218cc66180908c38416dab0f4b532a3b1530a7a0640135c3f78cb2a68f9a6",
+    "targetHash": "5927765069119d65f16eda2b2b5ceaf320762ab2498bf9aeaf6be7279582b7a4",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:52:07.833Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:00:42.774Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "35563b72149e1959be24a87bc44c43301f80490d7b95b2f0b6c06bc4e5e2b607",
+      "targetHash": "5927765069119d65f16eda2b2b5ceaf320762ab2498bf9aeaf6be7279582b7a4",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"inlineCode\",null,null,\"0\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"NULL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
+        "blob": "7a885e93982a6d14cd36cb89fc456e108be43f3c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/multi-match-any.md",
+        "blob": "950c6bddd47f378e1e3586536a09a7bda4d6a468"
+      }
+    }
   }
 }

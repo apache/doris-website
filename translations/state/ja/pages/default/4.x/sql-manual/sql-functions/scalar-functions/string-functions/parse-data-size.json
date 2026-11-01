@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "729ef324163d98e5416b3c878920243796ff942c45585ead7b1f4104114a5c0b",
-    "sourceTechnicalHash": "1945d5343842ea36b573296f22e0c832cb9f836e01dad825c3e4bbe3377716a4",
-    "targetHash": "bd5bb0759b0267ce0bad7394612420f0a1dbcb6b96e7879ad0b082da65905055",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+    "sourceTechnicalHash": "985ad941350d45763c0b015252d6c47ce5603f16024f672394cc3f8ad8e8ce3e",
+    "targetHash": "123f8bf2a465e1f4354fc68a7391bd0ae486dd67602afe9668bfd16bbaf0c204",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:52:07.833Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:01:46.841Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "302b6413c851b5f6b50aa054b315877e015dbf4296cad9c17a07b2c03ccf7531",
+      "targetHash": "123f8bf2a465e1f4354fc68a7391bd0ae486dd67602afe9668bfd16bbaf0c204",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+        "blob": "0de772fb099d40e64bfb71ed52296c4ae9af5e10"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/parse-data-size.md",
+        "blob": "719a41524fc41eadd7ecc786d6c8df7477adaa7e"
+      }
+    }
   }
 }

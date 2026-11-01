@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "25efa1ee2c69d67c97d084ae7e125307c78c5b2e1aa9101d76ab48657bfa8fd4",
-    "sourceTechnicalHash": "8dccbaf372885b48e9ea7d8f3cd5daa7e0d13347b7af283ad18aca0676f27cfa",
-    "targetHash": "be205389190d91fa4acd843475b9d4d80d21116d5dd760606ed15b114373be17",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "a292547ca5fedd73ae7441d5d483ea11188ed6de97de81a0608bb025834e3c0e",
+    "sourceTechnicalHash": "afa07bfa2644030c5b946ba3f7f45bc772a020057faafe039886951db276425a",
+    "targetHash": "f4645e7fe93b1f1a50a21a35f52de4c69f82ab0a8fd2e2c31b45475b8216526c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:52:07.834Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:04:35.918Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a292547ca5fedd73ae7441d5d483ea11188ed6de97de81a0608bb025834e3c0e",
+      "targetHash": "f4645e7fe93b1f1a50a21a35f52de4c69f82ab0a8fd2e2c31b45475b8216526c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"8\",\"8\",\"8\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"(?-s)\"]; received [\"inlineCode\",null,null,\"-\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"8\",\"8\",\"8\"]\nprotected node 5: expected [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"enable_extended_regex\"]; received [\"link\",\"https://github.com/google/re2/wiki/Syntax\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 29: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"(?-s)\"]; received [\"inlineCode\",null,null,\"-\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"2\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"8\",\"8\",\"8\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"-\"]; received [\"inlineCode\",null,null,\"(?-s)\"]\nprotected node 30: expected [\"inlineCode\",null,null,\"(?-s)\"]; received [\"inlineCode\",null,null,\"-\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
+        "blob": "330cc5f6aeeed98cf9cc1d0aea3113e376dc1813"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/scalar-functions/string-functions/regexp-extract-all.md",
+        "blob": "2b19176d2b08c6435b1965b956d3ea1b523d03a8"
+      }
+    }
   }
 }

@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hdfs.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hdfs.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
-    "sourceHash": "c5c098a1287fffd6231e8dcc8585dd9b12e6ea8d93174c512a7236389207f816",
-    "sourceTechnicalHash": "bb44d3601cc90d4669e412ea22bf63cf54ed0f60036caf2045e149bd2c003692",
-    "targetHash": "98d29c36583946f571b3b381f1f479a21b3ee18b1c5a7dd92197243c35473b42",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "569cbdcbdc70aadc43ad8995e31848853149de754f45ed6f1aa38485ba2b4872",
+    "sourceTechnicalHash": "0624fadfb5661c0be738fb5e2cc6c6437aba0ff392e75477a4bbf5056003f7a4",
+    "targetHash": "0e229c525786438d3a6accb826c371a608d1cbe7d1d1120782b4205994c638ce",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T07:10:18.483Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:10:29.830Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "569cbdcbdc70aadc43ad8995e31848853149de754f45ed6f1aa38485ba2b4872",
+      "targetHash": "0e229c525786438d3a6accb826c371a608d1cbe7d1d1120782b4205994c638ce",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 80: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hdfs.md",
+        "blob": "ecf3508867549ddeacdec65c9fee6dbbf4991d02"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/hdfs.md",
+        "blob": "ebe24834aaf3b8a1e13360726e9db3c2a90b5155"
+      }
+    }
   }
 }

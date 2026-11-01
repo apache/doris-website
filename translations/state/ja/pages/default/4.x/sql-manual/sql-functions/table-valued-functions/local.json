@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/local.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/local.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
-    "sourceHash": "c5c098a1287fffd6231e8dcc8585dd9b12e6ea8d93174c512a7236389207f816",
-    "sourceTechnicalHash": "bb44d3601cc90d4669e412ea22bf63cf54ed0f60036caf2045e149bd2c003692",
-    "targetHash": "fbe6efd7b77e2a9ca3aa9f64c030144d080cde7422aa289fe1d5d52681124c64",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "402814d27095f5ceca1502dce74758fdabcc3508cad2adb9de860a9329868151",
+    "sourceTechnicalHash": "58b8cc83f33c603aee053b98f112b3a70a682741e7510c6de6b2685959bf2e07",
+    "targetHash": "3ce181aa9ab1fc3afd5208422009417759213cab9a0d472a3b530f959b8822e1",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T07:10:18.484Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T17:13:12.116Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "402814d27095f5ceca1502dce74758fdabcc3508cad2adb9de860a9329868151",
+      "targetHash": "3ce181aa9ab1fc3afd5208422009417759213cab9a0d472a3b530f959b8822e1",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 56: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 56: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 56: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 2: expected [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\", \\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]; received [\"code\",\"sql\",null,\"LOCAL(\\n  \\\"file_path\\\" = \\\"<file_path>\\\",\\n  \\\"backend_id\\\" = \\\"<backend_id>\\\",\\n  \\\"format\\\" = \\\"<format>\\\"\\n  [, \\\"<optional_property_key>\\\" = \\\"<optional_property_value>\\\" [, ...] ]\\n  );\"]\nprotected node 56: expected [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]; received [\"inlineCode\",null,null,\"false\"]\nprotected node 57: expected [\"inlineCode\",null,null,\"false\"]; received [\"inlineCode\",null,null,\"TIMESTAMPTZ\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/table-valued-functions/local.md",
+        "blob": "2f0c3a79f702992ab7678d2b34d02f6ad5c1f5de"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/table-valued-functions/local.md",
+        "blob": "ba940042d3dfc074c730376213714c12cb5a4d84"
+      }
+    }
   }
 }
