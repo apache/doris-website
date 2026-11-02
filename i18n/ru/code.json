@@ -2928,7 +2928,7 @@
     "message": "Спросить ИИ"
   },
   "homepage.hero.058": {
-    "message": "Присоединиться к Slack"
+    "message": "Telegram"
   },
   "homepage.features.001": {
     "message": "Аналитика реального времени"
@@ -3663,10 +3663,10 @@
     "message": "Создаёте решение на Doris?"
   },
   "homepage.slackcommunitynudge.010": {
-    "message": "Присоединяйтесь к Slack за помощью с установкой, советами по производительности и ответами пользователей и разработчиков Apache Doris."
+    "message": "Присоединяйтесь к Telegram за помощью с установкой, советами по производительности и ответами пользователей и разработчиков Apache Doris."
   },
   "homepage.slackcommunitynudge.011": {
-    "message": "Присоединиться к Slack"
+    "message": "Telegram"
   },
   "homepage.slackcommunitynudge.013": {
     "message": "21–22 октября · онлайн"

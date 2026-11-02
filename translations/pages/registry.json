@@ -7,6 +7,7 @@
       "sourcePath": "src/pages/index.tsx",
       "sourceFiles": [
         "src/components/Icons/star-green-icon.tsx",
+        "src/components/Icons/telegram.tsx",
         "src/components/home-next/HomeNext.scss",
         "src/components/home-next/HomeNext.tsx",
         "src/components/home-next/NewsTicker.logic.js",
@@ -5551,6 +5552,11 @@
       "id": "slack",
       "kind": "utility",
       "sourcePath": "src/pages/slack.tsx"
+    },
+    {
+      "id": "telegram",
+      "kind": "utility",
+      "sourcePath": "src/pages/telegram.tsx"
     },
     {
       "id": "archived-docs",

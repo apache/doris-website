@@ -156,11 +156,26 @@ function buildSlackEntryUrl({ medium, content, campaign }) {
     return `${SLACK_ENTRY_URL}?${params.toString()}`;
 }
 
+// Russian community entry points use Telegram; the public URL remains stable
+// when customFields.telegramInviteUrl changes.
+function getCommunityName(locale) {
+    return locale === 'ru' ? 'Telegram' : 'Slack';
+}
+
+function buildCommunityEntryUrl({ locale, ...options }) {
+    const slackUrl = buildSlackEntryUrl(options);
+    return getCommunityName(locale) === 'Telegram'
+        ? `/telegram${new URL(slackUrl).search}`
+        : slackUrl;
+}
+
 module.exports = {
     SLACK_ENTRY_URL,
     SLACK_EVENT_ACTION,
     SLACK_EVENT_CATEGORY,
     buildSlackEntryUrl,
+    buildCommunityEntryUrl,
+    getCommunityName,
     buildSlackEventName,
     getMatomoScriptUrl,
     getReferrerHost,
