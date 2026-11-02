@@ -456,6 +456,16 @@ Note: these two mechanisms are mutually exclusive—enabling DOC encoding disabl
 
 - The system ranks paths by non-null ratio / sparsity: high-frequency (less-sparse) paths go through Subcolumnization and are stored as independent subcolumns; remaining low-frequency (sparse) paths are merged and stored in sparse columns. The maximum number of extracted subcolumns is controlled by `variant_max_subcolumns_count`.
 - If a path is declared in a Schema Template, by default it will not be moved into sparse columns; set `variant_enable_typed_paths_to_sparse` to allow typed paths to be moved into sparse columns.
+- From version 4.2, `variant_max_subcolumns_count = 0` stores every dynamic path in sparse columns, while Schema Template paths still go through Subcolumnization unless `variant_enable_typed_paths_to_sparse` is set. Use it when values are mostly read whole. Such a path has no subcolumn, so it has no subpath index. To send every dynamic path through Subcolumnization instead, set a count above the number of distinct paths:
+  ```sql
+  -- every dynamic path in sparse columns
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- every dynamic path as a subcolumn, as long as the paths fit in the count
+  v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
+  ```
+
+  A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit. Only that column keeps it: a table created from it through `SHOW CREATE TABLE` output, `CREATE TABLE LIKE` or `CREATE TABLE AS SELECT` stores every dynamic path in sparse columns.
 - Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
 
 **Reference notes**
@@ -528,7 +538,7 @@ CREATE TABLE example_table (
 
 <table>
 <tr><td>Property</td><td>Description</td></tr>
-<tr><td>`variant_max_subcolumns_count`</td><td>Max number of paths that can go through Subcolumnization. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended), which is already enough for most workloads. Avoid setting it too large. If the workload truly needs very large extracted-subcolumn scale, prefer <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>. 0 means no limit; do not exceed 10000.</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>Max number of paths that can go through Subcolumnization. Above the threshold, new paths may be stored in a shared data structure. Default: 2048 (Recommended), which is already enough for most workloads. Avoid setting it too large. If the workload truly needs very large extracted-subcolumn scale, prefer <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>. From version 4.2, 0 means that no dynamic path goes through Subcolumnization and all of them are stored in sparse columns; a column created before version 4.2 keeps the old meaning, no limit. Do not exceed 10000.</td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`</td><td>By default, typed paths always participate in Subcolumnization (and do not count against `variant_max_subcolumns_count`). When set to `true`, typed paths also count toward the threshold and may be moved to the shared structure.</td></tr>
 <tr><td>`variant_sparse_hash_shard_count`</td><td>Shard count for sparse columns. Distributes sparse subpaths across multiple sparse columns to improve read performance. Default: 1; tune based on the number of sparse subpaths.</td></tr>
 </table>
