@@ -49,41 +49,15 @@ A compute-storage decoupled cluster relies on FoundationDB (FDB) to store metada
 | Direct deployment on machines (recommended) | Already have available physical machines / virtual machines | Refer to [Compute-Storage Decoupled - Pre-Deployment Preparation](../../deploy-manually/separating-storage-compute-deploy-manually) to complete the deployment, ensuring that the deployment machines and the K8s cluster are in the same LAN |
 | Deploy on Kubernetes | Want to manage FDB uniformly within K8s | Directly execute the "K8s Quick Deployment" below |
 
-### K8s Quick Deployment (Simplest Path)
+### K8s Quick Deployment (Development)
 
-Execute the following 4 steps in order to bring up a minimal FDB cluster (single replica) on K8s:
+Follow [Deploy FoundationDB](install-fdb.md) to install the pinned CRDs, FDB Operator, Monitor RBAC and **single-replica development profile**. This keeps the quick path and full guide on the same versioned assets; do not mix older deployment YAML with the new CRDs.
 
-**1. Apply the FoundationDB CRDs:**
+1. Check MetaService client compatibility: use the 7.3.69 profile only with a compatible client, or follow the guide's [7.1 option](install-fdb.md#fdb-71).
+2. Choose your SSD StorageClass and review [resource planning](install-fdb.md#resource-planning): the single profile requests 4.4 CPU / 5Gi including sidecars and 20Gi of PVCs. It is not a production profile.
+3. Complete the guide's installation and availability/full-replication/reconciliation checks, then record the generated `fdb-single-config` ConfigMap in `fdb-system` for Step 3 below. Verify the actual MetaService connection as well.
 
-```shell
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbclusters.yaml
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbbackups.yaml
-kubectl apply -f https://raw.githubusercontent.com/FoundationDB/fdb-kubernetes-operator/main/config/crd/bases/apps.foundationdb.org_foundationdbrestores.yaml
-```
-
-**2. Deploy fdb-kubernetes-operator:**
-
-```shell
-kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/master/config/operator/fdb-operator.yaml
-```
-
-**3. Deploy the FoundationDB cluster (single-replica minimal mode):**
-
-```shell
-kubectl apply -f https://raw.githubusercontent.com/apache/doris-operator/refs/heads/master/doc/examples/disaggregated/fdb/cluster-single.yaml
-```
-
-**4. Verify the FDB status:**
-
-```shell
-kubectl get fdb
-```
-
-When the `AVAILABLE` column returned by `kubectl get fdb` is `true`, the FDB cluster is ready.
-
-:::tip Advanced Options
-The single-replica mode is only suitable for development and testing. The two-replica mode is recommended for production, and the Kubernetes cluster needs at least three host machines. For other deployment forms (two-replica, production deployment, private repository images, FQDN mode, etc.), refer to [Deploy FoundationDB](install-fdb.md).
-:::
+For a double-replica starting configuration, the guide provides a separate profile requesting 17.6 CPU / 132Gi including sidecars and 1000Gi of PVCs, excluding Operator and Doris resources. Plan independent host failure domains, workload capacity and replacement headroom before production use.
 
 ## Step 2: Deploy Doris Operator
 
