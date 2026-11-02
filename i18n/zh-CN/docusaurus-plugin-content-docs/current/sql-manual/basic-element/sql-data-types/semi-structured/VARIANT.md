@@ -762,7 +762,12 @@ CREATE TABLE IF NOT EXISTS tbl (
   v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
   ```
 
-  4.2 版本之前创建的列保持原有行为：`0` 表示所有动态路径都参与子列列式提取（Subcolumnization），不限制数量。只有该列本身保持这一行为：用 `SHOW CREATE TABLE` 的输出、`CREATE TABLE LIKE` 或 `CREATE TABLE AS SELECT` 从它创建的新表，会把所有动态路径存入稀疏列。
+  4.2 版本之前创建的列保持原有行为：`0` 表示所有动态路径都参与子列列式提取（Subcolumnization），不限制数量。只有该列本身保持这一行为。在 4.2 及之后的版本上执行 `CREATE TABLE new_t LIKE old_t` 时，定义会被复制，`new_t` 显示的 `variant_max_subcolumns_count = 0` 和索引都与 `old_t` 相同，但 `new_t` 会把所有动态路径存入稀疏列。用 `SHOW CREATE TABLE` 的输出或 `CREATE TABLE AS SELECT` 创建的表也按同样的方式存储。在这样的表上：
+
+  - 读取路径（如 `v['a']`）返回的值不变。
+  - 动态路径没有子列和子路径索引。对这些路径执行 `SEARCH` 会报错，`score()` 返回 0，`MATCH` 不走索引而是直接计算值；如果 `enable_match_without_inverted_index` 为 `false`，`MATCH` 会报错。
+
+  如果希望所有动态路径都成为子列，请在创建新表时把 `variant_max_subcolumns_count` 设置得比不同路径的数量更大，再用 `INSERT INTO new_t SELECT * FROM old_t` 导入数据。
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
 **参考说明**
