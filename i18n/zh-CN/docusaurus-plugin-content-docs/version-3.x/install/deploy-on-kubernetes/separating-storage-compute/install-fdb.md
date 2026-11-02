@@ -38,7 +38,7 @@
 
 ## 版本与镜像来源
 
-本章使用 [Doris Operator 仓库提供的部署样例](https://github.com/apache/doris-operator/tree/9e8feacc6518a4d6d254a42998355a4d58cbd820/config/fdb/v2.35.0)，CRD 与 Operator 均采用 v2.35.0。文件来源和校验信息可查看[版本说明](https://github.com/apache/doris-operator/blob/9e8feacc6518a4d6d254a42998355a4d58cbd820/config/fdb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
+本章使用 [Doris Operator 仓库提供的部署样例](https://github.com/apache/doris-operator/tree/master/config/fdb/v2.35.0)，CRD 与 Operator 均采用 v2.35.0。文件来源和校验信息可查看[版本说明](https://github.com/apache/doris-operator/blob/master/config/fdb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
 
 | 组件 | 版本 | SelectDB 镜像 | VeloDB 备选镜像 |
 | --- | --- | --- | --- |
@@ -101,8 +101,8 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 ```shell
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
-FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/9e8feacc6518a4d6d254a42998355a4d58cbd820/config/fdb/v2.35.0
-FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/9e8feacc6518a4d6d254a42998355a4d58cbd820/doc/examples/disaggregated/fdb/v2.35.0
+FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/master/config/fdb/v2.35.0
+FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/fdb/v2.35.0
 for resource in clusters backups restores; do
   curl -fSL "$FDB_ASSETS/crds/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
