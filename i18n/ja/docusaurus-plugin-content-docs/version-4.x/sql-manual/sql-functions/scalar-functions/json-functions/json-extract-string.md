@@ -2,52 +2,57 @@
 {
     "title": "JSON_EXTRACT_STRING",
     "language": "ja",
-    "description": "JSON オブジェクトから JSON パスが指す値を抽出し、STRING 型に変換します。"
+    "description": "JSONEXTRACTSTRING は、JSON オブジェクトから <jsonpath> で指定されたフィールドを抽出し、STRING 型に変換します。"
 }
 ---
 
-## 説明
-`JSON_EXTRACT_STRING` は、JSON オブジェクトから `<json_path>` が指す値を抽出し、[`STRING`](../../../basic-element/sql-data-types/string-type/STRING.md) 型に変換します。
+## 説明 {#description}
+`JSON_EXTRACT_STRING` は、JSON オブジェクトから `<json_path>` で指定されたフィールドを抽出し、[`STRING`](../../../basic-element/sql-data-types/string-type/STRING.md) 型に変換します。
 
-## 構文
+## 構文 {#syntax}
 ```sql
 JSON_EXTRACT_STRING(<json_object>, <json_path>)
 ```
 
-## パラメータ
+## パラメータ {#parameters}
+
 | パラメータ | 説明 |
 | --- | --- |
-| `<json_object>` | 抽出元の JSON 型の値。 |
-| `<json_path>` | 抽出する要素を指定する文字列型の JSON パス。 |
+| `<json_object>` | 必須。JSON 値、または JSON に変換できる有効な JSON テキスト。 |
+| `<json_path>` | 必須。STRING 型の JSON パス。配列を走査するには明示的なワイルドカードを使用します。 |
 
-## 戻り値
-`Nullable(STRING)` を返します。JSON パスが指す値を STRING 型に変換した結果です。入力が NULL の場合、パスが存在しない場合、または値を STRING 型に変換できない場合は NULL を返します。
+## 戻り値 {#return-value}
+`Nullable(STRING)` 抽出された STRING 値を返します。場合によっては NULL を返します
 
-## 使用上の注意
-1. `<json_object>` または `<json_path>` が NULL の場合は NULL を返します。
-2. `<json_path>` が指す要素が存在しない場合は NULL を返します。
-3. `<json_path>` が指す値を STRING 型に変換できない場合は NULL を返します。
-4. 動作は「CAST と JSON_EXTRACT の組み合わせ」と同じで、次の式と等価です。
+## 使用上の注意 {#usage-notes}
+1. `<json_object>` または `<json_path>` が NULL の場合、NULL を返します。
+2. `<json_path>` で指定された要素が存在しない場合、NULL を返します。
+3. `<json_path>` で指定された要素を STRING に変換できない場合、NULL を返します。
+4. 動作は「cast + json_extract」と一致し、次と同等です。
     ```sql
     CAST(JSON_EXTRACT(<json_object>, <json_path>) as STRING)
     ```
-    `<json_path>` が指す値が STRING 型でなくても、STRING 型に変換できれば変換後の値を取得できます。
-5. 返される STRING には二重引用符（"）を含みません。
-6. JSON オブジェクト内の null 値は SQL の NULL ではなく、文字列 "null" に変換されます。要素が null かどうかを判定するには、[`JSON_EXTRACT_ISNULL`](./json-extract-isnull.md) を使用してください。
+    したがって、`<json_path>` が指すオブジェクトが STRING 型でなくても、STRING 型への変換をサポートしていれば、変換後の値を取得できます。
+5. ここで返される STRING には二重引用符（"）が含まれません。
+6. JSON オブジェクト内の null 値の場合、結果は NULL ではなく文字列 "null" です。
+要素が null かどうかを確認するには、関数 [`JSON_EXTRACT_ISNULL`](./json-extract-isnull.md) を使用してください。
 
-## 例
-1. 通常の使用例
+## 例 {#examples}
+1. 通常のパラメータ
     ```sql
     SELECT json_extract_string('{"id": 123, "name": "doris"}', '$.name');
     ```
     ```text
-    +---------------------------------------------------------------+
+```
+
+```text
++---------------------------------------------------------------+
     | json_extract_string('{"id": 123, "name": "doris"}', '$.name') |
     +---------------------------------------------------------------+
     | doris                                                         |
     +---------------------------------------------------------------+
     ```
-2. パスが存在しない場合
+2. Case where path does not exist
     ```sql
     SELECT json_extract_string('{"id": 123, "name": "doris"}', '$.name2');
     ```
@@ -58,7 +63,7 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     | NULL                                                           |
     +----------------------------------------------------------------+
     ```
-3. NULL を渡した場合
+3. NULL parameters
     ```sql
     SELECT json_extract_string('{"id": 123, "name": "doris"}', NULl);
     ```
@@ -79,7 +84,7 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     | NULL                               |
     +------------------------------------+
     ```
-4. 他の型を STRING に変換する場合
+4. Case where other types are converted to STRING
     ```sql
     SELECT json_extract_string('{"id": 123, "name": "doris"}','$.id');
     ```
@@ -90,7 +95,7 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     | 123                                                        |
     +------------------------------------------------------------+
     ```
-5. JSON の null 値を文字列 "null" に変換する場合
+5. Null values will be converted to string "null" instead of NULL
     ```sql
     SELECT json_extract_string('{"id": null, "name": "doris"}','$.id');
     ```
@@ -101,3 +106,21 @@ JSON_EXTRACT_STRING(<json_object>, <json_path>)
     | null                                                        |
     +-------------------------------------------------------------+
     ```
+
+### Extracting the same field from array elements (Doris 4.0 and later)
+
+Use `$[*].k1` to traverse array elements explicitly. `$.k1` only accesses object members and does not implicitly traverse an array, so the direct path below returns SQL `NULL`. Array elements without `k1` are omitted from the matches.
+
+The result is a `STRING` containing JSON array text, rather than a SQL `ARRAY`.
+```sql
+SELECT json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$.k1') AS direct_path,
+       json_extract_string('[{"k1":"v1"},{"k2":"v2"},{"k1":"v3"},{"k1":"v4"}]', '$[*].k1') AS all_values;
+```
+
+```text
++-------------+------------------+
+| direct_path | all_values       |
++-------------+------------------+
+| NULL        | ["v1","v3","v4"] |
++-------------+------------------+
+```

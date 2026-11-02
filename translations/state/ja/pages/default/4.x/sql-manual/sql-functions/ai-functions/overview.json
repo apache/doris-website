@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
-    "sourceCommit": "81077becd6a77efa3e237ed9159bf413f36c9902",
-    "sourceHash": "b22304f55a5559c34b1a4887ba2d739ae0d95633cd0036d5a5e87aeee345a103",
-    "sourceTechnicalHash": "96775cb11d9329ac11a3ae66c57d0895f848e765259b05da92745602573dc2a2",
-    "targetHash": "185ba66c00453e6636b849da4bf1fc7f0f2122c9c2d24d9aaef739746254eb4e",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "f62054eb1e686cf100b765e8f9a0d2d022bdcdefa503b54932210a8f55f82a1a",
+    "sourceTechnicalHash": "2f32a3228e28bb8799859afbb8f1a3c5a055c1d3cea62524592d501a75fc8a61",
+    "targetHash": "07f00de1eed6f035b244c770d244fc948f1bfe52c3a883952b7b37f057f6f624",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T05:07:27.671Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-01T05:26:30.058Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "f62054eb1e686cf100b765e8f9a0d2d022bdcdefa503b54932210a8f55f82a1a",
+      "targetHash": "07f00de1eed6f035b244c770d244fc948f1bfe52c3a883952b7b37f057f6f624",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 11: expected [\"inlineCode\",null,null,\"AI_AGG\"]; received [\"inlineCode\",null,null,\"api_key\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"EMBED\"]; received [\"inlineCode\",null,null,\"AI_AGG\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2048\",\"3\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.2\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- \\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]; received [\"html\",null,null,\"<!--\\nLicensed to the Apache Software Foundation (ASF) under one\\nor more contributor license agreements.  See the NOTICE file\\ndistributed with this work for additional information\\nregarding copyright ownership.  The ASF licenses this file\\nto you under the Apache License, Version 2.0 (the\\n\\\"License\\\"); you may not use this file except in compliance\\nwith the License.  You may obtain a copy of the License at\\n\\n  http://www.apache.org/licenses/LICENSE-2.0\\n\\nUnless required by applicable law or agreed to in writing,\\nsoftware distributed under the License is distributed on an\\n\\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\\nKIND, either express or implied.  See the License for the\\nspecific language governing permissions and limitations\\nunder the License.\\n-->\"]\nprotected node 9: expected [\"inlineCode\",null,null,\"api_key\"]; received [\"inlineCode\",null,null,\"LOCAL\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
+        "blob": "29524a3d0c12fbd62d75f7ce67032d731498465b"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/ai-functions/overview.md",
+        "blob": "7090008ed81923f173bb31127ed2e8b41bffa4c1"
+      }
+    }
   }
 }
