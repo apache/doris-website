@@ -9,7 +9,6 @@
         "FoundationDB",
         "fdb-kubernetes-operator",
         "resources",
-        "SelectDB",
         "VeloDB"
     ]
 }
@@ -40,10 +39,10 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 This guide uses the [deployment examples provided by Doris Operator](https://github.com/apache/doris-operator/tree/master/config/fdb/v2.35.0), with CRDs and an Operator based on v2.35.0. File sources and checksums are listed in the [version notes](https://github.com/apache/doris-operator/blob/master/config/fdb/v2.35.0/UPSTREAM.md). The examples use the following images:
 
-| Component | Version | SelectDB image | VeloDB alternative |
-| --- | --- | --- | --- |
-| FDB Operator / matching CRDs | v2.35.0 | `selectdb/fdb-kubernetes-operator:v2.35.0` | `velodb/fdb-kubernetes-operator:v2.35.0` |
-| Controller client initializer / FDB database | 7.3.69 | `selectdb/fdb-kubernetes-monitor:7.3.69` | `velodb/fdb-kubernetes-monitor:7.3.69` |
+| Component | Version | VeloDB image |
+| --- | --- | --- |
+| FDB Operator / matching CRDs | v2.35.0 | `velodb/fdb-kubernetes-operator:v2.35.0` |
+| Controller client initializer / FDB database | 7.3.69 | `velodb/fdb-kubernetes-monitor:7.3.69` |
 
 These images support linux/amd64 and linux/arm64. The examples use `imageType: unified`, so the FDB main container and sidecar share the Monitor image. The controller also uses this image to initialize its client.
 
@@ -114,7 +113,11 @@ curl -fSL "$FDB_EXAMPLES/cluster-single.yaml" -o fdb-cluster.yaml
 
 ### Step 2: Install CRDs, the controller and Monitor RBAC
 
-The deployment files use SelectDB images by default. To use VeloDB images, replace `selectdb/` with `velodb/` in the Operator, initializer and cluster image settings, keeping the version tags.
+Use the VeloDB images listed above. The following command updates the downloaded Operator, initializer and cluster image settings to use the VeloDB repository:
+
+```shell
+sed -i.bak 's|selectdb/|velodb/|g' fdb-operator.yaml fdb-cluster.yaml
+```
 
 Deploy the CRDs, Operator and Monitor RBAC with the following commands:
 
@@ -200,6 +203,7 @@ If MetaService uses a 7.1 client, you can create an FDB 7.1.67 cluster on amd64 
 
 ```shell
 curl -fSL "$FDB_ASSETS/operator-client-7.1.patch.yaml" -o fdb-client-7.1.patch.yaml
+sed -i.bak 's|selectdb/|velodb/|g' fdb-client-7.1.patch.yaml
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system patch \
   deployment fdb-kubernetes-operator-controller-manager --type=strategic \
   --patch-file fdb-client-7.1.patch.yaml
@@ -207,7 +211,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
   deployment/fdb-kubernetes-operator-controller-manager --timeout=300s
 ```
 
-Change `spec.version` and the main image config's `version` and `tag` to `7.1.67` in the copied cluster YAML. If using VeloDB, also change the patch image to `velodb/fdb-kubernetes-monitor:7.1.67`. The 7.1.67 image is amd64-only: in mixed-architecture clusters, set `nodeSelector: {kubernetes.io/arch: amd64}` on the controller and every database Pod template. Use this configuration to create a new cluster compatible with your MetaService; it is not a procedure for downgrading an existing FDB cluster.
+Change `spec.version` and the main image config's `version` and `tag` to `7.1.67` in the copied cluster YAML. The 7.1.67 image is amd64-only: in mixed-architecture clusters, set `nodeSelector: {kubernetes.io/arch: amd64}` on the controller and every database Pod template. Use this configuration to create a new cluster compatible with your MetaService; it is not a procedure for downgrading an existing FDB cluster.
 
 ## Private registries and troubleshooting
 

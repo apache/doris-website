@@ -2,15 +2,14 @@
 {
     "title": "部署 FoundationDB",
     "language": "zh-CN",
-    "description": "在 Kubernetes 上安装版本配套的 FoundationDB Operator 和数据库，涵盖 SelectDB/VeloDB 镜像源、测试与双副本资源规划、MetaService 客户端兼容性、存储权限和就绪验证。",
+    "description": "在 Kubernetes 上安装版本配套的 FoundationDB Operator 和数据库，涵盖 SelectDB 镜像源、测试与双副本资源规划、MetaService 客户端兼容性、存储权限和就绪验证。",
     "keywords": [
         "Doris",
         "Kubernetes",
         "FoundationDB",
         "fdb-kubernetes-operator",
         "resources",
-        "SelectDB",
-        "VeloDB"
+        "SelectDB"
     ]
 }
 ---
@@ -40,10 +39,10 @@
 
 本章使用 [Doris Operator 仓库提供的部署样例](https://github.com/apache/doris-operator/tree/master/config/fdb/v2.35.0)，CRD 与 Operator 均采用 v2.35.0。文件来源和校验信息可查看[版本说明](https://github.com/apache/doris-operator/blob/master/config/fdb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
 
-| 组件 | 版本 | SelectDB 镜像 | VeloDB 备选镜像 |
-| --- | --- | --- | --- |
-| FDB Operator / 配套 CRD | v2.35.0 | `selectdb/fdb-kubernetes-operator:v2.35.0` | `velodb/fdb-kubernetes-operator:v2.35.0` |
-| 控制器初始化客户端 / FDB 数据库 | 7.3.69 | `selectdb/fdb-kubernetes-monitor:7.3.69` | `velodb/fdb-kubernetes-monitor:7.3.69` |
+| 组件 | 版本 | SelectDB 镜像 |
+| --- | --- | --- |
+| FDB Operator / 配套 CRD | v2.35.0 | `selectdb/fdb-kubernetes-operator:v2.35.0` |
+| 控制器初始化客户端 / FDB 数据库 | 7.3.69 | `selectdb/fdb-kubernetes-monitor:7.3.69` |
 
 上述镜像均支持 linux/amd64 和 linux/arm64。样例采用 `imageType: unified`，FDB 主容器和 sidecar 共用 Monitor 镜像，控制器也使用该镜像初始化客户端。
 
@@ -114,7 +113,7 @@ curl -fSL "$FDB_EXAMPLES/cluster-single.yaml" -o fdb-cluster.yaml
 
 ### 第 2 步：安装 CRD、控制器和 Monitor RBAC
 
-部署文件默认使用 SelectDB 镜像。如需使用 VeloDB 镜像，将 Operator、初始化容器和集群镜像配置中的 `selectdb/` 替换为 `velodb/` 即可，版本 tag 保持不变。
+部署文件使用上表中的 SelectDB 镜像。
 
 通过以下命令部署 CRD、Operator 和 Monitor RBAC：
 
@@ -207,7 +206,7 @@ kubectl --kubeconfig "$KUBECONFIG" -n fdb-system rollout status \
   deployment/fdb-kubernetes-operator-controller-manager --timeout=300s
 ```
 
-将下载的集群 YAML 中 `spec.version`、主镜像配置的 `version` 和 `tag` 一起改为 `7.1.67`。使用 VeloDB 时，也应将补丁中的镜像改为 `velodb/fdb-kubernetes-monitor:7.1.67`。7.1.67 镜像仅支持 amd64；混合架构集群需在控制器及所有数据库 Pod 模板中设置 `nodeSelector: {kubernetes.io/arch: amd64}`。该配置用于新建兼容当前 MetaService 的集群，不用于已有 FDB 集群的降级。
+将下载的集群 YAML 中 `spec.version`、主镜像配置的 `version` 和 `tag` 一起改为 `7.1.67`。7.1.67 镜像仅支持 amd64；混合架构集群需在控制器及所有数据库 Pod 模板中设置 `nodeSelector: {kubernetes.io/arch: amd64}`。该配置用于新建兼容当前 MetaService 的集群，不用于已有 FDB 集群的降级。
 
 ## 私有仓库与常见问题
 
