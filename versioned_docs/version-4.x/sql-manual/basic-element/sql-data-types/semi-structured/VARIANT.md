@@ -465,12 +465,7 @@ Note: these two mechanisms are mutually exclusive—enabling DOC encoding disabl
   v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
   ```
 
-  A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit. Only that column keeps it. On version 4.2 or later, `CREATE TABLE new_t LIKE old_t` copies the definition, so `new_t` shows the same `variant_max_subcolumns_count = 0` and the same indexes as `old_t`, but `new_t` stores every dynamic path in sparse columns. A table created from `SHOW CREATE TABLE` output or with `CREATE TABLE AS SELECT` stores them the same way. On such a table:
-
-  - Reading a path, such as `v['a']`, returns the same values.
-  - Dynamic paths have no subcolumns or subpath indexes. `SEARCH` on them fails, `score()` returns 0, and `MATCH` evaluates the values without an index, or fails if `enable_match_without_inverted_index` is `false`.
-
-  To keep every dynamic path as a subcolumn, create the new table with a `variant_max_subcolumns_count` above the number of distinct paths, then load it with `INSERT INTO new_t SELECT * FROM old_t`.
+  From version 4.2, this meaning applies to every statement that creates a table, including `CREATE TABLE`, `CREATE TABLE LIKE` and `CREATE TABLE AS SELECT`. A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit.
 - Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
 
 **Reference notes**
