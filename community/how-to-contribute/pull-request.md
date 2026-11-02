@@ -93,9 +93,14 @@ After creating the branch, you can make code changes on it.
 ### (5) Push the code to the remote branch
 
 ```bash
-git commit -a -m "<your_commit_message>"
+git status
+git add <file_path>
+git diff --cached
+git commit -m "<your_commit_message>"
 git push origin <your_branch_name>
 ```
+
+Replace `<file_path>` with a file you intend to include in this PR; list multiple paths in the same `git add` command to stage several files. Review the staged diff before committing. `git commit -a` and `git add -u` only handle tracked files and do not add untracked files.
 
 For more information on using git, refer to the official GitHub documentation: [Using git](https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories).
 
@@ -270,7 +275,7 @@ $ git branch
 ### (6) Stage the changes after editing the code
 
 ```bash
-$ git add -u
+$ git add <file_path>
 ```
 
 ### (7) Fill in the message and commit to the local branch
