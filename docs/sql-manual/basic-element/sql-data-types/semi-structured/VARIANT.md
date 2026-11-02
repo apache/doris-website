@@ -763,6 +763,24 @@ Note: these two mechanisms are mutually exclusive—enabling DOC encoding disabl
   ```
 
   From version 4.2, this meaning applies to every statement that creates a table, including `CREATE TABLE`, `CREATE TABLE LIKE` and `CREATE TABLE AS SELECT`. A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit.
+
+  ```sql
+  -- Version 4.1
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- After upgrading to version 4.2: new_t has the same definition as old_t, with a count of 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- lists the subcolumns v.a and v.b, because old_t keeps the old meaning
+  DESC new_t;  -- lists no subcolumn, because new_t stores a and b in sparse columns
+  ```
 - Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
 
 **Reference notes**

@@ -466,6 +466,24 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
   ```
 
   从 4.2 版本起，任何建表语句中的 `0` 都是这个语义，包括 `CREATE TABLE`、`CREATE TABLE LIKE` 和 `CREATE TABLE AS SELECT`。4.2 版本之前创建的列保持原有行为：`0` 表示所有动态路径都参与子列列式提取（Subcolumnization），不限制数量。
+
+  ```sql
+  -- 4.1 版本
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- 升级到 4.2 版本后：new_t 的定义与 old_t 相同，count 也是 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- 列出子列 v.a 和 v.b，因为 old_t 保持原有语义
+  DESC new_t;  -- 不列出子列，因为 new_t 把 a 和 b 存入稀疏列
+  ```
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
 **参考说明**
