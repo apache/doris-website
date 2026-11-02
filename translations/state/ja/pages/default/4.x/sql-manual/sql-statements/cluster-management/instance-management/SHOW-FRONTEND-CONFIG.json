@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "2752e47d15491c720bc577e5a3f3f9acd9541692765bc9e26a198b051a86fcff",
-    "sourceTechnicalHash": "975062a219f01c10ef70f695a7a0054a181bbe2267b4682e2f85824cc2f09ed2",
-    "targetHash": "587dd0864db8aa8163dccdeb35fa40297c87d6498e0dc914272a7620710ecd2b",
+    "sourceCommit": "bba406979506208850ce2b3aacee2f93085e355a",
+    "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+    "sourceTechnicalHash": "69cad0c18fd68f970c56d3e373ee50a0c4e411c33eef9ebac8c7188c697ce896",
+    "targetHash": "b889cc8973f41f1d41dc205d2073b0cdbc8f4a5b38f35b188bf1c982b7f45b98",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T09:35:18.349Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T05:33:35.620Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "073a92ddb4d57dce12ab4ffb1762cbd6476c2dce96228bc7fa59a7a19ab15c81",
+      "targetHash": "b889cc8973f41f1d41dc205d2073b0cdbc8f4a5b38f35b188bf1c982b7f45b98",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"inlineCode\",null,null,\"********\"]; received [\"inlineCode\",null,null,\"Value\"]\nprotected node 2: expected [\"inlineCode\",null,null,\"Value\"]; received [\"inlineCode\",null,null,\"********\"]\nprotected node 7: expected [\"code\",\"sql\",null,\" SHOW FRONTEND CONFIG LIKE '%check_java_version%';\"]; received [\"inlineCode\",null,null,\"LIKE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
+        "blob": "cd5346fb8709004f29d7f0bd9bb62d524b0fb258"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/instance-management/SHOW-FRONTEND-CONFIG.md",
+        "blob": "16599abfbb9b60190c5c1a054c6b21cc6ac274fe"
+      }
+    }
   }
 }

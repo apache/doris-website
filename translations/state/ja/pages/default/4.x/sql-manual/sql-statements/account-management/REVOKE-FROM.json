@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
-    "sourceHash": "5dbd70421778a9b59c38e6fa9feb9f0d9aa850605a6ccc7d941bfb6ab711ff35",
-    "sourceTechnicalHash": "2220047ccab1a270d2306d68cf2f5bd3c30a1d7b36d16d7d418a94cf0d5365f7",
-    "targetHash": "7846b462b007e7b2d2575750d0ba79073e2b54b4ef3839b843ab9c13282ba21d",
+    "sourceCommit": "bba406979506208850ce2b3aacee2f93085e355a",
+    "sourceHash": "ba1d3e20a4de83e80e0148a0d36bb43703d5ae5e5e048d3ff233d9a3685a446c",
+    "sourceTechnicalHash": "d8e531340274357318b61f8db6f99c96ae86c243b054eb15d3f2543e2b07703a",
+    "targetHash": "64c7b87b45ebb7d95ba56468fa51af61c9c2c09b9f54c4bfed37f8a5f55d6b4d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T07:55:32.508Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T05:20:28.645Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "ba1d3e20a4de83e80e0148a0d36bb43703d5ae5e5e048d3ff233d9a3685a446c",
+      "targetHash": "64c7b87b45ebb7d95ba56468fa51af61c9c2c09b9f54c4bfed37f8a5f55d6b4d",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"REVOKE <privilege_list> \\nON { <priv_level> \\n   | RESOURCE <resource_name> \\n   | WORKLOAD GROUP <workload_group_name> \\n   | COMPUTE GROUP <compute_group_name> \\n   | STORAGE VAULT <storage_vault_name> \\n   } \\nFROM { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"REVOKE <privilege_list>\\nON { <priv_level>\\n   | RESOURCE <resource_name>\\n   | WORKLOAD GROUP <workload_group_name>\\n   | COMPUTE GROUP <compute_group_name>\\n   | STORAGE VAULT <storage_vault_name>\\n   }\\nFROM { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity> \"]; received [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity>\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"%\"]; received [\"inlineCode\",null,null,\"<workload_group_name>\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"3\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 7: expected [\"code\",\"sql\",null,\"REVOKE <privilege_list> \\nON { <priv_level> \\n   | RESOURCE <resource_name> \\n   | WORKLOAD GROUP <workload_group_name> \\n   | COMPUTE GROUP <compute_group_name> \\n   | STORAGE VAULT <storage_vault_name> \\n   } \\nFROM { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"REVOKE <privilege_list>\\nON { <priv_level>\\n   | RESOURCE <resource_name>\\n   | WORKLOAD GROUP <workload_group_name>\\n   | COMPUTE GROUP <compute_group_name>\\n   | STORAGE VAULT <storage_vault_name>\\n   }\\nFROM { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity> \"]; received [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"REVOKE <privilege_list> \\nON { <priv_level> \\n   | RESOURCE <resource_name> \\n   | WORKLOAD GROUP <workload_group_name> \\n   | COMPUTE GROUP <compute_group_name> \\n   | STORAGE VAULT <storage_vault_name> \\n   } \\nFROM { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"REVOKE <privilege_list>\\nON { <priv_level>\\n   | RESOURCE <resource_name>\\n   | WORKLOAD GROUP <workload_group_name>\\n   | COMPUTE GROUP <compute_group_name>\\n   | STORAGE VAULT <storage_vault_name>\\n   }\\nFROM { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity> \"]; received [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity>\"]\nprotected node 32: expected [\"inlineCode\",null,null,\"GRANT\"]; received [\"inlineCode\",null,null,\"REVOKE\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"code\",\"sql\",null,\"REVOKE <privilege_list> \\nON { <priv_level> \\n   | RESOURCE <resource_name> \\n   | WORKLOAD GROUP <workload_group_name> \\n   | COMPUTE GROUP <compute_group_name> \\n   | STORAGE VAULT <storage_vault_name> \\n   } \\nFROM { <user_identity> | ROLE <role_name> }\"]; received [\"code\",\"sql\",null,\"REVOKE <privilege_list>\\nON { <priv_level>\\n   | RESOURCE <resource_name>\\n   | WORKLOAD GROUP <workload_group_name>\\n   | COMPUTE GROUP <compute_group_name>\\n   | STORAGE VAULT <storage_vault_name>\\n   }\\nFROM { <user_identity> | ROLE <role_name> }\"]\nprotected node 8: expected [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity> \"]; received [\"code\",\"sql\",null,\"REVOKE <role_list> FROM <user_identity>\"]\nprotected node 12: expected [\"inlineCode\",null,null,\"%\"]; received [\"inlineCode\",null,null,\"<workload_group_name>\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+        "blob": "83bd11fe966487ab5cdc907cc000bc39bb8badb8"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/account-management/REVOKE-FROM.md",
+        "blob": "6fc1027883e966921c011f94a317584b92b5b458"
+      }
+    }
   }
 }
