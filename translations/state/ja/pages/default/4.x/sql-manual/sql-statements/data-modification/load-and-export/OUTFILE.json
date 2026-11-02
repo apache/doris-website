@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
-    "sourceCommit": "36b6ac03012b774adfa0a299fd438c65a916d52b",
-    "sourceHash": "1f08027ec74e43c8dda27bc320e8f10ffb5999d69fb89618b79e1ed78cbe1e9c",
-    "sourceTechnicalHash": "ff8a2085c7c3265e58d725e24fd62ff50b791350fe412ddf0bdbf998e85ca14c",
-    "targetHash": "f34f85cd330c95b7495e2c2ad3fd805b7dceba17fde99d6641dd5415b1c0cab2",
+    "sourceCommit": "d96999b7523c0017b3cb53954507efb41ddbf922",
+    "sourceHash": "cd8d07964bc901e20639cc071afaa4f3bcd4c8b42af03813b1973ca3ca517d0f",
+    "sourceTechnicalHash": "ed3be2aa99a13a8e00e17e07a0885e3d284a5a27a718fe668f178b8aea5d86f1",
+    "targetHash": "ba3441d40fcc95af499bace41ffb893e93512d62a572bcfea37969bd002dc53c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T07:48:32.828Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T17:26:47.163Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "cd8d07964bc901e20639cc071afaa4f3bcd4c8b42af03813b1973ca3ca517d0f",
+      "targetHash": "ba3441d40fcc95af499bace41ffb893e93512d62a572bcfea37969bd002dc53c",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"line_delimiter\"]; received [\"inlineCode\",null,null,\"\\\"\\\\\\\\x01\\\"\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"max_file_size\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 18: expected [\"inlineCode\",null,null,\"line_delimiter\"]; received [\"inlineCode\",null,null,\"\\\"\\\\\\\\x01\\\"\"]\nprotected node 19: expected [\"inlineCode\",null,null,\"max_file_size\"]; received [\"inlineCode\",null,null,\"\\\"abc\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]; received [\"0\",\"0\",\"01\",\"01\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2\",\"1.2\",\"1.2\",\"100\",\"100\",\"100\",\"100\",\"128\",\"128\",\"16\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.1.5\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3.1.1\",\"32\",\"32\",\"4\",\"4\",\"4.1.5\",\"4.1.5\",\"5\",\"64\",\"64\",\"64\",\"64\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"8\",\"96\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 54: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"enable_delete_existing_files = true\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
+        "blob": "b6f1c8cafdb4b047f11eeb64a0b018a10d3bd285"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/data-modification/load-and-export/OUTFILE.md",
+        "blob": "6227ffd2bb56a13f8d7b5826f93668f2197193e1"
+      }
+    }
   }
 }
