@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "e445233678d794905d2ec2e8bd13e16ea1809053c27b2f773f0741b6436905f4",
-    "sourceTechnicalHash": "9132291a9e3ed139bfb0bb94b254d91c20ed38a247d8182e7e6846ba7e30a58b",
-    "targetHash": "40a991585a64b0e055e03758aec4905b538b5274aa6aea3df2400014f02328aa",
+    "sourceCommit": "bba406979506208850ce2b3aacee2f93085e355a",
+    "sourceHash": "6e2930f9348e2d5d9c042fabb581acc083e3c203ea3f56eb4b475de61a4669da",
+    "sourceTechnicalHash": "774871b609c397467cf7d0ae26c27b868c694027d6b7cfd13d47dd8daf5d805b",
+    "targetHash": "86e029b55dc8fd241ad3b5ed4f662935d6315c8622d622e720bcd8ae17431506",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T09:35:18.351Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T05:30:45.825Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "6e2930f9348e2d5d9c042fabb581acc083e3c203ea3f56eb4b475de61a4669da",
+      "targetHash": "86e029b55dc8fd241ad3b5ed4f662935d6315c8622d622e720bcd8ae17431506",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+        "blob": "46ec724073254f7a294f1628df695a77882ec523"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/cluster-management/compute-management/DROP-RESOURCE.md",
+        "blob": "8c16da1c50f7e90a1b4082c5d380e20071a6cca5"
+      }
+    }
   }
 }
