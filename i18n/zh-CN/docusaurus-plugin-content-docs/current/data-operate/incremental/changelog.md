@@ -167,7 +167,7 @@ CREATE DATABASE changelog_db PROPERTIES ("changelog.enable" = "true");
 | auto-increment 列 | 不支持，建表和 `ADD COLUMN` 都会被拒绝 |
 | VARIANT 类型的列 | 不能开启 nested group；否则建表和 `ADD COLUMN` 都会被拒绝 |
 
-无论 VARIANT 列在表中是什么布局，Changelog 中该列的 after 镜像和 before 镜像都把对象的所有路径存放在稀疏列中。Schema Template 路径保留声明的类型。读取 Changelog（Table Stream、`CHANGES`、`changelog()`）时会读取 VARIANT 整列，再从完整的值中取子路径，因此结果与读取该列相同，但不会用到子列和子路径索引。
+无论 VARIANT 列在表中是什么布局，Changelog 中该列的 after 镜像和 before 镜像都把对象的所有路径存放在[稀疏列](../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#sparse-columns)中。Schema Template 路径保留声明的类型。读取 Changelog（Table Stream、`CHANGES`、`changelog()`）时会读取 VARIANT 整列，再从完整的值中取子路径，因此结果与读取该列相同，但不会用到子列和子路径索引。
 
 ### 部署模式
 
