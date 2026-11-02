@@ -2,32 +2,40 @@
 {
     "title": "MIN",
     "language": "ja",
-    "description": "MIN 関数は、式の NULL 以外の値のうち最小値を返します。"
+    "description": "MIN 関数は、式の NULL ではない値のうち最小の値を返します。"
 }
 ---
 
-## 説明
+## 説明 {#description}
 
-MIN 関数は、式の NULL 以外の値のうち最小値を返します。
+MIN 関数は、式の NULL ではない値のうち最小の値を返します。
 
-## 構文
+バージョンによる違い：Doris 4.1 系列の 4.1.5 以降、および Doris 4.2 以降では、配列内の `NULL` 要素は `NULL` ではない要素より大きい値として比較されます。Doris 4.0 および 4.1.5 より前の Doris 4.1 では、配列内の `NULL` 要素はより小さい値として比較されます。配列値全体が `NULL` の場合は、これらすべてのバージョンで無視されます。
+
+## 構文 {#syntax}
 
 ```sql
 MIN(<expr>)
 ```
 
-## パラメータ
+## パラメータ {#parameters}
 
 | パラメータ | 説明 |
-| -- | -- |
-| `<expr>` | 最小値を求める式。String、Time、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array 型をサポートします。 |
+| --- | --- |
+| `<expr>` | 値を取得する式。サポートされる型は String、Time、Date、DateTime、Timestamptz、IPv4、IPv6、TinyInt、SmallInt、Integer、BigInt、LargeInt、Float、Double、Decimal、Array です。 |
 
-## 戻り値
+## 戻り値 {#return-value}
 
 入力式と同じデータ型を返します。
-グループ内のすべての行で式の値が NULL の場合は、NULL を返します。
+グループ内のすべてのレコードが NULL の場合、関数は NULL を返します。
 
-## 例
+:::caution 動作変更（4.1.5）
+
+Doris 4.1 系列の 4.1.5 以降では、配列などの複合値に含まれる NULL 要素は、同じ位置の NULL ではない要素より大きい値として比較されます。たとえば、`[10, 20, NULL]` は `[10, 20, 40]` より大きい値として比較されます。これは式全体が NULL である場合とは異なります。そのような行は引き続き無視されます。4.1.5 より前では、集計比較において複合値内部の NULL 要素は小さい値として扱われました。
+
+:::
+
+## 例 {#example}
 
 ```sql
 -- setup
@@ -38,7 +46,7 @@ create table t1(
         k_array array<int>
 ) distributed by hash (k1) buckets 1
 properties ("replication_num"="1");
-insert into t1 values 
+insert into t1 values
     (1, 'apple', 10.01, [10, 20, 30]),
     (1, 'banana', 20.02, [10, 20]),
     (2, 'orange', 30.03, [10, 20, 40]),
@@ -46,11 +54,15 @@ insert into t1 values
     (3, null, null, null);
 ```
 
-```sql
-select k1, min(k_string) from t1 group by k1;
+```text
+テーブルが作成され、データが正常に挿入されました。
 ```
 
-文字列型: グループごとに文字列の最小値を返します。
+```sql
+select k1, min(k_string) from t1 group by k1 order by k1;
+```
+
+String 型：各グループについて、最小の文字列値を返します。
 
 ```text
 +------+---------------+
@@ -63,10 +75,10 @@ select k1, min(k_string) from t1 group by k1;
 ```
 
 ```sql
-select k1, min(k_decimal) from t1 group by k1;
+select k1, min(k_decimal) from t1 group by k1 order by k1;
 ```
 
-Decimal 型: 高精度の小数値の最小値を返します。
+Decimal 型：最小の高精度小数値を返します。
 
 ```text
 +------+----------------+
@@ -79,17 +91,17 @@ Decimal 型: 高精度の小数値の最小値を返します。
 ```
 
 ```sql
-select k1, min(k_array) from t1 group by k1;
+select k1, min(k_array) from t1 group by k1 order by k1;
 ```
 
-Array 型: グループごとに最小の配列値を返します (要素を順に比較し、NULL を最小の要素とみなします)。
+Array 型：要素を順番に比較し、各グループの最小の配列値を返します。NULL 要素は、同じ位置の NULL ではない要素より大きい値として比較されます。
 
 ```text
 +------+----------------+
 | k1   | min(k_array)   |
 +------+----------------+
 |    1 | [10, 20]       |
-|    2 | [10, 20, null] |
+|    2 | [10, 20, 40]   |
 |    3 | NULL           |
 +------+----------------+
 ```
@@ -98,7 +110,7 @@ Array 型: グループごとに最小の配列値を返します (要素を順�
 select min(k_string) from t1 where k1 = 3;
 ```
 
-グループ内のすべての値が NULL の場合は NULL を返します。
+グループ内のすべての値が NULL の場合、NULL を返します。
 
 ```text
 +---------------+
@@ -112,7 +124,7 @@ select min(k_string) from t1 where k1 = 3;
 select min(k_string) from t1;
 ```
 
-すべてのデータの中から最小値を返します。
+すべてのデータの最小値。
 
 ```text
 +---------------+

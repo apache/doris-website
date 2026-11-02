@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "ea9314225e5aac71833957e9d7f0bdef77a80c02644904c407a82f816304a113",
-    "sourceTechnicalHash": "64a572978d4ce39ba0e657632feaf0b4f9a2086765ff89f0b23b1aab2a254912",
-    "targetHash": "d70c2d919a1a39dfd1fb40dc93537029570d7f3805182d5c1a76d0ec05a79757",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "a47b1597c3bd34f750643728f8a21d93e8a3355bd683b114bd2e1495e06055ec",
+    "sourceTechnicalHash": "9b19e699739257471def7cbe0fa59ae1e103a90410e434a6e6e60a5bcc8829c1",
+    "targetHash": "eaa4b873d26c6881376dbf797d7b7d9579b95e4e0b6ab06bb7f3ad40a6d7c80a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T05:12:57.465Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:20:15.459Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "a47b1597c3bd34f750643728f8a21d93e8a3355bd683b114bd2e1495e06055ec",
+      "targetHash": "eaa4b873d26c6881376dbf797d7b7d9579b95e4e0b6ab06bb7f3ad40a6d7c80a",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]\nprotected node 10: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルが作成され、データが正常に挿入されました。\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 7: expected [\"inlineCode\",null,null,\"[10, 20, NULL]\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"[10, 20, 40]\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"inlineCode\",null,null,\"[10, 20, NULL]\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 9: expected [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values \\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]; received [\"code\",\"sql\",null,\"-- setup\\ncreate table t1(\\n        k1 int,\\n        k_string varchar(100),\\n        k_decimal decimal(10, 2),\\n        k_array array<int>\\n) distributed by hash (k1) buckets 1\\nproperties (\\\"replication_num\\\"=\\\"1\\\");\\ninsert into t1 values\\n    (1, 'apple', 10.01, [10, 20, 30]),\\n    (1, 'banana', 20.02, [10, 20]),\\n    (2, 'orange', 30.03, [10, 20, 40]),\\n    (2, null, null, [10, 20, null]),\\n    (3, null, null, null);\"]\nprotected node 10: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルが作成され、データが正常に挿入されました。\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
+        "blob": "2bc1116f5c0fe9b49a23c84cb759351aa672ae68"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/min.md",
+        "blob": "330a99af3ecee80b6fc7b07e3cbe28fc7552f101"
+      }
+    }
   }
 }

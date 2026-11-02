@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-by.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-by.md",
-    "sourceCommit": "f9184fac0bbfb81ef27a7f834ad53f1764cc8929",
-    "sourceHash": "c6f6527a6dc7431aeffce1dfcb4e8fd5298789427b44d30310ae99faf37a2302",
-    "sourceTechnicalHash": "7cc91e22ecea156da06e669ae07b8df0350d8d343884f915665c5608ec3c66db",
-    "targetHash": "cdecfee7dc786e919541369ff1718de611a5fce87eb74b048875881e22e59540",
+    "sourceCommit": "618ed23852c4c67b16296910731076bb11594a09",
+    "sourceHash": "2eca5f83a98ff714e00678270d823f8061b82d20de006dc07f37ea3f34c06f6e",
+    "sourceTechnicalHash": "d7ff6ca9e34fdd6d2c7b341655503d1dda621606b248858b09473b70e0221c36",
+    "targetHash": "bc82da6e4ceac7c725b87c3faa6635b9890e3595377363e9bf68db1ddd0861bd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T05:12:57.465Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-10-31T17:09:00.245Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "2eca5f83a98ff714e00678270d823f8061b82d20de006dc07f37ea3f34c06f6e",
+      "targetHash": "bc82da6e4ceac7c725b87c3faa6635b9890e3595377363e9bf68db1ddd0861bd",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 11: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルの作成とデータの挿入に成功しました。\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 5: expected [\"inlineCode\",null,null,\"NULL\"]; received [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]\nprotected node 6: expected [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"<expr1>\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"inlineCode\",null,null,\"<expr2>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]; received [\"inlineCode\",null,null,\"NULL\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"<expr1>\"]; received [\"code\",\"sql\",null,\"MAX_BY(<expr1>, <expr2>)\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"<expr2>\"]; received [\"inlineCode\",null,null,\"<expr1>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 11: expected [\"code\",\"text\",null,\"Table created and data inserted successfully.\"]; received [\"code\",\"text\",null,\"テーブルの作成とデータの挿入に成功しました。\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-by.md",
+        "blob": "5bd095384f45d5937926aa54a16189199083650f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-functions/aggregate-functions/max-by.md",
+        "blob": "9bc097d39befac02e8dbe07926c605b4d8a77c9b"
+      }
+    }
   }
 }
