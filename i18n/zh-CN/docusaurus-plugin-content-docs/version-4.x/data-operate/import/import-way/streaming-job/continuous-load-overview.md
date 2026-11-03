@@ -20,14 +20,16 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: Feature 概览 + 架构选型决策 -->
 <!-- 适用场景: 实时数据接入选型 / 持续导入运维 -->
 
 Doris 支持通过 **Streaming Job** 的方式，从多种数据源持续导入数据到 Doris 表中。提交 Job 后，Doris 会持续运行导入作业，实时读取数据源中的数据并写入到 Doris 表中。
-
-:::tip
-该功能自 4.1.0 版本起支持。
-:::
 
 本文将帮助你解决以下问题：
 
@@ -39,13 +41,13 @@ Doris 支持通过 **Streaming Job** 的方式，从多种数据源持续导入�
 
 ## 支持的数据源与同步模式
 
-持续导入支持以下数据源和同步模式：
+持续导入支持以下数据源和同步模式。S3 通知导入和一次性导入自 Doris 4.1.6 版本起支持：
 
 | 数据源     | 支持版本          | SQL 映射同步                                                          | 自动建表同步                                                                | 配置指南                                                                                                                                  |
 | :--------- | :---------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | MySQL      | 5.6、5.7、8.0.x   | [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)            | [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)               | [Amazon RDS MySQL](./prerequisites/amazon-rds-mysql.md) · [Amazon Aurora MySQL](./prerequisites/amazon-aurora-mysql.md)                   |
 | PostgreSQL | 14、15、16、17    | [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)  | [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)     | [Amazon RDS PostgreSQL](./prerequisites/amazon-rds-postgresql.md) · [Amazon Aurora PostgreSQL](./prerequisites/amazon-aurora-postgresql.md) |
-| OceanBase  | MySQL 兼容模式    | -                                                                     | [OceanBase CDC 自动建表同步](./continuous-load-oceanbase-database.md)（自 4.1.4 版本起） | -                                                                                                                                         |
+| OceanBase  | MySQL 兼容模式    | -                                                                     | [OceanBase CDC 自动建表同步](./continuous-load-oceanbase-database.md) | -                                                                                                                                         |
 | S3         | -                 | [S3 导入概览](./continuous-load-s3.md)                                | -                                                                           | -                                                                                                                                         |
 
 上游列类型如何映射为 Doris 类型，见 [MySQL](./data-type-mapping-mysql.md)、[PostgreSQL](./data-type-mapping-postgresql.md)和 [OceanBase](./data-type-mapping-oceanbase.md) 数据类型映射。
@@ -146,8 +148,8 @@ select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 | LoadStatistic     | Job 的统计信息                                                        |
 | ErrorMsg          | Job 执行的错误信息                                                    |
 | JobRuntimeMsg     | Job 运行时的一些提示信息                                              |
-| LagBytes          | 数据源端日志（MySQL / OceanBase Binlog、PostgreSQL WAL）的积压字节数，`-1` 表示当前不可用（例如 S3 数据源或全量快照阶段）。**自 4.1.4 版本起**，该列由原来的 `Lag`（单位：秒）改名为 `LagBytes`（单位：字节） |
-| LastSourceEventTimestamp | 已提交 Offset 中记录的数据源端最新事件时间戳（Unix 秒），为空表示不可用。**自 4.1.4 版本起新增** |
+| LagBytes          | 数据源端日志（MySQL / OceanBase Binlog、PostgreSQL WAL）的积压字节数，`-1` 表示当前不可用（例如 S3 数据源或全量快照阶段） |
+| LastSourceEventTimestamp | 已提交 Offset 中记录的数据源端最新事件时间戳（Unix 秒），为空表示不可用 |
 | LastTaskSuccessTime | 最近一次 Task 成功完成的时间                                        |
 
 ### 查看 Task 状态

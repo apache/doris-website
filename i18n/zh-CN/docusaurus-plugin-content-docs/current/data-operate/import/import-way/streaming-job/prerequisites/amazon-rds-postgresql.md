@@ -18,6 +18,12 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 / 配置参数 -->
 <!-- 适用场景: 部署前检查 / 环境准备 -->
 
@@ -160,18 +166,6 @@ Amazon RDS PostgreSQL 使用 `rds_replication` 角色来授予复制权限，而
 
 <!-- 知识类型: 操作步骤 / 配置参数 -->
 
-### Doris 4.0
-
-需要预先创建名为 `dbz_publication` 的 Publication，且必须使用 `FOR ALL TABLES`：
-
-```sql
-CREATE PUBLICATION dbz_publication FOR ALL TABLES;
-```
-
-如果同步用户拥有 superuser 权限（如 `rds_superuser` 角色），Doris 可以在任务启动时自动创建 `dbz_publication`，无需手动执行该语句。Doris 4.0 不支持自定义 Publication 名称或仅指定部分表。
-
-### Doris 4.1.0 及之后版本
-
 默认情况下，无需手动创建 Publication。未设置 `publication_name` 时，Doris 会使用同步账号创建名为 `doris_pub_<job_id>` 的 Publication，并在删除作业时清理，因此同步账号需要具有创建 Publication 的权限。
 
 如果在创建 Streaming Job 时显式设置 `publication_name`，则需要预先创建同名 Publication。自定义 Publication 必须包含作业同步的全部源表，并由用户负责维护和清理。例如：
@@ -195,7 +189,7 @@ FOR TABLE public.orders, public.customers;
 
 **Q2：可以使用其他名称的 Publication 吗？**
 
-Doris 4.0 不支持，只能使用 `dbz_publication FOR ALL TABLES`。自 4.1.0 版本起，可以通过 `publication_name` 指定自定义名称，但必须在创建作业前创建该 Publication，并确保其包含所有同步表。
+可以通过 `publication_name` 指定自定义名称，但必须在创建作业前创建该 Publication，并确保其包含所有同步表。
 
 **Q3：是否必须使用 `rds_replication` 角色？**
 
@@ -203,7 +197,7 @@ Doris 4.0 不支持，只能使用 `dbz_publication FOR ALL TABLES`。自 4.1.0 
 
 **Q4：是否一定要手动创建 Publication？**
 
-Doris 4.0 中，普通同步用户需要手动创建 `dbz_publication`；拥有 superuser 权限时可由 Doris 自动创建。自 4.1.0 版本起，省略 `publication_name` 时 Doris 会自动创建和管理默认 Publication，仅使用自定义 Publication 时需要预先创建。详见[步骤五](#步骤五配置-publication)。
+省略 `publication_name` 时 Doris 会自动创建和管理默认 Publication，仅使用自定义 Publication 时需要预先创建。详见[步骤五](#步骤五配置-publication)。
 
 ---
 
@@ -216,7 +210,6 @@ Doris 4.0 中，普通同步用户需要手动创建 `dbz_publication`；拥有 
 | `SHOW rds.logical_replication;` 仍为 `off` | 参数组未绑定到实例 / 未重启 | 检查实例是否使用了新的参数组，并执行重启 |
 | 创建用户报权限错误 | 当前账号权限不足 | 使用具有创建用户权限的管理员账号执行 |
 | `GRANT rds_replication` 报错 | 当前账号无权授予该角色 | 使用 `rds_superuser` 账号或具备授予权限的账号执行 |
-| Doris 4.0 报 `dbz_publication` 不存在 | 未创建 `dbz_publication`，且同步账号无 superuser 权限 | 执行 `CREATE PUBLICATION dbz_publication FOR ALL TABLES;`，或使用具有相应权限的账号 |
-| Doris 4.1.0 及之后版本创建默认 Publication 失败 | 同步账号缺少创建 Publication 的权限 | 为同步账号授予所需权限，或由管理员预先创建自定义 Publication 并配置 `publication_name` |
-| Doris 4.1.0 及之后版本报自定义 Publication 不存在 | 配置了 `publication_name`，但未预先创建同名 Publication | 按[步骤五](#步骤五配置-publication)创建 Publication，或删除 `publication_name` 配置以使用 Doris 自动管理的默认 Publication |
+| 创建默认 Publication 失败 | 同步账号缺少创建 Publication 的权限 | 为同步账号授予所需权限，或由管理员预先创建自定义 Publication 并配置 `publication_name` |
+| 自定义 Publication 不存在 | 配置了 `publication_name`，但未预先创建同名 Publication | 按[步骤五](#步骤五配置-publication)创建 Publication，或删除 `publication_name` 配置以使用 Doris 自动管理的默认 Publication |
 | 修改参数后未生效 | 未选择 **Apply immediately** 或未重启 | 重新执行 [步骤三](#步骤三应用参数组并重启) |

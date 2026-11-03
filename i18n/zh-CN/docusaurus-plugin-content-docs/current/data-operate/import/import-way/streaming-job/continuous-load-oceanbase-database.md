@@ -16,16 +16,18 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 + 配置参数 -->
 <!-- 适用场景: OceanBase MySQL 兼容模式整库镜像同步到 Doris -->
 
 OceanBase CDC 自动建表同步通过 `FROM OCEANBASE (...) TO DATABASE (...)` 实现。Doris 从 OBBinlog 服务读取 OceanBase 的全量和增量数据，并根据上游表结构自动创建 Doris 主键表。可以通过 `include_tables` 同步一张、多张或全部表。
 
-:::caution 实验性功能
-
-OceanBase CDC 持续导入自 Doris 4.1.4 起作为实验性功能提供。目前仅支持 OceanBase 的 MySQL 兼容模式和自动建表同步，不支持 Oracle 兼容模式与 SQL 映射同步。
-
-:::
+目前仅支持 OceanBase 的 MySQL 兼容模式和自动建表同步，不支持 Oracle 兼容模式与 SQL 映射同步。
 
 ### 适用场景
 

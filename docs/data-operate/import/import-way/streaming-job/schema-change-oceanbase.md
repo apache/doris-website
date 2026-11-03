@@ -15,16 +15,18 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Concept -->
 <!-- Applicable scenario: Upstream schema changes during OceanBase Auto Table Creation Sync -->
 
 OceanBase Schema Change Sync automatically applies upstream column changes to Doris target tables during continuous load. This capability applies only to [OceanBase CDC with Auto Table Creation](./continuous-load-oceanbase-database.md).
 
-:::caution Experimental feature
-
-OceanBase Schema Change Sync is available as an experimental feature starting from Doris 4.1.4 and supports only MySQL compatibility mode.
-
-:::
+OceanBase Schema Change Sync supports only MySQL compatibility mode.
 
 OceanBase uses the MySQL CDC schema change processing path, so its supported changes and behavior are the same as for MySQL.
 

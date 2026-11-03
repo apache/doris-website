@@ -17,6 +17,12 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 / 配置参数 -->
 <!-- 适用场景: MySQL 单表实时同步到 Doris，需要列映射或数据转换 -->
 
@@ -34,7 +40,7 @@ SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functio
 
 | 检查项 | 说明 |
 | ------ | ---- |
-| Doris 版本 | 4.1.0 及以上 |
+| Doris 版本 | 4.1.5 及以上 |
 | 表类型 | 目前仅支持**主键表**作为目标表 |
 | 用户权限 | 需要 `Load` 权限 |
 | MySQL 配置 | 需要在 MySQL 端开启 Binlog，参考[配置指南](./continuous-load-overview.md) |
@@ -93,7 +99,7 @@ CDC Stream TVF 支持的 MySQL 数据源参数如下：
 | database              | -       | 数据库名                                                                                                                                        |
 | table                 | -       | 需要同步的表名                                                                                                                                  |
 | offset                | latest  | `latest`：仅增量同步；`initial`：全量 + 增量同步                                                                                                |
-| snapshot_split_size   | 40960（4.1.4 之前为 8096）    | split 的大小（行数）。全量同步时，表会被切分成多个 split 进行同步                                                                               |
+| snapshot_split_size   | 40960    | split 的大小（行数）。全量同步时，表会被切分成多个 split 进行同步                                                                               |
 | snapshot_parallelism  | 1       | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量                                                                                         |
 
 ### 导入配置参数

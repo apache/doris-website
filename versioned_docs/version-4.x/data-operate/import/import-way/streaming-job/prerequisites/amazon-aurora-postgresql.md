@@ -15,6 +15,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Procedure -->
 <!-- Applicable scenario: Pre-deployment check / Environment preparation -->
 

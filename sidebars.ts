@@ -389,7 +389,7 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 {
                                     type: 'category',
-                                    label: 'MySQL (Experimental)',
+                                    label: 'MySQL',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-mysql-database',
@@ -407,7 +407,7 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'PostgreSQL (Experimental)',
+                                    label: 'PostgreSQL',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-table',
                                         'data-operate/import/import-way/streaming-job/continuous-load-postgresql-database',
@@ -425,7 +425,7 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
-                                    label: 'OceanBase (Experimental)',
+                                    label: 'OceanBase',
                                     items: [
                                         'data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database',
                                         'data-operate/import/import-way/streaming-job/schema-change-oceanbase',

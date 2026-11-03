@@ -12,7 +12,13 @@
 }
 ---
 
-Doris uses **Streaming Job + S3 TVF** to ingest S3 files into an existing Doris table in batches. Choose ordered, notification, or one-time ingestion based on how files arrive and whether the job should continue running.
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
+Doris uses **Streaming Job + S3 TVF** to ingest S3 files into an existing Doris table in batches. Choose ordered, notification, or one-time ingestion based on how files arrive and whether the job should continue running. Notification and one-time ingestion are supported starting with Doris 4.1.6.
 
 ## Choose an ingestion mode
 
