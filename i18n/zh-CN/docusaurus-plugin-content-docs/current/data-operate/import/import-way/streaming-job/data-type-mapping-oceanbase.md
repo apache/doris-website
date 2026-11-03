@@ -7,15 +7,15 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 参考 / 数据类型映射 -->
 
 OceanBase CDC 持续导入仅支持 MySQL 兼容模式，并复用 MySQL 的类型转换逻辑。下表展示自动建表时 OceanBase 列类型与 Doris 列类型之间的映射。
-
-:::caution 实验性功能
-
-OceanBase CDC 持续导入自 Doris 4.1.4 起作为实验性功能提供。
-
-:::
 
 ## JDBC URL 参数归一化
 

@@ -131,21 +131,21 @@
     "message": "Непрерывная загрузка",
     "description": "The label for category Continuous Load in sidebar docs"
   },
-  "sidebar.docs.category.MySQL (Experimental)": {
-    "message": "MySQL (экспериментально)",
-    "description": "The label for category MySQL (Experimental) in sidebar docs"
+  "sidebar.docs.category.MySQL": {
+    "message": "MySQL",
+    "description": "The label for category MySQL in sidebar docs"
   },
   "sidebar.docs.category.Prerequisites": {
     "message": "Предварительные требования",
     "description": "The label for category Prerequisites in sidebar docs"
   },
-  "sidebar.docs.category.PostgreSQL (Experimental)": {
-    "message": "PostgreSQL (экспериментально)",
-    "description": "The label for category PostgreSQL (Experimental) in sidebar docs"
+  "sidebar.docs.category.PostgreSQL": {
+    "message": "PostgreSQL",
+    "description": "The label for category PostgreSQL in sidebar docs"
   },
-  "sidebar.docs.category.OceanBase (Experimental)": {
-    "message": "OceanBase (экспериментально)",
-    "description": "The label for category OceanBase (Experimental) in sidebar docs"
+  "sidebar.docs.category.OceanBase": {
+    "message": "OceanBase",
+    "description": "The label for category OceanBase in sidebar docs"
   },
   "sidebar.docs.category.S3": {
     "message": "S3",

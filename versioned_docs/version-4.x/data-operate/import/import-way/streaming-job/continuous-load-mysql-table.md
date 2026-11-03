@@ -17,6 +17,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Operation steps / Configuration parameters -->
 <!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->
 
@@ -34,7 +40,7 @@ By integrating the read capability of [Flink CDC](https://github.com/apache/flin
 
 | Item | Description |
 | ------ | ---- |
-| Doris version | 4.1.0 and above |
+| Doris version | 4.1.5 and above |
 | Table type | Currently only **primary key tables** are supported as the target table |
 | User privileges | `Load` privilege is required |
 | MySQL configuration | Binlog must be enabled on the MySQL side. See the [Configuration Guide](./continuous-load-overview.md) |
@@ -93,7 +99,7 @@ The MySQL data source parameters supported by CDC Stream TVF are as follows:
 | database              | -       | Database name                                                                                                                                   |
 | table                 | -       | Name of the table to sync                                                                                                                       |
 | offset                | latest  | `latest`: incremental sync only; `initial`: full + incremental sync                                                                             |
-| snapshot_split_size   | 40960 (8096 before 4.1.4)    | Size of a split (in rows). During full sync, the table is divided into multiple splits for syncing                                              |
+| snapshot_split_size   | 40960    | Size of a split (in rows). During full sync, the table is divided into multiple splits for syncing                                              |
 | snapshot_parallelism  | 1       | Parallelism during the full sync stage, that is, the maximum number of splits scheduled per Task                                                |
 
 ### Import Configuration Parameters

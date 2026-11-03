@@ -12,6 +12,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+S3 one-time ingestion is experimental and supported starting with Doris 4.1.6.
+
+:::
+
 One-time ingestion uses `ONE_TIME` to ingest matching S3 files into an existing Doris table in batches. The job enters `FINISHED` after the final batch commits. It suits historical initialization, a one-off offline load, or a backfill under a separate prefix.
 
 Prepare all files before creation and keep the source path stable during ingestion. The completed job does not wait for future files. For continuous ingestion, choose [ordered ingestion](./continuous-load-s3-ordered.md) or [notification ingestion](./continuous-load-s3-notification.md).

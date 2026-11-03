@@ -17,12 +17,16 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Procedure -->
 <!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->
 
 SQL Mapping Sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md). The target is an existing Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). Doris SQL provides the expressiveness to support column mapping, filtering, and data transformation. This approach is suitable for real-time sync scenarios where data needs to be processed before writing.
-
-> SQL Mapping Sync is supported since version 4.1.0.
 
 By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads change logs (WAL) from PostgreSQL to perform full + incremental sync from the source table to the target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md).
 
@@ -105,7 +109,7 @@ Data source parameters are configured through the `cdc_stream(...)` TVF. They de
 | `schema` | Yes | - | Schema name. |
 | `table` | Yes | - | Name of the table to sync. Each SQL Mapping job supports one source table. |
 | `offset` | Yes | - | Startup offset. `initial`: full and incremental sync; `snapshot`: full sync only; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"lsn":"12345678"}`. PostgreSQL does not support `earliest`. |
-| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | No | `40960` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `skip_snapshot_backfill` | No | `false` | Whether to skip WAL backfill during the snapshot. When set to `true`, at-least-once semantics are used. |
 | `slot_name` | No | `doris_cdc_<job_id>` | Logical replication slot name. The name can contain only lowercase letters, digits, and underscores, cannot start with a digit, and is limited to 63 characters. A custom slot must be created in advance and is not deleted by Doris. |

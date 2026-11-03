@@ -12,6 +12,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 Ordered ingestion uses `ORDERED_LIST` to continuously discover new S3 objects in **lexicographical key order**, including the path and filename. It suits logs and ETL files named with increasing timestamps or sequence numbers. This order describes file discovery and does not guarantee row order in the target table.
 
 This is the default S3 ingestion mode and requires no queue. For files arriving in any order, use [notification ingestion](./continuous-load-s3-notification.md). For a prepared static file set, use [one-time ingestion](./continuous-load-s3-one-time.md).

@@ -17,12 +17,16 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 / 配置参数 -->
 <!-- 适用场景: MySQL 单表实时同步到 Doris，需要列映射或数据转换 -->
 
 SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md) 实现，目标是一张**已存在**的 Doris 表（`INSERT INTO tbl SELECT * FROM cdc_stream(...)`）。借助 Doris SQL 的表达能力，可以在同步链路中进行列映射、过滤和数据转换，适用于对数据需要做加工的实时同步场景。
-
-> SQL 映射同步自 4.1.0 版本起支持。
 
 通过集成 [Flink CDC](https://github.com/apache/flink-cdc) 的读取能力，Doris 从 MySQL 读取变更日志（Binlog），完成源表到目标表的**全量 + 增量**同步。若希望 Doris 自动创建下游表、按库为单位同步一组表，请参考 [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)。
 
@@ -36,7 +40,7 @@ SQL 映射同步通过 Job + [CDC Stream TVF](../../../../sql-manual/sql-functio
 
 | 检查项 | 说明 |
 | ------ | ---- |
-| Doris 版本 | 4.1.0 及以上 |
+| Doris 版本 | 4.1.5 及以上 |
 | 表类型 | 上游源表必须有主键；Doris 目标表仅支持主键模型表（Unique Key） |
 | 用户权限 | 需要 `Load` 权限 |
 | MySQL 配置 | 需要在 MySQL 端开启 Binlog，参考[配置指南](./continuous-load-overview.md#支持的数据源与同步模式) |
@@ -95,7 +99,7 @@ CDC Stream TVF 支持以下 MySQL 数据源参数。
 | `database` | 是 | - | MySQL 数据库名。 |
 | `table` | 是 | - | 需要同步的表名。SQL Mapping 每个作业只支持一张源表。 |
 | `offset` | 是 | - | 启动位点。`initial`：全量 + 增量同步；`snapshot`：仅全量同步；`earliest`：从当前可用的最早 Binlog 位点开始；`latest`：仅同步作业启动后的增量；也可设置 JSON 精确位点，例如 `{"file":"binlog.000001","pos":"154"}` 或 `{"gtids":"<gtid_set>"}`。 |
-| `snapshot_split_size` | 否 | `40960`（4.1.4 之前为 `8096`） | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
+| `snapshot_split_size` | 否 | `40960` | split 的大小（行数）。全量同步时，表会被切分成多个 split。必须为正整数。 |
 | `snapshot_parallelism` | 否 | `1` | 全量阶段的并行度，即单次 Task 最多调度的 split 数量。必须为正整数。 |
 | `skip_snapshot_backfill` | 否 | `false` | 是否跳过快照期间的 Binlog 回填。设置为 `true` 时采用 at-least-once 语义。 |
 | `server_id` | 否 | 自动生成 | MySQL CDC reader 的 server ID。支持单值（如 `5400`）或闭区间（如 `5400-5408`）；区间宽度必须大于等于 `snapshot_parallelism`。 |

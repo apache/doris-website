@@ -17,12 +17,16 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Operation steps / Configuration parameters -->
 <!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->
 
 SQL Mapping Sync is implemented through Job + [CDC Stream TVF](../../../../sql-manual/sql-functions/table-valued-functions/cdc-stream.md), targeting an **existing** Doris table (`INSERT INTO tbl SELECT * FROM cdc_stream(...)`). With the expressive power of Doris SQL, you can perform column mapping, filtering, and data transformation in the sync pipeline. This is suitable for real-time sync scenarios that require data processing.
-
-> SQL Mapping Sync is supported since version 4.1.0.
 
 By integrating the read capability of [Flink CDC](https://github.com/apache/flink-cdc), Doris reads the change log (Binlog) from MySQL and completes **full + incremental** sync from source table to target table. If you want Doris to automatically create downstream tables and sync a group of tables on a per-database basis, see [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md).
 
@@ -36,7 +40,7 @@ By integrating the read capability of [Flink CDC](https://github.com/apache/flin
 
 | Item | Description |
 | ------ | ---- |
-| Doris version | 4.1.0 and above |
+| Doris version | 4.1.5 and above |
 | Table type | The upstream source table must have a primary key; the Doris target table must use the Unique Key model |
 | User privileges | `Load` privilege is required |
 | MySQL configuration | Binlog must be enabled on the MySQL side. See the [Configuration Guide](./continuous-load-overview.md#supported-data-sources-and-sync-modes) |
@@ -95,7 +99,7 @@ CDC Stream TVF supports the following MySQL data source parameters.
 | `database` | Yes | - | MySQL database name. |
 | `table` | Yes | - | Name of the table to sync. Each SQL Mapping job supports one source table. |
 | `offset` | Yes | - | Startup offset. `initial`: full and incremental sync; `snapshot`: full sync only; `earliest`: start from the earliest available Binlog offset; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"file":"binlog.000001","pos":"154"}` or `{"gtids":"<gtid_set>"}`. |
-| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
+| `snapshot_split_size` | No | `40960` | Split size in rows. During full sync, the table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
 | `skip_snapshot_backfill` | No | `false` | Whether to skip Binlog backfill during the snapshot. When set to `true`, at-least-once semantics are used. |
 | `server_id` | No | Automatically generated | Server ID of the MySQL CDC reader. Supports a single value, such as `5400`, or a closed range, such as `5400-5408`. The range width must be greater than or equal to `snapshot_parallelism`. |
