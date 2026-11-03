@@ -37,7 +37,7 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 ## Versions and image sources
 
-This guide uses the [deployment examples provided by Doris Operator](https://github.com/apache/doris-operator/tree/master/config/fdb/v2.35.0), with CRDs and an Operator based on v2.35.0. File sources and checksums are listed in the [version notes](https://github.com/apache/doris-operator/blob/master/config/fdb/v2.35.0/UPSTREAM.md). The examples use the following images:
+This guide uses the [deployment examples provided by Doris Operator](https://github.com/apache/doris-operator/tree/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Deployment example sources and CRD checksums are listed in the [version notes](https://github.com/apache/doris-operator/blob/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0/UPSTREAM.md). The examples use the following images:
 
 | Component | Version | VeloDB image |
 | --- | --- | --- |
@@ -100,10 +100,11 @@ If FDB CRDs or a controller already exist, first check whether they can be reuse
 ```shell
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
-FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/master/config/fdb/v2.35.0
-FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/master/doc/examples/disaggregated/fdb/v2.35.0
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0
+FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/doc/examples/disaggregated/fdb/v2.35.0
 for resource in clusters backups restores; do
-  curl -fSL "$FDB_ASSETS/crds/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
+  curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
 curl -fSL "$FDB_ASSETS/operator.yaml" -o fdb-operator.yaml
 curl -fSL "$FDB_ASSETS/monitor-rbac.yaml" -o fdb-monitor-rbac.yaml
