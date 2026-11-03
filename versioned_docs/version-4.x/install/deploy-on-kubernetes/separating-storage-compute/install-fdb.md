@@ -37,7 +37,7 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 ## Versions and image sources
 
-This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/main/config/samples/velodb). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/main/config/samples/velodb/README.md). The examples use the following images:
+This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/samples/velodb). CRDs are downloaded from the [VeloDB FDB Operator repository on branch-2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/crd/bases), matching Operator v2.35.0. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/branch-2.35.0/config/samples/velodb/README.md). The examples use the following images:
 
 | Component | Version | VeloDB image |
 | --- | --- | --- |
@@ -100,8 +100,8 @@ If FDB CRDs or a controller already exist, first check whether they can be reuse
 ```shell
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
-FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/main/config/samples/velodb
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/samples/velodb
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done

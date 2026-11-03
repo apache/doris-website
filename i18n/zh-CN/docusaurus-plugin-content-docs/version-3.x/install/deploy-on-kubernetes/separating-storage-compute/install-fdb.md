@@ -37,7 +37,7 @@
 
 ## 版本与镜像来源
 
-本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/main/config/samples/velodb)。CRD 从 [VeloDB FDB Operator 仓库的 v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。兼容版本及部署定制说明可查看[样例指南](https://github.com/velodb/fdb-kubernetes-operator/blob/main/config/samples/velodb/README.md)。部署样例使用的镜像如下：
+本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/samples/velodb)。CRD 从 [VeloDB FDB Operator 仓库的 branch-2.35.0 分支](https://github.com/velodb/fdb-kubernetes-operator/tree/branch-2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。兼容版本及部署定制说明可查看[样例指南](https://github.com/velodb/fdb-kubernetes-operator/blob/branch-2.35.0/config/samples/velodb/README.md)。部署样例使用的镜像如下：
 
 | 组件 | 版本 | VeloDB 镜像 |
 | --- | --- | --- |
@@ -100,8 +100,8 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 ```shell
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
-FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/main/config/samples/velodb
+FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/crd/bases
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/branch-2.35.0/config/samples/velodb
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
