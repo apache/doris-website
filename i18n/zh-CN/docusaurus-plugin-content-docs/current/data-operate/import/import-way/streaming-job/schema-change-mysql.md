@@ -16,16 +16,16 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 概念说明 -->
 <!-- 适用场景: MySQL 自动建表同步期间的上游表结构变更 -->
 
 MySQL Schema Change 同步用于在持续导入期间，将上游 MySQL 表的列结构变更自动应用到 Doris 目标表。该能力仅适用于 [MySQL CDC 自动建表同步](./continuous-load-mysql-database.md)，不适用于 [MySQL CDC SQL 映射同步](./continuous-load-mysql-table.md)。
-
-:::tip
-
-MySQL Schema Change 同步自 Doris 4.1.4 起支持。
-
-:::
 
 ## 支持的 Schema Change
 

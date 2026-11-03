@@ -16,16 +16,16 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Concept -->
 <!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->
 
 PostgreSQL Schema Change Sync automatically applies upstream PostgreSQL column changes to Doris during continuous load. This capability applies only to [PostgreSQL CDC with Auto Table Creation](./continuous-load-postgresql-database.md). It is not supported by [PostgreSQL CDC with SQL Mapping](./continuous-load-postgresql-table.md).
-
-:::tip
-
-PostgreSQL Schema Change Sync is supported from Doris 4.1.0.
-
-:::
 
 ## Supported Schema Changes
 
@@ -43,14 +43,14 @@ PostgreSQL Schema Change Sync is supported from Doris 4.1.0.
 - Column renames, column type changes, DEFAULT changes, and `NULL` / `NOT NULL` constraint changes are not synchronized automatically. Pause the continuous load job, change the Doris target table manually, verify that both schemas are compatible, and then resume the job.
 - Auto Table Creation Sync enables Schema Change Sync by default. Doris 4.1 does not provide a SQL property to disable it. The `cdc_stream()` table function (SQL Mapping Sync) disables Schema Change Sync internally.
 
-:::caution Behavior change (4.1.4)
+:::caution Schema change behavior
 
-Since version 4.1.4, PostgreSQL schema change detection is driven by Relation events:
+PostgreSQL schema change detection is driven by Relation events:
 
 - Only `ADD COLUMN` and `DROP COLUMN` are recognized.
 - A change that adds and drops columns at the same time (possibly a `RENAME`) is skipped, and the target table is left unchanged.
 - Column type changes are skipped.
-- An added column **no longer carries the `DEFAULT` value of the upstream column**.
+- An added column **does not carry the `DEFAULT` value of the upstream column**.
 - This capability applies only to the Auto Table Creation Sync (at-least-once) path. The SQL Mapping (TVF / exactly-once) path does not support it.
 
 :::

@@ -12,6 +12,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+S3 notification ingestion is experimental and supported starting with Doris 4.1.6.
+
+:::
+
 Notification ingestion uses `NOTIFICATION` to consume S3 object-created events from SQS and continuously ingest new files into Doris. It suits UUID filenames and files arriving in any order, without relying on filename ordering.
 
 Only **AWS S3 notifications sent directly to an SQS Standard Queue in the same Region** are supported. Each job needs a dedicated queue. Historical objects are not scanned or backfilled. End-to-end delivery is at-least-once: an object can be ingested more than once, and file ingestion order is not guaranteed.

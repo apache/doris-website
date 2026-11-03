@@ -6,6 +6,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Reference / data type mapping -->
 
 The table below shows how each upstream PostgreSQL column type maps to a Doris column type. There is a single mapping, shared by both sync methods — the only difference is who creates the target table:

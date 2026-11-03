@@ -16,16 +16,16 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 概念说明 -->
 <!-- 适用场景: PostgreSQL 自动建表同步期间的上游表结构变更 -->
 
 PostgreSQL Schema Change 同步用于在持续导入期间，将上游 PostgreSQL 表的列结构变更自动应用到 Doris 目标表。该能力仅适用于 [PostgreSQL CDC 自动建表同步](./continuous-load-postgresql-database.md)，不适用于 [PostgreSQL CDC SQL 映射同步](./continuous-load-postgresql-table.md)。
-
-:::tip
-
-PostgreSQL Schema Change 同步自 Doris 4.1.0 起支持。
-
-:::
 
 ## 支持的 Schema Change
 
@@ -41,7 +41,7 @@ PostgreSQL Schema Change 同步自 Doris 4.1.0 起支持。
 | DEFAULT、`NULL` / `NOT NULL` 及其他约束变化 | 不同步，需自行确认目标表兼容性。 |
 | 索引及其他表级操作 | 不同步；`TRUNCATE`、`DROP TABLE` 不会清空或删除 Doris 表。 |
 
-自 Doris 4.1.4 起，通过 Relation 事件检测表结构变化。单独执行 DDL 不会立即同步，需等待该表后续的 INSERT、UPDATE 或 DELETE。请在全量同步完成并进入增量同步后，再变更源表结构。
+通过 Relation 事件检测表结构变化。单独执行 DDL 不会立即同步，需等待该表后续的 INSERT、UPDATE 或 DELETE。请在全量同步完成并进入增量同步后，再变更源表结构。
 
 新增列不复制默认值和非空约束，也不回填 Doris 中已有的数据。
 

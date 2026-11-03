@@ -19,6 +19,12 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Operating procedure -->
 <!-- Applicable scenario: Continuously sync an entire PostgreSQL database to Doris -->
 
@@ -96,15 +102,15 @@ PostgreSQL source parameters configure the JDBC connection, sync scope, and full
 | `schema` | Yes | - | Schema name. |
 | `include_tables` | No | - | Names of the tables to sync, separated by commas. If not set, all tables in the Schema are synced. |
 | `exclude_tables` | No | - | Names of the tables not to sync, separated by commas. This parameter takes effect only when `include_tables` is not set. |
-| `table.<table_name>.target_table` | No | Source table name | Supported since version 4.1.0. Sets the Doris target table name for a source table. `<table_name>` is the source table name. |
-| `table.<table_name>.exclude_columns` | No | - | Supported since version 4.1.0. Specifies source columns not to sync, separated by commas. The columns must exist and cannot include primary key columns. |
-| `offset` | No | `latest` | Startup offset. `initial`: full and incremental sync; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"lsn":"12345678"}`. Since version 4.1.0, `snapshot` is also supported for full sync only. PostgreSQL does not support `earliest`. |
-| `snapshot_split_size` | No | `40960` (`8096` before 4.1.4) | Split size in rows. During full sync, a table is divided into multiple splits. Must be a positive integer. |
+| `table.<table_name>.target_table` | No | Source table name | Sets the Doris target table name for a source table. `<table_name>` is the source table name. |
+| `table.<table_name>.exclude_columns` | No | - | Specifies source columns not to sync, separated by commas. The columns must exist and cannot include primary key columns. |
+| `offset` | No | `latest` | Startup offset. `initial`: full and incremental sync; `latest`: sync only changes after the job starts. You can also specify an exact JSON offset, such as `{"lsn":"12345678"}`. `snapshot` is also supported for full sync only. PostgreSQL does not support `earliest`. |
+| `snapshot_split_size` | No | `40960` | Split size in rows. During full sync, a table is divided into multiple splits. Must be a positive integer. |
 | `snapshot_parallelism` | No | `1` | Parallelism of the full-sync phase, that is, the maximum number of splits scheduled by a Task at one time. Must be a positive integer. |
-| `slot_name` | No | `doris_cdc_<job_id>` | Supported since version 4.1.0. Logical replication slot name. The name can contain only lowercase letters, digits, and underscores, cannot start with a digit, and is limited to 63 characters. A custom slot must be created in advance and is not deleted by Doris. |
-| `publication_name` | No | `doris_pub_<job_id>` | Supported since version 4.1.0. Publication name. The naming rules are the same as for `slot_name`. A custom publication must be created in advance, include all synced tables, and is not deleted by Doris. |
-| `ssl_mode` | No | `disable` | Supported since version 4.1.0. SSL mode. Valid values are `disable`, `require`, and `verify-ca`. |
-| `ssl_rootcert` | Conditionally required | - | Supported since version 4.1.0. CA certificate file in the format `FILE:<file_name>`. Required when `ssl_mode` is `verify-ca`. Upload the file first using [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md). |
+| `slot_name` | No | `doris_cdc_<job_id>` | Logical replication slot name. The name can contain only lowercase letters, digits, and underscores, cannot start with a digit, and is limited to 63 characters. A custom slot must be created in advance and is not deleted by Doris. |
+| `publication_name` | No | `doris_pub_<job_id>` | Publication name. The naming rules are the same as for `slot_name`. A custom publication must be created in advance, include all synced tables, and is not deleted by Doris. |
+| `ssl_mode` | No | `disable` | SSL mode. Valid values are `disable`, `require`, and `verify-ca`. |
+| `ssl_rootcert` | Conditionally required | - | CA certificate file in the format `FILE:<file_name>`. Required when `ssl_mode` is `verify-ca`. Upload the file first using [CREATE FILE](../../../../sql-manual/sql-statements/security/CREATE-FILE.md). |
 
 If both `include_tables` and `exclude_tables` are set, `include_tables` takes precedence. The following `FROM POSTGRES` parameter fragment syncs `orders` and `customers`, writes `orders` to `ods_orders`, excludes the non-key column `internal_note`, and uses pre-created logical replication resources with CA verification:
 

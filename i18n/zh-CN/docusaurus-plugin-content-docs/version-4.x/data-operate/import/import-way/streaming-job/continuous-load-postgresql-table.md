@@ -17,6 +17,12 @@
 }
 ---
 
+:::caution 实验性功能
+
+Doris 持续导入为实验性功能，自 Doris 4.1.5 版本起支持。
+
+:::
+
 <!-- 知识类型: 操作步骤 -->
 <!-- 适用场景: PostgreSQL 实时数据同步 / 单表 SQL 映射 CDC 接入 -->
 
@@ -103,7 +109,7 @@ select * from jobs("type"="insert") where ExecuteType = "STREAMING";
 | schema               | -       | Schema 名称                                                                                                                       |
 | table                | -       | 需要同步的表名                                                                                                                    |
 | offset               | latest  | `latest`：仅增量同步；`initial`：全量 + 增量同步                                                                                  |
-| snapshot_split_size  | 40960（4.1.4 之前为 8096）    | split 的大小（行数）。全量同步时，表会被切分成多个 split 进行同步                                                                 |
+| snapshot_split_size  | 40960    | split 的大小（行数）。全量同步时，表会被切分成多个 split 进行同步                                                                 |
 | snapshot_parallelism | 1       | 全量阶段同步的并行度，即单次 Task 最多调度的 split 数量                                                                           |
 
 ### 导入配置参数

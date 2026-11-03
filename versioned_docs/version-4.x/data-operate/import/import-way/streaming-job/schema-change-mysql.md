@@ -16,16 +16,16 @@
 }
 ---
 
+:::caution Experimental feature
+
+Doris continuous load is experimental and supported starting with Doris 4.1.5.
+
+:::
+
 <!-- Knowledge type: Concept -->
 <!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->
 
 MySQL Schema Change Sync automatically applies upstream MySQL column changes to Doris during continuous load. This capability applies only to [MySQL CDC with Auto Table Creation](./continuous-load-mysql-database.md). It is not supported by [MySQL CDC with SQL Mapping](./continuous-load-mysql-table.md).
-
-:::tip
-
-MySQL Schema Change Sync is supported from Doris 4.1.4.
-
-:::
 
 ## Supported Schema Changes
 
