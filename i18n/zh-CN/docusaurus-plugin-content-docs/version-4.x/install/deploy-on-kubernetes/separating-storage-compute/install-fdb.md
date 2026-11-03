@@ -37,7 +37,7 @@
 
 ## 版本与镜像来源
 
-本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0)。CRD 从 [VeloDB FDB Operator 仓库的 v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。部署样例来源和 CRD 校验信息可查看[版本说明](https://github.com/velodb/fdb-kubernetes-operator/blob/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
+本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/main/config/samples/velodb)。CRD 从 [VeloDB FDB Operator 仓库的 v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。兼容版本及部署定制说明可查看[样例指南](https://github.com/velodb/fdb-kubernetes-operator/blob/main/config/samples/velodb/README.md)。部署样例使用的镜像如下：
 
 | 组件 | 版本 | VeloDB 镜像 |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ VeloDB FDB Operator 仓库提供了单副本和双副本两种集群样例，可
 
 以下步骤使用 `fdb-system` namespace，Operator 仅管理该 namespace 中的 FDB 集群。如需使用其他 namespace，请同时修改部署文件中的对象 namespace 和 RBAC subject namespace。
 
-### 第 1 步：下载固定版本的安装资源
+### 第 1 步：下载安装资源
 
 将 `/path/to/kubeconfig` 替换为目标 Kubernetes 集群的配置文件路径，然后查看已有的 FDB 资源、控制器和 StorageClass：
 
@@ -101,7 +101,7 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
 FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/main/config/samples/velodb
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done

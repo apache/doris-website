@@ -37,7 +37,7 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 ## Versions and image sources
 
-This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Deployment example sources and CRD checksums are listed in the [version notes](https://github.com/velodb/fdb-kubernetes-operator/blob/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0/UPSTREAM.md). The examples use the following images:
+This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/main/config/samples/velodb). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Compatibility and deployment customizations are described in the [sample guide](https://github.com/velodb/fdb-kubernetes-operator/blob/main/config/samples/velodb/README.md). The examples use the following images:
 
 | Component | Version | VeloDB image |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ Deploying FoundationDB on Kubernetes involves four steps:
 
 The following steps use the `fdb-system` namespace. The Operator manages FDB clusters only in this namespace. To use another namespace, update the object namespaces and RBAC subject namespaces in the deployment files together.
 
-### Step 1: Download the pinned installation assets
+### Step 1: Download the installation assets
 
 Replace `/path/to/kubeconfig` with the configuration file for your Kubernetes cluster, then check existing FDB resources, controllers and StorageClasses:
 
@@ -101,7 +101,7 @@ If FDB CRDs or a controller already exist, first check whether they can be reuse
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
 FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/main/config/samples/velodb
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
