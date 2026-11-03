@@ -2,7 +2,7 @@
 {
     "title": "部署 FoundationDB",
     "language": "zh-CN",
-    "description": "在 Kubernetes 上安装版本配套的 FoundationDB Operator 和数据库，涵盖 SelectDB 镜像源、测试与双副本资源规划、MetaService 客户端兼容性、存储权限和就绪验证。",
+    "description": "在 Kubernetes 上安装版本配套的 FoundationDB Operator 和数据库，涵盖 VeloDB 镜像源、测试与双副本资源规划、MetaService 客户端兼容性、存储权限和就绪验证。",
     "keywords": [
         "Doris",
         "Kubernetes",
@@ -37,22 +37,22 @@
 
 ## 版本与镜像来源
 
-本章使用 [Doris Operator 仓库提供的部署样例](https://github.com/apache/doris-operator/tree/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0)。CRD 从 [VeloDB FDB Operator 仓库的 v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。部署样例来源和 CRD 校验信息可查看[版本说明](https://github.com/apache/doris-operator/blob/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
+本章使用 [VeloDB FDB Operator 仓库提供的部署样例](https://github.com/velodb/fdb-kubernetes-operator/tree/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0)。CRD 从 [VeloDB FDB Operator 仓库的 v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases) 下载，与本章使用的 Operator v2.35.0 配套。部署样例来源和 CRD 校验信息可查看[版本说明](https://github.com/velodb/fdb-kubernetes-operator/blob/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0/UPSTREAM.md)。部署样例使用的镜像如下：
 
-| 组件 | 版本 | SelectDB 镜像 |
+| 组件 | 版本 | VeloDB 镜像 |
 | --- | --- | --- |
-| FDB Operator / 配套 CRD | v2.35.0 | `selectdb/fdb-kubernetes-operator:v2.35.0` |
-| 控制器初始化客户端 / FDB 数据库 | 7.3.69 | `selectdb/fdb-kubernetes-monitor:7.3.69` |
+| FDB Operator / 配套 CRD | v2.35.0 | `velodb/fdb-kubernetes-operator:v2.35.0` |
+| 控制器初始化客户端 / FDB 数据库 | 7.3.69 | `velodb/fdb-kubernetes-monitor:7.3.69` |
 
 上述镜像均支持 linux/amd64 和 linux/arm64。样例采用 `imageType: unified`，FDB 主容器和 sidecar 共用 Monitor 镜像，控制器也使用该镜像初始化客户端。
 
-请配套使用本章提供的 CRD、Operator 和集群样例。仓库中的旧版 `config/operator/fdb-operator.yaml`、根目录 FDB CRD、旧集群样例和 `doris-foundationdb` Helm Chart 使用了不同版本，不能直接与本章配置混用。
+请配套使用本章提供的 CRD、Operator 和集群样例。仓库中 `config/samples/` 下的通用样例和 Helm Chart 是独立安装方式；请勿将其中的控制器、客户端或数据库配置与本章版本化样例混用。
 
 ## 资源规划 {#resource-planning}
 
 部署资源包括 FDB Operator 和 FDB 集群两部分。Operator 的 requests 和 limits 均为 **500m CPU / 256Mi**，初始化客户端均为 **10m CPU / 50Mi**。
 
-Doris Operator 仓库提供了单副本和双副本两种集群样例，可以根据使用场景选择：
+VeloDB FDB Operator 仓库提供了单副本和双副本两种集群样例，可以根据使用场景选择：
 
 | 配置项 | 单副本（开发测试） | 双副本 |
 | --- | --- | --- |
@@ -101,20 +101,19 @@ kubectl --kubeconfig "$KUBECONFIG" get storageclass
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
 FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0
-FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/doc/examples/disaggregated/fdb/v2.35.0
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
 curl -fSL "$FDB_ASSETS/operator.yaml" -o fdb-operator.yaml
 curl -fSL "$FDB_ASSETS/monitor-rbac.yaml" -o fdb-monitor-rbac.yaml
 # 开发测试配置。双副本配置请改为下载 cluster-double.yaml。
-curl -fSL "$FDB_EXAMPLES/cluster-single.yaml" -o fdb-cluster.yaml
+curl -fSL "$FDB_ASSETS/cluster-single.yaml" -o fdb-cluster.yaml
 ```
 
 ### 第 2 步：安装 CRD、控制器和 Monitor RBAC
 
-部署文件使用上表中的 SelectDB 镜像。
+部署文件使用上表中的 VeloDB 镜像。
 
 通过以下命令部署 CRD、Operator 和 Monitor RBAC：
 

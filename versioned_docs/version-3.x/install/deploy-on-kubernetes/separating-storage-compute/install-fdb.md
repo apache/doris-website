@@ -37,7 +37,7 @@ This guide describes a new FDB installation. If an FDB Operator is already insta
 
 ## Versions and image sources
 
-This guide uses the [deployment examples provided by Doris Operator](https://github.com/apache/doris-operator/tree/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Deployment example sources and CRD checksums are listed in the [version notes](https://github.com/apache/doris-operator/blob/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0/UPSTREAM.md). The examples use the following images:
+This guide uses the [deployment examples provided by VeloDB FDB Operator](https://github.com/velodb/fdb-kubernetes-operator/tree/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0). CRDs are downloaded from the [VeloDB FDB Operator repository at v2.35.0](https://github.com/velodb/fdb-kubernetes-operator/tree/v2.35.0/config/crd/bases), matching Operator v2.35.0. Deployment example sources and CRD checksums are listed in the [version notes](https://github.com/velodb/fdb-kubernetes-operator/blob/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0/UPSTREAM.md). The examples use the following images:
 
 | Component | Version | VeloDB image |
 | --- | --- | --- |
@@ -46,13 +46,13 @@ This guide uses the [deployment examples provided by Doris Operator](https://git
 
 These images support linux/amd64 and linux/arm64. The examples use `imageType: unified`, so the FDB main container and sidecar share the Monitor image. The controller also uses this image to initialize its client.
 
-Use the CRDs, Operator and cluster examples provided in this guide together. The older `config/operator/fdb-operator.yaml`, root FDB CRDs, cluster examples and `doris-foundationdb` Helm chart use different versions and cannot be used directly with this configuration.
+Use the CRDs, Operator and cluster examples provided in this guide together. The generic examples directly under `config/samples/` and the Helm chart are separate installation paths; do not mix their controller, client or database settings with these versioned profiles.
 
 ## Resource planning {#resource-planning}
 
 Plan resources for both the FDB Operator and the FDB cluster. The Operator requests and limits are **500m CPU / 256Mi**, and its client initializer requests and limits are **10m CPU / 50Mi**.
 
-The Doris Operator repository provides single- and double-replica cluster examples. Choose one based on your usage:
+The VeloDB FDB Operator repository provides single- and double-replica cluster examples. Choose one based on your usage:
 
 | Setting | Single replica (development) | Double replica |
 | --- | --- | --- |
@@ -101,24 +101,19 @@ If FDB CRDs or a controller already exist, first check whether they can be reuse
 mkdir fdb-install-v2.35.0
 cd fdb-install-v2.35.0
 FDB_CRDS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/v2.35.0/config/crd/bases
-FDB_ASSETS=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/config/fdb/v2.35.0
-FDB_EXAMPLES=https://raw.githubusercontent.com/apache/doris-operator/bae8554666d68d24cd10b06a6b868a372b59a5a4/doc/examples/disaggregated/fdb/v2.35.0
+FDB_ASSETS=https://raw.githubusercontent.com/velodb/fdb-kubernetes-operator/5a4dfe167483b3de4a2f2035cf705d27579b202f/config/samples/velodb/v2.35.0
 for resource in clusters backups restores; do
   curl -fSL "$FDB_CRDS/apps.foundationdb.org_foundationdb${resource}.yaml" -o "fdb-${resource}-crd.yaml"
 done
 curl -fSL "$FDB_ASSETS/operator.yaml" -o fdb-operator.yaml
 curl -fSL "$FDB_ASSETS/monitor-rbac.yaml" -o fdb-monitor-rbac.yaml
 # Development profile. Use cluster-double.yaml instead for the double profile.
-curl -fSL "$FDB_EXAMPLES/cluster-single.yaml" -o fdb-cluster.yaml
+curl -fSL "$FDB_ASSETS/cluster-single.yaml" -o fdb-cluster.yaml
 ```
 
 ### Step 2: Install CRDs, the controller and Monitor RBAC
 
-Use the VeloDB images listed above. The following command updates the downloaded Operator, initializer and cluster image settings to use the VeloDB repository:
-
-```shell
-sed -i.bak 's|selectdb/|velodb/|g' fdb-operator.yaml fdb-cluster.yaml
-```
+The downloaded Operator, initializer and database profiles already use the VeloDB images listed above.
 
 Deploy the CRDs, Operator and Monitor RBAC with the following commands:
 
@@ -204,7 +199,6 @@ If MetaService uses a 7.1 client, you can create an FDB 7.1.67 cluster on amd64 
 
 ```shell
 curl -fSL "$FDB_ASSETS/operator-client-7.1.patch.yaml" -o fdb-client-7.1.patch.yaml
-sed -i.bak 's|selectdb/|velodb/|g' fdb-client-7.1.patch.yaml
 kubectl --kubeconfig "$KUBECONFIG" -n fdb-system patch \
   deployment fdb-kubernetes-operator-controller-manager --type=strategic \
   --patch-file fdb-client-7.1.patch.yaml
