@@ -8,26 +8,26 @@
     "sourceLocale": "en",
     "sourcePath": "docs/lakehouse/file-formats/parquet.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
-    "sourceCommit": "a00ecb74bfde68f1858ff1b06a45b7025289e048",
-    "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
-    "sourceTechnicalHash": "3669e1053cb64e25230afd4b7410f85dacad0c07c5ec3ae6175312119fcdf8c7",
-    "targetHash": "1c39315142a700e47aaf69d24b8328b10460bbfdf2f5f62c14f1801177277382",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
+    "sourceTechnicalHash": "38c5aa1fc8e41b3081866fe16fa4b89a22bc764e846ec59bedc8f074e8c882e6",
+    "targetHash": "3541cee78a3f1a34013f6c17088d061aaa0dc13a5d321f70b0f50e97a88eeb19",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-20T05:27:32.754Z",
+    "translatedAt": "2026-11-04T18:09:29.102Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "glossary-version-changed",
+      "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "51e0ee85d7579314ba3ef8e6b948d1aee8b787909ee40b1e5f47056cbd034ab8",
-      "targetHash": "1c39315142a700e47aaf69d24b8328b10460bbfdf2f5f62c14f1801177277382",
+      "sourceHash": "a87392751451893c002c2f57d021622c61905ee7305559d38b1d6aaff87a7f2b",
+      "targetHash": "3541cee78a3f1a34013f6c17088d061aaa0dc13a5d321f70b0f50e97a88eeb19",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+          "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"DATETIMEV2\"]; received [\"inlineCode\",null,null,\"10:11:00\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]"
         }
       ],
       "history": [
@@ -45,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\",\"96\"]; received [\"0\",\"1\",\"128\",\"2\",\"2\",\"2\",\"2.1\",\"2.1\",\"2.1\",\"2.1\",\"2.1.5\",\"2.1.6\",\"256\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0\",\"3.0.3\",\"4\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"4.1.5\",\"64\",\"8\",\"96\",\"96\",\"96\",\"96\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"DATETIMEV2\"]; received [\"inlineCode\",null,null,\"10:11:00\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]"
             }
           ]
         },
@@ -54,11 +54,21 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]\nprotected node 9: expected [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]; received [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]"
+              "message": "Restore protected source content:\nprotected node 3: expected [\"inlineCode\",null,null,\"10:11:00\"]; received [\"inlineCode\",null,null,\"DATETIMEV2\"]\nprotected node 4: expected [\"inlineCode\",null,null,\"DATETIMEV2\"]; received [\"inlineCode\",null,null,\"10:11:00\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"hive.parquet.time-zone\"]; received [\"link\",\"../catalogs/hive-catalog.mdx#timestamp-compatibility\",null]"
             }
           ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/lakehouse/file-formats/parquet.md",
+        "blob": "24be88ccceda270531b2b696ce9d9c2047ab0356"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/lakehouse/file-formats/parquet.md",
+        "blob": "105f7b5b4de7f2bbd08dfd26a0ca69205686b482"
+      }
     }
   }
 }
