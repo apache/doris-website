@@ -127,6 +127,12 @@ DISTRIBUTED BY RANDOM BUCKETS 8
 
 * **数量原则**：在不考虑扩容的情况下，一个表的 tablet 数量建议略多于整个集群的磁盘数量。
 
+:::caution MOW 表还需关注单 Tablet 行数
+
+对于 MOW Unique Key 表，除压缩后数据大小外，还应评估单个 Tablet 的物理行数。Base Compaction 需要为参与合并的输入物理行建立行号转换映射，主体约占 8 字节/行。窄表或压缩率较高的表，即使 Tablet 大小符合上述建议，也可能因行数过多而出现 Compaction 内存不足。详细估算和处理建议参见 [MOW 大 Tablet 的 Compaction 内存开销](../../admin-manual/trouble-shooting/compaction.md#mow-compaction-memory)。
+
+:::
+
 分桶数应设为 BE 数量的整数倍，以确保数据均匀分布。通常每个分区的分桶数不应超过 **128**——如果需要更多，应优先考虑对表进行分区。
 
 例如，假设有 10 台 BE 机器，每个 BE 一块磁盘，可以按照以下建议进行数据分桶：

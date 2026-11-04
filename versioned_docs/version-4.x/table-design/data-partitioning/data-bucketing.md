@@ -192,6 +192,12 @@ When determining the number of buckets, follow the two principles below. When th
 
 2. **Quantity principle**: Without considering scaling, the number of Tablets in a table is recommended to be slightly larger than the total number of disks in the cluster.
 
+:::caution Consider the row count of each MOW tablet
+
+For MOW Unique Key tables, consider the physical row count of each tablet as well as its compressed data size. Base Compaction builds a rowid conversion map for the physical input rows being merged, with approximately 8 bytes per row for the main mapping storage. Narrow tables or tables with high compression ratios may run out of memory during compaction because of a high row count, even when the tablet size meets the recommendations above. For estimates and mitigation guidance, see [Compaction memory overhead on large MOW tablets](../../admin-manual/trouble-shooting/compaction.md#mow-compaction-memory).
+
+:::
+
 In addition, note the following:
 
 - The number of buckets should be an integer multiple of the number of BEs to ensure even data distribution.
