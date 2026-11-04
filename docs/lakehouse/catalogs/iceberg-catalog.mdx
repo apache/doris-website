@@ -252,6 +252,84 @@ Since version 4.1.4, the Iceberg identity partition metadata is delivered with e
 
 See [Iceberg to Doris Data Type Mapping](iceberg-catalog/doris-type-mapping.md) for the complete Doris 4.2 mapping table, precision rules, and unsupported types.
 
+### Spatial types (Iceberg V3) {#iceberg-spatial-types}
+
+The development version supports Iceberg V3 `geometry` and `geography` as Doris `GEOMETRY` and `GEOGRAPHY`. Spatial WKB values are read and written through Parquet. Both top-level spatial columns and spatial values nested in ARRAY, MAP values and STRUCT fields can be read and written, including combinations of these containers. Doris internal-table spatial storage is not supported.
+
+Spatial types are supported through an Iceberg catalog. Generic file TVFs such as S3 or LOCAL reject Parquet GEOMETRY/GEOGRAPHY annotations, including nested fields. Unannotated BYTE_ARRAY columns retain their ordinary binary mapping. Existing external table columns explicitly declared as BINARY (Doris VARBINARY) can still read valid GEOMETRY/GEOGRAPHY-annotated Parquet leaves as raw WKB bytes, including nested leaves; this preserves the table's binary type rather than exposing a spatial type.
+
+Variant does not support native GEOMETRY/GEOGRAPHY values, including spatial values inside its objects or arrays. This matches the verified Spark 4.1 / Iceberg 1.12 behavior. Storing WKB as ordinary Binary or in an application-defined object does not make it a native spatial value and does not automatically restore its kind, CRS or algorithm. Ordinary Variant columns can coexist with separate spatial columns.
+
+| Declaration | Default | Effect |
+| --- | --- | --- |
+| `GEOMETRY('<crs>')` | `OGC:CRS84` | Preserves the source coordinate reference system without transforming coordinates. |
+| `GEOGRAPHY('<crs>', '<algorithm>')` | `OGC:CRS84`, `spherical` | Preserves CRS and edge algorithm. Algorithms are spherical, vincenty, thomas, andoyer and karney. |
+
+Replace `iceberg_catalog` and `spatial_db` with an existing writable Iceberg catalog and database. Select them, then create an unpartitioned V3 table and insert typed values:
+
+```sql
+SWITCH iceberg_catalog;
+USE spatial_db;
+CREATE TABLE spatial_values (id INT, geom GEOMETRY, geog GEOGRAPHY)
+ENGINE=ICEBERG PROPERTIES ('format-version'='3', 'write.format.default'='parquet');
+INSERT INTO spatial_values VALUES
+(1, ST_GeometryFromWKBTyped('0101000000000000000000F03F0000000000000040'),
+    ST_GeogFromWKB('0101000000000000000000F03F0000000000000040')),
+(2, NULL, NULL);
+SELECT id, ST_AsText(geom), ST_AsText(geog) FROM spatial_values ORDER BY id;
+```
+
+```text
+1  POINT (1 2)  POINT (1 2)
+2  NULL         NULL
+```
+
+The same catalog/database can store spatial leaves in nested columns. Ordinary map keys are supported with spatial values:
+
+```sql
+CREATE TABLE spatial_nested (
+    id INT, shapes ARRAY<GEOMETRY>, locations MAP<STRING, GEOGRAPHY>,
+    detail STRUCT<shape:GEOMETRY>)
+ENGINE=ICEBERG PROPERTIES ('format-version'='3', 'write.format.default'='parquet');
+INSERT INTO spatial_nested
+SELECT id, array(geom), map('home', geog), named_struct('shape', geom)
+FROM spatial_values;
+SELECT id, size(shapes), ST_AsText(shapes[1]), ST_AsText(locations['home']),
+       ST_AsText(struct_element(detail, 'shape'))
+FROM spatial_nested ORDER BY id;
+```
+
+```text
+1  1  POINT (1 2)  POINT (1 2)  POINT (1 2)
+2  1  NULL         NULL         NULL
+```
+
+NULL containers, empty containers, NULL elements/values/fields and spatial EMPTY values remain distinct. Spatial leaf metadata and original WKB are preserved recursively. This storage support does not enable spatial map-key comparison, grouping or ordering.
+
+The example requires permission to create the table, insert data and query it in that catalog/database. Configure the [Iceberg REST metastore](../metastores/iceberg-rest.md) first if no catalog exists.
+
+Values preserve raw WKB (XY, XYZ, XYM and XYZM) bytes and support all seven basic WKB kinds, mixed child byte orders and EMPTY. EMPTY differs from SQL NULL. Standard ISO WKB Z/M ordinates are retained; PostGIS EWKB dimension flags and embedded SRID are unsupported. Geography and recognized geographic Geometry CRS identifiers (`OGC:CRS84`, `EPSG:4326`) require defined X/Y coordinates in [-180,180]/[-90,90]; projected Geometry does not use that range. Other Geometry CRS strings are preserved without a CRS resolver or automatic conversion.
+
+Use `ST_AsText`, `ST_AsBinary`, `ST_X`, `ST_Y` and `ST_GeometryType` to inspect raw values. Typed `ST_AsBinary` returns raw WKB as `VARBINARY`, including bytes that are not valid UTF-8; the legacy STRING overload retains its existing return type. ST_AsText includes dimension markers and all ordinates; ST_X/ST_Y return the point's X/Y. Typed measurements and relationships support only XY and require default `GEOGRAPHY(OGC:CRS84, spherical)` and supported nonempty Point/LineString/Polygon shapes. Unsupported parameter or shape combinations fail explicitly. Other algorithms can be read and written, but cannot be used for these computations. `ST_Contains`, `ST_Within` and `ST_Touches` support combinations of these three shape kinds with containment, reverse-containment and boundary-only contact semantics. A line solely on a polygon boundary is not contained; lines crossing in their interiors do not touch. `ST_Equals` tests equal-dimensional point-set equality, and `ST_Overlaps` tests equal-dimensional partial overlap; raw WKB byte order does not determine these relations. `ST_DWithin(a,b,d)` tests whether spherical distance is at most the finite nonnegative threshold d, in metres. Unsupported calculation domains are still rejected explicitly. Spherical relations use all geodesic edges without closing an open LineString.
+
+For spherical polygon calculations, each ring selects the smaller region (at most a hemisphere), regardless of winding. Reversing a ring does not select its complement larger than a hemisphere; calculations that select this complement by ring direction are not supported. This calculation convention does not change the ring order or bytes retained by raw WKB accessors and Iceberg reads/writes.
+
+At extreme coordinate precision, different Polygon boundaries defined by the original coordinates can collapse to the same S2 region. `ST_Equals` still distinguishes those boundaries; `ST_Contains`, `ST_Within` and `ST_Overlaps` explicitly reject such ambiguous polygon pairs instead of returning an unreliable result. `ST_Touches` requires confirmed original-coordinate boundary contact for pairs involving a Polygon. After confirming contact, it explicitly rejects a LineString/Polygon pair if a positive-length raw line segment collapses to one S2 point and is not a shared polygon boundary segment. This conservative limit also applies to subdivisions outside the polygon; rounded coordinates cannot reliably establish their interior relationship. Predicates that depend on Polygon interiors also reject a point whose original coordinates are off the boundary but whose S2 position lies on the rounded boundary. When `ST_Contains`/`ST_Within`, `ST_Touches` or polygon `ST_Overlaps` would otherwise rely on disjoint rounded interiors, a positive-length overlap along the rounded Polygon boundary involving a nonshared raw edge is rejected as unresolved. `ST_Contains`, `ST_Within` and `ST_Overlaps` also reject Polygon pairs when a raw boundary vertex belongs to only one polygon but shares an S2 position with a boundary vertex of the other, including when the rounded regions suggest strict containment. The same collision guard applies to `ST_Contains(Polygon, LineString)` and `ST_Within(LineString, Polygon)`; mixed-dimension `ST_Overlaps` retains its false result. Touches retains its false result when there is no original-coordinate boundary contact. These guards do not implement a separate raw-coordinate region solver. Outside these precision limits, ordinary containment and equivalent edge subdivisions, ring rotations, reversals and hole orderings remain supported. These calculation limits do not affect raw WKB storage or accessors.
+
+`GROUP BY`, `SELECT DISTINCT`, `COUNT(DISTINCT ...)` and `MIN`/`MAX` reject native spatial arguments, including nested spatial values and window aggregates. `COLLECT_SET`, including its aggregate-state entry points, rejects spatial arguments and Array/Map/Struct values containing spatial leaves. Raw WKB is preserved without canonicalization: different byte orders can encode the same geometry, and byte ordering does not define spatial ordering. Ordinary `COUNT` and `ANY_VALUE` remain supported, as does grouping by ordinary keys with spatial values. For explicit byte-level grouping or deduplication, use `hex(ST_AsBinary(shape))`; `ST_AsBinary` alone remains subject to existing VARBINARY restrictions.
+
+`UNION` (including `UNION DISTINCT`), `INTERSECT` and `EXCEPT` reject spatial keys. `ARRAY_AGG(DISTINCT ...)` and `COLLECT_LIST(DISTINCT ...)` reject spatial arguments. `COUNT_MAP(DISTINCT ...)`, `MIN_MAP(DISTINCT ...)`, `MAX_MAP(DISTINCT ...)`, `SUM_MAP(DISTINCT ...)` and `AVG_MAP(DISTINCT ...)` also reject MAP arguments containing spatial leaves, including nested values. Nondistinct `MAP_AGG`, `MAP_AGG_V2` and `COUNT_MAP` with ordinary keys and spatial values remain supported. `MIN_MAP` and `MAX_MAP`, including their aggregate-state combinators, reject values containing spatial leaves because spatial ordering is not defined. `UNION ALL` and nondistinct scalar `ARRAY_AGG`/`COLLECT_LIST` remain supported.
+
+`LEAST`, `GREATEST`, `COUNT_AT_MIN` and `COUNT_AT_MAX` reject spatial arguments. Window `PARTITION BY` also rejects spatial keys, including nested spatial leaves; ordinary partition keys with supported spatial window values remain allowed. `MIN_BY` and `MAX_BY` reject scalar spatial result values and recursively reject ordering keys containing spatial leaves, including aggregate-state paths. Nested spatial result values with ordinary ordering keys remain supported. `TOPN_ARRAY` rejects spatial values, including nested ones. `MULTI_DISTINCT_COUNT` rejects spatial arguments, including nested spatial leaves; `GROUP_ARRAY_UNION` and `GROUP_ARRAY_INTERSECT` reject arrays containing spatial values.
+
+`INSERT ... SELECT` must preserve kind, CRS and algorithm. To copy projected Geometry or nondefault Geography, declare the destination with the same parameters as the source. The same identity checks apply recursively to nested leaves. In `INSERT ... SELECT`, `UPDATE` assignments and `MERGE` branches, `CAST(ARRAY(CAST(NULL AS INT)) AS ARRAY<INT>)` can be written to a Geometry or Geography array column. The container remains non-NULL and its NULL element receives the target type; this does not bypass identity checks for non-NULL values or invalid array-depth cast errors. CREATE and ALTER reject spatial columns when the table is V2 or uses a non-Parquet write format. No spatial index, bounds pruning, predicate pushdown or GeoArrow support is added.
+
+All participating FEs and BEs must support spatial types. This feature does not provide mixed-version execution compatibility for upgrades from 4.x to 5.0.
+
+For Arrow Flight SQL clients, project spatial columns through `ST_AsBinary` or `ST_AsText`. Direct spatial-column result schemas are not supported; Iceberg Arrow storage mapping does not add GeoArrow or direct Flight spatial output.
+
+See [ST_GEOMETRYFROMWKBTYPED](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geometryfromwkbtyped.md) and [ST_GEOGFROMWKB](../../sql-manual/sql-functions/scalar-functions/spatial-functions/st-geogfromwkb.md). Historical WKB constructors keep their STRING/EWKB behavior.
+
 ### Column Name Case
 
 Doris preserves the original case of column names in an Iceberg table and matches columns case-insensitively when reading. Column names containing uppercase letters or mixed case (for example `UserId` or `ORDER_ID`) can be queried normally.
