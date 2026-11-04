@@ -2,81 +2,87 @@
 {
     "title": "Amazon Aurora PostgreSQL",
     "language": "ja",
-    "description": "Doris のストリーミング取り込みの前提条件を満たすために、Amazon Aurora PostgreSQL で論理レプリケーションを有効にし、同期ユーザーを設定する方法を説明します。",
+    "description": "Amazon Aurora PostgreSQL で論理レプリケーションを有効にし、Doris のストリーミング取り込みの前提条件を満たす同期ユーザーを設定する方法。",
     "keywords": [
         "Amazon Aurora PostgreSQL",
-        "論理レプリケーション",
+        "Logical Replication",
         "rds.logical_replication",
-        "Doris ストリーミング取り込み",
-        "パブリケーション",
+        "Doris streaming ingestion",
+        "Publication",
         "dbz_publication",
         "publication_name",
-        "CDC の前提条件"
+        "CDC prerequisites"
     ]
 }
 ---
 
+:::caution 実験的機能
+
+Doris の継続ロードは実験的機能であり、Doris 4.1.5 以降でサポートされています。
+
+:::
+
 <!-- Knowledge type: Procedure -->
 <!-- Applicable scenario: Pre-deployment check / Environment preparation -->
 
-Doris のストリーミング取り込みでは、**Amazon Aurora PostgreSQL 互換エディション 14 以降**からのデータ同期をサポートしています。同期を開始する前に、Aurora クラスター側で論理レプリケーションを有効にし、必要な権限を付与する必要があります。このドキュメントは DBA とデータエンジニアを対象に、前提となる設定手順を説明します。
+Doris のストリーミング取り込みは **Amazon Aurora PostgreSQL-Compatible Edition 14 以降** からのデータ同期をサポートします。同期する前に、Aurora クラスター側で Logical Replication を有効にし、関連する認可を完了する必要があります。本書は DBA とデータエンジニアを対象とし、前提条件の設定手順をすべて説明します。
 
-### 前提条件のチェックリスト {#prerequisite-checklist}
+### 前提条件チェックリスト {#prerequisite-checklist}
 
-設定を始める前に、以下を確認してください。
+設定を開始する前に、次の情報を確認してください：
 
-| 確認項目 | 要件 |
+| チェック項目 | 要件 |
 | --- | --- |
 | Aurora PostgreSQL のバージョン | 14 以降 |
-| 操作権限 | AWS RDS コンソールでクラスターパラメータグループを変更できる権限 |
-| データベース権限 | ユーザーの作成、権限の付与、パブリケーションの作成ができる権限 |
-| メンテナンス時間帯 | Aurora のライターインスタンスを再起動できること（論理レプリケーションのパラメータ変更後に再起動が必要） |
+| 操作権限 | AWS RDS コンソールでクラスター・パラメータグループを変更する権限 |
+| データベース権限 | ユーザーの作成、権限付与、Publication の作成を行う権限 |
+| メンテナンスウィンドウ | Aurora writer インスタンスの再起動を許容できること（論理レプリケーション・パラメータの変更後に再起動が必要） |
 
-### 設定の流れ {#configuration-workflow}
+### 設定ワークフロー {#configuration-workflow}
 
-設定は次の 5 ステップで行います。
+設定全体は 5 つのステップで構成されます：
 
-1. 現在の論理レプリケーション設定を確認する
-2. クラスターパラメータグループを設定する
-3. クラスターパラメータグループを適用し、インスタンスを再起動する
-4. Doris の同期ユーザーを作成し、権限を付与する
-5. Doris のバージョンに応じてパブリケーションを設定する
+1. 現在の論理レプリケーション設定の状態を確認する
+2. クラスター・パラメータグループを設定する
+3. クラスター・パラメータグループを適用してインスタンスを再起動する
+4. Doris 同期ユーザーを作成して権限を付与する
+5. Doris のバージョンに基づいて Publication を設定する
 
-ステップ 1 で論理レプリケーションがすでに有効であることを確認できた場合は、**ステップ 4** に進んで同期ユーザーを作成できます。
+ステップ 1 で論理レプリケーションがすでに有効になっていることが確認できた場合は、**ステップ 4** に進んで同期ユーザーを作成できます。
 
-## ステップ 1：現在の設定を確認する {#step-1-check-the-current-configuration}
+## ステップ 1: 現在の設定を確認 {#step-1-check-the-current-configuration}
 
 <!-- Knowledge type: Procedure -->
 
-**目的：** Aurora クラスターで論理レプリケーションが有効かを確認し、パラメータグループの変更が必要か判断します。
+**目的：** Aurora クラスターで論理レプリケーションが有効になっているか確認し、パラメータグループを変更する必要があるか判断します。
 
-Aurora のライターインスタンスに接続し、次の SQL を実行します。
+Aurora writer インスタンスに接続し、次の SQL を実行します：
 
 ```sql
 SHOW rds.logical_replication;
 ```
 
-返された値に応じて、次の操作を選択します。
+返された値に基づいて、次の操作を選択します：
 
 | 返された値 | 意味 | 次の操作 |
 | --- | --- | --- |
-| `on` | 論理レプリケーションは有効 | [ステップ 4：同期ユーザーを作成する](#step-4-create-the-sync-user)に進む |
-| `off` | 論理レプリケーションは無効 | [ステップ 2：クラスターパラメータグループを設定する](#step-2-configure-the-cluster-parameter-group)に進む |
+| `on` | 論理レプリケーションは有効 | [ステップ 4: 同期ユーザーの作成](#step-4-create-the-sync-user) に進む |
+| `off` | 論理レプリケーションは無効 | [ステップ 2: クラスター・パラメータグループを設定](#step-2-configure-the-cluster-parameter-group) に進む |
 
-## ステップ 2：クラスターパラメータグループを設定する {#step-2-configure-the-cluster-parameter-group}
+## ステップ 2: クラスター・パラメータグループを設定 {#step-2-configure-the-cluster-parameter-group}
 
 <!-- Knowledge type: Configuration parameters -->
 
-**目的：** 論理レプリケーションを有効にした DB クラスターパラメータグループを作成し、Aurora クラスターで使用します。
+**目的：** 論理レプリケーションを有効にした DB Cluster Parameter Group を作成し、Aurora クラスターで使用できるようにします。
 
 手順：
 
-1. [AWS RDS コンソール](https://console.aws.amazon.com/rds/)にサインインします。
-2. 左側のナビゲーションで **Parameter groups** を選択し、**Create parameter group** をクリックします。
-3. タイプに **DB Cluster Parameter Group** を指定し、対応する Aurora PostgreSQL のバージョンファミリーを選択します。
-4. 作成したクラスターパラメータグループを編集し、`rds.logical_replication` を検索して、値を `1` に設定します。
+1. [AWS RDS コンソール](https://console.aws.amazon.com/rds/) にサインインします。
+2. 左側のナビゲーションペインで **Parameter groups** を選択し、**Create parameter group** をクリックします。
+3. タイプに **DB Cluster Parameter Group** を設定し、対応する Aurora PostgreSQL のバージョンファミリーを選択します。
+4. 作成したクラスター・パラメータグループを編集し、`rds.logical_replication` を検索して値を `1` に設定します：
 
-    ![PostgreSQL の WAL 設定](/images/next/data-operate/streaming-job/pgwalsetting.png)
+    ![PostgreSQL WAL 設定](/images/next/data-operate/streaming-job/pgwalsetting.png)
 
 5. **Save Changes** をクリックして保存します。
 
@@ -84,38 +90,38 @@ SHOW rds.logical_replication;
 
 | パラメータ | 推奨値 | 説明 |
 | --- | --- | --- |
-| `rds.logical_replication` | `1` | 論理レプリケーションを有効にする。`0` は無効を意味する |
+| `rds.logical_replication` | `1` | 論理レプリケーションを有効化。`0` は無効を示します |
 
-## ステップ 3：クラスターパラメータグループを適用して再起動する {#step-3-apply-the-cluster-parameter-group-and-restart}
+## ステップ 3: クラスター・パラメータグループを適用して再起動 {#step-3-apply-the-cluster-parameter-group-and-restart}
 
 <!-- Knowledge type: Procedure -->
 
-**目的：** 作成したパラメータグループを対象の Aurora クラスターに関連付け、ライターインスタンスを再起動して設定を反映します。
+**目的：** 新しく作成したパラメータグループを対象 Aurora クラスターに関連付け、writer インスタンスを再起動して設定を有効にします。
 
 手順：
 
-1. RDS コンソールで対象の Aurora クラスターを選択し、**Modify** をクリックします。
-2. **DB cluster parameter group** で、ステップ 2 で作成したクラスターパラメータグループを選択します。
+1. RDS コンソールで対象 Aurora クラスターを選択し、**Modify** をクリックします。
+2. **DB cluster parameter group** で、ステップ 2 で作成したクラスター・パラメータグループを選択します。
 3. **Apply immediately** を選択します。
-4. Aurora のライターインスタンスを再起動し、設定を反映します。
+4. Aurora writer インスタンスを再起動して設定を有効にします。
 
 :::caution
-`rds.logical_replication` パラメータの変更を反映するには、Aurora のライターインスタンスの再起動が必要です。業務負荷の低い時間帯に実施してください。
+`rds.logical_replication` パラメータの変更を有効にするには Aurora writer インスタンスの再起動が必要です。この操作は業務のオフピーク時間帯に実施してください。
 :::
 
-## ステップ 4：同期ユーザーを作成する {#step-4-create-the-sync-user}
+## ステップ 4: 同期ユーザーを作成 {#step-4-create-the-sync-user}
 
 <!-- Knowledge type: Procedure -->
 
-**目的：** Doris のストリーミング取り込み専用のアカウントを作成し、データの読み取りとレプリケーションに必要な最小限の権限を付与します。
+**目的：** Doris のストリーミング取り込み専用アカウントを作成し、データの読み取りとレプリケーションの実行に必要な最小権限を付与します。
 
-1. 専用ユーザーを作成します。
+1. 専用ユーザーを作成します：
 
     ```sql
     CREATE USER doris_sync PASSWORD '<password>';
     ```
 
-2. スキーマとテーブルの読み取り権限を付与します（ここでは `public` スキーマを例にしています。必要に応じて置き換えてください）。
+2. スキーマとテーブルに読み取り権限を付与します（例として `public` スキーマを使用しています。必要に応じて置き換えてください）：
 
     ```sql
     GRANT USAGE ON SCHEMA "public" TO doris_sync;
@@ -123,7 +129,7 @@ SHOW rds.logical_replication;
     ALTER DEFAULT PRIVILEGES IN SCHEMA "public" GRANT SELECT ON TABLES TO doris_sync;
     ```
 
-3. レプリケーション権限を付与します。
+3. レプリケーション権限を付与します：
 
     ```sql
     GRANT rds_replication TO doris_sync;
@@ -131,70 +137,57 @@ SHOW rds.logical_replication;
 
 権限の説明：
 
-| 権限 | 用途 |
+| 権限 | 目的 |
 | --- | --- |
-| `USAGE ON SCHEMA` | 指定したスキーマへのアクセスを許可する |
-| `SELECT ON ALL TABLES` | スキーマ内の既存の全テーブルからデータを読み取れるようにする |
-| `ALTER DEFAULT PRIVILEGES ... GRANT SELECT` | このスキーマに後から作成されるテーブルへの読み取り権限を自動的に付与する |
-| `rds_replication` | Aurora PostgreSQL で論理レプリケーションを実行するために必要なロール |
+| `USAGE ON SCHEMA` | 指定したスキーマへのアクセスを許可します |
+| `SELECT ON ALL TABLES` | スキーマ内の既存のすべてのテーブルからのデータ読み取りを許可します |
+| `ALTER DEFAULT PRIVILEGES ... GRANT SELECT` | このスキーマで後から作成されるテーブルに読み取り権限を自動的に付与します |
+| `rds_replication` | Aurora PostgreSQL で論理レプリケーションを実行するために必要なロールです |
 
-## ステップ 5：パブリケーションを設定する {#step-5-configure-the-publication}
+## ステップ 5: Publication を設定 {#step-5-configure-the-publication}
 
 <!-- Knowledge type: Procedure -->
 
-### Doris 4.0 {#doris-40}
+デフォルトでは、Publication を手動で作成する必要はありません。`publication_name` が設定されていない場合、Doris は同期アカウントを使用して `doris_pub_<job_id>` という名前の Publication を作成し、ジョブが削除されるとクリーンアップします。そのため、同期アカウントには Publication を作成する権限が必要です。
 
-`dbz_publication` という名前のパブリケーションを、`FOR ALL TABLES` を指定して事前に作成する必要があります。
-
-```sql
-CREATE PUBLICATION dbz_publication FOR ALL TABLES;
-```
-
-同期ユーザーに `rds_superuser` ロールなどのスーパーユーザー権限がある場合、Doris はタスク開始時に `dbz_publication` を自動作成できるため、この SQL を手動で実行する必要はありません。Doris 4.0 は、独自のパブリケーション名や一部のテーブルのみを含むパブリケーションをサポートしていません。
-
-### Doris 4.1.0 以降 {#doris-410-and-later}
-
-デフォルトでは、パブリケーションを手動で作成する必要はありません。`publication_name` を設定しない場合、Doris は同期アカウントを使用して `doris_pub_<job_id>` という名前のパブリケーションを作成し、ジョブの削除時にクリーンアップします。そのため、同期アカウントにはパブリケーションの作成権限が必要です。
-
-ストリーミングジョブの作成時に `publication_name` を明示的に設定する場合は、同じ名前のパブリケーションを事前に作成してください。独自に作成するパブリケーションには、ジョブが同期するすべてのソーステーブルを含める必要があります。また、その管理とクリーンアップはユーザーが行う必要があります。例：
+Streaming Job の作成時に `publication_name` を明示的に設定する場合は、同じ名前の Publication を事前に作成してください。カスタム Publication には、ジョブで同期するすべてのソーステーブルを含める必要があり、その維持とクリーンアップはユーザーが行います。例：
 
 ```sql
 CREATE PUBLICATION doris_pub_custom
 FOR TABLE public.orders, public.customers;
 ```
 
-ジョブの作成時に `"publication_name" = "doris_pub_custom"` を設定します。名前に使用できるのは小文字、数字、アンダースコアのみです。先頭に数字は使用できず、長さは 63 文字以内です。
+ジョブの作成時に `"publication_name" = "doris_pub_custom"` を設定します。名前には小文字、数字、アンダースコアのみを使用でき、数字で始めることはできず、63 文字以内です。
 
 ## よくある質問 {#faq}
 
 <!-- Knowledge type: FAQ -->
 
-**Q1：`SHOW rds.logical_replication;` が `on` を返しました。ほかに必要な作業はありますか？**
+**Q1: `SHOW rds.logical_replication;` は `on` を返します。ほかに何をする必要がありますか？**
 
-クラスターパラメータグループの変更やインスタンスの再起動は不要です。[ステップ 4：同期ユーザーを作成する](#step-4-create-the-sync-user)から始めてください。
+クラスター・パラメータグループを変更したり、インスタンスを再起動したりする必要はありません。[ステップ 4: 同期ユーザーの作成](#step-4-create-the-sync-user) から直接開始してください。
 
-**Q2：Aurora PostgreSQL 13 以前のバージョンはサポートされていますか？**
+**Q2: Aurora PostgreSQL 13 以前のバージョンはサポートされていますか？**
 
 いいえ。Doris のストリーミング取り込みには Aurora PostgreSQL 14 以降が必要です。
 
-**Q3：独自の名前のパブリケーションを使用できますか？**
+**Q3: カスタム名の Publication を使用できますか？**
 
-Doris 4.0 は独自の名前をサポートせず、`dbz_publication FOR ALL TABLES` のみをサポートします。バージョン 4.1.0 以降では、`publication_name` で独自の名前を指定できますが、ジョブの作成前にパブリケーションを作成し、同期するすべてのテーブルが含まれていることを確認する必要があります。
+`publication_name` でカスタム名を指定できますが、ジョブを作成する前に Publication を作成し、すべての同期対象テーブルが含まれていることを確認する必要があります。
 
-**Q4：同期にスーパーユーザーアカウントは必要ですか？**
+**Q4: 同期に superuser アカウントを使用する必要がありますか？**
 
-いいえ。Doris 4.0 では、通常の同期ユーザーを使う場合、`dbz_publication` を手動で作成する必要があります。ユーザーにスーパーユーザー権限があれば、Doris が自動作成できます。バージョン 4.1.0 以降では、`publication_name` を省略すると、Doris がデフォルトのパブリケーションを自動作成して管理します。事前にパブリケーションを作成する必要があるのは、独自のパブリケーションを使う場合のみです。
+いいえ。`publication_name` を省略すると、Doris がデフォルト Publication を自動的に作成して管理します。カスタム Publication を使用する場合にのみ、事前作成が必要です。
 
 ## トラブルシューティング {#troubleshooting}
 
 <!-- Knowledge type: Troubleshooting -->
 <!-- Applicable scenario: Pre-sync prerequisite check failure -->
 
-| 症状 | 考えられる原因 | 対処方法 |
+| 症状 | 考えられる原因 | 解決策 |
 | --- | --- | --- |
-| `SHOW rds.logical_replication;` が引き続き `off` を返す | 新しいパラメータグループがクラスターに関連付けられていないか、ライターインスタンスが再起動されていない | **DB cluster parameter group** が新しいパラメータグループに切り替わっていることを確認し、ライターインスタンスを再起動する |
-| ユーザーの作成または権限の付与に失敗する | 現在ログインしているアカウントの権限が不足している | `rds_superuser` または同等の権限を持つアカウントでサインインし、操作を実行する |
-| `GRANT rds_replication` でエラーが返る | 現在の Aurora のバージョンが古すぎるか、クラスターが Aurora PostgreSQL ではない | Aurora PostgreSQL 14 以降にアップグレードする |
-| Doris 4.0 で `dbz_publication` が存在しないと報告される | `dbz_publication` が作成されておらず、同期アカウントにスーパーユーザー権限もない | `CREATE PUBLICATION dbz_publication FOR ALL TABLES;` を実行するか、必要な権限を持つアカウントを使用する |
-| Doris 4.1.0 以降でデフォルトのパブリケーションを作成できない | 同期アカウントにパブリケーションの作成権限がない | 同期アカウントに必要な権限を付与するか、管理者に独自のパブリケーションを事前に作成してもらい、`publication_name` を設定する |
-| Doris 4.1.0 以降で独自のパブリケーションが存在しないと報告される | `publication_name` が設定されているが、同じ名前のパブリケーションが作成されていない | [ステップ 5](#step-5-configure-the-publication)の説明に従ってパブリケーションを作成するか、`publication_name` の設定を削除する |
+| `SHOW rds.logical_replication;` が引き続き `off` を返す | 新しいパラメータグループがクラスターに関連付けられていないか、writer インスタンスが再起動されていない | **DB cluster parameter group** が新しいパラメータグループに切り替わっていることを確認し、writer インスタンスを再起動します |
+| ユーザーの作成または権限付与に失敗する | 現在のログインアカウントの権限が不足している | `rds_superuser` または同等の権限を持つアカウントでサインインして操作します |
+| `GRANT rds_replication` がエラーを返す | 現在の Aurora バージョンが低すぎるか、クラスターが Aurora PostgreSQL ではない | Aurora PostgreSQL 14 以降にアップグレードします |
+| デフォルト Publication を作成できない | 同期アカウントに Publication の作成権限がない | 同期アカウントに必要な権限を付与するか、管理者にカスタム Publication を事前作成してもらい、`publication_name` を設定します |
+| カスタム Publication が存在しない | `publication_name` が設定されているが、同じ名前の Publication が作成されていない | [ステップ 5](#step-5-configure-the-publication) に従って Publication を作成するか、`publication_name` の設定を削除します |
