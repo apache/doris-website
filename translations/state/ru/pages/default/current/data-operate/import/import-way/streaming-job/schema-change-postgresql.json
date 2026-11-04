@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "601a0937496024527f980bf3cf41f4b5c1ea8766ec89ad342c25c760f722068f",
-    "sourceTechnicalHash": "314a94abb841454e6d9ca080e4009f80097125fbddfcc0e81752a8bc3e36a99d",
-    "targetHash": "487fa4a0cfe78fdb7a8fbaa70b1dc2327cdfc172c42cbb09d2dd868c995f728f",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "f3e97d274164bc891805e1376bb2310c54955bb28dacae1f1821f72b08b47a49",
+    "sourceTechnicalHash": "55d7a0407466a53b50570a8994a578087bc61c4ca0cd4998460b11ff69ba50a7",
+    "targetHash": "ef2b2b429839589ac01a0fa21c5901ce3a727259a7f6cded66f6fdcc174d5a7c",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:23:48.928Z",
+    "translatedAt": "2026-11-04T09:42:46.476Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "601a0937496024527f980bf3cf41f4b5c1ea8766ec89ad342c25c760f722068f",
-      "targetHash": "487fa4a0cfe78fdb7a8fbaa70b1dc2327cdfc172c42cbb09d2dd868c995f728f",
+      "sourceHash": "f3e97d274164bc891805e1376bb2310c54955bb28dacae1f1821f72b08b47a49",
+      "targetHash": "ef2b2b429839589ac01a0fa21c5901ce3a727259a7f6cded66f6fdcc174d5a7c",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: концепция -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: изменения схемы в исходной системе во время PostgreSQL Auto Table Creation Sync -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "abab47e15d4239b8cb69cf0997a6231bc92a7172"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "94637264873b46048b7d943ec363e1f23499211d"
+      }
     }
   }
 }
