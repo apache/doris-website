@@ -53,6 +53,53 @@ OUTFILE 和 EXPORT 导出 UUID 的完整类型映射见[导出文件列类型映
 
 * brotli
 
+## 写入页索引（Dev 版本）
+
+Doris 支持在 OUTFILE、EXPORT 导出，以及向使用 Parquet 格式的 Hive、Iceberg 表写入数据时，可选输出 Parquet `ColumnIndex` 和 `OffsetIndex` 元数据。支持这些索引的读取引擎可以按列值定位候选数据页，并保持各列读取的行范围一致。已有文件不会被修改。
+
+在写入语句执行前设置以下会话变量。它们仅作用于 Parquet 输出，不会开启读取侧的页索引过滤。
+
+| 变量 | 类型 | 默认值 | 行为 |
+| --- | --- | --- | --- |
+| `enable_parquet_write_page_index` | Boolean | `true` | 为新生成的 Parquet 文件写入页索引。`ColumnIndex` 依赖该列是否具有可用的统计信息；`OffsetIndex` 记录数据页的位置和行位置。 |
+| `parquet_write_data_page_size` | Integer，字节 | `1048576`（1 MiB） | 未压缩数据页的目标大小，范围为 `1` 至 `2147483647`。开启或关闭索引写入时均生效，不控制 Row Group 大小或字典页大小。 |
+
+页大小是目标值，单个值或一次写入批次可能使数据页超过该值。对于 Hive/Iceberg `lz4` 输出使用的 Hadoop 帧格式 LZ4，Doris 将该目标值限制在 `131072` 字节（128 KiB）以内，以保持与 Hadoop 读取端的兼容性。Raw LZ4 输出不受此压缩格式专属限制。
+
+例如，按 [OUTFILE](../../data-operate/export/outfile.md) 文档准备可写的 S3 Bucket 和访问凭据后，可以将查询结果导出为带索引的 Parquet 文件，并将目标页大小设为 256 KiB。请将存储占位符替换为实际配置：
+
+```sql
+SET enable_parquet_write_page_index = true;
+SET parquet_write_data_page_size = 262144;
+
+SELECT 1 AS id, 'example' AS label
+INTO OUTFILE 's3://example-bucket/export/result_'
+FORMAT AS PARQUET
+PROPERTIES (
+    "s3.endpoint" = "https://s3.example.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<access_key>",
+    "s3.secret_key" = "<secret_key>"
+);
+```
+
+生成的文件会为满足条件的列包含页索引元数据。对于 Hive 或 Iceberg，在执行 `INSERT INTO` 或 `INSERT OVERWRITE` 前设置相同的会话变量即可；目标表须已配置为写入 Parquet。对于 EXPORT，须在提交任务前设置。
+
+索引写入默认 `true`，保持 dev 版本现有的写入行为。若后续输出文件不需要页索引，可在写入前关闭：
+
+```sql
+SET enable_parquet_write_page_index = false;
+```
+
+可在当前会话中恢复默认值：
+
+```sql
+SET enable_parquet_write_page_index = true;
+SET parquet_write_data_page_size = 1048576;
+```
+
+页索引会增加元数据和写入开销。较小的数据页可能有利于高选择性查询，尤其是数据按过滤列聚集时，但也会生成更多索引条目和页头。收益取决于读取引擎和数据分布，开启索引不保证查询加速；读取端不使用这些可选索引时，仍可正常读取文件。这两个变量不改变 Parquet 格式版本或数据页版本。
+
 ## 相关参数
 
 ### 时间戳与日期兼容性（4.1.5 起）
