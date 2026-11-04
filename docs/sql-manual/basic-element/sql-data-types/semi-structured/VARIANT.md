@@ -597,7 +597,7 @@ CREATE TABLE example_table (
 
 | Property | Default | ALTER | Description |
 | --- | --- | --- | --- |
-| `variant_max_subcolumns_count` | `2048` | No | Maximum number of dynamic paths that go through Subcolumnization in one data file; paths with more non-null values are chosen first, and the other paths are stored in sparse columns. `0` means no limit. Range 0 to 100000; stay at or below 10000. The default is enough for most workloads; if the workload truly needs a much larger number of subcolumns, prefer [DOC mode](./variant-workload-guide.md#doc-mode-template). |
+| `variant_max_subcolumns_count` | `2048` | No | Maximum number of dynamic paths that go through Subcolumnization in one data file; paths with more non-null values are chosen first, and the other paths are stored in sparse columns. `0` means that no dynamic path goes through Subcolumnization and all of them are stored in sparse columns. Range 0 to 100000; stay at or below 10000. The default is enough for most workloads; if the workload truly needs a much larger number of subcolumns, prefer [DOC mode](./variant-workload-guide.md#doc-mode-template). |
 | `variant_enable_typed_paths_to_sparse` | `false` | No | By default, Schema Template paths always go through Subcolumnization and do not count toward `variant_max_subcolumns_count`. When `true`, they count toward the limit and can be stored in sparse columns. |
 | `variant_sparse_hash_shard_count` | `1` | No | Number of physical sparse columns that sparse paths are distributed to by hash. Range 0 to 1024; `0` is treated as `1`. |
 | `variant_max_sparse_column_statistics_size` | `10000` | No | Maximum number of sparse paths in one data file whose statistics are recorded. Beyond it, a query on a path that has no statistics cannot skip the sparse columns. Range 1 to 50000. |
@@ -737,6 +737,7 @@ Disabling norms does not affect `MATCH` filtering, but `score()` returns an erro
    );
    SELECT * FROM tbl WHERE v_str MATCH 'Doris';
    ```
+4. The path is stored in sparse columns: a subpath index needs a subcolumn. A path beyond `variant_max_subcolumns_count` has none, and with `variant_max_subcolumns_count = 0` no dynamic path has one. Pin the path with a Schema Template, or see [Sparse columns](#sparse-columns).
 
 ## Wide columns
 
@@ -752,6 +753,34 @@ Note: these two mechanisms are mutually exclusive—enabling DOC encoding disabl
 
 - The system ranks paths by non-null ratio / sparsity: high-frequency (less-sparse) paths go through Subcolumnization and are stored as independent subcolumns; remaining low-frequency (sparse) paths are merged and stored in sparse columns. The maximum number of extracted subcolumns is controlled by `variant_max_subcolumns_count`.
 - If a path is declared in a Schema Template, by default it will not be moved into sparse columns; set `variant_enable_typed_paths_to_sparse` to allow typed paths to be moved into sparse columns.
+- `variant_max_subcolumns_count = 0` stores every dynamic path in sparse columns, while Schema Template paths still go through Subcolumnization unless `variant_enable_typed_paths_to_sparse` is set. Use it when values are mostly read whole. To send every dynamic path through Subcolumnization instead, for example to keep subpath indexes on them, set a count above the number of distinct paths:
+  ```sql
+  -- every dynamic path in sparse columns
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- every dynamic path as a subcolumn, as long as the paths fit in the count
+  v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
+  ```
+
+  From version 4.2, this meaning applies to every statement that creates a table, including `CREATE TABLE`, `CREATE TABLE LIKE` and `CREATE TABLE AS SELECT`. A column created before version 4.2 keeps its old behavior: `0` sends every dynamic path through Subcolumnization, with no limit.
+
+  ```sql
+  -- Version 4.1
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- After upgrading to version 4.2: new_t has the same definition as old_t, with a count of 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- lists the subcolumns v.a and v.b, because old_t keeps the old meaning
+  DESC new_t;  -- lists no subcolumn, because new_t stores a and b in sparse columns
+  ```
 - Sparse columns support sharding: distribute sparse subpaths across multiple sparse columns to reduce per-column read overhead and improve read efficiency. Use `variant_sparse_hash_shard_count` to specify how many sparse columns are physically stored.
 
 **Reference notes**

@@ -165,7 +165,9 @@ In a database whose default enables changelog, `SHOW CREATE TABLE` of a table wi
 | Restriction | Notes |
 |---|---|
 | Auto-increment columns | Not supported; both `CREATE TABLE` and `ADD COLUMN` reject them |
-| VARIANT columns | Not supported; both `CREATE TABLE` and `ADD COLUMN` reject them |
+| VARIANT columns | Must not use doc mode or nested group, including through a session default; both `CREATE TABLE` and `ADD COLUMN` reject them |
+
+The changelog stores the after image and the before image of a VARIANT column with every path of an object in [sparse columns](../../sql-manual/basic-element/sql-data-types/semi-structured/VARIANT.md#sparse-columns), whatever the layout of the column in the table is. Schema Template paths keep their declared types. Reads of the changelog (table streams, `CHANGES`, `changelog()`) read a VARIANT column whole and take subpaths from the whole value, so they return what a read of the column returns, without subcolumns or subpath indexes. A statement that reads a VARIANT column from a changelog does not support `SEARCH` or `MATCH` on a VARIANT subpath, including on other tables in the statement.
 
 ### Deployment modes
 

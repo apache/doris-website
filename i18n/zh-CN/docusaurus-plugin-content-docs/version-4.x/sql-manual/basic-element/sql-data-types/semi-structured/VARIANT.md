@@ -456,6 +456,34 @@ SELECT * FROM tbl WHERE v['str'] MATCH 'Doris';
 
 - 系统会按“非空比例/稀疏度”对路径排序：高频（不稀疏）路径优先执行子列列式提取（Subcolumnization），并存为独立子列；可执行 Subcolumnization 的最大子列数量由 `variant_max_subcolumns_count` 指定，其余低频（稀疏）路径会被合并存放到稀疏列中。
 - 如果对子列指定了预定义 Schema，默认情况下该子列不会被放入稀疏列中；可通过 `variant_enable_typed_paths_to_sparse` 允许“指定了类型”的子列进入稀疏列。
+- 从 4.2 版本起，设置 `variant_max_subcolumns_count = 0` 时，所有动态路径都存入稀疏列；Schema Template 路径仍参与子列列式提取（Subcolumnization），除非设置了 `variant_enable_typed_paths_to_sparse`。适合值主要被整体读取的场景。这些路径没有子列，因此也没有子路径索引。如果希望所有动态路径都参与子列列式提取（Subcolumnization），请把该值设置得比不同路径的数量更大：
+  ```sql
+  -- 所有动态路径都在稀疏列中
+  v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+
+  -- 所有动态路径都成为子列（路径数量不超过该值时）
+  v VARIANT<properties('variant_max_subcolumns_count' = '2048')>
+  ```
+
+  从 4.2 版本起，任何建表语句中的 `0` 都是这个语义，包括 `CREATE TABLE`、`CREATE TABLE LIKE` 和 `CREATE TABLE AS SELECT`。4.2 版本之前创建的列保持原有行为：`0` 表示所有动态路径都参与子列列式提取（Subcolumnization），不限制数量。
+
+  ```sql
+  -- 4.1 版本
+  CREATE TABLE old_t (
+      k INT,
+      v VARIANT<properties('variant_max_subcolumns_count' = '0')>
+  )
+  DUPLICATE KEY(k) DISTRIBUTED BY HASH(k) BUCKETS 1;
+  INSERT INTO old_t VALUES (1, PARSE_TO_VARIANT('{"a": 1, "b": "x"}'));
+
+  -- 升级到 4.2 版本后：new_t 的定义与 old_t 相同，count 也是 0
+  CREATE TABLE new_t LIKE old_t;
+  INSERT INTO new_t SELECT * FROM old_t;
+
+  SET describe_extend_variant_column = true;
+  DESC old_t;  -- 列出子列 v.a 和 v.b，因为 old_t 保持原有语义
+  DESC new_t;  -- 不列出子列，因为 new_t 把 a 和 b 存入稀疏列
+  ```
 - 稀疏列支持 sharding：通过将稀疏子路径分散到多个稀疏列中，降低单列读取负担、提升读取效率；可通过 `variant_sparse_hash_shard_count` 指定稀疏列的实际存储个数。
 
 **参考说明**
@@ -528,7 +556,7 @@ CREATE TABLE example_table (
 
 <table>
 <tr><td>稀疏列属性</td><td>描述</td></tr>
-<tr><td>`variant_max_subcolumns_count`</td><td>控制可参与子列列式提取（Subcolumnization）的路径数上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），已经覆盖大多数 workload；避免设置得过大。若场景确实需要大规模自动提取子列，优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。0 表示不限制；不推荐超过 10000。</td></tr>
+<tr><td>`variant_max_subcolumns_count`</td><td>控制可参与子列列式提取（Subcolumnization）的路径数上限；超过后新增路径可能存放于共享数据结构。默认 2048（推荐），已经覆盖大多数 workload；避免设置得过大。若场景确实需要大规模自动提取子列，优先参考 <a href="./variant-workload-guide#doc-mode-template">DOC mode</a>。从 4.2 版本起，0 表示动态路径都不参与子列列式提取（Subcolumnization），全部存入稀疏列；4.2 版本之前创建的列保持原有含义，即不限制。不推荐超过 10000。</td></tr>
 <tr><td>`variant_enable_typed_paths_to_sparse`</td><td>默认指定了 Path 类型后，该 Path 一定会参与子列列式提取（Subcolumnization），且不计入 `variant_max_subcolumns_count`。设置为 `true` 后也会计入阈值，可能被收敛到共享结构。</td></tr>
 <tr><td>`variant_sparse_hash_shard_count`</td><td>控制稀疏列的分片数量。将稀疏子列分散存储到多个稀疏列中，以提升查询性能。默认值为 1，建议根据稀疏子列数量适当调整。</td></tr>
 </table>
