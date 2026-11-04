@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
-    "sourceHash": "7fff46f665bc5c1bfa9968a5cf8f0d5533f84b60149324aa47683796f8bfad71",
-    "sourceTechnicalHash": "01577e3e555e96d4d2972afe2d1172bcb187f66aa87a4bee7e30de25084df2f0",
-    "targetHash": "1c97b84df6fb7144c27a5c6d98c4bbbd5b5389f7a81aef790ded3126f4997abc",
+    "sourceCommit": "d96999b7523c0017b3cb53954507efb41ddbf922",
+    "sourceHash": "b742be3d1417bf6ddd95228d9eced76229e8ea0dc021e0b19068c4a934d9b4b7",
+    "sourceTechnicalHash": "4f7f7552d70446f083962a4e53755b6c04f3c683851a7f2754b9b8a0f68cf661",
+    "targetHash": "a67ca7141191650368699276f9ed806951052401a292fdb64ffb5a72b3d922bd",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T09:21:16.659Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T18:02:45.374Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "glossary-version-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "b742be3d1417bf6ddd95228d9eced76229e8ea0dc021e0b19068c4a934d9b4b7",
+      "targetHash": "a67ca7141191650368699276f9ed806951052401a292fdb64ffb5a72b3d922bd",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"<column_name>\"]; received [\"inlineCode\",null,null,\"<database_name>\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"table_name\"]; received [\"inlineCode\",null,null,\"<table_name>\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"WITH SYNC\"]; received [\"inlineCode\",null,null,\"<column_name>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 4: expected [\"inlineCode\",null,null,\"<column_name>\"]; received [\"inlineCode\",null,null,\"<database_name>\"]\nprotected node 5: expected [\"inlineCode\",null,null,\"table_name\"]; received [\"inlineCode\",null,null,\"<table_name>\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"WITH SYNC\"]; received [\"inlineCode\",null,null,\"<column_name>\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
+        "blob": "65c42f1f280aaebbcc16f69406b81fe01f3b416f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/statistics/ANALYZE.md",
+        "blob": "b389d1c35a2fe6bb2ae55feca859afaed0b411f9"
+      }
+    }
   }
 }
