@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "fd0df854ee8804ca79d3a4abe48fd84074bc50afb8d3b534821f7a59ccc5eb75",
-    "sourceTechnicalHash": "b55a161f48a22529890dcc0e1f1fe21c2c03df2c82f2f38bb814921850fffa42",
-    "targetHash": "d5fde9d64e43a504f5414ab38126853fc5871e07ed2d19ee9d705c1794b428fc",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "09e25ad65acddd4607df222906f48f70239365266e5d2d40cce56c882d411207",
+    "sourceTechnicalHash": "8493dc54e70d8b5ff2f5ced947f91a1d59acaf99e18ec3a1bdfac0f214b4f2b9",
+    "targetHash": "7308c0b8576513f83ae9fe6b29413a9a1d91da24c943b7659c55ec5ba1e2aeec",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:18:12.992Z",
+    "translatedAt": "2026-11-04T07:55:12.980Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "fd0df854ee8804ca79d3a4abe48fd84074bc50afb8d3b534821f7a59ccc5eb75",
-      "targetHash": "d5fde9d64e43a504f5414ab38126853fc5871e07ed2d19ee9d705c1794b428fc",
+      "sourceHash": "09e25ad65acddd4607df222906f48f70239365266e5d2d40cce56c882d411207",
+      "targetHash": "7308c0b8576513f83ae9fe6b29413a9a1d91da24c943b7659c55ec5ba1e2aeec",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 작업 단계 / 구성 매개변수 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 열 매핑 또는 데이터 변환이 필요한 MySQL 단일 테이블의 Doris 실시간 동기화 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 18: expected [\"link\",\"../../../../data-operate/import/import-way/insert-into-manual.md#import-configuration-parameters\",null]; received [\"link\",\"../../../../data-operate/import/import-way/insert-into-manual.md#데이터-적재-구성-매개변수\",null]\nprotected node 20: expected [\"link\",\"./continuous-load-overview.md#common-parameters\",null]; received [\"link\",\"./continuous-load-overview.md#일반-매개변수\",null]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "4a1667c489b2ee575ecccbc9f7a11c9609d4c710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "5fbe01e00a2022eb4449bd63d8489bbe984e7e2a"
+      }
     }
   }
 }
