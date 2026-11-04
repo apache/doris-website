@@ -23,7 +23,7 @@
 | char(N)       | char(N)       |                           |
 | varchar(N)    | varchar(N)    |                           |
 | string        | string        |                           |
-| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`。 |
+| binary        | VARBINARY | 自 4.1.5 版本起固定映射为 `VARBINARY`，属性 `enable.mapping.varbinary` 不再生效（不设置、设为 `false`、设为 `true` 结果均为 `VARBINARY`）。4.1.4.1 及之前默认映射为 `string`，设为 `true` 时才映射为 `VARBINARY`。 |
 | timestamp with local time zone| TIMESTAMPTZ(6) | 自 4.1.5 版本起固定映射为 `TIMESTAMPTZ(6)`。精度最高为 6，超过的部分会丢失。 |
 | array         | array         |                           |
 | map           | map           |                           |
