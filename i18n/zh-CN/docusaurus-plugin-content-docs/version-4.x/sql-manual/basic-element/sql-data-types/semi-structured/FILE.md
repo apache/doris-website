@@ -33,7 +33,7 @@ FILE
 | inline | VARBINARY | NULL 或二进制内容，包括空字节序列，受 VARBINARY 单值长度限制。 |
 
 - 对于非 NULL FILE，uri 或 inline 至少一项非 NULL。存在 inline 时，其余五个字段均可为 NULL；inline 也可与元数据同时存在，已提供的字段仍须满足各自的约束。
-- URI 按原值保存，不检查格式，也不编码或解码。通过 CAST 构造 FILE 不会访问对应对象，也不会核对 inline 是否与 URI、size 或 checksum 一致。
+- URI 按原值保存，不检查格式，也不编码或解码。Doris 不核对 inline 是否与 URI、size 或 checksum 一致。
 - offset 为 NULL 时，已提供的 size 表示从 0 开始的字节范围；两者均非 NULL 时，范围为 `[offset, offset + size)`，其和不能超过 BIGINT 最大值 `9223372036854775807`。
 - 已知 checksum 算法名称使用 `ETAG`、`MD5`、`CRC32`、`CRC32C` 或 `SHA-256`。ETAG 的值为非空字符串；MD5、CRC32/CRC32C、SHA-256 分别要求 32、8、64 位小写十六进制摘要。其他算法的名称及摘要均须非空。Doris 只校验声明格式，不计算或验证内容摘要。
 - MySQL 查询结果以六字段 JSON 对象展示 FILE，inline 使用 Base64 表示。
@@ -42,44 +42,10 @@ FILE
 
 - FILE 可用于查询表达式，暂不能在内表或外部 Catalog 中声明为表列，包括容器中嵌套的 FILE。
 - 完整 FILE 及包含 FILE 的容器不能用于比较、排序、哈希、分组、DISTINCT 或 MAP key；这些操作应先提取普通标量字段。
-- FILE 支持从 STRUCT 显式转换，包括嵌套的 STRUCT 值，不支持转换为其他类型。FILE 与 STRUCT 之间不支持隐式转换，须使用 CAST。完整规则见 [FILE 类型转换](../conversion/file-conversion.md)。
+- CAST 和 TRY_CAST 不支持 FILE 与其他类型之间的转换，包括嵌套 FILE。NULL 及相同类型转换规则见 [FILE 类型转换](../conversion/file-conversion.md)。
 - UDF 的参数、返回值及聚合中间类型不支持 FILE，包括嵌套 FILE。
 
 ## 获取 FILE
-
-### 根据元数据构造
-
-通过显式 CAST，将六字段 STRUCT 值转换为 FILE。值为 NULL 的字段也须提供；转换本身不访问远端存储。
-
-```sql
-SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f;
-```
-```text
-+-----------------------------------------------------------------------------------------------------------+
-| f                                                                                                         |
-+-----------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+-----------------------------------------------------------------------------------------------------------+
-```
-
-也可以构造只有 inline 内容的 FILE：
-
-```sql
-SELECT CAST(NAMED_STRUCT(
-    'uri', NULL, 'offset', NULL, 'size', NULL,
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f;
-```
-```text
-+--------------------------------------------------------------------------------------------+
-| f                                                                                          |
-+--------------------------------------------------------------------------------------------+
-| {"uri":null,"offset":null,"size":null,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+--------------------------------------------------------------------------------------------+
-```
 
 ### 获取远端对象元数据
 
@@ -129,15 +95,10 @@ resource 的创建方式和访问要求见各函数文档。
 SELECT ELEMENT_AT(f, 'uri') AS uri,
        f['size'] AS size,
        FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
+FROM (SELECT TO_FILE('file_test_s3_resource',
+    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
 ```
 ```text
-+-------------------------+------+------------+
-| uri                     | size | inline_hex |
-+-------------------------+------+------------+
-| s3://bucket/picture.jpg |    3 | 616263     |
-+-------------------------+------+------------+
+uri	size	inline_hex
+s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663	NULL
 ```

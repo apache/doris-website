@@ -145,18 +145,15 @@ SELECT ELEMENT_AT(parse_to_variant('[10, 20, 30]'), -1); -- 30
 
 6. Accessing a `FILE` field by its case-insensitive name.
 
+    Use the resource and object from the [TO_FILE example](../to-file.md).
+
     ```sql
     SELECT ELEMENT_AT(f, 'URI') AS uri,
            ELEMENT_AT(f, 'size') AS size
-    FROM (SELECT CAST(NAMED_STRUCT(
-        'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-        'content_type', NULL, 'checksum', NULL, 'inline', NULL
-    ) AS FILE) AS f) t;
+    FROM (SELECT TO_FILE('file_test_s3_resource',
+        's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
     ```
     ```text
-    +-------------------------+------+
-    | uri                     | size |
-    +-------------------------+------+
-    | s3://bucket/picture.jpg |    3 |
-    +-------------------------+------+
+    uri	size
+    s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663
     ```

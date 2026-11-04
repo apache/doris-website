@@ -25,7 +25,7 @@ AS <uri>, <offset>, <size>, <content_type>, <checksum>, <inline>
 
 | Parameter | Description |
 | --- | --- |
-| `<file>` | Required FILE expression or NULL FILE. Ordinary STRUCT is not accepted; explicitly CAST it to FILE first. |
+| `<file>` | Required FILE expression or NULL FILE. |
 | `<table_alias>` | Alias for the expanded row. |
 | Field aliases | Exactly six aliases, in the displayed order. |
 
@@ -44,21 +44,18 @@ Returns the following six nullable columns. A non-NULL FILE produces exactly one
 
 ## Example
 
+Use the resource and object from the [TO_FILE example](../scalar-functions/to-file.md).
+
 ```sql
 SELECT uri, size, HEX(CAST(inline_bytes AS STRING)) AS inline_hex
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 'urn:example:file', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'00FF80'
-) AS FILE) AS f) t
+FROM (SELECT TO_FILE('file_test_s3_resource',
+    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t
 LATERAL VIEW EXPLODE_FILE(f) e AS uri, off, size, mime, checksum, inline_bytes;
 ```
 
 ```text
-+------------------+------+------------+
-| uri              | size | inline_hex |
-+------------------+------+------------+
-| urn:example:file |    3 | 00FF80     |
-+------------------+------+------------+
+uri	size	inline_hex
+s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663	NULL
 ```
 
 ```sql

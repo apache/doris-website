@@ -33,7 +33,7 @@ FILE
 | inline | VARBINARY | NULL or binary content, including empty bytes, subject to the VARBINARY value length limit. |
 
 - For a non-NULL FILE, uri or inline must be non-NULL. When inline is present, the other five fields may all be NULL. Inline can also coexist with metadata; any supplied fields must satisfy their own constraints.
-- URI strings are stored without syntax validation, encoding, or decoding. Constructing FILE with CAST does not access the referenced object. Doris does not check whether inline matches the URI, size, or checksum.
+- URI strings are stored without syntax validation, encoding, or decoding. Doris does not check whether inline matches the URI, size, or checksum.
 - When offset is NULL, a supplied size describes the range starting at 0. When both are present, the range is `[offset, offset + size)`; their sum must not exceed the BIGINT maximum, `9223372036854775807`.
 - Checksum declarations use `ETAG`, `MD5`, `CRC32`, `CRC32C`, or `SHA-256` for known algorithms. ETAG is an opaque nonempty value; MD5, CRC32/CRC32C, and SHA-256 require 32, 8, and 64 lowercase hexadecimal digits respectively. Other algorithm names and digests must both be nonempty. Doris validates the declaration without calculating or verifying the content digest.
 - MySQL query results display FILE as a six-field JSON object, with inline encoded as Base64.
@@ -42,44 +42,10 @@ FILE
 
 - FILE is available in query expressions. FILE columns cannot be declared in internal tables or external catalogs, including FILE nested in containers.
 - Whole FILE values and containers containing FILE cannot be used for comparison, sorting, hashing, grouping, DISTINCT, or MAP keys. Extract an ordinary scalar field for these operations.
-- FILE supports explicit conversion from STRUCT, including nested STRUCT values. Casting FILE to other types is unsupported. There is no implicit conversion between FILE and STRUCT; use CAST. See [FILE Type Conversion](../conversion/file-conversion.md).
+- CAST and TRY_CAST do not support conversion between FILE and other types, including nested FILE. See [FILE Type Conversion](../conversion/file-conversion.md) for NULL and identity casts.
 - FILE arguments, return values, and aggregate intermediate types are unsupported in UDFs, including nested FILE.
 
 ## Obtaining FILE Values
-
-### Construct from metadata
-
-Use an explicit CAST to construct FILE from a six-field STRUCT value. Fields whose values are NULL must still be included. This conversion does not access remote storage.
-
-```sql
-SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f;
-```
-```text
-+-----------------------------------------------------------------------------------------------------------+
-| f                                                                                                         |
-+-----------------------------------------------------------------------------------------------------------+
-| {"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+-----------------------------------------------------------------------------------------------------------+
-```
-
-An inline-only FILE is also valid:
-
-```sql
-SELECT CAST(NAMED_STRUCT(
-    'uri', NULL, 'offset', NULL, 'size', NULL,
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f;
-```
-```text
-+--------------------------------------------------------------------------------------------+
-| f                                                                                          |
-+--------------------------------------------------------------------------------------------+
-| {"uri":null,"offset":null,"size":null,"content_type":null,"checksum":null,"inline":"YWJj"} |
-+--------------------------------------------------------------------------------------------+
-```
 
 ### Obtain remote object metadata
 
@@ -129,15 +95,10 @@ Read `uri`, `offset`, `size`, `content_type`, or `checksum` with `ELEMENT_AT(f, 
 SELECT ELEMENT_AT(f, 'uri') AS uri,
        f['size'] AS size,
        FROM_BINARY(FL_GET_BINARY(f)) AS inline_hex
-FROM (SELECT CAST(NAMED_STRUCT(
-    'uri', 's3://bucket/picture.jpg', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE) AS f) t;
+FROM (SELECT TO_FILE('file_test_s3_resource',
+    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg') AS f) t;
 ```
 ```text
-+-------------------------+------+------------+
-| uri                     | size | inline_hex |
-+-------------------------+------+------------+
-| s3://bucket/picture.jpg |    3 | 616263     |
-+-------------------------+------+------------+
+uri	size	inline_hex
+s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg	158663	NULL
 ```

@@ -66,19 +66,19 @@ TO_JSON(value)
 
 ### FILE 值
 
+使用 [TO_FILE 示例](../to-file.md)中的 resource 和对象。
+
 :::note
 自 4.2.0 起支持
 :::
 
 ```sql
-SELECT TO_JSON(CAST(NAMED_STRUCT(
-    'uri', 'urn:example', 'offset', NULL, 'size', CAST(3 AS BIGINT),
-    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
-) AS FILE)) AS j;
+SELECT TO_JSON(TO_FILE('file_test_s3_resource',
+    's3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg')) AS j;
 ```
 
 ```text
-{"uri":"urn:example","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}
+{"uri":"s3://linrrzqqq/doris-file-type-test/my-github-avatar.jpg","offset":null,"size":158663,"content_type":"image/jpeg","checksum":"ETAG:9CE0C3466E8F035CD0A6CE3389982B15","inline":null}
 ```
 
 ```sql
