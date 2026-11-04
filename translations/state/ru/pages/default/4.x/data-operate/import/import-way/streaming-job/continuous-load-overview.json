@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
-    "sourceTechnicalHash": "e6a7a39aedeb314a75f78ccd94bac7d0861aec1bada9a2233641364ccf34a9ce",
-    "targetHash": "3782b4586098e79b0ed4f3ffdb6f39b1bf912fbd3c13edbfb025600b4f749480",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "00c25145958118a203551d143f137f7dabc171bb2456c4818d7c3c73a869a658",
+    "sourceTechnicalHash": "74ffef51d21023d72680cce539fcb410f97ccb6a5c15f75f88393b3cd3b2ca65",
+    "targetHash": "50c2f9ddc8ad11a53bb04a06071c5b4edc76e338e249f5c1a03a070db9b1ef24",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:32:55.019Z",
+    "translatedAt": "2026-11-04T21:57:25.749Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
-      "targetHash": "3782b4586098e79b0ed4f3ffdb6f39b1bf912fbd3c13edbfb025600b4f749480",
+      "sourceHash": "00c25145958118a203551d143f137f7dabc171bb2456c4818d7c3c73a869a658",
+      "targetHash": "50c2f9ddc8ad11a53bb04a06071c5b4edc76e338e249f5c1a03a070db9b1ef24",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: обзор функции + решение по выбору архитектуры -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- Применимые сценарии: выбор приёма данных в реальном времени / операции непрерывной загрузки -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: решение по выбору архитектуры -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 42: expected [\"code\",\"sql\",null,\"select * from jobs(\\\"type\\\"=\\\"insert\\\") where ExecuteType = \\\"STREAMING\\\";\"]; received [\"code\",\"sql\",null,\"select * from jobs(\\\\\\\"type\\\\\\\"=\\\\\\\"insert\\\\\\\") where ExecuteType = \\\\\\\"STREAMING\\\\\\\";\"]\nprotected node 44: expected [\"code\",\"sql\",null,\"select * from tasks(\\\"type\\\"=\\\"insert\\\") where jobId='<job_id>';\"]; received [\"code\",\"sql\",null,\"select * from tasks(\\\\\\\"type\\\\\\\"=\\\\\\\"insert\\\\\\\") where jobId='<job_id>';\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "ce0cdf257b6230520990f1b2ba154062193d4257"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "c9131e8ac3e3db857973a9593d91cb8089807924"
+      }
     }
   }
 }

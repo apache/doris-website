@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "508b25fe6077b4957db06934598de484c2746b09c3bf30c18258bb32cba30563",
-    "sourceTechnicalHash": "92f984bce32b5c8d3458ed1ceda80292a25fc2c41d8b76bfdb8699d5c3d50670",
-    "targetHash": "9c46b2d2a705afe0e61ce2af1a41a0006f3a5ff897aee5f9423c6d9c559041cd",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "7ebfb0f3f1684c91da2dda51b2149033a36f99654a2f5ccf6bc58b239abe87f6",
+    "sourceTechnicalHash": "7c6e97deaa54756d7275994c78579359e37b101a4e34df24700d58426288599a",
+    "targetHash": "77deb118ead359a672c4a99f2bf76588b8ac40eb3214e6d5e28e2eea006b0d1b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T17:23:31.361Z",
+    "translatedAt": "2026-11-04T21:20:46.883Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "508b25fe6077b4957db06934598de484c2746b09c3bf30c18258bb32cba30563",
-      "targetHash": "9c46b2d2a705afe0e61ce2af1a41a0006f3a5ff897aee5f9423c6d9c559041cd",
+      "sourceHash": "7ebfb0f3f1684c91da2dda51b2149033a36f99654a2f5ccf6bc58b239abe87f6",
+      "targetHash": "77deb118ead359a672c4a99f2bf76588b8ac40eb3214e6d5e28e2eea006b0d1b",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура / Параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: Проверка перед развертыванием / Подготовка среды -->\"]\nprotected node 4: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "6718569cb99b94f34684aa4fbfc4204ec6b8814c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "570881d7982281e302d0078b95904f89a4174f90"
+      }
     }
   }
 }
