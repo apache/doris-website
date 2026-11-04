@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "3d7cd8411f1c3367254819687d23b825a41bd4b94ecb18ebaf6912b9c85c9593",
-    "sourceTechnicalHash": "2b34cee584df9be347573e9278e85ce2f08dfca451b28183b79d628d8f3434b7",
-    "targetHash": "55aa392123e6aad45832d84355075387bf20fd6edf19dcda189d71a4adb1fdce",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "0bebbdd5ea7911fffd3d38e10ac335954ff453c697a76a14cba1e7114662f90f",
+    "sourceTechnicalHash": "5e4de7c0890bfeabd9b2df342806c8b5098a22185f627fa56134117a6c6b8a36",
+    "targetHash": "c0d110fc9793ee18d16b3670cd768d617ad327351db53a2ec68b5895dedc73ca",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T05:35:37.918Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "0bebbdd5ea7911fffd3d38e10ac335954ff453c697a76a14cba1e7114662f90f",
+      "targetHash": "c0d110fc9793ee18d16b3670cd768d617ad327351db53a2ec68b5895dedc73ca",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]; received [\"1\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"compute_group\"]; received [\"inlineCode\",null,null,\"1\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"session.<variable_name>\"]; received [\"inlineCode\",null,null,\"compute_group\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: PostgreSQL real-time data sync / single-table CDC ingestion with SQL mapping -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: PostgreSQL リアルタイムデータ同期 / SQL マッピングによる単一テーブル CDC 取り込み -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]; received [\"1\",\"2\",\"4.1.5\",\"63\",\"63\",\"8\"]\nprotected node 72: expected [\"inlineCode\",null,null,\"compute_group\"]; received [\"inlineCode\",null,null,\"1\"]\nprotected node 73: expected [\"inlineCode\",null,null,\"session.<variable_name>\"]; received [\"inlineCode\",null,null,\"compute_group\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "b1075456f088d41265b15441421181c260c30eaa"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-postgresql-table.md",
+        "blob": "7f78b5b2a780fa76a66a5bade4d70249cf0a30e8"
+      }
+    }
   }
 }

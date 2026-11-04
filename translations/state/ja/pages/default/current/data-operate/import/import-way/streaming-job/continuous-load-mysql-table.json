@@ -8,13 +8,79 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "d62005014c4520682968b5c33223d0747eeac92585562e8c3a4e0de5a704ce9e",
-    "sourceTechnicalHash": "2f63485fcb9cb1070f993e858ead67e83f6d9a7bc39a6e050c659dc3fea1e790",
-    "targetHash": "c00dc0f34901ee8c7897cd0e49c52d3b8aebcf0173c7e858fd6914478715b5c7",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "e68f1e6e67ed6765bf762406505c061c997f8d9cfd4cc0209549e327c86dcc2d",
+    "sourceTechnicalHash": "16ea972b163cda4c21bad73b86692f99b367a0d0752d3af354fbe56af73815ff",
+    "targetHash": "ba278cd0d2479e8636dc926f077eb25063d3941f63e2ff685741ab4a0f5a9e2b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T05:00:26.059Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "e68f1e6e67ed6765bf762406505c061c997f8d9cfd4cc0209549e327c86dcc2d",
+      "targetHash": "ba278cd0d2479e8636dc926f077eb25063d3941f63e2ff685741ab4a0f5a9e2b",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]\nprotected node 65: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 66: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "missed comma between flow collection entries at line 5, column 2:\n    2:\n     ^"
+            },
+            {
+              "check": "syntax",
+              "message": "missed comma between flow collection entries at line 5, column 2:\n    2:\n     ^"
+            },
+            {
+              "check": "frontmatter",
+              "message": "missed comma between flow collection entries at line 5, column 2:\n    2:\n     ^"
+            },
+            {
+              "check": "protected-content",
+              "message": "missed comma between flow collection entries at line 5, column 2:\n    2:\n     ^"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 操作手順 / 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: 列マッピングまたはデータ変換を伴う MySQL 単一テーブルの Doris へのリアルタイム同期 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\",\"4.1.5\"]\nprotected node 65: expected [\"inlineCode\",null,null,\"offset\"]; received [\"inlineCode\",null,null,\"ALTER JOB\"]\nprotected node 66: expected [\"inlineCode\",null,null,\"ALTER JOB\"]; received [\"inlineCode\",null,null,\"offset\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "beca83534df4d29735ffa6c344a27ffaa3cd896f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "ab620b1a3ee6d659419256a7fc50c4bc14e61b65"
+      }
+    }
   }
 }

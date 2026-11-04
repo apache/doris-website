@@ -1,66 +1,70 @@
 ---
 {
-    "title": "データ型のマッピング",
+    "title": "データ型マッピング",
     "language": "ja",
-    "description": "Doris Streaming Job CDC のデータ型マッピング。テーブルの自動作成時に上流の MySQL の型が Doris のカラム型にどう対応するか、および Doris への書き込み時に値がどう変換されるかを説明します。"
+    "description": "Doris Streaming Job CDC のデータ型マッピング: 自動テーブル作成時に上流の MySQL 型が Doris の列型にどのようにマッピングされるか、および Doris に書き込む際に値がどのように変換されるか。"
 }
 ---
 
-<!-- Knowledge type: Reference / data type mapping -->
+:::caution 実験的機能
 
-以下の表に、上流の MySQL の各カラム型と Doris のカラム型の対応を示します。どちらの同期方法でも同じマッピングを使用し、異なるのはターゲットテーブルの作成者だけです。
-
-- **テーブル自動作成による同期（Auto Table Creation Sync）**：Doris が上流のスキーマを読み取り、この表に示す Doris のカラム型でターゲットテーブルを自動的に作成します。
-- **SQL マッピングによる同期（SQL Mapping Sync）**：各カラムに互換性のある Doris の型を使用して、ターゲットテーブルを自分で作成します。
-
-どちらの場合も、値の書き込みには同じマッピングが適用されます。サポートされていない型については、[制限事項](./continuous-load-overview.md#limitations)を参照してください。
-
-## JDBC URL パラメータの正規化 {#jdbc-url-parameter-normalization}
-
-> バージョン 4.1.4 以降でサポートされます。
-
-MySQL データソースを使用する Streaming Job を作成する場合（または `cdc_stream()` テーブル関数を使用する場合）、`jdbc_url` で明示的に設定しない限り、Doris は次のパラメータを自動的に追加します。
-
-| パラメータ | 自動追加される値 | 効果 |
-| --- | --- | --- |
-| `tinyInt1isBit` | `false` | `TINYINT(1)` を `TINYINT`（`1` / `0`）として読み取り、`BOOLEAN`（`true` / `false`）としては読み取らない |
-| `yearIsDateType` | `false` | `YEAR` を日付ではなく整数の年として読み取る |
-| `useUnicode` | `true` | Unicode エンコーディングを使用する |
-| `characterEncoding` | `utf-8` | 文字セットに UTF-8 を使用する |
-
-これらのパラメータのいずれかを `jdbc_url` で明示的に設定した場合、Doris はその値を保持し、上書きしません。PostgreSQL の `jdbc_url` は正規化されません。
-
-:::caution アップグレード時の影響
-
-4.1.3 以前からアップグレードすると、既存の MySQL CDC ジョブの `TINYINT(1)` カラムは `1` / `0` として報告され、以前の `true` / `false` とは異なります。また、`YEAR` カラムは日付ではなく整数の年として報告されます。以前の動作を維持するには、`tinyInt1isBit=true` と `yearIsDateType=true` を `jdbc_url` で明示的に設定してください。
+Doris の継続的データロードは実験的機能であり、Doris 4.1.5 以降でサポートされています。
 
 :::
 
-## MySQL から Doris へのマッピング
+<!-- Knowledge type: Reference / data type mapping -->
 
-| MySQL の型 | Doris の型 | 備考 |
+以下のテーブルは、上流 MySQL の各列型が Doris の列型にどのようにマッピングされるかを示します。マッピングは単一で、どちらの同期方式でも共有されます。違いはターゲットテーブルを作成する主体だけです。
+
+- **自動テーブル作成同期 (Auto Table Creation Sync)**: Doris は上流スキーマを読み取り、これらの Doris 列型でターゲットテーブルを自動的に作成します。
+- **SQL マッピング同期 (SQL Mapping Sync)**: 自分でターゲットテーブルを作成し、各列に互換性のある Doris 型を使用します。
+
+どちらの場合も、値は同じマッピングに従って書き込まれます。サポートされていない型については、[制限事項](./continuous-load-overview.md#limitations) を参照してください。
+
+## JDBC URL パラメータの正規化 {#jdbc-url-parameter-normalization}
+
+MySQL データソースで Streaming Job を作成する場合（または `cdc_stream()` テーブル関数を使用する場合）、`jdbc_url` に以下のパラメータを明示的に設定していない限り、Doris はそれらを自動的に追加します。
+
+| パラメータ | 注入値 | 効果 |
 | --- | --- | --- |
-| `BOOLEAN` / `TINYINT(1)` | `TINYINT` | **バージョン 4.1.4 以降**は `TINYINT`（値は `1` / `0`）にマッピングされる。4.1.4 より前は `BOOLEAN`（`true` / `false`）にマッピングされていた。理由については、[JDBC URL パラメータの正規化](#jdbc-url-parameter-normalization)を参照 |
+| `tinyInt1isBit` | `false` | `TINYINT(1)` は `BOOLEAN`（`true` / `false`）ではなく、`TINYINT`（`1` / `0`）として読み取られます |
+| `yearIsDateType` | `false` | `YEAR` は日付ではなく整数年として読み取られます |
+| `useUnicode` | `true` | Unicode エンコーディングを使用します |
+| `characterEncoding` | `utf-8` | 文字セットとして UTF-8 を使用します |
+
+これらのパラメータが `jdbc_url` に明示的に設定されている場合、Doris はその値を保持し、上書きしません。PostgreSQL の `jdbc_url` は正規化されません。
+
+:::caution アップグレードの影響
+
+`TINYINT(1)` を `BOOLEAN` として、または `YEAR` を日付として読み取るには、`jdbc_url` にそれぞれ `tinyInt1isBit=true` または `yearIsDateType=true` を明示的に設定します。
+
+:::
+
+## MySQL から Doris へ {#mysql-to-doris}
+
+| MySQL 型 | Doris 型 | 注記 |
+| --- | --- | --- |
+| `BOOLEAN` / `TINYINT(1)` | `TINYINT` | `TINYINT` にマッピングされます（値は `1` / `0`）。理由については [JDBC URL パラメータの正規化](#jdbc-url-parameter-normalization) を参照してください |
 | `TINYINT` | `TINYINT` | `UNSIGNED` → `SMALLINT` |
 | `SMALLINT` | `SMALLINT` | `UNSIGNED` → `INT` |
 | `MEDIUMINT` | `INT` | `UNSIGNED` → `INT` |
 | `INT` | `INT` | `UNSIGNED` → `BIGINT` |
 | `BIGINT` | `BIGINT` | `UNSIGNED` → `LARGEINT` |
-| `YEAR` | `SMALLINT` | **バージョン 4.1.4 以降**は値を日付ではなく整数の年として読み取る。MySQL のゼロ年（`0000`）は `0` として保持される |
+| `YEAR` | `SMALLINT` | 値は日付ではなく整数年として読み取られます。MySQL のゼロ年（`0000`）は `0` のまま保持されます |
 | `FLOAT` | `FLOAT` | |
 | `DOUBLE` | `DOUBLE` | |
-| `DECIMAL(p,s)` | `DECIMAL(p,s)` | 精度が非常に高い場合は `STRING` にフォールバックする |
+| `DECIMAL(p,s)` | `DECIMAL(p,s)` | 非常に高い精度の場合は `STRING` にフォールバックします |
 | `DATE` | `DATE` | |
-| `DATETIME` | `DATETIME(s)` | マイクロ秒単位の精度（0～6 桁）が保持される |
-| `TIMESTAMP` | `DATETIME(s)` | サーバーのタイムゾーンに正規化される |
-| `TIME` | `STRING` | 文字列としてシリアライズされる。例：`12:34:56.000000` |
+| `DATETIME` | `DATETIME(s)` | マイクロ秒スケール（0–6）を保持します |
+| `TIMESTAMP` | `DATETIME(s)` | サーバーのタイムゾーンに正規化されます |
+| `TIME` | `STRING` | 文字列としてシリアル化されます。例: `12:34:56.000000` |
 | `CHAR` | `CHAR` | |
 | `VARCHAR` | `VARCHAR` | |
 | `TINYTEXT` / `TEXT` / `MEDIUMTEXT` / `LONGTEXT` | `STRING` | |
-| `BINARY` / `VARBINARY` / `TINYBLOB` / `BLOB` / `MEDIUMBLOB` / `LONGBLOB` | `STRING` | Base64 でエンコードされた文字列 |
+| `BINARY` / `VARBINARY` / `TINYBLOB` / `BLOB` / `MEDIUMBLOB` / `LONGBLOB` | `STRING` | Base64 エンコードされた文字列 |
 | `BIT(1)` | `BOOLEAN` | |
-| `BIT(n>1)` | `STRING` | Base64 でエンコードされた文字列 |
-| `JSON` | `STRING` | JSON テキストとして保存される |
-| `ENUM` | `STRING` | ラベル値に変換される |
-| `SET` | `STRING` | コンマ区切りのラベルに変換される |
-| 空間型（`GEOMETRY`、`POINT` など）およびその他の型 | サポートされていない | このようなカラムを含むテーブルでは、テーブル自動作成が失敗する。SQL マッピングによる同期を使用して `SELECT` でキャストするか、そのカラムを除外する |
+| `BIT(n>1)` | `STRING` | Base64 エンコードされた文字列 |
+| `JSON` | `STRING` | JSON テキストとして格納されます |
+| `ENUM` | `STRING` | ラベル値に解決されます |
+| `SET` | `STRING` | カンマ区切りのラベルに解決されます |
+| 空間型（`GEOMETRY`、`POINT` など）およびその他の型 | サポート対象外 | このような列を含むテーブルでは自動テーブル作成が失敗します。SQL マッピング同期（`SELECT` でキャスト）を使用するか、列を除外してください |

@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
-    "sourceCommit": "aaeed3f933f749cfa0ec725382e72ca23a4162e4",
-    "sourceHash": "7737d87bb7148eb1824454935d4fa9b8d208a6614156712cc1c6db0535b86b2d",
-    "sourceTechnicalHash": "beb3c16b2f0a2582b5ff477aef8fa2ed7195ee654fe03a4418184427095ef3b1",
-    "targetHash": "8b4d49fe4348a9ed04d9e94405a68d4e875bb422306240a0bd29cade9a6243e2",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+    "sourceTechnicalHash": "a9ca2611ca188e7b37eb2049a948e4ff249441596b31fa147f726c4ba840e6d9",
+    "targetHash": "17cd26cb7b377d440a5205eca45330ad11f4b72a28a935e88202dbff35a7017e",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-17T04:51:55.086Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-11-04T05:38:12.293Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+      "targetHash": "17cd26cb7b377d440a5205eca45330ad11f4b72a28a935e88202dbff35a7017e",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "936d05dce30d54c265d1a99b4a41f418f65d4235"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "de5481bb4fed8a0824ed879ceb801a3529e4b855"
+      }
+    }
   }
 }
