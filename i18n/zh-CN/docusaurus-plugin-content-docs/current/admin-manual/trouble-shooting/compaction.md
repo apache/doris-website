@@ -102,3 +102,35 @@ compaction 并发线程数在 BE 的配置文件中配置，包括下面几个�
 - `max_base_compaction_threads`：base compaction 的线程数，默认是 4
 - `max_cumu_compaction_threads`：cumulative compaction 的线程数，默认是 -1，表示每块盘 1 个线程
 
+## MOW 大 Tablet 的 Compaction 内存开销 {#mow-compaction-memory}
+
+Unique Key 模型的写时合并（Merge-on-Write，MOW）表在执行 Compaction 时，需要在内存中维护行号转换映射（rowid conversion map），将输入 Rowset 中的行位置对应到输出 Rowset 中的新位置，以便更新 delete bitmap。对于行数较多的 Tablet，尤其是包含大量历史数据的 Base Compaction，这部分内存可能很大，导致 Compaction 因内存不足而失败。
+
+### 内存如何随行数增长
+
+该映射为参与合并的输入 Segment 中的每一条物理行预分配一个槽位，记录目标 Segment 的位置和目标行号。每个槽位包含两个 32 位整数，主体约占 8 字节，因此可以按以下公式估算：
+
+```text
+映射主体内存 ≈ 本次参与合并的输入物理行数之和 × 8 字节
+```
+
+输入物理行数包括尚未通过 Compaction 清理的历史版本。即使某条旧行已被标记删除、最终不会写入输出 Rowset，预分配的槽位仍然占用内存，因此不能直接用查询返回的有效行数来估算。该映射会保留到 Compaction 任务结束，不会随着每个读取批次的完成而释放。
+
+这只是映射主体的估算值，实际 Compaction 还需要容器、读取缓冲、写入缓冲和索引等内存。Tablet 的压缩后数据大小与物理行数没有固定比例，窄表或压缩率较高的表，即使磁盘体积不大，也可能产生较大的映射。
+
+### 计算示例
+
+假设某个 MOW Tablet 的 Base Rowset 包含 10 亿条物理行，本次 Base Compaction 还需要合并包含 1 亿条物理行的增量 Rowset。即使这 1 亿条增量全部更新已有 Key，最终只输出 10 亿条有效记录，映射仍需要按输入的 11 亿条物理行分配：
+
+```text
+本次输入物理行数 = 10 亿 + 1 亿 = 11 亿
+映射主体内存 ≈ 11 亿 × 8 字节 = 8.8 × 10^9 字节 ≈ 8.2 GiB
+```
+
+如果同一 BE 同时运行 4 个输入规模相同的 Compaction 任务，仅这些映射的主体就约占 32.8 GiB，尚未包含其他 Compaction 内存及查询、导入等任务的内存。以上为计算示例，实际占用取决于各任务的输入规模和并发情况。
+
+### 排查和处理建议
+
+- 建表或新增分区时，除压缩后数据大小外，还应根据预计行数合理设置分区、分桶，并选择分布均匀的分桶键，避免单个 Tablet 积累过多行。参见[数据分桶](../../table-design/data-partitioning/data-bucketing.md)。已有分区的分桶数不能直接修改，处理已有超大 Tablet 时需评估重建表并迁移数据的方案。
+- 内存紧张时，可适当降低 Base Compaction 并发，为单个任务保留更多可用内存。降低并发只能减少同一 BE 上多个任务叠加的内存峰值，不能减小单个任务的映射；如果单个映射本身已超过可用内存，仅降低并发仍可能失败。
+- Vertical Compaction、较小的 `compaction_batch_size` 或较少的 `vertical_compaction_num_columns_per_group` 可以降低读取和列组处理的内存，但不能减少完整行号映射的大小。`compaction_memory_bytes_limit` 用于估算读取批次大小，并非行号映射或整个 Compaction 任务的内存硬上限。
