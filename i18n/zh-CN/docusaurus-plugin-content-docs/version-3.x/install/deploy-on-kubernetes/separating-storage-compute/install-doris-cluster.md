@@ -17,6 +17,8 @@
 - （推荐）如果使用机器直接部署，需要确保该机器能够被 Kubernetes 集群上的服务访问。FoundationDB 在机器上直接部署请参考存算分离部署文档中[部署前准备阶段的介绍](../../../compute-storage-decoupled/before-deployment)。
 - 在 Kubernetes 上部署请参考[在 Kubernetes 上部署 FoundationDB](install-fdb.md)。
 
+安装 FDB 前，核对 MetaService 构建产物包含的客户端库。不要假定较旧构建兼容 7.3 服务端；参见 [7.1 安装方案](install-fdb.md#fdb-71)及[资源规划](install-fdb.md#resource-planning)。
+
 ## 第 2 步：部署 Doris Operator
 ### 1. 下发资源定义
 ```shell
