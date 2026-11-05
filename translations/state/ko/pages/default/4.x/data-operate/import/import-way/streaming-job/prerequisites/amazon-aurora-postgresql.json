@@ -8,23 +8,22 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "5b6137a794933bd818e991a185a7e54bcd78525328fa6c954bf840a0eb31159e",
-    "sourceTechnicalHash": "b410b0cf409323389ff31a3d8a765777d8e6ad76dd7a8c06bda1b69bf5815cb0",
-    "targetHash": "244dd9555ceb2ed79e4fcd3173d4e3b51bc9df181b603a1cda1595a34e188fac",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+    "sourceTechnicalHash": "a7c93a4eea42e3639409532ec8e531f43371e5473d67a9cb9f43d8fe9986b7cd",
+    "targetHash": "30bdaf6f6e272747fdeb21c7262f597764e36dd8807091af26ab77d75675f6c3",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:19:44.006Z",
+    "translatedAt": "2026-11-05T20:32:33.267Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 1,
       "acceptedWithWarnings": false,
-      "sourceHash": "5b6137a794933bd818e991a185a7e54bcd78525328fa6c954bf840a0eb31159e",
-      "targetHash": "244dd9555ceb2ed79e4fcd3173d4e3b51bc9df181b603a1cda1595a34e188fac",
+      "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+      "targetHash": "30bdaf6f6e272747fdeb21c7262f597764e36dd8807091af26ab77d75675f6c3",
       "warnings": [],
       "history": [
         {
@@ -32,6 +31,16 @@
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "9dfa2f7f565395f502e0ab9103498d7037469829"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "7b53c9012900ccc16b7dc151290e2868f60cbe3a"
+      }
     }
   }
 }
