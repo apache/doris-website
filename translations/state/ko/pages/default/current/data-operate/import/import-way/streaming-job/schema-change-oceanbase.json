@@ -8,29 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-    "sourceCommit": "fc42f75f28a60e348a61a8c08f63ed48d4db6be6",
-    "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-    "sourceTechnicalHash": "4ac3778545d692c84078e2a00500536db7ea4e54563f4b2bca41f3cadf3047dc",
-    "targetHash": "82aa4321a7f5bff1b996ab18555541a47c78e83f5a0f299e8b741460249bc3e1",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+    "sourceTechnicalHash": "4726eea3433bba5ea731c67af17f402f74dc991aad7645397957c5a0450c6527",
+    "targetHash": "38c992f247968284d50cddd24346f74c083fdcf29ea7187e403b53905589c156",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T02:58:06.675Z",
+    "translatedAt": "2026-11-05T08:51:09.397Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-      "targetHash": "82aa4321a7f5bff1b996ab18555541a47c78e83f5a0f299e8b741460249bc3e1",
+      "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+      "targetHash": "38c992f247968284d50cddd24346f74c083fdcf29ea7187e403b53905589c156",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 개념 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during OceanBase Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: OceanBase Auto Table Creation Sync 중 업스트림 스키마 변경 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
+        "blob": "3bd25cba8dd081db5e659cbdd0f3521f3e0daf20"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
+        "blob": "92f64a7e3bef1073e0a8661366596a06681967dc"
+      }
     }
   }
 }
