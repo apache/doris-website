@@ -1,14 +1,14 @@
 ---
 {
-    "title": "PostgreSQL スキーマ変更同期",
+    "title": "PostgreSQL のスキーマ変更の同期",
     "language": "ja",
-    "sidebar_label": "スキーマ変更同期",
-    "description": "PostgreSQL CDC Auto Table Creation Sync でサポートされるスキーマ変更と同期動作について説明します。",
+    "sidebar_label": "スキーマ変更の同期",
+    "description": "PostgreSQL CDC の自動テーブル作成による同期でサポートされるスキーマ変更と、その同期動作について説明します。",
     "keywords": [
-        "PostgreSQL Schema Change",
+        "PostgreSQL のスキーマ変更",
         "PostgreSQL CDC",
-        "Auto Table Creation Sync",
-        "Continuous Load",
+        "自動テーブル作成による同期",
+        "継続的なデータロード",
         "Streaming Job",
         "ADD COLUMN",
         "DROP COLUMN"
@@ -16,47 +16,47 @@
 }
 ---
 
-<!-- Knowledge type: Concept -->
-<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->
+:::caution 実験的機能
 
-PostgreSQL スキーマ変更同期は、継続的データロード中に、上流 PostgreSQL の列変更を Doris に自動適用します。この機能は [Auto Table Creation を使用する PostgreSQL CDC](./continuous-load-postgresql-database.md) にのみ適用されます。[SQL Mapping を使用する PostgreSQL CDC](./continuous-load-postgresql-table.md) ではサポートされません。
-
-:::tip
-
-PostgreSQL スキーマ変更同期は Doris 4.1.0 以降でサポートされます。
+Doris の継続的なデータロードは実験的機能であり、Doris 4.1.5 以降でサポートされます。
 
 :::
 
+<!-- Knowledge type: Concept -->
+<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->
+
+PostgreSQL のスキーマ変更の同期では、継続的なデータロード中に、上流の PostgreSQL テーブルの列変更が Doris に自動的に適用されます。この機能は [PostgreSQL CDC の自動テーブル作成](./continuous-load-postgresql-database.md) にのみ適用されます。[PostgreSQL CDC の SQL マッピング](./continuous-load-postgresql-table.md) ではサポートされません。
+
 ## サポートされるスキーマ変更 {#supported-schema-changes}
 
-| PostgreSQL 操作 | Doris の動作 |
+| PostgreSQL の操作 | Doris の動作 |
 | --- | --- |
-| `ADD COLUMN` | 同じ名前の列を、[PostgreSQL データ型マッピング](./data-type-mapping-postgresql.md) で定義された型で追加します。DEFAULT と `NOT NULL` の制約はコピーされず、履歴行へのバックフィルも行われません。後続の行では、PostgreSQL が WAL に書き込んだ実際の値が使用されます。 |
+| `ADD COLUMN` | 同じ名前の列を、[PostgreSQL のデータ型マッピング](./data-type-mapping-postgresql.md) に従った型で追加します。DEFAULT と `NOT NULL` 制約はコピーされず、既存の行に値は補完されません。その後の行には、PostgreSQL が WAL に書き込んだ実際の値が使用されます。 |
 | `DROP COLUMN` | 同じ名前の列を削除します。 |
 
-## 考慮事項 {#considerations}
+## 注意事項 {#considerations}
 
-- DDL のみを実行した場合、PostgreSQL のスキーマ変更は直ちには反映されません。Doris は、変更されたテーブルが後続の INSERT、UPDATE、または DELETE を受信した後に新しいスキーマを検出して適用します。
-- フルスナップショットフェーズ中は、自動スキーマ変更同期はサポートされません。フルスナップショットが完了し、ジョブが増分フェーズに入った後で上流スキーマを変更してください。
-- 追加された列がすでに存在する場合、または削除対象の列が存在しない場合、再試行でジョブが失敗しないよう、Doris はその操作をスキップします。
-- 同じスキーマ変更で列の追加と削除が同時に行われる場合、Doris はそれを列の名前変更の可能性として扱い、ターゲットテーブルを自動的には変更しません。これにより、意図しないデータ損失を防ぎます。
-- 列名の変更、列型の変更、DEFAULT の変更、および `NULL` / `NOT NULL` 制約の変更は自動同期されません。継続的データロードジョブを一時停止し、Doris のターゲットテーブルを手動で変更して、両方のスキーマに互換性があることを確認してから、ジョブを再開してください。
-- Auto Table Creation Sync では、Schema Change Sync がデフォルトで有効になります。Doris 4.1 では、これを無効にする SQL プロパティは提供されていません。`cdc_stream()` テーブル関数（SQL Mapping Sync）では、Schema Change Sync が内部的に無効になります。
+- PostgreSQL で DDL を実行しただけでは、スキーマ変更はすぐには反映されません。変更されたテーブルにその後の INSERT、UPDATE、または DELETE が発生すると、Doris が新しいスキーマを検出して適用します。
+- フルスナップショットフェーズでは、スキーマ変更の自動同期はサポートされません。上流のスキーマ変更は、フルスナップショットが完了し、ジョブが増分フェーズに入ってから行ってください。
+- 追加する列がすでに存在する場合、または削除する列が存在しない場合、Doris はその操作をスキップします。これにより、再試行時にジョブが失敗することを防ぎます。
+- 同じスキーマ変更で列の追加と削除が同時に行われた場合、Doris は列名の変更の可能性があると判断し、対象テーブルを自動的には変更しません。これにより、意図しないデータ損失を防ぎます。
+- 列名の変更、列の型の変更、DEFAULT の変更、および `NULL` / `NOT NULL` 制約の変更は、自動的には同期されません。継続的なデータロードジョブを一時停止し、Doris の対象テーブルを手動で変更して、両方のスキーマに互換性があることを確認してから、ジョブを再開してください。
+- 自動テーブル作成による同期では、スキーマ変更の同期がデフォルトで有効です。Doris 4.1 には、これを無効にする SQL プロパティはありません。`cdc_stream()` テーブル関数を使用する SQL マッピングによる同期では、内部的にスキーマ変更の同期が無効になります。
 
-:::caution 動作変更 (4.1.4)
+:::caution スキーマ変更時の動作
 
-4.1.4 以降、PostgreSQL のスキーマ変更検出は Relation イベントによって駆動されます：
+PostgreSQL のスキーマ変更は、Relation イベントによって検出されます。
 
 - 認識されるのは `ADD COLUMN` と `DROP COLUMN` のみです。
-- 列の追加と削除を同時に行う変更（`RENAME` の可能性があります）はスキップされ、ターゲットテーブルは変更されません。
-- 列型の変更はスキップされます。
-- 追加された列には、**上流列の `DEFAULT` 値が引き継がれなくなりました**。
-- この機能は Auto Table Creation Sync（at-least-once）パスにのみ適用されます。SQL Mapping（TVF / exactly-once）パスではサポートされません。
+- 列の追加と削除が同時に行われる変更（`RENAME` の可能性がある変更）はスキップされ、対象テーブルは変更されません。
+- 列の型の変更はスキップされます。
+- 追加された列には、**上流の列の `DEFAULT` 値は引き継がれません**。
+- この機能は、自動テーブル作成による同期の経路（at-least-once）にのみ適用されます。SQL マッピングの経路（TVF / exactly-once）ではサポートされません。
 
 :::
 
 ## 関連ドキュメント {#related-docs}
 
-- [Auto Table Creation を使用する PostgreSQL CDC](./continuous-load-postgresql-database.md)
-- [PostgreSQL データ型マッピング](./data-type-mapping-postgresql.md)
-- [継続的データロードの概要](./continuous-load-overview.md)
+- [PostgreSQL CDC の自動テーブル作成](./continuous-load-postgresql-database.md)
+- [PostgreSQL のデータ型マッピング](./data-type-mapping-postgresql.md)
+- [継続的なデータロードの概要](./continuous-load-overview.md)

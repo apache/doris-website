@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "3c863f744dd4c9850eaa0cd8b6257415c40b3c036d7fe41df5ce6e53880d4fa2",
-    "sourceTechnicalHash": "b00c95043720a730a1789753bd2ed86c27d57a9e8c4d53216eea68950335f26e",
-    "targetHash": "9d588a05a5c5b1ed8be6cdabdfa1f187fe31826650fddbe2b734c1070c39a62f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "58f882ed1909cecc68c8efeab059d8f9f8baacd58e1f85abcd4aecaf4f3b7763",
+    "sourceTechnicalHash": "28246e1412e243685242ee6d56828495913ad013755b183a3083b4496bba297e",
+    "targetHash": "49f6dbbd465d2a32a129598a7f18eaf88eae215f9b34568eab72913ebc4788c7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T19:02:53.356Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "58f882ed1909cecc68c8efeab059d8f9f8baacd58e1f85abcd4aecaf4f3b7763",
+      "targetHash": "49f6dbbd465d2a32a129598a7f18eaf88eae215f9b34568eab72913ebc4788c7",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"168\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4.1.5\",\"5\",\"5.6\",\"5.7\",\"7\",\"72\",\"72\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"168\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4.1.5\",\"5\",\"5.6\",\"5.7\",\"7\",\"72\",\"72\",\"8.0\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operational steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment configuration -->\"]; received [\"html\",null,null,\"<!-- 適用場面: デプロイ前の確認 / 環境設定 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+        "blob": "e628df91b710320e3306fd74ae83e0101ba66031"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+        "blob": "aa7248a8bc4c8b5236b0a8b25462ed87c093d775"
+      }
+    }
   }
 }
