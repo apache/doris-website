@@ -32,12 +32,14 @@ Converts Doris internal data types to JSONB type. This function allows for conve
 ## Syntax
 
 ```sql
-TO_JSON(value)
+TO_JSON(<value>)
 ```
 
 ## Parameters
 
-**value** - The value to be converted to JSONB type.
+| Parameter | Description |
+| --- | --- |
+| `<value>` | A value or NULL to convert to JSONB. Accepted types are listed below. |
 
 The following types have direct mapping to JSONB types and can be converted directly:
 - Numeric types: TINYINT, SMALLINT, INT, BIGINT, LARGEINT, FLOAT, DOUBLE, DECIMAL
@@ -49,9 +51,12 @@ Additionally, the function supports converting the following types:
 - Date types: DATETIME, TIMESTAMP_NS, DATE, TIME
 - IP types: IPV4, IPV6
 - Complex types: MAP
+- File type: FILE
 
 DATETIME, TIMESTAMP_NS, DATE, TIME, IPV4, and IPV6 values are converted to JSONB strings because JSONB has no corresponding native types.
 For MAP type, it will be converted to JSONB Object type. The Map keys must be STRING type, as JSON standard requires Object keys to be strings.
+
+For FILE, the result is a JSONB object containing all six fields: `uri`, `offset`, `size`, `content_type`, `checksum`, and `inline`. The binary `inline` field becomes a Base64 string; empty bytes become an empty string, and NULL fields become JSON null. FILE values within ARRAY, STRUCT, and MAP values use the same representation.
 
 ## Return Value
 
@@ -60,6 +65,27 @@ Returns a value of JSONB type.
 When the input `value` is SQL NULL, the function returns SQL NULL (not a JSON null value). When NULL values appear within arrays or structs, they are converted to JSON null values.
 
 ## Examples
+
+### FILE values
+
+```sql
+SELECT TO_JSON(CAST(NAMED_STRUCT(
+    'uri', 'urn:example', 'offset', NULL, 'size', CAST(3 AS BIGINT),
+    'content_type', NULL, 'checksum', NULL, 'inline', X'616263'
+) AS FILE)) AS j;
+```
+
+```text
+{"uri":"urn:example","offset":null,"size":3,"content_type":null,"checksum":null,"inline":"YWJj"}
+```
+
+```sql
+SELECT TO_JSON(CAST(NULL AS FILE)) AS j;
+```
+
+```text
+NULL
+```
 
 ### Basic scalar values
 
