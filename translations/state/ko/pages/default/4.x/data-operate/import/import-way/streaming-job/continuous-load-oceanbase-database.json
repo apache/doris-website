@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "8efd902ad347012713cc5ad67253a164fa57b353309cb2a2120c12ada150d508",
-    "sourceTechnicalHash": "b7d7c1c6fcb85f9ef3b4a99cb43192ad82bba1d2bddd4a3e810295451b97caae",
-    "targetHash": "38fbca66513cb0e4cd0ecd2bc4e98c6db18d3fb42c9b785760ac5de1c390b520",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+    "sourceTechnicalHash": "e250196dfc607b337e02d81d0c29c396a6143a8bc7f47502ce4846ac2cd4015b",
+    "targetHash": "1da3e312f407cd303c60324fbc6844691e9ccd119e71d5f2d49a18bd6697c399",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:18:28.153Z",
+    "translatedAt": "2026-11-05T20:18:04.299Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "8efd902ad347012713cc5ad67253a164fa57b353309cb2a2120c12ada150d508",
-      "targetHash": "38fbca66513cb0e4cd0ecd2bc4e98c6db18d3fb42c9b785760ac5de1c390b520",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+      "targetHash": "1da3e312f407cd303c60324fbc6844691e9ccd119e71d5f2d49a18bd6697c399",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 절차 + 구성 매개변수 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: OceanBase MySQL 호환 모드의 데이터베이스를 Doris로 미러링 -->\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "6723db3500c7ddc81acbadc1caa3b4fd4aa33f84"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
+        "blob": "e58fdf36b42ee837387ade99c52b9bfd56cf5dfe"
+      }
     }
   }
 }
