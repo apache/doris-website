@@ -8,26 +8,26 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
-    "sourceCommit": "6cda2dc3be8a96374d29b14b1162c8c3bdae9138",
-    "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
-    "sourceTechnicalHash": "e6a7a39aedeb314a75f78ccd94bac7d0861aec1bada9a2233641364ccf34a9ce",
-    "targetHash": "07c82c76feab1bc04e07c273fbfafb142977deaac57a439dfa37f0376a8cef22",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "00c25145958118a203551d143f137f7dabc171bb2456c4818d7c3c73a869a658",
+    "sourceTechnicalHash": "74ffef51d21023d72680cce539fcb410f97ccb6a5c15f75f88393b3cd3b2ca65",
+    "targetHash": "c2af7c5ed1041e7a836d2120c41882a8cd564f64a03eac57c689bc7bb0d8972f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-26T05:48:45.477Z",
+    "translatedAt": "2026-11-05T06:27:17.627Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "glossary-version-changed",
+      "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "90ed2b601f085663d2f1cbbaf06a0355fa331815b1da04d3c45a01e3d75ddadc",
-      "targetHash": "07c82c76feab1bc04e07c273fbfafb142977deaac57a439dfa37f0376a8cef22",
+      "sourceHash": "00c25145958118a203551d143f137f7dabc171bb2456c4818d7c3c73a869a658",
+      "targetHash": "c2af7c5ed1041e7a836d2120c41882a8cd564f64a03eac57c689bc7bb0d8972f",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能の概要とアーキテクチャの選択 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: リアルタイムのデータ取り込み方式の選択 / 継続的なデータロードの運用 -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: アーキテクチャの選択 -->\"]"
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
         }
       ],
       "history": [
@@ -35,8 +35,8 @@
           "attempt": 1,
           "issues": [
             {
-              "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1\",\"4.1.0\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"4.1.5\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
+              "check": "request",
+              "message": "Codex translation failed: 1"
             }
           ]
         },
@@ -45,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 機能概要 + アーキテクチャ選択の判断 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: リアルタイムデータ取り込みの選択 / 継続ロードの運用 -->\"]"
             }
           ]
         },
@@ -54,11 +54,21 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature overview + architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能の概要とアーキテクチャの選択 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Real-time data ingestion selection / continuous load operations -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: リアルタイムのデータ取り込み方式の選択 / 継続的なデータロードの運用 -->\"]\nprotected node 16: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture selection decision -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: アーキテクチャの選択 -->\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"100\",\"1024\",\"14\",\"15\",\"16\",\"17\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4.1\",\"4.1.5\",\"4.1.5\",\"4.1.6\",\"5.6\",\"5.7\",\"8.0\"]\nprotected node 25: expected [\"inlineCode\",null,null,\"ErrorMsg\"]; received [\"inlineCode\",null,null,\"select * from jobs(...)\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"select * from jobs(...)\"]; received [\"inlineCode\",null,null,\"ErrorMsg\"]"
             }
           ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "ce0cdf257b6230520990f1b2ba154062193d4257"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-overview.md",
+        "blob": "c9131e8ac3e3db857973a9593d91cb8089807924"
+      }
     }
   }
 }

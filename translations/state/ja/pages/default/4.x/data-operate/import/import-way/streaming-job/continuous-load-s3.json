@@ -8,13 +8,39 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
-    "sourceCommit": "aaeed3f933f749cfa0ec725382e72ca23a4162e4",
-    "sourceHash": "7737d87bb7148eb1824454935d4fa9b8d208a6614156712cc1c6db0535b86b2d",
-    "sourceTechnicalHash": "beb3c16b2f0a2582b5ff477aef8fa2ed7195ee654fe03a4418184427095ef3b1",
-    "targetHash": "8b4d49fe4348a9ed04d9e94405a68d4e875bb422306240a0bd29cade9a6243e2",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+    "sourceTechnicalHash": "a9ca2611ca188e7b37eb2049a948e4ff249441596b31fa147f726c4ba840e6d9",
+    "targetHash": "7cf3f515cbe170c33a75bd825e1007324af8de032e22d6c14f699c1784a7c617",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-17T04:51:55.086Z",
-    "glossaryVersion": "1"
+    "translatedAt": "2026-11-05T06:49:21.810Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "e5c89eadbfe0b2709080a7b51d51cab5155fbec0f79876ad6456ab26bd70425a",
+      "targetHash": "7cf3f515cbe170c33a75bd825e1007324af8de032e22d6c14f699c1784a7c617",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "936d05dce30d54c265d1a99b4a41f418f65d4235"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3.md",
+        "blob": "de5481bb4fed8a0824ed879ceb801a3529e4b855"
+      }
+    }
   }
 }
