@@ -8,42 +8,56 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "515c7a1fe9b5fd5877fca42918610bf16a892f812b592ee8dd73393939cb99ad",
-    "sourceTechnicalHash": "c2a2b2e07974dd150bcc69e5713171033199c5a508b69e2076194f41c5c05f77",
-    "targetHash": "b5f616fd027f2f6328d580e4fa7f6236df74ecc5d4215d626037ab5181426856",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "3f1e7f7020ac79b1681dd62de8c988a434e38d9bb638db3ad58869b4ebbb91d8",
+    "sourceTechnicalHash": "c7063c821684a619dfd8a53045a9028672f6c99547a0bc44e6a287b183fb4fdb",
+    "targetHash": "d0914bb8c6d16abb02f4f1b403e55bc80b37ad6fc229c0bb5e5602b9516bf170",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:42.788Z",
+    "translatedAt": "2026-11-05T13:10:39.909Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "515c7a1fe9b5fd5877fca42918610bf16a892f812b592ee8dd73393939cb99ad",
-      "targetHash": "b5f616fd027f2f6328d580e4fa7f6236df74ecc5d4215d626037ab5181426856",
+      "sourceHash": "3f1e7f7020ac79b1681dd62de8c988a434e38d9bb638db3ad58869b4ebbb91d8",
+      "targetHash": "d0914bb8c6d16abb02f4f1b403e55bc80b37ad6fc229c0bb5e5602b9516bf170",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: справочник / сопоставление типов данных -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 25: expected [\"inlineCode\",null,null,\"bpchar(n)\"]; received [\"inlineCode\",null,null,\"scale\"]\nprotected node 26: expected [\"inlineCode\",null,null,\"CHAR(n)\"]; received [\"inlineCode\",null,null,\"bpchar(n)\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"CHAR\"]; received [\"inlineCode\",null,null,\"CHAR(n)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/import-way/streaming-job/data-type-mapping-postgresql",
-        "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "515c7a1fe9b5fd5877fca42918610bf16a892f812b592ee8dd73393939cb99ad",
-        "targetHash": "b5f616fd027f2f6328d580e4fa7f6236df74ecc5d4215d626037ab5181426856",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
+        "blob": "cf7ececf50b5091921485ab4604b2e92f987b542"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-postgresql.md",
+        "blob": "47653939df457b92b427ae84e90d9bfaaec3b3da"
       }
     }
   }
