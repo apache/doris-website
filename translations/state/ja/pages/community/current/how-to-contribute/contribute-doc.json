@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "community/how-to-contribute/contribute-doc.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
-    "sourceCommit": "9fe0c0843e49ce92d87c8412ba20eeadbc89f166",
-    "sourceHash": "92adddc806e422b80b5be3a9f2c075d436e64edfe50b6241939addb25f2b77c0",
-    "sourceTechnicalHash": "5307a5f274e0ecb35c2e1aa50b86d12a518436bc7cf8564a2a02e1f11d080ac8",
-    "targetHash": "d8421fac0220ed2a4b5c4feea7a37e76607e468590fdf384131cf9110566803e",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "3633dba5cef91c3a29d2d8a4824881ab61549a398317098ffacccff3649ea2c8",
+    "sourceTechnicalHash": "b0d10b02ba6922b2499679494c80be2a137a0fb0b733f8b28934753a71e24f7e",
+    "targetHash": "b76ab999577efdbbd9dd175aabb39917f3cbabc782e94601b1935f9588cf8467",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T08:41:51.551Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-06T05:20:58.441Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3633dba5cef91c3a29d2d8a4824881ab61549a398317098ffacccff3649ea2c8",
+      "targetHash": "b76ab999577efdbbd9dd175aabb39917f3cbabc782e94601b1935f9588cf8467",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 58: expected [\"inlineCode\",null,null,\"version-X.X-sidebars.json\"]; received [\"inlineCode\",null,null,\"versioned_sidebars/\"]\nprotected node 59: expected [\"inlineCode\",null,null,\"versioned_sidebars/\"]; received [\"inlineCode\",null,null,\"version-X.X-sidebars.json\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1.2\",\"2\",\"2\",\"2.0\",\"2.1\",\"2.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\"]; received [\"1\",\"1\",\"1.2\",\"2\",\"2\",\"2\",\"2.0\",\"2.1\",\"2.1\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4\",\"4\",\"4\",\"4\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"label\"]; received [\"inlineCode\",null,null,\"sidebars.ts\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"sidebars.ts\"]; received [\"inlineCode\",null,null,\"label\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 39: expected [\"inlineCode\",null,null,\"label\"]; received [\"inlineCode\",null,null,\"sidebars.ts\"]\nprotected node 40: expected [\"inlineCode\",null,null,\"sidebars.ts\"]; received [\"inlineCode\",null,null,\"label\"]\nprotected node 58: expected [\"inlineCode\",null,null,\"version-X.X-sidebars.json\"]; received [\"inlineCode\",null,null,\"versioned_sidebars/\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 58: expected [\"inlineCode\",null,null,\"version-X.X-sidebars.json\"]; received [\"inlineCode\",null,null,\"versioned_sidebars/\"]\nprotected node 59: expected [\"inlineCode\",null,null,\"versioned_sidebars/\"]; received [\"inlineCode\",null,null,\"version-X.X-sidebars.json\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "community/how-to-contribute/contribute-doc.md",
+        "blob": "0d710460248228f906244aaf6eceb716dbd5c77e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs-community/current/how-to-contribute/contribute-doc.md",
+        "blob": "9cc439c077bb2bb3cbcfb879338e37cc757c63ea"
+      }
+    }
   }
 }
