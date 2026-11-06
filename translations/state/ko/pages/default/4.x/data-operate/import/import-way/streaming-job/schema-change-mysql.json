@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
-    "sourceTechnicalHash": "a73d820e86f140c9c40974f99b0970958c9523839f46e09123a5f033949a09c7",
-    "targetHash": "cafb4de30647162643e9d416ad91600886b75d7caa75c83101fb08f77efa7d3d",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "eeb97919fb1b6b531dad592edd77022a427eee7177d8f2ab667ad9ecf1919ea3",
+    "sourceTechnicalHash": "2903369782571cd356dd42ced15df36a38a574bef64902704ea9cc63423236c0",
+    "targetHash": "f026e4a374a634475cfd8bb44935cc399ba3893f102c36af11e1d0d85ba5119f",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:19:20.484Z",
+    "translatedAt": "2026-11-06T05:57:10.820Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
-      "targetHash": "cafb4de30647162643e9d416ad91600886b75d7caa75c83101fb08f77efa7d3d",
+      "sourceHash": "eeb97919fb1b6b531dad592edd77022a427eee7177d8f2ab667ad9ecf1919ea3",
+      "targetHash": "f026e4a374a634475cfd8bb44935cc399ba3893f102c36af11e1d0d85ba5119f",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 개념 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: MySQL 자동 테이블 생성 동기화 중 업스트림 스키마 변경 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "3f6c3a7cf4afc3e613c96c6882babe4c98474fec"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
+        "blob": "fad68e62e75cb0aff754362434220fd54aaf8422"
+      }
     }
   }
 }
