@@ -91,7 +91,7 @@ For more help, please refer to [ALTER USER](../../sql-manual/sql-statements/acco
 
 ### LDAP-based Authentication Scheme
 
-Please refer to [LDAP-based Authentication Scheme](./ldap.md).
+Please refer to [LDAP-based Authentication Scheme](./authentication/ldap.md).
 
 ## Authorization
 
