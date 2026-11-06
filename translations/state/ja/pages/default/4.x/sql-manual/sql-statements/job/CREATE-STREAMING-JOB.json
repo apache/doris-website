@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
-    "sourceCommit": "7ae76ea0087c52fb5cf54c8d641c4edfd16ed1f2",
+    "sourceCommit": "d96999b7523c0017b3cb53954507efb41ddbf922",
     "sourceHash": "6ece6c0632091655838b822f565d6bd5d113baa550f035a096c452d54a47a292",
     "sourceTechnicalHash": "b8c529b4785e4c657d9c109384f437cf34fc55eb9ceac0e490686224b693aa14",
-    "targetHash": "1e499099c5edd6a2a92289594d522aed44febd4d6b9b6bee58ee7c2bd37387a1",
+    "targetHash": "e827178b5972b275eebaa50405f7b02d90f35afefbcf442b7a9e1f661ad242ae",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T09:58:17.484Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-02T17:49:39.162Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "6ece6c0632091655838b822f565d6bd5d113baa550f035a096c452d54a47a292",
+      "targetHash": "e827178b5972b275eebaa50405f7b02d90f35afefbcf442b7a9e1f661ad242ae",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 25: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]\nprotected node 29: expected [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\", \\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\",\\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"10737418240\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"6\",\"8096\"]; received [\"0\",\"0\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"100\",\"1024\",\"104857600\",\"10737418240\",\"10737418240\",\"2\",\"2\",\"256\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4.1.4\",\"40960\",\"5\",\"6\",\"8096\"]\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 25: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 25: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]\nprotected node 29: expected [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\", \\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\",\\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command> \"]; received [\"code\",\"SQL\",null,\"CREATE JOB <job_name>\\n[ PROPERTIES (\\n    <job_property>\\n    [ , ... ]\\n    )\\n]\\nON STREAMING\\n[ COMMENT <comment> ]\\nDO <Insert_Command>\"]\nprotected node 25: expected [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO \\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]; received [\"code\",\"sql\",null,\"CREATE JOB my_job\\nON STREAMING\\nDO\\nINSERT INTO db1.`tbl1`\\nSELECT * FROM S3\\n(\\n    \\\"uri\\\" = \\\"s3://bucket/s3/demo/*.csv\\\",\\n    \\\"format\\\" = \\\"csv\\\",\\n    \\\"column_separator\\\" = \\\",\\\",\\n    \\\"s3.endpoint\\\" = \\\"https://s3.ap-southeast-1.amazonaws.com\\\",\\n    \\\"s3.region\\\" = \\\"ap-southeast-1\\\",\\n    \\\"s3.access_key\\\" = \\\"\\\",\\n    \\\"s3.secret_key\\\" = \\\"\\\"\\n);\"]\nprotected node 29: expected [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\", \\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]; received [\"code\",\"sql\",null,\"CREATE JOB test_postgres_job\\nON STREAMING\\nFROM POSTGRES (\\n    \\\"jdbc_url\\\" = \\\"jdbc:postgresql://127.0.0.1:5432/postgres\\\",\\n    \\\"driver_url\\\" = \\\"postgresql-42.5.1.jar\\\",\\n    \\\"driver_class\\\" = \\\"org.postgresql.Driver\\\",\\n    \\\"user\\\" = \\\"postgres\\\",\\n    \\\"password\\\" = \\\"postgres\\\",\\n    \\\"database\\\" = \\\"postgres\\\",\\n    \\\"schema\\\" = \\\"public\\\",\\n    \\\"include_tables\\\" = \\\"test_tbls\\\",\\n    \\\"offset\\\" = \\\"latest\\\"\\n)\\nTO DATABASE target_test_db (\\n    \\\"table.create.properties.replication_num\\\" = \\\"1\\\"\\n)\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+        "blob": "42d71783112a88d6035bc2aa1ca10196aa2f11b5"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/sql-manual/sql-statements/job/CREATE-STREAMING-JOB.md",
+        "blob": "f94b74e48cf396eee4a9125521518b99d53eb671"
+      }
+    }
   }
 }

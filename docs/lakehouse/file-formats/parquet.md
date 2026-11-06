@@ -43,6 +43,53 @@ For the complete UUID output mappings in OUTFILE and EXPORT, see [Column Type Ma
 * lzo
 * brotli
 
+## Writing Page Indexes (Dev Version)
+
+Doris can optionally write Parquet `ColumnIndex` and `OffsetIndex` metadata when exporting with OUTFILE or EXPORT, or inserting into Hive and Iceberg tables stored as Parquet. A reader that supports these indexes can locate candidate pages by value and keep rows aligned across columns. Existing files are unchanged.
+
+Set the following session variables before the write statement. They apply to Parquet output only and do not enable page-index filtering on the read side.
+
+| Variable | Type | Default | Behavior |
+| --- | --- | --- | --- |
+| `enable_parquet_write_page_index` | Boolean | `true` | Writes page indexes for new Parquet files. `ColumnIndex` depends on statistics being available for the column; `OffsetIndex` records data-page locations and row positions. |
+| `parquet_write_data_page_size` | Integer, bytes | `1048576` (1 MiB) | Target uncompressed data-page size, in the range `1` to `2147483647`. Applies whether index writing is enabled or disabled. It does not set the row-group size or dictionary-page size. |
+
+Page size is a target: a value or a write batch can exceed it. For Hadoop-framed LZ4, used by Hive/Iceberg `lz4` output, Doris caps this target at `131072` bytes (128 KiB) to retain compatibility with Hadoop readers. Raw LZ4 output is not subject to this codec-specific cap.
+
+For example, after preparing a writable S3 bucket and credentials as described in [OUTFILE](../../data-operate/export/outfile.md), export a query result with indexes and a 256 KiB page target. Replace the storage placeholders with your own configuration:
+
+```sql
+SET enable_parquet_write_page_index = true;
+SET parquet_write_data_page_size = 262144;
+
+SELECT 1 AS id, 'example' AS label
+INTO OUTFILE 's3://example-bucket/export/result_'
+FORMAT AS PARQUET
+PROPERTIES (
+    "s3.endpoint" = "https://s3.example.com",
+    "s3.region" = "us-east-1",
+    "s3.access_key" = "<access_key>",
+    "s3.secret_key" = "<secret_key>"
+);
+```
+
+The resulting files include page-index metadata for eligible columns. For Hive or Iceberg, set the same variables in the session before `INSERT INTO` or `INSERT OVERWRITE`; the destination table must already be configured to write Parquet. For EXPORT, set them before submitting the job.
+
+Index writing defaults to `true`, preserving the existing dev writer behavior. To omit page indexes from subsequent output, set the option before writing:
+
+```sql
+SET enable_parquet_write_page_index = false;
+```
+
+To restore the defaults in the current session:
+
+```sql
+SET enable_parquet_write_page_index = true;
+SET parquet_write_data_page_size = 1048576;
+```
+
+Indexes add metadata and write-side work. Smaller pages can improve selective reads, especially when values are clustered, but also create more index entries and page headers. Benefits depend on the consuming engine and data distribution; enabling indexes does not guarantee faster queries. Readers can still read the files without using the optional indexes. These settings do not change the Parquet format version or data-page version.
+
 ## Parameters
 
 ### Timestamp and Date Compatibility (Since 4.1.5) {#timestamp-and-date-compatibility}

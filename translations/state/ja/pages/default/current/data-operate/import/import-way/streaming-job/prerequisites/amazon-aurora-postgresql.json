@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "92909cda0a07e03538cf90ed2e399bc8a96e75907dcf05245d5a22d1c67c089c",
-    "sourceTechnicalHash": "c05cf2381449c308ffaa7db9e422d04102dedfac200b8f824ed2df9911dd7559",
-    "targetHash": "c8bd060ab17fa4776bcecacf60fda5e8f0ce9b1b867a5d6e80d9a4073475e7f2",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "75e139f5224730d283d2b502334b784cc034debe62c816049b4336d7a92f242b",
+    "sourceTechnicalHash": "59995481a9bc4366931b9026bbe804395e344ff921a77180befc7796a5f4086d",
+    "targetHash": "b6fd532ac877f4da32ed8b138c3ea1d42c510aec41103df99975f9c6cfcf0d91",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T06:23:18.776Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "75e139f5224730d283d2b502334b784cc034debe62c816049b4336d7a92f242b",
+      "targetHash": "b6fd532ac877f4da32ed8b138c3ea1d42c510aec41103df99975f9c6cfcf0d91",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: デプロイ前チェック / 環境準備 -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "frontmatter",
+              "message": "Restore complete front matter field: keywords"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "3b1c6c3d178b32dc89ebb8e67c74eda1977c32d9"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "fd7fdee96985b86162d77f1dc929d3a136225bb4"
+      }
+    }
   }
 }

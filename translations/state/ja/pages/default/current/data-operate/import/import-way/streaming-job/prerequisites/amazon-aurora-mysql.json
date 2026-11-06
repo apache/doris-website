@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "a26ae88ea722583e332f686cbee7f436f3808fbb79bfff389a5cf092a88c10ba",
-    "sourceTechnicalHash": "cb4e42b5320102fac21dc52e7827ecda60dc50683c525968a4aa287a97c1df78",
-    "targetHash": "032a632daba158eabb11da02405316c280fc33993e62ff85780acc7eefa50e06",
+    "sourceCommit": "b43359138c7074bdac36c381ea30180bc312e92a",
+    "sourceHash": "8c20bd57f3e7332fd7138f703a32e6da797a45e321c98fe40101c476d5a523dd",
+    "sourceTechnicalHash": "5bf64d10ad863e461807af34fb0a4f1e52814cdb3032729c385c7a57c2f13df1",
+    "targetHash": "7c27c0254de5e08985877f62f2b16c0d6f1eaae9cd11e5db380ca26b5dcaeccb",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T06:11:42.448Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "8c20bd57f3e7332fd7138f703a32e6da797a45e321c98fe40101c476d5a523dd",
+      "targetHash": "7c27c0254de5e08985877f62f2b16c0d6f1eaae9cd11e5db380ca26b5dcaeccb",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 38: expected [\"inlineCode\",null,null,\"ROW\"]; received [\"inlineCode\",null,null,\"binlog_format\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"binlog_format\"]; received [\"inlineCode\",null,null,\"ROW\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"5\",\"5.6\",\"5.7\",\"72\",\"72\",\"72\",\"72\",\"8.0\"]; received [\"1\",\"1\",\"1\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"5\",\"5.6\",\"5.7\",\"72\",\"72\",\"72\",\"72\",\"8.0\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operational steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 運用手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Data source onboarding prerequisite configuration -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: デプロイ前チェック / データソース接続前の前提構成 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 38: expected [\"inlineCode\",null,null,\"ROW\"]; received [\"inlineCode\",null,null,\"binlog_format\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"binlog_format\"]; received [\"inlineCode\",null,null,\"ROW\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 38: expected [\"inlineCode\",null,null,\"ROW\"]; received [\"inlineCode\",null,null,\"binlog_format\"]\nprotected node 39: expected [\"inlineCode\",null,null,\"binlog_format\"]; received [\"inlineCode\",null,null,\"ROW\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+        "blob": "6f9e3939aa7f8835fb2ea16aca11b8f14e43bb22"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-mysql.md",
+        "blob": "d7bc1a7b759a20ef81351bdb2c292559e73b0376"
+      }
+    }
   }
 }

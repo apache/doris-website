@@ -8,30 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "fd0df854ee8804ca79d3a4abe48fd84074bc50afb8d3b534821f7a59ccc5eb75",
-    "sourceTechnicalHash": "b55a161f48a22529890dcc0e1f1fe21c2c03df2c82f2f38bb814921850fffa42",
-    "targetHash": "159da200357e2e675e0258b3d0b97f8530b539c966933180a8768f9c8de59b9d",
+    "sourceCommit": "86b74d856b11f04d9fc5888e6da3d3ef3c83c168",
+    "sourceHash": "09e25ad65acddd4607df222906f48f70239365266e5d2d40cce56c882d411207",
+    "sourceTechnicalHash": "8493dc54e70d8b5ff2f5ced947f91a1d59acaf99e18ec3a1bdfac0f214b4f2b9",
+    "targetHash": "482d6cfc0bd4cab1d794ba39075200c832bdf5b334ffb52173384ec8cb77e461",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:32:38.250Z",
+    "translatedAt": "2026-11-04T10:02:04.277Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
       "acceptedWithWarnings": false,
-      "sourceHash": "fd0df854ee8804ca79d3a4abe48fd84074bc50afb8d3b534821f7a59ccc5eb75",
-      "targetHash": "159da200357e2e675e0258b3d0b97f8530b539c966933180a8768f9c8de59b9d",
+      "sourceHash": "09e25ad65acddd4607df222906f48f70239365266e5d2d40cce56c882d411207",
+      "targetHash": "482d6cfc0bd4cab1d794ba39075200c832bdf5b334ffb52173384ec8cb77e461",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operation steps / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: операционные шаги / параметры конфигурации -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Real-time sync of a single MySQL table to Doris with column mapping or data transformation -->\"]; received [\"html\",null,null,\"<!-- Сценарий использования: синхронизация одной таблицы MySQL с Doris в реальном времени с сопоставлением столбцов или преобразованием данных -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "4a1667c489b2ee575ecccbc9f7a11c9609d4c710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-mysql-table.md",
+        "blob": "5fbe01e00a2022eb4449bd63d8489bbe984e7e2a"
+      }
     }
   }
 }

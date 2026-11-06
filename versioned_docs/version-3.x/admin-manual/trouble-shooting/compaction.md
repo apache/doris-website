@@ -103,3 +103,36 @@ The number of concurrent compaction threads is configured in the BE configuratio
 - `max_base_compaction_threads`: Number of base compaction threads, default is 4.
 - `max_cumu_compaction_threads`: Number of cumulative compaction threads, default is -1, which mean that 1 thread per disk.
 - `max_single_replica_compaction_threads`: Number of threads for fetching data files during single replica compaction, default is 10.
+
+## Compaction memory overhead on large MOW tablets {#mow-compaction-memory}
+
+Unique Key tables that use merge-on-write (MOW) maintain an in-memory rowid conversion map during compaction. This map associates row locations in the input rowsets with their new locations in the output rowset so that the delete bitmap can be updated. For tablets with many rows, especially Base Compaction involving large amounts of historical data, the map can consume substantial memory and cause compaction to fail when memory is insufficient.
+
+### How memory usage grows with row count
+
+The map preallocates one entry for every physical row in the input segments being merged. Each entry records the destination segment position and row ID as two 32-bit integers, so its main storage uses approximately 8 bytes per row. You can estimate this memory as follows:
+
+```text
+Main mapping storage ≈ Total physical input rows participating in this compaction × 8 bytes
+```
+
+Physical input rows include historical versions that compaction has not yet removed. Even if an old row is marked as deleted and will not be written to the output rowset, its preallocated entry still occupies memory. Therefore, the number of valid rows returned by a query cannot directly substitute for the physical input row count in this estimate. The map is retained until the compaction task finishes and is not released after each read batch.
+
+This estimate covers only the main storage of the map. Actual compaction memory also includes container overhead, read buffers, write buffers, and indexes. There is no fixed ratio between a tablet's compressed data size and its physical row count. A narrow table or a table with a high compression ratio can therefore require a large map even when its on-disk size is relatively small.
+
+### Calculation example
+
+Suppose the base rowset of a MOW tablet contains 1 billion physical rows, and this Base Compaction also merges incremental rowsets containing 100 million physical rows. Even if all 100 million incremental rows update existing keys and the output contains only 1 billion valid rows, the map is still allocated for the 1.1 billion physical input rows:
+
+```text
+Physical input rows = 1 billion + 100 million = 1.1 billion
+Main mapping storage ≈ 1.1 billion × 8 bytes = 8.8 × 10^9 bytes ≈ 8.2 GiB
+```
+
+If the same BE runs four compaction tasks with this input size concurrently, the main storage of these maps alone uses approximately 32.8 GiB. This excludes other compaction memory and memory used by queries, loads, and other tasks. This is a calculated example; actual usage depends on the input size of each task and the concurrency.
+
+### Troubleshooting and mitigation
+
+- When creating a table or adding partitions, choose partition and bucket counts based on the expected row count as well as the compressed data size. Select bucket keys that distribute data evenly to prevent a single tablet from accumulating too many rows. See [Data Bucketing](../../table-design/data-partitioning/data-bucketing.md). The bucket count of an existing partition cannot be changed directly; for an existing oversized tablet, consider recreating the table and migrating the data.
+- When memory is limited, consider reducing Base Compaction concurrency to leave more memory available for each task. This only reduces the combined memory peak of multiple tasks on the same BE; it does not reduce the map of an individual task. If a single map already exceeds the available memory, reducing concurrency alone may still be insufficient.
+- Vertical compaction, a smaller `compaction_batch_size`, or fewer columns in `vertical_compaction_num_columns_per_group` can reduce memory used for reading and processing column groups, but do not reduce the size of the complete rowid map. `compaction_memory_bytes_limit` is used to estimate the read batch size and does not impose a hard cap on the rowid map or the entire compaction task.
