@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/open-api/be-http/compaction-score",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/open-api/be-http/compaction-score.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/compaction-score.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "57ebf62d7abeabc8a2d0c2720e8069d158fad061a5636e89933206f29b2dbbcb",
+    "sourceTechnicalHash": "a62c0a89c9bea2f0262a42418137f8df37220698316a344c26144ad0a4a79afd",
+    "targetHash": "748e3c484f3d6bb97b4fd6e8a0832618410e92eacf1a65f89fafa77867240d20",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-07T16:56:43.760Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "57ebf62d7abeabc8a2d0c2720e8069d158fad061a5636e89933206f29b2dbbcb",
+      "targetHash": "748e3c484f3d6bb97b4fd6e8a0832618410e92eacf1a65f89fafa77867240d20",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"10\",\"200\",\"400\",\"400\",\"400\",\"401\",\"403\",\"500\",\"64\",\"8040\"]; received [\"0\",\"1\",\"10\",\"2\",\"200\",\"400\",\"400\",\"400\",\"401\",\"403\",\"500\",\"64\",\"8040\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/open-api/be-http/compaction-score.md",
+        "blob": "bcefbcf0e2f01de86b7c5311925a22525be503bb"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/open-api/be-http/compaction-score.md",
+        "blob": "233dc1fc4c3281d73bf3a6dacf840089a0714fdc"
+      }
+    }
+  }
+}

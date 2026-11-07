@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "4.x",
+    "docId": "admin-manual/auth/tls-framework",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "versioned_docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/tls-framework.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+    "sourceTechnicalHash": "67992242190d81f957842223e23c04ea92718900e2e5399c7961bdcffbca2472",
+    "targetHash": "1752159c01a89d5df4cd172b5d906cf0d101f56f7b4b996c15e5e6433f0f4110",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-07T16:52:43.362Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "4ea294e089419c085e46dae72f52ae8b751035202fc0a573639e9f27b8135a6d",
+      "targetHash": "1752159c01a89d5df4cd172b5d906cf0d101f56f7b4b996c15e5e6433f0f4110",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Configuration parameters / Extension contract -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 設定パラメータ / 拡張契約 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: TLS module integration / Configuration compatibility -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: TLS モジュールの統合 / 設定の互換性 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/admin-manual/auth/tls-framework.md",
+        "blob": "395b9f863ba1d9999658fb5921ee61383ec70604"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/admin-manual/auth/tls-framework.md",
+        "blob": "39ade6574fed4d7665eee8d8d12ad4bbbe00e655"
+      }
+    }
+  }
+}
