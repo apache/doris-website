@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>icon / product-logo / 32x32px / logstash / color</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 0.0004 13 0.0004 13 12 0 12"></polygon>
+    </defs>
+    <g id="icon-/-product-logo-/-32x32px-/-logstash-/-color" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-8" transform="translate(2.000000, 0.000000)">
+            <polygon id="Fill-1" fill="#00BFB3" points="16 32 27 32 27 20 16 20"></polygon>
+            <g id="Group-7">
+                <path d="M1,0.0004 L0,0.0004 L0,20.0004 L13,20.0004 L13,12.0004 C13,5.3724 7.627,0.0004 1,0.0004" id="Fill-2" fill="#FEC514"></path>
+                <g id="Group-6" transform="translate(0.000000, 20.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="Clip-5"></g>
+                    <path d="M0,0.0004 L0,0.0004 C0,6.6274 5.373,12.0004 12,12.0004 L13,12.0004 L13,0.0004 L0,0.0004 Z" id="Fill-4" fill="#343741" mask="url(#mask-2)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,10 @@
+# BEGIN DORIS PUBLISH OPTIMIZATION
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteOptions IgnoreInherit
+RewriteRule "^(?:Apache_Doris_v2_0_0b89998444\.pdf)$" "/pdf/Apache_Doris_v2_0_0b89998444.pdf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+RewriteRule "^(?:Apache_Doris_v2_1_c8bc030188\.pdf)$" "/pdf/Apache_Doris_v2_1_c8bc030188.pdf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+RewriteRule "^(?:Apache_Doris_v3_x_t5x7q9z2y4\.pdf)$" "/pdf/Apache_Doris_v3_x_t5x7q9z2y4.pdf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+RewriteRule "^(?:Apache_Doris_v4_x_j3h8d6b1v0\.pdf)$" "/pdf/Apache_Doris_v4_x_j3h8d6b1v0.pdf" [R=302,L,NE,E=DORIS_ASSET_REDIRECT:1]
+</IfModule>
+# END DORIS PUBLISH OPTIMIZATION
