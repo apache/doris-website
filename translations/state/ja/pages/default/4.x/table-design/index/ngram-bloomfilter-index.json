@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/index/ngram-bloomfilter-index.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/ngram-bloomfilter-index.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "02238d2ae99d46939d108e17e8a3199ab266a159a8bce6337a74057d790106e9",
-    "sourceTechnicalHash": "88595fd2217f6ebb7958ea9ad1063af643e48cc4a62bf1e1c8a66cde5279aa12",
-    "targetHash": "efc63bb372f51c0beb12fb099bad1373872ec57b70cae2f468b6a79e3780489f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+    "sourceTechnicalHash": "13b57a6d71e6fd5520ea8691f9f6261f4cd5127afc9dd167e61bcfafcfcc3078",
+    "targetHash": "8aa8b305d9bc8b52f7ac940ac2f879875dc2145e1a5fc3761800eacbab56a9d9",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.632Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-06T05:15:51.503Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "5c1482e6ee811a464be458c52dc186a1292a1ce6c654c687f33486da5e25b883",
+      "targetHash": "8aa8b305d9bc8b52f7ac940ac2f879875dc2145e1a5fc3761800eacbab56a9d9",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]; received [\"inlineCode\",null,null,\"pattern\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0.93\",\"0.93\",\"1\",\"1\",\"1\",\"10\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"7.60\",\"7.60\",\"8\",\"8\"]; received [\"0.93\",\"0.93\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"2\",\"2\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4\",\"4.1.5\",\"7.60\",\"7.60\",\"8\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Feature description + Operation steps -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 機能の説明と操作手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Acceleration of LIKE fuzzy queries on string columns -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: 文字列カラムに対する LIKE のあいまい検索の高速化 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]; received [\"inlineCode\",null,null,\"pattern\"]\nprotected node 53: expected [\"inlineCode\",null,null,\"streaming_load_max_mb\"]; received [\"inlineCode\",null,null,\"be.conf\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 15: expected [\"inlineCode\",null,null,\"pattern\"]; received [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]\nprotected node 16: expected [\"inlineCode\",null,null,\"LIKE '%pattern%'\"]; received [\"inlineCode\",null,null,\"pattern\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/index/ngram-bloomfilter-index.md",
+        "blob": "75a7d7d4658508ab55572faa21d20a8af0a9f710"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/index/ngram-bloomfilter-index.md",
+        "blob": "06dd06e96aecc8e0ba5d074ac9047bac27037388"
+      }
+    }
   }
 }
