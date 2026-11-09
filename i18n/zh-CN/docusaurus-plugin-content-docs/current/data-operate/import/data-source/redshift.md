@@ -38,7 +38,7 @@
 
 迁移前请按下表完成 Redshift 到 Doris 的数据类型对应：
 
-| Redshift         | Doris          | 备注                   |
+|     Redshift     |     Doris      |          备注          |
 | ---------------- | -------------- | ---------------------- |
 | SMALLINT         | SMALLINT       |                        |
 | INTEGER          | INT            |                        |
@@ -48,10 +48,10 @@
 | DOUBLE PRECISION | DOUBLE         |                        |
 | BOOLEAN          | BOOLEAN        |                        |
 | CHAR             | CHAR           |                        |
-| VARCHAR          | VARCHAR/STRING | VARCHAR 长度最大 65535 |
+| VARCHAR          | VARCHAR/STRING | VARCHAR 长度最大 65533 |
 | DATE             | DATE           |                        |
 | TIMESTAMP        | DATETIME       |                        |
-| TIME/TIMEZ       | STRING         |                        |
+| TIME/TIMETZ      | STRING         |                        |
 | SUPER            | VARIANT        |                        |
 | OTHER            | UNSUPPORTED    |                        |
 
@@ -243,7 +243,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
-**步骤 3**：设置容错率（可选）。如果允许跳过部分错误数据，可以在 S3 Load 的 `PROPERTIES` 中设置容错率，详见[导入配置参数](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/broker-load-manual#导入配置参数)。
+**步骤 3**：设置容错率（可选）。如果允许跳过部分错误数据，可以在 S3 Load 的 `PROPERTIES` 中设置容错率，详见[导入配置参数](../../import/import-way/broker-load-manual.md#导入配置参数)。
 
 #### 3.4 批量导入多个分区
 
