@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "5b6137a794933bd818e991a185a7e54bcd78525328fa6c954bf840a0eb31159e",
-    "sourceTechnicalHash": "b410b0cf409323389ff31a3d8a765777d8e6ad76dd7a8c06bda1b69bf5815cb0",
-    "targetHash": "e07ddaa47382ef57e2a7ce78828410899b7f5de58fde36ee833d2eb59de8ac8f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+    "sourceTechnicalHash": "a7c93a4eea42e3639409532ec8e531f43371e5473d67a9cb9f43d8fe9986b7cd",
+    "targetHash": "dca7aa6fc9ae27314997091944a8c52cb6d690fddef99b86cdb0023639a5a972",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:32:50.682Z",
+    "translatedAt": "2026-11-05T13:33:17.651Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "5b6137a794933bd818e991a185a7e54bcd78525328fa6c954bf840a0eb31159e",
-      "targetHash": "e07ddaa47382ef57e2a7ce78828410899b7f5de58fde36ee833d2eb59de8ac8f",
+      "sourceHash": "c9d5ff33bd0e34d99db5f874671fba89581b0d099422ed39c28b79b9ef59b6ac",
+      "targetHash": "dca7aa6fc9ae27314997091944a8c52cb6d690fddef99b86cdb0023639a5a972",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: проверка перед развертыванием / подготовка среды -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: Процедура -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "9dfa2f7f565395f502e0ab9103498d7037469829"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-aurora-postgresql.md",
+        "blob": "7b53c9012900ccc16b7dc151290e2868f60cbe3a"
+      }
     }
   }
 }

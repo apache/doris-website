@@ -8,42 +8,47 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "3c863f744dd4c9850eaa0cd8b6257415c40b3c036d7fe41df5ce6e53880d4fa2",
-    "sourceTechnicalHash": "b00c95043720a730a1789753bd2ed86c27d57a9e8c4d53216eea68950335f26e",
-    "targetHash": "a45246330392d92737c3a71d41cda5a6408815dcd08733a03a5e90b7f772cba9",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "58f882ed1909cecc68c8efeab059d8f9f8baacd58e1f85abcd4aecaf4f3b7763",
+    "sourceTechnicalHash": "28246e1412e243685242ee6d56828495913ad013755b183a3083b4496bba297e",
+    "targetHash": "1d75d2430aed33f321d134715b4238c3c245685ea605b7cb638c718ab434c432",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:42.968Z",
+    "translatedAt": "2026-11-05T13:41:57.832Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
-      "attempts": 1,
-      "modelCalls": 0,
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "3c863f744dd4c9850eaa0cd8b6257415c40b3c036d7fe41df5ce6e53880d4fa2",
-      "targetHash": "a45246330392d92737c3a71d41cda5a6408815dcd08733a03a5e90b7f772cba9",
+      "sourceHash": "58f882ed1909cecc68c8efeab059d8f9f8baacd58e1f85abcd4aecaf4f3b7763",
+      "targetHash": "1d75d2430aed33f321d134715b4238c3c245685ea605b7cb638c718ab434c432",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Operational steps -->\"]; received [\"html\",null,null,\"<!-- Тип знаний: операционные шаги -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment configuration -->\"]; received [\"html\",null,null,\"<!-- Сценарий применения: проверка перед развертыванием / настройка среды -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql",
-        "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "3c863f744dd4c9850eaa0cd8b6257415c40b3c036d7fe41df5ce6e53880d4fa2",
-        "targetHash": "a45246330392d92737c3a71d41cda5a6408815dcd08733a03a5e90b7f772cba9",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+        "blob": "e628df91b710320e3306fd74ae83e0101ba66031"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-mysql.md",
+        "blob": "aa7248a8bc4c8b5236b0a8b25462ed87c093d775"
       }
     }
   }
