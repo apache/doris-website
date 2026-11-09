@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/config/ms-config",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/config/ms-config.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/config/ms-config.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "a7dbf4061a9ee8c9251f5133dd41a22746d3f455be17f34c0e851a0d47fba739",
+    "sourceTechnicalHash": "a38446236635fce679ec0ddec310a0d43c6a648dec4383f328edd97fc3059194",
+    "targetHash": "169fe76e633b9a8fb781299153348cc0fb9ffd326dc2e20eb1e45a45cc9c0f7a",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-07T16:55:26.462Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 1,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a7dbf4061a9ee8c9251f5133dd41a22746d3f455be17f34c0e851a0d47fba739",
+      "targetHash": "169fe76e633b9a8fb781299153348cc0fb9ffd326dc2e20eb1e45a45cc9c0f7a",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/config/ms-config.md",
+        "blob": "5b00f770b9abefeb9ae799d643fff3ff7a73043e"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/config/ms-config.md",
+        "blob": "9dab5f1d34a7a7929b04857d04f48bce3c46b787"
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/auth/authorization/custom",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/auth/authorization/custom.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/custom.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "a028c6e5ed15c65bb9d596e6aa87cc257dd95d80d8cbdc227ee35929b4e0aec2",
+    "sourceTechnicalHash": "6fc7eade9c0391901e9dd3c644f08373106b7c6fe307dcc682cc180138d9b3a5",
+    "targetHash": "fe4d71ef454b159e3e350853afcbb3d33972ab1299c71393433d15c6a762b1c5",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-07T16:50:28.418Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "a028c6e5ed15c65bb9d596e6aa87cc257dd95d80d8cbdc227ee35929b4e0aec2",
+      "targetHash": "fe4d71ef454b159e3e350853afcbb3d33972ab1299c71393433d15c6a762b1c5",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 31: expected [\"inlineCode\",null,null,\"access_controller_type = my-authz\"]; received [\"inlineCode\",null,null,\"fe.conf\"]\nprotected node 32: expected [\"inlineCode\",null,null,\"fe.conf\"]; received [\"inlineCode\",null,null,\"access_controller_type = my-authz\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"4\",\"4\"]; received [\"1\",\"4\",\"4\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/auth/authorization/custom.md",
+        "blob": "68f63dd12dc8d267d5f72e5a69ff0624cc372e75"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/auth/authorization/custom.md",
+        "blob": "6e402b7203e962b5c311fd7737ac5f97ca087a85"
+      }
+    }
+  }
+}

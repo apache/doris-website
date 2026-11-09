@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "page": {
+    "pluginId": "default",
+    "version": "current",
+    "docId": "admin-manual/open-api/fe-http/tso-action",
+    "locale": "ja",
+    "sourceLocale": "en",
+    "sourcePath": "docs/admin-manual/open-api/fe-http/tso-action.md",
+    "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/tso-action.md",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "02c3f5260f6bdf50b6e55f97251083c6a8497693bf28529b316b0ebe8630a091",
+    "sourceTechnicalHash": "c3692279acd7a56ef295b331915184ee0991405f0caf313408ae1cac1629cf22",
+    "targetHash": "0fabccc66b7947b8d77864d1c9bcef68eed3352bd7b30999f3633d670e6cf858",
+    "reviewStatus": "machine",
+    "ownership": "machine",
+    "translatedAt": "2026-11-07T16:58:06.841Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "no-previous-translation",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "02c3f5260f6bdf50b6e55f97251083c6a8497693bf28529b316b0ebe8630a091",
+      "targetHash": "0fabccc66b7947b8d77864d1c9bcef68eed3352bd7b30999f3633d670e6cf858",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"code\",\"bash\",null,\"curl --user root http://127.0.0.1:8030/api/tso\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 9: expected [\"code\",\"json\",null,\"{\\n  \\\"code\\\": 0,\\n  \\\"msg\\\": \\\"success\\\",\\n  \\\"data\\\": {\\n    \\\"window_end_physical_time\\\": 1625097601000,\\n    \\\"current_tso\\\": 426009585254400123,\\n    \\\"current_tso_physical_time\\\": 1625097600000,\\n    \\\"current_tso_logical_counter\\\": 123\\n  }\\n}\"]; received [\"code\",\"bash\",null,\"curl --user root http://127.0.0.1:8030/api/tso\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"window_end_physical_time\"]; received [\"code\",\"json\",null,\"{\\n  \\\"code\\\": 0,\\n  \\\"msg\\\": \\\"success\\\",\\n  \\\"data\\\": {\\n    \\\"window_end_physical_time\\\": 1625097601000,\\n    \\\"current_tso\\\": 426009585254400123,\\n    \\\"current_tso_physical_time\\\": 1625097600000,\\n    \\\"current_tso_logical_counter\\\": 123\\n  }\\n}\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 8: expected [\"code\",\"bash\",null,\"curl --user root http://127.0.0.1:8030/api/tso\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 9: expected [\"code\",\"json\",null,\"{\\n  \\\"code\\\": 0,\\n  \\\"msg\\\": \\\"success\\\",\\n  \\\"data\\\": {\\n    \\\"window_end_physical_time\\\": 1625097601000,\\n    \\\"current_tso\\\": 426009585254400123,\\n    \\\"current_tso_physical_time\\\": 1625097600000,\\n    \\\"current_tso_logical_counter\\\": 123\\n  }\\n}\"]; received [\"code\",\"bash\",null,\"curl --user root http://127.0.0.1:8030/api/tso\"]\nprotected node 10: expected [\"inlineCode\",null,null,\"window_end_physical_time\"]; received [\"code\",\"json\",null,\"{\\n  \\\"code\\\": 0,\\n  \\\"msg\\\": \\\"success\\\",\\n  \\\"data\\\": {\\n    \\\"window_end_physical_time\\\": 1625097601000,\\n    \\\"current_tso\\\": 426009585254400123,\\n    \\\"current_tso_physical_time\\\": 1625097600000,\\n    \\\"current_tso_logical_counter\\\": 123\\n  }\\n}\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/open-api/fe-http/tso-action.md",
+        "blob": "4bc05aa88575ec5d29f485a7cf9c05f04d36dfa2"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/open-api/fe-http/tso-action.md",
+        "blob": "d21febe870ef3368739ba61409227e6ae6bc200c"
+      }
+    }
+  }
+}
