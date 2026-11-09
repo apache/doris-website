@@ -20,6 +20,7 @@ under the License.
 # Apache Doris Website
 
 Source code for [doris.apache.org](https://doris.apache.org), built with [Docusaurus 3](https://docusaurus.io/).
+中文文档源码位于 `i18n/zh-CN/` 目录，欢迎参与文档修复与翻译。
 
 ## Quick Start
 
