@@ -48,10 +48,10 @@ Before the migration, map the Redshift data types to Doris data types according 
 | DOUBLE PRECISION | DOUBLE         |                                  |
 | BOOLEAN          | BOOLEAN        |                                  |
 | CHAR             | CHAR           |                                  |
-| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65535  |
+| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65533  |
 | DATE             | DATE           |                                  |
 | TIMESTAMP        | DATETIME       |                                  |
-| TIME/TIMEZ       | STRING         |                                  |
+| TIME/TIMETZ       | STRING         |                                  |
 | SUPER            | VARIANT        |                                  |
 | OTHER            | UNSUPPORTED    |                                  |
 
@@ -243,7 +243,7 @@ Reason: column_name[country], the length of input is too long than schema. first
 Reason: column_name[country], the length of input is too long than schema. first 32 bytes of input str: [Australia] schema length: 1; actual length: 9; . src line [];
 ```
 
-**Step 3**: Set an error tolerance ratio (optional). If you can tolerate skipping some erroneous rows, set the error tolerance ratio in the `PROPERTIES` of the S3 Load. For details, see [Load Configuration Parameters](https://doris.apache.org/zh-CN/docs/dev/data-operate/import/import-way/broker-load-manual#导入配置参数).
+**Step 3**: Set an error tolerance ratio (optional). If you can tolerate skipping some erroneous rows, set the error tolerance ratio in the `PROPERTIES` of the S3 Load. For details, see [Load Configuration Parameters](../import-way/broker-load-manual#import-configuration-parameters).
 
 #### 3.4 Load Multiple Partitions in Batches
 
