@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/data-partitioning/data-bucketing.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
-    "sourceTechnicalHash": "b5258fa3ea20b88e3418b0cb93a756ed8d254aeeef526a406b460a3f186fdff7",
-    "targetHash": "850eadb1aa1f7be26c5532dfec8f8f9a29159f03b5300f4ed99b38771ae530e3",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "3682d6cd918a2675980aa4442023bdde34cad135b2577e28bd5033b1bdd01e88",
+    "sourceTechnicalHash": "1a94914035afbb9b5d54dac55968386c1edffdc6f35e8d0af44f0923742558e0",
+    "targetHash": "895776844481b522d8b88362baa42ba964849b630b42ac0b374354647488cb93",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T08:01:42.127Z",
+    "translatedAt": "2026-11-05T09:06:34.765Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
-      "targetHash": "850eadb1aa1f7be26c5532dfec8f8f9a29159f03b5300f4ed99b38771ae530e3",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3682d6cd918a2675980aa4442023bdde34cad135b2577e28bd5033b1bdd01e88",
+      "targetHash": "895776844481b522d8b88362baa42ba964849b630b42ac0b374354647488cb93",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 43: expected [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]; received [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex reported a failed turn"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture decision / Configuration parameter -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 아키텍처 선택 결정 / 구성 매개변수 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Table design / Performance tuning / Data skew handling -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: 테이블 설계 / 성능 튜닝 / 데이터 편향 처리 -->\"]\nprotected node 43: expected [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]; received [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 43: expected [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]; received [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/table-design/data-partitioning/data-bucketing.md",
+        "blob": "94bae9fa24decf52e019fb0e2afd4584e123254a"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
+        "blob": "d11ba55ad50eda3305eb81d6b69889854f39b1b3"
+      }
     }
   }
 }
