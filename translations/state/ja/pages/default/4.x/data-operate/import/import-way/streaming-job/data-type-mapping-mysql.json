@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "1fa11c2e4608bb7b8c229643df07d87ef4b229bbf869d11a2e58b103ce17b925",
-    "sourceTechnicalHash": "3be5cc57570c78ee9a7493fc3d24d6e1d7f2bfa69bb5e26588a2a226cc9e1103",
-    "targetHash": "2ee2db074d8c047185751241bc00e712740b9c3c5fe5b03d38cc180531ae8200",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+    "sourceTechnicalHash": "5d8d68cfb5888fd3e9d8f6d4a2a1b88d2ffe560dff416479496870d3130eb91f",
+    "targetHash": "37f168bc78936df2bae4c125921c86fe41096c502443af9efef580f3f5507552",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.604Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T06:58:29.422Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "2d53b2d32d9aa40242e5c9cd02357afee01dec5c935d94b4e49b6884d500fec8",
+      "targetHash": "37f168bc78936df2bae4c125921c86fe41096c502443af9efef580f3f5507552",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 26: expected [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"yearIsDateType=true\"]; received [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"yearIsDateType=true\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"0\",\"4.1.5\",\"6\",\"64\",\"64\",\"8\"]; received [\"0\",\"0\",\"1\",\"4.1.5\",\"6\",\"64\",\"64\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: リファレンス / データ型マッピング -->\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 26: expected [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]; received [\"inlineCode\",null,null,\"jdbc_url\"]\nprotected node 27: expected [\"inlineCode\",null,null,\"yearIsDateType=true\"]; received [\"inlineCode\",null,null,\"tinyInt1isBit=true\"]\nprotected node 28: expected [\"inlineCode\",null,null,\"jdbc_url\"]; received [\"inlineCode\",null,null,\"yearIsDateType=true\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "d003c0256a473f37d261ec0d805473b669eb9929"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-mysql.md",
+        "blob": "f9eca56ff40f1e44545cea00e7cc779c9c10f42e"
+      }
+    }
   }
 }

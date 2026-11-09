@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
-    "sourceTechnicalHash": "f8b1209a68f3e4c0a30a8244226e58f8beee42dd22fe1c09a044ea8756414a68",
-    "targetHash": "3bfe7c31bf9304bdba323ca11be50d8e08eaf67aa8cdeac3f24ec5491a9f6d3f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+    "sourceTechnicalHash": "ffd7f07e4d1059141097ad632faa07690a2ba2f18a863eb2f13678da4818aba6",
+    "targetHash": "734cf55ecc4aefed30a3f169626f72f9599bd56631dad52b1550d64c7c145bfe",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.605Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T07:04:50.372Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+      "targetHash": "734cf55ecc4aefed30a3f169626f72f9599bd56631dad52b1550d64c7c145bfe",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"false\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: リファレンス / データ型マッピング -->\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "request",
+              "message": "Codex translation failed: 1"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 6: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]\nprotected node 8: expected [\"inlineCode\",null,null,\"0\"]; received [\"inlineCode\",null,null,\"false\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "6d449674101f25f59135aea5296f737b3e40238f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "42c5859718c6c014c810756a8060d5cce02bfd29"
+      }
+    }
   }
 }
