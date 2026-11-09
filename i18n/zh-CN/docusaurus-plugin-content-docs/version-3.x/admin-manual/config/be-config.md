@@ -809,10 +809,12 @@ BaseCompaction:546859:
 #### `streaming_load_max_mb`
 
 * 类型：int64
-* 描述：用于限制数据格式为 csv 的一次 Stream load 导入中，允许的最大数据量。
+* 描述：限制单次 Stream Load 的最大请求体大小。未设置 `read_json_by_line=true` 的 JSON 导入还受 `streaming_load_json_max_mb` 限制。
   - Stream Load 一般适用于导入几个 GB 以内的数据，不适合导入过大的数据。
-* 默认值：10240（MB）
+* 默认值：102400（MB）
 * 可动态修改：是
+
+以上为源码默认值，实际生效值以部署环境配置为准。具有 ADMIN_PRIV 权限的用户可通过 `SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';` 查看各 BE 的实际配置。该参数支持动态修改，无需重启 BE。托管云服务用户应通过服务提供的配置管理方式或联系管理员确认和调整配置。
 
 #### `streaming_load_json_max_mb`
 

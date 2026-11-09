@@ -96,7 +96,7 @@ doris-streamloader --source_file="data.csv" --url="http://localhost:8330" --head
 | --workers   | 导入的并发数   |  0    |   设置成 0 为自动模式，会根据导入数据的大小，磁盘的吞吐量，Stream Load 导入速度计算一个值。也可以手动设置，性能好的集群可以设置大点，最好不要超过 10。如果观察到导入内存过高（通过观察 Memtracker 或者 Exceed 日志）, 则可适当降低 worker 数量   |
 | --disk_throughput      | 磁盘的吞吐量，单位 MB/s   |  800    |  通常保持默认即可。该值参与 --workers 的自动推算过程。如果希望通过工具能计算出一个适当的 workers 数，可以根据实际磁盘吞吐设置。  |
 |--streamload_throughput | Stream Load 导入实际的吞吐大小，单位 MB/s | 100 | 通常保持默认即可。该值参与 --workers 的自动推算过程。默认值是通过每日性能测试环境给出的 Stream Load 吞吐量以及性能可预测性得出的。如果希望通过工具能计算出一个适当的 workers 数，可以设置实测的 Stream Load 的吞吐，即：(LoadBytes\*1000)/(LoadTimeMs\*1024\*1024) 计算出实际的吞吐量 |
-| --max_byte_per_task      | 每个导入任务数据量的最大大小，超过这个值剩下的数据会被拆分到一个新的导入任务中。  |  107374182400 (100G)    |  建议设置一个很大的值来减少导入的版本数。但如果遇到 body exceed max size 错误且不想调整 streaming_load_max_mb 参数（需重启 be），又或是遇到 -238 TOO MANY SEGMENT 错误，可以临时调小这个配置    |
+| --max_byte_per_task      | 每个导入任务数据量的最大大小，超过这个值剩下的数据会被拆分到一个新的导入任务中。  |  107374182400 (100G)    |  建议设置一个很大的值来减少导入的版本数。但如果遇到 body exceed max size 错误且不想调整 streaming_load_max_mb 参数，又或是遇到 -238 TOO MANY SEGMENT 错误，可以临时调小这个配置    |
 | --check_utf8 | <p>是否对导入数据的编码进行检查：</p>   <p> 1）false，那么不做检查直接将原始数据导入; 2）true，那么对数据中非 utf-8 编码的字符用 � 进行替代</p> | true |保持默认|
 |--debug |打印 Debug 日志 | false | 保持默认|
 |--auto_retry| 自动重传失败的 worker 序号和 task 序号的列表 | 空字符串 | 仅导入失败时重传使用，正常导入无需关心。失败时会提示具体参数内容，复制执行即可。例：如果 --auto_retry="1,1,2,1" 则表示：需要重传的 task 为：第一个 worker 的第一个 task，第二个 worker 的第一个 task。 |
@@ -185,7 +185,7 @@ Load Result: {
 
 2. `workers`，默认值为 CPU 核数，在 CPU 核数过多的场景（比如 96 核）会产生太多的并发，需要减少这个值，**推荐一般设置为 8 即可。**
 
-3. `max_byte_per_task`，可以设置一个很大的值来减少导入的 version 数。但如果遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb` 参数（需重启 BE），又或是遇到 `-238 TOO MANY SEGMENT` 错误，可以临时调小这个配置，**一般使用默认即可。**
+3. `max_byte_per_task`，可以设置一个很大的值来减少导入的 version 数。但如果遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb` 参数，又或是遇到 `-238 TOO MANY SEGMENT` 错误，可以临时调小这个配置，**一般使用默认即可。**
 
 4. 影响 version 数的两个参数：
 - `workers`：worker 数越多，版本号越多，并发越高，一般使用 8 即可。
@@ -205,13 +205,12 @@ Load Result: {
 ### 3. FAQ
 
 - 在导入过程中，遇到了部分子任务失败的问题，当时没有断点续传的功能，导入失败后重新删表导入，如果遇到这个问题，工具会进行自动重传，如果重传失败会打印出重传命令，复制后可以手动重传。
-- 该工具的默认单个导入是 100G，超过了 BE 默认的 `streaming_load_max_mb` 阈值如果不希望重启 BE，可以减少 `max_byte_per_task` 这个参数的大小。
+- 工具默认单个任务上限为 100 GB，与 `streaming_load_max_mb` 的源码默认值 102400 MB 一致。实际 BE 配置可能不同。如果任务超过实际限制，可减小 `--max_byte_per_task` 以拆分批次，或联系管理员动态调整 `streaming_load_max_mb`，无需重启 BE。
  
-  查看 `streaming_load_max_mb` 大小的方法：
+  具有 ADMIN_PRIV 权限的用户可通过 SQL 查看各 BE 的实际配置；托管云服务用户也可通过服务提供的配置管理方式或联系管理员确认，无需直接访问 BE 主机：
 
-  
-  ```Go
-  -curl "http://127.0.0.1:8040/api/show_config"
+  ```sql
+  SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';
   ```
   
 - 导入过程如果遇到 `-238 TOO MANY SEGMENT` 的问题，可以减少 `max_byte_per_task` 的大小。

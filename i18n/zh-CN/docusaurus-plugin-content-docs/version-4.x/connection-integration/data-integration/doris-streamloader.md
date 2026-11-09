@@ -250,7 +250,7 @@ Load Result: {
 
 2. **`workers`**：默认值为 `0`，即自动模式（工具会根据导入数据大小、`disk_throughput` 与 `streamload_throughput` 自动推算，常见结果为 1、2、4 或 8）。也可手动设置，性能好的集群可适当调大，**最好不超过 10**。**一般手动设置为 `8`**。
 
-3. **`max_byte_per_task`**：可设置较大值以减少导入版本数。但如遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb`（需重启 BE），或遇到 `-238 TOO MANY SEGMENT` 错误，可临时调小该值。**一般使用默认即可。**
+3. **`max_byte_per_task`**：可设置较大值以减少导入版本数。但如遇到 `body exceed max size` 错误且不想调整 `streaming_load_max_mb`，或遇到 `-238 TOO MANY SEGMENT` 错误，可临时调小该值。**一般使用默认即可。**
 
 4. **影响版本数的两个关键参数**：
 
@@ -284,12 +284,12 @@ Load Result: {
 
 ### 2. 单个导入超过了 BE 默认的 `streaming_load_max_mb` 阈值怎么办？
 
-工具默认单个导入上限为 100 GB，可能超出 BE 的 `streaming_load_max_mb` 阈值。在不希望重启 BE 的前提下，可减小 `--max_byte_per_task` 参数。
+工具默认单个任务上限为 100 GB，与 `streaming_load_max_mb` 的源码默认值 102400 MB 一致。实际 BE 配置可能不同。如果任务超过实际限制，可减小 `--max_byte_per_task` 以拆分批次，或联系管理员动态调整 `streaming_load_max_mb`，无需重启 BE。
 
-查看 `streaming_load_max_mb` 大小的方法：
+具有 ADMIN_PRIV 权限的用户可通过 SQL 查看各 BE 的实际配置；托管云服务用户也可通过服务提供的配置管理方式或联系管理员确认，无需直接访问 BE 主机：
 
-```shell
-curl "http://127.0.0.1:8040/api/show_config"
+```sql
+SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';
 ```
 
 ### 3. 遇到 `-238 TOO MANY SEGMENT` 错误怎么办？

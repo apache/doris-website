@@ -132,7 +132,7 @@ INSERT INTO target_table SELECT ... FROM source_table;
 | --- | --- | --- |
 | insert_timeout | 14400（4 小时） | INSERT INTO 作为 SQL 语句的的超时时间，单位：秒。 |
 | enable_insert_strict | true | 如果设置为 true，当 INSERT INTO 遇到不合格数据时导入会失败。如果设置为 false，INSERT INTO 会忽略不合格的行，只要有一条数据被正确导入，导入就会成功。在 2.1.4 及以前的版本中。INSERT INTO 无法控制错误率，只能通过该参数设置为严格检查数据质量或完全忽略错误数据。常见的数据不合格的原因有：源数据列长度超过目的数据列长度、列类型不匹配、分区不匹配、列顺序不匹配等。 |
-| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本，仅当 `enable_insert_strict` 值为 false 时生效。用于控制当使用 `INSERT INTO FROM S3/HDFS/LOCAL()` 时，设定错误容忍率的。默认为 1.0 表示容忍所有错误。可以取值 0 ~ 1 之间的小数。表示当错误行数超过该比例后，INSERT 任务会失败。 |
+| insert_max_filter_ratio | 1.0 | 自 2.1.5 版本起支持，仅在 `enable_insert_strict = false` 时生效。控制 `INSERT INTO ... VALUES` 和 `INSERT INTO ... SELECT` 的最大过滤行比例，包括从 Doris 表、外部表以及 S3、HDFS、LOCAL 等文件 TVF 读取数据的场景。取值范围为 0 ~ 1，默认值为 1.0。当 `filtered_rows / (loaded_rows + filtered_rows)` 超过该值时，INSERT 失败。1.0 表示允许所有行被过滤，不表示忽略其他执行错误。 |
 
 ### 导入返回值
 

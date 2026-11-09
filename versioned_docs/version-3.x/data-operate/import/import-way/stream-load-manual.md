@@ -268,9 +268,9 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 
 1. `streaming_load_max_mb`
 
-   - Default value: 10240 (MB)
+   - Default value: 102400 (MB)
    - Dynamic configuration: Yes
-   - Parameter description: The maximum import size for Stream Load. If the user's original file exceeds this value, the `streaming_load_max_mb` parameter on the BE needs to be adjusted.
+   - Parameter description: The maximum request body size for Stream Load. The source-code default is 102400 MB (100 GB); the effective limit depends on the BE configuration in your deployment. JSON loads that do not use `read_json_by_line=true` are also subject to `streaming_load_json_max_mb`. If a request exceeds the effective limit, split the data into smaller batches or ask the administrator to adjust the configuration. For managed cloud services, use the configuration mechanism provided by the service or contact its administrator; direct access to BE hosts is not required.
 
 2. Header parameters
 

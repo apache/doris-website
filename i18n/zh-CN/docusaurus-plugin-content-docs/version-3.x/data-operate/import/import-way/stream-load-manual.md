@@ -264,11 +264,11 @@ Stream Load 操作支持 HTTP 分块导入（HTTP chunked）与 HTTP 非分块�
 
 1. streaming_load_max_mb
 
-- 默认值：10240（MB）
+- 默认值：102400（MB）
 
 - 动态配置：是
 
-- 参数描述：Stream load 的最大导入大小。如果用户的原始文件超过这个值，则需要调整 BE 的参数 `streaming_load_max_mb`。
+- 参数描述：Stream Load 请求体的最大大小。源码默认值为 102400 MB（100 GB），实际限制以部署环境中的 BE 配置为准。未设置 `read_json_by_line=true` 的 JSON 导入还受 `streaming_load_json_max_mb` 限制。请求超过实际限制时，可拆分数据批次，或联系管理员调整配置。对于托管云服务，应使用服务提供的配置管理方式或联系管理员，无需直接访问 BE 主机。
 
 2. Header 参数
 

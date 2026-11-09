@@ -155,7 +155,7 @@ The SELECT statement is the same as a regular query and can include `WHERE`, `JO
 | --- | --- | --- |
 | insert_timeout | 14400 (4 hours) | Timeout for INSERT INTO as a SQL statement, in seconds. |
 | enable_insert_strict | true | When set to true, the import fails if it encounters any non-conforming data. When set to false, non-conforming rows are ignored, and the import is considered successful as long as at least one row is imported correctly. In version 2.1.4 and earlier, INSERT INTO cannot control the error rate; you can only use this parameter to set strict checking or to ignore error data entirely. Common reasons for non-conforming data include: source column length exceeds target column length, column type mismatch, partition mismatch, and column order mismatch. |
-| insert_max_filter_ratio | 1.0 | Supported since version 2.1.5. Takes effect only when `enable_insert_strict` is false. It controls the error tolerance ratio of `INSERT INTO FROM S3/HDFS/LOCAL()`. The default value 1.0 means tolerating all errors. The value range is 0 to 1, meaning that the INSERT task fails when the ratio of error rows exceeds this value. |
+| insert_max_filter_ratio | 1.0 | Supported since version 2.1.5. Takes effect only when `enable_insert_strict = false`. Controls the maximum proportion of filtered rows for `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT`, including queries from Doris tables, external tables, and file TVFs such as S3, HDFS, and LOCAL. The range is 0 to 1; the default is 1.0. The INSERT fails when `filtered_rows / (loaded_rows + filtered_rows)` exceeds this value. A value of 1.0 allows all rows to be filtered; it does not suppress other execution errors. |
 
 ### Import Return Values
 
@@ -438,7 +438,7 @@ Adjust the following two parameters to ensure that `Import timeout >= Data volum
 
 - `enable_insert_strict = true`: fail immediately when any non-conforming data is encountered.
 - `enable_insert_strict = false`: ignore non-conforming rows (version 2.1.4 and earlier).
-- Since version 2.1.5, you can use `insert_max_filter_ratio` (which only takes effect when `enable_insert_strict = false`) to control the error tolerance by ratio. It applies only to `INSERT INTO FROM S3/HDFS/LOCAL()`.
+- Since version 2.1.5, you can use `insert_max_filter_ratio` (which only takes effect when `enable_insert_strict = false`) to control the error tolerance by ratio. It applies to both `INSERT INTO ... VALUES` and `INSERT INTO ... SELECT`, including Doris tables, external tables, and file TVFs.
 
 **Q5: What should I do when the status returns `committed` but not `visible`?**
 

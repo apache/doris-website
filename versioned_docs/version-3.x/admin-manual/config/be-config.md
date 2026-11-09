@@ -783,10 +783,12 @@ BaseCompaction:546859:
 #### `streaming_load_max_mb`
 
 * Type: int64
-* Description: Used to limit the maximum amount of csv data allowed in one Stream load.
+* Description: Limits the maximum request body size for a single Stream Load. JSON loads without `read_json_by_line=true` are also subject to `streaming_load_json_max_mb`.
   - Stream Load is generally suitable for loading data less than a few GB, not suitable for loading too large data.
-* Default value: 10240 (MB)
+* Default value: 102400 (MB)
 * Dynamically modifiable: Yes
+
+This is the source-code default; the effective value depends on the deployment configuration. Users with ADMIN_PRIV can run `SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';` to check the effective value on each BE. This parameter can be changed dynamically without restarting the BE. For managed cloud services, use the configuration mechanism provided by the service or contact the administrator to confirm or adjust the value.
 
 #### `streaming_load_json_max_mb`
 
