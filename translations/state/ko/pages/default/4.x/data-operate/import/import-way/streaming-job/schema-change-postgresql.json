@@ -8,30 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
     "targetPath": "i18n/ko/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
-    "sourceCommit": "f1464d3fb0dd6007d36104a970c3bc7db282d822",
-    "sourceHash": "f6fc4c7247836367cfd29e7f77537494f837b530c841071cf07057138953ebc6",
-    "sourceTechnicalHash": "2dd18f0b441af5acf43a5a4cf1088e5b91a92e6b433e71cd337cf9d7077e4348",
-    "targetHash": "a2da5a10cf1710767dd3470cf0d4242e52187479055c8c749029f982b7e46246",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+    "sourceTechnicalHash": "2e25de7d0526383aa311f8fd109fb86bfee270cd20a862e3eb900fdc5143a97e",
+    "targetHash": "adeac3eebe6a7608cd44ea5cf235a6c5fc3ee796a4e05fd53da68c54da303569",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-19T09:19:37.738Z",
+    "translatedAt": "2026-11-06T06:13:00.204Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "f6fc4c7247836367cfd29e7f77537494f837b530c841071cf07057138953ebc6",
-      "targetHash": "a2da5a10cf1710767dd3470cf0d4242e52187479055c8c749029f982b7e46246",
+      "sourceHash": "8e3b23ea433ad9ba0a97b1149978dc4b7f71f00333c34a55272b295cf6b452a5",
+      "targetHash": "adeac3eebe6a7608cd44ea5cf235a6c5fc3ee796a4e05fd53da68c54da303569",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 지식 유형: 개념 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during PostgreSQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 적용 시나리오: PostgreSQL 자동 테이블 생성 동기화 중 업스트림 스키마 변경 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
           "issues": []
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "9de74ae1a5f449b56e4b04f651204fc5978ca3c1"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-postgresql.md",
+        "blob": "94637264873b46048b7d943ec363e1f23499211d"
+      }
     }
   }
 }
