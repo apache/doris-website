@@ -386,7 +386,7 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 Recommend setting based on business tolerance for data visibility delay. If system pressure is high, consider increasing the interval.
 
-### Adjusting the Commit Data Size
+### Modifying Commit Data Volume
 
 Group Commit's default commit data-size trigger threshold is 128 MB. You can adjust it through table configuration:
 
