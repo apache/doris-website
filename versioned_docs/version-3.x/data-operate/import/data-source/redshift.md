@@ -16,22 +16,22 @@ During the process of migrating Redshift, it is usually necessary to use object 
 
 ## Data type mapping
 
-| Redshift         | Doris          | Comment                 |
-| ---------------- | -------------- | -------------------- |
-| SMALLINT         | SMALLINT       |                      |
-| INTEGER          | INT            |                      |
-| BIGINT           | BIGINT         |                      |
-| DECIMAL          | DECIMAL        |                      |
-| REAL             | FLOAT          |                      |
-| DOUBLE PRECISION | DOUBLE         |                      |
-| BOOLEAN          | BOOLEAN        |                      |
-| CHAR             | CHAR           |                      |
-| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65535 |
-| DATE             | DATE           |                      |
-| TIMESTAMP        | DATETIME       |                      |
-| TIME/TIMEZ       | STRING         |                      |
-| SUPER            | VARIANT        |                      |
-| OTHER            | UNSUPPORTED    |                      |
+|     Redshift     |     Doris      |             Comment             |
+| ---------------- | -------------- | ------------------------------- |
+| SMALLINT         | SMALLINT       |                                 |
+| INTEGER          | INT            |                                 |
+| BIGINT           | BIGINT         |                                 |
+| DECIMAL          | DECIMAL        |                                 |
+| REAL             | FLOAT          |                                 |
+| DOUBLE PRECISION | DOUBLE         |                                 |
+| BOOLEAN          | BOOLEAN        |                                 |
+| CHAR             | CHAR           |                                 |
+| VARCHAR          | VARCHAR/STRING | VARCHAR maximum length is 65533 |
+| DATE             | DATE           |                                 |
+| TIMESTAMP        | DATETIME       |                                 |
+| TIME/TIMETZ      | STRING         |                                 |
+| SUPER            | VARIANT        |                                 |
+| OTHER            | UNSUPPORTED    |                                 |
 
 ## 1. Create Table
 

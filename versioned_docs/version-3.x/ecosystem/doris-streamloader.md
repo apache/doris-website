@@ -101,7 +101,7 @@ The parameters above are required, and the following parameters are optional:
 | --workers   | Concurrency  level of data loading |  0    |   "0" means the auto mode, in which the streamload speed is based on the data size and disk throughput. You can dial this up for a high-performance cluster, but it is advised to keep it below 10. If you observe excessive memory usage (via the memtracker in log), you can dial this down.   |
 | --disk_throughput      | Disk throughput (MB/s) |  800    |  Usually remain as default. This parameter is a basis of the automatic inference of workers. You can adjust this based on your needs to get a more appropriate value of workers.  |
 |--streamload_throughput | Streamload throughput (MB/s) | 100 | Usually remain as default. The default value is derived from the streamload throughput and predicted performance provided by the daily performance testing environment. To get a more appropriate value of workers, you can configure this based on your measured streamload throughput: (LoadBytes*1000)/(LoadTimeMs*1024*1024) |
-| --max_byte_per_task      | Maximum data size for each load task. For a dataset exceeding this size, the remaining part will be split into a new load task. |  107374182400 (100G)    | This is recommended to be large in order to reduce the number of load versions. However, if you encounter a "body exceed max size" and try to avoid adjusting the streaming_load_max_mb parameter (which requires restarting the backend), or if you encounter a "-238 TOO MANY SEGMENT" error, you can temporarily dial this down. |
+| --max_byte_per_task      | Maximum data size for each load task. For a dataset exceeding this size, the remaining part will be split into a new load task. |  107374182400 (100G)    | This is recommended to be large in order to reduce the number of load versions. However, if you encounter a "body exceed max size" and try to avoid adjusting the streaming_load_max_mb parameter, or if you encounter a "-238 TOO MANY SEGMENT" error, you can temporarily dial this down. |
 | --check_utf8 | <p>Whether to check the encoding of the data that has been loaded: </p>   <p> 1) false, direct load of raw data without checking;  2)  true, replacing non UTF-8 characters with � </p> | true |Remain as default|
 |--debug |Print debug log | false | Remain as default |
 |--auto_retry| The list of failed workers and tasks for auto retry | empty string | This is only used when there is an load failure. The serial numbers of the failed workers and tasks will be shown and all you need is to copy and execute the the entire command. For example, if --auto_retry="1,1;2,1", that means the failed tasks include the first task in the first worker and the first task in the second worker. |
@@ -192,7 +192,7 @@ Load Result: {
 
 2. The default value of `workers` is the number of CPU cores. When that is large, for example, 96 cores, the value of `workers` should be dialed down. **The recommended value for most cases is 8.**
 
-3. `max_byte_per_task` is recommended to be large in order to reduce the number of load versions. However, if you encounter a "body exceed max size" and try to avoid adjusting the streaming_load_max_mb parameter (which requires restarting the backend), or if you encounter a `-238 TOO MANY SEGMENT` error, you can temporarily dial this down. **For most cases, this can remain as default.**
+3. `max_byte_per_task` is recommended to be large in order to reduce the number of load versions. However, if you encounter a "body exceed max size" and try to avoid adjusting the streaming_load_max_mb parameter, or if you encounter a `-238 TOO MANY SEGMENT` error, you can temporarily dial this down. **For most cases, this can remain as default.**
 
 **Two parameters that impacts the number of versions:**
 
@@ -213,12 +213,12 @@ In most cases, you only need to set the required parameters and `workers`.
 ### FAQ
 
 - Before resumable loading was available, to fix any partial failures in loading would require deleting the current table and starting over. In this case, Doris Streamloader would retry automatically. If the retry fails, a retry command will be printed so you can copy and execute it.
-- The default maximum data loading size for Doris Streamloader is limited by BE config `streaming_load_max_mb` (default: 100GB). If you don't want to restart BE, you can also dial down `max_byte_per_task`.
+- The tool's default upper limit per task is 100 GB, matching the source-code default of `streaming_load_max_mb` (102400 MB) in Doris 3.0.2 and later (2.1.7 and later in the 2.1 series). The BE default is 10 GB in Doris 3.0.0 and 3.0.1, and 100 GB in 4.x and dev. The effective BE configuration may differ. If a task exceeds the effective limit, reduce `--max_byte_per_task` to split it into smaller batches, or ask the administrator to adjust the dynamically modifiable `streaming_load_max_mb` parameter. A BE restart is not required.
 
-  To show current `streaming_load_max_mb`: 
+  Users with ADMIN_PRIV can check the effective configuration on each BE through SQL. For managed cloud services, use the configuration mechanism provided by the service or contact the administrator; direct BE host access is not required:
 
-  ```Go
-  curl "http://127.0.0.1:8040/api/show_config"
+  ```sql
+  SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';
   ```
   
 - If you encounter an `-238 TOO MANY SEGMENT ` error, you can dial down `max_byte_per_task`.

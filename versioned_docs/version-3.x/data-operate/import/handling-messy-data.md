@@ -252,9 +252,27 @@ PROPERTIES
 
 **Insert Into**
 ```sql
-SET insert_max_filter_ratio = 0.1;
-INSERT INTO test_table FROM S3/HDFS/LOCAL();```
+CREATE TABLE insert_filter_ratio_example (id INT NOT NULL)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+SET enable_insert_strict = false;
+SET insert_max_filter_ratio = 0.5;
+INSERT INTO insert_filter_ratio_example VALUES (1), (NULL);
+SELECT * FROM insert_filter_ratio_example;
+```
+
+```text
++------+
+| id   |
++------+
+|    1 |
++------+
+```
+
+Because `id` does not allow NULL, the second row is filtered. The filter ratio is `1 / (1 + 1) = 0.5`, which does not exceed the threshold, so the load succeeds.
 
 :::tip
-For Insert Into statements, `insert_max_filter_ratio` only takes effect when `enable_insert_strict = false`, and only applies to `INSERT INTO FROM S3/HDFS/LOCAL()` syntax. The default value is 1.0, which means that all abnormal data are allowed to be filtered.
+For INSERT INTO statements, `insert_max_filter_ratio` takes effect only when `enable_insert_strict = false` and defaults to `1.0`. It applies to VALUES and SELECT, including Doris tables, external tables, and file TVFs. INSERT fails when the actual filter ratio exceeds the threshold; equality is allowed. This parameter does not suppress other execution errors.
 :::

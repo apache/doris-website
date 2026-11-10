@@ -450,12 +450,18 @@ PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 
 `job_properties` 子句具体参数选项如下：
 
+**版本说明：**
+
+- `max_batch_size` 的校验上限从 Doris 2.1.1 起由 1 GB 提高到 10 GB。
+- 默认值从 Doris 2.1.5 和 3.0.0 起由 100 MB 提高到 1 GB。
+- 3.x、4.x 和 dev 均使用 10 GB 的上限和 1 GB 的默认值。
+
 | 参数 | 说明 |
 | ---- | ---- |
 | desired_concurrent_number | <p>默认值：256</p><p>单个导入子任务（load task）期望的并发度。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际并发度通过以下公式计算：</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p><p>- `topic_partition_num`：Kafka Topic 的 partition 数量；</p><p>- `desired_concurrent_number`：设置的参数大小；</p><p>- `max_routine_load_task_concurrent_num`：FE 中设置的 Routine Load 最大任务并行度参数。</p> |
 | max_batch_interval | 每个子任务的最大运行时间，单位是秒，必须大于 0，默认值为 60(s)。`max_batch_interval`/`max_batch_rows`/`max_batch_size` 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_batch_rows | 每个子任务最多读取的行数。必须大于等于 200000，默认 20000000。`max_batch_interval`/`max_batch_rows`/`max_batch_size` 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
-| max_batch_size | 每个子任务最多读取的字节数。单位是字节，范围是 100MB 到 1GB，默认 1G。`max_batch_interval`/`max_batch_rows`/`max_batch_size` 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
+| max_batch_size | 每个子任务最多读取的字节数。单位是字节，范围是 100 MB 到 10 GB（104857600 ~ 10737418240 字节，含边界值），默认 1G。`max_batch_interval`/`max_batch_rows`/`max_batch_size` 共同形成子任务执行阈值。任一参数达到阈值，导入子任务结束，并生成新的导入子任务。 |
 | max_error_number | 采样窗口内允许的最大错误行数，必须大于等于 0，默认 0（即不允许有错误行）。采样窗口为 `max_batch_rows * 10`。如果采样窗口内错误行数大于 `max_error_number`，则会导致例行作业被暂停，需要人工介入检查数据质量问题，可通过 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 命令中的 `ErrorLogUrls` 检查数据的质量问题。被 where 条件过滤掉的行不算错误行。 |
 | strict_mode | 是否开启严格模式，默认关闭。严格模式表示对于导入过程中的列类型转换进行严格过滤。开启后，非空原始数据的列类型变换如果结果为 NULL 则会被过滤。<p>过滤策略：</p><p>- 某衍生列（由函数转换生成而来），Strict Mode 对其不产生影响；</p><p>- 当列类型需要转换，错误的数据类型将被过滤掉，可在 [SHOW ROUTINE LOAD](../../../sql-manual/sql-statements/data-modification/load-and-export/SHOW-ROUTINE-LOAD) 的 `ErrorLogUrls` 中查看；</p><p>- 对于导入的某列类型包含范围限制的，如果原始数据能正常通过类型转换但无法通过范围限制的，strict mode 对其不产生影响。例如类型是 `decimal(1,0)`，原始数据为 10，则属于可以通过类型转换但不在列声明的范围内。详细内容参考[严格模式](../../../data-operate/import/handling-messy-data#严格模式)。</p> |
 | timezone | 指定导入作业所使用的时区。默认为使用 Session 的 timezone 参数。该参数会影响所有导入涉及的与时区有关的函数结果。 |

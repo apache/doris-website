@@ -251,10 +251,27 @@ PROPERTIES
 
 **Insert Into**
 ```sql
-SET insert_max_filter_ratio = 0.1;
-INSERT INTO test_table FROM S3/HDFS/LOCAL();
+CREATE TABLE insert_filter_ratio_example (id INT NOT NULL)
+DUPLICATE KEY(id)
+DISTRIBUTED BY HASH(id) BUCKETS 1
+PROPERTIES ("replication_num" = "1");
+
+SET enable_insert_strict = false;
+SET insert_max_filter_ratio = 0.5;
+INSERT INTO insert_filter_ratio_example VALUES (1), (NULL);
+SELECT * FROM insert_filter_ratio_example;
 ```
 
+```text
++------+
+| id   |
++------+
+|    1 |
++------+
+```
+
+由于 `id` 不允许 NULL，第二行被过滤；过滤比例为 `1 / (1 + 1) = 0.5`，未超过阈值，因此导入成功。
+
 :::tip
-对于 Insert Into 语句，`insert_max_filter_ratio` 仅在 `enable_insert_strict = false` 时生效，且只适用于 `INSERT INTO FROM S3/HDFS/LOCAL()` 语法。默认值为 1.0，表示允许所有异常数据被过滤。
+对于 INSERT INTO 语句，`insert_max_filter_ratio` 仅在 `enable_insert_strict = false` 时生效，默认值为 `1.0`。它适用于 VALUES 和 SELECT，包括从 Doris 表、外部表及文件 TVF 读取数据的场景。实际过滤比例超过阈值时，INSERT 失败；等于阈值时允许导入。该参数不用于忽略其他执行错误。
 ::: 
