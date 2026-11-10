@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
-    "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-    "sourceTechnicalHash": "4ac3778545d692c84078e2a00500536db7ea4e54563f4b2bca41f3cadf3047dc",
-    "targetHash": "e833f3a0bdda75df80c2173e3f3d25fcb1983252ae19df3b15bc6447b6d32cf7",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+    "sourceTechnicalHash": "4726eea3433bba5ea731c67af17f402f74dc991aad7645397957c5a0450c6527",
+    "targetHash": "86867aad486a365f3e179a67825221a6575010e1c8388fa1b73fc792c0fd3ec6",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-30T18:37:39.875Z",
+    "translatedAt": "2026-11-05T19:09:37.061Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-      "targetHash": "e833f3a0bdda75df80c2173e3f3d25fcb1983252ae19df3b15bc6447b6d32cf7",
+      "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+      "targetHash": "86867aad486a365f3e179a67825221a6575010e1c8388fa1b73fc792c0fd3ec6",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during OceanBase Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase Auto Table Creation Sync 中の上流スキーマ変更 -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during OceanBase Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase の自動テーブル作成同期中の上流スキーマ変更 -->\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-        "blob": "958b3be3531cc07daa1ebf6d029f72d1cba3d803"
+        "blob": "3bd25cba8dd081db5e659cbdd0f3521f3e0daf20"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-        "blob": "6d3ec123372828358533c15e0c0f2d03d57ee9ef"
+        "blob": "92f64a7e3bef1073e0a8661366596a06681967dc"
       }
     }
   }
