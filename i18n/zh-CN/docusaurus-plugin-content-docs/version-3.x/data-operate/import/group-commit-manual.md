@@ -390,6 +390,12 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 ### 修改提交数据量
 
+**版本说明：**
+
+- 表属性 `group_commit_data_bytes` 从 Doris 2.1.0 引入时，默认值即为 134217728 字节（128 MB）。
+- 3.x、4.x 和 dev 均沿用该默认值。
+- BE 参数 `group_commit_queue_mem_limit` 的默认值为 64 MB，用于队列内存背压控制，与提交触发阈值是不同的配置项。
+
 Group Commit 的默认提交数据量触发阈值为 128 MB，用户可以通过修改表配置进行调整：
 
 ```sql

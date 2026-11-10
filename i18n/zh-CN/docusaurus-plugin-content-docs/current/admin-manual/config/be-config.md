@@ -844,6 +844,12 @@ BaseCompaction:546859:
 
 以上为源码默认值，实际生效值以部署环境配置为准。具有 ADMIN_PRIV 权限的用户可通过 `SHOW BACKEND CONFIG LIKE 'streaming_load_max_mb';` 查看各 BE 的实际配置。该参数支持动态修改，无需重启 BE。托管云服务用户应通过服务提供的配置管理方式或联系管理员确认和调整配置。
 
+**版本说明：**
+
+- 在 3.x 系列中，`streaming_load_max_mb` 的默认值从 Doris 3.0.2 起由 10240 MB（10 GB）提高到 102400 MB（100 GB）；3.0.0 和 3.0.1 的默认值仍为 10 GB。
+- 2.1 系列从 2.1.7 起进行相同调整。
+- 4.x 和 dev 沿用 100 GB 的默认值。实际生效值以部署环境配置为准。
+
 #### `streaming_load_json_max_mb`
 
 * 类型：int64

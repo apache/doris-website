@@ -450,6 +450,12 @@ PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 
 `job_properties` 子句具体参数选项如下：
 
+**版本说明：**
+
+- `max_batch_size` 的校验上限从 Doris 2.1.1 起由 1 GB 提高到 10 GB。
+- 默认值从 Doris 2.1.5 和 3.0.0 起由 100 MB 提高到 1 GB。
+- 3.x、4.x 和 dev 均使用 10 GB 的上限和 1 GB 的默认值。
+
 | 参数 | 说明 |
 | ---- | ---- |
 | desired_concurrent_number | <p>默认值：256</p><p>单个导入子任务（load task）期望的并发度。在导入过程中，期望的子任务并发度可能不等于实际并发度。实际并发度通过以下公式计算：</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`，其中：</p><p>- `topic_partition_num`：Kafka Topic 的 partition 数量；</p><p>- `desired_concurrent_number`：设置的参数大小；</p><p>- `max_routine_load_task_concurrent_num`：FE 中设置的 Routine Load 最大任务并行度参数。</p> |

@@ -487,6 +487,12 @@ Set the value based on how much visibility delay your business can tolerate. If 
 
 ### Adjusting the Commit Data Size
 
+**Version history:**
+
+- The `group_commit_data_bytes` table property was introduced in Doris 2.1.0 with a default of 134217728 bytes (128 MB).
+- This default is unchanged in 3.x, 4.x, and dev.
+- The BE parameter `group_commit_queue_mem_limit` defaults to 64 MB and controls queue memory backpressure. It is a separate setting from the commit trigger threshold.
+
 The default commit data-size trigger threshold for Group Commit is 128 MB. You can adjust it by modifying the table configuration:
 
 ```sql

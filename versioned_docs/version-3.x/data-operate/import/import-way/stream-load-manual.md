@@ -268,9 +268,15 @@ Parameter Description: The default timeout for Stream Load. The load job will be
 
 1. `streaming_load_max_mb`
 
-   - Default value: 102400 (MB)
+   - Default value: 102400 MB (3.0.2 and later); 10240 MB (3.0.0 and 3.0.1)
    - Dynamic configuration: Yes
-   - Parameter description: The maximum request body size for Stream Load. The source-code default is 102400 MB (100 GB); the effective limit depends on the BE configuration in your deployment. JSON loads that do not use `read_json_by_line=true` are also subject to `streaming_load_json_max_mb`. If a request exceeds the effective limit, split the data into smaller batches or ask the administrator to adjust the configuration. For managed cloud services, use the configuration mechanism provided by the service or contact its administrator; direct access to BE hosts is not required.
+   - Parameter description: The maximum request body size for Stream Load. The source-code default is 102400 MB (100 GB) from Doris 3.0.2 onward; the effective limit depends on the BE configuration in your deployment. JSON loads that do not use `read_json_by_line=true` are also subject to `streaming_load_json_max_mb`. If a request exceeds the effective limit, split the data into smaller batches or ask the administrator to adjust the configuration. For managed cloud services, use the configuration mechanism provided by the service or contact its administrator; direct access to BE hosts is not required.
+
+**Version history:**
+
+- In the 3.x series, the default for `streaming_load_max_mb` increased from 10240 MB (10 GB) to 102400 MB (100 GB) in Doris 3.0.2. Doris 3.0.0 and 3.0.1 use the 10 GB default.
+- In the 2.1 series, the same change took effect in 2.1.7.
+- Doris 4.x and dev retain the 100 GB default. The effective value depends on your deployment configuration.
 
 2. Header parameters
 

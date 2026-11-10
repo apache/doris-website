@@ -213,7 +213,7 @@ In most cases, you only need to set the required parameters and `workers`.
 ### FAQ
 
 - Before resumable loading was available, to fix any partial failures in loading would require deleting the current table and starting over. In this case, Doris Streamloader would retry automatically. If the retry fails, a retry command will be printed so you can copy and execute it.
-- The tool's default upper limit per task is 100 GB, matching the source-code default of `streaming_load_max_mb` (102400 MB). The effective BE configuration may differ. If a task exceeds the effective limit, reduce `--max_byte_per_task` to split it into smaller batches, or ask the administrator to adjust the dynamically modifiable `streaming_load_max_mb` parameter. A BE restart is not required.
+- The tool's default upper limit per task is 100 GB, matching the source-code default of `streaming_load_max_mb` (102400 MB) in Doris 3.0.2 and later (2.1.7 and later in the 2.1 series). The BE default is 10 GB in Doris 3.0.0 and 3.0.1, and 100 GB in 4.x and dev. The effective BE configuration may differ. If a task exceeds the effective limit, reduce `--max_byte_per_task` to split it into smaller batches, or ask the administrator to adjust the dynamically modifiable `streaming_load_max_mb` parameter. A BE restart is not required.
 
   Users with ADMIN_PRIV can check the effective configuration on each BE through SQL. For managed cloud services, use the configuration mechanism provided by the service or contact the administrator; direct BE host access is not required:
 

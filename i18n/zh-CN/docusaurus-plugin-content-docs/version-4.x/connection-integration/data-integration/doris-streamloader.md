@@ -284,7 +284,7 @@ Load Result: {
 
 ### 2. 单个导入超过了 BE 默认的 `streaming_load_max_mb` 阈值怎么办？
 
-工具默认单个任务上限为 100 GB，与 `streaming_load_max_mb` 的源码默认值 102400 MB 一致。实际 BE 配置可能不同。如果任务超过实际限制，可减小 `--max_byte_per_task` 以拆分批次，或联系管理员动态调整 `streaming_load_max_mb`，无需重启 BE。
+工具默认单个任务上限为 100 GB，与 Doris 3.0.2 及以上版本（2.1 系列为 2.1.7 及以上版本）的 `streaming_load_max_mb` 源码默认值 102400 MB 一致。3.0.0 和 3.0.1 的 BE 默认限制为 10 GB；4.x 和 dev 的 BE 默认限制为 100 GB。实际 BE 配置可能不同。如果任务超过实际限制，可减小 `--max_byte_per_task` 以拆分批次，或联系管理员动态调整 `streaming_load_max_mb`，无需重启 BE。
 
 具有 ADMIN_PRIV 权限的用户可通过 SQL 查看各 BE 的实际配置；托管云服务用户也可通过服务提供的配置管理方式或联系管理员确认，无需直接访问 BE 主机：
 

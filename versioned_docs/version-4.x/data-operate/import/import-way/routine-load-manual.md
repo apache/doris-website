@@ -456,6 +456,12 @@ PROPERTIES ("<key1>" = "<value1>"[, "<key2>" = "<value2>" ...])
 
 The specific parameter options of the `job_properties` clause are as follows:
 
+**Version history:**
+
+- The upper limit of `max_batch_size` increased from 1 GB to 10 GB in Doris 2.1.1.
+- Its default increased from 100 MB to 1 GB in Doris 2.1.5 and 3.0.0.
+- The 10 GB upper limit and 1 GB default apply throughout 3.x, 4.x, and dev.
+
 | Parameter | Description |
 | ---- | ---- |
 | desired_concurrent_number | <p>Default value: 256</p><p>The desired concurrency for a single load task. During import, the desired subtask concurrency may not equal the actual concurrency. The actual concurrency is calculated as:</p><p>`min(topic_partition_num, desired_concurrent_number, max_routine_load_task_concurrent_num)`, where:</p><p>- `topic_partition_num`: the number of partitions of the Kafka topic.</p><p>- `desired_concurrent_number`: the value of this parameter.</p><p>- `max_routine_load_task_concurrent_num`: the maximum task parallelism for Routine Load set in the FE.</p> |
