@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/trouble-shooting/compaction.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction.md",
-    "sourceCommit": "8dd8cb1f5ce4154d6f537595ac445d1b9ca2431d",
-    "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
-    "sourceTechnicalHash": "41d944af131840b9d678afb8022e96503a768084f57e9cba0e5a8fa14f401d19",
-    "targetHash": "8f6a4c67fb8f66388ebabee1f938d11d106a00e96fbeb57117921da6e302e354",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+    "sourceTechnicalHash": "e45add6e503594b1f8004ccba2359d6bc269ef564a7b2aaba48d5ca48c1ec3a8",
+    "targetHash": "71b763e23553af6f4b71fa2e36eb2cdf4f4f44345650341f994dfe8a2dd25357",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T18:27:30.341Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T16:50:32.315Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+      "targetHash": "71b763e23553af6f4b71fa2e36eb2cdf4f4f44345650341f994dfe8a2dd25357",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"11\",\"15\",\"2\",\"2\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"4\",\"5\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/trouble-shooting/compaction.md",
+        "blob": "5dfc0e312d02d64c51c7a479f7ea399525c844d6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction.md",
+        "blob": "b435655c7139b4c1d7d8f4b3dee3aa9a1cdbb69d"
+      }
+    }
   }
 }

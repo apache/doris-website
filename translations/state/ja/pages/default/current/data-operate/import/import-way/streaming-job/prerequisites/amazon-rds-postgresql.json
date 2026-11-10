@@ -8,13 +8,71 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "508b25fe6077b4957db06934598de484c2746b09c3bf30c18258bb32cba30563",
-    "sourceTechnicalHash": "92f984bce32b5c8d3458ed1ceda80292a25fc2c41d8b76bfdb8699d5c3d50670",
-    "targetHash": "a906f59c02a2df506fc29d32d6c9698bc200926c7481a2845a81dee348af9321",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "7ebfb0f3f1684c91da2dda51b2149033a36f99654a2f5ccf6bc58b239abe87f6",
+    "sourceTechnicalHash": "7c6e97deaa54756d7275994c78579359e37b101a4e34df24700d58426288599a",
+    "targetHash": "01455c37cca2aef5b0a1203a6a6e1a70a65037407d56ef3347c6f26358c83c85",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.096Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T17:35:17.178Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "7ebfb0f3f1684c91da2dda51b2149033a36f99654a2f5ccf6bc58b239abe87f6",
+      "targetHash": "01455c37cca2aef5b0a1203a6a6e1a70a65037407d56ef3347c6f26358c83c85",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"rds_replication\"]; received [\"inlineCode\",null,null,\"REPLICATION\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"REPLICATION\"]; received [\"inlineCode\",null,null,\"rds_replication\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure / Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 手順 / 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Pre-deployment check / Environment preparation -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: デプロイ前の確認 / 環境準備 -->\"]\nprotected node 4: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 手順 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "frontmatter",
+              "message": "Restore complete front matter field: keywords"
+            },
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"rds_replication\"]; received [\"inlineCode\",null,null,\"REPLICATION\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"REPLICATION\"]; received [\"inlineCode\",null,null,\"rds_replication\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 28: expected [\"inlineCode\",null,null,\"rds_replication\"]; received [\"inlineCode\",null,null,\"REPLICATION\"]\nprotected node 29: expected [\"inlineCode\",null,null,\"REPLICATION\"]; received [\"inlineCode\",null,null,\"rds_replication\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "6718569cb99b94f34684aa4fbfc4204ec6b8814c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/prerequisites/amazon-rds-postgresql.md",
+        "blob": "570881d7982281e302d0078b95904f89a4174f90"
+      }
+    }
   }
 }

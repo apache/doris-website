@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-    "sourceCommit": "b1f54b8f686135f54d3ffab1841aa9e27ee02666",
-    "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-    "sourceTechnicalHash": "4ac3778545d692c84078e2a00500536db7ea4e54563f4b2bca41f3cadf3047dc",
-    "targetHash": "0634da0d6ce53f0834c2582428b01f0df2905448b06608c7eb4709184487c56d",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+    "sourceTechnicalHash": "4726eea3433bba5ea731c67af17f402f74dc991aad7645397957c5a0450c6527",
+    "targetHash": "0c8b7a13a6ee1143dfac949d165bafa0e2040301e807fa3fde8ede39ba3841a3",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-29T19:51:44.958Z",
+    "translatedAt": "2026-11-04T17:48:21.647Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "d534b172591f2127a5706380ab06f01aa210bda12a8da17950fe8a3910763735",
-      "targetHash": "0634da0d6ce53f0834c2582428b01f0df2905448b06608c7eb4709184487c56d",
+      "sourceHash": "cfcb50d1428cd3695df7e75421fb93fcd513080f04fbf3cb1a9fd005917f1c50",
+      "targetHash": "0c8b7a13a6ee1143dfac949d165bafa0e2040301e807fa3fde8ede39ba3841a3",
       "warnings": [],
       "history": [
         {
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "docs/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-        "blob": "958b3be3531cc07daa1ebf6d029f72d1cba3d803"
+        "blob": "3bd25cba8dd081db5e659cbdd0f3521f3e0daf20"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/schema-change-oceanbase.md",
-        "blob": "6d3ec123372828358533c15e0c0f2d03d57ee9ef"
+        "blob": "92f64a7e3bef1073e0a8661366596a06681967dc"
       }
     }
   }

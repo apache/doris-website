@@ -8,13 +8,48 @@
     "sourceLocale": "en",
     "sourcePath": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "6e929513742565e816506c13ca9f31d0c056a4ab4b9f1c70aff0ef26a384bcac",
-    "sourceTechnicalHash": "f8b1209a68f3e4c0a30a8244226e58f8beee42dd22fe1c09a044ea8756414a68",
-    "targetHash": "3bfe7c31bf9304bdba323ca11be50d8e08eaf67aa8cdeac3f24ec5491a9f6d3f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+    "sourceTechnicalHash": "ffd7f07e4d1059141097ad632faa07690a2ba2f18a863eb2f13678da4818aba6",
+    "targetHash": "4468e35672a3d7334fe275689b1bcb38d57b10143951f62f995b959aa3a4ed5d",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T15:18:07.097Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T17:11:31.597Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 2,
+      "acceptedWithWarnings": false,
+      "sourceHash": "eb7ba4c67a7a5051526b671b216c5f35c048ad518888df9e0e37a586e0139460",
+      "targetHash": "4468e35672a3d7334fe275689b1bcb38d57b10143951f62f995b959aa3a4ed5d",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Reference / data type mapping -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: リファレンス / データ型マッピング -->\"]\nprotected node 6: expected [\"inlineCode\",null,null,\"TINYINT\"]; received [\"inlineCode\",null,null,\"BOOLEAN\"]\nprotected node 7: expected [\"inlineCode\",null,null,\"1\"]; received [\"inlineCode\",null,null,\"true\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "6d449674101f25f59135aea5296f737b3e40238f"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/data-type-mapping-oceanbase.md",
+        "blob": "42c5859718c6c014c810756a8060d5cce02bfd29"
+      }
+    }
   }
 }
