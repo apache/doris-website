@@ -1,5 +1,6 @@
 const themes = require('prism-react-renderer').themes;
 const versionsPlugin = require('./config/versions-plugin');
+const recentBlogsPlugin = require('./config/recent-blogs-plugin.cjs');
 const VERSIONS = require('./versions.json');
 const { markdownBoldPlugin } = require('./config/markdown-bold-plugin');
 const { DEFAULT_VERSION } = require('./src/constant/version');
@@ -383,6 +384,7 @@ const config = {
             onUntruncatedBlogPosts: 'ignore',
             onInlineAuthors: 'ignore',
         }],
+        SKIP_BLOG ? null : recentBlogsPlugin,
         'docusaurus-plugin-sass',
         require.resolve('./config/matomo-plugin/index.cjs'),
         // Use custom blog plugin

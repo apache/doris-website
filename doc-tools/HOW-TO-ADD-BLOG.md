@@ -22,10 +22,9 @@ static/images/blogs/<slug>/cover.<ext>
 static/images/blogs/<slug>/<content-image>.<ext>
 ```
 
-The following files require changes only when the post should appear in the corresponding featured area:
+The following file requires changes only when the post should appear in the Newsletter carousel:
 
 ```text
-src/components/recent-blogs/recent-blogs.data.ts
 src/constant/newsletter.data.ts
 ```
 
@@ -47,7 +46,7 @@ Before adding the post, collect or derive the following information:
 | Cover image | Yes | A horizontal image used by Blog cards |
 | Content images | When referenced | Every local image used by the article |
 | Keywords | Recommended | A short list of specific search terms |
-| Featured placement | Optional | Recent posts, Newsletter, or Blog header |
+| Featured placement | Optional | Newsletter or Blog header |
 
 If the requester has not supplied a slug, summary, description, keywords, or image alt text, derive them from the article. Do not invent an author, organization, publication date, technical result, or product claim. Ask for missing factual information when it cannot be established from the source material.
 
@@ -294,28 +293,15 @@ When the supplied Markdown references images:
 
 Do not silently omit a missing image. If a remote image must be stored in the repository, place it in the same article image directory and replace its remote reference with the corresponding `/images/blogs/<slug>/...` path.
 
-## Step 7: Update optional homepage placements
+## Step 7: Check recent posts and optional featured placements
 
-Adding the file under `blog/` is enough to add it to the Blog page. The following changes are conditional.
+Adding the file under `blog/` is enough to add it to the Blog page and make it eligible for Recent posts. Newsletter and Blog header placements are optional.
 
 ### Recent posts
 
-If the post should appear in the Recent posts section, edit:
+The Recent posts section at the bottom of each article updates automatically from Docusaurus blog metadata. It shows up to four articles in descending publication-date order, excluding the current article, drafts, and unlisted posts. No separate list needs editing.
 
-```text
-src/components/recent-blogs/recent-blogs.data.ts
-```
-
-Add the post with its internal URL:
-
-```ts
-{
-    label: 'Building a Real-Time Analytics Platform with Apache Doris',
-    link: '/blog/building-a-real-time-analytics-platform',
-},
-```
-
-Keep the configured list length and ordering consistent with the surrounding file. At the time of writing, the list contains four posts in newest-first order. Remove the oldest entry when adding a new one if the design still expects four.
+Set the front matter `date` accurately: this field determines the order, rather than the file's modification time. Each locale uses its generated blog titles and internal permalinks, including the existing English fallback behavior. The list refreshes when the site is rebuilt or the development server reloads changed blog content.
 
 ### Newsletter carousel
 
