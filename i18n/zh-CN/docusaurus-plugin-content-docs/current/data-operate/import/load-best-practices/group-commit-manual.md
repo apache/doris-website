@@ -465,7 +465,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 
 <!-- 知识类型: 配置参数 -->
 
-当满足时间间隔（默认为 10 秒）或数据量（默认为 64 MB）其中一个条件时，会自动提交数据。这两个参数需要配合使用，建议根据实际场景进行调优。
+提交间隔（默认 10 秒）或累计数据量达到阈值（默认 128 MB）时，任一条件满足都会触发提交。请根据实际场景调整这两个表级阈值。
 
 ### 修改提交间隔
 
@@ -487,11 +487,11 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 ### 修改提交数据量
 
-Group Commit 的默认提交数据量为 64 MB，用户可以通过修改表的配置调整：
+Group Commit 的默认提交数据量触发阈值为 128 MB，用户可以通过修改表配置进行调整：
 
 ```sql
-# 修改提交数据量为 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# 将提交数据量触发阈值设为 256 MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
 **参数调整建议：**
@@ -501,7 +501,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 | 较小阈值（如 32 MB） | 内存占用更少，适合资源受限的环境 | 提交批次较小，吞吐量可能受限 |
 | 较大阈值（如 256 MB） | 批量提交效率更高，系统吞吐量更大 | 占用更多内存 |
 
-建议根据系统内存资源和数据可靠性要求来权衡。如果内存充足且追求更高吞吐，可以适当增加到 128 MB 或更大。
+建议根据系统内存资源和数据可靠性要求来权衡。如果内存充足且追求更高吞吐，可以适当增加到 256 MB 或更大。
 
 ## 相关系统配置
 
@@ -845,7 +845,7 @@ Too many group commit async WALs for table <table_name>
 
 **Q2：开启 `async_mode` 后，数据多久可以查询到？**
 
-- 数据可见延迟由表属性 `group_commit_interval_ms`（默认 10 秒）和 `group_commit_data_bytes`（默认 64 MB）共同决定，先满足任一条件即提交。
+- 数据可见延迟由表属性 `group_commit_interval_ms`（默认 10 秒）和 `group_commit_data_bytes`（默认提交触发阈值为 128 MB）共同决定，先满足任一条件即触发提交。
 
 **Q3：`async_mode` 何时会自动退化为 `sync_mode`？**
 

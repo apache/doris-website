@@ -364,7 +364,7 @@ curl --location-trusted -u {user}:{passwd} -T data.csv -H "group_commit:sync_mod
 About Stream Load usage, please refer to [Stream Load](./import-way/stream-load-manual).
 
 
-Data is automatically committed when either time interval (default 10 seconds) or data volume (default 64 MB) condition is met. These parameters should be used together and tuned based on actual scenarios.
+A commit is triggered when either the commit interval (10 seconds by default) elapses or the accumulated data reaches the configured size threshold (128 MB by default). Tune both per-table thresholds for your workload.
 
 ### Modifying Commit Interval
 
@@ -386,13 +386,13 @@ ALTER TABLE dt SET ("group_commit_interval_ms" = "2000");
 
 Recommend setting based on business tolerance for data visibility delay. If system pressure is high, consider increasing the interval.
 
-### Modifying Commit Data Volume
+### Adjusting the Commit Data Size
 
-Group Commit's default commit data volume is 64 MB, users can adjust through table configuration:
+Group Commit's default commit data-size trigger threshold is 128 MB. You can adjust it through table configuration:
 
 ```sql
-# Modify commit data volume to 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# Set the commit data-size trigger threshold to 256 MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
 **Parameter Adjustment Recommendations**:
@@ -404,7 +404,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
   - Pros: Higher batch commit efficiency, greater system throughput
   - Cons: Uses more memory
 
-Recommend balancing based on system memory resources and data reliability requirements. If memory is sufficient and higher throughput is desired, consider increasing to 128MB or more.
+Recommend balancing based on system memory resources and data reliability requirements. If memory is sufficient and higher throughput is desired, consider increasing to 256 MB or more.
 
 
 ### BE Configuration

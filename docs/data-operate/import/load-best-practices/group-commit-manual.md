@@ -465,7 +465,7 @@ For more details on Stream Load syntax and best practices, see [Stream Load](../
 
 <!-- Knowledge type: Configuration parameters -->
 
-Data is auto-committed when either the time interval (default 10 seconds) or the data size (default 64 MB) condition is met. These two parameters work together; tune them based on the actual scenario.
+A commit is triggered when either the commit interval (default 10 seconds) elapses or accumulated data reaches the default size threshold of 128 MB. Tune the two per-table thresholds based on your workload.
 
 ### Adjusting the Commit Interval
 
@@ -487,11 +487,11 @@ Set the value based on how much visibility delay your business can tolerate. If 
 
 ### Adjusting the Commit Data Size
 
-The default commit data size for Group Commit is 64 MB. You can adjust it by modifying the table configuration:
+The default commit data-size trigger threshold for Group Commit is 128 MB. You can adjust it by modifying the table configuration:
 
 ```sql
-# Change the commit data size to 128MB
-ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
+# Set the commit data-size trigger threshold to 256 MB
+ALTER TABLE dt SET ("group_commit_data_bytes" = "268435456");
 ```
 
 **Tuning suggestions:**
@@ -501,7 +501,7 @@ ALTER TABLE dt SET ("group_commit_data_bytes" = "134217728");
 | Smaller threshold (such as 32 MB) | Lower memory footprint, suitable for resource-constrained environments | Smaller commit batches, throughput may be limited |
 | Larger threshold (such as 256 MB) | Higher batch-commit efficiency and higher system throughput | Higher memory footprint |
 
-Choose a value that balances memory resources against data reliability requirements. If memory is sufficient and you want higher throughput, you can increase the value to 128 MB or larger.
+Choose a value that balances memory resources against data reliability requirements. If memory is sufficient and you want higher throughput, you can increase the value to 256 MB or larger.
 
 ## Related System Configuration
 
@@ -845,7 +845,7 @@ The tests below cover 30, 100, and 500 concurrency.
 
 **Q2: After enabling `async_mode`, how soon can the data be queried?**
 
-- Data visibility delay is determined jointly by the table properties `group_commit_interval_ms` (default 10 seconds) and `group_commit_data_bytes` (default 64 MB). The commit happens as soon as either condition is met.
+- Data visibility delay is determined jointly by the table properties `group_commit_interval_ms` (default 10 seconds) and `group_commit_data_bytes` (default trigger threshold 128 MB). A commit is triggered as soon as either threshold is reached.
 
 **Q3: When does `async_mode` automatically fall back to `sync_mode`?**
 
