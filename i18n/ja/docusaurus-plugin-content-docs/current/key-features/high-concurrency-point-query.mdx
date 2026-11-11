@@ -46,17 +46,16 @@ Apache Doris の高同時実行ポイントクエリは、テーブルとクエ�
 - **`store_row_column`**：各行を行形式でエンコードしたデータとして保持する隠しカラムを追加するテーブルプロパティです。これにより、BE は行全体を返す際に N 個のカラムではなく一つのカラムを読み取ります。
 - **`SHORT-CIRCUIT`**：プランナーが通常の分散プランを省略し、一つのタブレットに対する一回の RPC を使う経路にクエリを送ったとき、`EXPLAIN` の出力に表示されるマーカーです。
 - **`PreparedStatement`**：MySQL プロトコルを介したサーバー側のステートメントキャッシュです。Apache Doris は解析済みステートメント、出力式、ディスクリプタテーブルをセッションごとにキャッシュし、`EXECUTE` 呼び出し間で再利用します。
-- **`Row Cache`**：行全体を保持する独立した LRU キャッシュです。分析クエリとポイントクエリが混在するワークロードで、カラム指向の Page Cache が受けるキャッシュ追い出しの影響を受けずに利用できます。
 
 ## Apache Doris の高同時実行ポイントクエリの仕組み {#how}
 
-Apache Doris の高同時実行ポイントクエリ経路は、ストレージレイアウト、FE によるプランの書き換え、ショートサーキットでのディスパッチ、サーバー側での `PreparedStatement` の再利用、オプションの Row Cache を使う BE の行検索という五つの層を連携させます。
+Apache Doris の高同時実行ポイントクエリ経路は、ストレージレイアウト、FE によるプランの書き換え、ショートサーキットでのディスパッチ、サーバー側での `PreparedStatement` の再利用、BE の行検索という五つの層を連携させます。
 
 1. **ストレージレイアウト。** テーブル作成時に `store_row_column=true` を設定すると、BE は各行をカラム指向のセグメントと、行形式でエンコードした隠しカラムの両方に書き込みます。Apache Doris 3.0 以降では、`row_store_columns="k1,v1,v2"` を使って対象を一部のカラムに限定し、ストレージのオーバーヘッドを抑えられます。
 2. **プランの書き換え（FE）。** Nereids のルール `LogicalResultSinkToShortCircuitPointQuery` は、単一の Unique テーブル、すべてのキーカラムに対する等価の連言述語、結合やサブクエリなし、集計なしというクエリの形を確認します。すべて一致すると、`isShortCircuitQuery` フラグを `StatementContext` 内で有効にします。
 3. **ショートサーキットでのディスパッチ。** FE はフラグメントの生成と送信の代わりに、`PartitionPruneV2ForShortCircuitPlan` でバケットを特定し、そのキーを保持し得る一つのタブレットを選び、所有する BE に一回の RPC を送ります。
 4. **サーバー側での `PreparedStatement` の再利用。** `useServerPrepStmts=true` の場合、FE は `ShortCircuitQueryContext` をセッション UUID ごとにキャッシュします。その後の `EXECUTE` 呼び出しでは解析とプランニングをすべて省略し、パラメーター値だけを変更します。
-5. **BE での行検索。** `point_query_executor` はキーで行を特定し、行形式のカラムを読み取ってバイト列を返します。オプションの Row Cache にヒットした場合は、セグメントの読み取りも省略します。
+5. **BE での行検索。** `point_query_executor` はキーで行を特定し、行形式のカラムを読み取ってバイト列を返します。
 
 ## クイックスタート {#quick-start}
 
@@ -110,7 +109,7 @@ Apache Doris の高同時実行ポイントクエリは、リクエストごと�
 
 ## 性能と確認方法 {#performance}
 
-Apache Doris によると、FE の CPU がボトルネックの場合、ショートサーキット経路に加えてサーバー側の `PreparedStatement` を有効にすると、スループットが 4 倍以上向上します。これは [Prepared Statement の紹介ページ](./prepared-statement)で、Prepared Statement の観点から示されているものと同じ 4 倍の効果です。二つの効果を重ね合わせたものではありません。数値は行の幅、Row Cache のヒット率、トラフィックを受け持つ FE Observer の数によって変わるため、ベンチマーク値ではなく計画上の下限として扱ってください。
+Apache Doris によると、FE の CPU がボトルネックの場合、ショートサーキット経路に加えてサーバー側の `PreparedStatement` を有効にすると、スループットが 4 倍以上向上します。これは [Prepared Statement の紹介ページ](./prepared-statement)で、Prepared Statement の観点から示されているものと同じ 4 倍の効果です。二つの効果を重ね合わせたものではありません。数値は行の幅とトラフィックを受け持つ FE Observer の数によって変わるため、ベンチマーク値ではなく計画上の下限として扱ってください。
 
 次の二点で、この経路が有効であることを確認できます。
 

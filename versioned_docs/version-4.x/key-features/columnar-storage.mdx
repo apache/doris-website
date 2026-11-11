@@ -108,7 +108,7 @@ Apache Doris columnar storage is the default and only OLAP format, so every anal
 
 **Not a good fit**
 
-- `SELECT *` lookups by primary key at thousands of QPS. Each column is a separate read, so a wide-row point query pays N times the I/O. Reach for the [High-Concurrency Point Query](./high-concurrency-point-query) path, which adds a row-cached column with `"store_row_column" = "true"` on top of a Unique-Key Merge-on-Write table.
+- `SELECT *` lookups by primary key at thousands of QPS. Each column is a separate read, so a wide-row point query pays N times the I/O. Reach for the [High-Concurrency Point Query](./high-concurrency-point-query) path, which adds a row-format column with `"store_row_column" = "true"` on top of a Unique-Key Merge-on-Write table.
 - Tweaking `compression` or `storage_page_size` without a profile. The defaults (LZ4F, 64 KB) fit most workloads. Move to ZSTD only when storage cost matters more than CPU; shrink the page size only when small columns are wasting decompression work.
 - Disabling encodings to "see the raw column." There is no raw mode. The codec is part of the file format, not a layer you peel off.
 - Treating columnar storage as a fix for narrow point lookups on a row-oriented schema. If every query is `WHERE id = ?` and returns one row, you want a different system or the row-store extension, not a different compression codec.

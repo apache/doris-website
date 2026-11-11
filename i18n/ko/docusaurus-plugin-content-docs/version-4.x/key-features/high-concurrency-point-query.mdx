@@ -45,17 +45,16 @@ Apache Doris의 고동시성 포인트 쿼리는 테이블과 쿼리가 모두 �
 - **`store_row_column`**: 각 행을 행 단위로 인코딩한 blob으로 보관하는 숨겨진 컬럼을 추가하는 테이블 속성입니다. 따라서 BE는 전체 행을 반환할 때 N개 컬럼 대신 컬럼 하나를 읽습니다.
 - **`SHORT-CIRCUIT`**: `EXPLAIN` 출력에 표시되는 마커로, 플래너가 일반적인 분산 실행 계획을 건너뛰고 단일 tablet, 단일 RPC 경로로 쿼리를 라우팅했음을 나타냅니다.
 - **`PreparedStatement`**: MySQL 프로토콜을 통한 서버 측 구문 캐싱입니다. Apache Doris는 파싱된 구문, 출력 표현식, descriptor 테이블을 세션별로 캐시한 뒤 여러 `EXECUTE` 호출에서 재사용합니다.
-- **`Row Cache`**: 전체 행을 보관하는 별도의 LRU 캐시입니다. 분석 쿼리와 포인트 쿼리가 혼재하는 워크로드에서 컬럼 기반 Page Cache가 겪는 축출 압박을 견딥니다.
 
 ## Apache Doris 고동시성 포인트 쿼리는 어떻게 동작하나요? {#how}
 
-Apache Doris의 고동시성 포인트 쿼리 경로는 스토리지 레이아웃, FE 실행 계획 재작성, short-circuit 디스패치, 서버 측 `PreparedStatement` 재사용, 선택적으로 Row Cache를 사용하는 BE 행 조회라는 다섯 계층을 연결합니다.
+Apache Doris의 고동시성 포인트 쿼리 경로는 스토리지 레이아웃, FE 실행 계획 재작성, short-circuit 디스패치, 서버 측 `PreparedStatement` 재사용, BE 행 조회라는 다섯 계층을 연결합니다.
 
 1. **스토리지 레이아웃.** 테이블 생성 시 `store_row_column=true`를 설정하면 BE는 각 행을 컬럼 기반 세그먼트와 행 단위로 인코딩한 숨겨진 컬럼에 모두 기록합니다. Apache Doris 3.0부터는 `row_store_columns="k1,v1,v2"`로 일부 컬럼에만 적용하여 스토리지 오버헤드를 제한할 수 있습니다.
 2. **실행 계획 재작성(FE).** Nereids 규칙인 `LogicalResultSinkToShortCircuitPointQuery`는 쿼리의 형태를 검사합니다. 단일 Unique 테이블을 사용하고, 모든 키 컬럼에 동등 조건이 있으며, 조인이나 서브쿼리, 집계가 없어야 합니다. 모든 조건이 일치하면 `isShortCircuitQuery` 플래그를 `StatementContext`에서 활성화합니다.
 3. **Short-circuit 디스패치.** FE는 fragment를 생성하여 전송하는 대신, `PartitionPruneV2ForShortCircuitPlan`을 통해 버킷을 결정하고 해당 키를 포함할 수 있는 tablet 하나를 선택한 뒤, 이를 보유한 BE에 단일 RPC를 전송합니다.
 4. **서버 측 `PreparedStatement` 재사용.** `useServerPrepStmts=true`를 사용하면 FE는 `ShortCircuitQueryContext`를 세션 UUID별로 캐시합니다. 이후의 `EXECUTE` 호출은 파싱과 실행 계획 수립을 완전히 건너뛰며, 매개변수 값만 변경됩니다.
-5. **BE 행 조회.** `point_query_executor`는 키로 행을 찾고, 행 형식 컬럼을 읽어 바이트를 반환합니다. 선택 사항인 Row Cache에서 캐시 히트가 발생하면 세그먼트 읽기까지 건너뜁니다.
+5. **BE 행 조회.** `point_query_executor`는 키로 행을 찾고, 행 형식 컬럼을 읽어 바이트를 반환합니다.
 
 ## 빠른 시작 {#quick-start}
 
@@ -109,7 +108,7 @@ Apache Doris의 고동시성 포인트 쿼리는 요청마다 기본 키로 행�
 
 ## 성능 및 검증 {#performance}
 
-Apache Doris에 따르면 FE CPU가 병목일 때 short-circuit 경로에 서버 측 `PreparedStatement`를 추가로 활성화하면 처리량이 4배 이상 향상됩니다. 이는 [Prepared Statement 카드](./prepared-statement)에서 prepared statement 관점으로 언급한 4배와 같은 효과이며, 서로 중첩할 수 있는 두 가지 효과가 아니라 하나의 통합된 효과입니다. 수치는 행의 폭, Row Cache 적중률, 트래픽을 처리하는 FE Observers 수에 따라 달라지므로, 벤치마크 수치가 아니라 계획을 세울 때의 하한 기준으로 보세요.
+Apache Doris에 따르면 FE CPU가 병목일 때 short-circuit 경로에 서버 측 `PreparedStatement`를 추가로 활성화하면 처리량이 4배 이상 향상됩니다. 이는 [Prepared Statement 카드](./prepared-statement)에서 prepared statement 관점으로 언급한 4배와 같은 효과이며, 서로 중첩할 수 있는 두 가지 효과가 아니라 하나의 통합된 효과입니다. 수치는 행의 폭과 트래픽을 처리하는 FE Observers 수에 따라 달라지므로, 벤치마크 수치가 아니라 계획을 세울 때의 하한 기준으로 보세요.
 
 다음 두 가지를 확인하면 이 경로가 활성화되어 있는지 알 수 있습니다.
 

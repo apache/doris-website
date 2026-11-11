@@ -56,7 +56,6 @@ Doris が管理するキャッシュは、現在すべて LRU 方式でエント
 主にログ分析で使用するポイントクエリの実行を高速化します。
 
 ```
-- PointQueryRowCache
 - PointQueryLookupConnectionCache
 ```
 

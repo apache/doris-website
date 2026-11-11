@@ -56,7 +56,6 @@
 Ускоряет выполнение точечных запросов и используется главным образом для анализа журналов.
 
 ```
-- PointQueryRowCache
 - PointQueryLookupConnectionCache
 ```
 

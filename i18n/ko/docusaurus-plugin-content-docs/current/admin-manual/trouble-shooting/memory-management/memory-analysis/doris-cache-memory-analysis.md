@@ -56,7 +56,6 @@ Doris가 관리하는 캐시는 현재 모두 LRU 제거 전략을 사용하며,
 포인트 쿼리 실행 속도를 높이며, 주로 로그 분석에 사용됩니다.
 
 ```
-- PointQueryRowCache
 - PointQueryLookupConnectionCache
 ```
 

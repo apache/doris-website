@@ -93,7 +93,7 @@ curl --location-trusted -u root: -H "partial_columns:true" -H "column_separator:
 
 **3. High-concurrency point queries:**
 
-With its current business size, the company is receiving query requests for tags at a concurrency level of over 5000 QPS. They use a combination of strategies to guarantee high performance. Firstly, they adopt [Prepared Statement](https://doris.apache.org/docs/query-acceleration/hight-concurrent-point-query#using-preparedstatement) for pre-compilation and pre-execution of SQL. Secondly, they fine-tune the parameters for Doris Backend and the tables to optimize storage and execution. Lastly, they enable [row cache](https://doris.apache.org/docs/query-acceleration/hight-concurrent-point-query#enable-row-cache) as a complement to the column-oriented Apache Doris.
+With its current business size, the company is receiving query requests for tags at a concurrency level of over 5000 QPS. They use a combination of strategies to guarantee high performance. Firstly, they adopt [Prepared Statement](https://doris.apache.org/docs/query-acceleration/hight-concurrent-point-query#using-preparedstatement) for pre-compilation and pre-execution of SQL. Secondly, they fine-tune the parameters for Doris Backend and the tables to optimize storage and execution.
 
 - Fine-tune the Doris Backend page cache in `be.conf`:
 

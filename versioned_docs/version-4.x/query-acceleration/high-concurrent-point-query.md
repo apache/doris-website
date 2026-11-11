@@ -2,7 +2,7 @@
 {
     "title": "High-Concurrency Point Query",
     "language": "en",
-    "description": "How to enable high-concurrency point queries in Doris? Significantly improve primary-key point-query QPS and response latency through row store, short-circuit path, PreparedStatement, and row cache.",
+    "description": "How to enable high-concurrency point queries in Doris? Significantly improve primary-key point-query QPS and response latency through row store, short-circuit path, and PreparedStatement.",
     "keywords": [
         "Doris high-concurrency point query",
         "primary-key point-query optimization",
@@ -10,7 +10,6 @@
         "row store store_row_column",
         "Merge-On-Write point query",
         "SHORT-CIRCUIT short path",
-        "row cache",
         "FE high CPU point-query bottleneck"
     ]
 }
@@ -30,7 +29,6 @@ To address this, Doris applies optimizations at the following layers:
 | Row Store | Columnar storage amplifies random IO when reading whole rows of wide tables; row store reduces IO overhead |
 | Short-Circuit query path (SHORT-CIRCUIT) | FE query planning and parsing is too heavy for simple queries; the short-circuit path bypasses the regular planning flow |
 | PreparedStatement | SQL parsing and expression evaluation consume FE CPU; caching the plan and expressions reduces overhead |
-| Row Cache | The Page Cache is easily evicted by large queries; a dedicated row cache improves hit rate |
 
 ## Quick Enablement Checklist
 
@@ -141,19 +139,6 @@ readStatement.setInt(1, 1235);
 resultSet = readStatement.executeQuery();
 ...
 ```
-
-## Enabling Row Cache
-
-<!-- Knowledge type: Configuration parameter -->
-<!-- Applicable scenarios: Low row-store hit rate, Page Cache easily evicted -->
-
-By default, Doris provides a **Page-level cache**, where each page stores data for a single column, so the Page Cache is column-oriented. For row store, a row contains multiple columns, and the cache may be flushed by large queries.
-
-To improve the hit rate, Doris introduces a separate **Row Cache** that reuses the LRU Cache mechanism to control memory usage. The following BE configuration controls its memory limit:
-
-| Configuration | Default | Description |
-| ---------------------------- | ---------- | --------------------------------- |
-| `row_cache_mem_limit` | `20%` | Percentage of memory used by the Row Cache |
 
 ## Performance Tuning Recommendations
 

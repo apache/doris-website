@@ -2,7 +2,7 @@
 {
     "title": "고동시성 포인트 쿼리",
     "language": "ko",
-    "description": "Doris에서 고동시성 포인트 쿼리를 활성화하는 방법은 무엇일까요? 행 저장소, short-circuit 경로, PreparedStatement, 행 캐시를 통해 기본 키 포인트 쿼리의 QPS와 응답 지연 시간을 크게 개선할 수 있습니다.",
+    "description": "Doris에서 고동시성 포인트 쿼리를 활성화하는 방법은 무엇일까요? 행 저장소, short-circuit 경로, PreparedStatement를 통해 기본 키 포인트 쿼리의 QPS와 응답 지연 시간을 크게 개선할 수 있습니다.",
     "keywords": [
         "Doris 고동시성 포인트 쿼리",
         "기본 키 포인트 쿼리 최적화",
@@ -10,7 +10,6 @@
         "행 저장소 store_row_column",
         "Merge-On-Write 포인트 쿼리",
         "SHORT-CIRCUIT 단축 경로",
-        "행 캐시",
         "FE CPU 사용량 과다로 인한 포인트 쿼리 병목"
     ]
 }
@@ -30,7 +29,6 @@
 | 행 저장소 | 열이 많은 테이블에서 행 전체를 읽으면 열 지향 스토리지의 랜덤 IO가 증가합니다. 행 저장소는 IO 오버헤드를 줄입니다 |
 | Short-Circuit 쿼리 경로(SHORT-CIRCUIT) | 단순한 쿼리에서는 FE의 쿼리 계획 및 파싱 작업이 지나치게 무겁습니다. short-circuit 경로는 일반적인 계획 수립 과정을 우회합니다 |
 | PreparedStatement | SQL 파싱과 표현식 평가가 FE CPU를 소모합니다. 계획과 표현식을 캐시하면 오버헤드가 줄어듭니다 |
-| 행 캐시 | Page Cache는 대규모 쿼리로 인해 쉽게 축출됩니다. 전용 행 캐시는 적중률을 높입니다 |
 
 ## 빠른 활성화를 위한 체크리스트 {#quick-enablement-checklist}
 
@@ -141,19 +139,6 @@ readStatement.setInt(1, 1235);
 resultSet = readStatement.executeQuery();
 ...
 ```
-
-## 행 캐시 활성화 {#enabling-row-cache}
-
-<!-- Knowledge type: Configuration parameter -->
-<!-- Applicable scenarios: Low row-store hit rate, Page Cache easily evicted -->
-
-Doris는 기본적으로 **페이지 단위 캐시**를 제공합니다. 각 페이지는 단일 열의 데이터를 저장하므로 Page Cache는 열 지향적입니다. 행 저장소에서는 한 행에 여러 열이 포함되며, 대규모 쿼리로 인해 캐시가 비워질 수 있습니다.
-
-적중률을 높이기 위해 Doris는 LRU Cache 메커니즘을 재사용하여 메모리 사용량을 제어하는 별도의 **행 캐시**를 제공합니다. 다음 BE 설정으로 메모리 한도를 지정할 수 있습니다.
-
-| 설정 | 기본값 | 설명 |
-| ---------------------------- | ---------- | --------------------------------- |
-| `row_cache_mem_limit` | `20%` | 행 캐시가 사용하는 메모리의 비율 |
 
 ## 성능 튜닝 권장 사항 {#performance-tuning-recommendations}
 
