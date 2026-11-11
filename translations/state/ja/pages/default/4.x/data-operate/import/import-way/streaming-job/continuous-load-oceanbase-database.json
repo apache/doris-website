@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
-    "sourceHash": "8efd902ad347012713cc5ad67253a164fa57b353309cb2a2120c12ada150d508",
-    "sourceTechnicalHash": "b7d7c1c6fcb85f9ef3b4a99cb43192ad82bba1d2bddd4a3e810295451b97caae",
-    "targetHash": "9698c332fda7cbd10681c5977a6ec729cd718d96464c08b73da4c9d3a48b8db9",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+    "sourceTechnicalHash": "e250196dfc607b337e02d81d0c29c396a6143a8bc7f47502ce4846ac2cd4015b",
+    "targetHash": "28d44da3bc7240c46dafe27b7027ae4787978988dae4230a376d18770ec3a52a",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-30T18:12:43.492Z",
+    "translatedAt": "2026-11-05T06:17:57.699Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,12 +22,12 @@
       "reason": "chinese-reference-changed",
       "attempts": 3,
       "acceptedWithWarnings": true,
-      "sourceHash": "8efd902ad347012713cc5ad67253a164fa57b353309cb2a2120c12ada150d508",
-      "targetHash": "9698c332fda7cbd10681c5977a6ec729cd718d96464c08b73da4c9d3a48b8db9",
+      "sourceHash": "242e620b0546ed354ba9662a11cd07d47bbcbcd13fa4a47ce33603a5b3c2c8b2",
+      "targetHash": "28d44da3bc7240c46dafe27b7027ae4787978988dae4230a376d18770ec3a52a",
       "warnings": [
         {
           "check": "protected-content",
-          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]"
+          "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
         }
       ],
       "history": [
@@ -36,7 +36,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 手順 + 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase の MySQL 互換モードデータベースを Doris にミラーリング -->\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- ナレッジタイプ: 手順 + 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Mirror an OceanBase database in MySQL compatibility mode to Doris -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: OceanBase の MySQL 互換モードのデータベースを Doris にミラーリング -->\"]"
             }
           ]
         },
@@ -45,7 +45,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.5\"]\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]"
             }
           ]
         },
@@ -54,7 +54,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]; received [\"1\",\"1\",\"1\",\"1\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.1.4\"]"
+              "message": "Restore protected source content:\nprotected node 13: expected [\"inlineCode\",null,null,\"users\"]; received [\"inlineCode\",null,null,\"source_db\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"orders\"]; received [\"inlineCode\",null,null,\"users\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"source_db\"]; received [\"inlineCode\",null,null,\"orders\"]"
             }
           ]
         }
@@ -63,11 +63,11 @@
     "sourceRevisions": {
       "en": {
         "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-        "blob": "0a8015393a78c4575cca22f61819b1dca19d11b6"
+        "blob": "6723db3500c7ddc81acbadc1caa3b4fd4aa33f84"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-oceanbase-database.md",
-        "blob": "7d6fc5704e91fa4fe529c0af937f9fc1d974ef9f"
+        "blob": "e58fdf36b42ee837387ade99c52b9bfd56cf5dfe"
       }
     }
   }

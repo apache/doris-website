@@ -8,13 +8,13 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-    "sourceCommit": "12cfb3bd72049510d2e81003f71149c3abbafab2",
-    "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
-    "sourceTechnicalHash": "a73d820e86f140c9c40974f99b0970958c9523839f46e09123a5f033949a09c7",
-    "targetHash": "74b4c011ec7f2eb6352cabd9c843e8a23423b34aad2181fba9881a5f580e34f8",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "eeb97919fb1b6b531dad592edd77022a427eee7177d8f2ab667ad9ecf1919ea3",
+    "sourceTechnicalHash": "2903369782571cd356dd42ced15df36a38a574bef64902704ea9cc63423236c0",
+    "targetHash": "ca52f1ccd05a5e9b81974531b57f7fe5456ef2f0d163119d6ffad5a33dc129c5",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-30T18:32:18.703Z",
+    "translatedAt": "2026-11-05T19:08:06.468Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
@@ -22,8 +22,8 @@
       "reason": "chinese-reference-changed",
       "attempts": 2,
       "acceptedWithWarnings": false,
-      "sourceHash": "94f63db2538e67c4df30c3cdcb41a93ba407d6603b43c0d5ee25526c7e15a3d5",
-      "targetHash": "74b4c011ec7f2eb6352cabd9c843e8a23423b34aad2181fba9881a5f580e34f8",
+      "sourceHash": "eeb97919fb1b6b531dad592edd77022a427eee7177d8f2ab667ad9ecf1919ea3",
+      "targetHash": "ca52f1ccd05a5e9b81974531b57f7fe5456ef2f0d163119d6ffad5a33dc129c5",
       "warnings": [],
       "history": [
         {
@@ -31,7 +31,7 @@
           "issues": [
             {
               "check": "protected-content",
-              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: MySQL Auto Table Creation Sync 中の上流スキーマ変更 -->\"]"
+              "message": "Restore protected source content:\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Concept -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 概念 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenario: Upstream schema changes during MySQL Auto Table Creation Sync -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: MySQL の自動テーブル作成同期中に発生する上流のスキーマ変更 -->\"]"
             }
           ]
         },
@@ -44,11 +44,11 @@
     "sourceRevisions": {
       "en": {
         "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-        "blob": "ae10801b3f5d8230f5ba3884982deefad2f33f69"
+        "blob": "3f6c3a7cf4afc3e613c96c6882babe4c98474fec"
       },
       "zh-CN": {
         "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/schema-change-mysql.md",
-        "blob": "1f29025c436daf6b980b46353e78c93b20425413"
+        "blob": "fad68e62e75cb0aff754362434220fd54aaf8422"
       }
     }
   }

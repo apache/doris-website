@@ -8,30 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "docs/admin-manual/trouble-shooting/compaction.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction.md",
-    "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-    "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
-    "sourceTechnicalHash": "41d944af131840b9d678afb8022e96503a768084f57e9cba0e5a8fa14f401d19",
-    "targetHash": "3f057c10d8434a908b21c23512f4dc9d59556ac8909c1fc5600e4ffacfcc4eb7",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+    "sourceTechnicalHash": "e45add6e503594b1f8004ccba2359d6bc269ef564a7b2aaba48d5ca48c1ec3a8",
+    "targetHash": "1fe3ebbdaa010aba73b235d4b15b98d195c434cc31d04a0c7f2bea3059520eee",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-21T16:46:08.590Z",
+    "translatedAt": "2026-11-04T21:07:57.929Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
       "mode": "full",
-      "reason": "local-t09-batch",
-      "attempts": 1,
-      "modelCalls": 1,
-      "acceptedWithWarnings": false,
-      "sourceHash": "20aa4388685584e0b72153eb51b3dd579995ba460bb8568a992aaf5feb259a1b",
-      "targetHash": "3f057c10d8434a908b21c23512f4dc9d59556ac8909c1fc5600e4ffacfcc4eb7",
-      "warnings": [],
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "826ef04eba975382da32eedb057f880d0897b40dcff4bc33afa857b507d9cb04",
+      "targetHash": "1fe3ebbdaa010aba73b235d4b15b98d195c434cc31d04a0c7f2bea3059520eee",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"4\",\"5\",\"8\"]"
+        }
+      ],
       "history": [
         {
           "attempt": 1,
-          "issues": []
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 13: expected [\"code\",null,null,\"ALTER TABLE table_name SET(\\\"name\\\" = \\\"value\\\");\"]; received [\"inlineCode\",null,null,\"PROPERTIES\"]\nprotected node 14: expected [\"inlineCode\",null,null,\"max_base_compaction_threads\"]; received [\"code\",null,null,\"ALTER TABLE table_name SET(\\\"name\\\" = \\\"value\\\");\"]\nprotected node 15: expected [\"inlineCode\",null,null,\"max_cumu_compaction_threads\"]; received [\"inlineCode\",null,null,\"max_base_compaction_threads\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"5\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1.1\",\"1.2.2\",\"10\",\"10\",\"10\",\"10\",\"100\",\"100\",\"15\",\"2000\",\"238\",\"238\",\"268435456\",\"30\",\"32\",\"32.8\",\"4\",\"4\",\"5\",\"8\"]"
+            }
+          ]
         }
       ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/admin-manual/trouble-shooting/compaction.md",
+        "blob": "5dfc0e312d02d64c51c7a479f7ea399525c844d6"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/admin-manual/trouble-shooting/compaction.md",
+        "blob": "b435655c7139b4c1d7d8f4b3dee3aa9a1cdbb69d"
+      }
     }
   }
 }

@@ -8,42 +8,38 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
     "targetPath": "i18n/ru/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
-    "sourceCommit": "87417f1fefb604bf8a98d1fea0ace4beaccc4b2c",
-    "sourceHash": "5663dea632a6e961837174dd02a1b7f3e189315e1ac777116aa399c8d37fa156",
-    "sourceTechnicalHash": "d1c4dbb4d4fd09d440e5c4d98a59845cd38b89f0477b4738e336b559ffbc498d",
-    "targetHash": "ff6bc0b1e352b880577f62305673706ce13ef8bfe13eba033b7f3d0fe61a0cd7",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "0d4504f2c2bb150c90c5760fcb7785c5c1c31f6cf24effb859c04aacb66ac365",
+    "sourceTechnicalHash": "0ef9f4675554c67eef4de46fc24f2b723dd88727d7733988dfbf4ca44d07d96c",
+    "targetHash": "714fcfb2fbb5a0b6baa7763af5d397bcf5fad927409080628a592d52b449c31b",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-22T14:29:42.326Z",
+    "translatedAt": "2026-11-05T12:37:57.457Z",
     "glossaryVersion": "1",
     "generation": {
       "policy": "whole-document-v1",
-      "mode": "copy",
-      "reason": "cross-version-copy",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
       "attempts": 1,
-      "modelCalls": 0,
       "acceptedWithWarnings": false,
-      "sourceHash": "5663dea632a6e961837174dd02a1b7f3e189315e1ac777116aa399c8d37fa156",
-      "targetHash": "ff6bc0b1e352b880577f62305673706ce13ef8bfe13eba033b7f3d0fe61a0cd7",
+      "sourceHash": "0d4504f2c2bb150c90c5760fcb7785c5c1c31f6cf24effb859c04aacb66ac365",
+      "targetHash": "714fcfb2fbb5a0b6baa7763af5d397bcf5fad927409080628a592d52b449c31b",
       "warnings": [],
       "history": [
         {
           "attempt": 1,
-          "operation": "copy",
           "issues": []
         }
-      ],
-      "reusedFrom": {
-        "origin": "published",
-        "version": "current",
-        "docId": "data-operate/import/import-way/streaming-job/continuous-load-s3-notification",
-        "sourcePath": "docs/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
-        "targetPath": "i18n/ru/docusaurus-plugin-content-docs/current/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
-        "sourceCommit": "8f714fef54cbb3e1887308cedcfca6982493c347",
-        "sourceHash": "5663dea632a6e961837174dd02a1b7f3e189315e1ac777116aa399c8d37fa156",
-        "targetHash": "ff6bc0b1e352b880577f62305673706ce13ef8bfe13eba033b7f3d0fe61a0cd7",
-        "commit": "1002f49f8493cec281b17e668c8e5fc30af90b66",
-        "pr": "https://github.com/apache/doris-website/pull/4436"
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+        "blob": "fbee49706bbbaa46dd2a47f015e16773cd0d4bcd"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/data-operate/import/import-way/streaming-job/continuous-load-s3-notification.md",
+        "blob": "078de88aec2016d8d4e74c51723a22bfa5140d94"
       }
     }
   }

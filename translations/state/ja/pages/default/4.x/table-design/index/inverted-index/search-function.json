@@ -8,13 +8,67 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/index/inverted-index/search-function.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/search-function.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "9bba18ad86f25fa602eddd3ff8e2e4ca7bf4dcad678baa8fe6339501da90b811",
-    "sourceTechnicalHash": "5599b98df98dcc32ca2624e91c869352226956dfd0f096499194845f6c83621f",
-    "targetHash": "5649f53d5c6c1751f6bd4607b7f083838305462798c651c8b6a09a081b2e612f",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "655f64cd14d3cb8ca34a68521ebc81c8f4e6de5b3d1d13d81a3837e286a5cfac",
+    "sourceTechnicalHash": "e881c7730f7c5fa6fc3f784e955975f7c13f2e84b1aba154a0dfa36bcc2dc4ae",
+    "targetHash": "cd829c8d7208b5048fdf8be84c90e35fb76a9df35fb1ffd0bf1c0c7533bf9a36",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T02:27:01.601Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-06T05:11:20.450Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "655f64cd14d3cb8ca34a68521ebc81c8f4e6de5b3d1d13d81a3837e286a5cfac",
+      "targetHash": "cd829c8d7208b5048fdf8be84c90e35fb76a9df35fb1ffd0bf1c0c7533bf9a36",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Function reference / Procedure -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 関数リファレンス / 手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Full-text search / Inverted index query / DSL expression authoring -->\"]; received [\"html\",null,null,\"<!-- ユースケース: 全文検索 / 転置インデックスのクエリ / DSL 式の記述 -->\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"5\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 35: expected [\"inlineCode\",null,null,\"AND\"]; received [\"inlineCode\",null,null,\"standard\"]\nprotected node 36: expected [\"inlineCode\",null,null,\"OR\"]; received [\"inlineCode\",null,null,\"AND\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"5\",\"6\",\"7\",\"8\",\"9\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]; received [\"1\",\"1\",\"10\",\"11\",\"12\",\"2\",\"2\",\"2\",\"3\",\"4\",\"4.0\",\"4.1.0\",\"4.2\",\"4.2\",\"5\",\"6\",\"7\",\"8\",\"9\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Function reference / Procedure -->\"]; received [\"html\",null,null,\"<!-- ナレッジの種類: 関数リファレンス / 手順 -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Use cases: Full-text search / Inverted index query / DSL expression authoring -->\"]; received [\"html\",null,null,\"<!-- ユースケース: 全文検索 / 転置インデックスのクエリ / DSL 式の記述 -->\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/index/inverted-index/search-function.md",
+        "blob": "2bc8403ed6db7f71fea9e953683b2e142e555e42"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/index/inverted-index/search-function.md",
+        "blob": "4ff63a2164a7dea0d2b33fbb05a8af69c08e8d72"
+      }
+    }
   }
 }

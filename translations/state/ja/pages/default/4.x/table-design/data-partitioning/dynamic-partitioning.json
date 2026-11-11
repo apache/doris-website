@@ -8,13 +8,57 @@
     "sourceLocale": "en",
     "sourcePath": "versioned_docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
-    "sourceCommit": "618b88463542c388ef5d477f53e4f17162fd5eb7",
-    "sourceHash": "9d57fff34947f71bcc8cba61d62d710ecf3069107411a1fcdba1e6fd5b135171",
-    "sourceTechnicalHash": "19ac045f0da143f4ff3e8db49961f24b4a3c702752525b0a2cc8fc9febbeee0b",
-    "targetHash": "83706463f19815d2662a73c652ce4d98381f2dcb35e5c4f876979c3c6f6d4639",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "13563bb606216d19253663f6a687fe81f3047815e5c02222a554be93e74ff8d6",
+    "sourceTechnicalHash": "2e73cb8a7a2d1ba5d5a0d20b7d05f2025cfd1a1cc51552603b06a19b83d39adc",
+    "targetHash": "af60fa374cb0663f471b555c7dd2f75b910eef8eceb2f4470d4cb0295395d6ac",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-15T01:12:08.632Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-05T19:21:18.986Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": false,
+      "sourceHash": "13563bb606216d19253663f6a687fe81f3047815e5c02222a554be93e74ff8d6",
+      "targetHash": "af60fa374cb0663f471b555c7dd2f75b910eef8eceb2f4470d4cb0295395d6ac",
+      "warnings": [],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"11\",\"2\",\"2\",\"2024\",\"28\",\"28\",\"28\",\"29\",\"3\",\"3\",\"3\",\"3\",\"30\",\"31\",\"5\",\"500\",\"600\",\"7\",\"7\",\"7\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"11\",\"2\",\"2\",\"2\",\"2024\",\"28\",\"28\",\"28\",\"29\",\"3\",\"3\",\"3\",\"3\",\"30\",\"31\",\"4\",\"5\",\"500\",\"600\",\"7\",\"7\",\"7\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Knowledge type: Feature introduction + Operating procedure + Configuration parameters -->\"]; received [\"html\",null,null,\"<!-- 知識の種類: 機能紹介 + 操作手順 + 設定パラメータ -->\"]\nprotected node 3: expected [\"html\",null,null,\"<!-- Applicable scenarios: Log management / Time-series data / Data lifecycle management -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: ログ管理 / 時系列データ / データのライフサイクル管理 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nprotected node 79: expected [\"inlineCode\",null,null,\"dynamic_partition.time_unit\"]; received [\"inlineCode\",null,null,\"HOUR\"]\nprotected node 80: expected [\"inlineCode\",null,null,\"HOUR\"]; received [\"inlineCode\",null,null,\"[yyyy-MM-dd HH:mm:ss,yyyy-MM-dd HH:mm:ss],[...,...]\"]\nprotected node 81: expected [\"inlineCode\",null,null,\"[yyyy-MM-dd HH:mm:ss,yyyy-MM-dd HH:mm:ss],[...,...]\"]; received [\"inlineCode\",null,null,\"\\\"NULL\\\"\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": []
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "versioned_docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
+        "blob": "bcb7f00915b40bd8c06a9067432774cb97a8959c"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/version-4.x/table-design/data-partitioning/dynamic-partitioning.md",
+        "blob": "9df2baad3a44e8ff9134e19654c085fd630c27f8"
+      }
+    }
   }
 }

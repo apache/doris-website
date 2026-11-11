@@ -8,13 +8,79 @@
     "sourceLocale": "en",
     "sourcePath": "docs/table-design/data-partitioning/data-bucketing.md",
     "targetPath": "i18n/ja/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
-    "sourceCommit": "5fda1b3f1951c28633678a1759f2a09601734325",
-    "sourceHash": "58291839133e329fa9f5cf8a7f786078ec5e2976ab5cf3e8fba62a7624943a05",
-    "sourceTechnicalHash": "b5258fa3ea20b88e3418b0cb93a756ed8d254aeeef526a406b460a3f186fdff7",
-    "targetHash": "31114d9f228cf1b624980191f5801ca7bd117184aed3faa032aedef118023afa",
+    "sourceCommit": "060685ca7597183b740b337fbef4fb1ec81f2683",
+    "sourceHash": "3682d6cd918a2675980aa4442023bdde34cad135b2577e28bd5033b1bdd01e88",
+    "sourceTechnicalHash": "1a94914035afbb9b5d54dac55968386c1edffdc6f35e8d0af44f0923742558e0",
+    "targetHash": "417ccf22a8b2a461af46c5a47703dd48525a37471d2a62a7f2884ad8393212c7",
     "reviewStatus": "machine",
     "ownership": "machine",
-    "translatedAt": "2026-10-14T14:05:28.127Z",
-    "glossaryVersion": "0"
+    "translatedAt": "2026-11-04T18:22:13.957Z",
+    "glossaryVersion": "1",
+    "generation": {
+      "policy": "whole-document-v1",
+      "mode": "full",
+      "reason": "chinese-reference-changed",
+      "attempts": 3,
+      "acceptedWithWarnings": true,
+      "sourceHash": "3682d6cd918a2675980aa4442023bdde34cad135b2577e28bd5033b1bdd01e88",
+      "targetHash": "417ccf22a8b2a461af46c5a47703dd48525a37471d2a62a7f2884ad8393212c7",
+      "warnings": [
+        {
+          "check": "protected-content",
+          "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 43: expected [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]; received [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]"
+        }
+      ],
+      "history": [
+        {
+          "attempt": 1,
+          "issues": [
+            {
+              "check": "headings",
+              "message": "the stream contains non-printable characters at line 3, column 6:\n        \u001b[200~\"title\": \"データバケット化\",\n         ^"
+            },
+            {
+              "check": "syntax",
+              "message": "the stream contains non-printable characters at line 3, column 6:\n        \u001b[200~\"title\": \"データバケット化\",\n         ^"
+            },
+            {
+              "check": "frontmatter",
+              "message": "the stream contains non-printable characters at line 3, column 6:\n        \u001b[200~\"title\": \"データバケット化\",\n         ^"
+            },
+            {
+              "check": "protected-content",
+              "message": "the stream contains non-printable characters at line 3, column 6:\n        \u001b[200~\"title\": \"データバケット化\",\n         ^"
+            }
+          ]
+        },
+        {
+          "attempt": 2,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 1: expected [\"html\",null,null,\"<!-- Knowledge type: Architecture decision / Configuration parameter -->\"]; received [\"html\",null,null,\"<!-- 知識タイプ: アーキテクチャの選択 / 構成パラメータ -->\"]\nprotected node 2: expected [\"html\",null,null,\"<!-- Applicable scenarios: Table design / Performance tuning / Data skew handling -->\"]; received [\"html\",null,null,\"<!-- 適用シナリオ: テーブル設計 / パフォーマンスチューニング / データスキュー対策 -->\"]"
+            }
+          ]
+        },
+        {
+          "attempt": 3,
+          "issues": [
+            {
+              "check": "protected-content",
+              "message": "Restore protected source content:\nnumeric values: expected [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]; received [\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"1\",\"10\",\"10\",\"10\",\"10\",\"10\",\"10\",\"128\",\"128\",\"2\",\"2\",\"2\",\"2\",\"2\",\"2.0\",\"20\",\"20\",\"200\",\"200\",\"3\",\"3\",\"3\",\"3\",\"3\",\"3\",\"4\",\"4\",\"4.0\",\"4.0\",\"4.0.8\",\"4.0.8\",\"4.0.8\",\"4.1\",\"4.1\",\"4.1.4\",\"4.1.4\",\"4.1.4\",\"8\",\"8\",\"8\",\"8\"]\nprotected node 43: expected [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl \\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]; received [\"code\",\"sql\",null,\"-- Modify hash bucket table\\nALTER TABLE demo.hash_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY HASH(region) BUCKETS 16;\\n\\n-- Modify random bucket table\\nALTER TABLE demo.random_bucket_tbl\\nADD PARTITION p250103 VALUES LESS THAN(\\\"2025-01-03\\\")\\nDISTRIBUTED BY RANDOM BUCKETS 16;\\n\\n-- Modify dynamic partition table\\nALTER TABLE demo.dynamic_partition_tbl\\nSET (\\\"dynamic_partition.buckets\\\"=\\\"16\\\");\"]"
+            }
+          ]
+        }
+      ]
+    },
+    "sourceRevisions": {
+      "en": {
+        "path": "docs/table-design/data-partitioning/data-bucketing.md",
+        "blob": "94bae9fa24decf52e019fb0e2afd4584e123254a"
+      },
+      "zh-CN": {
+        "path": "i18n/zh-CN/docusaurus-plugin-content-docs/current/table-design/data-partitioning/data-bucketing.md",
+        "blob": "d11ba55ad50eda3305eb81d6b69889854f39b1b3"
+      }
+    }
   }
 }
