@@ -229,10 +229,9 @@ Row cache reuses the LRU Cache mechanism in Apache Doris. When the caching start
 
 ![row-cache](/images/high-concurrency_5.png)
 
-To enable row cache, you can specify the following configuration in BE:
+To configure the row cache memory limit, set the following BE parameter:
 
 ```JSON
-disable_storage_row_cache=false // This specifies whether to enable row cache; it is set to false by default.
 row_cache_mem_limit=20% // This specifies the percentage of row cache in the memory; it is set to 20% by default.
 ```
 

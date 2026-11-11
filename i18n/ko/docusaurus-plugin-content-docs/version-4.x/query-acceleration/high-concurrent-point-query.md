@@ -41,7 +41,6 @@
 - 테이블 생성 시 `light_schema_change = true`를 활성화해야 합니다
 - 쿼리에는 **Key 열에 대한 동등 조건만** 포함되어야 하며, 조인이나 중첩 서브쿼리가 없어야 합니다
 - JDBC URL에서 `useServerPrepStmts=true`를 활성화해 PreparedStatement를 사용해야 합니다
-- (선택 사항) BE 설정 `disable_storage_row_cache = false`를 지정해 행 캐시를 활성화합니다
 - `EXPLAIN`을 사용해 실행 계획에 `SHORT-CIRCUIT` 표시가 포함되어 있는지 확인합니다
 
 ## 행 저장소 {#row-store}
@@ -150,11 +149,10 @@ resultSet = readStatement.executeQuery();
 
 Doris는 기본적으로 **페이지 단위 캐시**를 제공합니다. 각 페이지는 단일 열의 데이터를 저장하므로 Page Cache는 열 지향적입니다. 행 저장소에서는 한 행에 여러 열이 포함되며, 대규모 쿼리로 인해 캐시가 비워질 수 있습니다.
 
-적중률을 높이기 위해 Doris는 LRU Cache 메커니즘을 재사용하여 메모리 사용량을 제어하는 별도의 **행 캐시**를 제공합니다. 다음 BE 설정으로 활성화할 수 있습니다.
+적중률을 높이기 위해 Doris는 LRU Cache 메커니즘을 재사용하여 메모리 사용량을 제어하는 별도의 **행 캐시**를 제공합니다. 다음 BE 설정으로 메모리 한도를 지정할 수 있습니다.
 
 | 설정 | 기본값 | 설명 |
 | ---------------------------- | ---------- | --------------------------------- |
-| `disable_storage_row_cache` | `true` (기본적으로 비활성화) | 행 캐시를 비활성화할지 여부입니다. 활성화하려면 `false`로 설정합니다 |
 | `row_cache_mem_limit` | `20%` | 행 캐시가 사용하는 메모리의 비율 |
 
 ## 성능 튜닝 권장 사항 {#performance-tuning-recommendations}

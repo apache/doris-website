@@ -90,9 +90,7 @@ PROPERTIES (
 
 ## 开启行缓存
 
-Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的数据，所以 Page cache 是针对列的缓存，对于前面提到的行存，一行里包括了多列数据，缓存可能被大查询给刷掉，为了增加行缓存命中率，单独引入了行存缓存，行缓存复用了 Doris 中的 LRU Cache 机制来保障内存的使用，通过指定下面的的 BE 配置来开启
-
-- `disable_storage_row_cache` 是否开启行缓存，默认不开启
+Doris 中有针对 Page 级别的 Cache，每个 Page 中存的是某一列的数据，所以 Page cache 是针对列的缓存，对于前面提到的行存，一行里包括了多列数据，缓存可能被大查询给刷掉，为了增加行缓存命中率，单独引入了行存缓存，行缓存复用了 Doris 中的 LRU Cache 机制来保障内存的使用。以下 BE 配置控制行缓存的内存上限：
 
 - `row_cache_mem_limit` 指定 Row cache 占用内存的百分比，默认 20% 内存
 

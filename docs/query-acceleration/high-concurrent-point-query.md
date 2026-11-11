@@ -41,7 +41,6 @@ Before using high-concurrency point queries, confirm that all of the following c
 - `light_schema_change = true` is enabled at table creation
 - The query contains only **equality conditions on Key columns**, with no joins or nested subqueries
 - The JDBC URL has `useServerPrepStmts=true` enabled to use PreparedStatement
-- (Optional) BE configuration `disable_storage_row_cache = false` is set to enable row cache
 - Use `EXPLAIN` to verify that the execution plan contains the `SHORT-CIRCUIT` marker
 
 ## Row Store
@@ -150,11 +149,10 @@ resultSet = readStatement.executeQuery();
 
 By default, Doris provides a **Page-level cache**, where each page stores data for a single column, so the Page Cache is column-oriented. For row store, a row contains multiple columns, and the cache may be flushed by large queries.
 
-To improve the hit rate, Doris introduces a separate **Row Cache** that reuses the LRU Cache mechanism to control memory usage. Enable it through the following BE configurations:
+To improve the hit rate, Doris introduces a separate **Row Cache** that reuses the LRU Cache mechanism to control memory usage. The following BE configuration controls its memory limit:
 
 | Configuration | Default | Description |
 | ---------------------------- | ---------- | --------------------------------- |
-| `disable_storage_row_cache` | `true` (disabled by default) | Whether to disable row cache. Set to `false` to enable |
 | `row_cache_mem_limit` | `20%` | Percentage of memory used by the Row Cache |
 
 ## Performance Tuning Recommendations

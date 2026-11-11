@@ -41,7 +41,6 @@
 - 建表时开启 `light_schema_change = true`
 - 查询语句仅包含 **Key 列等值条件**，无 join 与嵌套子查询
 - JDBC URL 开启 `useServerPrepStmts=true` 使用 PreparedStatement
-- （可选）BE 配置 `disable_storage_row_cache = false` 开启行缓存
 - 通过 `EXPLAIN` 验证执行计划中存在 `SHORT-CIRCUIT` 标记
 
 ## 行存（Row Store）
@@ -150,11 +149,10 @@ resultSet = readStatement.executeQuery();
 
 Doris 默认提供 **Page 级别的 Cache**，每个 Page 中存储某一列的数据，因此 Page Cache 是面向列的缓存。对于行存而言，一行包括多列数据，缓存可能被大查询冲刷掉。
 
-为提升命中率，Doris 单独引入了**行缓存（Row Cache）**，复用 LRU Cache 机制保障内存使用。通过以下 BE 配置开启：
+为提升命中率，Doris 单独引入了**行缓存（Row Cache）**，复用 LRU Cache 机制保障内存使用。以下 BE 配置控制行缓存的内存上限：
 
 | 配置项                       | 默认值     | 说明                              |
 | ---------------------------- | ---------- | --------------------------------- |
-| `disable_storage_row_cache`  | `true`（默认不开启）| 是否关闭行缓存，设置为 `false` 开启 |
 | `row_cache_mem_limit`        | `20%`      | Row Cache 占用内存的百分比         |
 
 ## 性能优化建议
