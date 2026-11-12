@@ -556,7 +556,7 @@ ALTER TABLE example_tbl ADD COLUMN `v.x` VARIANT;
 - `ADD COLUMN` of a nullable VARIANT column, with or without a Schema Template and properties.
 - `DROP COLUMN`, `RENAME COLUMN`, and `MODIFY COLUMN ... COMMENT '...'`.
 - `ADD INDEX` and `DROP INDEX`. An index with `field_pattern` can only be defined in `CREATE TABLE`.
-- On a column without a Schema Template: changing `NOT NULL` to `NULL`, and changing `variant_doc_materialization_min_rows`. `MODIFY COLUMN` takes the complete column definition; a property it omits takes the value of the matching `default_variant_*` session variable, so restate every property whose value differs.
+- On a column without a Schema Template: changing `NOT NULL` to `NULL`, and changing `variant_doc_materialization_min_rows`. `MODIFY COLUMN` takes the complete column definition; a property it omits takes its default value (see [Column properties](#column-properties)), so restate every property whose value differs from the default.
 
 Not supported:
 
@@ -611,16 +611,7 @@ The **ALTER** column tells whether `ALTER TABLE ... MODIFY COLUMN` can change th
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `default_variant_max_subcolumns_count` | `2048` | Value of `variant_max_subcolumns_count` for a VARIANT column defined without it. |
-| `default_variant_enable_typed_paths_to_sparse` | `false` | Value of `variant_enable_typed_paths_to_sparse` for a column defined without it. |
-| `default_variant_sparse_hash_shard_count` | `0` | Value of `variant_sparse_hash_shard_count` for a column defined without it; `0` is treated as `1`. |
-| `default_variant_max_sparse_column_statistics_size` | `10000` | Value of `variant_max_sparse_column_statistics_size` for a column defined without it. |
-| `default_variant_enable_doc_mode` | `false` | Value of `variant_enable_doc_mode` for a column defined without it. |
-| `default_variant_doc_materialization_min_rows` | `0` | Value of `variant_doc_materialization_min_rows` for a column defined without it. |
-| `default_variant_doc_hash_shard_count` | `64` | Value of `variant_doc_hash_shard_count` for a column defined without it. |
 | `describe_extend_variant_column` | `false` | When `true`, `DESC` also lists the subcolumns of VARIANT columns. |
-
-The `default_variant_*` variables apply when a column is defined, by `CREATE TABLE` or by `ALTER TABLE`. Changing them does not affect existing columns, but it does affect a later `MODIFY COLUMN` that omits the property.
 
 ### BE configuration
 
