@@ -67,6 +67,8 @@ Therefore, this tablet's Compaction Score = 4.
 
 ### 2.2 Compaction Types
 
+The following candidate ranges describe rowset selection on a storage-compute coupled BE.
+
 - Cumulative Compaction: merges eligible incremental rowsets on the incremental side of the cumulative point.
 - Base Compaction: merges eligible historical rowsets before the cumulative point; one task may select only part of that history.
 - Full Compaction: merges the complete local version chain after continuity and completeness checks.
@@ -128,6 +130,8 @@ Compaction execution follows a producer-consumer model:
 
 Background compaction is normally sufficient. Before intervening, inspect the tablet's rowsets, `cumulative point`, current tasks, and errors with the [Compaction status API](../open-api/be-http/compaction-status). Choose the operation based on the rowsets to merge:
 
+The rowset ranges and local-version-chain checks below describe the **storage-compute coupled BE** implementation. Storage-compute separated deployments use Cloud Compaction; the complete-local-chain rule must not be applied to that path. See the SQL version/deployment scope at the end of this section.
+
 | Operation | Appropriate use | Limits |
 | --- | --- | --- |
 | Cumulative | Reduce small incremental rowsets on the incremental side of the cumulative point | Uses the table's compaction policy and its rowset selection rules; it does not merge the entire history |
@@ -158,4 +162,4 @@ curl -u '<user>:<password>' \
 
 The run endpoint supports `base`, `cumulative`, and `full`. A successful submission is not proof that compaction has finished: check the task status, resulting rowsets, and BE logs. A version gap, a conflicting task, or no useful input can prevent the requested merge. See the [manual Compaction API](../open-api/be-http/compaction-run) for response fields.
 
-Since Doris 4.1.4, `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` can also request Full Compaction for one tablet in both deployment modes. The partition-level `ADMIN COMPACT TABLE` still accepts only Base/Cumulative and is limited to storage-compute coupled clusters. See [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE) for syntax and permissions.
+Since Doris 4.1.1, partition-level `ADMIN COMPACT TABLE` also accepts `FULL` and supports both deployment modes; in 4.0 and 4.1.0 it is limited to Base/Cumulative in storage-compute coupled clusters. Since 4.1.4, `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` can also target a single tablet in either mode. See [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE) for syntax, privileges, and version limits.

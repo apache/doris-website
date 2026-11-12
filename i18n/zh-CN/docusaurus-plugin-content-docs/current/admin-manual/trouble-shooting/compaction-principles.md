@@ -59,6 +59,8 @@ Compaction Score 是衡量 tablet 数据乱序程度 的指标，同时也是判
 
 ### 2.2 Compaction 类型
 
+以下候选范围描述存算一体 BE 的 rowset 选择逻辑。
+
 - Cumulative Compaction：选择 cumulative point 增量侧符合策略的 rowset 进行合并；
 - Base Compaction：选择 cumulative point 之前符合条件的历史 rowset，可能只合并候选中的一部分；
 - Full Compaction：选择完整的本地版本链进行合并，需要连续性及完整性检查；
@@ -120,6 +122,8 @@ Compaction 的执行流程采用 生产者-消费者模型：
 
 通常应由后台自动合并。手动干预前，先通过 [Compaction 状态 API](../open-api/be-http/compaction-status) 检查 tablet 的 rowset、`cumulative point`、当前任务和错误，再按需要合并的数据范围选择操作：
 
+下表的 rowset 范围及本地版本链检查描述的是**存算一体 BE** 的实现。存算分离采用 Cloud Compaction 路径，不能直接套用“完整本地版本链”的判断；SQL 操作的版本与部署模式范围见文末说明。
+
 | 操作 | 适用场景 | 限制 |
 | --- | --- | --- |
 | Cumulative | 减少 cumulative point 增量侧的小 rowset | 遵循表的 Compaction 策略及 rowset 选择规则，不合并全部历史数据 |
@@ -150,4 +154,4 @@ curl -u '<user>:<password>' \
 
 触发接口接受 `base`、`cumulative`、`full`。提交成功不代表合并完成：请检查任务状态、合并后的 rowset 及 BE 日志。版本缺口、任务冲突或没有有效输入都可能导致此次合并无法执行。响应字段详见[手动 Compaction API](../open-api/be-http/compaction-run)。
 
-从 Doris 4.1.4 起，也可以使用 `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` 触发单个 tablet 的 Full Compaction，该语句支持存算一体和存算分离。分区级 `ADMIN COMPACT TABLE` 仍只支持 Base/Cumulative，且仅适用于存算一体。语法与权限见 [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)。
+从 Doris 4.1.1 起，分区级 `ADMIN COMPACT TABLE` 也支持 `FULL`，且支持存算一体、存算分离两种模式；4.0 和 4.1.0 中只支持存算一体的 Base/Cumulative。从 4.1.4 起，还可以使用 `ADMIN COMPACT TABLET <tablet_id> WHERE TYPE='FULL'` 按单个 tablet 触发，两种模式均支持。语法、权限与版本限制见 [COMPACT TABLE](../../sql-manual/sql-statements/table-and-view/data-and-status-management/COMPACT-TABLE)。

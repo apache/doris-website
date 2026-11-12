@@ -152,6 +152,8 @@ Unique Key 模型的写时合并（Merge-on-Write，MOW）表在执行 Compactio
 
 通常应由后台自动合并。手动干预前，先通过 [Compaction 状态 API](../open-api/be-http/compaction-status) 检查 tablet 的 rowset、`cumulative point`、当前任务和错误，再按需要合并的数据范围选择操作：
 
+下表的 rowset 范围及本地版本链检查描述的是**存算一体 BE** 的实现。存算分离采用 Cloud Compaction 路径，不能直接套用“完整本地版本链”的判断。
+
 | 操作 | 适用场景 | 限制 |
 | --- | --- | --- |
 | Cumulative | 减少 cumulative point 增量侧的小 rowset | 遵循表的 Compaction 策略及 rowset 选择规则，不合并全部历史数据 |

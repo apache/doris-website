@@ -141,6 +141,8 @@ If the same BE runs four compaction tasks with this input size concurrently, the
 
 Background compaction is normally sufficient. Before intervening, inspect the tablet's rowsets, `cumulative point`, current tasks, and errors with the [Compaction status API](../open-api/be-http/compaction-status). Choose the operation based on the rowsets to merge:
 
+The rowset ranges and local-version-chain checks below describe the **storage-compute coupled BE** implementation. Storage-compute separated deployments use Cloud Compaction; the complete-local-chain rule must not be applied to that path.
+
 | Operation | Appropriate use | Limits |
 | --- | --- | --- |
 | Cumulative | Reduce small incremental rowsets on the incremental side of the cumulative point | Uses the table's compaction policy and its rowset selection rules; it does not merge the entire history |
