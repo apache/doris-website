@@ -15,7 +15,7 @@ async function createBlogFixture(root) {
     for (const directory of ['src/theme/BlogListPage', 'src/theme/BlogListItem', 'src/theme/BlogFooter', 'src/theme/BlogLayout',
         'src/theme/BlogPostItem/Container', 'src/theme/BlogPostItem/Header/Title', 'src/theme/BlogPostPage/Metadata',
         'src/theme/BlogPostPage/StructuredData', 'src/theme/BlogTagsListPage', 'src/theme/BlogTagsPostsPage', 'src/components/PageHeader',
-        'src/components/VersionsDoc'])
+        'src/components/VersionsDoc', 'src/components/YouTube'])
         fs.cpSync(path.join(repo, directory), path.join(root, directory), {recursive: true});
     for (const file of ['src/components/blogs/BlogLanguageNote.tsx', 'src/components/blogs/components/head-blogs.tsx',
         'src/utils/blogLocale.ts', 'src/hooks/use-format-date.ts', 'src/theme/BlogPostItem/styles.scss', 'src/scss/_variables.scss', 'src/theme/MDXComponents.js'])
