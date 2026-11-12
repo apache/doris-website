@@ -346,3 +346,4 @@ SELECT * FROM hello;
 | 调 FE 资源、改 Follower 数量、自定义启动配置、配置访问模式（NodePort / LoadBalancer）、持久化存储 | [配置 FE](config-fe.md) | `spec.feSpec.*` 全量字段 |
 | 单组/多组计算组、限制资源、配置访问模式、缓存与日志的持久化 | [配置计算组](config-cg.md) | `spec.computeGroups[*]` 全量字段 |
 | 设置 root / 非 root 管理用户密码、Secret 凭证、挂载 Kerberos 认证文件 | [配置认证](config-cluster.md) | 集群级凭证与 Kerberos |
+| BE 扩缩容、新增或移除计算组、检查缩容和 PVC 清理 | [调整计算容量](config-cg.md#scaling-compute-groups) | 操作步骤、退役行为与结果验证 |
