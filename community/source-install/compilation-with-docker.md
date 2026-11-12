@@ -79,16 +79,88 @@ Different Doris versions correspond to different build images. `apache/doris:bui
 | `apache/doris:build-env-ldb-toolchain-latest` | master | Tracks the trunk |
 | `apache/doris:build-env-ldb-toolchain-no-avx2-latest` | master | Compatible with CPUs that do not support AVX2 |
 
-Taking compilation of Doris 2.0 as an example, download and check the image:
+Run these commands on the host. This example builds `master`; for a release branch, change both the branch and image using the table above. Run the remaining host commands in the same shell to retain these variables. For ARM64 and JDK variations, see [Notes on Image Selection](#notes-on-image-selection).
 
 ```bash
-# You can also use docker.io/apache/doris:build-env-for-2.0
-docker pull apache/doris:build-env-for-2.0
+DORIS_BRANCH=master
+DORIS_BUILD_IMAGE=apache/doris:build-env-ldb-toolchain-latest
+DORIS_SOURCE_DIR="$PWD/doris"
 
-# Confirm that the image has been downloaded successfully
-docker images
-# REPOSITORY      TAG                  IMAGE ID        CREATED       SIZE
-# apache/doris    build-env-for-2.0    f29cf1979dba    3 days ago    3.3GB
+docker pull "$DORIS_BUILD_IMAGE"
+```
+
+## 3. Compile Doris
+
+<!-- Knowledge type: Procedure -->
+
+### 3.1 Download the Doris Source Code
+
+On the host, clone the selected branch into the directory configured above:
+
+```bash
+git clone --branch "$DORIS_BRANCH" https://github.com/apache/doris.git "$DORIS_SOURCE_DIR"
+```
+
+### 3.2 Start the Build Container
+
+```bash
+mkdir -p "$HOME/.m2"
+
+docker run -it --network=host \
+    --name doris-build \
+    -v "$HOME/.m2:/root/.m2" \
+    -v "$DORIS_SOURCE_DIR:/root/doris" \
+    --workdir /root/doris \
+    "$DORIS_BUILD_IMAGE"
+```
+
+The command opens Bash inside the container, with the mounted source directory `/root/doris` as the working directory.
+
+Explanation of the key `docker run` parameters:
+
+| Parameter | Purpose |
+| ---- | ---- |
+| `-v` | Mounts a host directory into the container, used to persist source code and dependencies |
+| `--name` | Specifies the container name for easier management later |
+| `--workdir` | Starts the shell in the mounted source directory |
+| `--network` | Sets the container network mode. `host` shares the network stack with the host and requires no port mapping |
+
+Recommendations:
+
+- Always mount the Doris source directory so that the build artifacts remain on the host and are not lost when the container exits.
+- Mount the `.m2` directory to avoid re-downloading Maven dependencies every time the container starts.
+- Downloading third-party libraries inside the container requires internet access. The `--network=host` mode is recommended.
+
+### 3.3 Run the Build
+
+Inside the container, run the default build:
+
+```bash
+bash build.sh
+```
+
+When the build finishes, the artifacts are located under `output/` in the source directory.
+
+:::tip
+**How do you check whether the machine supports the AVX2 instruction set?**
+
+```bash
+cat /proc/cpuinfo | grep avx2
+```
+
+Non-empty output means AVX2 is supported.
+:::
+
+### Other Build Options
+
+Choose one of these commands instead of the default build when needed:
+
+```bash
+# For CPUs without AVX2
+USE_AVX2=0 bash build.sh
+
+# Build the Debug version of BE
+BUILD_TYPE=Debug bash build.sh
 ```
 
 ### Notes on Image Selection
@@ -111,77 +183,6 @@ export JAVA_HOME=/usr/lib/jvm/jdk-17.0.2/
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
-## 3. Compile Doris
-
-<!-- Knowledge type: Procedure -->
-
-### 3.1 Download the Doris Source Code
-
-On the host machine, fetch the code for the target branch (using branch-2.0 as an example):
-
-```bash
-git clone -b branch-2.0 https://github.com/apache/doris.git
-```
-
-Assume the source directory is `~/doris-branch-2.0`.
-
-### 3.2 Start the Build Container
-
-```bash
-# Prepare the maven .m2 directory on the host in advance so that Java dependencies can be reused across multiple builds
-mkdir ~/.m2
-
-# Mount the source code and the .m2 directory, then start the build image
-docker run -it --network=host \
-    --name mydocker \
-    -v ~/.m2:/root/.m2 \
-    -v ~/doris-branch-2.0:/root/doris-branch-2.0/ \
-    apache/doris:build-env-for-2.0
-
-# After the command runs successfully, it enters the container automatically
-```
-
-Explanation of the key `docker run` parameters:
-
-| Parameter | Purpose |
-| ---- | ---- |
-| `-v` | Mounts a host directory into the container, used to persist source code and dependencies |
-| `--name` | Specifies the container name for easier management later |
-| `--network` | Sets the container network mode. `host` shares the network stack with the host and requires no port mapping |
-
-Recommendations:
-
-- Always mount the Doris source directory so that the build artifacts remain on the host and are not lost when the container exits.
-- Mount the `.m2` directory to avoid re-downloading Maven dependencies every time the container starts.
-- Downloading third-party libraries inside the container requires internet access. The `--network=host` mode is recommended.
-
-### 3.3 Run the Build
-
-After entering the source directory inside the container, run:
-
-```bash
-# By default, compile artifacts that support AVX2
-sh build.sh
-
-# When the CPU does not support AVX2, append USE_AVX2=0
-USE_AVX2=0 sh build.sh
-
-# Compile the Debug version of BE
-BUILD_TYPE=Debug sh build.sh
-```
-
-When the build finishes, the artifacts are located under `output/` in the source directory.
-
-:::tip
-**How do you check whether the machine supports the AVX2 instruction set?**
-
-```bash
-cat /proc/cpuinfo | grep avx2
-```
-
-Non-empty output means AVX2 is supported.
-:::
-
 ## 4. Build Your Own Development Image
 
 To customize the base image (for example, to switch to a different base distribution or add debugging tools), refer to `docker/README.md` in the source code.
@@ -203,6 +204,16 @@ Configure a Docker image mirror accelerator, or use the full path `docker.io/apa
 ### Q4: Java library downloads fail inside the container?
 
 Verify that the container is started with `--network=host`, and that the `~/.m2` directory is mounted into the container, so that a proxy or network isolation does not make the Maven central repository unreachable.
+
+### Q5: Git reports `detected dubious ownership in repository`?
+
+A mounted source directory may be owned by a different host user. After confirming that you trust the source repository, add an exception for its mounted path inside the container:
+
+```bash
+git config --global --add safe.directory /root/doris
+```
+
+If you changed the container mount path, replace `/root/doris` accordingly.
 
 ## Related Documents
 
