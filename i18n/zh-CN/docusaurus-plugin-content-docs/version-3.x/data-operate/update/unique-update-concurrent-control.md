@@ -129,7 +129,7 @@ MySQL> select * from test_table;
 
 在这次导入中，因 sequence column 的值（也就是 modify_date 中的值）中 '2020-03-05' 为最大值，所以 keyword 列中最终保留了 c。
 
-如果建表时使用了 `function_column.sequence_col` 方式来指定 sequence 列，在导入时需要指定 sequence 列到其他列的映射。
+如果建表时使用了 `function_column.sequence_type`（即未将 sequence 列映射到表中的普通列），在导入时需要指定 sequence 列到源数据列的映射。
 
 **1. Stream Load**
 
@@ -234,12 +234,12 @@ MySQL [test]> select * from test_table;
 
 ### 注意
 
-1. 为防止误用，在 StreamLoad/BrokerLoad 等导入任务以及行更新 insert 语句中，用户必须显示指定 sequence 列 (除非 sequence 列的默认值为 CURRENT_TIMESTAMP)，不然会收到以下报错信息：
+1. **Sequence 列的要求取决于建表方式**：使用 `function_column.sequence_col` 时，按普通列规则导入映射列即可，无需额外指定导入时的 Sequence 映射参数。使用 `function_column.sequence_type` 时，Stream Load / Broker Load 需要按上文配置源数据列映射。对于显式指定目标列列表的全行 `INSERT`，需要包含映射的普通列（除非其默认值为 `CURRENT_TIMESTAMP`）；未映射普通列时，需要包含隐藏列 `__DORIS_SEQUENCE_COL__`。不指定目标列列表的 `INSERT` 已包含映射的普通列。部分列更新的例外见下文第 3 点。缺少必要的 Sequence 输入时，会收到如下报错：
 
 ```Plain
 Table test_tbl has sequence column, need to specify the sequence column
 ```
-2. 在使用 Insert 语句插入数据时，由于用户必须显示指定 sequence 列，否则会报如上异常。为了方便用户在一些场景下（表复制，内部数据迁移等场景）使用，Doris 可以通过 session 参数控制，来关闭 sequence 列的检查约束：
+2. 在表复制、内部数据迁移等场景下，可以通过 session 参数关闭全行 `INSERT` 的 Sequence 列检查约束：
 
 ```sql
 set require_sequence_in_insert = false;

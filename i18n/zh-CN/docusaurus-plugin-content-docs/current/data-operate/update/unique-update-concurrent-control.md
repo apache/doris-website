@@ -285,7 +285,7 @@ MySQL [test]> select * from test_table;
 
 <!-- 知识类型: 注意事项 -->
 
-1. **必须显式指定 Sequence 列**：在 Stream Load / Broker Load 等导入任务以及行更新 `INSERT` 语句中，用户必须显式指定 Sequence 列（除非 Sequence 列的默认值为 `CURRENT_TIMESTAMP`），否则会收到如下报错：
+1. **Sequence 列的要求取决于建表方式**：使用 `function_column.sequence_col` 时，按普通列规则导入映射列即可，无需额外指定导入时的 Sequence 映射参数。使用 `function_column.sequence_type` 时，Stream Load / Broker Load 需要按上文配置源数据列映射。对于显式指定目标列列表的全行 `INSERT`，需要包含映射的普通列（除非其默认值为 `CURRENT_TIMESTAMP`）；未映射普通列时，需要包含隐藏列 `__DORIS_SEQUENCE_COL__`。不指定目标列列表的 `INSERT` 已包含映射的普通列。部分列更新的例外见下文第 3 点。缺少必要的 Sequence 输入时，会收到如下报错：
 
     ```Plain
     Table test_tbl has sequence column, need to specify the sequence column
