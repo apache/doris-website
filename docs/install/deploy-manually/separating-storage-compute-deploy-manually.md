@@ -286,7 +286,18 @@ Meta Service itself provides both metadata management and data recycling functio
    bin/start_fe.sh --daemon
    ```
 
-   The first FE process initializes the cluster and runs as the FOLLOWER role. Use a MySQL client to connect to the FE and run `show frontends` to confirm that the FE you just started is the master.
+   The first FE process initializes the cluster and runs as the FOLLOWER role. For new clusters on **4.2.1** and **5.0**, initialize root before running `SHOW FRONTENDS` or registering additional nodes. If no initial root password was configured, connect on the FE host:
+
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+   ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   SHOW FRONTENDS;
+   ```
+
+   Replace `9030` with the configured `query_port`. The password change releases the initial SQL restriction on this connection. If `initial_root_password` was set before first startup, connect with `-p` and that password instead. Subsequent node-registration and SQL commands must use the configured credentials. Admin is enabled separately if client login is needed; see [Initialize Built-in Accounts](../../admin-manual/auth/authentication/internal#initialize-built-in-accounts).
 
 ## Step 6: Register FE Follower/Observer Nodes
 
@@ -418,7 +429,7 @@ Doris depends on the FDB 7.1.x series by default. Run `fdbserver --version` to c
 
 Run the following command to confirm:
 ```bash
-mysql -h <fe_host> -P 9030 -u root -e "SHOW FRONTENDS;"
+mysql -h <fe_host> -P 9030 -u root -p -e "SHOW FRONTENDS;"
 ```
 Check whether the `Role` column for the corresponding FE in the output is `MASTER`.
 

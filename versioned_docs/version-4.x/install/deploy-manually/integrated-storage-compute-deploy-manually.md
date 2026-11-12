@@ -101,13 +101,17 @@ After completing the prerequisite checks and planning, such as [Environment chec
 
 4. **Check the FE startup status**
 
-   Connect to the Doris cluster with the MySQL client. The initial user is `root`, and the default password is empty.
+   For new clusters on **4.2.1** and **5.0**, initialize root's password before checking status, adding FE nodes or registering BE. If no `initial_root_password` was configured, run the following **on this FE host**:
 
-   ```SQL
-
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
-
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P<fe_query_port> -uroot
    ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   ```
+
+   Normal SQL is restricted with error 1820 until this succeeds; the same connection is then usable. If an initial password was configured, log in with that password using `-p`. All later MySQL commands below require the configured password. See [Initialize Built-in Accounts](../../admin-manual/auth/authentication/internal#initialize-built-in-accounts).
 
    After connecting to the Doris cluster, you can check the FE status with the `show frontends` command. Typically, confirm the following:
 
@@ -135,7 +139,7 @@ A single FE node can be used for testing and verification. In production, it is 
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
    
    ## register a new FE follower node
    ALTER SYSTEM ADD FOLLOWER "<fe_ip_address>:<fe_edit_log_port>"
@@ -208,7 +212,7 @@ A single FE node can be used for testing and verification. In production, it is 
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
       
    ## register BE node
    ALTER SYSTEM ADD BACKEND "<be_ip_address>:<be_heartbeat_service_port>"
@@ -230,7 +234,7 @@ A single FE node can be used for testing and verification. In production, it is 
 
    ```Bash
    ## connect a alive FE node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
       
    ## check BE node status
    show backends;
@@ -250,7 +254,7 @@ A single FE node can be used for testing and verification. In production, it is 
 
    ```Bash
    ## connect a alive fe node
-   mysql -uroot -P<fe_query_port> -h<fe_ip_address>
+   mysql -uroot -p -P<fe_query_port> -h<fe_ip_address>
    ```
 
 2. **Check Doris installation information**
@@ -265,21 +269,12 @@ A single FE node can be used for testing and verification. In production, it is 
    show backends;
    ```
 
-3. **Modify the Doris cluster password**
+3. **Enable admin if needed**
 
-   When a Doris cluster is created, the system automatically creates a user named `root` with an empty password by default. For better security, it is recommended to set a new password for the `root` user immediately after the cluster is created.
+   Root's password was initialized in Step 1. On a protected new cluster, admin cannot log in while its password is empty. If client access to admin is needed, run the following as root; internal JOB, MTMV and statistics execution do not require this step:
 
-   ```SQL
-   -- check the current user
-   select user();  
-   +------------------------+  
-   | user()                 |  
-   +------------------------+  
-   | 'root'@'192.168.88.30' |  
-   +------------------------+  
-        
-   -- modify the password for current user
-   SET PASSWORD = PASSWORD('doris_new_passwd');
+   ```sql
+   ALTER USER 'admin' IDENTIFIED BY '<new_admin_password>';
    ```
 
 4. **Create a test table and insert data**
@@ -366,14 +361,7 @@ SHOW BACKENDS;
 
 ### Q: How do I reset the password if I forget the root password?
 
-On the FE node, connect via 127.0.0.1 to log in as root without a password, then change the password:
-
-```Bash
-mysql -h127.0.0.1 -P9030 -uroot
-
--- Reset password
-SET PASSWORD = PASSWORD('your_new_password');
-```
+Follow the [local password-recovery procedure](../../admin-manual/auth/authentication/internal#faq): temporarily enable `skip_localhost_auth_check`, restart that FE, reset the password over direct loopback MySQL, then remove the setting and restart again. A loopback connection does not bypass a configured password by default.
 
 ---
 

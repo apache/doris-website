@@ -42,9 +42,9 @@ User properties include, but are not limited to, the maximum number of user conn
 
 ### Built-in Users
 
-Built-in users are users that Doris creates by default and that have certain privileges out of the box, including root and admin. Their initial passwords are empty. After the FE starts, you can change the password with the password modification command. **Default users cannot be dropped.**
+Built-in users are users that Doris creates by default and that have certain privileges out of the box, including root and admin. Unless an initial root password is configured, their initial passwords are empty. Initialize client access as described in [Initialize Built-in Accounts](#initialize-built-in-accounts). **Default users cannot be dropped.**
 
-| User | Allowed Login Source | Default Role |
+| User | Login source after setting a password | Default Role |
 | --- | --- | --- |
 | `root@'%'` | Any node | operator |
 | `admin@'%'` | Any node | admin |
@@ -52,6 +52,94 @@ Built-in users are users that Doris creates by default and that have certain pri
 ### Password
 
 The password is the credential used by a user to log in. It is set by the administrator when the user is created, and the user can also change it later.
+
+## Initialize Built-in Accounts
+
+:::info Supported versions
+
+The following behavior is available from **4.2.1** in the 4.x series and in **5.0**. It applies by default to clusters newly initialized on these versions. Clusters initialized before this feature retain their previous authentication behavior after an upgrade. Adding an FE to an existing cluster does not reinitialize the accounts.
+
+:::
+
+With the default configuration, authentication depends on each account's **current** password:
+
+| Account state | Direct MySQL connection from the FE's loopback address | Remote MySQL, HTTP/Web UI, Stream Load, Arrow Flight SQL/ADBC |
+| --- | --- | --- |
+| root has an empty password | Can log in, but must set its own nonempty password before normal SQL | Login rejected |
+| admin has an empty password | Login rejected | Login rejected |
+| root or admin has a nonempty password | Normal password and privilege checks | Normal password and privilege checks |
+
+Resetting either account's password to empty applies these restrictions to subsequent logins again. Existing authenticated sessions are not revoked by a password change. Other users' empty-password behavior is unchanged. Internal JOB, MTMV, statistics and other internal execution contexts do not require an admin login password.
+
+### Set root's password before using the cluster
+
+If no `initial_root_password` was configured, run the MySQL client **on the FE host**, using a direct TCP loopback connection. Replace `9030` with the FE's `query_port` if needed:
+
+```bash
+mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+```
+
+Only `127.0.0.1` and IPv6 loopback `::1` qualify; the entire `127.0.0.0/8` range does not. Connections carrying PROXY protocol are not eligible for this bootstrap login. For Docker or Kubernetes, run the client inside the FE container's network namespace; loopback on the Docker host is not the FE container's loopback.
+
+In this session, normal SQL such as `SHOW DATABASES` returns error **1820** until root sets a nonempty password. Execute:
+
+```sql
+SET PASSWORD = PASSWORD('<new_root_password>');
+SHOW DATABASES;
+```
+
+Replace the password placeholder with your own nonempty password. The password change releases the restriction on the same session, so `SHOW DATABASES` now succeeds without reconnecting. Rejected MySQL logins use **1045 / 28000**; Arrow Flight SQL/ADBC reports **UNAUTHENTICATED**. Use the configured password for Web UI, HTTP, Stream Load and Flight clients.
+
+Subsequent MySQL connections must supply the password:
+
+```bash
+mysql --protocol=TCP -h<fe_host> -P9030 -uroot -p
+```
+
+### Enable admin only when needed
+
+After initializing root, run the following as root if client access to admin is needed:
+
+```sql
+ALTER USER 'admin' IDENTIFIED BY '<new_admin_password>';
+```
+
+This enables admin password authentication. Leaving admin with an empty password keeps client login disabled on a protected new cluster and does not stop internal background jobs. Only root can change root's own password.
+
+### Set an initial root password for automation
+
+Before the **first cluster initialization**, set the existing FE configuration [`initial_root_password`](../../config/fe-config#initial_root_password) to a two-stage SHA-1 password hash. FE accepts a hash, not plaintext. For example, generate it offline without requiring an already running Doris cluster:
+
+```bash
+python3 - <<'PY'
+import getpass
+import hashlib
+password = getpass.getpass('Initial root password: ')
+if not password:
+    raise SystemExit('Password must not be empty')
+print('*' + hashlib.sha1(hashlib.sha1(password.encode('utf-8')).digest()).hexdigest().upper())
+PY
+```
+
+Copy the output into `fe.conf` before starting the first FE:
+
+```properties
+initial_root_password = *<40_HEXADECIMAL_DIGITS>
+```
+
+Root then authenticates with that password from the first startup and does not enter the empty-password bootstrap session. This setting does not initialize admin's password. Invalid nonempty values prevent first initialization in 4.2.1 and 5.0; correct the value and restart. Already initialized clusters ignore this setting, so keeping it does not overwrite later password changes. Remove it after initialization if no longer needed.
+
+Deployment scripts must use the configured credentials when registering FE/BE nodes or running SQL. Use the deployment tool's Secret/configuration integration to supply them; FE reads the initial hash from its configuration.
+
+### Explicit test compatibility
+
+For isolated tests that require the previous empty-password behavior, set the following on **every FE that accepts client connections**, in `fe.conf` or the effective `fe_custom.conf`, and restart those FEs:
+
+```properties
+allow_empty_password_for_root_admin = true
+```
+
+On a protected new cluster this permits empty-password root/admin logins from any host and supported protocol, without the password-reset restriction. It does not bypass a configured nonempty password. The default is `false`; it cannot be changed online. Removing the entry or setting it to `false` and restarting restores protection. This is a test setting; use `skip_localhost_auth_check` only for temporary local password recovery as described in [FAQ](#faq).
 
 ## Authentication Mechanism
 
@@ -187,17 +275,14 @@ For example, suppose a user named `user@'192.%'` has been created, allowing user
 
 ### Q: How do I reset a forgotten password?
 
-If you have forgotten the password and cannot log in to Doris, follow these steps to recover:
+Use the existing local recovery setting temporarily:
 
-1. Add the following parameter to the FE config file:
+1. On one FE, add `skip_localhost_auth_check = true` to `fe.conf` or the effective `fe_custom.conf`, then restart that FE.
+2. On that FE host, connect directly over loopback MySQL: `mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot`.
+3. Run `SET PASSWORD = PASSWORD('<new_root_password>');`. Only root can reset root's password.
+4. Remove the recovery entry or set it to `false`, then restart the FE again. Reconnect using `-p` and the new password.
 
-    ```text
-    skip_localhost_auth_check = true
-    ```
-
-2. Restart the FE.
-3. Log in to Doris on the FE host as the root user without a password.
-4. After logging in, reset the password with the `SET PASSWORD` command.
+For protected new clusters, recovery does not apply to PROXY protocol, HTTP or Flight. `allow_empty_password_for_root_admin` does not bypass an existing password and is not a forgotten-password recovery setting.
 
 ### Q: Can other users reset the root user's password?
 

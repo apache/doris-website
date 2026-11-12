@@ -42,9 +42,9 @@ Apache Doris 提供内置的用户认证机制，管理员通过 SQL 命令创�
 
 ### 内置用户
 
-内置用户是 Doris 默认创建的用户，并默认拥有一定的权限，包括 root 和 admin。初始密码都为空，FE 启动后，可以通过修改密码命令进行修改。**不支持删除默认用户**。
+内置用户是 Doris 默认创建的用户，并默认拥有一定的权限，包括 root 和 admin。未配置初始 root 密码时，初始密码均为空。客户端访问的初始化步骤见[初始化内置账号](#初始化内置账号)。**不支持删除默认用户**。
 
-| 用户 | 允许登录来源 | 默认角色 |
+| 用户 | 设置密码后的登录来源 | 默认角色 |
 | --- | --- | --- |
 | `root@'%'` | 任意节点 | operator |
 | `admin@'%'` | 任意节点 | admin |
@@ -52,6 +52,94 @@ Apache Doris 提供内置的用户认证机制，管理员通过 SQL 命令创�
 ### 密码
 
 密码是用户登录的凭据，由管理员创建用户时设置，也可以在创建后由用户自己更改。
+
+## 初始化内置账号
+
+:::info 支持版本
+
+以下行为从 4.x 系列的 **4.2.1** 以及 **5.0** 开始支持，默认仅对这些版本新初始化的集群生效。在此功能引入之前已初始化的集群，升级后保留原有认证行为。向已有集群添加 FE 不会重新初始化账号。
+
+:::
+
+默认配置下，认证规则取决于账号的**当前密码**：
+
+| 账号状态 | 从 FE 回环地址直接通过 MySQL 连接 | 远程 MySQL、HTTP/Web UI、Stream Load、Arrow Flight SQL/ADBC |
+| --- | --- | --- |
+| root 密码为空 | 允许登录，但执行普通 SQL 前必须先为自己设置非空密码 | 拒绝登录 |
+| admin 密码为空 | 拒绝登录 | 拒绝登录 |
+| root 或 admin 已设置非空密码 | 正常校验密码和权限 | 正常校验密码和权限 |
+
+如果将账号密码重新设置为空，后续登录会再次受到上述限制。密码变更不会主动注销已认证的会话。普通用户的空密码行为不变。JOB、MTMV、统计信息等内部执行上下文不需要 admin 的登录密码。
+
+### 使用集群前先设置 root 密码
+
+如果没有配置 `initial_root_password`，请在 **FE 所在主机**运行 MySQL 客户端，通过 TCP 直接连接回环地址。如果 FE 的 `query_port` 不是 `9030`，请替换端口：
+
+```bash
+mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+```
+
+仅 `127.0.0.1` 和 IPv6 回环地址 `::1` 符合条件，不包括整个 `127.0.0.0/8` 网段。携带 PROXY protocol 的连接不能用于此引导登录。使用 Docker 或 Kubernetes 时，请在 FE 容器的网络命名空间内运行客户端；Docker 宿主机的回环地址不是 FE 容器的回环地址。
+
+在此会话中，设置非空密码前执行 `SHOW DATABASES` 等普通 SQL 会返回 **1820** 错误。请执行：
+
+```sql
+SET PASSWORD = PASSWORD('<new_root_password>');
+SHOW DATABASES;
+```
+
+将占位符替换为自己的非空密码。密码设置成功后，当前会话立即解除限制，无须重连，`SHOW DATABASES` 即可成功执行。MySQL 登录被拒绝时返回 **1045 / 28000**；Arrow Flight SQL/ADBC 返回 **UNAUTHENTICATED**。Web UI、HTTP、Stream Load 和 Flight 客户端应使用已配置的密码。
+
+后续 MySQL 连接需要提供密码：
+
+```bash
+mysql --protocol=TCP -h<fe_host> -P9030 -uroot -p
+```
+
+### 按需启用 admin
+
+完成 root 初始化后，如需以 admin 账号进行客户端登录，请由 root 执行：
+
+```sql
+ALTER USER 'admin' IDENTIFIED BY '<new_admin_password>';
+```
+
+设置密码后即可使用 admin 密码认证。在受保护的新集群中，保持 admin 空密码会禁用其客户端登录，但不会停止内部后台任务。root 的密码只能由 root 自己修改。
+
+### 自动化部署时设置初始 root 密码
+
+在**首次初始化集群之前**，将已有 FE 配置 [`initial_root_password`](../../config/fe-config#initial_root_password) 设置为两阶段 SHA-1 密码哈希。FE 接受哈希，不接受明文。可以离线生成哈希，无须已有 Doris 集群：
+
+```bash
+python3 - <<'PY'
+import getpass
+import hashlib
+password = getpass.getpass('Initial root password: ')
+if not password:
+    raise SystemExit('Password must not be empty')
+print('*' + hashlib.sha1(hashlib.sha1(password.encode('utf-8')).digest()).hexdigest().upper())
+PY
+```
+
+在启动第一个 FE 前，将输出写入 `fe.conf`：
+
+```properties
+initial_root_password = *<40_HEXADECIMAL_DIGITS>
+```
+
+此时 root 从首次启动起就使用该密码认证，不进入空密码引导会话。此配置不会初始化 admin 的密码。4.2.1 和 5.0 首次初始化时，非空无效值会阻止初始化；修正后可重启。已初始化的集群会忽略此配置，保留它也不会覆盖后续修改的密码；初始化完成后可以删除。
+
+部署脚本注册 FE/BE 节点或执行 SQL 时，也需要使用已配置的账号密码。请通过部署工具的 Secret/配置集成提供凭据；FE 从自身配置中读取初始密码哈希。
+
+### 显式开启测试兼容模式
+
+隔离测试环境如需恢复原有空密码行为，请在**每台接收客户端连接的 FE** 的 `fe.conf` 或实际生效的 `fe_custom.conf` 中配置，并重启这些 FE：
+
+```properties
+allow_empty_password_for_root_admin = true
+```
+
+在受保护的新集群中，此配置允许 root/admin 从任意主机通过支持的协议进行空密码登录，且无须先修改密码；它不会绕过已配置的非空密码。默认值为 `false`，不支持在线修改。删除此项或改为 `false` 并重启后恢复保护。此项仅用于测试；忘记密码时应按[常见问题](#常见问题)临时使用 `skip_localhost_auth_check` 进行本机恢复。
 
 ## 认证机制
 
@@ -187,17 +275,14 @@ Doris 本身不支持黑名单，只有白名单功能，但我们可以利用[�
 
 ### Q: 忘记密码如何重置？
 
-如果忘记了密码无法登录 Doris，可以按如下步骤恢复：
+临时使用已有的本机恢复配置：
 
-1. 在 FE 的 config 文件中添加参数：
+1. 在一台 FE 的 `fe.conf` 或实际生效的 `fe_custom.conf` 中添加 `skip_localhost_auth_check = true`，然后重启该 FE。
+2. 在该 FE 主机上直接通过回环地址连接 MySQL：`mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot`。
+3. 执行 `SET PASSWORD = PASSWORD('<new_root_password>');`。root 的密码只能由 root 自己重置。
+4. 删除恢复配置或设为 `false`，再重启该 FE。之后通过 `-p` 提供新密码重新连接。
 
-    ```text
-    skip_localhost_auth_check = true
-    ```
-
-2. 重启 FE。
-3. 在 FE 本机通过 root 用户无密码登录 Doris。
-4. 登录后通过 `SET PASSWORD` 命令重置密码。
+受保护的新集群不支持通过 PROXY protocol、HTTP 或 Flight 进行此恢复。`allow_empty_password_for_root_admin` 不会绕过已设置的密码，不能用于忘记密码后的恢复。
 
 ### Q: root 用户的密码可以被其他用户重置吗？
 

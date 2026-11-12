@@ -25,21 +25,33 @@ import TabItem from '@theme/TabItem';
 
 ## 使用 Docker 快速部署
 
-自最新版本起，可以使用 Docker 进行快速部署。
+以下示例通过 Docker 在本地快速体验 Doris。
+
+:::info 4.2.1 和 5.0 的新集群认证
+
+下方工具示例固定使用 **4.1.0**，依赖原有的空密码初始化行为。**4.2.1** 和 **5.0** 请按[本地完整部署](#本地完整部署)操作，或使用支持哈希形式 `initial_root_password`、且注册节点和执行 SQL 时提供相同密码的部署工具。详见[初始化内置账号](../admin-manual/auth/authentication/internal#初始化内置账号)。
+
+:::
 
 ### 第 1 步（1/2）：启动集群
 
-运行以下命令，一步完成启动脚本的下载与集群启动。不指定版本时，默认下载最新版本（`doris-latest`）：
-
-```shell
-curl -fsSL https://doris.apache.org/files/start-doris.sh | bash
-```
-
-如需指定版本，使用 `-v` 参数：
+通过显式版本启动：
 
 ```shell
 curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
 ```
+
+启动后，先连接并设置 root 密码，再继续操作：
+
+```bash
+mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+```
+
+```sql
+SET PASSWORD = PASSWORD('<new_root_password>');
+```
+
+请使用自己的非空密码，后续连接通过 `-p` 提示输入该密码。
 
 ### 第 2 步（2/2）：验证集群状态
 
@@ -48,13 +60,13 @@ curl -fsSL https://doris.apache.org/files/start-doris.sh | bash -s -- -v 4.1.0
 ```sql
 -- 目的：验证 FE 节点是否正常加入集群
 -- 期望：Join 和 Alive 列均为 true
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
+mysql -uroot -p -P9030 -h127.0.0.1 -e 'SELECT `host`, `join`, `alive` FROM frontends()'
 ```
 
 ```sql
 -- 目的：验证 BE 节点是否正常心跳
 -- 期望：Alive 列为 1
-mysql -uroot -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
+mysql -uroot -p -P9030 -h127.0.0.1 -e 'SELECT `host`, `alive` FROM backends()'
 ```
 
 **输出解析：** `Alive=true`（FE）或 `Alive=1`（BE）表示节点运行正常。
@@ -112,12 +124,24 @@ sysctl -p
    apache-doris/fe/bin/start_fe.sh --daemon
    ```
 
-3. **验证 FE 状态**：
+3. **初始化 root 密码**：检查状态或注册 BE 前，先在 FE 主机上连接：
+
+   ```bash
+   mysql --protocol=TCP -h127.0.0.1 -P9030 -uroot
+   ```
+
+   ```sql
+   SET PASSWORD = PASSWORD('<new_root_password>');
+   ```
+
+   请使用自己的非空密码。**4.2.1** 和 **5.0** 新集群在此步骤成功前执行普通 SQL 会返回 1820。如果首次启动前已配置 `initial_root_password`，请通过 `-p` 提供该密码连接。下文后续连接均使用 `-p`。admin 需要 root 设置密码后才能登录，详见[初始化内置账号](../admin-manual/auth/authentication/internal#初始化内置账号)。
+
+4. **验证 FE 状态**：
 
    ```sql
    -- 目的：确认 FE 已启动并加入集群
    -- 期望：Join=true, Alive=true, IsMaster=true
-   mysql -uroot -P9030 -h127.0.0.1 -e "show frontends;"
+   mysql -uroot -p -P9030 -h127.0.0.1 -e "show frontends;"
    ```
 
 ### 第 4 步（4/4）：部署 BE
@@ -147,7 +171,7 @@ sysctl -p
    ```sql
    -- 目的：确认 BE 已注册且心跳正常
    -- 期望：Alive=true
-   mysql -uroot -P9030 -h127.0.0.1 -e "show backends;"
+   mysql -uroot -p -P9030 -h127.0.0.1 -e "show backends;"
    ```
 
 ---
@@ -159,7 +183,7 @@ sysctl -p
 ### 连接集群
 
 ```sql
-mysql -uroot -P9030 -h127.0.0.1
+mysql -uroot -p -P9030 -h127.0.0.1
 ```
 
 ### 创建数据库和表
