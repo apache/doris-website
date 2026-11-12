@@ -193,13 +193,13 @@ PROPERTIES ("timeout" = "3600");
 
 ```sql
 CREATE ROUTINE LOAD test.sequence_hidden_routine ON test_sequence_hidden
+    COLUMNS TERMINATED BY "\t",
     COLUMNS(k1,k2,v1,source_sequence,v2),
     ORDER BY source_sequence
     PROPERTIES
     (
         "desired_concurrent_number" = "1",
-        "format" = "csv",
-        "column_separator" = "\t"
+        "format" = "csv"
     )
     FROM KAFKA
     (
