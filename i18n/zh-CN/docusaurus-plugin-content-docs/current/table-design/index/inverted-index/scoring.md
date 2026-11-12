@@ -54,6 +54,28 @@ LIMIT 10;
 2. `WHERE` 子句中至少包含一个 `MATCH_*` 条件
 3. 查询为 Top-N 类型，且 `ORDER BY` 基于 `score()` 结果排序
 
+### Doris 4.0.1 中按相关性得分过滤
+
+Doris 4.0.1 不允许在 `WHERE` 子句中使用 `score()`。如需过滤计算后的得分，请先在子查询中获取数量受限的候选结果，并将 `MATCH_*` 条件、按得分别名的 `ORDER BY` 和 `LIMIT` 都放在该子查询内，再在外层查询中按别名过滤：
+
+```sql
+SELECT a.*
+FROM (
+    SELECT *, score() AS relevance
+    FROM search_demo
+    WHERE content MATCH_ANY 'text search test'
+    ORDER BY relevance DESC
+    LIMIT 1000
+) AS a
+WHERE a.relevance > 5
+ORDER BY a.relevance DESC
+LIMIT 10;
+```
+
+此查询从得分最高的 1000 条候选记录中返回最多 10 条得分大于 5 的记录；候选记录均未达到阈值时，返回空结果。应按应用需求选择候选数量；该写法过滤的是候选结果集，而不是返回全部得分超过阈值的匹配记录。
+
+请保留内层 `LIMIT`：缺少它时，子查询不再具备所需的 Top-N 结构，优化器可能将外层得分条件移入计算得分的查询。仅在外层设置 `ORDER BY` 和 `LIMIT` 不能替代内层 Top-N 操作。得分取决于查询和数据集，5 只是示例阈值。
+
 ### 支持的索引类型
 
 | 索引类型         | 是否支持打分 | 说明                       |
