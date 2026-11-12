@@ -26,7 +26,7 @@ Doris 使用 S3 Client，通过 S3 兼容协议访问阿里云 OSS。
 | oss.access_key                 | s3.access_key                | OSS Access Key，用于身份验证                                 | 无     |
 | oss.secret_key                 | s3.secret_key                | OSS Secret Key，与 Access Key 配合使用                       | 无     |
 | oss.region                     | s3.region                    | OSS region，指定阿里云 OSS 的区域                             | 无     |
-| oss.use_path_style             | s3.use_path_style            | 是否使用 path-style（路径风格）访问。兼容 MinIO 等非 AWS S3 服务建议设置为 true | FALSE  |
+| oss.use_path_style             | use_path_style            | 是否使用 path-style（路径风格）访问。兼容 MinIO 等非 AWS S3 服务建议设置为 true | FALSE  |
 | oss.connection.maximum         | s3.connection.maximum        | 最大连接数，指定与 OSS 服务建立的最大连接数                  | 50     |
 | oss.connection.request.timeout | s3.connection.request.timeout| 请求超时时间（毫秒），指定连接 OSS 服务时的请求超时时间       | 3000   |
 | oss.connection.timeout         | s3.connection.timeout        | 连接超时时间（毫秒），指定与 OSS 服务建立连接时的超时时间     | 1000   |
